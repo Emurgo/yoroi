@@ -31,7 +31,7 @@ const useStyles = () => {
     notice: {
       backgroundColor: color.sys_cyan_100,
       ...atoms.p_md,
-      borderRadius: 8,
+      ...atoms.rounded_sm,
     },
     text: {
       ...atoms.body_2_md_regular,
