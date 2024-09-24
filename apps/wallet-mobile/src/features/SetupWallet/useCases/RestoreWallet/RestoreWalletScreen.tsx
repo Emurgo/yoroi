@@ -10,6 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '../../../../components/Modal/ModalContext'
+import {useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {Space} from '../../../../components/Space/Space'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
@@ -37,6 +38,7 @@ export const RestoreWalletScreen = () => {
   const {openModal} = useModal()
   const [focusedIndex, setFocusedIndex] = React.useState<number>(0)
   const [isValidPhrase, setIsValidPhrase] = React.useState(false)
+  const {scrollViewRef} = useScrollView()
 
   if (mnemonicType === null) throw new Error('mnemonicType missing')
 
@@ -170,6 +172,7 @@ export const RestoreWalletScreen = () => {
             inputErrorsIndexes={inputErrorsIndexes}
             onError={onError}
             onClearError={onClearError}
+            scrollViewRef={scrollViewRef}
           />
         </ScrollView>
 
