@@ -37,7 +37,7 @@ export const Button = (props: ButtonProps) => {
     outlineOnLight,
     iconImage,
     withoutBackground,
-    shelleyTheme,
+    shelleyTheme = true,
     mainTheme,
     outlineShelley,
     textStyles,
