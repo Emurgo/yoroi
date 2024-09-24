@@ -1,5 +1,6 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
@@ -7,57 +8,85 @@ import icon from '../../assets/img/icon/dashboard.png'
 import {Icon} from '../Icon'
 import {Button} from './Button'
 
-storiesOf('Button', module).add('default', () => (
-  <ScrollView>
-    <Row>
-      <Button onPress={() => action('onPress')()} title="Submit" />
-    </Row>
+storiesOf('Button', module).add('default', () => {
+  const {color, isDark, selectThemeName} = useTheme()
 
-    <Row>
-      <Button block onPress={() => action('onPress')()} title="submit" />
-    </Row>
+  return (
+    <ScrollView style={{backgroundColor: color.bg_color_max}}>
+      <Row>
+        <Button
+          onPress={() => {
+            selectThemeName(isDark ? 'default-light' : 'default-dark')
+          }}
+          title="Toggle theme"
+        />
+      </Row>
 
-    <Row>
-      <Button block shelleyTheme onPress={() => action('onPress')()} title="Submit" />
-    </Row>
+      <Row>
+        <Button onPress={() => action('onPress')()} title="Submit" />
+      </Row>
 
-    <Row>
-      <Button outlineOnLight block shelleyTheme onPress={() => action('onPress')()} title="Submit" />
-    </Row>
+      <Row>
+        <Button block onPress={() => action('onPress')()} title="submit" />
+      </Row>
 
-    <Row>
-      <Button outlineOnLight block onPress={() => action('onPress')()} title="Submit" />
-    </Row>
+      <Row>
+        <Button block shelleyTheme onPress={() => action('onPress')()} title="Submit" />
+      </Row>
 
-    <Row>
-      <Button outlineShelley withoutBackground shelleyTheme block onPress={() => action('onPress')()} title="Submit" />
-    </Row>
+      <Row>
+        <Button outlineOnLight block shelleyTheme onPress={() => action('onPress')()} title="Submit" />
+      </Row>
 
-    <Row>
-      <Button block shelleyTheme iconImage={icon} onPress={() => action('onPress')()} title="Submit, with image" />
-    </Row>
+      <Row>
+        <Button outlineOnLight block shelleyTheme disabled onPress={() => action('onPress')()} title="Submit" />
+      </Row>
 
-    <Row>
-      <Button
-        block
-        shelleyTheme
-        startContent={<Icon.Plus size={24} color="white" />}
-        onPress={() => action('onPress')()}
-        title="Submit, with start content"
-      />
-    </Row>
+      <Row>
+        <Button block outlineShelley outlineOnLight disabled onPress={() => action('onPress')()} title="Submit" />
+      </Row>
 
-    <Row>
-      <Button
-        block
-        shelleyTheme
-        endContent={<Icon.Plus size={24} color="white" />}
-        onPress={() => action('onPress')()}
-        title="Submit, with end content"
-      />
-    </Row>
-  </ScrollView>
-))
+      <Row>
+        <Button outlineOnLight block onPress={() => action('onPress')()} title="Submit" />
+      </Row>
+
+      <Row>
+        <Button
+          outlineShelley
+          withoutBackground
+          shelleyTheme
+          block
+          onPress={() => action('onPress')()}
+          title="Submit"
+        />
+      </Row>
+
+      <Row>
+        <Button block shelleyTheme iconImage={icon} onPress={() => action('onPress')()} title="Submit, with image" />
+      </Row>
+
+      <Row>
+        <Button
+          block
+          shelleyTheme
+          startContent={<Icon.Plus size={24} color="white" />}
+          onPress={() => action('onPress')()}
+          title="Submit, with start content"
+        />
+      </Row>
+
+      <Row>
+        <Button
+          block
+          shelleyTheme
+          endContent={<Icon.Plus size={24} color="white" />}
+          onPress={() => action('onPress')()}
+          title="Submit, with end content"
+        />
+      </Row>
+    </ScrollView>
+  )
+})
 
 const Row = (props: ViewProps) => <View {...props} style={styles.row} />
 
