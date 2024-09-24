@@ -1,13 +1,14 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 
 import {Boundary} from '../../../components/Boundary/Boundary'
 import {Button} from '../../../components/Button/Button'
 import {Checkbox} from '../../../components/Checkbox/Checkbox'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {PleaseWaitView} from '../../../components/PleaseWaitModal'
+import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
 import {Space} from '../../../components/Space/Space'
 import {Warning} from '../../../components/Warning/Warning'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
@@ -56,13 +57,15 @@ export const WithdrawStakingRewards = ({wallet}: Props) => {
 }
 
 const WithdrawalTxForm = ({wallet, onDone}: {wallet: YoroiWallet; onDone: (withdrawalTx: YoroiUnsignedTx) => void}) => {
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
   const bold = useBold()
   const {meta} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const strings = useWithdrawStakingRewardsStrings()
   const [isChecked, setIsChecked] = React.useState(false)
   const [deregister, setDeregister] = React.useState<boolean>()
+  const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
+
   const {isLoading} = useWithdrawalTx(
     {wallet, deregister, addressMode: meta.addressMode},
     {enabled: deregister != null, onSuccess: (withdrawalTx) => onDone(withdrawalTx)},
@@ -77,7 +80,7 @@ const WithdrawalTxForm = ({wallet, onDone}: {wallet: YoroiWallet; onDone: (withd
     <View style={styles.root} testID="dangerousActionView">
       <Header title={strings.warningModalTitle}></Header>
 
-      <ScrollView style={styles.scroll} bounces={false}>
+      <ScrollView ref={scrollViewRef} style={styles.scroll} bounces={false} onScrollBarChange={setIsScrollBarShown}>
         <Warning content={[strings.warning1, strings.warning2, strings.warning3].join('\r\n')} />
 
         <Space height="lg" />
@@ -117,7 +120,7 @@ const WithdrawalTxForm = ({wallet, onDone}: {wallet: YoroiWallet; onDone: (withd
         <Space height="lg" />
       </ScrollView>
 
-      <View style={styles.actions}>
+      <View style={[styles.actions, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
         <Button
           shelleyTheme
           onPress={() => setDeregister(false)}
@@ -133,7 +136,7 @@ const WithdrawalTxForm = ({wallet, onDone}: {wallet: YoroiWallet; onDone: (withd
 }
 
 const Header = ({title}: {title: string}) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return <View style={styles.header}>{title !== '' && <Text style={styles.title}>{title}</Text>}</View>
 }
 
@@ -209,7 +212,7 @@ const messages = defineMessages({
 })
 
 const useBold = () => {
-  const styles = useStyles()
+  const {styles} = useStyles()
 
   return {
     b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
@@ -240,8 +243,6 @@ const useStyles = () => {
     actions: {
       ...atoms.px_lg,
       paddingTop: 16,
-      borderTopWidth: 1,
-      borderTopColor: color.gray_200,
     },
     bolder: {
       color: color.gray_max,
@@ -257,5 +258,9 @@ const useStyles = () => {
       ...atoms.self_stretch,
     },
   })
-  return styles
+
+  const colors = {
+    lightGray: color.gray_200,
+  }
+  return {styles, colors} as const
 }
