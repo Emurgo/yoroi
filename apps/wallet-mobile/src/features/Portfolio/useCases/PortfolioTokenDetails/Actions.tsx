@@ -84,7 +84,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       borderTopColor: color.gray_200,
-      ...atoms.border_t,
+      ...atoms.border_0,
     },
     container: {
       ...atoms.flex_row,
