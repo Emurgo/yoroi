@@ -63,7 +63,7 @@ export const resolverApiMaker = (
     [Resolver.NameServer.Handle, getHandleCryptoAddress],
     [Resolver.NameServer.Unstoppable, getUnstoppableCryptoAddress],
     [Resolver.NameServer.Cns, getCnsCryptoAddress],
-  ] as const
+  ]
 
   // facade to the different name servers
   const getCardanoAddresses = async (

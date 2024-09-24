@@ -45,5 +45,5 @@ export type PortfolioApi = Readonly<{
     id: PortfolioTokenId,
     period: PortfolioTokenHistoryPeriod,
   ): Promise<Readonly<ApiResponse<PortfolioApiTokenHistoryResponse>>>
-  tokenImageInvalidate(ids: ReadonlyArray<PortfolioTokenId>): Promise<undefined>
+  tokenImageInvalidate(ids: ReadonlyArray<PortfolioTokenId>): Promise<void>
 }>

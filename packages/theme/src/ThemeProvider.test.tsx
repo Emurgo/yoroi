@@ -1,10 +1,10 @@
-import React from 'react'
+import * as React from 'react'
 import {render, fireEvent} from '@testing-library/react-native'
 import {Button, Text} from 'react-native'
+import {ErrorBoundary} from '@yoroi/common'
 
 import {ThemeProvider, useTheme, useThemeColor} from './ThemeProvider'
 import {SupportedThemes, ThemeStorage} from './types'
-import {ErrorBoundary} from '@yoroi/common'
 
 describe('ThemeProvider', () => {
   let storedValue: SupportedThemes | undefined

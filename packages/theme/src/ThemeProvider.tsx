@@ -1,5 +1,5 @@
-import React from 'react'
-import {ColorSchemeName, useColorScheme as _useColorScheme} from 'react-native'
+import * as React from 'react'
+import {useColorScheme} from 'react-native'
 
 import {ThemedPalette, SupportedThemes, Theme, ThemeStorage} from './types'
 import {defaultLightTheme} from './themes/default-light'
@@ -85,8 +85,4 @@ const themes: Record<Exclude<SupportedThemes, 'system'>, Theme> = {
 
 const missingProvider = () => {
   throw new Error('ThemeProvider is missing')
-}
-
-const useColorScheme = (): NonNullable<ColorSchemeName> => {
-  return _useColorScheme() as NonNullable<ColorSchemeName>
 }

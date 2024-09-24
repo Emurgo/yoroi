@@ -41,7 +41,7 @@ describe('portfolioTokenStorageMaker', () => {
         cacheRecordMaker({expires: 0, hash: ''}, nftCryptoKitty),
       ],
       [primaryETH.id, cacheRecordMaker({expires: 0, hash: ''}, primaryETH)],
-    ] as const
+    ]
 
     token.infos.save(entries)
 
@@ -67,7 +67,7 @@ describe('portfolioTokenStorageMaker', () => {
         cacheRecordMaker({expires: 0, hash: ''}, nftCryptoKitty),
       ],
       [primaryETH.id, cacheRecordMaker({expires: 0, hash: ''}, primaryETH)],
-    ] as const
+    ]
 
     token.infos.save(entries)
 
