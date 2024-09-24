@@ -6,9 +6,10 @@ import {Space} from '../../../../../components/Space/Space'
 import {Address} from '../../../common/Address'
 import {CollapsibleSection} from '../../../common/CollapsibleSection'
 import {Divider} from '../../../common/Divider'
+import {FormattedTx} from '../../../common/hooks/useFormattedTx'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {TokenItem} from '../../../common/TokenItem'
-import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs, FormattedTx} from '../../../common/types'
+import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs} from '../../../common/types'
 
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()
@@ -136,7 +137,9 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
+      ...atoms.flex_1,
       ...atoms.px_lg,
+      backgroundColor: color.bg_color_max,
     },
     utxoTitle: {
       ...atoms.flex_row,
@@ -146,13 +149,13 @@ const useStyles = () => {
       width: 12,
       height: 12,
       backgroundColor: color.primary_500,
-      borderRadius: 1200,
+      ...atoms.rounded_full,
     },
     utxoTitleCircleOutput: {
       width: 12,
       height: 12,
       backgroundColor: color.green_static,
-      borderRadius: 1200,
+      ...atoms.rounded_full,
     },
     utxoTitleText: {
       ...atoms.body_2_md_medium,
@@ -162,7 +165,7 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.justify_end,
       ...atoms.flex_wrap,
-      gap: 8,
+      ...atoms.gap_sm,
     },
     fee: {
       ...atoms.flex_row,
@@ -178,7 +181,5 @@ const useStyles = () => {
     },
   })
 
-  const colors = {}
-
-  return {styles, colors} as const
+  return {styles} as const
 }

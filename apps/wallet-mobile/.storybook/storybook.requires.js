@@ -173,7 +173,6 @@ const getStories = () => {
     "./src/features/Scan/useCases/ShowCameraPermissionDeniedScreen/OpenDeviceAppSettingsButton.stories.tsx": require("../src/features/Scan/useCases/ShowCameraPermissionDeniedScreen/OpenDeviceAppSettingsButton.stories.tsx"),
     "./src/features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen.stories.tsx": require("../src/features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen.stories.tsx"),
     "./src/features/Send/common/ButtonGroup/ButtonGroup.stories.tsx": require("../src/features/Send/common/ButtonGroup/ButtonGroup.stories.tsx"),
-    "./src/features/Send/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx": require("../src/features/Send/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx"),
     "./src/features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen.stories.tsx": require("../src/features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen.stories.tsx"),
     "./src/features/Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen.stories.tsx": require("../src/features/Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/AddToken.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/AddToken.stories.tsx"),

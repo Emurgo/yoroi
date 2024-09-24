@@ -52,13 +52,12 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     address: {
       ...atoms.flex_row,
-      ...atoms.flex_row,
       ...atoms.justify_between,
     },
     addressText: {
       ...atoms.flex_1,
       ...atoms.body_2_md_regular,
-      color: color.gray_900,
+      color: color.text_gray_medium,
     },
     index: {
       ...atoms.body_2_md_medium,

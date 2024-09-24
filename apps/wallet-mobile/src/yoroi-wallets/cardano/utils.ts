@@ -48,7 +48,7 @@ const getIsAddressKeyBech32Format = async (address: string): Promise<boolean> =>
   try {
     await CardanoMobile.Ed25519KeyHash.fromBech32(address)
     return true
-  } catch (e) {
+  } catch {
     return false
   }
 }
@@ -57,7 +57,7 @@ const getIsAddressScriptBech32Format = async (address: string): Promise<boolean>
   try {
     await CardanoMobile.ScriptHash.fromBech32(address)
     return true
-  } catch (e) {
+  } catch {
     return false
   }
 }
@@ -67,7 +67,7 @@ const getIsRewardAddressBech32Format = async (addressBech32: string): Promise<bo
     const address = await CardanoMobile.Address.fromBech32(addressBech32)
     await CardanoMobile.RewardAddress.fromAddress(address)
     return true
-  } catch (e) {
+  } catch {
     return false
   }
 }

@@ -6,8 +6,8 @@ import * as React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
+import {Info} from '../../../../../components/Info/Info'
 import {Space} from '../../../../../components/Space/Space'
-import {Warning} from '../../../../../components/Warning/Warning'
 import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {Quantities} from '../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
@@ -16,9 +16,10 @@ import {Address} from '../../../common/Address'
 import {CollapsibleSection} from '../../../common/CollapsibleSection'
 import {Divider} from '../../../common/Divider'
 import {useAddressType} from '../../../common/hooks/useAddressType'
+import {FormattedTx} from '../../../common/hooks/useFormattedTx'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {TokenItem} from '../../../common/TokenItem'
-import {FormattedOutputs, FormattedTx} from '../../../common/types'
+import {FormattedOutputs} from '../../../common/types'
 
 export const OverviewTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()
@@ -188,7 +189,9 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
+      ...atoms.flex_1,
       ...atoms.px_lg,
+      backgroundColor: color.bg_color_max,
     },
     infoItem: {
       ...atoms.flex_row,
@@ -229,7 +232,7 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.justify_end,
       ...atoms.flex_1,
-      gap: 8,
+      ...atoms.gap_sm,
     },
     tokensSection: {
       ...atoms.flex_row,
@@ -294,7 +297,7 @@ const ReceiverTokensSectionMultiReceiver = () => {
       <CollapsibleSection label="Other parties">
         <Space height="lg" />
 
-        <Warning
+        <Info
           content="Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance"
           blue
         />

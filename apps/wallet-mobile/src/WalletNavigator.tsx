@@ -302,7 +302,7 @@ const useStyles = () => {
     divider: color.gray_200,
   }
 
-  return {colors, styles}
+  return {colors, styles} as const
 }
 
 const messages = defineMessages({

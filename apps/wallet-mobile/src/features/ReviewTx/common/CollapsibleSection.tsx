@@ -56,7 +56,7 @@ const useStyles = () => {
     },
     sectionHeaderText: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_900,
+      color: color.text_gray_medium,
     },
     childrenContainer: {
       overflow: 'hidden',
