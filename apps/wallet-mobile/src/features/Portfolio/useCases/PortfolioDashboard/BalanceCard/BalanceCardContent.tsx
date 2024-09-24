@@ -9,6 +9,7 @@ import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
+import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 
 type Props = {
@@ -17,6 +18,7 @@ type Props = {
 }
 
 export const BalanceCardContent = ({amount, headerCard}: Props) => {
+  const navigationTo = useNavigateTo()
   const {styles} = useStyles()
   const {isPrivacyActive, setPrivacyModeOff, setPrivacyModeOn} = usePrivacyMode()
 
@@ -36,7 +38,7 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
   }
 
   return (
-    <View>
+    <TouchableOpacity onPress={navigationTo.tokensList}>
       {headerCard}
 
       <Spacer height={6} />
@@ -58,7 +60,7 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 

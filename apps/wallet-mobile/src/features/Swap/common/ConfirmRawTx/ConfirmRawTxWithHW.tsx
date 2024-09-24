@@ -81,16 +81,16 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: 35,
+      ...atoms.flex_1,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.gap_2xl,
       ...atoms.px_lg,
     },
     text: {
-      fontSize: 18,
-      color: color.black_static,
-      textAlign: 'center',
+      ...atoms.body_1_lg_regular,
+      ...atoms.text_center,
+      color: color.text_gray_medium,
     },
   })
 

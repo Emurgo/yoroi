@@ -75,7 +75,7 @@ export const Dashboard = () => {
       return
     }
 
-    openModal('', <WithdrawStakingRewards wallet={wallet} />, windowHeight * 0.8)
+    openModal('', <WithdrawStakingRewards wallet={wallet} />, Math.min(windowHeight * 0.9, 704))
   }
 
   return (
