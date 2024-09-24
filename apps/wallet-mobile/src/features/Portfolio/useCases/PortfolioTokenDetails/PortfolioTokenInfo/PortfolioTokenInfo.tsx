@@ -3,22 +3,22 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {TabPanel, TabPanels} from '../../../../../components/Tabs/Tabs'
-import {usePortfolioTokenDetailContext} from '../../../common/PortfolioTokenDetailContext'
+import {PortfolioDetailsTab, usePortfolio} from '../../../common/PortfolioProvider'
 import {Overview} from './Overview/Overview'
 import {Performance} from './Performance'
 
 export const PortfolioTokenInfo = () => {
   const {styles} = useStyles()
-  const {activeTab} = usePortfolioTokenDetailContext()
+  const {detailsTab} = usePortfolio()
 
   return (
     <View style={styles.root}>
       <TabPanels>
-        <TabPanel active={activeTab === 'performance'}>
+        <TabPanel active={detailsTab === PortfolioDetailsTab.Performance}>
           <Performance />
         </TabPanel>
 
-        <TabPanel active={activeTab === 'overview'}>
+        <TabPanel active={detailsTab === PortfolioDetailsTab.Overview}>
           <Overview />
         </TabPanel>
       </TabPanels>

@@ -12,7 +12,7 @@ import {ILiquidityPool, useGetLiquidityPool} from '../../../common/hooks/useGetL
 import {IOpenOrders, useGetOpenOrders} from '../../../common/hooks/useGetOpenOrders'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
 import {Line} from '../../../common/Line'
-import {portfolioDAppsTabs, TPortfolioDAppsTabs} from '../../../common/types'
+import {PortfolioDappsTab, usePortfolio} from '../../../common/PortfolioProvider'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {LendAndBorrowTab} from './LendAndBorrowTab'
 import {LiquidityPoolTab} from './LiquidityPoolTab'
@@ -25,8 +25,7 @@ export const PortfolioDAppsTokenList = () => {
   const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
-
-  const [activeTab, setActiveTab] = React.useState<TPortfolioDAppsTabs>(portfolioDAppsTabs.LIQUIDITY_POOL)
+  const {dappsTab} = usePortfolio()
 
   const {data: liquidityPools, isFetching: liquidityPoolFetching} = useGetLiquidityPool()
   const {data: openOrders, isFetching: openOrdersFetching} = useGetOpenOrders()
@@ -86,7 +85,7 @@ export const PortfolioDAppsTokenList = () => {
     <ScrollView style={styles.root} contentContainerStyle={styles.container}>
       {!isSearching ? (
         <View>
-          <TotalTokensValue amount={primaryBalance} cardType="dapps" />
+          <TotalTokensValue amount={primaryBalance} />
 
           <Line />
         </View>
@@ -94,9 +93,9 @@ export const PortfolioDAppsTokenList = () => {
 
       <Spacer height={16} />
 
-      <PortfolioDAppTabs activeTab={activeTab} onChangeTab={setActiveTab} />
+      <PortfolioDAppTabs />
 
-      <TabPanel active={activeTab === 'liquidityPool'}>
+      <TabPanel active={dappsTab === PortfolioDappsTab.LiquidityPool}>
         <LiquidityPoolTab
           tokensList={getListLiquidityPool}
           isFetching={liquidityPoolFetching}
@@ -104,11 +103,11 @@ export const PortfolioDAppsTokenList = () => {
         />
       </TabPanel>
 
-      <TabPanel active={activeTab === 'openOrders'}>
+      <TabPanel active={dappsTab === PortfolioDappsTab.OpenOrders}>
         <OpenOrdersTab tokensList={getListOpenOrders} isFetching={openOrdersFetching} isSearching={isSearching} />
       </TabPanel>
 
-      <TabPanel active={activeTab === 'lendAndBorrow'}>
+      <TabPanel active={dappsTab === PortfolioDappsTab.LendAndBorrow}>
         <LendAndBorrowTab />
       </TabPanel>
     </ScrollView>

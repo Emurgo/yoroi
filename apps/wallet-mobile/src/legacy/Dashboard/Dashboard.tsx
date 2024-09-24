@@ -51,15 +51,13 @@ export const Dashboard = () => {
   const {wallet, meta} = useSelectedWallet()
   const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
   const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
   const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
-
-  const {resetToTxHistory} = useWalletNavigation()
 
   const isParticipatingInGovernance = useIsParticipatingInGovernance(wallet)
   const walletNavigateTo = useWalletNavigation()
@@ -77,11 +75,7 @@ export const Dashboard = () => {
       return
     }
 
-    openModal(
-      '',
-      <WithdrawStakingRewards wallet={wallet} onSuccess={() => resetToTxHistory()} onCancel={() => closeModal()} />,
-      windowHeight * 0.8,
-    )
+    openModal('', <WithdrawStakingRewards wallet={wallet} />, windowHeight * 0.8)
   }
 
   return (
