@@ -45,7 +45,7 @@ export const WithdrawStakingRewards = ({wallet}: Props) => {
           onCancel={() => closeModal()}
         />
       </Boundary>,
-      400,
+      450,
     )
   }
 
