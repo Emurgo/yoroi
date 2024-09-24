@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {showErrorDialog} from '../../../kernel/dialogs'
@@ -25,7 +25,7 @@ export const CreatePinInput = ({onDone}: Props) => {
   const [pin, setPin] = React.useState('')
   const [step, setStep] = React.useState<'pin' | 'pinConfirmation'>('pin')
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (step === 'pin') {
       pinInputRef.current?.clear()
       pinInputRef.current?.focus()

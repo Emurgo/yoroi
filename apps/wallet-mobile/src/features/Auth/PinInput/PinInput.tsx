@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
-import React, {useEffect, useRef} from 'react'
+import * as React from 'react'
 import {StyleSheet, TextInput, View} from 'react-native'
 import {InteractionManager} from 'react-native'
 
@@ -26,10 +26,10 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   const styles = useStyles()
 
   const [pin, setPin] = React.useState('')
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = React.useRef<TextInput>(null)
   const {isDark} = useTheme()
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (enabled) {
       const interaction = InteractionManager.runAfterInteractions(() => {
         const timer = setTimeout(() => {
@@ -118,7 +118,7 @@ const PinPlaceholder = ({isActive}: PinPlaceholderProps) => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     pinInput: {
@@ -165,7 +165,7 @@ const useStyles = () => {
       backgroundColor: color.primary_600,
     },
     hiddenInput: {
-      position: 'absolute',
+      ...atoms.absolute,
       opacity: 0,
       height: 0,
       width: 0,
