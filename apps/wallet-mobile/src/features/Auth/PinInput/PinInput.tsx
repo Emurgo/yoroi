@@ -2,6 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React, {useEffect, useRef} from 'react'
 import {StyleSheet, TextInput, View} from 'react-native'
+import {InteractionManager} from 'react-native'
 
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {Text} from '../../../components/Text'
@@ -30,7 +31,13 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
 
   useEffect(() => {
     if (enabled) {
-      inputRef.current?.focus()
+      const interaction = InteractionManager.runAfterInteractions(() => {
+        const timer = setTimeout(() => {
+          inputRef.current?.focus()
+        }, 300)
+        return () => clearTimeout(timer)
+      })
+      return () => interaction.cancel()
     }
   }, [enabled])
 
