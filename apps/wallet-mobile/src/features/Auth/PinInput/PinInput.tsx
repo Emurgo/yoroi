@@ -28,14 +28,12 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   const inputRef = useRef<TextInput>(null)
   const {isDark} = useTheme()
 
-  // Auto-focus the hidden TextInput to trigger native keyboard
   useEffect(() => {
     if (enabled) {
       inputRef.current?.focus()
     }
   }, [enabled])
 
-  // Expose the clear function via ref
   React.useImperativeHandle(ref, () => ({
     clear: () => {
       setPin('')
@@ -50,14 +48,12 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   const handleTextChange = (value: string) => {
     if (!enabled) return
 
-    // Limit pin input to pinMaxLength
     if (value.length > pinMaxLength) {
       value = value.substring(0, pinMaxLength)
     }
 
     setPin(value)
 
-    // Call onDone when pin is complete
     if (value.length === pinMaxLength) {
       onDone(value)
     }
@@ -79,14 +75,12 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
         <Spacer height={24} />
 
         <View style={styles.pinContainer}>
-          {/* Pin Placeholder Circles */}
           {_.range(0, pinMaxLength).map((index) => (
             <PinPlaceholder key={index} isActive={index < pin.length} />
           ))}
         </View>
       </View>
 
-      {/* Hidden TextInput for triggering the native keyboard */}
       <TextInput
         ref={inputRef}
         style={styles.hiddenInput}
