@@ -109,7 +109,8 @@ const SelectUsbSection = () => {
         iconImage={<Icon.Usb color={colors.blue} />}
         textStyles={styles.buttonText}
         title={strings.hwModalUsbButton}
-        outlineShelley
+        outlineOnLight
+        shelleyTheme
         onPress={() => {
           USBChanged(true)
           navigateHw()
