@@ -31,6 +31,7 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
 
         <Button
           outlineOnLight
+          shelleyTheme
           onPress={() => request()}
           title={strings.bluetoothButton}
           testID="connectWithBLEButton"
@@ -42,6 +43,7 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
 
         <Button
           outlineOnLight
+          shelleyTheme
           onPress={onSelectUSB}
           title={strings.usbButton}
           disabled={!isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
