@@ -67,7 +67,8 @@ const SelectBluetoothSection = () => {
         iconImage={<Icon.Bluetooth color={colors.blue} />}
         textStyles={styles.buttonText}
         title={strings.hwModalBtButton}
-        outlineShelley
+        outlineOnLight
+        shelleyTheme
         onPress={() => request()}
       />
     </>
