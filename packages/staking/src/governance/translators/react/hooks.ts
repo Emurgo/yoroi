@@ -28,6 +28,8 @@ export const useStakingKeyState = (
 ) => {
   const {manager} = useGovernance()
   return useQuery({
+    cacheTime: 0,
+    staleTime: 0,
     queryKey: ['governanceStakingKeyState', stakingKeyHash],
     queryFn: () => manager.getStakingKeyState(stakingKeyHash),
     enabled: stakingKeyHash.length > 0,

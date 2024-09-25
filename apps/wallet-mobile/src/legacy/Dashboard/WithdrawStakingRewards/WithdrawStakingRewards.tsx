@@ -12,7 +12,7 @@ import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollVi
 import {Space} from '../../../components/Space/Space'
 import {Warning} from '../../../components/Warning/Warning'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
-import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
+import globalMessages, {confirmationMessages, ledgerMessages, txLabels} from '../../../kernel/i18n/global-messages'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useWithdrawalTx} from '../../../yoroi-wallets/hooks'
@@ -36,7 +36,7 @@ export const WithdrawStakingRewards = ({wallet}: Props) => {
     await delay(1000)
 
     openModal(
-      '',
+      strings.confirmTx,
       <Boundary>
         <ConfirmTx
           wallet={wallet}
@@ -144,6 +144,7 @@ const useWithdrawStakingRewardsStrings = () => {
   const intl = useIntl()
 
   return {
+    confirmTx: intl.formatMessage(txLabels.confirmTx),
     warningModalTitle: intl.formatMessage(messages.warningModalTitle),
     warning1: intl.formatMessage(messages.warning1),
     warning2: intl.formatMessage(messages.warning2),
