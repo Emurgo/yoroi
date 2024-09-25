@@ -20,11 +20,9 @@ import {useWalletManager} from '../../context/WalletManagerProvider'
 import {SupportIllustration} from '../../illustrations/SupportIllustration'
 import {AggregatedBalance} from './AggregatedBalance'
 import {WalletListItem} from './WalletListItem'
-import {useNotifications} from '../../../Notifications/useCases/common/hooks'
 
 export const SelectWalletFromList = () => {
   useLinksRequestWallet()
-  useNotifications()
   const {styles, colors} = useStyles()
   const {walletManager} = useWalletManager()
   const {navigateToTxHistory} = useWalletNavigation()

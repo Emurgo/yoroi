@@ -8,6 +8,9 @@ import {merge, Subject, switchMap} from 'rxjs'
 import uuid from 'uuid'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useEffect} from 'react'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import * as BackgroundFetch from 'expo-background-fetch'
+import * as TaskManager from 'expo-task-manager'
 
 export const useRequestPermissions = () => {
   React.useEffect(() => {
@@ -23,8 +26,17 @@ export const useHandleNotification = () => {
         completion({alert: true, sound: true, badge: true})
       },
     )
+
+    const s2 = Notifications.events().registerNotificationReceivedBackground(
+      (notification: Notification, completion) => {
+        console.log(`Notification received in background: ${notification.title} : ${notification.body}`)
+        // completion({alert: true, sound: true, badge: true})
+      },
+    )
+
     return () => {
       s.remove()
+      s2.remove()
     }
   }, [])
 }
@@ -169,57 +181,90 @@ export const useNotifications = () => {
   }, [manager, send])
 }
 
+const BACKGROUND_FETCH_TASK = 'background-fetch'
+
+TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
+  const now = Date.now()
+
+  console.log(`Got background fetch call at date: ${new Date(now).toISOString()}`)
+
+  // Be sure to return the successful result type!
+  return BackgroundFetch.BackgroundFetchResult.NewData
+})
+
+// 2. Register the task at some point in your app by providing the same name,
+// and some configuration options for how the background fetch should behave
+// Note: This does NOT need to be in the global scope and CAN be used in your React components!
+async function registerBackgroundFetchAsync() {
+  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
+    minimumInterval: 60 * 15, // 15 minutes
+    stopOnTerminate: false, // android only,
+    startOnBoot: true, // android only
+  })
+}
+
+// 3. (Optional) Unregister tasks by specifying the task name
+// This will cancel any future background fetch calls that match the given name
+// Note: This does NOT need to be in the global scope and CAN be used in your React components!
+async function unregisterBackgroundFetchAsync() {
+  return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK)
+}
+
 const useTransactionReceivedNotificationSubject = () => {
   const {walletManager} = useWalletManager()
   const asyncStorage = useAsyncStorage()
   const notificationsAsyncStorage = asyncStorage.join('notifications-transacrion-received-subject/')
   const [transactionReceivedSubject] = React.useState(new Subject<NotificationTypes.TransactionReceivedEvent>())
 
-  useEffect(() => {
+  React.useEffect(() => {
+    registerBackgroundFetchAsync()
+    return () => {
+      unregisterBackgroundFetchAsync()
+    }
+  }, [])
+
+  React.useEffect(() => {
     const s1 = walletManager.syncWalletInfos$.subscribe(async (status) => {
       const walletInfos = Array.from(status.values())
       const walletsDoneSyncing = walletInfos.filter((info) => info.status === 'done')
+      const areAllDone = walletsDoneSyncing.length === walletInfos.length
+      if (!areAllDone) return
 
-      console.log('walletsDoneSyncing', walletsDoneSyncing)
+      console.log(
+        'all wallets done syncing',
+        walletInfos.map((info) => info.id),
+      )
+
       for (const info of walletsDoneSyncing) {
+        console.log('wallet done syncing', info.id)
         const walletId = info.id
         const processed = (await notificationsAsyncStorage.getItem<string[]>(walletId)) || []
         const wallet = walletManager.getWalletById(walletId)
-        if (!wallet) return
-        const utxos = wallet.allUtxos
+        if (!wallet) continue
+        const txIds = getTxIds(wallet)
 
-        console.log('processed', processed)
         if (processed.length === 0) {
-          await notificationsAsyncStorage.setItem(
-            walletId,
-            utxos.map((utxo) => utxo.utxo_id),
-          )
-          return
+          console.log(`Wallet ${walletId} has no processed tx ids`)
+          await notificationsAsyncStorage.setItem(walletId, txIds)
+          continue
         }
-        const newUtxos = utxos.filter((utxo) => !processed.includes(utxo.utxo_id))
-        if (newUtxos.length === 0) return
-        console.log('newUtxos', newUtxos)
-        const newIds = newUtxos.map((utxo) => utxo.utxo_id)
-        await notificationsAsyncStorage.setItem(walletId, [...processed, ...newIds])
-        newUtxos.forEach((utxo) => {
+        const newTxIds = txIds.filter((txId) => !processed.includes(txId))
+        if (newTxIds.length === 0) {
+          console.log(`Wallet ${walletId} has no new tx ids`)
+          continue
+        }
+        console.log('new tx ids', newTxIds)
+        await notificationsAsyncStorage.setItem(walletId, [...processed, ...newTxIds])
+        newTxIds.forEach((id) => {
           const metadata: NotificationTypes.TransactionReceivedEvent['metadata'] = {
-            walletId,
-            txId: utxo.tx_hash,
-            amount: utxo.amount,
+            txId: id,
             isSentByUser: false,
             nextTxsCounter: 1,
             previousTxsCounter: 0,
           }
-          transactionReceivedSubject.next({
-            id: uuid.v4(),
-            date: new Date().toISOString(),
-            isRead: false,
-            trigger: NotificationTypes.Trigger.TransactionReceived,
-            metadata,
-          })
+          transactionReceivedSubject.next(createTransactionReceivedNotification(metadata))
         })
       }
-      // console.log('syncWalletInfos', {status})
     })
 
     return () => {
@@ -227,6 +272,16 @@ const useTransactionReceivedNotificationSubject = () => {
     }
   }, [])
   return transactionReceivedSubject
+}
+
+const createTransactionReceivedNotification = (metadata: NotificationTypes.TransactionReceivedEvent['metadata']) => {
+  return {
+    id: uuid.v4(),
+    date: new Date().toISOString(),
+    isRead: false,
+    trigger: NotificationTypes.Trigger.TransactionReceived,
+    metadata,
+  } as const
 }
 
 const useRewardsUpdatedNotificationSubject = () => {
@@ -239,4 +294,9 @@ const usePrimaryTokenPriceChangedNotificationSubject = () => {
     new Subject<NotificationTypes.PrimaryTokenPriceChangedEvent>(),
   )
   return primaryTokenPriceChangedSubject
+}
+
+const getTxIds = (wallet: YoroiWallet) => {
+  const ids = wallet.allUtxos.map((utxo) => utxo.tx_hash)
+  return [...new Set(ids)]
 }
