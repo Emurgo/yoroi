@@ -107,8 +107,6 @@ export const Overview = () => {
           </View>
 
           <Spacer height={16} />
-
-          <View style={styles.divider} />
         </View>
       </Accordion>
 
@@ -167,11 +165,6 @@ const useStyles = () => {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
       color: color.gray_900,
-    },
-    divider: {
-      ...atoms.flex_1,
-      height: 1,
-      backgroundColor: color.gray_200,
     },
     copyButton: {
       ...atoms.flex_1,
