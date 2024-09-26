@@ -1,14 +1,11 @@
 import * as React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-type Props = {
-  size?: number
-  color?: string
-}
+import {IconProps} from '.'
 
-export const MultiParty = ({size = 40, color = '#242838', ...props}: Props) => {
+export const MultiParty = ({size = 40, color = '#242838'}: IconProps) => {
   return (
-    <Svg width={size} height={size} viewBox="0 0 40 40" fill="none" {...props}>
+    <Svg width={size} height={size} viewBox="0 0 40 40" fill="none">
       <Path
         fillRule="evenodd"
         clipRule="evenodd"

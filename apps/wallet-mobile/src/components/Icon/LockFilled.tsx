@@ -1,12 +1,9 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-type Props = {
-  size?: number
-  color?: string
-}
+import {IconProps} from '.'
 
-export const LockFilled = ({size = 16, color = 'black'}: Props) => (
+export const LockFilled = ({size = 16, color = 'black'}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 16 16">
     <Path
       fillRule="evenodd"

@@ -4,7 +4,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {Button, ButtonType} from '../../../components/Button/NewButton'
 import {SafeArea} from '../../../components/SafeArea'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
@@ -28,11 +28,11 @@ export const FailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={navigateTo.buyAda} title={strings.buyAda} shelleyTheme />
+      <Button onPress={navigateTo.buyAda} title={strings.buyAda} />
 
       <Space height="lg" />
 
-      <Button onPress={navigateTo.main} title={strings.goToMain} textStyles={styles.outlineText} outline />
+      <Button type={ButtonType.Text} onPress={navigateTo.main} title={strings.goToMain} />
     </SafeArea>
   )
 }
@@ -85,9 +85,6 @@ const useStyles = () => {
       ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 330,
-    },
-    outlineText: {
-      color: color.primary_500,
     },
   })
   return styles

@@ -6,10 +6,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button/Button'
 import {Checkbox} from '../../../../components/Checkbox/Checkbox'
+import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
 import {ShareQRCodeCard} from '../../../../components/ShareQRCodeCard/ShareQRCodeCard'
 import {Space} from '../../../../components/Space/Space'
 import {useAllowScreenshot} from '../../../../hooks/useAllowScreenShot'
-import {useCopy} from '../../../../hooks/useCopy'
 import {useBlockGoBack} from '../../../../kernel/navigation'
 import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description} from '../../common/components'
@@ -26,8 +26,7 @@ export const QrCode = () => {
 
   if (votingKeyEncrypted === null) throw new Error('votingKeyEncrypted cannot be null')
 
-  const [isCopying, copy] = useCopy()
-  const handleOnCopy = () => copy(votingKeyEncrypted)
+  const {copy, isCopying} = useCopy()
 
   const onNext = () => {
     navigateTo.txHistory()
@@ -44,9 +43,8 @@ export const QrCode = () => {
           title={strings.step4QrTitle}
           qrContent={votingKeyEncrypted}
           shareContent={votingKeyEncrypted}
-          onLongPress={handleOnCopy}
+          onLongPress={(event) => copy({text: votingKeyEncrypted, feedback: strings.step4QrCopiedText, event})}
           shareLabel={strings.step4QrShareLabel}
-          copiedText={strings.step4QrCopiedText}
         />
 
         <Space height="lg" />

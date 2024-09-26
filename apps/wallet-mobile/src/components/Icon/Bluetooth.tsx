@@ -1,14 +1,11 @@
 import * as React from 'react'
-import Svg, {Path, SvgProps} from 'react-native-svg'
+import Svg, {Path} from 'react-native-svg'
 
-type Props = SvgProps & {
-  color?: string
-  size?: number
-}
+import {IconProps} from '.'
 
-export const Bluetooth = ({color = '#4B6DDE', size = 25, ...props}: Props) => {
+export const Bluetooth = ({color = '#4B6DDE', size = 25}: IconProps) => {
   return (
-    <Svg width={size} height={size} viewBox="0 0 25 25" fill="none" {...props}>
+    <Svg width={size} height={size} viewBox="0 0 25 25" fill="none">
       <Path
         fillRule="evenodd"
         clipRule="evenodd"

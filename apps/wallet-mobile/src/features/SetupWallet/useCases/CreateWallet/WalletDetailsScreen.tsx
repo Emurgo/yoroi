@@ -190,7 +190,7 @@ export const WalletDetailsScreen = () => {
               closeModal()
               showRestoreWalletInfoModalChanged(false)
             }}
-            testId="setup-modal-continue-button"
+            testID="setup-modal-continue-button"
           />
         </View>
       </View>,

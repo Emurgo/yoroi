@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Dimensions, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
@@ -44,11 +44,9 @@ export const BuyBannerBig = () => {
 
         <Button
           testID="rampOnOffButton"
-          mainTheme
+          size="S"
           title={strings.buyCrypto.toLocaleUpperCase()}
           onPress={handleExchange}
-          style={styles.spaceButton}
-          textStyles={styles.spaceButtonText}
         />
       </LinearGradient>
     </View>
@@ -70,9 +68,6 @@ const useStyles = () => {
       flexDirection: 'column',
       alignItems: 'center',
     },
-    spaceButtonText: {
-      ...atoms.p_0,
-    },
     label: {
       ...atoms.heading_3_medium,
       color: color.gray_max,
@@ -83,9 +78,6 @@ const useStyles = () => {
       ...atoms.px_2xl,
       color: color.gray_max,
       textAlign: 'center',
-    },
-    spaceButton: {
-      ...atoms.px_lg,
     },
   })
   const colors = {

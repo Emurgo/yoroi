@@ -1,11 +1,9 @@
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-type Props = {
-  size?: number
-}
+import {IconProps} from '.'
 
-export const MuesliSwap = ({size = 36}: Props) => (
+export const MuesliSwap = ({size = 36}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 36 36">
     <G fill="none" fillRule="evenodd">
       <Path

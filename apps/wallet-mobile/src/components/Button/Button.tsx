@@ -1,30 +1,19 @@
-import {isNumber} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import React, {type ReactNode} from 'react'
-import {Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
+import React from 'react'
+import {StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
 
 import {Text} from '../Text'
 
-export type ButtonProps = TouchableOpacityProps & {
+export type ButtonProps = {
   title: string
-  outline?: boolean
   outlineOnLight?: boolean
   containerStyle?: ViewStyle
   block?: boolean
-  iconImage?: number | ReactNode
-  withoutBackground?: boolean
   shelleyTheme?: boolean
-  mainTheme?: boolean
   warningTheme?: boolean
   outlineShelley?: boolean
   textStyles?: TextStyle
-  isCopying?: boolean
-  copiedText?: string
-  testId?: string
-  startContent?: ReactNode
-  endContent?: ReactNode
-}
+} & TouchableOpacityProps
 
 export const Button = (props: ButtonProps) => {
   const {
@@ -33,59 +22,28 @@ export const Button = (props: ButtonProps) => {
     block,
     style,
     containerStyle,
-    outline,
     outlineOnLight,
-    iconImage,
-    withoutBackground,
     shelleyTheme,
-    mainTheme,
     outlineShelley,
     textStyles,
-    isCopying,
-    copiedText,
-    testId,
-    startContent,
-    endContent,
-    warningTheme,
     ...rest
   } = props
 
   const {styles} = useStyles()
-  const {isDark} = useTheme()
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[block && styles.block, containerStyle]}
-      activeOpacity={0.5}
-      testID={testId}
-      {...rest}
-    >
-      {isCopying && (
-        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-          <Text style={styles.copiedText}>{copiedText}</Text>
-        </Animated.View>
-      )}
-
+    <TouchableOpacity onPress={onPress} style={[block && styles.block, containerStyle]} activeOpacity={0.5} {...rest}>
       <View
         style={[
           styles.button,
-          outline && styles.buttonOutline,
           outlineOnLight && styles.buttonOutlineOnLight,
           props.disabled && styles.buttonDisabled,
-          withoutBackground && styles.buttonTransparent,
           outlineShelley && styles.buttonOutlineShelley,
           shelleyTheme && styles.shelleyTheme,
-          mainTheme && styles.mainTheme,
-          warningTheme && styles.warningTheme,
           outlineOnLight && shelleyTheme && styles.shelleyOutlineOnLight,
           style,
         ]}
       >
-        {isNumber(iconImage) ? <Image source={iconImage} /> : React.isValidElement(iconImage) ? iconImage : null}
-
-        {startContent != null ? startContent : null}
-
         <Text
           style={[
             styles.text,
@@ -93,14 +51,11 @@ export const Button = (props: ButtonProps) => {
             outlineOnLight && shelleyTheme && styles.textShelleyOutlineOnLight,
             outlineShelley && styles.textOutlineShelley,
             props.disabled && !outlineOnLight && styles.buttonDisabledText,
-            warningTheme && isDark && styles.warningThemeText,
             textStyles,
           ]}
         >
           {title}
         </Text>
-
-        {endContent != null ? endContent : null}
       </View>
     </TouchableOpacity>
   )
@@ -126,15 +81,6 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    buttonTransparent: {
-      backgroundColor: 'transparent',
-    },
-    buttonOutline: {
-      ...buttonOutline,
-    },
-    mainTheme: {
-      backgroundColor: color.primary_500,
     },
     buttonOutlineOnLight: {
       ...buttonOutline,
@@ -174,28 +120,6 @@ const useStyles = () => {
     textShelleyOutlineOnLight: {
       color: color.primary_600,
       fontWeight: '600',
-    },
-    isCopying: {
-      position: 'absolute',
-      backgroundColor: color.gray_max,
-      alignItems: 'center',
-      justifyContent: 'center',
-      top: -50,
-      alignSelf: 'center',
-      borderRadius: 4,
-      zIndex: 10,
-    },
-    copiedText: {
-      color: color.gray_min,
-      textAlign: 'center',
-      ...atoms.p_sm,
-      ...atoms.body_2_md_medium,
-    },
-    warningTheme: {
-      backgroundColor: color.sys_magenta_500,
-    },
-    warningThemeText: {
-      color: color.gray_min,
     },
   })
 

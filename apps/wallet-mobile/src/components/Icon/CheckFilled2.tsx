@@ -1,12 +1,9 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-type Props = {
-  size?: number
-  color?: string
-}
+import {IconProps} from '.'
 
-export const CheckFilled2 = ({size = 20, color}: Props) => (
+export const CheckFilled2 = ({size = 20, color}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 20 20">
     <Path
       d="M14.707 8.707a1 1 0 00-1.414-1.414L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l5-5z"

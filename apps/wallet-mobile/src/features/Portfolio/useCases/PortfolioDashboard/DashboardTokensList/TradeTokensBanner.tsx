@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {TradeTokensAsset} from './TradeTokensAsset'
@@ -22,13 +22,7 @@ export const TradeTokensBanner = () => {
       <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
         <Text style={styles.title}>{strings.tradeTokens}</Text>
 
-        <Button
-          mainTheme
-          title={strings.swap.toLocaleUpperCase()}
-          style={styles.spaceButton}
-          textStyles={styles.spaceButtonText}
-          onPress={handleSwap}
-        />
+        <Button title={strings.swap} onPress={handleSwap} />
 
         <View style={styles.assetBox}>
           <TradeTokensAsset />
@@ -55,13 +49,6 @@ const useStyles = () => {
       ...atoms.relative,
       ...atoms.overflow_hidden,
       backgroundColor: color.bg_color_max,
-    },
-    spaceButtonText: {
-      ...atoms.p_0,
-    },
-    spaceButton: {
-      ...atoms.px_lg,
-      minHeight: 40,
     },
     title: {
       ...atoms.body_1_lg_medium,

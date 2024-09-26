@@ -157,15 +157,11 @@ const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
   )
 }
 
-const MetadataRow = ({title, copyText, children}: {title: string; children: ReactNode; copyText?: string}) => {
+const MetadataRow = ({title, children}: {title: string; children: ReactNode}) => {
   const styles = useStyles()
   return (
     <View style={styles.rowContainer}>
-      <View style={styles.rowBetween}>
-        <Text style={styles.title}>{title}</Text>
-
-        {copyText !== undefined ? <CopyButton value={copyText} /> : null}
-      </View>
+      <Text style={styles.title}>{title}</Text>
 
       <Spacer height={4} />
 
@@ -195,12 +191,12 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
         <Text style={styles.name}>{normalizeMetadataString(info.description)}</Text>
       </MetadataRow>
 
-      <MetadataRow title={strings.fingerprint} copyText={info.fingerprint}>
-        <Text style={styles.name}>{info.fingerprint}</Text>
+      <MetadataRow title={strings.fingerprint}>
+        <CopyButton title={info.fingerprint} value={info.fingerprint} />
       </MetadataRow>
 
-      <MetadataRow title={strings.policyId} copyText={policyId}>
-        <Text style={styles.name}>{policyId}</Text>
+      <MetadataRow title={strings.policyId}>
+        <CopyButton title={policyId} value={policyId} />
       </MetadataRow>
 
       {traits?.traits.map((trait) => (
@@ -272,9 +268,7 @@ const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
   return (
     <View>
       <View style={styles.copyMetadata}>
-        <CopyButton value={stringifiedMetadata} style={styles.copyButton}>
-          <Text style={styles.copyText}>{strings.copyMetadata}</Text>
-        </CopyButton>
+        <CopyButton title={strings.copyMetadata} value={stringifiedMetadata} style={styles.copyButton} />
       </View>
 
       <Spacer height={14} />
@@ -306,11 +300,6 @@ const useStyles = () => {
       ...atoms.body_1_lg_regular,
       flex: 1,
       textDecorationLine: 'underline',
-    },
-    copyText: {
-      color: color.gray_900,
-      ...atoms.body_2_md_medium,
-      textTransform: 'uppercase',
     },
     container: {
       flex: 1,

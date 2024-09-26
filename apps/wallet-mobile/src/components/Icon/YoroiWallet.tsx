@@ -1,15 +1,11 @@
-import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import Svg, {G, Path, Polygon} from 'react-native-svg'
 
-type Props = {width?: number; height?: number; color?: string}
+import {IconProps} from '.'
 
-export const YoroiWallet = (props: Props) => {
-  const {color: colors} = useTheme()
-  const {width = 210, height = 60, color = colors.white_static} = props
-
+export const YoroiWallet = ({color = 'white', size = 210}: IconProps) => {
   return (
-    <Svg width={width} height={height} viewBox="0 0 210 60">
+    <Svg width={size} height={size / 3.5} viewBox="0 0 210 60">
       <G id="logo-yoroi" fill="none">
         <G id="logo">
           <G id="Group">

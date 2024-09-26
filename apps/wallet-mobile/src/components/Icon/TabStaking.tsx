@@ -1,9 +1,9 @@
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-type Props = {size?: number; color?: string}
+import {IconProps} from '.'
 
-export const TabStaking = ({size = 24, color = '#6B7384'}: Props) => (
+export const TabStaking = ({size = 24, color = '#6B7384'}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 24 24">
     <G stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <G transform="translate(2.751854, 2.000000)" fill={color} fillRule="nonzero">

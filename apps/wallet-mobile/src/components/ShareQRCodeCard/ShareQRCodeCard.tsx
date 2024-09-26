@@ -1,10 +1,16 @@
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
-import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
@@ -16,24 +22,20 @@ type ShareQRCodeCardProps = {
   qrContent: string
   shareContent: string
   title: string
-  isCopying?: boolean
-  onLongPress: () => void
-  testId?: string
+  onLongPress: (event: GestureResponderEvent) => void
+  testID?: string
   onShare?: () => void
   shareLabel: string
-  copiedText: string
 }
 
 export const ShareQRCodeCard = ({
   qrContent,
   shareContent,
   title,
-  isCopying,
   onLongPress,
-  testId,
+  testID,
   onShare,
   shareLabel,
-  copiedText,
 }: ShareQRCodeCardProps) => {
   const {styles, colors, qrSize} = useStyles()
 
@@ -84,12 +86,12 @@ export const ShareQRCodeCard = ({
 
           <Spacer height={16} />
 
-          <Text style={styles.title} testID={`${testId}-title`}>
+          <Text style={styles.title} testID={`${testID}-title`}>
             {title}
           </Text>
 
           <View style={styles.addressContainer}>
-            <View style={styles.qrCode} testID={`${testId}-qr`}>
+            <View style={styles.qrCode} testID={`${testID}-qr`}>
               <QRCode value={qrContent} size={qrSize} backgroundColor={colors.white} color={colors.black} />
             </View>
 
@@ -102,12 +104,6 @@ export const ShareQRCodeCard = ({
             <Text style={styles.textShareAddress}>{shareLabel}</Text>
           </TouchableOpacity>
         </View>
-
-        {isCopying && (
-          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-            <Text style={styles.copiedText}>{copiedText}</Text>
-          </Animated.View>
-        )}
       </>
     </TouchableWithoutFeedback>
   )
@@ -152,22 +148,6 @@ const useStyles = () => {
       ...atoms.button_2_md,
       textTransform: 'uppercase',
       letterSpacing: 0.5,
-    },
-    copiedText: {
-      color: color.gray_min,
-      textAlign: 'center',
-      padding: 8,
-      ...atoms.body_2_md_medium,
-    },
-    isCopying: {
-      position: 'absolute',
-      backgroundColor: color.gray_max,
-      alignItems: 'center',
-      justifyContent: 'center',
-      bottom: 60,
-      alignSelf: 'center',
-      borderRadius: 4,
-      zIndex: 10,
     },
   })
 

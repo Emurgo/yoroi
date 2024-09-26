@@ -308,7 +308,7 @@ export const RestoreWalletDetailsScreen = () => {
                 accountVisual,
               })
             }
-            testId="setup-restore-step2-next-button"
+            testID="setup-restore-step2-next-button"
             disabled={disabled}
           />
         </View>

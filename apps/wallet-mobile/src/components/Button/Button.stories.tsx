@@ -1,100 +1,252 @@
-import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import icon from '../../assets/img/icon/dashboard.png'
+import {Accordion} from '../Accordion/Accordion'
 import {Icon} from '../Icon'
-import {Button} from './Button'
+import {Button, ButtonType} from './NewButton'
 
 storiesOf('Button', module).add('default', () => {
   const {color, isDark, selectThemeName} = useTheme()
+  const [expanded, setExpanded] = React.useState<ButtonType | null>(ButtonType.Primary)
 
   return (
-    <ScrollView style={{backgroundColor: color.bg_color_max}}>
-      <Row>
+    <ScrollView style={{backgroundColor: color.bg_color_max, padding: 16}}>
+      <Grid>
         <Button
           onPress={() => {
             selectThemeName(isDark ? 'default-light' : 'default-dark')
           }}
-          title="Toggle theme"
+          icon={Icon.Theme}
         />
-      </Row>
 
-      <Row>
-        <Button onPress={() => action('onPress')()} title="Submit" />
-      </Row>
+        <View style={{flexDirection: 'row', gap: 16, paddingVertical: 16}}>
+          <Button type={ButtonType.Secondary} title="Cancel" />
 
-      <Row>
-        <Button block onPress={() => action('onPress')()} title="submit" />
-      </Row>
+          <Button title="Continue" icon={Icon.Bluetooth} />
+        </View>
+      </Grid>
 
-      <Row>
-        <Button block shelleyTheme onPress={() => action('onPress')()} title="Submit" />
-      </Row>
+      <Accordion
+        label={ButtonType.Primary}
+        expanded={expanded === ButtonType.Primary}
+        onChange={() => setExpanded(expanded === ButtonType.Primary ? null : ButtonType.Primary)}
+      >
+        <Grid>
+          <Button title="Button" />
 
-      <Row>
-        <Button outlineOnLight block shelleyTheme onPress={() => action('onPress')()} title="Submit" />
-      </Row>
+          <Button title="Button" isLoading />
 
-      <Row>
-        <Button outlineOnLight block shelleyTheme disabled onPress={() => action('onPress')()} title="Submit" />
-      </Row>
+          <Button title="Button" disabled />
+        </Grid>
 
-      <Row>
-        <Button block outlineShelley outlineOnLight disabled onPress={() => action('onPress')()} title="Submit" />
-      </Row>
+        <Grid>
+          <Button title="Button" icon={Icon.Clock} />
 
-      <Row>
-        <Button outlineOnLight block onPress={() => action('onPress')()} title="Submit" />
-      </Row>
+          <Button title="Button" icon={Icon.Clock} disabled />
+        </Grid>
 
-      <Row>
-        <Button
-          outlineShelley
-          withoutBackground
-          shelleyTheme
-          block
-          onPress={() => action('onPress')()}
-          title="Submit"
-        />
-      </Row>
+        <Grid>
+          <Button title="Button" size="S" />
 
-      <Row>
-        <Button block shelleyTheme iconImage={icon} onPress={() => action('onPress')()} title="Submit, with image" />
-      </Row>
+          <Button title="Button" size="S" isLoading />
 
-      <Row>
-        <Button
-          block
-          shelleyTheme
-          startContent={<Icon.Plus size={24} color="white" />}
-          onPress={() => action('onPress')()}
-          title="Submit, with start content"
-        />
-      </Row>
+          <Button title="Button" size="S" disabled />
+        </Grid>
 
-      <Row>
-        <Button
-          block
-          shelleyTheme
-          endContent={<Icon.Plus size={24} color="white" />}
-          onPress={() => action('onPress')()}
-          title="Submit, with end content"
-        />
-      </Row>
+        <Grid>
+          <Button title="Button" size="S" icon={Icon.Clock} />
+
+          <Button title="Button" size="S" icon={Icon.Clock} disabled />
+        </Grid>
+      </Accordion>
+
+      <Accordion
+        label={ButtonType.Secondary}
+        expanded={expanded === ButtonType.Secondary}
+        onChange={() => setExpanded(expanded === ButtonType.Secondary ? null : ButtonType.Secondary)}
+      >
+        <Grid>
+          <Button title="Button" type={ButtonType.Secondary} />
+
+          <Button title="Button" type={ButtonType.Secondary} isLoading />
+
+          <Button title="Button" type={ButtonType.Secondary} disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.Secondary} icon={Icon.Clock} />
+
+          <Button title="Button" type={ButtonType.Secondary} icon={Icon.Clock} disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.Secondary} size="S" />
+
+          <Button title="Button" type={ButtonType.Secondary} size="S" isLoading />
+
+          <Button title="Button" type={ButtonType.Secondary} size="S" disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.Secondary} size="S" icon={Icon.Clock} />
+
+          <Button title="Button" type={ButtonType.Secondary} size="S" icon={Icon.Clock} disabled />
+        </Grid>
+      </Accordion>
+
+      <Accordion
+        label={ButtonType.Critical}
+        expanded={expanded === ButtonType.Critical}
+        onChange={() => setExpanded(expanded === ButtonType.Critical ? null : ButtonType.Critical)}
+      >
+        <Grid>
+          <Button title="Button" type={ButtonType.Critical} />
+
+          <Button title="Button" type={ButtonType.Critical} isLoading />
+
+          <Button title="Button" type={ButtonType.Critical} disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.Critical} icon={Icon.Clock} />
+
+          <Button title="Button" type={ButtonType.Critical} icon={Icon.Clock} disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.Critical} size="S" />
+
+          <Button title="Button" type={ButtonType.Critical} size="S" isLoading />
+
+          <Button title="Button" type={ButtonType.Critical} size="S" disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.Critical} size="S" icon={Icon.Clock} />
+
+          <Button title="Button" type={ButtonType.Critical} size="S" icon={Icon.Clock} disabled />
+        </Grid>
+      </Accordion>
+
+      <Accordion
+        label={ButtonType.Text}
+        expanded={expanded === ButtonType.Text}
+        onChange={() => setExpanded(expanded === ButtonType.Text ? null : ButtonType.Text)}
+      >
+        <Grid>
+          <Button title="Button" type={ButtonType.Text} />
+
+          <Button title="Button" type={ButtonType.Text} isLoading />
+
+          <Button title="Button" type={ButtonType.Text} disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.Text} icon={Icon.Clock} />
+
+          <Button title="Button" type={ButtonType.Text} icon={Icon.Clock} rightIcon />
+
+          <Button title="Button" type={ButtonType.Text} icon={Icon.Clock} disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.Text} size="S" />
+
+          <Button title="Button" type={ButtonType.Text} size="S" isLoading />
+
+          <Button title="Button" type={ButtonType.Text} size="S" disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.Text} size="S" icon={Icon.Clock} />
+
+          <Button title="Button" type={ButtonType.Text} size="S" icon={Icon.Clock} rightIcon />
+
+          <Button title="Button" type={ButtonType.Text} size="S" icon={Icon.Clock} disabled />
+        </Grid>
+      </Accordion>
+
+      <Accordion
+        label={ButtonType.SecondaryText}
+        expanded={expanded === ButtonType.SecondaryText}
+        onChange={() => setExpanded(expanded === ButtonType.SecondaryText ? null : ButtonType.SecondaryText)}
+      >
+        <Grid>
+          <Button title="Button" type={ButtonType.SecondaryText} />
+
+          <Button title="Button" type={ButtonType.SecondaryText} isLoading />
+
+          <Button title="Button" type={ButtonType.SecondaryText} disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.SecondaryText} icon={Icon.Clock} />
+
+          <Button title="Button" type={ButtonType.SecondaryText} icon={Icon.Clock} rightIcon />
+
+          <Button title="Button" type={ButtonType.SecondaryText} icon={Icon.Clock} disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.SecondaryText} size="S" />
+
+          <Button title="Button" type={ButtonType.SecondaryText} size="S" isLoading />
+
+          <Button title="Button" type={ButtonType.SecondaryText} size="S" disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.SecondaryText} size="S" icon={Icon.Clock} />
+
+          <Button title="Button" type={ButtonType.SecondaryText} size="S" icon={Icon.Clock} rightIcon />
+
+          <Button title="Button" type={ButtonType.SecondaryText} size="S" icon={Icon.Clock} disabled />
+        </Grid>
+      </Accordion>
+
+      <Accordion
+        label={ButtonType.Circle}
+        expanded={expanded === ButtonType.Circle}
+        onChange={() => setExpanded(expanded === ButtonType.Circle ? null : ButtonType.Circle)}
+      >
+        <Grid>
+          <Button title="Button" type={ButtonType.Circle} icon={Icon.Clock} />
+
+          <Button title="Button" type={ButtonType.Circle} icon={Icon.Clock} disabled />
+        </Grid>
+      </Accordion>
+
+      <Accordion
+        label={ButtonType.Link}
+        expanded={expanded === ButtonType.Link}
+        onChange={() => setExpanded(expanded === ButtonType.Link ? null : ButtonType.Link)}
+      >
+        <Grid>
+          <Button title="Button" type={ButtonType.Link} />
+
+          <Button title="Button" type={ButtonType.Link} disabled />
+        </Grid>
+
+        <Grid>
+          <Button title="Button" type={ButtonType.Link} size="S" />
+
+          <Button title="Button" type={ButtonType.Link} size="S" disabled />
+        </Grid>
+      </Accordion>
     </ScrollView>
   )
 })
 
-const Row = (props: ViewProps) => <View {...props} style={styles.row} />
+const Grid = (props: ViewProps) => <View {...props} style={styles.grid} />
 
 const styles = StyleSheet.create({
-  row: {
+  grid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
+    paddingVertical: 16,
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
   },
 })

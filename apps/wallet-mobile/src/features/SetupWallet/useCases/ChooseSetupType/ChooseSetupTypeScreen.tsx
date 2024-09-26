@@ -64,7 +64,7 @@ export const ChooseSetupTypeScreen = () => {
             title={strings.createWalletButtonCard}
             icon={<CreateWallet style={styles.icon} />}
             onPress={handleCreate}
-            testId="setup-create-new-wallet-button"
+            testID="setup-create-new-wallet-button"
           />
 
           <Space height="lg" />
@@ -73,7 +73,7 @@ export const ChooseSetupTypeScreen = () => {
             title={strings.restoreWalletButtonCard}
             icon={<RestoreWallet style={styles.icon} />}
             onPress={handleRestore}
-            testId="setup-restore-wallet-button"
+            testID="setup-restore-wallet-button"
           />
 
           <Space height="lg" />
@@ -82,7 +82,7 @@ export const ChooseSetupTypeScreen = () => {
             title={strings.connectWalletButtonCard}
             icon={<HardwareWallet style={styles.icon} />}
             onPress={handleHw}
-            testId="setup-connect-HW-wallet-button"
+            testID="setup-connect-HW-wallet-button"
           />
 
           <Space height="lg" />

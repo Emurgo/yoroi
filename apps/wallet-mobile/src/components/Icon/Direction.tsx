@@ -6,14 +6,10 @@ import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types/o
 import {Received} from '../Icon/Received'
 import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'
+import {IconProps} from '.'
 import {MultiParty} from './MultiParty'
 
-type Props = {
-  transaction: TransactionInfo
-  size?: number
-}
-
-export const Direction = ({transaction, size = defaultSize}: Props) => {
+export const Direction = ({transaction, size = defaultSize}: IconProps & {transaction: TransactionInfo}) => {
   const {color} = useTheme()
   const {direction} = transaction
 

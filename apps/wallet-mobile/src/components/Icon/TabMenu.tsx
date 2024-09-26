@@ -1,12 +1,9 @@
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-type Props = {
-  size?: number
-  color?: string
-}
+import {IconProps} from '.'
 
-export const TabMenu = ({size = 36, color = 'black'}: Props) => (
+export const TabMenu = ({size = 36, color = 'black'}: IconProps) => (
   <Svg width={size} height={size - 1} viewBox="0 0 25 24" fill="none">
     <G fill={color}>
       <Path d="M7.125 7a1 1 0 000 2h10a1 1 0 100-2h-10zM6.125 12a1 1 0 011-1h10a1 1 0 110 2h-10a1 1 0 01-1-1zM7.125 15a1 1 0 100 2h10a1 1 0 100-2h-10z" />

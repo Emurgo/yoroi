@@ -4,13 +4,12 @@ import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Chain} from '@yoroi/types'
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
+import {GestureResponderEvent, StyleSheet, TouchableOpacity, View} from 'react-native'
 
+import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
-import {useCopy} from '../../../../hooks/useCopy'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {useReceive} from '../../../Receive/common/ReceiveProvider'
@@ -30,7 +29,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {isSingle, addressMode} = useAddressMode()
   const {next: nextReceiveAddress, used: usedAddresses} = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
-  const [isCopying, copy] = useCopy()
+  const {copy} = useCopy()
   const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
 
   const {reset: resetSendState} = useTransfer()
@@ -102,9 +101,9 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     navigateTo.receiveSingleAddress()
   }
 
-  const handleOnLongPressReceive = () => {
+  const handleOnLongPressReceive = (event: GestureResponderEvent) => {
     track.receiveCopyAddressClicked({copy_address_location: 'Long Press wallet Address'})
-    copy(nextReceiveAddress)
+    copy({text: nextReceiveAddress, event})
   }
 
   const iconProps = {
@@ -118,12 +117,6 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
       <View style={styles.centralized}>
         <View style={[styles.row, disabled && styles.disabled]}>
-          {isCopying && (
-            <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-              <Text style={styles.textCopy}>{strings.addressCopiedMsg}</Text>
-            </Animated.View>
-          )}
-
           <View style={styles.centralized}>
             <TouchableOpacity
               style={styles.actionIcon}
@@ -222,22 +215,6 @@ const useStyles = () => {
     },
     disabled: {
       opacity: 0.5,
-    },
-    isCopying: {
-      position: 'absolute',
-      backgroundColor: color.gray_max,
-      alignItems: 'center',
-      justifyContent: 'center',
-      top: -40,
-      borderRadius: 4,
-      zIndex: 10,
-      left: -25,
-    },
-    textCopy: {
-      textAlign: 'center',
-      ...atoms.p_sm,
-      ...atoms.body_2_md_medium,
-      color: color.gray_min,
     },
   })
 

@@ -111,7 +111,7 @@ export const VerifyRecoveryPhraseScreen = () => {
 
             navigation.navigate('setup-wallet-details-form')
           }}
-          testId="setup-next-button"
+          testID="setup-next-button"
         />
       </View>
     </SafeAreaView>

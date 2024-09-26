@@ -4,7 +4,7 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
@@ -42,13 +42,7 @@ export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
 
           <Spacer height={8} />
 
-          <Button
-            testID="rampOnOffButton"
-            mainTheme
-            title={strings.buyCrypto.toLocaleUpperCase()}
-            onPress={handleExchange}
-            style={styles.spaceButton}
-          />
+          <Button testID="rampOnOffButton" title={strings.buyCrypto.toLocaleUpperCase()} onPress={handleExchange} />
         </LinearGradient>
       </View>
 
@@ -85,9 +79,6 @@ const useStyles = () => {
     text: {
       ...atoms.body_1_lg_regular,
       color: color.gray_max,
-    },
-    spaceButton: {
-      maxWidth: 100,
     },
   })
   const colors = {

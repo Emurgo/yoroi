@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Image, StyleSheet, Text, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '../../../components/Button/Button'
+import {Button, ButtonType} from '../../../components/Button/NewButton'
 import {Icon} from '../../../components/Icon'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
@@ -139,20 +139,9 @@ export const PoolTransitionModal = ({
       {isScrollBarShown && <View style={styles.line} />}
 
       <Actions>
-        <Button
-          withoutBackground
-          title={strings.skipNoRewards.toLocaleUpperCase()}
-          textStyles={styles.outlineButton}
-          onPress={handleOnSkip}
-        />
+        <Button type={ButtonType.SecondaryText} title={strings.skipNoRewards} onPress={handleOnSkip} />
 
-        <Button
-          shelleyTheme
-          title={strings.updateKeepEarning}
-          onPress={handleOnUpdate}
-          textStyles={styles.button}
-          disabled={isLoading}
-        />
+        <Button title={strings.updateKeepEarning} onPress={handleOnUpdate} disabled={isLoading} />
       </Actions>
 
       <Space height="xl" />
@@ -239,19 +228,11 @@ const useStyles = () => {
     },
     actions: {
       ...atoms.px_lg,
-      alignSelf: 'stretch',
       gap: 4,
     },
     details: {
       ...atoms.body_1_lg_regular,
       color: color.gray_900,
-    },
-    outlineButton: {
-      color: color.gray_900,
-      ...atoms.button_2_md,
-    },
-    button: {
-      ...atoms.button_1_lg,
     },
     arrowDown: {
       ...atoms.flex_1,

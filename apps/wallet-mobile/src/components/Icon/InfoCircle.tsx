@@ -1,12 +1,9 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-type Props = {
-  size?: number
-  color?: string
-}
+import {IconProps} from '.'
 
-export const InfoCircle = ({size = 16, color = '#4B6DDE'}: Props) => (
+export const InfoCircle = ({size = 16, color = '#4B6DDE'}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 16 16">
     <Path
       d="M8 4.665A.667.667 0 0 0 8 6h.007a.667.667 0 0 0 0-1.334zm0 2a.667.667 0 0 0-.667.667v3.333a.667.667 0 0 0 1.334 0V7.332A.667.667 0 0 0 8 6.665"

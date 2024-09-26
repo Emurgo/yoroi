@@ -1,11 +1,9 @@
 import * as React from 'react'
 import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
 
-interface Props {
-  size?: number
-}
+import {IconProps} from '.'
 
-export const NoNfts = ({size = 36}: Props) => (
+export const NoNfts = ({size = 36}: IconProps) => (
   <Svg width={size} height={(size / 143) * 101} viewBox="0 0 143 101">
     <G stroke="#1D45BA" strokeWidth={0.5}>
       <Path d="m48.874 99.14 93.081-53.396M13.553 72.55l86.8-49.851M43.506 16.36l98.019 56.136M1.045 52.942 83.175 100" />

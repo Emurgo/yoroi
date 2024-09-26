@@ -2,13 +2,13 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {GestureResponderEvent, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import Icon from '../../../assets/img/copy.png'
-import {Button} from '../../../components/Button/Button'
+import {Button, ButtonType} from '../../../components/Button/NewButton'
+import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
+import {Icon} from '../../../components/Icon'
 import {useModal} from '../../../components/Modal/ModalContext'
-import {useCopy} from '../../../hooks/useCopy'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
 import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
@@ -26,7 +26,7 @@ import {useStrings} from '../common/useStrings'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
   const {isSingle, addressMode} = useAddressMode()
@@ -37,12 +37,12 @@ export const DescribeSelectedAddressScreen = () => {
 
   const {track} = useMetrics()
 
-  const [isCopying, copy] = useCopy()
+  const {copy} = useCopy()
   const hasAddress = !isEmptyString(selectedAddress)
 
-  const handleOnPressCopy = () => {
+  const onCopy = (event: GestureResponderEvent) => {
     track.receiveCopyAddressClicked({copy_address_location: 'CTA Copy Address'})
-    copy(selectedAddress)
+    copy({text: selectedAddress, feedback: strings.addressCopiedMsg, event})
   }
 
   const handleOnModalConfirm = React.useCallback(
@@ -83,26 +83,17 @@ export const DescribeSelectedAddressScreen = () => {
         </View>
       </ScrollView>
 
-      <Button
-        withoutBackground
-        title={strings.requestSpecificAmountButton}
-        textStyles={{
-          color: colors.requestSpecificAmountTextColor,
-        }}
-        onPress={navigateTo.requestSpecificAmount}
-        disabled={!hasAddress}
-        testID="receive:request-specific-amount-link"
-      />
+      <View style={styles.actions}>
+        <Button
+          type={ButtonType.Text}
+          title={strings.requestSpecificAmountButton}
+          onPress={navigateTo.requestSpecificAmount}
+          disabled={!hasAddress}
+          testID="receive:request-specific-amount-link"
+        />
 
-      <Button
-        shelleyTheme
-        onPress={handleOnPressCopy}
-        disabled={!hasAddress}
-        title={strings.copyAddressButton}
-        iconImage={Icon}
-        isCopying={isCopying}
-        copiedText={strings.addressCopiedMsg}
-      />
+        <Button onPress={onCopy} disabled={!hasAddress} title={strings.copyAddressButton} icon={Icon.Copy} />
+      </View>
     </SafeAreaView>
   )
 }
@@ -120,6 +111,10 @@ const useStyles = () => {
     },
     address: {
       ...atoms.align_center,
+    },
+    actions: {
+      ...atoms.flex_col,
+      ...atoms.gap_sm,
     },
   })
 

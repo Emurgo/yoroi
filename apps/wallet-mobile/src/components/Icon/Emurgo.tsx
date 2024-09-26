@@ -1,14 +1,11 @@
-import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-type Props = {width: number; height: number; color?: string}
+import {IconProps} from '.'
 
-export const Emurgo = (props: Props) => {
-  const {color: colors} = useTheme()
-  const {width, height, color = colors.black_static} = props
+export const Emurgo = ({size = 36, color = 'black'}: IconProps) => {
   return (
-    <Svg viewBox="0 0 1671 626.86401" {...{width, height}}>
+    <Svg viewBox="0 0 1671 626.86401" width={size} height={size}>
       <G transform="matrix(1.3333333,0,0,-1.3333333,0,626.864)" id="g10">
         <G fill={color} id="g12">
           <G fill={color} id="g14">

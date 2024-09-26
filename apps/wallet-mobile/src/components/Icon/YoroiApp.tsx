@@ -1,11 +1,9 @@
 import React from 'react'
 import Svg, {Defs, LinearGradient, Path, Rect, Stop} from 'react-native-svg'
 
-type Props = {
-  size?: number
-}
+import {IconProps} from '.'
 
-export const YoroiApp = ({size = 36}: Props) => {
+export const YoroiApp = ({size = 36}: IconProps) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 49 48" fill="none">
       <Rect x={0.5} width={48} height={48} rx={8} fill="url(#paint0_linear_16084_126466)" />

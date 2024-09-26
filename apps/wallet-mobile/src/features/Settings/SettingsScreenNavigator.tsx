@@ -146,8 +146,8 @@ export const SettingsScreenNavigator = () => {
           options={{
             title: strings.networkTitle,
             headerRight: () => (
-              <TouchableOpacity onPress={handleOpenModal} activeOpacity={0.5}>
-                <Icon.Info size={24} color={color.gray_900} style={{...atoms.px_lg}} />
+              <TouchableOpacity onPress={handleOpenModal} activeOpacity={0.5} style={{...atoms.px_lg}}>
+                <Icon.Info size={24} color={color.gray_900} />
               </TouchableOpacity>
             ),
           }}

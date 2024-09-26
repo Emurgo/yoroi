@@ -246,7 +246,7 @@ export const SaveNanoXScreen = () => {
             shelleyTheme
             title={strings.next}
             onPress={handleOnSubmit}
-            testId="setup-restore-step2-next-button"
+            testID="setup-restore-step2-next-button"
             disabled={disabled}
           />
         </View>

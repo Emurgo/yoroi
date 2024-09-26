@@ -1,14 +1,13 @@
 import * as React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
+import {IconProps} from '.'
+
 export const Chevron = ({
   direction,
-  color,
+  color = 'black',
   size = 40,
-}: {
-  size?: number
-  backgroundColor?: string
-  color?: string
+}: IconProps & {
   direction: 'left' | 'right' | 'up' | 'down'
 }) => {
   const rotate = direction === 'down' ? 0 : direction === 'right' ? 270 : direction === 'left' ? 90 : 180

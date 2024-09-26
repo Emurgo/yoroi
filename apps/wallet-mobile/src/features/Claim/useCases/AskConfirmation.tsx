@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Platform, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {Button, ButtonType} from '../../../components/Button/NewButton'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {useStrings} from '../common/useStrings'
@@ -40,18 +40,9 @@ export const AskConfirmation = ({address, url, code, onContinue}: Props) => {
       </ScrollView>
 
       <Actions>
-        <Button
-          title={strings.cancel}
-          onPress={closeModal}
-          withoutBackground
-          outlineShelley
-          block
-          disabled={isLoading}
-        />
+        <Button size="S" type={ButtonType.Secondary} title={strings.cancel} onPress={closeModal} disabled={isLoading} />
 
-        <Spacer width={20} />
-
-        <Button title={strings.continue} onPress={onContinue} shelleyTheme block disabled={isLoading} />
+        <Button size="S" title={strings.continue} onPress={onContinue} disabled={isLoading} />
       </Actions>
     </View>
   )
@@ -84,10 +75,8 @@ const useStyles = () => {
     },
     actions: {
       ...atoms.flex_row,
-      ...atoms.align_end,
       ...atoms.pb_lg,
-      minHeight: 48,
-      maxHeight: 54,
+      ...atoms.gap_lg,
     },
     item: {
       ...atoms.self_stretch,

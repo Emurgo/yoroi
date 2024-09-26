@@ -37,12 +37,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
       <View style={styles.stats}>
         <View style={styles.row}>
           <View style={styles.icon}>
-            <Icon.TotalAda
-              color={color.el_primary_medium}
-              backgroundColor={color.gray_200}
-              width={ICON_DIM}
-              height={ICON_DIM}
-            />
+            <Icon.TotalAda color={color.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
@@ -64,12 +59,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
         <View style={styles.row}>
           <View style={styles.icon}>
-            <Icon.TotalReward
-              color={color.el_primary_medium}
-              backgroundColor={color.gray_200}
-              width={ICON_DIM}
-              height={ICON_DIM}
-            />
+            <Icon.TotalReward color={color.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
@@ -91,12 +81,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
         <View style={styles.row}>
           <View style={styles.icon}>
-            <Icon.TotalDelegated
-              color={color.el_primary_medium}
-              backgroundColor={color.gray_200}
-              width={ICON_DIM}
-              height={ICON_DIM}
-            />
+            <Icon.TotalDelegated color={color.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />

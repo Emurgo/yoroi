@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '../../../../../../components/Button/Button'
+import {Button} from '../../../../../../components/Button/NewButton'
 import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {useNavigateTo} from '../../../../common/hooks/useNavigateTo'
 import {useStrings} from '../../../../common/hooks/useStrings'
@@ -29,13 +29,7 @@ export const BuyADABanner = () => {
 
         <Spacer height={16} />
 
-        <Button
-          mainTheme
-          title={strings.buyCrypto.toLocaleUpperCase()}
-          onPress={handleExchange}
-          style={styles.spaceButton}
-          textStyles={styles.spaceButtonText}
-        />
+        <Button title={strings.buyCrypto.toLocaleUpperCase()} onPress={handleExchange} />
 
         <View style={styles.assetImageBox}>
           <AssetImage />
@@ -56,13 +50,6 @@ const useStyles = () => {
       ...atoms.rounded_sm,
       ...atoms.overflow_hidden,
       backgroundColor: color.bg_color_max,
-    },
-    spaceButtonText: {
-      ...atoms.p_0,
-    },
-    spaceButton: {
-      ...atoms.px_lg,
-      minHeight: 40,
     },
     title: {
       ...atoms.body_1_lg_medium,
