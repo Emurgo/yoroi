@@ -13,7 +13,7 @@ import {
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'

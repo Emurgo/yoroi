@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {Button, ButtonType} from '../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../components/Button/Button'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {useEnableAuthWithOs} from '../../Auth/common/hooks'
 import {OsAuthScreen} from '../../Auth/OsAuthScreen/OsAuthScreen'

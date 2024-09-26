@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, Platform, ScrollView, StyleSheet} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'
 import {Text} from '../../../components/Text'
 import globalMessages from '../../../kernel/i18n/global-messages'

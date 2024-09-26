@@ -5,7 +5,7 @@ import * as React from 'react'
 import {GestureResponderEvent, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../components/Button/Button'
 import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../components/Icon'
 import {useModal} from '../../../components/Modal/ModalContext'

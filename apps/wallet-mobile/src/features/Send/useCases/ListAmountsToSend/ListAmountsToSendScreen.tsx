@@ -12,7 +12,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation} from 'react-query'
 
 import {Boundary} from '../../../../components/Boundary/Boundary'
-import {Button} from '../../../../components/Button/NewButton'
+import {Button} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import globalMessages from '../../../../kernel/i18n/global-messages'

@@ -4,7 +4,7 @@ import {BackHandler, Image, Platform, ScrollView, StyleSheet, Text, View} from '
 
 import errorImage from '../../assets/img/error.png'
 import {logger} from '../../kernel/logger/logger'
-import {Button} from '../Button/NewButton'
+import {Button} from '../Button/Button'
 import {CopyButton} from '../CopyButton'
 import {Spacer} from '../Spacer/Spacer'
 import {ExpandableItem} from './ExpandableItem'

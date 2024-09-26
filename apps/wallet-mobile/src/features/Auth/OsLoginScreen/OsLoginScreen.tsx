@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {logger} from '../../../kernel/logger/logger'
 import {useAuth} from '../AuthProvider'
 import {useAuthWithOs} from '../common/hooks'

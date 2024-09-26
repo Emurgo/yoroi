@@ -7,7 +7,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'
 import {Text} from '../../../components/Text'
 import {useWalletNavigation} from '../../../kernel/navigation'

@@ -11,7 +11,7 @@ import {useQueryErrorResetBoundary} from 'react-query'
 
 import image from '../../assets/img/error.png'
 import {LocalizableError} from '../../kernel/i18n/LocalizableError'
-import {Button} from '../Button/NewButton'
+import {Button} from '../Button/Button'
 import {Space} from '../Space/Space'
 import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'

@@ -6,7 +6,7 @@ import {Chain} from '@yoroi/types'
 import React from 'react'
 import {GestureResponderEvent, StyleSheet, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'

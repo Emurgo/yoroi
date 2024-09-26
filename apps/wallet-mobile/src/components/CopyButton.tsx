@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleProp, ViewStyle} from 'react-native'
 
 import {Icon} from '../components/Icon'
-import {Button, ButtonType} from './Button/NewButton'
+import {Button, ButtonType} from './Button/Button'
 import {useCopy} from './Clipboard/ClipboardProvider'
 
 type CopyButtonProps = {

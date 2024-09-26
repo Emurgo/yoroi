@@ -3,7 +3,7 @@ import {Image} from 'expo-image'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {Icon} from '../../../components/Icon'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'

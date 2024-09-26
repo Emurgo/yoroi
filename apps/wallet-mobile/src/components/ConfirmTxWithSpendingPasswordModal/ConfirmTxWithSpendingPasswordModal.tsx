@@ -7,7 +7,7 @@ import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSe
 import {debugWalletInfo, features} from '../../kernel/features'
 import {useSignTxWithPassword, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
-import {Button} from '../Button/NewButton'
+import {Button} from '../Button/Button'
 import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'
 import {Checkmark, TextInput} from '../TextInput/TextInput'

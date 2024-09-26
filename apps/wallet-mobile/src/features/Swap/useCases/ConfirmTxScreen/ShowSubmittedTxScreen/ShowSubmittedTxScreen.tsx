@@ -5,7 +5,7 @@ import {Linking, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {z} from 'zod'
 
-import {Button, ButtonType} from '../../../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../../../components/Button/Button'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation'

@@ -5,7 +5,7 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Accordion} from '../Accordion/Accordion'
 import {Icon} from '../Icon'
-import {Button, ButtonType} from './NewButton'
+import {Button, ButtonType} from './Button'
 
 storiesOf('Button', module).add('default', () => {
   const {color, isDark, selectThemeName} = useTheme()

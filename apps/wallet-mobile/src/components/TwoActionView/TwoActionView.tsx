@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {confirmationMessages} from '../../kernel/i18n/global-messages'
-import {Button, ButtonType} from '../Button/NewButton'
+import {Button, ButtonType} from '../Button/Button'
 import {Space} from '../Space/Space'
 import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'

@@ -6,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 
 import {Boundary} from '../../../components/Boundary/Boundary'
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'

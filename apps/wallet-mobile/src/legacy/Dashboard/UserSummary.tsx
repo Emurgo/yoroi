@@ -4,7 +4,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, ButtonType} from '../../components/Button/NewButton'
+import {Button, ButtonType} from '../../components/Button/Button'
 import {Icon} from '../../components/Icon'
 import {Space} from '../../components/Space/Space'
 import {Text} from '../../components/Text'

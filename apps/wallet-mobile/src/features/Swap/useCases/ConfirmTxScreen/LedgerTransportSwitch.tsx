@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
 import {useIsUsbSupported} from '../../../../legacy/HW'

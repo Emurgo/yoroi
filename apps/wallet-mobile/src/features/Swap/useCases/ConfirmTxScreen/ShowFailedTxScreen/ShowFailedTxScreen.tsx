@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/NewButton'
+import {Button} from '../../../../../components/Button/Button'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {useBlockGoBack} from '../../../../../kernel/navigation'

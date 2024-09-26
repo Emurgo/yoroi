@@ -4,7 +4,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, ButtonType} from '../../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {useStrings} from '../useStrings'

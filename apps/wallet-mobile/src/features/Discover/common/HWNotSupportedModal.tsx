@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {Text} from '../../../components/Text'

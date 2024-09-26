@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {Button} from '../../../../components/Button/NewButton'
+import {Button} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'
 

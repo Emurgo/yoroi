@@ -4,7 +4,7 @@ import * as React from 'react'
 import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/NewButton'
+import {Button} from '../../../../components/Button/Button'
 import {Checkbox} from '../../../../components/Checkbox/Checkbox'
 import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
 import {ShareQRCodeCard} from '../../../../components/ShareQRCodeCard/ShareQRCodeCard'

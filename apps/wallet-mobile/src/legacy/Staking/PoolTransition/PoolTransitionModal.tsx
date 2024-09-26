@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Image, StyleSheet, Text, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, ButtonType} from '../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../components/Button/Button'
 import {Icon} from '../../../components/Icon'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'

@@ -5,7 +5,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, View, ViewStyle} from 'react-native'
 
-import {Button} from '../../../../components/Button/NewButton'
+import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {ProgressStep} from '../../../../components/ProgressStep'
 import {TextInput} from '../../../../components/TextInput/TextInput'

@@ -3,7 +3,7 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
 
-import {Button, ButtonType} from '../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'

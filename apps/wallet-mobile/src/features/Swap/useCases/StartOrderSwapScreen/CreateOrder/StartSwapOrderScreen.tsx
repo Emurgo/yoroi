@@ -8,7 +8,7 @@ import * as React from 'react'
 import {Alert, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button} from '../../../../../components/Button/NewButton'
+import {Button} from '../../../../../components/Button/Button'
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
 import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'

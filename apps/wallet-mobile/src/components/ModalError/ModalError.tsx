@@ -9,7 +9,7 @@ import {
   LedgerUserError,
   RejectedByUserError,
 } from '../../yoroi-wallets/hw/hw'
-import {Button, ButtonType} from '../Button/NewButton'
+import {Button, ButtonType} from '../Button/Button'
 import {Icon} from '../Icon'
 import {Space} from '../Space/Space'
 import {Text} from '../Text'

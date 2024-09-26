@@ -3,7 +3,7 @@ import * as React from 'react'
 import {FlatList, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../components/Button/Button'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'

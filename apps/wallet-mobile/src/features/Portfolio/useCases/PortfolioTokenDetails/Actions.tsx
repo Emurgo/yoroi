@@ -5,7 +5,7 @@ import {Chain, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSwapForm} from '../../../Swap/common/SwapFormProvider'

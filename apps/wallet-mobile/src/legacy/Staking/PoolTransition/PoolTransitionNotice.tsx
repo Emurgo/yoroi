@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View, ViewProps} from 'react-native'
 
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {Icon} from '../../../components/Icon'
 import {Space} from '../../../components/Space/Space'
 import {formatTimeSpan} from '../../../yoroi-wallets/utils/timeUtils'

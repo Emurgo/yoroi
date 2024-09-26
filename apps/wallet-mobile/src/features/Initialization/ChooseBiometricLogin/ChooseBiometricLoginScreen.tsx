@@ -6,7 +6,7 @@ import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button, ButtonType} from '../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'
 import {useEnableAuthWithOs} from '../../Auth/common/hooks'
 import {useStrings} from '../common'

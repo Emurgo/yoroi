@@ -10,7 +10,7 @@ import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../../../components/Button/Button'
 import {
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,

@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Linking, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '../../../../components/Button/NewButton'
+import {Button} from '../../../../components/Button/Button'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useStrings} from '../useStrings'

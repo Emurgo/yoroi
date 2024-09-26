@@ -3,7 +3,7 @@ import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
-import {Button} from '../../../../../components/Button/NewButton'
+import {Button} from '../../../../../components/Button/Button'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {Space} from '../../../../../components/Space/Space'
 import {Text} from '../../../../../components/Text'

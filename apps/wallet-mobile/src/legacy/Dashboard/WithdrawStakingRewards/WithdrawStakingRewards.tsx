@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Boundary} from '../../../components/Boundary/Boundary'
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {Checkbox} from '../../../components/Checkbox/Checkbox'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {PleaseWaitView} from '../../../components/PleaseWaitModal'

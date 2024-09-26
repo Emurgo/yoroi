@@ -17,7 +17,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner} from '../../components/Banner/Banner'
-import {Button} from '../../components/Button/NewButton'
+import {Button} from '../../components/Button/Button'
 import {useModal} from '../../components/Modal/ModalContext'
 import {Space} from '../../components/Space/Space'
 import {

@@ -5,7 +5,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Button} from '../../../../../components/Button/NewButton'
+import {Button} from '../../../../../components/Button/Button'
 import {ConfirmTxWithHwModal} from '../../../../../components/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
 import {ConfirmTxWithOsModal} from '../../../../../components/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
 import {ConfirmTxWithSpendingPasswordModal} from '../../../../../components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'

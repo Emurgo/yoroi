@@ -6,7 +6,7 @@ import React from 'react'
 import {FlatList, Linking, Platform, StyleSheet, Text, TextProps, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {CopyButton} from '../../../components/CopyButton'
 import {Icon} from '../../../components/Icon'
 import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'

@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/NewButton'
+import {Button} from '../../../../../components/Button/Button'
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
 import {useStrings} from '../../../common/useStrings'

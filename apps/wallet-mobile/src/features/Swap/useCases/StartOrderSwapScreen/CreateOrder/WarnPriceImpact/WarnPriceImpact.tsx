@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../../../../components/Button/Button'
 import {useModal} from '../../../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from '../../../../common/constants'

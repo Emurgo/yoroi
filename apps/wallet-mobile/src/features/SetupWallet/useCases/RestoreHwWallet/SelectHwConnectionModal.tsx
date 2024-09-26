@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Alert, Platform, StyleSheet, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button, ButtonType} from '../../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'

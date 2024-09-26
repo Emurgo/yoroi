@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button, ButtonType} from '../../components/Button/NewButton'
+import {Button, ButtonType} from '../../components/Button/Button'
 import {CopyButton} from '../../components/CopyButton'
 import {Text} from '../../components/Text'
 import {TitledCard} from '../../components/TitledCard'

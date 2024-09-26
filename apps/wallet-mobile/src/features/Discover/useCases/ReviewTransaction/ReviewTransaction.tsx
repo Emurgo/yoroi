@@ -11,7 +11,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery} from 'react-query'
 import {z} from 'zod'
 
-import {Button} from '../../../../components/Button/NewButton'
+import {Button} from '../../../../components/Button/Button'
 import {CopyButton} from '../../../../components/CopyButton'
 import {Icon} from '../../../../components/Icon'
 import {ScrollView} from '../../../../components/ScrollView/ScrollView'

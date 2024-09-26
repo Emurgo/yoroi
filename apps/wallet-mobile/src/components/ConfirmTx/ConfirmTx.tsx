@@ -17,7 +17,7 @@ import {useSubmitTx} from '../../yoroi-wallets/hooks'
 import {withBLE, withUSB} from '../../yoroi-wallets/hw/hwWallet'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
 import {delay} from '../../yoroi-wallets/utils/timeUtils'
-import {Button, ButtonProps} from '../Button/NewButton'
+import {Button, ButtonProps} from '../Button/Button'
 import {ValidatedTextInput} from '../ValidatedTextInput'
 import {Dialog, Step as DialogStep} from './Dialog'
 

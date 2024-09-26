@@ -7,7 +7,7 @@ import {Dimensions, Keyboard, Platform, StyleSheet, Text, View} from 'react-nati
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/NewButton'
+import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useScrollView} from '../../../../components/ScrollView/ScrollView'

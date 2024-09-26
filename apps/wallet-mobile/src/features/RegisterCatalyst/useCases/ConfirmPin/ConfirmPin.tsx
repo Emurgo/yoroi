@@ -5,7 +5,7 @@ import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 
-import {Button} from '../../../../components/Button/NewButton'
+import {Button} from '../../../../components/Button/Button'
 import {BACKSPACE, NumericKeyboard} from '../../../../components/NumericKeyboard'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'

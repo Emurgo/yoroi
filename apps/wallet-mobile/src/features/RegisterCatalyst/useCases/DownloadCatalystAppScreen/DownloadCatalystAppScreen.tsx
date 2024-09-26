@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '../../../../assets/img/app-store-badge.png'
 import playstoreBadge from '../../../../assets/img/google-play-badge.png'
-import {Button} from '../../../../components/Button/NewButton'
+import {Button} from '../../../../components/Button/Button'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {Space} from '../../../../components/Space/Space'
 import {useStakingInfo} from '../../../../legacy/Dashboard/StakePoolInfos'

@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, ButtonType} from '../../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {TextInput} from '../../../../components/TextInput/TextInput'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'

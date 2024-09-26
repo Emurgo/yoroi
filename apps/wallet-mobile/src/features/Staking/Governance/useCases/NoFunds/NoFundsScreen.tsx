@@ -4,7 +4,7 @@ import {Chain} from '@yoroi/types'
 import React from 'react'
 import {Linking, StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/NewButton'
+import {Button} from '../../../../../components/Button/Button'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {Space} from '../../../../../components/Space/Space'
 import {Spacer} from '../../../../../components/Spacer/Spacer'

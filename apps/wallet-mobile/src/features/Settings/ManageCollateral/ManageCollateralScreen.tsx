@@ -17,7 +17,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation} from 'react-query'
 
-import {Button} from '../../../components/Button/NewButton'
+import {Button} from '../../../components/Button/Button'
 import {CopyButton} from '../../../components/CopyButton'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
 import {Icon} from '../../../components/Icon'
