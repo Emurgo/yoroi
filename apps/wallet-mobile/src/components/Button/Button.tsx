@@ -6,56 +6,23 @@ import {Text} from '../Text'
 
 export type ButtonProps = {
   title: string
-  outlineOnLight?: boolean
   containerStyle?: ViewStyle
   block?: boolean
   shelleyTheme?: boolean
-  warningTheme?: boolean
-  outlineShelley?: boolean
   textStyles?: TextStyle
 } & TouchableOpacityProps
 
 export const Button = (props: ButtonProps) => {
-  const {
-    onPress,
-    title,
-    block,
-    style,
-    containerStyle,
-    outlineOnLight,
-    shelleyTheme,
-    outlineShelley,
-    textStyles,
-    ...rest
-  } = props
+  const {onPress, title, block, style, containerStyle, shelleyTheme, textStyles, ...rest} = props
 
   const {styles} = useStyles()
 
   return (
     <TouchableOpacity onPress={onPress} style={[block && styles.block, containerStyle]} activeOpacity={0.5} {...rest}>
       <View
-        style={[
-          styles.button,
-          outlineOnLight && styles.buttonOutlineOnLight,
-          props.disabled && styles.buttonDisabled,
-          outlineShelley && styles.buttonOutlineShelley,
-          shelleyTheme && styles.shelleyTheme,
-          outlineOnLight && shelleyTheme && styles.shelleyOutlineOnLight,
-          style,
-        ]}
+        style={[styles.button, props.disabled && styles.buttonDisabled, shelleyTheme && styles.shelleyTheme, style]}
       >
-        <Text
-          style={[
-            styles.text,
-            outlineOnLight && styles.textOutlineOnLight,
-            outlineOnLight && shelleyTheme && styles.textShelleyOutlineOnLight,
-            outlineShelley && styles.textOutlineShelley,
-            props.disabled && !outlineOnLight && styles.buttonDisabledText,
-            textStyles,
-          ]}
-        >
-          {title}
-        </Text>
+        <Text style={[styles.text, props.disabled && styles.buttonDisabledText, textStyles]}>{title}</Text>
       </View>
     </TouchableOpacity>
   )
@@ -64,11 +31,6 @@ export const Button = (props: ButtonProps) => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
 
-  const buttonOutline = {
-    borderWidth: 2,
-    borderColor: color.gray_min,
-    backgroundColor: 'transparent',
-  }
   const styles = StyleSheet.create({
     block: {
       flex: 1,
@@ -82,14 +44,6 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    buttonOutlineOnLight: {
-      ...buttonOutline,
-      borderColor: color.secondary_500,
-    },
-    buttonOutlineShelley: {
-      ...buttonOutline,
-      borderColor: color.el_primary_medium,
-    },
     text: {
       color: color.white_static,
       ...atoms.body_2_md_medium,
@@ -97,12 +51,7 @@ const useStyles = () => {
       textAlign: 'center',
       textTransform: 'uppercase',
     },
-    textOutlineOnLight: {
-      color: color.secondary_500,
-    },
-    textOutlineShelley: {
-      color: color.text_primary_medium,
-    },
+
     buttonDisabled: {
       opacity: 0.5,
     },
@@ -111,15 +60,6 @@ const useStyles = () => {
     },
     shelleyTheme: {
       backgroundColor: color.primary_500,
-    },
-    shelleyOutlineOnLight: {
-      backgroundColor: 'transparent',
-      borderColor: color.primary_600,
-      borderWidth: 2,
-    },
-    textShelleyOutlineOnLight: {
-      color: color.primary_600,
-      fontWeight: '600',
     },
   })
 

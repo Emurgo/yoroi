@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {confirmationMessages} from '../../kernel/i18n/global-messages'
-import {Button} from '../Button/Button'
+import {Button, ButtonType} from '../Button/NewButton'
 import {Space} from '../Space/Space'
 import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'
@@ -52,9 +52,8 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
       <View style={styles.buttons}>
         {secondaryButton != null && (
           <Button
-            block
-            shelleyTheme
-            outlineOnLight
+            size="S"
+            type={ButtonType.Secondary}
             onPress={secondaryButton.onPress}
             title={secondaryButton.label ?? intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
             disabled={secondaryButton.disabled}
@@ -65,8 +64,7 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
         <Space width="md" />
 
         <Button
-          block
-          shelleyTheme
+          size="S"
           onPress={primaryButton.onPress}
           title={primaryButton.label}
           disabled={primaryButton.disabled}

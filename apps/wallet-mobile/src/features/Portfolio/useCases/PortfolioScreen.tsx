@@ -3,7 +3,7 @@ import * as React from 'react'
 import {FlatList, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
+import {Button, ButtonType} from '../../../components/Button/NewButton'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -60,11 +60,11 @@ export const PortfolioScreen = () => {
 
         <Spacer height={16} />
 
-        <Button title={!isActive ? 'start sync' : 'stop sync'} onPress={handleOnSync} shelleyTheme />
+        <Button title={!isActive ? 'start sync' : 'stop sync'} onPress={handleOnSync} size="S" />
 
         <Spacer height={16} />
 
-        <Button title="reset" onPress={handleOnReset} outlineShelley disabled={!canWipe} />
+        <Button title="reset" onPress={handleOnReset} size="S" type={ButtonType.Secondary} disabled={!canWipe} />
 
         <Spacer height={16} />
 

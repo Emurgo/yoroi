@@ -4,11 +4,11 @@ import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Chain} from '@yoroi/types'
 import React from 'react'
-import {GestureResponderEvent, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {GestureResponderEvent, StyleSheet, View} from 'react-native'
 
+import {Button, ButtonType} from '../../../../components/Button/NewButton'
 import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../../components/Icon'
-import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
@@ -22,7 +22,7 @@ import {useWalletManager} from '../../../WalletManager/context/WalletManagerProv
 import {useStrings} from '../../common/strings'
 
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
 
@@ -106,85 +106,60 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     copy({text: nextReceiveAddress, event})
   }
 
-  const iconProps = {
-    size: 24,
-    color: colors.actionColor,
-  }
-
   return (
-    <View>
-      <Spacer height={16} />
-
+    <View style={styles.container}>
       <View style={styles.centralized}>
-        <View style={[styles.row, disabled && styles.disabled]}>
-          <View style={styles.centralized}>
-            <TouchableOpacity
-              style={styles.actionIcon}
-              onPress={handleOnPressReceive}
-              testID="receiveButton"
-              disabled={disabled}
-              onLongPress={handleOnLongPressReceive}
-            >
-              <Icon.Received {...iconProps} />
-            </TouchableOpacity>
+        <Button
+          type={ButtonType.Circle}
+          icon={Icon.Received}
+          onPress={handleOnPressReceive}
+          testID="receiveButton"
+          disabled={disabled}
+          onLongPress={handleOnLongPressReceive}
+        />
 
-            <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
-          </View>
-
-          {!meta.isReadOnly && <Spacer width={18} />}
-
-          {!meta.isReadOnly && (
-            <View style={styles.centralized}>
-              <TouchableOpacity
-                style={styles.actionIcon}
-                onPress={handleOnSend}
-                testID="sendButton"
-                disabled={disabled}
-              >
-                <Icon.Send {...iconProps} />
-              </TouchableOpacity>
-
-              <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
-            </View>
-          )}
-
-          {!meta.isReadOnly && (
-            <>
-              <Spacer width={18} />
-
-              <View style={styles.centralized}>
-                <TouchableOpacity
-                  style={styles.actionIcon}
-                  onPress={handleOnSwap}
-                  testID="swapButton"
-                  disabled={disabled}
-                >
-                  <Icon.Swap {...iconProps} />
-                </TouchableOpacity>
-
-                <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
-              </View>
-
-              <Spacer width={18} />
-
-              <View style={styles.centralized}>
-                <TouchableOpacity
-                  style={styles.actionIcon}
-                  onPress={handleOnExchange}
-                  testID="buyButton"
-                  disabled={disabled}
-                >
-                  <Icon.Exchange {...iconProps} />
-                </TouchableOpacity>
-
-                <Text style={styles.actionLabel}>{strings.exchange}</Text>
-              </View>
-            </>
-          )}
-        </View>
+        <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
       </View>
 
-      <Spacer height={21} />
+      {!meta.isReadOnly && (
+        <>
+          <View style={styles.centralized}>
+            <Button
+              type={ButtonType.Circle}
+              icon={Icon.Send}
+              onPress={handleOnSend}
+              testID="sendButton"
+              disabled={disabled}
+            />
+
+            <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
+          </View>
+
+          <View style={styles.centralized}>
+            <Button
+              type={ButtonType.Circle}
+              icon={Icon.Swap}
+              onPress={handleOnSwap}
+              testID="swapButton"
+              disabled={disabled}
+            />
+
+            <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
+          </View>
+
+          <View style={styles.centralized}>
+            <Button
+              type={ButtonType.Circle}
+              icon={Icon.Exchange}
+              onPress={handleOnExchange}
+              testID="buyButton"
+              disabled={disabled}
+            />
+
+            <Text style={styles.actionLabel}>{strings.exchange}</Text>
+          </View>
+        </>
+      )}
     </View>
   )
 }
@@ -192,36 +167,24 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    container: {
+      ...atoms.py_xl,
+      ...atoms.flex_row,
+      ...atoms.justify_center,
+      ...atoms.gap_lg,
+    },
     centralized: {
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    row: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-    },
-    actionIcon: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: 56,
-      width: 56,
-      borderRadius: 28,
-      backgroundColor: color.primary_500,
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
     actionLabel: {
       ...atoms.pt_sm,
       ...atoms.body_3_sm_medium,
       color: color.gray_max,
     },
-    disabled: {
-      opacity: 0.5,
-    },
   })
 
-  const colors = {
-    actionColor: color.white_static,
-  }
-  return {styles, colors}
+  return {styles}
 }
 
 const useNavigateTo = () => {

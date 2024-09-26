@@ -137,7 +137,7 @@ const useStyles = ({
           : {...atoms.p_sm, ...atoms.gap_2xs, ...atoms.rounded_sm}
       break
     case ButtonType.Circle:
-      shape = {width: 48, height: 48, ...atoms.rounded_full}
+      shape = {width: 56, height: 56, ...atoms.align_center, ...atoms.rounded_full}
       break
   }
   const font =

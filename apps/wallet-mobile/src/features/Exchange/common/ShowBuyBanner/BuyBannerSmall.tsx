@@ -1,12 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '../../../../components/Button/NewButton'
+import {Button, ButtonType} from '../../../../components/Button/NewButton'
 import {Icon} from '../../../../components/Icon'
-import {Spacer} from '../../../../components/Spacer/Spacer'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {useStrings} from '../useStrings'
 
@@ -23,52 +22,48 @@ export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
     navigation.navigate('exchange-create-order')
   }
   return (
-    <>
-      <View style={styles.root}>
-        <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradientColor}>
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>{strings.needMoreCrypto}</Text>
+    <LinearGradient style={styles.container} start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradientColor}>
+      <View style={styles.viewTitle}>
+        <Text style={styles.title}>{strings.needMoreCrypto}</Text>
 
-            <Spacer width={5} />
-
-            <TouchableOpacity onPress={onClose}>
-              <Icon.Close size={24} color={colors.gray} />
-            </TouchableOpacity>
-          </View>
-
-          <Spacer height={8} />
-
-          <Text style={styles.text}>{strings.ourTrustedPartners}</Text>
-
-          <Spacer height={8} />
-
-          <Button testID="rampOnOffButton" title={strings.buyCrypto.toLocaleUpperCase()} onPress={handleExchange} />
-        </LinearGradient>
+        <Button type={ButtonType.SecondaryText} icon={Icon.Close} onPress={onClose} style={styles.closeButton} />
       </View>
 
-      <Spacer height={18} />
-    </>
+      <Text style={styles.text}>{strings.ourTrustedPartners}</Text>
+
+      <Button
+        testID="rampOnOffButton"
+        style={styles.button}
+        title={strings.buyCrypto}
+        size="S"
+        onPress={handleExchange}
+      />
+    </LinearGradient>
   )
 }
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-    },
-    gradient: {
-      flex: 1,
-      opacity: 1,
-      borderRadius: 8,
-      flexDirection: 'column',
+    container: {
+      ...atoms.flex,
+      ...atoms.rounded_sm,
+      ...atoms.flex_col,
       ...atoms.px_lg,
       ...atoms.py_md,
+      ...atoms.gap_sm,
     },
     viewTitle: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      flex: 1,
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.gap_lg,
+    },
+    closeButton: {
+      ...atoms.p_0,
+      flexGrow: 0,
+    },
+    button: {
+      ...atoms.self_center,
     },
     title: {
       ...atoms.body_1_lg_medium,

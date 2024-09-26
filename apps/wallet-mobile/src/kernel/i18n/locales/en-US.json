@@ -848,7 +848,7 @@
   "global.sign": "sign",
   "global.signTransaction": "Sign transaction",
   "global.spendingPassword": "Spending Password",
-  "global.exchange": "Buy/Sell ADA",
+  "global.exchange": "Buy/Sell",
   "global.staking.epochLabel": "Epoch",
   "global.staking.stakePoolHash": "Stake pool hash",
   "global.staking.stakePoolName": "Stake pool name",

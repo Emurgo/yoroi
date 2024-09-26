@@ -17,7 +17,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner} from '../../components/Banner/Banner'
-import {Button} from '../../components/Button/Button'
+import {Button} from '../../components/Button/NewButton'
 import {useModal} from '../../components/Modal/ModalContext'
 import {Space} from '../../components/Space/Space'
 import {
@@ -156,8 +156,6 @@ export const Dashboard = () => {
             onPress={navigateTo.stakingCenter}
             title={intl.formatMessage(messages.stakingCenterButton)}
             disabled={meta.isReadOnly}
-            shelleyTheme
-            block
             testID="stakingCenterButton"
           />
         </Actions>

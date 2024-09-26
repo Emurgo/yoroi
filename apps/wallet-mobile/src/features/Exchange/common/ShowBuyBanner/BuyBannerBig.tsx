@@ -42,12 +42,7 @@ export const BuyBannerBig = () => {
 
         <Space />
 
-        <Button
-          testID="rampOnOffButton"
-          size="S"
-          title={strings.buyCrypto.toLocaleUpperCase()}
-          onPress={handleExchange}
-        />
+        <Button testID="rampOnOffButton" size="S" title={strings.buyCrypto} onPress={handleExchange} />
       </LinearGradient>
     </View>
   )

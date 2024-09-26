@@ -1,9 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {Button, ButtonType} from '../../../components/Button/NewButton'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {useEnableAuthWithOs} from '../../Auth/common/hooks'
 import {OsAuthScreen} from '../../Auth/OsAuthScreen/OsAuthScreen'
@@ -22,18 +21,17 @@ export const EnableLoginWithOsScreen = () => {
         <Button
           key="cancel"
           disabled={isLoading}
-          outlineShelley
+          size="S"
+          type={ButtonType.Secondary}
           title={strings.notNowButton}
           onPress={() => navigation.goBack()}
-          containerStyle={styles.cancel}
         />,
         <Button
-          shelleyTheme
+          size="S"
           disabled={isLoading}
           key="link"
           title={strings.linkButton}
           onPress={() => enableAuthWithOs()}
-          containerStyle={styles.link}
         />,
       ]}
     />
@@ -73,15 +71,5 @@ const messages = defineMessages({
   subHeading2: {
     id: 'components.settings.biometricslinkscreen.subHeading2',
     defaultMessage: '!!!to your Yoroi wallet',
-  },
-})
-
-const styles = StyleSheet.create({
-  cancel: {
-    flex: 1,
-    marginRight: 15,
-  },
-  link: {
-    flex: 1,
   },
 })

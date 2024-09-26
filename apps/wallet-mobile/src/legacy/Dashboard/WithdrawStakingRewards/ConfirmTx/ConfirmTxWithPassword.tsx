@@ -4,8 +4,7 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button} from '../../../../components/Button/Button'
-import {Space} from '../../../../components/Space/Space'
+import {Button, ButtonType} from '../../../../components/Button/NewButton'
 import {TextInput} from '../../../../components/TextInput/TextInput'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
@@ -52,20 +51,14 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}:
 
       <View style={styles.buttons}>
         <Button
-          block
-          shelleyTheme
-          outlineOnLight
+          type={ButtonType.Secondary}
           onPress={() => onCancel()}
           title={intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
           disabled={isLoading}
           testID="cancelTxButton"
         />
 
-        <Space width="md" />
-
         <Button
-          block
-          shelleyTheme
           onPress={() => signAndSubmitTx({unsignedTx, password})}
           title={strings.confirmButton}
           disabled={isLoading}
@@ -113,6 +106,7 @@ const useStyles = () => {
       backgroundColor: color.bg_color_max,
       ...atoms.p_lg,
       ...atoms.flex_row,
+      ...atoms.gap_md,
     },
     scroll: {
       ...atoms.flex_1,

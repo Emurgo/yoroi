@@ -4,7 +4,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button} from '../../components/Button/Button'
+import {Button, ButtonType} from '../../components/Button/NewButton'
 import {Icon} from '../../components/Icon'
 import {Space} from '../../components/Space/Space'
 import {Text} from '../../components/Text'
@@ -101,17 +101,15 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
         <Space height="lg" />
 
-        <View style={styles.row}>
-          <Button
-            disabled={disableWithdraw}
-            outlineOnLight
-            shelleyTheme
-            onPress={onWithdraw}
-            title={strings.withdrawButtonTitle}
-            style={styles.withdrawButton}
-            testID="userSummaryWithdrawButton"
-          />
-        </View>
+        <Button
+          type={ButtonType.Secondary}
+          disabled={disableWithdraw}
+          size="S"
+          style={styles.withdrawButton}
+          onPress={onWithdraw}
+          title={strings.withdrawButtonTitle}
+          testID="userSummaryWithdrawButton"
+        />
       </View>
     </TitledCard>
   )
@@ -142,7 +140,7 @@ const useStyles = () => {
       ...atoms.body_1_lg_medium,
     },
     withdrawButton: {
-      ...atoms.px_lg,
+      ...atoms.self_start,
     },
   })
 

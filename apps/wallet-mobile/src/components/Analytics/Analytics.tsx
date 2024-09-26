@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TextStyle, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button} from '../../components/Button/Button'
+import {Button, ButtonType} from '../../components/Button/NewButton'
 import {Spacer} from '../../components/Spacer/Spacer'
 import {Text} from '../../components/Text'
 import {YoroiLogo} from '../../components/YoroiLogo/YoroiLogo'
@@ -64,15 +64,13 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
           <CommonContent onReadMore={onReadMore} showLogo />
 
           <Button // skip button
-            block
-            outlineShelley
+            size="S"
+            type={ButtonType.Text}
             onPress={() => {
               metrics.disable()
               onClose?.()
             }}
             title={strings.skip}
-            style={styles.skip}
-            textStyles={styles.skipText}
           />
         </View>
       </ScrollView>
@@ -90,8 +88,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
         ]}
       >
         <Button // accept button
-          block
-          shelleyTheme
+          size="S"
           onPress={() => {
             metrics.enable()
             onClose?.()
@@ -218,12 +215,6 @@ const useStyles = () => {
     title: {
       ...atoms.heading_3_medium,
       textAlign: 'center',
-    },
-    skip: {
-      borderWidth: 0,
-    },
-    skipText: {
-      color: color.primary_900,
     },
     tick: {
       color: color.primary_700,

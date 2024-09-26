@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../../../components/Button/NewButton'
 import {useModal} from '../../../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from '../../../../common/constants'
@@ -36,14 +36,9 @@ export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
       <Spacer fill />
 
       <View style={styles.buttonsWrapper}>
-        <Button outlineShelley title={strings.cancel} onPress={closeModal} containerStyle={styles.buttonContainer} />
+        <Button size="S" type={ButtonType.Secondary} title={strings.cancel} onPress={closeModal} />
 
-        <Button
-          title={strings.continue}
-          onPress={onContinue}
-          style={styles.buttonContinue}
-          containerStyle={styles.buttonContainer}
-        />
+        <Button size="S" title={strings.continue} onPress={onContinue} style={styles.buttonContinue} />
       </View>
     </View>
   )
@@ -52,9 +47,6 @@ export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    buttonContainer: {
-      ...atoms.flex_1,
-    },
     buttonContinue: {
       backgroundColor: color.sys_magenta_500,
       ...atoms.flex_1,

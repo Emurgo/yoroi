@@ -29,7 +29,7 @@ export const BuyADABanner = () => {
 
         <Spacer height={16} />
 
-        <Button title={strings.buyCrypto.toLocaleUpperCase()} onPress={handleExchange} />
+        <Button title={strings.buyCrypto} onPress={handleExchange} />
 
         <View style={styles.assetImageBox}>
           <AssetImage />

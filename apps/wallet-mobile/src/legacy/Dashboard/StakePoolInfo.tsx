@@ -4,9 +4,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button} from '../../components/Button/Button'
+import {Button, ButtonType} from '../../components/Button/NewButton'
 import {CopyButton} from '../../components/CopyButton'
-import {Space} from '../../components/Space/Space'
 import {Text} from '../../components/Text'
 import {TitledCard} from '../../components/TitledCard'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
@@ -27,43 +26,23 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   return (
     <View>
       <TitledCard title={strings.title} variant="poolInfo" testID="stakePoolInfoTitleCard">
-        <View>
+        <View style={styles.container}>
           <Text bold style={styles.poolName}>
             {formatStakepoolNameWithTicker(stakePoolInfoAndHistory.info.ticker, stakePoolInfoAndHistory.info.name) ??
               strings.unknownPool}
           </Text>
 
-          <Space height="xs" />
+          <CopyButton title={stakePoolId} value={stakePoolId} message={strings.copied} />
 
-          <View style={styles.poolIdBlock}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="middle"
-              monospace
-              style={styles.poolId}
-              testID="stakePoolInfoPoolIdText"
-            >
-              {stakePoolId}
-            </Text>
-
-            <CopyButton value={stakePoolId} message={strings.copied} />
-          </View>
+          {!isEmptyString(homepage) && (
+            <Button
+              type={ButtonType.Secondary}
+              size="S"
+              onPress={() => Linking.openURL(homepage)}
+              title={strings.goToWebsiteButtonLabel}
+            />
+          )}
         </View>
-
-        {!isEmptyString(homepage) && (
-          <>
-            <Space height="lg" />
-
-            <View>
-              <Button
-                outlineOnLight
-                shelleyTheme
-                onPress={() => Linking.openURL(homepage)}
-                title={strings.goToWebsiteButtonLabel}
-              />
-            </View>
-          </>
-        )}
       </TitledCard>
 
       <View style={styles.warning}>
@@ -103,17 +82,12 @@ export const useStakePoolInfoAndHistory = (
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
+    container: {
+      ...atoms.gap_md,
+    },
     poolName: {
       ...atoms.body_1_lg_medium,
       color: color.text_gray_medium,
-    },
-    poolIdBlock: {
-      ...atoms.flex_row,
-    },
-    poolId: {
-      color: color.text_gray_medium,
-      ...atoms.body_2_md_regular,
-      ...atoms.flex_1,
     },
     warning: {
       ...atoms.p_sm,

@@ -4,7 +4,7 @@ import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../../../components/Button/NewButton'
 import {useModal} from '../../../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {useLanguage} from '../../../../../../kernel/i18n'
@@ -68,19 +68,13 @@ export const WarnLimitPrice = ({onConfirm, orderData}: LimitPriceWarningProps) =
       <View style={styles.buttonsWrapper}>
         <Button
           testID="swapCancelButton"
-          outlineShelley
+          size="S"
+          type={ButtonType.Secondary}
           title={strings.limitPriceWarningBack}
           onPress={closeModal}
-          containerStyle={styles.buttonContainer}
         />
 
-        <Button
-          testID="swapConfirmButton"
-          shelleyTheme
-          title={strings.limitPriceWarningConfirm}
-          onPress={onConfirm}
-          containerStyle={styles.buttonContainer}
-        />
+        <Button size="S" testID="swapConfirmButton" title={strings.limitPriceWarningConfirm} onPress={onConfirm} />
       </View>
     </View>
   )
@@ -89,9 +83,6 @@ export const WarnLimitPrice = ({onConfirm, orderData}: LimitPriceWarningProps) =
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    buttonContainer: {
-      ...atoms.flex_1,
-    },
     buttonsWrapper: {
       ...atoms.align_center,
       ...atoms.justify_between,
