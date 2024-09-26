@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Bluetooth = ({color = '#4B6DDE', size = 25}: IconProps) => {
   return (

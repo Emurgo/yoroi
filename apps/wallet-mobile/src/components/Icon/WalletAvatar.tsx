@@ -3,7 +3,7 @@ import {Image} from 'expo-image'
 import React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const WalletAvatar = ({image = '', size = 40, style}: IconProps & {image?: string; style?: ViewStyle}) => {
   const styles = useStyles()

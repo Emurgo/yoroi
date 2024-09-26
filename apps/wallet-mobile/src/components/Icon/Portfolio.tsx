@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Portfolio = ({size = 36, color = 'black'}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 20 18" fill="none">

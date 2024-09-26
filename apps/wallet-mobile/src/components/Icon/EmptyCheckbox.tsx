@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const EmptyCheckbox = ({size = 16, color: defaultColor}: IconProps) => {
   const {color} = useTheme()

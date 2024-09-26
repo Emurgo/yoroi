@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Ada = ({size = 20, color = '#000000'}: IconProps) => (
   <Svg viewBox="0 0 36.993 44" width={size} height={size}>

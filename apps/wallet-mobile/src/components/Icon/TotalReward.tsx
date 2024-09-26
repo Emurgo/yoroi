@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Circle, G, Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const TotalReward = ({size = 44, color = 'black'}: IconProps) => (
   <Svg viewBox="0 0 44 44" width={size} height={size}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const VyfiSwap = ({size = 36}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 40 40" fill="none">

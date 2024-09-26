@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const SpectrumSwap = ({size = 36}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 44 41" fill="none">

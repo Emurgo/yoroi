@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Defs, LinearGradient, Path, Rect, Stop} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const YoroiApp = ({size = 36}: IconProps) => {
   return (

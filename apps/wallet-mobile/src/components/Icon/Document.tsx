@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {G, Line, Rect} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Document = ({size = 40, color = 'black'}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 24 24">

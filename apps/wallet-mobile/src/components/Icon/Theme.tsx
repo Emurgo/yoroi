@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Theme = ({size = 20, color = '#6B7384'}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 20 20" fill="none">

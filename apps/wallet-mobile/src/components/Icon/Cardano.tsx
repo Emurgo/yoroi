@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Cardano = ({size = 20, color = '#000000'}: IconProps) => (
   <Svg viewBox="0 0 2000 1848" width={size} height={size}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Emurgo = ({size = 36, color = 'black'}: IconProps) => {
   return (

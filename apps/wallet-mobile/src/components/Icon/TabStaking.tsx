@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const TabStaking = ({size = 24, color = '#6B7384'}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 24 24">

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const NoNfts = ({size = 36}: IconProps) => (
   <Svg width={size} height={(size / 143) * 101} viewBox="0 0 143 101">

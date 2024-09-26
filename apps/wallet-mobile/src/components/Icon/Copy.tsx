@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Copy = ({size = 36, color = 'black'}: IconProps) => (
   <Svg width={size} height={size} viewBox="-2 -2 28 28">

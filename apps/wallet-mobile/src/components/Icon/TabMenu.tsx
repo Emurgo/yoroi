@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const TabMenu = ({size = 36, color = 'black'}: IconProps) => (
   <Svg width={size} height={size - 1} viewBox="0 0 25 24" fill="none">

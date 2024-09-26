@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Checkbox = ({size = 16, color = '#4B6DDE'}: IconProps) => {
   return (

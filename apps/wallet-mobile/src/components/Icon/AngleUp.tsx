@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const AngleUp = ({size = 16, color = '#12705D'}: IconProps) => (
   <Svg viewBox="0 0 16 16" width={size} height={size}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Refresh = ({size = 24, color = '#242838', active = false}: IconProps & {active: boolean}) => (
   <Svg width={size} height={size} viewBox="0 0 32 32" fill="none">

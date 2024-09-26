@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Backspace = ({color = 'black', size = 24}: IconProps) => (
   <Svg width={size ?? 24} height={size ?? 17} viewBox="0 0 24 17" fill="none">

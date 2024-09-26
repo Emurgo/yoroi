@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const InfoCircle = ({size = 16, color = '#4B6DDE'}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 16 16">

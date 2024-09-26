@@ -6,7 +6,7 @@ import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types/o
 import {Received} from '../Icon/Received'
 import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'
-import {IconProps} from '.'
+import {IconProps} from './type'
 import {MultiParty} from './MultiParty'
 
 export const Direction = ({transaction, size = defaultSize}: IconProps & {transaction: TransactionInfo}) => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Clock = ({size = 40, color}: IconProps) => (
   <Svg width={size} height={size} viewBox="-2 -2 28 28">

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const Language = ({size = 24, color = '#6B7384'}: IconProps) => {
   return (

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const TabWallet = ({size = 24, color = '#6B7384'}: IconProps) => {
   return (

@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {G, Path, Polygon} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const YoroiWallet = ({color = 'white', size = 210}: IconProps) => {
   return (

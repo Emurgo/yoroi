@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Circle, G, Line, Path, Rect} from 'react-native-svg'
 
-import {IconProps} from '.'
+import {IconProps} from './type'
 
 export const StakingKeyDeregistered = ({size = 36, color = '#6B7384'}: IconProps) => (
   <Svg viewBox="0 0 36 36" width={size} height={size}>
