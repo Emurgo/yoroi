@@ -6,12 +6,12 @@
     "start": {
       "line": 55,
       "column": 16,
-      "index": 1648
+      "index": 1645
     },
     "end": {
       "line": 58,
       "column": 3,
-      "index": 1752
+      "index": 1749
     }
   },
   {
@@ -21,12 +21,12 @@
     "start": {
       "line": 59,
       "column": 14,
-      "index": 1768
+      "index": 1765
     },
     "end": {
       "line": 62,
       "column": 3,
-      "index": 1867
+      "index": 1864
     }
   },
   {
@@ -36,12 +36,12 @@
     "start": {
       "line": 63,
       "column": 11,
-      "index": 1880
+      "index": 1877
     },
     "end": {
       "line": 66,
       "column": 3,
-      "index": 1992
+      "index": 1989
     }
   },
   {
@@ -51,12 +51,12 @@
     "start": {
       "line": 67,
       "column": 15,
-      "index": 2009
+      "index": 2006
     },
     "end": {
       "line": 70,
       "column": 3,
-      "index": 2130
+      "index": 2127
     }
   },
   {
@@ -66,12 +66,12 @@
     "start": {
       "line": 71,
       "column": 15,
-      "index": 2147
+      "index": 2144
     },
     "end": {
       "line": 74,
       "column": 3,
-      "index": 2263
+      "index": 2260
     }
   }
 ]
