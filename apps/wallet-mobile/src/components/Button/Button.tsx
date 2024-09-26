@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ActivityIndicator, Pressable, PressableProps, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 
-import type {IconProps} from '../Icon'
+import type {IconProps} from '../Icon/type'
 import {Text} from '../Text'
 
 export const ButtonType = {
