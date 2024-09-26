@@ -62,7 +62,8 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       ...atoms.px_lg,
-      ...atoms.flex_1,
+      ...atoms.flex,
+      ...atoms.gap_lg,
       ...atoms.justify_between,
     },
     text: {
