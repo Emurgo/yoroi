@@ -5,7 +5,7 @@ import {Camera} from 'expo-camera'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {Button} from '../Button/Button'
+import {Button} from '../Button/NewButton'
 import {Spacer} from '../Spacer/Spacer'
 import {CameraCodeScanner} from './CameraCodeScanner'
 

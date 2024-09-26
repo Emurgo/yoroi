@@ -4,7 +4,7 @@ import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BlueCheckbox} from '../../../components/BlueCheckbox/BlueCheckbox'
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {YoroiLogo} from '../../../components/YoroiLogo/YoroiLogo'
 import {useNavigateTo, useStrings} from '../common'
@@ -68,7 +68,7 @@ export const TermsOfServiceChangedScreen = () => {
 
         <Spacer fill />
 
-        <Button title={strings.continue} shelleyTheme disabled={!accepted} onPress={onPressContinue} />
+        <Button title={strings.continue} disabled={!accepted} onPress={onPressContinue} />
       </ScrollView>
     </SafeAreaView>
   )

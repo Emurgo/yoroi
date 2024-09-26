@@ -8,7 +8,7 @@ import * as React from 'react'
 import {Alert, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
 import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'
@@ -329,7 +329,7 @@ export const StartSwapOrderScreen = () => {
       </ScrollView>
 
       <Actions style={[(deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
-        <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
+        <Button testID="swapButton" title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
       </Actions>
     </View>
   )

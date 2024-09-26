@@ -20,7 +20,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Icon} from '../../../../components/Icon'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '../../../../components/Modal/ModalContext'
@@ -184,7 +184,6 @@ export const WalletDetailsScreen = () => {
           />
 
           <Button
-            shelleyTheme
             title={strings.continueButton}
             onPress={() => {
               closeModal()
@@ -242,7 +241,7 @@ export const WalletDetailsScreen = () => {
             }}
           />
 
-          <Button title={strings.continueButton} shelleyTheme onPress={closeModal} />
+          <Button title={strings.continueButton} onPress={closeModal} />
         </View>
       </View>,
       HEIGHT_MODAL_CHECKSUM,
@@ -328,7 +327,6 @@ export const WalletDetailsScreen = () => {
 
         <Actions>
           <Button
-            shelleyTheme
             title={strings.next}
             onPress={() => handleCreateWallet()}
             disabled={isLoading || Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}

@@ -6,7 +6,7 @@ import React from 'react'
 import {StyleSheet, TextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {Space} from '../../../../components/Space/Space'
@@ -114,13 +114,7 @@ export const StartMultiTokenTxScreen = () => {
 
         <Actions style={isScrollBarShown && styles.actionsScroll}>
           <Padding>
-            <NextButton
-              onPress={handleOnNext}
-              title={strings.next}
-              disabled={!canGoNext}
-              testID="nextButton"
-              shelleyTheme
-            />
+            <NextButton onPress={handleOnNext} title={strings.next} disabled={!canGoNext} testID="nextButton" />
           </Padding>
         </Actions>
       </SafeAreaView>

@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {useBlockGoBack} from '../../../../../kernel/navigation'
@@ -26,7 +26,7 @@ export const ShowFailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={navigateTo.startSwap} title={strings.failedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={navigateTo.startSwap} title={strings.failedTxButton} style={styles.button} />
     </View>
   )
 }

@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Checkbox} from '../../../components/Checkbox/Checkbox'
 import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {Spacer} from '../../../components/Spacer/Spacer'

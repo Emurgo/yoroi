@@ -7,7 +7,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BulletPointItem} from '../../../../components/BulletPointItem'
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Space} from '../../../../components/Space/Space'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {Text} from '../../../../components/Text'
@@ -54,7 +54,7 @@ export const CheckNanoXScreen = () => {
       </ScrollView>
 
       <Actions>
-        <Button shelleyTheme onPress={onContinue} title={strings.continueButton} testID="continueButton" />
+        <Button onPress={onContinue} title={strings.continueButton} testID="continueButton" />
       </Actions>
     </SafeAreaView>
   )

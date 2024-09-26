@@ -3,7 +3,7 @@ import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {Space} from '../../../../../components/Space/Space'
 import {Text} from '../../../../../components/Text'
@@ -30,7 +30,7 @@ export const SubmittedTxScreen = () => {
 
       <Space height="xl" />
 
-      <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} />
     </SafeArea>
   )
 }

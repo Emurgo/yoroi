@@ -6,7 +6,7 @@ import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../components/Spacer/Spacer'
@@ -108,7 +108,7 @@ export const ShowExchangeResultOrderScreen = () => {
         </View>
 
         <View style={styles.actions}>
-          <Button shelleyTheme onPress={handleOnClose} title={strings.close} />
+          <Button onPress={handleOnClose} title={strings.close} />
         </View>
       </SafeAreaView>
     </ExchangeProvider>

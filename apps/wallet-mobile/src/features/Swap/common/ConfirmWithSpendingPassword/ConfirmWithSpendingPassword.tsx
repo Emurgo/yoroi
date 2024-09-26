@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
 import {TextInput} from '../../../../components/TextInput/TextInput'
@@ -57,7 +57,6 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
 
       <Button
         testID="swapButton"
-        shelleyTheme
         title={strings.sign}
         onPress={() => onSubmit?.(spendingPassword)}
         disabled={spendingPassword.length === 0}

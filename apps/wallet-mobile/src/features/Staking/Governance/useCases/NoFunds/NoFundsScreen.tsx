@@ -4,7 +4,7 @@ import {Chain} from '@yoroi/types'
 import React from 'react'
 import {Linking, StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {Space} from '../../../../../components/Space/Space'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -52,7 +52,7 @@ export const NoFundsScreen = () => {
 
         <Space height="lg" />
 
-        <Button title={buttonText} textStyles={styles.button} shelleyTheme onPress={handleOnTryAgain} />
+        <Button title={buttonText} onPress={handleOnTryAgain} />
 
         <Spacer fill />
 
@@ -81,10 +81,6 @@ const useStyles = () => {
       ...atoms.text_center,
       maxWidth: 320,
       color: color.gray_max,
-    },
-    button: {
-      ...atoms.px_xl,
-      ...atoms.py_lg,
     },
   })
 

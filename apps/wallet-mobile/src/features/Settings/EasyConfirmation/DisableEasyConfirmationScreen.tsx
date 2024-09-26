@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Text} from '../../../components/Text'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -29,7 +29,7 @@ export const DisableEasyConfirmationScreen = () => {
       </View>
 
       <View style={styles.actions}>
-        <Button title={strings.disableButton} onPress={handleOnDisableConfirmation} shelleyTheme />
+        <Button title={strings.disableButton} onPress={handleOnDisableConfirmation} />
       </View>
     </SafeAreaView>
   )

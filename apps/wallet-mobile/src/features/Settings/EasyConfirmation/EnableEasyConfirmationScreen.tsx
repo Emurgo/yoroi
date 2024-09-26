@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LoadingOverlay} from '../../../components/LoadingOverlay/LoadingOverlay'
 import {Text} from '../../../components/Text'
@@ -61,7 +61,6 @@ export const EnableEasyConfirmationScreen = () => {
             title={strings.enableButton}
             onPress={() => enableEasyConfirmation(rootPassword)}
             disabled={isEmptyString(rootPassword) || isLoading}
-            shelleyTheme
           />
         </Actions>
       </SafeAreaView>

@@ -6,12 +6,12 @@
     "start": {
       "line": 48,
       "column": 18,
-      "index": 1543
+      "index": 1533
     },
     "end": {
       "line": 51,
       "column": 3,
-      "index": 1745
+      "index": 1735
     }
   },
   {
@@ -21,12 +21,12 @@
     "start": {
       "line": 52,
       "column": 17,
-      "index": 1764
+      "index": 1754
     },
     "end": {
       "line": 55,
       "column": 3,
-      "index": 1878
+      "index": 1868
     }
   }
 ]

@@ -4,7 +4,7 @@ import {Image, StyleSheet, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import IllustrationDAppImage from '../../../../assets/img/illustration-dapp.png'
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useShowWelcomeDApp} from '../../common/useShowWelcomeDApp'
 import {useStrings} from '../../common/useStrings'
@@ -73,7 +73,7 @@ const Modal = () => {
       <Text style={styles.welcomeText}>{strings.welcomeToYoroiDAppExplorerDescription}</Text>
 
       <View style={styles.actions}>
-        <Button shelleyTheme onPress={closeModal} title={strings.next} />
+        <Button onPress={closeModal} title={strings.next} />
       </View>
     </View>
   )

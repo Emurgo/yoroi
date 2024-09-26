@@ -4,7 +4,7 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
 import globalMessages, {confirmationMessages} from '../../../kernel/i18n/global-messages'
@@ -36,7 +36,7 @@ export const InsufficientFundsModal = () => {
         })}
       </Text>
 
-      <Button shelleyTheme title={strings.back} onPress={closeModal} textStyles={styles.button} />
+      <Button title={strings.back} onPress={closeModal} />
 
       {Platform.OS === 'android' && <Space height="lg" />}
     </View>
@@ -68,9 +68,6 @@ const useStyles = () => {
     text: {
       color: color.gray_max,
       ...atoms.body_1_lg_regular,
-    },
-    button: {
-      ...atoms.button_1_lg,
     },
   })
 

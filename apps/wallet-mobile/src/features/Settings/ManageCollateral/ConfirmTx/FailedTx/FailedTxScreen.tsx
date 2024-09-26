@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
@@ -25,7 +25,7 @@ export const FailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={navigation.goBack} title={strings.failedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={navigation.goBack} title={strings.failedTxButton} style={styles.button} />
     </SafeArea>
   )
 }

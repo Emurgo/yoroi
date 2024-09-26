@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
 import {useStrings} from '../../../common/useStrings'
@@ -23,13 +23,7 @@ export const ErrorScreen = () => {
 
       <Space height="lg" />
 
-      <Button
-        testID="rampOnOffErrorCloseButton"
-        shelleyTheme
-        title={strings.close}
-        style={styles.button}
-        onPress={closeModal}
-      />
+      <Button testID="rampOnOffErrorCloseButton" title={strings.close} style={styles.button} onPress={closeModal} />
     </View>
   )
 }

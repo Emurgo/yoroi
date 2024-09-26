@@ -6,7 +6,7 @@ import * as React from 'react'
 import {Linking, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'
@@ -66,7 +66,6 @@ export const RecoveryPhraseScreen = () => {
         <Space height="xl" />
 
         <Button
-          shelleyTheme
           title={strings.continueButton}
           onPress={() => {
             closeModal()
@@ -147,7 +146,6 @@ export const RecoveryPhraseScreen = () => {
       <Spacer fill />
 
       <Button
-        shelleyTheme
         title={strings.next}
         disabled={isBlur}
         onPress={() => {

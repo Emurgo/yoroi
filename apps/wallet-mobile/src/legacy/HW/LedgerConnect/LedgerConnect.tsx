@@ -14,7 +14,7 @@ import {Observer} from 'rxjs'
 import bleImage from '../../../assets/img/bluetooth.png'
 import usbImage from '../../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem} from '../../../components/BulletPointItem'
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Loading} from '../../../components/Loading/Loading'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
@@ -299,7 +299,6 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
         {useUSB === true && (
           <Button
-            shelleyTheme
             onPress={() => {
               if (refreshing || deviceObj == null || waiting) {
                 return Alert.alert(

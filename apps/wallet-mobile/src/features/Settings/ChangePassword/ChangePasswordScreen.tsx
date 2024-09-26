@@ -6,7 +6,7 @@ import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {Checkmark, TextInput} from '../../../components/TextInput/TextInput'
 import {errorMessages} from '../../../kernel/i18n/global-messages'
@@ -96,7 +96,6 @@ export const ChangePasswordScreen = () => {
             onPress={() => changePassword({currentPassword, newPassword})}
             disabled={hasErrors}
             title={strings.continueButton}
-            shelleyTheme
           />
         </Actions>
       </SafeAreaView>

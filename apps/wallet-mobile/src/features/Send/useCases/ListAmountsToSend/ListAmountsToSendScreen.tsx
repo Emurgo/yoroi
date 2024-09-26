@@ -12,7 +12,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation} from 'react-query'
 
 import {Boundary} from '../../../../components/Boundary/Boundary'
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import globalMessages from '../../../../kernel/i18n/global-messages'
@@ -119,12 +119,7 @@ export const ListAmountsToSendScreen = () => {
 
         <Spacer height={33} />
 
-        <NextButton
-          onPress={onNext}
-          title={strings.next}
-          shelleyTheme
-          disabled={selectedTokensCounter === 0 || isLoading}
-        />
+        <NextButton onPress={onNext} title={strings.next} disabled={selectedTokensCounter === 0 || isLoading} />
       </Actions>
     </SafeAreaView>
   )

@@ -7,7 +7,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Space} from '../../../../components/Space/Space'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
@@ -98,7 +98,6 @@ export const VerifyRecoveryPhraseScreen = () => {
 
       <View style={[styles.actions, styles.padding]}>
         <Button
-          shelleyTheme
           title={strings.next}
           disabled={disabled}
           onPress={async () => {

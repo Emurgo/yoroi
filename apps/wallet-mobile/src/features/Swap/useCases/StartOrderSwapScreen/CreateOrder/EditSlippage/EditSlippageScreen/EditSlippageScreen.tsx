@@ -5,7 +5,7 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../../../components/Button/Button'
+import {Button} from '../../../../../../../components/Button/NewButton'
 import {KeyboardAvoidingView} from '../../../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {TextInput} from '../../../../../../../components/TextInput/TextInput'
 import {useLanguage} from '../../../../../../../kernel/i18n'
@@ -125,13 +125,7 @@ export const EditSlippageScreen = () => {
           </View>
         </ScrollView>
 
-        <Button
-          testID="applyButton"
-          shelleyTheme
-          title={strings.apply}
-          disabled={isButtonDisabled}
-          onPress={onSubmit}
-        />
+        <Button testID="applyButton" title={strings.apply} disabled={isButtonDisabled} onPress={onSubmit} />
       </SafeAreaView>
     </KeyboardAvoidingView>
   )

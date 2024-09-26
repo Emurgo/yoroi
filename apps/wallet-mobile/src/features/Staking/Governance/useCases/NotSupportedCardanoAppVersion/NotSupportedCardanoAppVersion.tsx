@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {Space} from '../../../../../components/Space/Space'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -41,7 +41,7 @@ export const NotSupportedCardanoAppVersion = () => {
       <Spacer fill />
 
       <Actions>
-        <Button block title={strings.notSupportedVersionButton} shelleyTheme onPress={handleOnPress} />
+        <Button title={strings.notSupportedVersionButton} onPress={handleOnPress} />
       </Actions>
     </SafeArea>
   )

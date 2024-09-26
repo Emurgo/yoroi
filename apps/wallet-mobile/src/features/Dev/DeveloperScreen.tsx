@@ -10,7 +10,7 @@ import {useIntl} from 'react-intl'
 import {Alert, InteractionManager, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 import config from 'react-native-config'
 
-import {Button} from '../../components/Button/Button'
+import {Button} from '../../components/Button/NewButton'
 import {Text} from '../../components/Text'
 import {TextInput} from '../../components/TextInput/TextInput'
 import {agreementDate} from '../../kernel/config'
@@ -193,7 +193,6 @@ export const DeveloperScreen = () => {
             <Button
               disabled={isLoading || addresses.split(',').length > 50 || addresses.length === 0}
               style={styles.button}
-              shelleyTheme
               onPress={() => {
                 storage
                   .keys('/wallet/', false)

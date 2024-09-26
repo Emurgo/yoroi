@@ -4,7 +4,7 @@ import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'r
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BlueCheckbox} from '../../../components/BlueCheckbox/BlueCheckbox'
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Icon} from '../../../components/Icon'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {YoroiLogo} from '../../../components/YoroiLogo/YoroiLogo'
@@ -81,13 +81,7 @@ export const InitialScreen = () => {
 
         <Spacer fill />
 
-        <Button
-          title={strings.continue}
-          shelleyTheme
-          disabled={!tosAccepted}
-          onPress={onPressContinue}
-          testID="buttonContinue"
-        />
+        <Button title={strings.continue} disabled={!tosAccepted} onPress={onPressContinue} testID="buttonContinue" />
       </ScrollView>
     </SafeAreaView>
   )

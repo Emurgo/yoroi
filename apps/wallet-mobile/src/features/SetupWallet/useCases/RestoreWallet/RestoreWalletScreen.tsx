@@ -7,7 +7,7 @@ import {Dimensions, Keyboard, Platform, StyleSheet, Text, View} from 'react-nati
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useScrollView} from '../../../../components/ScrollView/ScrollView'
@@ -242,7 +242,7 @@ const WordSuggestionList = ({
 
 const WordSuggestionButton = ({title, onPress}: {title: string; onPress: () => void}) => {
   const {styles} = useStyles()
-  return <Button onPress={onPress} style={styles.suggestion} textStyles={styles.suggestionText} title={title} />
+  return <Button onPress={onPress} style={styles.suggestion} title={title} />
 }
 
 const useBold = () => {
@@ -301,11 +301,6 @@ const useStyles = () => {
       borderWidth: 2,
       borderRadius: 8,
       backgroundColor: 'transparent',
-    },
-    suggestionText: {
-      ...atoms.body_1_lg_regular,
-      textTransform: 'none',
-      color: color.text_primary_medium,
     },
     suggestionArea: {
       backgroundColor: color.bg_color_max,

@@ -17,7 +17,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation} from 'react-query'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {CopyButton} from '../../../components/CopyButton'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
 import {Icon} from '../../../components/Icon'
@@ -169,16 +169,11 @@ export const ManageCollateralScreen = () => {
       </ScrollView>
 
       {shouldShowPrimaryButton && (
-        <Button
-          title={strings.generateCollateral}
-          onPress={handleGenerateCollateral}
-          shelleyTheme
-          disabled={isLoading}
-        />
+        <Button title={strings.generateCollateral} onPress={handleGenerateCollateral} disabled={isLoading} />
       )}
 
       {shouldShowBackButton && params?.backButton && (
-        <Button title={params.backButton.content} onPress={params.backButton.onPress} shelleyTheme />
+        <Button title={params.backButton.content} onPress={params.backButton.onPress} />
       )}
 
       <Space height="lg" />

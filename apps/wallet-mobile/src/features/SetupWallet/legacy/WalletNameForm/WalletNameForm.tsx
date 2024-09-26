@@ -5,7 +5,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, View, ViewStyle} from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {ProgressStep} from '../../../../components/ProgressStep'
 import {TextInput} from '../../../../components/TextInput/TextInput'
@@ -23,7 +23,6 @@ type Props = {
     totalSteps: number
   }
   containerStyle?: ViewStyle
-  buttonStyle?: ViewStyle
   topContent?: React.ReactNode
   bottomContent?: React.ReactNode
   isWaiting?: boolean
@@ -34,7 +33,6 @@ export const WalletNameForm = ({
   image,
   progress,
   containerStyle,
-  buttonStyle,
   topContent,
   bottomContent,
   defaultWalletName,
@@ -92,10 +90,8 @@ export const WalletNameForm = ({
 
         <View style={styles.buttonContainer}>
           <Button
-            block
             onPress={() => onSubmit({name: name.trim()})}
             title={strings.save}
-            style={[styles.button, buttonStyle]}
             disabled={hasErrors || isWaiting}
             testID="saveWalletButton"
           />
@@ -127,10 +123,6 @@ const useStyles = () => {
     buttonContainer: {
       flexDirection: 'row',
       marginTop: 12,
-    },
-    button: {
-      marginHorizontal: 10,
-      marginVertical: 16,
     },
   })
 

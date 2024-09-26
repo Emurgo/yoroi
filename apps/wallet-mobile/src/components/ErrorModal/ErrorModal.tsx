@@ -6,7 +6,7 @@ import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, 
 import image from '../../assets/img/error.png'
 import globalMessages, {errorMessages} from '../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../kernel/utils'
-import {Button} from '../Button/Button'
+import {Button} from '../Button/NewButton'
 import {Icon} from '../Icon'
 import {Modal} from '../legacy/Modal/Modal'
 
@@ -63,13 +63,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
         </View>
       )}
 
-      <Button
-        block
-        shelleyTheme
-        onPress={onDismiss}
-        title={intl.formatMessage(globalMessages.close)}
-        testID="closeErrorModalButton"
-      />
+      <Button onPress={onDismiss} title={intl.formatMessage(globalMessages.close)} testID="closeErrorModalButton" />
     </ScrollView>
   )
 }

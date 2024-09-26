@@ -18,7 +18,7 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Icon} from '../../../../components/Icon'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '../../../../components/Modal/ModalContext'
@@ -151,7 +151,7 @@ export const SaveNanoXScreen = () => {
 
         <Space height="sm" />
 
-        <Button title={strings.continueButton} shelleyTheme onPress={closeModal} />
+        <Button title={strings.continueButton} onPress={closeModal} />
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
@@ -186,7 +186,7 @@ export const SaveNanoXScreen = () => {
 
         <Space height="sm" />
 
-        <Button title={strings.continueButton} shelleyTheme onPress={closeModal} />
+        <Button title={strings.continueButton} onPress={closeModal} />
       </View>,
       HEIGHT_MODAL_CHECKSUM,
     )
@@ -243,7 +243,6 @@ export const SaveNanoXScreen = () => {
 
         <View>
           <Button
-            shelleyTheme
             title={strings.next}
             onPress={handleOnSubmit}
             testID="setup-restore-step2-next-button"

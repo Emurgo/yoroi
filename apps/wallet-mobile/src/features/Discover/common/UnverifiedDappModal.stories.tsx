@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {UnverifiedDappModal, useOpenUnverifiedDappModal} from './UnverifiedDappModal'
 
 storiesOf('Discover UnverifiedDappModal', module)
@@ -25,5 +25,5 @@ const WithButton = () => {
     })
   }
 
-  return <Button title="Open Modal" shelleyTheme onPress={handleOnPress} />
+  return <Button title="Open Modal" onPress={handleOnPress} />
 }

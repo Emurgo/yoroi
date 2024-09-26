@@ -3,7 +3,7 @@ import {Image} from 'expo-image'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Icon} from '../../../components/Icon'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
@@ -110,7 +110,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo, showSing
 
       <Spacer height={46} />
 
-      <Button title={strings.confirmConnectionModalConnect} shelleyTheme onPress={onConfirm} />
+      <Button title={strings.confirmConnectionModalConnect} onPress={onConfirm} />
     </View>
   )
 }

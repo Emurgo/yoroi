@@ -7,7 +7,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Space} from '../../../components/Space/Space'
 import {Text} from '../../../components/Text'
 import {useWalletNavigation} from '../../../kernel/navigation'
@@ -57,7 +57,7 @@ export const DarkThemeAnnouncement = () => {
         </View>
       </ScrollView>
 
-      <Button title={strings.continue} disabled={isSetScreenShownLoading} onPress={navigate} shelleyTheme />
+      <Button title={strings.continue} disabled={isSetScreenShownLoading} onPress={navigate} />
 
       {Platform.OS === 'android' && <Space height="lg" />}
     </SafeAreaView>

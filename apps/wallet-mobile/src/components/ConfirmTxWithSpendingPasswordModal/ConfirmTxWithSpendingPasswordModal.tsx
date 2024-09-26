@@ -7,7 +7,7 @@ import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSe
 import {debugWalletInfo, features} from '../../kernel/features'
 import {useSignTxWithPassword, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
-import {Button} from '../Button/Button'
+import {Button} from '../Button/NewButton'
 import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'
 import {Checkmark, TextInput} from '../TextInput/TextInput'
@@ -73,7 +73,6 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
       <View style={styles.actions}>
         <Button
           testID="confirmButton"
-          shelleyTheme
           title={strings.sign}
           onPress={() => onSubmit?.(spendingPassword)}
           disabled={spendingPassword.length === 0}

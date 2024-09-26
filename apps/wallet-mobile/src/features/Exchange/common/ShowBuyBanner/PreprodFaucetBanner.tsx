@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Linking, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useStrings} from '../useStrings'
@@ -35,7 +35,6 @@ export const PreprodFaucetBanner = () => {
 
           <Button
             testID="rampOnOffButton"
-            shelleyTheme
             title={strings.preprodFaucetBannerButtonText}
             onPress={handleOnPress}
             style={styles.spaceButton}

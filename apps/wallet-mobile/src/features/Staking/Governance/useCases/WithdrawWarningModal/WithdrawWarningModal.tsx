@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {useStrings} from '../../common/strings'
@@ -23,7 +23,7 @@ export const WithdrawWarningModal = ({onParticipatePress}: Props) => {
 
       <Spacer fill />
 
-      <Button title={strings.withdrawWarningButton} shelleyTheme onPress={onParticipatePress} />
+      <Button title={strings.withdrawWarningButton} onPress={onParticipatePress} />
 
       <Spacer height={24} />
     </View>

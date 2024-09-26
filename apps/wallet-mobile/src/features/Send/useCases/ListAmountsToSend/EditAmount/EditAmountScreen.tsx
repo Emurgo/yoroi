@@ -7,7 +7,7 @@ import * as React from 'react'
 import {InteractionManager, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {Space} from '../../../../../components/Space/Space'
@@ -153,7 +153,6 @@ export const EditAmountScreen = () => {
           <ApplyButton
             onPress={handleOnApply}
             title={strings.apply.toLocaleUpperCase()}
-            shelleyTheme
             disabled={isUnableToSpend || !hasBalance || isZero}
           />
         </Actions>

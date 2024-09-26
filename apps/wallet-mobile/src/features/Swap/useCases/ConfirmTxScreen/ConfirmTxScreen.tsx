@@ -5,7 +5,7 @@ import {InteractionManager, StyleSheet, useWindowDimensions, View, ViewProps} fr
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay/LoadingOverlay'
 import {useModal} from '../../../../components/Modal/ModalContext'
@@ -132,7 +132,6 @@ export const ConfirmTxScreen = () => {
         <Button
           disabled={isButtonDisabled}
           testID="swapButton"
-          shelleyTheme
           title={strings.confirm}
           onPress={() => {
             if (meta.isEasyConfirmationEnabled) {

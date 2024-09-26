@@ -4,7 +4,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, Linking, StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {TextInput} from '../../../../../components/TextInput/TextInput'
@@ -75,7 +75,6 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       <Button
         title={strings.confirm}
         disabled={isNonNullable(error) || drepId.length === 0 || !isFetched || isFetching}
-        shelleyTheme
         onPress={handleOnPress}
       />
 

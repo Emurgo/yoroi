@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View, ViewProps} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Icon} from '../../../components/Icon'
 import {Space} from '../../../components/Space/Space'
 import {formatTimeSpan} from '../../../yoroi-wallets/utils/timeUtils'
@@ -36,7 +36,7 @@ export const PoolTransitionNotice = () => {
       </Text>
 
       <Actions>
-        <Button style={styles.noticeButton} onPress={navigateToUpdate} title={strings.update} block />
+        <Button style={styles.noticeButton} onPress={navigateToUpdate} title={strings.update} />
 
         <Space fill />
       </Actions>

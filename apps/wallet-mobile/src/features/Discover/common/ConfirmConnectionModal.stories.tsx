@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {ConfirmConnectionModal, useOpenConfirmConnectionModal} from './ConfirmConnectionModal'
 
 storiesOf('Discover ConfirmConnectionModal', module)
@@ -50,9 +50,9 @@ const WithButton = () => {
 
   return (
     <View>
-      <Button title="Open modal without warning" shelleyTheme onPress={handleOnPressNoWarning} />
+      <Button title="Open modal without warning" onPress={handleOnPressNoWarning} />
 
-      <Button title="Open modal with warning" shelleyTheme onPress={handleOnPressWarning} />
+      <Button title="Open modal with warning" onPress={handleOnPressWarning} />
     </View>
   )
 }

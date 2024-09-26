@@ -4,7 +4,7 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, View, ViewStyle} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../../common/useStrings'
 
@@ -52,7 +52,7 @@ export const CreateExchangeButton = ({
 
   return (
     <View style={[styles.actions, style]}>
-      <Button testID="rampOnOffButton" shelleyTheme title={title} onPress={handleOnPress} disabled={disabled} />
+      <Button testID="rampOnOffButton" title={title} onPress={handleOnPress} disabled={disabled} />
     </View>
   )
 }

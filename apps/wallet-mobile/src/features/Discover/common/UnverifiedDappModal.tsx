@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {useStrings} from './useStrings'
@@ -46,7 +46,7 @@ export const UnverifiedDappModal = ({onConfirm}: Props) => {
       <Spacer fill />
 
       <View style={styles.actions}>
-        <Button title={strings.understand} shelleyTheme onPress={onConfirm} />
+        <Button title={strings.understand} onPress={onConfirm} />
       </View>
     </View>
   )

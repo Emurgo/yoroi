@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, Platform, ScrollView, StyleSheet} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Space} from '../../../components/Space/Space'
 import {Text} from '../../../components/Text'
 import globalMessages from '../../../kernel/i18n/global-messages'
@@ -57,8 +57,6 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
       <Space height="md" />
 
       <Button
-        block
-        shelleyTheme
         onPress={onSelectUSB}
         title={getUsbButtonTitle()}
         disabled={!isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
@@ -71,13 +69,7 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
 
       <Space height="md" />
 
-      <Button
-        block
-        shelleyTheme
-        onPress={() => request()}
-        title={strings.bluetoothButton}
-        testID="connectWithBLEButton"
-      />
+      <Button onPress={() => request()} title={strings.bluetoothButton} testID="connectWithBLEButton" />
     </ScrollView>
   )
 }

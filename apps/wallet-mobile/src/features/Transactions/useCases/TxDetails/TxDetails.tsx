@@ -22,7 +22,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner} from '../../../../components/Banner/Banner'
 import {Boundary} from '../../../../components/Boundary/Boundary'
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {CopyButton} from '../../../../components/CopyButton'
 import {FadeIn} from '../../../../components/FadeIn'
 import {Icon} from '../../../../components/Icon'
@@ -187,7 +187,6 @@ export const TxDetails = () => {
             <Button
               onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
               title={strings.openInExplorer}
-              shelleyTheme
             />
           </Actions>
         )}

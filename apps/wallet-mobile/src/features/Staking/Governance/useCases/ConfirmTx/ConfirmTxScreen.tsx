@@ -5,7 +5,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {ConfirmTxWithHwModal} from '../../../../../components/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
 import {ConfirmTxWithOsModal} from '../../../../../components/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
 import {ConfirmTxWithSpendingPasswordModal} from '../../../../../components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
@@ -205,7 +205,7 @@ export const ConfirmTxScreen = () => {
 
       <Spacer fill />
 
-      <Button title={strings.confirm} shelleyTheme onPress={onSubmit} />
+      <Button title={strings.confirm} onPress={onSubmit} />
 
       <Spacer height={26} />
     </View>

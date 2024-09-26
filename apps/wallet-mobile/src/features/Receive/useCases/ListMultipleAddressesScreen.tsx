@@ -13,7 +13,7 @@ import {
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Space} from '../../../components/Space/Space'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
@@ -127,7 +127,6 @@ export const ListMultipleAddressesScreen = () => {
         layout={Layout}
       >
         <Button
-          shelleyTheme
           title={strings.generateButton}
           disabled={hasReachedGapLimit}
           onPress={handleOnGenerateNewReceiveAddress}

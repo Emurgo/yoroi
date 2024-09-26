@@ -4,7 +4,7 @@ import * as React from 'react'
 import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Checkbox} from '../../../../components/Checkbox/Checkbox'
 import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
 import {ShareQRCodeCard} from '../../../../components/ShareQRCodeCard/ShareQRCodeCard'
@@ -57,7 +57,7 @@ export const QrCode = () => {
       </ScrollView>
 
       <Actions style={styles.padding}>
-        <Button shelleyTheme onPress={onNext} title={strings.completeButton} disabled={isCopying || !checked} />
+        <Button onPress={onNext} title={strings.completeButton} disabled={isCopying || !checked} />
       </Actions>
     </SafeAreaView>
   )

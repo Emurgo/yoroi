@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Boundary} from '../../../components/Boundary/Boundary'
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {Checkbox} from '../../../components/Checkbox/Checkbox'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {PleaseWaitView} from '../../../components/PleaseWaitModal'
@@ -122,7 +122,6 @@ const WithdrawalTxForm = ({wallet, onDone}: {wallet: YoroiWallet; onDone: (withd
 
       <View style={[styles.actions, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
         <Button
-          shelleyTheme
           onPress={() => setDeregister(false)}
           title={strings.keepButton}
           disabled={!hasRewards || isLoading}

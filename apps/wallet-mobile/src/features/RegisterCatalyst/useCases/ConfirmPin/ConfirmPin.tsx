@@ -5,7 +5,7 @@ import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {BACKSPACE, NumericKeyboard} from '../../../../components/NumericKeyboard'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'
@@ -222,7 +222,7 @@ export const ConfirmPin = () => {
 
       <Padding>
         <Actions>
-          <Button shelleyTheme onPress={() => onNext()} title={strings.continueButton} disabled={!done || isLoading} />
+          <Button onPress={() => onNext()} title={strings.continueButton} disabled={!done || isLoading} />
         </Actions>
       </Padding>
 

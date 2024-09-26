@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Your Summary",
     "file": "src/legacy/Dashboard/UserSummary.tsx",
     "start": {
-      "line": 162,
+      "line": 163,
       "column": 9,
-      "index": 4849
+      "index": 4889
     },
     "end": {
-      "line": 165,
+      "line": 166,
       "column": 3,
-      "index": 4951
+      "index": 4991
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Total Rewards",
     "file": "src/legacy/Dashboard/UserSummary.tsx",
     "start": {
-      "line": 166,
+      "line": 167,
       "column": 16,
-      "index": 4969
+      "index": 5009
     },
     "end": {
-      "line": 169,
+      "line": 170,
       "column": 3,
-      "index": 5079
+      "index": 5119
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Total Delegated",
     "file": "src/legacy/Dashboard/UserSummary.tsx",
     "start": {
-      "line": 170,
+      "line": 171,
       "column": 18,
-      "index": 5099
+      "index": 5139
     },
     "end": {
-      "line": 173,
+      "line": 174,
       "column": 3,
-      "index": 5213
+      "index": 5253
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Withdraw",
     "file": "src/legacy/Dashboard/UserSummary.tsx",
     "start": {
-      "line": 174,
+      "line": 175,
       "column": 23,
-      "index": 5238
+      "index": 5278
     },
     "end": {
-      "line": 177,
+      "line": 178,
       "column": 3,
-      "index": 5350
+      "index": 5390
     }
   }
 ]

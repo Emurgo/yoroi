@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../components/Button/NewButton'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
@@ -66,11 +66,7 @@ export const SuccessTxScreen = () => {
 
       <Spacer fill />
 
-      <Button
-        title={navigateToStaking ? strings.goToStaking : strings.goToGovernance}
-        shelleyTheme
-        onPress={handleOnPress}
-      />
+      <Button title={navigateToStaking ? strings.goToStaking : strings.goToGovernance} onPress={handleOnPress} />
 
       <Spacer height={6} />
     </View>

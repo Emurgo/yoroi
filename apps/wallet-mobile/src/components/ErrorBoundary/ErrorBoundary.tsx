@@ -4,7 +4,7 @@ import {BackHandler, Image, Platform, ScrollView, StyleSheet, Text, View} from '
 
 import errorImage from '../../assets/img/error.png'
 import {logger} from '../../kernel/logger/logger'
-import {Button} from '../Button/Button'
+import {Button} from '../Button/NewButton'
 import {CopyButton} from '../CopyButton'
 import {Spacer} from '../Spacer/Spacer'
 import {ExpandableItem} from './ExpandableItem'
@@ -84,7 +84,7 @@ const ErrorView = ({state}: {state: State}) => {
 
       {Platform.OS === 'android' && (
         <View style={{padding: 16}}>
-          <Button shelleyTheme onPress={() => BackHandler.exitApp()} title="OK" style={{width: '100%'}} />
+          <Button onPress={() => BackHandler.exitApp()} title="OK" style={{width: '100%'}} />
         </View>
       )}
     </View>

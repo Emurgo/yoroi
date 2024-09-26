@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../components/Button/NewButton'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {Text} from '../../../components/Text'
@@ -32,7 +32,7 @@ const HWNotSupportedModal = ({onConfirm}: Props) => {
 
       <Spacer fill />
 
-      <Button title={strings.cancel} shelleyTheme onPress={onConfirm} />
+      <Button title={strings.cancel} onPress={onConfirm} />
     </>
   )
 }

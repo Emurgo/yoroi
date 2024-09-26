@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button} from '../../../../components/Button/NewButton'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useStrings} from '../strings'
 import {ConectionErrorImage} from './ConectionErrorImage'
@@ -29,7 +29,7 @@ export const ServiceUnavailable = ({resetErrorBoundary}: ServiceUnavailableProps
 
         <Spacer height={20} />
 
-        <Button onPress={resetErrorBoundary} title={strings.tryAgain} style={styles.button} shelleyTheme />
+        <Button onPress={resetErrorBoundary} title={strings.tryAgain} style={styles.button} />
       </View>
     </SafeAreaView>
   )
