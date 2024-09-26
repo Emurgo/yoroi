@@ -26,6 +26,12 @@ storiesOf('Button', module).add('default', () => {
 
           <Button title="Continue" icon={Icon.Bluetooth} />
         </View>
+
+        <View style={{flexDirection: 'column', gap: 16, paddingVertical: 16}}>
+          <Button type={ButtonType.Secondary} title="Cancel" />
+
+          <Button title="Continue" icon={Icon.Bluetooth} />
+        </View>
       </Grid>
 
       <Accordion

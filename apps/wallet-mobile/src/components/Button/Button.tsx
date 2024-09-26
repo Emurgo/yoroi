@@ -125,8 +125,8 @@ const useStyles = ({
     case ButtonType.Critical:
       shape =
         size === 'M'
-          ? {...atoms.py_lg, ...atoms.px_xl, ...atoms.gap_sm, ...atoms.rounded_sm}
-          : {...atoms.py_md, ...atoms.px_lg, ...atoms.gap_xs, ...atoms.rounded_sm}
+          ? {maxHeight: 56, ...atoms.py_lg, ...atoms.px_xl, ...atoms.gap_sm, ...atoms.rounded_sm}
+          : {maxHeight: 40, ...atoms.py_md, ...atoms.px_lg, ...atoms.gap_xs, ...atoms.rounded_sm}
       break
     case ButtonType.Text:
     case ButtonType.SecondaryText:
