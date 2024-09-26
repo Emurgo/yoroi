@@ -24,6 +24,7 @@ export function usePortfolioTokenTraits(
     ...options,
     queryFn: async () => {
       const response = await getTokenTraits(id)
+      console.log('usePortfolioTokenTraits', JSON.stringify(response, null, 2))
       if (isRight(response)) return response.value.data
       throw new Error('usePorfolioTokenTraits')
     },

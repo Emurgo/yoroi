@@ -59,11 +59,11 @@ const TabBar = ({navigation, state}: MaterialTopTabBarProps) => {
         [strings.overviewTab, 'overview'],
         [strings.utxosTab, 'utxos'],
       ]}
-      style={styles.tabBar}
-      showsHorizontalScrollIndicator={false}
       renderItem={({item: [label, key], index}) => (
         <Tab key={key} active={state.index === index} label={label} onPress={() => navigation.navigate(key)} />
       )}
+      style={styles.tabBar}
+      showsHorizontalScrollIndicator={false}
       bounces={false}
       horizontal
     />

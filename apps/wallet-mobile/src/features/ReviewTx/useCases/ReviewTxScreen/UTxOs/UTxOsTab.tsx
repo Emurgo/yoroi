@@ -59,15 +59,15 @@ const Input = ({input}: {input: FormattedInput}) => {
       <Space height="sm" />
 
       <View style={styles.tokenItems}>
-        {input.assets.map((asset) => (
-          <TokenItem key={asset.name} label={asset.label} isPrimaryToken={asset.isPrimary} />
+        {input.assets.map((asset, index) => (
+          <TokenItem tokenInfo={asset.tokenInfo} key={index} label={asset.label} isPrimaryToken={asset.isPrimary} />
         ))}
       </View>
     </View>
   )
 }
 const Outputs = ({outputs}: {outputs: FormattedOutputs}) => {
-  return outputs.map((output) => <Output key={output.address} output={output} />)
+  return outputs.map((output, index) => <Output key={index} output={output} />)
 }
 
 const Output = ({output}: {output: FormattedOutput}) => {
@@ -89,8 +89,14 @@ const Output = ({output}: {output: FormattedOutput}) => {
       <Space height="sm" />
 
       <View style={styles.tokenItems}>
-        {output.assets.map((asset) => (
-          <TokenItem isSent={false} key={asset.name} label={asset.label} isPrimaryToken={asset.isPrimary} />
+        {output.assets.map((asset, index) => (
+          <TokenItem
+            key={index}
+            tokenInfo={asset.tokenInfo}
+            isSent={false}
+            label={asset.label}
+            isPrimaryToken={asset.isPrimary}
+          />
         ))}
       </View>
     </View>

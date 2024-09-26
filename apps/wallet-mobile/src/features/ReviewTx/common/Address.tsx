@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TextStyle, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TextProps, TextStyle, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../components/Icon'
 import {Space} from '../../../components/Space/Space'
@@ -11,11 +11,13 @@ export const Address = ({
   index,
   textStyle,
   multiline = false,
+  addressProps,
 }: {
   address: string
   index?: number
   textStyle?: TextStyle
   multiline?: boolean
+  addressProps?: TextProps
 }) => {
   const {styles, colors} = useStyles()
   const [, copy] = useCopy()
@@ -26,11 +28,12 @@ export const Address = ({
         style={[styles.addressText, textStyle]}
         numberOfLines={!multiline ? 1 : undefined}
         ellipsizeMode={!multiline ? 'middle' : undefined}
+        {...addressProps}
       >
         {address}
       </Text>
 
-      {index !== undefined && (
+      {index !== undefined ? (
         <>
           <Space width="sm" />
 
@@ -38,6 +41,8 @@ export const Address = ({
 
           <Space width="sm" />
         </>
+      ) : (
+        <Space width="xs" />
       )}
 
       <TouchableOpacity onPress={() => copy(address)} activeOpacity={0.5}>

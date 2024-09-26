@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 
 export type TransactionDetails = {
   id: string
@@ -858,6 +858,7 @@ export interface Withdrawals {
 
 export type FormattedInput = {
   assets: Array<{
+    tokenInfo: Portfolio.Token.Info
     name: string
     label: string
     quantity: Balance.Quantity
@@ -873,6 +874,7 @@ export type FormattedInput = {
 export type FormattedInputs = Array<FormattedInput>
 export type FormattedOutput = {
   assets: Array<{
+    tokenInfo: Portfolio.Token.Info
     name: string
     label: string
     quantity: Balance.Quantity
@@ -884,6 +886,7 @@ export type FormattedOutput = {
 }
 export type FormattedOutputs = Array<FormattedOutput>
 export type FormattedFee = {
+  tokenInfo: Portfolio.Token.Info
   name: string
   label: string
   quantity: Balance.Quantity

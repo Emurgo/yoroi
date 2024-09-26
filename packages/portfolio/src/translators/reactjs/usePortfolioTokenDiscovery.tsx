@@ -24,6 +24,10 @@ export function usePortfolioTokenDiscovery(
     ...options,
     queryFn: async () => {
       const response = await getTokenDiscovery(id)
+      console.log(
+        'usePortfolioTokenDiscovery',
+        JSON.stringify(response, null, 2),
+      )
       if (isRight(response)) return response.value.data
       throw new Error('usePortfolioTokenDiscovery')
     },

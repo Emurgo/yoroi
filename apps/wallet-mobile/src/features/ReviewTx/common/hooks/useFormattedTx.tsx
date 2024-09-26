@@ -102,6 +102,7 @@ const formatInputs = async (
         coin != null
           ? [
               {
+                tokenInfo: wallet.portfolioPrimaryTokenInfo,
                 name: wallet.portfolioPrimaryTokenInfo.name,
                 label: formatTokenWithText(coin, wallet.portfolioPrimaryTokenInfo),
                 quantity: coin,
@@ -118,6 +119,7 @@ const formatInputs = async (
             const quantity = asQuantity(a.amount)
 
             return {
+              tokenInfo,
               name: infoExtractName(tokenInfo),
               label: formatTokenWithText(quantity, tokenInfo),
               quantity: quantity,
@@ -151,6 +153,7 @@ const formatOutputs = async (
 
       const primaryAssets = [
         {
+          tokenInfo: wallet.portfolioPrimaryTokenInfo,
           name: wallet.portfolioPrimaryTokenInfo.name,
           label: formatTokenWithText(coin, wallet.portfolioPrimaryTokenInfo),
           quantity: coin,
@@ -166,6 +169,7 @@ const formatOutputs = async (
               const quantity = asQuantity(amount)
 
               return {
+                tokenInfo,
                 name: infoExtractName(tokenInfo),
                 label: formatTokenWithText(quantity, tokenInfo),
                 quantity,
@@ -191,6 +195,7 @@ export const formatFee = (wallet: YoroiWallet, data: TransactionBody): Formatted
   const fee = asQuantity(data?.fee ?? '0')
 
   return {
+    tokenInfo: wallet.portfolioPrimaryTokenInfo,
     name: wallet.portfolioPrimaryTokenInfo.name,
     label: formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo),
     quantity: fee,

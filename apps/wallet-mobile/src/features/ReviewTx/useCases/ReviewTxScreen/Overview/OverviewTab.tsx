@@ -6,7 +6,6 @@ import * as React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
-import {Info} from '../../../../../components/Info/Info'
 import {Space} from '../../../../../components/Space/Space'
 import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {Quantities} from '../../../../../yoroi-wallets/utils/utils'
@@ -140,10 +139,10 @@ const SenderTokens = ({tx, notOwnedOutputs}: {tx: FormattedTx; notOwnedOutputs: 
 
         <Space fill />
 
-        <TokenItem label={totalPrimaryTokenSpentLabel} />
+        <TokenItem tokenInfo={wallet.portfolioPrimaryTokenInfo} label={totalPrimaryTokenSpentLabel} />
 
-        {notPrimaryTokenSent.map((token) => (
-          <TokenItem key={token.name} label={token.label} isPrimaryToken={false} />
+        {notPrimaryTokenSent.map((token, index) => (
+          <TokenItem key={index} tokenInfo={token.tokenInfo} label={token.label} isPrimaryToken={false} />
         ))}
       </View>
     </View>
@@ -285,7 +284,7 @@ const CreatedByInfoItem = () => {
 
 // 🚧 TODO: WIP 🚧
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ReceiverTokensSectionMultiReceiver = () => {
+/* const ReceiverTokensSectionMultiReceiver = () => {
   const {styles} = useStyles()
 
   return (
@@ -314,25 +313,25 @@ const ReceiverTokensSectionMultiReceiver = () => {
 
             <Space fill />
 
-            <TokenItem label="-20,204617 ADA" isSent={false} />
+            <TokenItem tokenId="12345" label="-20,204617 ADA" isSent={false} />
 
-            <TokenItem label="-10 Token 1" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="-10 Token 1" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="-100 Token 2" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="-100 Token 2" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="-1 Token 3" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="-1 Token 3" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="100000000000000000 Token 4" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="100000000000000000 Token 4" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="1000000 Token 5" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="1000000 Token 5" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="100 Token 6" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="100 Token 6" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="100000000000 Token 7" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="100000000000 Token 7" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="1 Token 8" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="1 Token 8" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="1000 Token 9" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="1000 Token 9" isPrimaryToken={false} isSent={false} />
           </View>
         </View>
       </CollapsibleSection>
@@ -340,10 +339,10 @@ const ReceiverTokensSectionMultiReceiver = () => {
       <Space height="lg" />
     </>
   )
-}
+} */
 
 // 🚧 TODO: WIP 🚧
-const ReceiverSectionLabel = () => {
+/* const ReceiverSectionLabel = () => {
   const {styles, colors} = useStyles()
 
   return (
@@ -355,4 +354,4 @@ const ReceiverSectionLabel = () => {
       <Text style={styles.tokenSectionLabel}>Receive</Text>
     </View>
   )
-}
+} */
