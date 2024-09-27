@@ -2,16 +2,7 @@ import {useDappConnector} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {
-  Alert,
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {Alert, Linking, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
@@ -46,13 +37,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const {manager} = useDappConnector()
   const {track} = useMetrics()
 
-  const HEIGHT_SCREEN = useWindowDimensions().height
-
-  // For devices like iPhone SE wuth logical pixel height < 700, we need a bottom sheet with more height
-  const heightDialogByHeightScreen =
-    HEIGHT_SCREEN < 700
-      ? (HEIGHT_SCREEN * (dApp.isSingleAddress ? 70 : 50)) / 100
-      : (HEIGHT_SCREEN * (dApp.isSingleAddress ? 50 : 40)) / 100
+  const heightDialogByHeightScreen = dApp.isSingleAddress ? 460 : 340
 
   const heightDialogByInit = INIT_DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
   const dialogHeight = heightDialogByInit < heightDialogByHeightScreen ? heightDialogByHeightScreen : heightDialogByInit
