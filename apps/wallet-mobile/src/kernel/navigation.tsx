@@ -107,7 +107,6 @@ export const defaultMaterialTopTabNavigationOptions = (
 // ROUTES
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
-  'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   portfolio: NavigatorScreenParams<Portfolio2Routes>
   discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
@@ -625,7 +624,6 @@ const routesWithTabBar: Record<keyof WalletTabRoutes, string[]> = {
   portfolio: ['dashboard-portfolio'],
   discover: ['discover-select-dapp-from-list'],
   menu: ['_menu'],
-  'staking-dashboard': ['staking-dashboard-main'],
 }
 
 const getFocusedRouteName = (state: Partial<NavigationState> | NavigationState['routes'][0]['state']): string[] => {

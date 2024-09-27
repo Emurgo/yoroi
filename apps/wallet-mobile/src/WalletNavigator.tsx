@@ -199,7 +199,6 @@ const WalletTabNavigator = () => {
                 ),
               tabBarLabel: strings.menuTabBarLabel,
               tabBarTestID: 'menuTabBarButton',
-              headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
             }}
           />
         </Tab.Navigator>
