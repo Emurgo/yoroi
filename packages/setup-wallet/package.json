@@ -161,7 +161,7 @@
     "eslint-plugin-ft-flow": "^3.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "flowgen": "^1.21.0",
-    "immer": "^10.0.2",
+    "immer": "10.1.1",
     "pod-install": "^0.1.0",
     "react": "18.2.0",
     "react-native": "0.74.4",
@@ -170,7 +170,7 @@
     "release-it": "^15.0.0"
   },
   "peerDependencies": {
-    "immer": "^10.0.2"
+    "immer": "10.1.1"
   },
   "optionalDependencies": {
     "react": "18.2.0",

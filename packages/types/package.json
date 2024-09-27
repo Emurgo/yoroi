@@ -100,8 +100,8 @@
     "@emurgo/yoroi-lib": "^1.2.1",
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^29.5.12",
-    "axios": "^1.5.0",
-    "bignumber.js": "^9.0.1",
+    "axios": "1.7.7",
+    "bignumber.js": "9.1.2",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
@@ -113,14 +113,14 @@
     "prettier": "^2.0.5",
     "react-native-builder-bob": "^0.23.2",
     "release-it": "^15.0.0",
-    "rxjs": "^7.8.1",
+    "rxjs": "7.8.1",
     "typescript": "5.0.4"
   },
   "peerDependencies": {
     "@emurgo/yoroi-lib": "^1.2.1",
-    "axios": "^1.5.0",
-    "bignumber.js": "^9.0.1",
-    "rxjs": "^7.8.1"
+    "axios": "1.7.7",
+    "bignumber.js": "9.1.2",
+    "rxjs": "7.8.1"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {

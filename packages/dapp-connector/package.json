@@ -138,10 +138,6 @@
       }
     }
   },
-  "dependencies": {
-    "axios": "^1.5.0",
-    "zod": "^3.22.1"
-  },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
@@ -164,9 +160,10 @@
     "@types/react": "^18.2.6",
     "@types/react-test-renderer": "^18.0.0",
     "@yoroi/types": "1.5.8",
+    "axios": "1.7.7",
     "axios-mock-adapter": "^1.21.5",
     "babel-jest": "^29.6.3",
-    "bignumber.js": "^9.0.1",
+    "bignumber.js": "9.1.2",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
@@ -185,10 +182,13 @@
     "react-query": "^3.39.3",
     "react-test-renderer": "18.2.0",
     "release-it": "^15.0.0",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "zod": "3.23.8"
   },
   "peerDependencies": {
-    "bignumber.js": "^9.0.1"
+    "axios": "1.7.7",
+    "bignumber.js": "9.1.2",
+    "zod": "3.23.8"
   },
   "optionalDependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3",

@@ -164,7 +164,7 @@
     "@types/react": "^18.2.6",
     "@types/react-test-renderer": "^18.0.0",
     "@yoroi/types": "1.5.8",
-    "axios": "^1.5.0",
+    "axios": "1.7.7",
     "babel-jest": "^29.6.3",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
@@ -184,13 +184,13 @@
     "react-test-renderer": "18.2.0",
     "release-it": "^15.0.0",
     "typescript": "5.0.4",
-    "zod": "^3.22.2"
+    "zod": "3.23.8"
   },
   "peerDependencies": {
     "@yoroi/api": "^1.5.2",
     "@yoroi/common": "^1.5.4",
-    "axios": "^1.5.0",
-    "zod": "^3.22.2"
+    "axios": "1.7.7",
+    "zod": "3.23.8"
   },
   "optionalDependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3",
