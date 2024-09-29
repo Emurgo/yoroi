@@ -146,7 +146,7 @@
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
     "@commitlint/config-conventional": "^17.0.2",
-    "@react-native-async-storage/async-storage": "^1.19.3",
+    "@react-native-async-storage/async-storage": "2.0.0",
     "@react-native-community/eslint-config": "^3.0.2",
     "@react-native/babel-preset": "0.74.86",
     "@react-native/eslint-config": "0.74.86",
@@ -193,7 +193,7 @@
     "immer": "10.1.1"
   },
   "optionalDependencies": {
-    "@react-native-async-storage/async-storage": "^1.19.3",
+    "@react-native-async-storage/async-storage": "2.0.0",
     "react": "18.2.0",
     "react-query": "^3.39.3"
   },

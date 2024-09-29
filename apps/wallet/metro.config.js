@@ -1,8 +1,8 @@
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
-const path = require('path');
+const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config')
+const path = require('path')
 
-const projectRoot = __dirname;
-const workspaceRoot = path.resolve(projectRoot, '../..');
+const projectRoot = __dirname
+const workspaceRoot = path.resolve(projectRoot, '../..')
 
 /**
  * Metro configuration
@@ -20,6 +20,6 @@ const config = {
       path.resolve(workspaceRoot, 'node_modules'),
     ],
   },
-};
+}
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+module.exports = mergeConfig(getDefaultConfig(__dirname), config)

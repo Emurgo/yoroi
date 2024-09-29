@@ -140,7 +140,7 @@
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
     "@commitlint/config-conventional": "^17.0.2",
-    "@react-native-async-storage/async-storage": "^1.19.3",
+    "@react-native-async-storage/async-storage": "2.0.0",
     "@react-native-community/eslint-config": "^3.0.2",
     "@react-native/babel-preset": "0.74.86",
     "@react-native/eslint-config": "0.74.86",
@@ -172,7 +172,7 @@
     "react": "18.2.0",
     "react-native": "0.74.4",
     "react-native-builder-bob": "^0.23.2",
-    "react-native-mmkv": "^2.11.0",
+    "react-native-mmkv": "3.0.1",
     "react-query": "^3.39.3",
     "react-test-renderer": "18.2.0",
     "release-it": "^15.0.0",
@@ -189,9 +189,9 @@
     "zod": "3.23.8"
   },
   "optionalDependencies": {
-    "@react-native-async-storage/async-storage": "^1.19.3",
+    "@react-native-async-storage/async-storage": "2.0.0",
     "react": "18.2.0",
-    "react-native-mmkv": "^2.11.0",
+    "react-native-mmkv": "3.0.1",
     "react-query": "^3.39.3"
   },
   "packageManager": "yarn@1.22.21",
