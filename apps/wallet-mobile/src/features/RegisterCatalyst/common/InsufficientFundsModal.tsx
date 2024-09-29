@@ -23,7 +23,7 @@ export const InsufficientFundsModal = () => {
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const fmtMinPrimaryBalance = formatter({
     info: wallet.portfolioPrimaryTokenInfo,
-    quantity: catalystConfig.displayedMinAda,
+    quantity: catalystConfig.minAda,
   })
   const fmtPrimaryBalance = formatter(primaryBalance)
 
