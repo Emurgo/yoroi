@@ -11,7 +11,12 @@ Object.values(TokenChartInterval).forEach((TokenChartInterval) => {
     Error,
     Awaited<ReturnType<typeof ptPriceQueryFn>>,
     ['ptPriceHistory', TokenChartInterval]
-  >({queryKey: ['ptPriceHistory', TokenChartInterval], queryFn: ptPriceQueryFn})
+  >({
+    queryKey: ['ptPriceHistory', TokenChartInterval],
+    queryFn: ptPriceQueryFn,
+    cacheTime: Infinity,
+    staleTime: Infinity,
+  })
 })
 
 const keyToPersist = 'persist'

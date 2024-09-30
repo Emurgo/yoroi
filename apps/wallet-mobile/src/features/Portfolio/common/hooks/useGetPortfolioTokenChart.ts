@@ -52,13 +52,10 @@ const ptTicker = networkConfigs[Chain.Network.Mainnet].primaryTokenInfo.ticker
 
 export const ptPriceQueryFn = async ({queryKey}: {queryKey: ['ptPriceHistory', TokenChartInterval]}) => {
   const response = await fetchPtPriceActivity(getTimestamps(queryKey[1]))
-  if (isRight(response) && !response.value.data.error) {
-    const tickers = response.value.data.tickers
-    if (tickers.length === 0) return null
-    return tickers
+  if (isRight(response) && !response.value.data.error && response.value.data.tickers.length !== 0) {
+    return response.value.data.tickers
   }
-  logger.error('Failed to fetch token chart data for PT')
-  return null
+  throw new Error('Failed to fetch token chart data for PT')
 }
 
 export const useGetPortfolioTokenChart = (
@@ -90,7 +87,6 @@ export const useGetPortfolioTokenChart = (
     enabled: tokenInfo && isPrimaryToken(tokenInfo.info),
     staleTime: time.halfHour,
     cacheTime: time.oneHour,
-    retryDelay: time.oneSecond,
     refetchInterval: time.halfHour,
     queryKey: ['ptPriceHistory', timeInterval],
     queryFn: ptPriceQueryFn,
@@ -105,8 +101,8 @@ export const useGetPortfolioTokenChart = (
       // force queryFn to be async, otherwise it takes longer and doesn't show isFetching
       await delay(0)
 
-      const tickers = ptPriceQuery.data ?? []
-      if (tickers.length === 0) return null
+      const tickers = ptPriceQuery?.data ?? []
+      if (tickers.length === 0) throw new Error('No PT price data')
 
       const validCurrency = currency === ptTicker ? supportedCurrencies.USD : currency ?? supportedCurrencies.USD
 
