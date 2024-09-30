@@ -15,4 +15,5 @@ module.exports = {
       },
     ],
   },
+  ignorePatterns: ['node_modules/', 'android/', 'ios/', 'coverage/'],
 }

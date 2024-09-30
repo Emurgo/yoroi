@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install",
+    "build": "yarn lint",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
