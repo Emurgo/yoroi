@@ -6,26 +6,22 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View}
 
 import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {makeList} from '../../../../../kernel/utils'
 import {PreprodFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/PreprodFaucetBanner'
 import {SanchonetFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/SanchonetFaucetBanner'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {useGetTokensWithBalance} from '../../../common/hooks/useGetTokensWithBalance'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {useZeroBalance} from '../../../common/hooks/useZeroBalance'
 import {BuyADABanner} from './BuyADABanner/BuyADABanner'
 import {DashboardTokenItem} from './DashboardTokenItem'
-import {DashboardTokenSkeletonItem} from './DashboardTokenSkeletonItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 
 export const DashboardTokensList = () => {
   const {styles, cardItemWidth, cardItemWidthForJustAda} = useStyles()
   const navigationTo = useNavigateTo()
   const isZeroADABalance = useZeroBalance()
-  const {isLoading} = useGetTokensWithBalance()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const {
@@ -47,25 +43,6 @@ export const DashboardTokensList = () => {
 
   const handleDirectTokensList = () => {
     navigationTo.tokensList()
-  }
-
-  const renderFooterList = () => {
-    if (isLoading)
-      return (
-        <View style={styles.containerLoading}>
-          <View />
-
-          {makeList(3).map((_, index) => (
-            <View style={[styles.tokenItemContainer, {width: cardItemWidth}]} key={index}>
-              <DashboardTokenSkeletonItem />
-            </View>
-          ))}
-
-          <Spacer width={8} />
-        </View>
-      )
-
-    return <Spacer width={16} />
   }
 
   const renderTokensList = () => {
@@ -96,7 +73,6 @@ export const DashboardTokensList = () => {
         horizontal
         data={tokensList}
         ListHeaderComponent={<Spacer width={16} />}
-        ListFooterComponent={renderFooterList()}
         ItemSeparatorComponent={() => <Spacer width={8} />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.info.id}
@@ -164,10 +140,6 @@ const useStyles = () => {
     title: {
       ...atoms.body_1_lg_medium,
       color: color.gray_900,
-    },
-    containerLoading: {
-      ...atoms.flex_row,
-      ...atoms.gap_sm,
     },
     justAdaContainer: {
       ...atoms.flex_row,
