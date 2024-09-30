@@ -3,7 +3,7 @@ import {
   UseMutationOptions,
   useMutation,
   useQueryClient,
-} from 'react-query'
+} from '@tanstack/react-query'
 
 // TODO: import later from @yoroi/common utils/hooks
 /* istanbul ignore next */

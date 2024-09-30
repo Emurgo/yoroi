@@ -43,6 +43,7 @@
     "react-intl": "6.7.0",
     "react-native": "0.74.4",
     "react-native-mmkv": "3.0.1",
+    "@tanstack/react-query": "4.36.1",
     "rxjs": "7.8.1",
     "zod": "3.23.8"
   },

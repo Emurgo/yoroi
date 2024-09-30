@@ -167,7 +167,6 @@
     "react-native": "0.74.4",
     "react-native-builder-bob": "^0.23.2",
     "react-native-linear-gradient": "2.5.6",
-    "react-query": "^3.39.3",
     "react-test-renderer": "18.2.0",
     "release-it": "^15.0.0",
     "typescript": "5.0.4"

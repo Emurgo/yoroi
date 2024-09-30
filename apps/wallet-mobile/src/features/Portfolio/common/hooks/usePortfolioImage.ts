@@ -1,6 +1,6 @@
 import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
-import {useMutation} from 'react-query'
+import {useMutation} from '@tanstack/react-query'
 
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 

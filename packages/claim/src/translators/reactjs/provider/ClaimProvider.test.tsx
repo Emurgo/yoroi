@@ -1,6 +1,6 @@
 import {act, renderHook} from '@testing-library/react-hooks'
 import {queryClientFixture} from '@yoroi/common'
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 
 import {wrapperMaker} from '../../../fixtures/wrapperMaker'
 import {claimManagerMockInstances} from '../../../manager.mocks'

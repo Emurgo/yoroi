@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 
@@ -8,11 +8,14 @@ import {mockSwapManager} from '../../../manager.mocks'
 import {useSwapSlippage} from './useSwapSlippage'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 
+jest.useFakeTimers()
+
 describe('useSwapSlippage', () => {
   let queryClient: QueryClient
 
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.clearAllTimers()
     queryClient = queryClientFixture()
   })
 

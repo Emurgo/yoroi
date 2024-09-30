@@ -2,7 +2,7 @@ import {DecoratorFunction} from '@storybook/addons'
 import {storiesOf} from '@storybook/react-native'
 import {claimManagerMockInstances, ClaimProvider, mocksState} from '@yoroi/claim'
 import * as React from 'react'
-import {QueryClientProvider} from 'react-query'
+import {QueryClientProvider} from '@tanstack/react-query'
 
 import {queryClientFixture} from '../../../kernel/fixtures/fixtures'
 import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'

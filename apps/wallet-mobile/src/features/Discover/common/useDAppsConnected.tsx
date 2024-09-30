@@ -1,6 +1,6 @@
 import {DappConnection, useDappConnector} from '@yoroi/dapp-connector'
 import {Chain} from '@yoroi/types'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 

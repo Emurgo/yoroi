@@ -3,7 +3,7 @@ import {
   useMutation,
   UseMutationOptions,
   useQueryClient,
-} from 'react-query'
+} from '@tanstack/react-query'
 
 export const useMutationWithInvalidations = <
   TData = unknown,

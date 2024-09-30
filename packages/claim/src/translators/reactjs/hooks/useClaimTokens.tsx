@@ -1,6 +1,6 @@
 import {Claim, Scan} from '@yoroi/types'
 import {useMutationWithInvalidations} from '@yoroi/common'
-import {UseMutationOptions} from 'react-query'
+import {UseMutationOptions} from '@tanstack/react-query'
 
 import {useClaim} from './useClaim'
 

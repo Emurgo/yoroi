@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ActivityIndicator, Button, StyleSheet, Text, View} from 'react-native'
-import {useQuery} from 'react-query'
+import {useQuery} from '@tanstack/react-query'
 
 import {QueryProvider} from '../../../.storybook/decorators'
 import {errorMessages} from '../../kernel/i18n/global-messages'

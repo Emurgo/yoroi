@@ -15,7 +15,7 @@ import {
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useMutation} from 'react-query'
+import {useMutation} from '@tanstack/react-query'
 
 import {Button} from '../../../components/Button/Button'
 import {CopyButton} from '../../../components/CopyButton'

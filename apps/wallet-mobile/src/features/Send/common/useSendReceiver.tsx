@@ -2,7 +2,7 @@ import {isDomain, isNameServer, isResolvableDomain, useResolverCryptoAddresses} 
 import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
-import {useQueryClient} from 'react-query'
+import {useQueryClient} from '@tanstack/react-query'
 
 export const useSendReceiver = () => {
   const queryClient = useQueryClient()

@@ -2,7 +2,7 @@ import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
-import {useMutation, UseMutationOptions} from 'react-query'
+import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {z} from 'zod'
 
 import {normalisePtId} from '../../../kernel/helpers/normalisePtId'

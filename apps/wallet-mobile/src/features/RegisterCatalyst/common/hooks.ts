@@ -1,6 +1,6 @@
 import {Catalyst, useCatalyst} from '@yoroi/staking'
 import {App} from '@yoroi/types'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {time} from '../../../kernel/constants'
 import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'

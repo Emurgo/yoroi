@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
-import {useQuery} from 'react-query'
+import {useQuery} from '@tanstack/react-query'
 
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {LanguageCode} from '../../../kernel/i18n/languages'

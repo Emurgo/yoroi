@@ -1,4 +1,4 @@
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {renderHook, act} from '@testing-library/react-hooks'
 import {queryClientFixture} from '@yoroi/common'
 import {Claim, Scan} from '@yoroi/types'
@@ -9,6 +9,8 @@ import {
 } from '../../../manager.mocks'
 import {wrapperMaker} from '../../../fixtures/wrapperMaker'
 import {useClaimTokens} from './useClaimTokens'
+
+jest.useFakeTimers()
 
 describe('useClaimTokens', () => {
   let queryClient: QueryClient

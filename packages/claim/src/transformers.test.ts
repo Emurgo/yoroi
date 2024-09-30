@@ -1,10 +1,10 @@
 import {Api, Claim, Portfolio} from '@yoroi/types'
 import {tokenMocks, createTokenManagerMock} from '@yoroi/portfolio'
+import {cacheRecordMaker} from '@yoroi/common'
 
 import {asClaimApiError, asClaimToken} from './transformers'
 import {claimFaucetResponses} from './api-faucet.mocks'
 import {claimApiMockResponses} from './manager.mocks'
-import {cacheRecordMaker} from '@yoroi/common'
 
 const tokenManagerMock = createTokenManagerMock()
 

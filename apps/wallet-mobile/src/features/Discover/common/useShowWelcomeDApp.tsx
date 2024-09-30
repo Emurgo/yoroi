@@ -1,6 +1,6 @@
 import {isBoolean, useAsyncStorage} from '@yoroi/common'
 import * as React from 'react'
-import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
+import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 

@@ -1,10 +1,12 @@
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {renderHook, act} from '@testing-library/react-hooks'
 
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {resolverManagerMocks} from '../../manager.mocks'
 import {useResolverSetShowNotice} from './useResolverSetShowNotice'
+
+jest.useFakeTimers()
 
 describe('useResolverSetShowNotice', () => {
   let queryClient: QueryClient
@@ -16,6 +18,7 @@ describe('useResolverSetShowNotice', () => {
 
   afterEach(() => {
     queryClient.clear()
+    jest.clearAllTimers()
   })
 
   const mockResolverManager = {...resolverManagerMocks.success}

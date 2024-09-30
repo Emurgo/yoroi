@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 
@@ -8,11 +8,14 @@ import {mockSwapManager, swapManagerMocks} from '../../../manager.mocks'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {useSwapTokensOnlyVerified} from './useSwapTokensOnlyVerified'
 
+jest.useFakeTimers()
+
 describe('useSwapTokensOnlyVerified', () => {
   let queryClient: QueryClient
 
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.clearAllTimers()
     queryClient = queryClientFixture()
   })
 
@@ -50,9 +53,7 @@ describe('useSwapTokensOnlyVerified', () => {
   })
 
   it('empty result (no-api data) should return []', async () => {
-    mockSwapManager.tokens.list.onlyVerified = jest
-      .fn()
-      .mockResolvedValue(undefined)
+    mockSwapManager.tokens.list.onlyVerified = jest.fn().mockResolvedValue(null)
 
     const TestListToken = () => {
       const tokens = useSwapTokensOnlyVerified()

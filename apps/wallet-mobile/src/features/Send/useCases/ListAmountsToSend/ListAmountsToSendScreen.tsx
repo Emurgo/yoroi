@@ -9,7 +9,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useMutation} from 'react-query'
+import {useMutation} from '@tanstack/react-query'
 
 import {Boundary} from '../../../../components/Boundary/Boundary'
 import {Button} from '../../../../components/Button/Button'

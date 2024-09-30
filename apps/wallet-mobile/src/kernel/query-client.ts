@@ -1,5 +1,5 @@
 import {freeze} from 'immer'
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 
 const queryClient = new QueryClient()
 const keyToPersist = 'persist'

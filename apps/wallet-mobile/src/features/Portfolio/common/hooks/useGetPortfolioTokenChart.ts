@@ -1,7 +1,7 @@
 import {isRight} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {Chain, Portfolio} from '@yoroi/types'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {supportedCurrencies, time} from '../../../../kernel/constants'
 import {useLanguage} from '../../../../kernel/i18n'

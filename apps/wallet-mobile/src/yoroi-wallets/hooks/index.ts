@@ -17,7 +17,7 @@ import {
   useQuery,
   useQueryClient,
   UseQueryOptions,
-} from 'react-query'
+} from '@tanstack/react-query'
 
 import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'

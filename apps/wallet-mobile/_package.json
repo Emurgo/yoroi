@@ -198,7 +198,7 @@
     "react-native-url-polyfill": "^2.0.0",
     "react-native-view-shot": "^3.8.0",
     "react-native-webview": "^13.8.1",
-    "react-query": "^3.39.3",
+    "@tanstack/react-query": "4.36.1",
     "reselect": "^4.0.0",
     "rxjs": "7.8.1",
     "sentry-expo": "^7.0.1",

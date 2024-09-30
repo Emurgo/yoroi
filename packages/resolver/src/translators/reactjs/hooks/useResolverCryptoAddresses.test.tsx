@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 
@@ -7,6 +7,8 @@ import {queryClientFixture} from '../../../fixtures/query-client'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {useResolverCryptoAddresses} from './useResolverCryptoAddresses'
 import {resolverManagerMocks} from '../../manager.mocks'
+
+jest.useFakeTimers()
 
 describe('useResolverCryptoAddresses', () => {
   let queryClient: QueryClient
@@ -18,6 +20,7 @@ describe('useResolverCryptoAddresses', () => {
 
   afterEach(() => {
     queryClient.clear()
+    jest.clearAllTimers()
   })
 
   const mockResolverManager = {...resolverManagerMocks.success}
@@ -43,6 +46,7 @@ describe('useResolverCryptoAddresses', () => {
       resolverManager: mockResolverManager,
     })
     const {getByTestId} = render(<TestResolverAddresss />, {wrapper})
+    jest.advanceTimersByTimeAsync(1e3)
 
     await waitFor(() => {
       expect(getByTestId('addresses')).toBeDefined()

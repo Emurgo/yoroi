@@ -1,5 +1,5 @@
 import {useMutationWithInvalidations} from '@yoroi/common'
-import {UseMutationOptions} from 'react-query'
+import {UseMutationOptions} from '@tanstack/react-query'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'

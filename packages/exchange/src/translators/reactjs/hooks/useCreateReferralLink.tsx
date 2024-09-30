@@ -1,6 +1,6 @@
 import {Exchange} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
-import {UseQueryOptions, useQuery} from 'react-query'
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 export const useCreateReferralLink = (
   {

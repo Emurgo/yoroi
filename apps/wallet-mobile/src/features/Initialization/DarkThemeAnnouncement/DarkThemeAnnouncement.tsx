@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, Pressable, StyleSheet, Switch, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {Button} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'

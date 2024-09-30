@@ -1,15 +1,31 @@
 import {useMutationWithInvalidations} from './useMutationWithInvalidations'
-import {QueryClient, QueryClientProvider} from 'react-query'
+import {QueryClient, QueryClientProvider, QueryKey} from '@tanstack/react-query'
 import React, {PropsWithChildren} from 'react'
 import {waitFor} from '@testing-library/react-native'
 import {renderHook} from '@testing-library/react-hooks'
 
 const mutationFn = () => Promise.resolve(true)
 
+jest.useFakeTimers()
+
+const getMockedQueryClient = () => {
+  const queryClient = new QueryClient()
+  queryClient.cancelQueries = jest.fn()
+  queryClient.invalidateQueries = jest.fn()
+  queryClient.setDefaultOptions({queries: {cacheTime: 0, retry: false}})
+  return queryClient
+}
+
 describe('useMutationWithInvalidations', () => {
+  const client = getMockedQueryClient()
+
+  afterEach(() => {
+    client.clear()
+    jest.clearAllTimers()
+  })
+
   it('should cancel and invalidate queries', async () => {
-    const queries = ['query1', 'query2']
-    const client = getMockedQueryClient()
+    const queries: Array<QueryKey> = [['query1'], ['query2']]
     const wrapper = (props: PropsWithChildren) => (
       <QueryClientProvider {...props} client={client} />
     )
@@ -32,11 +48,3 @@ describe('useMutationWithInvalidations', () => {
     expect(client.invalidateQueries).toHaveBeenNthCalledWith(2, queries[1])
   })
 })
-
-const getMockedQueryClient = () => {
-  const queryClient = new QueryClient()
-  queryClient.cancelQueries = jest.fn()
-  queryClient.invalidateQueries = jest.fn()
-  queryClient.setDefaultOptions({queries: {cacheTime: 0, retry: false}})
-  return queryClient
-}

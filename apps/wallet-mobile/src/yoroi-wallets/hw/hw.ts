@@ -1,5 +1,5 @@
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
-import {useMutation, UseMutationOptions} from 'react-query'
+import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 
 import {ledgerMessages} from '../../kernel/i18n/global-messages'
 import {LocalizableError} from '../../kernel/i18n/LocalizableError'

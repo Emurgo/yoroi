@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View} from 'react-native'
-import {useQueryClient} from 'react-query'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {ConfirmTx} from '../../../components/ConfirmTx/ConfirmTx'
 import {KeyboardSpacer} from '../../../components/KeyboardSpacer'

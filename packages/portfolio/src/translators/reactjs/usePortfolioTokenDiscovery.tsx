@@ -1,6 +1,6 @@
 import {isRight} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
-import {UseQueryOptions, useQuery} from 'react-query'
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 export function usePortfolioTokenDiscovery(
   {

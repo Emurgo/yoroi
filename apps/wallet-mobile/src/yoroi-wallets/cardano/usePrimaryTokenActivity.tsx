@@ -1,6 +1,6 @@
 import {fetchData, isRight} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {networkConfigs} from '../../features/WalletManager/network-manager/network-manager'
 import {time} from '../../kernel/constants'

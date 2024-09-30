@@ -1,7 +1,7 @@
 import {ErrorBoundary, SuspenseBoundary} from '@yoroi/common'
 import {Claim} from '@yoroi/types'
 import * as React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {ClaimProvider} from '../translators/reactjs/provider/ClaimProvider'
 import {ClaimState} from '../translators/reactjs/state/state'
 

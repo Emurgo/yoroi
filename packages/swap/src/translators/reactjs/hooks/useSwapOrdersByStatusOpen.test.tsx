@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 
@@ -9,11 +9,14 @@ import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {useSwapOrdersByStatusOpen} from './useSwapOrdersByStatusOpen'
 import {storageSerializer} from '@yoroi/common'
 
+jest.useFakeTimers()
+
 describe('useSwapOrdersByStatusOpen', () => {
   let queryClient: QueryClient
 
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.clearAllTimers()
     queryClient = queryClientFixture()
   })
 

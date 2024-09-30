@@ -1,5 +1,5 @@
 import {Chain} from '@yoroi/types'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {useSelectedNetwork} from './useSelectedNetwork'
 

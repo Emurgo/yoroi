@@ -1,5 +1,5 @@
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
-import {UseMutationOptions} from 'react-query'
+import {UseMutationOptions} from '@tanstack/react-query'
 
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {storageKeyShowBuyBannerSmall, storageRootExchange} from './constants'

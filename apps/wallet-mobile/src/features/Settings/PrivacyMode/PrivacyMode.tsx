@@ -1,5 +1,5 @@
 import {parseSafe, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
-import {UseMutationOptions, useQuery} from 'react-query'
+import {UseMutationOptions, useQuery} from '@tanstack/react-query'
 
 const useReadPrivacyMode = () => {
   const storage = useAsyncStorage()

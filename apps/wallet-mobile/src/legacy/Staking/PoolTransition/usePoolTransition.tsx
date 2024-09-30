@@ -5,7 +5,7 @@ import {Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {useQuery} from 'react-query'
+import {useQuery} from '@tanstack/react-query'
 
 import {useSelectedNetwork} from '../../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'

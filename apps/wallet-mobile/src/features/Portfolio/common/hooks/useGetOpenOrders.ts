@@ -1,5 +1,5 @@
 import {ImageSourcePropType} from 'react-native'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {getDappFallbackLogo} from '../../../Discover/common/helpers'
 import {IAsset, mockAmount} from './useGetLiquidityPool'

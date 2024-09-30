@@ -8,7 +8,7 @@ import {useEffect} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQuery} from 'react-query'
+import {useQuery} from '@tanstack/react-query'
 import {z} from 'zod'
 
 import {Button} from '../../../../components/Button/Button'

@@ -1,19 +1,22 @@
 import * as React from 'react'
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
+import {storageSerializer} from '@yoroi/common'
 
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {mockSwapManager, swapManagerMocks} from '../../../manager.mocks'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {useSwapOrdersByStatusCompleted} from './useSwapOrdersByStatusCompleted'
-import {storageSerializer} from '@yoroi/common'
+
+jest.useFakeTimers()
 
 describe('useSwapOrdersByStatusCompleted', () => {
   let queryClient: QueryClient
 
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.clearAllTimers()
     queryClient = queryClientFixture()
   })
 

@@ -3,7 +3,7 @@ import {isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
 import {freeze, produce} from 'immer'
 import React from 'react'
-import {useQuery, useQueryClient} from 'react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {merge, switchMap} from 'rxjs'
 
 import {time} from '../../../kernel/constants'
