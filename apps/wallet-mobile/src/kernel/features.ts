@@ -6,7 +6,6 @@ export const features = {
   showProdPoolsInDev: isDev,
   moderatingNftsEnabled: false,
   poolTransition: true,
-  portfolioSecondaryCharts: isDev,
   portfolioPerformance: false,
   portfolioNews: false,
   portfolioExport: false,
