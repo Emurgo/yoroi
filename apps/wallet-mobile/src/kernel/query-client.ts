@@ -5,19 +5,23 @@ import {ptPriceQueryFn, TokenChartInterval} from '../features/Portfolio/common/h
 
 const queryClient = new QueryClient()
 
-Object.values(TokenChartInterval).forEach((TokenChartInterval) => {
-  queryClient.prefetchQuery<
-    Awaited<ReturnType<typeof ptPriceQueryFn>>,
-    Error,
-    Awaited<ReturnType<typeof ptPriceQueryFn>>,
-    ['ptPriceHistory', TokenChartInterval]
-  >({
-    queryKey: ['ptPriceHistory', TokenChartInterval],
-    queryFn: ptPriceQueryFn,
-    cacheTime: Infinity,
-    staleTime: Infinity,
+const prefetchPtPriceHistory = () => {
+  Object.values(TokenChartInterval).forEach((TokenChartInterval) => {
+    queryClient.prefetchQuery<
+      Awaited<ReturnType<typeof ptPriceQueryFn>>,
+      Error,
+      Awaited<ReturnType<typeof ptPriceQueryFn>>,
+      ['ptPriceHistory', TokenChartInterval]
+    >({
+      queryKey: ['ptPriceHistory', TokenChartInterval],
+      queryFn: ptPriceQueryFn,
+      cacheTime: Infinity,
+      staleTime: Infinity,
+    })
   })
-})
+}
+
+prefetchPtPriceHistory()
 
 const keyToPersist = 'persist'
 /*

@@ -96,7 +96,7 @@ export const useGetPortfolioTokenChart = (
     enabled: tokenInfo && isPrimaryToken(tokenInfo.info),
     staleTime: time.oneMinute,
     ...options,
-    queryKey: ['useGetPortfolioTokenChart', '.', timeInterval, currency],
+    queryKey: ['useGetPortfolioTokenChart', 'pt', timeInterval, currency],
     queryFn: async () => {
       // force queryFn to be async, otherwise it takes longer and doesn't show isFetching
       await delay(0)

@@ -56,13 +56,7 @@ const PortfolioContext = React.createContext<PortfolioState & PortfolioActions>(
   ...defaultActions,
 })
 
-export const PortfolioProvider = ({
-  children,
-  initialState,
-}: {
-  children: React.ReactNode
-  initialState?: Partial<PortfolioState>
-}) => {
+const useIsTokenHistoryApiAvailable = () => {
   const {
     networkManager: {tokenManager},
   } = useSelectedNetwork()
@@ -78,7 +72,17 @@ export const PortfolioProvider = ({
       return false
     },
   })
-  const isTokenHistoryApiAvailable = data ?? false
+  return data ?? false
+}
+
+export const PortfolioProvider = ({
+  children,
+  initialState,
+}: {
+  children: React.ReactNode
+  initialState?: Partial<PortfolioState>
+}) => {
+  const isTokenHistoryApiAvailable = useIsTokenHistoryApiAvailable()
   const [portfolioState, dispatch] = React.useReducer(portfolioReducer, {...defaultState, ...initialState})
 
   const actions = React.useRef<PortfolioActions>({
