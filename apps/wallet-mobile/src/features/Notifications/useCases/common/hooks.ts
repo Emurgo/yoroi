@@ -85,16 +85,18 @@ export const useReceivedNotificationEvents = (
 }
 
 export const useSendNotification = () => {
-  const sendNotification = React.useCallback((title: string, body: string) => {
-    const notification = new Notification({
-      title,
-      body,
-      sound: 'default',
-    })
-    Notifications.postLocalNotification(notification.payload)
-  }, [])
+  const sendNotification = React.useCallback(postNotification, [])
 
   return {send: sendNotification}
+}
+
+const postNotification = (title: string, body: string) => {
+  const notification = new Notification({
+    title,
+    body,
+    sound: 'default',
+  })
+  Notifications.postLocalNotification(notification.payload)
 }
 
 export const useNotificationsManager = (options?: {
@@ -181,13 +183,14 @@ export const useNotifications = () => {
   }, [manager, send])
 }
 
-const BACKGROUND_FETCH_TASK = 'background-fetch'
+const BACKGROUND_FETCH_TASK = 'yoroi-notifications-background-fetch'
 
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   const now = Date.now()
 
   console.log(`Got background fetch call at date: ${new Date(now).toISOString()}`)
 
+  postNotification('Background fetch', 'Background fetch call received')
   // Be sure to return the successful result type!
   return BackgroundFetch.BackgroundFetchResult.NewData
 })
@@ -196,17 +199,23 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 // and some configuration options for how the background fetch should behave
 // Note: This does NOT need to be in the global scope and CAN be used in your React components!
 async function registerBackgroundFetchAsync() {
-  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-    minimumInterval: 60 * 15, // 15 minutes
+  console.log('registering background fetch')
+  const s = await BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
+    minimumInterval: 60 * 10, // 10 minutes
     stopOnTerminate: false, // android only,
     startOnBoot: true, // android only
   })
+  const isRegistered = BackgroundFetch.getStatusAsync().then((status) => {
+    console.log('BackgroundFetch status:', status)
+  })
+  return s
 }
 
 // 3. (Optional) Unregister tasks by specifying the task name
 // This will cancel any future background fetch calls that match the given name
 // Note: This does NOT need to be in the global scope and CAN be used in your React components!
 async function unregisterBackgroundFetchAsync() {
+  console.log('unregistering background fetch')
   return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK)
 }
 

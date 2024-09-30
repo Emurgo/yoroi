@@ -12,7 +12,7 @@
   },
   "ios": {
     "infoPlist": {
-      "UIBackgroundModes": ["location", "fetch", "remote-notification"]
+      "UIBackgroundModes": ["fetch", "remote-notification"]
     }
   }
 }

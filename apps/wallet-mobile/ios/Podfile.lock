@@ -25,7 +25,7 @@ PODS:
     - React-Core
   - Expo (48.0.20):
     - ExpoModulesCore
-  - ExpoBackgroundFetch (12.0.1):
+  - ExpoBackgroundFetch (11.8.1):
     - ExpoModulesCore
   - ExpoBlur (12.9.2):
     - ExpoModulesCore
@@ -523,9 +523,12 @@ PODS:
   - RNScreens (3.22.1):
     - React-Core
     - React-RCTImage
-  - RNSentry (5.8.0):
+  - RNSentry (5.33.1):
+    - hermes-engine
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
-    - Sentry/HybridSDK (= 8.9.3)
+    - React-hermes
+    - Sentry/HybridSDK (= 8.36.0)
   - RNShare (10.0.2):
     - React-Core
   - RNSVG (13.8.0):
@@ -541,9 +544,7 @@ PODS:
   - SDWebImageWebPCoder (0.11.0):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.15)
-  - Sentry/HybridSDK (8.9.3):
-    - SentryPrivate (= 8.9.3)
-  - SentryPrivate (8.9.3)
+  - Sentry/HybridSDK (8.36.0)
   - UMAppLoader (4.6.0)
   - Yoga (1.14.0)
   - ZXingObjC/Core (3.6.9)
@@ -662,7 +663,6 @@ SPEC REPOS:
     - SDWebImageSVGCoder
     - SDWebImageWebPCoder
     - Sentry
-    - SentryPrivate
     - ZXingObjC
 
 EXTERNAL SOURCES:
@@ -860,7 +860,7 @@ SPEC CHECKSUMS:
   EXFont: 6ea3800df746be7233208d80fe379b8ed74f4272
   EXImageLoader: fd053169a8ee932dd83bf1fe5487a50c26d27c2b
   Expo: b7d2843b0a0027d0ce76121a63085764355a16ed
-  ExpoBackgroundFetch: a06c553ecaf0bade0acd691042d996b9ce926327
+  ExpoBackgroundFetch: 80d41ec15c6cce0bafb5d2326b8e85f42152eba7
   ExpoBlur: e832d874bd94afc0645daddbd3162ec1ce172080
   ExpoDevice: 1c1b0c9cad96c292c1de73948649cfd654b2b3c0
   ExpoImage: bf714e0101812ccbbd1a4fdbfd34905feeefd9f5
@@ -942,19 +942,18 @@ SPEC CHECKSUMS:
   RNPermissions: f1b49dd05fa9b83993cd05a9ee115247944d8f1a
   RNReanimated: d6b4b867b6d1ee0798f5fb372708fa4bb8d66029
   RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
-  RNSentry: f9e637773502a61c7b455c4ce65bc7008ce22a6e
+  RNSentry: 0744d3c79504bc4778190d047d1b60daf4a378cd
   RNShare: 859ff710211285676b0bcedd156c12437ea1d564
   RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
   SDWebImage: cb032eba469c54e0000e78bcb0a13cdde0a52798
   SDWebImageAVIFCoder: 8348fef6d0ec69e129c66c9fe4d74fbfbf366112
   SDWebImageSVGCoder: 15a300a97ec1c8ac958f009c02220ac0402e936c
   SDWebImageWebPCoder: 295a6573c512f54ad2dd58098e64e17dcf008499
-  Sentry: 97161cac725da1ecbe77d1445bf8a61c1e5667f1
-  SentryPrivate: 9a76def09fb08f9501997b8df946e8097947b94f
+  Sentry: f8374b5415bc38dfb5645941b3ae31230fbeae57
   UMAppLoader: f17a5ee8e85b536ace0fc254b447a37ed198d57e
   Yoga: e71803b4c1fff832ccf9b92541e00f9b873119b9
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: 09a3c8236b8655c1bc6f4dd9d56c009f5bdf0939
+PODFILE CHECKSUM: 4c2d6038a2a21dd9538daa115acf7ff866d31ee0
 
 COCOAPODS: 1.15.2
