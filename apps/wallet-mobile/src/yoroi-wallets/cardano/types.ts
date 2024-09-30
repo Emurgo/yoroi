@@ -12,6 +12,7 @@ import {
 } from '@emurgo/yoroi-lib'
 import {App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
+import {Subject} from 'rxjs'
 
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import type {
@@ -31,7 +32,6 @@ import {
 } from '../types/staking'
 import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import type {Addresses} from './account-manager/account-manager'
-import {Subject} from 'rxjs'
 
 export type WalletEvent =
   | {type: 'initialize'}

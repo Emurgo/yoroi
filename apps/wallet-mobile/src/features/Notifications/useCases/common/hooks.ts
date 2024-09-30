@@ -1,16 +1,18 @@
-import * as React from 'react'
 import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
-import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
-import {Notifications as NotificationTypes} from '@yoroi/types'
-import {isNonNullable, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {mountAsyncStorage} from '@yoroi/common/src'
 import {notificationManagerMaker} from '@yoroi/notifications'
-import {merge, Subject, switchMap} from 'rxjs'
-import uuid from 'uuid'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {useEffect} from 'react'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {Notifications as NotificationTypes} from '@yoroi/types'
 import * as BackgroundFetch from 'expo-background-fetch'
 import * as TaskManager from 'expo-task-manager'
+import * as React from 'react'
+import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
+import {Subject} from 'rxjs'
+import uuid from 'uuid'
+
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
+import {walletManager} from '../../../WalletManager/wallet-manager'
 
 export const useRequestPermissions = () => {
   React.useEffect(() => {
@@ -27,12 +29,9 @@ export const useHandleNotification = () => {
       },
     )
 
-    const s2 = Notifications.events().registerNotificationReceivedBackground(
-      (notification: Notification, completion) => {
-        console.log(`Notification received in background: ${notification.title} : ${notification.body}`)
-        // completion({alert: true, sound: true, badge: true})
-      },
-    )
+    const s2 = Notifications.events().registerNotificationReceivedBackground((notification: Notification) => {
+      console.log(`Notification received in background: ${notification.title} : ${notification.body}`)
+    })
 
     return () => {
       s.remove()
@@ -161,13 +160,10 @@ export const useNotifications = () => {
   useHandleNotification()
   const {send} = useSendNotification()
   const transactionReceivedSubject = useTransactionReceivedNotificationSubject()
-  const rewardsUpdatedSubject = useRewardsUpdatedNotificationSubject()
-  const primaryTokenPriceChangedSubject = usePrimaryTokenPriceChangedNotificationSubject()
+
   const manager = useNotificationsManager({
     subscriptions: {
       [NotificationTypes.Trigger.TransactionReceived]: transactionReceivedSubject,
-      [NotificationTypes.Trigger.RewardsUpdated]: rewardsUpdatedSubject,
-      [NotificationTypes.Trigger.PrimaryTokenPriceChanged]: primaryTokenPriceChangedSubject,
     },
   })
   React.useEffect(() => {
@@ -184,31 +180,71 @@ export const useNotifications = () => {
 }
 
 const BACKGROUND_FETCH_TASK = 'yoroi-notifications-background-fetch'
+const appStorage = mountAsyncStorage({path: '/'})
+const notificationsAsyncStorage = appStorage.join('notifications-transacrion-received-subject/')
+const eventsStorage = appStorage.join('events/')
+const configStorage = appStorage.join('settings/')
 
-TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-  const now = Date.now()
-
-  console.log(`Got background fetch call at date: ${new Date(now).toISOString()}`)
-
-  postNotification('Background fetch', 'Background fetch call received')
-  // Be sure to return the successful result type!
-  return BackgroundFetch.BackgroundFetchResult.NewData
+const notificationManager = notificationManagerMaker({
+  eventsStorage,
+  configStorage,
 })
+
+if (!TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK)) {
+  TaskManager.defineTask(BACKGROUND_FETCH_TASK, () => {
+    const now = Date.now()
+    console.log(`Got background fetch call at date: ${new Date(now).toISOString()}`)
+
+    const ids = [...walletManager.walletMetas.keys()]
+    ids.forEach((id) => {
+      const wallet = walletManager.getWalletById(id)
+      if (!wallet) return
+      wallet.sync({isForced: true}).then(async () => {
+        console.log(`Wallet ${id} synced at date: ${new Date(now).toISOString()}`)
+        const processed = (await notificationsAsyncStorage.getItem<string[]>(id)) || []
+        const txIds = getTxIds(wallet)
+
+        if (processed.length === 0) {
+          console.log(`Wallet ${id} has no processed tx ids`)
+          await notificationsAsyncStorage.setItem(id, txIds)
+          return
+        }
+        const newTxIds = txIds.filter((txId) => !processed.includes(txId))
+        if (newTxIds.length === 0) {
+          console.log(`Wallet ${id} has no new tx ids on network ${wallet.networkManager.network}`)
+          return
+        }
+        console.log('new tx ids', newTxIds)
+        await notificationsAsyncStorage.setItem(id, [...processed, ...newTxIds])
+        newTxIds.forEach((id) => {
+          const metadata: NotificationTypes.TransactionReceivedEvent['metadata'] = {
+            txId: id,
+            isSentByUser: false,
+            nextTxsCounter: 1,
+            previousTxsCounter: 0,
+          }
+          const notification = createTransactionReceivedNotification(metadata)
+          notificationManager.events.save(notification)
+          postNotification('Transaction received from background', 'You have received a new transaction')
+        })
+      })
+    })
+
+    postNotification('Background fetch', 'Background fetch call received')
+    // TODO: Be sure to return the correct result type!
+    return BackgroundFetch.BackgroundFetchResult.NewData
+  })
+}
 
 // 2. Register the task at some point in your app by providing the same name,
 // and some configuration options for how the background fetch should behave
 // Note: This does NOT need to be in the global scope and CAN be used in your React components!
 async function registerBackgroundFetchAsync() {
-  console.log('registering background fetch')
-  const s = await BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
+  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
     minimumInterval: 60 * 10, // 10 minutes
     stopOnTerminate: false, // android only,
     startOnBoot: true, // android only
   })
-  const isRegistered = BackgroundFetch.getStatusAsync().then((status) => {
-    console.log('BackgroundFetch status:', status)
-  })
-  return s
 }
 
 // 3. (Optional) Unregister tasks by specifying the task name
@@ -279,7 +315,7 @@ const useTransactionReceivedNotificationSubject = () => {
     return () => {
       s1.unsubscribe()
     }
-  }, [])
+  }, [walletManager, notificationsAsyncStorage, transactionReceivedSubject])
   return transactionReceivedSubject
 }
 
@@ -291,18 +327,6 @@ const createTransactionReceivedNotification = (metadata: NotificationTypes.Trans
     trigger: NotificationTypes.Trigger.TransactionReceived,
     metadata,
   } as const
-}
-
-const useRewardsUpdatedNotificationSubject = () => {
-  const [rewardsUpdatedSubject] = React.useState(new Subject<NotificationTypes.RewardsUpdatedEvent>())
-  return rewardsUpdatedSubject
-}
-
-const usePrimaryTokenPriceChangedNotificationSubject = () => {
-  const [primaryTokenPriceChangedSubject] = React.useState(
-    new Subject<NotificationTypes.PrimaryTokenPriceChangedEvent>(),
-  )
-  return primaryTokenPriceChangedSubject
 }
 
 const getTxIds = (wallet: YoroiWallet) => {

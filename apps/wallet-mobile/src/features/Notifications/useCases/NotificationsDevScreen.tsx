@@ -37,7 +37,7 @@ export const NotificationsDevScreen = () => {
           <Text style={{fontSize: 24}}>Notifications Playground</Text>
 
           <Button
-            title={`Trigger Transacrion Received Notification`}
+            title="Trigger Transacrion Received Notification"
             shelleyTheme
             onPress={handleOnTriggerTransactionReceived}
           />
@@ -82,7 +82,9 @@ const ReceivedNotification = ({notification}: {notification: NotificationTypes.E
     return (
       <View>
         <Text>{title}</Text>
+
         <Text>{notification.metadata.txId}</Text>
+
         <Text>{readStatus}</Text>
       </View>
     )
@@ -91,7 +93,9 @@ const ReceivedNotification = ({notification}: {notification: NotificationTypes.E
   return (
     <View>
       <Text>{notification.trigger}</Text>
+
       <Text>{notification.date}</Text>
+
       <Text>{readStatus}</Text>
     </View>
   )
