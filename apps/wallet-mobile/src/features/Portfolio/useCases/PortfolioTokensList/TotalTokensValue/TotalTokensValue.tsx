@@ -3,37 +3,23 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Icon} from '../../../../../components/Icon'
-import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
 import {useStrings} from '../../../common/hooks/useStrings'
+import {PortfolioListTab, usePortfolio} from '../../../common/PortfolioProvider'
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 
 type Props = {
   amount: Portfolio.Token.Amount
-  cardType: 'wallet' | 'dapps'
 }
 
-export const TotalTokensValue = ({amount, cardType}: Props) => {
+export const TotalTokensValue = ({amount}: Props) => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const isWallet = cardType === 'wallet'
-  const title = isWallet ? strings.totalWalletValue : strings.totalDAppValue
-  const tooltip = isWallet ? strings.totalWalletValueTooltip : strings.totalDAppsValueTooltip
+  const {listTab} = usePortfolio()
+  const title = listTab === PortfolioListTab.Wallet ? strings.totalWalletValue : strings.totalDAppValue
 
   return (
     <View style={styles.root}>
-      <TotalTokensValueContent
-        amount={amount}
-        headerCard={
-          <Tooltip title={tooltip}>
-            <View style={styles.labelContainer}>
-              <Text style={[styles.normalText]}>{title}</Text>
-
-              <Icon.InfoCircle />
-            </View>
-          </Tooltip>
-        }
-      />
+      <TotalTokensValueContent amount={amount} headerCard={<Text style={[styles.normalText]}>{title}</Text>} />
     </View>
   )
 }
@@ -46,11 +32,6 @@ const useStyles = () => {
     normalText: {
       ...atoms.body_3_sm_regular,
       color: color.gray_600,
-    },
-    labelContainer: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_xs,
     },
   })
 

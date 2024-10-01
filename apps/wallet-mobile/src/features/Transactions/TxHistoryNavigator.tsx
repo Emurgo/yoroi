@@ -9,10 +9,10 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {TouchableOpacity} from 'react-native'
 
 import {Boundary} from '../../components/Boundary/Boundary'
-import {Spacer} from '../../components/Spacer/Spacer'
+import {Icon} from '../../components/Icon'
 import {unstoppableApiKey} from '../../kernel/env'
 import {
   BackButton,
@@ -28,7 +28,6 @@ import {ReceiveProvider} from '../Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '../Receive/useCases/ListMultipleAddressesScreen'
 import {RequestSpecificAmountScreen} from '../Receive/useCases/RequestSpecificAmountScreen'
-import {CodeScannerButton} from '../Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
 import {ConfirmTxScreen} from '../Send/useCases/ConfirmTx/ConfirmTxScreen'
@@ -87,9 +86,6 @@ export const TxHistoryNavigator = () => {
     })
   }, [wallet.externalAddresses, wallet.networkManager.tokenManager, wallet.portfolioPrimaryTokenInfo])
 
-  // navigator components
-  const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
-
   // exchange
   const exchangeManager = React.useMemo(() => {
     const api = exchangeApiMaker({
@@ -130,7 +126,7 @@ export const TxHistoryNavigator = () => {
                 options={{
                   title: meta.name,
                   headerTransparent: true,
-                  headerRight: headerRightHistory,
+                  ...(!meta.isReadOnly && {headerRight: () => <HeaderRightHistory />}),
                 }}
               />
 
@@ -538,45 +534,18 @@ const useStrings = () => {
 }
 
 const HeaderRightHistory = React.memo(() => {
-  const {meta} = useSelectedWallet()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {styles, colors} = useStyles()
-
-  return (
-    <Row style={styles.row}>
-      {!meta.isReadOnly && (
-        <>
-          <CodeScannerButton
-            onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
-            color={colors.gray}
-          />
-
-          <Spacer width={10} />
-        </>
-      )}
-    </Row>
-  )
-})
-const Row = ({children, style, ...rest}: ViewProps) => (
-  <View style={[style, {flexDirection: 'row'}]} {...rest}>
-    {children}
-  </View>
-)
-
-const useStyles = () => {
   const {color} = useTheme()
 
-  const styles = StyleSheet.create({
-    row: {
-      paddingStart: 8,
-    },
-  })
-
-  return {
-    styles,
-    colors: {gray: color.gray_max},
-  } as const
-}
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
+      style={{paddingRight: 8}}
+    >
+      <Icon.Qr color={color.gray_max} />
+    </TouchableOpacity>
+  )
+})
 
 const sendOptions = (navigationOptions: StackNavigationOptions, color: ThemedPalette) => ({
   ...navigationOptions,

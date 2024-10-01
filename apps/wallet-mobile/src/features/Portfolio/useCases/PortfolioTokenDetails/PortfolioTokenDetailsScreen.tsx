@@ -14,27 +14,18 @@ import {TxList} from '../../../Transactions/useCases/TxList/TxList'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioTokenDetailParams} from '../../common/hooks/useNavigateTo'
 import {useStrings} from '../../common/hooks/useStrings'
-import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
+import {PortfolioDetailsTab, usePortfolio} from '../../common/PortfolioProvider'
 import {BuyADABanner} from '../PortfolioDashboard/DashboardTokensList/BuyADABanner/BuyADABanner'
 import {Actions} from './Actions'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
-type ActiveTab = 'performance' | 'overview' | 'transactions'
-
-type Tabs = 'Performance' | 'Overview' | 'Transactions'
-const tabs: Record<ActiveTab, Tabs> = {
-  performance: 'Performance',
-  overview: 'Overview',
-  transactions: 'Transactions',
-}
-
 const HEADER_HEIGHT = 304
 
 export const PortfolioTokenDetailsScreen = () => {
   const strings = useStrings()
-  const {activeTab, setActiveTab} = usePortfolioTokenDetailContext()
+  const {detailsTab, setDetailsTab} = usePortfolio()
   const {track} = useMetrics()
   const [isStickyTab, setIsStickyTab] = React.useState(false)
   const {id: tokenId} = usePortfolioTokenDetailParams()
@@ -50,8 +41,8 @@ export const PortfolioTokenDetailsScreen = () => {
   }
 
   React.useEffect(() => {
-    track.portfolioTokenDetails({token_details_tab: tabs[activeTab]})
-  }, [activeTab, track])
+    track.portfolioTokenDetails({token_details_tab: detailsTab})
+  }, [detailsTab, track])
 
   const renderTabs = React.useMemo(() => {
     return (
@@ -59,28 +50,28 @@ export const PortfolioTokenDetailsScreen = () => {
         {features.portfolioPerformance && (
           <Tab
             style={styles.tab}
-            active={activeTab === 'performance'}
-            onPress={() => setActiveTab('performance')}
+            active={detailsTab === PortfolioDetailsTab.Performance}
+            onPress={() => setDetailsTab(PortfolioDetailsTab.Performance)}
             label={strings.performance}
           />
         )}
 
         <Tab
           style={styles.tab}
-          active={activeTab === 'overview'}
-          onPress={() => setActiveTab('overview')}
+          active={detailsTab === PortfolioDetailsTab.Overview}
+          onPress={() => setDetailsTab(PortfolioDetailsTab.Overview)}
           label={strings.overview}
         />
 
         <Tab
           style={styles.tab}
-          active={activeTab === 'transactions'}
-          onPress={() => setActiveTab('transactions')}
+          active={detailsTab === PortfolioDetailsTab.Transactions}
+          onPress={() => setDetailsTab(PortfolioDetailsTab.Transactions)}
           label={strings.transactions}
         />
       </Tabs>
     )
-  }, [activeTab, setActiveTab, strings.overview, strings.performance, strings.transactions, styles.tab, styles.tabs])
+  }, [detailsTab, setDetailsTab, strings.overview, strings.performance, strings.transactions, styles.tab, styles.tabs])
 
   return (
     <SafeArea>
@@ -110,8 +101,8 @@ export const PortfolioTokenDetailsScreen = () => {
               <PortfolioTokenInfo />
             </>
           }
-          {...(activeTab !== 'transactions' && {data: []})}
-          {...(activeTab === 'transactions' && {ListEmptyComponent: <BuyADABanner />})}
+          {...(detailsTab !== PortfolioDetailsTab.Transactions && {data: []})}
+          {...(detailsTab === PortfolioDetailsTab.Transactions && {ListEmptyComponent: <BuyADABanner />})}
         />
 
         <Actions tokenInfo={tokenInfo} />

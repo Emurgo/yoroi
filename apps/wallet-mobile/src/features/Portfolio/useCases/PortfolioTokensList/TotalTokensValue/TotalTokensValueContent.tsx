@@ -5,11 +5,13 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
 import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
+import {useStrings} from '../../../common/hooks/useStrings'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
-import {usePortfolio} from '../../../common/PortfolioProvider'
+import {PortfolioListTab, usePortfolio} from '../../../common/PortfolioProvider'
 import {SkeletonQuantityChange} from './SkeletonQuantityChange'
 import {TokenValueBalance} from './TokenValueBalance'
 import {TokenValuePairedBalance} from './TokenValuePairedBalance'
@@ -20,6 +22,7 @@ type Props = {
 }
 
 export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
+  const strings = useStrings()
   const {styles, color} = useStyles()
   const {
     currency,
@@ -27,7 +30,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
     ptActivity: {close, open},
     isLoading,
   } = useCurrencyPairing()
-  const {isPrimaryTokenActive, setIsPrimaryTokenActive} = usePortfolio()
+  const {isPrimaryTokenActive, setIsPrimaryTokenActive, listTab} = usePortfolio()
   const {togglePrivacyMode} = usePrivacyMode()
 
   const {changePercent, changeValue, variantPnl} = priceChange(open, close)
@@ -57,26 +60,32 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
         <View style={styles.rowBetween}>
           <TokenValuePairedBalance amount={amount} isFetching={isLoading} isPrimaryTokenActive={isPrimaryTokenActive} />
 
-          <View style={styles.varyContainer}>
-            {isLoading ? (
-              <SkeletonQuantityChange />
-            ) : (
-              <PnlTag variant={variantPnl} withIcon>
-                <Text>{formatPriceChange(changePercent)}%</Text>
-              </PnlTag>
-            )}
+          <Tooltip
+            title={
+              listTab === PortfolioListTab.Dapps ? strings.totalDAppsValueTooltip : strings.totalWalletValueTooltip
+            }
+          >
+            <View style={styles.varyContainer}>
+              {isLoading ? (
+                <SkeletonQuantityChange />
+              ) : (
+                <PnlTag variant={variantPnl} withIcon>
+                  <Text>{formatPriceChange(changePercent)}%</Text>
+                </PnlTag>
+              )}
 
-            {isLoading ? (
-              <SkeletonQuantityChange />
-            ) : (
-              <PnlTag variant={variantPnl}>
-                <Text>{`${changeValue > 0 ? '+' : ''}${formatPriceChange(
-                  changeValue,
-                  config.decimals,
-                )} ${currency}`}</Text>
-              </PnlTag>
-            )}
-          </View>
+              {isLoading ? (
+                <SkeletonQuantityChange />
+              ) : (
+                <PnlTag variant={variantPnl}>
+                  <Text>{`${changeValue > 0 ? '+' : ''}${formatPriceChange(
+                    changeValue,
+                    config.decimals,
+                  )} ${currency}`}</Text>
+                </PnlTag>
+              )}
+            </View>
+          </Tooltip>
         </View>
       </View>
     </View>

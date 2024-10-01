@@ -199,7 +199,6 @@ const WalletTabNavigator = () => {
                 ),
               tabBarLabel: strings.menuTabBarLabel,
               tabBarTestID: 'menuTabBarButton',
-              headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
             }}
           />
         </Tab.Navigator>
@@ -294,7 +293,7 @@ const useStyles = () => {
 
   const colors = {
     active: color.text_primary_max,
-    inactive: color.text_gray_medium,
+    inactive: color.text_gray_low,
     background: color.bg_color_max,
     divider: color.gray_200,
   }

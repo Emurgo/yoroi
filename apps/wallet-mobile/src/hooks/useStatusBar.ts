@@ -6,7 +6,6 @@ import {Platform, StatusBar, StatusBarStyle} from 'react-native'
 type StatusBarColor = {
   bgColorAndroid: Color
   statusBarStyle: StatusBarStyle | undefined
-  translucent: boolean
 }
 export const useStatusBar = (currentRouteName: string | undefined) => {
   const {color, isDark} = useTheme()
@@ -22,8 +21,8 @@ export const useStatusBar = (currentRouteName: string | undefined) => {
       const style = getStatusBarStyleByRoute({currentRouteName, isDark, color})
       statusBarStyleByRoute.current = style
       if (Platform.OS === 'android') {
-        StatusBar.setBackgroundColor(style.bgColorAndroid, true)
-        StatusBar.setTranslucent(style.translucent)
+        StatusBar.setBackgroundColor(style.bgColorAndroid)
+        StatusBar.setTranslucent(true)
       }
       style.statusBarStyle !== undefined && StatusBar.setBarStyle(style.statusBarStyle, true)
     }
@@ -44,27 +43,23 @@ const getStatusBarStyleByRoute = ({
   if (currentRouteName) {
     if (currentRouteName === 'history-list') {
       return {
-        translucent: true,
         bgColorAndroid: 'rgba(0,0,0,0)', // transparent
         statusBarStyle: undefined,
       }
     } else if (oldBlueRoutes.includes(currentRouteName)) {
       return {
-        translucent: false,
         // old blue, not present in the current theming
         bgColorAndroid: '#254BC9',
         statusBarStyle: 'light-content',
       }
     } else if (currentRouteName === 'scan-start') {
       return {
-        translucent: false,
-        bgColorAndroid: color.white_static,
+        bgColorAndroid: color.black_static,
         statusBarStyle: 'dark-content',
       }
     }
   }
   return {
-    translucent: false,
     bgColorAndroid: isDark ? color.bg_color_max : color.white_static,
     statusBarStyle: isDark ? 'light-content' : 'dark-content',
   }
