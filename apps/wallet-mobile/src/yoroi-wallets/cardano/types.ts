@@ -76,8 +76,6 @@ export interface YoroiWallet {
   get isEmpty(): boolean
   get hasOnlyPrimary(): boolean
 
-  readonly utxos$: Subject<{utxos: RawUtxo[]}>
-
   // account
   readonly accountVisual: number
 

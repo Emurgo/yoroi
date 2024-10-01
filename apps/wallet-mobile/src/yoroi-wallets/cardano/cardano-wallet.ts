@@ -87,7 +87,6 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     readonly accountVisual: number
     private readonly utxoManager: UtxoManager
     private _utxos: RawUtxo[]
-    readonly utxos$: Subject<{utxos: RawUtxo[]}>
     private _collateralId = ''
 
     private readonly transactionManager: TransactionManager
@@ -224,7 +223,6 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       this.memosManager = memosManager
       this.balanceManager = balanceManager
       this.balance$ = balanceManager.observable$
-      this.utxos$ = new Subject()
       this.accountManager = accountManager
       this.portfolioPrimaryTokenInfo = portfolioPrimaryTokenInfo
 
@@ -1005,7 +1003,6 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         this.balanceManager.syncBalances(balancesToSync)
 
         this._utxos = newUtxos
-        this.utxos$.next({utxos: newUtxos})
         this.notify({type: 'utxos', utxos: this.utxos})
         return true
       }
