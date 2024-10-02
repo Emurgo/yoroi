@@ -59,6 +59,7 @@ export const RemoveWalletScreen = () => {
             <Spacer height={24} />
 
             <WalletNameInput
+              placeholder={strings.walletName}
               value={typedWalletName}
               onChangeText={setTypedWalletName}
               right={typedWalletName === meta.name ? <Checkmark /> : undefined}
