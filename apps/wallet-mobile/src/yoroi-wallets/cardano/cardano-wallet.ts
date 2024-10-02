@@ -12,7 +12,7 @@ import {Buffer} from 'buffer'
 import {freeze} from 'immer'
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
-import {Observable, Subject} from 'rxjs'
+import {Observable} from 'rxjs'
 
 import {buildPortfolioBalanceManager} from '../../features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'

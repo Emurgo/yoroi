@@ -1,3 +1,11 @@
+import {
+  NotificationProvider,
+  useNotificationManager,
+  useNotificationsConfig,
+  useReceivedNotificationEvents,
+  useResetNotificationsConfig,
+  useUpdateNotificationsConfig,
+} from '@yoroi/notifications'
 import {useTheme} from '@yoroi/theme'
 import {Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
@@ -5,34 +13,36 @@ import {StyleSheet, Switch as RNSwitch, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
-import {ScrollableView} from '../../../components/ScrollableView'
-import {
-  useHandleNotification,
-  useMockedNotifications,
-  useNotificationsConfig,
-  useReceivedNotificationEvents,
-  useRequestPermissions,
-  useResetNotificationsConfig,
-  useUpdateNotificationsConfig,
-} from './common/hooks'
+import {ScrollView} from '../../../components/ScrollView/ScrollView'
+import {useMockedNotifications} from './common/mocks'
+import {createTransactionReceivedNotification} from './common/transaction-received-notification'
 
 export const NotificationsDevScreen = () => {
-  useRequestPermissions()
-  useHandleNotification()
-  const {triggerTransactionReceived} = useMockedNotifications()
+  const {manager} = useMockedNotifications()
+  return (
+    <NotificationProvider manager={manager}>
+      <Screen />
+    </NotificationProvider>
+  )
+}
+
+const Screen = () => {
+  const manager = useNotificationManager()
 
   const handleOnTriggerTransactionReceived = () => {
-    triggerTransactionReceived({
-      previousTxsCounter: 0,
-      nextTxsCounter: 1,
-      txId: '123',
-      isSentByUser: false,
-    })
+    manager.notification$.next(
+      createTransactionReceivedNotification({
+        previousTxsCounter: 0,
+        nextTxsCounter: 1,
+        txId: '123',
+        isSentByUser: false,
+      }),
+    )
   }
 
   return (
     <SafeAreaView edges={['bottom', 'top', 'left', 'right']}>
-      <ScrollableView>
+      <ScrollView>
         <View style={{padding: 16, gap: 8}}>
           <Text style={{fontSize: 24}}>Notifications Playground</Text>
 
@@ -48,7 +58,7 @@ export const NotificationsDevScreen = () => {
 
           <ReceivedNotificationsList />
         </View>
-      </ScrollableView>
+      </ScrollView>
     </SafeAreaView>
   )
 }

@@ -1,12 +1,17 @@
-import * as TaskManager from 'expo-task-manager'
-import {WalletManager, walletManager} from '../../../WalletManager/wallet-manager'
-import * as BackgroundFetch from 'expo-background-fetch'
-import {App, Notifications as NotificationTypes} from '@yoroi/types'
-import {notificationManager} from './notification-manager'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import uuid from 'uuid'
-import {sendNotification} from './notifications'
+import {useAsyncStorage} from '@yoroi/common'
 import {mountAsyncStorage} from '@yoroi/common/src'
+import {App, Notifications as NotificationTypes} from '@yoroi/types'
+import * as BackgroundFetch from 'expo-background-fetch'
+import * as TaskManager from 'expo-task-manager'
+import * as React from 'react'
+import {Subject} from 'rxjs'
+import uuid from 'uuid'
+
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
+import {WalletManager, walletManager} from '../../../WalletManager/wallet-manager'
+import {notificationManager} from './notification-manager'
+import {displayNotificationEvent} from './notifications'
 
 const BACKGROUND_FETCH_TASK = 'yoroi-notifications-background-fetch'
 if (!TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK)) {
@@ -47,7 +52,7 @@ const syncAllWallets = async (walletManager: WalletManager) => {
   const ids = [...walletManager.walletMetas.keys()]
   const promises = ids.map((id) => {
     const wallet = walletManager.getWalletById(id)
-    if (!wallet) return
+    if (!wallet) return Promise.resolve()
     return wallet.sync({isForced: true})
   })
   await Promise.all(promises)
@@ -85,7 +90,7 @@ export const checkForNewTransactions = async (walletManager: WalletManager, appS
       }
       const notification = createTransactionReceivedNotification(metadata)
       notificationManager.events.save(notification)
-      sendNotification('Transaction received from background', 'You have received a new transaction')
+      displayNotificationEvent(notification)
     })
   }
 }
@@ -105,4 +110,33 @@ export const createTransactionReceivedNotification = (
     trigger: NotificationTypes.Trigger.TransactionReceived,
     metadata,
   } as const
+}
+
+export const useTransactionReceivedNotificationSubject = () => {
+  const {walletManager} = useWalletManager()
+  const asyncStorage = useAsyncStorage()
+  const [transactionReceivedSubject] = React.useState(new Subject<NotificationTypes.TransactionReceivedEvent>())
+
+  React.useEffect(() => {
+    registerBackgroundFetchAsync()
+    return () => {
+      unregisterBackgroundFetchAsync()
+    }
+  }, [])
+
+  React.useEffect(() => {
+    const s1 = walletManager.syncWalletInfos$.subscribe(async (status) => {
+      const walletInfos = Array.from(status.values())
+      const walletsDoneSyncing = walletInfos.filter((info) => info.status === 'done')
+      const areAllDone = walletsDoneSyncing.length === walletInfos.length
+      if (!areAllDone) return
+
+      await checkForNewTransactions(walletManager, asyncStorage)
+    })
+
+    return () => {
+      s1.unsubscribe()
+    }
+  }, [walletManager, asyncStorage, transactionReceivedSubject])
+  return transactionReceivedSubject
 }
