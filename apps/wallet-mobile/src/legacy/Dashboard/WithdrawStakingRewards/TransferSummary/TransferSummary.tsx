@@ -20,8 +20,6 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
 
   return (
     <>
-      <Header title={strings.confirmTx}></Header>
-
       <Item>
         <Text>{strings.balanceLabel}</Text>
 
@@ -154,11 +152,6 @@ const Item = (props: ViewProps) => {
   return <View {...props} style={styles.item} />
 }
 
-const Header = ({title}: {title: string}) => {
-  const styles = useStyles()
-  return <View style={styles.header}>{title !== '' && <Text style={styles.title}>{title}</Text>}</View>
-}
-
 const useStrings = () => {
   const intl = useIntl()
 
@@ -207,15 +200,6 @@ const useStyles = () => {
     balanceAmount: {
       color: color.text_primary_medium,
       ...atoms.body_1_lg_regular,
-    },
-    title: {
-      ...atoms.heading_3_medium,
-      ...atoms.p_lg,
-      color: color.text_gray_max,
-    },
-    header: {
-      ...atoms.align_center,
-      ...atoms.self_stretch,
     },
   })
   return styles

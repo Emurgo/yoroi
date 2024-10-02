@@ -4,7 +4,7 @@
     "defaultMessage": "!!!Receive",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 408,
+      "line": 404,
       "column": 16,
       "index": 14957
     },
@@ -24,7 +24,7 @@
       "index": 15080
     },
     "end": {
-      "line": 415,
+      "line": 411,
       "column": 3,
       "index": 15193
     }
@@ -34,12 +34,12 @@
     "defaultMessage": "!!!Swap",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 416,
+      "line": 412,
       "column": 13,
       "index": 15208
     },
     "end": {
-      "line": 419,
+      "line": 415,
       "column": 3,
       "index": 15281
     }
@@ -64,12 +64,12 @@
     "defaultMessage": "!!!Swap to",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 424,
+      "line": 420,
       "column": 15,
       "index": 15394
     },
     "end": {
-      "line": 427,
+      "line": 423,
       "column": 3,
       "index": 15467
     }
@@ -79,7 +79,7 @@
     "defaultMessage": "!!!Slippage Tolerance",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 428,
+      "line": 424,
       "column": 21,
       "index": 15490
     },
@@ -99,7 +99,7 @@
       "index": 15601
     },
     "end": {
-      "line": 435,
+      "line": 431,
       "column": 3,
       "index": 15682
     }
@@ -109,12 +109,12 @@
     "defaultMessage": "!!!Send",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 436,
+      "line": 432,
       "column": 13,
       "index": 15697
     },
     "end": {
-      "line": 439,
+      "line": 435,
       "column": 3,
       "index": 15777
     }
@@ -139,12 +139,12 @@
     "defaultMessage": "!!!Select asset",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 444,
+      "line": 440,
       "column": 20,
       "index": 15920
     },
     "end": {
-      "line": 447,
+      "line": 443,
       "column": 3,
       "index": 16009
     }
@@ -154,7 +154,7 @@
     "defaultMessage": "!!!Assets added",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 448,
+      "line": 444,
       "column": 26,
       "index": 16037
     },
@@ -174,7 +174,7 @@
       "index": 16159
     },
     "end": {
-      "line": 455,
+      "line": 451,
       "column": 3,
       "index": 16252
     }
@@ -184,12 +184,12 @@
     "defaultMessage": "!!!Confirm",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 456,
+      "line": 452,
       "column": 16,
       "index": 16270
     },
     "end": {
-      "line": 459,
+      "line": 455,
       "column": 3,
       "index": 16356
     }
@@ -204,7 +204,7 @@
       "index": 16377
     },
     "end": {
-      "line": 466,
+      "line": 462,
       "column": 3,
       "index": 16615
     }
@@ -214,7 +214,7 @@
     "defaultMessage": "!!!Confirm transaction",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 467,
+      "line": 463,
       "column": 27,
       "index": 16644
     },
@@ -234,7 +234,7 @@
       "index": 16752
     },
     "end": {
-      "line": 474,
+      "line": 470,
       "column": 3,
       "index": 16827
     }
@@ -244,12 +244,12 @@
     "defaultMessage": "!!!Success",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 475,
+      "line": 471,
       "column": 25,
       "index": 16854
     },
     "end": {
-      "line": 478,
+      "line": 474,
       "column": 3,
       "index": 16928
     }
@@ -259,7 +259,7 @@
     "defaultMessage": "!!!Request specific amount",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 479,
+      "line": 475,
       "column": 18,
       "index": 16948
     },
@@ -279,7 +279,7 @@
       "index": 17092
     },
     "end": {
-      "line": 486,
+      "line": 482,
       "column": 3,
       "index": 17188
     }
@@ -289,7 +289,7 @@
     "defaultMessage": "!!!Buy provider",
     "file": "src/features/Transactions/TxHistoryNavigator.tsx",
     "start": {
-      "line": 487,
+      "line": 483,
       "column": 29,
       "index": 17219
     },
