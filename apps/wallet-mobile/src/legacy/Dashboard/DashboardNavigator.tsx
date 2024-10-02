@@ -27,6 +27,7 @@ export const DashboardNavigator = () => {
       <Stack.Navigator
         screenOptions={{
           ...defaultStackNavigationOptions(atoms, color),
+          title: strings.title,
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }}
       >
@@ -35,27 +36,17 @@ export const DashboardNavigator = () => {
           component={Dashboard}
           options={{
             title: meta.name,
-            headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
           }}
         />
 
         <Stack.Screen //
           name="staking-center"
           component={StakingCenter}
-          options={{title: strings.title, headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>}}
         />
 
-        <Stack.Screen
-          name="delegation-confirmation"
-          component={DelegationConfirmation}
-          options={{title: strings.title, headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>}}
-        />
+        <Stack.Screen name="delegation-confirmation" component={DelegationConfirmation} />
 
-        <Stack.Screen
-          name="delegation-failed-tx"
-          component={FailedTxScreen}
-          options={{title: strings.title, headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>}}
-        />
+        <Stack.Screen name="delegation-failed-tx" component={FailedTxScreen} />
       </Stack.Navigator>
     </GovernanceProvider>
   )
