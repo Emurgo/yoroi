@@ -7,6 +7,7 @@ type ConfigStorageData = Notifications.Config
 const getAllTriggers = (): Array<Notifications.Trigger> =>
   Object.values(Notifications.Trigger)
 
+// TODO: Add handler to show notification
 export const notificationManagerMaker = ({
   eventsStorage,
   configStorage,
