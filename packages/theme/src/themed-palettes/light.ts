@@ -30,6 +30,8 @@ export const light: ThemedPalette = {
   el_gray_min: lightPalette.gray_400, // icons, shapes, lines in buttons, chips, tabs, checkboxes, readio, switch
   el_secondary: lightPalette.secondary_400, // success state
 
+  input_selected: `${lightPalette.primary_200}${opacity._80}`,
+
   mobile_overlay: `${lightPalette.black_static}${opacity._40}`, // mobile bottom sheet overlay
   mobile_bg_blur: `${lightPalette.white_static}${opacity._80}`, // mobile bottom sheet background
 

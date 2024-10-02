@@ -314,7 +314,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
         }}
         onBlur={handleOnBlur}
         cursorColor={colors.primary_600} // only works for android
-        selectionColor={Platform.OS === 'android' ? colors.gray_100 : undefined} // on ios, selectionColor changes cursor and selection
+        selectionColor={Platform.OS === 'android' ? colors.input_selected : undefined} // on ios, selectionColor changes cursor and selection
         keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
         keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
       />
