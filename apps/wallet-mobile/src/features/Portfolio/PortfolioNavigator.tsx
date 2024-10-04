@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {Boundary} from '../../components/Boundary/Boundary'
-import {defaultStackNavigationOptions, PortfolioRoutes} from '../../kernel/navigation'
+import {defaultStackNavigationOptions, Portfolio2Routes} from '../../kernel/navigation'
 import {SearchProvider} from '../Search/SearchContext'
 import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {TxDetails} from '../Transactions/useCases/TxDetails/TxDetails'
@@ -15,7 +15,7 @@ import ExportTokenTransactions from './useCases/PortfolioTokenDetails/ExportToke
 import {PortfolioTokenDetailsScreen} from './useCases/PortfolioTokenDetails/PortfolioTokenDetailsScreen'
 import {PortfolioTokenListScreen} from './useCases/PortfolioTokensList/PortfolioTokenListScreen'
 
-const Stack = createStackNavigator<PortfolioRoutes>()
+const Stack = createStackNavigator<Portfolio2Routes>()
 
 export const PortfolioNavigator = () => {
   const {atoms, color} = useTheme()
