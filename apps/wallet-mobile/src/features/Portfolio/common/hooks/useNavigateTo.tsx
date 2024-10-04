@@ -2,11 +2,11 @@ import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 
-import {Portfolio2Routes, useParams} from '../../../../kernel/navigation'
+import {PortfolioRoutes, useParams} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 
 export const useNavigateTo = () => {
-  const navigation = useNavigation<NavigationProp<Portfolio2Routes>>()
+  const navigation = useNavigation<NavigationProp<PortfolioRoutes>>()
 
   return React.useRef({
     tokensList: () => navigation.navigate('portfolio-tokens-list'),
@@ -43,7 +43,7 @@ export const useNavigateTo = () => {
   } as const).current
 }
 
-type PortfolioTokenDetailParams = Portfolio2Routes['portfolio-token-details']
+type PortfolioTokenDetailParams = PortfolioRoutes['portfolio-token-details']
 
 const isPortfolioTokenDetailParams = (
   params?: PortfolioTokenDetailParams | object | undefined,
