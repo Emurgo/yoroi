@@ -244,7 +244,7 @@
   "components.receive.receivescreen.usedAddresses": "Used",
   "components.receive.receivescreen.verifyAddress": "Verify address",
   "components.receive.addresscard.title": "Wallet address",
-  "components.receive.addresscard.shareLabel": "Share address",
+  "components.receive.addresscard.shareLabel": "Share",
   "components.receive.addresscard.walletAddress": "Wallet address details",
   "components.receive.addresscard.spendingKeyHash": "Spending key hash",
   "components.receive.addresscard.stakingKeyHash": "Staking key hash",
