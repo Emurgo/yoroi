@@ -26,7 +26,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     notice: {
       backgroundColor: color.sys_cyan_100,
-      padding: 12,
+      ...atoms.p_md,
       borderRadius: 8,
     },
     text: {
