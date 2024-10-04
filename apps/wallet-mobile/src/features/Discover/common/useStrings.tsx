@@ -66,6 +66,7 @@ export const useStrings = () => {
     filterParentOptionsNFT: intl.formatMessage(messages.filterParentOptionsNFT),
     filterParentOptionsTrading: intl.formatMessage(messages.filterParentOptionsTrading),
     learnMore: intl.formatMessage(globalMessages.learnMore),
+    disconnectWarning: intl.formatMessage(messages.disconnectWarning),
   }).current
 }
 
@@ -106,7 +107,7 @@ const messages = Object.freeze(
     },
     connected: {
       id: 'discover.discoverList.connected',
-      defaultMessage: '!!!Connected',
+      defaultMessage: '!!!Authorized',
     },
     singleAddress: {
       id: 'discover.discoverList.singleAddress',
@@ -126,7 +127,7 @@ const messages = Object.freeze(
     },
     disconnectWalletFromDApp: {
       id: 'discover.discoverList.disconnectWalletFromDApp',
-      defaultMessage: '!!!Disconnect wallet from DApp',
+      defaultMessage: '!!!Disconnect DApp',
     },
     dAppActions: {
       id: 'discover.discoverList.dAppActions',
@@ -298,6 +299,11 @@ const messages = Object.freeze(
     filterParentOptionsCommunity: {
       id: 'discover.filterOptions.parent.community',
       defaultMessage: '!!!Community',
+    },
+    disconnectWarning: {
+      id: 'discover.modal.disconnectWarning',
+      defaultMessage:
+        '!!!Even if you disconnected Yoroi from the DApp, Yoroi is still authorized. If you want to remove such authorization, please click Disconnect DApp.',
     },
   }),
 )
