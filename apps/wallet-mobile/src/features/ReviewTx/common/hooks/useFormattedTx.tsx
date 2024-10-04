@@ -1,7 +1,7 @@
 import {invalid, isNonNullable} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import {useQuery} from 'react-query'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
