@@ -111,7 +111,6 @@ describe('traitValueExpander', () => {
     expect(traitValueExpander(input)).toEqual(expected)
   })
 
-  // Test for boolean
   it('should correctly handle a boolean', () => {
     const input = true
 
