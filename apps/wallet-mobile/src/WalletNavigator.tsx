@@ -150,6 +150,7 @@ const WalletTabNavigator = () => {
 
           <Tab.Screen
             name="portfolio"
+            initialParams={{screen: 'dashboard-portfolio'}}
             options={{
               tabBarIcon: ({focused}) =>
                 focused ? (

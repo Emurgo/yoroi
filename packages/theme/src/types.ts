@@ -105,6 +105,8 @@ export type ThemedPalette = BasePalette & {
   el_gray_min: HexColor
   el_secondary: HexColor
 
+  input_selected: HexColor
+
   web_overlay: HexColor
   web_bg_sidebar_active: HexColor
   web_bg_sidebar_inactive: HexColor
