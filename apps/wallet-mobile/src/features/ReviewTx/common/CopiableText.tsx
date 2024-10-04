@@ -6,14 +6,14 @@ import {Icon} from '../../../components/Icon'
 import {Space} from '../../../components/Space/Space'
 import {useCopy} from '../../../hooks/useCopy'
 
-export const Address = ({
-  address,
+export const CopiableText = ({
+  text,
   index,
   textStyle,
   multiline = false,
   addressProps,
 }: {
-  address: string
+  text: string
   index?: number
   textStyle?: TextStyle
   multiline?: boolean
@@ -23,14 +23,14 @@ export const Address = ({
   const [, copy] = useCopy()
 
   return (
-    <View style={styles.address}>
+    <View style={styles.text}>
       <Text
         style={[styles.addressText, textStyle]}
         numberOfLines={!multiline ? 1 : undefined}
         ellipsizeMode={!multiline ? 'middle' : undefined}
         {...addressProps}
       >
-        {address}
+        {text}
       </Text>
 
       {index !== undefined ? (
@@ -45,7 +45,7 @@ export const Address = ({
         <Space width="xs" />
       )}
 
-      <TouchableOpacity onPress={() => copy(address)} activeOpacity={0.5}>
+      <TouchableOpacity onPress={() => copy(text)} activeOpacity={0.5}>
         <Icon.Copy size={24} color={colors.copy} />
       </TouchableOpacity>
     </View>
@@ -55,7 +55,7 @@ export const Address = ({
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    address: {
+    text: {
       ...atoms.flex_row,
       ...atoms.justify_between,
     },

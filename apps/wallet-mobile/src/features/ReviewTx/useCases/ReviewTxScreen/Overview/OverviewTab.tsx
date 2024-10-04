@@ -11,8 +11,8 @@ import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {Quantities} from '../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {Address} from '../../../common/Address'
 import {CollapsibleSection} from '../../../common/CollapsibleSection'
+import {CopiableText} from '../../../common/CopiableText'
 import {Divider} from '../../../common/Divider'
 import {useAddressType} from '../../../common/hooks/useAddressType'
 import {FormattedTx} from '../../../common/hooks/useFormattedTx'
@@ -76,7 +76,7 @@ const FeeInfoItem = ({fee}: {fee: string}) => {
     <View style={styles.infoItem}>
       <Text style={styles.infoLabel}>{strings.feeLabel}</Text>
 
-      <Text style={styles.fee}>{fee}</Text>
+      <Text style={styles.fee}>{`-${fee}`}</Text>
     </View>
   )
 }
@@ -97,7 +97,7 @@ const SenderSection = ({
     <CollapsibleSection label={strings.myWalletLabel}>
       <Space height="lg" />
 
-      <Address address={address} />
+      <CopiableText text={address} />
 
       <Space height="sm" />
 
@@ -178,7 +178,7 @@ const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs})
       <View style={styles.receiverAddress}>
         <Text>{isScriptAddress ? strings.receiveToScriptLabel : strings.receiveToLabel}:</Text>
 
-        <Address address={address} textStyle={styles.receiverSectionAddress} />
+        <CopiableText text={address} textStyle={styles.receiverSectionAddress} />
       </View>
     </>
   )

@@ -3,8 +3,8 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Space} from '../../../../../components/Space/Space'
-import {Address} from '../../../common/Address'
 import {CollapsibleSection} from '../../../common/CollapsibleSection'
+import {CopiableText} from '../../../common/CopiableText'
 import {Divider} from '../../../common/Divider'
 import {FormattedTx} from '../../../common/hooks/useFormattedTx'
 import {useStrings} from '../../../common/hooks/useStrings'
@@ -33,7 +33,7 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
 }
 
 const Inputs = ({inputs}: {inputs: FormattedInputs}) => {
-  return inputs.map((input) => <Input key={input.txHash} input={input} />)
+  return inputs.map((input, index) => <Input key={`${input.address}-${index}`} input={input} />)
 }
 
 const Input = ({input}: {input: FormattedInput}) => {
@@ -49,11 +49,11 @@ const Input = ({input}: {input: FormattedInput}) => {
 
         <Space height="lg" />
 
-        <Address address={input.address} multiline />
+        <CopiableText text={input.address} multiline />
 
         <Space height="sm" />
 
-        <Address index={input.txIndex} address={input.txHash} multiline />
+        <CopiableText index={input.txIndex} text={input.txHash} multiline />
       </View>
 
       <Space height="sm" />
@@ -67,7 +67,7 @@ const Input = ({input}: {input: FormattedInput}) => {
   )
 }
 const Outputs = ({outputs}: {outputs: FormattedOutputs}) => {
-  return outputs.map((output, index) => <Output key={index} output={output} />)
+  return outputs.map((output, index) => <Output key={`${output.address}-${index}`} output={output} />)
 }
 
 const Output = ({output}: {output: FormattedOutput}) => {
@@ -83,7 +83,7 @@ const Output = ({output}: {output: FormattedOutput}) => {
 
         <Space height="lg" />
 
-        <Address address={output.address} multiline />
+        <CopiableText text={output.address} multiline />
       </View>
 
       <Space height="sm" />

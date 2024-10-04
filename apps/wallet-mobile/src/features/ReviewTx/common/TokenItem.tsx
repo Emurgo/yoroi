@@ -1,9 +1,10 @@
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, useWindowDimensions} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
+import {useStrings} from './hooks/useStrings'
 import {TokenDetails} from './TokenDetails'
 
 export const TokenItem = ({
@@ -18,10 +19,12 @@ export const TokenItem = ({
   label: string
 }) => {
   const {styles} = useStyles()
+  const strings = useStrings()
   const {openModal} = useModal()
+  const {height: windowHeight} = useWindowDimensions()
 
   const handleShowTokenDetails = () => {
-    openModal('Asset Details', <TokenDetails tokenInfo={tokenInfo} />)
+    openModal(strings.tokenDetailsTitle, <TokenDetails tokenInfo={tokenInfo} />, windowHeight * 0.8)
   }
 
   if (!isSent)

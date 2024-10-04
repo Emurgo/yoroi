@@ -21,6 +21,17 @@ export const useStrings = () => {
     utxosOutputsLabel: intl.formatMessage(messages.utxosOutputsLabel),
     utxosYourAddressLabel: intl.formatMessage(messages.utxosYourAddressLabel),
     utxosForeignAddressLabel: intl.formatMessage(messages.utxosForeignAddressLabel),
+    overview: intl.formatMessage(messages.overview),
+    json: intl.formatMessage(messages.json),
+    metadata: intl.formatMessage(messages.metadata),
+    policyId: intl.formatMessage(messages.policyId),
+    fingerprint: intl.formatMessage(messages.fingerprint),
+    name: intl.formatMessage(messages.name),
+    tokenSupply: intl.formatMessage(messages.tokenSupply),
+    symbol: intl.formatMessage(messages.symbol),
+    description: intl.formatMessage(messages.description),
+    details: intl.formatMessage(messages.details),
+    tokenDetailsTitle: intl.formatMessage(messages.tokenDetailsTitle),
   }
 }
 
@@ -59,7 +70,7 @@ const messages = defineMessages({
   },
   receiveToLabel: {
     id: 'txReview.overview.receiveToLabel',
-    defaultMessage: '!!!receiveToLabel',
+    defaultMessage: '!!!To',
   },
   receiveToScriptLabel: {
     id: 'txReview.overview.receiveToScriptLabel',
@@ -80,5 +91,49 @@ const messages = defineMessages({
   utxosForeignAddressLabel: {
     id: 'txReview.utxos.utxosForeignAddressLabel',
     defaultMessage: '!!!Foreign address',
+  },
+  overview: {
+    id: 'txReview.tokenDetails.overViewTab.title',
+    defaultMessage: '!!!Overview',
+  },
+  json: {
+    id: 'txReview.tokenDetails.jsonTab.title',
+    defaultMessage: '!!!JSON',
+  },
+  metadata: {
+    id: 'txReview.tokenDetails.jsonTab.metadata',
+    defaultMessage: '!!!Metadata',
+  },
+  policyId: {
+    id: 'txReview.tokenDetails.policyId.label',
+    defaultMessage: '!!!Policy ID',
+  },
+  fingerprint: {
+    id: 'txReview.tokenDetails.fingerprint.label',
+    defaultMessage: '!!!Fingerprint',
+  },
+  name: {
+    id: 'txReview.tokenDetails.overViewTab.name.label',
+    defaultMessage: '!!!Name',
+  },
+  tokenSupply: {
+    id: 'txReview.tokenDetails.overViewTab.tokenSupply.label',
+    defaultMessage: '!!!Token Supply',
+  },
+  symbol: {
+    id: 'txReview.tokenDetails.overViewTab.symbol.label',
+    defaultMessage: '!!!Symbol',
+  },
+  description: {
+    id: 'txReview.tokenDetails.overViewTab.description.label',
+    defaultMessage: '!!!Description',
+  },
+  details: {
+    id: 'txReview.tokenDetails.overViewTab.details.label',
+    defaultMessage: '!!!Details on',
+  },
+  tokenDetailsTitle: {
+    id: 'txReview.tokenDetails.title',
+    defaultMessage: '!!!Asset Details',
   },
 })
