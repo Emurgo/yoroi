@@ -7,6 +7,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
 import {Icon} from '../../../../../components/Icon'
+import {InfoBanner} from '../../../../../components/InfoBanner/InfoBanner'
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -37,7 +38,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const {manager} = useDappConnector()
   const {track} = useMetrics()
 
-  const heightDialogByHeightScreen = dApp.isSingleAddress ? 460 : 340
+  const heightDialogByHeightScreen = dApp.isSingleAddress ? 612 : 492
 
   const heightDialogByInit = INIT_DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
   const dialogHeight = heightDialogByInit < heightDialogByHeightScreen ? heightDialogByHeightScreen : heightDialogByInit
@@ -108,6 +109,10 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
             <SingleAddressDAppWarning />
           </>
         )}
+
+        <Space height="lg" />
+
+        <InfoBanner iconSize={20} content={strings.disconnectWarning} />
 
         <Space height="lg" />
 
