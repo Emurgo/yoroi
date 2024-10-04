@@ -45,14 +45,12 @@ export const Actions = ({tokenInfo}: Props) => {
       from_asset: [
         {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
       ],
-      to_asset: [
-        {asset_name: tokenInfo.name ?? '', asset_ticker: tokenInfo.ticker ?? '', policy_id: tokenInfo.id ?? ''},
-      ],
+      to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.id}],
       order_type: swap.orderData.type,
       slippage_tolerance: swap.orderData.slippage,
     })
 
-    navigateTo.swap()
+    navigateTo.resetTabAndSwap()
   }
 
   return (
@@ -64,7 +62,7 @@ export const Actions = ({tokenInfo}: Props) => {
           outlineOnLight
           title={strings.send.toLocaleUpperCase()}
           startContent={<Icon.Send color={colors.primary} size={24} />}
-          onPress={navigateTo.send}
+          onPress={navigateTo.resetTabAndSend}
         />
 
         <Button
