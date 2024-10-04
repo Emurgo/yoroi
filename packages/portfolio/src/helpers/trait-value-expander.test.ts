@@ -123,7 +123,6 @@ describe('traitValueExpander', () => {
     expect(traitValueExpander(input)).toEqual(adjustedExpected)
   })
 
-  // Test for symbol
   it('should correctly handle a symbol', () => {
     const input = Symbol('sym')
     const expected = {
