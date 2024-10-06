@@ -40,4 +40,12 @@ describe('parseScanAction', () => {
       params: expect.any(Object),
     })
   })
+
+  it('should correctly parse a Yoroi link', () => {
+    const result = parseScanAction(codeContent.links.success.yoroiPaymentRequestWithLink)
+    expect(result).toEqual({
+      action: 'launch-url',
+      url: codeContent.links.success.yoroiPaymentRequestWithLink,
+    })
+  })
 })

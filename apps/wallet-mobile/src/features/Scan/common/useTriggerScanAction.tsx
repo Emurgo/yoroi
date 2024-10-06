@@ -3,7 +3,7 @@ import {toBigInt} from '@yoroi/common'
 import {useTransfer} from '@yoroi/transfer'
 import {Scan} from '@yoroi/types'
 import * as React from 'react'
-import {Alert} from 'react-native'
+import {Alert, Linking} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {useClaimErrorResolver} from '../../../features/Claim/common/useClaimErrorResolver'
@@ -46,6 +46,11 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: Scan.Featu
 
   const trigger = (scanAction: Scan.Action) => {
     switch (scanAction.action) {
+      case 'launch-url': {
+        Linking.openURL(scanAction.url)
+        break
+      }
+
       case 'send-single-pt': {
         if (insideFeature !== 'send') resetTransferState()
 
