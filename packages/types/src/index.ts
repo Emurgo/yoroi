@@ -237,6 +237,7 @@ import {ScanErrorUnknown, ScanErrorUnknownContent} from './scan/errors'
 import {
   ScanAction,
   ScanActionClaim,
+  ScanActionLaunchUrl,
   ScanActionSendOnlyReceiver,
   ScanActionSendSinglePt,
   ScanFeature,
@@ -657,6 +658,7 @@ export namespace Scan {
   export type ActionClaim = ScanActionClaim
   export type ActionSendOnlyReceiver = ScanActionSendOnlyReceiver
   export type ActionSendSinglePt = ScanActionSendSinglePt
+  export type ActionScanLaunchUrl = ScanActionLaunchUrl
 }
 
 export namespace Claim {
