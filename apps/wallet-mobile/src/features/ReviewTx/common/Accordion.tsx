@@ -4,7 +4,7 @@ import {Animated, LayoutAnimation, StyleSheet, Text, TouchableOpacity, View} fro
 
 import {Icon} from '../../../components/Icon'
 
-export const CollapsibleSection = ({label, children}: {label: string; children: React.ReactNode}) => {
+export const Accordion = ({label, children}: {label: string; children: React.ReactNode}) => {
   const {styles, colors} = useStyles()
   const [isOpen, setIsOpen] = React.useState(false)
   const animatedHeight = React.useRef(new Animated.Value(0)).current

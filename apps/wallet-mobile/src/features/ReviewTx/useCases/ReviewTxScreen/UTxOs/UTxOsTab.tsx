@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Space} from '../../../../../components/Space/Space'
-import {CollapsibleSection} from '../../../common/CollapsibleSection'
+import {Accordion} from '../../../common/Accordion'
 import {CopiableText} from '../../../common/CopiableText'
 import {Divider} from '../../../common/Divider'
 import {useStrings} from '../../../common/hooks/useStrings'
@@ -18,15 +18,15 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
     <View style={styles.root}>
       <Space height="lg" />
 
-      <CollapsibleSection label={`${strings.utxosInputsLabel} (${tx.inputs.length})`}>
+      <Accordion label={`${strings.utxosInputsLabel} (${tx.inputs.length})`}>
         <Inputs inputs={tx.inputs} />
-      </CollapsibleSection>
+      </Accordion>
 
       <Fee fee={tx.fee.label} />
 
-      <CollapsibleSection label={`${strings.utxosOutputsLabel} (${tx.outputs.length})`}>
+      <Accordion label={`${strings.utxosOutputsLabel} (${tx.outputs.length})`}>
         <Outputs outputs={tx.outputs} />
-      </CollapsibleSection>
+      </Accordion>
     </View>
   )
 }

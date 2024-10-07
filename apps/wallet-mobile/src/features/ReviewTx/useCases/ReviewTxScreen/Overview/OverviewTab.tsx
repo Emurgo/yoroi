@@ -11,7 +11,7 @@ import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {Quantities} from '../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {CollapsibleSection} from '../../../common/CollapsibleSection'
+import {Accordion} from '../../../common/Accordion'
 import {CopiableText} from '../../../common/CopiableText'
 import {Divider} from '../../../common/Divider'
 import {useAddressType} from '../../../common/hooks/useAddressType'
@@ -93,7 +93,7 @@ const SenderSection = ({
   const address = ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address
 
   return (
-    <CollapsibleSection label={strings.myWalletLabel}>
+    <Accordion label={strings.myWalletLabel}>
       <Space height="lg" />
 
       <CopiableText text={address} />
@@ -103,7 +103,7 @@ const SenderSection = ({
       <SenderTokens tx={tx} notOwnedOutputs={notOwnedOutputs} />
 
       {notOwnedOutputs.length === 1 && <ReceiverSection notOwnedOutputs={notOwnedOutputs} />}
-    </CollapsibleSection>
+    </Accordion>
   )
 }
 
@@ -292,7 +292,7 @@ const CreatedByInfoItem = () => {
 
       <Space height="lg" />
 
-      <CollapsibleSection label="Other parties">
+      <Accordion label="Other parties">
         <Space height="lg" />
 
         <Info
@@ -333,7 +333,7 @@ const CreatedByInfoItem = () => {
             <TokenItem tokenId="12345" label="1000 Token 9" isPrimaryToken={false} isSent={false} />
           </View>
         </View>
-      </CollapsibleSection>
+      </Accordion>
 
       <Space height="lg" />
     </>
