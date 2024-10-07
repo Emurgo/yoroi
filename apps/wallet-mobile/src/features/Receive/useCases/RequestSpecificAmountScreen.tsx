@@ -124,7 +124,7 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
 
   return (
     <View style={[styles.container, styles.flex]}>
-      <RNScrollView contentContainerStyle={[styles.flex, styles.modalContainer]}>
+      <RNScrollView contentContainerStyle={[styles.flex_grow, styles.modalContainer]}>
         {hasAddress ? (
           <ShareQRCodeCard
             title={title}
@@ -175,6 +175,9 @@ const useStyles = () => {
     },
     flex: {
       ...atoms.flex_1,
+    },
+    flex_grow: {
+      ...atoms.flex_grow,
     },
     textAddressDetails: {
       color: color.text_gray_medium,
