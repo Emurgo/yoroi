@@ -107,7 +107,7 @@ export const defaultMaterialTopTabNavigationOptions = (
 // ROUTES
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
-  portfolio: NavigatorScreenParams<Portfolio2Routes>
+  portfolio: NavigatorScreenParams<PortfolioRoutes>
   discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
@@ -283,7 +283,7 @@ export type DashboardRoutes = {
   'delegation-failed-tx': undefined
 }
 
-export type Portfolio2Routes = {
+export type PortfolioRoutes = {
   'dashboard-portfolio': undefined
   'portfolio-tokens-list': undefined
   'portfolio-token-details': {id: Portfolio.Token.Id}
@@ -335,11 +335,7 @@ type MenuRoutes = {
   'voting-registration': undefined
 }
 
-type PortfolioRoutes = {
-  'portfolio-dashboard': undefined
-}
-
-export type AppRoutes = PortfolioRoutes & {
+export type AppRoutes = {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined
