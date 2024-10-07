@@ -120,7 +120,7 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/routers": "^6.1.5",
     "@react-navigation/stack": "^6.3.16",
-    "@sentry/react-native": "^5.33.1",
+    "@sentry/react-native": "^5.8.0",
     "@shopify/flash-list": "^1.4.1",
     "@types/bip39": "^3.0.0",
     "@types/pbkdf2": "^3.1.2",
