@@ -6,10 +6,9 @@ import {Space} from '../../../../../components/Space/Space'
 import {CollapsibleSection} from '../../../common/CollapsibleSection'
 import {CopiableText} from '../../../common/CopiableText'
 import {Divider} from '../../../common/Divider'
-import {FormattedTx} from '../../../common/hooks/useFormattedTx'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {TokenItem} from '../../../common/TokenItem'
-import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs} from '../../../common/types'
+import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs, FormattedTx} from '../../../common/types'
 
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()

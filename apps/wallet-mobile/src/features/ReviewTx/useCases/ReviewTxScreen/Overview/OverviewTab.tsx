@@ -15,10 +15,9 @@ import {CollapsibleSection} from '../../../common/CollapsibleSection'
 import {CopiableText} from '../../../common/CopiableText'
 import {Divider} from '../../../common/Divider'
 import {useAddressType} from '../../../common/hooks/useAddressType'
-import {FormattedTx} from '../../../common/hooks/useFormattedTx'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {TokenItem} from '../../../common/TokenItem'
-import {FormattedOutputs} from '../../../common/types'
+import {FormattedOutputs, FormattedTx} from '../../../common/types'
 
 export const OverviewTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()

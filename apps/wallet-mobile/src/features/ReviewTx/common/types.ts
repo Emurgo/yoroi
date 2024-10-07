@@ -25,6 +25,7 @@ export type FormattedInput = {
 }
 
 export type FormattedInputs = Array<FormattedInput>
+
 export type FormattedOutput = {
   assets: Array<{
     tokenInfo: Portfolio.Token.Info
@@ -37,11 +38,19 @@ export type FormattedOutput = {
   rewardAddress: string | null
   ownAddress: boolean
 }
+
 export type FormattedOutputs = Array<FormattedOutput>
+
 export type FormattedFee = {
   tokenInfo: Portfolio.Token.Info
   name: string
   label: string
   quantity: Balance.Quantity
   isPrimary: boolean
+}
+
+export type FormattedTx = {
+  inputs: FormattedInputs
+  outputs: FormattedOutputs
+  fee: FormattedFee
 }

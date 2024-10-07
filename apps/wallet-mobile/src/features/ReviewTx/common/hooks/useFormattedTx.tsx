@@ -19,7 +19,6 @@ import {
   TransactionOutputs,
 } from '../types'
 
-export type FormattedTx = ReturnType<typeof useFormattedTx>
 export const useFormattedTx = (data: TransactionBody) => {
   const {wallet} = useSelectedWallet()
 

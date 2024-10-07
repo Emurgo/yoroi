@@ -207,7 +207,7 @@ import {
 import {AppQueueTask, AppQueueTaskManager} from './app/queue-task-manager'
 import {ExplorersManager} from './explorers/manager'
 import {ExplorersExplorer} from './explorers/explorer'
-import {PortfolioTokenTraits} from './portfolio/traits'
+import {PortfolioTokenTrait, PortfolioTokenTraits} from './portfolio/traits'
 import {HWDeviceInfo, HWDeviceObj, HWFeatures} from './hw/hw'
 import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
 import {WalletMeta} from './wallet/meta'
@@ -237,6 +237,7 @@ import {ScanErrorUnknown, ScanErrorUnknownContent} from './scan/errors'
 import {
   ScanAction,
   ScanActionClaim,
+  ScanActionLaunchUrl,
   ScanActionSendOnlyReceiver,
   ScanActionSendSinglePt,
   ScanFeature,
@@ -547,6 +548,7 @@ export namespace Portfolio {
   }
 
   export namespace Token {
+    export type Trait = PortfolioTokenTrait
     export type Traits = PortfolioTokenTraits
     export type Balances = PortfolioTokenBalances
     export type Amount = PortfolioTokenAmount
@@ -656,6 +658,7 @@ export namespace Scan {
   export type ActionClaim = ScanActionClaim
   export type ActionSendOnlyReceiver = ScanActionSendOnlyReceiver
   export type ActionSendSinglePt = ScanActionSendSinglePt
+  export type ActionScanLaunchUrl = ScanActionLaunchUrl
 }
 
 export namespace Claim {
