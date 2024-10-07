@@ -9,6 +9,7 @@ export * from './helpers/is-primary-token'
 export * from './helpers/is-ft'
 export * from './helpers/is-nft'
 export * from './helpers/info-filter-by-name'
+export * from './helpers/trait-value-expander'
 
 export * from './adapters/amount.mocks'
 export * from './adapters/dullahan-api/api-maker.mocks'

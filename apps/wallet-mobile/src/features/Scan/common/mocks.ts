@@ -28,6 +28,8 @@ export const codeContent = {
         'web+cardano://claim/v1?code=42&faucet_url=https%3A%2F%2Ffaucet.com&memo=memo-text&message=message1&message=message2&message=message3&extra=extra',
       legacyCip13Transfer:
         'web+cardano:addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km?extra=extra&amount=1.23&memo=memo&message=message',
+      yoroiPaymentRequestWithLink:
+        'yoroi://yoroi-wallet.com/w1/transfer/request/ada-with-link?link=web%252Bcardano%253Aaddr1qxvn5nehgdjadqpztxqckh4yz37h0vc7rnl57x9jfaraxxe627hhjyls27xwmke4e4ewn27rv3qcntakvp7wd53dqahqxuhfua%253Famount%253D2',
     },
   },
 } as const

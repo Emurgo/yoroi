@@ -66,7 +66,7 @@ export const ShareQRCodeCard = ({
 
   if (isSharing)
     return (
-      <ViewShot ref={ref}>
+      <ViewShot style={styles.shot} ref={ref}>
         <CaptureShareQRCodeCard content={qrContent} />
       </ViewShot>
     )
@@ -127,6 +127,9 @@ const useStyles = () => {
     },
     addressContainer: {
       alignItems: 'center',
+    },
+    shot: {
+      height: 308,
     },
     card: {
       ...atoms.gap_lg,
