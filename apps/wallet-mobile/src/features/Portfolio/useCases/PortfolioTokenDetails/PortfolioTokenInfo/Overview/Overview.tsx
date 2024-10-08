@@ -7,6 +7,7 @@ import {Accordion} from '../../../../../../components/Accordion/Accordion'
 import {CopyButton} from '../../../../../../components/CopyButton'
 import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {features} from '../../../../../../kernel/features'
+import {isEmptyString} from '../../../../../../kernel/utils'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioTokenDetailParams} from '../../../../common/hooks/useNavigateTo'
 import {useStrings} from '../../../../common/hooks/useStrings'
@@ -46,7 +47,7 @@ export const Overview = () => {
         <View style={styles.tokenInfoContainer}>
           <TokenInfoIcon size="sm" info={tokenInfo.info} imageStyle={styles.tokenLogo} />
 
-          <Text style={styles?.tokenName}>{tokenSymbol}</Text>
+          <Text style={styles.tokenName}>{tokenSymbol}</Text>
         </View>
 
         <Text style={styles.textBody}>{tokenInfo.info?.description}</Text>
@@ -58,7 +59,13 @@ export const Overview = () => {
 
           <Spacer height={4} />
 
-          <Text style={styles.textBody}>{tokenInfo.info?.website ?? '-'}</Text>
+          {!isEmptyString(tokenInfo.info?.website) ? (
+            <TouchableOpacity onPress={() => Linking.openURL(tokenInfo.info.website)}>
+              <Text style={styles.linkText}>{tokenInfo.info.website}</Text>
+            </TouchableOpacity>
+          ) : (
+            <Text style={styles.textBody}>-</Text>
+          )}
         </View>
 
         <Spacer height={24} />
@@ -160,6 +167,11 @@ const useStyles = () => {
       ...atoms.flex_1,
       ...atoms.flex_row,
       ...atoms.gap_lg,
+    },
+    linkText: {
+      color: color.primary_500,
+      ...atoms.link_1_lg_underline,
+      ...atoms.flex_1,
     },
     title: {
       ...atoms.body_1_lg_medium,

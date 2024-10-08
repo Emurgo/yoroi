@@ -10,7 +10,6 @@ import {
   swapStorageMaker,
 } from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {TransferProvider} from '@yoroi/transfer'
 import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -149,6 +148,7 @@ const WalletTabNavigator = () => {
 
           <Tab.Screen
             name="portfolio"
+            initialParams={{screen: 'dashboard-portfolio'}}
             options={{
               tabBarIcon: ({focused}) =>
                 focused ? (
@@ -232,51 +232,49 @@ export const WalletNavigator = () => {
   }
 
   return (
-    <TransferProvider>
-      <SearchProvider>
-        <Stack.Navigator
-          screenOptions={{
-            ...navOptions,
-            headerLeft: undefined,
+    <SearchProvider>
+      <Stack.Navigator
+        screenOptions={{
+          ...navOptions,
+          headerLeft: undefined,
+        }}
+      >
+        <Stack.Screen
+          name="wallet-selection"
+          options={{
+            title: strings.walletSelectionScreenHeader,
+            headerTitle: ({children}) => <NetworkTag directChangeActive>{children}</NetworkTag>,
           }}
-        >
-          <Stack.Screen
-            name="wallet-selection"
-            options={{
-              title: strings.walletSelectionScreenHeader,
-              headerTitle: ({children}) => <NetworkTag directChangeActive>{children}</NetworkTag>,
-            }}
-            component={SelectWalletFromList}
-          />
+          component={SelectWalletFromList}
+        />
 
-          <Stack.Screen //
-            name="setup-wallet"
-            options={{headerShown: false}}
-            component={SetupWalletNavigator}
-          />
+        <Stack.Screen //
+          name="setup-wallet"
+          options={{headerShown: false}}
+          component={SetupWalletNavigator}
+        />
 
-          <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
+        <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
 
-          <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
+        <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 
-          <Stack.Screen
-            name="voting-registration"
-            options={{headerShown: false}}
-            getComponent={() => CatalystNavigator}
-          />
+        <Stack.Screen
+          name="voting-registration"
+          options={{headerShown: false}}
+          getComponent={() => CatalystNavigator}
+        />
 
-          <Stack.Screen
-            name="toggle-analytics-settings"
-            options={{headerShown: false}}
-            component={ToggleAnalyticsSettingsNavigator}
-          />
+        <Stack.Screen
+          name="toggle-analytics-settings"
+          options={{headerShown: false}}
+          component={ToggleAnalyticsSettingsNavigator}
+        />
 
-          <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
+        <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
 
-          <Stack.Screen name="staking-dashboard" options={{headerShown: false}} component={DashboardNavigator} />
-        </Stack.Navigator>
-      </SearchProvider>
-    </TransferProvider>
+        <Stack.Screen name="staking-dashboard" options={{headerShown: false}} component={DashboardNavigator} />
+      </Stack.Navigator>
+    </SearchProvider>
   )
 }
 

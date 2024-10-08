@@ -227,7 +227,7 @@ const useStyles = () => {
 
   const colors = {
     placeholder: color.gray_600,
-    focused: color.gray_900,
+    focused: color.input_selected,
     blur: color.black_static,
     noSelected: color.gray_400,
     gray: color.gray_max,

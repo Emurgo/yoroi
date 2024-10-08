@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {configCardanoLegacyTransfer, linksCardanoModuleMaker} from '@yoroi/links'
+import {configCardanoLegacyTransfer, linksCardanoModuleMaker, linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
@@ -106,12 +106,16 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
   const {track} = useMetrics()
 
   const cardanoLinks = linksCardanoModuleMaker()
-  const requestData = cardanoLinks.create({
+  const cardanoRequestLink = cardanoLinks.create({
     config: configCardanoLegacyTransfer,
     params: {
       address: address,
       amount: Number(amount),
     },
+  })
+  const yoroiLinks = linksYoroiModuleMaker('yoroi')
+  const yoroiPaymentRequestLink = yoroiLinks.transfer.request.adaWithLink({
+    link: cardanoRequestLink.link,
   })
 
   const {
@@ -119,18 +123,18 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
   } = useSelectedWallet()
   const hasAmount = !isEmptyString(amount)
   const hasAddress = !isEmptyString(address)
-  const content = hasAmount ? requestData.link : address
+  const content = hasAmount ? yoroiPaymentRequestLink : address
   const title = hasAmount ? `${amount} ${portfolioPrimaryTokenInfo.ticker.toLocaleUpperCase()}` : ''
 
   const {copy} = useCopy()
 
   return (
     <View style={[styles.container, styles.flex]}>
-      <RNScrollView contentContainerStyle={[styles.flex, styles.modalContainer]}>
+      <RNScrollView contentContainerStyle={[styles.flex_grow, styles.modalContainer]}>
         {hasAddress ? (
           <ShareQRCodeCard
             title={title}
-            shareContent={`${strings.address} ${content}`}
+            shareContent={content}
             qrContent={content}
             onLongPress={(event: GestureResponderEvent) =>
               copy({text: content, feedback: strings.addressCopiedMsg, event})
@@ -175,6 +179,9 @@ const useStyles = () => {
     },
     flex: {
       ...atoms.flex_1,
+    },
+    flex_grow: {
+      ...atoms.flex_grow,
     },
     textAddressDetails: {
       color: color.text_gray_medium,

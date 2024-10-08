@@ -137,7 +137,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    cursor: color.text_gray_medium,
+    cursor: color.input_selected,
   }
   return {styles, colors} as const
 }

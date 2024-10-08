@@ -2,6 +2,7 @@ import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {ThemeProvider} from '@yoroi/theme'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {LogBox, StyleSheet} from 'react-native'
 import * as RNP from 'react-native-paper'
@@ -58,17 +59,19 @@ const Yoroi = () => {
                     <LoadingBoundary style={StyleSheet.absoluteFill}>
                       <LanguageProvider>
                         <AuthProvider>
-                          <LinksProvider>
-                            <SetupWalletProvider>
-                              <PoolTransitionProvider>
-                                <BrowserProvider>
-                                  <AutomaticWalletOpenerProvider>
-                                    <InitApp />
-                                  </AutomaticWalletOpenerProvider>
-                                </BrowserProvider>
-                              </PoolTransitionProvider>
-                            </SetupWalletProvider>
-                          </LinksProvider>
+                          <TransferProvider>
+                            <LinksProvider>
+                              <SetupWalletProvider>
+                                <PoolTransitionProvider>
+                                  <BrowserProvider>
+                                    <AutomaticWalletOpenerProvider>
+                                      <InitApp />
+                                    </AutomaticWalletOpenerProvider>
+                                  </BrowserProvider>
+                                </PoolTransitionProvider>
+                              </SetupWalletProvider>
+                            </LinksProvider>
+                          </TransferProvider>
                         </AuthProvider>
                       </LanguageProvider>
                     </LoadingBoundary>

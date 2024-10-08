@@ -45,20 +45,23 @@ export const Actions = ({tokenInfo}: Props) => {
       from_asset: [
         {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
       ],
-      to_asset: [
-        {asset_name: tokenInfo.name ?? '', asset_ticker: tokenInfo.ticker ?? '', policy_id: tokenInfo.id ?? ''},
-      ],
+      to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.id}],
       order_type: swap.orderData.type,
       slippage_tolerance: swap.orderData.slippage,
     })
 
-    navigateTo.swap()
+    navigateTo.resetTabAndSwap()
   }
 
   return (
     <View style={styles.root}>
       <View style={styles.container}>
-        <Button type={ButtonType.Secondary} title={strings.send} icon={Icon.Send} onPress={navigateTo.send} />
+        <Button
+          type={ButtonType.Secondary}
+          title={strings.send}
+          icon={Icon.Send}
+          onPress={navigateTo.resetTabAndSend}
+        />
 
         <Button title={strings.swap} icon={Icon.Swap} onPress={handleOnSwap} />
       </View>
