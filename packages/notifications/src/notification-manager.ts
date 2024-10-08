@@ -19,7 +19,7 @@ export const notificationManagerMaker = ({
     const triggers = getAllTriggers()
     triggers.forEach((trigger) => {
       const subscription = subscriptions?.[trigger]?.subscribe(
-        (event: Notifications.Event) => events.save(event),
+        (event: Notifications.Event) => events.push(event),
       )
       if (subscription) {
         localSubscriptions.push(subscription)
@@ -112,7 +112,7 @@ const eventsManagerMaker = ({
       await storage.setItem<EventsStorageData>('events', modifiedEvents)
       unreadCounterByGroup$.next(buildUnreadCounterDefaultValue())
     },
-    markAsRead: async (id: string) => {
+    markAsRead: async (id: number) => {
       const allEvents = await events.read()
       const modifiedEvents = allEvents.map((event) =>
         event.id === id ? {...event, isRead: true} : event,

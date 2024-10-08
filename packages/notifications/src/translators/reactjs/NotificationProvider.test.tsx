@@ -3,23 +3,15 @@ import {
   NotificationProvider,
   useNotificationManager,
 } from './NotificationProvider'
-import {notificationManagerMaker} from '../../notification-manager'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {mountAsyncStorage} from '@yoroi/common'
 import {render, renderHook} from '@testing-library/react-native'
+import {createManagerMock} from './mocks'
 
 describe('NotificationProvider', () => {
   beforeEach(() => AsyncStorage.clear())
 
-  const eventsStorage = mountAsyncStorage({path: 'events/'})
-  const configStorage = mountAsyncStorage({path: 'config/'})
-
   it('should render', () => {
-    const manager = notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-    })
-
+    const manager = createManagerMock()
     expect(
       render(
         <NotificationProvider manager={manager}>
@@ -30,10 +22,7 @@ describe('NotificationProvider', () => {
   })
 
   it('should render hook without crashing', () => {
-    const manager = notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-    })
+    const manager = createManagerMock()
 
     const wrapper = ({children}: {children: React.ReactNode}) => (
       <NotificationProvider manager={manager}>{children}</NotificationProvider>

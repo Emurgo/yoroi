@@ -1,6 +1,9 @@
-import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
+import {Notifications} from '@jamsinclair/react-native-notifications'
+import {NotificationBackgroundFetchResult} from '@jamsinclair/react-native-notifications'
 import {useEffect} from 'react'
+
 import {notificationManager} from './notification-manager'
+import {parseNotificationId} from './notifications'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
 let initialized = false
@@ -9,13 +12,20 @@ const init = () => {
   if (initialized) return
   initialized = true
   Notifications.registerRemoteNotifications()
-  Notifications.events().registerNotificationReceivedForeground((_notification: Notification, completion) => {
+  Notifications.events().registerNotificationReceivedForeground((_notification, completion) => {
     completion({alert: true, sound: true, badge: true})
   })
-  // TODO: Can we remove this?
-  Notifications.events().registerNotificationReceivedBackground((notification: Notification) => {
-    console.log(`Notification received in background: ${notification.title} : ${notification.body}`)
+
+  Notifications.events().registerNotificationReceivedBackground((_notification, completion) => {
+    completion(NotificationBackgroundFetchResult.NEW_DATA)
   })
+
+  Notifications.events().registerNotificationOpened((notification, completion) => {
+    const id = parseNotificationId(notification.identifier)
+    notificationManager.events.markAsRead(id)
+    completion()
+  })
+
   notificationManager.hydrate()
 
   return () => {

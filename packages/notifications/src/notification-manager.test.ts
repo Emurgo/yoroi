@@ -4,6 +4,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {BehaviorSubject, Subject} from 'rxjs'
 import {Notifications} from '@yoroi/types'
 
+const createManager = () => {
+  const eventsStorage = mountAsyncStorage({path: 'events/'})
+  const configStorage = mountAsyncStorage({path: 'config/'})
+  return notificationManagerMaker({
+    eventsStorage,
+    configStorage,
+    display: jest.fn(),
+  })
+}
+
 describe('NotificationManager', () => {
   beforeEach(() => AsyncStorage.clear())
 
@@ -11,18 +21,13 @@ describe('NotificationManager', () => {
   const configStorage = mountAsyncStorage({path: 'config/'})
 
   it('should be defined', () => {
-    const manager = notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-    })
+    const manager = createManager()
     expect(manager).toBeDefined()
   })
 
   it('should return default config if not set', async () => {
-    const manager = notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-    })
+    const manager = createManager()
+
     const config = await manager.config.read()
     expect(config).toEqual({
       [Notifications.Trigger.PrimaryTokenPriceChanged]: {
@@ -40,10 +45,8 @@ describe('NotificationManager', () => {
   })
 
   it('should allow to save config', async () => {
-    const manager = notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-    })
+    const manager = createManager()
+
     const config = await manager.config.read()
     const newConfig = {
       ...config,
@@ -58,10 +61,8 @@ describe('NotificationManager', () => {
   })
 
   it('should allow to reset config', async () => {
-    const manager = notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-    })
+    const manager = createManager()
+
     const config = await manager.config.read()
     const newConfig = {
       ...config,
@@ -77,10 +78,8 @@ describe('NotificationManager', () => {
   })
 
   it('should default unread counter with 0 for all event types', async () => {
-    const manager = notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-    })
+    const manager = createManager()
+
     expect(manager.unreadCounterByGroup$.value).toEqual(
       new Map([
         ['transaction-history', 0],
@@ -90,12 +89,10 @@ describe('NotificationManager', () => {
   })
 
   it('should allow to save events', async () => {
-    const manager = notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-    })
+    const manager = createManager()
+
     const event = createTransactionReceivedEvent()
-    await manager.events.save(event)
+    await manager.events.push(event)
     const savedEvents = await manager.events.read()
     expect(savedEvents).toEqual([event])
     expect(
@@ -104,12 +101,10 @@ describe('NotificationManager', () => {
   })
 
   it('should allow to save events that are read', async () => {
-    const manager = notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-    })
+    const manager = createManager()
+
     const event = createTransactionReceivedEvent({isRead: true})
-    await manager.events.save(event)
+    await manager.events.push(event)
     const savedEvents = await manager.events.read()
     expect(savedEvents).toEqual([event])
     expect(
@@ -118,14 +113,14 @@ describe('NotificationManager', () => {
   })
 
   it('should allow to mark 1 event as read', async () => {
-    const manager = notificationManagerMaker({eventsStorage, configStorage})
+    const manager = createManager()
 
     const event1 = createTransactionReceivedEvent()
     const event2 = createTransactionReceivedEvent()
     const event3 = createTransactionReceivedEvent()
-    await manager.events.save(event1)
-    await manager.events.save(event2)
-    await manager.events.save(event3)
+    await manager.events.push(event1)
+    await manager.events.push(event2)
+    await manager.events.push(event3)
 
     expect(
       manager.unreadCounterByGroup$.value.get('transaction-history'),
@@ -139,14 +134,14 @@ describe('NotificationManager', () => {
   })
 
   it('should allow to mark all events as read', async () => {
-    const manager = notificationManagerMaker({eventsStorage, configStorage})
+    const manager = createManager()
 
     const event1 = createTransactionReceivedEvent()
     const event2 = createTransactionReceivedEvent()
     const event3 = createTransactionReceivedEvent()
-    await manager.events.save(event1)
-    await manager.events.save(event2)
-    await manager.events.save(event3)
+    await manager.events.push(event1)
+    await manager.events.push(event2)
+    await manager.events.push(event3)
 
     await manager.events.markAllAsRead()
     const savedEvents = await manager.events.read()
@@ -157,14 +152,14 @@ describe('NotificationManager', () => {
   })
 
   it('should allow to clear events', async () => {
-    const manager = notificationManagerMaker({eventsStorage, configStorage})
+    const manager = createManager()
 
     const event1 = createTransactionReceivedEvent()
     const event2 = createTransactionReceivedEvent()
     const event3 = createTransactionReceivedEvent()
-    await manager.events.save(event1)
-    await manager.events.save(event2)
-    await manager.events.save(event3)
+    await manager.events.push(event1)
+    await manager.events.push(event2)
+    await manager.events.push(event3)
 
     await manager.events.clear()
     const savedEvents = await manager.events.read()
@@ -175,14 +170,14 @@ describe('NotificationManager', () => {
   })
 
   it('should allow to clear all events and reset config', async () => {
-    const manager = notificationManagerMaker({eventsStorage, configStorage})
+    const manager = createManager()
 
     const event1 = createTransactionReceivedEvent()
     const event2 = createTransactionReceivedEvent()
     const event3 = createTransactionReceivedEvent()
-    await manager.events.save(event1)
-    await manager.events.save(event2)
-    await manager.events.save(event3)
+    await manager.events.push(event1)
+    await manager.events.push(event2)
+    await manager.events.push(event3)
 
     const config = await manager.config.read()
     const newConfig = {
@@ -204,13 +199,13 @@ describe('NotificationManager', () => {
   })
 
   it('should allow to destroy manager', async () => {
-    const manager = notificationManagerMaker({eventsStorage, configStorage})
+    const manager = createManager()
     await manager.destroy()
     expect(manager.unreadCounterByGroup$.isStopped).toBeTruthy()
   })
 
   it('should notify user if config is set to true', async () => {
-    const manager = notificationManagerMaker({eventsStorage, configStorage})
+    const manager = createManager()
     const event = createTransactionReceivedEvent()
     const config = await manager.config.read()
     const newConfig = {
@@ -220,7 +215,7 @@ describe('NotificationManager', () => {
       },
     }
     await manager.config.save(newConfig)
-    await manager.events.save(event)
+    await manager.events.push(event)
     const savedEvents = await manager.events.read()
     expect(savedEvents).toEqual([event])
     expect(
@@ -229,7 +224,7 @@ describe('NotificationManager', () => {
   })
 
   it('should not notify user if config is set to false', async () => {
-    const manager = notificationManagerMaker({eventsStorage, configStorage})
+    const manager = createManager()
     const event = createTransactionReceivedEvent()
     const config = await manager.config.read()
     const newConfig = {
@@ -239,7 +234,7 @@ describe('NotificationManager', () => {
       },
     }
     await manager.config.save(newConfig)
-    await manager.events.save(event)
+    await manager.events.push(event)
     const savedEvents = await manager.events.read()
     expect(savedEvents).toEqual([])
     expect(
@@ -260,6 +255,7 @@ describe('NotificationManager', () => {
         [Notifications.Trigger.RewardsUpdated]: new Subject(),
         [Notifications.Trigger.PrimaryTokenPriceChanged]: new Subject(),
       },
+      display: jest.fn(),
     })
 
     manager.hydrate()
@@ -271,10 +267,7 @@ describe('NotificationManager', () => {
   })
 
   it('should not crash when hydrating with no subscriptions', async () => {
-    const manager = notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-    })
+    const manager = createManager()
 
     manager.hydrate()
     await manager.destroy()
@@ -284,7 +277,7 @@ describe('NotificationManager', () => {
 const createTransactionReceivedEvent = (
   overrides?: Partial<Notifications.TransactionReceivedEvent>,
 ): Notifications.TransactionReceivedEvent => ({
-  id: Math.random().toString(),
+  id: Math.random() * 10000,
   trigger: Notifications.Trigger.TransactionReceived,
   date: new Date().toISOString(),
   isRead: false,
@@ -297,6 +290,6 @@ const createTransactionReceivedEvent = (
   ...overrides,
 })
 
-const findEvent = (events: Notifications.Event[], id: string) => {
+const findEvent = (events: Notifications.Event[], id: number) => {
   return events.find((event) => event.id === id)
 }

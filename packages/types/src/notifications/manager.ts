@@ -44,10 +44,10 @@ export type NotificationGroup = 'transaction-history' | 'portfolio'
 
 export type NotificationEvent = NotificationTransactionReceivedEvent
 
-type NotificationEventId = string
+type NotificationEventId = number
 
 interface NotificationEventBase {
-  id: string // uuid
+  id: NotificationEventId
   date: string
   isRead: boolean
 }

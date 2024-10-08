@@ -5,14 +5,17 @@ import * as BackgroundFetch from 'expo-background-fetch'
 import * as TaskManager from 'expo-task-manager'
 import * as React from 'react'
 import {Subject} from 'rxjs'
-import uuid from 'uuid'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {TRANSACTION_DIRECTION} from '../../../../yoroi-wallets/types/other'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {WalletManager, walletManager} from '../../../WalletManager/wallet-manager'
 import {notificationManager} from './notification-manager'
+import {generateNotificationId} from './notifications'
 
 const BACKGROUND_FETCH_TASK = 'yoroi-notifications-background-fetch'
+
+// Check is needed for hot reloading, as task can not be defined twice
 if (!TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK)) {
   const appStorage = mountAsyncStorage({path: '/'})
   TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
@@ -24,19 +27,15 @@ if (!TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK)) {
   })
 }
 
-export async function registerBackgroundFetchAsync() {
+const registerBackgroundFetchAsync = () => {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-    minimumInterval: 60 * 10, // 10 minutes
-    stopOnTerminate: false, // android only,
-    startOnBoot: true, // android only
+    minimumInterval: 60 * 10,
+    stopOnTerminate: false,
+    startOnBoot: true,
   })
 }
 
-// 3. (Optional) Unregister tasks by specifying the task name
-// This will cancel any future background fetch calls that match the given name
-// Note: This does NOT need to be in the global scope and CAN be used in your React components!
-export async function unregisterBackgroundFetchAsync() {
-  console.log('unregistering background fetch')
+const unregisterBackgroundFetchAsync = () => {
   return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK)
 }
 
@@ -50,38 +49,36 @@ const syncAllWallets = async (walletManager: WalletManager) => {
   await Promise.all(promises)
 }
 
-export const checkForNewTransactions = async (walletManager: WalletManager, appStorage: App.Storage) => {
+const checkForNewTransactions = async (walletManager: WalletManager, appStorage: App.Storage) => {
   const walletIds = [...walletManager.walletMetas.keys()]
-  const notificationsAsyncStorage = appStorage.join('notifications-transaction-received-subject/')
   const notifications: NotificationTypes.TransactionReceivedEvent[] = []
 
-  for (const id of walletIds) {
-    const wallet = walletManager.getWalletById(id)
+  for (const walletId of walletIds) {
+    const wallet = walletManager.getWalletById(walletId)
     if (!wallet) continue
-    const processed = (await notificationsAsyncStorage.getItem<string[]>(id)) || []
-    const txIds = getTxIds(wallet)
+    const storage = buildStorage(appStorage, walletId)
+    const processed = await storage.getProcessedTransactions()
+    const allTxIds = getTxIds(wallet)
 
     if (processed.length === 0) {
-      console.log(`Wallet ${id} has no processed tx ids`)
-      await notificationsAsyncStorage.setItem(id, txIds)
+      await storage.addProcessedTransactions(allTxIds)
       continue
     }
 
-    const newTxIds = txIds.filter((txId) => !processed.includes(txId))
+    const newTxIds = allTxIds.filter((txId) => !processed.includes(txId))
 
     if (newTxIds.length === 0) {
-      console.log(`Wallet ${id} has no new tx ids on network ${wallet.networkManager.network}`)
       continue
     }
-    console.log('new tx ids', newTxIds)
-    await notificationsAsyncStorage.setItem(id, [...processed, ...newTxIds])
+
+    await storage.addProcessedTransactions(newTxIds)
 
     newTxIds.forEach((id) => {
       const metadata: NotificationTypes.TransactionReceivedEvent['metadata'] = {
         txId: id,
-        isSentByUser: false,
-        nextTxsCounter: 1,
-        previousTxsCounter: 0,
+        isSentByUser: wallet.transactions[id]?.direction === TRANSACTION_DIRECTION.SENT,
+        nextTxsCounter: newTxIds.length + processed.length,
+        previousTxsCounter: processed.length,
       }
       notifications.push(createTransactionReceivedNotification(metadata))
     })
@@ -99,7 +96,7 @@ export const createTransactionReceivedNotification = (
   metadata: NotificationTypes.TransactionReceivedEvent['metadata'],
 ) => {
   return {
-    id: uuid.v4(),
+    id: generateNotificationId(),
     date: new Date().toISOString(),
     isRead: false,
     trigger: NotificationTypes.Trigger.TransactionReceived,
@@ -121,7 +118,7 @@ export const useTransactionReceivedNotifications = () => {
   }, [])
 
   React.useEffect(() => {
-    const s1 = walletManager.syncWalletInfos$.subscribe(async (status) => {
+    const subscription = walletManager.syncWalletInfos$.subscribe(async (status) => {
       const walletInfos = Array.from(status.values())
       const walletsDoneSyncing = walletInfos.filter((info) => info.status === 'done')
       const areAllDone = walletsDoneSyncing.length === walletInfos.length
@@ -132,8 +129,26 @@ export const useTransactionReceivedNotifications = () => {
     })
 
     return () => {
-      s1.unsubscribe()
+      subscription.unsubscribe()
     }
-  }, [walletManager, asyncStorage, transactionReceivedSubject])
-  return transactionReceivedSubject
+  }, [walletManager, asyncStorage])
+}
+
+const buildStorage = (appStorage: App.Storage, walletId: string) => {
+  const storage = appStorage.join(`wallet/${walletId}/transaction-received-notification-history/`)
+
+  const getProcessedTransactions = async () => {
+    return (await storage.getItem<string[]>('processed')) || []
+  }
+
+  const addProcessedTransactions = async (txIds: string[]) => {
+    const processed = await getProcessedTransactions()
+    const newProcessed = [...processed, ...txIds]
+    await storage.setItem('processed', newProcessed)
+  }
+
+  return {
+    getProcessedTransactions,
+    addProcessedTransactions,
+  }
 }

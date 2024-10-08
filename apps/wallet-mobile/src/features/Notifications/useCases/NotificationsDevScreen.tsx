@@ -14,13 +14,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
 import {ScrollView} from '../../../components/ScrollView/ScrollView'
-import {createTransactionReceivedNotification} from './common/transaction-received-notification'
 import {notificationManager} from './common/notification-manager'
+import {createTransactionReceivedNotification} from './common/transaction-received-notification'
 
 export const NotificationsDevScreen = () => {
-  const manager = notificationManager
   return (
-    <NotificationProvider manager={manager}>
+    <NotificationProvider manager={notificationManager}>
       <Screen />
     </NotificationProvider>
   )
@@ -64,7 +63,11 @@ const Screen = () => {
 }
 
 const ReceivedNotificationsList = () => {
-  const {data: receivedNotifications} = useReceivedNotificationEvents()
+  const {data: receivedNotifications = []} = useReceivedNotificationEvents()
+  const sortedNotifications = React.useMemo(
+    () => [...receivedNotifications].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+    [receivedNotifications],
+  )
   return (
     <View>
       <Text
@@ -76,7 +79,7 @@ const ReceivedNotificationsList = () => {
         Received Notifications
       </Text>
 
-      {receivedNotifications?.map((notification) => (
+      {sortedNotifications.map((notification) => (
         <ReceivedNotification key={notification.id} notification={notification} />
       ))}
     </View>
@@ -87,7 +90,10 @@ const ReceivedNotification = ({notification}: {notification: NotificationTypes.E
   const readStatus = notification.isRead ? 'Read' : 'Unread'
 
   if (notification.trigger === NotificationTypes.Trigger.TransactionReceived) {
-    const title = `You received a transaction at ${new Date(notification.date).toLocaleString()}`
+    const date = new Date(notification.date)
+    const title = `[${notification.id}] You received a transaction at ${date.toLocaleDateString(
+      'en-US',
+    )} ${date.toLocaleTimeString('en-US')}`
 
     return (
       <View>
@@ -114,6 +120,7 @@ const ReceivedNotification = ({notification}: {notification: NotificationTypes.E
 const NotificationSettings = () => {
   const {data: notificationsConfig} = useNotificationsConfig()
   const {mutate: saveConfig} = useUpdateNotificationsConfig()
+  const {events} = useNotificationManager()
   const {mutate: resetConfig} = useResetNotificationsConfig({
     onSuccess: (config) => setLocalConfig(config),
   })
@@ -151,7 +158,10 @@ const NotificationSettings = () => {
     })
   }
 
-  const handleOnReset = () => resetConfig()
+  const handleOnReset = () => {
+    resetConfig()
+    events.clear()
+  }
 
   return (
     <View>

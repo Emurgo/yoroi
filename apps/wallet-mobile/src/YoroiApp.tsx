@@ -1,5 +1,6 @@
 import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
+import {NotificationProvider} from '@yoroi/notifications'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {ThemeProvider} from '@yoroi/theme'
 import React from 'react'
@@ -13,6 +14,7 @@ import {LoadingBoundary} from './components/Boundary/Boundary'
 import {ErrorBoundary} from './components/ErrorBoundary/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {BrowserProvider} from './features/Discover/common/BrowserProvider'
+import {notificationManager} from './features/Notifications/useCases/common/notification-manager'
 import {PortfolioTokenActivityProvider} from './features/Portfolio/common/PortfolioTokenActivityProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {AutomaticWalletOpenerProvider} from './features/WalletManager/context/AutomaticWalletOpeningProvider'
@@ -28,8 +30,6 @@ import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
 import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
-import {NotificationProvider} from '@yoroi/notifications'
-import {notificationManager} from './features/Notifications/useCases/common/notification-manager'
 
 enableScreens(true)
 enableFreeze(true)
