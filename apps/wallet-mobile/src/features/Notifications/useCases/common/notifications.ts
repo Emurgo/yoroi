@@ -8,7 +8,7 @@ export const displayNotificationEvent = (notificationEvent: NotificationTypes.Ev
   }
 }
 
-export const sendNotification = (title: string, body: string) => {
+const sendNotification = (title: string, body: string) => {
   const notification = new Notification({
     title,
     body,

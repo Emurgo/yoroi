@@ -7,11 +7,11 @@ type ConfigStorageData = Notifications.Config
 const getAllTriggers = (): Array<Notifications.Trigger> =>
   Object.values(Notifications.Trigger)
 
-// TODO: Add handler to show notification
 export const notificationManagerMaker = ({
   eventsStorage,
   configStorage,
   subscriptions,
+  display,
 }: Notifications.ManagerMakerProps): Notifications.Manager => {
   const localSubscriptions: Subscription[] = []
 
@@ -31,6 +31,7 @@ export const notificationManagerMaker = ({
   const {events, unreadCounterByGroup$, notification$} = eventsManagerMaker({
     storage: eventsStorage,
     config,
+    display,
   })
 
   const clear = async () => {
@@ -72,7 +73,9 @@ const notificationTriggerGroups: Record<
 const eventsManagerMaker = ({
   storage,
   config,
+  display,
 }: {
+  display: (event: Notifications.Event) => void
   storage: App.Storage<true, string>
   config: Notifications.Manager['config']
 }): {
@@ -120,8 +123,7 @@ const eventsManagerMaker = ({
     read: async (): Promise<EventsStorageData> => {
       return (await storage.getItem<EventsStorageData>('events')) ?? []
     },
-    save: async (event: Readonly<Notifications.Event>) => {
-      // TODO: Maybe rename to notify
+    push: async (event: Readonly<Notifications.Event>) => {
       if (!shouldNotify(event, await config.read())) {
         return
       }
@@ -130,6 +132,7 @@ const eventsManagerMaker = ({
       if (!event.isRead) {
         await updateUnreadCounter()
         notification$.next(event)
+        display(event)
       }
     },
     clear: async (): Promise<void> => {

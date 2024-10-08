@@ -13,6 +13,7 @@ export type NotificationManagerMakerProps = {
   subscriptions?: Partial<
     Record<NotificationTrigger, Subject<NotificationEvent>>
   >
+  display: (event: NotificationEvent) => void
 }
 
 export interface NotificationTransactionReceivedEvent
@@ -78,7 +79,7 @@ export type NotificationManager = {
     markAllAsRead: () => Promise<void>
     markAsRead(id: NotificationEventId): Promise<void>
     read: () => Promise<ReadonlyArray<NotificationEvent>>
-    save: (event: Readonly<NotificationEvent>) => Promise<void>
+    push: (event: Readonly<NotificationEvent>) => Promise<void>
     clear: () => Promise<void>
   }
   // Config sets the ground to what, when, and if should notify user

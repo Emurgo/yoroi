@@ -1,12 +1,7 @@
 import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
-import {useAsyncStorage} from '@yoroi/common'
-import {notificationManagerMaker} from '@yoroi/notifications'
-import {Notifications as NotificationTypes} from '@yoroi/types'
-import * as React from 'react'
 import {useEffect} from 'react'
-
-import {displayNotificationEvent} from './notifications'
-import {useTransactionReceivedNotificationSubject} from './transaction-received-notification'
+import {notificationManager} from './notification-manager'
+import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
 let initialized = false
 
@@ -21,51 +16,14 @@ const init = () => {
   Notifications.events().registerNotificationReceivedBackground((notification: Notification) => {
     console.log(`Notification received in background: ${notification.title} : ${notification.body}`)
   })
-}
+  notificationManager.hydrate()
 
-export const useNotificationsManager = (options?: {
-  subscriptions?: NotificationTypes.ManagerMakerProps['subscriptions']
-}) => {
-  const storage = useAsyncStorage()
-  const subscriptions = options?.subscriptions
-
-  const manager = React.useMemo(() => {
-    const eventsStorage = storage.join('events/')
-    const configStorage = storage.join('settings/')
-
-    return notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-      subscriptions,
-    })
-  }, [storage, subscriptions])
-
-  React.useEffect(() => {
-    manager.hydrate()
-    return () => {
-      manager.destroy()
-    }
-  }, [manager])
-
-  return manager
+  return () => {
+    notificationManager.destroy()
+  }
 }
 
 export const useNotifications = () => {
-  useEffect(() => {
-    init()
-  }, [])
-
-  const transactionReceivedSubject = useTransactionReceivedNotificationSubject()
-
-  const manager = useNotificationsManager({
-    subscriptions: {
-      [NotificationTypes.Trigger.TransactionReceived]: transactionReceivedSubject,
-    },
-  })
-  React.useEffect(() => {
-    const subscription = manager.notification$.subscribe(displayNotificationEvent)
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [manager])
+  useEffect(() => init(), [])
+  useTransactionReceivedNotifications()
 }

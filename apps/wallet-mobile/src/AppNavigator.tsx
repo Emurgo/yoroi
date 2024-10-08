@@ -33,7 +33,6 @@ import {
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
 import {useNotifications} from './features/Notifications/useCases/common/hooks'
 import {NotificationsDevScreen} from './features/Notifications/useCases/NotificationsDevScreen'
-import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from './features/WalletManager/common/hooks/useHasWallets'
@@ -205,8 +204,6 @@ export const AppNavigator = () => {
               <Stack.Screen name="storybook" component={StorybookScreen} />
 
               <Stack.Screen name="playground" component={Playground} />
-
-              <Stack.Screen name="portfolio-dashboard" component={PortfolioScreen} />
 
               <Stack.Screen name="notifications" component={NotificationsDevScreen} />
             </Stack.Group>

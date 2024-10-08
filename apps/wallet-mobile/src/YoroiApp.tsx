@@ -28,6 +28,8 @@ import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
 import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
+import {NotificationProvider} from '@yoroi/notifications'
+import {notificationManager} from './features/Notifications/useCases/common/notification-manager'
 
 enableScreens(true)
 enableFreeze(true)
@@ -63,7 +65,9 @@ const Yoroi = () => {
                               <PoolTransitionProvider>
                                 <BrowserProvider>
                                   <AutomaticWalletOpenerProvider>
-                                    <InitApp />
+                                    <NotificationProvider manager={notificationManager}>
+                                      <InitApp />
+                                    </NotificationProvider>
                                   </AutomaticWalletOpenerProvider>
                                 </BrowserProvider>
                               </PoolTransitionProvider>

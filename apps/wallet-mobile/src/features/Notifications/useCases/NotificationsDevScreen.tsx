@@ -14,11 +14,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
 import {ScrollView} from '../../../components/ScrollView/ScrollView'
-import {useMockedNotifications} from './common/mocks'
 import {createTransactionReceivedNotification} from './common/transaction-received-notification'
+import {notificationManager} from './common/notification-manager'
 
 export const NotificationsDevScreen = () => {
-  const {manager} = useMockedNotifications()
+  const manager = notificationManager
   return (
     <NotificationProvider manager={manager}>
       <Screen />
@@ -30,7 +30,7 @@ const Screen = () => {
   const manager = useNotificationManager()
 
   const handleOnTriggerTransactionReceived = () => {
-    manager.notification$.next(
+    manager.events.push(
       createTransactionReceivedNotification({
         previousTxsCounter: 0,
         nextTxsCounter: 1,
