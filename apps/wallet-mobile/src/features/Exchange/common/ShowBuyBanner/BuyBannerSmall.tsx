@@ -63,7 +63,7 @@ const useStyles = () => {
       flexGrow: 0,
     },
     button: {
-      ...atoms.self_center,
+      ...atoms.self_start,
     },
     title: {
       ...atoms.body_1_lg_medium,
