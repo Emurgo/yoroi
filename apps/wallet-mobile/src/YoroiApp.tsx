@@ -2,6 +2,7 @@ import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {ThemeProvider} from '@yoroi/theme'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {LogBox, StyleSheet} from 'react-native'
 import * as RNP from 'react-native-paper'
@@ -14,6 +15,7 @@ import {ErrorBoundary} from './components/ErrorBoundary/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {BrowserProvider} from './features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from './features/Portfolio/common/PortfolioTokenActivityProvider'
+import {ReviewTxProvider} from './features/ReviewTx/common/ReviewTxProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {AutomaticWalletOpenerProvider} from './features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
@@ -58,17 +60,21 @@ const Yoroi = () => {
                     <LoadingBoundary style={StyleSheet.absoluteFill}>
                       <LanguageProvider>
                         <AuthProvider>
-                          <LinksProvider>
-                            <SetupWalletProvider>
-                              <PoolTransitionProvider>
-                                <BrowserProvider>
-                                  <AutomaticWalletOpenerProvider>
-                                    <InitApp />
-                                  </AutomaticWalletOpenerProvider>
-                                </BrowserProvider>
-                              </PoolTransitionProvider>
-                            </SetupWalletProvider>
-                          </LinksProvider>
+                          <TransferProvider>
+                            <LinksProvider>
+                              <SetupWalletProvider>
+                                <PoolTransitionProvider>
+                                  <BrowserProvider>
+                                    <AutomaticWalletOpenerProvider>
+                                      <ReviewTxProvider>
+                                        <InitApp />
+                                      </ReviewTxProvider>
+                                    </AutomaticWalletOpenerProvider>
+                                  </BrowserProvider>
+                                </PoolTransitionProvider>
+                              </SetupWalletProvider>
+                            </LinksProvider>
+                          </TransferProvider>
                         </AuthProvider>
                       </LanguageProvider>
                     </LoadingBoundary>

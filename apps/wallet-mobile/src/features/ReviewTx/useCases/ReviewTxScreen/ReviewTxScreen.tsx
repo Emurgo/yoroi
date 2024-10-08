@@ -5,11 +5,11 @@ import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableOpaci
 
 import {Button} from '../../../../components/Button/Button'
 import {SafeArea} from '../../../../components/SafeArea'
-import {ReviewTxRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {useFormattedTx} from '../../common/hooks/useFormattedTx'
 import {useOnConfirm} from '../../common/hooks/useOnConfirm'
 import {useStrings} from '../../common/hooks/useStrings'
 import {useTxBody} from '../../common/hooks/useTxBody'
+import {useReviewTx} from '../../common/ReviewTxProvider'
 import {OverviewTab} from './Overview/OverviewTab'
 import {UTxOsTab} from './UTxOs/UTxOsTab'
 
@@ -18,18 +18,21 @@ const MaterialTab = createMaterialTopTabNavigator()
 export const ReviewTxScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {unsignedTx, onSuccess, onError} = useReviewTx()
 
-  // TODO: move this to a context
-  const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
+  if (unsignedTx === null) throw new Error('ReviewTxScreen: missing unsignedTx')
+
   const {onConfirm} = useOnConfirm({
-    unsignedTx: params.unsignedTx,
-    onSuccess: params.onSuccess,
-    onError: params.onError,
+    unsignedTx,
+    onSuccess,
+    onError,
   })
 
   // TODO: add cbor arguments
-  const txBody = useTxBody({unsignedTx: params.unsignedTx})
+  const txBody = useTxBody({unsignedTx})
   const formatedTx = useFormattedTx(txBody)
+
+  console.log('txBody', JSON.stringify(txBody, null, 2))
 
   const OverViewTabMemo = React.memo(() => <OverviewTab tx={formatedTx} />)
   const UTxOsTabMemo = React.memo(() => <UTxOsTab tx={formatedTx} />)

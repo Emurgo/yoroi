@@ -15,8 +15,8 @@ export const useOnConfirm = ({
   onError,
   onNotSupportedCIP1694,
 }: {
-  onSuccess: (txId: YoroiSignedTx) => void
-  onError: () => void
+  onSuccess?: ((txId: YoroiSignedTx) => void) | null
+  onError?: (() => void) | null
   cbor?: string
   unsignedTx?: YoroiUnsignedTx
   onNotSupportedCIP1694?: () => void
@@ -34,7 +34,7 @@ export const useOnConfirm = ({
         <ConfirmTxWithHwModal
           onCancel={closeModal}
           unsignedTx={unsignedTx}
-          onSuccess={(signedTx) => onSuccess(signedTx)}
+          onSuccess={(signedTx) => onSuccess?.(signedTx)}
           onNotSupportedCIP1694={onNotSupportedCIP1694}
         />,
         400,
@@ -47,8 +47,8 @@ export const useOnConfirm = ({
         strings.signTransaction,
         <ConfirmTxWithSpendingPasswordModal
           unsignedTx={unsignedTx}
-          onSuccess={(signedTx) => onSuccess(signedTx)}
-          onError={onError}
+          onSuccess={(signedTx) => onSuccess?.(signedTx)}
+          onError={onError ?? undefined}
         />,
       )
       return
@@ -59,13 +59,13 @@ export const useOnConfirm = ({
         strings.signTransaction,
         <ConfirmTxWithOsModal
           unsignedTx={unsignedTx}
-          onSuccess={(signedTx) => onSuccess(signedTx)}
-          onError={onError}
+          onSuccess={(signedTx) => onSuccess?.(signedTx)}
+          onError={onError ?? undefined}
         />,
       )
       return
     }
   }
 
-  return {onConfirm}
+  return {onConfirm} as const
 }
