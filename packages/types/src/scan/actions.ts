@@ -22,9 +22,15 @@ export type ScanActionClaim = Readonly<{
   params: Record<string, any> | undefined
 }>
 
+export type ScanActionLaunchUrl = Readonly<{
+  action: 'launch-url'
+  url: string
+}>
+
 export type ScanAction =
   | ScanActionSendOnlyReceiver
   | ScanActionSendSinglePt
   | ScanActionClaim
+  | ScanActionLaunchUrl
 
 export type ScanFeature = 'send' | 'scan'
