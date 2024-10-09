@@ -75,6 +75,7 @@ const getStories = () => {
     "./src/components/ExpandableInfoCard/ExpandableInfoCard.stories.tsx": require("../src/components/ExpandableInfoCard/ExpandableInfoCard.stories.tsx"),
     "./src/components/HideableText/HideableText.stories.tsx": require("../src/components/HideableText/HideableText.stories.tsx"),
     "./src/components/Icon/Icon.stories.tsx": require("../src/components/Icon/Icon.stories.tsx"),
+    "./src/components/InfoBanner/InfoBanner.stories.tsx": require("../src/components/InfoBanner/InfoBanner.stories.tsx"),
     "./src/components/LanguagePicker/LanguagePicker.stories.tsx": require("../src/components/LanguagePicker/LanguagePicker.stories.tsx"),
     "./src/components/LanguagePicker/LanguagePickerWarning.stories.tsx": require("../src/components/LanguagePicker/LanguagePickerWarning.stories.tsx"),
     "./src/components/legacy/Modal/Modal.stories.tsx": require("../src/components/legacy/Modal/Modal.stories.tsx"),
