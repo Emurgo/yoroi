@@ -18,7 +18,7 @@ const MaterialTab = createMaterialTopTabNavigator()
 export const ReviewTxScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {unsignedTx, onSuccess, onError} = useReviewTx()
+  const {unsignedTx, operations, onSuccess, onError} = useReviewTx()
 
   if (unsignedTx === null) throw new Error('ReviewTxScreen: missing unsignedTx')
 
@@ -32,9 +32,7 @@ export const ReviewTxScreen = () => {
   const txBody = useTxBody({unsignedTx})
   const formatedTx = useFormattedTx(txBody)
 
-  console.log('txBody', JSON.stringify(txBody, null, 2))
-
-  const OverViewTabMemo = React.memo(() => <OverviewTab tx={formatedTx} />)
+  const OverViewTabMemo = React.memo(() => <OverviewTab tx={formatedTx} operations={operations} />)
   const UTxOsTabMemo = React.memo(() => <UTxOsTab tx={formatedTx} />)
 
   return (

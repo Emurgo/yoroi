@@ -16,11 +16,11 @@ import {CopiableText} from '../../../common/CopiableText'
 import {Divider} from '../../../common/Divider'
 import {useAddressType} from '../../../common/hooks/useAddressType'
 import {useStrings} from '../../../common/hooks/useStrings'
-import {useReviewTx} from '../../../common/ReviewTxProvider'
+import {ReviewTxState} from '../../../common/ReviewTxProvider'
 import {TokenItem} from '../../../common/TokenItem'
 import {FormattedOutputs, FormattedTx} from '../../../common/types'
 
-export const OverviewTab = ({tx}: {tx: FormattedTx}) => {
+export const OverviewTab = ({tx, operations}: {tx: FormattedTx; operations: ReviewTxState['operations']}) => {
   const {styles} = useStyles()
 
   const notOwnedOutputs = React.useMemo(() => tx.outputs.filter((output) => !output.ownAddress), [tx.outputs])
@@ -36,7 +36,7 @@ export const OverviewTab = ({tx}: {tx: FormattedTx}) => {
 
       <SenderSection tx={tx} notOwnedOutputs={notOwnedOutputs} ownedOutputs={ownedOutputs} />
 
-      <OperationsSection />
+      <OperationsSection operations={operations} />
     </View>
   )
 }
@@ -186,9 +186,7 @@ const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs})
   )
 }
 
-const OperationsSection = () => {
-  const {operations} = useReviewTx()
-
+const OperationsSection = ({operations}: {operations: ReviewTxState['operations']}) => {
   if (operations === null || (Array.isArray(operations) && operations.length === 0)) return null
 
   return (
