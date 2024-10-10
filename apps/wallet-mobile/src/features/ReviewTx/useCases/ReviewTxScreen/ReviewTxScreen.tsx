@@ -1,7 +1,7 @@
 import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Button} from '../../../../components/Button/Button'
 import {SafeArea} from '../../../../components/SafeArea'
@@ -37,9 +37,23 @@ export const ReviewTxScreen = () => {
   return (
     <SafeArea style={styles.root}>
       <MaterialTab.Navigator tabBar={TabBar}>
-        <MaterialTab.Screen name="overview" component={OverViewTabMemo} />
+        <MaterialTab.Screen name="overview">
+          {() => (
+            /* TODO: make scrollview general to use button border */
+            <ScrollView style={styles.root}>
+              <OverViewTabMemo />
+            </ScrollView>
+          )}
+        </MaterialTab.Screen>
 
-        <MaterialTab.Screen name="utxos" component={UTxOsTabMemo} />
+        <MaterialTab.Screen name="utxos">
+          {() => (
+            /* TODO: make scrollview general to use button border */
+            <ScrollView style={styles.root}>
+              <UTxOsTabMemo />
+            </ScrollView>
+          )}
+        </MaterialTab.Screen>
       </MaterialTab.Navigator>
 
       <Actions>
@@ -59,11 +73,11 @@ const TabBar = ({navigation, state}: MaterialTopTabBarProps) => {
         [strings.overviewTab, 'overview'],
         [strings.utxosTab, 'utxos'],
       ]}
-      style={styles.tabBar}
-      showsHorizontalScrollIndicator={false}
       renderItem={({item: [label, key], index}) => (
         <Tab key={key} active={state.index === index} label={label} onPress={() => navigation.navigate(key)} />
       )}
+      style={styles.tabBar}
+      showsHorizontalScrollIndicator={false}
       bounces={false}
       horizontal
     />

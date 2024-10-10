@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Confirm",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 28,
+      "line": 39,
       "column": 11,
-      "index": 1188
+      "index": 1785
     },
     "end": {
-      "line": 31,
+      "line": 42,
       "column": 3,
-      "index": 1255
+      "index": 1852
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!UTxOs",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 32,
+      "line": 43,
       "column": 9,
-      "index": 1266
+      "index": 1863
     },
     "end": {
-      "line": 35,
+      "line": 46,
       "column": 3,
-      "index": 1329
+      "index": 1926
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!UTxOs",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 36,
+      "line": 47,
       "column": 12,
-      "index": 1343
+      "index": 1940
     },
     "end": {
-      "line": 39,
+      "line": 50,
       "column": 3,
-      "index": 1415
+      "index": 2012
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Overview",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 40,
+      "line": 51,
       "column": 15,
-      "index": 1432
+      "index": 2029
     },
     "end": {
-      "line": 43,
+      "line": 54,
       "column": 3,
-      "index": 1510
+      "index": 2107
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Wallet",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 44,
+      "line": 55,
       "column": 15,
-      "index": 1527
+      "index": 2124
     },
     "end": {
-      "line": 47,
+      "line": 58,
       "column": 3,
-      "index": 1601
+      "index": 2198
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Fee",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 48,
+      "line": 59,
       "column": 12,
-      "index": 1615
+      "index": 2212
     },
     "end": {
-      "line": 51,
+      "line": 62,
       "column": 3,
-      "index": 1674
+      "index": 2271
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Your Wallet",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 52,
+      "line": 63,
       "column": 17,
-      "index": 1693
+      "index": 2290
     },
     "end": {
-      "line": 55,
+      "line": 66,
       "column": 3,
-      "index": 1779
+      "index": 2376
     }
   },
   {
@@ -109,29 +109,29 @@
     "defaultMessage": "!!!Send",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 56,
+      "line": 67,
       "column": 13,
-      "index": 1794
+      "index": 2391
     },
     "end": {
-      "line": 59,
+      "line": 70,
       "column": 3,
-      "index": 1869
+      "index": 2466
     }
   },
   {
     "id": "txReview.overview.receiveToLabel",
-    "defaultMessage": "!!!receiveToLabel",
+    "defaultMessage": "!!!To",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 60,
+      "line": 71,
       "column": 18,
-      "index": 1889
+      "index": 2486
     },
     "end": {
-      "line": 63,
+      "line": 74,
       "column": 3,
-      "index": 1979
+      "index": 2564
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!To script",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 64,
+      "line": 75,
       "column": 24,
-      "index": 2005
+      "index": 2590
     },
     "end": {
-      "line": 67,
+      "line": 78,
       "column": 3,
-      "index": 2096
+      "index": 2681
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Inputs",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 68,
+      "line": 79,
       "column": 20,
-      "index": 2118
+      "index": 2703
     },
     "end": {
-      "line": 71,
+      "line": 82,
       "column": 3,
-      "index": 2199
+      "index": 2784
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Outputs",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 72,
+      "line": 83,
       "column": 21,
-      "index": 2222
+      "index": 2807
     },
     "end": {
-      "line": 75,
+      "line": 86,
       "column": 3,
-      "index": 2305
+      "index": 2890
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Your address",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 76,
+      "line": 87,
       "column": 25,
-      "index": 2332
+      "index": 2917
     },
     "end": {
-      "line": 79,
+      "line": 90,
       "column": 3,
-      "index": 2424
+      "index": 3009
     }
   },
   {
@@ -199,14 +199,179 @@
     "defaultMessage": "!!!Foreign address",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 80,
+      "line": 91,
       "column": 28,
-      "index": 2454
+      "index": 3039
     },
     "end": {
-      "line": 83,
+      "line": 94,
       "column": 3,
-      "index": 2552
+      "index": 3137
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.overViewTab.title",
+    "defaultMessage": "!!!Overview",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 95,
+      "column": 12,
+      "index": 3151
+    },
+    "end": {
+      "line": 98,
+      "column": 3,
+      "index": 3242
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.jsonTab.title",
+    "defaultMessage": "!!!JSON",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 99,
+      "column": 8,
+      "index": 3252
+    },
+    "end": {
+      "line": 102,
+      "column": 3,
+      "index": 3335
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.jsonTab.metadata",
+    "defaultMessage": "!!!Metadata",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 103,
+      "column": 12,
+      "index": 3349
+    },
+    "end": {
+      "line": 106,
+      "column": 3,
+      "index": 3439
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.policyId.label",
+    "defaultMessage": "!!!Policy ID",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 107,
+      "column": 12,
+      "index": 3453
+    },
+    "end": {
+      "line": 110,
+      "column": 3,
+      "index": 3542
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.fingerprint.label",
+    "defaultMessage": "!!!Fingerprint",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 111,
+      "column": 15,
+      "index": 3559
+    },
+    "end": {
+      "line": 114,
+      "column": 3,
+      "index": 3653
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.overViewTab.name.label",
+    "defaultMessage": "!!!Name",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 115,
+      "column": 8,
+      "index": 3663
+    },
+    "end": {
+      "line": 118,
+      "column": 3,
+      "index": 3755
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.overViewTab.tokenSupply.label",
+    "defaultMessage": "!!!Token Supply",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 119,
+      "column": 15,
+      "index": 3772
+    },
+    "end": {
+      "line": 122,
+      "column": 3,
+      "index": 3879
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.overViewTab.symbol.label",
+    "defaultMessage": "!!!Symbol",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 123,
+      "column": 10,
+      "index": 3891
+    },
+    "end": {
+      "line": 126,
+      "column": 3,
+      "index": 3987
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.overViewTab.description.label",
+    "defaultMessage": "!!!Description",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 127,
+      "column": 15,
+      "index": 4004
+    },
+    "end": {
+      "line": 130,
+      "column": 3,
+      "index": 4110
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.overViewTab.details.label",
+    "defaultMessage": "!!!Details on",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 131,
+      "column": 11,
+      "index": 4123
+    },
+    "end": {
+      "line": 134,
+      "column": 3,
+      "index": 4224
+    }
+  },
+  {
+    "id": "txReview.tokenDetails.title",
+    "defaultMessage": "!!!Asset Details",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 135,
+      "column": 21,
+      "index": 4247
+    },
+    "end": {
+      "line": 138,
+      "column": 3,
+      "index": 4331
     }
   }
 ]

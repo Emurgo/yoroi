@@ -1,31 +1,55 @@
 import {useTheme} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, useWindowDimensions} from 'react-native'
+
+import {useModal} from '../../../components/Modal/ModalContext'
+import {useStrings} from './hooks/useStrings'
+import {TokenDetails} from './TokenDetails'
 
 export const TokenItem = ({
+  tokenInfo,
   isPrimaryToken = true,
   isSent = true,
   label,
 }: {
+  tokenInfo: Portfolio.Token.Info
   isPrimaryToken?: boolean
   isSent?: boolean
   label: string
 }) => {
   const {styles} = useStyles()
+  const strings = useStrings()
+  const {openModal} = useModal()
+  const {height: windowHeight} = useWindowDimensions()
+
+  const handleShowTokenDetails = () => {
+    openModal(strings.tokenDetailsTitle, <TokenDetails tokenInfo={tokenInfo} />, windowHeight * 0.8)
+  }
 
   if (!isSent)
     return (
-      <View style={[styles.receivedTokenItem, !isPrimaryToken && styles.notPrimaryReceivedTokenItem]}>
+      <TouchableOpacity
+        onPress={handleShowTokenDetails}
+        activeOpacity={0.5}
+        style={[styles.receivedTokenItem, !isPrimaryToken && styles.notPrimaryReceivedTokenItem]}
+        disabled={isPrimaryToken}
+      >
         <Text style={[styles.tokenReceivedItemText, !isPrimaryToken && styles.notPrimaryReceivedTokenItemText]}>
           {label}
         </Text>
-      </View>
+      </TouchableOpacity>
     )
 
   return (
-    <View style={[styles.sentTokenItem, !isPrimaryToken && styles.notPrimarySentTokenItem]}>
+    <TouchableOpacity
+      onPress={handleShowTokenDetails}
+      activeOpacity={0.5}
+      style={[styles.sentTokenItem, !isPrimaryToken && styles.notPrimarySentTokenItem]}
+      disabled={isPrimaryToken}
+    >
       <Text style={[styles.tokenSentItemText, !isPrimaryToken && styles.notPrimarySentTokenItemText]}>{label}</Text>
-    </View>
+    </TouchableOpacity>
   )
 }
 
