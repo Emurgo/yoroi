@@ -194,7 +194,6 @@ const getStories = () => {
     "./src/features/Settings/Currency/ChangeCurrencyScreen.stories.tsx": require("../src/features/Settings/Currency/ChangeCurrencyScreen.stories.tsx"),
     "./src/features/Settings/EasyConfirmation/EasyConfirmationScreen.stories.tsx": require("../src/features/Settings/EasyConfirmation/EasyConfirmationScreen.stories.tsx"),
     "./src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.stories.tsx": require("../src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.stories.tsx"),
-    "./src/features/Settings/ManageCollateral/ConfirmTx/ConfirmTxScreen.stories.tsx": require("../src/features/Settings/ManageCollateral/ConfirmTx/ConfirmTxScreen.stories.tsx"),
     "./src/features/Settings/ManageCollateral/ConfirmTx/FailedTx/FailedTxScreen.stories.tsx": require("../src/features/Settings/ManageCollateral/ConfirmTx/FailedTx/FailedTxScreen.stories.tsx"),
     "./src/features/Settings/ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen.stories.tsx": require("../src/features/Settings/ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen.stories.tsx"),
     "./src/features/Settings/ManageCollateral/ManageCollateralScreen.stories.tsx": require("../src/features/Settings/ManageCollateral/ManageCollateralScreen.stories.tsx"),

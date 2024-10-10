@@ -30,7 +30,6 @@ import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
 import {ManageCollateralScreen} from './ManageCollateral'
-import {ConfirmTxScreen} from './ManageCollateral/ConfirmTx'
 import {FailedTxScreen} from './ManageCollateral/ConfirmTx/FailedTx/FailedTxScreen'
 import {SubmittedTxScreen} from './ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {PrivacyPolicyScreen} from './PrivacyPolicy'
@@ -185,14 +184,6 @@ export const SettingsScreenNavigator = () => {
           title: strings.collateral,
         }}
         component={ManageCollateralScreen}
-      />
-
-      <Stack.Screen //
-        name="collateral-confirm-tx"
-        options={{
-          title: strings.collateral,
-        }}
-        component={ConfirmTxScreen}
       />
 
       <Stack.Screen //
