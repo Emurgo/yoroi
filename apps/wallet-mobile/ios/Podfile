@@ -81,7 +81,6 @@ target 'yoroi' do
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
 
-
     # Get the development team id from the main project / set env file
     dev_team_id = ""
     project = installer.aggregate_targets[0].user_project
