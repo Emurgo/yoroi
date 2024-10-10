@@ -48,11 +48,21 @@ const Input = ({input}: {input: FormattedInput}) => {
 
         <Space height="lg" />
 
-        <CopiableText text={input.address} multiline />
+        <CopiableText textToCopy={input.address}>
+          <Text style={styles.addressText}>{input.address}</Text>
+        </CopiableText>
 
         <Space height="sm" />
 
-        <CopiableText index={input.txIndex} text={input.txHash} multiline />
+        <CopiableText textToCopy={input.txHash}>
+          <Text style={styles.addressText}>{input.txHash}</Text>
+
+          <Space width="sm" />
+
+          <Text style={styles.index}>{`#${input.txIndex}`}</Text>
+
+          <Space width="sm" />
+        </CopiableText>
       </View>
 
       <Space height="sm" />
@@ -82,7 +92,9 @@ const Output = ({output}: {output: FormattedOutput}) => {
 
         <Space height="lg" />
 
-        <CopiableText text={output.address} multiline />
+        <CopiableText textToCopy={output.address}>
+          <Text style={styles.addressText}>{output.address}</Text>
+        </CopiableText>
       </View>
 
       <Space height="sm" />
@@ -182,6 +194,15 @@ const useStyles = () => {
     },
     feeValue: {
       ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
+    },
+    addressText: {
+      ...atoms.flex_1,
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
+    },
+    index: {
+      ...atoms.body_2_md_medium,
       color: color.text_gray_medium,
     },
   })
