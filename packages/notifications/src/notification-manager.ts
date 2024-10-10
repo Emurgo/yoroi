@@ -1,4 +1,4 @@
-import {BehaviorSubject, Subject, Subscription} from 'rxjs'
+import {BehaviorSubject, Subscription} from 'rxjs'
 import {App, Notifications} from '@yoroi/types'
 
 type EventsStorageData = ReadonlyArray<Notifications.Event>
