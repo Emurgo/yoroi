@@ -295,10 +295,7 @@ const CreatedByInfoItem = () => {
       <Accordion label="Other parties">
         <Space height="lg" />
 
-        <Info
-          content="Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance"
-          blue
-        />
+        <Info content="Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance" />
 
         <Space height="lg" />
 
