@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Transactions",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 303,
+      "line": 309,
       "column": 22,
-      "index": 10476
+      "index": 10838
     },
     "end": {
-      "line": 306,
+      "line": 312,
       "column": 3,
-      "index": 10579
+      "index": 10941
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Send",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 307,
+      "line": 313,
       "column": 14,
-      "index": 10595
+      "index": 10957
     },
     "end": {
-      "line": 310,
+      "line": 316,
       "column": 3,
-      "index": 10694
+      "index": 11056
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Receive",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 311,
+      "line": 317,
       "column": 17,
-      "index": 10713
+      "index": 11075
     },
     "end": {
-      "line": 314,
+      "line": 320,
       "column": 3,
-      "index": 10818
+      "index": 11180
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Dashboard",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 315,
+      "line": 321,
       "column": 19,
-      "index": 10839
+      "index": 11201
     },
     "end": {
-      "line": 318,
+      "line": 324,
       "column": 3,
-      "index": 10936
+      "index": 11298
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Delegate",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 319,
+      "line": 325,
       "column": 18,
-      "index": 10956
+      "index": 11318
     },
     "end": {
-      "line": 322,
+      "line": 328,
       "column": 3,
-      "index": 11051
+      "index": 11413
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Wallet",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 323,
+      "line": 329,
       "column": 16,
-      "index": 11069
+      "index": 11431
     },
     "end": {
-      "line": 326,
+      "line": 332,
       "column": 3,
-      "index": 11167
+      "index": 11529
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Staking",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 327,
+      "line": 333,
       "column": 17,
-      "index": 11186
+      "index": 11548
     },
     "end": {
-      "line": 330,
+      "line": 336,
       "column": 3,
-      "index": 11251
+      "index": 11613
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!NFT Gallery",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 331,
+      "line": 337,
       "column": 14,
-      "index": 11267
+      "index": 11629
     },
     "end": {
-      "line": 334,
+      "line": 340,
       "column": 3,
-      "index": 11361
+      "index": 11723
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Menu",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 335,
+      "line": 341,
       "column": 14,
-      "index": 11377
+      "index": 11739
     },
     "end": {
-      "line": 338,
+      "line": 344,
       "column": 3,
-      "index": 11429
+      "index": 11791
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Discover",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 339,
+      "line": 345,
       "column": 18,
-      "index": 11449
+      "index": 11811
     },
     "end": {
-      "line": 342,
+      "line": 348,
       "column": 3,
-      "index": 11538
+      "index": 11900
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!My wallets",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 343,
+      "line": 349,
       "column": 31,
-      "index": 11571
+      "index": 11933
     },
     "end": {
-      "line": 346,
+      "line": 352,
       "column": 3,
-      "index": 11680
+      "index": 12042
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Portfolio",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 347,
+      "line": 353,
       "column": 19,
-      "index": 11701
+      "index": 12063
     },
     "end": {
-      "line": 350,
+      "line": 356,
       "column": 3,
-      "index": 11770
+      "index": 12132
     }
   }
 ]

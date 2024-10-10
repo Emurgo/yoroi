@@ -30,7 +30,6 @@ import {ListMultipleAddressesScreen} from '../Receive/useCases/ListMultipleAddre
 import {RequestSpecificAmountScreen} from '../Receive/useCases/RequestSpecificAmountScreen'
 import {ScanCodeScreen} from '../Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
-import {ConfirmTxScreen} from '../Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
 import {SubmittedTxScreen} from '../Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {SelectTokenFromListScreen} from '../Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
@@ -351,15 +350,6 @@ export const TxHistoryNavigator = () => {
                   </Boundary>
                 )}
               </Stack.Screen>
-
-              <Stack.Screen //
-                name="send-confirm-tx"
-                component={ConfirmTxScreen}
-                options={{
-                  title: strings.confirmTitle,
-                  ...sendOptions(navigationOptions, color),
-                }}
-              />
 
               <Stack.Screen
                 name="send-submitted-tx"

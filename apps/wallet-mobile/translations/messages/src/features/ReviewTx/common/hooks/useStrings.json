@@ -1,0 +1,212 @@
+[
+  {
+    "id": "txReview.confirm",
+    "defaultMessage": "!!!Confirm",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 28,
+      "column": 11,
+      "index": 1188
+    },
+    "end": {
+      "line": 31,
+      "column": 3,
+      "index": 1255
+    }
+  },
+  {
+    "id": "txReview.title",
+    "defaultMessage": "!!!UTxOs",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 32,
+      "column": 9,
+      "index": 1266
+    },
+    "end": {
+      "line": 35,
+      "column": 3,
+      "index": 1329
+    }
+  },
+  {
+    "id": "txReview.tabLabel.utxos",
+    "defaultMessage": "!!!UTxOs",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 36,
+      "column": 12,
+      "index": 1343
+    },
+    "end": {
+      "line": 39,
+      "column": 3,
+      "index": 1415
+    }
+  },
+  {
+    "id": "txReview.tabLabel.overview",
+    "defaultMessage": "!!!Overview",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 40,
+      "column": 15,
+      "index": 1432
+    },
+    "end": {
+      "line": 43,
+      "column": 3,
+      "index": 1510
+    }
+  },
+  {
+    "id": "txReview.overview.wallet",
+    "defaultMessage": "!!!Wallet",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 44,
+      "column": 15,
+      "index": 1527
+    },
+    "end": {
+      "line": 47,
+      "column": 3,
+      "index": 1601
+    }
+  },
+  {
+    "id": "txReview.fee",
+    "defaultMessage": "!!!Fee",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 48,
+      "column": 12,
+      "index": 1615
+    },
+    "end": {
+      "line": 51,
+      "column": 3,
+      "index": 1674
+    }
+  },
+  {
+    "id": "txReview.overview.myWalletLabel",
+    "defaultMessage": "!!!Your Wallet",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 52,
+      "column": 17,
+      "index": 1693
+    },
+    "end": {
+      "line": 55,
+      "column": 3,
+      "index": 1779
+    }
+  },
+  {
+    "id": "txReview.overview.sendLabel",
+    "defaultMessage": "!!!Send",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 56,
+      "column": 13,
+      "index": 1794
+    },
+    "end": {
+      "line": 59,
+      "column": 3,
+      "index": 1869
+    }
+  },
+  {
+    "id": "txReview.overview.receiveToLabel",
+    "defaultMessage": "!!!receiveToLabel",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 60,
+      "column": 18,
+      "index": 1889
+    },
+    "end": {
+      "line": 63,
+      "column": 3,
+      "index": 1979
+    }
+  },
+  {
+    "id": "txReview.overview.receiveToScriptLabel",
+    "defaultMessage": "!!!To script",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 64,
+      "column": 24,
+      "index": 2005
+    },
+    "end": {
+      "line": 67,
+      "column": 3,
+      "index": 2096
+    }
+  },
+  {
+    "id": "txReview.utxos.utxosInputsLabel",
+    "defaultMessage": "!!!Inputs",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 68,
+      "column": 20,
+      "index": 2118
+    },
+    "end": {
+      "line": 71,
+      "column": 3,
+      "index": 2199
+    }
+  },
+  {
+    "id": "txReview.utxos.utxosOutputsLabel",
+    "defaultMessage": "!!!Outputs",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 72,
+      "column": 21,
+      "index": 2222
+    },
+    "end": {
+      "line": 75,
+      "column": 3,
+      "index": 2305
+    }
+  },
+  {
+    "id": "txReview.utxos.utxosYourAddressLabel",
+    "defaultMessage": "!!!Your address",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 76,
+      "column": 25,
+      "index": 2332
+    },
+    "end": {
+      "line": 79,
+      "column": 3,
+      "index": 2424
+    }
+  },
+  {
+    "id": "txReview.utxos.utxosForeignAddressLabel",
+    "defaultMessage": "!!!Foreign address",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 80,
+      "column": 28,
+      "index": 2454
+    },
+    "end": {
+      "line": 83,
+      "column": 3,
+      "index": 2552
+    }
+  }
+]

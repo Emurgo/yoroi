@@ -9,7 +9,7 @@ import {Dimensions, InteractionManager, Platform, TouchableOpacity, TouchableOpa
 
 import {Icon} from '../components/Icon'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types/yoroi'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types/yoroi'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
 
 // prettier-ignore
@@ -117,7 +117,7 @@ export type WalletStackRoutes = {
   'wallet-selection': undefined
   'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
-  'nft-details-routes': NavigatorScreenParams<NftRoutes>
+  'review-tx-routes': NavigatorScreenParams<ReviewTxRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
@@ -153,7 +153,6 @@ export type TxHistoryRoutes = {
   'receive-specific-amount': undefined
   'receive-multiple': undefined
   'send-start-tx': undefined
-  'send-confirm-tx': undefined
   'send-submitted-tx': {txId: string}
   'send-failed-tx': undefined
   'send-list-amounts-to-send': undefined
@@ -292,6 +291,20 @@ export type PortfolioRoutes = {
     id: string
   }
   history: NavigatorScreenParams<TxHistoryRoutes>
+}
+
+export type ReviewTxRoutes = {
+  'review-tx': {
+    unsignedTx?: YoroiUnsignedTx
+    cbor?: string
+    onSuccess: (signedTx: YoroiSignedTx) => void
+    onError: () => void
+  }
+}
+
+export type PortfolioTokenListTabRoutes = {
+  'wallet-token': undefined
+  'dapps-token': undefined
 }
 
 export type VotingRegistrationRoutes = {
@@ -446,6 +459,16 @@ export const useWalletNavigation = () => {
           params: {
             screen: 'send-start-tx',
           },
+        },
+      })
+    },
+
+    navigateToTxReview: (params: ReviewTxRoutes['review-tx']) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'review-tx-routes',
+        params: {
+          screen: 'review-tx',
+          params,
         },
       })
     },
