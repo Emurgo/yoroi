@@ -8,7 +8,6 @@ import {Space} from '../Space/Space'
 type Props = {
   content: ReactNode
   iconSize?: number
-  blue?: boolean
 }
 
 export const Info = ({content, iconSize = 30}: Props) => {
