@@ -9,11 +9,12 @@ import {
 import {useTheme} from '@yoroi/theme'
 import {Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Switch as RNSwitch, Text, View} from 'react-native'
+import {StyleSheet, Switch as RNSwitch, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
 import {ScrollView} from '../../../components/ScrollView/ScrollView'
+import {Text} from '../../../components/Text'
 import {notificationManager} from './common/notification-manager'
 import {createTransactionReceivedNotification} from './common/transaction-received-notification'
 

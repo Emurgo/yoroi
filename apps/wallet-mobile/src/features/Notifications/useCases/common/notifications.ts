@@ -5,8 +5,8 @@ export const generateNotificationId = (): number => {
   return generateRandomInteger(0, Number.MAX_SAFE_INTEGER)
 }
 
-export const parseNotificationId = (id: string): number => {
-  return parseInt(id, 10)
+export const parseNotificationId = (id: string | number): number => {
+  return parseInt(String(id), 10)
 }
 
 const generateRandomInteger = (min: number, max: number): number => {
@@ -28,6 +28,7 @@ const sendNotification = (options: {title: string; body: string; id: number}) =>
     title: options.title,
     body: options.body,
     sound: 'default',
+    id: options.id,
   })
   Notifications.postLocalNotification(notification.payload, options.id)
 }
