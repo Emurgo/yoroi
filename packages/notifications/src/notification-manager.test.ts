@@ -17,9 +17,6 @@ const createManager = () => {
 describe('NotificationManager', () => {
   beforeEach(() => AsyncStorage.clear())
 
-  const eventsStorage = mountAsyncStorage({path: 'events/'})
-  const configStorage = mountAsyncStorage({path: 'config/'})
-
   it('should be defined', () => {
     const manager = createManager()
     expect(manager).toBeDefined()
@@ -243,6 +240,9 @@ describe('NotificationManager', () => {
   })
 
   it('should subscribe to events when called hydrate', async () => {
+    const eventsStorage = mountAsyncStorage({path: 'events/'})
+    const configStorage = mountAsyncStorage({path: 'config/'})
+
     const event = createTransactionReceivedEvent()
 
     const notificationSubscription = new BehaviorSubject(event)
