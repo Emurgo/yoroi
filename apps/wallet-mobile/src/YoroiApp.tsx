@@ -3,6 +3,7 @@ import {LinksProvider} from '@yoroi/links'
 import {NotificationProvider} from '@yoroi/notifications'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {ThemeProvider} from '@yoroi/theme'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {LogBox, StyleSheet} from 'react-native'
 import * as RNP from 'react-native-paper'
@@ -60,19 +61,21 @@ const Yoroi = () => {
                     <LoadingBoundary style={StyleSheet.absoluteFill}>
                       <LanguageProvider>
                         <AuthProvider>
-                          <LinksProvider>
-                            <SetupWalletProvider>
-                              <PoolTransitionProvider>
-                                <BrowserProvider>
-                                  <AutomaticWalletOpenerProvider>
-                                    <NotificationProvider manager={notificationManager}>
-                                      <InitApp />
-                                    </NotificationProvider>
-                                  </AutomaticWalletOpenerProvider>
-                                </BrowserProvider>
-                              </PoolTransitionProvider>
-                            </SetupWalletProvider>
-                          </LinksProvider>
+                          <TransferProvider>
+                            <LinksProvider>
+                              <SetupWalletProvider>
+                                <PoolTransitionProvider>
+                                  <BrowserProvider>
+                                    <AutomaticWalletOpenerProvider>
+                                      <NotificationProvider manager={notificationManager}>
+                                        <InitApp />
+                                      </NotificationProvider>
+                                    </AutomaticWalletOpenerProvider>
+                                  </BrowserProvider>
+                                </PoolTransitionProvider>
+                              </SetupWalletProvider>
+                            </LinksProvider>
+                          </TransferProvider>
                         </AuthProvider>
                       </LanguageProvider>
                     </LoadingBoundary>

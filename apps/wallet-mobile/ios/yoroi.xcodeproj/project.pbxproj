@@ -839,7 +839,7 @@
 				CODE_SIGN_ENTITLEMENTS = yoroi/yoroi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 598;
+				CURRENT_PROJECT_VERSION = 610;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -885,7 +885,7 @@
 				CODE_SIGN_ENTITLEMENTS = yoroi/yoroi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 598;
+				CURRENT_PROJECT_VERSION = 610;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENVFILE = "$(PODS_ROOT)/../../.env.production";
@@ -1081,7 +1081,7 @@
 				CODE_SIGN_ENTITLEMENTS = nightly.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 598;
+				CURRENT_PROJECT_VERSION = 610;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -1126,7 +1126,7 @@
 				CODE_SIGN_ENTITLEMENTS = nightly.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 598;
+				CURRENT_PROJECT_VERSION = 610;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENVFILE = "$(PODS_ROOT)/../../.env.nightly";
