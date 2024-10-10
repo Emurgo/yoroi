@@ -1,16 +1,16 @@
 import {useTheme} from '@yoroi/theme'
+import {App} from '@yoroi/types'
 import React, {useEffect, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import {debugWalletInfo, features} from '../../features'
-import {useSelectedWallet} from '../../features/WalletManager/Context/SelectedWalletContext'
-import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
+import {debugWalletInfo, features} from '../../kernel/features'
 import {useSignTxWithPassword, useSubmitTx} from '../../yoroi-wallets/hooks'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
-import {Button} from '../Button'
-import {Spacer} from '../Spacer'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
+import {Button} from '../Button/Button'
+import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'
-import {Checkmark, TextInput} from '../TextInput'
+import {Checkmark, TextInput} from '../TextInput/TextInput'
 import {useStrings} from './strings'
 
 type Props = {
@@ -21,11 +21,12 @@ type Props = {
 
 export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onError}: Props) => {
   const spendingPasswordRef = useRef<RNTextInput>(null)
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const styles = useStyles()
   const {signTx, error: signError, isLoading: signIsLoading} = useSignTxWithPassword({wallet})
   const {submitTx, error: submitError, isLoading: submitIsLoading} = useSubmitTx({wallet}, {onError})
   const strings = useStrings()
+  const {isDark} = useTheme()
 
   const [spendingPassword, setSpendingPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
   const isPasswordCorrect = useIsPasswordCorrect(spendingPassword)
@@ -47,7 +48,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
   const errorMessage = error ? getErrorMessage(error, strings) : null
 
   return (
-    <>
+    <View style={styles.root}>
       <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
 
       <TextInput
@@ -69,30 +70,32 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
 
       <Spacer fill />
 
-      <Button
-        testID="confirmButton"
-        shelleyTheme
-        title={strings.sign}
-        onPress={() => onSubmit?.(spendingPassword)}
-        disabled={spendingPassword.length === 0}
-      />
+      <View style={styles.actions}>
+        <Button
+          testID="confirmButton"
+          shelleyTheme
+          title={strings.sign}
+          onPress={() => onSubmit?.(spendingPassword)}
+          disabled={spendingPassword.length === 0}
+        />
+      </View>
 
       {isLoading && (
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color="black" />
+          <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
         </View>
       )}
-    </>
+    </View>
   )
 }
 
 const useIsPasswordCorrect = (password: string) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false)
 
   useEffect(() => {
     let isMounted = true
-    wallet.encryptedStorage.rootKey
+    wallet.encryptedStorage.xpriv
       .read(password)
       .then(() => isMounted && setIsPasswordCorrect(true))
       .catch(() => isMounted && setIsPasswordCorrect(false))
@@ -104,7 +107,7 @@ const useIsPasswordCorrect = (password: string) => {
 }
 
 const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' | 'error', string>) => {
-  if (error instanceof WrongPassword) {
+  if (error instanceof App.Errors.WrongPassword) {
     return strings.wrongPasswordMessage
   }
   if (error instanceof Error) {
@@ -115,16 +118,23 @@ const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' 
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
+    root: {
+      ...atoms.flex_1,
+      ...atoms.px_lg,
+      ...atoms.pb_lg,
+    },
+    actions: {
+      ...atoms.pt_lg,
+    },
     modalText: {
       paddingHorizontal: 70,
       textAlign: 'center',
       paddingBottom: 8,
     },
     errorMessage: {
-      color: color.magenta[500],
+      color: color.sys_magenta_500,
       textAlign: 'center',
     },
     loading: {

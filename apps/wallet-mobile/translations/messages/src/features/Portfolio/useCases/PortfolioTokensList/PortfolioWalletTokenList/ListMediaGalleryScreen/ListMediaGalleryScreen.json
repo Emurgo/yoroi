@@ -1,0 +1,122 @@
+[
+  {
+    "id": "nft.gallery.nftCount",
+    "defaultMessage": "!!!NFT count",
+    "file": "src/features/Portfolio/useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen.tsx",
+    "start": {
+      "line": 163,
+      "column": 12,
+      "index": 4659
+    },
+    "end": {
+      "line": 166,
+      "column": 3,
+      "index": 4732
+    }
+  },
+  {
+    "id": "nft.gallery.errorTitle",
+    "defaultMessage": "!!!Oops!",
+    "file": "src/features/Portfolio/useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen.tsx",
+    "start": {
+      "line": 167,
+      "column": 14,
+      "index": 4748
+    },
+    "end": {
+      "line": 170,
+      "column": 3,
+      "index": 4819
+    }
+  },
+  {
+    "id": "nft.gallery.errorDescription",
+    "defaultMessage": "!!!Something went wrong.",
+    "file": "src/features/Portfolio/useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen.tsx",
+    "start": {
+      "line": 171,
+      "column": 20,
+      "index": 4841
+    },
+    "end": {
+      "line": 174,
+      "column": 3,
+      "index": 4934
+    }
+  },
+  {
+    "id": "nft.gallery.reloadApp",
+    "defaultMessage": "!!!Try to restart the app.",
+    "file": "src/features/Portfolio/useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen.tsx",
+    "start": {
+      "line": 175,
+      "column": 13,
+      "index": 4949
+    },
+    "end": {
+      "line": 178,
+      "column": 3,
+      "index": 5037
+    }
+  },
+  {
+    "id": "nft.gallery.noNftsFound",
+    "defaultMessage": "!!!No NFTs found",
+    "file": "src/features/Portfolio/useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen.tsx",
+    "start": {
+      "line": 179,
+      "column": 15,
+      "index": 5054
+    },
+    "end": {
+      "line": 182,
+      "column": 3,
+      "index": 5134
+    }
+  },
+  {
+    "id": "nft.gallery.noNftsInWallet",
+    "defaultMessage": "!!!No NFTs added to your wallet yet",
+    "file": "src/features/Portfolio/useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen.tsx",
+    "start": {
+      "line": 183,
+      "column": 18,
+      "index": 5154
+    },
+    "end": {
+      "line": 186,
+      "column": 3,
+      "index": 5256
+    }
+  },
+  {
+    "id": "nft.navigation.title",
+    "defaultMessage": "!!!NFT Gallery",
+    "file": "src/features/Portfolio/useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen.tsx",
+    "start": {
+      "line": 187,
+      "column": 9,
+      "index": 5267
+    },
+    "end": {
+      "line": 190,
+      "column": 3,
+      "index": 5342
+    }
+  },
+  {
+    "id": "nft.navigation.search",
+    "defaultMessage": "!!!Search NFT",
+    "file": "src/features/Portfolio/useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen.tsx",
+    "start": {
+      "line": 191,
+      "column": 10,
+      "index": 5354
+    },
+    "end": {
+      "line": 194,
+      "column": 3,
+      "index": 5429
+    }
+  }
+]

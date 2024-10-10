@@ -20,11 +20,10 @@ export const Link = ({url, text, style, children}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     text: {
-      color: color.primary[600],
+      color: color.primary_600,
       textDecorationLine: 'underline',
     },
   })

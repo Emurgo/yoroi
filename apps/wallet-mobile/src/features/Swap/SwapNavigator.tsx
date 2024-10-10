@@ -2,24 +2,28 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useSwap, useSwapTokensOnlyVerified} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {Keyboard, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../navigation'
-import {useBalance} from '../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../WalletManager/Context/SelectedWalletContext'
+import {KeyboardAvoidingView} from '../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useIsKeyboardOpen} from '../../kernel/keyboard/useIsKeyboardOpen'
+import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kernel/navigation'
+import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
+import {useSearch} from '../Search/SearchContext'
+import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './common/strings'
-import {CreateOrder} from './useCases/StartSwapScreen/CreateOrder/CreateOrder'
-import {ListOrders} from './useCases/StartSwapScreen/ListOrders/ListOrders'
+import {StartSwapOrderScreen} from './useCases/StartOrderSwapScreen/CreateOrder/StartSwapOrderScreen'
+import {ListOrders} from './useCases/StartOrderSwapScreen/ListOrders/ListOrders'
 
 const Tab = createMaterialTopTabNavigator<SwapTabRoutes>()
 export const SwapTabNavigator = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
+  const isKeyboardOpen = useIsKeyboardOpen()
 
   // state data
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {
     aggregatorTokenId,
     lpTokenHeldChanged,
@@ -28,17 +32,14 @@ export const SwapTabNavigator = () => {
     sellTokenInfoChanged,
     primaryTokenInfoChanged,
   } = useSwap()
-  const lpTokenHeld = useBalance({wallet, tokenId: aggregatorTokenId})
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const lpTokenHeld = usePortfolioBalances({wallet}).records.get(aggregatorTokenId!)
 
   // initialize sell with / and primary token
   React.useEffect(() => {
-    const ptInfo = {
-      decimals: wallet.primaryTokenInfo.decimals ?? 0,
-      id: wallet.primaryTokenInfo.id,
-    }
-    sellTokenInfoChanged(ptInfo)
-    primaryTokenInfoChanged(ptInfo)
-  }, [primaryTokenInfoChanged, sellTokenInfoChanged, wallet.primaryTokenInfo.decimals, wallet.primaryTokenInfo.id])
+    sellTokenInfoChanged(wallet.portfolioPrimaryTokenInfo)
+    primaryTokenInfoChanged(wallet.portfolioPrimaryTokenInfo)
+  }, [primaryTokenInfoChanged, sellTokenInfoChanged, wallet.portfolioPrimaryTokenInfo])
 
   // update the fee tiers
   React.useEffect(() => {
@@ -49,45 +50,72 @@ export const SwapTabNavigator = () => {
   React.useEffect(() => {
     if (aggregatorTokenId == null) return
 
-    lpTokenHeldChanged({
-      tokenId: aggregatorTokenId,
-      quantity: lpTokenHeld,
-    })
+    lpTokenHeldChanged(lpTokenHeld)
   }, [aggregatorTokenId, lpTokenHeld, lpTokenHeldChanged])
 
-  // pre load swap tokens
-  const {refetch} = useSwapTokensOnlyVerified({suspense: false, enabled: false})
-  React.useEffect(() => {
-    refetch()
-  }, [refetch])
+  useSwapTokensOnlyVerified({suspense: false})
+
+  const {visible: isSearchBarVisible} = useSearch()
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <Tab.Navigator
-        screenOptions={({route}) => ({
-          ...defaultMaterialTopTabNavigationOptions(theme),
-          tabBarLabel: route.name === 'token-swap' ? strings.tokenSwap : strings.orderSwap,
-        })}
-        style={styles.tab}
-      >
-        <Tab.Screen name="token-swap" component={CreateOrder} />
+    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.flex}>
+        <Tab.Navigator
+          screenOptions={({route}) => ({
+            ...defaultMaterialTopTabNavigationOptions(atoms, color),
+            ...(isSearchBarVisible && {tabBarStyle: {height: 0}}),
+            tabBarLabel: route.name === 'token-swap' ? strings.tokenSwap : strings.orderSwap,
+          })}
+          style={styles.tab}
+        >
+          <Tab.Screen
+            listeners={{
+              tabPress: (e) => {
+                // if the keyboard is open, the user needs to close first the keyboard
+                // then, press again the tab to change screen
+                // to avoid screen freezing
+                if (isKeyboardOpen) {
+                  Keyboard.dismiss()
+                  e.preventDefault()
+                }
+              },
+            }}
+            name="token-swap"
+            component={StartSwapOrderScreen}
+          />
 
-        <Tab.Screen name="orders" component={ListOrders} />
-      </Tab.Navigator>
-    </SafeAreaView>
+          <Tab.Screen
+            listeners={{
+              tabPress: (e) => {
+                // if the keyboard is open, the user needs to close first the keyboard
+                // then, press again the tab to change screen
+                // to avoid screen freezing
+                if (isKeyboardOpen) {
+                  Keyboard.dismiss()
+                  e.preventDefault()
+                }
+              },
+            }}
+            name="orders"
+            getComponent={() => ListOrders}
+          />
+        </Tab.Navigator>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.bg_color_max,
+    },
+    flex: {
+      ...atoms.flex_1,
     },
     tab: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
   })
   return styles

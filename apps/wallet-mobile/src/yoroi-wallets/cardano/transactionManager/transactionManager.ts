@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {isArray, parseSafe} from '@yoroi/common'
+import {isArray, parseSafe, PromiseAllLimited} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import assert from 'assert'
 import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {Logger} from '../../logging'
+import {logger} from '../../../kernel/logger/logger'
 import {
-  BackendConfig,
   CERTIFICATE_KIND,
   RawTransaction,
   Transaction,
@@ -19,10 +18,10 @@ import {
 } from '../../types/other'
 import {RemoteCertificateMeta} from '../../types/staking'
 import {Version, versionCompare} from '../../utils/versioning'
-import * as yoroiApi from '../api'
+import * as yoroiApi from '../api/api'
 import {ApiHistoryError} from '../errors'
 
-export type TransactionManagerState = {
+type TransactionManagerState = {
   transactions: Transactions
   // @deprecated
   perAddressSyncMetadata: Record<string, SyncMetadata>
@@ -106,10 +105,10 @@ export class TransactionManager {
     return this.#confirmationCountsSelector(this.#state)
   }
 
-  async doSync(addressesByChunks: Array<Array<string>>, backendConfig: BackendConfig) {
+  async doSync(addressesByChunks: Array<Array<string>>, baseApiUrl: string) {
     const txUpdate = await syncTxs({
       addressesByChunks,
-      backendConfig,
+      baseApiUrl,
       transactions: this.#state.transactions,
       api: yoroiApi,
     })
@@ -122,22 +121,24 @@ export class TransactionManager {
         // @deprecated
         perAddressSyncMetadata: this.#state.perAddressSyncMetadata,
       })
+      return true
     }
+    return false
   }
 }
 
 export async function syncTxs({
   addressesByChunks,
-  backendConfig,
+  baseApiUrl,
   transactions,
   api,
 }: Readonly<{
   addressesByChunks: Array<Array<string>>
-  backendConfig: BackendConfig
+  baseApiUrl: string
   transactions: Record<string, Transaction>
   api: Pick<typeof yoroiApi, 'getTipStatus' | 'fetchNewTxHistory'>
 }>): Promise<Record<string, Transaction> | undefined> {
-  const {bestBlock} = await api.getTipStatus(backendConfig)
+  const {bestBlock} = await api.getTipStatus(baseApiUrl)
   if (!bestBlock.hash) return
 
   // this should change when backend stop throwing when no tx_hash is passed
@@ -145,49 +146,52 @@ export async function syncTxs({
   const lastTx = getLatestYoroiTransaction(Object.values(transactions))
 
   // the way the addresses are arranged are make it slower (getting the same tx twice)
-  const tasks = addressesByChunks.map(async (addrs) => {
-    const taskResult: Array<Array<RawTransaction>> = []
-    let bestTx: TimeForTx | undefined
-    let isPaginating = false
-    let historyPayload = txHistoryPayloadFactory(
-      addrs,
-      {
-        // tip
-        bestBlockNum: bestBlock.height,
-        // current - from state txs saved
-        bestBlockHash: lastTx?.blockHash,
-        bestTxHash: lastTx?.txHash,
-      },
-      bestBlock.hash!,
-    )
+  const tasks = addressesByChunks.map((addrs) => {
+    const promise = async () => {
+      const taskResult: Array<Array<RawTransaction>> = []
+      let bestTx: TimeForTx | undefined
+      let isPaginating = false
+      let historyPayload = txHistoryPayloadFactory(
+        addrs,
+        {
+          // tip
+          bestBlockNum: bestBlock.height,
+          // current - from state txs saved
+          bestBlockHash: lastTx?.blockHash,
+          bestTxHash: lastTx?.txHash,
+        },
+        bestBlock.hash!,
+      )
 
-    do {
-      const response = await api.fetchNewTxHistory(historyPayload, backendConfig)
-      taskResult.push(response.transactions)
+      do {
+        const response = await api.fetchNewTxHistory(historyPayload, baseApiUrl)
+        taskResult.push(response.transactions)
 
-      // next payload
-      isPaginating = !response.isLast
-      if (isPaginating) {
-        bestTx = getLatestApiTransaction(response.transactions)
-        historyPayload = txHistoryPayloadFactory(
-          addrs,
-          {
-            // tip
-            bestBlockNum: bestBlock.height,
-            // current - from api txs just received
-            bestBlockHash: bestTx?.blockHash,
-            bestTxHash: bestTx?.txHash,
-          },
-          bestBlock.hash!,
-        )
-      }
-    } while (isPaginating)
+        // next payload
+        isPaginating = !response.isLast
+        if (isPaginating) {
+          bestTx = getLatestApiTransaction(response.transactions)
+          historyPayload = txHistoryPayloadFactory(
+            addrs,
+            {
+              // tip
+              bestBlockNum: bestBlock.height,
+              // current - from api txs just received
+              bestBlockHash: bestTx?.blockHash,
+              bestTxHash: bestTx?.txHash,
+            },
+            bestBlock.hash!,
+          )
+        }
+      } while (isPaginating)
 
-    return taskResult
+      return taskResult
+    }
+    return promise
   })
 
   try {
-    const result = await Promise.all(tasks)
+    const result = await PromiseAllLimited(tasks, 4)
     const newTxs = result.flat(2).map((tx) => [tx.hash, toCachedTx(tx)])
     // .map((tx) => processTxHistoryData(tx, addressesByChunks.flat(), 0, networkId))
 
@@ -217,17 +221,26 @@ export async function syncTxs({
             )
             return newTxs
           } else {
-            Logger.error(`API returned an unexpected error response`)
+            logger.error(`API returned an unexpected error response`, {
+              type: 'http',
+              error: e,
+            })
           }
           break
 
         // UNKNOWN
         default:
-          Logger.error(`API returned an unknown error response: ${e}`)
+          logger.error(`API returned an unknown error response`, {
+            type: 'http',
+            error: e,
+          })
           return
       }
     }
-    Logger.error(`Unknown error: ${e}`)
+    logger.error(`Unknown error`, {
+      type: 'http',
+      error: e,
+    })
     return
   }
 }
@@ -477,7 +490,7 @@ type SyncMetadata = {
   bestTxHash: string | null | undefined
 }
 
-export type TxManagerStorage = {
+type TxManagerStorage = {
   loadTxs: () => Promise<Record<string, Transaction>>
   saveTxs: (txs: Record<string, Transaction>) => Promise<void>
   clear: () => Promise<void>
@@ -493,7 +506,7 @@ export const makeTxManagerStorage = (storage: App.Storage): TxManagerStorage => 
 
     return tuples.reduce((result: TransactionManagerState['transactions'], [txid, tx]) => {
       if (!tx) {
-        Logger.warn('corrupted transaction', {txid})
+        logger.warn('makeTxManagerStorage: corrupted transaction', {txid})
         return result
       }
 

@@ -1,27 +1,22 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {configCardanoLegacyTransfer, linksCardanoModuleMaker} from '@yoroi/links'
+import {configCardanoLegacyTransfer, linksCardanoModuleMaker, linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  Keyboard,
-  ScrollView as RNScrollView,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {ScrollView as RNScrollView, StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../../components'
+import {Button} from '../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '../../../components/Modal/ModalContext'
 import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
-import {useCopy} from '../../../legacy/useCopy'
-import {useMetrics} from '../../../metrics/metricsManager'
-import {isEmptyString} from '../../../utils'
-import {editedFormatter} from '../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
+import {ShareQRCodeCard} from '../../../components/ShareQRCodeCard/ShareQRCodeCard'
+import {TextInput} from '../../../components/TextInput/TextInput'
+import {useCopy} from '../../../hooks/useCopy'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {isEmptyString} from '../../../kernel/utils'
+import {editedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '../common/ReceiveProvider'
-import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../common/useStrings'
 
@@ -29,7 +24,7 @@ export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()
   const {colors, styles} = useStyles()
   const [amount, setAmount] = React.useState('')
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const {track} = useMetrics()
   const hasAmount = !isEmptyString(amount)
@@ -49,7 +44,7 @@ export const RequestSpecificAmountScreen = () => {
   const handleOnChangeAmount = (amount: string) => {
     const edited = editedFormatter(amount)
     const numberOfDecimals = (edited.split('.')[1] ?? []).length
-    if (Number(edited) <= Number.MAX_SAFE_INTEGER && numberOfDecimals <= (wallet.primaryTokenInfo.decimals ?? 0)) {
+    if (Number(edited) <= Number.MAX_SAFE_INTEGER && numberOfDecimals <= wallet.portfolioPrimaryTokenInfo.decimals) {
       setAmount(edited)
     }
   }
@@ -61,136 +56,147 @@ export const RequestSpecificAmountScreen = () => {
   )
 
   return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <KeyboardAvoidingView style={styles.root}>
-          <ScrollView ref={scrollViewRef} style={styles.content} onScrollBarChange={setIsScrollBarShown}>
-            <Spacer height={24} />
+    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+      <SafeAreaView style={[styles.flex, styles.container]} edges={['left', 'right', 'bottom']}>
+        <ScrollView ref={scrollViewRef} style={styles.flex} onScrollBarChange={setIsScrollBarShown}>
+          <View style={styles.request}>
+            <Text style={styles.textAddressDetails}>{strings.specificAmountDescription}</Text>
 
-            <View style={styles.screen}>
-              <Text style={styles.textAddressDetails}>{strings.specificAmountDescription}</Text>
-
-              <TextInput
-                label={strings.ADALabel}
-                keyboardType="numeric"
-                onChangeText={handleOnChangeAmount}
-                value={amount}
-                testID="receive:request-specific-amount-ada-input"
-              />
-
-              <View style={styles.textSection}>
-                <Text style={[styles.textAddressDetails, {color: colors.gray}]}>{strings.address}</Text>
-
-                <Text style={styles.textAddressDetails}>{selectedAddress}</Text>
-              </View>
-            </View>
-          </ScrollView>
-
-          <View style={[styles.actions, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
-            <Button
-              shelleyTheme
-              onPress={handleOnGenerateLink}
-              disabled={!hasAmount}
-              title={strings.generateLink}
-              style={styles.button}
-              testID="receive:request-specific-amount:generate-link-button"
+            <TextInput
+              label={strings.ADALabel}
+              keyboardType="numeric"
+              onChangeText={handleOnChangeAmount}
+              value={amount}
+              testID="receive:request-specific-amount-ada-input"
+              noHelper
             />
+
+            <View style={styles.textSection}>
+              <Text style={[styles.textAddressDetails, {color: colors.gray}]}>{strings.address}</Text>
+
+              <Text style={styles.textAddressDetails}>{selectedAddress}</Text>
+            </View>
           </View>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-    </SafeAreaView>
+        </ScrollView>
+
+        <View style={[styles.actions, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
+          <Button
+            shelleyTheme
+            onPress={handleOnGenerateLink}
+            disabled={!hasAmount}
+            title={strings.generateLink}
+            testID="receive:request-specific-amount:generate-link-button"
+          />
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
 const Modal = ({amount, address}: {amount: string; address: string}) => {
   const strings = useStrings()
   const {styles} = useStyles()
+  const {track} = useMetrics()
 
   const cardanoLinks = linksCardanoModuleMaker()
-  const requestData = cardanoLinks.create({
+  const cardanoRequestLink = cardanoLinks.create({
     config: configCardanoLegacyTransfer,
     params: {
       address: address,
       amount: Number(amount),
     },
   })
+  const yoroiLinks = linksYoroiModuleMaker('yoroi')
+  const yoroiPaymentRequestLink = yoroiLinks.transfer.request.adaWithLink({
+    link: cardanoRequestLink.link,
+  })
 
-  const {primaryTokenInfo} = useSelectedWallet()
+  const {
+    wallet: {portfolioPrimaryTokenInfo},
+  } = useSelectedWallet()
   const hasAmount = !isEmptyString(amount)
   const hasAddress = !isEmptyString(address)
-  const content = hasAmount ? requestData.link : address
-  const title = hasAmount ? `${amount} ${primaryTokenInfo.ticker?.toLocaleUpperCase()}` : ''
+  const content = hasAmount ? yoroiPaymentRequestLink : address
+  const title = hasAmount ? `${amount} ${portfolioPrimaryTokenInfo.ticker.toLocaleUpperCase()}` : ''
 
   const [isCopying, copy] = useCopy()
   const handOnCopy = () => copy(content)
 
   return (
-    <View style={styles.root}>
-      <RNScrollView>
+    <View style={[styles.container, styles.flex]}>
+      <RNScrollView contentContainerStyle={[styles.flex_grow, styles.modalContainer]}>
         {hasAddress ? (
-          <ShareQRCodeCard title={title} content={content} onLongPress={handOnCopy} testId="receive:specific-amount" />
+          <ShareQRCodeCard
+            title={title}
+            shareContent={content}
+            qrContent={content}
+            onLongPress={handOnCopy}
+            testId="receive:specific-amount"
+            onShare={() => track.receiveShareAddressClicked()}
+            shareLabel={strings.shareLabel}
+            copiedText={strings.addressCopiedMsg}
+          />
         ) : (
           <View style={styles.root}>
             <SkeletonAdressDetail />
           </View>
         )}
-
-        <Spacer height={32} />
       </RNScrollView>
 
-      <Button
-        shelleyTheme
-        onPress={handOnCopy}
-        disabled={!hasAmount}
-        title={strings.copyLinkBtn}
-        iconImage={require('../../../assets/img/copy.png')}
-        isCopying={isCopying}
-        copiedText={strings.copyLinkMsg}
-        style={styles.button}
-        testID="receive:request-specific-amount:copy-link-button"
-      />
-
-      <Spacer height={16} />
+      <View style={styles.actions}>
+        <Button
+          shelleyTheme
+          onPress={handOnCopy}
+          disabled={!hasAmount}
+          title={strings.copyLinkBtn}
+          iconImage={require('../../../assets/img/copy.png')}
+          isCopying={isCopying}
+          copiedText={strings.copyLinkMsg}
+          testID="receive:request-specific-amount:copy-link-button"
+        />
+      </View>
     </View>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
-    content: {
-      flex: 1,
-      paddingHorizontal: 16,
+    container: {
+      ...atoms.p_lg,
+    },
+    modalContainer: {
+      ...atoms.justify_between,
+      ...atoms.gap_lg,
+    },
+    flex: {
+      ...atoms.flex_1,
+    },
+    flex_grow: {
+      ...atoms.flex_grow,
     },
     textAddressDetails: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
     },
     textSection: {
-      gap: 4,
-      width: '100%',
+      ...atoms.gap_xs,
     },
-    screen: {
-      gap: 16,
-      flex: 2,
-    },
-    button: {
-      backgroundColor: color.primary[500],
+    request: {
+      ...atoms.gap_lg,
     },
     actions: {
-      padding: 16,
+      ...atoms.pt_lg,
     },
   })
 
   const colors = {
-    gray: color.gray[600],
-    lightGray: color.gray[200],
+    gray: color.gray_600,
+    lightGray: color.gray_200,
   }
 
   return {styles, colors} as const

@@ -2,6 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
+import {Space} from './Space/Space'
 import {Text} from './Text'
 
 type ExternalProps = {
@@ -11,40 +12,34 @@ type ExternalProps = {
   testID?: string
 }
 
-export const TitledCard = ({title, children, variant, testID}: ExternalProps) => {
+export const TitledCard = ({title, children, testID}: ExternalProps) => {
   const styles = useStyles()
   return (
-    <View testID={testID}>
+    <View>
       {title !== undefined && <Text style={styles.title}>{title}</Text>}
 
-      <View style={[styles.content, variant === 'poolInfo' ? styles.poolInfoContent : undefined]}>{children}</View>
+      <Space height="sm" />
+
+      <View style={styles.content} testID={testID}>
+        {children}
+      </View>
     </View>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     title: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
-      justifyContent: 'center',
+      ...atoms.body_1_lg_regular,
+      ...atoms.justify_center,
+      color: color.text_gray_low,
     },
     content: {
-      ...padding['m'],
-      flexDirection: 'row',
+      ...atoms.p_lg,
+      borderColor: color.gray_200,
+      borderWidth: 1,
       borderRadius: 8,
-      elevation: 2,
-      shadowOpacity: 1,
-      shadowRadius: 12,
-      shadowOffset: {width: 0, height: 2},
-      shadowColor: 'rgba(0, 0, 0, 0.06)',
-      backgroundColor: color.gray.min,
-    },
-    poolInfoContent: {
-      ...padding['none'],
-      flexDirection: 'column',
     },
   })
   return styles

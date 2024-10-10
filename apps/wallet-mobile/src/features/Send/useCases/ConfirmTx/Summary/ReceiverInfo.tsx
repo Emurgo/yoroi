@@ -1,17 +1,14 @@
 import {nameServerName} from '@yoroi/resolver'
 import {useTheme} from '@yoroi/theme'
+import {Transfer} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Spacer} from '../../../../../components/Spacer'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
-import {YoroiTarget} from '../../../../../yoroi-wallets/types'
 import {useStrings} from '../../../common/strings'
 
-type Props = {
-  target: YoroiTarget
-}
-export const ReceiverInfo = ({target}: Props) => {
+export const ReceiverInfo = ({target}: {target: Transfer.Target}) => {
   const strings = useStrings()
   const {receiver, entry} = target
   const styles = useStyles()
@@ -54,16 +51,15 @@ export const ReceiverInfo = ({target}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {typography, color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     label: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[900],
+      ...atoms.body_2_md_regular,
+      color: color.gray_900,
     },
     value: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_900,
     },
   })
 

@@ -4,19 +4,19 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
-import globalMessages from '../../../../../i18n/global-messages'
-import {formatTokenWithSymbol} from '../../../../../legacy/format'
+import globalMessages from '../../../../../kernel/i18n/global-messages'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
+import {formatTokenWithSymbol} from '../../../../../yoroi-wallets/utils/format'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../WalletManager/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 
 export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const primaryAmount = Amounts.getAmount(
     Amounts.getAmountsFromEntries(yoroiUnsignedTx.entries),
-    wallet.primaryToken.identifier,
+    wallet.portfolioPrimaryTokenInfo.id,
   )
 
   return (
@@ -24,7 +24,7 @@ export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedT
       <Text>{strings.total}</Text>
 
       <Text style={styles.amount} testID="totalAmountText">
-        {formatTokenWithSymbol(primaryAmount.quantity, wallet.primaryToken)}
+        {formatTokenWithSymbol(primaryAmount.quantity, wallet.portfolioPrimaryTokenInfo)}
       </Text>
     </View>
   )
@@ -38,11 +38,10 @@ const useStrings = () => {
   }
 }
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     amount: {
-      color: color.secondary[600],
+      color: color.secondary_600,
     },
   })
   return styles

@@ -5,29 +5,22 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Text} from '../../../components'
-import {LoadingOverlay} from '../../../components/LoadingOverlay'
-import {useDisableEasyConfirmation} from '../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../WalletManager/Context/SelectedWalletMetaContext'
+import {Button} from '../../../components/Button/Button'
+import {Text} from '../../../components/Text'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigation = useNavigation()
-  const wallet = useSelectedWallet()
-  const walletMeta = useSelectedWalletMeta()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  if (!walletMeta) throw new Error('Missing walletMeta')
-  const {disableEasyConfirmation, isLoading} = useDisableEasyConfirmation(wallet, {
-    onSuccess: () => {
-      setSelectedWalletMeta({
-        ...walletMeta,
-        isEasyConfirmationEnabled: false,
-      })
-      navigation.goBack()
-    },
-  })
+  const {wallet} = useSelectedWallet()
+  const {walletManager} = useWalletManager()
+
+  const handleOnDisableConfirmation = () => {
+    walletManager.disableEasyConfirmation(wallet.id)
+    navigation.goBack()
+  }
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
@@ -36,15 +29,8 @@ export const DisableEasyConfirmationScreen = () => {
       </View>
 
       <View style={styles.actions}>
-        <Button
-          title={strings.disableButton}
-          onPress={() => disableEasyConfirmation()}
-          disabled={isLoading}
-          shelleyTheme
-        />
+        <Button title={strings.disableButton} onPress={handleOnDisableConfirmation} shelleyTheme />
       </View>
-
-      <LoadingOverlay loading={isLoading} />
     </SafeAreaView>
   )
 }
@@ -70,15 +56,14 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
     heading: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     disableSection: {
       flex: 1,

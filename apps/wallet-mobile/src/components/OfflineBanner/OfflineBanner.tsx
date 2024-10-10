@@ -1,14 +1,14 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {useSelectedWallet} from '../../features/WalletManager/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useIsOnline} from '../../yoroi-wallets/hooks'
-import {Banner} from '../Banner'
-import {LoadingBoundary} from '../Boundary'
+import {Banner} from '../Banner/Banner'
+import {LoadingBoundary} from '../Boundary/Boundary'
 
-export const OfflineBannerInner = () => {
+const OfflineBannerInner = () => {
   const intl = useIntl()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const isOnline = useIsOnline(wallet)
 
   return isOnline ? null : <Banner error text={intl.formatMessage(messages.offline)} />

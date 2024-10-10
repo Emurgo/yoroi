@@ -1,30 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {isArray, isString} from '@yoroi/common'
+import {Portfolio} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 
 import {
   BaseAsset,
   CERTIFICATE_KIND,
-  DefaultAsset,
-  NetworkId,
-  Token,
   Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
   TransactionInfo,
-} from '../../types'
+} from '../../types/other'
+import {Token} from '../../types/tokens'
 import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../MultiToken'
 import {multiTokenFromRemote} from '../utils'
 
-export const ASSURANCE_LEVELS = {
+const ASSURANCE_LEVELS = {
   LOW: 3,
   MEDIUM: 9,
 }
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
-export const getTransactionAssurance = (
+const getTransactionAssurance = (
   status: (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS],
   confirmations: number,
 ): TransactionAssurance => {
@@ -41,7 +40,7 @@ export const getTransactionAssurance = (
   return 'HIGH'
 }
 
-const getTxTokens = (tx: Transaction, networkId: NetworkId): Record<string, Token> => {
+const getTxTokens = (tx: Transaction): Record<string, Token> => {
   const tokens: Record<string, Token> = {}
   const rawTokens: Array<BaseAsset> = []
   tx.inputs.forEach((i) => rawTokens.push(...i.assets))
@@ -49,14 +48,11 @@ const getTxTokens = (tx: Transaction, networkId: NetworkId): Record<string, Toke
   rawTokens.forEach((t) => {
     if (tokens[t.assetId] == null) {
       tokens[t.assetId] = {
-        networkId,
         isDefault: false,
         identifier: t.assetId,
         metadata: {
           policyId: t.policyId,
           assetName: t.name,
-          // no metadata for now
-          type: 'Cardano',
           numberOfDecimals: 0,
           ticker: null,
           longName: null,
@@ -74,11 +70,11 @@ const _sum = (
     amount: string
     assets: Array<BaseAsset>
   }>,
-  defaultAsset: DefaultAsset,
+  primaryTokenInfo: Portfolio.Token.Info,
 ): MultiToken =>
   a.reduce(
     (acc: MultiToken, x) => acc.joinAddMutable(multiTokenFromRemote(x)),
-    new MultiToken([], getDefaultNetworkTokenEntry(defaultAsset)),
+    new MultiToken([], getDefaultNetworkTokenEntry(primaryTokenInfo)),
   )
 
 const _multiPartyWarningCache: Record<string, boolean> = {}
@@ -87,7 +83,7 @@ export const processTxHistoryData = (
   ownAddresses: Array<string>,
   confirmations: number,
   memo: string | null,
-  defaultAsset: DefaultAsset,
+  primaryTokenInfo: Portfolio.Token.Info,
 ): TransactionInfo => {
   const metadata = tx.metadata?.reduce<TransactionInfo['metadata']>(
     (metadatas: TransactionInfo['metadata'], metadata) => {
@@ -104,7 +100,7 @@ export const processTxHistoryData = (
     {},
   )
 
-  const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, defaultAsset)
+  const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, primaryTokenInfo)
   // collateral
   const collateral = tx.collateralInputs || []
   const isNonNativeScriptExecution = Number(tx.scriptSize) > 0 || collateral.length > 0
@@ -161,13 +157,13 @@ export const processTxHistoryData = (
   const ownInputs = unifiedInputs.filter(({address}) => ownAddresses.includes(address))
   const ownOutputs = unifiedOutputs.filter(({address}) => ownAddresses.includes(address))
 
-  const totalIn = _sum(unifiedInputs, defaultAsset)
+  const totalIn = _sum(unifiedInputs, primaryTokenInfo)
 
-  const totalOut = _sum(unifiedOutputs, defaultAsset)
+  const totalOut = _sum(unifiedOutputs, primaryTokenInfo)
 
-  const ownIn = _sum(ownInputs, defaultAsset).joinAddMutable(ownImplicitInput)
+  const ownIn = _sum(ownInputs, primaryTokenInfo).joinAddMutable(ownImplicitInput)
 
-  const ownOut = _sum(ownOutputs, defaultAsset).joinAddMutable(ownImplicitOutput)
+  const ownOut = _sum(ownOutputs, primaryTokenInfo).joinAddMutable(ownImplicitOutput)
 
   const hasOnlyOwnInputs = ownInputs.length === unifiedInputs.length
   const hasOnlyOwnOutputs = ownOutputs.length === unifiedOutputs.length
@@ -214,7 +210,7 @@ export const processTxHistoryData = (
   //    balance = sum(delta)
   // recall: if the tx has withdrawals or refunds to this wallet, they are
   // included in own utxo outputs
-  const delta = _sum(ownUtxoOutputs, defaultAsset).joinSubtractMutable(_sum(ownUtxoInputs, defaultAsset))
+  const delta = _sum(ownUtxoOutputs, primaryTokenInfo).joinSubtractMutable(_sum(ownUtxoInputs, primaryTokenInfo))
 
   let amount
   let fee
@@ -246,12 +242,11 @@ export const processTxHistoryData = (
   }
 
   const assurance = getTransactionAssurance(tx.status, confirmations)
-  const tokens = getTxTokens(tx, defaultAsset.networkId)
+  const tokens = getTxTokens(tx)
 
   const _remoteAssetAsTokenEntry = (asset: BaseAsset) => ({
     identifier: asset.assetId,
     amount: new BigNumber(asset.amount),
-    networkId: defaultAsset.networkId,
   })
 
   return {

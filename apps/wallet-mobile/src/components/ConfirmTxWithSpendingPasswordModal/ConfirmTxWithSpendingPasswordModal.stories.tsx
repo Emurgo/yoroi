@@ -2,15 +2,15 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SelectedWalletProvider} from '../../features/WalletManager/Context/SelectedWalletContext'
-import {mocks} from '../../yoroi-wallets/mocks'
+import {mocks} from '../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ConfirmTxWithSpendingPasswordModal} from './ConfirmTxWithSpendingPasswordModal'
 
 storiesOf('ConfirmTxWithSpendingPasswordModal', module)
   .addDecorator((story) => (
-    <SelectedWalletProvider wallet={mocks.wallet}>
+    <WalletManagerProviderMock wallet={mocks.wallet}>
       <View style={styles.container}>{story()}</View>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))
   .add('Default', () => <ConfirmTxWithSpendingPasswordModal unsignedTx={mocks.yoroiUnsignedTx} />)
 

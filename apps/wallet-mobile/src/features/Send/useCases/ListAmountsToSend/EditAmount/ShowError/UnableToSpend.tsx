@@ -16,11 +16,10 @@ export const UnableToSpend = ({style, ...props}: TextProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     overSpendable: {
-      color: color.gray[600],
+      color: color.gray_600,
       textAlign: 'center',
     },
   })

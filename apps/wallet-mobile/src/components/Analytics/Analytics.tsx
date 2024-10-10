@@ -1,11 +1,15 @@
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Switch, TextStyle, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, TextStyle, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, Spacer, Text, YoroiLogo} from '../../components'
-import {useMetrics} from '../../metrics/metricsManager'
+import {Button} from '../../components/Button/Button'
+import {Spacer} from '../../components/Spacer/Spacer'
+import {Text} from '../../components/Text'
+import {YoroiLogo} from '../../components/YoroiLogo/YoroiLogo'
+import {SettingsSwitch} from '../../features/Settings/common/SettingsSwitch'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {
@@ -121,11 +125,11 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
           <CommonContent onReadMore={onReadMore} />
 
           <View style={styles.toggle}>
-            <Text bold>{strings.toggle}</Text>
+            <Text style={styles.toggle_text}>{strings.toggle}</Text>
 
             <Spacer fill />
 
-            <Switch
+            <SettingsSwitch
               value={metrics.isEnabled}
               onValueChange={() => (metrics.isEnabled ? metrics.disable() : metrics.enable())}
             />
@@ -183,19 +187,18 @@ const CommonContent = ({onReadMore, showLogo}: {onReadMore?: () => void; showLog
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
     content: {
       alignItems: 'center',
       paddingHorizontal: 16,
     },
     text: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     list: {
       flex: 1,
@@ -208,45 +211,50 @@ const useStyles = () => {
       alignItems: 'baseline',
     },
     link: {
-      color: color.primary[600],
+      color: color.primary_600,
       textAlign: 'center',
+      ...atoms.link_1_lg,
     },
     title: {
-      ...typography['heading-3-medium'],
+      ...atoms.heading_3_medium,
       textAlign: 'center',
     },
     skip: {
       borderWidth: 0,
     },
     skipText: {
-      color: color.primary[900],
+      color: color.primary_900,
     },
     tick: {
-      color: color.primary[700],
+      color: color.primary_700,
       paddingRight: 8,
       fontSize: 16,
     },
     cross: {
-      color: color.magenta[500],
+      color: color.sys_magenta_500,
       paddingRight: 8,
       fontSize: 16,
     },
     toggle: {
-      padding: 16,
       flexDirection: 'row',
       alignItems: 'center',
+      fontSize: 24,
+    },
+    toggle_text: {
+      ...atoms.body_1_lg_medium,
+      fontWeight: '500',
     },
     buttonRow: {
       width: '100%',
       position: 'absolute',
       bottom: 0,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
       height: BOTTOM_BUTTON_ROW_HEIGHT,
       padding: 16,
     },
     borderTop: {
       borderTopWidth: 1,
-      borderTopColor: color.gray[500],
+      borderTopColor: color.gray_500,
     },
   })
 

@@ -6,7 +6,6 @@ import {
   stripAllButFirstDecimalSeparator,
   stripAllButLastDecimalSeparators,
   stripCommas,
-  stripExcessiveDecimals,
   stripInvalidCharacters,
 } from './amountUtils'
 
@@ -42,12 +41,6 @@ describe('formatMultilineSeparator', () => {
 describe('formatSeparatorWithoutDigits', () => {
   it('adds 0 before . if not present', () => {
     expect(formatSeparatorWithoutDigits('.')).toBe('0.')
-  })
-})
-
-describe('stripExcessiveDecimals', () => {
-  it('strips all decimal numbers after 6th', () => {
-    expect(stripExcessiveDecimals('123.12345678')).toBe('123.123456')
   })
 })
 

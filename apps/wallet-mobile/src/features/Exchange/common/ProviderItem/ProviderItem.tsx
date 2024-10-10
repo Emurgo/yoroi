@@ -1,12 +1,14 @@
+import {useExchange} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Space} from '../../../../components/Space/Space'
-import {useStrings} from '../useStrings'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 
 type Props = {
-  fee: number
+  fee: string
   label: string
   rightAdornment: React.ReactNode
   leftAdornment: React.ReactNode
@@ -16,27 +18,41 @@ type Props = {
 
 export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disabled, label}: Props) => {
   const styles = useStyles()
-  const strings = useStrings()
+  const {
+    selected: {network},
+  } = useWalletManager()
+  const {orderType} = useExchange()
+
+  const isPreprod = network === Chain.Network.Preprod
+  const isSancho = network === Chain.Network.Sancho
+  const isMainnet = network === Chain.Network.Mainnet
+  const isBuy = orderType === 'buy'
+
+  if ((isPreprod || isSancho) && isBuy) return null
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
-      {leftAdornment}
+    <>
+      <Space height={isMainnet ? '_2xs' : 'lg'} />
 
-      <Space width="m" />
+      <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
+        {leftAdornment}
 
-      <View style={styles.labels}>
-        <Text style={styles.label}>{label}</Text>
+        <Space width="md" />
 
-        <Text style={styles.fee}>{`${fee}% ${strings.fee}`}</Text>
-      </View>
+        <View style={styles.labels}>
+          <Text style={styles.label}>{label}</Text>
 
-      {!disabled && rightAdornment}
-    </TouchableOpacity>
+          <Text style={styles.fee}>{fee}</Text>
+        </View>
+
+        {!disabled && rightAdornment}
+      </TouchableOpacity>
+    </>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     item: {
       flexDirection: 'row',
@@ -46,12 +62,12 @@ const useStyles = () => {
       flex: 1,
     },
     label: {
-      ...theme.typography['body-1-l-medium'],
-      color: theme.color.gray[900],
+      ...atoms.body_1_lg_medium,
+      color: color.gray_900,
     },
     fee: {
-      ...theme.typography['body-3-s-regular'],
-      color: theme.color.gray[600],
+      ...atoms.body_3_sm_regular,
+      color: color.gray_600,
     },
   })
 

@@ -3,8 +3,8 @@ import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLanguage} from '../../../i18n'
-import {PrivacyPolicy} from '../../../Legal'
+import {useLanguage} from '../../../kernel/i18n'
+import {PrivacyPolicy} from '../../Legal/PrivacyPolicy/PrivacyPolicy'
 
 export const PrivacyPolicyScreen = () => {
   const styles = useStyles()
@@ -20,11 +20,10 @@ export const PrivacyPolicyScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
       flex: 1,
     },
     contentContainer: {

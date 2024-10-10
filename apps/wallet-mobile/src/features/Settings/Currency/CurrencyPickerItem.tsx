@@ -5,7 +5,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../components/Icon'
 import {Text} from '../../../components/Text'
-import {currencyNames} from '../../../i18n/global-messages'
+import {currencyNames} from '../../../kernel/i18n/global-messages'
 import {CurrencySymbol} from '../../../yoroi-wallets/types/other'
 
 type Props = {
@@ -63,12 +63,11 @@ const Subtitle = ({children}: {children: React.ReactNode}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
-      borderBottomColor: color.gray[200],
+      borderBottomColor: color.gray_200,
       borderBottomWidth: 1,
       paddingVertical: 8,
     },
@@ -82,16 +81,16 @@ const useStyles = () => {
       flexDirection: 'column',
     },
     bodyMedium: {
-      color: color.gray[900],
-      ...typography['body-1-l-medium'],
+      color: color.gray_900,
+      ...atoms.body_1_lg_medium,
     },
     bodyRegular: {
-      color: color.gray[900],
-      ...typography['body-3-s-regular'],
+      color: color.gray_900,
+      ...atoms.body_3_sm_regular,
     },
   })
   const colors = {
-    checkIcon: color.primary[600],
+    checkIcon: color.primary_600,
   }
   return {styles, colors}
 }

@@ -1,0 +1,189 @@
+import {storiesOf} from '@storybook/react-native'
+import {tokenInfoMocks} from '@yoroi/portfolio'
+import {mockSwapManager, mockSwapStateDefault, SwapProvider} from '@yoroi/swap'
+import {produce} from 'immer'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
+
+import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {SearchProvider} from '../../../../../Search/SearchContext'
+import {SwapFormProvider} from '../../../../common/SwapFormProvider'
+import {EditBuyAmount} from './EditBuyAmount'
+
+const mockWallet = produce(mocks.wallet, (draft) => {
+  draft.utxos = [
+    {
+      utxo_id: '1d38bea2d83eec5cca60ca2c1c3cc0db48b8e2e1a632c2d97849adb5357aca05:1',
+      tx_hash: '1d38bea2d83eec5cca60ca2c1c3cc0db48b8e2e1a632c2d97849adb5357aca05',
+      tx_index: 1,
+      receiver:
+        'addr_test1qz54nn8wkn4zppe3js5ta9d4t09nyfmjyx2lh5g37tu6dcwr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0q3pj8n4',
+      amount: '2000000',
+      assets: [
+        {
+          assetId: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.444444',
+          policyId: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f',
+          name: '444444',
+          amount: '44',
+        },
+        {
+          assetId: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.',
+          policyId: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f',
+          name: '',
+          amount: '1000',
+        },
+        {
+          assetId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
+          policyId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e',
+          name: '74484f444c53',
+          amount: '1234567800000000',
+        },
+        {
+          assetId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
+          policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
+          name: '7755534443',
+          amount: '12345',
+        },
+      ],
+    },
+  ]
+})
+const mockSwapStateOtherToken = produce(mockSwapStateDefault, (draft) => {
+  draft.orderData.amounts = {
+    sell: {
+      quantity: 500000n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.444444',
+      },
+    },
+    buy: {
+      quantity: 5000000n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
+      },
+    },
+  }
+})
+const mockSwapStateSameToken = produce(mockSwapStateDefault, (draft) => {
+  draft.orderData.amounts = {
+    sell: {
+      quantity: 500000n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
+      },
+    },
+    buy: {
+      quantity: 400000n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
+      },
+    },
+  }
+})
+const mockSwapStateUnamedToken = produce(mockSwapStateDefault, (draft) => {
+  draft.orderData.amounts.sell = {
+    quantity: 0n,
+    info: {
+      ...tokenInfoMocks.ftNameless,
+      id: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.',
+    },
+  }
+})
+const mockSwapStateWithIconBigDecimals = produce(mockSwapStateDefault, (draft) => {
+  draft.orderData.amounts.buy = {
+    quantity: 12301234567n,
+    info: {
+      ...tokenInfoMocks.ftNameless,
+      id: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
+    },
+  }
+})
+
+storiesOf('Swap Edit Buy Amount', module)
+  .add('initial - message', () => {
+    return (
+      <WalletManagerProviderMock wallet={mocks.wallet}>
+        <SearchProvider>
+          <SwapProvider swapManager={mockSwapManager}>
+            <SwapFormProvider>
+              <View style={styles.container}>
+                <EditBuyAmount />
+              </View>
+            </SwapFormProvider>
+          </SwapProvider>
+        </SearchProvider>
+      </WalletManagerProviderMock>
+    )
+  })
+  .add('other token', () => {
+    return (
+      <WalletManagerProviderMock wallet={mockWallet}>
+        <SearchProvider>
+          <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateOtherToken}>
+            <SwapFormProvider>
+              <View style={styles.container}>
+                <EditBuyAmount />
+              </View>
+            </SwapFormProvider>
+          </SwapProvider>
+        </SearchProvider>
+      </WalletManagerProviderMock>
+    )
+  })
+  .add('same token', () => {
+    return (
+      <WalletManagerProviderMock wallet={mockWallet}>
+        <SearchProvider>
+          <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateSameToken}>
+            <SwapFormProvider>
+              <View style={styles.container}>
+                <EditBuyAmount />
+              </View>
+            </SwapFormProvider>
+          </SwapProvider>
+        </SearchProvider>
+      </WalletManagerProviderMock>
+    )
+  })
+  .add('unamed token', () => {
+    return (
+      <WalletManagerProviderMock wallet={mockWallet}>
+        <SearchProvider>
+          <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateUnamedToken}>
+            <SwapFormProvider>
+              <View style={styles.container}>
+                <EditBuyAmount />
+              </View>
+            </SwapFormProvider>
+          </SwapProvider>
+        </SearchProvider>
+      </WalletManagerProviderMock>
+    )
+  })
+  .add('icon + big decimals', () => {
+    return (
+      <WalletManagerProviderMock wallet={mockWallet}>
+        <SearchProvider>
+          <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateWithIconBigDecimals}>
+            <SwapFormProvider>
+              <View style={styles.container}>
+                <EditBuyAmount />
+              </View>
+            </SwapFormProvider>
+          </SwapProvider>
+        </SearchProvider>
+      </WalletManagerProviderMock>
+    )
+  })
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+})

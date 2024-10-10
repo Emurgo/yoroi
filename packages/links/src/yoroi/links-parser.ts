@@ -2,6 +2,7 @@ import {Links} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {
+  BrowserLaunchDappUrlSchema,
   ExchangeShowCreateResultSchema,
   TransferRequestAdaSchema,
   TransferRequestAdaWithLinkSchema,
@@ -49,6 +50,19 @@ export const linksYoroiParser = (
             version: 1,
             feature: 'exchange',
             useCase: 'order/show-create-result',
+            params,
+          },
+          true,
+        )
+      }
+      case `/w1/browser/launch`: {
+        const objectFromParams = convertSearchParamsToObject(url.searchParams)
+        const params = BrowserLaunchDappUrlSchema.parse(objectFromParams)
+        return freeze(
+          {
+            version: 1,
+            feature: 'browser',
+            useCase: 'launch',
             params,
           },
           true,

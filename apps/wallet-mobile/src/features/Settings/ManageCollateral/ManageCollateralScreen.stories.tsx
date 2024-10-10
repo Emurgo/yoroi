@@ -4,8 +4,8 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {mocks} from '../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../WalletManager/Context/SelectedWalletContext'
+import {mocks} from '../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ManageCollateralScreen} from './ManageCollateralScreen'
 
 const styles = StyleSheet.create({
@@ -20,8 +20,8 @@ const goneCollateral: YoroiWallet = {
   getCollateralInfo: () => {
     return {
       amount: {
-        quantity: '0',
-        tokenId: mocks.wallet.primaryTokenInfo.id,
+        quantity: 0n,
+        info: mocks.wallet.portfolioPrimaryTokenInfo,
       },
       collateralId: mocks.wallet.collateralId,
       utxo: undefined,
@@ -36,8 +36,8 @@ const noCollateral: YoroiWallet = {
   getCollateralInfo: () => {
     return {
       amount: {
-        quantity: '0',
-        tokenId: mocks.wallet.primaryTokenInfo.id,
+        quantity: 0n,
+        info: mocks.wallet.portfolioPrimaryTokenInfo,
       },
       collateralId: '',
       utxo: undefined,
@@ -53,8 +53,8 @@ const noFundsWallet: YoroiWallet = {
   getCollateralInfo: () => {
     return {
       amount: {
-        quantity: '0',
-        tokenId: mocks.wallet.primaryTokenInfo.id,
+        quantity: 0n,
+        info: mocks.wallet.portfolioPrimaryTokenInfo,
       },
       collateralId: '',
       utxo: undefined,
@@ -75,27 +75,27 @@ storiesOf('ManageCollateralScreen', module)
     </TransferProvider>
   ))
   .add('with collateral', () => (
-    <SelectedWalletProvider wallet={mocks.wallet}>
+    <WalletManagerProviderMock wallet={mocks.wallet}>
       <ManageCollateralScreen />
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))
   .add('with collateral - remove loading', () => (
-    <SelectedWalletProvider wallet={withCollateralRemoveLoading}>
+    <WalletManagerProviderMock wallet={withCollateralRemoveLoading}>
       <ManageCollateralScreen />
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))
   .add('collateral is gone', () => (
-    <SelectedWalletProvider wallet={goneCollateral}>
+    <WalletManagerProviderMock wallet={goneCollateral}>
       <ManageCollateralScreen />
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))
   .add('no collateral', () => (
-    <SelectedWalletProvider wallet={noCollateral}>
+    <WalletManagerProviderMock wallet={noCollateral}>
       <ManageCollateralScreen />
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))
   .add('not enough funds', () => (
-    <SelectedWalletProvider wallet={noFundsWallet}>
+    <WalletManagerProviderMock wallet={noFundsWallet}>
       <ManageCollateralScreen />
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))

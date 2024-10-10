@@ -98,6 +98,22 @@ const getTokens: ListTokensResponse = [
     },
     categories: [],
   },
+  {
+    supply: {
+      total: '45000000003000000',
+      circulating: null,
+    },
+    status: 'verified',
+    website: 'https://eduladder.com',
+    symbol: 'ELAD',
+    decimalPlaces: 6,
+    description: 'Proof Of Contribution.',
+    address: {
+      policyId: '2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6',
+      name: 'FFFFAA',
+    },
+    categories: [],
+  },
 ]
 
 const getTokenPairs: TokenPairsResponse = [
@@ -368,7 +384,7 @@ const getCompletedOrders: CompletedOrder[] = [
     attachedLvl: 'someAttachedLvl',
     scriptVersion: 'v1',
     pubKeyHash: 'somePubKeyHash',
-    feeField: 10,
+    dex: 'minswap',
   },
 ]
 
@@ -403,7 +419,6 @@ const getOpenOrders: OpenOrder[] = [
     // ],
     utxo: '1e977694e2413bd0e6105303bb44da60530cafe49b864dde8f8902b021ed86ba#0',
     provider: 'muesliswap_v4',
-    // feeField: '2650000',
     // allowPartial: true,
     owner:
       'addr1qxxvt9rzpdxxysmqp50d7f5a3gdescgrejsu7zsdxqjy8yun4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsmq6nqx',

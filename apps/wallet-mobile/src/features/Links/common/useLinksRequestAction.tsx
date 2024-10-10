@@ -1,52 +1,66 @@
+import {toBigInt} from '@yoroi/common'
 import {linksCardanoModuleMaker, useLinks} from '@yoroi/links'
 import {useTransfer} from '@yoroi/transfer'
 import {Links} from '@yoroi/types'
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
+import uuid from 'uuid'
 
 import {useModal} from '../../../components/Modal/ModalContext'
-import {Logger} from '../../../yoroi-wallets/logging'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
-import {useSelectedWalletContext} from '../../WalletManager/Context/SelectedWalletContext'
+import {logger} from '../../../kernel/logger/logger'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {useBrowser} from '../../Discover/common/BrowserProvider'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
+import {RequestedBrowserLaunchDappUrlScreen} from '../useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
 import {useNavigateTo} from './useNavigationTo'
 import {useStrings} from './useStrings'
 
 const heightBreakpoint = 467
 export const useLinksRequestAction = () => {
   const strings = useStrings()
+  const {track} = useMetrics()
   const {action, actionFinished} = useLinks()
   const {openModal, closeModal} = useModal()
-  const [wallet] = useSelectedWalletContext()
+  const {
+    selected: {wallet},
+  } = useWalletManager()
   const navigateTo = useNavigateTo()
 
+  const {addTab, setTabActive, tabs} = useBrowser()
   const {memoChanged, receiverResolveChanged, amountChanged, reset, linkActionChanged} = useTransfer()
+
   const startTransferWithLink = React.useCallback(
     (action: Links.YoroiAction, decimals: number) => {
-      Logger.debug('startTransferWithLink', action, decimals)
+      logger.debug('useLinksRequestAction: startTransferWithLink', {action, decimals})
       if (action.info.useCase === 'request/ada-with-link') {
         reset()
         try {
           const link = decodeURIComponent(action.info.params.link)
-          const parsedCardanoLink = linksCardanoModuleMaker().parse(link)
-          if (parsedCardanoLink) {
-            const redirectTo = action.info.params.redirectTo
-            if (redirectTo != null) linkActionChanged(action)
+          if (wallet) {
+            const parsedCardanoLink = linksCardanoModuleMaker().parse(link)
+            if (parsedCardanoLink) {
+              const redirectTo = action.info.params.redirectTo
+              if (redirectTo != null) linkActionChanged(action)
 
-            const {address: receiver, amount, memo} = parsedCardanoLink.params
-            const ptAmount = Quantities.integer(asQuantity(amount ?? 0), decimals)
-            memoChanged(memo ?? '')
-            receiverResolveChanged(receiver ?? '')
-            amountChanged(ptAmount)
-            closeModal()
-            actionFinished()
-            navigateTo.startTransfer()
+              const {address: receiver, amount, memo} = parsedCardanoLink.params
+              const ptAmount = toBigInt(amount, decimals)
+              memoChanged(memo ?? '')
+              receiverResolveChanged(receiver ?? '')
+              amountChanged({
+                quantity: ptAmount,
+                info: wallet.portfolioPrimaryTokenInfo,
+              })
+              closeModal()
+              actionFinished()
+              navigateTo.startTransfer()
+            }
           }
         } catch (error) {
           // TODO: revisit it should display an alert
           closeModal()
           actionFinished()
-          Logger.error('Error parsing Cardano link', error)
+          logger.error('Error parsing Cardano link', {error})
         }
       }
     },
@@ -59,6 +73,7 @@ export const useLinksRequestAction = () => {
       navigateTo,
       receiverResolveChanged,
       reset,
+      wallet,
     ],
   )
 
@@ -88,14 +103,80 @@ export const useLinksRequestAction = () => {
     [strings.trustedPaymentRequestedTitle, strings.untrustedPaymentRequestedTitle, startTransferWithLink, openModal],
   )
 
+  const launchDappUrl = React.useCallback(
+    (action: Links.YoroiAction) => {
+      logger.debug('useLinksRequestAction: launchDappUrl', {action})
+      if (action.info.useCase === 'launch') {
+        try {
+          const dappUrl = decodeURIComponent(action.info.params.dappUrl)
+          const redirectTo = action.info.params.redirectTo
+          if (redirectTo != null) linkActionChanged(action)
+
+          logger.debug('useLinksRequestAction: launchDappUrl', {dappUrl})
+          track.discoverConnectedBottomSheetOpenDAppClicked()
+
+          const id = uuid.v4()
+          addTab(dappUrl, id)
+          setTabActive(tabs.length)
+
+          closeModal()
+          actionFinished()
+          navigateTo.launchDappUrl()
+        } catch (error) {
+          // TODO: revisit it should display an alert
+          closeModal()
+          actionFinished()
+          logger.error('Error parsing Yoroi link', {error})
+        }
+      }
+    },
+    [actionFinished, addTab, closeModal, linkActionChanged, navigateTo, setTabActive, tabs, track],
+  )
+
+  const openRequestedBrowserLaunchDappUrl = React.useCallback(
+    ({params, isTrusted}: {params: Links.BrowserLaunchDappUrlParams; isTrusted: boolean}) => {
+      const title = isTrusted ? strings.trustedBrowserLaunchDappUrlTitle : strings.untrustedBrowserLaunchDappUrlTitle
+      const handleOnContinue = () =>
+        launchDappUrl({
+          info: {
+            version: 1,
+            feature: 'browser',
+            useCase: 'launch',
+            params,
+          },
+          isTrusted,
+        })
+
+      const content = (
+        <RequestedBrowserLaunchDappUrlScreen onContinue={handleOnContinue} params={params} isTrusted={isTrusted} />
+      )
+
+      openModal(title, content, heightBreakpoint)
+    },
+    [launchDappUrl, openModal, strings.trustedBrowserLaunchDappUrlTitle, strings.untrustedBrowserLaunchDappUrlTitle],
+  )
+
   React.useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      if (action?.info.useCase === 'request/ada-with-link' && wallet != null) {
-        openRequestedPaymentAdaWithLink(
-          {params: action.info.params, isTrusted: action.isTrusted},
-          wallet.primaryTokenInfo.decimals ?? 0,
-        )
+      if (wallet != null && action != null) {
+        switch (action.info.useCase) {
+          case 'request/ada-with-link':
+            openRequestedPaymentAdaWithLink(
+              {params: action.info.params, isTrusted: action.isTrusted},
+              wallet.portfolioPrimaryTokenInfo.decimals,
+            )
+            break
+          case 'launch':
+            openRequestedBrowserLaunchDappUrl({
+              params: action.info.params,
+              isTrusted: action.isTrusted,
+            })
+            break
+          default:
+            logger.error(new Error(`useLinksRequestAction: unknown useCase: ${action?.info.useCase}`))
+            break
+        }
       }
     })
-  }, [action?.info.params, action?.info.useCase, action?.isTrusted, openRequestedPaymentAdaWithLink, wallet])
+  }, [action, openRequestedBrowserLaunchDappUrl, openRequestedPaymentAdaWithLink, wallet])
 }

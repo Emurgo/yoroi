@@ -1,0 +1,513 @@
+[
+  {
+    "id": "components.txhistory.txdetails.txTypeSent",
+    "defaultMessage": "!!!Sent funds",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 58,
+      "column": 8,
+      "index": 3217
+    },
+    "end": {
+      "line": 61,
+      "column": 3,
+      "index": 3312
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.txTypeReceived",
+    "defaultMessage": "!!!Received funds",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 62,
+      "column": 12,
+      "index": 3326
+    },
+    "end": {
+      "line": 65,
+      "column": 3,
+      "index": 3429
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.txTypeSelf",
+    "defaultMessage": "!!!Intrawallet transaction",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 66,
+      "column": 8,
+      "index": 3439
+    },
+    "end": {
+      "line": 69,
+      "column": 3,
+      "index": 3547
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.txTypeMulti",
+    "defaultMessage": "!!!Multi-party transaction",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 70,
+      "column": 9,
+      "index": 3558
+    },
+    "end": {
+      "line": 73,
+      "column": 3,
+      "index": 3667
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.addressPrefixReceive",
+    "defaultMessage": "!!!/{idx}",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 77,
+      "column": 24,
+      "index": 3738
+    },
+    "end": {
+      "line": 80,
+      "column": 3,
+      "index": 3839
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.addressPrefixChange",
+    "defaultMessage": "!!!/change",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 81,
+      "column": 23,
+      "index": 3864
+    },
+    "end": {
+      "line": 84,
+      "column": 3,
+      "index": 3965
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.addressPrefixNotMine",
+    "defaultMessage": "!!!not mine",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 85,
+      "column": 24,
+      "index": 3991
+    },
+    "end": {
+      "line": 88,
+      "column": 3,
+      "index": 4094
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.fee",
+    "defaultMessage": "!!!Fee:",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 89,
+      "column": 16,
+      "index": 4112
+    },
+    "end": {
+      "line": 92,
+      "column": 3,
+      "index": 4195
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.fromAddresses",
+    "defaultMessage": "!!!From Addresses",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 93,
+      "column": 17,
+      "index": 4214
+    },
+    "end": {
+      "line": 96,
+      "column": 3,
+      "index": 4316
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.toAddresses",
+    "defaultMessage": "!!!To Addresses",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 97,
+      "column": 15,
+      "index": 4333
+    },
+    "end": {
+      "line": 100,
+      "column": 3,
+      "index": 4431
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.memo",
+    "defaultMessage": "!!!Memo",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 101,
+      "column": 8,
+      "index": 4441
+    },
+    "end": {
+      "line": 104,
+      "column": 3,
+      "index": 4524
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.transactionId",
+    "defaultMessage": "!!!Transaction ID",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 105,
+      "column": 17,
+      "index": 4543
+    },
+    "end": {
+      "line": 108,
+      "column": 3,
+      "index": 4645
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.txAssuranceLevel",
+    "defaultMessage": "!!!Transaction assurance level",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 109,
+      "column": 20,
+      "index": 4667
+    },
+    "end": {
+      "line": 112,
+      "column": 3,
+      "index": 4785
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.confirmations",
+    "defaultMessage": "!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 113,
+      "column": 17,
+      "index": 4804
+    },
+    "end": {
+      "line": 116,
+      "column": 3,
+      "index": 4953
+    }
+  },
+  {
+    "id": "components.txhistory.txdetails.omittedCount",
+    "defaultMessage": "!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 117,
+      "column": 16,
+      "index": 4971
+    },
+    "end": {
+      "line": 120,
+      "column": 3,
+      "index": 5120
+    }
+  },
+  {
+    "id": "global.openInExplorer",
+    "defaultMessage": "!!!Open in explorer",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 121,
+      "column": 18,
+      "index": 5140
+    },
+    "end": {
+      "line": 124,
+      "column": 3,
+      "index": 5221
+    }
+  },
+  {
+    "id": "components.txhistory.txhistory.title",
+    "defaultMessage": "!!!Transactions",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 125,
+      "column": 9,
+      "index": 5232
+    },
+    "end": {
+      "line": 128,
+      "column": 3,
+      "index": 5324
+    }
+  },
+  {
+    "id": "components.txhistory.txhistory.warningbanner.title",
+    "defaultMessage": "!!!Note:",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 129,
+      "column": 16,
+      "index": 5342
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 5441
+    }
+  },
+  {
+    "id": "components.txhistory.txhistory.warningbanner.message",
+    "defaultMessage": "!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 133,
+      "column": 11,
+      "index": 5454
+    },
+    "end": {
+      "line": 136,
+      "column": 3,
+      "index": 5636
+    }
+  },
+  {
+    "id": "components.txhistory.txhistory.noTransactions",
+    "defaultMessage": "!!!No transactions to show yet",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 137,
+      "column": 18,
+      "index": 5656
+    },
+    "end": {
+      "line": 140,
+      "column": 3,
+      "index": 5772
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.fee",
+    "defaultMessage": "!!!Fee",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 141,
+      "column": 7,
+      "index": 5781
+    },
+    "end": {
+      "line": 144,
+      "column": 3,
+      "index": 5870
+    }
+  },
+  {
+    "id": "global.txLabels.assets",
+    "description": "The number of assets different assets, not the amount",
+    "defaultMessage": "!!!{cnt} assets",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 145,
+      "column": 10,
+      "index": 5882
+    },
+    "end": {
+      "line": 149,
+      "column": 3,
+      "index": 6034
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeSent",
+    "defaultMessage": "!!!ADA sent",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 150,
+      "column": 23,
+      "index": 6059
+    },
+    "end": {
+      "line": 153,
+      "column": 3,
+      "index": 6169
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeReceived",
+    "defaultMessage": "!!!ADA received",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 154,
+      "column": 27,
+      "index": 6198
+    },
+    "end": {
+      "line": 157,
+      "column": 3,
+      "index": 6316
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeSelf",
+    "defaultMessage": "!!!Intrawallet",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 158,
+      "column": 23,
+      "index": 6341
+    },
+    "end": {
+      "line": 161,
+      "column": 3,
+      "index": 6454
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeMulti",
+    "defaultMessage": "!!!Multiparty",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 162,
+      "column": 24,
+      "index": 6480
+    },
+    "end": {
+      "line": 165,
+      "column": 3,
+      "index": 6593
+    }
+  },
+  {
+    "id": "utils.format.unknownAssetName",
+    "defaultMessage": "!!![Unknown asset name]",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 166,
+      "column": 20,
+      "index": 6615
+    },
+    "end": {
+      "line": 169,
+      "column": 3,
+      "index": 6708
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.walletAddress",
+    "defaultMessage": "!!!Your wallet address",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 170,
+      "column": 17,
+      "index": 6727
+    },
+    "end": {
+      "line": 173,
+      "column": 3,
+      "index": 6835
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.BIP32path",
+    "defaultMessage": "!!!BIP32 path:",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 174,
+      "column": 13,
+      "index": 6850
+    },
+    "end": {
+      "line": 177,
+      "column": 3,
+      "index": 6946
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.copyLabel",
+    "defaultMessage": "!!!Copy address",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 178,
+      "column": 13,
+      "index": 6961
+    },
+    "end": {
+      "line": 181,
+      "column": 3,
+      "index": 7058
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.spendingKeyHash",
+    "defaultMessage": "!!!Spending",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 182,
+      "column": 12,
+      "index": 7072
+    },
+    "end": {
+      "line": 185,
+      "column": 3,
+      "index": 7171
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.stakingKeyHash",
+    "defaultMessage": "!!!Staking",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 186,
+      "column": 11,
+      "index": 7184
+    },
+    "end": {
+      "line": 189,
+      "column": 3,
+      "index": 7281
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.title",
+    "defaultMessage": "!!!Title",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 190,
+      "column": 20,
+      "index": 7303
+    },
+    "end": {
+      "line": 193,
+      "column": 3,
+      "index": 7389
+    }
+  },
+  {
+    "id": "components.receive.addressverifymodal.title",
+    "defaultMessage": "!!!Verify Address on Ledger",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 194,
+      "column": 15,
+      "index": 7406
+    },
+    "end": {
+      "line": 197,
+      "column": 3,
+      "index": 7517
+    }
+  }
+]

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!**The selected language translation is fully provided by the community**. EMURGO is grateful to all those who have contributed",
     "file": "src/components/LanguagePicker/LanguagePickerWarning.tsx",
     "start": {
-      "line": 62,
+      "line": 74,
       "column": 11,
-      "index": 1530
+      "index": 1890
     },
     "end": {
-      "line": 67,
+      "line": 79,
       "column": 3,
-      "index": 1765
+      "index": 2125
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "_",
     "file": "src/components/LanguagePicker/LanguagePickerWarning.tsx",
     "start": {
-      "line": 68,
+      "line": 80,
       "column": 16,
-      "index": 1783
+      "index": 2143
     },
     "end": {
-      "line": 71,
+      "line": 83,
       "column": 3,
-      "index": 1870
+      "index": 2230
     }
   }
 ]

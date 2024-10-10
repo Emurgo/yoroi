@@ -3,7 +3,9 @@ import * as React from 'react'
 import {Linking, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, useModal} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useStrings} from '../../common/useStrings'
 
 export const AskToRedirectScreen = ({link}: {link: string}) => {
@@ -39,25 +41,25 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
 const Actions = (props: ViewProps) => <View {...props} />
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
+      ...atoms.px_lg,
     },
     actions: {
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
     text: {
-      ...theme.typography['body-2-m-regular'],
-      color: theme.color.gray.max,
+      ...atoms.body_2_md_regular,
+      color: color.gray_max,
     },
   })
   const colors = {
-    danger: color.magenta[500],
-    warning: color.yellow[500],
+    danger: color.sys_magenta_500,
+    warning: color.sys_orange_500,
   }
   return {styles, colors}
 }

@@ -1,19 +1,20 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Balance, Portfolio, Swap} from '@yoroi/types'
+import {tokenInfoMocks} from '@yoroi/portfolio'
 
 import {asTokenFingerprint, transformersMaker} from './transformers'
 import {openswapMocks} from '../adapters/openswap-api/openswap.mocks'
 import {apiMocks} from '../adapters/openswap-api/api.mocks'
 import {PriceAddress, TokenAddress} from '../adapters/openswap-api/types'
 
-const primaryTokenId = ''
-const transformers = transformersMaker(primaryTokenId)
+const primaryTokenInfo = tokenInfoMocks.primaryETH
+const transformers = transformersMaker(primaryTokenInfo)
 
 describe('asOpenswapAmount', () => {
   it('success', () => {
-    const yoroiAmount: Balance.Amount = {
+    const yoroiAmount = {
       tokenId: 'policyid.assetname',
-      quantity: '100',
-    }
+      quantity: 100n,
+    } as const
 
     const result = transformers.asOpenswapAmount(yoroiAmount)
 
@@ -25,10 +26,10 @@ describe('asOpenswapAmount', () => {
   })
 
   it('success (empty token) primary token', () => {
-    const yoroiAmount: Balance.Amount = {
-      tokenId: '',
-      quantity: '50',
-    }
+    const yoroiAmount = {
+      tokenId: '.',
+      quantity: 50n,
+    } as const
 
     const result = transformers.asOpenswapAmount(yoroiAmount)
 
@@ -40,10 +41,10 @@ describe('asOpenswapAmount', () => {
   })
 
   it('success nameless token', () => {
-    const yoroiAmount: Balance.Amount = {
-      tokenId: 'policyId',
-      quantity: '75',
-    }
+    const yoroiAmount = {
+      tokenId: 'policyId.',
+      quantity: 75n,
+    } as const
 
     const result = transformers.asOpenswapAmount(yoroiAmount)
 
@@ -63,6 +64,26 @@ describe('asYoroiOpenOrder', () => {
 
     expect(result).toEqual<Swap.OpenOrder>(apiMocks.getOpenOrders[0]!)
   })
+
+  it('success (pt without .) coverage should not happen', () => {
+    const transformer = transformersMaker({
+      ...primaryTokenInfo,
+      id: '.' as any,
+    })
+    const result = transformer.asYoroiOpenOrder(openswapMocks.getOpenOrders[0]!)
+
+    expect(result).toEqual<Swap.OpenOrder>({
+      ...apiMocks.getOpenOrders[0]!,
+      deposit: {
+        quantity: 1700000n,
+        tokenId: '.' as any,
+      },
+      from: {
+        quantity: 1000000n,
+        tokenId: '.' as any,
+      },
+    })
+  })
 })
 
 describe('asYoroiCompletedOrder', () => {
@@ -72,13 +93,23 @@ describe('asYoroiCompletedOrder', () => {
     )
 
     expect(result).toEqual<Swap.CompletedOrder>(apiMocks.getCompletedOrders[0]!)
+
+    const missingDex = {...openswapMocks.getCompletedOrders[0]!}
+    missingDex.dex = undefined as any
+    const defaultedProviderToMuesliswap = {
+      ...apiMocks.getCompletedOrders[0]!,
+      provider: 'muesliswap' as Swap.PoolProvider,
+    }
+
+    const result2 = transformers.asYoroiCompletedOrder(missingDex)
+    expect(result2).toEqual<Swap.CompletedOrder>(defaultedProviderToMuesliswap)
   })
 })
 
 describe('asYoroiTokenId', () => {
   it('success (empty policyId) should not happen', () => {
     const result = transformers.asYoroiTokenId({policyId: '', name: 'someName'})
-    expect(result).toBe('')
+    expect(result).toBe(primaryTokenInfo.id)
   })
 
   it('success', () => {
@@ -101,7 +132,10 @@ describe('asYoroiTokenId', () => {
 describe('asYoroiAmount', () => {
   it('empty when null', () => {
     const result = transformers.asYoroiAmount(null as any)
-    expect(result).toEqual<Balance.Amount>({quantity: '0', tokenId: ''})
+    expect(result).toEqual<Balance.Amount>({
+      quantity: '0',
+      tokenId: primaryTokenInfo.id,
+    })
   })
 
   it('success', () => {
@@ -136,7 +170,10 @@ describe('asYoroiAmount', () => {
         name: '',
       },
     })
-    expect(result).toEqual<Balance.Amount>({quantity: '1000000', tokenId: ''})
+    expect(result).toEqual<Balance.Amount>({
+      quantity: '1000000',
+      tokenId: primaryTokenInfo.id,
+    })
   })
 
   it('success (period) primary token', () => {
@@ -147,7 +184,10 @@ describe('asYoroiAmount', () => {
         name: '.',
       },
     })
-    expect(result).toEqual<Balance.Amount>({quantity: '1000000', tokenId: ''})
+    expect(result).toEqual<Balance.Amount>({
+      quantity: '1000000',
+      tokenId: primaryTokenInfo.id,
+    })
   })
 })
 
@@ -162,7 +202,7 @@ describe('asOpensawpTokenId (TokenAddress)', () => {
     })
   })
   it('success primary token (empty values)', () => {
-    const result = transformers.asOpenswapTokenId('' as any)
+    const result = transformers.asOpenswapTokenId('.' as any)
     expect(result).toEqual<TokenAddress>({
       policyId: '',
       assetName: '',
@@ -181,7 +221,7 @@ describe('asOpensawpPriceTokenAddress (PriceAddress)', () => {
     })
   })
   it('success primary token (empty values)', () => {
-    const result = transformers.asOpenswapPriceTokenAddress('' as any)
+    const result = transformers.asOpenswapPriceTokenAddress('.' as any)
     expect(result).toEqual<PriceAddress>({
       policyId: '',
       name: '',
@@ -239,48 +279,91 @@ describe('asYoroiPool', () => {
   })
 })
 
-describe('asYoroiBalanceToken', () => {
+describe('asYoroiPortfolioTokenInfos', () => {
   it('success', () => {
-    const result = transformers.asYoroiBalanceToken(
-      openswapMocks.getTokenPairs[0]!,
-    )
-
-    expect(result).toEqual<Balance.Token>(apiMocks.getTokenPairs[0]!)
-  })
-})
-
-describe('asYoroiBalanceTokens', () => {
-  it('success', () => {
-    const result = transformers.asYoroiBalanceTokens(
-      openswapMocks.getTokenPairs,
-    )
-
-    expect(result).toEqual<Array<Balance.Token>>(apiMocks.getTokenPairs)
-  })
-})
-
-describe('asYoroiBalanceTokenInfo', () => {
-  it('success', () => {
-    const result = transformers.asYoroiBalanceTokenInfo(
-      openswapMocks.getTokens[0]!,
-    )
-
-    expect(result).toEqual<Balance.TokenInfo>(apiMocks.getTokens[0]!)
-  })
-})
-
-describe('asYoroiBalanceTokenInfos', () => {
-  it('success', () => {
-    const result = transformers.asYoroiBalanceTokenInfos(
+    const result = transformers.asYoroiPortfolioTokenInfos(
       openswapMocks.getTokens,
     )
 
-    expect(result).toEqual<Array<Balance.TokenInfo>>(apiMocks.getTokens)
+    expect(result).toEqual<Array<Portfolio.Token.Info>>(apiMocks.getTokens)
   })
 
   it('success (empty)', () => {
-    const result = transformers.asYoroiBalanceTokenInfos([])
+    const result = transformers.asYoroiPortfolioTokenInfos([])
 
-    expect(result).toEqual<Array<Balance.TokenInfo>>([])
+    expect(result).toEqual<Array<Portfolio.Token.Info>>([])
+  })
+})
+
+describe('asYoroiPortfolioTokenInfosFromPairs', () => {
+  it('success', () => {
+    const result = transformers.asYoroiPortfolioTokenInfosFromPairs(
+      openswapMocks.getTokenPairs,
+    )
+
+    expect(result).toEqual<Array<Portfolio.Token.Info>>(apiMocks.getTokenPairs)
+  })
+
+  it('success (empty)', () => {
+    const result = transformers.asYoroiPortfolioTokenInfosFromPairs([])
+
+    expect(result).toEqual<Array<Portfolio.Token.Info>>([])
+  })
+})
+
+describe('asYoroiPortfolioTokenInfo', () => {
+  it('success', () => {
+    const result = transformers.asYoroiPortfolioTokenInfo(
+      openswapMocks.getTokens[0]!,
+    )
+
+    expect(result).toEqual<Portfolio.Token.Info>({
+      application: Portfolio.Token.Application.General,
+      decimals: 0,
+      description: 'Eggscape Club Utility Token',
+      fingerprint: 'asset126v2sm79r8uxvk4ju64mr6srxrvm2x75fpg6w3',
+      id: '1c1e38cfcc815d2015dbda6bee668b2e707ee3f9d038d96668fcf63c.4567677363617065436c75624561737465725a656e6e79',
+      name: 'EggscapeClubEasterZenny',
+      nature: Portfolio.Token.Nature.Secondary,
+      originalImage: 'ipfs://QmNYibJoiTWRiMmWn4yXwvoakEPgq9WmaukmRXHF1VGbAU',
+      reference: '',
+      status: Portfolio.Token.Status.Valid,
+      symbol: '',
+      tag: '',
+      ticker: 'EZY',
+      type: Portfolio.Token.Type.FT,
+      website: 'https://eggscape.io/',
+    })
+  })
+
+  it('success (primary token)', () => {
+    const result = transformers.asYoroiPortfolioTokenInfo({
+      address: {
+        policyId: '',
+        name: '',
+      },
+      categories: [],
+      decimalPlaces: 6,
+      description: 'Cardano',
+      status: 'verified',
+      symbol: '₳',
+      website: 'https://www.cardano.org/',
+      supply: {
+        circulating: '1000000000000',
+        total: '45000000000000',
+      },
+    })
+
+    expect(result).toEqual<Portfolio.Token.Info>(primaryTokenInfo)
+  })
+})
+
+describe('asYoroiTokenIdAndQuantity', () => {
+  it('missing token, returns as primary token', () => {
+    const result = transformers.asYoroiTokenIdAndQuantity({token: ''})
+    expect(result).toEqual({
+      tokenId: primaryTokenInfo.id,
+      quantity: 0n,
+    })
   })
 })

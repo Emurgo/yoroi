@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/types",
-  "version": "1.5.4",
+  "version": "1.5.8",
   "description": "The Yoroi Types package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -39,6 +39,7 @@
   ],
   "scripts": {
     "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
+    "build:dev": "yarn tsc && yarn clean && bob build",
     "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
@@ -100,6 +101,7 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.5.12",
     "axios": "^1.5.0",
+    "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
@@ -111,6 +113,7 @@
     "prettier": "^2.0.5",
     "react-native-builder-bob": "^0.23.2",
     "release-it": "^15.0.0",
+    "rxjs": "^7.8.1",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {

@@ -1,0 +1,347 @@
+[
+  {
+    "id": "components.catalyst.step1.title",
+    "defaultMessage": "!!!Intro",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 49,
+      "column": 9,
+      "index": 2690
+    },
+    "end": {
+      "line": 52,
+      "column": 3,
+      "index": 2770
+    }
+  },
+  {
+    "id": "components.catalyst.step1.subTitle",
+    "defaultMessage": "!!!Before you begin, make sure to\ndownload the Catalyst Voting App",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 53,
+      "column": 12,
+      "index": 2784
+    },
+    "end": {
+      "line": 56,
+      "column": 3,
+      "index": 2926
+    }
+  },
+  {
+    "id": "components.catalyst.step1.stakingKeyNotRegistered",
+    "defaultMessage": "!!!Catalyst voting rewards are sent to delegation accounts and your wallet does not seem to have a registered delegation certificate. If you want to receive voting rewards, you need to delegate your funds first.",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 57,
+      "column": 27,
+      "index": 2955
+    },
+    "end": {
+      "line": 63,
+      "column": 3,
+      "index": 3284
+    }
+  },
+  {
+    "id": "components.catalyst.step1.tip",
+    "defaultMessage": "!!!Make sure you know how to take a screenshot with your device, so that you can backup your catalyst QR code.",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 64,
+      "column": 7,
+      "index": 3293
+    },
+    "end": {
+      "line": 69,
+      "column": 3,
+      "index": 3490
+    }
+  },
+  {
+    "id": "catalyst.registration.start",
+    "defaultMessage": "!!!Registration start",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 70,
+      "column": 21,
+      "index": 3513
+    },
+    "end": {
+      "line": 73,
+      "column": 3,
+      "index": 3602
+    }
+  },
+  {
+    "id": "catalyst.voting.start",
+    "defaultMessage": "!!!Voting start",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 74,
+      "column": 15,
+      "index": 3619
+    },
+    "end": {
+      "line": 77,
+      "column": 3,
+      "index": 3696
+    }
+  },
+  {
+    "id": "catalyst.voting.end",
+    "defaultMessage": "!!!Voting end",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 78,
+      "column": 13,
+      "index": 3711
+    },
+    "end": {
+      "line": 81,
+      "column": 3,
+      "index": 3784
+    }
+  },
+  {
+    "id": "catalyst.voting.results",
+    "defaultMessage": "!!!Results",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 82,
+      "column": 17,
+      "index": 3803
+    },
+    "end": {
+      "line": 85,
+      "column": 3,
+      "index": 3877
+    }
+  },
+  {
+    "id": "components.catalyst.step2.title",
+    "defaultMessage": "!!!Write Down PIN",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 86,
+      "column": 14,
+      "index": 3893
+    },
+    "end": {
+      "line": 89,
+      "column": 3,
+      "index": 3982
+    }
+  },
+  {
+    "id": "components.catalyst.step2.description",
+    "defaultMessage": "!!!Please write down this PIN as you will need it every time you want to access the Catalyst Voting app",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 90,
+      "column": 20,
+      "index": 4004
+    },
+    "end": {
+      "line": 94,
+      "column": 3,
+      "index": 4191
+    }
+  },
+  {
+    "id": "components.catalyst.step2.checkbox",
+    "defaultMessage": "!!!I have written it down",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 95,
+      "column": 12,
+      "index": 4205
+    },
+    "end": {
+      "line": 98,
+      "column": 3,
+      "index": 4305
+    }
+  },
+  {
+    "id": "components.catalyst.step3.title",
+    "defaultMessage": "!!!Enter PIN",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 99,
+      "column": 14,
+      "index": 4321
+    },
+    "end": {
+      "line": 102,
+      "column": 3,
+      "index": 4405
+    }
+  },
+  {
+    "id": "components.catalyst.step3.description",
+    "defaultMessage": "!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 103,
+      "column": 20,
+      "index": 4427
+    },
+    "end": {
+      "line": 106,
+      "column": 3,
+      "index": 4602
+    }
+  },
+  {
+    "id": "components.catalyst.confirmTx.title",
+    "defaultMessage": "!!!Confirm Registration",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 107,
+      "column": 21,
+      "index": 4625
+    },
+    "end": {
+      "line": 110,
+      "column": 3,
+      "index": 4724
+    }
+  },
+  {
+    "id": "components.catalyst.confirmTx.passwordSignDescription",
+    "defaultMessage": "!!!Confirm your voting registration and submit the certificate generated in previous step to the blockchain",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 111,
+      "column": 27,
+      "index": 4753
+    },
+    "end": {
+      "line": 115,
+      "column": 3,
+      "index": 4960
+    }
+  },
+  {
+    "id": "components.catalyst.step4.bioAuthInstructions",
+    "defaultMessage": "!!!Please authenticate so that Yoroi can generate the required certificate for voting",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 116,
+      "column": 22,
+      "index": 4984
+    },
+    "end": {
+      "line": 119,
+      "column": 3,
+      "index": 5155
+    }
+  },
+  {
+    "id": "global.actions.dialogs.commonbuttons.confirmButton",
+    "defaultMessage": "!!!Confirm",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 120,
+      "column": 11,
+      "index": 5168
+    },
+    "end": {
+      "line": 123,
+      "column": 3,
+      "index": 5269
+    }
+  },
+  {
+    "id": "components.catalyst.step4.description",
+    "defaultMessage": "!!!Screenshot or share this QR code and save it securely. Save the secret code as plain text in case you need to recreate the QR code.",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 124,
+      "column": 20,
+      "index": 5291
+    },
+    "end": {
+      "line": 128,
+      "column": 3,
+      "index": 5509
+    }
+  },
+  {
+    "id": "components.catalyst.step4.title",
+    "defaultMessage": "!!!Catalyst Code",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 129,
+      "column": 14,
+      "index": 5525
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 5613
+    }
+  },
+  {
+    "id": "components.catalyst.step4.qrTitle",
+    "defaultMessage": "!!!Backup Catalyst Code",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 133,
+      "column": 16,
+      "index": 5631
+    },
+    "end": {
+      "line": 136,
+      "column": 3,
+      "index": 5728
+    }
+  },
+  {
+    "id": "components.catalyst.step4.qrShareLabel",
+    "defaultMessage": "!!!Share Code",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 137,
+      "column": 21,
+      "index": 5751
+    },
+    "end": {
+      "line": 140,
+      "column": 3,
+      "index": 5843
+    }
+  },
+  {
+    "id": "components.catalyst.step4.qrCopiedText",
+    "defaultMessage": "!!!Code Copied",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 141,
+      "column": 21,
+      "index": 5866
+    },
+    "end": {
+      "line": 144,
+      "column": 3,
+      "index": 5959
+    }
+  },
+  {
+    "id": "components.catalyst.step4.qrCheckbox",
+    "defaultMessage": "!!!I have take a screenshot of my QR code and saved my Catalyst secret code as a fallback.",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 145,
+      "column": 19,
+      "index": 5980
+    },
+    "end": {
+      "line": 148,
+      "column": 3,
+      "index": 6147
+    }
+  }
+]

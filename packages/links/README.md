@@ -21,9 +21,9 @@ npm install @yoroi/links
 yarn add @yoroi/links
 ```
 
-## Cardano Usage
+## Cardano usage
 
-### Importing the Module
+### Importing the module
 
 ```typescript
 import {linksCardanoModuleMaker, configCardanoClaimV1} from '@yoroi/links'
@@ -78,9 +78,9 @@ console.log(parsedLink)
 
 ## Yoroi Usage
 
-**Important** Yoroi uses in query string arrays as name[index], e.g `whateverArray[0]=1&whateverArray[1]=`
+> [!IMPORTANT] > **Important** Yoroi uses in query string arrays as name[index], e.g `whateverArray[0]=1&whateverArray[1]=`
 
-### Importing the Module
+### Importing the module
 
 ```typescript
 import {
@@ -106,8 +106,7 @@ const cardanoLink = create({
 
 const yoroiPaymentRequestWithAdaLink = transfer.request.adaWithLink({
   link: cardanoLink.link,
-  business: 'exchange',
-  partnerId: 'encryptus',
+  appId: 'app-id',
   authorization: 'uuid-v4',
   redirectTo: 'https://my.amazing.web/?amountRequested=1&session=03bf4dd213d',
 })
@@ -115,13 +114,13 @@ const yoroiPaymentRequestWithAdaLink = transfer.request.adaWithLink({
 console.log(yoroiPaymentRequestWithAdaLink)
 ```
 
-### Supported Schemes and Authorities
+### Supported schemes and authorities
 
 | Scheme          | Authority          | Path       | Description                        |
 | --------------- | ------------------ | ---------- | ---------------------------------- |
 | `yoroi` `https` | `yoroi-wallet.com` | `transfer` | Used for requesting payments       |
 | `yoroi` `https` | `yoroi-wallet.com` | `exchange` | Used for iteracting with exchanges |
-| `yoroi` `https` | `yoroi-wallet.com` | `dapp`     | **soon**                           |
+| `yoroi` `https` | `yoroi-wallet.com` | `browser`  | User for launching dapps           |
 
 ## Testing the deep & universal links developing
 
@@ -137,20 +136,20 @@ adb shell am start -W -a android.intent.action.VIEW -d "yoroi://yoroi-wallet.com
 
 Yoroi validates deeplinks and univeral links in a stricted way, missing params is fine, will warn users, adding extra params will make Yoroi to ignore your request completely.
 
-### `PartnerInfoParams`
+### `PartnerInfoSchema`
 
 This schema is designed for adding information about how Yoroi should behave, even though all are flagged as optional, it will change how Yoroi reacts to it, and for some funnels it might block the user, or trigger some red alerts about dangerous actions. **`PartnerInfoParams` is part of all links**. It includes the following fields:
 
 - `isSandbox`: A boolean indicating the environment, when `true` deeplinks only work on non-production builds.
-- `isTestnet`: A boolean that restrics whether it should list only `mainnet` wallets or testnets wallets. 
-- `appId`: A string with a maximum length of 40 characters that identifies that app. 
-- `redirectTo`: Yoroi may present a link button or automatic redirect the user based on funnel.
-- `authorization`: All actions initiated within Yoroi will provide an authorization, that works along with the wallet used.
+- `isTestnet`: A boolean that restrics whether it should work only in `mainnet` wallets (default) or only in testnets wallets like `preprod`, `preview`, etc.
+- `appId`: A string with a maximum length of 40 characters that identifies that app. To create one open a PR on the clients that you wan't to interact. It will be bound in the aggreement.
+- `redirectTo`: Yoroi may present a link button or automatic redirect the user based on some funnels, it requires `https`.
+- `authorization`: All actions initiated within Yoroi will provide an authorization, that works along with the wallet used, by not passing it back, Yoroi can't continue from where it was left.
 - `message`: Yoroi may present this message for some actions, be descriptive and concise around the action needed from Yoroi, otherwise users might reject your request.
-- `walletId`: As the authorization, when provided, is expected back. Otherwise just set `isProduction` so Yoroi will know how to ask users to open their right wallet.
-- `signature`: Partner signature, it changes many behaviours inside Yoroi, specially regarding warning and dangerous messages.
+- `walletId`: As the authorization, when provided, is expected back. Otherwise just set `isProduction` so Yoroi will know how to ask users to open any wallet with real funds.
+- `signature`: Partner signature, it changes many behaviours inside Yoroi, specially regarding some warnings and dangerous messages. When providing your `appId` in the PR is expected a signed message that will be verified against your private key.
 
-### `ExchangeShowCreateResultParams`
+### `ExchangeShowCreateResultSchema`
 
 This schema validates data for the creation result of a order to exchange coins, the link includes the following fields:
 
@@ -174,11 +173,53 @@ This schema is for validating transfer requests of ADA and includes the followin
     - `quantity`: A string with a maximum length of 80 characters, atomic, Cardano Lovelaces.
 - `memo` (optional): A string with a maximum length of 256 characters, stored in the wallet local storage wallet, it is not included in the transaction.
 
-### `TransferRequestAdaWithLinkParams`
+### `TransferRequestAdaWithLinkSchema`
 
 This schema validates transfer requests that include a URL and has the following fields:
 
 - `link`: A URL string with a maximum length of 2048 characters, it supports the CIP13 for Cardano legacy transfer, that can also be created by this module.
+
+### `BrowserLaunchDappUrlSchema`
+
+This schema validates transfer requests that include a URL and has the following fields:
+
+- `dappUrl`: A URL string with a maximum length of 2048 characters, this URL will be used internally to launch the dApp, if as a dApp developer the dApp is willing to capture the referer, remember to add e.g `&ref=yoroiwallet.com` to the `dappUrl` before building it throught the packages, otherwise it will launch with just the link provided.
+
+This schema validates transfer requests that include a URL and has the following fields:
+
+## How to make my dapp launch within Yoroi
+
+### Quick implementation (JS/TS)
+
+1. Install `@yoroi/links` package in your app
+2. Import it `@yoroi/links` in your code
+3. Use the factory to create the link
+4. Lanch the link based on the platform that you are using
+5. The platform should open Yoroi if it is installed
+
+#### Snippet
+
+```typescript
+import {linksYoroiModuleMaker} from '@yoroi/links'
+
+const {browser} = linksYoroiModuleMaker('yoroi')
+const yoroiMobileLink = browser.launch.dappUrl({
+  dappUrl: 'https://my-awesome-dapp.com?ref=yoroimobile.com',
+  // if you have
+  appId: 'app-id',
+  // if initated by Yoroi please add it back
+  authorization: 'uuid-v4',
+  // some funnels can redirect the user automaticaly
+  redirectTo: 'https://my-awesome-dapp.com?continueOn=my-funnel&data=123',
+})
+
+// whatever Links.openUrl(yoroiMobileLink)
+console.log(yoroiMobileLink)
+```
+
+### Trusted dapp
+
+Coming soon.
 
 ## For more
 

@@ -1,20 +1,18 @@
 import {DecoratorFunction} from '@storybook/addons'
 import {storiesOf} from '@storybook/react-native'
-import React from 'react'
+import {claimManagerMockInstances, ClaimProvider, mocksState} from '@yoroi/claim'
+import * as React from 'react'
 import {QueryClientProvider} from 'react-query'
 
-import {queryClientFixture} from '../../../utils/fixtures'
+import {queryClientFixture} from '../../../kernel/fixtures/fixtures'
 import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../WalletManager/Context/SelectedWalletContext'
-import {claimApiMockInstances} from '../module/api.mocks'
-import {ClaimProvider} from '../module/ClaimProvider'
-import {mocks as claimMocks} from '../module/state.mocks'
+import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ShowSuccessScreen} from './ShowSuccessScreen'
 
 const AppDecorator: DecoratorFunction<React.ReactNode> = (story) => {
   return (
     <QueryClientProvider client={queryClientFixture()}>
-      <SelectedWalletProvider wallet={walletMocks.wallet}>{story()}</SelectedWalletProvider>
+      <WalletManagerProviderMock wallet={walletMocks.wallet}>{story()}</WalletManagerProviderMock>
     </QueryClientProvider>
   )
 }
@@ -23,21 +21,21 @@ storiesOf('Claim ShowSuccessScreen', module)
   .addDecorator(AppDecorator)
   .add('processing', () => {
     return (
-      <ClaimProvider claimApi={claimApiMockInstances.error} initialState={claimMocks.withClaimTokenProcessing}>
+      <ClaimProvider manager={claimManagerMockInstances.error} initialState={mocksState.withClaimTokenProcessing}>
         <ShowSuccessScreen />
       </ClaimProvider>
     )
   })
   .add('accepted', () => {
     return (
-      <ClaimProvider claimApi={claimApiMockInstances.error} initialState={claimMocks.withClaimTokenAccepted}>
+      <ClaimProvider manager={claimManagerMockInstances.error} initialState={mocksState.withClaimTokenAccepted}>
         <ShowSuccessScreen />
       </ClaimProvider>
     )
   })
   .add('done', () => {
     return (
-      <ClaimProvider claimApi={claimApiMockInstances.error} initialState={claimMocks.withClaimTokenDone}>
+      <ClaimProvider manager={claimManagerMockInstances.error} initialState={mocksState.withClaimTokenDone}>
         <ShowSuccessScreen />
       </ClaimProvider>
     )

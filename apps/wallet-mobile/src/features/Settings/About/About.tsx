@@ -1,50 +1,33 @@
+import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TextProps, View, ViewProps} from 'react-native'
-import DeviceInfo from 'react-native-device-info'
+import {Pressable, StyleSheet, TextProps, View, ViewProps} from 'react-native'
 
-import {Text} from '../../../components'
-import {CONFIG} from '../../../legacy/config'
-import {lightPalette} from '../../../theme'
-import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
-import {isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
-
-const version = DeviceInfo.getVersion()
+import {Text} from '../../../components/Text'
+import {appInfo} from '../../../kernel/appInfo'
+import {commit} from '../../../kernel/env'
+import {SettingsRouteNavigation} from '../../../kernel/navigation'
 
 export const About = () => {
   const strings = useStrings()
   const styles = useStyles()
-
-  const wallet = useSelectedWallet()
-  const network = getNetworkConfigById(wallet.networkId).MARKETING_NAME
-  const walletType = isHaskellShelley(wallet.walletImplementationId) ? strings.shelleyWallet : strings.unknownWalletType
+  const navigation = useNavigation<SettingsRouteNavigation>()
 
   return (
     <View style={styles.about}>
       <Row>
         <LabelText>{strings.currentVersion}</LabelText>
 
-        <ValueText>{version}</ValueText>
+        <Pressable onLongPress={() => navigation.navigate('settings-system-log')}>
+          <ValueText>{appInfo.version}</ValueText>
+        </Pressable>
       </Row>
 
       <Row>
         <LabelText>{strings.commit}</LabelText>
 
-        <ValueText>{CONFIG.COMMIT}</ValueText>
-      </Row>
-
-      <Row>
-        <LabelText>{strings.network}</LabelText>
-
-        <ValueText>{network}</ValueText>
-      </Row>
-
-      <Row>
-        <LabelText>{strings.walletType}</LabelText>
-
-        <ValueText>{walletType}</ValueText>
+        <ValueText>{commit}</ValueText>
       </Row>
     </View>
   )
@@ -75,26 +58,25 @@ const ValueText = ({style, children, ...props}: TextProps) => {
   )
 }
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     about: {
       flex: 1,
-      backgroundColor: color.gray.min,
-      padding: 16,
+      backgroundColor: color.bg_color_max,
+      ...atoms.p_lg,
     },
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: 16,
+      ...atoms.py_lg,
     },
     labelText: {
-      color: lightPalette.gray['900'],
-      ...typography['body-1-l-medium'],
+      color: color.gray_900,
+      ...atoms.body_1_lg_medium,
     },
     valueText: {
-      color: lightPalette.gray['500'],
-      ...typography['body-1-l-regular'],
+      color: color.gray_500,
+      ...atoms.body_1_lg_regular,
     },
   })
 

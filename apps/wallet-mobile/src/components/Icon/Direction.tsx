@@ -1,10 +1,12 @@
+import {ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
-import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
+import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types/other'
 import {Received} from '../Icon/Received'
 import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'
+import {MultiParty} from './MultiParty'
 
 type Props = {
   transaction: TransactionInfo
@@ -12,46 +14,63 @@ type Props = {
 }
 
 export const Direction = ({transaction, size = defaultSize}: Props) => {
-  const {direction, assurance, status} = transaction
-  const isPending = assurance === 'PENDING' || status === 'PENDING'
+  const {color} = useTheme()
+  const {direction} = transaction
 
-  const theme: ThemeStatus = isPending ? 'PENDING' : direction === 'RECEIVED' ? 'DIRECT_CREDIT' : 'NORMAL'
-  const color = colorsMap[theme]
-
+  const iconStyles = styleMap(color)[direction]
   const IconComponent = iconMap[direction]
 
   return (
-    <View style={{display: 'flex', borderRadius: size / 2, backgroundColor: color?.background}}>
-      <IconComponent color={color?.icon} width={size} height={size} />
+    <View style={[styles.icon, {backgroundColor: iconStyles?.background}]}>
+      <IconComponent color={iconStyles?.icon} size={iconStyles.size ?? size} />
     </View>
   )
 }
 
 const defaultSize = 36
 
-const iconMap: Record<
-  TransactionDirection,
-  ({width, height, color}: {width: number; height: number; color: string}) => JSX.Element
-> = {
+const iconMap: Record<TransactionDirection, ({size, color}: {size: number; color: string}) => JSX.Element> = {
   SENT: Send,
   RECEIVED: Received,
   SELF: Transaction,
-  MULTI: Transaction,
+  MULTI: MultiParty,
 }
 
-const colorsMap: Record<ThemeStatus, {background: string; icon: string}> = {
-  PENDING: {
-    background: '#DCE0E9',
-    icon: '#6B7384',
+export const styleMap: (
+  color: ThemedPalette,
+) => Record<ThemeStatus, {background: string; icon: string; text: string; size?: number}> = (color) => ({
+  SELF: {
+    text: color.gray_900,
+    background: color.gray_100,
+    icon: color.gray_900,
   },
-  NORMAL: {
-    background: '#EDEFF3',
-    icon: '#6B7384',
+  SENT: {
+    text: color.el_primary_medium,
+    background: color.primary_100,
+    icon: color.el_primary_medium,
   },
-  DIRECT_CREDIT: {
-    background: 'rgba(48, 84, 203, 0.1)',
-    icon: '#3154CB',
+  RECEIVED: {
+    text: color.secondary_600,
+    background: color.secondary_100,
+    icon: color.secondary_600,
   },
-}
+  MULTI: {
+    text: color.gray_900,
+    background: color.gray_100,
+    icon: color.gray_900,
+    size: 50,
+  },
+})
 
-type ThemeStatus = 'PENDING' | 'NORMAL' | 'DIRECT_CREDIT'
+type ThemeStatus = 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
+
+const styles = StyleSheet.create({
+  icon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+  },
+})

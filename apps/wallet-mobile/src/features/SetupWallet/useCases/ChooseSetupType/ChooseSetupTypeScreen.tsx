@@ -5,29 +5,23 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {Space} from '../../../../components/Space/Space'
-import {LedgerTransportSwitchModal} from '../../../../HW'
-import {isProduction} from '../../../../legacy/config'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../navigation'
-import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
 import {CreateWallet} from '../../illustrations/CreateWallet'
 import {HardwareWallet} from '../../illustrations/HardwareWallet'
 import {RestoreWallet} from '../../illustrations/RestoreWallet'
+import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
 
 export const ChooseSetupTypeScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {
-    walletImplementationIdChanged,
-    networkIdChanged,
-    setUpTypeChanged,
-    useUSBChanged: USBChanged,
-  } = useSetupWallet()
-  const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const {walletImplementationChanged, setupTypeChanged} = useSetupWallet()
+  const {openModal} = useModal()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -36,58 +30,29 @@ export const ChooseSetupTypeScreen = () => {
     }, [track]),
   )
 
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const handleCreate = () => {
-    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
-    setUpTypeChanged('create')
+    walletImplementationChanged('cardano-cip1852')
+    setupTypeChanged('create')
 
-    if (isProduction()) {
-      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-      navigation.navigate('setup-wallet-about-recovery-phase')
-      return
-    }
-
-    // On production the step of network is skipped
-    navigation.navigate('setup-wallet-create-choose-network')
+    navigation.navigate('setup-wallet-about-recovery-phase')
   }
 
   const handleRestore = () => {
-    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
-    setUpTypeChanged('restore')
+    walletImplementationChanged('cardano-cip1852')
+    setupTypeChanged('restore')
 
-    if (isProduction()) {
-      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-      navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
-      return
-    }
-
-    // On production the step of network is skipped
-    navigation.navigate('setup-wallet-restore-choose-network')
+    navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
   }
 
   const handleHw = () => {
-    setIsModalOpen(true)
-  }
-
-  const navigateHw = () => {
-    setIsModalOpen(false)
-    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
-    setUpTypeChanged('hw')
-
-    if (isProduction()) {
-      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-      navigation.navigate('setup-wallet-check-nano-x')
-      return
-    }
-
-    // On production the step of network is skipped
-    navigation.navigate('setup-wallet-restore-choose-network')
+    openModal(strings.hwModalTitle, <SelectHwConnectionModal />, 305)
   }
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <Space height="l" />
+      <Space height="lg" />
 
       <LogoBanner />
 
@@ -99,52 +64,41 @@ export const ChooseSetupTypeScreen = () => {
             title={strings.createWalletButtonCard}
             icon={<CreateWallet style={styles.icon} />}
             onPress={handleCreate}
+            testId="setup-create-new-wallet-button"
           />
 
-          <Space height="l" />
+          <Space height="lg" />
 
           <ButtonCard
             title={strings.restoreWalletButtonCard}
             icon={<RestoreWallet style={styles.icon} />}
             onPress={handleRestore}
+            testId="setup-restore-wallet-button"
           />
 
-          <Space height="l" />
+          <Space height="lg" />
 
           <ButtonCard
             title={strings.connectWalletButtonCard}
             icon={<HardwareWallet style={styles.icon} />}
             onPress={handleHw}
+            testId="setup-connect-HW-wallet-button"
           />
 
-          <Space height="l" />
+          <Space height="lg" />
         </View>
       </ScrollView>
-
-      <LedgerTransportSwitchModal
-        visible={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        onSelectUSB={() => {
-          USBChanged(true)
-          navigateHw()
-        }}
-        onSelectBLE={() => {
-          USBChanged(false)
-          navigateHw()
-        }}
-        showCloseIcon
-      />
     </SafeAreaView>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      ...theme.padding['x-l'],
-      backgroundColor: theme.color['white-static'],
+      ...atoms.px_lg,
+      backgroundColor: color.bg_color_max,
     },
     icon: {
       position: 'absolute',

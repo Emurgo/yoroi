@@ -5,21 +5,22 @@ import {Linking, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {Button, Spacer} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
 import {Space} from '../../../../components/Space/Space'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../navigation'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
-import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 
 export const AboutRecoveryPhraseScreen = () => {
   const bold = useBold()
   const {styles} = useStyles()
   const strings = useStrings()
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -38,11 +39,11 @@ export const AboutRecoveryPhraseScreen = () => {
       <ScrollView bounces={false} contentContainerStyle={styles.scroll}>
         <StepperProgress currentStep={1} currentStepTitle={strings.stepAboutRecoveryPhrase} totalSteps={4} />
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <Text style={styles.aboutRecoveryPhraseTitle}>{strings.aboutRecoveryPhraseTitle(bold)}</Text>
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <CardAboutPhrase
           showBackgroundColor
@@ -59,15 +60,14 @@ export const AboutRecoveryPhraseScreen = () => {
 
       <Spacer fill />
 
-      <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
+      <Actions style={[styles.actions, styles.padding]}>
+        <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
 
-      <Space height="l" />
-
-      <Actions style={styles.actions}>
         <Button
+          shelleyTheme
           title={strings.next}
-          style={styles.button}
           onPress={() => navigation.navigate('setup-wallet-recovery-phrase-mnemonic')}
+          testID="setup-step1-next-button"
         />
       </Actions>
     </SafeAreaView>
@@ -85,25 +85,29 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.bg_color_max,
+      ...atoms.flex_1,
+      ...atoms.pb_lg,
+    },
+    padding: {
+      ...atoms.px_lg,
     },
     aboutRecoveryPhraseTitle: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
     },
-    button: {backgroundColor: theme.color.primary[500]},
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     actions: {
-      ...theme.padding['l'],
+      ...atoms.pt_lg,
+      ...atoms.gap_lg,
     },
     scroll: {
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
     },
   })
 

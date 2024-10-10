@@ -1,5 +1,5 @@
-import {baseSpace, SpacingSize} from '@yoroi/theme'
-import React from 'react'
+import {SpacingSize, tokens} from '@yoroi/theme'
+import * as React from 'react'
 import {View, ViewStyle} from 'react-native'
 
 const debugStyle = {backgroundColor: 'red', opacity: 0.2}
@@ -12,9 +12,9 @@ type Props = {
   debug?: boolean
 }
 
-export const Space = ({height = 's', width = 's', fill, style, debug}: Props) => {
-  const heightValue = baseSpace[height]
-  const widthValue = baseSpace[width]
+export const Space = ({height = 'sm', width = 'sm', fill, style, debug}: Props) => {
+  const heightValue = tokens.space[height]
+  const widthValue = tokens.space[width]
 
   return <View style={[fill && {flex: 1}, {height: heightValue, width: widthValue}, style, debug && debugStyle]} />
 }

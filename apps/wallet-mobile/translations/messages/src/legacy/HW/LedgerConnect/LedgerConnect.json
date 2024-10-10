@@ -1,0 +1,62 @@
+[
+  {
+    "id": "components.walletinit.connectnanox.connectnanoxscreen.caption",
+    "defaultMessage": "!!!Scanning bluetooth devices...",
+    "file": "src/legacy/HW/LedgerConnect/LedgerConnect.tsx",
+    "start": {
+      "line": 329,
+      "column": 11,
+      "index": 10151
+    },
+    "end": {
+      "line": 332,
+      "column": 3,
+      "index": 10285
+    }
+  },
+  {
+    "id": "components.walletinit.connectnanox.connectnanoxscreen.introline",
+    "defaultMessage": "!!!You'll need to:",
+    "file": "src/legacy/HW/LedgerConnect/LedgerConnect.tsx",
+    "start": {
+      "line": 333,
+      "column": 13,
+      "index": 10300
+    },
+    "end": {
+      "line": 336,
+      "column": 3,
+      "index": 10422
+    }
+  },
+  {
+    "id": "components.ledger.ledgerconnect.usbDeviceReady",
+    "defaultMessage": "!!!USB device is ready, please tap on Confirm to continue.",
+    "file": "src/legacy/HW/LedgerConnect/LedgerConnect.tsx",
+    "start": {
+      "line": 337,
+      "column": 18,
+      "index": 10442
+    },
+    "end": {
+      "line": 340,
+      "column": 3,
+      "index": 10587
+    }
+  },
+  {
+    "id": "components.walletinit.connectnanox.connectnanoxscreen.error",
+    "defaultMessage": "!!!An error occurred while trying to connect with your hardware wallet:",
+    "file": "src/legacy/HW/LedgerConnect/LedgerConnect.tsx",
+    "start": {
+      "line": 341,
+      "column": 9,
+      "index": 10598
+    },
+    "end": {
+      "line": 344,
+      "column": 3,
+      "index": 10769
+    }
+  }
+]

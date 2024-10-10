@@ -4,8 +4,9 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Icon, Spacer} from '../../../../../components'
+import {Icon} from '../../../../../components/Icon'
 import {PressableIcon} from '../../../../../components/PressableIcon/PressableIcon'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useStrings} from '../../../common/strings'
 
 export const NotifySupportedNameServers = () => {
@@ -33,7 +34,7 @@ export const NotifySupportedNameServers = () => {
         <View style={styles.header}>
           <Text style={styles.title}>{`${strings.resolverNoticeTitle} `}😇</Text>
 
-          <PressableIcon icon={Icon.CrossCircle} onPress={handleOnClose} size={24} />
+          <PressableIcon icon={Icon.CrossCircle} onPress={handleOnClose} size={24} color={colors.iconColor} />
         </View>
 
         <Spacer height={10} />
@@ -68,12 +69,11 @@ const NameServer = ({text}: {text: string}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     gradient: {
       borderRadius: 8,
-      ...padding['m'],
+      ...atoms.p_md,
     },
     header: {
       flexDirection: 'row',
@@ -84,25 +84,26 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       lineHeight: 22,
-      color: color.gray.max,
+      color: color.gray_max,
     },
     nameServerText: {
-      ...typography['body-2-m-medium'],
-      color: color.gray.max,
+      ...atoms.body_2_md_medium,
+      color: color.gray_max,
     },
     title: {
-      ...typography['body-1-l-medium'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_medium,
+      color: color.gray_max,
     },
     text: {
-      ...typography['body-2-m-regular'],
-      color: color.gray.max,
+      ...atoms.body_2_md_regular,
+      color: color.gray_max,
     },
   })
 
   const colors = {
-    lightGreen: color.secondary[200],
-    lightBlue: color.primary[100],
+    lightGreen: color.secondary_200,
+    lightBlue: color.primary_100,
+    iconColor: color.gray_max,
   }
 
   return {styles, colors}

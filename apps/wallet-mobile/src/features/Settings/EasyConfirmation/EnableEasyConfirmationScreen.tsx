@@ -1,19 +1,21 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {App} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, Text, TextInput} from '../../../components'
-import {LoadingOverlay} from '../../../components/LoadingOverlay'
-import {showErrorDialog} from '../../../dialogs'
-import {errorMessages} from '../../../i18n/global-messages'
-import {isEmptyString} from '../../../utils/utils'
-import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
-import {useEnableEasyConfirmation} from '../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../WalletManager/Context/SelectedWalletMetaContext'
+import {Button} from '../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {LoadingOverlay} from '../../../components/LoadingOverlay/LoadingOverlay'
+import {Text} from '../../../components/Text'
+import {TextInput} from '../../../components/TextInput/TextInput'
+import {showErrorDialog} from '../../../kernel/dialogs'
+import {errorMessages} from '../../../kernel/i18n/global-messages'
+import {isEmptyString} from '../../../kernel/utils'
+import {useEnableEasyConfirmation} from '../../Auth/common/useEnableEasyConfirmation'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
@@ -21,28 +23,23 @@ export const EnableEasyConfirmationScreen = () => {
   const styles = useStyles()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
-  const walletMeta = useSelectedWalletMeta()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const wallet = useSelectedWallet()
-  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(wallet, {
+  const {
+    meta: {id},
+  } = useSelectedWallet()
+  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(id, {
     onSuccess: () => {
-      if (!walletMeta) throw new Error('Missing walletMeta')
-      setSelectedWalletMeta({
-        ...walletMeta,
-        isEasyConfirmationEnabled: true,
-      })
       navigation.goBack()
     },
     onError: (error) => {
-      if (!(error instanceof WrongPassword)) throw error
+      if (!(error instanceof App.Errors.WrongPassword)) throw error
       showErrorDialog(errorMessages.incorrectPassword, intl)
     },
   })
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.container}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
+    <KeyboardAvoidingView style={styles.root}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.safeAreaView}>
+        <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.content}>
           <Text style={styles.heading}>{strings.enableHeading}</Text>
 
           <Text style={styles.warning}>{strings.enableWarning}</Text>
@@ -67,10 +64,10 @@ export const EnableEasyConfirmationScreen = () => {
             shelleyTheme
           />
         </Actions>
-      </KeyboardAvoidingView>
+      </SafeAreaView>
 
       <LoadingOverlay loading={isLoading} />
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -119,28 +116,28 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: color.gray.min,
+    root: {
+      ...atoms.flex_1,
     },
-    contentContainer: {
-      padding: 16,
+    safeAreaView: {
+      backgroundColor: color.bg_color_max,
+      ...atoms.flex_1,
+    },
+    content: {
+      ...atoms.p_lg,
+      ...atoms.gap_lg,
     },
     heading: {
-      ...typography['body-1-l-regular'],
-      paddingBottom: 20,
+      ...atoms.body_1_lg_regular,
     },
     warning: {
-      color: color.magenta[500],
-      ...typography['body-2-m-regular'],
-      paddingBottom: 20,
+      color: color.sys_magenta_500,
+      ...atoms.body_2_md_regular,
     },
     actions: {
-      paddingBottom: 16,
-      paddingHorizontal: 16,
+      ...atoms.p_lg,
     },
   })
 

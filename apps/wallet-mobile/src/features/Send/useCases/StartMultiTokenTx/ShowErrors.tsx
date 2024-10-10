@@ -1,15 +1,16 @@
 import React from 'react'
 
-import {Banner, ClickableBanner, Spacer} from '../../../../components'
+import {Banner, ClickableBanner} from '../../../../components/Banner/Banner'
+import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useHasPendingTx, useSync} from '../../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
 
 export const ShowErrors = () => {
   const strings = useStrings()
 
-  const wallet = useSelectedWallet()
-  const hasPendingTx = useHasPendingTx(wallet)
+  const {wallet} = useSelectedWallet()
+  const hasPendingTx = useHasPendingTx({wallet})
   const {isLoading, error, sync} = useSync(wallet)
 
   if (error != null && !isLoading) {

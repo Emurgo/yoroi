@@ -1,10 +1,14 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
+import {StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import {Button, Spacer, Text, TextInput} from '../../../../components'
-import {debugWalletInfo, features} from '../../../../features'
+import {Button} from '../../../../components/Button/Button'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
+import {TextInput} from '../../../../components/TextInput/TextInput'
+import {debugWalletInfo, features} from '../../../../kernel/features'
 import {useStrings} from '../../common/strings'
+import {ActivityIndicator} from '../ConfirmRawTx/ActivityIndicator'
 import {getErrorMessage} from '../errors'
 
 export type ErrorData = {
@@ -17,9 +21,10 @@ type Props = {
   isLoading?: boolean
   error?: Error
   onPasswordChange?: () => void
+  summary?: string
 }
 
-export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPasswordChange}: Props) => {
+export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPasswordChange, summary}: Props) => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
@@ -30,8 +35,8 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
   const errorMessage = error ? getErrorMessage(error, strings) : null
 
   return (
-    <>
-      <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+    <View style={styles.root}>
+      <Text style={styles.modalText}>{summary ?? strings.enterSpendingPassword}</Text>
 
       <TextInput
         secureTextEntry
@@ -60,31 +65,33 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
 
       {isLoading && (
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color="black" />
+          <ActivityIndicator />
         </View>
       )}
-    </>
+    </View>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
+    root: {
+      ...atoms.flex_1,
+    },
     modalText: {
       paddingHorizontal: 70,
-      textAlign: 'center',
+      ...atoms.text_center,
       paddingBottom: 8,
-      color: color.gray[900],
+      color: color.gray_900,
     },
     loading: {
-      position: 'absolute',
+      ...atoms.absolute,
       height: '100%',
       left: 0,
       right: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
   })
 

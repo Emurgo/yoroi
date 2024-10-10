@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/api",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "The API package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -47,6 +47,7 @@
   ],
   "scripts": {
     "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
+    "build:dev": "yarn tsc && yarn clean && bob build",
     "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
@@ -132,9 +133,7 @@
     ]
   },
   "dependencies": {
-    "@emurgo/cip14-js": "^3.0.1",
-    "@yoroi/common": "1.5.2",
-    "@yoroi/types": "1.5.4"
+    "@emurgo/cip14-js": "^3.0.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -149,6 +148,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
+    "@yoroi/types": "1.5.8",
     "axios": "^1.5.0",
     "axios-mock-adapter": "^1.21.5",
     "commitlint": "^17.0.2",
@@ -172,7 +172,9 @@
     "zod": "^3.22.1"
   },
   "peerDependencies": {
+    "@yoroi/common": "^1.5.4",
     "axios": "^1.5.0",
+    "immer": "^10.0.3",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-query": "^3.39.3",
     "zod": "^3.22.1"

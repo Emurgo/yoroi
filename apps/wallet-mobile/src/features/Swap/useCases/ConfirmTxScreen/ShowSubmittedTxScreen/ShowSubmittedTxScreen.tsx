@@ -5,10 +5,11 @@ import {Linking, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {z} from 'zod'
 
-import {Button, Spacer, Text} from '../../../../../components'
-import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
-import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
-import {useSelectedWallet} from '../../../../WalletManager/Context/SelectedWalletContext'
+import {Button} from '../../../../../components/Button/Button'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
+import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 
@@ -19,19 +20,22 @@ export const ShowSubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const explorers = wallet.networkManager.explorers
   const walletNavigate = useWalletNavigation()
 
   const unsafeParams = useUnsafeParams()
   const params = isParams(unsafeParams) ? unsafeParams : null
 
+  if (!params) throw new Error('Invalid params')
+
   const navigateToExplorer = () => {
     const txId = params?.txId ?? ''
-    Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_TX(txId))
+    Linking.openURL(explorers.cardanoscan.tx(txId))
   }
 
   return (
-    <SafeAreaView style={{flex: 1}} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <View style={styles.container}>
         <SubmittedTxImage />
 
@@ -64,9 +68,12 @@ export const ShowSubmittedTxScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    root: {
+      backgroundColor: color.bg_color_max,
+      flex: 1,
+    },
     bottomFixed: {
       position: 'absolute',
       bottom: 0,
@@ -82,14 +89,14 @@ const useStyles = () => {
       padding: 16,
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
+      color: color.gray_max,
+      ...atoms.heading_3_medium,
       padding: 4,
       textAlign: 'center',
     },
     text: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
+      color: color.gray_600,
+      ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 300,
     },

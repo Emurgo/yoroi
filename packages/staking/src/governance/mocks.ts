@@ -1,6 +1,8 @@
 import {GovernanceManager} from './manager'
+import {Chain} from '@yoroi/types'
 
 export const managerMock: GovernanceManager = {
+  network: Chain.Network.Mainnet,
   convertHexKeyHashToBech32Format: () =>
     Promise.reject(new Error('Mock not implemented')),
   validateDRepID: () => Promise.reject(new Error('Mock not implemented')),

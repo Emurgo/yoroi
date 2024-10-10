@@ -1,28 +1,34 @@
+import {atomicFormatter} from '@yoroi/common'
 import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
-import {Exchange} from '@yoroi/types'
+import {Chain, Exchange} from '@yoroi/types'
 import * as React from 'react'
-import {Alert, Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
-import {Space} from '../../../../components/Space/Space'
-import {Warning} from '../../../../components/Warning'
-import env from '../../../../legacy/env'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {Icon} from '../../../../components/Icon'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {banxaTestWallet} from '../../../../kernel/env'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useWalletNavigation} from '../../../../kernel/navigation'
+import {delay} from '../../../../yoroi-wallets/utils/timeUtils'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
 import {BanxaLogo} from '../../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
+import {CreateExchangeButton} from './CreateExchangeButton/CreateExchangeButton'
 import {EditAmount} from './EditAmount/EditAmount'
+import {ErrorScreen} from './LoadingLink/ErrorScreen'
+import {LoadingLinkScreen} from './LoadingLink/LoadingScreen'
 import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
+import {ShowPreprodNotice} from './ShowPreprodNotice/ShowPreprodNotice'
 
 const BOTTOM_ACTION_SECTION = 180
 
@@ -30,8 +36,14 @@ export const CreateExchangeOrderScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {track} = useMetrics()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const walletNavigation = useWalletNavigation()
   const [contentHeight, setContentHeight] = React.useState(0)
+  const {
+    selected: {network},
+  } = useWalletManager()
+
+  const {openModal, closeModal} = useModal()
 
   const navigateTo = useNavigateTo()
   const {orderType, canExchange, providerId, provider, amount, referralLink: managerReferralLink} = useExchange()
@@ -44,59 +56,64 @@ export const CreateExchangeOrderScreen = () => {
 
   const {height: deviceHeight} = useWindowDimensions()
 
-  const amountTokenInfo = useTokenInfo({wallet, tokenId: wallet.primaryTokenInfo.id})
-  const quantity = `${amount.value}` as `${number}`
-  const denomination = amountTokenInfo.decimals ?? 0
-  const orderAmount = +Quantities.denominated(quantity, denomination)
+  const quantity = BigInt(amount.value)
+  const orderAmount = Number(
+    atomicFormatter({value: quantity, decimalPlaces: wallet.portfolioPrimaryTokenInfo.decimals}),
+  )
   const returnUrl = encodeURIComponent(
     linksYoroiModuleMaker('yoroi').exchange.order.showCreateResult({
       provider: providerSelected?.id ?? '',
       orderType,
       walletId: wallet.id,
-      isTestnet: wallet.networkId !== 1,
-      isSandbox: wallet.networkId !== 1,
+      isTestnet: !wallet.isMainnet,
+      isSandbox: !wallet.isMainnet,
       appId: providerSelected?.appId,
     }),
   )
-  const sandboxWallet = env.getString('BANXA_TEST_WALLET')
-  const isMainnet = wallet.networkId === 1
-  const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
+  const walletAddress = wallet.isMainnet ? wallet.externalAddresses[0] : banxaTestWallet
 
   const urlOptions: Exchange.ReferralUrlQueryStringParams = {
     orderType: orderType,
     fiatType: 'USD',
     coinType: 'ADA',
-    coinAmount: orderAmount ?? 0,
+    coinAmount: orderAmount,
     blockchain: 'ADA',
     walletAddress,
     returnUrl,
     walletId: wallet.id,
   }
 
+  const {signal, setupSignalTimeout} = useAbortSignal()
+
   const {isLoading, refetch: createReferralLink} = useCreateReferralLink(
     {
       queries: urlOptions,
       providerId,
       referralLinkCreate: managerReferralLink.create,
+      fetcherConfig: {signal},
     },
     {
       enabled: false,
       suspense: false,
       useErrorBoundary: false,
-      onError: (error) => {
-        Alert.alert(strings.error, error.message)
+      onError: async () => {
+        closeModal()
+
+        await delay(1000)
+
+        openModal('', <ErrorScreen />, undefined, undefined, true)
       },
       onSuccess: (referralLink) => {
+        closeModal()
+
         if (referralLink.toString() !== '') {
           Linking.openURL(referralLink.toString())
           track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
-          navigateTo.exchangeOpenOrder()
+          walletNavigation.navigateToTxHistory()
         }
       },
     },
   )
-
-  const exchangeDisabled = isLoading || !canExchange
 
   React.useEffect(() => {
     track.exchangePageViewed()
@@ -104,6 +121,8 @@ export const CreateExchangeOrderScreen = () => {
 
   const handleOnExchange = () => {
     createReferralLink()
+    setupSignalTimeout(3000)
+    openModal('', <LoadingLinkScreen />, undefined, undefined, true)
   }
 
   const handleOnListProvidersByOrderType = () => {
@@ -114,9 +133,18 @@ export const CreateExchangeOrderScreen = () => {
     }
   }
 
+  // on Preprod it launches the faucet when buying
+  // selling is enabled for both and launch the sandbox
+  const isSancho = network === Chain.Network.Sancho
+  const isPreprod = network === Chain.Network.Preprod
+  const isBlocked = isSancho && orderType === 'buy'
+  const exchangeDisabled = isLoading || (wallet.isMainnet && !canExchange) || isBlocked
+
+  const feeText = (isPreprod || isSancho) && orderType === 'sell' ? strings.playground : `${fee}% ${strings.fee}`
+
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <KeyboardAvoidingView style={styles.flex}>
+    <KeyboardAvoidingView style={styles.root}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.safeAreaView}>
         <ScrollView style={styles.scroll}>
           <View
             style={styles.container}
@@ -127,80 +155,78 @@ export const CreateExchangeOrderScreen = () => {
           >
             <SelectBuyOrSell disabled={isLoading} />
 
-            <Space height="xl" />
+            <ShowPreprodNotice />
 
             <EditAmount disabled={isLoading} />
 
-            <Space height="xxs" />
-
             <ProviderItem
               label={providerSelected?.name ?? ''}
-              fee={fee}
+              fee={feeText}
               leftAdornment={<Logo size={40} />}
               rightAdornment={<Icon.Chevron direction="right" />}
               onPress={handleOnListProvidersByOrderType}
               disabled
             />
 
-            <Space height="xl" />
-
-            {orderType === 'sell' && providerId === 'banxa' && (
-              <>
-                <Warning content={strings.sellCurrencyWarning} />
-
-                <Space height="xl" />
-              </>
-            )}
-
             <ShowDisclaimer />
           </View>
         </ScrollView>
 
-        <View
-          style={[
-            styles.actions,
-            {
-              ...(deviceHeight < contentHeight && styles.actionBorder),
-            },
-          ]}
-        >
-          <Button
-            testID="rampOnOffButton"
-            shelleyTheme
-            title={strings.proceed.toLocaleUpperCase()}
-            onPress={handleOnExchange}
-            disabled={exchangeDisabled}
-          />
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        <CreateExchangeButton
+          style={{
+            ...(deviceHeight < contentHeight && styles.actionBorder),
+          }}
+          disabled={exchangeDisabled}
+          onPress={handleOnExchange}
+        />
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
+const useAbortSignal = () => {
+  const abortController = React.useMemo(() => new AbortController(), [])
+  const timeoutIdRef = React.useRef<ReturnType<typeof setTimeout> | undefined>()
+
+  const setupTimeout = (timeoutMs: number) => {
+    timeoutIdRef.current = setTimeout(() => abortController.abort(), timeoutMs ?? 0)
+  }
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutIdRef?.current) {
+        clearTimeout(timeoutIdRef.current)
+      }
+      abortController.abort()
+    }
+  }, [abortController])
+
+  return {
+    signal: abortController.signal,
+    setupSignalTimeout: setupTimeout,
+  }
+}
+
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.bg_color_max,
+      ...atoms.flex_1,
     },
-    flex: {
-      flex: 1,
+    safeAreaView: {
+      ...atoms.flex_1,
+      ...atoms.py_lg,
     },
     scroll: {
-      paddingHorizontal: 16,
+      ...atoms.px_lg,
     },
     container: {
-      flex: 1,
-      paddingTop: 20,
-    },
-    actions: {
-      paddingVertical: 16,
-      paddingHorizontal: 16,
+      ...atoms.flex_1,
     },
     actionBorder: {
       borderTopWidth: 1,
-      borderTopColor: theme.color.gray[200],
+      borderTopColor: color.gray_200,
     },
   })
   return styles

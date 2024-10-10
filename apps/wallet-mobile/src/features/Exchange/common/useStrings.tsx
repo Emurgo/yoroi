@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages from '../../../i18n/global-messages'
+import globalMessages from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -20,6 +20,7 @@ export const useStrings = () => {
     customerSupport: intl.formatMessage(messages.customerSupport),
     descriptionBuySellADATransaction: intl.formatMessage(messages.descriptionBuySellADATransaction),
     disclaimer: intl.formatMessage(messages.disclaimer),
+    contentDisclaimerPreprod: intl.formatMessage(messages.contentDisclaimerPreprod),
     fiatAmountYouGet: intl.formatMessage(messages.fiatAmountYouGet),
     goToTransactions: intl.formatMessage(messages.goToTransactions),
     notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
@@ -35,12 +36,27 @@ export const useStrings = () => {
     ourTrustedPartners: intl.formatMessage(messages.ourTrustedPartners),
     needMoreCrypto: intl.formatMessage(messages.needMoreCrypto),
     fee: intl.formatMessage(messages.fee),
+    preprodFaucetBannerTitle: intl.formatMessage(messages.preprodFaucetBannerTitle),
+    preprodFaucetBannerText: intl.formatMessage(messages.preprodFaucetBannerText),
+    preprodFaucetBannerButtonText: intl.formatMessage(messages.preprodFaucetBannerButtonText),
+    sanchoFaucetBannerTitle: intl.formatMessage(messages.sanchoFaucetBannerTitle),
+    sanchoFaucetBannerText: intl.formatMessage(messages.sanchoFaucetBannerText),
+    sanchoFaucetBannerButtonText: intl.formatMessage(messages.sanchoFaucetBannerButtonText),
+    createOrderPreprodFaucetButtonText: intl.formatMessage(messages.createOrderPreprodFaucetButtonText),
+    createOrderPreprodNoticeTitle: intl.formatMessage(messages.createOrderPreprodNoticeTitle),
+    createOrderPreprodNoticeText: intl.formatMessage(messages.createOrderPreprodNoticeText),
+    createOrderSanchonetFaucetButtonText: intl.formatMessage(messages.createOrderSanchonetFaucetButtonText),
+    createOrderSanchonetNoticeTitle: intl.formatMessage(messages.createOrderSanchonetNoticeTitle),
+    createOrderSanchonetNoticeText: intl.formatMessage(messages.createOrderSanchonetNoticeText),
+    playground: intl.formatMessage(messages.playground),
     close: intl.formatMessage(globalMessages.close),
     error: intl.formatMessage(globalMessages.error),
+    loadingLink: intl.formatMessage(messages.loadingLink),
+    linkError: intl.formatMessage(messages.linkError),
   }).current
 }
 
-export const messages = Object.freeze(
+const messages = Object.freeze(
   defineMessages({
     currentBalance: {
       id: 'swap.swapScreen.currentBalance',
@@ -53,6 +69,10 @@ export const messages = Object.freeze(
     disclaimer: {
       id: 'rampOnOff.createRampOnOff.disclaimer',
       defaultMessage: '!!!Disclaimer',
+    },
+    contentDisclaimerPreprod: {
+      id: 'rampOnOff.createRampOnOff.contentDisclaimer.preprod',
+      defaultMessage: `!!!You can test the off-ramp capabilities with test ADA using a 3rd party provider. No real transactions will take place, but you can interact with the interface. By clicking 'Proceed,' you acknowledge that you will be redirected to our partner's website, where you may need to accept their terms and conditions.`,
     },
     contentDisclaimer: {
       id: 'rampOnOff.createRampOnOff.contentDisclaimer',
@@ -155,6 +175,66 @@ export const messages = Object.freeze(
     fee: {
       id: 'rampOnOff.createRampOnOff.fee',
       defaultMessage: '!!!fee',
+    },
+    preprodFaucetBannerTitle: {
+      id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.title',
+      defaultMessage: '!!!Learn Cardano with test ADA ⭐️',
+    },
+    preprodFaucetBannerText: {
+      id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.text',
+      defaultMessage: `!!!Get started with Cardano's test currency, TADA. It's your key to testing a new world of possibilities.`,
+    },
+    preprodFaucetBannerButtonText: {
+      id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.button.text',
+      defaultMessage: '!!!Go to tada faucet',
+    },
+    sanchoFaucetBannerTitle: {
+      id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.title',
+      defaultMessage: '!!!Learn Cardano with test ADA ⭐️',
+    },
+    sanchoFaucetBannerText: {
+      id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.text',
+      defaultMessage: `!!!Get started with Cardano's test currency, TADA. It's your key to testing a new world of possibilities.`,
+    },
+    sanchoFaucetBannerButtonText: {
+      id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.button.text',
+      defaultMessage: '!!!Go to tada faucet',
+    },
+    createOrderPreprodFaucetButtonText: {
+      id: 'rampOnOff.createRampOnOff.createorder.preprodfaucet.button.text',
+      defaultMessage: '!!!Add test ada',
+    },
+    createOrderPreprodNoticeTitle: {
+      id: 'rampOnOff.createRampOnOff.createorder.preprodnotice.title',
+      defaultMessage: '!!!ADA purchases can only be made on the mainnet',
+    },
+    createOrderPreprodNoticeText: {
+      id: 'rampOnOff.createRampOnOff.createorder.preprodnotice.text',
+      defaultMessage: '!!!Switch network or top up your testnet network wallet with the free Cardano faucet',
+    },
+    createOrderSanchonetFaucetButtonText: {
+      id: 'rampOnOff.createRampOnOff.createorder.sanchofaucet.button.text',
+      defaultMessage: '!!!Add test ada',
+    },
+    createOrderSanchonetNoticeTitle: {
+      id: 'rampOnOff.createRampOnOff.createorder.sanchonotice.title',
+      defaultMessage: '!!!ADA purchases can only be made on the mainnet',
+    },
+    createOrderSanchonetNoticeText: {
+      id: 'rampOnOff.createRampOnOff.createorder.sanchonotice.text',
+      defaultMessage: '!!!Switch network or top up your testnet network wallet with the free Cardano faucet',
+    },
+    playground: {
+      id: 'rampOnOff.createRampOnOff.createorder.playground',
+      defaultMessage: '!!!Playground',
+    },
+    loadingLink: {
+      id: 'rampOnOff.createRampOnOff.loadingLink',
+      defaultMessage: '!!!We are redirecting you outside Yoroi. Please wait',
+    },
+    linkError: {
+      id: 'rampOnOff.createRampOnOff.linkError',
+      defaultMessage: '!!!This service is currently unavailable. Please try again later',
     },
   }),
 )

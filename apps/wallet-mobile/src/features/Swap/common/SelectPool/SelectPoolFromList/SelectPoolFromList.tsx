@@ -1,3 +1,4 @@
+import {usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {getMarketPrice, useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
@@ -6,11 +7,11 @@ import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Spacer} from '../../../../../components'
-import {useMetrics} from '../../../../../metrics/metricsManager'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../../WalletManager/Context/SelectedWalletContext'
+import {Space} from '../../../../../components/Space/Space'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../navigation'
 import {PoolIcon} from '../../PoolIcon/PoolIcon'
 import {useStrings} from '../../strings'
@@ -23,17 +24,38 @@ type Props = {
 }
 export const SelectPoolFromList = ({pools = []}: Props) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {selectedPoolChanged, orderData} = useSwap()
   const {poolTouched} = useSwapForm()
   const [selectedCardIndex, setSelectedCardIndex] = useState(orderData.selectedPoolId)
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {styles, colors} = useStyles()
+  const {isDark} = useTheme()
 
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
-  const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
+  const {tokenInfo: sellTokenInfo} = usePortfolioTokenInfo(
+    {
+      getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+      id: orderData.amounts.sell?.info.id ?? 'unknown.',
+      network: wallet.networkManager.network,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+    },
+    {suspense: true},
+  )
+  const {tokenInfo: buyTokenInfo} = usePortfolioTokenInfo(
+    {
+      getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+      id: orderData.amounts.buy?.info.id ?? 'unknown.',
+      network: wallet.networkManager.network,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+    },
+    {suspense: true},
+  )
+
+  // NOTE: suspense + default to unknown
+  if (!sellTokenInfo || !buyTokenInfo) return null
+
+  const denomination = sellTokenInfo.decimals - buyTokenInfo.decimals
   const tokenToSellName = sellTokenInfo.ticker ?? sellTokenInfo.name
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
@@ -45,8 +67,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
     navigate.startSwap()
   }
 
-  const decimals = wallet.primaryTokenInfo.decimals ?? 0
-  const ticker = wallet.primaryTokenInfo.ticker
+  const {decimals, ticker} = wallet.portfolioPrimaryTokenInfo
 
   const protocolCapitalize = (protocol: string): string => protocol[0].toUpperCase() + protocol.substring(1)
 
@@ -55,27 +76,44 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
       {pools.map((pool) => {
         // TODO: Needs review and move to package
         const tvl = asQuantity(
-          new BigNumber(pool.tokenA.quantity).dividedBy(new BigNumber(pool.ptPriceTokenA)).multipliedBy(2).toString(),
+          new BigNumber(pool.tokenA.quantity.toString())
+            .dividedBy(new BigNumber(pool.ptPriceTokenA))
+            .multipliedBy(2)
+            .toString(),
         )
         const formattedTvl = Quantities.format(tvl, decimals, 0)
-        const formattedBatcherFeeInPt = Quantities.format(pool.batcherFee.quantity, decimals, decimals)
-        const marketPrice = getMarketPrice(pool, orderData.amounts.sell.tokenId)
+        const formattedBatcherFeeInPt = Quantities.format(
+          asQuantity(pool.batcherFee.quantity.toString()),
+          decimals,
+          decimals,
+        )
+        const marketPrice =
+          orderData.amounts.sell?.info.id != null
+            ? getMarketPrice(pool, orderData.amounts.sell.info.id)
+            : new BigNumber(0)
         const selectedPoolId = selectedCardIndex ?? orderData?.bestPoolCalculation?.pool?.poolId ?? null
+        const isSelectedPool = pool.poolId === selectedPoolId
 
         return (
           <View key={pool.poolId}>
             <Spacer height={16} />
 
-            <View style={[styles.shadowProp]}>
+            <View style={[isSelectedPool && isDark ? undefined : styles.shadowProp]}>
               <LinearGradient
-                colors={pool.poolId === selectedPoolId ? colors.gradientColor : [colors.white, colors.white]}
+                colors={isSelectedPool ? colors.gradientColor : [colors.white, colors.white]}
                 style={styles.linearGradient}
               >
-                <TouchableOpacity key={pool.poolId} onPress={() => handleOnPoolSelection(pool)} style={[styles.card]}>
+                <TouchableOpacity
+                  key={pool.poolId}
+                  onPress={() => handleOnPoolSelection(pool)}
+                  style={[styles.card, !isSelectedPool && {backgroundColor: colors.bg}]}
+                >
                   <View style={styles.cardHeader}>
                     <View style={styles.icon}>
                       <PoolIcon size={40} providerId={pool.provider} />
                     </View>
+
+                    <Space width="md" />
 
                     <Text style={styles.label}>{protocolCapitalize(pool.provider)}</Text>
                   </View>
@@ -89,7 +127,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 
                         <Text style={styles.infoValue}>
                           {`${Quantities.format(
-                            marketPrice ?? Quantities.zero,
+                            asQuantity(marketPrice),
                             denomination,
                             PRECISION,
                           )} ${tokenToSellName}/${tokenToBuyName}`}
@@ -138,27 +176,26 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     container: {
       paddingHorizontal: 16,
       flexDirection: 'column',
-      backgroundColor: color.gray.min,
       flex: 1,
       paddingBottom: 30,
     },
     linearGradient: {
+      flex: 1,
+      opacity: 1,
       borderRadius: 8,
     },
     card: {
-      padding: 16,
-      paddingHorizontal: 20,
-      borderRadius: 20,
+      ...atoms.p_lg,
+      borderRadius: 8,
     },
     shadowProp: {
-      shadowColor: color.gray.max,
+      shadowColor: color.gray_max,
       shadowOpacity: 0.2,
       shadowOffset: {
         width: 0,
@@ -175,12 +212,13 @@ const useStyles = () => {
       paddingBottom: 8,
     },
     icon: {
-      marginRight: 8,
-      fontSize: 24,
+      borderRadius: 8,
+      width: 40,
+      overflow: 'hidden',
     },
     label: {
-      fontSize: 16,
-      ...typography['body-1-l-medium'],
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_medium,
     },
     infoContainer: {
       flexDirection: 'column',
@@ -191,22 +229,21 @@ const useStyles = () => {
       paddingBottom: 4,
     },
     infoLabel: {
-      color: color.gray[600],
-      fontSize: 16,
-      fontFamily: 'Rubik-Regular',
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
     },
     infoValue: {
-      fontSize: 16,
-      color: color.gray.max,
-      fontFamily: 'Rubik-Regular',
+      ...atoms.body_1_lg_regular,
+      color: color.gray_max,
       display: 'flex',
       flexShrink: 1,
       textAlign: 'right',
     },
   })
   const colors = {
-    gradientColor: color.gradients['blue-green'],
-    white: color['white-static'],
+    gradientColor: color.bg_gradient_1,
+    white: color.gray_min,
+    bg: color.bg_color_max,
   }
 
   return {styles, colors} as const

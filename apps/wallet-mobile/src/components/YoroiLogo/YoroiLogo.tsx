@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
 import {Defs, LinearGradient, Path, Stop, Svg, SvgProps} from 'react-native-svg'
 
-import {Spacer} from '../Spacer'
+import {Spacer} from '../Spacer/Spacer'
 
 const YOROI_COMPANY_NAME = 'Yoroi'
 
@@ -55,19 +55,18 @@ const YoroiLogoSvg = (props: SvgProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     yoroiLogo: {
       alignItems: 'center',
     },
     yoroiLogoTitle: {
-      color: color.primary[600],
-      ...typography['heading-1-medium'],
+      color: color.primary_600,
+      ...atoms.heading_1_medium,
     },
     yoroiLogoText: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[900],
+      ...atoms.body_2_md_regular,
+      color: color.gray_900,
     },
   })
   return styles

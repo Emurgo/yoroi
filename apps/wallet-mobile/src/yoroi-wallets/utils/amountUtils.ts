@@ -1,11 +1,5 @@
 import {compose} from 'lodash/fp'
 
-export const stripExcessiveDecimals = (number: string) => {
-  const separatorIndex = number.indexOf('.')
-
-  return separatorIndex === -1 ? number : number.substring(0, separatorIndex + 1 + 6)
-}
-
 export const stripAllButLastDecimalSeparators = (number: string) => {
   const lastSeparatorIndex = number.lastIndexOf('.')
   if (lastSeparatorIndex !== -1) {

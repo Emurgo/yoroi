@@ -6,11 +6,14 @@ import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
-import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
-import {errorMessages} from '../../../i18n/global-messages'
+import {Button} from '../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Checkmark, TextInput} from '../../../components/TextInput/TextInput'
+import {errorMessages} from '../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../yoroi-wallets/utils/validators'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()
@@ -30,15 +33,15 @@ export const ChangePasswordScreen = () => {
 
   const hasErrors = Object.keys(currentPasswordErrors).length > 0 || Object.keys(newPasswordErrors).length > 0
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {changePassword, isError, reset} = useChangePassword(wallet, {
     onSuccess: () => navigation.goBack(),
     onError: () => currentPasswordRef.current?.focus(),
   })
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <KeyboardAvoidingView style={{flex: 1}}>
+    <KeyboardAvoidingView style={styles.root}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
         <ScrollView bounces={false} keyboardDismissMode="on-drag" contentContainerStyle={styles.contentContainer}>
           <CurrentPasswordInput
             ref={currentPasswordRef}
@@ -55,8 +58,6 @@ export const ChangePasswordScreen = () => {
             autoComplete="off"
           />
 
-          <Spacer />
-
           <PasswordInput
             ref={newPasswordRef}
             enablesReturnKeyAutomatically
@@ -71,8 +72,6 @@ export const ChangePasswordScreen = () => {
             right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
             autoComplete="off"
           />
-
-          <Spacer />
 
           <PasswordConfirmationInput
             ref={newPasswordConfirmationRef}
@@ -100,8 +99,8 @@ export const ChangePasswordScreen = () => {
             shelleyTheme
           />
         </Actions>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -157,19 +156,23 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
+    root: {
+      backgroundColor: color.bg_color_max,
+      ...atoms.flex_1,
+    },
     safeAreaView: {
-      flex: 1,
+      ...atoms.flex_1,
     },
     contentContainer: {
-      padding: 16,
+      ...atoms.p_lg,
+      ...atoms.gap_lg,
     },
     actions: {
-      padding: 16,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
+      ...atoms.p_lg,
     },
   })
   return styles
@@ -179,8 +182,14 @@ const useChangePassword = (
   wallet: YoroiWallet,
   mutationOptions: MutationOptions<void, Error, {currentPassword: string; newPassword: string}>,
 ) => {
+  const {walletManager} = useWalletManager()
   const {mutate, ...mutation} = useMutation(
-    ({currentPassword, newPassword}) => wallet.changePassword(currentPassword, newPassword),
+    ({currentPassword, newPassword}) =>
+      walletManager.changeWalletPassword({
+        id: wallet.id,
+        oldPassword: currentPassword,
+        newPassword,
+      }),
     mutationOptions,
   )
 

@@ -102,6 +102,23 @@ describe('linksYoroiParser', () => {
     })
   })
 
+  it('should parse browser launch dapp-url', () => {
+    const link =
+      'yoroi://yoroi-wallet.com/w1/browser/launch?dappUrl=https%3A//cardanospot.io/landing%3Fref%3Dyoroiwallet.com&appId=uuid-v4'
+
+    const result = linksYoroiParser(link)
+
+    expect(result).toEqual({
+      version: 1,
+      feature: 'browser',
+      useCase: 'launch',
+      params: {
+        dappUrl: 'https://cardanospot.io/landing?ref=yoroiwallet.com',
+        appId: 'uuid-v4',
+      },
+    })
+  })
+
   it('should return null for invalid link', () => {
     const link = 'invalid-link'
 

@@ -1,31 +1,25 @@
-import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
-import {Api} from '@yoroi/types'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
-import {useIntl} from 'react-intl'
-import {InteractionManager, Keyboard, StyleSheet, Text, View} from 'react-native'
+import {Dimensions, Keyboard, Platform, StyleSheet, Text, View} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, KeyboardAvoidingView, useModal} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {Space} from '../../../../components/Space/Space'
-import {showErrorDialog} from '../../../../dialogs'
-import {errorMessages} from '../../../../i18n/global-messages'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {useWalletNavigation, WalletInitRouteNavigation} from '../../../../navigation'
-import {isEmptyString} from '../../../../utils'
-import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
-import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
-import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
-import {useOpenWallet, usePlate, useWalletMetas} from '../../../../yoroi-wallets/hooks'
-import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
-import {useSetSelectedWalletMeta} from '../../../WalletManager/Context/SelectedWalletMetaContext'
-import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
+import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {isEmptyString} from '../../../../kernel/utils'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/useStrings'
-import {MnemonicInput} from './MnemonicInput'
+import {WalletDuplicatedModal} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
+import {MnemonicInput} from './MnemonicInput/MnemonicInput'
 
 export type MnemonicWordInputRef = {
   focus: () => void
@@ -36,19 +30,15 @@ export const RestoreWalletScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const bold = useBold()
-  const intl = useIntl()
   const [mnemonic, setMnemonic] = React.useState('')
-  const navigation = useNavigation<WalletInitRouteNavigation>()
-  const {publicKeyHexChanged, mnemonicChanged, mnemonicType} = useSetupWallet()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const {publicKeyHexChanged, mnemonicChanged, mnemonicType, walletImplementation, accountVisual} = useSetupWallet()
   const {track} = useMetrics()
-  const walletManager = useWalletManager()
-  const {walletMetas} = useWalletMetas(walletManager)
+  const {walletManager} = useWalletManager()
   const {openModal} = useModal()
-  const {navigateToTxHistory} = useWalletNavigation()
-  const selectWalletMeta = useSetSelectedWalletMeta()
-  const selectWallet = useSetSelectedWallet()
   const [focusedIndex, setFocusedIndex] = React.useState<number>(0)
   const [isValidPhrase, setIsValidPhrase] = React.useState(false)
+  const {scrollViewRef} = useScrollView()
 
   if (mnemonicType === null) throw new Error('mnemonicType missing')
 
@@ -119,36 +109,21 @@ export const RestoreWalletScreen = () => {
     }, [mnemonicType, track]),
   )
 
-  const {openWallet} = useOpenWallet({
-    onSuccess: ([wallet, walletMeta]) => {
-      selectWalletMeta(walletMeta)
-      selectWallet(wallet)
-      navigateToTxHistory()
-    },
-    onError: (error) => {
-      InteractionManager.runAfterInteractions(() => {
-        return error instanceof InvalidState
-          ? showErrorDialog(errorMessages.walletStateInvalid, intl)
-          : error instanceof Api.Errors.Network
-          ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
-      })
-    },
-  })
-
   const handleOnNext = React.useCallback(async () => {
-    const {accountPubKeyHex} = await makeKeys({mnemonic})
-    const checksum = walletChecksum(accountPubKeyHex)
+    const {accountPubKeyHex} = await walletManager.generateWalletKeys(walletImplementation, mnemonic, accountVisual)
 
-    const duplicatedWalletMeta = walletMetas?.find((walletMeta) => walletMeta.checksum.TextPart === checksum.TextPart)
+    const duplicatedAccountWalletMeta = walletManager.findWalletMetadataByPublicKeyHex(accountPubKeyHex)
 
-    if (duplicatedWalletMeta) {
+    if (duplicatedAccountWalletMeta) {
+      const {plate, seed} = walletManager.checksum(accountPubKeyHex)
+
       openModal(
         strings.restoreDuplicatedWalletModalTitle,
-        <Modal
-          walletName={duplicatedWalletMeta.name}
-          publicKeyHex={accountPubKeyHex}
-          onPress={() => openWallet(duplicatedWalletMeta)}
+        <WalletDuplicatedModal
+          plate={plate}
+          seed={seed}
+          duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
+          duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
         />,
       )
 
@@ -159,14 +134,15 @@ export const RestoreWalletScreen = () => {
     publicKeyHexChanged(accountPubKeyHex)
     navigation.navigate('setup-wallet-restore-details')
   }, [
+    accountVisual,
     mnemonic,
     mnemonicChanged,
     navigation,
     openModal,
-    openWallet,
     publicKeyHexChanged,
     strings.restoreDuplicatedWalletModalTitle,
-    walletMetas,
+    walletImplementation,
+    walletManager,
   ])
 
   return (
@@ -177,11 +153,9 @@ export const RestoreWalletScreen = () => {
         </View>
 
         <ScrollView style={styles.scroll} bounces={false} keyboardShouldPersistTaps="always">
-          <View>
-            <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
+          <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
 
-            <Space height="l" />
-          </View>
+          <Space height="lg" />
 
           <MnemonicInput
             isValidPhrase={isValidPhrase}
@@ -198,6 +172,7 @@ export const RestoreWalletScreen = () => {
             inputErrorsIndexes={inputErrorsIndexes}
             onError={onError}
             onClearError={onClearError}
+            scrollViewRef={scrollViewRef}
           />
         </ScrollView>
 
@@ -223,48 +198,7 @@ const NextButton = ({onPress}: {onPress: () => void}) => {
 
   return (
     <View style={styles.padding}>
-      <Button title={strings.next} style={styles.button} onPress={onPress} />
-    </View>
-  )
-}
-
-const Modal = ({
-  onPress,
-  publicKeyHex,
-  walletName,
-}: {
-  onPress: () => void
-  publicKeyHex: string
-  walletName: string
-}) => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-  const {networkId} = useSetupWallet()
-  const plate = usePlate({networkId, publicKeyHex})
-
-  return (
-    <View style={styles.modal}>
-      <Text style={styles.modalText}>{strings.restoreDuplicatedWalletModalText}</Text>
-
-      <Space height="l" />
-
-      <View style={styles.checksum}>
-        <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
-
-        <Space width="s" />
-
-        <View>
-          <Text style={styles.plateName}>{walletName}</Text>
-
-          <Text style={styles.plateText}>{plate.accountPlate.TextPart}</Text>
-        </View>
-      </View>
-
-      <Space fill />
-
-      <Button title={strings.restoreDuplicatedWalletModalButton} style={styles.button} onPress={onPress} />
-
-      <Space height="xl" />
+      <Button title={strings.next} style={styles.button} onPress={onPress} testID="setup-restore-step1-next-button" />
     </View>
   )
 }
@@ -288,7 +222,7 @@ const WordSuggestionList = ({
         keyboardShouldPersistTaps="always"
         renderItem={({item: word, index: wordIndex}) => (
           <>
-            {wordIndex === 0 && <Space width="l" />}
+            {wordIndex === 0 && <Space width="lg" />}
 
             <WordSuggestionButton
               onPress={() => {
@@ -297,10 +231,10 @@ const WordSuggestionList = ({
               title={word}
             />
 
-            {wordIndex === data.length - 1 && <Space width="l" />}
+            {wordIndex === data.length - 1 && <Space width="lg" />}
           </>
         )}
-        ItemSeparatorComponent={() => <Space width="s" />}
+        ItemSeparatorComponent={() => <Space width="sm" />}
       />
     </View>
   )
@@ -320,95 +254,77 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {height: screenHeight} = Dimensions.get('window')
+
+  const isSmallScreen = screenHeight < 700
+  const dynamicPaddingBottom =
+    Platform.OS === 'ios'
+      ? isSmallScreen
+        ? screenHeight * 0.01 // Smaller padding for small screens
+        : screenHeight * 0.05 // Regular padding for larger screens
+      : 16 // Default padding for Android
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.bg_color_max,
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_900,
     },
-    button: {backgroundColor: theme.color.primary[500]},
+    button: {backgroundColor: color.primary_500},
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     stepper: {
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
     },
     scroll: {
-      ...theme.padding['l'],
+      ...atoms.p_lg,
     },
     padding: {
-      ...theme.padding['l'],
-    },
-    checksum: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      textAlignVertical: 'center',
-    },
-    walletChecksum: {
-      width: 38,
-      height: 38,
-      borderRadius: 8,
-    },
-    modalText: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
-      lineHeight: 24,
-    },
-    plateText: {
-      ...theme.typography['body-3-s-regular'],
-      color: theme.color.gray[600],
-      textAlign: 'center',
-      justifyContent: 'center',
-    },
-    plateName: {
-      ...theme.typography['body-2-m-medium'],
-      color: theme.color.gray[900],
-    },
-    modal: {
-      flex: 1,
+      ...atoms.p_lg,
     },
     suggestions: {
-      backgroundColor: 'rgba(255, 255, 255, 0.80)',
-      borderColor: theme.color.gray[200],
+      backgroundColor: color.bg_color_max,
+      borderColor: color.gray_200,
       borderTopWidth: 1,
       flexDirection: 'row',
       alignItems: 'center',
       paddingTop: 16,
-      paddingBottom: 19,
+      paddingBottom: dynamicPaddingBottom,
     },
     suggestion: {
-      borderColor: theme.color.primary[500],
+      borderColor: color.primary_300,
       borderWidth: 2,
       borderRadius: 8,
       backgroundColor: 'transparent',
     },
     suggestionText: {
-      ...theme.typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
       textTransform: 'none',
-      color: theme.color.primary[500],
+      color: color.text_primary_medium,
     },
     suggestionArea: {
-      backgroundColor: 'rgba(255, 255, 255, 0.80)',
-      borderColor: theme.color.gray[200],
+      backgroundColor: color.bg_color_max,
+      borderColor: color.gray_200,
       borderTopWidth: 1,
       alignItems: 'center',
       paddingTop: 30,
       paddingBottom: 30,
     },
     suggestionMessage: {
-      ...theme.typography['body-1-l-regular'],
-      textAlign: 'center',
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
+      ...atoms.text_center,
     },
   })
 
   const colors = {
-    gray900: theme.color.gray[900],
-    gradientBlueGreen: theme.color.gradients['blue-green'],
+    gray900: color.gray_900,
+    gradientBlueGreen: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

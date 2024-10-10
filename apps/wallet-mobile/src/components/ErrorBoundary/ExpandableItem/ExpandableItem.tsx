@@ -1,8 +1,9 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {COLORS} from '../../../theme'
-import {Icon, Text} from '../..'
+import {Icon} from '../../Icon'
+import {Text} from '../../Text'
 
 type Props = {
   label: string
@@ -13,6 +14,7 @@ type Props = {
 
 export const ExpandableItem = ({label, content, disabled, style}: Props) => {
   const [expanded, setExpanded] = React.useState(false)
+  const {styles, colors} = useStyles()
 
   return (
     <TouchableOpacity
@@ -24,11 +26,11 @@ export const ExpandableItem = ({label, content, disabled, style}: Props) => {
     >
       <View style={style}>
         <View style={styles.labelWrapper}>
-          <Text secondary style={[disabled === true && styles.disabled]}>
+          <Text secondary style={[disabled && styles.disabled]}>
             {label}
           </Text>
 
-          <Icon.Chevron size={23} direction={expanded ? 'up' : 'down'} color={COLORS.SECONDARY_TEXT} />
+          <Icon.Chevron size={23} direction={expanded ? 'up' : 'down'} color={colors.icon} />
         </View>
 
         {expanded && (
@@ -41,17 +43,22 @@ export const ExpandableItem = ({label, content, disabled, style}: Props) => {
   )
 }
 
-const styles = StyleSheet.create({
-  labelWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 12,
-  },
-  disabled: {
-    color: COLORS.DISABLED,
-  },
-  contentWrapper: {
-    padding: 16,
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    labelWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...atoms.p_md,
+    },
+    disabled: {
+      color: color.gray_600,
+    },
+    contentWrapper: {
+      ...atoms.p_lg,
+    },
+  })
+
+  return {styles, colors: {icon: color.gray_max}} as const
+}

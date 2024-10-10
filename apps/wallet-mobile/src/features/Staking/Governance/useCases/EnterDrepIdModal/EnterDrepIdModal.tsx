@@ -2,11 +2,14 @@ import {isNonNullable} from '@yoroi/common'
 import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Linking, StyleSheet, View} from 'react-native'
+import {Alert, Linking, StyleSheet, View} from 'react-native'
 
-import {Button, Spacer, Text, TextInput} from '../../../../../components'
+import {Button} from '../../../../../components/Button/Button'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
+import {TextInput} from '../../../../../components/TextInput/TextInput'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
-import {useStrings} from '../../common'
+import {useStrings} from '../../common/strings'
 
 type Props = {
   onSubmit?: (drepId: string) => void
@@ -22,7 +25,14 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {retry: false, enabled: drepId.length > 0})
 
   const handleOnPress = () => {
-    parseDrepId(drepId, CardanoMobile).then((parsedId) => onSubmit?.(parsedId))
+    parseDrepId(drepId, CardanoMobile).then(({type, hash}) => {
+      if (type === 'key') {
+        onSubmit?.(hash)
+        return
+      }
+
+      Alert.alert(strings.error, strings.scriptNotSupported)
+    })
   }
 
   const handleOnLinkPress = () => {
@@ -75,31 +85,31 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     text: {
-      color: color.gray[900],
-      textAlign: 'center',
-      ...typography['body-1-l-regular'],
+      color: color.text_gray_medium,
+      ...atoms.text_center,
+      ...atoms.body_1_lg_regular,
     },
     link: {
-      color: color.primary[500],
+      color: color.primary_500,
       textDecorationLine: 'underline',
     },
     inputWrapperStyle: {
       minHeight: 80,
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     inputStyle: {
       minHeight: 70,
-      ...padding['t-l'],
-      ...padding['b-l'],
-      ...padding['l-l'],
-      ...padding['r-l'],
+      ...atoms.pt_lg,
+      ...atoms.pb_lg,
+      ...atoms.pl_lg,
+      ...atoms.pr_lg,
       // padding: 16, does not have effect
     },
   })

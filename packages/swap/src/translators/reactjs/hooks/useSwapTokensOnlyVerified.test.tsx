@@ -25,7 +25,7 @@ describe('useSwapTokensOnlyVerified', () => {
       const tokens = useSwapTokensOnlyVerified()
       return (
         <View>
-          <Text testID="tokens">{JSON.stringify(tokens.data)}</Text>
+          <Text testID="tokens">{JSON.stringify(tokens)}</Text>
         </View>
       )
     }
@@ -47,5 +47,31 @@ describe('useSwapTokensOnlyVerified', () => {
       JSON.stringify(swapManagerMocks.listOnlyVerifiedTokensResponse),
     )
     expect(mockSwapManager.tokens.list.onlyVerified).toHaveBeenCalled()
+  })
+
+  it('empty result (no-api data) should return []', async () => {
+    mockSwapManager.tokens.list.onlyVerified = jest
+      .fn()
+      .mockResolvedValue(undefined)
+
+    const TestListToken = () => {
+      const tokens = useSwapTokensOnlyVerified()
+      return (
+        <View>
+          <Text testID="tokens">{JSON.stringify(tokens)}</Text>
+        </View>
+      )
+    }
+
+    const wrapper = wrapperManagerFixture({
+      queryClient,
+      swapManager: mockSwapManager,
+    })
+    const {getByTestId} = render(<TestListToken />, {wrapper})
+
+    await waitFor(() => {
+      expect(getByTestId('tokens')).toBeDefined()
+    })
+    expect(getByTestId('tokens').props.children).toEqual(JSON.stringify([]))
   })
 })

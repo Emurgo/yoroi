@@ -1,33 +1,48 @@
+import {useExchange} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
+import {Space} from '../../../../../components/Space/Space'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../../common/useStrings'
 
 export const ShowDisclaimer = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
   const strings = useStrings()
   const styles = useStyles()
+  const {
+    selected: {network},
+  } = useWalletManager()
+  const {orderType} = useExchange()
+
+  const isPreprod = network === Chain.Network.Preprod
+  const isSancho = network === Chain.Network.Sancho
+
+  if ((isPreprod || isSancho) && orderType === 'buy') return null
+
+  const contentDisclaimer =
+    (isPreprod || isSancho) && orderType === 'sell' ? strings.contentDisclaimerPreprod : strings.contentDisclaimer
 
   return (
-    <LinearGradient
-      style={styles.gradient}
-      start={{x: 1, y: 1}}
-      end={{x: 0, y: 0}}
-      colors={theme.color.gradients['blue-green']}
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>{strings.disclaimer}</Text>
+    <>
+      <Space height="xl" />
 
-        <Text style={styles.text}>{strings.contentDisclaimer}</Text>
-      </View>
-    </LinearGradient>
+      <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={color.bg_gradient_1}>
+        <View style={styles.container}>
+          <Text style={styles.title}>{strings.disclaimer}</Text>
+
+          <Text style={styles.text}>{contentDisclaimer}</Text>
+        </View>
+      </LinearGradient>
+    </>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       paddingHorizontal: 16,
@@ -38,14 +53,14 @@ const useStyles = () => {
       borderRadius: 8,
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_max,
       fontWeight: '500',
     },
     text: {
-      ...theme.typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
       marginTop: 8,
-      color: theme.color.gray.max,
+      color: color.gray_max,
     },
   })
 

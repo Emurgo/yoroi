@@ -1,10 +1,12 @@
 import {useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button, Spacer, useModal} from '../../../../components'
-import {AddressMode} from '../../../../wallet-manager/types'
-import {useAddressModeManager} from '../../../../wallet-manager/useAddressModeManager'
+import {Button} from '../../../../components/Button/Button'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {QRs as QRsIllustration} from '../../illustrations/QRs'
 import {useMultipleAddressesInfo} from '../useMultipleAddressesInfo'
 import {useStrings} from '../useStrings'
@@ -12,13 +14,13 @@ import {useStrings} from '../useStrings'
 export const singleOrMultipleAddressesModalHeight = 580
 
 type Props = {
-  onConfirm: (method: AddressMode) => void
+  onConfirm: (addressMode: Wallet.AddressMode) => void
 }
 
 export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
-  const {enableMultipleMode, enableSingleMode} = useAddressModeManager()
+  const {enableMultipleMode, enableSingleMode} = useAddressMode()
 
   const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
 
@@ -26,74 +28,70 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
 
   const handleOnMultiple = () => {
     enableMultipleMode()
-    hideMultipleAddressesInfo()
-    closeModal()
-    onConfirm('multiple')
+    hideMultipleAddressesInfo({
+      onSuccess: () => {
+        closeModal()
+        onConfirm('multiple')
+      },
+    })
   }
 
   const handleOnSingle = () => {
     enableSingleMode()
-    hideMultipleAddressesInfo()
-    closeModal()
-    onConfirm('single')
+    hideMultipleAddressesInfo({
+      onSuccess: () => {
+        closeModal()
+        onConfirm('single')
+      },
+    })
   }
 
   return (
     <View style={styles.modal}>
       <QRsIllustration />
 
-      <Text style={[styles.details, {color: colors.details}]}>{strings.singleOrMultipleDetails}</Text>
+      <Text style={styles.details}>{strings.singleOrMultipleDetails}</Text>
 
-      <Spacer fill height={24} />
+      <Spacer fill height={16} />
 
-      <View style={styles.buttonContainer}>
+      <View style={styles.actions}>
         <Button
-          outline
+          withoutBackground
+          textStyles={styles.multipleButtonTitle}
           title={strings.selectMultiple}
-          textStyles={{
-            color: colors.selectMultipleInsteadTextColor,
-          }}
           onPress={handleOnMultiple}
         />
 
-        <Spacer height={6} />
-
-        <Button shelleyTheme title={strings.singleAddressWallet} onPress={handleOnSingle} style={styles.button} />
+        <Button shelleyTheme title={strings.singleAddressWallet} onPress={handleOnSingle} />
       </View>
-
-      <Spacer height={24} />
     </View>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     modal: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      ...atoms.flex_1,
+      ...atoms.align_center,
+      ...atoms.justify_between,
+      ...atoms.px_lg,
+      ...atoms.py_lg,
     },
-    buttonContainer: {
-      alignSelf: 'stretch',
-      backgroundColor: theme.color.gray.min,
+    actions: {
+      ...atoms.self_stretch,
     },
     details: {
-      ...theme.typography['body-1-l-regular'],
-      justifyContent: 'center',
-      textAlign: 'center',
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
+      ...atoms.justify_center,
+      ...atoms.text_center,
     },
-
-    button: {
-      backgroundColor: theme.color.primary[500],
+    multipleButtonTitle: {
+      color: color.text_primary_max,
     },
   })
 
-  const colors = {
-    details: theme.color.gray[900],
-    selectMultipleInsteadTextColor: theme.color.primary[500],
-  }
-
-  return {styles, colors} as const
+  return {styles} as const
 }

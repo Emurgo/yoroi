@@ -14,4 +14,4 @@ const styles = StyleSheet.create({
 
 storiesOf('WalletAddress', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('Default', () => <WalletAddress networkId={1} addressHash="addressHash" />)
+  .add('Default', () => <WalletAddress addressHash="addressHash" />)

@@ -37,6 +37,14 @@
       "path": "./packages/api"
     },
     {
+      "name": "@yoroi/identicon",
+      "path": "./packages/identicon"
+    },
+    {
+      "name": "@yoroi/explorers",
+      "path": "./packages/explorers"
+    },
+    {
       "name": "@yoroi/resolver",
       "path": "./packages/resolver"
     },
@@ -49,17 +57,34 @@
       "path": "./packages/staking"
     },
     {
+      "name": "@yoroi/dapp-connector",
+      "path": "./packages/dapp-connector"
+    },
+    {
+      "name": "@yoroi/portfolio",
+      "path": "./packages/portfolio"
+    },
+    {
       "name": "@yoroi/wallet-mobile",
       "path": "./apps/wallet-mobile"
     },
     {
+      "name": "@yoroi/notifications",
+      "path": "./packages/notifications"
+    },
+    {
+      "name": "@yoroi/claim",
+      "path": "./packages/claim"
+    },
+    {
       "name": "@yoroi/e2e-wallet-mobile",
       "path": "./e2e/wallet-mobile"
-    }
+    },
   ],
-
   "settings": {
-    "jest.disabledWorkspaceFolders": ["root"],
+    "jest.disabledWorkspaceFolders": [
+      "root"
+    ],
     "jest.pathToJest": "node_modules/.bin/jest",
     "jest.pathToConfig": "./jest.config.js",
     "java.compile.nullAnalysis.mode": "automatic",
@@ -68,6 +93,6 @@
     "typescript.tsserver.maxTsServerMemory": 12072,
     "typescript.tsdk": "root/node_modules/typescript/lib",
     "javascript.preferences.importModuleSpecifier": "relative",
-    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.preferences.importModuleSpecifier": "relative"
   }
 }

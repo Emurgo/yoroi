@@ -4,10 +4,10 @@ import * as React from 'react'
 import {Dimensions, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
 import {Space} from '../../../../components/Space/Space'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {TxHistoryRouteNavigation} from '../../../../navigation'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {BuyBannerIllustration} from '../../illustrations/BuyBannerIllustration'
 import {useStrings} from '../useStrings'
 
@@ -56,41 +56,40 @@ export const BuyBannerBig = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      ...padding['b-m'],
-      backgroundColor: color.gray.min,
+      ...atoms.pb_md,
+      backgroundColor: color.bg_color_max,
       flex: 1,
     },
     gradient: {
-      ...padding['b-xl'],
+      ...atoms.pb_xl,
       opacity: 1,
       borderRadius: 8,
       flexDirection: 'column',
       alignItems: 'center',
     },
     spaceButtonText: {
-      ...padding['none'],
+      ...atoms.p_0,
     },
     label: {
-      ...typography['heading-3-medium'],
-      color: color.gray.max,
+      ...atoms.heading_3_medium,
+      color: color.gray_max,
       textAlign: 'center',
     },
     text: {
-      ...typography['body-1-l-regular'],
-      ...padding['x-xxl'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_regular,
+      ...atoms.px_2xl,
+      color: color.gray_max,
       textAlign: 'center',
     },
     spaceButton: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
   })
   const colors = {
-    gradientColor: color.gradients['green'],
+    gradientColor: color.bg_gradient_2,
   }
   return {styles, colors} as const
 }

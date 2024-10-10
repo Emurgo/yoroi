@@ -1,9 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../../components'
-import {useBlockGoBack} from '../../../../../navigation'
+import {Button} from '../../../../../components/Button/Button'
+import {SafeArea} from '../../../../../components/SafeArea'
+import {Space} from '../../../../../components/Space/Space'
+import {Text} from '../../../../../components/Text'
+import {useBlockGoBack} from '../../../../../kernel/navigation'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
@@ -15,14 +18,14 @@ export const FailedTxScreen = () => {
   const navigateTo = useNavigateTo()
 
   return (
-    <View style={styles.container}>
+    <SafeArea style={styles.container}>
       <FailedTxImage />
 
       <Text style={styles.title}>{strings.failedTxTitle}</Text>
 
       <Text style={styles.text}>{strings.failedTxText}</Text>
 
-      <Spacer height={22} />
+      <Space height="xl" />
 
       <Button
         onPress={navigateTo.startTxAfterReset}
@@ -30,34 +33,34 @@ export const FailedTxScreen = () => {
         style={styles.button}
         shelleyTheme
       />
-    </View>
+    </SafeArea>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...padding['l'],
+      backgroundColor: color.bg_color_max,
+      ...atoms.flex_1,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.p_lg,
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
-      ...padding['x-s'],
-      textAlign: 'center',
+      color: color.gray_max,
+      ...atoms.heading_3_medium,
+      ...atoms.px_xs,
+      ...atoms.text_center,
     },
     text: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
-      textAlign: 'center',
+      color: color.gray_600,
+      ...atoms.body_2_md_regular,
+      ...atoms.text_center,
       maxWidth: 330,
     },
     button: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
   })
   return styles

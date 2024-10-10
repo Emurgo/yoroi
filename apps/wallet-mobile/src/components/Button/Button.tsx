@@ -1,5 +1,6 @@
+import {isNumber} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import React, {type ReactNode} from 'react'
 import {Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 
@@ -11,14 +12,18 @@ export type ButtonProps = TouchableOpacityProps & {
   outlineOnLight?: boolean
   containerStyle?: ViewStyle
   block?: boolean
-  iconImage?: number
+  iconImage?: number | ReactNode
   withoutBackground?: boolean
   shelleyTheme?: boolean
   mainTheme?: boolean
+  warningTheme?: boolean
   outlineShelley?: boolean
   textStyles?: TextStyle
   isCopying?: boolean
   copiedText?: string
+  testId?: string
+  startContent?: ReactNode
+  endContent?: ReactNode
 }
 
 export const Button = (props: ButtonProps) => {
@@ -38,13 +43,24 @@ export const Button = (props: ButtonProps) => {
     textStyles,
     isCopying,
     copiedText,
+    testId,
+    startContent,
+    endContent,
+    warningTheme,
     ...rest
   } = props
 
   const {styles} = useStyles()
+  const {isDark} = useTheme()
 
   return (
-    <TouchableOpacity onPress={onPress} style={[block && styles.block, containerStyle]} activeOpacity={0.5} {...rest}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[block && styles.block, containerStyle]}
+      activeOpacity={0.5}
+      testID={testId}
+      {...rest}
+    >
       {isCopying && (
         <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
           <Text style={styles.copiedText}>{copiedText}</Text>
@@ -61,11 +77,14 @@ export const Button = (props: ButtonProps) => {
           outlineShelley && styles.buttonOutlineShelley,
           shelleyTheme && styles.shelleyTheme,
           mainTheme && styles.mainTheme,
+          warningTheme && styles.warningTheme,
           outlineOnLight && shelleyTheme && styles.shelleyOutlineOnLight,
           style,
         ]}
       >
-        {iconImage != null && <Image source={iconImage} />}
+        {isNumber(iconImage) ? <Image source={iconImage} /> : React.isValidElement(iconImage) ? iconImage : null}
+
+        {startContent != null ? startContent : null}
 
         <Text
           style={[
@@ -73,23 +92,26 @@ export const Button = (props: ButtonProps) => {
             outlineOnLight && styles.textOutlineOnLight,
             outlineOnLight && shelleyTheme && styles.textShelleyOutlineOnLight,
             outlineShelley && styles.textOutlineShelley,
+            props.disabled && !outlineOnLight && styles.buttonDisabledText,
+            warningTheme && isDark && styles.warningThemeText,
             textStyles,
           ]}
         >
           {title}
         </Text>
+
+        {endContent != null ? endContent : null}
       </View>
     </TouchableOpacity>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
 
   const buttonOutline = {
     borderWidth: 2,
-    borderColor: color.gray.min,
+    borderColor: color.gray_min,
     backgroundColor: 'transparent',
   }
   const styles = StyleSheet.create({
@@ -97,7 +119,7 @@ const useStyles = () => {
       flex: 1,
     },
     button: {
-      backgroundColor: color.secondary[500],
+      backgroundColor: color.secondary_500,
       minHeight: 48,
       maxHeight: 54,
       borderRadius: 8,
@@ -112,59 +134,68 @@ const useStyles = () => {
       ...buttonOutline,
     },
     mainTheme: {
-      backgroundColor: color.primary[500],
+      backgroundColor: color.primary_500,
     },
     buttonOutlineOnLight: {
       ...buttonOutline,
-      borderColor: color.secondary[500],
+      borderColor: color.secondary_500,
     },
     buttonOutlineShelley: {
       ...buttonOutline,
-      borderColor: color.primary[600],
+      borderColor: color.el_primary_medium,
     },
     text: {
-      color: color.gray.min,
-      ...typography['body-2-m-medium'],
-      ...padding['s'],
+      color: color.white_static,
+      ...atoms.body_2_md_medium,
+      ...atoms.p_sm,
       textAlign: 'center',
       textTransform: 'uppercase',
     },
     textOutlineOnLight: {
-      color: color.secondary[500],
+      color: color.secondary_500,
     },
     textOutlineShelley: {
-      color: color.primary[600],
+      color: color.text_primary_medium,
     },
     buttonDisabled: {
       opacity: 0.5,
     },
+    buttonDisabledText: {
+      color: color.gray_min,
+    },
     shelleyTheme: {
-      backgroundColor: color.primary[600],
+      backgroundColor: color.primary_500,
     },
     shelleyOutlineOnLight: {
       backgroundColor: 'transparent',
-      borderColor: color.primary[600],
+      borderColor: color.primary_600,
       borderWidth: 2,
     },
     textShelleyOutlineOnLight: {
-      color: color.primary[600],
+      color: color.primary_600,
       fontWeight: '600',
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_max,
       alignItems: 'center',
       justifyContent: 'center',
-      top: -20,
+      top: -50,
       alignSelf: 'center',
       borderRadius: 4,
       zIndex: 10,
     },
     copiedText: {
-      color: theme.color['white-static'],
+      color: color.gray_min,
       textAlign: 'center',
-      ...padding['s'],
-      ...typography['body-2-m-medium'],
+      ...atoms.p_sm,
+      ...atoms.body_2_md_medium,
+    },
+    warningTheme: {
+      backgroundColor: color.sys_magenta_500,
+    },
+    warningThemeText: {
+      color: color.gray_min,
     },
   })
 

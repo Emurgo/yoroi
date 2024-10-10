@@ -3,20 +3,22 @@ import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
-import {ConfirmTx} from '../../../../components/ConfirmTx'
-import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
+import {ConfirmTx} from '../../../../components/ConfirmTx/ConfirmTx'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {ValidatedTextInput} from '../../../../components/ValidatedTextInput'
+import {debugWalletInfo, features} from '../../../../kernel/features'
+import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {useSetCollateralId} from '../../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
-import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
-import {debugWalletInfo, features} from '../../..'
-import {useSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {YoroiSignedTx} from '../../../../yoroi-wallets/types/yoroi'
+import {CurrentBalance} from '../../../Send/useCases/ConfirmTx/Summary/CurrentBalance'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../navigation'
 import {BalanceAfter} from './Summary/BalanceAfter'
-import {CurrentBalance} from './Summary/CurrentBalance'
 import {Fees} from './Summary/Fees'
 import {PrimaryTotal} from './Summary/PrimaryTotal'
 import {SecondaryTotals} from './Summary/SecondaryTotals'
@@ -24,7 +26,7 @@ import {SecondaryTotals} from './Summary/SecondaryTotals'
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
@@ -77,7 +79,7 @@ export const ConfirmTxScreen = () => {
 
           <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+          {!meta.isEasyConfirmationEnabled && !meta.isHW && (
             <ValidatedTextInput
               secureTextEntry
               value={password}
@@ -111,11 +113,10 @@ const Actions = (props: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
       flex: 1,
     },
     container: {
@@ -125,7 +126,6 @@ const useStyles = () => {
     actions: {
       paddingTop: 16,
       paddingHorizontal: 16,
-      paddingBottom: Platform.OS === 'ios' ? 25 : 16,
     },
   })
   return styles

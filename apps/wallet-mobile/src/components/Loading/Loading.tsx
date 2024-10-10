@@ -6,8 +6,8 @@ export const Loading = () => {
   const rotationStyle = useRotationStyle()
 
   return (
-    <Animated.View style={[{padding: 4}, rotationStyle]}>
-      <Svg width={22} height={22} viewBox="0 0 20 20" fill="none">
+    <Animated.View style={rotationStyle}>
+      <Svg width={20} height={20} viewBox="0 0 20 20" fill="none">
         <Path
           d="M1 10c-.552 0-1.005.449-.95.998A10 10 0 1010.998.05C10.448-.005 10 .448 10 1c0 .552.45.994.997 1.062a8 8 0 11-8.935 8.935C1.994 10.45 1.552 10 1 10z"
           fill="url(#paint0_linear_12263_40263)"
@@ -32,7 +32,7 @@ export const Loading = () => {
   )
 }
 
-export const useRotationStyle = () => {
+const useRotationStyle = () => {
   const spin = React.useRef(new Animated.Value(0)).current
 
   React.useEffect(() => {

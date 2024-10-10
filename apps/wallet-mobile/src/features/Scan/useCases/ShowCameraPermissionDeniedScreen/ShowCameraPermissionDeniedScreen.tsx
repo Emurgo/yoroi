@@ -3,8 +3,10 @@ import React from 'react'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, Text} from '../../../../components'
-import {useBlockGoBack, useWalletNavigation} from '../../../../navigation'
+import {Button} from '../../../../components/Button/Button'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
+import {useBlockGoBack, useWalletNavigation} from '../../../../kernel/navigation'
 import {useStrings} from '../../common/useStrings'
 import {CameraPermissionDeniedIllustration} from '../../illustrations/CameraPermissionDeniedIlustration'
 import {OpenDeviceAppSettingsButton} from './OpenDeviceAppSettingsButton'
@@ -43,13 +45,12 @@ const Actions = ({style, ...props}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
-      ...padding['x-l'],
+      backgroundColor: color.bg_color_max,
+      ...atoms.px_lg,
     },
     scroll: {
       flex: 1,
@@ -57,19 +58,19 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
-      ...padding['xs'],
+      color: color.gray_max,
+      ...atoms.heading_3_medium,
+      ...atoms.px_sm,
       textAlign: 'center',
     },
     help: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
+      color: color.gray_600,
+      ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 330,
     },
     actions: {
-      ...padding['y-l'],
+      ...atoms.py_lg,
     },
   })
   return styles

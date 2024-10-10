@@ -1,21 +1,21 @@
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Boundary, Icon, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
-import {formatTokenWithText} from '../../../../legacy/format'
-import {isEmptyString} from '../../../../utils'
+import {Icon} from '../../../../components/Icon'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {isEmptyString} from '../../../../kernel/utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
+import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
+import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 
 type Props = {
   label?: string
   wallet: YoroiWallet
-  amount: Balance.Amount
+  amount?: Partial<Portfolio.Token.Amount>
   onChange(value: string): void
   value?: string
   navigateTo?: () => void
@@ -30,7 +30,6 @@ export const AmountCard = ({
   label,
   onChange,
   value,
-  wallet,
   amount,
   navigateTo,
   touched,
@@ -41,15 +40,13 @@ export const AmountCard = ({
 }: Props) => {
   const [isFocused, setIsFocused] = React.useState(false)
   const strings = useStrings()
-  const {quantity, tokenId} = amount
-  const tokenInfo = useTokenInfo({wallet, tokenId})
   const {styles, colors} = useStyles()
+  const {isDark} = useTheme()
 
   const noTokenSelected = !touched
-
-  const name = tokenInfo.ticker ?? tokenInfo.name
-  const formattedAmount = noTokenSelected ? Quantities.zero : formatTokenWithText(quantity, tokenInfo, 18)
-  const fallback = React.useCallback(() => <TokenIconPlaceholder />, [])
+  const info = amount?.info
+  const name = info?.ticker ?? info?.name ?? ''
+  const formattedAmount = !info ? '0' : formatTokenWithText(amount?.quantity ?? 0n, info, 18)
 
   const focusInput = () => {
     if (inputRef?.current) {
@@ -65,8 +62,8 @@ export const AmountCard = ({
         <View style={styles.content}>
           <Pressable
             style={styles.amountWrapper}
-            onPress={() => (noTokenSelected ? navigateTo?.() : focusInput())}
-            testID={noTokenSelected ? `${testId}-token-input` : ''}
+            onPress={() => (!info ? navigateTo?.() : focusInput())}
+            testID={`${testId}-token-input`}
           >
             <TextInput
               keyboardType="numeric"
@@ -85,28 +82,31 @@ export const AmountCard = ({
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               testID={`${testId}-amount-input`}
-              {...(noTokenSelected && {onPressIn: navigateTo})}
+              keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
+              {...(!info && {onPressIn: navigateTo})}
             />
           </Pressable>
 
           <Spacer width={7} />
 
-          <View style={styles.rightSection}>
+          <View>
             <TouchableOpacity onPress={navigateTo}>
               <View style={styles.sectionContainer}>
-                <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback}}>
-                  {noTokenSelected ? (
-                    <Icon.Coins size={24} color={colors.noSelected} />
-                  ) : (
-                    <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant="swap" />
-                  )}
-                </Boundary>
+                {!info || (info.nature !== Portfolio.Token.Nature.Primary && info.originalImage === '') ? (
+                  <View style={styles.notSelected}>
+                    <Icon.Coins size={20} color={colors.noSelected} />
+                  </View>
+                ) : (
+                  <TokenInfoIcon info={info} size="sm" />
+                )}
 
                 <Spacer width={8} />
 
-                <Text style={styles.coinName}>{noTokenSelected ? strings.selectToken : name}</Text>
+                <Text style={styles.coinName}>{noTokenSelected || !info ? strings.selectToken : name}</Text>
 
-                <Icon.Chevron direction="right" size={20} color="black" />
+                <Spacer width={8} />
+
+                <Icon.Chevron direction="down" size={24} color={colors.gray} />
               </View>
             </TouchableOpacity>
 
@@ -153,88 +153,84 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: color.gray[400],
-      paddingTop: 16,
-      paddingBottom: 16,
-      paddingLeft: 16,
-      paddingRight: 16,
-      padding: 10,
+      borderColor: color.gray_400,
+      ...atoms.p_lg,
       height: 86,
     },
     borderError: {
-      borderColor: color.magenta[500],
+      borderColor: color.sys_magenta_500,
       borderWidth: 2,
     },
     active: {
       borderWidth: 2,
-      borderColor: color.gray[900],
+      borderColor: color.gray_900,
     },
-
     label: {
-      position: 'absolute',
+      ...atoms.absolute,
       top: -7,
       left: 10,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
       paddingHorizontal: 5,
       fontSize: 12,
-      color: color.gray[900],
+      color: color.gray_900,
     },
     labelError: {
-      color: color.magenta[500],
+      color: color.sys_magenta_500,
     },
     content: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
       height: 64,
     },
     amountInput: {
-      paddingVertical: 0,
+      ...atoms.py_0,
       minWidth: 120,
       maxWidth: 200,
       height: 34,
       fontSize: 16,
-      color: color.gray.max,
+      color: color.gray_max,
     },
     amountWrapper: {
-      flex: 1,
-    },
-    rightSection: {
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
+      ...atoms.flex_1,
     },
     sectionContainer: {
-      flexDirection: 'row',
+      ...atoms.flex_row,
+      ...atoms.align_center,
       alignSelf: 'flex-end',
-      alignItems: 'center',
     },
     coinName: {
-      ...typography['body-1-l-regular'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_max,
     },
     balanceText: {
       fontSize: 12,
-      color: color.gray[600],
+      color: color.gray_600,
     },
     errorText: {
-      color: color.magenta[500],
+      color: color.sys_magenta_500,
       fontSize: 12,
     },
     grayText: {
-      color: color.gray[600],
+      color: color.gray_600,
+    },
+    notSelected: {
+      backgroundColor: color.gray_100,
+      borderRadius: 4,
+      ...atoms.p_xs,
     },
   })
+
   const colors = {
-    placeholder: theme.color.gray[600],
-    focused: theme.color.gray[900],
-    blur: theme.color['black-static'],
-    noSelected: theme.color.gray[400],
+    placeholder: color.gray_600,
+    focused: color.input_selected,
+    blur: color.black_static,
+    noSelected: color.gray_400,
+    gray: color.gray_max,
   }
   return {styles, colors} as const
 }

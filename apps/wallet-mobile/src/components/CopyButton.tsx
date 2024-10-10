@@ -3,12 +3,12 @@ import React from 'react'
 import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 
-import {Text} from '../../../wallet-mobile/src/components'
-import {isEmptyString} from '../../../wallet-mobile/src/utils/utils'
+import {Text} from '../../../wallet-mobile/src/components/Text'
 import {Icon} from '../components/Icon'
-import {useCopy} from '../legacy/useCopy'
+import {useCopy} from '../hooks/useCopy'
+import {isEmptyString} from '../kernel/utils'
 
-export type CopyButtonProps = {
+type CopyButtonProps = {
   value: string
   onCopy?: () => void
   children?: React.ReactNode
@@ -67,17 +67,16 @@ const AnimatedCopyButton = ({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const colors = {
-    gray: color.gray[900],
+    gray: color.gray_900,
   }
 
   const styles = StyleSheet.create({
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_max,
       alignItems: 'center',
       justifyContent: 'center',
       bottom: 20,
@@ -87,11 +86,11 @@ const useStyles = () => {
       zIndex: 10,
     },
     copiedText: {
-      color: color.gray.min,
+      color: color.gray_min,
       textAlign: 'center',
       padding: 8,
       flex: 1,
-      ...typography['body-2-m-medium'],
+      ...atoms.body_2_md_medium,
     },
     rowContainer: {
       flexDirection: 'row',

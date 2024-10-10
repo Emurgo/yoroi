@@ -5,8 +5,11 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, useModal} from '../../../../components'
-import {isEmptyString} from '../../../../utils/utils'
+import {Button} from '../../../../components/Button/Button'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {Space} from '../../../../components/Space/Space'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {isEmptyString} from '../../../../kernel/utils'
 import {useStrings} from '../../common/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
@@ -65,36 +68,40 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   )
 }
 
-const Message = ({message}: {message?: string}) =>
-  !isEmptyString(message) && (
-    <>
-      <Text>{message}</Text>
+const Message = ({message}: {message?: string}) => {
+  const {styles} = useStyles()
+  return (
+    !isEmptyString(message) && (
+      <>
+        <Text style={styles.text}>{message}</Text>
 
-      <Spacer height={16} />
-    </>
+        <Space height="lg" />
+      </>
+    )
   )
+}
 const Actions = (props: ViewProps) => <View {...props} />
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     actions: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
     },
     text: {
-      ...theme.typography['body-2-m-regular'],
-      color: theme.color.gray.max,
+      color: color.text_gray_max,
+      ...atoms.body_2_md_regular,
     },
   })
   const colors = {
-    danger: color.magenta[500],
-    warning: color.yellow[500],
+    danger: color.sys_magenta_500,
+    warning: color.sys_orange_500,
   }
-  return {styles, colors}
+  return {styles, colors} as const
 }

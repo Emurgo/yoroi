@@ -1,21 +1,20 @@
 import {freeze} from 'immer'
 
-import {banxaLogo, encryptusLogo} from './logos'
+import {anzensLogo, banxaLogo, cardanoSpotLogo, encryptusLogo} from './logos'
 
-// TODO: move to yoroi configuration manager
 export const trustedApps: Readonly<
-  Map<string, {name: string; xpub: string | undefined; logo: string; provider: string}>
+  Map<string, {name: string; vkey: string | undefined; logo: string; provider: string}>
 > = freeze(
   new Map(
     __DEV__
-      ? [['yoroi', {name: 'Yoroi Test', provider: 'EMURGO', xpub: '', logo: ''}]]
+      ? [['yoroi', {name: 'Yoroi Test', provider: 'EMURGO', vkey: '', logo: ''}]]
       : [
           [
             '18d1545a-a59b-45cb-a180-157b110c77fe',
             {
               name: 'Encryptus Exchange',
               provider: 'Encryptus',
-              xpub: '',
+              vkey: '',
               logo: encryptusLogo,
             },
           ],
@@ -24,8 +23,26 @@ export const trustedApps: Readonly<
             {
               name: 'Banxa Ramp On',
               provider: 'Banxa',
-              xpub: '',
+              vkey: '',
               logo: banxaLogo,
+            },
+          ],
+          [
+            '388c75fd-6820-4202-a4a6-9ea9038e2e35',
+            {
+              name: 'Cardano Spot',
+              provider: 'EMURGO',
+              vkey: '',
+              logo: cardanoSpotLogo,
+            },
+          ],
+          [
+            '388c75fd-6820-4202-a4a6-9ea9038e2e35',
+            {
+              name: 'Anzens',
+              provider: 'Anzens',
+              vkey: '',
+              logo: anzensLogo,
             },
           ],
         ],

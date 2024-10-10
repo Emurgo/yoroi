@@ -3,35 +3,35 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {defaultStackNavigationOptions, WalletInitRoutes} from '../../navigation'
-import {CheckNanoXScreen} from './legacy/CheckNanoX/CheckNanoXScreen'
-import {ConnectNanoXScreen} from './legacy/ConnectNanoX/ConnectNanoXScreen'
+import {defaultStackNavigationOptions, WalletInitRoutes} from '../../kernel/navigation'
+import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
+import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
-import {SaveNanoXScreen} from './legacy/SaveNanoX/SaveNanoXScreen'
 import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen'
 import {ChooseMnemonicTypeScreen} from './useCases/ChooseMnemonicType/ChooseMnemonicTypeScreen'
-import {ChooseNetworkScreen} from './useCases/ChooseNetwork/ChooseNetworkScreen'
 import {ChooseSetupTypeScreen} from './useCases/ChooseSetupType/ChooseSetupTypeScreen'
 import {AboutRecoveryPhraseScreen} from './useCases/CreateWallet/AboutRecoveryPhraseScreen'
 import {RecoveryPhraseScreen} from './useCases/CreateWallet/RecoveryPhraseScreen'
 import {VerifyRecoveryPhraseScreen} from './useCases/CreateWallet/VerifyRecoveryPhraseScreen'
 import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
+import {CheckNanoXScreen} from './useCases/RestoreHwWallet/CheckNanoXScreen'
+import {ConnectNanoXScreen} from './useCases/RestoreHwWallet/ConnectNanoXScreen'
+import {SaveNanoXScreen} from './useCases/RestoreHwWallet/SaveNanoXScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 
 const Stack = createStackNavigator<WalletInitRoutes>()
 export const SetupWalletNavigator = () => {
   const strings = useStrings()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
 
-  const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(theme), [theme])
+  const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   return (
     <Stack.Navigator
       screenOptions={{
-        cardStyle: {backgroundColor: 'transparent'},
         ...navigationOptions,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >
       <Stack.Screen
@@ -44,18 +44,6 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-choose-setup-type"
         component={ChooseSetupTypeScreen}
         options={{title: strings.addNewWalletTitle}}
-      />
-
-      <Stack.Screen
-        name="setup-wallet-create-choose-network"
-        component={ChooseNetworkScreen}
-        options={{title: strings.createWalletTitle}}
-      />
-
-      <Stack.Screen
-        name="setup-wallet-restore-choose-network"
-        component={ChooseNetworkScreen}
-        options={{title: strings.restoreWalletTitle}}
       />
 
       <Stack.Screen
@@ -134,6 +122,12 @@ export const SetupWalletNavigator = () => {
         component={VerifyRecoveryPhraseScreen}
         options={{title: strings.createWalletTitle}}
       />
+
+      <Stack.Screen
+        name="setup-wallet-preparing-wallet"
+        component={PreparingWalletScreen}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   )
 }
@@ -179,15 +173,15 @@ const messages = defineMessages({
   },
   connectNanoXTitle: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger Device',
+    defaultMessage: '!!!Connect hardware wallet',
   },
   checkNanoXTitle: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger Device',
+    defaultMessage: '!!!Connect hardware wallet',
   },
   saveNanoXTitle: {
     id: 'components.walletinit.connectnanox.savenanoxscreen.title',
-    defaultMessage: '!!!Save wallet',
+    defaultMessage: '!!!Connect hardware wallet',
   },
 })
 

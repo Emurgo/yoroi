@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
@@ -7,17 +6,18 @@ import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
-import {ConfirmTx} from '../../../../components/ConfirmTx'
-import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
-import {assetsToSendProperties} from '../../../../metrics/helpers'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {sortTokenInfos} from '../../../../utils'
-import {useSaveMemo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
-import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
-import {Amounts} from '../../../../yoroi-wallets/utils'
-import {debugWalletInfo, features} from '../../..'
-import {useSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {ConfirmTx} from '../../../../components/ConfirmTx/ConfirmTx'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Space} from '../../../../components/Space/Space'
+import {ValidatedTextInput} from '../../../../components/ValidatedTextInput'
+import {isDev} from '../../../../kernel/env'
+import {debugWalletInfo, features} from '../../../../kernel/features'
+import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../kernel/i18n/global-messages'
+import {assetsToSendProperties} from '../../../../kernel/metrics/helpers'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
+import {YoroiSignedTx} from '../../../../yoroi-wallets/types/yoroi'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
 import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {BalanceAfter} from './Summary/BalanceAfter'
@@ -30,7 +30,7 @@ import {SecondaryTotals} from './Summary/SecondaryTotals'
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
@@ -38,21 +38,16 @@ export const ConfirmTxScreen = () => {
 
   const {memo, selectedTargetIndex, unsignedTx: yoroiUnsignedTx, targets} = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(amounts).map(({tokenId}) => tokenId),
-  })
-  const tokens = sortTokenInfos({wallet, tokenInfos})
 
   const {saveMemo} = useSaveMemo({wallet})
 
   useEffect(() => {
-    if (features.prefillWalletInfo && __DEV__) {
+    if (features.prefillWalletInfo && isDev) {
       setPassword(debugWalletInfo.PASSWORD)
     }
   }, [])
 
-  const sendProperties = React.useMemo(() => assetsToSendProperties({tokens, amounts}), [amounts, tokens])
+  const sendProperties = React.useMemo(() => assetsToSendProperties({amounts}), [amounts])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -80,38 +75,42 @@ export const ConfirmTxScreen = () => {
   if (yoroiUnsignedTx === undefined) throw new Error('Missing yoroiUnsignedTx')
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <ScrollView style={styles.container} persistentScrollbar ref={scrollViewRef}>
+    <KeyboardAvoidingView style={[styles.root, styles.flex]}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.flex, styles.safeAreaView]}>
+        <ScrollView style={styles.scrollView} persistentScrollbar ref={scrollViewRef}>
           <CurrentBalance />
 
           <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          <Spacer height={4} />
+          <Space height="xs" />
 
           <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          <Spacer height={16} />
+          <Space height="lg" />
 
           {targets.map((target, index) => (
             <ReceiverInfo key={`${target.receiver.resolve}:${index}`} target={target} />
           ))}
 
-          <Spacer height={8} />
+          <Space />
 
           <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          <Spacer height={8} />
+          <Space />
 
           <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+          <Space />
+
+          {!meta.isEasyConfirmationEnabled && !meta.isHW && (
             <ValidatedTextInput
               secureTextEntry
               value={password}
               label={strings.password}
               onChangeText={setPassword}
               testID="spendingPasswordInput"
+              textContentType="oneTimeCode"
+              noHelper
             />
           )}
         </ScrollView>
@@ -128,32 +127,36 @@ export const ConfirmTxScreen = () => {
             chooseTransportOnConfirmation
           />
         </Actions>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
-const Actions = (props: ViewProps) => {
+const Actions = ({style, ...props}: ViewProps) => {
   const styles = useStyles()
-  return <View {...props} style={styles.actions} />
+  return <View {...props} style={[styles.actions, style]} />
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.gray.min,
-      flex: 1,
+      backgroundColor: color.bg_color_max,
     },
-    container: {
-      backgroundColor: color.gray.min,
-      flex: 1,
-      ...padding['x-l'],
+    safeAreaView: {
+      ...atoms.gap_lg,
+      ...atoms.pb_lg,
+    },
+    scrollView: {
+      ...atoms.flex_1,
+      ...atoms.px_lg,
+    },
+    flex: {
+      ...atoms.flex_1,
     },
     actions: {
-      ...padding['l'],
+      ...atoms.px_lg,
     },
   })
   return styles

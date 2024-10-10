@@ -1,28 +1,52 @@
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
+import {PromiseAllLimited} from '@yoroi/common'
 import BigNumber from 'bignumber.js'
 
-import {Address} from '../../types'
+import {logger} from '../../../kernel/logger/logger'
 import {RawUtxo} from '../../types/other'
-import {CardanoMobile} from '../../wallets'
-import {COINS_PER_UTXO_BYTE} from '../constants/common'
 import {cardanoValueFromRemoteFormat} from '../utils'
+import {wrappedCsl} from '../wrappedCsl'
 
-export async function calcLockedDeposit(utxos: RawUtxo[], address: Address, coinsPerUtxoByteStr: string) {
-  const utxosWithAssets = utxos.filter((u) => u.assets.length > 0)
+const addressPlaceholder =
+  'addr1qx8nuj8a7gy8kes4pedpfdscrlxr6p8gkzyzmhdmsf4209xssydveuc8xyx4zh27fwcmr62mraeezjwf24hzkyejwfmqmpfpy5'
 
-  const coinsPerUtxoByte = await CardanoMobile.BigNum.fromStr(coinsPerUtxoByteStr ?? COINS_PER_UTXO_BYTE)
-  const dataCost = await CardanoMobile.DataCost.newCoinsPerByte(coinsPerUtxoByte)
-  const normalizedAddress = await normalizeToAddress(CardanoMobile, address)
-  if (normalizedAddress === undefined) throw new Error('calcLockedDeposit::Error not a valid address')
+export async function calcLockedDeposit({
+  rawUtxos,
+  address = addressPlaceholder,
+  coinsPerUtxoByteStr,
+}: {
+  rawUtxos: RawUtxo[]
+  address?: string
+  coinsPerUtxoByteStr: string
+}) {
+  const cslLocal = wrappedCsl()
+  const csl = cslLocal.csl
+  const cslProvided = wrappedCsl()
+  const result = new BigNumber(0)
+  try {
+    const utxosWithAssets = rawUtxos.filter((u) => u.assets.length > 0)
+    const coinsPerUtxoByte = await csl.BigNum.fromStr(coinsPerUtxoByteStr)
+    const dataCost = await csl.DataCost.newCoinsPerByte(coinsPerUtxoByte)
 
-  const promises = utxosWithAssets.map((u) => {
-    return cardanoValueFromRemoteFormat(u)
-      .then((v) => CardanoMobile.TransactionOutput.new(normalizedAddress, v))
-      .then((txOutput) => CardanoMobile.minAdaForOutput(txOutput, dataCost))
-      .then((m) => m.toStr())
-  })
-  const results = await Promise.all(promises)
-  const totalLocked = results.reduce((acc, v) => acc.plus(v), new BigNumber(0))
+    const normalizedAddress = await normalizeToAddress(cslProvided.csl, address)
+    if (normalizedAddress === undefined) throw new Error('calcLockedDeposit::Error not a valid address')
 
-  return totalLocked
+    const promises = utxosWithAssets.map((u) => {
+      return () =>
+        cardanoValueFromRemoteFormat(u)
+          .then((v) => csl.TransactionOutput.new(normalizedAddress, v))
+          .then((txOutput) => csl.minAdaForOutput(txOutput, dataCost))
+          .then((m) => m.toStr())
+    })
+    const results = await PromiseAllLimited(promises, 20)
+    const totalLocked = results.reduce((acc, v) => acc.plus(v), result)
+
+    return totalLocked
+  } catch (e) {
+    logger.error(e as Error, {utxosLength: rawUtxos.length, coinsPerUtxoByteStr})
+    return result
+  } finally {
+    cslProvided.release()
+    cslLocal.release()
+  }
 }

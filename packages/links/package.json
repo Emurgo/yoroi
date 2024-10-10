@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/links",
-  "version": "1.5.4",
+  "version": "1.5.7",
   "description": "The package for managing links of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -49,6 +49,7 @@
   ],
   "scripts": {
     "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
+    "build:dev": "yarn tsc && yarn clean && bob build",
     "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dev": "yarn clean && bob build",
@@ -135,10 +136,6 @@
       "<rootDir>/jest.setup.js"
     ]
   },
-  "dependencies": {
-    "@yoroi/common": "1.5.2",
-    "@yoroi/types": "1.5.4"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
@@ -150,6 +147,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
+    "@yoroi/types": "1.5.8",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
@@ -172,6 +170,7 @@
     "zod": "^3.22.2"
   },
   "peerDependencies": {
+    "@yoroi/common": "^1.5.4",
     "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",
     "zod": "^3.22.2"

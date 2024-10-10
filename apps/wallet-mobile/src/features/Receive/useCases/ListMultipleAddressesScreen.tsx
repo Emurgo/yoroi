@@ -6,7 +6,6 @@ import {
   LayoutAnimation,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollView,
   StyleSheet,
   View,
   ViewToken,
@@ -14,11 +13,11 @@ import {
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer} from '../../../components'
-import {useMetrics} from '../../../metrics/metricsManager'
-import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
-import {BIP32_HD_GAP_LIMIT} from '../common/contants'
+import {Button} from '../../../components/Button/Button'
+import {Space} from '../../../components/Space/Space'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
@@ -32,25 +31,22 @@ type AddressInfo = {
 }
 
 export const ListMultipleAddressesScreen = () => {
-  const inView = React.useRef(Number.MAX_SAFE_INTEGER)
   const strings = useStrings()
   const {styles} = useStyles()
-  const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
+  const {wallet} = useSelectedWallet()
+  const inView = React.useRef(Number.MAX_SAFE_INTEGER)
 
-  const {addressMode} = useAddressModeManager()
-  const addresses = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
-
-  React.useEffect(() => {
-    wallet.generateNewReceiveAddressIfNeeded()
-  }, [wallet])
+  const {addressMode} = useAddressMode()
+  const addresses = useReceiveAddressesStatus(addressMode)
+  const [showAddressLimitInfo, setShowAddressLimitInfo] = React.useState(true)
 
   const addressInfos = toAddressInfos(addresses)
-  const hasReachedGapLimit = addresses.unused.length >= BIP32_HD_GAP_LIMIT
+  const hasReachedGapLimit = !addresses.canIncrease
 
-  const onViewableItemsChanged = React.useCallback(({viewableItems}: {viewableItems: ViewToken[]}) => {
+  const handleOnViewableItemsChanged = React.useCallback(({viewableItems}: {viewableItems: ViewToken[]}) => {
     inView.current = viewableItems.length
   }, [])
 
@@ -81,10 +77,7 @@ export const ListMultipleAddressesScreen = () => {
     }, [track]),
   )
 
-  const [showAddressLimitInfo, setShowAddressLimitInfo] = React.useState(true)
-  const scrollViewRef = React.useRef<ScrollView>(null)
-
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const handleOnScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (event.nativeEvent.contentOffset.y <= 0) {
       InteractionManager.runAfterInteractions(() => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -110,25 +103,20 @@ export const ListMultipleAddressesScreen = () => {
           <>
             <ShowAddressLimitInfo />
 
-            <Spacer height={16} />
+            <Space height="lg" />
           </>
         )}
 
-        <ScrollView
-          ref={scrollViewRef}
-          onScroll={handleScroll}
+        <Animated.FlatList
+          onScroll={handleOnScroll}
           scrollEventThrottle={16}
+          data={addressInfos}
+          keyExtractor={(addressInfo) => addressInfo.address}
+          renderItem={renderAddressInfo}
+          layout={Layout}
           showsVerticalScrollIndicator={false}
-        >
-          <Animated.FlatList
-            data={addressInfos}
-            keyExtractor={(addressInfo) => addressInfo.address}
-            renderItem={renderAddressInfo}
-            layout={Layout}
-            showsVerticalScrollIndicator={false}
-            onViewableItemsChanged={onViewableItemsChanged}
-          />
-        </ScrollView>
+          onViewableItemsChanged={handleOnViewableItemsChanged}
+        />
       </View>
 
       <Animated.View
@@ -143,7 +131,6 @@ export const ListMultipleAddressesScreen = () => {
           title={strings.generateButton}
           disabled={hasReachedGapLimit}
           onPress={handleOnGenerateNewReceiveAddress}
-          style={styles.button}
         />
       </Animated.View>
     </SafeAreaView>
@@ -165,32 +152,24 @@ const toAddressInfos = (addresses: {unused: string[]; used: string[]}): AddressI
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      backgroundColor: theme.color.gray.min,
-      ...theme.padding['t-l'],
+      backgroundColor: color.bg_color_max,
+      ...atoms.flex_1,
+      ...atoms.py_lg,
     },
     content: {
-      flex: 1,
-      ...theme.padding['x-l'],
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     footer: {
-      backgroundColor: theme.color.gray.min,
-      borderColor: theme.color.gray[200],
-      ...theme.padding['l'],
-    },
-    button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: color.bg_color_max,
+      borderColor: color.gray_200,
+      ...atoms.pt_lg,
+      ...atoms.px_lg,
     },
   })
 
-  const colors = {
-    buttonBackgroundBlue: theme.color.primary[600],
-    learnMore: theme.color.primary[500],
-    details: theme.color.gray[900],
-  }
-
-  return {styles, colors} as const
+  return {styles} as const
 }

@@ -2,9 +2,9 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 
-import {useAuth} from '../../auth/AuthProvider'
-import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
-import {defaultStackNavigationOptions, InititalizationRoutes} from '../../navigation'
+import {defaultStackNavigationOptions, InititalizationRoutes} from '../../kernel/navigation'
+import {useAuth} from '../Auth/AuthProvider'
+import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
 import {AnalyticsNoticeScreen} from './AnalyticsNoticeScreen'
 import {useStrings} from './common'
 import {InitialScreen} from './InitialScreen/InitialScreen'
@@ -15,13 +15,12 @@ import {ReadTermsOfServiceScreen} from './ReadTermsOfServiceScreen'
 const Stack = createStackNavigator<InititalizationRoutes>()
 export const InitializationNavigator = () => {
   const strings = useStrings()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
 
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(theme),
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+        ...defaultStackNavigationOptions(atoms, color),
       }}
     >
       <Stack.Screen name="initial" component={InitialScreen} options={{headerShown: false}} />

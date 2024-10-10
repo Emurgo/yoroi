@@ -4,28 +4,29 @@ import {useTheme} from '@yoroi/theme'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
 import {Linking, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, useModal} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {Space} from '../../../../components/Space/Space'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../navigation'
-import {generateAdaMnemonic} from '../../../../yoroi-wallets/cardano/mnemonic'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {generateAdaMnemonic} from '../../../../yoroi-wallets/cardano/mnemonic/mnemonic'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
-import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {EyeClosed as EyeClosedIllustration} from '../../illustrations/EyeClosed'
 import {EyeOpen as EyeOpenIllustration} from '../../illustrations/EyeOpen'
 import {Info as InfoIcon} from '../../illustrations/Info'
 
 export const RecoveryPhraseScreen = () => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const {openModal, closeModal} = useModal()
   const [isBlur, setIsBlur] = React.useState(true)
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
   const {mnemonicChanged, showCreateWalletInfoModal, showCreateWalletInfoModalChanged} = useSetupWallet()
   const {track} = useMetrics()
@@ -65,13 +66,16 @@ export const RecoveryPhraseScreen = () => {
         <Space height="xl" />
 
         <Button
+          shelleyTheme
           title={strings.continueButton}
-          style={styles.button}
           onPress={() => {
             closeModal()
             showCreateWalletInfoModalChanged(false)
           }}
+          testId="setup-step2-continue-button"
         />
+
+        <Space height="_2xl" />
       </View>,
       552,
     )
@@ -87,7 +91,6 @@ export const RecoveryPhraseScreen = () => {
     strings.recoveryPhraseCardThirdItem,
     strings.recoveryPhraseCardTitle,
     strings.recoveryPhraseModalTitle,
-    styles.button,
     styles.modal,
   ])
 
@@ -104,7 +107,7 @@ export const RecoveryPhraseScreen = () => {
         <Text style={styles.title}>
           {strings.recoveryPhraseTitle(bold)}
 
-          <Info onPress={handleOnShowModal} />
+          <Info onPress={handleOnShowModal} testId="step2-info-icon" />
         </Text>
 
         <View style={styles.mnemonicWords}>
@@ -116,12 +119,7 @@ export const RecoveryPhraseScreen = () => {
 
           {mnemonic.split(' ').map((word, index) => (
             <View key={`mnemonic-${index}`} testID={`mnemonic-${index}`} style={styles.mnemonicTextContainer}>
-              <LinearGradient
-                style={[StyleSheet.absoluteFill, {opacity: 1}]}
-                start={{x: 1, y: 0}}
-                end={{x: 0, y: 0}}
-                colors={colors.gradientBlueGreen}
-              />
+              <View style={[StyleSheet.absoluteFill, styles.buttonBackground]} />
 
               <Text style={styles.mnemonicText}>
                 <Text style={styles.mnemonicText}>{index + 1}. </Text>
@@ -132,7 +130,12 @@ export const RecoveryPhraseScreen = () => {
           ))}
         </View>
 
-        <TouchableOpacity activeOpacity={0.5} style={styles.blurButton} onPress={() => setIsBlur(!isBlur)}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.blurButton}
+          onPress={() => setIsBlur(!isBlur)}
+          testID="step2-show_hide-recovery-phrase-button"
+        >
           {isBlur ? <EyeOpenIllustration /> : <EyeClosedIllustration />}
 
           <Text style={styles.blurTextButton}>
@@ -144,26 +147,28 @@ export const RecoveryPhraseScreen = () => {
       <Spacer fill />
 
       <Button
+        shelleyTheme
         title={strings.next}
-        style={styles.button}
         disabled={isBlur}
         onPress={() => {
           mnemonicChanged(mnemonic)
           navigation.navigate('setup-wallet-verify-recovery-phrase-mnemonic')
         }}
+        testId="setup-step2-next-button"
       />
 
-      <Space height="l" />
+      <Space height="lg" />
     </SafeAreaView>
   )
 }
 
-const Info = ({onPress}: {onPress: () => void}) => {
+const Info = ({onPress, testId}: {onPress: () => void; testId?: string}) => {
   const {styles} = useStyles()
+  const {color, isDark} = useTheme()
   return (
     <TouchableOpacity style={styles.info} onPress={onPress}>
-      <View style={styles.infoIcon}>
-        <InfoIcon size={24} />
+      <View style={styles.infoIcon} testID={testId}>
+        <InfoIcon size={24} color={isDark ? color.white_static : color.black_static} />
       </View>
     </TouchableOpacity>
   )
@@ -178,79 +183,79 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      ...theme.padding['x-l'],
-      justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.bg_color_max,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     modal: {
-      flex: 1,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     title: {
-      lineHeight: 24,
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_900,
     },
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     content: {
       gap: 16,
     },
-    button: {
-      backgroundColor: theme.color.primary[500],
-    },
     mnemonicWords: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 8,
-      ...theme.padding['y-s'],
+      ...atoms.flex_row,
+      ...atoms.flex_wrap,
+      ...atoms.py_sm,
+      ...atoms.gap_sm,
     },
     mnemonicTextContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
       borderRadius: 8,
-      overflow: 'hidden',
-      ...theme.padding['x-l'],
-      ...theme.padding['y-s'],
+      ...atoms.overflow_hidden,
+      ...atoms.flex_row,
+      ...atoms.flex_wrap,
+      ...atoms.px_lg,
+      ...atoms.py_sm,
     },
     mnemonicText: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.primary['600'],
+      ...atoms.body_1_lg_regular,
+      color: color.primary_600,
     },
     blurView: {
-      position: 'absolute',
-      ...theme.padding['xxl'],
       left: -8,
       right: -8,
       bottom: 0,
       top: 0,
-      zIndex: 1,
+      ...atoms.z_10,
+      ...atoms.absolute,
+      ...atoms.p_2xl,
     },
     blurButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.gap_sm,
     },
     blurTextButton: {
-      ...theme.typography['button-2-m'],
-      color: theme.color.primary[500],
+      color: color.primary_500,
+      ...atoms.button_2_md,
+      textTransform: 'none',
     },
     info: {
-      position: 'relative',
+      ...atoms.relative,
     },
     infoIcon: {
-      position: 'absolute',
       top: Platform.OS === 'ios' ? -22 : -18,
       left: 0,
+      ...atoms.absolute,
+    },
+    buttonBackground: {
+      backgroundColor: color.primary_100,
     },
   })
 
   const colors = {
-    gradientBlueGreen: theme.color.gradients['blue-green'],
+    gradientBlueGreen: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

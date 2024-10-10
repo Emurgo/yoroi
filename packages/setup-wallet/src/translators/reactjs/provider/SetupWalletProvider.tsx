@@ -38,14 +38,17 @@ export const SetupWalletProvider = ({
         type: SetupWalletActionType.WalletPasswordChanged,
         walletPassword,
       }),
-    networkIdChanged: (networkId: SetupWalletState['networkId']) =>
-      dispatch({type: SetupWalletActionType.NetworkIdChanged, networkId}),
-    walletImplementationIdChanged: (
-      walletImplementationId: SetupWalletState['walletImplementationId'],
+    walletImplementationChanged: (
+      walletImplementation: SetupWalletState['walletImplementation'],
     ) =>
       dispatch({
-        type: SetupWalletActionType.WalletImplementationIdChanged,
-        walletImplementationId,
+        type: SetupWalletActionType.WalletImplementationChanged,
+        walletImplementation,
+      }),
+    accountVisualChanged: (accountVisual: SetupWalletState['accountVisual']) =>
+      dispatch({
+        type: SetupWalletActionType.AccountVisualChanged,
+        accountVisual,
       }),
     publicKeyHexChanged: (publicKeyHex: SetupWalletState['publicKeyHex']) =>
       dispatch({type: SetupWalletActionType.PublicKeyHexChanged, publicKeyHex}),
@@ -53,8 +56,8 @@ export const SetupWalletProvider = ({
       dispatch({type: SetupWalletActionType.PathChanged, path}),
     hwDeviceInfoChanged: (hwDeviceInfo: SetupWalletState['hwDeviceInfo']) =>
       dispatch({type: SetupWalletActionType.HwDeviceInfoChanged, hwDeviceInfo}),
-    setUpTypeChanged: (setUpType: SetupWalletState['setUpType']) =>
-      dispatch({type: SetupWalletActionType.SetUpTypeChanged, setUpType}),
+    setupTypeChanged: (setUpType: SetupWalletState['setUpType']) =>
+      dispatch({type: SetupWalletActionType.SetupTypeChanged, setUpType}),
     mnemonicTypeChanged: (mnemonicType: SetupWalletState['mnemonicType']) =>
       dispatch({type: SetupWalletActionType.MnemonicTypeChanged, mnemonicType}),
     useUSBChanged: (useUSB: SetupWalletState['useUSB']) =>
@@ -74,6 +77,8 @@ export const SetupWalletProvider = ({
         type: SetupWalletActionType.ShowCreateWalletInfoModalChanged,
         showCreateWalletInfoModal,
       }),
+    walletIdChanged: (walletId: SetupWalletState['walletId']) =>
+      dispatch({type: SetupWalletActionType.WalletIdChanged, walletId}),
   }).current
 
   const context = React.useMemo(

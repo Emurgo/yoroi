@@ -2,12 +2,12 @@ import {useAsyncStorage} from '@yoroi/common'
 import {type StakingKeyState, governanceApiMaker, governanceManagerMaker, useStakingKeyState} from '@yoroi/staking'
 import * as React from 'react'
 
-import {CONFIG} from '../../../../legacy/config'
+import {governaceAfterBlock} from '../../../../kernel/config'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useStakingKey, useTipStatus} from '../../../../yoroi-wallets/hooks'
-import {isMainnetNetworkId, isSanchoNetworkId} from '../../../../yoroi-wallets/utils'
+import {useStakingKey} from '../../../../yoroi-wallets/hooks'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
-import {useSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {useBestBlock} from '../../../WalletManager/common/hooks/useBestBlock'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {GovernanceVote} from '../types'
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
@@ -31,23 +31,17 @@ export const mapStakingKeyStateToGovernanceAction = (state: StakingKeyState): Go
 }
 
 export const useIsGovernanceFeatureEnabled = (wallet: YoroiWallet) => {
-  const tipStatus = useTipStatus({wallet, options: {suspense: true}})
-  const {bestBlock} = tipStatus
-  const walletNetworkId = wallet.networkId
-  const isSanchonet = isSanchoNetworkId(walletNetworkId)
-  const isMainnet = isMainnetNetworkId(walletNetworkId)
-
-  const enabledSince = isSanchonet
-    ? CONFIG.GOVERNANCE_ENABLED_SINCE_BLOCK.SANCHONET
-    : isMainnet
-    ? CONFIG.GOVERNANCE_ENABLED_SINCE_BLOCK.MAINNET
-    : CONFIG.GOVERNANCE_ENABLED_SINCE_BLOCK.PREPROD
-
-  return bestBlock.height >= enabledSince
+  const bestBlock = useBestBlock({options: {suspense: true}})
+  return bestBlock.height >= governaceAfterBlock[wallet.networkManager.network]
 }
 
 export const useGovernanceManagerMaker = () => {
-  const {networkId, id: walletId} = useSelectedWallet()
+  const {
+    wallet: {
+      networkManager: {network},
+      id: walletId,
+    },
+  } = useSelectedWallet()
 
   const storage = useAsyncStorage()
   const governanceStorage = storage.join(`wallet/${walletId}/staking-governance/`)
@@ -56,11 +50,11 @@ export const useGovernanceManagerMaker = () => {
     () =>
       governanceManagerMaker({
         walletId,
-        networkId,
-        api: governanceApiMaker({networkId}),
+        network,
+        api: governanceApiMaker({network}),
         cardano: CardanoMobile,
         storage: governanceStorage,
       }),
-    [governanceStorage, networkId, walletId],
+    [governanceStorage, network, walletId],
   )
 }

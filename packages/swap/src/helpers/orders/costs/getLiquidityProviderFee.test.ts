@@ -1,45 +1,44 @@
-import {Quantities} from '../../../utils/quantities'
+import {tokenInfoMocks} from '../../../tokenInfo.mocks'
 import {getLiquidityProviderFee} from './getLiquidityProviderFee'
-import {asQuantity} from '../../../utils/asQuantity'
 
 describe('getLiquidityProviderFee', () => {
   it('should return zero when sell quantity is zero', () => {
     const result = getLiquidityProviderFee('0.03', {
-      tokenId: 'testToken',
-      quantity: Quantities.zero,
+      info: tokenInfoMocks.a,
+      quantity: 0n,
     })
 
     expect(result).toEqual({
-      tokenId: 'testToken',
-      quantity: Quantities.zero,
+      info: tokenInfoMocks.a,
+      quantity: 0n,
     })
   })
 
   it('should calculate provider fee correctly based on sell side', () => {
-    const expectedFee = '300'
+    const expectedFee = 300n
 
     const result = getLiquidityProviderFee('0.03', {
-      tokenId: 'testToken',
-      quantity: '1000000',
+      info: tokenInfoMocks.a,
+      quantity: 1000000n,
     })
 
     expect(result).toEqual({
-      tokenId: 'testToken',
-      quantity: asQuantity(expectedFee),
+      info: tokenInfoMocks.a,
+      quantity: expectedFee,
     })
   })
 
   it('should calculate fee ceil up', () => {
-    const expectedFee = '66'
+    const expectedFee = 66n
 
     const result = getLiquidityProviderFee('66.666666', {
-      tokenId: 'testToken',
-      quantity: '99',
+      info: tokenInfoMocks.a,
+      quantity: 99n,
     })
 
     expect(result).toEqual({
-      tokenId: 'testToken',
-      quantity: asQuantity(expectedFee),
+      info: tokenInfoMocks.a,
+      quantity: expectedFee,
     })
   })
 })

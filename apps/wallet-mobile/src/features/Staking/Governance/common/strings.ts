@@ -1,7 +1,7 @@
 import {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {errorMessages, ledgerMessages, txLabels} from '../../../../i18n/global-messages'
+import globalMessages, {errorMessages, ledgerMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -38,8 +38,13 @@ export const useStrings = () => {
     transactionDetails: intl.formatMessage(messages.transactionDetails),
     total: intl.formatMessage(messages.total),
     transactionFailed: intl.formatMessage(messages.transactionFailed),
+    notSupportedVersionTitle: intl.formatMessage(messages.notSupportedVersionTitle),
+    notSupportedVersionDescription: intl.formatMessage(messages.notSupportedVersionDescription),
+    noFunds: intl.formatMessage(messages.noFunds),
     transactionFailedDescription: intl.formatMessage(messages.transactionFailedDescription),
     tryAgain: intl.formatMessage(messages.tryAgain),
+    buyAda: intl.formatMessage(messages.buyAda),
+    goToFaucet: intl.formatMessage(messages.goToFaucet),
     withdrawWarningTitle: intl.formatMessage(messages.withdrawWarningTitle),
     withdrawWarningDescription: intl.formatMessage(messages.withdrawWarningDescription),
     withdrawWarningButton: intl.formatMessage(messages.withdrawWarningButton),
@@ -60,6 +65,8 @@ export const useStrings = () => {
     enterDrepIDInfo: intl.formatMessage(messages.enterDrepIDInfo),
     goToStaking: intl.formatMessage(messages.goToStaking),
     readyToCollectRewards: intl.formatMessage(messages.readyToCollectRewards),
+    notSupportedVersionButton: intl.formatMessage(messages.notSupportedVersionButton),
+    scriptNotSupported: intl.formatMessage(messages.scriptNotSupported),
   }
 }
 
@@ -137,7 +144,7 @@ const messages = defineMessages({
   },
   drepID: {
     id: 'components.governance.drepID',
-    defaultMessage: '!!!Drep ID',
+    defaultMessage: '!!!Drep ID (fingerprint)',
   },
   thankYouForParticipating: {
     id: 'components.governance.thankYouForParticipating',
@@ -193,6 +200,10 @@ const messages = defineMessages({
     id: 'components.governance.transactionFailed',
     defaultMessage: '!!!Transaction failed',
   },
+  noFunds: {
+    id: 'components.governance.noFunds',
+    defaultMessage: '!!!To participate in governance you need to have ADA in your wallet',
+  },
   transactionFailedDescription: {
     id: 'components.governance.transactionFailedDescription',
     defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
@@ -200,6 +211,14 @@ const messages = defineMessages({
   tryAgain: {
     id: 'components.governance.tryAgain',
     defaultMessage: '!!!Try again',
+  },
+  buyAda: {
+    id: 'components.governance.buyAda',
+    defaultMessage: '!!!Buy ada',
+  },
+  goToFaucet: {
+    id: 'components.governance.goToFaucet',
+    defaultMessage: '!!!Go to tada faucet',
   },
   withdrawWarningTitle: {
     id: 'components.governance.withdrawWarningTitle',
@@ -249,5 +268,21 @@ const messages = defineMessages({
   readyToCollectRewards: {
     id: 'components.governance.readyToCollectRewards',
     defaultMessage: '!!!You are now ready to collect your rewards.',
+  },
+  notSupportedVersionTitle: {
+    id: 'components.governance.notSupportedVersionTitle',
+    defaultMessage: '!!!Error',
+  },
+  notSupportedVersionDescription: {
+    id: 'components.governance.notSupportedVersionDescription',
+    defaultMessage: '!!!To be able to vote you need to update your Cardano ADA app to 7.',
+  },
+  notSupportedVersionButton: {
+    id: 'components.governance.notSupportedVersionButton',
+    defaultMessage: '!!!Go to main wallet page',
+  },
+  scriptNotSupported: {
+    id: 'components.governance.scriptNotSupported',
+    defaultMessage: '!!!Script DReps ids will be supported soon.',
   },
 })

@@ -12,35 +12,31 @@ import AppAda, {DeviceStatusCodes} from '@cardano-foundation/ledgerjs-hw-app-car
 // @ts-ignore
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
+import {HW, Wallet} from '@yoroi/types'
 import {BleError} from 'react-native-ble-plx'
 
-import {ledgerMessages} from '../../../i18n/global-messages'
-import LocalizableError from '../../../i18n/LocalizableError'
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
+import {derivationConfig} from '../../../features/WalletManager/common/derivation-config'
+import {ledgerMessages} from '../../../kernel/i18n/global-messages'
+import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
+import {logger} from '../../../kernel/logger/logger'
 import {
   AdaAppClosedError,
-  DeviceId,
-  DeviceObj,
   GeneralConnectionError,
   HARDWARE_WALLETS,
-  HWDeviceInfo,
   LedgerUserError,
   RejectedByUserError,
-} from '../../hw'
-import {Logger} from '../../logging'
-import {WalletImplementationId} from '../../types'
-import {NUMBERS} from '../numbers'
-import {isByron, isHaskellShelley} from '../utils'
+} from '../../hw/hw'
 
 const MIN_ADA_APP_VERSION = '2.2.1'
 const MIN_ADA_APP_VERSION_SUPPORTING_CIP36 = 6
-
-export type WalletType = 'BIP44' | 'CIP1852'
+const MIN_ADA_APP_VERSION_SUPPORTING_CIP1694 = 7
 
 // these are defined in LedgerConnectStore.js in yoroi-frontend
-export type LedgerConnectionResponse = {
+type LedgerConnectionResponse = {
   extendedPublicKeyResp: GetExtendedPublicKeyResponse
-  deviceId: DeviceId | null | undefined
-  deviceObj: DeviceObj | null | undefined
+  deviceId: string | null | undefined
+  deviceObj: HW.DeviceObj | null | undefined
   serialHex: string
 }
 
@@ -104,35 +100,23 @@ const mapLedgerError = (e: Error | any): Error | LocalizableError => {
   } else if (e instanceof DeprecatedAdaAppError) {
     return e
   } else {
-    Logger.error('ledgerUtils::mapLedgerError: Unexpected error', e)
+    logger.error('mapLedgerError: Unexpected error', {e})
     return e
   }
 }
 
 //
 // ============== General util ==================
-//
-
-const HARDENED = NUMBERS.HARD_DERIVATION_START
-const WALLET_TYPE_PURPOSE = NUMBERS.WALLET_TYPE_PURPOSE
-const COIN_TYPE = NUMBERS.COIN_TYPES.CARDANO
-
-const getWalletType = (id: WalletImplementationId): WalletType => {
-  if (isByron(id)) {
-    return 'BIP44'
-  } else if (isHaskellShelley(id)) {
-    return 'CIP1852'
-  } else {
-    throw new Error('ledgerUtils::getWalletType: wallet type not supported')
+const getXPubPathRequest = (
+  implementation: Wallet.Implementation,
+  accountVisual: number,
+): GetExtendedPublicKeyRequest => {
+  const implementationConfig = cardanoConfig.implementations[implementation]
+  const {purpose, coinType} = implementationConfig.derivations.base.harden
+  return {
+    path: [purpose, coinType, derivationConfig.hardStart + accountVisual],
   }
 }
-
-const makeCardanoAccountBIP44Path: (walletType: WalletType, account: number) => GetExtendedPublicKeyRequest = (
-  walletType: WalletType,
-  account: number,
-) => ({
-  path: [WALLET_TYPE_PURPOSE[walletType], COIN_TYPE, HARDENED + account],
-})
 
 export const checkDeviceVersion = (versionResponse: GetVersionResponse): void => {
   if (
@@ -140,7 +124,7 @@ export const checkDeviceVersion = (versionResponse: GetVersionResponse): void =>
     versionResponse.version.minor == null ||
     versionResponse.version.patch == null
   ) {
-    Logger.warn('ledgerUtils::checkDeviceVersion: incomplete version data from device')
+    logger.warn('checkDeviceVersion: incomplete version data from device', {versionResponse})
     return
   }
 
@@ -152,7 +136,7 @@ export const checkDeviceVersion = (versionResponse: GetVersionResponse): void =>
   const minVersionArray = MIN_ADA_APP_VERSION.split('.')
 
   if (minVersionArray.length !== deviceVersionArray.length) {
-    Logger.warn('ledgerUtils::checkDeviceVersion: version formats mismatch')
+    logger.warn('checkDeviceVersion: version formats mismatch', {minVersionArray, deviceVersionArray})
     return
   }
 
@@ -173,8 +157,8 @@ export const checkDeviceVersion = (versionResponse: GetVersionResponse): void =>
 }
 
 const connectionHandler = async (
-  deviceId: DeviceId | null | undefined,
-  deviceObj: DeviceObj | null | undefined,
+  deviceId: string | null | undefined,
+  deviceObj: HW.DeviceObj | null | undefined,
   useUSB = false,
 ): Promise<AppAda> => {
   let transport
@@ -196,8 +180,10 @@ const connectionHandler = async (
 
     const appAda = new AppAda(transport)
     const versionResp: GetVersionResponse = await appAda.getVersion()
-    Logger.debug('ledgerUtils::connectionHandler: AppAda version', versionResp)
+
+    logger.debug('connectionHandler: AppAda version', {versionResp})
     checkDeviceVersion(versionResp)
+
     return appAda
   } catch (e) {
     throw mapLedgerError(e)
@@ -205,16 +191,16 @@ const connectionHandler = async (
 }
 
 export const getHWDeviceInfo = async (
-  walletImplementationId: WalletImplementationId,
-  deviceId: DeviceId | null | undefined,
-  deviceObj: DeviceObj | null | undefined,
+  implementation: Wallet.Implementation,
+  deviceId: string | null | undefined,
+  deviceObj: HW.DeviceObj | null | undefined,
   useUSB = false,
-): Promise<HWDeviceInfo> => {
+  accountVisual = 0, // default to first account
+): Promise<HW.DeviceInfo> => {
   try {
     const appAda = await connectionHandler(deviceId, deviceObj, useUSB)
     // assume single account in Yoroi
-    const accountPath = makeCardanoAccountBIP44Path(getWalletType(walletImplementationId), NUMBERS.ACCOUNT_INDEX)
-    // get Cardano's first account
+    const accountPath = getXPubPathRequest(implementation, accountVisual)
     // i.e hdPath = [2147483692, 2147485463, 2147483648]
     const extendedPublicKeyResp: GetExtendedPublicKeyResponse = await appAda.getExtendedPublicKey(accountPath)
     const serial: GetSerialResponse = await appAda.getSerial()
@@ -249,7 +235,7 @@ const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
   return true
 }
 
-export const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
+const normalizeHWResponse = (resp: LedgerConnectionResponse): HW.DeviceInfo => {
   validateHWResponse(resp)
   const {extendedPublicKeyResp, deviceId, deviceObj, serialHex} = resp
   return {
@@ -267,21 +253,24 @@ export const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInf
 export const doesCardanoAppVersionSupportCIP36 = (majorVersion: number) => {
   return majorVersion >= MIN_ADA_APP_VERSION_SUPPORTING_CIP36
 }
+export const doesCardanoAppVersionSupportCIP1694 = (majorVersion: number) => {
+  return majorVersion >= MIN_ADA_APP_VERSION_SUPPORTING_CIP1694
+}
 
 //
 // ============== transaction logic ==================
 //
 
-export const getCardanoAppMajorVersion = async (hwDeviceInfo: HWDeviceInfo, useUSB: boolean) => {
+export const getCardanoAppMajorVersion = async (hwDeviceInfo: HW.DeviceInfo, useUSB: boolean) => {
   const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
   const {version} = await appAda.getVersion()
-  Logger.debug('ledgerUtils::getCardanoAppMajorVersion', version.major)
+  logger.debug('getCardanoAppMajorVersion: version', {version})
   return version.major
 }
 
 export const signTxWithLedger = async (
   signRequest: SignTransactionRequest,
-  hwDeviceInfo: HWDeviceInfo,
+  hwDeviceInfo: HW.DeviceInfo,
   useUSB: boolean,
 ) => {
   try {

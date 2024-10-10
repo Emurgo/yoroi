@@ -1,9 +1,8 @@
-export type FungibilityFilter = 'all' | 'ft' | 'nft'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Text} from '../../../../components'
+import {Text} from '../../../../components/Text'
 
 type CounterTypes = {
   openingText?: string
@@ -35,23 +34,22 @@ export const Counter = ({openingText, counter, unitsText, closingText, style}: C
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     counter: {
       paddingTop: 16,
       justifyContent: 'center',
       flexDirection: 'row',
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
     counterText: {
-      ...typography['body-2-m-medium'],
-      color: color.primary[600],
+      ...atoms.body_2_md_medium,
+      color: color.primary_600,
     },
     counterTextBold: {
-      ...typography['body-2-m-regular'],
-      color: color.primary[600],
+      ...atoms.body_2_md_regular,
+      color: color.primary_600,
     },
   })
 

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Not enough funds",
     "file": "src/Staking/FailedTx/FailedTxScreen.tsx",
     "start": {
-      "line": 105,
+      "line": 104,
       "column": 18,
-      "index": 2563
+      "index": 2502
     },
     "end": {
-      "line": 108,
+      "line": 107,
       "column": 3,
-      "index": 2679
+      "index": 2618
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Your transaction cannot be processed due to lack of funds on your wallet balance",
     "file": "src/Staking/FailedTx/FailedTxScreen.tsx",
     "start": {
-      "line": 109,
+      "line": 108,
       "column": 20,
-      "index": 2701
+      "index": 2640
     },
     "end": {
-      "line": 112,
+      "line": 111,
       "column": 3,
-      "index": 2883
+      "index": 2822
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Buy ada",
     "file": "src/Staking/FailedTx/FailedTxScreen.tsx",
     "start": {
-      "line": 113,
+      "line": 112,
       "column": 10,
-      "index": 2895
+      "index": 2834
     },
     "end": {
-      "line": 116,
+      "line": 115,
       "column": 3,
-      "index": 2994
+      "index": 2933
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Go to main wallet page",
     "file": "src/Staking/FailedTx/FailedTxScreen.tsx",
     "start": {
-      "line": 117,
+      "line": 116,
       "column": 12,
-      "index": 3008
+      "index": 2947
     },
     "end": {
-      "line": 120,
+      "line": 119,
       "column": 3,
-      "index": 3124
+      "index": 3063
     }
   }
 ]

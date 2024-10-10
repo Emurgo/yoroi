@@ -4,11 +4,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import image from '../../assets/img/error.png'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {Modal} from '../../legacy/Modal'
-import {isEmptyString} from '../../utils/utils'
-import {Button} from '../Button'
+import globalMessages, {errorMessages} from '../../kernel/i18n/global-messages'
+import {isEmptyString} from '../../kernel/utils'
+import {Button} from '../Button/Button'
 import {Icon} from '../Icon'
+import {Modal} from '../legacy/Modal/Modal'
 
 type ErrorViewProps = {
   title?: string
@@ -65,6 +65,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
 
       <Button
         block
+        shelleyTheme
         onPress={onDismiss}
         title={intl.formatMessage(globalMessages.close)}
         testID="closeErrorModalButton"
@@ -88,30 +89,29 @@ export const ErrorModal = ({visible, title, errorMessage, errorLogs, onRequestCl
 )
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
   const text = {
-    color: color.gray.max,
-    ...typography['body-2-m-regular'],
+    color: color.gray_max,
+    ...atoms.body_2_md_regular,
   }
   const styles = StyleSheet.create({
     scrollView: {
-      ...padding['r-s'],
+      ...atoms.pr_sm,
     },
     headerView: {
       alignItems: 'center',
     },
     title: {
       ...text,
-      ...padding['b-l'],
+      ...atoms.pb_lg,
     },
     image: {
-      ...padding['b-l'],
+      ...atoms.pb_lg,
     },
     paragraph: {
       ...text,
-      ...padding['b-l'],
-      ...typography['body-2-m-regular'],
+      ...atoms.pb_lg,
+      ...atoms.body_2_md_regular,
     },
     errorSection: {
       marginVertical: 16,
@@ -124,26 +124,26 @@ const useStyles = () => {
     showErrorTrigger: {
       flex: 1,
       ...text,
-      color: color.gray[700],
+      color: color.gray_700,
     },
     errorSectionView: {
       elevation: 1,
       shadowOffset: {width: 0, height: 2},
       shadowRadius: 12,
       shadowOpacity: 0.06,
-      shadowColor: color['black-static'],
-      backgroundColor: color.gray.min,
+      shadowColor: color.black_static,
+      backgroundColor: color.bg_color_max,
       borderRadius: 8,
     },
     errorSectionContent: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      ...padding['m'],
+      ...atoms.p_md,
     },
   })
   const colors = {
-    icon: color.gray[400],
+    icon: color.gray_400,
   }
   return {styles, colors}
 }

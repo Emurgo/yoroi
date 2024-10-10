@@ -2,89 +2,100 @@ import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {ThemeProvider} from '@yoroi/theme'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
-import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
-import Config from 'react-native-config'
+import {LogBox, StyleSheet} from 'react-native'
 import * as RNP from 'react-native-paper'
-import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableFreeze, enableScreens} from 'react-native-screens'
-import {QueryClient, QueryClientProvider} from 'react-query'
+import {QueryClientProvider} from 'react-query'
 
-import {AuthProvider} from './auth/AuthProvider'
-import {LoadingBoundary} from './components'
-import {ErrorBoundary} from './components/ErrorBoundary'
+import {LoadingBoundary} from './components/Boundary/Boundary'
+import {ErrorBoundary} from './components/ErrorBoundary/ErrorBoundary'
+import {AuthProvider} from './features/Auth/AuthProvider'
+import {BrowserProvider} from './features/Discover/common/BrowserProvider'
+import {PortfolioTokenActivityProvider} from './features/Portfolio/common/PortfolioTokenActivityProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
-import {SelectedWalletProvider} from './features/WalletManager/Context/SelectedWalletContext'
-import {SelectedWalletMetaProvider} from './features/WalletManager/Context/SelectedWalletMetaContext'
-import {LanguageProvider} from './i18n'
+import {AutomaticWalletOpenerProvider} from './features/WalletManager/context/AutomaticWalletOpeningProvider'
+import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
+import {walletManager} from './features/WalletManager/wallet-manager'
 import {InitApp} from './InitApp'
-import {CONFIG} from './legacy/config'
-import {setLogLevel} from './legacy/logging'
-import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
-import {useMigrations} from './migrations/useMigrations'
-import {PoolTransitionProvider} from './Staking/PoolTransition/PoolTransitionProvider'
-import {walletManager} from './wallet-manager/walletManager'
-import {WalletManagerProvider} from './wallet-manager/WalletManagerContext'
-import {rootStorage} from './yoroi-wallets/storage/rootStorage'
+import {disableLogbox, loggerFilter} from './kernel/env'
+import {LanguageProvider} from './kernel/i18n'
+import {useSetupLogger} from './kernel/logger/hooks/useSetupLogger'
+import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
+import {queryInfo} from './kernel/query-client'
+import {useMigrations} from './kernel/storage/migrations/useMigrations'
+import {rootStorage} from './kernel/storage/rootStorage'
+import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
+import {useThemeStorageMaker} from './yoroi-wallets/hooks'
 
 enableScreens(true)
 enableFreeze(true)
 
-if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental != null) {
-    UIManager.setLayoutAnimationEnabledExperimental(true)
-  }
+if (disableLogbox) {
+  LogBox.ignoreAllLogs()
+} else {
+  LogBox.ignoreLogs(['Require cycle:'])
 }
-
-setLogLevel(CONFIG.LOG_LEVEL)
-
-// eslint-disable-next-line no-extra-boolean-cast
-if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
-
-const queryClient = new QueryClient()
 
 const metricsManager = makeMetricsManager()
 
-export const YoroiApp = () => {
-  const migrated = useMigrations(rootStorage)
+const Yoroi = () => {
+  const isMigrated = useMigrations(rootStorage)
+  const themeStorage = useThemeStorageMaker()
 
-  if (!migrated) return null
+  if (!isMigrated) return null
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <ThemeProvider>
-        <MetricsProvider metricsManager={metricsManager}>
-          <WalletManagerProvider walletManager={walletManager}>
-            <ErrorBoundary>
-              <QueryClientProvider client={queryClient}>
-                <LoadingBoundary style={StyleSheet.absoluteFill}>
-                  <LanguageProvider>
-                    <CurrencyProvider>
-                      <SafeAreaProvider>
-                        <RNP.Provider>
-                          <AuthProvider>
-                            <SelectedWalletMetaProvider>
-                              <SelectedWalletProvider>
-                                <LinksProvider>
-                                  <SetupWalletProvider>
-                                    <PoolTransitionProvider>
+      <ThemeProvider storage={themeStorage}>
+        <ErrorBoundary>
+          <MetricsProvider metricsManager={metricsManager}>
+            <QueryClientProvider client={queryInfo.queryClient}>
+              <WalletManagerProvider walletManager={walletManager}>
+                <CurrencyProvider>
+                  <PortfolioTokenActivityProvider>
+                    <LoadingBoundary style={StyleSheet.absoluteFill}>
+                      <LanguageProvider>
+                        <AuthProvider>
+                          <TransferProvider>
+                            <LinksProvider>
+                              <SetupWalletProvider>
+                                <PoolTransitionProvider>
+                                  <BrowserProvider>
+                                    <AutomaticWalletOpenerProvider>
                                       <InitApp />
-                                    </PoolTransitionProvider>
-                                  </SetupWalletProvider>
-                                </LinksProvider>
-                              </SelectedWalletProvider>
-                            </SelectedWalletMetaProvider>
-                          </AuthProvider>
-                        </RNP.Provider>
-                      </SafeAreaProvider>
-                    </CurrencyProvider>
-                  </LanguageProvider>
-                </LoadingBoundary>
-              </QueryClientProvider>
-            </ErrorBoundary>
-          </WalletManagerProvider>
-        </MetricsProvider>
+                                    </AutomaticWalletOpenerProvider>
+                                  </BrowserProvider>
+                                </PoolTransitionProvider>
+                              </SetupWalletProvider>
+                            </LinksProvider>
+                          </TransferProvider>
+                        </AuthProvider>
+                      </LanguageProvider>
+                    </LoadingBoundary>
+                  </PortfolioTokenActivityProvider>
+                </CurrencyProvider>
+              </WalletManagerProvider>
+            </QueryClientProvider>
+          </MetricsProvider>
+        </ErrorBoundary>
       </ThemeProvider>
     </AsyncStorageProvider>
+  )
+}
+
+export const YoroiApp = () => {
+  const isReady = useSetupLogger(loggerFilter)
+
+  if (!isReady) return null
+
+  return (
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <RNP.Provider>
+        <Yoroi />
+      </RNP.Provider>
+    </SafeAreaProvider>
   )
 }

@@ -4,18 +4,20 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 
-import {BulletPointItem, CameraCodeScanner, Spacer, Text} from '../../../../components'
-import {showErrorDialog} from '../../../../dialogs'
-import {errorMessages} from '../../../../i18n/global-messages'
-import {Logger} from '../../../../legacy/logging'
-import {WalletInitRouteNavigation} from '../../../../navigation'
-import {theme} from '../../../../theme'
-import {isCIP1852AccountPath, isValidPublicKey} from '../../../../yoroi-wallets/cardano/bip44Validators'
+import {BulletPointItem} from '../../../../components/BulletPointItem'
+import {CameraCodeScanner} from '../../../../components/CameraCodeScanner/CameraCodeScanner'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
+import {showErrorDialog} from '../../../../kernel/dialogs'
+import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {logger} from '../../../../kernel/logger/logger'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {isCIP1852AccountPath, isValidPublicKey} from '../../../../yoroi-wallets/cardano/bip44Validators/bip44Validators'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {publicKeyHexChanged, pathChanged} = useSetupWallet()
 
   const onRead = async (event: {data: string}): Promise<boolean> => {
@@ -27,7 +29,7 @@ export const ImportReadOnlyWalletScreen = () => {
 
       navigation.navigate('setup-wallet-save-read-only')
     } catch (error) {
-      Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
+      logger.error(error as Error)
       await showErrorDialog(errorMessages.invalidQRCode, intl)
       return Promise.resolve(true)
     }
@@ -57,8 +59,6 @@ export const ImportReadOnlyWalletScreen = () => {
     </View>
   )
 }
-
-const _CameraOverlay = () => <View style={styles.scannerOverlay} />
 
 const messages = defineMessages({
   paragraph: {
@@ -93,7 +93,6 @@ const useStrings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.COLORS.BACKGROUND,
   },
   cameraContainer: {
     flex: 2,
@@ -110,26 +109,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
   },
-  scannerOverlay: {
-    height: '75%',
-    width: '75%',
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 24,
-    marginTop: 100,
-  },
 })
 
 const parseReadOnlyWalletKey = async (text: string): Promise<{publicKeyHex: string; path: number[]}> => {
-  Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::data', text)
   const dataObj = JSON.parse(text)
   const {publicKeyHex, path} = dataObj
   if (isCIP1852AccountPath(path) && (await isValidPublicKey(publicKeyHex))) {
-    Logger.debug('ImportReadOnlyWalletScreen::publicKeyHex', publicKeyHex)
-    Logger.debug('ImportReadOnlyWalletScreen::path', path)
-  } else {
-    throw new Error('invalid QR code')
+    return {publicKeyHex, path}
   }
 
-  return {publicKeyHex, path}
+  throw new Error('invalid QR code')
 }

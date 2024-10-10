@@ -1,0 +1,347 @@
+[
+  {
+    "id": "components.catalyst.step1.title",
+    "defaultMessage": "!!!Intro",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 49,
+      "column": 9,
+      "index": 2692
+    },
+    "end": {
+      "line": 52,
+      "column": 3,
+      "index": 2772
+    }
+  },
+  {
+    "id": "components.catalyst.step1.subTitle",
+    "defaultMessage": "!!!Before you begin, make sure to\ndownload the Catalyst Voting App",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 53,
+      "column": 12,
+      "index": 2786
+    },
+    "end": {
+      "line": 56,
+      "column": 3,
+      "index": 2928
+    }
+  },
+  {
+    "id": "components.catalyst.step1.stakingKeyNotRegistered",
+    "defaultMessage": "!!!Catalyst voting rewards are sent to delegation accounts and your wallet does not seem to have a registered delegation certificate. If you want to receive voting rewards, you need to delegate your funds first.",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 57,
+      "column": 27,
+      "index": 2957
+    },
+    "end": {
+      "line": 63,
+      "column": 3,
+      "index": 3286
+    }
+  },
+  {
+    "id": "components.catalyst.step1.tip",
+    "defaultMessage": "!!!Make sure you know how to take a screenshot with your device, so that you can backup your catalyst QR code.",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 64,
+      "column": 7,
+      "index": 3295
+    },
+    "end": {
+      "line": 69,
+      "column": 3,
+      "index": 3492
+    }
+  },
+  {
+    "id": "catalyst.registration.start",
+    "defaultMessage": "!!!Registration start",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 70,
+      "column": 21,
+      "index": 3515
+    },
+    "end": {
+      "line": 73,
+      "column": 3,
+      "index": 3604
+    }
+  },
+  {
+    "id": "catalyst.voting.start",
+    "defaultMessage": "!!!Voting start",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 74,
+      "column": 15,
+      "index": 3621
+    },
+    "end": {
+      "line": 77,
+      "column": 3,
+      "index": 3698
+    }
+  },
+  {
+    "id": "catalyst.voting.end",
+    "defaultMessage": "!!!Voting end",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 78,
+      "column": 13,
+      "index": 3713
+    },
+    "end": {
+      "line": 81,
+      "column": 3,
+      "index": 3786
+    }
+  },
+  {
+    "id": "catalyst.voting.results",
+    "defaultMessage": "!!!Results",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 82,
+      "column": 17,
+      "index": 3805
+    },
+    "end": {
+      "line": 85,
+      "column": 3,
+      "index": 3879
+    }
+  },
+  {
+    "id": "components.catalyst.step2.title",
+    "defaultMessage": "!!!Write down PIN",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 86,
+      "column": 14,
+      "index": 3895
+    },
+    "end": {
+      "line": 89,
+      "column": 3,
+      "index": 3984
+    }
+  },
+  {
+    "id": "components.catalyst.step2.description",
+    "defaultMessage": "!!!Please write down this PIN as you will need it every time you want to access the Catalyst Voting app",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 90,
+      "column": 20,
+      "index": 4006
+    },
+    "end": {
+      "line": 94,
+      "column": 3,
+      "index": 4193
+    }
+  },
+  {
+    "id": "components.catalyst.step2.checkbox",
+    "defaultMessage": "!!!I have written it down",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 95,
+      "column": 12,
+      "index": 4207
+    },
+    "end": {
+      "line": 98,
+      "column": 3,
+      "index": 4307
+    }
+  },
+  {
+    "id": "components.catalyst.step3.title",
+    "defaultMessage": "!!!Enter PIN",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 99,
+      "column": 14,
+      "index": 4323
+    },
+    "end": {
+      "line": 102,
+      "column": 3,
+      "index": 4407
+    }
+  },
+  {
+    "id": "components.catalyst.step3.description",
+    "defaultMessage": "!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 103,
+      "column": 20,
+      "index": 4429
+    },
+    "end": {
+      "line": 106,
+      "column": 3,
+      "index": 4604
+    }
+  },
+  {
+    "id": "components.catalyst.confirmTx.title",
+    "defaultMessage": "!!!Confirm Registration",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 107,
+      "column": 21,
+      "index": 4627
+    },
+    "end": {
+      "line": 110,
+      "column": 3,
+      "index": 4726
+    }
+  },
+  {
+    "id": "components.catalyst.confirmTx.passwordSignDescription",
+    "defaultMessage": "!!!Confirm your voting registration and submit the certificate generated in previous step to the blockchain",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 111,
+      "column": 27,
+      "index": 4755
+    },
+    "end": {
+      "line": 115,
+      "column": 3,
+      "index": 4962
+    }
+  },
+  {
+    "id": "components.catalyst.confirmTx.bioAuthInstructions",
+    "defaultMessage": "!!!Please authenticate so that Yoroi can generate the required certificate for voting",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 116,
+      "column": 22,
+      "index": 4986
+    },
+    "end": {
+      "line": 119,
+      "column": 3,
+      "index": 5161
+    }
+  },
+  {
+    "id": "global.actions.dialogs.commonbuttons.confirmButton",
+    "defaultMessage": "!!!Confirm",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 120,
+      "column": 11,
+      "index": 5174
+    },
+    "end": {
+      "line": 123,
+      "column": 3,
+      "index": 5275
+    }
+  },
+  {
+    "id": "components.catalyst.step4.description",
+    "defaultMessage": "!!!Screenshot and send the QR code to another device, then scan it with the Catalyst app. Alternatively, copy and paste the hash code into the app. Ensure you save both codes securely as they cannot be retrieved later.",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 124,
+      "column": 20,
+      "index": 5297
+    },
+    "end": {
+      "line": 128,
+      "column": 3,
+      "index": 5599
+    }
+  },
+  {
+    "id": "components.catalyst.step4.title",
+    "defaultMessage": "!!!Catalyst Code",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 129,
+      "column": 14,
+      "index": 5615
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 5703
+    }
+  },
+  {
+    "id": "components.catalyst.step4.qrTitle",
+    "defaultMessage": "!!!Backup Catalyst Code",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 133,
+      "column": 16,
+      "index": 5721
+    },
+    "end": {
+      "line": 136,
+      "column": 3,
+      "index": 5818
+    }
+  },
+  {
+    "id": "components.catalyst.step4.qrShareLabel",
+    "defaultMessage": "!!!Share Code",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 137,
+      "column": 21,
+      "index": 5841
+    },
+    "end": {
+      "line": 140,
+      "column": 3,
+      "index": 5933
+    }
+  },
+  {
+    "id": "components.catalyst.step4.qrCopiedText",
+    "defaultMessage": "!!!Code Copied",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 141,
+      "column": 21,
+      "index": 5956
+    },
+    "end": {
+      "line": 144,
+      "column": 3,
+      "index": 6049
+    }
+  },
+  {
+    "id": "components.catalyst.step4.qrCheckbox",
+    "defaultMessage": "!!!I confirm that I have saved the QR and hash codes and understand they are irretrievable.",
+    "file": "src/features/RegisterCatalyst/common/strings.ts",
+    "start": {
+      "line": 145,
+      "column": 19,
+      "index": 6070
+    },
+    "end": {
+      "line": 148,
+      "column": 3,
+      "index": 6238
+    }
+  }
+]

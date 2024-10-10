@@ -3,10 +3,10 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {OsAuthScreen} from '../../../auth'
-import {Button} from '../../../components'
-import globalMessages from '../../../i18n/global-messages'
-import {useEnableAuthWithOs} from '../../../yoroi-wallets/auth'
+import {Button} from '../../../components/Button/Button'
+import globalMessages from '../../../kernel/i18n/global-messages'
+import {useEnableAuthWithOs} from '../../Auth/common/hooks'
+import {OsAuthScreen} from '../../Auth/OsAuthScreen/OsAuthScreen'
 
 export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
@@ -22,12 +22,13 @@ export const EnableLoginWithOsScreen = () => {
         <Button
           key="cancel"
           disabled={isLoading}
-          outline
+          outlineShelley
           title={strings.notNowButton}
           onPress={() => navigation.goBack()}
           containerStyle={styles.cancel}
         />,
         <Button
+          shelleyTheme
           disabled={isLoading}
           key="link"
           title={strings.linkButton}

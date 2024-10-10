@@ -1,16 +1,17 @@
 import {useTheme} from '@yoroi/theme'
-import {Swap} from '@yoroi/types'
+import {HW, Swap} from '@yoroi/types'
 import React, {useState} from 'react'
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {Text} from '../../../../components'
-import {LedgerConnect} from '../../../../HW'
-import {walletManager} from '../../../../wallet-manager/walletManager'
-import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
-import {useSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {Text} from '../../../../components/Text'
+import {LedgerConnect} from '../../../../legacy/HW'
+import {withBLE, withUSB} from '../../../../yoroi-wallets/hw/hwWallet'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {LedgerTransportSwitch} from '../../useCases/ConfirmTxScreen/LedgerTransportSwitch'
 import {useCancelOrderWithHw} from '../helpers'
 import {useStrings} from '../strings'
+import {ActivityIndicator} from './ActivityIndicator'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
@@ -23,9 +24,10 @@ type Props = {
 }
 
 export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}: Props) => {
+  const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
-  const wallet = useSelectedWallet()
+  const {meta} = useSelectedWallet()
   const strings = useStrings()
   const styles = useStyles()
   const {cancelOrder: cancelOrderWithHw} = useCancelOrderWithHw({cancelOrder}, {onSuccess: onConfirm})
@@ -35,16 +37,18 @@ export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}
     setStep('connect-transport')
   }
 
-  const onConnectBLE = async (deviceId: DeviceId) => {
+  const onConnectBLE = (deviceId: string) => {
     setStep('loading')
-    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
-    cancelOrderWithHw({useUSB: false, utxo, bech32Address})
+    const hwDeviceInfo = withBLE(meta, deviceId)
+    walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
+    cancelOrderWithHw({useUSB: false, utxo, bech32Address, hwDeviceInfo})
   }
 
-  const onConnectUSB = async (deviceObj: DeviceObj) => {
+  const onConnectUSB = (deviceObj: HW.DeviceObj) => {
     setStep('loading')
-    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
-    cancelOrderWithHw({useUSB: true, utxo, bech32Address})
+    const hwDeviceInfo = withUSB(meta, deviceObj)
+    walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
+    cancelOrderWithHw({useUSB: true, utxo, bech32Address, hwDeviceInfo})
   }
 
   if (step === 'select-transport') {
@@ -66,7 +70,7 @@ export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="black" />
+      <ActivityIndicator />
 
       <Text style={styles.text}>{strings.continueOnLedger}</Text>
     </View>
@@ -74,20 +78,19 @@ export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
-
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: 35,
+      ...atoms.flex_1,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.gap_2xl,
+      ...atoms.px_lg,
     },
     text: {
-      fontSize: 18,
-      color: color['black-static'],
-      textAlign: 'center',
+      ...atoms.body_1_lg_regular,
+      ...atoms.text_center,
+      color: color.text_gray_medium,
     },
   })
 

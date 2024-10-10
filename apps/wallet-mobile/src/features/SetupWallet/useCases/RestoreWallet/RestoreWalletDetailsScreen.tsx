@@ -1,8 +1,10 @@
-import {useFocusEffect} from '@react-navigation/native'
+import {walletChecksum} from '@emurgo/cip4-js'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
+import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
-import {Api} from '@yoroi/types'
+import {Api, Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -18,33 +20,31 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, KeyboardAvoidingView, TextInput, useModal} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {Icon} from '../../../../components/Icon'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {Space} from '../../../../components/Space/Space'
-import {showErrorDialog} from '../../../../dialogs'
-import {errorMessages} from '../../../../i18n/global-messages'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {useWalletNavigation} from '../../../../navigation'
-import {isEmptyString} from '../../../../utils'
-import {AddressMode} from '../../../../wallet-manager/types'
-import {parseWalletMeta} from '../../../../wallet-manager/validators'
-import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
-import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
-import {useCreateWallet, useOpenWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
-import {WalletImplementationId} from '../../../../yoroi-wallets/types'
+import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
+import {TextInput} from '../../../../components/TextInput/TextInput'
+import {showErrorDialog} from '../../../../kernel/dialogs'
+import {debugWalletInfo, features} from '../../../../kernel/features'
+import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {logger} from '../../../../kernel/logger/logger'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {isEmptyString} from '../../../../kernel/utils'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
-  validateWalletName,
-} from '../../../../yoroi-wallets/utils'
-import {debugWalletInfo, features} from '../../..'
-import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
-import {useSetSelectedWalletMeta} from '../../../WalletManager/Context/SelectedWalletMetaContext'
+} from '../../../../yoroi-wallets/utils/validators'
+import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
+import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
-import {PreparingWallet} from '../../common/PreparingWallet/PreparingWallet'
-import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {Info as InfoIcon} from '../../illustrations/Info'
 
@@ -63,23 +63,20 @@ const useSizeModal = () => {
 }
 
 // when restoring, later will be part of the onboarding
-const addressMode: AddressMode = 'single'
+const addressMode: Wallet.AddressMode = 'single'
 export const RestoreWalletDetailsScreen = () => {
-  const bold = useBold()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const strings = useStrings()
   const {styles} = useStyles()
+  const {track} = useMetrics()
+  const bold = useBold()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
-  const strings = useStrings()
-  const {resetToTxHistory} = useWalletNavigation()
-  const walletManager = useWalletManager()
-  const {track} = useMetrics()
-  const {walletNames} = useWalletNames(walletManager)
+  const {walletManager} = useWalletManager()
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
-  const selectWalletMeta = useSetSelectedWalletMeta()
-  const selectWallet = useSetSelectedWallet()
   const storage = useAsyncStorage()
-  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useSetupWallet()
-  const plate = usePlate({networkId, publicKeyHex})
+  const {mnemonic, publicKeyHex, walletImplementation, walletIdChanged, accountVisual} = useSetupWallet()
+  const plate = walletChecksum(publicKeyHex)
 
   const passwordRef = React.useRef<RNTextInput>(null)
   const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
@@ -90,49 +87,26 @@ export const RestoreWalletDetailsScreen = () => {
   )
   const passwordErrors = validatePassword(password, passwordConfirmation)
 
-  const passwordErrorText = passwordErrors.passwordIsWeak
-    ? strings.passwordStrengthRequirement({requiredPasswordLength: REQUIRED_PASSWORD_LENGTH})
-    : undefined
-  const passwordConfirmationErrorText = passwordErrors.matchesConfirmation
-    ? strings.repeatPasswordInputError
-    : undefined
-
-  const {
-    openWallet,
-    data: openWalletData,
-    isLoading: isOpenWalletLoading,
-    isSuccess: isOpenWalletSuccess,
-  } = useOpenWallet({
-    onSuccess: ([wallet, walletMeta]) => {
-      selectWalletMeta(walletMeta)
-      selectWallet(wallet)
-      resetToTxHistory()
-    },
-    onError: (error) => {
-      InteractionManager.runAfterInteractions(() => {
-        return error instanceof InvalidState
-          ? showErrorDialog(errorMessages.walletStateInvalid, intl)
-          : error instanceof Api.Errors.Network
-          ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
-      })
-    },
-  })
-
   const intl = useIntl()
   const {
     createWallet,
-    isLoading: isCreateWalletLoading,
+    isLoading,
     isSuccess: isCreateWalletSuccess,
-  } = useCreateWallet({
+  } = useCreateWalletMnemonic({
     onSuccess: async (wallet) => {
+      walletIdChanged(wallet.id)
       const walletStorage = storage.join('wallet/')
       const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
 
-      if (!walletMeta) throw new Error('invalid wallet meta')
+      if (!walletMeta) {
+        const error = new Error('RestoreWalletDetailsScreen: wallet meta is invalid, reached an invalid state.')
+        logger.error(error)
+        throw error
+      }
 
-      openWallet(walletMeta)
       track.restoreWalletDetailsSettled()
+
+      navigation.navigate('setup-wallet-preparing-wallet')
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -143,28 +117,31 @@ export const RestoreWalletDetailsScreen = () => {
     },
   })
 
+  const passwordErrorText =
+    passwordErrors.passwordIsWeak && !isLoading
+      ? strings.passwordStrengthRequirement({requiredPasswordLength: REQUIRED_PASSWORD_LENGTH})
+      : undefined
+  const passwordConfirmationErrorText =
+    passwordErrors.matchesConfirmation && !isLoading ? strings.repeatPasswordInputError : undefined
+
   useFocusEffect(
     React.useCallback(() => {
       track.restoreWalletDetailsStepViewed()
     }, [track]),
   )
 
-  const isLoading = isCreateWalletLoading || isOpenWalletLoading || !!openWalletData
-
-  if (isLoading) {
-    return <PreparingWallet />
-  }
-
-  const nameErrors = validateWalletName(name, null, walletNames && !isCreateWalletSuccess ? walletNames : [])
+  const nameErrors = !isCreateWalletSuccess ? walletManager.validateWalletName(name) : null
   const walletNameErrorText = getWalletNameError(
     {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
     nameErrors,
   )
 
+  const disabled = isLoading || Object.keys(nameErrors ?? {}).length > 0 || Object.keys(passwordErrors).length > 0
+
   const showModalTipsPassword = () => {
     openModal(
       strings.walletDetailsModalTitle,
-      <View style={styles.modal}>
+      <View style={[styles.flex, styles.modal]}>
         <ScrollView bounces={false}>
           <View>
             <CardAboutPhrase
@@ -172,14 +149,14 @@ export const RestoreWalletDetailsScreen = () => {
               linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <CardAboutPhrase
               title={strings.walletPasswordModalCardTitle}
               linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <LearnMoreButton
               onPress={() => {
@@ -189,11 +166,9 @@ export const RestoreWalletDetailsScreen = () => {
           </View>
         </ScrollView>
 
-        <Space height="s" />
+        <Space height="sm" />
 
-        <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
-
-        <Space height="l" />
+        <Button title={strings.continueButton} shelleyTheme onPress={closeModal} />
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
@@ -202,21 +177,21 @@ export const RestoreWalletDetailsScreen = () => {
   const showModalTipsPlateNumber = () => {
     openModal(
       strings.walletDetailsModalTitle,
-      <View style={styles.modal}>
+      <View style={[styles.flex, styles.modal]}>
         <ScrollView bounces={false}>
           <View>
             <CardAboutPhrase
               title={strings.walletChecksumModalCardTitle}
-              checksumImage={plate.accountPlate.ImagePart}
+              checksumImage={plate.ImagePart}
               checksumLine={1}
               linesOfText={[
                 strings.walletChecksumModalCardFirstItem,
-                strings.walletChecksumModalCardSecondItem(plate.accountPlate.TextPart),
+                strings.walletChecksumModalCardSecondItem(plate.TextPart),
                 strings.walletChecksumModalCardThirdItem,
               ]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <LearnMoreButton
               onPress={() => {
@@ -226,25 +201,18 @@ export const RestoreWalletDetailsScreen = () => {
           </View>
         </ScrollView>
 
-        <Space height="s" />
+        <Space height="sm" />
 
-        <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
-
-        <Space height="l" />
+        <Button title={strings.continueButton} shelleyTheme onPress={closeModal} />
       </View>,
       HEIGHT_MODAL_CHECKSUM,
     )
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <StepperProgress
-          style={styles.steps}
-          currentStep={2}
-          currentStepTitle={strings.stepWalletDetails}
-          totalSteps={2}
-        />
+    <KeyboardAvoidingView style={[styles.root, styles.flex]}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeAreaView, styles.flex]}>
+        <StepperProgress currentStep={2} currentStepTitle={strings.stepWalletDetails} totalSteps={2} />
 
         <View style={styles.info}>
           <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
@@ -254,20 +222,19 @@ export const RestoreWalletDetailsScreen = () => {
 
         <Space height="xl" />
 
-        <ScrollView style={styles.form}>
+        <ScrollView style={styles.flex}>
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus
             label={strings.walletDetailsNameInput}
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
-            errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
+            errorText={!isEmptyString(walletNameErrorText) && !isLoading ? walletNameErrorText : undefined}
             errorDelay={0}
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
             testID="walletNameInput"
             autoComplete="off"
-            disabled={isLoading}
             showErrorOnBlur
           />
 
@@ -286,7 +253,6 @@ export const RestoreWalletDetailsScreen = () => {
             onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
             testID="walletPasswordInput"
             autoComplete="off"
-            disabled={isLoading}
             showErrorOnBlur
             textContentType="oneTimeCode"
           />
@@ -304,55 +270,58 @@ export const RestoreWalletDetailsScreen = () => {
             errorText={passwordConfirmationErrorText}
             testID="walletRepeatPasswordInput"
             autoComplete="off"
-            disabled={isLoading}
-            showErrorOnBlur={!isOpenWalletSuccess}
             textContentType="oneTimeCode"
           />
 
           <Space height="xl" />
 
           <View style={styles.checksum}>
-            <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
+            <Icon.WalletAvatar
+              image={new Blockies({seed: plate.ImagePart}).asBase64()}
+              style={styles.walletChecksum}
+              size={24}
+            />
 
-            <Space width="s" />
+            <Space width="sm" />
 
-            <Text style={styles.plateNumber}>{plate.accountPlate.TextPart}</Text>
+            <Text style={styles.plateNumber} testID="wallet-plate-number">
+              {plate.TextPart}
+            </Text>
 
-            <Space width="s" />
+            <Space width="sm" />
 
             <Info onPress={showModalTipsPlateNumber} />
           </View>
         </ScrollView>
 
-        <View style={styles.actions}>
+        <View>
           <Button
+            shelleyTheme
             title={strings.next}
-            style={styles.button}
-            onPress={
-              isCreateWalletLoading || isOpenWalletLoading || isOpenWalletSuccess
-                ? NOOP
-                : () =>
-                    createWallet({
-                      name,
-                      password,
-                      mnemonicPhrase: mnemonic,
-                      networkId,
-                      walletImplementationId: walletImplementationId as WalletImplementationId,
-                      addressMode,
-                    })
+            onPress={() =>
+              createWallet({
+                name,
+                password,
+                mnemonicPhrase: mnemonic,
+                implementation: walletImplementation,
+                addressMode,
+                accountVisual,
+              })
             }
-            disabled={isLoading || Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
+            testId="setup-restore-step2-next-button"
+            disabled={disabled}
           />
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
 const Info = ({onPress}: {onPress: () => void}) => {
+  const {color, isDark} = useTheme()
   return (
     <TouchableOpacity onPress={onPress}>
-      <InfoIcon size={24} />
+      <InfoIcon size={24} color={isDark ? color.white_static : color.black_static} />
     </TouchableOpacity>
   )
 }
@@ -366,60 +335,51 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    form: {
-      ...theme.padding['x-l'],
-      flex: 1,
-    },
-    steps: {
-      ...theme.padding['x-l'],
-    },
-    root: {
-      flex: 1,
-      justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+    flex: {
+      ...atoms.flex_1,
     },
     modal: {
-      flex: 1,
+      ...atoms.pb_lg,
+      ...atoms.px_lg,
+    },
+    root: {
+      backgroundColor: color.bg_color_max,
+      ...atoms.justify_between,
+      ...atoms.px_lg,
+    },
+    safeAreaView: {
+      ...atoms.pb_lg,
     },
     info: {
-      ...theme.padding['x-l'],
       flexDirection: 'row',
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
     },
     plateNumber: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
-      textAlign: 'center',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    button: {
-      backgroundColor: theme.color.primary[500],
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
+      ...atoms.text_center,
+      ...atoms.justify_center,
+      ...atoms.align_center,
     },
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     checksum: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_center,
       textAlignVertical: 'center',
     },
     walletChecksum: {
       width: 24,
       height: 24,
     },
-    actions: {
-      ...theme.padding['l'],
-    },
   })
 
   return {styles} as const
 }
-
-const NOOP = () => undefined

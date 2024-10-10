@@ -2,10 +2,10 @@ import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
 import {convertHexKeyHashToBech32Format, parseDrepId} from './helpers'
 import {StakingKeyState} from './types'
-import {App} from '@yoroi/types'
+import {App, Chain} from '@yoroi/types'
 
 export type Config = {
-  networkId: number
+  network: Chain.SupportedNetworks
   walletId: string
   cardano: CardanoTypes.Wasm
   storage: App.Storage
@@ -27,6 +27,7 @@ export type GovernanceAction =
     }
 
 export type GovernanceManager = {
+  readonly network: Chain.Network
   validateDRepID: (drepID: string) => Promise<void>
   createDelegationCertificate: (
     drepID: string,
@@ -61,7 +62,10 @@ export const governanceManagerMaker = (config: Config): GovernanceManager => {
 }
 
 class Manager implements GovernanceManager {
-  constructor(private config: Config) {}
+  readonly network: Chain.Network
+  constructor(private config: Config) {
+    this.network = config.network
+  }
 
   async convertHexKeyHashToBech32Format(hexKeyHash: string): Promise<string> {
     return await convertHexKeyHashToBech32Format(
@@ -131,8 +135,8 @@ class Manager implements GovernanceManager {
   }
 
   async validateDRepID(drepId: string): Promise<void> {
-    const drepKeyHash = await parseDrepId(drepId, this.config.cardano)
-    const drepStatus = await this.config.api.getDRepById(drepKeyHash)
+    const {hash} = await parseDrepId(drepId, this.config.cardano)
+    const drepStatus = await this.config.api.getDRepById(hash)
 
     if (!drepStatus || !drepStatus.epoch) {
       throw new Error('DRep ID not registered')
@@ -188,15 +192,21 @@ class Manager implements GovernanceManager {
     action: GovernanceAction | null,
   ): Promise<void> {
     if (!action) {
-      await this.config.storage.removeItem(LATEST_ACTION_KEY)
+      await this.config.storage
+        .join(`${this.config.network}/`)
+        .removeItem(LATEST_ACTION_KEY)
       return
     }
-    await this.config.storage.setItem(LATEST_ACTION_KEY, action)
+    await this.config.storage
+      .join(`${this.config.network}/`)
+      .setItem(LATEST_ACTION_KEY, action)
   }
 
   async getLatestGovernanceAction(): Promise<GovernanceAction | null> {
     try {
-      return await this.config.storage.getItem(LATEST_ACTION_KEY)
+      return await this.config.storage
+        .join(`${this.config.network}/`)
+        .getItem(LATEST_ACTION_KEY)
     } catch {
       return null
     }

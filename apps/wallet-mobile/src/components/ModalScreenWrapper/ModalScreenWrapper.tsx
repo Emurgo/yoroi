@@ -3,7 +3,8 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 
-import {KeyboardAvoidingView, Spacer} from '..'
+import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
+import {Spacer} from '../Spacer/Spacer'
 
 // This is another option for modals that will keep the context tree, it requires navigation and if you need to wrap it a fragment is a must
 // Tested and working but it will require a big refactor on the navigator to work with it
@@ -89,8 +90,7 @@ const SliderIndicator = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
@@ -110,7 +110,7 @@ const useStyles = () => {
     },
     sheet: {
       flex: 1,
-      backgroundColor: color['bottom-sheet-background'],
+      backgroundColor: color.gray_200,
       borderTopRightRadius: 20,
       borderTopLeftRadius: 20,
       alignSelf: 'stretch',
@@ -122,7 +122,7 @@ const useStyles = () => {
       fontFamily: 'Rubik-Medium',
       fontSize: 20,
       padding: 16,
-      color: color.gray.max,
+      color: color.gray_max,
     },
     header: {
       alignItems: 'center',
@@ -130,7 +130,7 @@ const useStyles = () => {
     },
     slider: {
       height: 4,
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_max,
       width: 32,
       borderRadius: 10,
     },

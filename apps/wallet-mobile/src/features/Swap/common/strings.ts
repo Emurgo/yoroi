@@ -1,6 +1,6 @@
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {errorMessages, ledgerMessages} from '../../../i18n/global-messages'
+import globalMessages, {errorMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -153,15 +153,23 @@ export const useStrings = () => {
     emptyOpenOrders: intl.formatMessage(messages.emptyOpenOrders),
     emptyOpenOrdersSub: intl.formatMessage(messages.emptyOpenOrdersSub),
     emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
+    emptySearchCompletedOrders: intl.formatMessage(messages.emptySearchCompletedOrders),
+    emptySearchOpenOrders: intl.formatMessage(messages.emptySearchOpenOrders),
     warning: intl.formatMessage(messages.warning),
     missingCollateral: intl.formatMessage(errorMessages.missingCollateral.title),
     backToSwapOrders: intl.formatMessage(messages.backToSwapOrders),
+    preprodNoticeTitle: intl.formatMessage(messages.preprodNoticeTitle),
+    preprodNoticeText: intl.formatMessage(messages.preprodNoticeText),
+    sanchoNoticeTitle: intl.formatMessage(messages.sanchoNoticeTitle),
+    sanchoNoticeText: intl.formatMessage(messages.sanchoNoticeText),
   }
 }
 
-export const amountInputErrorMessages = defineMessages({})
-
-export const messages = defineMessages({
+const messages = defineMessages({
+  swapFees: {
+    id: 'swap.swapScreen.swapFees',
+    defaultMessage: `!!!Swap fees include the following:\n • Matchmaker Fee\n • Frontend Fee\n • Liquidity Provider Fee`,
+  },
   wrongPasswordMessage: {
     id: 'global.actions.dialogs.incorrectPassword.title',
     defaultMessage: '!!!Incorrect password.',
@@ -265,9 +273,21 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.swapMinAdaTitle',
     defaultMessage: '!!!Min ADA',
   },
-  swapFees: {
-    id: 'swap.swapScreen.swapFees',
-    defaultMessage: `!!!Swap fees include the following:\n • Matchmaker Fee\n • Frontend Fee\n • Liquidity Provider Fee`,
+  preprodNoticeTitle: {
+    id: 'swap.swapScreen.preprodNoticeTitle',
+    defaultMessage: `!!!Swap is not available on testnet`,
+  },
+  preprodNoticeText: {
+    id: 'swap.swapScreen.preprodNoticeText',
+    defaultMessage: `!!!Switch to mainnet if you want to use the feature and swap real tokens`,
+  },
+  sanchoNoticeTitle: {
+    id: 'swap.swapScreen.sanchoNoticeTitle',
+    defaultMessage: `!!!Swap is not available on sanchonet`,
+  },
+  sanchoNoticeText: {
+    id: 'swap.swapScreen.sanchoNoticeText',
+    defaultMessage: `!!!Switch to mainnet if you want to use the feature and swap real tokens`,
   },
   swapFeesTitle: {
     id: 'swap.swapScreen.swapFeesTitle',
@@ -642,6 +662,14 @@ export const messages = defineMessages({
   emptyCompletedOrders: {
     id: 'swap.listOrders.emptyCompletedOrders',
     defaultMessage: '!!!No orders completed yet',
+  },
+  emptySearchCompletedOrders: {
+    id: 'swap.listOrders.emptySearchCompletedOrders',
+    defaultMessage: '!!!No orders found for',
+  },
+  emptySearchOpenOrders: {
+    id: 'swap.listOrders.emptySearchOpenOrders',
+    defaultMessage: '!!!No orders found for',
   },
   priceImpact: {
     id: 'swap.swapScreen.priceImpact',

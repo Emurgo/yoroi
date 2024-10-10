@@ -19,6 +19,13 @@ yarn workspace @yoroi/common add -D @yoroi/types@"$1"
 yarn workspace @yoroi/api add -D @yoroi/types@"$1"
 yarn workspace @yoroi/api add @yoroi/common@"$1"
 
+# explorers 
+yarn workspace @yoroi/explorers add -D @yoroi/types@"$1"
+
+# portfolio 
+yarn workspace @yoroi/portfolio add -D @yoroi/types@"$1"
+yarn workspace @yoroi/portfolio add @yoroi/common@"$1"
+
 # swap
 yarn workspace @yoroi/swap add -D @yoroi/types@"$1"
 yarn workspace @yoroi/swap add @yoroi/api@"$1"
@@ -45,6 +52,7 @@ yarn workspace @yoroi/theme add @yoroi/common@"$1"
 # wallet-mobile
 yarn workspace @yoroi/wallet-mobile add -D @yoroi/types@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/exchange@"$1"
+yarn workspace @yoroi/wallet-mobile add @yoroi/explorers@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/api@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/common@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/swap@"$1"
@@ -54,5 +62,9 @@ yarn workspace @yoroi/wallet-mobile add @yoroi/links@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/staking@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/resolver@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/theme@"$1"
+yarn workspace @yoroi/wallet-mobile add @yoroi/dapp-connector@"$1"
+yarn workspace @yoroi/wallet-mobile add @yoroi/identicon@"$1"
+yarn workspace @yoroi/wallet-mobile add @yoroi/notifications@"$1"
+yarn workspace @yoroi/wallet-mobile add @yoroi/claim@"$1"
 
 echo "Using new packages..."

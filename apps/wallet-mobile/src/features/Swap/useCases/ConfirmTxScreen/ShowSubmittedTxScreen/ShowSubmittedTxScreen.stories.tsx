@@ -3,17 +3,17 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../WalletManager/Context/SelectedWalletContext'
+import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ShowSubmittedTxScreen} from './ShowSubmittedTxScreen'
 
 storiesOf('Submitted Tx Screen', module)
   .addDecorator((getStory) => (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
         <View style={{...StyleSheet.absoluteFillObject}}>{getStory()}</View>
       </SwapProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))
   .add('initial', () => {
     return <ShowSubmittedTxScreen />

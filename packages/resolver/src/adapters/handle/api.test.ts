@@ -12,10 +12,11 @@ describe('getCryptoAddress', () => {
     handleApiMockResponses.getCrypoAddress.resolved_addresses.ada
   const mockApiResponse = handleApiMockResponses.getCrypoAddress
 
-  it('should return the address', async () => {
+  it('should return the address in mainnet', async () => {
     const domain = `$${mockApiResponse.name}`
     const sanitizedDomain = `${mockApiResponse.name}`
     const expectedUrl = `${handleApiConfig.mainnet.getCryptoAddress}${sanitizedDomain}`
+    const isMainnet = true
 
     const mockFetchDataResponse: Right<
       Api.ResponseSuccess<HandleApiGetCryptoAddressResponse>
@@ -27,7 +28,42 @@ describe('getCryptoAddress', () => {
       },
     }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
-    const getCryptoAddress = handleApiGetCryptoAddress({request: mockFetchData})
+    const getCryptoAddress = handleApiGetCryptoAddress({
+      request: mockFetchData,
+      isMainnet,
+    })
+
+    const result = await getCryptoAddress(domain)
+
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        url: expectedUrl,
+      },
+      undefined,
+    )
+    expect(result).toBe(mockAddress)
+  })
+
+  it('should return the address in preprod', async () => {
+    const domain = `$${mockApiResponse.name}`
+    const sanitizedDomain = `${mockApiResponse.name}`
+    const expectedUrl = `${handleApiConfig.preprod.getCryptoAddress}${sanitizedDomain}`
+    const isMainnet = false
+
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<HandleApiGetCryptoAddressResponse>
+    > = {
+      tag: 'right',
+      value: {
+        data: mockApiResponse,
+        status: 200,
+      },
+    }
+    const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
+    const getCryptoAddress = handleApiGetCryptoAddress({
+      request: mockFetchData,
+      isMainnet,
+    })
 
     const result = await getCryptoAddress(domain)
 

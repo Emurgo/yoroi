@@ -1,24 +1,19 @@
+import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
-import {formatTokenWithText} from '../../../../../legacy/format'
-import {useBalances} from '../../../../../yoroi-wallets/hooks'
-import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../WalletManager/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../../common/strings'
 
 export const CurrentBalance = () => {
   const styles = useStyles()
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
+  const {wallet} = useSelectedWallet()
+  const balance = wallet.primaryBalance
 
-  const balance = formatTokenWithText(
-    Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity,
-    wallet.primaryToken,
-  )
+  const formattedBalance = amountFormatter({template: '{{value}} {{ticker}}'})(balance)
 
   return (
     <View style={styles.banner}>
@@ -26,23 +21,22 @@ export const CurrentBalance = () => {
         {strings.availableFunds}
       </Text>
 
-      <Text bold>{balance}</Text>
+      <Text bold>{formattedBalance}</Text>
     </View>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     banner: {
-      backgroundColor: color.gray.min,
-      ...padding['y-l'],
-      alignItems: 'center',
-      justifyContent: 'center',
+      backgroundColor: color.bg_color_max,
+      ...atoms.py_lg,
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
     label: {
-      ...padding['b-xs'],
+      ...atoms.pb_xs,
     },
   })
   return styles

@@ -1,10 +1,12 @@
-import {padding, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, YoroiLogo} from '../../../components'
-import {BlueCheckbox} from '../../../components/BlueCheckbox'
+import {BlueCheckbox} from '../../../components/BlueCheckbox/BlueCheckbox'
+import {Button} from '../../../components/Button/Button'
+import {Spacer} from '../../../components/Spacer/Spacer'
+import {YoroiLogo} from '../../../components/YoroiLogo/YoroiLogo'
 import {useNavigateTo, useStrings} from '../common'
 
 export const TermsOfServiceChangedScreen = () => {
@@ -73,8 +75,7 @@ export const TermsOfServiceChangedScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     scrollableContentContainer: {
       flexGrow: 1,
@@ -89,25 +90,25 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      ...padding['l'],
-      backgroundColor: color.gray.min,
+      ...atoms.p_lg,
+      backgroundColor: color.bg_color_max,
     },
     title: {
-      ...typography['heading-3-medium'],
-      color: color.gray[900],
+      ...atoms.heading_3_medium,
+      color: color.gray_900,
       textAlign: 'center',
     },
     description: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[800],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_800,
       textAlign: 'center',
     },
     checkboxText: {
-      ...typography['body-1-l-regular'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_max,
     },
     checkboxLink: {
-      color: color.gray[800],
+      color: color.gray_800,
       textDecorationLine: 'underline',
     },
   })

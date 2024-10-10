@@ -1,7 +1,9 @@
 import {GovernanceManager} from '@yoroi/staking'
 import {StakingKeyState} from '@yoroi/staking/src'
+import {Chain} from '@yoroi/types'
 
 const governanceManager: GovernanceManager = {
+  network: Chain.Network.Mainnet,
   getStakingKeyState: () => {
     return Promise.resolve({
       drepDelegation: {action: 'no-confidence', tx: 'txId', slot: 1, epoch: 1},

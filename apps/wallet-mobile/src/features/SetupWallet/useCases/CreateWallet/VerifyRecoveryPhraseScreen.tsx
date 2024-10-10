@@ -2,18 +2,17 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import LinearGradient from 'react-native-linear-gradient'
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
 import {Space} from '../../../../components/Space/Space'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../navigation'
-import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
-import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
+import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {walletManager} from '../../../WalletManager/wallet-manager'
 import {useStrings} from '../../common/useStrings'
 import {Alert as AlertIllustration} from '../../illustrations/Alert'
 import {Check2 as Check2Illustration} from '../../illustrations/Check2'
@@ -21,9 +20,9 @@ import {Check2 as Check2Illustration} from '../../illustrations/Check2'
 export const VerifyRecoveryPhraseScreen = () => {
   const {styles} = useStyles()
   const bold = useBold()
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
-  const {mnemonic, publicKeyHexChanged} = useSetupWallet()
+  const {mnemonic, publicKeyHexChanged, accountVisual, walletImplementation} = useSetupWallet()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -67,13 +66,14 @@ export const VerifyRecoveryPhraseScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StepperProgress currentStep={3} currentStepTitle={strings.stepVerifyRecoveryPhrase} totalSteps={4} />
+      <StepperProgress
+        currentStep={3}
+        currentStepTitle={strings.stepVerifyRecoveryPhrase}
+        totalSteps={4}
+        style={styles.padding}
+      />
 
-      <Space height="l" />
-
-      <Text style={styles.title}>{strings.verifyRecoveryPhraseTitle(bold)}</Text>
-
-      <Space height="l" />
+      <Text style={[styles.title, styles.padding]}>{strings.verifyRecoveryPhraseTitle(bold)}</Text>
 
       <MnemonicInput
         onPress={removeLastEntry}
@@ -82,17 +82,9 @@ export const VerifyRecoveryPhraseScreen = () => {
         error={isPhraseComplete && !isValidPhrase}
       />
 
-      {isPhraseComplete && isLastWordValid() && (
-        <>
-          <Space height="l" />
+      {isPhraseComplete && isLastWordValid() && <SuccessMessage />}
 
-          <SuccessMessage />
-        </>
-      )}
-
-      <Space height="l" />
-
-      <ScrollView bounces={false}>
+      <ScrollView bounces={false} style={styles.padding}>
         <WordBadges
           defaultMnemonic={mnemonicDefault}
           mnemonicEntries={mnemonicEntries}
@@ -101,30 +93,26 @@ export const VerifyRecoveryPhraseScreen = () => {
           removeLastEntryAndAddNew={removeLastEntryAndAddNew}
         />
 
-        {!isLastWordValid() && userEntries.length > 0 && (
-          <>
-            <Space height="l" />
-
-            <ErrorMessage />
-          </>
-        )}
+        {!isLastWordValid() && userEntries.length > 0 && <ErrorMessage />}
       </ScrollView>
 
-      <Space height="l" />
-
-      <View>
+      <View style={[styles.actions, styles.padding]}>
         <Button
-          title="next"
-          style={styles.button}
+          shelleyTheme
+          title={strings.next}
           disabled={disabled}
           onPress={async () => {
-            const {accountPubKeyHex} = await makeKeys({mnemonic})
+            const {accountPubKeyHex} = await walletManager.generateWalletKeys(
+              walletImplementation,
+              mnemonic,
+              accountVisual,
+            )
             publicKeyHexChanged(accountPubKeyHex)
+
             navigation.navigate('setup-wallet-details-form')
           }}
+          testId="setup-next-button"
         />
-
-        <Space height="s" />
       </View>
     </SafeAreaView>
   )
@@ -134,10 +122,10 @@ const ErrorMessage = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   return (
-    <View style={styles.errorMessageContainer}>
+    <View style={[styles.errorMessageContainer, styles.padding]}>
       <AlertIllustration />
 
-      <Space width="s" />
+      <Space width="sm" />
 
       <Text style={styles.errorMessage}>{strings.verifyRecoveryPhraseErrorMessage}</Text>
     </View>
@@ -148,10 +136,10 @@ const SuccessMessage = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   return (
-    <View style={styles.successMessageContainer}>
+    <View style={[styles.successMessageContainer, styles.padding]}>
       <Check2Illustration />
 
-      <Space width="s" />
+      <Space width="sm" />
 
       <Text style={styles.successMessage}>{strings.verifyRecoveryPhraseSuccessMessage}</Text>
     </View>
@@ -183,16 +171,11 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
   }
 
   return (
-    <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.recoveryPhrase}>
-      <LinearGradient
-        style={[StyleSheet.absoluteFill, {opacity: 1}]}
-        start={{x: 1, y: 0}}
-        end={{x: 0, y: 0}}
-        colors={colors.gradientBlueGreen}
-      />
+    <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={[styles.recoveryPhrase, styles.padding]}>
+      <View style={[StyleSheet.absoluteFill, {backgroundColor: colors.bg}]} />
 
       <View style={styles.recoveryPhraseBackground}>
-        <View style={[styles.recoveryPhraseOutline]}>
+        <View style={styles.recoveryPhraseOutline}>
           {userEntries.map((entry, index, array) => {
             const isLast = index === array.length - 1
             const recoveryWordError = !isLastWordValid() && lastUserEntry?.id === entry.id
@@ -211,6 +194,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                     used
                     recoveryWordError={recoveryWordError}
                     defaultMnemonic={defaultMnemonic}
+                    style={styles.mnemonicNumberWordBadge}
                   />
 
                   <Animated.View
@@ -220,11 +204,13 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                     style={[styles.wordBadgeContainerOutline, recoveryWordError && styles.errorBadgeBackground]}
                   >
                     {!recoveryWordError && (
-                      <LinearGradient
-                        style={[StyleSheet.absoluteFill, {opacity: 1}]}
-                        start={isPhraseComplete && isValidPhrase ? {x: 0, y: 0} : {x: 1, y: 0}}
-                        end={isPhraseComplete && isValidPhrase ? {x: 0, y: 1} : {x: 0, y: 0}}
-                        colors={isPhraseComplete && isValidPhrase ? colors.gradientGreen : colors.gradientBlueGreen}
+                      <View
+                        style={[
+                          StyleSheet.absoluteFill,
+                          {
+                            backgroundColor: isPhraseComplete && isValidPhrase ? colors.gradientGreen : colors.buttonBg,
+                          },
+                        ]}
                       />
                     )}
 
@@ -232,6 +218,10 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                       word={entry.word}
                       recoveryWordError={recoveryWordError}
                       defaultMnemonic={defaultMnemonic}
+                      style={[
+                        styles.mnemonicInputWordBadge,
+                        isPhraseComplete && isValidPhrase && {color: colors.black},
+                      ]}
                     />
                   </Animated.View>
                 </Animated.View>
@@ -298,17 +288,18 @@ const WordBadges = ({
             disabled={isUsed}
             onPress={() => selectWord(entry)}
           >
-            <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={[styles.wordBadgeContainer]}>
-              <LinearGradient
-                style={[StyleSheet.absoluteFill, {opacity: 1}]}
-                start={{x: 1, y: 0}}
-                end={{x: 0, y: 0}}
-                colors={!usedError ? colors.gradientBlueGreen : [colors.error, colors.error]}
-              />
+            <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.wordBadgeContainer}>
+              <View style={[StyleSheet.absoluteFill, {backgroundColor: !usedError ? colors.buttonBg : colors.error}]} />
 
               {isUsed && <View style={styles.usedWordBackground} />}
 
-              <WordBadge word={entry.word} used={isUsed} usedError={usedError} defaultMnemonic={defaultMnemonic} />
+              <WordBadge
+                word={entry.word}
+                used={isUsed}
+                usedError={usedError}
+                defaultMnemonic={defaultMnemonic}
+                style={styles.wordBadgeBottom}
+              />
             </Animated.View>
           </TouchableOpacity>
         )
@@ -323,8 +314,9 @@ type WordBadgeProps = {
   usedError?: boolean
   recoveryWordError?: boolean
   defaultMnemonic: Array<Entry>
+  style?: StyleProp<Animated.AnimateStyle<StyleProp<TextStyle>>>
 }
-const WordBadge = ({word, used, usedError, recoveryWordError}: WordBadgeProps) => {
+const WordBadge = ({word, used, usedError, recoveryWordError, style}: WordBadgeProps) => {
   const {styles} = useStyles()
   return (
     <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.wordBadge}>
@@ -332,7 +324,12 @@ const WordBadge = ({word, used, usedError, recoveryWordError}: WordBadgeProps) =
         layout={Layout}
         entering={FadeIn}
         exiting={FadeOut}
-        style={[styles.wordBadgeText, used && !usedError && styles.usedWord, recoveryWordError && styles.errorBadge]}
+        style={[
+          styles.wordBadgeText,
+          used && !usedError && styles.usedWord,
+          recoveryWordError && styles.errorBadge,
+          style,
+        ]}
       >
         {word}
       </Animated.Text>
@@ -349,96 +346,102 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      ...theme.padding['x-l'],
-      justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.bg_color_max,
+      ...atoms.flex_1,
+      ...atoms.justify_between,
+      ...atoms.gap_lg,
+    },
+    padding: {
+      ...atoms.px_lg,
+    },
+    actions: {
+      ...atoms.pb_lg,
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.text_gray_medium,
     },
-    button: {backgroundColor: theme.color.primary[500]},
     recoveryPhrase: {
-      ...theme.padding['xxs'],
       minHeight: 182,
       borderRadius: 8,
-      overflow: 'hidden',
+      ...atoms.p_2xs,
+      ...atoms.overflow_hidden,
     },
     recoveryPhraseBackground: {
+      borderColor: color.primary_200,
+      borderWidth: 1,
+      backgroundColor: color.bg_color_max,
       borderRadius: 6,
-      overflow: 'hidden',
-      backgroundColor: theme.color['white-static'],
       minHeight: 182,
+      ...atoms.overflow_hidden,
     },
     recoveryPhraseOutline: {
-      padding: 6,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 8,
+      ...atoms.p_sm,
+      ...atoms.flex_row,
+      ...atoms.flex_wrap,
+      ...atoms.gap_sm,
     },
     errorMessageContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
     },
     errorMessage: {
-      color: theme.color.magenta['500'],
-      ...theme.typography['body-2-m-regular'],
+      color: color.sys_magenta_500,
+      ...atoms.body_2_md_regular,
     },
     successMessageContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_start,
     },
     successMessage: {
-      color: theme.color.gray.max,
-      ...theme.typography['body-1-l-medium'],
+      color: color.text_gray_max,
+      ...atoms.body_1_lg_medium,
     },
     errorBadge: {
-      color: theme.color.magenta['500'],
+      color: color.sys_magenta_500,
     },
     errorBadgeBackground: {
-      backgroundColor: theme.color.magenta['100'],
+      backgroundColor: color.sys_magenta_100,
     },
     words: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 8,
+      ...atoms.flex_row,
+      ...atoms.flex_wrap,
+      ...atoms.gap_sm,
     },
     wordBadgeView: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 2,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.gap_2xs,
     },
     wordBadgeContainerOutline: {
-      ...theme.padding['x-s'],
-      ...theme.padding['y-xs'],
       borderRadius: 8,
-      overflow: 'hidden',
+      ...atoms.overflow_hidden,
+      ...atoms.px_xs,
+      ...atoms.py_xs,
     },
     wordBadgeContainer: {
-      ...theme.padding['x-l'],
-      ...theme.padding['y-s'],
       borderRadius: 8,
-      overflow: 'hidden',
+      ...atoms.py_sm,
+      ...atoms.overflow_hidden,
     },
     wordBadge: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      ...atoms.flex_row,
+      ...atoms.flex_wrap,
     },
     wordBadgeText: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.primary['600'],
+      color: color.text_primary_medium,
+      ...atoms.body_1_lg_regular,
     },
     usedWord: {
-      color: theme.color.primary['400'],
+      color: color.primary_400,
     },
     usedWordBackground: {
-      position: 'absolute',
-      backgroundColor: theme.color['white-static'],
+      ...atoms.absolute,
+      backgroundColor: color.bg_color_max,
       borderRadius: 6,
       left: 2,
       right: 2,
@@ -446,14 +449,25 @@ const useStyles = () => {
       bottom: 2,
     },
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
+    },
+    mnemonicInputWordBadge: {
+      ...atoms.px_sm,
+    },
+    mnemonicNumberWordBadge: {
+      ...atoms.pr_xs,
+    },
+    wordBadgeBottom: {
+      ...atoms.px_lg,
     },
   })
 
   const colors = {
-    error: theme.color.magenta['500'],
-    gradientBlueGreen: theme.color.gradients['blue-green'],
-    gradientGreen: theme.color.gradients['green'],
+    error: color.sys_magenta_500,
+    buttonBg: color.primary_100,
+    gradientGreen: color.secondary_300,
+    black: color.black_static,
+    bg: color.bg_color_max,
   }
 
   return {styles, colors} as const

@@ -4,12 +4,12 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, {FadeInDown, FadeInUp, FadeOut, FadeOutDown, Layout} from 'react-native-reanimated'
 
-import {useCopy} from '../../../../../src/legacy/useCopy'
-import {Spacer} from '../../../../components'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {useCopy} from '../../../../hooks/useCopy'
 import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../useStrings'
 
-export type SmallAddressCardProps = {
+type SmallAddressCardProps = {
   address: string
   isUsed?: boolean
   loading?: boolean
@@ -78,8 +78,7 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     smallAddressCard: {
@@ -93,8 +92,8 @@ const useStyles = () => {
       padding: 16,
     },
     textAddress: {
-      ...typography['body-2-m-regular'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_max,
     },
     footer: {
       width: '100%',
@@ -103,44 +102,44 @@ const useStyles = () => {
     },
     statusUnused: {
       borderRadius: 20,
-      backgroundColor: color.secondary[600],
+      backgroundColor: color.secondary_600,
       paddingVertical: 4,
       paddingHorizontal: 8,
       alignItems: 'center',
       justifyContent: 'center',
     },
     statusUnusedText: {
-      color: color.gray.min,
-      ...typography['body-3-s-medium'],
+      color: color.gray_min,
+      ...atoms.body_3_sm_medium,
       letterSpacing: 0.2,
     },
     statusUsed: {
       borderRadius: 20,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
       paddingVertical: 4,
       paddingHorizontal: 8,
       alignItems: 'center',
       justifyContent: 'center',
     },
     statusUsedText: {
-      ...typography['body-3-s-medium'],
+      ...atoms.body_3_sm_medium,
       lineHeight: 16,
       letterSpacing: 0.2,
-      color: color.gray.max,
+      color: color.gray_max,
     },
     date: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[700],
+      ...atoms.body_2_md_regular,
+      color: color.gray_700,
     },
     copiedText: {
-      color: color.gray.min,
+      color: color.gray_min,
       textAlign: 'center',
       padding: 8,
-      ...typography['body-2-m-medium'],
+      ...atoms.body_2_md_medium,
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_max,
       alignItems: 'center',
       justifyContent: 'center',
       top: 0,
@@ -151,7 +150,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    bgCard: color.gradients['blue-green'],
+    bgCard: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

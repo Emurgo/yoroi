@@ -114,15 +114,3 @@ export const supportedNetworks: ReadonlyArray<Network> = [
   'mainnet',
   'preprod',
 ] as const
-
-export const supportedProviders: ReadonlyArray<Provider> = [
-  'minswap',
-  'muesliswap_v1',
-  'muesliswap_v3',
-  'muesliswap_v4',
-  'spectrum',
-  'sundaeswap',
-  'vyfi',
-  'wingriders',
-  'muesliswap_v2',
-] as const

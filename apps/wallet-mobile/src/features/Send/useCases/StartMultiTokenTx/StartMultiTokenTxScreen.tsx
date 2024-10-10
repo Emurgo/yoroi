@@ -3,14 +3,17 @@ import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import _ from 'lodash'
 import React from 'react'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {StyleSheet, TextInput, View, ViewProps} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
-import {useMetrics} from '../../../../metrics/metricsManager'
+import {Space} from '../../../../components/Space/Space'
+import {useNextTick} from '../../../../hooks/useNextTick'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
-import {Amounts} from '../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {memoMaxLenght} from '../../common/constants'
 import {AddressErrorWrongNetwork} from '../../common/errors'
 import {useNavigateTo} from '../../common/navigation'
@@ -27,7 +30,7 @@ export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigateTo = useNavigateTo()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const isFocused = useIsFocused()
 
@@ -35,13 +38,12 @@ export const StartMultiTokenTxScreen = () => {
     track.sendInitiated()
   }, [track])
 
-  const hasPendingTx = useHasPendingTx(wallet)
+  const hasPendingTx = useHasPendingTx({wallet})
   const isOnline = useIsOnline(wallet)
 
   const {targets, selectedTargetIndex, memo, memoChanged, receiverResolveChanged} = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
   const receiver = targets[selectedTargetIndex].receiver
-  const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
 
   const {isWrongBlockchainError, isResolvingAddressess, receiverError, isUnsupportedDomain, isNotResolvedDomain} =
@@ -57,13 +59,13 @@ export const StartMultiTokenTxScreen = () => {
     receiverError,
     addressError,
   })
+
   const isValidAddress = addressValidated && !hasReceiverError
-
   const hasMemoError = memo.length > memoMaxLenght
-
   const canGoNext = isOnline && !hasPendingTx && isValidAddress && !hasMemoError
 
   const handleOnNext = () => {
+    const shouldOpenAddToken = Object.keys(amounts).length === 0
     if (shouldOpenAddToken) {
       navigateTo.addToken()
     } else {
@@ -76,12 +78,16 @@ export const StartMultiTokenTxScreen = () => {
   }
   const handleOnChangeMemo = (text: string) => memoChanged(text)
 
+  const inputRef = React.useRef<TextInput>(null)
+  const focusOnReceiver = React.useCallback(() => inputRef.current?.focus(), [])
+  useNextTick(focusOnReceiver)
+
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView style={styles.flex}>
+    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+      <SafeAreaView edges={['bottom', 'right', 'left']} style={[styles.safeAreaView, styles.flex]}>
         <ScrollView
           ref={scrollViewRef}
-          style={[styles.flex, styles.scroll]}
+          style={[styles.flex, styles.padding]}
           bounces={false}
           onScrollBarChange={setIsScrollBarShown}
         >
@@ -96,32 +102,40 @@ export const StartMultiTokenTxScreen = () => {
             isValid={isValidAddress}
             error={hasReceiverError}
             errorText={receiverErrorMessage}
+            ref={inputRef}
           />
 
           <SelectNameServer />
 
-          <Spacer height={16} />
+          <Space height="lg" />
 
           <InputMemo value={memo} onChangeText={handleOnChangeMemo} isValid={!hasMemoError} />
         </ScrollView>
 
-        <Actions style={Boolean(isScrollBarShown) && styles.actionsScroll}>
-          <NextButton
-            onPress={handleOnNext}
-            title={strings.next}
-            disabled={!canGoNext}
-            testID="nextButton"
-            shelleyTheme
-          />
+        <Actions style={isScrollBarShown && styles.actionsScroll}>
+          <Padding>
+            <NextButton
+              onPress={handleOnNext}
+              title={strings.next}
+              disabled={!canGoNext}
+              testID="nextButton"
+              shelleyTheme
+            />
+          </Padding>
         </Actions>
-      </KeyboardAvoidingView>
-    </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
 const Actions = ({style, ...props}: ViewProps) => {
+  return <View style={style} {...props} />
+}
+
+// NOTE: just to display the scrollable line on top of action
+const Padding = ({style, ...props}: ViewProps) => {
   const styles = useStyles()
-  return <View style={[styles.actions, style]} {...props} />
+  return <View style={[styles.padding, style]} {...props} />
 }
 
 const useReceiverError = ({
@@ -159,26 +173,24 @@ const useReceiverError = ({
   }
 }
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: color.gray.min,
-      ...padding['t-l'],
+    root: {
+      backgroundColor: color.bg_color_max,
+    },
+    safeAreaView: {
+      ...atoms.gap_lg,
+      ...atoms.py_lg,
     },
     flex: {
-      flex: 1,
+      ...atoms.flex_1,
     },
-    actions: {
-      ...padding['l'],
-    },
-    scroll: {
-      ...padding['x-l'],
+    padding: {
+      ...atoms.px_lg,
     },
     actionsScroll: {
-      borderTopWidth: 1,
-      borderTopColor: color.gray[200],
+      ...atoms.border_t,
+      borderTopColor: color.gray_200,
     },
   })
   return styles

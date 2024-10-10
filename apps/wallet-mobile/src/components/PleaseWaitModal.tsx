@@ -1,24 +1,29 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
-import {Modal} from '../legacy/Modal'
-import {Spacer} from './Spacer'
+import {Modal} from './legacy/Modal/Modal'
+import {Spacer} from './Spacer/Spacer'
 
 type PleaseWaitViewProps = {
   title: string
   spinnerText: string
 }
-export const PleaseWaitView = ({title, spinnerText}: PleaseWaitViewProps) => (
-  <View style={styles.container}>
-    <Text style={styles.title}>{title}</Text>
+export const PleaseWaitView = ({title, spinnerText}: PleaseWaitViewProps) => {
+  const {styles, color} = useStyles()
 
-    <ActivityIndicator size="large" color="black" />
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>{title}</Text>
 
-    <Spacer height={12} />
+      <ActivityIndicator size="large" color={color.gray_900} />
 
-    <Text style={styles.wait}>{spinnerText}</Text>
-  </View>
-)
+      <Spacer height={12} />
+
+      <Text style={styles.wait}>{spinnerText}</Text>
+    </View>
+  )
+}
 
 type Props = {
   visible: boolean
@@ -31,21 +36,23 @@ export const PleaseWaitModal = ({visible, title, spinnerText}: Props) => (
   </Modal>
 )
 
-const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  title: {
-    fontSize: 18,
-    color: '#000',
-    marginBottom: 35,
-    textAlign: 'center',
-  },
-  wait: {
-    marginTop: 7,
-    marginBottom: 12,
-    fontSize: 13,
-    textAlign: 'center',
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    container: {
+      ...atoms.p_lg,
+    },
+    title: {
+      color: color.gray_900,
+      ...atoms.text_center,
+      ...atoms.heading_4_medium,
+    },
+    wait: {
+      color: color.gray_900,
+      ...atoms.text_center,
+      ...atoms.body_2_md_regular,
+      ...atoms.py_lg,
+    },
+  })
+  return {styles, color}
+}

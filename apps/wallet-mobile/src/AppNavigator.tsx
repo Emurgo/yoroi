@@ -1,37 +1,43 @@
 import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
-import {createStackNavigator} from '@react-navigation/stack'
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack'
 import {isString} from '@yoroi/common'
 import {supportedPrefixes} from '@yoroi/links'
-import {TransferProvider} from '@yoroi/transfer'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 
 import StorybookScreen from '../.storybook'
-import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
-import {useAuth} from './auth/AuthProvider'
-import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
-import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
-import {useStatusBar} from './components/hooks/useStatusBar'
 import {ModalProvider} from './components/Modal/ModalContext'
 import {ModalScreen} from './components/Modal/ModalScreen'
+import {useAuth} from './features/Auth/AuthProvider'
+import {useBackgroundTimeout} from './features/Auth/backgroundTimeout'
+import {supportsAndroidFingerprintOverlay} from './features/Auth/common/biometrics'
+import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './features/Auth/common/hooks'
+import {EnableLoginWithPin} from './features/Auth/EnableLoginWithPin'
+import {OsLoginScreen} from './features/Auth/OsLoginScreen/OsLoginScreen'
+import {PinLoginScreen} from './features/Auth/PinLoginScreen/PinLoginScreen'
+import {DeveloperScreen} from './features/Dev/DeveloperScreen'
+import {Playground} from './features/Dev/Playground'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
-import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
-import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
-import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {
   ChooseBiometricLoginScreen,
   useShowBiometricsScreen,
-} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
-import {CONFIG} from './legacy/config'
-import {DeveloperScreen} from './legacy/DeveloperScreen'
-import {AppRoutes} from './navigation'
-import {SearchProvider} from './Search/SearchContext'
-import {useWalletManager} from './wallet-manager/WalletManagerContext'
+} from './features/Initialization/ChooseBiometricLogin/ChooseBiometricLoginScreen'
+import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
+import {
+  DarkThemeAnnouncement,
+  useShowDarkThemeAnnouncementScreen,
+} from './features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement'
+import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
+import {SearchProvider} from './features/Search/SearchContext'
+import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
+import {useHasWallets} from './features/WalletManager/common/hooks/useHasWallets'
+import {useStatusBar} from './hooks/useStatusBar'
+import {agreementDate} from './kernel/config'
+import {AppRoutes, defaultStackNavigationOptions} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
-import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './yoroi-wallets/auth'
-import {useHasWallets} from './yoroi-wallets/hooks'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -42,16 +48,10 @@ export const AppNavigator = () => {
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
-  const {showBiometricsScreen} = useShowBiometricsScreen()
-  const isAuthOsSupported = useIsAuthOsSupported()
-  const authSetting = useAuthSetting()
-  const walletManager = useWalletManager()
-  const {hasWallets} = useHasWallets(walletManager)
   useHideScreenInAppSwitcher()
+  const {atoms, color} = useTheme()
 
   useAutoLogout()
-
-  const shouldAskToUseAuthWithOs = showBiometricsScreen && isAuthOsSupported && authSetting !== 'os'
 
   const {isLoggedIn, isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs({
@@ -60,7 +60,7 @@ export const AppNavigator = () => {
   })
 
   const firstAction = useFirstAction()
-  const onReady = () => {
+  const onReady = React.useCallback(() => {
     if (isLoggedIn) return
 
     // try first OS auth before navigating to os login screen
@@ -81,12 +81,16 @@ export const AppNavigator = () => {
     } else {
       RNBootSplash.hide({fade: true})
     }
-  }
+  }, [authWithOs, firstAction, isLoggedIn])
 
-  const handleStateChange = () => {
+  const handleStateChange = React.useCallback(() => {
     const currentRouteName = navRef.current?.getCurrentRoute()?.name
     setRouteName(currentRouteName)
-  }
+  }, [])
+
+  const afterLoginAction = useAfterLoginAction()
+
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   return (
     <NavigationContainer
@@ -98,8 +102,8 @@ export const AppNavigator = () => {
       <ModalProvider>
         <Stack.Navigator
           screenOptions={{
+            ...navOptions,
             headerShown: false /* used only for transition */,
-            detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
           }}
         >
           {/* Not Authenticated */}
@@ -147,7 +151,7 @@ export const AppNavigator = () => {
           {isLoggedIn && (
             <>
               <Stack.Group>
-                {!hasWallets && shouldAskToUseAuthWithOs && (
+                {afterLoginAction === 'choose-biometric-login' && (
                   <Stack.Screen //
                     name="choose-biometric-login"
                     options={{headerShown: false}}
@@ -155,7 +159,15 @@ export const AppNavigator = () => {
                   />
                 )}
 
-                {!hasWallets && !shouldAskToUseAuthWithOs && (
+                {afterLoginAction === 'dark-theme-announcement' && (
+                  <Stack.Screen //
+                    name="dark-theme-announcement"
+                    options={{headerShown: false}}
+                    component={DarkThemeAnnouncement}
+                  />
+                )}
+
+                {afterLoginAction === 'setup-wallet' && (
                   <Stack.Screen //
                     name="setup-wallet"
                     options={{headerShown: false}}
@@ -163,18 +175,18 @@ export const AppNavigator = () => {
                   />
                 )}
 
-                <Stack.Screen name="manage-wallets">
-                  {() => (
-                    <SearchProvider>
-                      <TransferProvider>
-                        <WalletNavigator />
-                      </TransferProvider>
-                    </SearchProvider>
-                  )}
-                </Stack.Screen>
+                {afterLoginAction === 'manage-wallets' && (
+                  <Stack.Screen name="manage-wallets" getComponent={() => WalletNavigator} />
+                )}
               </Stack.Group>
 
-              <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+              <Stack.Group
+                screenOptions={{
+                  presentation: 'transparentModal',
+                  ...(Platform.OS === 'android' && {...TransitionPresets.DefaultTransition}), // overriding general navigation settings
+                  cardStyle: {backgroundColor: 'transparent'}, // this is needed for the modal to be transparent
+                }}
+              >
                 <Stack.Screen name="modal" component={ModalScreen} />
               </Stack.Group>
             </>
@@ -187,6 +199,8 @@ export const AppNavigator = () => {
               <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
 
               <Stack.Screen name="storybook" component={StorybookScreen} />
+
+              <Stack.Screen name="playground" component={Playground} />
             </Stack.Group>
           )}
         </Stack.Navigator>
@@ -275,9 +289,9 @@ type FirstAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first
 const getFirstAction = (
   isAuthOsSupported: boolean,
   authSetting: AuthSetting,
-  agreement: LegalAgreement | undefined,
+  legalAgreement: LegalAgreement | undefined | null,
 ): FirstAction => {
-  const hasAccepted = agreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
+  const hasAccepted = legalAgreement?.latestAcceptedAgreementsDate === agreementDate
 
   if (isString(authSetting) && !hasAccepted) return 'show-agreement-changed-notice'
 
@@ -291,7 +305,35 @@ const getFirstAction = (
 const useFirstAction = () => {
   const authSetting = useAuthSetting()
   const isAuthOsSupported = useIsAuthOsSupported()
-  const terms = useLegalAgreement()
+  const legalAgreement = useLegalAgreement()
 
-  return getFirstAction(isAuthOsSupported, authSetting, terms)
+  return React.useMemo(
+    () => getFirstAction(isAuthOsSupported, authSetting, legalAgreement),
+    [authSetting, isAuthOsSupported, legalAgreement],
+  )
+}
+
+type AfterLoginAction = 'choose-biometric-login' | 'dark-theme-announcement' | 'setup-wallet' | 'manage-wallets'
+const getAfterLoginAction = (
+  shouldAskToUseAuthWithOs: boolean,
+  showDarkThemeAnnouncement: boolean,
+  hasWallets: boolean,
+): AfterLoginAction => {
+  if (!hasWallets && shouldAskToUseAuthWithOs) return 'choose-biometric-login'
+  if (!hasWallets && showDarkThemeAnnouncement && !shouldAskToUseAuthWithOs) return 'dark-theme-announcement'
+  if (!hasWallets && !shouldAskToUseAuthWithOs && !showDarkThemeAnnouncement) return 'setup-wallet'
+
+  return 'manage-wallets'
+}
+const useAfterLoginAction = () => {
+  const hasWallets = useHasWallets()
+  const {showBiometricsScreen} = useShowBiometricsScreen()
+  const {showDarkThemeAnnouncement} = useShowDarkThemeAnnouncementScreen()
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const authSetting = useAuthSetting()
+
+  return React.useMemo(() => {
+    const shouldAskToUseAuthWithOs = (showBiometricsScreen && isAuthOsSupported && authSetting !== 'os') ?? false
+    return getAfterLoginAction(shouldAskToUseAuthWithOs, showDarkThemeAnnouncement ?? false, hasWallets)
+  }, [authSetting, hasWallets, isAuthOsSupported, showBiometricsScreen, showDarkThemeAnnouncement])
 }

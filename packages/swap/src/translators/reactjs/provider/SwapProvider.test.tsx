@@ -9,6 +9,8 @@ import {SwapState, defaultSwapState} from '../state/state'
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {useSwap} from '../hooks/useSwap'
 import {mocks} from '../../../helpers/mocks'
+import {Portfolio} from '@yoroi/types'
+import {tokenInfoMocks} from '../../../tokenInfo.mocks'
 
 describe('SwapProvider', () => {
   let queryClient: QueryClient
@@ -157,14 +159,18 @@ describe('SwapProvider', () => {
       orderData: {
         ...defaultSwapState.orderData,
         amounts: {
-          sell: {
-            quantity: '10',
-            tokenId: 'policyId.sell',
-          },
-          buy: {
-            quantity: '20',
-            tokenId: 'policyId.buy',
-          },
+          sell: asTokenAmount({
+            quantity: 10n,
+            tokenId: 'tokenA.',
+          }),
+          buy: asTokenAmount({
+            quantity: 20n,
+            tokenId: 'tokenB.',
+          }),
+        },
+        tokens: {
+          ptInfo: tokenInfoMocks.pt,
+          priceDenomination: 0,
         },
       },
       unsignedTx: undefined,
@@ -185,15 +191,18 @@ describe('SwapProvider', () => {
       result.current.switchTokens()
     })
 
-    expect(result.current.orderData.amounts).toEqual({
-      sell: {
-        quantity: '20',
-        tokenId: 'policyId.buy',
-      },
-      buy: {
-        quantity: '10',
-        tokenId: 'policyId.sell',
-      },
+    expect(result.current.orderData.amounts).toEqual<{
+      sell: Portfolio.Token.Amount
+      buy: Portfolio.Token.Amount
+    }>({
+      sell: asTokenAmount({
+        quantity: 20n,
+        tokenId: 'tokenB.',
+      }),
+      buy: asTokenAmount({
+        quantity: 10n,
+        tokenId: 'tokenA.',
+      }),
     })
   })
 
@@ -204,14 +213,18 @@ describe('SwapProvider', () => {
         type: 'limit',
         limitPrice: '2',
         amounts: {
-          sell: {
-            quantity: '10',
-            tokenId: 'policyId.sell',
-          },
-          buy: {
-            quantity: '20',
-            tokenId: 'policyId.buy',
-          },
+          sell: asTokenAmount({
+            quantity: 10n,
+            tokenId: 'tokenA.',
+          }),
+          buy: asTokenAmount({
+            quantity: 20n,
+            tokenId: 'tokenB.',
+          }),
+        },
+        tokens: {
+          ptInfo: tokenInfoMocks.pt,
+          priceDenomination: 0,
         },
       },
       unsignedTx: undefined,
@@ -232,15 +245,18 @@ describe('SwapProvider', () => {
       result.current.switchTokens()
     })
 
-    expect(result.current.orderData.amounts).toEqual({
-      sell: {
-        quantity: '20',
-        tokenId: 'policyId.buy',
-      },
-      buy: {
-        quantity: '10',
-        tokenId: 'policyId.sell',
-      },
+    expect(result.current.orderData.amounts).toEqual<{
+      sell: Portfolio.Token.Amount
+      buy: Portfolio.Token.Amount
+    }>({
+      sell: asTokenAmount({
+        quantity: 20n,
+        tokenId: 'tokenB.',
+      }),
+      buy: asTokenAmount({
+        quantity: 10n,
+        tokenId: 'tokenA.',
+      }),
     })
 
     act(() => {
@@ -248,14 +264,14 @@ describe('SwapProvider', () => {
     })
 
     expect(result.current.orderData.amounts).toEqual({
-      sell: {
-        quantity: '10',
-        tokenId: 'policyId.sell',
-      },
-      buy: {
-        quantity: '20',
-        tokenId: 'policyId.buy',
-      },
+      sell: asTokenAmount({
+        quantity: 10n,
+        tokenId: 'tokenA.',
+      }),
+      buy: asTokenAmount({
+        quantity: 20n,
+        tokenId: 'tokenB.',
+      }),
     })
   })
 
@@ -264,14 +280,14 @@ describe('SwapProvider', () => {
       orderData: {
         ...defaultSwapState.orderData,
         amounts: {
-          sell: {
-            quantity: '1',
-            tokenId: 'policyId.sell',
-          },
-          buy: {
-            quantity: '2',
-            tokenId: 'policyId.buy',
-          },
+          sell: asTokenAmount({
+            quantity: 1n,
+            tokenId: 'tokenA.',
+          }),
+          buy: asTokenAmount({
+            quantity: 2n,
+            tokenId: 'tokenB.',
+          }),
         },
         limitPrice: '3',
       },
@@ -293,15 +309,18 @@ describe('SwapProvider', () => {
       result.current.resetQuantities()
     })
 
-    expect(result.current.orderData.amounts).toEqual({
-      sell: {
-        quantity: '0',
-        tokenId: 'policyId.sell',
-      },
-      buy: {
-        quantity: '0',
-        tokenId: 'policyId.buy',
-      },
+    expect(result.current.orderData.amounts).toEqual<{
+      sell: Portfolio.Token.Amount
+      buy: Portfolio.Token.Amount
+    }>({
+      sell: asTokenAmount({
+        quantity: 0n,
+        tokenId: 'tokenA.',
+      }),
+      buy: asTokenAmount({
+        quantity: 0n,
+        tokenId: 'tokenB.',
+      }),
     })
     expect(result.current.orderData.limitPrice).toEqual(undefined)
   })
@@ -311,14 +330,14 @@ describe('SwapProvider', () => {
       orderData: {
         ...defaultSwapState.orderData,
         amounts: {
-          sell: {
-            quantity: '1',
+          sell: asTokenAmount({
+            quantity: 1n,
             tokenId: 'policyId.sell',
-          },
-          buy: {
-            quantity: '2',
+          }),
+          buy: asTokenAmount({
+            quantity: 2n,
             tokenId: 'policyId.buy',
-          },
+          }),
         },
       },
       unsignedTx: undefined,
@@ -348,14 +367,18 @@ describe('SwapProvider', () => {
       orderData: {
         ...defaultSwapState.orderData,
         amounts: {
-          sell: {
-            quantity: '10',
+          sell: asTokenAmount({
+            quantity: 10n,
             tokenId: 'policyId.sell',
-          },
-          buy: {
-            quantity: '20',
+          }),
+          buy: asTokenAmount({
+            quantity: 20n,
             tokenId: 'policyId.buy',
-          },
+          }),
+        },
+        tokens: {
+          ptInfo: tokenInfoMocks.pt,
+          priceDenomination: 0,
         },
       },
       unsignedTx: undefined,
@@ -373,18 +396,18 @@ describe('SwapProvider', () => {
     })
 
     act(() => {
-      result.current.buyQuantityChanged('30')
+      result.current.buyQuantityChanged(30n)
     })
 
     expect(result.current.orderData.amounts).toEqual({
-      sell: {
-        quantity: '10',
+      sell: asTokenAmount({
+        quantity: 10n,
         tokenId: 'policyId.sell',
-      },
-      buy: {
-        quantity: '30',
+      }),
+      buy: asTokenAmount({
+        quantity: 30n,
         tokenId: 'policyId.buy',
-      },
+      }),
     })
   })
 
@@ -393,14 +416,18 @@ describe('SwapProvider', () => {
       orderData: {
         ...defaultSwapState.orderData,
         amounts: {
-          sell: {
-            quantity: '10',
+          sell: asTokenAmount({
+            quantity: 10n,
             tokenId: 'policyId.sell',
-          },
-          buy: {
-            quantity: '20',
+          }),
+          buy: asTokenAmount({
+            quantity: 20n,
             tokenId: 'policyId.buy',
-          },
+          }),
+        },
+        tokens: {
+          ptInfo: tokenInfoMocks.pt,
+          priceDenomination: 0,
         },
       },
       unsignedTx: undefined,
@@ -418,18 +445,18 @@ describe('SwapProvider', () => {
     })
 
     act(() => {
-      result.current.sellQuantityChanged('30')
+      result.current.sellQuantityChanged(30n)
     })
 
     expect(result.current.orderData.amounts).toEqual({
-      sell: {
-        quantity: '30',
+      sell: asTokenAmount({
+        quantity: 30n,
         tokenId: 'policyId.sell',
-      },
-      buy: {
-        quantity: '20',
+      }),
+      buy: asTokenAmount({
+        quantity: 20n,
         tokenId: 'policyId.buy',
-      },
+      }),
     })
   })
 
@@ -454,16 +481,20 @@ describe('SwapProvider', () => {
     })
 
     act(() => {
-      result.current.lpTokenHeldChanged({
-        quantity: '30',
-        tokenId: 'policyId.tokenHeld',
-      })
+      result.current.lpTokenHeldChanged(
+        asTokenAmount({
+          quantity: 30n,
+          tokenId: 'policyId.tokenHeld',
+        }),
+      )
     })
 
-    expect(result.current.orderData.lpTokenHeld).toEqual({
-      quantity: '30',
-      tokenId: 'policyId.tokenHeld',
-    })
+    expect(result.current.orderData.lpTokenHeld).toEqual(
+      asTokenAmount({
+        quantity: 30n,
+        tokenId: 'policyId.tokenHeld',
+      }),
+    )
   })
 
   it('BuyTokenInfoChanged', () => {
@@ -472,27 +503,16 @@ describe('SwapProvider', () => {
         ...defaultSwapState.orderData,
         amounts: {
           sell: {
-            quantity: '10',
-            tokenId: 'policyId.sell',
+            quantity: 10n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '20',
-            tokenId: 'policyId.buy',
+            quantity: 20n,
+            info: tokenInfoMocks.b,
           },
         },
         tokens: {
-          sellInfo: {
-            decimals: 6,
-            id: 'policyId.sell',
-          },
-          buyInfo: {
-            decimals: 6,
-            id: 'policyId.buy',
-          },
-          ptInfo: {
-            decimals: 6,
-            id: '',
-          },
+          ptInfo: tokenInfoMocks.pt,
           priceDenomination: 0,
         },
       },
@@ -511,21 +531,16 @@ describe('SwapProvider', () => {
     })
 
     act(() => {
-      result.current.buyTokenInfoChanged({
-        decimals: 4,
-        id: 'new.token',
-      })
+      result.current.buyTokenInfoChanged(tokenInfoMocks.c)
     })
 
-    expect(result.current.orderData.amounts.buy).toEqual({
-      quantity: '20',
-      tokenId: 'new.token',
+    expect(
+      result.current.orderData.amounts.buy,
+    ).toEqual<Portfolio.Token.Amount>({
+      quantity: 20n,
+      info: tokenInfoMocks.c,
     })
-    expect(result.current.orderData.tokens.buyInfo).toEqual({
-      decimals: 4,
-      id: 'new.token',
-    })
-    expect(result.current.orderData.tokens.priceDenomination).toBe(2)
+    expect(result.current.orderData.tokens.priceDenomination).toBe(4)
   })
 
   it('SellTokenInfoChanged', () => {
@@ -534,27 +549,15 @@ describe('SwapProvider', () => {
         ...defaultSwapState.orderData,
         amounts: {
           sell: {
-            quantity: '1000000',
-            tokenId: 'policyId.sell',
+            quantity: 1000000n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '20',
-            tokenId: 'policyId.buy',
+            quantity: 20n,
+            info: tokenInfoMocks.b,
           },
         },
         tokens: {
-          sellInfo: {
-            decimals: 6,
-            id: 'policyId.sell',
-          },
-          buyInfo: {
-            decimals: 6,
-            id: 'policyId.buy',
-          },
-          ptInfo: {
-            decimals: 6,
-            id: '',
-          },
           priceDenomination: 0,
         },
       },
@@ -573,27 +576,26 @@ describe('SwapProvider', () => {
     })
 
     act(() => {
-      result.current.sellTokenInfoChanged({
-        decimals: 4,
-        id: 'new.token',
-      })
+      result.current.sellTokenInfoChanged(tokenInfoMocks.c)
     })
 
-    expect(result.current.orderData.amounts.sell).toEqual({
-      quantity: '10000',
-      tokenId: 'new.token',
+    expect(
+      result.current.orderData.amounts.sell,
+    ).toEqual<Portfolio.Token.Amount>({
+      quantity: 100n,
+      info: tokenInfoMocks.c,
     })
-    expect(result.current.orderData.tokens.sellInfo).toEqual({
-      decimals: 4,
-      id: 'new.token',
-    })
-    expect(result.current.orderData.tokens.priceDenomination).toBe(-2)
+    expect(result.current.orderData.tokens.priceDenomination).toBe(-4)
   })
 
   it('PoolPairsChanged', () => {
     const initialState: SwapState = {
       orderData: {
         ...defaultSwapState.orderData,
+        tokens: {
+          ...defaultSwapState.orderData.tokens,
+          ptInfo: tokenInfoMocks.pt,
+        },
       },
       unsignedTx: undefined,
     }
@@ -636,16 +638,10 @@ describe('SwapProvider', () => {
     })
 
     act(() => {
-      result.current.primaryTokenInfoChanged({
-        decimals: 6,
-        id: 'primary.tokenId',
-      })
+      result.current.primaryTokenInfoChanged(tokenInfoMocks.pt)
     })
 
-    expect(result.current.orderData.tokens.ptInfo).toEqual({
-      decimals: 6,
-      id: 'primary.tokenId',
-    })
+    expect(result.current.orderData.tokens.ptInfo).toEqual(tokenInfoMocks.pt)
   })
 
   it('FrontendFeeTiersChanged', () => {
@@ -678,3 +674,39 @@ describe('SwapProvider', () => {
     )
   })
 })
+
+function asTokenAmount(
+  {
+    tokenId,
+    quantity,
+  }: {
+    tokenId: Portfolio.Token.Id
+    quantity: bigint
+  },
+  decimals = 6,
+) {
+  const amount: Portfolio.Token.Amount = {
+    quantity,
+    info: {
+      id: tokenId,
+      decimals,
+
+      application: Portfolio.Token.Application.Coin,
+      nature: Portfolio.Token.Nature.Secondary,
+      status: Portfolio.Token.Status.Valid,
+      type: Portfolio.Token.Type.FT,
+
+      fingerprint: '',
+      name: '',
+      ticker: '',
+      description: '',
+      symbol: '',
+      tag: '',
+      reference: '',
+      website: '',
+      originalImage: '',
+    },
+  }
+
+  return amount
+}

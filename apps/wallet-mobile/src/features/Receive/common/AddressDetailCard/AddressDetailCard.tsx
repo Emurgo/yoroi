@@ -3,13 +3,15 @@ import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
-import {Spacer} from '../../../../components'
-import {useCopy} from '../../../../legacy/useCopy'
-import {isEmptyString} from '../../../../utils/utils'
+import {ShareQRCodeCard} from '../../../../components/ShareQRCodeCard/ShareQRCodeCard'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {useCopy} from '../../../../hooks/useCopy'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {isEmptyString} from '../../../../kernel/utils'
 import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
 import {useReceive} from '../ReceiveProvider'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
-import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
+import {useStrings} from '../useStrings'
 
 type AddressDetailCardProps = {
   title: string
@@ -33,6 +35,8 @@ type CardItem = {
 export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
   const {styles, colors} = useStyles()
   const [isCopying, copy] = useCopy()
+  const {track} = useMetrics()
+  const strings = useStrings()
 
   const {selectedAddress: address} = useReceive()
   const {spending, staking} = useKeyHashes({address})
@@ -70,10 +74,14 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
         return (
           <ShareQRCodeCard
             title={item.title}
-            content={item.address}
+            qrContent={item.address}
+            shareContent={`${strings.address} ${item.address}`}
             onLongPress={() => copy(item.address)}
             isCopying={isCopying}
             testId="receive:address-detail-card"
+            onShare={() => track.receiveShareAddressClicked()}
+            shareLabel={strings.shareLabel}
+            copiedText={strings.addressCopiedMsg}
           />
         )
       case 'Details':
@@ -86,7 +94,7 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
   }
 
   return (
-    <>
+    <View style={styles.root}>
       <View style={styles.container}>
         <Animated.FlatList
           layout={Layout}
@@ -118,20 +126,22 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
           />
         ))}
       </View>
-    </>
+    </View>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
+    root: {
+      ...atoms.align_center,
+    },
     container: {
       borderRadius: 10,
-      flex: 1,
-      alignSelf: 'center',
+      ...atoms.flex_1,
     },
     index: {
-      flexDirection: 'row',
+      ...atoms.flex_row,
       gap: 6,
     },
     circle: {
@@ -139,12 +149,13 @@ const useStyles = () => {
       height: 12,
       borderRadius: 100,
     },
-    contentContainer: {gap: 10},
+    contentContainer: {
+      gap: 10,
+    },
   })
-
   const colors = {
-    active: theme.color.primary[500],
-    inactive: theme.color.gray[300],
+    active: color.el_primary_medium,
+    inactive: color.gray_300,
   }
-  return {styles, colors}
+  return {styles, colors} as const
 }

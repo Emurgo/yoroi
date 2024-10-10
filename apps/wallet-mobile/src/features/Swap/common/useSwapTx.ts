@@ -2,9 +2,9 @@ import {useMutationWithInvalidations} from '@yoroi/common'
 import {useSwap} from '@yoroi/swap'
 import {UseMutationOptions} from 'react-query'
 
-import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
-import {splitStringInto64CharArray} from '../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
+import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types/yoroi'
+import {splitStringInto64CharArray} from '../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {entries: YoroiEntry[]}>) => {
   const {orderData} = useSwap()
@@ -16,19 +16,19 @@ export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {
         msg: splitStringInto64CharArray(
           JSON.stringify({
             provider: pool?.provider,
-            sellTokenId: orderData.amounts.sell.tokenId,
-            sellQuantity: orderData.amounts.sell.quantity,
-            buyTokenId: orderData.amounts.buy.tokenId,
-            buyQuantity: orderData.amounts.buy.quantity,
+            sellTokenId: orderData.amounts.sell?.info.id,
+            sellQuantity: orderData.amounts.sell?.quantity.toString(),
+            buyTokenId: orderData.amounts.buy?.info.id,
+            buyQuantity: orderData.amounts.buy?.quantity.toString(),
           }),
         ),
       },
     },
   ]
 
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const mutation = useMutationWithInvalidations({
-    mutationFn: (data) => wallet.createUnsignedTx(data.entries, metadata),
+    mutationFn: (data) => wallet.createUnsignedTx({entries: data.entries, metadata, addressMode: meta.addressMode}),
     invalidateQueries: [['useCreateOrder']],
     ...options,
   })

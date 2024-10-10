@@ -3,14 +3,14 @@ import {useQuery, UseQueryOptions} from 'react-query'
 
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {storageKeyShowBuyBannerSmall, storageRootExchange} from './constants'
 
 export const useShowBuyBannerSmall = (options?: UseQueryOptions<boolean, Error, boolean, [string, string]>) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
+  const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
   const isInThresholdToBuy = Quantities.isGreaterThan(minAdaThreshold, primaryAmount.quantity)
 
   const storage = useAsyncStorage()

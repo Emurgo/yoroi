@@ -1,3 +1,4 @@
+import {Chain} from '@yoroi/types'
 import {GOVERNANCE_ENDPOINTS} from './config'
 import {DRepId} from './types'
 import {Fetcher, fetcher} from '@yoroi/common'
@@ -10,21 +11,21 @@ export type GovernanceApi = {
 }
 
 export const governanceApiMaker = ({
-  networkId,
+  network,
   client = fetcher,
 }: {
-  networkId: number
+  network: Chain.SupportedNetworks
   client?: Config['client']
 }) => {
-  return new Api({networkId, client})
+  return new Api({network, client})
 }
 
 class Api implements GovernanceApi {
   constructor(private config: Config) {}
 
   async getDRepById(drepId: DRepId) {
-    const {networkId, client} = this.config
-    const backend = getApiConfig(networkId)
+    const {network, client} = this.config
+    const backend = getApiConfig(network)
 
     try {
       const url = backend.getDRepById.replace('{{DREP_ID}}', drepId)
@@ -42,8 +43,8 @@ class Api implements GovernanceApi {
   }
 
   async getStakingKeyState(stakeKeyHash: string) {
-    const {networkId, client} = this.config
-    const backend = getApiConfig(networkId)
+    const {network, client} = this.config
+    const backend = getApiConfig(network)
     const url = backend.getStakeKeyState.replace(
       '{{STAKE_KEY_HASH}}',
       stakeKeyHash,
@@ -63,14 +64,12 @@ class Api implements GovernanceApi {
   }
 }
 
-const getApiConfig = (networkId: number) => {
-  if (networkId === 450) return GOVERNANCE_ENDPOINTS.sanchonet
-  if (networkId === 300) return GOVERNANCE_ENDPOINTS.preprod
-  return GOVERNANCE_ENDPOINTS.mainnet
+const getApiConfig = (network: Chain.SupportedNetworks) => {
+  return GOVERNANCE_ENDPOINTS[network]
 }
 
 type Config = {
-  networkId: number
+  network: Chain.SupportedNetworks
   client: Fetcher
 }
 

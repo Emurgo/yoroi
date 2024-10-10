@@ -5,15 +5,17 @@ import {InteractionManager, StyleSheet, useWindowDimensions, View, ViewProps} fr
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
-import {LoadingOverlay} from '../../../../components/LoadingOverlay'
+import {Button} from '../../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {LoadingOverlay} from '../../../../components/LoadingOverlay/LoadingOverlay'
 import {useModal} from '../../../../components/Modal/ModalContext'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
-import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
-import {Quantities} from '../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useSignAndSubmitTx} from '../../../../yoroi-wallets/hooks'
+import {YoroiSignedTx} from '../../../../yoroi-wallets/types/yoroi'
+import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
+import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
@@ -25,7 +27,7 @@ export const ConfirmTxScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {openModal, closeModal} = useModal()
@@ -33,18 +35,12 @@ export const ConfirmTxScreen = () => {
   const signedTxRef = React.useRef<YoroiSignedTx | null>(null)
 
   const {unsignedTx, orderData} = useSwap()
-  const sellTokenInfo = useTokenInfo({
-    wallet,
-    tokenId: orderData.amounts.sell.tokenId,
-  })
-  const buyTokenInfo = useTokenInfo({
-    wallet,
-    tokenId: orderData.amounts.buy.tokenId,
-  })
+  const sellTokenInfo = orderData.amounts.sell?.info
+  const buyTokenInfo = orderData.amounts.buy?.info
 
   const minReceived = Quantities.denominated(
-    orderData.selectedPoolCalculation?.buyAmountWithSlippage?.quantity ?? Quantities.zero,
-    buyTokenInfo.decimals ?? 0,
+    asQuantity(orderData.selectedPoolCalculation?.buyAmountWithSlippage?.quantity.toString() ?? 0),
+    buyTokenInfo?.decimals ?? 0,
   )
 
   const couldReceiveNoAssets = Quantities.isZero(minReceived)
@@ -58,13 +54,19 @@ export const ConfirmTxScreen = () => {
     if (orderData.selectedPoolCalculation === undefined) return
     track.swapOrderSubmitted({
       from_asset: [
-        {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
+        {
+          asset_name: sellTokenInfo?.name,
+          asset_ticker: sellTokenInfo?.ticker,
+          policy_id: sellTokenInfo?.id.split('.')[0],
+        },
       ],
-      to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
+      to_asset: [
+        {asset_name: buyTokenInfo?.name, asset_ticker: buyTokenInfo?.ticker, policy_id: buyTokenInfo?.id.split('.')[0]},
+      ],
       order_type: orderData.type,
       slippage_tolerance: orderData.slippage,
-      from_amount: orderData.amounts.sell.quantity,
-      to_amount: orderData.amounts.buy.quantity,
+      from_amount: orderData.amounts.sell?.quantity.toString() ?? '0',
+      to_amount: orderData.amounts.buy?.quantity.toString() ?? '0',
       pool_source: orderData.selectedPoolCalculation.pool.provider,
       swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
     })
@@ -133,12 +135,12 @@ export const ConfirmTxScreen = () => {
           shelleyTheme
           title={strings.confirm}
           onPress={() => {
-            if (wallet.isEasyConfirmationEnabled) {
+            if (meta.isEasyConfirmationEnabled) {
               authWithOs()
               return
             }
             openModal(
-              wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction,
+              meta.isHW ? strings.chooseConnectionMethod : strings.signTransaction,
               <View style={styles.modalContent}>
                 <ConfirmTx
                   wallet={wallet}
@@ -149,7 +151,7 @@ export const ConfirmTxScreen = () => {
 
                 <Spacer height={16} />
               </View>,
-              wallet.isHW ? 430 : 350,
+              meta.isHW ? 430 : 350,
             )
           }}
         />
@@ -164,35 +166,35 @@ const Actions = ({style, ...props}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
       paddingTop: 16,
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
     },
     actions: {
       padding: 16,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
     modalContent: {
       flex: 1,
       alignSelf: 'stretch',
+      ...atoms.px_lg,
     },
     scroll: {
       paddingHorizontal: 16,
     },
     actionBorder: {
       borderTopWidth: 1,
-      borderTopColor: color.gray[200],
+      borderTopColor: color.gray_200,
     },
   })
   return styles

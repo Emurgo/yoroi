@@ -3,7 +3,7 @@ import {Api} from '@yoroi/types'
 import {Platform} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Logger} from '../../logging'
+import {logger} from '../../../kernel/logger/logger'
 import type {BackendConfig} from '../../types/other'
 import {ApiError, ApiHistoryError} from '../errors'
 
@@ -42,7 +42,7 @@ type FetchRequest<T> = {
   checkResponse?: ResponseChecker<T>
   headers?: Record<string, string>
 }
-export const checkedFetch = (request: FetchRequest<any>) => {
+const checkedFetch = (request: FetchRequest<any>) => {
   const {endpoint, payload, method, headers} = request
   const checkResponse = request.checkResponse || _checkResponse
   const args = [
@@ -55,31 +55,30 @@ export const checkedFetch = (request: FetchRequest<any>) => {
   ] as const
 
   return fetch(...args) // Fetch throws only for network/dns/related errors, not http statuses
-    .catch((e) => {
-      Logger.error(`API call ${endpoint} failed`, e)
+    .catch((error) => {
+      logger.error(`API call ${endpoint} failed`, {error, type: 'http'})
 
-      /* It really is TypeError according to
-    https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    */
-      if (e instanceof TypeError) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+      if (error instanceof TypeError) {
         throw new Api.Errors.Network()
       }
 
-      throw e
+      throw error
     })
     .then(async (r) => {
       const response = await checkResponse(r, payload)
       return response
     })
 }
+
 export const fetchDefault = <T = Record<string, any>>(
   path: string,
   payload: any,
-  networkConfig: BackendConfig,
+  apiBaseUrl: BackendConfig['API_ROOT'],
   method: RequestMethod = 'POST',
   options?: {checkResponse?: ResponseChecker<T>},
 ): Promise<T> => {
-  const fullPath = `${networkConfig.API_ROOT}/${path}`
+  const fullPath = `${apiBaseUrl}/${path}`
   const yoroiVersion = `${Platform.OS} / ${DeviceInfo.getVersion()}`
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',
@@ -92,6 +91,8 @@ export const fetchDefault = <T = Record<string, any>>(
     checkResponse: options?.checkResponse ?? _checkResponse,
     headers,
   }
+  logger.debug(`fetchDefault: API call ${fullPath}`)
+  // when full request needs to be logged
+  // logger.debug(`fetchDefault: API call ${fullPath}`, {request})
   return checkedFetch(request)
 }
-export default fetchDefault

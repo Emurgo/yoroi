@@ -1,49 +1,45 @@
-import {invalid} from '@yoroi/common'
+import {useClaim} from '@yoroi/claim'
+import {sortTokenAmountsByInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {App, Claim, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {FlatList, Linking, Platform, StyleSheet, Text, TextProps, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {CopyButton, Icon} from '../../../components'
-import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {Button} from '../../../components/Button/Button'
+import {CopyButton} from '../../../components/CopyButton'
+import {Icon} from '../../../components/Icon'
 import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
+import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
-import {sortTokenInfos} from '../../../utils/sorting'
-import {isEmptyString} from '../../../utils/utils'
-import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
-import {useTokenInfos} from '../../../yoroi-wallets/hooks'
-import {Amounts} from '../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
+import {isEmptyString} from '../../../kernel/utils'
+import {TokenAmountItem} from '../../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
 import {ClaimSuccessIllustration} from '../illustrations/ClaimSuccessIllustration'
-import {useClaim} from '../module/ClaimProvider'
-import {ClaimStatus} from '../module/types'
 
 export const ShowSuccessScreen = () => {
+  const {styles} = useStyles()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const {claimToken} = useClaim()
+  const {claimInfo} = useClaim()
 
-  if (!claimToken) invalid('Should never happen')
+  if (!claimInfo) throw new App.Errors.InvalidState('ClaimInfo is not set, reached an invalid state')
 
-  const {status, txHash, amounts} = claimToken
+  const {status, txHash, amounts} = claimInfo
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} style={{flex: 1}}>
-      <View style={{flex: 1}}>
+    <SafeAreaView edges={['top', 'left', 'right']} style={styles.root}>
+      <View style={styles.flex}>
         <Header>
           <ClaimSuccessIllustration zoom={0.65} />
 
           <Status status={status} />
-
-          <Spacer height={16} />
         </Header>
 
-        <Spacer height={16} />
+        <Space height="lg" />
 
         <AmountList amounts={amounts} />
       </View>
@@ -55,7 +51,7 @@ export const ShowSuccessScreen = () => {
           <>
             <TxHash txHash={txHash} />
 
-            <Spacer height={16} />
+            <Space height="lg" />
           </>
         )}
 
@@ -72,10 +68,10 @@ const Header = ({style, ...props}: ViewProps) => {
   const {styles} = useStyles()
   return <View style={[styles.header, style]} {...props} />
 }
-const Status = ({status, style, ...props}: TextProps & {status: ClaimStatus}) => {
+const Status = ({status, style, ...props}: TextProps & {status: Claim.Status}) => {
   const {styles} = useStyles()
   const dialogs = useDialogs()
-  const dialog: Record<ClaimStatus, {message: string; title: string}> = {
+  const dialog: Record<Claim.Status, {message: string; title: string}> = {
     ['processing']: dialogs.processing,
     ['accepted']: dialogs.accepted,
     ['done']: dialogs.done,
@@ -95,9 +91,9 @@ const Status = ({status, style, ...props}: TextProps & {status: ClaimStatus}) =>
 
 const TxHash = ({txHash}: {txHash: string}) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {styles, colors} = useStyles()
-  const config = getNetworkConfigById(wallet.networkId)
+  const explorers = wallet.networkManager.explorers
 
   return (
     <>
@@ -116,7 +112,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
 
         <PressableIcon
           icon={Icon.ExternalLink}
-          onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TX(txHash))}
+          onPress={() => Linking.openURL(explorers.cardanoscan.tx(txHash))}
           color={colors.icon}
           size={16}
         />
@@ -125,70 +121,74 @@ const TxHash = ({txHash}: {txHash: string}) => {
   )
 }
 
-export const AmountList = ({amounts}: {amounts: Balance.Amounts}) => {
-  const wallet = useSelectedWallet()
-
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(amounts).map(({tokenId}) => tokenId),
-  })
+const AmountList = ({amounts}: {amounts: ReadonlyArray<Portfolio.Token.Amount>}) => {
+  const {wallet} = useSelectedWallet()
+  const {styles} = useStyles()
 
   return (
     <FlatList
-      data={sortTokenInfos({wallet, tokenInfos})}
-      renderItem={({item: tokenInfo}) => (
-        <AmountItem wallet={wallet} amount={Amounts.getAmount(amounts, tokenInfo.id)} />
-      )}
-      ItemSeparatorComponent={() => <Spacer height={16} />}
-      style={{paddingHorizontal: 16}}
-      keyExtractor={({id}) => id}
+      data={sortTokenAmountsByInfo({amounts, primaryTokenInfo: wallet.portfolioPrimaryTokenInfo})}
+      renderItem={({item: amount}) => <TokenAmountItem amount={amount} />}
+      ItemSeparatorComponent={() => <Space height="lg" />}
+      style={styles.list}
+      keyExtractor={({info}) => info.id}
     />
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    flex: {
+      ...atoms.flex_1,
+    },
+    list: {
+      ...atoms.px_lg,
+    },
+    root: {
+      ...atoms.flex_1,
+      color: color.bg_color_max,
+    },
     header: {
-      alignItems: 'center',
-      ...padding['x-l'],
+      ...atoms.align_center,
+      ...atoms.px_lg,
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
-      ...padding['xs'],
-      textAlign: 'center',
+      color: color.text_gray_max,
+      ...atoms.heading_3_medium,
+      ...atoms.px_sm,
+      ...atoms.align_center,
     },
     message: {
-      color: color.gray[600],
-      ...typography['body-3-s-regular'],
-      textAlign: 'center',
+      color: color.text_gray_medium,
+      ...atoms.body_3_sm_regular,
+      ...atoms.text_center,
       maxWidth: 300,
     },
     txLabel: {
-      ...typography['body-1-l-regular'],
-      ...padding['r-s'],
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
+      ...atoms.pr_sm,
     },
     monospace: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[600],
+      color: color.text_gray_medium,
       ...Platform.select({
         ios: {fontFamily: 'Menlo'},
         android: {fontFamily: 'monospace'},
       }),
-      ...padding['r-s'],
-      flex: 1,
+      ...atoms.body_1_lg_regular,
+      ...atoms.pr_sm,
+      ...atoms.flex_1,
     },
     txRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
     },
   })
 
   const colors = {
-    icon: color.gray[500],
+    icon: color.el_gray_medium,
   }
 
-  return {styles, colors}
+  return {styles, colors} as const
 }

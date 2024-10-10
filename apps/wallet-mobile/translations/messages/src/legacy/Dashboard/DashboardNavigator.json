@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.stakingcenter.title",
+    "defaultMessage": "!!!Staking Center",
+    "file": "src/legacy/Dashboard/DashboardNavigator.tsx",
+    "start": {
+      "line": 64,
+      "column": 9,
+      "index": 2065
+    },
+    "end": {
+      "line": 67,
+      "column": 3,
+      "index": 2153
+    }
+  }
+]

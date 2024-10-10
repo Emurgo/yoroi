@@ -6,20 +6,25 @@ import {
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Spacer, useModal} from '../../../../../components'
+import {useModal} from '../../../../../components/Modal/ModalContext'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useCreateGovernanceTx, useStakingKey} from '../../../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../../../WalletManager/Context/SelectedWalletContext'
-import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
+import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
+import {useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
 import {GovernanceVote} from '../../types'
-import {EnterDrepIdModal} from '../EnterDrepIdModal'
+import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const stakingKeyHash = useStakingKey(wallet)
   const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {suspense: true})
@@ -27,6 +32,7 @@ export const ChangeVoteScreen = () => {
   const {openModal} = useModal()
   const {manager} = useGovernance()
   const [pendingVote, setPendingVote] = React.useState<GovernanceVote['kind'] | null>(null)
+  const {styles} = useStyles()
 
   const {createCertificate: createDelegationCertificate, isLoading: isCreatingDelegationCertificate} =
     useDelegationCertificate({
@@ -63,7 +69,10 @@ export const ChangeVoteScreen = () => {
         {drepID, stakingKey},
         {
           onSuccess: async (certificate) => {
-            const unsignedTx = await createGovernanceTxMutation.mutateAsync([certificate])
+            const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+              certificates: [certificate],
+              addressMode: meta.addressMode,
+            })
             navigateTo.confirmTx({unsignedTx, vote})
           },
         },
@@ -80,7 +89,10 @@ export const ChangeVoteScreen = () => {
       {vote: 'abstain', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await createGovernanceTxMutation.mutateAsync([certificate])
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+            certificates: [certificate],
+            addressMode: meta.addressMode,
+          })
           navigateTo.confirmTx({unsignedTx, vote})
         },
       },
@@ -96,7 +108,10 @@ export const ChangeVoteScreen = () => {
       {vote: 'no-confidence', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await createGovernanceTxMutation.mutateAsync([certificate])
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+            certificates: [certificate],
+            addressMode: meta.addressMode,
+          })
           navigateTo.confirmTx({unsignedTx, vote})
         },
       },
@@ -162,20 +177,24 @@ export const ChangeVoteScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    paddingHorizontal: 18,
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  description: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-  },
-  actions: {
-    flex: 1,
-    gap: 16,
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      ...atoms.flex_1,
+      ...atoms.justify_between,
+      ...atoms.px_lg,
+      backgroundColor: color.bg_color_max,
+    },
+    description: {
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
+    },
+    actions: {
+      ...atoms.flex_1,
+      ...atoms.gap_lg,
+    },
+  })
+
+  return {styles}
+}

@@ -1,15 +1,16 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {storiesOf} from '@storybook/react-native'
+import {tokenBalanceMocks} from '@yoroi/portfolio'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {defaultTransferState, TransferProvider, TransferState} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 
 import {QueryProvider} from '../../../../../../.storybook/decorators'
-import {Boundary} from '../../../../../components'
+import {Boundary} from '../../../../../components/Boundary/Boundary'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../../WalletManager/Context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SelectNameServer} from './SelectNameServer'
 
 storiesOf('Send SelectNameServer', module)
@@ -18,7 +19,7 @@ storiesOf('Send SelectNameServer', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={wallet}>{story()}</SelectedWalletProvider>
+        <WalletManagerProviderMock wallet={wallet}>{story()}</WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -75,7 +76,12 @@ const mockSelectedNameServer: TransferState = {
   ...defaultTransferState,
   targets: [
     {
-      entry: {address: 'addr1vxggvx6uq9mtf6e0tyda2mahg84w8azngpvkwr5808ey6qsy2ww7d', amounts: {'': '1000000'}},
+      entry: {
+        address: 'addr1vxggvx6uq9mtf6e0tyda2mahg84w8azngpvkwr5808ey6qsy2ww7d',
+        amounts: {
+          [tokenBalanceMocks.primaryETH.info.id]: tokenBalanceMocks.primaryETH,
+        },
+      },
       receiver: {
         as: 'domain',
         resolve: '$stackchain',
@@ -92,7 +98,12 @@ const mockUnselectedNameServer: TransferState = {
   ...defaultTransferState,
   targets: [
     {
-      entry: {address: '', amounts: {'': '1000000'}},
+      entry: {
+        address: '',
+        amounts: {
+          [tokenBalanceMocks.primaryETH.info.id]: tokenBalanceMocks.primaryETH,
+        },
+      },
       receiver: {
         as: 'domain',
         resolve: '$stackchain',

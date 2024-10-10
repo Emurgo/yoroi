@@ -1,16 +1,17 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import Icon from '../../../assets/img/copy.png'
-import {Button, Spacer, useModal} from '../../../components'
-import {useCopy} from '../../../legacy/useCopy'
-import {useMetrics} from '../../../metrics/metricsManager'
-import {isEmptyString} from '../../../utils'
-import {AddressMode} from '../../../wallet-manager/types'
-import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
+import {Button} from '../../../components/Button/Button'
+import {useModal} from '../../../components/Modal/ModalContext'
+import {useCopy} from '../../../hooks/useCopy'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {isEmptyString} from '../../../kernel/utils'
+import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {useReceive} from '../common/ReceiveProvider'
 import {
@@ -28,7 +29,7 @@ export const DescribeSelectedAddressScreen = () => {
   const {styles, colors} = useStyles()
   const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
-  const {isSingle, addressMode} = useAddressModeManager()
+  const {isSingle, addressMode} = useAddressMode()
   const addresses = useReceiveAddressesStatus(addressMode)
   const isMultipleAddressesUsed = addresses.used.length > 1
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
@@ -45,14 +46,13 @@ export const DescribeSelectedAddressScreen = () => {
   }
 
   const handleOnModalConfirm = React.useCallback(
-    (method: AddressMode) => {
+    (method: Wallet.AddressMode) => {
       if (method === 'multiple') {
         navigateTo.multipleAddress()
       }
     },
     [navigateTo],
   )
-
   React.useEffect(() => {
     isShowingMultipleAddressInfo &&
       openModal(
@@ -76,15 +76,15 @@ export const DescribeSelectedAddressScreen = () => {
   )
 
   return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <ScrollView style={{flex: 1}}>
-        <View style={styles.address}>
+    <SafeAreaView style={[styles.root, styles.flex]} edges={['left', 'right', 'bottom']}>
+      <ScrollView style={styles.flex}>
+        <View style={[styles.address, styles.flex]}>
           {hasAddress ? <AddressDetailCard title={strings.addresscardTitle} /> : <SkeletonAdressDetail />}
         </View>
       </ScrollView>
 
       <Button
-        outline
+        withoutBackground
         title={strings.requestSpecificAmountButton}
         textStyles={{
           color: colors.requestSpecificAmountTextColor,
@@ -94,8 +94,6 @@ export const DescribeSelectedAddressScreen = () => {
         testID="receive:request-specific-amount-link"
       />
 
-      <Spacer height={6} />
-
       <Button
         shelleyTheme
         onPress={handleOnPressCopy}
@@ -104,34 +102,29 @@ export const DescribeSelectedAddressScreen = () => {
         iconImage={Icon}
         isCopying={isCopying}
         copiedText={strings.addressCopiedMsg}
-        style={styles.button}
       />
-
-      <Spacer height={6} />
     </SafeAreaView>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      ...theme.padding.l,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.bg_color_max,
+      ...atoms.p_lg,
+    },
+    flex: {
+      ...atoms.flex_1,
     },
     address: {
-      flex: 1,
-      alignItems: 'center',
-    },
-    button: {
-      backgroundColor: theme.color.primary[500],
+      ...atoms.align_center,
     },
   })
 
   const colors = {
-    requestSpecificAmountTextColor: theme.color.primary[500],
+    requestSpecificAmountTextColor: color.text_primary_medium,
   }
 
   return {styles, colors} as const

@@ -1,36 +1,43 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
+import {Chain} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
-import {useLanguage} from '../../../../../i18n'
-import {useBalance, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../../WalletManager/Context/SelectedWalletContext'
+import {Space} from '../../../../../components/Space/Space'
+import {useLanguage} from '../../../../../kernel/i18n'
+import {Quantities} from '../../../../../yoroi-wallets/utils/utils'
+import {usePortfolioPrimaryBalance} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {AmountCard} from '../../../common/AmountCard/AmountCard'
 import {useStrings} from '../../../common/useStrings'
 
 export const EditAmount = ({disabled}: {disabled?: boolean}) => {
-  const wallet = useSelectedWallet()
-
-  const tokenId = wallet.primaryTokenInfo.id
-  const balance = useBalance({wallet, tokenId})
   const strings = useStrings()
-  const amountTokenInfo = useTokenInfo({wallet, tokenId})
   const {numberLocale} = useLanguage()
+  const {
+    selected: {network},
+  } = useWalletManager()
+
+  const isPreprod = network === Chain.Network.Preprod
+  const isSancho = network === Chain.Network.Sancho
+
+  const {wallet} = useSelectedWallet()
+  const balance = usePortfolioPrimaryBalance({wallet})
 
   const {amount, orderType, amountInputChanged, provider, providerId} = useExchange()
   const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
 
   const onChangeAmountQuantity = React.useCallback(
     (text: string) => {
-      const [input, quantity] = Quantities.parseFromText(text, amountTokenInfo.decimals ?? 0, numberLocale)
+      const [input, quantity] = Quantities.parseFromText(text, balance.info.decimals, numberLocale)
       const newValue = +quantity
       const displayValue = text === '' ? '' : input
 
       let inputErrorMessage = null
 
       if (orderType === 'sell') {
-        const isNotEnoughBalance = new BigNumber(newValue).isGreaterThan(new BigNumber(balance))
+        const isNotEnoughBalance = new BigNumber(newValue).isGreaterThan(new BigNumber(balance.quantity.toString()))
         if (isNotEnoughBalance) inputErrorMessage = strings.notEnoughBalance
       }
 
@@ -53,7 +60,6 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
       )
     },
     [
-      amountTokenInfo.decimals,
       numberLocale,
       balance,
       providers,
@@ -66,16 +72,21 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
     ],
   )
 
+  if (isPreprod || isSancho) return null
+
   return (
-    <AmountCard
-      label={strings.amountTitle}
-      onChange={onChangeAmountQuantity}
-      value={amount.displayValue}
-      touched={true}
-      wallet={wallet}
-      amount={{tokenId, quantity: balance}}
-      error={amount.error ?? ''}
-      inputEditable={!disabled}
-    />
+    <>
+      <Space height="xl" />
+
+      <AmountCard
+        label={strings.amountTitle}
+        onChange={onChangeAmountQuantity}
+        value={amount.displayValue}
+        touched={true}
+        amount={balance}
+        error={amount.error ?? ''}
+        inputEditable={!disabled}
+      />
+    </>
   )
 }

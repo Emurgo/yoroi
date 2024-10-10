@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {TouchableOpacity} from 'react-native'
 
-import {Icon} from '../../../components'
+import {Icon} from '../../../components/Icon'
 
 type Props = {
   disabled?: boolean
@@ -21,12 +21,10 @@ export const ScannerButton = ({disabled, onPress}: Props) => {
 }
 
 const useStyles = () => {
-  const {
-    theme: {color},
-  } = useTheme()
+  const {color} = useTheme()
   const colors = {
-    disabled: color.gray[600],
-    enabled: color.gray.max,
+    disabled: color.gray_600,
+    enabled: color.gray_max,
   }
   return {colors}
 }

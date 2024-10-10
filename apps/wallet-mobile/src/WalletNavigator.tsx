@@ -1,40 +1,61 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {RouteProp, useFocusEffect} from '@react-navigation/native'
+import {BottomTabBar, BottomTabBarProps, createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {
+  milkTokenId,
+  supportedProviders,
+  swapApiMaker,
+  swapManagerMaker,
+  SwapProvider,
+  swapStorageMaker,
+} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
+import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, Platform} from 'react-native'
+import {Keyboard, Platform, StyleSheet, View} from 'react-native'
 
-import {VotingRegistration} from './Catalyst'
-import {Icon, OfflineBanner} from './components'
-import {DashboardNavigator} from './Dashboard'
+import {Icon} from './components/Icon'
+import {OfflineBanner} from './components/OfflineBanner/OfflineBanner'
+import {DiscoverNavigator} from './features/Discover'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
-import {MenuNavigator} from './features/Menu'
+import {MenuNavigator} from './features/Menu/Menu'
+import {PortfolioNavigator} from './features/Portfolio/PortfolioNavigator'
+import {CatalystNavigator} from './features/RegisterCatalyst/CatalystNavigator'
+import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
+import {NetworkTag} from './features/Settings/ChangeNetwork/NetworkTag'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
-import {GovernanceNavigator} from './features/Staking/Governance'
+import {GovernanceNavigator} from './features/Staking/Governance/GovernanceNavigator'
+import {SwapFormProvider} from './features/Swap/common/SwapFormProvider'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
-import {useSelectedWallet} from './features/WalletManager/Context/SelectedWalletContext'
-import {SelectWalletFromList} from './features/WalletManager/SelectWalletFromList/SelectWalletFromListScreen'
-import {useMetrics} from './metrics/metricsManager'
-import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
-import {defaultStackNavigationOptions} from './navigation'
-import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
-import {NftsNavigator} from './Nfts/NftsNavigator'
-import {SearchProvider} from './Search/SearchContext'
-import {TxHistoryNavigator} from './TxHistory'
-import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
+import {TxHistoryNavigator} from './features/Transactions/TxHistoryNavigator'
+import {useSelectedWallet} from './features/WalletManager/common/hooks/useSelectedWallet'
+import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
+import {useMetrics} from './kernel/metrics/metricsManager'
+import {
+  defaultStackNavigationOptions,
+  shouldShowTabBarForRoutes,
+  WalletStackRoutes,
+  WalletTabRoutes,
+} from './kernel/navigation'
+import {DashboardNavigator} from './legacy/Dashboard/DashboardNavigator'
+import {useFrontendFees, useStakingKey} from './yoroi-wallets/hooks'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
+
+const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
+  const shouldShow = shouldShowTabBarForRoutes(props.state)
+  return shouldShow ? <BottomTabBar {...props} /> : null
+}
+
+const aggregator: Swap.Aggregator = 'muesliswap'
+
 const WalletTabNavigator = () => {
   const strings = useStrings()
-  const {colors} = useStyles()
-  const wallet = useSelectedWallet()
-  const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
-
+  const {colors, styles} = useStyles()
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
   React.useEffect(() => {
@@ -61,81 +82,128 @@ const WalletTabNavigator = () => {
     }, [track]),
   )
 
+  // swap
+  const {wallet} = useSelectedWallet()
+  const {frontendFees} = useFrontendFees(wallet)
+  const stakingKey = useStakingKey(wallet)
+  const swapManager = React.useMemo(() => {
+    const aggregatorTokenId = wallet.isMainnet ? milkTokenId.mainnet : milkTokenId.preprod
+    const swapStorage = swapStorageMaker()
+    const swapApi = swapApiMaker({
+      isMainnet: wallet.isMainnet,
+      stakingKey,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+      supportedProviders,
+    })
+    const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
+    return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
+  }, [wallet.isMainnet, wallet.portfolioPrimaryTokenInfo, stakingKey, frontendFees])
+
   return (
-    <>
-      <OfflineBanner />
+    <SwapProvider swapManager={swapManager}>
+      <SwapFormProvider>
+        <OfflineBanner />
 
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-          tabBarLabelStyle: {fontSize: 11},
-          tabBarActiveTintColor: colors.active,
-          tabBarInactiveTintColor: colors.inactive,
-          tabBarStyle: {
-            // keyboardWillShow keyboardWillHiden dont work on android
-            display: isKeyboardOpen ? 'none' : undefined,
-          },
-          tabBarHideOnKeyboard: Platform.OS === 'android',
-        }}
-        initialRouteName={initialRoute}
-        backBehavior="initialRoute"
-      >
-        <Tab.Screen
-          name="history"
-          options={({route}: {route: RouteProp<WalletTabRoutes, 'history'>}) => ({
-            tabBarIcon: ({focused}) => <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />,
-            tabBarLabel: strings.walletTabBarLabel,
-            tabBarTestID: 'walletTabBarButton',
-            tabBarStyle: hideTabBarForRoutes(route),
-          })}
-        >
-          {() => (
-            <SearchProvider>
-              <TxHistoryNavigator />
-            </SearchProvider>
-          )}
-        </Tab.Screen>
+        <Tab.Navigator
+          sceneContainerStyle={{backgroundColor: colors.background}}
+          screenOptions={{
+            headerShown: false,
+            tabBarLabelStyle: styles.labelStyle,
+            tabBarActiveTintColor: colors.active,
+            tabBarInactiveTintColor: colors.inactive,
+            tabBarBackground: () => (
+              <View style={{...StyleSheet.absoluteFillObject, backgroundColor: colors.background}} />
+            ),
+            tabBarStyle: {
+              borderTopColor: colors.divider,
+              borderTopWidth: 2 * StyleSheet.hairlineWidth,
 
-        <Tab.Screen
-          name="nfts"
-          options={{
-            tabBarIcon: ({focused}) => <Icon.Image size={28} color={focused ? colors.active : colors.inactive} />,
-            tabBarLabel: strings.nftsTabBarLabel,
-            tabBarTestID: 'nftsTabBarButton',
+              // keyboardWillShow keyboardWillHiden dont work on android
+              display: isKeyboardOpen ? 'none' : undefined,
+            },
+            tabBarHideOnKeyboard: true,
           }}
+          tabBar={(props) => <TabBarWithHiddenContent {...props} />}
+          backBehavior="initialRoute"
         >
-          {() => (
-            <SearchProvider>
-              <NftsNavigator />
-            </SearchProvider>
-          )}
-        </Tab.Screen>
-
-        {isHaskellShelley(wallet.walletImplementationId) && (
           <Tab.Screen
-            name="staking-dashboard"
-            component={DashboardNavigator}
+            name="history"
             options={{
-              tabBarIcon: ({focused}) => (
-                <Icon.TabStaking size={24} color={focused ? colors.active : colors.inactive} />
-              ),
-              tabBarLabel: strings.stakingButton,
-              tabBarTestID: 'stakingTabBarButton',
+              tabBarIcon: ({focused}) =>
+                focused ? (
+                  <Icon.TabWalletActive size={24} color={colors.active} />
+                ) : (
+                  <Icon.TabWallet size={24} color={colors.inactive} />
+                ),
+              tabBarLabel: strings.walletTabBarLabel,
+              tabBarTestID: 'walletTabBarButton',
+            }}
+          >
+            {() => (
+              <SearchProvider>
+                <TxHistoryNavigator />
+              </SearchProvider>
+            )}
+          </Tab.Screen>
+
+          <Tab.Screen
+            name="portfolio"
+            initialParams={{screen: 'dashboard-portfolio'}}
+            options={{
+              tabBarIcon: ({focused}) =>
+                focused ? (
+                  <Icon.TabPortfolioActive size={24} color={colors.active} />
+                ) : (
+                  <Icon.TabPortfolio size={24} color={colors.inactive} />
+                ),
+              tabBarLabel: strings.portfolioButton,
+              tabBarTestID: 'portfolioTabBarButton',
+            }}
+          >
+            {() => (
+              <SearchProvider>
+                <PortfolioNavigator />
+              </SearchProvider>
+            )}
+          </Tab.Screen>
+
+          <Tab.Screen
+            name="discover"
+            options={{
+              tabBarIcon: ({focused}) =>
+                focused ? (
+                  <Icon.TabDiscoverActive size={28} color={colors.active} />
+                ) : (
+                  <Icon.TabDiscover size={28} color={colors.inactive} />
+                ),
+              tabBarLabel: strings.discoverTabBarLabel,
+              tabBarTestID: 'discoverTabBarButton',
+            }}
+          >
+            {() => (
+              <SearchProvider>
+                <DiscoverNavigator />
+              </SearchProvider>
+            )}
+          </Tab.Screen>
+
+          <Tab.Screen
+            name="menu"
+            component={MenuNavigator}
+            options={{
+              tabBarIcon: ({focused}) =>
+                focused ? (
+                  <Icon.TabMenuActive size={28} color={colors.active} />
+                ) : (
+                  <Icon.TabMenu size={28} color={colors.inactive} />
+                ),
+              tabBarLabel: strings.menuTabBarLabel,
+              tabBarTestID: 'menuTabBarButton',
             }}
           />
-        )}
-
-        <Tab.Screen
-          name="menu"
-          component={MenuNavigator}
-          options={{
-            tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? colors.active : colors.inactive} />,
-            tabBarLabel: strings.menuTabBarLabel,
-            tabBarTestID: 'menuTabBarButton',
-          }}
-        />
-      </Tab.Navigator>
-    </>
+        </Tab.Navigator>
+      </SwapFormProvider>
+    </SwapProvider>
   )
 }
 
@@ -143,8 +211,10 @@ const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
   const initialRoute = useLinksShowActionResult()
   const strings = useStrings()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   useLinksRequestAction()
+
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
@@ -162,53 +232,71 @@ export const WalletNavigator = () => {
   }
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultStackNavigationOptions(theme),
-        headerLeft: undefined,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-      }}
-    >
-      <Stack.Screen
-        name="wallet-selection"
-        options={{title: strings.walletSelectionScreenHeader}}
-        component={SelectWalletFromList}
-      />
+    <SearchProvider>
+      <Stack.Navigator
+        screenOptions={{
+          ...navOptions,
+          headerLeft: undefined,
+        }}
+      >
+        <Stack.Screen
+          name="wallet-selection"
+          options={{
+            title: strings.walletSelectionScreenHeader,
+            headerTitle: ({children}) => <NetworkTag directChangeActive>{children}</NetworkTag>,
+          }}
+          component={SelectWalletFromList}
+        />
 
-      <Stack.Screen //
-        name="setup-wallet"
-        options={{headerShown: false}}
-        component={SetupWalletNavigator}
-      />
+        <Stack.Screen //
+          name="setup-wallet"
+          options={{headerShown: false}}
+          component={SetupWalletNavigator}
+        />
 
-      <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
+        <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
 
-      <Stack.Screen name="nft-details-routes" options={{headerShown: false}} component={NftDetailsNavigator} />
+        <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 
-      <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
+        <Stack.Screen
+          name="voting-registration"
+          options={{headerShown: false}}
+          getComponent={() => CatalystNavigator}
+        />
 
-      <Stack.Screen name="voting-registration" options={{headerShown: false}} component={VotingRegistration} />
+        <Stack.Screen
+          name="toggle-analytics-settings"
+          options={{headerShown: false}}
+          component={ToggleAnalyticsSettingsNavigator}
+        />
 
-      <Stack.Screen
-        name="toggle-analytics-settings"
-        options={{headerShown: false}}
-        component={ToggleAnalyticsSettingsNavigator}
-      />
+        <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
 
-      <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
-    </Stack.Navigator>
+        <Stack.Screen name="staking-dashboard" options={{headerShown: false}} component={DashboardNavigator} />
+      </Stack.Navigator>
+    </SearchProvider>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
+
+  const styles = StyleSheet.create({
+    labelStyle: {
+      ...atoms.font_semibold,
+      ...atoms.text_center,
+      fontSize: 10,
+    },
+  })
 
   const colors = {
-    active: color.primary[600],
-    inactive: color.gray[600],
+    active: color.text_primary_max,
+    inactive: color.text_gray_low,
+    background: color.bg_color_max,
+    divider: color.gray_200,
   }
-  return {colors}
+
+  return {colors, styles}
 }
 
 const messages = defineMessages({
@@ -248,9 +336,17 @@ const messages = defineMessages({
     id: 'menu',
     defaultMessage: '!!!Menu',
   },
+  discoverButton: {
+    id: 'components.common.navigation.discover',
+    defaultMessage: '!!!Discover',
+  },
   walletSelectionScreenHeader: {
     id: 'components.walletselection.walletselectionscreen.header',
     defaultMessage: '!!!My wallets',
+  },
+  portfolioButton: {
+    id: 'global.portfolio',
+    defaultMessage: '!!!Portfolio',
   },
 })
 
@@ -258,6 +354,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
+    portfolioButton: intl.formatMessage(messages.portfolioButton),
     stakingButton: intl.formatMessage(messages.stakingButton),
     txHistoryTabBarLabel: intl.formatMessage(messages.transactionsButton),
     sendTabBarLabel: intl.formatMessage(messages.sendButton),
@@ -266,6 +363,7 @@ const useStrings = () => {
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
     nftsTabBarLabel: intl.formatMessage(messages.nftsButton),
     menuTabBarLabel: intl.formatMessage(messages.menuButton),
+    discoverTabBarLabel: intl.formatMessage(messages.discoverButton),
     walletSelectionScreenHeader: intl.formatMessage(messages.walletSelectionScreenHeader),
   }
 }

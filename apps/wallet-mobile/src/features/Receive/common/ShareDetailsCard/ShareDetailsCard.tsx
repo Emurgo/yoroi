@@ -3,9 +3,10 @@ import React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {CopyButton, Text} from '../../../../components'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {isEmptyString} from '../../../../utils/utils'
+import {CopyButton} from '../../../../components/CopyButton'
+import {Text} from '../../../../components/Text'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {isEmptyString} from '../../../../kernel/utils'
 import {useStrings} from '../useStrings'
 import {useLastDateAddressUsed} from './useLastDateAddressUsed'
 
@@ -88,13 +89,12 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
 
 const useStyles = () => {
   const screenWidth = useWindowDimensions().width
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     title: {
-      ...typography['heading-3-medium'],
-      color: color.gray.max,
+      ...atoms.heading_3_medium,
+      color: color.gray_max,
     },
     addressDetails: {
       borderRadius: 16,
@@ -104,20 +104,20 @@ const useStyles = () => {
       minHeight: 394,
       alignSelf: 'center',
       overflow: 'hidden',
-      ...padding['x-l'],
-      ...padding['y-xxl'],
+      ...atoms.px_lg,
+      ...atoms.py_2xl,
       gap: 16,
     },
     textAddressDetails: {
-      ...typography['body-2-m-regular'],
+      ...atoms.body_1_lg_regular,
       lineHeight: 24,
       textAlign: 'left',
       flex: 1,
-      color: color.gray[900],
+      color: color.gray_900,
     },
     textAddress: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[600],
+      ...atoms.body_2_md_regular,
+      color: color.gray_600,
       textAlign: 'left',
     },
     textSection: {
@@ -130,8 +130,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    grayText: color.gray[600],
-    backgroundGradientCard: color.gradients['blue-green'],
+    grayText: color.gray_600,
+    backgroundGradientCard: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

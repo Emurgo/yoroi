@@ -1,48 +1,46 @@
 import {isBoolean} from '@yoroi/common'
-import {useTheme} from '@yoroi/theme'
-import {capitalize} from 'lodash'
+import {SupportedThemes, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
+import {Platform, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon, Spacer} from '../../../components'
-import {useLanguage} from '../../../i18n'
-import {defaultLanguage} from '../../../i18n/languages'
-import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
-import {lightPalette} from '../../../theme'
-import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../../yoroi-wallets/auth'
+import {Icon} from '../../../components/Icon'
+import {Spacer} from '../../../components/Spacer/Spacer'
+import {isNightly, isProduction} from '../../../kernel/env'
+import {useLanguage} from '../../../kernel/i18n'
+import {themeNames} from '../../../kernel/i18n/global-messages'
+import {defaultLanguage} from '../../../kernel/i18n/languages'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
+import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../Auth/common/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
+import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
+import {networkConfigs} from '../../WalletManager/network-manager/network-manager'
 import {useNavigateTo} from '../common/navigation'
-import {useCurrencyContext} from '../Currency'
+import {SettingsSwitch} from '../common/SettingsSwitch'
+import {useCurrencyPairing} from '../Currency/CurrencyContext'
 import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from '../ScreenShare'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
-const iconProps = {
-  color: lightPalette.gray['600'],
-  size: 23,
-}
-
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
-  const {colorScheme} = useTheme()
+  const {styles, colors} = useStyles()
+  const {name} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
-  const {isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
-  const {currency} = useCurrencyContext()
+  const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
+  const {currency} = useCurrencyPairing()
   const {enabled: crashReportEnabled} = useCrashReports()
 
   const authSetting = useAuthSetting()
   const isAuthOsSupported = useIsAuthOsSupported()
   const navigateTo = useNavigateTo()
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
+  const {network} = useSelectedNetwork()
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
-  const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
-  const displayToggleThemeSetting = !isNightly() && !isProduction()
+  const displayScreenShareSetting = Platform.OS === 'android' && !isProduction
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
@@ -52,12 +50,24 @@ export const ApplicationSettingsScreen = () => {
     }
   }
 
+  const iconProps = {
+    color: colors.icon,
+    size: 23,
+  }
+
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
       <ScrollView bounces={false} style={styles.settings}>
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
+            label={strings.network}
+            onNavigate={navigateTo.changeNetwork}
+            selected={networkConfigs[network].name}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Language {...iconProps} />}
             label={strings.selectLanguage}
             onNavigate={navigateTo.changeLanguage}
             selected={language.label}
@@ -94,14 +104,12 @@ export const ApplicationSettingsScreen = () => {
             onNavigate={navigateTo.analytics}
           />
 
-          {displayToggleThemeSetting && (
-            <SettingsItem
-              icon={<Icon.EyeOff {...iconProps} />} // TODO
-              label={`${capitalize(colorScheme)} Theme`} // TODO
-            >
-              <ToggleThemeSwitch />
-            </SettingsItem>
-          )}
+          <NavigatedSettingsItem
+            icon={<Icon.Theme {...iconProps} />}
+            label={strings.selectTheme}
+            onNavigate={navigateTo.changeTheme}
+            selected={strings.translateThemeName(name)}
+          />
         </SettingsSection>
 
         <Spacer height={24} />
@@ -119,7 +127,7 @@ export const ApplicationSettingsScreen = () => {
             label={strings.privacyMode}
             info={strings.privacyModeInfo}
           >
-            <PrivacyModeSwitch isPrivacyOff={isPrivacyOff} />
+            <PrivacyModeSwitch isPrivacyActive={isPrivacyActive} />
           </SettingsItem>
 
           <SettingsItem
@@ -128,7 +136,7 @@ export const ApplicationSettingsScreen = () => {
             info={strings.biometricsSignInInfo}
             disabled={!isAuthOsSupported}
           >
-            <Switch
+            <SettingsSwitch
               value={authSetting === 'os'}
               onValueChange={onToggleAuthWithOs}
               disabled={!isAuthOsSupported || isTogglePrivacyModeLoading}
@@ -164,9 +172,9 @@ export const ApplicationSettingsScreen = () => {
 }
 
 // to avoid switch jumps
-const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
+const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
   const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading} = usePrivacyMode()
-  const [isLocalPrivacyOff, setIsLocalPrivacyOff] = React.useState(isPrivacyOff)
+  const [isLocalPrivacyActive, setIsLocalPrivacyOff] = React.useState(isPrivacyActive)
 
   const onTogglePrivacyMode = () => {
     setIsLocalPrivacyOff((prevState) => {
@@ -180,25 +188,13 @@ const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
     })
   }
 
-  return <Switch value={isLocalPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
-}
-
-const ToggleThemeSwitch = () => {
-  const {selectColorScheme, colorScheme} = useTheme()
-  const [theme, setTheme] = React.useState(true)
-
-  const onToggleThemeMode = () => {
-    if (colorScheme === 'light') {
-      selectColorScheme('dark')
-      setTheme(true)
-    }
-    if (colorScheme === 'dark') {
-      selectColorScheme('light')
-      setTheme(false)
-    }
-  }
-
-  return <Switch value={theme} onValueChange={onToggleThemeMode} />
+  return (
+    <SettingsSwitch
+      value={isLocalPrivacyActive}
+      onValueChange={onTogglePrivacyMode}
+      disabled={isTogglePrivacyModeLoading}
+    />
+  )
 }
 
 // to avoid switch jumps
@@ -218,7 +214,7 @@ const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean})
     })
   }
 
-  return <Switch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={CONFIG.FORCE_CRASH_REPORTS} />
+  return <SettingsSwitch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={isNightly} />
 }
 
 // to avoid switch jumps
@@ -231,7 +227,7 @@ const ScreenSharingSwitch = ({screenSharingEnabled, disabled}: {screenSharingEna
     setIsLocalEnabled(enabled)
   }
 
-  return <Switch value={isLocalEnabled} onValueChange={onToggle} disabled={disabled} />
+  return <SettingsSwitch value={isLocalEnabled} onValueChange={onToggle} disabled={disabled} />
 }
 
 const useStrings = () => {
@@ -241,6 +237,7 @@ const useStrings = () => {
     general: intl.formatMessage(messages.general),
     securityReporting: intl.formatMessage(messages.securityReporting),
     selectLanguage: intl.formatMessage(messages.selectLanguage),
+    selectTheme: intl.formatMessage(messages.selectTheme),
     selectFiatCurrency: intl.formatMessage(messages.selectFiatCurrency),
     about: intl.formatMessage(messages.about),
     changePin: intl.formatMessage(messages.changePin),
@@ -255,6 +252,8 @@ const useStrings = () => {
     privacyPolicy: intl.formatMessage(messages.privacyPolicy),
     screenSharing: intl.formatMessage(messages.screenSharing),
     screenSharingInfo: intl.formatMessage(messages.screenSharingInfo),
+    translateThemeName: (theme: SupportedThemes) => intl.formatMessage(themeNames[theme]),
+    network: intl.formatMessage(messages.network),
   }
 }
 
@@ -270,6 +269,10 @@ const messages = defineMessages({
   selectLanguage: {
     id: 'components.settings.applicationsettingsscreen.selectLanguage',
     defaultMessage: '!!!Language',
+  },
+  selectTheme: {
+    id: 'components.settings.applicationsettingsscreen.selectTheme',
+    defaultMessage: '!!!Theme',
   },
   selectFiatCurrency: {
     id: 'components.settings.applicationsettingsscreen.selectFiatCurrency',
@@ -328,15 +331,18 @@ const messages = defineMessages({
     defaultMessage:
       '!!!Changes to this option will enable you to make screenshots as well share your screen via third party apps',
   },
+  network: {
+    id: 'components.settings.applicationsettingsscreen.network',
+    defaultMessage: '!!!Network',
+  },
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
     settings: {
       flex: 1,
@@ -344,5 +350,5 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  return {styles, colors: {icon: color.gray_600}} as const
 }

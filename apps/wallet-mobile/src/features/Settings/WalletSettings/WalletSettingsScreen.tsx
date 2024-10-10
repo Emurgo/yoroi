@@ -1,26 +1,24 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
+import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAuth} from '../../../auth/AuthProvider'
-import {Icon, Spacer} from '../../../components'
-import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../dialogs'
-import {confirmationMessages} from '../../../i18n/global-messages'
-import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
-import {lightPalette} from '../../../theme'
-import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
-import {useAuthSetting} from '../../../yoroi-wallets/auth'
-import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
-import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
-import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
-import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
-import {useSelectedWallet, useSetSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
-import {useSetSelectedWalletMeta} from '../../WalletManager/Context/SelectedWalletMetaContext'
+import {Icon} from '../../../components/Icon'
+import {Spacer} from '../../../components/Spacer/Spacer'
+import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../kernel/dialogs'
+import {confirmationMessages} from '../../../kernel/i18n/global-messages'
+import {SettingsRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
+import {useResync} from '../../../yoroi-wallets/hooks'
+import {useAuth} from '../../Auth/AuthProvider'
+import {useAuthSetting} from '../../Auth/common/hooks'
+import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../common/navigation'
+import {SettingsSwitch} from '../common/SettingsSwitch'
 import {
   NavigatedSettingsItem,
   SettingsBuildItem,
@@ -29,27 +27,23 @@ import {
   SettingsSection,
 } from '../SettingsItems'
 
-const iconProps = {
-  color: lightPalette.gray['600'],
-  size: 23,
-}
-
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
   const {resetToWalletSelection} = useWalletNavigation()
-  const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
-  const addressMode = useAddressModeManager()
+  const addressMode = useAddressMode()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
-  const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
+  const {
+    meta: {isEasyConfirmationEnabled, isHW, isReadOnly, implementation},
+  } = useSelectedWallet()
   const navigateTo = useNavigateTo()
 
   const onToggleEasyConfirmation = () => {
-    if (easyConfirmationEnabled) {
+    if (isEasyConfirmationEnabled) {
       navigateTo.disableEasyConfirmation()
     } else {
       navigateTo.enableEasyConfirmation()
@@ -58,6 +52,11 @@ export const WalletSettingsScreen = () => {
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
+  }
+
+  const iconProps = {
+    color: colors.icon,
+    size: 23,
   }
 
   return (
@@ -86,19 +85,19 @@ export const WalletSettingsScreen = () => {
             icon={<Icon.Lock {...iconProps} />}
             label={strings.changePassword}
             onNavigate={() => settingsNavigation.navigate('change-password')}
-            disabled={wallet.isReadOnly || wallet.isHW}
+            disabled={isReadOnly || isHW}
           />
 
           <SettingsItem
             icon={<Icon.Bio {...iconProps} />}
             label={strings.easyConfirmation}
             info={strings.easyConfirmationInfo}
-            disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
+            disabled={authSetting === 'pin' || isHW || isReadOnly}
           >
-            <Switch
-              value={easyConfirmationEnabled}
+            <SettingsSwitch
+              value={isEasyConfirmationEnabled}
               onValueChange={onToggleEasyConfirmation}
-              disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
+              disabled={authSetting === 'pin' || isHW || isReadOnly}
             />
           </SettingsItem>
         </SettingsSection>
@@ -124,7 +123,6 @@ export const WalletSettingsScreen = () => {
             icon={<Icon.Qr {...iconProps} />}
             label={strings.multipleAddresses}
             info={strings.multipleAddressesInfo}
-            disabled={addressMode.isToggleLoading}
           >
             <AddressModeSwitcher isSingle={addressMode.isSingle} />
           </SettingsItem>
@@ -133,12 +131,7 @@ export const WalletSettingsScreen = () => {
         <Spacer height={24} />
 
         <SettingsSection title={strings.about}>
-          <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
-
-          <SettingsBuildItem
-            label={strings.walletType}
-            value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
-          />
+          <SettingsBuildItem label={strings.walletType} value={intl.formatMessage(getWalletType(implementation))} />
         </SettingsSection>
 
         <Spacer height={24} />
@@ -147,26 +140,17 @@ export const WalletSettingsScreen = () => {
   )
 }
 
-const getNetworkName = (networkId: NetworkId) => {
-  // note(v-almonacid): this throws when switching wallet
-  try {
-    const config = getNetworkConfigById(networkId)
-    return config.MARKETING_NAME
-  } catch (_e) {
-    return '-'
-  }
-}
-
-const getWalletType = (implementationId: WalletImplementationId): MessageDescriptor => {
-  if (isByron(implementationId)) return messages.byronWallet
-  if (isHaskellShelley(implementationId)) return messages.shelleyWallet
+const getWalletType = (implementation: Wallet.Implementation): MessageDescriptor => {
+  if (implementation === 'cardano-bip44') return messages.byronWallet
+  if (implementation === 'cardano-cip1852') return messages.shelleyWallet
 
   return messages.unknownWalletType
 }
 
 const ResyncButton = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const {colors} = useStyles()
   const {navigateToTxHistory} = useWalletNavigation()
   const intl = useIntl()
   const {resync, isLoading} = useResync(wallet, {
@@ -180,6 +164,11 @@ const ResyncButton = () => {
     }
   }
 
+  const iconProps = {
+    color: colors.icon,
+    size: 23,
+  }
+
   return (
     <NavigatedSettingsItem
       icon={<Icon.Resync {...iconProps} />}
@@ -191,7 +180,7 @@ const ResyncButton = () => {
 }
 
 const AddressModeSwitcher = (props: {isSingle: boolean}) => {
-  const addressMode = useAddressModeManager()
+  const addressMode = useAddressMode()
   const [isSingleLocal, setIsSingleLocal] = React.useState(props.isSingle)
 
   const handleOnSwitchAddressMode = () => {
@@ -206,26 +195,17 @@ const AddressModeSwitcher = (props: {isSingle: boolean}) => {
     })
   }
 
-  return (
-    <Switch value={!isSingleLocal} onValueChange={handleOnSwitchAddressMode} disabled={addressMode.isToggleLoading} />
-  )
+  return <SettingsSwitch value={!isSingleLocal} onValueChange={handleOnSwitchAddressMode} />
 }
 
 const useLogout = () => {
   const {logout} = useAuth()
   const intl = useIntl()
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
   return async () => {
     const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
     if (selection === DIALOG_BUTTONS.YES) {
       logout() // triggers navigation to login
-
-      InteractionManager.runAfterInteractions(() => {
-        setSelectedWallet(undefined)
-        setSelectedWalletMeta(undefined)
-      })
     }
   }
 }
@@ -347,17 +327,16 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
     settings: {
       flex: 1,
       padding: 16,
     },
   })
-  return styles
+  return {styles, colors: {icon: color.gray_500}} as const
 }

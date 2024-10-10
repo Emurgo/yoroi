@@ -5,6 +5,7 @@ import {useTransfer} from '../hooks/useTransfer'
 import {defaultTransferState} from '../state/state'
 
 import {TransferProvider} from './TransferProvider'
+import {tokenBalanceMocks} from '@yoroi/portfolio'
 
 const wrapper: React.FC<React.PropsWithChildren> = ({children}) => (
   <TransferProvider>{children}</TransferProvider>
@@ -71,10 +72,10 @@ describe('TransferContext :: hooks', () => {
     const {result} = renderHook(() => useTransfer(), {wrapper})
 
     act(() => {
-      result.current.tokenSelectedChanged('')
+      result.current.tokenSelectedChanged('.')
     })
 
-    expect(result.current.selectedTokenId).toBe('')
+    expect(result.current.selectedTokenId).toBe('.')
   })
 
   test('yoroiUnsignedTxChanged', () => {
@@ -144,15 +145,15 @@ describe('TransferContext :: hooks', () => {
     const {result} = renderHook(() => useTransfer(), {wrapper})
 
     act(() => {
-      result.current.tokenSelectedChanged('id')
+      result.current.tokenSelectedChanged(tokenBalanceMocks.primaryETH.info.id)
     })
 
     act(() => {
-      result.current.amountChanged('100')
+      result.current.amountChanged(tokenBalanceMocks.primaryETH)
     })
 
     expect(result.current.targets[0]?.entry.amounts).toEqual({
-      id: '100',
+      [tokenBalanceMocks.primaryETH.info.id]: tokenBalanceMocks.primaryETH,
     })
   })
 
@@ -160,19 +161,19 @@ describe('TransferContext :: hooks', () => {
     const {result} = renderHook(() => useTransfer(), {wrapper})
 
     act(() => {
-      result.current.tokenSelectedChanged('id')
+      result.current.tokenSelectedChanged(tokenBalanceMocks.primaryETH.info.id)
     })
 
     act(() => {
-      result.current.amountChanged('100')
+      result.current.amountChanged(tokenBalanceMocks.primaryETH)
     })
 
     expect(result.current.targets[0]?.entry.amounts).toEqual({
-      id: '100',
+      [tokenBalanceMocks.primaryETH.info.id]: tokenBalanceMocks.primaryETH,
     })
 
     act(() => {
-      result.current.amountRemoved('id')
+      result.current.amountRemoved(tokenBalanceMocks.primaryETH.info.id)
     })
 
     expect(result.current.targets[0]?.entry.amounts).toEqual({})
@@ -183,12 +184,21 @@ const yoroiUnsignedTx: Chain.Cardano.UnsignedTx & {mock: true} = {
   entries: [
     {
       address: 'address1',
-      amounts: {'': '99999'},
+      amounts: {
+        [tokenBalanceMocks.primaryETH.info.id]: '1',
+      },
     },
   ],
-  fee: {'': '12345'},
+  fee: {'.': '12345'},
   metadata: {},
-  change: [{address: 'change_address', amounts: {'': '1'}}],
+  change: [
+    {
+      address: 'change_address',
+      amounts: {
+        [tokenBalanceMocks.primaryETH.info.id]: '1',
+      },
+    },
+  ],
   staking: {
     registrations: [],
     deregistrations: [],

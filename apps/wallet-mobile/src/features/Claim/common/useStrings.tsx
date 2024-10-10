@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {txLabels} from '../../../i18n/global-messages'
+import globalMessages, {txLabels} from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -36,7 +36,7 @@ export const useStrings = () => {
   } as const).current
 }
 
-export const messages = Object.freeze(
+const messages = Object.freeze(
   defineMessages({
     askConfirmationTitle: {
       id: 'claim.askConfirmation.title',

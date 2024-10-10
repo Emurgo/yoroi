@@ -1,8 +1,7 @@
 import * as React from 'react'
-import {App, Balance, Swap} from '@yoroi/types'
+import {App, Portfolio, Swap} from '@yoroi/types'
 
 import {
-  SimpleTokenInfo,
   SwapActionType,
   SwapActions,
   SwapCreateOrderActionType,
@@ -67,23 +66,23 @@ export const SwapProvider = ({
     resetState: () => {
       dispatch({type: SwapActionType.ResetState})
     },
-    limitPriceChanged: (limitPrice: Balance.Quantity) => {
+    limitPriceChanged: (limitPrice: string) => {
       dispatch({type: SwapCreateOrderActionType.LimitPriceChanged, limitPrice})
     },
     //
-    buyQuantityChanged: (quantity: Balance.Quantity) => {
+    buyQuantityChanged: (quantity: bigint) => {
       dispatch({type: SwapCreateOrderActionType.BuyQuantityChanged, quantity})
     },
-    sellQuantityChanged: (quantity: Balance.Quantity) => {
+    sellQuantityChanged: (quantity: bigint) => {
       dispatch({type: SwapCreateOrderActionType.SellQuantityChanged, quantity})
     },
-    lpTokenHeldChanged: (amount: Balance.Amount | undefined) => {
+    lpTokenHeldChanged: (amount: Portfolio.Token.Amount | undefined) => {
       dispatch({type: SwapCreateOrderActionType.LpTokenHeldChanged, amount})
     },
-    buyTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => {
+    buyTokenInfoChanged: (tokenInfo: Portfolio.Token.Info) => {
       dispatch({type: SwapCreateOrderActionType.BuyTokenInfoChanged, tokenInfo})
     },
-    sellTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => {
+    sellTokenInfoChanged: (tokenInfo: Portfolio.Token.Info) => {
       dispatch({
         type: SwapCreateOrderActionType.SellTokenInfoChanged,
         tokenInfo,
@@ -92,7 +91,7 @@ export const SwapProvider = ({
     poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => {
       dispatch({type: SwapCreateOrderActionType.PoolPairsChanged, pools})
     },
-    primaryTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => {
+    primaryTokenInfoChanged: (tokenInfo: Portfolio.Token.Info) => {
       dispatch({
         type: SwapCreateOrderActionType.PrimaryTokenInfoChanged,
         tokenInfo,

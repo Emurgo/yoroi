@@ -1,11 +1,13 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLanguage} from '../../../i18n'
-import {PrivacyPolicy} from '../../../Legal'
+import {useLanguage} from '../../../kernel/i18n'
+import {PrivacyPolicy} from '../../Legal/PrivacyPolicy/PrivacyPolicy'
 
 export const ReadPrivacyPolicyScreen = () => {
+  const styles = useStyles()
   const {languageCode} = useLanguage()
 
   return (
@@ -17,12 +19,18 @@ export const ReadPrivacyPolicyScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: '#fff',
-    flex: 1,
-  },
-  contentContainer: {
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      backgroundColor: color.bg_color_max,
+      flex: 1,
+    },
+    contentContainer: {
+      paddingHorizontal: 16,
+    },
+  })
+
+  return styles
+}

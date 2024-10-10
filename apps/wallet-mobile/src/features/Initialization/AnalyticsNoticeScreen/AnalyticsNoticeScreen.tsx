@@ -1,12 +1,14 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Linking, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Analytics} from '../../../components'
+import {Analytics} from '../../../components/Analytics/Analytics'
 import {useAgreeWithLegal, useNavigateTo} from '../common'
 
 export const AnalyticsNoticeScreen = () => {
   const navigateTo = useNavigateTo()
+  const styles = useStyles()
   const {agree} = useAgreeWithLegal()
 
   const onClose = () => {
@@ -25,9 +27,15 @@ export const AnalyticsNoticeScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.bg_color_max,
+    },
+  })
+
+  return styles
+}

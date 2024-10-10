@@ -4,14 +4,14 @@
     "defaultMessage": "!!!By disabling this option you will be able to spend your assets only with your master password.",
     "file": "src/features/Settings/EasyConfirmation/DisableEasyConfirmationScreen.tsx",
     "start": {
-      "line": 62,
+      "line": 48,
       "column": 18,
-      "index": 2015
+      "index": 1543
     },
     "end": {
-      "line": 65,
+      "line": 51,
       "column": 3,
-      "index": 2217
+      "index": 1745
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Disable",
     "file": "src/features/Settings/EasyConfirmation/DisableEasyConfirmationScreen.tsx",
     "start": {
-      "line": 66,
+      "line": 52,
       "column": 17,
-      "index": 2236
+      "index": 1764
     },
     "end": {
-      "line": 69,
+      "line": 55,
       "column": 3,
-      "index": 2350
+      "index": 1878
     }
   }
 ]

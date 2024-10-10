@@ -1,53 +1,92 @@
 import React from 'react'
+import {ColorSchemeName, useColorScheme as _useColorScheme} from 'react-native'
 
-import {darkTheme} from './darkTheme'
-import {lightTheme} from './lightTheme'
-import {Theme} from './types'
+import {ThemedPalette, SupportedThemes, Theme, ThemeStorage} from './types'
+import {defaultLightTheme} from './themes/default-light'
+import {defaultDarkTheme} from './themes/default-dark'
+import {detectTheme} from './helpers/detect-theme'
+import {Atoms} from './atoms/atoms'
+
+type ThemeType = {
+  themeName: SupportedThemes
+}
+
+const themesData: ThemeType[] = [
+  {
+    themeName: 'system',
+  },
+  {
+    themeName: 'default-light',
+  },
+  {
+    themeName: 'default-dark',
+  },
+]
 
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
-export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
-  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
-    'light',
+export const ThemeProvider = ({
+  children,
+  storage,
+}: {
+  children: React.ReactNode
+  storage: ThemeStorage
+}) => {
+  const colorScheme = useColorScheme()
+  const [selectedName, setSelectedName] = React.useState<SupportedThemes>(
+    storage.read() ?? 'system',
   )
-
-  const selectColorScheme = React.useCallback(
-    (themeColor: 'light' | 'dark') => {
-      setColorScheme(themeColor)
-    },
-    [],
-  )
+  const [themeName, setThemeName] = React.useState<
+    Exclude<SupportedThemes, 'system'>
+  >(detectTheme(colorScheme, selectedName))
 
   const value = React.useMemo(
     () => ({
-      theme: themes[colorScheme],
-      colorScheme,
-      selectColorScheme,
-      isLight: colorScheme === 'light',
-      isDark: colorScheme === 'dark',
+      name: selectedName,
+      color: themes[themeName].color,
+
+      selectThemeName: (newTheme: SupportedThemes) => {
+        setSelectedName(newTheme)
+        setThemeName(detectTheme(colorScheme, newTheme))
+        storage.save(newTheme)
+      },
+
+      isLight: themes[themeName].base === 'light',
+      isDark: themes[themeName].base === 'dark',
+      atoms: themes[themeName].atoms,
+      data: themesData,
+      colorScheme: themeName,
     }),
-    [colorScheme, selectColorScheme],
+    [colorScheme, storage, themeName, selectedName],
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
 export const useTheme = () =>
-  React.useContext(ThemeContext) || missingProvider()
+  React.useContext(ThemeContext) ?? missingProvider()
+
+export const useThemeColor = () => useTheme().color
+
+type ThemeContext = {
+  name: SupportedThemes
+  color: ThemedPalette
+  selectThemeName: (name: SupportedThemes) => void
+  isLight: boolean
+  isDark: boolean
+  atoms: Atoms
+  data: ThemeType[]
+  colorScheme: Exclude<SupportedThemes, 'system'>
+}
+
+const themes: Record<Exclude<SupportedThemes, 'system'>, Theme> = {
+  ['default-light']: defaultLightTheme,
+  ['default-dark']: defaultDarkTheme,
+}
 
 const missingProvider = () => {
   throw new Error('ThemeProvider is missing')
 }
 
-type ColorSchemeOption = 'light' | 'dark'
-type ThemeContext = {
-  theme: Theme
-  colorScheme: ColorSchemeOption
-  selectColorScheme: (colorTheme: ColorSchemeOption) => void
-  isLight: boolean
-  isDark: boolean
-}
-
-const themes: Record<'light' | 'dark', Theme> = {
-  light: lightTheme,
-  dark: darkTheme,
+const useColorScheme = (): NonNullable<ColorSchemeName> => {
+  return _useColorScheme() as NonNullable<ColorSchemeName>
 }

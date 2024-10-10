@@ -1,0 +1,26 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.emurgo",
+      "sha256_cert_fingerprints": [
+        "77:0C:19:DD:CF:1C:98:BF:07:49:47:44:1B:10:61:6E:E6:A3:36:42:35:CC:B1:D5:F4:15:35:2E:DD:14:68:5D"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.emurgo.nightly",
+      "sha256_cert_fingerprints": [
+        "C0:E4:33:9B:B3:2F:C5:29:04:A0:BE:C8:AD:0F:3A:0C:36:DC:20:9A:F4:60:C0:42:96:DA:7E:3C:1F:ED:B4:77"
+      ]
+    }
+  }
+]

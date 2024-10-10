@@ -24,6 +24,14 @@ export const configYoroiExchangeOrderShowCreateResult: Readonly<
   path: 'exchange/order/show-create-result',
 } as const
 
+export const configYoroiBrowserLaunchDappUrl: Readonly<
+  Omit<Links.YoroiUriConfig, 'scheme'>
+> = {
+  authority: 'yoroi-wallet.com',
+  version: 'w1',
+  path: 'browser/launch',
+} as const
+
 export const supportedPrefixes = [
   'yoroi://',
   'https://yoroi-wallet.com/w1',

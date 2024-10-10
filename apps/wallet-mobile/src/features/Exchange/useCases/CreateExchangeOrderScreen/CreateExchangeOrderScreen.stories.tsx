@@ -3,12 +3,12 @@ import {exchangeDefaultState, ExchangeProvider, successManagerMock} from '@yoroi
 import {produce} from 'immer'
 import React from 'react'
 
-import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/Context/SelectedWalletContext'
+import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {CreateExchangeOrderScreen} from './CreateExchangeOrderScreen'
 
 storiesOf('Exchange CreateExchangeOrderScreen', module) //
-  .addDecorator((story) => <SelectedWalletProvider wallet={walletMocks.wallet}>{story()}</SelectedWalletProvider>)
+  .addDecorator((story) => <WalletManagerProviderMock wallet={walletMocks.wallet}>{story()}</WalletManagerProviderMock>)
   .add('initial', () => <Initial />)
   .add('buy', () => <BuyAda />)
   .add('sell', () => <SellAda />)

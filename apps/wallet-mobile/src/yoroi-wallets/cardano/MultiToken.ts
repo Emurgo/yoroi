@@ -1,17 +1,15 @@
-// taken from Yoroi Frontend's MultiToken class
 import {TokenEntry} from '@emurgo/yoroi-lib'
+import {Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
-import {DefaultAsset} from '../types'
-
-export type TokenLookupKey = {
+type TokenLookupKey = {
   identifier: string
 }
 export type TokenEntryPlain = TokenLookupKey & {
   amount: string
   isDefault: boolean
 }
-export type DefaultTokenEntry = {
+type DefaultTokenEntry = {
   defaultIdentifier: string
 }
 export class MultiToken {
@@ -162,20 +160,21 @@ export class MultiToken {
 /**
  * Utility functions
  */
-export const getDefaultNetworkTokenEntry = (defaultAsset: DefaultAsset): DefaultTokenEntry => {
+export const getDefaultNetworkTokenEntry = (primaryTokenInfo: Portfolio.Token.Info): DefaultTokenEntry => {
   return {
-    defaultIdentifier: defaultAsset.identifier,
+    defaultIdentifier: primaryTokenInfo.id,
   }
 }
-export const strToDefaultMultiAsset = (amount: string, defaultAsset: DefaultAsset) => {
-  const defaultTokenEntry = getDefaultNetworkTokenEntry(defaultAsset)
+export const strToDefaultMultiAsset = (amount: string, primaryTokenInfo: Portfolio.Token.Info) => {
   return new MultiToken(
     [
       {
-        identifier: defaultTokenEntry.defaultIdentifier,
+        identifier: primaryTokenInfo.id,
         amount: new BigNumber(amount),
       },
     ],
-    defaultTokenEntry,
+    {
+      defaultIdentifier: primaryTokenInfo.id,
+    },
   )
 }

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "walletinit.theme.tryDarkTheme",
+    "defaultMessage": "!!!Try Yoroi dark theme",
+    "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
+    "start": {
+      "line": 182,
+      "column": 10,
+      "index": 5253
+    },
+    "end": {
+      "line": 185,
+      "column": 3,
+      "index": 5346
+    }
+  },
+  {
+    "id": "walletinit.theme.description",
+    "defaultMessage": "!!!Press the theme switcher and dive into the new stylish theme crafted to enhance your Cardano wallet experience",
+    "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
+    "start": {
+      "line": 186,
+      "column": 15,
+      "index": 5363
+    },
+    "end": {
+      "line": 190,
+      "column": 3,
+      "index": 5551
+    }
+  },
+  {
+    "id": "walletinit.theme.chanageTheme",
+    "defaultMessage": "!!!Anonymous analytics data",
+    "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
+    "start": {
+      "line": 191,
+      "column": 15,
+      "index": 5568
+    },
+    "end": {
+      "line": 194,
+      "column": 3,
+      "index": 5665
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.continueButton",
+    "defaultMessage": "!!!Continue",
+    "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
+    "start": {
+      "line": 195,
+      "column": 12,
+      "index": 5679
+    },
+    "end": {
+      "line": 198,
+      "column": 3,
+      "index": 5778
+    }
+  }
+]

@@ -1,10 +1,12 @@
+import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Platform, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
+import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
-import {WalletChecksum} from '../../illustrations/WalletChecksum'
+import {useStrings} from '../useStrings'
 
 type CardAboutPhraseProps = {
   linesOfText: string[] | React.ReactNode[]
@@ -13,6 +15,7 @@ type CardAboutPhraseProps = {
   includeSpacing?: boolean
   checksumImage?: string
   checksumLine?: number
+  testId?: string
 }
 
 export const CardAboutPhrase = ({
@@ -22,8 +25,10 @@ export const CardAboutPhrase = ({
   includeSpacing,
   checksumImage,
   checksumLine,
+  testId,
 }: CardAboutPhraseProps) => {
   const {styles, colors} = useStyles(includeSpacing, showBackgroundColor)
+  const strings = useStrings()
 
   return (
     <View style={styles.container}>
@@ -38,9 +43,11 @@ export const CardAboutPhrase = ({
 
       {title !== undefined && (
         <>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title} testID={testId}>
+            {title}
+          </Text>
 
-          <Space height="s" />
+          <Space height="sm" />
         </>
       )}
 
@@ -50,15 +57,21 @@ export const CardAboutPhrase = ({
           <View key={index + '_ITEM_CARD'} style={styles.itemContainer}>
             <Text style={styles.bullet}>•</Text>
 
-            <Space width="s" />
+            <Space width="sm" />
 
             <Text style={styles.textLine}>
               {handleShowChecksum && (
                 <>
-                  <View style={styles.walletChecksumContainer}>
-                    <WalletChecksum iconSeed={checksumImage} style={styles.walletChecksum} />
+                  {strings.walletChecksum}
 
-                    <Space width="s" />
+                  <Space width="sm" />
+
+                  <View style={styles.walletChecksumContainer}>
+                    <Icon.WalletAvatar
+                      image={new Blockies({seed: checksumImage}).asBase64()}
+                      style={styles.walletChecksum}
+                      size={24}
+                    />
                   </View>
                 </>
               )}
@@ -73,36 +86,36 @@ export const CardAboutPhrase = ({
 }
 
 const useStyles = (padding?: boolean, background?: boolean) => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
-      ...theme.padding[padding ? 'l' : 'none'],
+      ...(padding ? atoms.p_lg : atoms.p_0),
       overflow: 'hidden',
     },
     title: {
-      ...theme.typography['body-1-l-medium'],
-      color: background ? theme.color.primary[600] : theme.color.gray[900],
+      ...atoms.body_1_lg_medium,
+      color: background ? color.primary_600 : color.gray_900,
       textAlign: 'center',
     },
     itemContainer: {
       flexDirection: 'row',
     },
     bullet: {
-      ...theme.typography['body-1-l-regular'],
-      color: background ? theme.color.primary[600] : theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: background ? color.primary_600 : color.gray_900,
     },
     textLine: {
       flex: 1,
-      ...theme.typography['body-1-l-regular'],
-      color: background ? theme.color.primary[600] : theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: background ? color.primary_600 : color.gray_900,
     },
     walletChecksum: {
-      width: 24,
-      height: 24,
+      width: 23,
+      height: 23,
       position: 'absolute',
-      top: -10,
+      top: Platform.OS === 'ios' ? -22 : -18,
     },
     walletChecksumContainer: {
       position: 'relative',
@@ -111,7 +124,7 @@ const useStyles = (padding?: boolean, background?: boolean) => {
   })
 
   const colors = {
-    gradientBlueGreen: theme.color.gradients['blue-green'],
+    gradientBlueGreen: color.bg_gradient_1,
   }
   return {styles, colors} as const
 }

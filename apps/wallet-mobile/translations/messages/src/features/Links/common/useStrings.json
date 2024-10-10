@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Payment requested",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 31,
+      "line": 36,
       "column": 34,
-      "index": 1360
+      "index": 1797
     },
     "end": {
-      "line": 34,
+      "line": 39,
       "column": 5,
-      "index": 1463
+      "index": 1900
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!A payment has been requested.",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 35,
+      "line": 40,
       "column": 40,
-      "index": 1505
+      "index": 1942
     },
     "end": {
-      "line": 38,
+      "line": 43,
       "column": 5,
-      "index": 1626
+      "index": 2063
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Payment requested",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 39,
+      "line": 44,
       "column": 36,
-      "index": 1664
+      "index": 2101
     },
     "end": {
-      "line": 42,
+      "line": 47,
       "column": 5,
-      "index": 1769
+      "index": 2206
     }
   },
   {
@@ -49,14 +49,74 @@
     "defaultMessage": "!!!A payment has been requested.",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 43,
+      "line": 48,
       "column": 42,
-      "index": 1813
+      "index": 2250
     },
     "end": {
-      "line": 46,
+      "line": 51,
       "column": 5,
-      "index": 1936
+      "index": 2373
+    }
+  },
+  {
+    "id": "links.trusted.browserLaunchDappUrl.title",
+    "defaultMessage": "!!!Launch dApp requested",
+    "file": "src/features/Links/common/useStrings.ts",
+    "start": {
+      "line": 53,
+      "column": 38,
+      "index": 2414
+    },
+    "end": {
+      "line": 56,
+      "column": 5,
+      "index": 2525
+    }
+  },
+  {
+    "id": "links.trusted.browserLaunchDappUrl.description",
+    "defaultMessage": "!!!A payment has been requested.",
+    "file": "src/features/Links/common/useStrings.ts",
+    "start": {
+      "line": 57,
+      "column": 44,
+      "index": 2571
+    },
+    "end": {
+      "line": 60,
+      "column": 5,
+      "index": 2696
+    }
+  },
+  {
+    "id": "links.untrusted.browserLaunchDappUrl.title",
+    "defaultMessage": "!!!Lauch dApp requested",
+    "file": "src/features/Links/common/useStrings.ts",
+    "start": {
+      "line": 61,
+      "column": 40,
+      "index": 2738
+    },
+    "end": {
+      "line": 64,
+      "column": 5,
+      "index": 2850
+    }
+  },
+  {
+    "id": "links.untrusted.browserLaunchDappUrl.description",
+    "defaultMessage": "!!!A payment has been requested.",
+    "file": "src/features/Links/common/useStrings.ts",
+    "start": {
+      "line": 65,
+      "column": 46,
+      "index": 2898
+    },
+    "end": {
+      "line": 68,
+      "column": 5,
+      "index": 3025
     }
   },
   {
@@ -64,14 +124,14 @@
     "defaultMessage": "!!!Open a wallet",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 48,
+      "line": 70,
       "column": 27,
-      "index": 1966
+      "index": 3055
     },
     "end": {
-      "line": 51,
+      "line": 73,
       "column": 5,
-      "index": 2057
+      "index": 3146
     }
   },
   {
@@ -79,14 +139,14 @@
     "defaultMessage": "!!!To continue, open a wallet.",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 52,
+      "line": 74,
       "column": 33,
-      "index": 2092
+      "index": 3181
     },
     "end": {
-      "line": 55,
+      "line": 77,
       "column": 5,
-      "index": 2203
+      "index": 3292
     }
   },
   {
@@ -94,14 +154,14 @@
     "defaultMessage": "!!!Redirect available",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 57,
+      "line": 79,
       "column": 24,
-      "index": 2230
+      "index": 3319
     },
     "end": {
-      "line": 60,
+      "line": 82,
       "column": 5,
-      "index": 2323
+      "index": 3412
     }
   },
   {
@@ -109,14 +169,14 @@
     "defaultMessage": "!!!The caller that request this action has provided a way for Yoroi to return to their application, would you like to be redirected?",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 61,
+      "line": 83,
       "column": 30,
-      "index": 2355
+      "index": 3444
     },
     "end": {
-      "line": 65,
+      "line": 87,
       "column": 5,
-      "index": 2573
+      "index": 3662
     }
   }
 ]

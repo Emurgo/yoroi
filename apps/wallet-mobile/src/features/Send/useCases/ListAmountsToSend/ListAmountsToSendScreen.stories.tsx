@@ -2,19 +2,19 @@ import {storiesOf} from '@storybook/react-native'
 import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
-import {SearchProvider} from '../../../../Search/SearchContext'
 import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../WalletManager/Context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {SearchProvider} from '../../../Search/SearchContext'
 import {ListAmountsToSendScreen} from './ListAmountsToSendScreen'
 
 storiesOf('List Amounts To Send', module).add('initial', () => {
   return (
-    <SelectedWalletProvider wallet={mocks.wallet}>
+    <WalletManagerProviderMock wallet={mocks.wallet}>
       <TransferProvider initialState={{}}>
         <SearchProvider>
           <ListAmountsToSendScreen />
         </SearchProvider>
       </TransferProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 })

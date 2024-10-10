@@ -6,9 +6,10 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon} from '../Icon'
-import {Spacer} from '../Spacer'
+import {Space} from '../Space/Space'
+import {Spacer} from '../Spacer/Spacer'
 
-export type ExpandableInfoCardProps = {
+type ExpandableInfoCardProps = {
   info: React.ReactNode
   expanded?: boolean
   children?: React.ReactNode
@@ -29,14 +30,12 @@ export const ExpandableInfoCard = ({
 
   return (
     <View>
-      <Spacer height={8} />
-
       <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
         {header}
 
         {children !== undefined && (
           <>
-            <Spacer height={8} />
+            <Space height="sm" />
 
             {children}
           </>
@@ -44,7 +43,7 @@ export const ExpandableInfoCard = ({
 
         {expanded && (
           <>
-            <Spacer height={8} />
+            <Space height="sm" />
 
             {info}
           </>
@@ -52,14 +51,14 @@ export const ExpandableInfoCard = ({
 
         {footer !== undefined && (
           <>
-            <Spacer height={8} />
+            <Space height="sm" />
 
             {footer}
           </>
         )}
       </View>
 
-      <Spacer height={8} />
+      <Space height="lg" />
     </View>
   )
 }
@@ -73,13 +72,18 @@ export const HeaderWrapper = ({
   expanded?: boolean
   onPress: () => void
 }) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
+
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.flexBetween}>
         {children}
 
-        {expanded ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
+        {expanded ? (
+          <Icon.Chevron direction="up" color={colors.gray} size={24} />
+        ) : (
+          <Icon.Chevron color={colors.gray} direction="down" size={24} />
+        )}
       </View>
     </TouchableOpacity>
   )
@@ -115,7 +119,7 @@ export const HiddenInfoWrapper = ({
   value: React.ReactNode
   icon?: React.ReactNode
 }) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   return (
     <View>
       <View style={styles.flexBetween}>
@@ -126,7 +130,7 @@ export const HiddenInfoWrapper = ({
 
           {info !== undefined && (
             <TouchableOpacity onPress={onPress}>
-              <Icon.Info size={24} />
+              <Icon.Info color={colors.gray} size={24} />
             </TouchableOpacity>
           )}
         </View>
@@ -181,21 +185,20 @@ export const ExpandableInfoCardSkeleton = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
+      ...atoms.p_lg,
+      borderColor: color.gray_200,
+      backgroundColor: color.bg_color_max,
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: color.gray[400],
-      padding: 16,
       width: '100%',
       height: 'auto',
-      backgroundColor: color.gray.min,
     },
     shadowProp: {
-      backgroundColor: color.gray.min,
-      shadowColor: color.gray.max,
+      backgroundColor: color.bg_color_max,
+      shadowColor: color.gray_max,
       shadowOffset: {
         width: 0,
         height: 1,
@@ -217,17 +220,17 @@ const useStyles = () => {
     },
     text: {
       textAlign: 'left',
-      ...typography['body-1-l-regular'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_max,
     },
     gray: {
-      color: color.gray[600],
-      ...typography['body-1-l-regular'],
+      color: color.gray_600,
+      ...atoms.body_1_lg_regular,
     },
     buttonLabel: {
       paddingTop: 13,
-      color: color.gray.max,
-      ...typography['body-2-m-medium'],
+      color: color.gray_max,
+      ...atoms.body_2_md_medium,
     },
     info: {
       flexDirection: 'row',
@@ -236,13 +239,13 @@ const useStyles = () => {
     value: {
       textAlign: 'right',
       flexShrink: 1,
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_900,
     },
     label: {
-      color: color.gray[600],
+      color: color.gray_600,
       paddingRight: 8,
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     footerDisabled: {
       opacity: 0.5,
@@ -250,8 +253,9 @@ const useStyles = () => {
   })
 
   const colors = {
-    skeletonBackground: theme.color.gray[200],
+    skeletonBackground: color.gray_200,
+    gray: color.gray_max,
   }
 
-  return {styles, colors}
+  return {styles, colors} as const
 }

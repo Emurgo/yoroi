@@ -2,8 +2,10 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../../components'
-import {useBlockGoBack} from '../../../../../navigation'
+import {Button} from '../../../../../components/Button/Button'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
+import {useBlockGoBack} from '../../../../../kernel/navigation'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
@@ -30,8 +32,7 @@ export const ShowFailedTxScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -40,14 +41,14 @@ const useStyles = () => {
       padding: 16,
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
+      color: color.gray_max,
+      ...atoms.heading_3_medium,
       padding: 4,
       textAlign: 'center',
     },
     text: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
+      color: color.gray_600,
+      ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 330,
     },

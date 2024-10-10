@@ -6,8 +6,12 @@ import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, Spacer, Text, useModal} from '../../../../components'
-import {useWalletNavigation} from '../../../../navigation'
+import {Button} from '../../../../components/Button/Button'
+import {Icon} from '../../../../components/Icon'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import {DescribeAction} from '../../common/DescribeAction/DescribeAction'
 import {useStrings} from '../../common/useStrings'
 import {BanxaLogo} from '../../illustrations/BanxaLogo'
@@ -133,11 +137,11 @@ const sanitizeParams = (params: Links.ExchangeShowCreateResultParams) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
     flex: {
       flex: 1,
@@ -152,15 +156,15 @@ const useStyles = () => {
       height: 228,
     },
     congratsText: {
-      ...theme.typography['heading-3-regular'],
-      color: theme.color.gray[900],
+      ...atoms.heading_3_medium,
+      color: color.gray_900,
       fontWeight: '500',
       textAlign: 'center',
       textAlignVertical: 'center',
     },
     contentValueText: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_max,
     },
     boxProvider: {
       flexDirection: 'row',

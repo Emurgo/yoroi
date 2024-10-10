@@ -11,7 +11,7 @@ export const KeyboardAvoidingView = ({
   return (
     <RNKeyboardAvoidingView
       behavior={behavior ?? 'padding'}
-      keyboardVerticalOffset={keyboardVerticalOffset ?? 86}
+      keyboardVerticalOffset={keyboardVerticalOffset ?? 70}
       enabled={enabled ?? Platform.OS === 'ios'}
       {...rest}
     >

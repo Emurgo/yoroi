@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages from '../../../i18n/global-messages'
+import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -27,9 +27,7 @@ export const useStrings = () => {
     cardanoMainnetDescription: intl.formatMessage(messages.cardanoMainnetDescription),
     cardanoTestnetDescription: intl.formatMessage(messages.cardanoTestnetDescription),
     cardanoSanchonetDescription: intl.formatMessage(messages.cardanoSanchonetDescription),
-    biometricDescription: intl.formatMessage(messages.biometricDescription),
-    enableButton: intl.formatMessage(messages.enableButton),
-    ignoreButton: intl.formatMessage(messages.ignoreButton),
+
     continueButton: intl.formatMessage(messages.continueButton),
     next: intl.formatMessage(messages.next),
     learnMore: intl.formatMessage(messages.learnMore),
@@ -78,17 +76,14 @@ export const useStrings = () => {
     stepWalletDetails: intl.formatMessage(messages.stepWalletDetails),
     walletDetailsTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
       intl.formatMessage(messages.walletDetailsTitle, {...options}),
+    hwWalletDetailsTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.hwWalletDetailsTitle, {...options}),
     walletDetailsPasswordHelper: intl.formatMessage(messages.walletDetailsPasswordHelper),
     walletDetailsNameInput: intl.formatMessage(messages.walletDetailsNameInput),
     walletDetailsPasswordInput: intl.formatMessage(messages.walletDetailsPasswordInput),
     walletDetailsConfirmPasswordInput: intl.formatMessage(messages.walletDetailsConfirmPasswordInput),
-    header: intl.formatMessage(messages.header),
-    addWalletButton: intl.formatMessage(messages.addWalletButton),
-    addWalletOnShelleyButton: intl.formatMessage(messages.addWalletOnShelleyButton),
     deprecated: intl.formatMessage(globalMessages.deprecated),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
-    loadingWallet: intl.formatMessage(messages.loadingWallet),
-    supportTicketLink: intl.formatMessage(messages.supportTicketLink),
     invalidChecksum: intl.formatMessage(messages.invalidChecksum),
     validChecksum: intl.formatMessage(messages.validChecksum),
     stepRestoreWalletScreen: intl.formatMessage(messages.stepRestoreWalletScreen),
@@ -101,10 +96,29 @@ export const useStrings = () => {
     restoreDuplicatedWalletModalText: intl.formatMessage(messages.restoreDuplicatedWalletModalText),
     restoreDuplicatedWalletModalButton: intl.formatMessage(messages.restoreDuplicatedWalletModalButton),
     preparingWallet: intl.formatMessage(messages.preparingWallet),
+    walletChecksum: intl.formatMessage(messages.walletChecksum),
+    hwModalText: intl.formatMessage(messages.hwModalText),
+    hwModalBtButton: intl.formatMessage(messages.hwModalBtButton),
+    hwModalUsbButton: intl.formatMessage(messages.hwModalUsbButton),
+    hwModalIosWarning: intl.formatMessage(messages.hwModalIosWarning),
+    error: intl.formatMessage(globalMessages.error),
+    bluetoothError: intl.formatMessage(messages.bluetoothError),
+    hwModalTitle: intl.formatMessage(messages.hwModalTitle),
+    hwExportKey: intl.formatMessage(messages.hwExportKey),
+    hwCheckIntroline: intl.formatMessage(messages.hwCheckIntroline),
+    hwCheckTitle: intl.formatMessage(messages.hwCheckTitle),
+    appInstalled: intl.formatMessage(ledgerMessages.appInstalled),
+    appOpened: intl.formatMessage(ledgerMessages.appOpened),
+    haveOTGAdapter: intl.formatMessage(ledgerMessages.haveOTGAdapter),
+    usbAlwaysConnected: intl.formatMessage(ledgerMessages.usbAlwaysConnected),
+    bluetoothEnabled: intl.formatMessage(ledgerMessages.bluetoothEnabled),
+    locationEnabled: intl.formatMessage(ledgerMessages.locationEnabled),
+    hwContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
+    ledgerSupportLink: intl.formatMessage(messages.ledgerSupportLink),
   }).current
 }
 
-export const messages = Object.freeze(
+const messages = Object.freeze(
   defineMessages({
     notFound: {
       id: 'components.walletinit.createwallet.createwalletscreen.notFound',
@@ -181,19 +195,6 @@ export const messages = Object.freeze(
     cardanoSanchonetDescription: {
       id: 'components.walletinit.walletinitmenu.cardanoSanchonetbutton.description',
       defaultMessage: '!!!Testnet for rolling out governance',
-    },
-    biometricDescription: {
-      id: 'components.walletinit.biometricScreen.biometricDescription.description',
-      defaultMessage:
-        '!!!Use your device biometrics for a more convenient access to your Yoroi wallet and transaction confirmation',
-    },
-    enableButton: {
-      id: 'components.walletinit.biometricScreen.enableButton.title',
-      defaultMessage: '!!!Enable biometrics',
-    },
-    ignoreButton: {
-      id: 'components.walletinit.biometricScreen.ignoreButton.title',
-      defaultMessage: '!!!Recovery phrase is a unique combination of words',
     },
     aboutRecoveryPhraseTitle: {
       id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhrase.title',
@@ -322,7 +323,11 @@ export const messages = Object.freeze(
     walletChecksumModalCardFirstItem: {
       id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.first',
       defaultMessage:
-        '!!!Wallet checksum is a generic Blockie image that is generated to visually distinguish your wallet from others.',
+        '!!!is a generic Blockie image that is generated to visually distinguish your wallet from others.',
+    },
+    walletChecksum: {
+      id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.walletchecksum',
+      defaultMessage: '!!!Wallet checksum',
     },
     walletChecksumModalCardSecondItem: {
       id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.second',
@@ -355,26 +360,6 @@ export const messages = Object.freeze(
     walletDetailsConfirmPasswordInput: {
       id: 'components.walletinit.walletDetails.walletDetailsConfirmPasswordInput',
       defaultMessage: '!!!Confirm password',
-    },
-    header: {
-      id: 'components.walletselection.walletselectionscreen.header',
-      defaultMessage: '!!!My wallets',
-    },
-    addWalletButton: {
-      id: 'components.walletselection.walletselectionscreen.addWalletButton',
-      defaultMessage: '!!!Add wallet',
-    },
-    addWalletOnShelleyButton: {
-      id: 'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
-      defaultMessage: '!!!Add wallet (Jormungandr ITN)',
-    },
-    loadingWallet: {
-      id: 'components.walletselection.walletselectionscreen.loadingWallet',
-      defaultMessage: '!!!Loading wallet',
-    },
-    supportTicketLink: {
-      id: 'components.walletselection.walletselectionscreen.supportTicketLink',
-      defaultMessage: '!!!Ask our support team',
     },
     invalidChecksum: {
       id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
@@ -420,6 +405,51 @@ export const messages = Object.freeze(
     wordNotFound: {
       id: 'components.walletinit.restorewallet.restorewalletscreen.wordNotFound',
       defaultMessage: '!!!Word not found',
+    },
+    hwModalTitle: {
+      id: 'components.ledger.ledgertransportswitchmodal.title',
+      defaultMessage: '!!!Choose connection method',
+    },
+    hwModalText: {
+      id: 'components.ledger.ledgertransportswitchmodal.text',
+      defaultMessage: '!!!Select the option to connect Ledger Nano X or Ledger Nano S to Yoroi app',
+    },
+    hwModalUsbButton: {
+      id: 'components.ledger.ledgertransportswitchmodal.usbButton',
+      defaultMessage: '!!!Connect with USB',
+    },
+    hwModalBtButton: {
+      id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
+      defaultMessage: '!!!Connect with Bluetooth',
+    },
+    hwModalIosWarning: {
+      id: 'components.ledger.ledgertransportswitchmodal.iosWarning',
+      defaultMessage:
+        '!!!USB connection is NOT available on Apple iOS devices. You can always try this connection type on Android platform',
+    },
+    hwWalletDetailsTitle: {
+      id: 'components.walletinit.restorewallet.hwWalletDetailsTitle',
+      defaultMessage: '!!!<b>Add</b> your <b>wallet name</b>',
+    },
+    hwExportKey: {
+      id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
+      defaultMessage: '!!!Action needed: Please, export public key from your Ledger device.',
+    },
+    bluetoothError: {
+      id: 'global.ledgerMessages.bluetoothDisabledError',
+      defaultMessage: '!!!Connect with Bluetooth',
+    },
+    hwCheckIntroline: {
+      id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
+      defaultMessage: '!!!Before continuing, please make sure that:',
+    },
+    hwCheckTitle: {
+      id: 'components.walletinit.connectnanox.checknanoxscreen.steppertitle',
+      defaultMessage: '!!!Intro',
+    },
+    ledgerSupportLink: {
+      id: 'components.walletinit.restorewallet.ledgerSupportLink',
+      defaultMessage: '!!!Learn more about using Yoroi with Ledger',
     },
   }),
 )

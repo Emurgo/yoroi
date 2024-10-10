@@ -2,10 +2,10 @@ import {useTheme} from '@yoroi/theme'
 import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '../../features/WalletManager/Context/SelectedWalletContext'
-import {useAuthOsWithEasyConfirmation} from '../../yoroi-wallets/auth'
+import {useAuthOsWithEasyConfirmation} from '../../features/Auth/common/hooks'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useSignTx, useSubmitTx} from '../../yoroi-wallets/hooks'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
 
 type Props = {
   onSuccess?: (signedTx: YoroiSignedTx) => void
@@ -14,8 +14,9 @@ type Props = {
 }
 
 export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) => {
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const styles = useStyles()
+  const {isDark} = useTheme()
 
   const {signTx, error: signError} = useSignTx({wallet})
   const {submitTx} = useSubmitTx({wallet}, {onError})
@@ -37,9 +38,9 @@ export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) =>
   )
 
   useEffect(() => {
-    if (!wallet.isEasyConfirmationEnabled) return
+    if (!meta.isEasyConfirmationEnabled) return
     authWithOs()
-  }, [wallet.isEasyConfirmationEnabled, authWithOs])
+  }, [meta.isEasyConfirmationEnabled, authWithOs])
 
   const error = signError || authWithOsError
 
@@ -55,21 +56,21 @@ export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) =>
 
   return (
     <View style={styles.center}>
-      <ActivityIndicator size="large" color="black" />
+      <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
     </View>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     center: {
       alignItems: 'center',
       justifyContent: 'center',
+      ...atoms.px_lg,
     },
     errorMessage: {
-      color: color.magenta[500],
+      color: color.sys_magenta_500,
       textAlign: 'center',
     },
   })

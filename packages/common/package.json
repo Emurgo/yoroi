@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/common",
-  "version": "1.5.2",
+  "version": "1.5.4",
   "description": "The Common package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -47,6 +47,7 @@
   ],
   "scripts": {
     "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
+    "build:dev": "yarn tsc && yarn clean && bob build",
     "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
@@ -58,8 +59,8 @@
     "prepublish:prod": "yarn build:release",
     "publish:prod": "npm publish --scope yoroi --access public",
     "release": "release-it",
-    "test": "jest",
-    "test:watch": "jest --watch --debug",
+    "test": "jest --maxWorkers=1",
+    "test:watch": "jest --watch --debug --maxWorkers=1",
     "tsc": "tsc --noEmit -p tsconfig.json"
   },
   "commitlint": {
@@ -108,7 +109,8 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
+      "!src/**/*.d.ts",
+      "!src/fixtures/**"
     ],
     "coverageReporters": [
       "text-summary",
@@ -144,8 +146,10 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
+    "@yoroi/types": "1.5.8",
     "axios": "^1.5.0",
     "axios-mock-adapter": "^1.21.5",
+    "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
@@ -154,6 +158,7 @@
     "eslint-plugin-ft-flow": "^3.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "flowgen": "^1.21.0",
+    "immer": "^10.0.3",
     "jest": "^28.1.1",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
@@ -164,18 +169,19 @@
     "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
+    "rxjs": "^7.8.1",
     "typescript": "^5.3.3",
     "zod": "^3.22.1"
-  },
-  "dependencies": {
-    "@yoroi/types": "1.5.4"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
     "axios": "^1.5.0",
+    "bignumber.js": "^9.0.1",
+    "immer": "^10.0.3",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-native-mmkv": "^2.11.0",
     "react-query": "^3.39.3",
+    "rxjs": "^7.8.1",
     "zod": "^3.22.1"
   },
   "packageManager": "yarn@1.22.21",

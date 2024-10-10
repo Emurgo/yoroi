@@ -47,6 +47,11 @@ import {
   LinksErrorUnsupportedAuthority,
   LinksErrorUnsupportedVersion,
 } from './links/errors'
+import {
+  ApiRequestRecordWithCache,
+  ApiResponseRecordWithCache,
+} from './api/cache'
+import {ApiHttpStatusCode} from './api/status-code'
 import {ApiResponse, ApiResponseError, ApiResponseSuccess} from './api/response'
 import {
   ApiErrorBadRequest,
@@ -88,7 +93,6 @@ import {
   ApiOnChainMetadataRecord,
   ApiOnChainMetadataRequest,
   ApiOnChainMetadataResponse,
-  ApiProtocolParamsResult,
   ApiTokenId,
   ApiTokenIdentity,
   ApiTokenRegistryEntry,
@@ -102,7 +106,11 @@ import {
   AppObservableStorage,
 } from './app/observable-storage'
 import {AppCacheInfo, AppCacheRecord, AppCacheRow} from './app/cache'
-import {AppObserver, AppSubscriber} from './app/simple-observer'
+import {
+  AppObserverManager,
+  AppObserverSubscribe,
+  AppSubscriber,
+} from './app/observer-manager'
 import {
   CardanoAddress,
   CardanoMetadata,
@@ -112,6 +120,8 @@ import {
   CardanoTxInfo,
   CardanoUnsignedTx,
   CardanoVoting,
+  ChainCardanoProtocolParams,
+  ChainCardanoBestBlock,
 } from './chain/cardano'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
@@ -136,27 +146,160 @@ import {
   LinksYoroiAction,
   LinksYoroiUriConfig,
   LinksYoroiModule,
+  LinksBrowserLaunchDappUrlParams,
 } from './links/yoroi'
+import {
+  PortfolioTokenId,
+  PortfolioTokenType,
+  PortfolioTokenPropertyType,
+  PortfolioTokenApplication,
+  PortfolioTokenSource,
+  PortfolioTokenNature,
+  PortfolioTokenStatus,
+} from './portfolio/token'
+import {PortfolioTokenDiscovery} from './portfolio/discovery'
+import {PortfolioTokenInfo} from './portfolio/info'
+import {
+  PortfolioTokenAmount,
+  PortfolioTokenAmountRecords,
+  PortfolioPrimaryBreakdown,
+} from './portfolio/amount'
+import {PortfolioTokenPrice} from './portfolio/price'
+import {ChainNetwork, ChainSupportedNetworks} from './chain/network'
+import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
+import {NumbersAtomicValue} from './numbers/atomic-value'
+import {
+  AppErrorInvalidState,
+  AppErrorWrongPassword,
+  AppErrorLibraryFailed,
+} from './app/errors'
+import {
+  PortfolioApi,
+  PortfolioApiTokenActivityResponse,
+  PortfolioApiTokenDiscoveryResponse,
+  PortfolioApiTokenHistoryResponse,
+  PortfolioApiTokenInfosResponse,
+  PortfolioApiTokenTraitsResponse,
+} from './portfolio/api'
+import {
+  PortfolioEventBalanceManager,
+  PortfolioEventSourceId,
+  PortfolioEventManagerOn,
+  PortfolioEventTokenManager,
+  PortfolioEventTokenManagerSync,
+  PortfolioEventTokenManagerHydrate,
+  PortfolioEventBalanceManagerHydrate,
+  PortfolioEventBalanceManagerRefresh,
+  PortfolioEventBalanceManagerSync,
+} from './portfolio/event'
+import {
+  PortfolioStorageBalance,
+  PortfolioStorageToken,
+} from './portfolio/storage'
+import {
+  PortfolioManagerBalance,
+  PortfolioManagerToken,
+} from './portfolio/manager'
+import {
+  PortfolioFungibilityFilter,
+  PortfolioTokenBalances,
+} from './portfolio/balances'
+import {AppQueueTask, AppQueueTaskManager} from './app/queue-task-manager'
+import {ExplorersManager} from './explorers/manager'
+import {ExplorersExplorer} from './explorers/explorer'
+import {PortfolioTokenTrait, PortfolioTokenTraits} from './portfolio/traits'
+import {HWDeviceInfo, HWDeviceObj, HWFeatures} from './hw/hw'
+import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
+import {WalletMeta} from './wallet/meta'
+import {
+  NetworkApi,
+  NetworkConfig,
+  NetworkEpochInfo,
+  NetworkEpochProgress,
+  NetworkEraConfig,
+  NetworkManager,
+} from './network/manager'
+import {
+  PortfolioTokenActivityRecord,
+  PortfolioTokenActivity,
+  PortfolioTokenActivityWindow,
+} from './portfolio/activity'
+import {
+  AppLoggerLevel,
+  AppLoggerMessage,
+  AppLoggerMetadata,
+  AppLoggerTransporter,
+  AppLoggerTransporterOptions,
+  AppLoggerEntry,
+  AppLoggerManager,
+} from './app/logger'
+import {ScanErrorUnknown, ScanErrorUnknownContent} from './scan/errors'
+import {
+  ScanAction,
+  ScanActionClaim,
+  ScanActionLaunchUrl,
+  ScanActionSendOnlyReceiver,
+  ScanActionSendSinglePt,
+  ScanFeature,
+} from './scan/actions'
+import {ClaimInfo, ClaimManager, ClaimStatus} from './claim/claim'
+import {
+  ClaimApiErrorsAlreadyClaimed,
+  ClaimApiErrorsExpired,
+  ClaimApiErrorsInvalidRequest,
+  ClaimApiErrorsNotFound,
+  ClaimApiErrorsRateLimited,
+  ClaimApiErrorsTooEarly,
+} from './claim/errors'
+import {
+  ClaimApiClaimTokensRequestPayload,
+  ClaimApiClaimTokensResponse,
+} from './claim/api'
+import {
+  PortfolioTokenHistory,
+  PortfolioTokenHistoryPeriod,
+} from './portfolio/history'
 
 export namespace App {
-  export interface Storage<IsAsync extends boolean = true>
-    extends AppStorage<IsAsync> {}
-  export type StorageFolderName = AppStorageFolderName
-  export interface MultiStorage<T, IsAsync extends boolean = true>
-    extends AppMultiStorage<T, IsAsync> {}
+  export namespace Errors {
+    export class InvalidState extends AppErrorInvalidState {}
+    export class WrongPassword extends AppErrorWrongPassword {}
+    export class LibraryError extends AppErrorLibraryFailed {}
+  }
 
-  export interface ObservableStorage<IsAsync extends boolean = true>
-    extends AppObservableStorage<IsAsync> {}
-  export interface ObservableMultiStorage<T, IsAsync extends boolean = true>
-    extends AppObservableMultiStorage<T, IsAsync> {}
+  export interface Storage<
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppStorage<IsAsync, K> {}
+  export type StorageFolderName = AppStorageFolderName
+  export interface MultiStorage<
+    T,
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppMultiStorage<T, IsAsync, K> {}
+
+  export interface ObservableStorage<
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppObservableStorage<IsAsync, K> {}
+  export interface ObservableMultiStorage<
+    T,
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppObservableMultiStorage<T, IsAsync, K> {}
 
   export type MultiStorageOptions<
     T,
     IsAsync extends boolean = true,
-  > = AppMultiStorageOptions<T, IsAsync>
+    K extends string = string,
+  > = AppMultiStorageOptions<T, IsAsync, K>
 
-  export type Observer<T> = AppObserver<T>
+  export type ObserverManager<T> = AppObserverManager<T>
   export type Subscriber<T> = AppSubscriber<T>
+  export type ObserverSubscribe<T> = AppObserverSubscribe<T>
+
+  export type QueueTask = AppQueueTask
+  export type QueueTaskManager = AppQueueTaskManager
 
   export type CacheInfo = AppCacheInfo
   export interface CacheRecord<T> extends AppCacheRecord<T> {}
@@ -167,6 +310,17 @@ export namespace App {
 
   export type FrontendFeeTier = AppFrontendFeeTier
   export type FrontendFeesResponse = AppFrontendFeesResponse
+
+  export namespace Logger {
+    export type Level = AppLoggerLevel
+    export const Level = AppLoggerLevel
+    export type Message = AppLoggerMessage
+    export type Metadata = AppLoggerMetadata
+    export type Transporter = AppLoggerTransporter
+    export type TransporterOptions = AppLoggerTransporterOptions
+    export type Entry = AppLoggerEntry
+    export type Manager = AppLoggerManager
+  }
 }
 
 export namespace Swap {
@@ -220,6 +374,7 @@ export namespace Links {
   export type TransferRequestAdaWithLinkParams =
     LinksTransferRequestAdaWithLinkParams
   export type TransferRequestAdaParams = LinksTransferRequestAdaParams
+  export type BrowserLaunchDappUrlParams = LinksBrowserLaunchDappUrlParams
   export type YoroiActionInfo = LinksYoroiActionInfo
   export type YoroiAction = LinksYoroiAction
 
@@ -244,6 +399,11 @@ export namespace Api {
   export type ResponseError = ApiResponseError
   export type ResponseSuccess<T> = ApiResponseSuccess<T>
   export type Response<T> = ApiResponse<T>
+
+  export type ResponseWithCache<T> = ApiResponseRecordWithCache<T>
+  export type RequestWithCache<T> = ApiRequestRecordWithCache<T>
+  export type HttpStatusCode = ApiHttpStatusCode
+  export const HttpStatusCode = ApiHttpStatusCode
 
   export namespace Errors {
     export class BadRequest extends ApiErrorBadRequest {}
@@ -292,16 +452,23 @@ export namespace Api {
     export type MetadataFile = ApiMetadataFile
     export type TokenId = ApiTokenId
 
-    export type ProtocolParamsResult = ApiProtocolParamsResult
+    export type ProtocolParams = ChainCardanoProtocolParams
+    export type BestBlock = ChainCardanoBestBlock
 
-    export interface Actions {
-      getProtocolParams: () => Promise<ProtocolParamsResult>
+    export interface Api {
+      getProtocolParams: () => Promise<ChainCardanoProtocolParams>
+      getBestBlock: () => Promise<ChainCardanoBestBlock>
     }
   }
 }
 
 export namespace Numbers {
   export type Locale = NumberLocale
+  export type AtomicValue = NumbersAtomicValue
+
+  export namespace Errors {
+    export class InvalidAtomicValue extends NumbersErrorInvalidAtomicValue {}
+  }
 }
 
 export namespace Resolver {
@@ -335,7 +502,98 @@ export namespace Transfer {
   export type Targets = TransferTargets
 }
 
+export namespace Explorers {
+  export type Manager = ExplorersManager
+  export const Explorer = ExplorersExplorer
+  export type Explorer = ExplorersExplorer
+}
+
+export namespace Portfolio {
+  export type PrimaryBreakdown = PortfolioPrimaryBreakdown
+  export type FungibilityFilter = PortfolioFungibilityFilter
+
+  export namespace Event {
+    export type SourceId = PortfolioEventSourceId
+    export type TokenManager = PortfolioEventTokenManager
+    export type BalanceManager = PortfolioEventBalanceManager
+    export type ManagerOn = PortfolioEventManagerOn
+    export const ManagerOn = PortfolioEventManagerOn
+
+    export type TokenManagerSync = PortfolioEventTokenManagerSync
+    export type TokenManagerHydrate = PortfolioEventTokenManagerHydrate
+
+    export type BalanceManagerSync = PortfolioEventBalanceManagerSync
+    export type BalanceManagerHydrate = PortfolioEventBalanceManagerHydrate
+    export type BalanceManagerRefresh = PortfolioEventBalanceManagerRefresh
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  export namespace Api {
+    export type TokenInfosResponse = PortfolioApiTokenInfosResponse
+    export type TokenDiscoveryResponse = PortfolioApiTokenDiscoveryResponse
+    export type TokenTraitsResponse = PortfolioApiTokenTraitsResponse
+    export type TokenActivityResponse = PortfolioApiTokenActivityResponse
+    export type TokenHistoryResponse = PortfolioApiTokenHistoryResponse
+    export type Api = PortfolioApi
+  }
+
+  export namespace Storage {
+    export type Token = PortfolioStorageToken
+    export type Balance = PortfolioStorageBalance
+  }
+
+  export namespace Manager {
+    export type Token = PortfolioManagerToken
+    export type Balance = PortfolioManagerBalance
+  }
+
+  export namespace Token {
+    export type Trait = PortfolioTokenTrait
+    export type Traits = PortfolioTokenTraits
+    export type Balances = PortfolioTokenBalances
+    export type Amount = PortfolioTokenAmount
+    export type AmountRecords = PortfolioTokenAmountRecords
+
+    export type Id = PortfolioTokenId
+
+    export type Type = PortfolioTokenType
+    export const Type = PortfolioTokenType
+
+    export type PropertyType = PortfolioTokenPropertyType
+    export const PropertyType = PortfolioTokenPropertyType
+
+    export type Application = PortfolioTokenApplication
+    export const Application = PortfolioTokenApplication
+
+    export type Source = PortfolioTokenSource
+    export const Source = PortfolioTokenSource
+
+    export type Nature = PortfolioTokenNature
+    export const Nature = PortfolioTokenNature
+
+    export type Status = PortfolioTokenStatus
+    export const Status = PortfolioTokenStatus
+
+    export type Info = PortfolioTokenInfo
+    export type Discovery = PortfolioTokenDiscovery
+    export type Price = PortfolioTokenPrice
+
+    export type Activity = PortfolioTokenActivity
+    export type ActivityWindow = PortfolioTokenActivityWindow
+    export const ActivityWindow = PortfolioTokenActivityWindow
+    export type ActivityRecord = PortfolioTokenActivityRecord
+
+    export type History = PortfolioTokenHistory
+    export type HistoryPeriod = PortfolioTokenHistoryPeriod
+    export const HistoryPeriod = PortfolioTokenHistoryPeriod
+  }
+}
+
 export namespace Chain {
+  export type Network = ChainNetwork
+  export const Network = ChainNetwork
+  export type SupportedNetworks = ChainSupportedNetworks
+
   export namespace Cardano {
     export type UnsignedTx = CardanoUnsignedTx
     export type SignedTx = CardanoSignedTx
@@ -345,7 +603,21 @@ export namespace Chain {
     export type Voting = CardanoVoting
     export type Address = CardanoAddress
     export type TokenId = CardanoTokenId
+    export type ProtocolParams = ChainCardanoProtocolParams
+    export type BestBlock = ChainCardanoBestBlock
   }
+}
+
+export namespace HW {
+  export type Features = HWFeatures
+  export type DeviceInfo = HWDeviceInfo
+  export type DeviceObj = HWDeviceObj
+}
+
+export namespace Wallet {
+  export type Implementation = WalletImplementation
+  export type AddressMode = WalletAddressMode
+  export type Meta = WalletMeta
 }
 
 export namespace Exchange {
@@ -364,6 +636,50 @@ export namespace Exchange {
     export class Unknown extends ExchangeUnknownError {}
     export class ProviderNotFound extends ExchangeProviderNotFoundError {}
   }
+}
+
+export namespace Network {
+  export type Api = NetworkApi
+  export type Manager = NetworkManager
+  export type Config = NetworkConfig
+  export type EraConfig = NetworkEraConfig
+  export type EpochInfo = NetworkEpochInfo
+  export type EpochProgress = NetworkEpochProgress
+}
+
+export namespace Scan {
+  export namespace Errors {
+    export class UnknownContent extends ScanErrorUnknownContent {}
+    export class Unknown extends ScanErrorUnknown {}
+  }
+
+  export type Feature = ScanFeature
+  export type Action = ScanAction
+  export type ActionClaim = ScanActionClaim
+  export type ActionSendOnlyReceiver = ScanActionSendOnlyReceiver
+  export type ActionSendSinglePt = ScanActionSendSinglePt
+  export type ActionScanLaunchUrl = ScanActionLaunchUrl
+}
+
+export namespace Claim {
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  export namespace Api {
+    export namespace Errors {
+      export class AlreadyClaimed extends ClaimApiErrorsAlreadyClaimed {}
+      export class Expired extends ClaimApiErrorsExpired {}
+      export class InvalidRequest extends ClaimApiErrorsInvalidRequest {}
+      export class NotFound extends ClaimApiErrorsNotFound {}
+      export class RateLimited extends ClaimApiErrorsRateLimited {}
+      export class TooEarly extends ClaimApiErrorsTooEarly {}
+    }
+
+    export type ClaimTokensRequestPayload = ClaimApiClaimTokensRequestPayload
+    export type ClaimTokensResponse = ClaimApiClaimTokensResponse
+  }
+
+  export type Status = ClaimStatus
+  export type Info = ClaimInfo
+  export type Manager = ClaimManager
 }
 
 export * from './helpers/types'

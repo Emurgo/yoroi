@@ -58,4 +58,11 @@ export const TransferRequestAdaWithLinkSchema = z
   .merge(PartnerInfoSchema)
   .strict()
 
+export const BrowserLaunchDappUrlSchema = z
+  .object({
+    dappUrl: z.string().max(2048),
+  })
+  .merge(PartnerInfoSchema)
+  .strict()
+
 export const isUnsafeUrl = (url: string) => url.startsWith('http:')

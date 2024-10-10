@@ -1,4 +1,4 @@
-import {Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {transformersMaker} from '../helpers/transformers'
 import {OpenSwapApi} from './openswap-api/api'
@@ -9,19 +9,19 @@ export const swapApiMaker = (
   {
     isMainnet,
     stakingKey,
-    primaryTokenId,
+    primaryTokenInfo,
     supportedProviders,
   }: {
     isMainnet?: boolean
     stakingKey: string
-    primaryTokenId: string
+    primaryTokenInfo: Portfolio.Token.Info
     supportedProviders: ReadonlyArray<Swap.SupportedProvider>
   },
   deps?: {openswap?: OpenSwapApi},
 ): Readonly<Swap.Api> => {
   const api =
     deps?.openswap ?? new OpenSwapApi(isMainnet ? 'mainnet' : 'preprod')
-  const transformers = transformersMaker(primaryTokenId)
+  const transformers = transformersMaker(primaryTokenInfo)
 
   const getOpenOrders: Swap.Api['getOpenOrders'] = () =>
     api
@@ -71,13 +71,13 @@ export const swapApiMaker = (
 
   const getTokenPairs: Swap.Api['getTokenPairs'] = async (token) =>
     !isMainnet
-      ? apiMocks.getTokenPairs // preprod doesn't return any tokens
+      ? apiMocks.getTokens // preprod doesn't return any tokens
       : api
           .getTokenPairs(transformers.asOpenswapTokenId(token))
-          .then(transformers.asYoroiBalanceTokens)
+          .then(transformers.asYoroiPortfolioTokenInfosFromPairs)
 
   const getTokens: Swap.Api['getTokens'] = async () => {
-    return api.getTokens().then(transformers.asYoroiBalanceTokenInfos)
+    return api.getTokens().then(transformers.asYoroiPortfolioTokenInfos)
   }
 
   const getPools: Swap.Api['getPools'] = async ({
@@ -122,7 +122,7 @@ export const swapApiMaker = (
     getPools,
     getCompletedOrders,
     stakingKey,
-    primaryTokenId,
+    primaryTokenInfo,
     supportedProviders,
   } as const
 }

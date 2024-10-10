@@ -2,31 +2,32 @@ import {parseSafe, useAsyncStorage} from '@yoroi/common'
 import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
-import {isEmptyString} from '../../../utils'
-import {ConfigCurrencies, configCurrencies, CurrencySymbol, supportedCurrencies} from '../../../yoroi-wallets/types'
+import {configCurrencies, supportedCurrencies} from '../../../kernel/constants'
+import {usePrimaryTokenActivity} from '../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
+import {ConfigCurrencies, CurrencySymbol} from '../../../yoroi-wallets/types/other'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
 export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
   const currency = useCurrency()
   const selectCurrency = useSaveCurrency()
-  const config = configCurrencies[currency]
-
-  return (
-    <CurrencyContext.Provider
-      value={{
-        currency,
-        selectCurrency,
-        supportedCurrencies,
-        configCurrencies,
-        config,
-      }}
-    >
-      {children}
-    </CurrencyContext.Provider>
+  const {ptActivity, isLoading} = usePrimaryTokenActivity({to: currency})
+  const value = React.useMemo(
+    () => ({
+      currency,
+      selectCurrency,
+      supportedCurrencies,
+      configCurrencies,
+      config: configCurrencies[currency],
+      ptActivity,
+      isLoading,
+    }),
+    [currency, selectCurrency, ptActivity, isLoading],
   )
+
+  return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>
 }
 
-export const useCurrencyContext = () => React.useContext(CurrencyContext) || missingProvider()
+export const useCurrencyPairing = () => React.useContext(CurrencyContext) || missingProvider()
 
 const missingProvider = () => {
   throw new Error('CurrencyProvider is missing')
@@ -46,12 +47,9 @@ const useCurrency = () => {
 
       return defaultCurrency
     },
-    suspense: true,
   })
 
-  if (isEmptyString(query.data)) throw new Error('Invalid state')
-
-  return query.data
+  return query.data ?? defaultCurrency
 }
 
 const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error, CurrencySymbol> = {}) => {
@@ -61,7 +59,7 @@ const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error
   const mutation = useMutation({
     mutationFn: (currencySymbol) => storage.join('appSettings/').setItem('currencySymbol', currencySymbol),
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries('currencySymbol')
+      queryClient.invalidateQueries(['currencySymbol'])
       onSuccess?.(data, variables, context)
     },
     ...options,
@@ -70,7 +68,7 @@ const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error
   return mutation.mutate
 }
 
-const defaultCurrency = supportedCurrencies.USD as CurrencySymbol
+const defaultCurrency: CurrencySymbol = supportedCurrencies.USD
 type SaveCurrencySymbol = ReturnType<typeof useSaveCurrency>
 type CurrencyContext = {
   currency: CurrencySymbol
@@ -79,6 +77,12 @@ type CurrencyContext = {
 
   supportedCurrencies: typeof supportedCurrencies
   configCurrencies: ConfigCurrencies
+  ptActivity: {
+    ts: number
+    close: number
+    open: number
+  }
+  isLoading: boolean
 }
 
 const parseCurrencySymbol = (data: unknown) => {

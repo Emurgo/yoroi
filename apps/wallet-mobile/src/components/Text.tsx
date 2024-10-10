@@ -12,8 +12,6 @@ type Props = TextProps & {
   adjustsFontSizeToFit?: boolean
 }
 
-export const foo: StyleProp<TextStyle> = false
-
 const androidAdjustsFontSizeToFitFix = (width: number, childrenLength: number) => {
   return Math.floor(1.4 * (width / childrenLength))
 }
@@ -71,24 +69,23 @@ export const Text = (props: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     text: {
-      ...typography['body-2-m-regular'],
-      color: color.gray.max,
+      ...atoms.body_2_md_regular,
+      color: color.gray_max,
     },
     secondary: {
-      color: color.gray[700],
+      color: color.gray_700,
     },
     small: {
-      ...typography['body-3-s-regular'],
+      ...atoms.body_3_sm_regular,
     },
     light: {
-      color: color.gray.min,
+      color: color.gray_min,
     },
     error: {
-      color: color.magenta[500],
+      color: color.sys_magenta_500,
     },
     bold: {
       fontFamily: 'Rubik-Medium',

@@ -1,45 +1,62 @@
+import {useNavigation} from '@react-navigation/native'
+import {useAsyncStorage} from '@yoroi/common'
+import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {Api} from '@yoroi/types'
+import {Api, Wallet} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary, Icon, Line, Text} from '../../../../components'
-import {showErrorDialog} from '../../../../dialogs'
-import {errorMessages} from '../../../../i18n/global-messages'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {useWalletNavigation} from '../../../../navigation'
-import {theme} from '../../../../theme'
-import {isEmptyString} from '../../../../utils/utils'
-import {AddressMode} from '../../../../wallet-manager/types'
-import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
-import {useCreateBip44Wallet, usePlate} from '../../../../yoroi-wallets/hooks'
-import {NetworkId, WalletImplementationId} from '../../../../yoroi-wallets/types'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {Icon} from '../../../../components/Icon'
+import {Line} from '../../../../components/Line'
+import {Text} from '../../../../components/Text'
+import {showErrorDialog} from '../../../../kernel/dialogs'
+import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {logger} from '../../../../kernel/logger/logger'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {isEmptyString} from '../../../../kernel/utils'
+import {usePlate} from '../../../../yoroi-wallets/hooks'
+import {derivationConfig} from '../../../WalletManager/common/derivation-config'
+import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
+import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
+import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {WalletAddress} from '../WalletAddress/WalletAddress'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
 // when ro, later will be part of the onboarding
-const addressMode: AddressMode = 'single'
+const addressMode: Wallet.AddressMode = 'single'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {resetToWalletSelection} = useWalletNavigation()
+  const storage = useAsyncStorage()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
 
-  const {publicKeyHex, path, networkId, walletImplementationId} = useSetupWallet()
+  const {publicKeyHex, path, walletImplementation, accountVisual, walletIdChanged} = useSetupWallet()
 
   const normalizedPath = path.map((i) => {
-    if (i >= NUMBERS.HARD_DERIVATION_START) {
-      return i - NUMBERS.HARD_DERIVATION_START
-    }
+    if (i >= derivationConfig.hardStart) return i - derivationConfig.hardStart
     return i
   })
 
-  const {createWallet, isLoading} = useCreateBip44Wallet({
-    onSuccess: () => {
+  const {createWallet, isLoading} = useCreateWalletXPub({
+    onSuccess: async (wallet) => {
+      walletIdChanged(wallet.id)
+      const walletStorage = storage.join('wallet/')
+      const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
+
+      if (!walletMeta) {
+        const error = new Error('WalletDetailsScreen: wallet meta is invalid, reached an invalid state.')
+        logger.error(error)
+        throw error
+      }
+
       track.restoreWalletDetailsSettled()
-      resetToWalletSelection()
+
+      navigation.navigate('setup-wallet-preparing-wallet')
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -54,14 +71,15 @@ export const SaveReadOnlyWalletScreen = () => {
     ({name}: {name: string}) => {
       createWallet({
         name,
-        networkId: networkId as NetworkId,
-        implementationId: walletImplementationId as WalletImplementationId,
+        implementation: walletImplementation,
         bip44AccountPublic: publicKeyHex,
         readOnly: true,
         addressMode,
+        hwDeviceInfo: null,
+        accountVisual,
       })
     },
-    [createWallet, networkId, publicKeyHex, walletImplementationId],
+    [createWallet, publicKeyHex, walletImplementation, accountVisual],
   )
 
   return (
@@ -72,11 +90,7 @@ export const SaveReadOnlyWalletScreen = () => {
         containerStyle={styles.walletFormStyle}
         bottomContent={
           <Boundary>
-            <WalletInfoView
-              normalizedPath={normalizedPath}
-              publicKeyHex={publicKeyHex}
-              networkId={networkId as NetworkId}
-            />
+            <WalletInfoView normalizedPath={normalizedPath} publicKeyHex={publicKeyHex} />
           </Boundary>
         }
         buttonStyle={styles.walletFormButtonStyle}
@@ -92,7 +106,6 @@ const LABEL_MARGIN = 6
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.COLORS.BACKGROUND,
     paddingHorizontal: 16,
   },
   scrollView: {
@@ -127,7 +140,6 @@ const styles = StyleSheet.create({
   },
   keyView: {
     padding: 4,
-    backgroundColor: theme.COLORS.CODE_STYLE_BACKGROUND,
     marginBottom: 10,
   },
   walletFormStyle: {
@@ -176,7 +188,7 @@ const useStrings = () => {
 
 const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => (
   <View style={styles.checksumView}>
-    <Icon.WalletAccount iconSeed={icon} />
+    <Icon.WalletAvatar image={new Blockies({seed: icon}).asBase64()} />
 
     <Text style={styles.checksumText}>{checksum}</Text>
   </View>
@@ -185,12 +197,15 @@ const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => (
 type WalletInfoProps = {
   normalizedPath: Array<number>
   publicKeyHex: string
-  networkId: NetworkId
 }
 
-const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoProps) => {
+const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
   const strings = useStrings()
-  const plate = usePlate({networkId, publicKeyHex})
+  const {walletImplementation} = useSetupWallet()
+  const {
+    networkManager: {chainId},
+  } = useSelectedNetwork()
+  const plate = usePlate({chainId, publicKeyHex, implementation: walletImplementation})
 
   return (
     <View style={styles.walletInfoContainer}>
@@ -209,7 +224,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
           <FlatList
             data={plate.addresses}
             keyExtractor={(item) => item}
-            renderItem={({item}) => <WalletAddress addressHash={item} networkId={networkId} />}
+            renderItem={({item}) => <WalletAddress addressHash={item} />}
           />
         </View>
 

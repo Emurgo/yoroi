@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Icon} from '../Icon'
-import {Spacer} from '../Spacer'
+import {Spacer} from '../Spacer/Spacer'
 
 export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
   const {styles, colors} = useStyles()
@@ -20,23 +20,22 @@ export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       backgroundColor: 'rgba(255, 16, 81, 0.06)',
       borderRadius: 8,
       flexDirection: 'column',
-      ...padding['t-m'],
-      ...padding['b-s'],
-      ...padding['x-l'],
+      ...atoms.pt_md,
+      ...atoms.pb_sm,
+      ...atoms.px_lg,
     },
     message: {
       flexDirection: 'row',
     },
   })
   const colors = {
-    icon: color.magenta[500],
+    icon: color.sys_magenta_500,
   }
   return {styles, colors}
 }

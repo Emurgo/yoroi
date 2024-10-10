@@ -1,8 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {SettingsRouteNavigation, TxHistoryRoutes} from '../../../navigation'
-import {useOverridePreviousRoute} from '../../../utils/navigation'
+import {SettingsRouteNavigation} from '../../../kernel/navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<SettingsRouteNavigation>()
@@ -12,8 +11,4 @@ export const useNavigateTo = () => {
     submittedTx: () => navigation.navigate('collateral-tx-submitted'),
     failedTx: () => navigation.navigate('collateral-tx-failed'),
   }).current
-}
-
-export const useOverridePreviousSendTxRoute = (routeName: keyof TxHistoryRoutes) => {
-  useOverridePreviousRoute(routeName)
 }

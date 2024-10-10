@@ -1,21 +1,22 @@
+import {useClaim, useClaimTokens} from '@yoroi/claim'
+import {toBigInt} from '@yoroi/common'
 import {useTransfer} from '@yoroi/transfer'
+import {Scan} from '@yoroi/types'
 import * as React from 'react'
-import {Alert} from 'react-native'
+import {Alert, Linking} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {useClaimErrorResolver} from '../../../features/Claim/common/useClaimErrorResolver'
 import {useStrings as useStringsClaim} from '../../../features/Claim/common/useStrings'
-import {useClaim} from '../../../features/Claim/module/ClaimProvider'
-import {useClaimTokens} from '../../../features/Claim/module/useClaimTokens'
 import {AskConfirmation} from '../../../features/Claim/useCases/AskConfirmation'
 import {pastedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
-import {ScanAction, ScanFeature} from './types'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from './useNavigateTo'
 
-export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeature}) => {
-  const {primaryTokenInfo} = useSelectedWallet()
+export const useTriggerScanAction = ({insideFeature}: {insideFeature: Scan.Feature}) => {
+  const {
+    wallet: {portfolioPrimaryTokenInfo},
+  } = useSelectedWallet()
   const {openModal, closeModal, startLoading, stopLoading} = useModal()
   const navigateTo = useNavigateTo()
 
@@ -27,11 +28,11 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
     memoChanged,
   } = useTransfer()
 
-  const {reset: resetClaimState, scanActionClaimChanged, address, claimTokenChanged} = useClaim()
+  const {reset: resetClaimState, scanActionClaimChanged, address, claimInfoChanged} = useClaim()
   const claimErrorResolver = useClaimErrorResolver()
   const {claimTokens} = useClaimTokens({
-    onSuccess: (claimToken) => {
-      claimTokenChanged(claimToken)
+    onSuccess: (claimInfo) => {
+      claimInfoChanged(claimInfo)
       closeModal()
       navigateTo.claimShowSuccess()
     },
@@ -43,8 +44,13 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
   })
   const stringsClaim = useStringsClaim()
 
-  const trigger = (scanAction: ScanAction) => {
+  const trigger = (scanAction: Scan.Action) => {
     switch (scanAction.action) {
+      case 'launch-url': {
+        Linking.openURL(scanAction.url)
+        break
+      }
+
       case 'send-single-pt': {
         if (insideFeature !== 'send') resetTransferState()
 
@@ -52,13 +58,14 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
 
         if (scanAction.params) {
           if ('amount' in scanAction.params) {
-            tokenSelectedChanged(primaryTokenInfo.id)
-            amountChanged(
-              Quantities.integer(
-                asQuantity(pastedFormatter(scanAction.params?.amount?.toString() ?? '')),
-                primaryTokenInfo.decimals ?? 0,
+            tokenSelectedChanged(portfolioPrimaryTokenInfo.id)
+            amountChanged({
+              info: portfolioPrimaryTokenInfo,
+              quantity: toBigInt(
+                pastedFormatter(scanAction.params?.amount?.toString() ?? ''),
+                portfolioPrimaryTokenInfo.decimals,
               ),
-            )
+            })
           }
           if ('memo' in scanAction.params) memoChanged(scanAction.params?.memo ?? '')
         }

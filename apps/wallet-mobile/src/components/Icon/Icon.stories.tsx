@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ColorSchemeName, ScrollView, Text, TextInput, View} from 'react-native'
 
-import {mockTransactionInfo} from '../../yoroi-wallets/mocks'
-import {Icon} from '..'
+import {mockTransactionInfo} from '../../yoroi-wallets/mocks/transaction'
+import {Icon} from '../Icon'
 
 storiesOf('Icon', module).add('Gallery', () => {
   return (
@@ -11,13 +11,15 @@ storiesOf('Icon', module).add('Gallery', () => {
       <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', padding: 16}}>
         <Item icon={<Icon.Bug size={40} />} title="Bug" />
 
+        <Item icon={<Icon.Backspace size={40} />} title="Backspace" />
+
         <Item icon={<Icon.Export size={40} />} title="Export" />
 
         <Item icon={<Icon.Magnify size={40} />} title="Magnify" />
 
         <Item icon={<Icon.Received />} title="Received" />
 
-        <Item icon={<Icon.WalletAccount iconSeed="" />} title="WalletAccount" />
+        <Item icon={<Icon.WalletAvatar image="" />} title="WalletAccount" />
 
         <Item icon={<Icon.Emurgo width={40} height={40} />} title="Emurgo" />
 
@@ -55,7 +57,9 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Info size={40} />} title="Info" />
 
-        <Item icon={<Icon.Menu size={40} />} title="Menu" />
+        <Item icon={<Icon.TabMenu size={40} />} title="Tab Menu" />
+
+        <Item icon={<Icon.TabMenuActive size={40} />} title="Tab Menu Active" />
 
         <Item
           icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SENT', status: 'SUCCESSFUL'})} />}
@@ -89,7 +93,15 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Settings size={40} />} title="Settings" />
 
+        <Item icon={<Icon.TabDiscoverActive size={40} />} title="Tab Discover Active" />
+
         <Item icon={<Icon.TabWallet size={40} />} title="Tab Wallet" />
+
+        <Item icon={<Icon.TabWalletActive size={40} />} title="Tab Wallet Active " />
+
+        <Item icon={<Icon.TabPortfolio size={40} />} title="Tab Portfolio" />
+
+        <Item icon={<Icon.TabPortfolioActive size={40} />} title="Tab Portfolio Active " />
 
         <Item icon={<Icon.TabStaking size={40} />} title="Tab Stake" />
 
@@ -103,11 +115,15 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.PlusCircle size={40} />} title="Plus Circle" />
 
+        <Item icon={<Icon.Change />} title="Change" />
+
         <Item icon={<Icon.CheckFilled size={40} />} title="Check Filled" />
 
         <Item icon={<Icon.CheckOutlined size={40} />} title="Check Outlined" />
 
         <Item icon={<Icon.Coins size={40} />} title="Coins" />
+
+        <Item icon={<Icon.Coins2 size={40} />} title="Coins2" />
 
         <Item icon={<Icon.CopySuccess size={40} />} title="Copy Success" />
 
@@ -197,6 +213,8 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Table size={40} />} title="Table" />
 
+        <Item icon={<Icon.Theme size={40} />} title="Theme" />
+
         <Item icon={<Icon.TermsOfUse size={40} />} title="Terms Of Use" />
 
         <Item icon={<Icon.Tokens size={40} />} title="Tokens" />
@@ -246,6 +264,46 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Warning />} title="Warning" />
 
         <Item icon={<Icon.Collateral />} title="Collateral" />
+
+        <Item icon={<Icon.TabDiscover />} title="Tab Discover" />
+
+        <Item icon={<Icon.CheckFilled2 />} title="CheckFilled2" />
+
+        <Item icon={<Icon.DApp />} title="DApp Icon" />
+
+        <Item icon={<Icon.Disconnect />} title="Disconnect" />
+
+        <Item icon={<Icon.LockFilled />} title="LockFilled" />
+
+        <Item icon={<Icon.Backward />} title="Backward" />
+
+        <Item icon={<Icon.Forward />} title="Forward" />
+
+        <Item icon={<Icon.Share2 />} title="Share2" />
+
+        <Item icon={<Icon.Reload />} title="Reload" />
+
+        <Item icon={<Icon.Square />} title="Square" />
+
+        <Item icon={<Icon.Google />} title="Google" />
+
+        <Item icon={<Icon.Connection />} title="Connection" />
+
+        <Item icon={<Icon.YoroiApp />} title="YoroiApp" />
+
+        <Item icon={<Icon.Checkbox />} title="Checkbox" />
+
+        <Item icon={<Icon.EmptyCheckbox />} title="EmptyCheckbox" />
+
+        <Item icon={<Icon.Language />} title="Language" />
+
+        <Item icon={<Icon.MultiParty />} title="MultiParty" />
+
+        <Item icon={<Icon.Ledger />} title="Ledger" />
+
+        <Item icon={<Icon.Bluetooth />} title="Bluetooth" />
+
+        <Item icon={<Icon.Usb />} title="Usb" />
       </ScrollView>
     </FilterProvider>
   )

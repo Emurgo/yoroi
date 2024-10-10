@@ -3,13 +3,13 @@ import {storiesOf} from '@storybook/react-native'
 import {AsyncStorageProvider} from '@yoroi/common'
 import * as React from 'react'
 
-import {mocks} from '../../../../yoroi-wallets/mocks'
-import {rootStorage} from '../../../../yoroi-wallets/storage/rootStorage'
-import {SelectedWalletProvider} from '../../../WalletManager/Context/SelectedWalletContext'
+import {rootStorage} from '../../../../kernel/storage/rootStorage'
+import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SingleOrMultipleAddressesModal} from './SingleOrMultipleAddressesModal'
 
 storiesOf('Receive SingleOrMultipleAddressesModal', module).add('default', () => (
-  <SelectedWalletProvider wallet={mocks.wallet}>
+  <WalletManagerProviderMock wallet={mocks.wallet}>
     <AsyncStorageProvider
       storage={{
         ...rootStorage,
@@ -30,5 +30,5 @@ storiesOf('Receive SingleOrMultipleAddressesModal', module).add('default', () =>
     >
       <SingleOrMultipleAddressesModal onConfirm={action('onConfirm')} />
     </AsyncStorageProvider>
-  </SelectedWalletProvider>
+  </WalletManagerProviderMock>
 ))

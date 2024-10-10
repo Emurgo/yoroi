@@ -3,18 +3,19 @@ import {storiesOf} from '@storybook/react-native'
 import {GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
-import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../WalletManager/Context/SelectedWalletContext'
-import {mocks as governanceMocks, SafeArea} from '../../common'
+import {SafeArea} from '../../../../../components/SafeArea'
+import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {mocks as governanceMocks} from '../../common/mocks'
 import {Routes} from '../../common/navigation'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
 
 storiesOf('Governance/ConfirmTxScreen', module)
   .addDecorator((story) => <SafeArea>{story()}</SafeArea>)
   .addDecorator((story) => (
-    <SelectedWalletProvider wallet={mocks.wallet}>
+    <WalletManagerProviderMock wallet={mocks.wallet}>
       <GovernanceProvider manager={governanceMocks.governanceManager}>{story()}</GovernanceProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))
   .add('Abstain', () => (
     <NavigationRouteContext.Provider value={getContextValue({kind: 'abstain'})}>

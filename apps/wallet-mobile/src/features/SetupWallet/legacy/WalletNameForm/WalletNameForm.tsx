@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useFocusEffect} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, View, ViewStyle} from 'react-native'
 
-import {Button, KeyboardAvoidingView, ProgressStep, TextInput} from '../../../../components'
-import globalMessages from '../../../../i18n/global-messages'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {spacing} from '../../../../theme'
-import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
-import {useWalletNames} from '../../../../yoroi-wallets/hooks'
+import {Button} from '../../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {ProgressStep} from '../../../../components/ProgressStep'
+import {TextInput} from '../../../../components/TextInput/TextInput'
+import globalMessages from '../../../../kernel/i18n/global-messages'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {getWalletNameError, validateWalletName} from '../../../../yoroi-wallets/utils/validators'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 
 type Props = {
   onSubmit: ({name}: {name: string}) => void
@@ -39,11 +41,12 @@ export const WalletNameForm = ({
   isWaiting = false,
 }: Props) => {
   const strings = useStrings()
+  const styles = useStyles()
   const [name, setName] = React.useState(defaultWalletName ?? '')
-  const walletManager = useWalletManager()
   const {track} = useMetrics()
-  const {walletNames} = useWalletNames(walletManager)
-  const validationErrors = validateWalletName(name, null, walletNames || [])
+  const {walletManager} = useWalletManager()
+  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
+  const validationErrors = validateWalletName(name, null, walletNames)
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorMessages = {
     tooLong: strings.walletNameErrorTooLong,
@@ -104,30 +107,35 @@ export const WalletNameForm = ({
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  container: {
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-    flex: 1,
-  },
-  heading: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.paragraphBottomMargin,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginTop: 12,
-  },
-  button: {
-    marginHorizontal: 10,
-    marginVertical: 16,
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.bg_color_max,
+    },
+    container: {
+      paddingVertical: 24,
+      paddingHorizontal: 16,
+      flex: 1,
+    },
+    heading: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 16,
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      marginTop: 12,
+    },
+    button: {
+      marginHorizontal: 10,
+      marginVertical: 16,
+    },
+  })
+
+  return styles
+}
 
 const messages = defineMessages({
   walletNameInputLabel: {

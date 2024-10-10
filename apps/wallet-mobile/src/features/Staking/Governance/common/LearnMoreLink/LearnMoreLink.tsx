@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity} from 'react-native'
 
-import {Text} from '../../../../../components'
+import {Text} from '../../../../../components/Text'
 import {useStrings} from '../strings'
 
 const LEARN_MORE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8582793481231-Governance'
@@ -25,8 +25,7 @@ export const LearnMoreLink = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       display: 'flex',
@@ -35,7 +34,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     link: {
-      color: color.primary[600],
+      color: color.primary_600,
       textDecorationLine: 'underline',
     },
   })

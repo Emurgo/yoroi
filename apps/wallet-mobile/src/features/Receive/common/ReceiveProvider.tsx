@@ -46,7 +46,7 @@ const receiveReducer = (state: ReceiveState, action: ReceiveAction) => {
 
 type ReceiveAction = {type: ReceiveActionType.SelectedAddressChanged; address: string}
 
-export type ReceiveState = {
+type ReceiveState = {
   selectedAddress: string
   defaultAddress: string
 }

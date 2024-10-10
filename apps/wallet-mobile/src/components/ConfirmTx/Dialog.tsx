@@ -1,11 +1,13 @@
+import {HW} from '@yoroi/types'
 import React from 'react'
 import {useIntl} from 'react-intl'
+import {ScrollView} from 'react-native'
 
-import {ErrorView, PleaseWaitView} from '../../components'
-import {LedgerConnect, LedgerTransportSwitchView} from '../../HW'
-import globalMessages, {ledgerMessages, txLabels} from '../../i18n/global-messages'
-import {Modal} from '../../legacy/Modal'
-import {DeviceId, DeviceObj} from '../../yoroi-wallets/hw'
+import globalMessages, {ledgerMessages, txLabels} from '../../kernel/i18n/global-messages'
+import {LedgerConnect, LedgerTransportSwitchView} from '../../legacy/HW'
+import {ErrorView} from '../ErrorModal/ErrorModal'
+import {Modal} from '../legacy/Modal/Modal'
+import {PleaseWaitView} from '../PleaseWaitModal'
 
 type ErrorData = {
   errorMessage: string
@@ -31,8 +33,8 @@ type DialogWithLedgerProps = BaseDialogProps & {
   process: 'withLedger'
   step: Step
   onChooseTransport: (bool: boolean) => void
-  onConnectBLE: (id: DeviceId) => void
-  onConnectUSB: (obj: DeviceObj) => void
+  onConnectBLE: (id: string) => void
+  onConnectUSB: (obj: HW.DeviceObj) => void
   useUSB?: boolean
 }
 
@@ -72,7 +74,11 @@ const DialogWithLedger = ({
           />
         )
       case Step.LedgerConnect:
-        return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
+        return (
+          <ScrollView bounces={false}>
+            <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
+          </ScrollView>
+        )
       case Step.WaitingHwResponse:
         return <PleaseWaitView title={strings.continueOnLedger} spinnerText={strings.followSteps} />
       case Step.Signing:
@@ -99,7 +105,7 @@ const DialogWithLedger = ({
   )
 }
 
-export const DialogSimple = ({step, onRequestClose, errorData}: DialogSimpleProps) => {
+const DialogSimple = ({step, onRequestClose, errorData}: DialogSimpleProps) => {
   const strings = useStrings()
 
   const getBody = () => {

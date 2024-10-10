@@ -1,10 +1,9 @@
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-import {Linking} from 'react-native'
 
-import {NumberLocale} from '../../i18n/languages'
-import {getNetworkConfigById} from '../cardano/networks'
-import {NetworkId, RawUtxo, TokenId, YoroiEntry} from '../types'
+import {NumberLocale} from '../../kernel/i18n/languages'
+import {RawUtxo} from '../types/other'
+import {TokenId, YoroiEntry} from '../types/yoroi'
 
 export const Entries = {
   first: (entries: YoroiEntry[]): YoroiEntry => {
@@ -228,17 +227,4 @@ export const splitStringInto64CharArray = (inputString: string): string[] => {
   }
 
   return resultArray
-}
-
-export const openInExplorer = async (transactionId: string, networkId: NetworkId) => {
-  const networkConfig = getNetworkConfigById(networkId)
-  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transactionId))
-}
-
-export const isMainnetNetworkId = (networkId: NetworkId) => {
-  return networkId !== 300 && !isSanchoNetworkId(networkId)
-}
-
-export const isSanchoNetworkId = (networkId: NetworkId) => {
-  return networkId === 450
 }

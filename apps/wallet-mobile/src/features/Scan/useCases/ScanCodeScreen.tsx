@@ -5,8 +5,8 @@ import {Alert, AlertButton} from 'react-native'
 import {z} from 'zod'
 
 import {CameraCodeScanner, CameraCodeScannerMethods} from '../../../components/CameraCodeScanner/CameraCodeScanner'
-import {ScanRoutes, useParams} from '../../../navigation'
-import * as feedback from '../../../utils/feedback'
+import * as feedback from '../../../kernel/haptics/feedback'
+import {ScanRoutes, useParams} from '../../../kernel/navigation'
 import {parseScanAction} from '../common/parsers'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useScanErrorResolver} from '../common/useScanErrorResolver'
@@ -59,5 +59,5 @@ const ScanStartParamsSchema = z.object({
   insideFeature: z.union([z.literal('scan'), z.literal('send')]),
 })
 
-export const isScanStartParams = createTypeGuardFromSchema<Params>(ScanStartParamsSchema)
-export const isParams = (params?: unknown): params is Params => isScanStartParams(params)
+const isScanStartParams = createTypeGuardFromSchema<Params>(ScanStartParamsSchema)
+const isParams = (params?: unknown): params is Params => isScanStartParams(params)

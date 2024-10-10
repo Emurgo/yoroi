@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.settings.changewalletname.changeButton",
+    "defaultMessage": "!!!Change name",
+    "file": "src/features/Settings/RenameWalletScreen/RenameWalletScreen.tsx",
+    "start": {
+      "line": 104,
+      "column": 16,
+      "index": 3321
+    },
+    "end": {
+      "line": 107,
+      "column": 3,
+      "index": 3425
+    }
+  },
+  {
+    "id": "components.settings.changewalletname.walletNameInputLabel",
+    "defaultMessage": "!!!Wallet name",
+    "file": "src/features/Settings/RenameWalletScreen/RenameWalletScreen.tsx",
+    "start": {
+      "line": 108,
+      "column": 24,
+      "index": 3451
+    },
+    "end": {
+      "line": 111,
+      "column": 3,
+      "index": 3563
+    }
+  }
+]

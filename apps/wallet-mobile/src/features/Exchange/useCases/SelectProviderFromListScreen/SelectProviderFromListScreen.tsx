@@ -5,9 +5,10 @@ import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
+import {useStrings} from '../../common/useStrings'
 import {BanxaLogo} from '../../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
 
@@ -15,6 +16,7 @@ export const SelectProviderFromListScreen = () => {
   const styles = useStyles()
   const {orderType, providerId: selectedProvider, orderTypeChanged, providerIdChanged, provider} = useExchange()
   const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
+  const strings = useStrings()
 
   const handleOnSelectProvider = React.useCallback(
     (providerId: string) => {
@@ -40,14 +42,14 @@ export const SelectProviderFromListScreen = () => {
           return (
             <ProviderItem
               label={provider.name}
-              fee={fee}
+              fee={`${fee}% ${strings.fee}`}
               leftAdornment={leftAdornment}
               rightAdornment={rightAdornment}
               onPress={() => handleOnSelectProvider(providerId)}
             />
           )
         }}
-        ItemSeparatorComponent={() => <Space height="l" />}
+        ItemSeparatorComponent={() => <Space height="lg" />}
         keyExtractor={([providerId]) => providerId}
       ></FlatList>
     </SafeAreaView>
@@ -55,10 +57,10 @@ export const SelectProviderFromListScreen = () => {
 }
 
 const CheckIcon = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
   return (
     <View>
-      <Icon.Check size={24} color={theme.color.primary[600]} />
+      <Icon.Check size={24} color={color.primary_600} />
 
       <Space fill />
     </View>
@@ -66,13 +68,13 @@ const CheckIcon = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
     },
     list: {
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
     },
   })
 

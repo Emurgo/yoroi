@@ -1,7 +1,5 @@
-import {Balance, Swap} from '@yoroi/types'
-import BigNumber from 'bignumber.js'
-
-import {asQuantity} from '../../utils/asQuantity'
+import {Portfolio, Swap} from '@yoroi/types'
+import {BigNumber} from 'bignumber.js'
 
 /**
  * Calculate the market price based on the desired sell amount in a liquidity pool.
@@ -13,16 +11,14 @@ import {asQuantity} from '../../utils/asQuantity'
  */
 export const getMarketPrice = (
   pool: Swap.Pool,
-  sellTokenId: string,
-): Balance.Quantity => {
+  sellTokenId: Portfolio.Token.Id,
+) => {
   const isSellTokenA = sellTokenId === pool.tokenA.tokenId
 
-  const A = new BigNumber(pool.tokenA.quantity)
-  const B = new BigNumber(pool.tokenB.quantity)
+  const A = new BigNumber(pool.tokenA.quantity.toString())
+  const B = new BigNumber(pool.tokenB.quantity.toString())
 
   const [firstToken, secondToken] = isSellTokenA ? [A, B] : [B, A]
 
-  return asQuantity(
-    secondToken.isZero() ? 0 : firstToken.dividedBy(secondToken).toString(),
-  )
+  return secondToken.isZero() ? secondToken : firstToken.dividedBy(secondToken)
 }

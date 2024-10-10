@@ -3,9 +3,9 @@ import {domainNormalizer} from '@yoroi/resolver'
 import {Balance} from '@yoroi/types'
 import {z} from 'zod'
 
-import {features} from '../../features'
-import {getAssetFingerprint} from '../../legacy/format'
-import {toDisplayAssetName} from './api'
+import {features} from '../../kernel/features'
+import {getAssetFingerprint} from '../utils/format'
+import {toDisplayAssetName} from './api/utils'
 export const convertNft = (options: {
   metadata?: unknown
   storageUrl: string
@@ -48,10 +48,6 @@ const normalizeProperty = (value: string | string[]): string => {
   return value
 }
 
-export const isSvgMediaType = (mediaType: unknown): boolean => {
-  return mediaType === 'image/svg+xml'
-}
-
 export const getNftMainImageMediaType = (nft: Balance.TokenInfo): string | undefined => {
   const originalMetadata = nft.metadatas.mintNft
   return hasMediaTypeProperty(originalMetadata) ? normalizeProperty(originalMetadata.mediaType) : undefined
@@ -75,19 +71,19 @@ type NftMetadataFilesProperty = {
 
 const StringOrArrayOfStringsSchema: z.ZodSchema<string | string[]> = z.union([z.string(), z.array(z.string())])
 
-export const hasNameProperty = createTypeGuardFromSchema<{name: string | string[]}>(
+const hasNameProperty = createTypeGuardFromSchema<{name: string | string[]}>(
   z.object({name: StringOrArrayOfStringsSchema}),
 )
 
-export const hasDescriptionProperty = createTypeGuardFromSchema<{description: string | string[]}>(
+const hasDescriptionProperty = createTypeGuardFromSchema<{description: string | string[]}>(
   z.object({description: StringOrArrayOfStringsSchema}),
 )
 
-export const hasMediaTypeProperty = createTypeGuardFromSchema<{mediaType: string | string[]}>(
+const hasMediaTypeProperty = createTypeGuardFromSchema<{mediaType: string | string[]}>(
   z.object({mediaType: StringOrArrayOfStringsSchema}),
 )
 
-export const hasImageProperty = createTypeGuardFromSchema<{image: string | string[]}>(
+const hasImageProperty = createTypeGuardFromSchema<{image: string | string[]}>(
   z.object({image: StringOrArrayOfStringsSchema}),
 )
 
@@ -95,4 +91,4 @@ const NftMetadataFilesSchema: z.ZodSchema<NftMetadataFilesProperty> = z.object({
   files: z.array(z.object({src: StringOrArrayOfStringsSchema.optional(), mediaType: z.string().optional()})).optional(),
 })
 
-export const hasFilesProperty = createTypeGuardFromSchema(NftMetadataFilesSchema)
+const hasFilesProperty = createTypeGuardFromSchema(NftMetadataFilesSchema)

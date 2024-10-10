@@ -1,1 +1,0 @@
-export {ChangeVoteScreen} from './ChangeVoteScreen'

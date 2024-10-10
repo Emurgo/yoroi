@@ -1,10 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../../components'
-import {useBlockGoBack, useWalletNavigation} from '../../../../../navigation'
+import {Button} from '../../../../../components/Button/Button'
+import {SafeArea} from '../../../../../components/SafeArea'
+import {Space} from '../../../../../components/Space/Space'
+import {Text} from '../../../../../components/Text'
+import {useBlockGoBack, useWalletNavigation} from '../../../../../kernel/navigation'
 import {useLinksRequestRedirect} from '../../../../Links/common/useLinksRequestRedirect'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
@@ -18,44 +21,44 @@ export const SubmittedTxScreen = () => {
   useLinksRequestRedirect(linkAction?.info.params.redirectTo)
 
   return (
-    <View style={styles.container}>
+    <SafeArea style={styles.root}>
       <SubmittedTxImage />
 
       <Text style={styles.title}>{strings.submittedTxTitle}</Text>
 
       <Text style={styles.text}>{strings.submittedTxText}</Text>
 
-      <Spacer height={22} />
+      <Space height="xl" />
 
       <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
-    </View>
+    </SafeArea>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    container: {
-      ...padding['l'],
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+    root: {
+      backgroundColor: color.bg_color_max,
+      ...atoms.p_lg,
+      ...atoms.flex_1,
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-regular'],
-      ...padding['xs'],
-      textAlign: 'center',
+      color: color.gray_max,
+      ...atoms.heading_3_medium,
+      ...atoms.px_sm,
+      ...atoms.text_center,
     },
     text: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
-      textAlign: 'center',
-      maxWidth: 300,
+      color: color.gray_600,
+      ...atoms.body_2_md_regular,
+      ...atoms.text_center,
+      maxWidth: 330,
     },
     button: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
   })
   return styles

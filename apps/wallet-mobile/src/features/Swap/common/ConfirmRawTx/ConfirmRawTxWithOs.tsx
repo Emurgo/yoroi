@@ -1,14 +1,15 @@
 import {useTheme} from '@yoroi/theme'
 import React, {useEffect} from 'react'
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 
-import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
-import {useSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {getErrorMessage} from '../errors'
 import {useStrings} from '../strings'
+import {ActivityIndicator} from './ActivityIndicator'
 
 export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
   const styles = useStyles()
 
@@ -18,9 +19,9 @@ export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) =
   )
 
   useEffect(() => {
-    if (!wallet.isEasyConfirmationEnabled) return
+    if (!meta.isEasyConfirmationEnabled) return
     authWithOs()
-  }, [wallet.isEasyConfirmationEnabled, authWithOs])
+  }, [meta.isEasyConfirmationEnabled, authWithOs])
 
   const errorMessage = error ? getErrorMessage(error, strings) : null
 
@@ -36,22 +37,22 @@ export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) =
 
   return (
     <View style={styles.center}>
-      <ActivityIndicator size="large" color="black" />
+      <ActivityIndicator />
     </View>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     center: {
       alignItems: 'center',
       justifyContent: 'center',
+      ...atoms.px_lg,
     },
     errorMessage: {
-      color: color.magenta[500],
+      color: color.sys_magenta_500,
       textAlign: 'center',
     },
   })

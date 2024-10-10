@@ -1,13 +1,16 @@
+import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import _ from 'lodash'
 import React, {ReactElement} from 'react'
 import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import {Hr, Icon, Spacer, Text} from '../../components'
-import {formatTokenWithSymbol} from '../../legacy/format'
-import {lightPalette} from '../../theme'
+import {Hr} from '../../components/Hr/Hr'
+import {Icon} from '../../components/Icon'
+import {Spacer} from '../../components/Spacer/Spacer'
+import {Text} from '../../components/Text'
+import {isEmptyString} from '../../kernel/utils'
 import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
-import {useSelectedWallet} from '../WalletManager/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
+import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
@@ -26,7 +29,7 @@ export const SettingsSection = ({title, children}: SettingsSectionProps) => {
 
           <Spacer height={5} />
 
-          <Hr />
+          <Hr style={styles.separator} />
         </>
       )}
 
@@ -59,7 +62,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
           <View>{children}</View>
         </View>
 
-        {!_.isNil(info) && (
+        {!isEmptyString(info) && (
           <>
             <Spacer height={12} />
 
@@ -68,7 +71,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
         )}
       </View>
 
-      <Hr />
+      <Hr style={styles.separator} />
     </View>
   )
 }
@@ -81,16 +84,16 @@ type NavigatedSettingsItemProps = {
 }
 
 export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, selected}: NavigatedSettingsItemProps) => {
-  const {styles} = useStyles()
+  const {styles, color} = useStyles()
   return (
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {!_.isNil(selected) && <Text style={styles.navigationItem}>{selected}</Text>}
+          {!isEmptyString(selected) && <Text style={styles.navigationItem}>{selected}</Text>}
 
           <Spacer width={16} />
 
-          <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
+          <Icon.Chevron direction="right" size={28} color={color.gray_600} />
         </View>
       </SettingsItem>
     </Touchable>
@@ -110,18 +113,28 @@ export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
 
 export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: NavigatedSettingsItemProps) => {
   const {styles, colors} = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {amount} = useCollateralInfo(wallet)
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
-  const formattedAmount = formatTokenWithSymbol(amount.quantity, wallet.primaryTokenInfo)
+  const formattedCollateral = React.useMemo(() => {
+    const amountCollateral = {
+      info: wallet.portfolioPrimaryTokenInfo,
+      quantity: BigInt(amount.quantity),
+    }
+
+    return !isPrivacyActive
+      ? amountFormatter({template: '{{value}} {{ticker}}'})(amountCollateral)
+      : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(amountCollateral)
+  }, [amount.quantity, isPrivacyActive, privacyPlaceholder, wallet.portfolioPrimaryTokenInfo])
 
   return (
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem label={label} icon={icon}>
         <View style={styles.row}>
-          <Text secondary>{formattedAmount}</Text>
+          <Text secondary>{formattedCollateral}</Text>
 
-          <Icon.Chevron direction="right" size={28} color={colors.iconColor} />
+          <Icon.Chevron direction="right" size={28} color={colors.icon} />
         </View>
       </SettingsItem>
     </Touchable>
@@ -129,8 +142,7 @@ export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: Navi
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     itemInner: {
@@ -145,29 +157,33 @@ const useStyles = () => {
       flex: 1,
     },
     disabled: {
-      color: color.gray['500'],
+      color: color.gray_500,
     },
     sectionText: {
-      color: color.gray['900'],
-      ...typography['body-2-m-regular'],
+      color: color.gray_900,
+      ...atoms.body_2_md_regular,
     },
     itemText: {
-      color: color.gray['900'],
-      ...typography['body-1-l-medium'],
+      color: color.gray_900,
+      ...atoms.body_1_lg_medium,
     },
     itemTextIsNil: {
-      color: color.gray['600'],
-      ...typography['body-3-s-regular'],
+      color: color.gray_600,
+      ...atoms.body_3_sm_regular,
     },
     navigationItem: {
-      color: color.gray['500'],
-      ...typography['body-1-l-regular'],
+      color: color.gray_500,
+      ...atoms.body_1_lg_regular,
+    },
+    separator: {
+      backgroundColor: color.gray_200,
+      height: 1,
     },
     row: {flexDirection: 'row', alignItems: 'center'},
   })
 
   const colors = {
-    iconColor: color.gray['600'],
+    icon: color.el_gray_medium,
   }
-  return {styles, colors}
+  return {styles, colors, color}
 }

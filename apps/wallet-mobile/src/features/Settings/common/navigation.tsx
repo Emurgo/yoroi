@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
+import {Chain} from '@yoroi/types'
 
-import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
+import {SettingsRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<SettingsRouteNavigation>()
@@ -11,6 +12,8 @@ export const useNavigateTo = () => {
     enableLoginWithOs: () => navigation.navigate('enable-login-with-os'),
     changeLanguage: () => navigation.navigate('change-language'),
     changeCurrency: () => navigation.navigate('change-currency'),
+    changeTheme: () => navigation.navigate('change-theme'),
+    changeNetwork: () => navigation.navigate('change-network'),
     about: () => navigation.navigate('about'),
     termsOfUse: () => navigation.navigate('terms-of-use'),
     privacyPolicy: () => navigation.navigate('privacy-policy'),
@@ -18,5 +21,7 @@ export const useNavigateTo = () => {
     changeCustomPin: () => navigation.navigate('change-custom-pin'),
     enableEasyConfirmation: () => navigation.navigate('enable-easy-confirmation'),
     disableEasyConfirmation: () => navigation.navigate('disable-easy-confirmation'),
+    preparingNetworks: (selectedNetwork: Chain.SupportedNetworks) =>
+      navigation.navigate('preparing-network', {selectedNetwork}),
   }
 }

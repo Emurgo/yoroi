@@ -32,7 +32,7 @@ export const ButtonActionGroup = ({labels, onSelect, selected, disabled}: Button
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -46,11 +46,11 @@ const useStyles = () => {
       borderRadius: 8,
     },
     selected: {
-      backgroundColor: theme.color.gray[200],
+      backgroundColor: color.gray_200,
     },
     label: {
-      color: theme.color.gray.max,
-      ...theme.typography['body-1-l-medium'],
+      color: color.gray_max,
+      ...atoms.body_1_lg_medium,
     },
   })
   return styles

@@ -1,17 +1,20 @@
 import {App} from '@yoroi/types'
 
-import {parseSafe} from '../../helpers/parsers'
+import {parseSafe} from '../../utils/parsers'
 import {mountMMKVMultiStorage, mountMMKVStorage} from './mmkv-storage'
 import {MMKV} from 'react-native-mmkv'
 
-const mmkv = new MMKV({id: 'default.mmkv'})
-const rootStorage = mountMMKVStorage('/', 'default.mmkv', mmkv)
+const mmkv = new MMKV({id: 'test.mmkv'})
+const rootStorage = mountMMKVStorage(
+  {path: '/', id: 'test.mmkv'},
+  {instance: mmkv},
+)
 
 describe('prefixed storage', () => {
   beforeEach(() => rootStorage.clear())
 
   it('getAllKeys, setItem, getItem, removeItem, clear', async () => {
-    const storage = mountMMKVStorage('/')
+    const storage = mountMMKVStorage({path: '/'})
     expect(storage.getAllKeys()).toEqual([])
 
     storage.setItem('item1', item1)
@@ -51,7 +54,7 @@ describe('prefixed storage', () => {
   it('getAllKeys, multiSet, multiGet, multiRemove', async () => {
     const storage = rootStorage.join('prefix/')
 
-    storage.multiSet([
+    storage.multiSet<any>([
       ['item1', item1],
       ['item2', item2],
     ])
@@ -126,12 +129,12 @@ describe('prefixed storage', () => {
       rootStorage.setItem('item', item, (data: unknown) => {
         expect(data).toBe(item)
         return storedItem
-      }) // overrides JSON.stringify
+      })
 
       const parsedResult = rootStorage.getItem('item', (data: unknown) => {
         expect(data).toBe(storedItem)
         return item
-      }) // overrides JSON.parse
+      })
 
       expect(parsedResult).toBe(item)
     })
@@ -149,7 +152,7 @@ describe('prefixed storage', () => {
       rootStorage.multiSet(tuples, (data: unknown) => {
         expect([item1, item2]).toContain(data)
         return `${data}-modified`
-      }) // overrides JSON.stringify
+      })
 
       const parsedResult = rootStorage.multiGet(
         ['item1', 'item2'],
@@ -157,7 +160,7 @@ describe('prefixed storage', () => {
           expect([storedItem1, storedItem2]).toContain(data)
           return data?.slice(0, 5)
         },
-      ) // overrides JSON.parse
+      )
 
       expect(parsedResult).toEqual(tuples)
     })
@@ -290,7 +293,7 @@ describe('multi storage', () => {
 })
 
 const options: App.MultiStorageOptions<any, false> = {
-  storage: mountMMKVStorage('/').join('multiStorage/'),
+  storage: mountMMKVStorage({path: '/'}).join('multiStorage/'),
   dataFolder: 'dataFolder/',
   keyExtractor: (item: any) => item.id,
   serializer: JSON.stringify,

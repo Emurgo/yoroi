@@ -1,3 +1,4 @@
+import {HW, Wallet} from '@yoroi/types'
 import {freeze, produce} from 'immer'
 
 export const setupWalletReducer = (
@@ -18,12 +19,12 @@ export const setupWalletReducer = (
         draft.walletPassword = action.walletPassword
         return
 
-      case SetupWalletActionType.NetworkIdChanged:
-        draft.networkId = action.networkId
+      case SetupWalletActionType.WalletImplementationChanged:
+        draft.walletImplementation = action.walletImplementation
         return
 
-      case SetupWalletActionType.WalletImplementationIdChanged:
-        draft.walletImplementationId = action.walletImplementationId
+      case SetupWalletActionType.AccountVisualChanged:
+        draft.accountVisual = action.accountVisual
         return
 
       case SetupWalletActionType.PublicKeyHexChanged:
@@ -38,7 +39,7 @@ export const setupWalletReducer = (
         draft.hwDeviceInfo = action.hwDeviceInfo
         return
 
-      case SetupWalletActionType.SetUpTypeChanged:
+      case SetupWalletActionType.SetupTypeChanged:
         draft.setUpType = action.setUpType
         return
 
@@ -58,6 +59,10 @@ export const setupWalletReducer = (
         draft.showRestoreWalletInfoModal = action.showRestoreWalletInfoModal
         return
 
+      case SetupWalletActionType.WalletIdChanged:
+        draft.walletId = action.walletId
+        return
+
       case SetupWalletActionType.Reset:
         return setupWalletDefaultState
 
@@ -72,8 +77,7 @@ export const setupWalletDefaultState: Readonly<SetupWalletState> = freeze(
     mnemonic: '',
     walletName: '',
     walletPassword: '',
-    networkId: -1,
-    walletImplementationId: '',
+    walletImplementation: 'cardano-cip1852',
     publicKeyHex: '',
     path: [],
     hwDeviceInfo: null,
@@ -82,6 +86,8 @@ export const setupWalletDefaultState: Readonly<SetupWalletState> = freeze(
     useUSB: false,
     showRestoreWalletInfoModal: true,
     showCreateWalletInfoModal: true,
+    walletId: null,
+    accountVisual: 0,
   },
   true,
 )
@@ -90,29 +96,31 @@ export type SetupWalletState = {
   mnemonic: string
   walletName: string
   walletPassword: string
-  networkId: NetworkId
-  walletImplementationId: string
+  walletImplementation: Wallet.Implementation
   publicKeyHex: string
   path: Array<number>
-  hwDeviceInfo: HWDeviceInfo | null
+  hwDeviceInfo: HW.DeviceInfo | null
   setUpType: 'restore' | 'create' | 'hw' | null
-  mnemonicType: 15 | 24 | null
+  mnemonicType: 12 | 15 | 24 | null
   useUSB: boolean
   showRestoreWalletInfoModal: boolean
   showCreateWalletInfoModal: boolean
+  walletId: string | null
+  accountVisual: number
 }
 
 export enum SetupWalletActionType {
   MnemonicChanged = 'mnemonicChanged',
   WalletNameChanged = 'walletNameChanged',
   WalletPasswordChanged = 'walletPasswordChanged',
-  NetworkIdChanged = 'networkIdChanged',
-  WalletImplementationIdChanged = 'walletImplementationIdChanged',
+  WalletImplementationChanged = 'walletImplementationChanged',
+  AccountVisualChanged = 'accountVisualChanged',
   PublicKeyHexChanged = 'publicKeyHexChanged',
   PathChanged = 'pathChanged',
   HwDeviceInfoChanged = 'hwDeviceInfoChanged',
-  SetUpTypeChanged = 'setUpTypeChanged',
+  SetupTypeChanged = 'setupTypeChanged',
   MnemonicTypeChanged = 'mnemonicTypeChanged',
+  WalletIdChanged = 'walletIdChanged',
   UseUSBChanged = 'useUSBChanged',
   Reset = 'reset',
   ShowRestoreWalletInfoModalChanged = 'showRestoreWalletInfoModalChanged',
@@ -133,12 +141,12 @@ export type SetupWalletAction =
       walletPassword: SetupWalletState['walletPassword']
     }
   | {
-      type: SetupWalletActionType.NetworkIdChanged
-      networkId: SetupWalletState['networkId']
+      type: SetupWalletActionType.WalletImplementationChanged
+      walletImplementation: SetupWalletState['walletImplementation']
     }
   | {
-      type: SetupWalletActionType.WalletImplementationIdChanged
-      walletImplementationId: SetupWalletState['walletImplementationId']
+      type: SetupWalletActionType.AccountVisualChanged
+      accountVisual: SetupWalletState['accountVisual']
     }
   | {
       type: SetupWalletActionType.PublicKeyHexChanged
@@ -153,7 +161,7 @@ export type SetupWalletAction =
       hwDeviceInfo: SetupWalletState['hwDeviceInfo']
     }
   | {
-      type: SetupWalletActionType.SetUpTypeChanged
+      type: SetupWalletActionType.SetupTypeChanged
       setUpType: SetupWalletState['setUpType']
     }
   | {
@@ -175,6 +183,10 @@ export type SetupWalletAction =
       type: SetupWalletActionType.ShowCreateWalletInfoModalChanged
       showCreateWalletInfoModal: SetupWalletState['showCreateWalletInfoModal']
     }
+  | {
+      type: SetupWalletActionType.WalletIdChanged
+      walletId: SetupWalletState['walletId']
+    }
 
 export type SetupWalletActions = {
   mnemonicChanged: (mnemonic: SetupWalletState['mnemonic']) => void
@@ -182,16 +194,19 @@ export type SetupWalletActions = {
   walletPasswordChanged: (
     walletPassword: SetupWalletState['walletPassword'],
   ) => void
-  networkIdChanged: (networkId: SetupWalletState['networkId']) => void
-  walletImplementationIdChanged: (
-    walletImplementationId: SetupWalletState['walletImplementationId'],
+  walletImplementationChanged: (
+    walletImplementation: SetupWalletState['walletImplementation'],
+  ) => void
+  accountVisualChanged: (
+    accountVisual: SetupWalletState['accountVisual'],
   ) => void
   publicKeyHexChanged: (publicKeyHex: SetupWalletState['publicKeyHex']) => void
   pathChanged: (path: SetupWalletState['path']) => void
   hwDeviceInfoChanged: (hwDeviceInfo: SetupWalletState['hwDeviceInfo']) => void
-  setUpTypeChanged: (setUpType: SetupWalletState['setUpType']) => void
+  setupTypeChanged: (setUpType: SetupWalletState['setUpType']) => void
   mnemonicTypeChanged: (mnemonicType: SetupWalletState['mnemonicType']) => void
   useUSBChanged: (useUSB: SetupWalletState['useUSB']) => void
+  walletIdChanged: (walletId: SetupWalletState['walletId']) => void
   reset: () => void
   showRestoreWalletInfoModalChanged: (
     showRestoreWalletInfoModal: boolean,
@@ -206,55 +221,23 @@ export const setupWalletInitialContext: SetupWalletContext = freeze(
     mnemonicChanged: missingInit,
     walletNameChanged: missingInit,
     walletPasswordChanged: missingInit,
-    networkIdChanged: missingInit,
-    walletImplementationIdChanged: missingInit,
+    walletImplementationChanged: missingInit,
+    accountVisualChanged: missingInit,
     publicKeyHexChanged: missingInit,
     pathChanged: missingInit,
     hwDeviceInfoChanged: missingInit,
-    setUpTypeChanged: missingInit,
+    setupTypeChanged: missingInit,
     mnemonicTypeChanged: missingInit,
     useUSBChanged: missingInit,
     reset: missingInit,
     showRestoreWalletInfoModalChanged: missingInit,
     showCreateWalletInfoModalChanged: missingInit,
+    walletIdChanged: missingInit,
   },
   true,
 )
 
 /* istanbul ignore next */
 function missingInit() {
-  console.error('[ExchangeContext] missing initialization')
+  console.error('[SetupWallet] missing initialization')
 }
-
-export type HWDeviceInfo = {
-  bip44AccountPublic: string
-  hwFeatures: HWFeatures
-}
-
-type HWFeatures = {
-  vendor: string
-  model: string
-  deviceId: DeviceId | null | undefined
-  // for establishing a connection through BLE
-  deviceObj: DeviceObj | null | undefined
-  // for establishing a connection through USB
-  serialHex?: string
-}
-
-export type DeviceId = string
-
-export type DeviceObj = {
-  vendorId: number
-  productId: number
-}
-
-export const NETWORK_REGISTRY = {
-  BYRON_MAINNET: 0,
-  HASKELL_SHELLEY: 1,
-  JORMUNGANDR: 100,
-  // ERGO: 200,
-  HASKELL_SHELLEY_TESTNET: 300,
-  UNDEFINED: -1,
-  SANCHONET: 450,
-} as const
-export type NetworkId = (typeof NETWORK_REGISTRY)[keyof typeof NETWORK_REGISTRY]

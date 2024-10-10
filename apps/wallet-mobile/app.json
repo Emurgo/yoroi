@@ -2,6 +2,12 @@
   "name": "yoroi",
   "displayName": "Yoroi",
   "expo": {
-    "plugins": ["sentry-expo"]
+    "name": "yoroi",
+    "slug": "yoroi",
+    "plugins": [
+      "sentry-expo"
+    ],
+    "sdkVersion": "48.0.0",
+    "entryPoint": ".vscode/exponentIndex.js"
   }
 }

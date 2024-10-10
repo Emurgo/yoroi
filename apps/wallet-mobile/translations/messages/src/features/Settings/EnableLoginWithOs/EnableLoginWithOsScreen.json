@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Not now",
     "file": "src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
     "start": {
-      "line": 56,
+      "line": 57,
       "column": 16,
-      "index": 1655
+      "index": 1725
     },
     "end": {
-      "line": 59,
+      "line": 60,
       "column": 3,
-      "index": 1759
+      "index": 1829
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Link",
     "file": "src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
     "start": {
-      "line": 60,
+      "line": 61,
       "column": 14,
-      "index": 1775
+      "index": 1845
     },
     "end": {
-      "line": 63,
+      "line": 64,
       "column": 3,
-      "index": 1874
+      "index": 1944
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Use your fingerprint",
     "file": "src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
     "start": {
-      "line": 64,
+      "line": 65,
       "column": 11,
-      "index": 1887
+      "index": 1957
     },
     "end": {
-      "line": 67,
+      "line": 68,
       "column": 3,
-      "index": 1999
+      "index": 2069
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!for faster, easier access",
     "file": "src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
     "start": {
-      "line": 68,
+      "line": 69,
       "column": 15,
-      "index": 2016
+      "index": 2086
     },
     "end": {
-      "line": 71,
+      "line": 72,
       "column": 3,
-      "index": 2137
+      "index": 2207
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!to your Yoroi wallet",
     "file": "src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
     "start": {
-      "line": 72,
+      "line": 73,
       "column": 15,
-      "index": 2154
+      "index": 2224
     },
     "end": {
-      "line": 75,
+      "line": 76,
       "column": 3,
-      "index": 2270
+      "index": 2340
     }
   }
 ]

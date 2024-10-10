@@ -23,6 +23,16 @@ describe('getApiError', () => {
       throw error
     }).toThrow(Api.Errors.InvalidState)
   })
+  it('should throw ResponseMalformed for -3 status', () => {
+    expect(() => {
+      const error = getApiError({
+        status: -3,
+        message: 'Malformated response',
+        responseData: null,
+      })
+      throw error
+    }).toThrow(Api.Errors.ResponseMalformed)
+  })
 
   it('should throw BadRequestError for 400 status', () => {
     expect(() => {

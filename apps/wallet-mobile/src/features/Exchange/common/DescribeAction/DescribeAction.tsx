@@ -1,14 +1,17 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Spacer, Text} from '../../../../components'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
 import {useStrings} from '../useStrings'
 
 const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
 
 export const DescribeAction = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const {orderType, providerId, provider} = useExchange()
   const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
   const providerSelected = Object.fromEntries(providers)[providerId]
@@ -47,22 +50,28 @@ export const DescribeAction = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  modalContent: {
-    flex: 1,
-  },
-  description: {
-    fontSize: 16,
-    lineHeight: 22,
-    fontFamily: 'Rubik',
-  },
-  decorationText: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-  },
-  linkText: {
-    color: '#4B6DDE',
-    textDecorationLine: 'underline',
-  },
-})
+const useStyles = () => {
+  const {atoms} = useTheme()
+
+  const styles = StyleSheet.create({
+    modalContent: {
+      flex: 1,
+      ...atoms.px_lg,
+    },
+    description: {
+      fontSize: 16,
+      lineHeight: 22,
+      fontFamily: 'Rubik',
+    },
+    decorationText: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+    },
+    linkText: {
+      color: '#4B6DDE',
+      textDecorationLine: 'underline',
+    },
+  })
+  return styles
+}

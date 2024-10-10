@@ -3,8 +3,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {useLanguage} from '../../i18n'
-import {useSearch, useSearchOnNavBar} from '../../Search/SearchContext'
+import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
+import {useLanguage} from '../../kernel/i18n'
 import {Icon} from '../Icon'
 import {Text} from '../Text'
 import {LanguagePickerWarning} from './LanguagePickerWarning'
@@ -58,8 +58,7 @@ const HR = (props: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     languagePicker: {
@@ -68,25 +67,25 @@ const useStyles = () => {
     },
     languageList: {
       alignItems: 'stretch',
-      ...padding['l'],
+      ...atoms.p_lg,
     },
     hr: {
       height: 1,
-      backgroundColor: color.gray[200],
+      backgroundColor: color.gray_200,
     },
     item: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      ...padding['y-l'],
+      ...atoms.py_lg,
     },
     itemText: {
-      ...typography['body-1-l-medium'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_medium,
+      color: color.gray_900,
     },
   })
   const colors = {
-    icon: color.primary[600],
+    icon: color.primary_600,
   }
   return {styles, colors}
 }

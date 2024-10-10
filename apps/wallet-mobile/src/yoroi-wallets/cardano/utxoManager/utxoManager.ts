@@ -4,7 +4,7 @@ import {isString, parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import {parseInt} from 'lodash'
 
-import {RawUtxo} from '../../types'
+import {RawUtxo} from '../../types/other'
 
 export const makeUtxoManager = async ({storage, apiUrl}: {storage: App.Storage; apiUrl: string}) => {
   const managerStorage = makeUtxoManagerStorage(storage)
@@ -15,7 +15,13 @@ export const makeUtxoManager = async ({storage, apiUrl}: {storage: App.Storage; 
 
   const getCachedUtxos = () => service.getAvailableUtxos().then((utxos) => utxos.map(serializer))
   const initialUtxos = await getCachedUtxos()
-  const initialCollateralId = await managerStorage.collateral.read()
+
+  const getCollateralId = async (): Promise<string> => {
+    const collateralId = await managerStorage.collateral.read()
+    return collateralId ?? ''
+  }
+
+  const initialCollateralId = await getCollateralId()
 
   // utxo state is related to the addresses used, if it changes a reset is needed
   const sync = (addresses: Array<string>) => {
@@ -41,7 +47,7 @@ export const makeUtxoManager = async ({storage, apiUrl}: {storage: App.Storage; 
     sync,
 
     initialCollateralId,
-    getCollateralId: () => managerStorage.collateral.read(),
+    getCollateralId,
     setCollateralId: (utxoId: RawUtxo['utxo_id']) => managerStorage.collateral.save(utxoId),
   } as const
 }
@@ -87,7 +93,11 @@ export const makeUtxoStorage = (storage: App.Storage) => {
   const setUtxoDiffToBestBlock = (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) =>
     storage.setItem(diffPath, utxoDiffToBestBlock)
 
-  const getUtxoAtSafePoint = () => storage.getItem(safePointPath, parseSafePoint)
+  const getUtxoAtSafePoint = async (): Promise<UtxoModels.UtxoAtSafePoint | undefined> => {
+    const safePoint = await storage.getItem(safePointPath, parseSafePoint)
+    if (!safePoint) return undefined
+    return safePoint
+  }
   const setUtxoAtSafePoint = (utxoAtSafePoint: UtxoAtSafePoint) => storage.setItem(safePointPath, utxoAtSafePoint)
 
   const utxoStorage: UtxoStorage = {

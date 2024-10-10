@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-native-paper'
 
-import {isEmptyString} from '../../utils/utils'
+import {isEmptyString} from '../../kernel/utils'
 import {Icon} from '../Icon'
 
 export type TextInputProps = RNTextInputProps &
@@ -60,7 +60,8 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
     right,
     noHelper,
     textAlign,
-    faded,
+    editable,
+    faded = editable === false,
     showErrorOnBlur,
     autoComplete = 'off',
     onFocus,
@@ -72,6 +73,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
   const [showPassword, setShowPassword] = React.useState(false)
   const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
   const {styles, colors} = useStyles()
+  const {isDark} = useTheme()
   useDebounced(
     React.useCallback(() => setErrorTextEnabled(true), []),
     value,
@@ -102,6 +104,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
         autoCorrect={false}
         autoComplete={autoComplete}
         autoCapitalize="none"
+        keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
         autoFocus={selectTextOnAutoFocus || autoFocus}
         onFocus={(event) => {
           // selectTextOnFocus + autoFocus doesn't work as expected
@@ -119,7 +122,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
         theme={{
           roundness: 8,
           colors: {
-            background: colors.background,
+            background: faded ? colors.gray_100 : colors.background,
             placeholder: faded ? colors.gray : colors.textInput,
             primary: faded ? colors.gray : colors.black,
             error: colors.textError,
@@ -132,7 +135,8 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
           <InputContainer>
             <RNTextInput
               {...inputProps}
-              style={[style, renderComponentStyle, {color: faded ? colors.gray : colors.text, flex: 1}]}
+              style={[style, renderComponentStyle, {color: faded ? colors.gray_900 : colors.text, flex: 1}]}
+              editable={editable}
             />
 
             {right != null ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
@@ -219,8 +223,7 @@ const AdornmentContainer = ({style, children}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     inputContainer: {
       flexDirection: 'row',
@@ -242,15 +245,16 @@ const useStyles = () => {
   })
 
   const colors = {
-    background: color.gray.min,
-    gray: color.gray[400],
-    textInput: color.gray[600],
-    actionGray: color.gray[500],
-    black: color.gray.max,
-    text: color.gray[900],
-    textError: color.magenta[500],
-    infoGray: color.gray[700],
-    positiveGreen: color.secondary[500],
+    ...color,
+    background: color.bg_color_max,
+    gray: color.gray_400,
+    textInput: color.gray_600,
+    actionGray: color.gray_500,
+    black: color.gray_max,
+    text: color.gray_900,
+    textError: color.sys_magenta_500,
+    infoGray: color.gray_700,
+    positiveGreen: color.secondary_500,
   }
 
   return {styles, colors}

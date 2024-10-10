@@ -1,6 +1,6 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Platform, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
@@ -17,9 +17,10 @@ export const AskConfirmation = ({address, url, code, onContinue}: Props) => {
   const strings = useStrings()
   const {closeModal, isLoading} = useModal()
   const domain = getDomain(url)
+  const styles = useStyles()
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
+    <View style={styles.root}>
       <ScrollView contentContainerStyle={{flex: 1}} bounces={false}>
         <Text style={styles.warning}>{strings.addressSharingWarning}</Text>
 
@@ -52,12 +53,16 @@ export const AskConfirmation = ({address, url, code, onContinue}: Props) => {
 
         <Button title={strings.continue} onPress={onContinue} shelleyTheme block disabled={isLoading} />
       </Actions>
-    </SafeAreaView>
+    </View>
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => <View style={[style, styles.actions]} {...props} />
+const Actions = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[style, styles.actions]} {...props} />
+}
 const Item = ({label, value}: {label: string; value: string}) => {
+  const styles = useStyles()
   return (
     <View style={styles.item}>
       <Text style={styles.rowLabel}>{label}</Text>
@@ -69,49 +74,55 @@ const Item = ({label, value}: {label: string; value: string}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    minHeight: 48,
-    maxHeight: 54,
-  },
-  item: {
-    alignSelf: 'stretch',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  warning: {
-    color: '#242838',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  rowLabel: {
-    color: '#6B7384',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 24,
-    paddingRight: 8,
-  },
-  rowValue: {
-    color: '#000',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 24,
-    maxWidth: 240,
-  },
-  monospace: {
-    ...Platform.select({
-      ios: {fontFamily: 'Menlo'},
-      android: {fontFamily: 'monospace'},
-    }),
-  },
-})
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+
+  const styles = StyleSheet.create({
+    root: {
+      ...atoms.flex_1,
+      ...atoms.px_lg,
+    },
+    actions: {
+      ...atoms.flex_row,
+      ...atoms.align_end,
+      ...atoms.pb_lg,
+      minHeight: 48,
+      maxHeight: 54,
+    },
+    item: {
+      ...atoms.self_stretch,
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+    },
+    warning: {
+      color: color.text_gray_medium,
+      ...atoms.font_normal,
+      ...atoms.text_center,
+      ...atoms.body_1_lg_regular,
+    },
+    rowLabel: {
+      color: color.text_gray_medium,
+      ...atoms.font_normal,
+      ...atoms.pr_sm,
+      ...atoms.body_1_lg_regular,
+    },
+    rowValue: {
+      maxWidth: 240,
+      color: color.text_gray_max,
+      ...atoms.font_normal,
+      ...atoms.body_1_lg_regular,
+    },
+    monospace: {
+      ...Platform.select({
+        ios: {fontFamily: 'Menlo'},
+        android: {fontFamily: 'monospace'},
+      }),
+      color: color.text_gray_max,
+    },
+  })
+
+  return styles
+}
 
 function getDomain(url: string) {
   try {

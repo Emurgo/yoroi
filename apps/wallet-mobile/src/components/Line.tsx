@@ -18,8 +18,7 @@ export const Line = ({backgroundColor}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       height: 1,
@@ -28,7 +27,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    background: color.gray[700],
+    background: color.gray_700,
   }
 
   return {styles, colors}

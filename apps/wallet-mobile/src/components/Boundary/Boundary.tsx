@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React, {SuspenseProps} from 'react'
 import {
   ErrorBoundary as ReactErrorBoundary,
@@ -9,9 +10,10 @@ import {ActivityIndicator, Image, LayoutAnimation, StyleSheet, TouchableOpacity,
 import {useQueryErrorResetBoundary} from 'react-query'
 
 import image from '../../assets/img/error.png'
-import LocalizableError from '../../i18n/LocalizableError'
-import {Button} from '../Button'
-import {Spacer} from '../Spacer'
+import {LocalizableError} from '../../kernel/i18n/LocalizableError'
+import {Button} from '../Button/Button'
+import {Space} from '../Space/Space'
+import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'
 
 type BoundaryProps = {
@@ -58,11 +60,16 @@ type LoadingFallbackProps = {
   size?: 'full' | 'large' | 'small'
   debug?: boolean
 }
-export const LoadingFallback = ({size = 'large', style, debug = false}: LoadingFallbackProps) => (
-  <View style={[size === 'full' && styles.stretch, styles.container, style, debug && styles.debug]}>
-    <ActivityIndicator size={size === 'small' ? 'small' : 'large'} color="black" />
-  </View>
-)
+const LoadingFallback = ({size = 'large', style, debug = false}: LoadingFallbackProps) => {
+  const {isDark} = useTheme()
+  const {styles} = useStyles()
+
+  return (
+    <View style={[size === 'full' && styles.stretch, styles.container, style, debug && styles.debug]}>
+      <ActivityIndicator size={size === 'small' ? 'small' : 'large'} color={isDark ? 'white' : 'dark'} />
+    </View>
+  )
+}
 
 type ErrorBoundaryProps = {
   fallback?: ReactErrorBoundaryProps['fallbackRender']
@@ -107,23 +114,26 @@ type ErrorFallbackProps = {
   debug?: boolean
 }
 
-export const FullErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
+const FullErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
+  const {styles} = useStyles()
+
   return (
     <View style={[styles.stretch, styles.container, debug && styles.debug]}>
       <View style={styles.errorHeader}>
         <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
       </View>
 
-      <Spacer height={16} />
+      <Space height="lg" />
 
       <Image source={image} />
 
-      <Spacer height={16} />
+      <Space height="lg" />
 
       {reset && (
         <Button
           title="Try again"
+          shelleyTheme
           onPress={() => {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             resetErrorBoundary()
@@ -134,8 +144,9 @@ export const FullErrorFallback = ({error, resetErrorBoundary, reset = true, debu
   )
 }
 
-export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
+const LargeErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
+  const {styles} = useStyles()
 
   return (
     <View style={[styles.container, debug && styles.debug]}>
@@ -143,27 +154,31 @@ export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true, deb
         <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
       </View>
 
-      <Spacer height={16} />
+      <Space height="lg" />
 
       <Image source={image} />
 
-      <Spacer height={16} />
+      <Space height="lg" />
 
       {reset && (
         <Button
           title="Try again"
+          shelleyTheme
           onPress={() => {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             resetErrorBoundary()
           }}
         />
       )}
+
+      <Spacer fill />
     </View>
   )
 }
 
-export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
+const SmallErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
+  const {styles} = useStyles()
 
   return (
     <View style={[styles.container, debug && styles.debug]}>
@@ -171,10 +186,11 @@ export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true, deb
         <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
       </View>
 
-      <Spacer height={16} />
+      <Space height="lg" />
 
       {reset && (
         <Button
+          shelleyTheme
           title="Try again"
           onPress={() => {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -186,8 +202,9 @@ export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true, deb
   )
 }
 
-export const InlineErrorFallback = ({error, resetErrorBoundary, reset, debug}: ErrorFallbackProps) => {
+const InlineErrorFallback = ({error, resetErrorBoundary, reset, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
+  const {styles} = useStyles()
 
   return (
     <View style={[styles.container, debug && styles.debug]}>
@@ -223,21 +240,27 @@ export const ResetError = React.forwardRef<ResetErrorRef, ResetErrorProps>(({res
   return <>{children}</>
 })
 
-const styles = StyleSheet.create({
-  stretch: {
-    height: '100%',
-    width: '100%',
-  },
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-  },
-  errorHeader: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  debug: {
-    backgroundColor: 'pink',
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    stretch: {
+      ...atoms.h_full,
+      ...atoms.w_full,
+    },
+    container: {
+      ...atoms.flex_1,
+      backgroundColor: color.bg_color_max,
+      ...atoms.align_center,
+      ...atoms.p_lg,
+    },
+    errorHeader: {
+      ...atoms.align_center,
+      ...atoms.justify_center,
+    },
+    debug: {
+      backgroundColor: 'pink',
+    },
+  })
+
+  return {styles}
+}

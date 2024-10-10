@@ -4,14 +4,14 @@ import {Api} from '@yoroi/types'
 
 export const getProtocolParams =
   (baseUrl: string, request: Fetcher = fetcher) =>
-  async (): Promise<Api.Cardano.ProtocolParamsResult> => {
-    return request<Api.Cardano.ProtocolParamsResult>({
+  async (): Promise<Api.Cardano.ProtocolParams> => {
+    return request<Api.Cardano.ProtocolParams>({
       url: `${baseUrl}/protocolparameters`,
       data: undefined,
       method: 'GET',
       headers: {'Content-Type': 'application/json'},
-    }).then((response: Api.Cardano.ProtocolParamsResult) => {
-      const parsedResponse = parseFrontendProtocolParamsResponse(response)
+    }).then((response: Api.Cardano.ProtocolParams) => {
+      const parsedResponse = parseProtocolParamsResponse(response)
 
       if (!parsedResponse)
         return Promise.reject(new Error('Invalid protocol params response'))
@@ -19,13 +19,13 @@ export const getProtocolParams =
     })
   }
 
-export const parseFrontendProtocolParamsResponse = (
-  data: Api.Cardano.ProtocolParamsResult,
-): Api.Cardano.ProtocolParamsResult | undefined => {
-  return isFrontendProtocolParamsResponse(data) ? data : undefined
+export const parseProtocolParamsResponse = (
+  data: Api.Cardano.ProtocolParams,
+): Api.Cardano.ProtocolParams | undefined => {
+  return isProtocolParamsResponse(data) ? data : undefined
 }
 
-const AppFrontendProtocolParamsTierSchema = z.object({
+const AppProtocolParamsSchema = z.object({
   coinsPerUtxoByte: z.string(),
   keyDeposit: z.string(),
   linearFee: z.object({
@@ -33,10 +33,9 @@ const AppFrontendProtocolParamsTierSchema = z.object({
     constant: z.string(),
   }),
   poolDeposit: z.string(),
+  epoch: z.number().nonnegative(),
 })
 
-const AppFrontendFeesResponseSchema = AppFrontendProtocolParamsTierSchema
-
-export const isFrontendProtocolParamsResponse = createTypeGuardFromSchema(
-  AppFrontendFeesResponseSchema,
+export const isProtocolParamsResponse = createTypeGuardFromSchema(
+  AppProtocolParamsSchema,
 )

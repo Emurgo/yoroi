@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.walletinit.connectnanox.checknanoxscreen.introline",
+    "defaultMessage": "!!!Before continuing, please make sure that:",
+    "file": "src/features/SetupWallet/useCases/RestoreHwWallet/CheckNanoXScreen.tsx",
+    "start": {
+      "line": 75,
+      "column": 13,
+      "index": 2604
+    },
+    "end": {
+      "line": 78,
+      "column": 3,
+      "index": 2750
+    }
+  },
+  {
+    "id": "components.walletinit.connectnanox.checknanoxscreen.steppertitle",
+    "defaultMessage": "!!!Intro",
+    "file": "src/features/SetupWallet/useCases/RestoreHwWallet/CheckNanoXScreen.tsx",
+    "start": {
+      "line": 79,
+      "column": 9,
+      "index": 2761
+    },
+    "end": {
+      "line": 82,
+      "column": 3,
+      "index": 2874
+    }
+  }
+]

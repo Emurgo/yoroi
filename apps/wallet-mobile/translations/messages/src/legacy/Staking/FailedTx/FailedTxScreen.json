@@ -1,0 +1,62 @@
+[
+  {
+    "id": "components.stakingcenter.failedDelegation.notEnoughFunds",
+    "defaultMessage": "!!!Not enough funds",
+    "file": "src/legacy/Staking/FailedTx/FailedTxScreen.tsx",
+    "start": {
+      "line": 108,
+      "column": 18,
+      "index": 2707
+    },
+    "end": {
+      "line": 111,
+      "column": 3,
+      "index": 2823
+    }
+  },
+  {
+    "id": "components.stakingcenter.failedDelegation.noFundsToProcess",
+    "defaultMessage": "!!!Your transaction cannot be processed due to lack of funds on your wallet balance",
+    "file": "src/legacy/Staking/FailedTx/FailedTxScreen.tsx",
+    "start": {
+      "line": 112,
+      "column": 20,
+      "index": 2845
+    },
+    "end": {
+      "line": 115,
+      "column": 3,
+      "index": 3027
+    }
+  },
+  {
+    "id": "components.stakingcenter.failedDelegation.buyAda",
+    "defaultMessage": "!!!Buy ada",
+    "file": "src/legacy/Staking/FailedTx/FailedTxScreen.tsx",
+    "start": {
+      "line": 116,
+      "column": 10,
+      "index": 3039
+    },
+    "end": {
+      "line": 119,
+      "column": 3,
+      "index": 3138
+    }
+  },
+  {
+    "id": "components.stakingcenter.failedDelegation.goToMain",
+    "defaultMessage": "!!!Go to main wallet page",
+    "file": "src/legacy/Staking/FailedTx/FailedTxScreen.tsx",
+    "start": {
+      "line": 120,
+      "column": 12,
+      "index": 3152
+    },
+    "end": {
+      "line": 123,
+      "column": 3,
+      "index": 3268
+    }
+  }
+]

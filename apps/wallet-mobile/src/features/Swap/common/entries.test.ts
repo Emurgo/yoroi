@@ -1,15 +1,17 @@
-import {Balance, Swap} from '@yoroi/types'
+import {tokenInfoMocks} from '@yoroi/portfolio'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {YoroiEntry} from '../../../yoroi-wallets/types/yoroi'
+import {asQuantity} from '../../../yoroi-wallets/utils/utils'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from './entries'
 
 describe('makePossibleFrontendFeeEntry', () => {
   it('return null if there is no address to deposit the frontend fee configured', () => {
     // arrange
-    const fee: Balance.Amount = {
-      quantity: '1',
-      tokenId: 'primaryToken.Id',
-    } as const
+    const fee: Portfolio.Token.Amount = {
+      quantity: 1n,
+      info: tokenInfoMocks.primaryETH,
+    }
     const wallet = undefined
 
     // act
@@ -21,10 +23,10 @@ describe('makePossibleFrontendFeeEntry', () => {
 
   it('return null if there is no frontend fee in the calculation', () => {
     // arrange
-    const fee: Balance.Amount = {
-      quantity: '0',
-      tokenId: 'primaryToken.Id',
-    } as const
+    const fee: Portfolio.Token.Amount = {
+      quantity: 0n,
+      info: tokenInfoMocks.primaryETH,
+    }
     const wallet = 'deposit.frontend.fee.wallet.address'
 
     // act
@@ -36,15 +38,15 @@ describe('makePossibleFrontendFeeEntry', () => {
 
   it('return the frontend fee entry when its present and also has a address to deposit it configured', () => {
     // arrange
-    const fee: Balance.Amount = {
-      quantity: '1',
-      tokenId: 'primaryToken.Id',
+    const fee: Portfolio.Token.Amount = {
+      quantity: 1n,
+      info: tokenInfoMocks.primaryETH,
     }
     const wallet = 'deposit.frontend.fee.wallet.address'
     const expectedEntry: YoroiEntry = {
       address: wallet,
       amounts: {
-        [fee.tokenId]: fee.quantity,
+        ['.']: asQuantity(fee.quantity.toString()),
       },
     } as const
 
@@ -59,17 +61,17 @@ describe('makePossibleFrontendFeeEntry', () => {
 describe('createOrderEntry', () => {
   const selectedPool: Swap.CreateOrderData['selectedPool'] = {
     deposit: {
-      quantity: '2000000',
+      quantity: 2000000n,
       tokenId: 'token2.Id',
     },
     batcherFee: {
-      quantity: '1000000',
+      quantity: 1000000n,
       tokenId: 'token2.Id',
     },
     // below are the values that are not used in the helper
     fee: '1',
     lpToken: {
-      quantity: '1',
+      quantity: 1n,
       tokenId: 'irrelevant.lpToken',
     },
     poolId: 'irrelevant.poolId',
@@ -77,15 +79,14 @@ describe('createOrderEntry', () => {
     ptPriceTokenA: '1',
     ptPriceTokenB: '1',
     tokenA: {
-      quantity: '1',
+      quantity: 1n,
       tokenId: 'irrelevant.tokenA',
     },
     tokenB: {
-      quantity: '1',
+      quantity: 1n,
       tokenId: 'irrelevant.tokenB',
     },
   }
-  const primaryTokenId = ''
   const address = 'aggregator.address'
   const datum: YoroiEntry['datum'] = {data: 'cbor'}
 
@@ -93,23 +94,23 @@ describe('createOrderEntry', () => {
     // arrange
     const amounts: Swap.CreateOrderData['amounts'] = {
       sell: {
-        quantity: '1000000',
-        tokenId: primaryTokenId,
+        quantity: 1000000n,
+        tokenId: tokenInfoMocks.primaryETH.id,
       },
       buy: {
-        quantity: '5',
+        quantity: 5n,
         tokenId: 'irrelevant.buy',
       },
     }
 
     // act
-    const orderEntry = createOrderEntry(amounts, selectedPool, address, primaryTokenId, datum)
+    const orderEntry = createOrderEntry(amounts, selectedPool, address, tokenInfoMocks.primaryETH.id, datum)
 
     // assert
     expect(orderEntry).toEqual({
       address: address,
       amounts: {
-        [primaryTokenId]: '4000000',
+        ['.']: '4000000',
       },
       datum: datum,
     })
@@ -119,23 +120,23 @@ describe('createOrderEntry', () => {
     // arrange
     const amounts: Swap.CreateOrderData['amounts'] = {
       sell: {
-        quantity: '1',
+        quantity: 1n,
         tokenId: 'nonPrimaryToken.Id',
       },
       buy: {
-        quantity: '5',
+        quantity: 5n,
         tokenId: 'irrelevant.buy',
       },
     }
     // act
-    const orderEntry = createOrderEntry(amounts, selectedPool, address, primaryTokenId, datum)
+    const orderEntry = createOrderEntry(amounts, selectedPool, address, tokenInfoMocks.primaryETH.id, datum)
 
     // assert
     expect(orderEntry).toEqual({
       address: address,
       amounts: {
-        [primaryTokenId]: '3000000',
-        [amounts.sell.tokenId]: amounts.sell.quantity,
+        ['.']: '3000000',
+        [amounts.sell.tokenId]: asQuantity(amounts.sell.quantity.toString()),
       },
       datum: datum,
     })

@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '../../../components'
+import {Boundary} from '../../../components/Boundary/Boundary'
 import {CurrencyPickerList} from './CurrencyPickerList'
 
 export const ChangeCurrencyScreen = () => {
@@ -19,12 +19,11 @@ export const ChangeCurrencyScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
   })
 

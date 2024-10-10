@@ -6,6 +6,7 @@ export interface LinksYoroiUriConfig {
     | 'exchange/order/show-create-result'
     | 'transfer/request/ada'
     | 'transfer/request/ada-with-link'
+    | 'browser/launch'
 }
 
 export type LinksPartnerInfoParams = {
@@ -45,6 +46,10 @@ export type LinksTransferRequestAdaParams = LinksPartnerInfoParams & {
   memo?: string
 }
 
+export type LinksBrowserLaunchDappUrlParams = LinksPartnerInfoParams & {
+  dappUrl: string
+}
+
 export type LinksYoroiActionInfo =
   | {
       version: 1
@@ -63,6 +68,12 @@ export type LinksYoroiActionInfo =
       feature: 'exchange'
       useCase: 'order/show-create-result'
       params: LinksExchangeShowCreateResultParams
+    }
+  | {
+      version: 1
+      feature: 'browser'
+      useCase: 'launch'
+      params: LinksBrowserLaunchDappUrlParams
     }
 
 export type LinksYoroiAction = {
@@ -84,6 +95,11 @@ export type LinksYoroiModule = Readonly<{
       adaWithLink(
         params: Readonly<LinksTransferRequestAdaWithLinkParams>,
       ): string
+    }
+  }
+  browser: {
+    launch: {
+      dappUrl(params: Readonly<LinksBrowserLaunchDappUrlParams>): string
     }
   }
 }>

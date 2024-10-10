@@ -3,14 +3,13 @@ import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {toCardanoNetworkId} from '../../../yoroi-wallets/cardano/utils'
 import {CardanoMobile} from '../../../yoroi-wallets/wallets'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
 
 export const useSendAddress = () => {
-  const wallet = useSelectedWallet()
-  const chainId = toCardanoNetworkId(wallet.networkId)
+  const {wallet} = useSelectedWallet()
+  const {chainId} = wallet.networkManager
 
   const {targets, selectedTargetIndex} = useTransfer()
   const {address} = targets[selectedTargetIndex].entry

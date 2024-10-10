@@ -1,4 +1,5 @@
 import {produce} from 'immer'
+import {Portfolio} from '@yoroi/types'
 
 import {
   combinedSwapReducers,
@@ -11,6 +12,7 @@ import {
 } from './state'
 import {mockSwapStateDefault} from './state.mocks'
 import {mocks} from '../../../helpers/mocks'
+import {tokenInfoMocks} from '../../../tokenInfo.mocks'
 
 // NOTE: the calculations are tested on the factories
 // here is just testing the state behaviour
@@ -21,12 +23,12 @@ describe('State Actions', () => {
       ...mockSwapStateDefault.orderData,
       amounts: {
         sell: {
-          quantity: '100000000',
-          tokenId: 'tokenA',
+          quantity: 100000000n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '1401162647',
-          tokenId: 'tokenB',
+          quantity: 1401162647n,
+          info: tokenInfoMocks.b,
         },
       },
       limitPrice: undefined,
@@ -54,12 +56,12 @@ describe('State Actions', () => {
           ...mockSwapStateDefault.orderData,
           amounts: {
             sell: {
-              quantity: '10000',
-              tokenId: 'tokenA',
+              quantity: 10000n,
+              info: tokenInfoMocks.a,
             },
             buy: {
-              quantity: '0',
-              tokenId: 'tokenB',
+              info: tokenInfoMocks.b,
+              quantity: 0n,
             },
           },
           limitPrice: undefined,
@@ -92,13 +94,17 @@ describe('State Actions', () => {
           ...mockSwapStateDefault.orderData,
           amounts: {
             sell: {
-              quantity: '100',
-              tokenId: 'tokenA',
+              info: tokenInfoMocks.a,
+              quantity: 100n,
             },
             buy: {
-              quantity: '0',
-              tokenId: 'tokenB',
+              info: tokenInfoMocks.b,
+              quantity: 0n,
             },
+          },
+          tokens: {
+            priceDenomination: 0,
+            ptInfo: tokenInfoMocks.pt,
           },
           limitPrice: undefined,
           slippage: 0,
@@ -124,8 +130,8 @@ describe('State Actions', () => {
       const state = combinedSwapReducers(stateAfterPools, actionLimit)
 
       expect(state.orderData.type).toBe('limit')
-      expect(state.orderData.limitPrice).toBe('0.5')
-      expect(state.orderData.amounts.buy.quantity).toBe('200')
+      expect(state.orderData.limitPrice).toBe('0.5000000000')
+      expect(state.orderData.amounts.buy?.quantity).toBe(200n)
 
       const actionMarket: SwapCreateOrderAction = {
         type: SwapCreateOrderActionType.OrderTypeChanged,
@@ -170,8 +176,14 @@ describe('State Actions', () => {
     describe('limit', () => {
       it('should update pool if avaible and reset limit to market price', () => {
         const initialState = produce(mockSwapStateDefault, (draft) => {
-          draft.orderData.amounts.sell.tokenId = 'tokenA'
-          draft.orderData.amounts.buy.tokenId = 'tokenB'
+          draft.orderData.amounts.sell = {
+            info: tokenInfoMocks.a,
+            quantity: 0n,
+          }
+          draft.orderData.amounts.buy = {
+            info: tokenInfoMocks.b,
+            quantity: 0n,
+          }
           draft.orderData.type = 'limit'
         })
         const updatedPools = combinedSwapReducers(initialState, {
@@ -189,7 +201,7 @@ describe('State Actions', () => {
         })
 
         // change back to market price
-        expect(state.orderData.limitPrice).toBe('2')
+        expect(state.orderData.limitPrice).toBe('2.0000000000')
         expect(state.orderData.selectedPoolId).toBe('1')
       })
     })
@@ -231,8 +243,14 @@ describe('State Actions', () => {
   describe('SwitchTokens', () => {
     it('should change buy / sell and derive the calculation accordingly', () => {
       const initialState = produce(mockSwapStateDefault, (draft) => {
-        draft.orderData.amounts.sell.tokenId = 'tokenA'
-        draft.orderData.amounts.buy.tokenId = 'tokenB'
+        draft.orderData.amounts.sell = {
+          info: tokenInfoMocks.a,
+          quantity: 0n,
+        }
+        draft.orderData.amounts.buy = {
+          info: tokenInfoMocks.b,
+          quantity: 0n,
+        }
       })
       const updatedPools = combinedSwapReducers(initialState, {
         type: SwapCreateOrderActionType.PoolPairsChanged,
@@ -243,8 +261,8 @@ describe('State Actions', () => {
         type: SwapCreateOrderActionType.SwitchTokens,
       })
 
-      expect(state.orderData.amounts.buy.tokenId).toBe('tokenA')
-      expect(state.orderData.amounts.sell.tokenId).toBe('tokenB')
+      expect(state.orderData.amounts.buy?.info.id).toBe('tokenA.')
+      expect(state.orderData.amounts.sell?.info.id).toBe('tokenB.')
     })
   })
 
@@ -254,16 +272,10 @@ describe('State Actions', () => {
         type: SwapCreateOrderActionType.ResetQuantities,
       }
       const expectedState = produce(mockSwapStateDefault, (draft) => {
-        draft.orderData.amounts = {
-          sell: {
-            quantity: '0',
-            tokenId: mockSwapStateDefault.orderData.amounts.sell.tokenId,
-          },
-          buy: {
-            quantity: '0',
-            tokenId: mockSwapStateDefault.orderData.amounts.buy.tokenId,
-          },
-        }
+        if (draft.orderData.amounts.sell)
+          draft.orderData.amounts.sell.quantity = 0n
+        if (draft.orderData.amounts.buy)
+          draft.orderData.amounts.buy.quantity = 0n
         draft.orderData.limitPrice = undefined
       })
       const state = combinedSwapReducers(mockSwapStateDefault, action)
@@ -272,8 +284,14 @@ describe('State Actions', () => {
 
     it('should reset limit to market price when order is limit', () => {
       const initialState = produce(mockSwapStateDefault, (draft) => {
-        draft.orderData.amounts.sell.tokenId = 'tokenA'
-        draft.orderData.amounts.buy.tokenId = 'tokenB'
+        draft.orderData.amounts.sell = {
+          info: tokenInfoMocks.a,
+          quantity: 0n,
+        }
+        draft.orderData.amounts.buy = {
+          info: tokenInfoMocks.b,
+          quantity: 0n,
+        }
         draft.orderData.type = 'limit'
       })
       const updatedPools = combinedSwapReducers(initialState, {
@@ -290,7 +308,7 @@ describe('State Actions', () => {
       })
 
       // change back to market price
-      expect(state.orderData.limitPrice).toBe('2')
+      expect(state.orderData.limitPrice).toBe('2.0000000000')
     })
   })
 
@@ -308,8 +326,14 @@ describe('State Actions', () => {
 
     it('should update the limit and the buy side when pools are available', () => {
       const initialState = produce(mockSwapStateDefault, (draft) => {
-        draft.orderData.amounts.sell.tokenId = 'tokenA'
-        draft.orderData.amounts.buy.tokenId = 'tokenB'
+        draft.orderData.amounts.sell = {
+          info: tokenInfoMocks.a,
+          quantity: 0n,
+        }
+        draft.orderData.amounts.buy = {
+          info: tokenInfoMocks.b,
+          quantity: 0n,
+        }
         draft.orderData.type = 'limit'
       })
       const updatedPools = combinedSwapReducers(initialState, {
@@ -329,21 +353,16 @@ describe('State Actions', () => {
   describe('SellTokenInfoChanged', () => {
     it('should reset pools and the derived data', () => {
       const initialState = produce(mockSwapStateDefault, (draft) => {
-        draft.orderData.amounts.sell.tokenId = 'tokenA'
-        draft.orderData.amounts.buy.tokenId = 'tokenB'
+        draft.orderData.amounts.sell = {
+          info: tokenInfoMocks.a,
+          quantity: 0n,
+        }
+        draft.orderData.amounts.buy = {
+          info: tokenInfoMocks.b,
+          quantity: 0n,
+        }
         draft.orderData.tokens = {
-          sellInfo: {
-            id: 'tokenA',
-            decimals: 6,
-          },
-          buyInfo: {
-            id: 'tokenB',
-            decimals: 6,
-          },
-          ptInfo: {
-            id: '',
-            decimals: 6,
-          },
+          ptInfo: tokenInfoMocks.pt,
           priceDenomination: 0,
         }
       })
@@ -353,18 +372,18 @@ describe('State Actions', () => {
       })
       const updatedSellQuantity = combinedSwapReducers(updatedPools, {
         type: SwapCreateOrderActionType.SellQuantityChanged,
-        quantity: '10000',
+        quantity: 10_000n,
       })
 
       const state = combinedSwapReducers(updatedSellQuantity, {
         type: SwapCreateOrderActionType.SellTokenInfoChanged,
-        tokenInfo: {
-          id: 'x',
-          decimals: 6,
-        },
+        tokenInfo: tokenInfoMocks.lp,
       })
 
-      expect(state.orderData.amounts.sell.tokenId).toBe('x')
+      expect(state.orderData.amounts.sell!).toEqual<Portfolio.Token.Amount>({
+        quantity: 10_000n,
+        info: tokenInfoMocks.lp,
+      })
       // should be updated right next with the new pool pairs
       expect(state.orderData.pools).toEqual([])
       // should reset everything derived
@@ -374,26 +393,32 @@ describe('State Actions', () => {
       // type is irrelevant
       expect(state.orderData.selectedPoolId).toBeUndefined()
     })
+
+    it('should initiate sell side', () => {
+      const state = combinedSwapReducers(mockSwapStateDefault, {
+        type: SwapCreateOrderActionType.SellTokenInfoChanged,
+        tokenInfo: tokenInfoMocks.lp,
+      })
+      expect(state.orderData.amounts.sell).toEqual<Portfolio.Token.Amount>({
+        quantity: 0n,
+        info: tokenInfoMocks.lp,
+      })
+    })
   })
 
   describe('BuyTokenInfoChanged', () => {
-    it('should reset pools and the derived data', () => {
+    it('should reset pools and the derived', () => {
       const initialState = produce(mockSwapStateDefault, (draft) => {
-        draft.orderData.amounts.sell.tokenId = 'tokenA'
-        draft.orderData.amounts.buy.tokenId = 'tokenB'
+        draft.orderData.amounts.sell = {
+          info: tokenInfoMocks.a,
+          quantity: 0n,
+        }
+        draft.orderData.amounts.buy = {
+          info: tokenInfoMocks.b,
+          quantity: 0n,
+        }
         draft.orderData.tokens = {
-          sellInfo: {
-            id: 'tokenA',
-            decimals: 6,
-          },
-          buyInfo: {
-            id: 'tokenB',
-            decimals: 6,
-          },
-          ptInfo: {
-            id: '',
-            decimals: 6,
-          },
+          ptInfo: tokenInfoMocks.pt,
           priceDenomination: 0,
         }
       })
@@ -403,18 +428,25 @@ describe('State Actions', () => {
       })
       const updatedSellQuantity = combinedSwapReducers(updatedPools, {
         type: SwapCreateOrderActionType.SellQuantityChanged,
-        quantity: '10000',
+        quantity: 10_000n,
+      })
+
+      expect(
+        updatedSellQuantity.orderData.amounts.buy,
+      ).toEqual<Portfolio.Token.Amount>({
+        info: tokenInfoMocks.b,
+        quantity: 138_194n,
       })
 
       const state = combinedSwapReducers(updatedSellQuantity, {
         type: SwapCreateOrderActionType.BuyTokenInfoChanged,
-        tokenInfo: {
-          id: 'x',
-          decimals: 6,
-        },
+        tokenInfo: tokenInfoMocks.c,
       })
 
-      expect(state.orderData.amounts.buy.tokenId).toBe('x')
+      expect(state.orderData.amounts.buy).toEqual<Portfolio.Token.Amount>({
+        quantity: 138_194n,
+        info: tokenInfoMocks.c,
+      })
       // should be updated right next with the new pool pairs
       expect(state.orderData.pools).toEqual([])
       // should reset everything derived
@@ -423,14 +455,31 @@ describe('State Actions', () => {
       expect(state.orderData.bestPoolCalculation).toBeUndefined()
       // type is irrelevant
       expect(state.orderData.selectedPoolId).toBeUndefined()
+    })
+
+    it('should initiate buy side', () => {
+      const state = combinedSwapReducers(mockSwapStateDefault, {
+        type: SwapCreateOrderActionType.BuyTokenInfoChanged,
+        tokenInfo: tokenInfoMocks.lp,
+      })
+      expect(state.orderData.amounts.buy).toEqual<Portfolio.Token.Amount>({
+        quantity: 0n,
+        info: tokenInfoMocks.lp,
+      })
     })
   })
 
   describe('SellQuantityChanged', () => {
     it('should calculate the buy side if pools are available', () => {
       const initialState = produce(mockSwapStateDefault, (draft) => {
-        draft.orderData.amounts.sell.tokenId = 'tokenA'
-        draft.orderData.amounts.buy.tokenId = 'tokenB'
+        draft.orderData.amounts.sell = {
+          info: tokenInfoMocks.a,
+          quantity: 0n,
+        }
+        draft.orderData.amounts.buy = {
+          info: tokenInfoMocks.b,
+          quantity: 0n,
+        }
       })
       const updatedPools = combinedSwapReducers(initialState, {
         type: SwapCreateOrderActionType.PoolPairsChanged,
@@ -439,20 +488,35 @@ describe('State Actions', () => {
 
       const state = combinedSwapReducers(updatedPools, {
         type: SwapCreateOrderActionType.SellQuantityChanged,
-        quantity: '10',
+        quantity: 10n,
       })
 
       expect(state.orderData.selectedPoolCalculation).toBeDefined()
-      expect(state.orderData.amounts.buy.quantity).toBe('124')
-      expect(state.orderData.amounts.sell.quantity).toBe('10')
+      expect(state.orderData.amounts.buy!.quantity).toBe(124n)
+      expect(state.orderData.amounts.sell!.quantity).toBe(10n)
+    })
+
+    it('should skip updates if sell quantity changes but no sell token info', () => {
+      const state = combinedSwapReducers(mockSwapStateDefault, {
+        type: SwapCreateOrderActionType.SellQuantityChanged,
+        quantity: 10n,
+      })
+
+      expect(state).toEqual(mockSwapStateDefault)
     })
   })
 
   describe('BuyQuantityChanged', () => {
     it('should calculate the buy side if pools are available', () => {
       const initialState = produce(mockSwapStateDefault, (draft) => {
-        draft.orderData.amounts.sell.tokenId = 'tokenA'
-        draft.orderData.amounts.buy.tokenId = 'tokenB'
+        draft.orderData.amounts.sell = {
+          info: tokenInfoMocks.a,
+          quantity: 0n,
+        }
+        draft.orderData.amounts.buy = {
+          info: tokenInfoMocks.b,
+          quantity: 0n,
+        }
       })
       const updatedPools = combinedSwapReducers(initialState, {
         type: SwapCreateOrderActionType.PoolPairsChanged,
@@ -461,12 +525,21 @@ describe('State Actions', () => {
 
       const state = combinedSwapReducers(updatedPools, {
         type: SwapCreateOrderActionType.BuyQuantityChanged,
-        quantity: '1',
+        quantity: 1n,
       })
 
       expect(state.orderData.selectedPoolCalculation).toBeDefined()
-      expect(state.orderData.amounts.buy.quantity).toBe('1')
-      expect(state.orderData.amounts.sell.quantity).toBe('3')
+      expect(state.orderData.amounts.buy!.quantity).toBe(1n)
+      expect(state.orderData.amounts.sell!.quantity).toBe(3n)
+    })
+
+    it('should skip updates if buy quantity changes but no buy token info', () => {
+      const state = combinedSwapReducers(mockSwapStateDefault, {
+        type: SwapCreateOrderActionType.BuyQuantityChanged,
+        quantity: 10n,
+      })
+
+      expect(state).toEqual(mockSwapStateDefault)
     })
   })
 
@@ -477,8 +550,14 @@ describe('State Actions', () => {
     describe('limit order', () => {
       it('should reset limit price to market and unselect the selected pool', () => {
         const initialState = produce(mockSwapStateDefault, (draft) => {
-          draft.orderData.amounts.sell.tokenId = 'tokenA'
-          draft.orderData.amounts.buy.tokenId = 'tokenB'
+          draft.orderData.amounts.sell = {
+            info: tokenInfoMocks.a,
+            quantity: 0n,
+          }
+          draft.orderData.amounts.buy = {
+            info: tokenInfoMocks.b,
+            quantity: 0n,
+          }
         })
         const updatedPools = combinedSwapReducers(initialState, {
           type: SwapCreateOrderActionType.PoolPairsChanged,
@@ -486,7 +565,7 @@ describe('State Actions', () => {
         })
         const updatedSellQuantity = combinedSwapReducers(updatedPools, {
           type: SwapCreateOrderActionType.SellQuantityChanged,
-          quantity: '100',
+          quantity: 100n,
         })
         const updatedType = combinedSwapReducers(updatedSellQuantity, {
           type: SwapCreateOrderActionType.OrderTypeChanged,
@@ -502,7 +581,7 @@ describe('State Actions', () => {
           pools: mocks.mockedPools6,
         })
 
-        expect(state.orderData.limitPrice).toBe('0.5')
+        expect(state.orderData.limitPrice).toBe('0.5000000000')
         expect(state.orderData.selectedPoolId).toBeUndefined()
       })
     })
@@ -510,8 +589,14 @@ describe('State Actions', () => {
     describe('no pools', () => {
       it('should leave limit price undefined and wont update the buy side', () => {
         const initialState = produce(mockSwapStateDefault, (draft) => {
-          draft.orderData.amounts.sell.tokenId = 'tokenA'
-          draft.orderData.amounts.buy.tokenId = 'tokenB'
+          draft.orderData.amounts.sell = {
+            info: tokenInfoMocks.a,
+            quantity: 0n,
+          }
+          draft.orderData.amounts.buy = {
+            info: tokenInfoMocks.b,
+            quantity: 0n,
+          }
         })
         const updatedPools = combinedSwapReducers(initialState, {
           type: SwapCreateOrderActionType.PoolPairsChanged,
@@ -519,7 +604,7 @@ describe('State Actions', () => {
         })
         const updatedSellQuantity = combinedSwapReducers(updatedPools, {
           type: SwapCreateOrderActionType.SellQuantityChanged,
-          quantity: '10000',
+          quantity: 10_000n,
         })
         const updatedType = combinedSwapReducers(updatedSellQuantity, {
           type: SwapCreateOrderActionType.OrderTypeChanged,
@@ -539,8 +624,8 @@ describe('State Actions', () => {
 
         expect(state.orderData.limitPrice).toBeUndefined()
         expect(state.orderData.selectedPoolId).toBeUndefined()
-        expect(state.orderData.amounts.buy.quantity).toBe(
-          updatedLimit.orderData.amounts.buy.quantity,
+        expect(state.orderData.amounts.buy!.quantity).toBe(
+          updatedLimit.orderData.amounts.buy!.quantity,
         )
       })
     })
@@ -551,19 +636,21 @@ describe('State Actions', () => {
   it('PrimaryTokenInfoChanged', () => {
     const expectedState = combinedSwapReducers(mockSwapStateDefault, {
       type: SwapCreateOrderActionType.PrimaryTokenInfoChanged,
-      tokenInfo: {
-        id: 'brand.new',
-        decimals: 6,
-      },
+      tokenInfo: tokenInfoMocks.pt,
     })
-    expect(expectedState.orderData.tokens.ptInfo.id).toBe('brand.new')
-    expect(expectedState.orderData.tokens.ptInfo.decimals).toBe(6)
+    expect(expectedState.orderData.tokens.ptInfo).toEqual(tokenInfoMocks.pt)
   })
 
   it('LpTokenHeldChanged', () => {
     const initialState = produce(mockSwapStateDefault, (draft) => {
-      draft.orderData.amounts.sell.tokenId = 'tokenA'
-      draft.orderData.amounts.buy.tokenId = 'tokenB'
+      draft.orderData.amounts.sell = {
+        info: tokenInfoMocks.a,
+        quantity: 0n,
+      }
+      draft.orderData.amounts.buy = {
+        info: tokenInfoMocks.b,
+        quantity: 0n,
+      }
     })
     const updatedPools = combinedSwapReducers(initialState, {
       type: SwapCreateOrderActionType.PoolPairsChanged,
@@ -571,28 +658,35 @@ describe('State Actions', () => {
     })
     const updatedSellQuantity = combinedSwapReducers(updatedPools, {
       type: SwapCreateOrderActionType.SellQuantityChanged,
-      quantity: '10000',
+      quantity: 10_000n,
     })
 
     const state = combinedSwapReducers(updatedSellQuantity, {
       type: SwapCreateOrderActionType.LpTokenHeldChanged,
       amount: {
-        quantity: '100',
-        tokenId: 'lp.token',
+        quantity: 100n,
+        info: tokenInfoMocks.lp,
       },
     })
 
-    expect(state.orderData.amounts.buy.quantity).toBe(
-      updatedSellQuantity.orderData.amounts.buy.quantity,
-    )
+    expect(state.orderData.lpTokenHeld).toEqual<Portfolio.Token.Amount>({
+      quantity: 100n,
+      info: tokenInfoMocks.lp,
+    })
   })
 
   // NOTE: initialized only
   // designed to be triggered once only
   it('FrontendFeeTiersChanged', () => {
     const initialState = produce(mockSwapStateDefault, (draft) => {
-      draft.orderData.amounts.sell.tokenId = 'tokenA'
-      draft.orderData.amounts.buy.tokenId = 'tokenB'
+      draft.orderData.amounts.sell = {
+        info: tokenInfoMocks.a,
+        quantity: 0n,
+      }
+      draft.orderData.amounts.buy = {
+        info: tokenInfoMocks.b,
+        quantity: 0n,
+      }
     })
     const updatedPools = combinedSwapReducers(initialState, {
       type: SwapCreateOrderActionType.PoolPairsChanged,
@@ -600,7 +694,7 @@ describe('State Actions', () => {
     })
     const updatedSellQuantity = combinedSwapReducers(updatedPools, {
       type: SwapCreateOrderActionType.SellQuantityChanged,
-      quantity: '10000',
+      quantity: 10_000n,
     })
 
     const state = combinedSwapReducers(updatedSellQuantity, {
@@ -608,8 +702,6 @@ describe('State Actions', () => {
       feeTiers: [],
     })
 
-    expect(state.orderData.amounts.buy.quantity).toBe(
-      updatedSellQuantity.orderData.amounts.buy.quantity,
-    )
+    expect(state.orderData.frontendFeeTiers).toEqual([])
   })
 })

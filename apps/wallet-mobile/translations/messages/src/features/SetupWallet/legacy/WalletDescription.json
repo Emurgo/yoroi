@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Your gateway to the financial world",
     "file": "src/features/SetupWallet/legacy/WalletDescription.tsx",
     "start": {
-      "line": 23,
+      "line": 24,
       "column": 10,
-      "index": 577
+      "index": 616
     },
     "end": {
-      "line": 26,
+      "line": 27,
       "column": 3,
-      "index": 702
+      "index": 741
     }
   }
 ]

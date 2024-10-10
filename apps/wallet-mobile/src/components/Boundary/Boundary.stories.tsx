@@ -1,12 +1,11 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {Button, StyleSheet, Text, View} from 'react-native'
-import {ActivityIndicator} from 'react-native-paper'
+import {ActivityIndicator, Button, StyleSheet, Text, View} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {QueryProvider} from '../../../.storybook/decorators'
-import {errorMessages} from '../../i18n/global-messages'
-import LocalizableError from '../../i18n/LocalizableError'
+import {errorMessages} from '../../kernel/i18n/global-messages'
+import {LocalizableError} from '../../kernel/i18n/LocalizableError'
 import {Boundary} from './Boundary'
 
 storiesOf('Boundary', module)
@@ -197,7 +196,7 @@ const Bomb = () => {
   )
 }
 
-export class i18Error extends LocalizableError {
+class i18Error extends LocalizableError {
   constructor() {
     super({
       id: errorMessages.fetchError.message.id,
@@ -236,7 +235,6 @@ const LoadingWithOverlay = () => {
 
       <Button
         onPress={() => {
-          console.log('refetch', Date.now())
           refetch()
         }}
         title="Refetch"

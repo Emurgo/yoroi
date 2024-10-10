@@ -57,8 +57,8 @@ export const TransferProvider = ({
       dispatch({type: TransferActionType.UnsignedTxChanged, unsignedTx}),
     tokenSelectedChanged: (tokenId) =>
       dispatch({type: TransferActionType.TokenSelectedChanged, tokenId}),
-    amountChanged: (quantity) =>
-      dispatch({type: TransferActionType.AmountChanged, quantity}),
+    amountChanged: (amount) =>
+      dispatch({type: TransferActionType.AmountChanged, amount}),
     amountRemoved: (tokenId) =>
       dispatch({type: TransferActionType.AmountRemoved, tokenId}),
     linkActionChanged: (linkAction) =>

@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {LanguagePicker} from '../../../components'
+import {LanguagePicker} from '../../../components/LanguagePicker/LanguagePicker'
 
 export const ChangeLanguageScreen = () => {
   const styles = useStyles()
@@ -15,12 +15,11 @@ export const ChangeLanguageScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
   })
   return styles

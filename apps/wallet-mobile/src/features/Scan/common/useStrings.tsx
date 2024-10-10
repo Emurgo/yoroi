@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages from '../../../i18n/global-messages'
+import globalMessages from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -37,7 +37,7 @@ export const useStrings = () => {
   } as const).current
 }
 
-export const messages = Object.freeze(
+const messages = Object.freeze(
   defineMessages({
     scanTitle: {
       id: 'scan.title',

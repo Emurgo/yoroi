@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {ModalProvider} from '../../../../components'
+import {ModalProvider} from '../../../../components/Modal/ModalContext'
 import {AskToRedirectScreen} from './AskToRedirectScreen'
 
 storiesOf('Links AskToRedirect', module)

@@ -1,20 +1,26 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../../components'
-import {useNavigateTo, useStrings} from '../../common'
-import {BrokenImage} from '../../illustrations'
+import {Button} from '../../../../../components/Button/Button'
+import {SafeArea} from '../../../../../components/SafeArea'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
+import {useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
+import {BrokenImage} from '../../illustrations/BrokenImage'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
+  const styles = useStyles()
 
   const handleOnTryAgain = () => {
     navigate.home()
   }
 
   return (
-    <View style={styles.root}>
+    <SafeArea style={styles.root}>
       <View style={styles.center}>
         <BrokenImage />
 
@@ -30,37 +36,44 @@ export const FailedTxScreen = () => {
 
         <Button title={strings.tryAgain} textStyles={styles.button} shelleyTheme onPress={handleOnTryAgain} />
       </View>
-    </View>
+    </SafeArea>
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    padding: 16,
-  },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontFamily: 'Rubik-Medium',
-    fontSize: 20,
-    lineHeight: 30,
-    color: '#000000',
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  description: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#6B7384',
-    textAlign: 'center',
-  },
-  button: {
-    paddingHorizontal: 24,
-    paddingVertical: 15,
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+
+  const styles = StyleSheet.create({
+    root: {
+      backgroundColor: color.bg_color_max,
+      flex: 1,
+      padding: 16,
+    },
+    center: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    title: {
+      fontFamily: 'Rubik-Medium',
+      fontSize: 20,
+      lineHeight: 30,
+      color: color.gray_max,
+      fontWeight: '500',
+      textAlign: 'center',
+    },
+    description: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 16,
+      lineHeight: 24,
+      color: color.gray_600,
+      textAlign: 'center',
+    },
+    button: {
+      paddingHorizontal: 24,
+      paddingVertical: 15,
+    },
+  })
+
+  return styles
+}

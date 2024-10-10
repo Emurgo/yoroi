@@ -2,10 +2,11 @@ import {storiesOf} from '@storybook/react-native'
 import {GovernanceManager, GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
+import {SafeArea} from '../../../../../components/SafeArea'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../WalletManager/Context/SelectedWalletContext'
-import {mocks as governanceMocks, SafeArea} from '../../common'
+import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {mocks as governanceMocks} from '../../common/mocks'
 import {HomeScreen} from './HomeScreen'
 
 const walletMock = {
@@ -113,8 +114,8 @@ const Wrapper = ({
   wallet: YoroiWallet
 }) => {
   return (
-    <SelectedWalletProvider wallet={wallet}>
+    <WalletManagerProviderMock wallet={wallet}>
       <GovernanceProvider manager={manager}>{children}</GovernanceProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }

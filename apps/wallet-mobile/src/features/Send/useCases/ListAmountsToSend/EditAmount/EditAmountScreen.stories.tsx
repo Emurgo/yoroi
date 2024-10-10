@@ -4,8 +4,8 @@ import {storiesOf} from '@storybook/react-native'
 import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
-import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../WalletManager/Context/SelectedWalletContext'
+import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {mocks as sendMocks} from '../../../common/mocks'
 import {EditAmountScreen} from './EditAmountScreen'
 
@@ -28,50 +28,50 @@ storiesOf('Edit Amount', module) //
 
 const NonPrimary = () => {
   return (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <TransferProvider initialState={sendMocks.editingAmount.secondaryToken}>
         <EditAmountScreen />
       </TransferProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 
 const Editing = () => {
   return (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <TransferProvider initialState={sendMocks.editingAmount.initialQuantity}>
         <EditAmountScreen />
       </TransferProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 
 const Adding = () => {
   return (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <TransferProvider initialState={sendMocks.editingAmount.adding}>
         <EditAmountScreen />
       </TransferProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 
 const InsuficientBalance = () => {
   return (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <TransferProvider initialState={sendMocks.editingAmount.insuficientBalance}>
         <EditAmountScreen />
       </TransferProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 
 const OverSpendable = () => {
   return (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <TransferProvider initialState={{}}>
         <EditAmountScreen />
       </TransferProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }

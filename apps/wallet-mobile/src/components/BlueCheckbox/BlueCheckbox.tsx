@@ -3,9 +3,9 @@ import {ReactNode} from 'react'
 import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 import {ClipPath, Defs, G, Path, Rect, Svg} from 'react-native-svg'
 
-import {Spacer} from '../Spacer'
+import {Spacer} from '../Spacer/Spacer'
 
-export type BlueCheckboxProps = {
+type BlueCheckboxProps = {
   checked?: boolean
   onPress?: () => void
   children?: ReactNode

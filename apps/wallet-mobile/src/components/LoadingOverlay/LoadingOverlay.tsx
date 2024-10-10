@@ -3,7 +3,9 @@ import {ActivityIndicator, StyleSheet, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 export const LoadingOverlay = ({loading, style, ...props}: ViewProps & {loading: boolean}) => {
-  return loading ? (
+  if (!loading) return null
+
+  return (
     <LinearGradient
       style={[StyleSheet.absoluteFill, {opacity: 0.5}, style]}
       start={{x: 0, y: 0}}
@@ -20,5 +22,5 @@ export const LoadingOverlay = ({loading, style, ...props}: ViewProps & {loading:
         />
       </View>
     </LinearGradient>
-  ) : null
+  )
 }

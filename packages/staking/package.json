@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/staking",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "The Staking package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -41,6 +41,7 @@
   ],
   "scripts": {
     "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
+    "build:dev": "yarn tsc && yarn clean && bob build",
     "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dev": "yarn clean && bob build",
@@ -113,10 +114,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 50,
-        "functions": 50,
-        "lines": 50,
-        "statements": 50
+        "branches": 60,
+        "functions": 60,
+        "lines": 60,
+        "statements": 60
       }
     },
     "modulePathIgnorePatterns": [
@@ -130,8 +131,6 @@
   },
   "dependencies": {
     "@emurgo/cip14-js": "^3.0.1",
-    "@yoroi/common": "1.5.2",
-    "@yoroi/types": "1.5.4",
     "bech32": "^2.0.0",
     "bip39": "^3.1.0"
   },
@@ -149,6 +148,9 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
+    "@yoroi/common": "1.5.4",
+    "@yoroi/types": "1.5.8",
+    "axios": "^1.5.0",
     "axios-mock-adapter": "^1.21.5",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
@@ -172,9 +174,11 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
+    "@yoroi/common": "1.5.4",
     "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "zod": "^3.22.2"
   },
   "optionalDependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3"

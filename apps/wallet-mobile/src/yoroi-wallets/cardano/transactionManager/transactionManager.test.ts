@@ -2,7 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
-import {rootStorage} from '../../storage/rootStorage'
+import {rootStorage} from '../../../kernel/storage/rootStorage'
+import {Transaction} from '../../types/other'
 import {ApiHistoryError} from '../errors'
 import {
   mockedAddressesByChunks,
@@ -16,7 +17,7 @@ import {
 } from '../mocks'
 import {makeTxManagerStorage, syncTxs, toCachedTx, TransactionManager} from './transactionManager'
 
-jest.mock('../api', () => ({
+jest.mock('../api/api', () => ({
   getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
   fetchNewTxHistory: jest
     .fn()
@@ -32,7 +33,7 @@ describe('transactionManager', () => {
     DeviceInfo.getVersion = () => '9.9.9'
 
     const mockStorage = rootStorage.join('txs/')
-    mockStorage.multiSet([
+    await mockStorage.multiSet<Transaction | [string]>([
       [mockTx.id, mockTx],
       ['txids', [mockTx.id]],
     ])
@@ -51,7 +52,7 @@ describe('transactionManager', () => {
     expect(txManager.perRewardAddressCertificates).toEqual({})
     expect(txManager.confirmationCounts).toEqual({})
 
-    await txManager.doSync(mockedAddressesByChunks, mockedBackendConfig)
+    await txManager.doSync(mockedAddressesByChunks, mockedBackendConfig.API_ROOT)
 
     expect(txManager.transactions).toMatchSnapshot()
     expect(txManager.perAddressTxs).toMatchSnapshot()
@@ -82,7 +83,7 @@ describe('transaction storage', () => {
 
   it('drops transaction if invalid format', async () => {
     const storage = rootStorage.join('txs/')
-    storage.multiSet([
+    await storage.multiSet([
       [mockTx.id, undefined],
       ['txids', [mockTx.id]],
     ])
@@ -96,7 +97,7 @@ describe('transaction storage', () => {
 
   it('starts fresh if txids is invalid format', async () => {
     const storage = rootStorage.join('txs/')
-    storage.multiSet([
+    await storage.multiSet([
       [mockTx.id, mockTx],
       ['txids', undefined],
     ])
@@ -113,7 +114,7 @@ describe('syncTxs (undefined means no updates)', () => {
   it('should return undefined if tipStatus bestBlock.hash is empty', async () => {
     const params = {
       addressesByChunks: [],
-      backendConfig: mockedBackendConfig,
+      baseApiUrl: mockedBackendConfig.API_ROOT,
       transactions: mockedEmptyLocalTransactions,
       api: {
         getTipStatus: jest.fn().mockResolvedValue({
@@ -133,7 +134,7 @@ describe('syncTxs (undefined means no updates)', () => {
   it('should return undefined if there is no new transactions', async () => {
     const params = {
       addressesByChunks: mockedAddressesByChunks,
-      backendConfig: mockedBackendConfig,
+      baseApiUrl: mockedBackendConfig.API_ROOT,
       transactions: mockedLocalTransactions,
       api: {
         getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
@@ -154,7 +155,7 @@ describe('syncTxs (undefined means no updates)', () => {
   it('should return current txs plus new txs if there are new transactions', async () => {
     const params = {
       addressesByChunks: mockedAddressesByChunks,
-      backendConfig: mockedBackendConfig,
+      baseApiUrl: mockedBackendConfig.API_ROOT,
       transactions: mockedLocalTransactions,
       api: {
         getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
@@ -179,7 +180,7 @@ describe('syncTxs (undefined means no updates)', () => {
   it('should return current txs plus new txs if there are new transactions and continue to request while is not the last', async () => {
     const params = {
       addressesByChunks: [mockedAddressesByChunks[0]],
-      backendConfig: mockedBackendConfig,
+      baseApiUrl: mockedBackendConfig.API_ROOT,
       transactions: {},
       api: {
         getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
@@ -205,7 +206,7 @@ describe('syncTxs (undefined means no updates)', () => {
     async (error) => {
       const params = {
         addressesByChunks: mockedAddressesByChunks,
-        backendConfig: mockedBackendConfig,
+        baseApiUrl: mockedBackendConfig.API_ROOT,
         transactions: {
           ...mockedLocalTransactions,
           ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
@@ -229,7 +230,7 @@ describe('syncTxs (undefined means no updates)', () => {
   it(`should return undefined if receives ${ApiHistoryError.errors.REFERENCE_BEST_BLOCK_MISMATCH}`, async () => {
     const params = {
       addressesByChunks: mockedAddressesByChunks,
-      backendConfig: mockedBackendConfig,
+      baseApiUrl: mockedBackendConfig.API_ROOT,
       transactions: mockedLocalTransactions,
       api: {
         getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
@@ -249,7 +250,7 @@ describe('syncTxs (undefined means no updates)', () => {
   it(`should return undefined if receives any other error`, async () => {
     const params = {
       addressesByChunks: mockedAddressesByChunks,
-      backendConfig: mockedBackendConfig,
+      baseApiUrl: mockedBackendConfig.API_ROOT,
       transactions: mockedLocalTransactions,
       api: {
         getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),

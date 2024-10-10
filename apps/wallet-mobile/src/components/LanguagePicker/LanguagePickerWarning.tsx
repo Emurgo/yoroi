@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -6,8 +7,9 @@ import Markdown from 'react-native-markdown-display'
 import {Icon} from '../Icon'
 
 export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
-  const [dismissed, setDismissed] = useState(false)
   const strings = useStrings()
+  const {styles, colors} = useStyles()
+  const [dismissed, setDismissed] = useState(false)
 
   if (!enabled) return null
   if (dismissed) return null
@@ -17,12 +19,12 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
       <View style={styles.dialogSquare}>
         <View style={styles.row}>
           <TouchableOpacity onPress={() => setDismissed(true)}>
-            <Icon.Cross size={26} />
+            <Icon.Cross size={24} color={colors.icon} />
           </TouchableOpacity>
         </View>
 
         {/* @ts-expect-error old react */}
-        <Markdown markdownStyles={{text: styles.markdownText}}>
+        <Markdown style={{text: styles.markdownText, body: styles.markdownText}}>
           {strings.contributors !== '_' ? `${strings.warning}: **${strings.contributors}**` : `${strings.warning}.`}
         </Markdown>
       </View>
@@ -30,24 +32,34 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  dialog: {
-    padding: 16,
-  },
-  dialogSquare: {
-    backgroundColor: '#EAEDF2',
-    borderRadius: 8,
-    padding: 14,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  markdownText: {
-    fontSize: 18,
-  },
-})
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+  const styles = StyleSheet.create({
+    dialog: {
+      ...atoms.p_lg,
+    },
+    dialogSquare: {
+      backgroundColor: color.bg_color_min,
+      borderRadius: 8,
+      ...atoms.p_lg,
+    },
+    row: {
+      ...atoms.flex_row,
+      ...atoms.justify_end,
+      ...atoms.align_center,
+    },
+    markdownText: {
+      ...atoms.body_1_lg_regular,
+      color: color.text_gray_medium,
+    },
+  })
+
+  const colors = {
+    icon: color.el_gray_max,
+  }
+
+  return {styles, colors} as const
+}
 
 const useStrings = () => {
   const intl = useIntl()

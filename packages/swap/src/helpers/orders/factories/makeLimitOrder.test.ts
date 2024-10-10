@@ -1,29 +1,30 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {makeLimitOrder} from './makeLimitOrder'
+import {tokenInfoMocks} from '../../../tokenInfo.mocks'
 
 describe('makeLimitOrder', () => {
-  const sell = {
-    quantity: '100' as Balance.Quantity,
-    tokenId: 'tokenA',
+  const sell: Portfolio.Token.Amount = {
+    quantity: 100n,
+    info: tokenInfoMocks.a,
   }
-  const buy = {
-    quantity: '200' as Balance.Quantity,
-    tokenId: 'tokenB',
+  const buy: Portfolio.Token.Amount = {
+    quantity: 200n,
+    info: tokenInfoMocks.b,
   }
   const pool: Swap.Pool = {
-    tokenA: {quantity: '4500000', tokenId: 'tokenA'},
-    tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+    tokenA: {quantity: 4500000n, tokenId: 'tokenA.'},
+    tokenB: {quantity: 9000000n, tokenId: 'tokenB.'},
     ptPriceTokenA: '1',
     ptPriceTokenB: '0.5',
     fee: '0.3',
     provider: 'minswap',
-    batcherFee: {quantity: '1', tokenId: ''},
-    deposit: {quantity: '1', tokenId: ''},
+    batcherFee: {quantity: 1n, tokenId: '.'},
+    deposit: {quantity: 1n, tokenId: '.'},
     poolId: '0',
     lpToken: {
-      quantity: '0',
-      tokenId: '0',
+      quantity: 0n,
+      tokenId: '0.',
     },
   }
   const address = '0xAddressHere'
@@ -31,17 +32,16 @@ describe('makeLimitOrder', () => {
   it('should create a limit order with the correct parameters', () => {
     const slippage = 10
 
-    const expectedBuyQuantity = '180'
+    const expectedBuyQuantity = 180n
 
     const result = makeLimitOrder(sell, buy, pool, slippage, address)
     expect(result.selectedPool).toEqual(pool)
     expect(result.address).toEqual(address)
     expect(result.slippage).toEqual(slippage)
-    expect(result.amounts.sell).toEqual(sell)
-    expect(result.amounts.buy.tokenId).toEqual(buy.tokenId)
-    expect(result.amounts.buy.quantity).toEqual(
-      expectedBuyQuantity as Balance.Quantity,
-    )
+    expect(result.amounts.sell.tokenId).toEqual(sell.info.id)
+    expect(result.amounts.sell.quantity).toEqual(sell.quantity)
+    expect(result.amounts.buy.tokenId).toEqual(buy.info.id)
+    expect(result.amounts.buy.quantity).toEqual(expectedBuyQuantity)
   })
 
   it('should throw an error if the slippage is invalid', () => {

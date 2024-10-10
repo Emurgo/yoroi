@@ -1,61 +1,46 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {InteractionManager, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQueryClient} from 'react-query'
 
-import {
-  Button,
-  Checkbox,
-  Checkmark,
-  KeyboardAvoidingView,
-  Spacer,
-  Text,
-  TextInput,
-  TextInputProps,
-} from '../../../components'
-import {useWalletNavigation} from '../../../navigation'
-import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
-import {hasWalletsKey, useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
+import {Button} from '../../../components/Button/Button'
+import {Checkbox} from '../../../components/Checkbox/Checkbox'
+import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Spacer} from '../../../components/Spacer/Spacer'
+import {Text} from '../../../components/Text'
+import {Checkmark, TextInput, TextInputProps} from '../../../components/TextInput/TextInput'
+import {useWalletNavigation} from '../../../kernel/navigation'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
-  const walletName = useWalletName(wallet)
   const {resetToWalletSetupInit, resetToWalletSelection} = useWalletNavigation()
-  const walletManager = useWalletManager()
-  const queryClient = useQueryClient()
+  const {walletManager} = useWalletManager()
+  const {meta} = useSelectedWallet()
 
-  const {removeWallet, isLoading: isRemoveWalletLoading} = useRemoveWallet(wallet.id, {
-    onSuccess: async () => {
-      queryClient.invalidateQueries({queryKey: [hasWalletsKey]})
-
-      const walletMetas = await walletManager.listWallets()
-      const hasWallets = walletMetas.length > 0
-
-      if (hasWallets) {
-        resetToWalletSelection()
-        return
-      }
-
+  const handleOnRemoveWallet = React.useCallback(() => {
+    if (walletManager.walletMetas.size === 1) {
       resetToWalletSetupInit()
-    },
-  })
+    } else {
+      resetToWalletSelection()
+    }
+    InteractionManager.runAfterInteractions(() => walletManager.removeWallet(meta.id))
+  }, [meta.id, resetToWalletSelection, resetToWalletSetupInit, walletManager])
 
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
-  const disabled = isRemoveWalletLoading || (!wallet.isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
+  const disabled = (!meta.isHW && !hasMnemonicWrittenDown) || meta.name !== typedWalletName
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <KeyboardAvoidingView style={styles.keyboardAvoider}>
-        <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
+    <KeyboardAvoidingView style={styles.root}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+        <ScrollView bounces={false}>
           <Description>
-            {!wallet.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
+            {!meta.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
 
             <Spacer height={24} />
 
@@ -69,41 +54,40 @@ export const RemoveWalletScreen = () => {
 
             <Spacer height={10} />
 
-            <Text style={styles.walletName}>{walletName}</Text>
+            <Text style={styles.walletName}>{meta.name}</Text>
 
             <Spacer height={24} />
 
             <WalletNameInput
+              placeholder={strings.walletName}
               value={typedWalletName}
               onChangeText={setTypedWalletName}
-              right={typedWalletName === walletName ? <Checkmark /> : undefined}
-              errorText={typedWalletName !== walletName ? strings.walletNameMismatchError : undefined}
+              right={typedWalletName === meta.name ? <Checkmark /> : undefined}
+              errorText={typedWalletName !== meta.name ? strings.walletNameMismatchError : undefined}
             />
           </WalletInfo>
         </ScrollView>
 
         <Spacer fill />
 
+        {!meta.isHW && (
+          <Checkbox
+            checked={hasMnemonicWrittenDown}
+            text={strings.hasWrittenDownMnemonic}
+            onChange={setHasMnemonicWrittenDown}
+          />
+        )}
+
         <Actions>
-          {!wallet.isHW && (
-            <Checkbox
-              checked={hasMnemonicWrittenDown}
-              text={strings.hasWrittenDownMnemonic}
-              onChange={setHasMnemonicWrittenDown}
-            />
-          )}
-
-          <Spacer height={30} />
-
           <Button
-            onPress={() => removeWallet()}
+            onPress={handleOnRemoveWallet}
             title={strings.remove}
             style={styles.removeButton}
             disabled={disabled}
           />
         </Actions>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -169,37 +153,35 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: color.gray.min,
-    },
-    contentContainer: {
-      ...padding['x-l'],
+    root: {
+      backgroundColor: color.bg_color_max,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
+      ...atoms.pt_lg,
     },
     descriptionContainer: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.bg_color_max,
     },
     description: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
 
     walletNameLabel: {
-      ...typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     walletName: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     actions: {
-      ...padding['l'],
+      ...atoms.py_lg,
     },
-    keyboardAvoider: {
-      flex: 1,
+    safeAreaView: {
+      ...atoms.flex_1,
     },
     removeButton: {
-      backgroundColor: color.magenta[500],
+      backgroundColor: color.sys_magenta_500,
     },
   })
   return styles

@@ -1,19 +1,14 @@
-import {Balance} from '@yoroi/types'
 import {ceilDivision} from '../../../utils/ceilDivision'
-import {asQuantity} from '../../../utils/asQuantity'
 
-export const getQuantityWithSlippage = (
-  quantity: Balance.Quantity,
-  slippage: number,
-): Balance.Quantity => {
+export const getQuantityWithSlippage = (quantity: bigint, slippage: number) => {
   const initialQuantity = BigInt(quantity)
 
   const slippageQuantity = ceilDivision(
-    BigInt(Math.floor(10000 * slippage)) * initialQuantity,
-    BigInt(100 * 10000),
+    BigInt(Math.floor(10_000 * slippage)) * initialQuantity,
+    BigInt(100 * 10_000),
   )
 
   const adjustedQuantity = initialQuantity - slippageQuantity
 
-  return asQuantity(adjustedQuantity.toString())
+  return adjustedQuantity
 }
