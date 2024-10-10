@@ -93,13 +93,18 @@ const SenderSection = ({
   ownedOutputs: FormattedOutputs
 }) => {
   const strings = useStrings()
+  const {styles} = useStyles()
   const address = ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address
 
   return (
     <Accordion label={strings.myWalletLabel}>
       <Space height="lg" />
 
-      <CopiableText text={address} />
+      <CopiableText textToCopy={address}>
+        <Text style={styles.addressText} numberOfLines={1} ellipsizeMode="middle">
+          {address}
+        </Text>
+      </CopiableText>
 
       <Space height="sm" />
 
@@ -180,7 +185,11 @@ const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs})
       <View style={styles.receiverAddress}>
         <Text>{isScriptAddress ? strings.receiveToScriptLabel : strings.receiveToLabel}:</Text>
 
-        <CopiableText text={address} textStyle={styles.receiverSectionAddress} />
+        <CopiableText textToCopy={address}>
+          <Text style={[styles.addressText, styles.receiverSectionAddress]} numberOfLines={1} ellipsizeMode="middle">
+            {address}
+          </Text>
+        </CopiableText>
       </View>
     </>
   )
@@ -275,6 +284,11 @@ const useStyles = () => {
     },
     receiverSectionAddress: {
       maxWidth: 260,
+    },
+    addressText: {
+      ...atoms.flex_1,
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
     },
   })
 
