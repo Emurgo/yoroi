@@ -72,7 +72,6 @@ export type NotificationManager = {
   unreadCounterByGroup$: BehaviorSubject<
     Readonly<Map<NotificationGroup, number>>
   >
-  notification$: Subject<NotificationEvent>
 
   // Events represent a notification event that was trigger by a config rule
   events: {

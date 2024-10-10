@@ -28,7 +28,7 @@ export const notificationManagerMaker = ({
   }
 
   const config = configManagerMaker({storage: configStorage})
-  const {events, unreadCounterByGroup$, notification$} = eventsManagerMaker({
+  const {events, unreadCounterByGroup$} = eventsManagerMaker({
     storage: eventsStorage,
     config,
     display,
@@ -51,7 +51,6 @@ export const notificationManagerMaker = ({
     events,
     config,
     unreadCounterByGroup$,
-    notification$,
   }
 }
 
@@ -83,12 +82,10 @@ const eventsManagerMaker = ({
   unreadCounterByGroup$: BehaviorSubject<
     Readonly<Map<Notifications.Group, number>>
   >
-  notification$: Subject<Notifications.Event>
 } => {
   const unreadCounterByGroup$ = new BehaviorSubject<
     Map<Notifications.Group, number>
   >(buildUnreadCounterDefaultValue())
-  const notification$ = new Subject<Notifications.Event>()
 
   const updateUnreadCounter = async () => {
     const allEvents = await events.read()
@@ -131,7 +128,6 @@ const eventsManagerMaker = ({
       await storage.setItem('events', [...allEvents, event])
       if (!event.isRead) {
         await updateUnreadCounter()
-        notification$.next(event)
         display(event)
       }
     },
@@ -140,7 +136,7 @@ const eventsManagerMaker = ({
       unreadCounterByGroup$.next(buildUnreadCounterDefaultValue())
     },
   }
-  return {events, unreadCounterByGroup$, notification$}
+  return {events, unreadCounterByGroup$}
 }
 
 const configManagerMaker = ({
