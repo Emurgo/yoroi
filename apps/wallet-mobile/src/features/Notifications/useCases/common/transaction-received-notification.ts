@@ -13,7 +13,7 @@ import {WalletManager, walletManager} from '../../../WalletManager/wallet-manage
 import {notificationManager} from './notification-manager'
 import {generateNotificationId} from './notifications'
 
-const BACKGROUND_FETCH_TASK = 'yoroi-notifications-background-fetch'
+const BACKGROUND_FETCH_TASK = 'yoroi-transaction-received-notifications-background-fetch'
 
 // Check is needed for hot reloading, as task can not be defined twice
 if (!TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK)) {
