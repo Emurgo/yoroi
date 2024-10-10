@@ -31,7 +31,7 @@ import {
   useShowDarkThemeAnnouncementScreen,
 } from './features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
-import {useNotifications} from './features/Notifications/useCases/common/hooks'
+import {useInitNotifications} from './features/Notifications/useCases/common/hooks'
 import {NotificationsDevScreen} from './features/Notifications/useCases/NotificationsDevScreen'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
@@ -46,7 +46,7 @@ const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamL
 const prefixes = [...supportedPrefixes]
 
 export const AppNavigator = () => {
-  useNotifications()
+  useInitNotifications()
   useDeepLinkWatcher()
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()

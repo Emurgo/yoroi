@@ -33,7 +33,7 @@ const init = () => {
   }
 }
 
-export const useNotifications = () => {
+export const useInitNotifications = () => {
   useEffect(() => init(), [])
   useTransactionReceivedNotifications()
 }
