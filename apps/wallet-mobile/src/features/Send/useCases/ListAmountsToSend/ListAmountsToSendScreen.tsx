@@ -18,7 +18,9 @@ import {Spacer} from '../../../../components/Spacer/Spacer'
 import globalMessages from '../../../../kernel/i18n/global-messages'
 import {assetsToSendProperties} from '../../../../kernel/metrics/helpers'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {YoroiEntry} from '../../../../yoroi-wallets/types/yoroi'
+import {useWalletNavigation} from '../../../../kernel/navigation'
+import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
+import {YoroiEntry, YoroiSignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch} from '../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
@@ -30,10 +32,12 @@ import {RemoveAmountButton} from './RemoveAmount'
 export const ListAmountsToSendScreen = () => {
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
+  const {navigateToTxReview} = useWalletNavigation()
   const strings = useStrings()
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
   const {track} = useMetrics()
+  const {wallet} = useSelectedWallet()
 
   useOverridePreviousSendTxRoute('send-start-tx')
 
@@ -42,16 +46,17 @@ export const ListAmountsToSendScreen = () => {
   }, [navigation])
 
   const {
+    memo,
     targets,
     selectedTargetIndex,
     tokenSelectedChanged,
     amountRemoved,
     unsignedTxChanged: yoroiUnsignedTxChanged,
   } = useTransfer()
+  const {saveMemo} = useSaveMemo({wallet})
   const {amounts} = targets[selectedTargetIndex].entry
   const selectedTokensCounter = Object.keys(amounts).length
 
-  const {wallet} = useSelectedWallet()
   const {
     meta: {addressMode},
   } = useSelectedWallet()
@@ -80,6 +85,23 @@ export const ListAmountsToSendScreen = () => {
     }
     amountRemoved(tokenId)
   }
+
+  const sendProperties = React.useMemo(() => assetsToSendProperties({amounts}), [amounts])
+
+  const onSuccess = (signedTx: YoroiSignedTx) => {
+    track.sendSummarySubmitted(sendProperties)
+    navigateTo.submittedTx(signedTx.signedTx.id)
+
+    if (memo.length > 0) {
+      saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
+    }
+  }
+
+  const onError = () => {
+    track.sendSummarySubmitted(sendProperties)
+    navigateTo.failedTx()
+  }
+
   const onNext = () => {
     track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
     // since the user can't see many targets we just send the first one
@@ -87,7 +109,7 @@ export const ListAmountsToSendScreen = () => {
     createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)], {
       onSuccess: (yoroiUnsignedTx) => {
         yoroiUnsignedTxChanged(yoroiUnsignedTx)
-        navigateTo.confirmTx()
+        navigateToTxReview({unsignedTx: yoroiUnsignedTx, onSuccess, onError})
       },
     })
   }
