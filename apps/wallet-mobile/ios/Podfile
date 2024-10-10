@@ -81,15 +81,6 @@ target 'yoroi' do
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
 
-    installer.pods_project.targets.each do |target|
-        target.build_configurations.each do |config|
-          if target.name == 'Sentry'
-            config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'YES'
-          else
-            # configuration for other targets
-          end
-        end
-      end
 
     # Get the development team id from the main project / set env file
     dev_team_id = ""
