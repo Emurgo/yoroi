@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
 import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
-import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
+import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {formatPriceChange} from '../../../common/helpers/priceChange'
 import {TOKEN_CHART_INTERVAL, TokenChartInterval} from '../../../common/hooks/useGetPortfolioTokenChart'
 import {useStrings} from '../../../common/hooks/useStrings'

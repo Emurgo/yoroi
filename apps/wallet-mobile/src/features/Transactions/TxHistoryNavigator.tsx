@@ -36,7 +36,7 @@ import {SelectTokenFromListScreen} from '../Send/useCases/ListAmountsToSend/AddT
 import {EditAmountScreen} from '../Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend/ListAmountsToSendScreen'
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
-import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
 import {
   ConfirmTxScreen as ConfirmTxSwapScreen,

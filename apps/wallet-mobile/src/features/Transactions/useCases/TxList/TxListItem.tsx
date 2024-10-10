@@ -24,8 +24,8 @@ import {
   formatTokenInteger,
 } from '../../../../yoroi-wallets/utils/format'
 import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
-import {useCurrencyPairing} from '../../../Settings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
+import {useCurrencyPairing} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
 import {useTxFilter} from './TxFilterProvider'
