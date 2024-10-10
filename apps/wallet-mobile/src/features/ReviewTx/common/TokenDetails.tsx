@@ -174,7 +174,9 @@ const PolicyId = ({policyId}: {policyId: string}) => {
       <Space width="lg" />
 
       <View style={styles.copiableText}>
-        <CopiableText textStyle={styles.value} text={policyId} multiline />
+        <CopiableText textToCopy={policyId}>
+          <Text style={styles.value}>{policyId}</Text>
+        </CopiableText>
       </View>
     </Row>
   )
@@ -193,7 +195,9 @@ const Fingerprint = ({info}: {info: Portfolio.Token.Info}) => {
       <Space width="lg" />
 
       <View style={styles.copiableText}>
-        <CopiableText textStyle={styles.value} text={info.fingerprint} multiline />
+        <CopiableText textToCopy={info.fingerprint}>
+          <Text style={styles.value}>{info.fingerprint}</Text>
+        </CopiableText>
       </View>
     </Row>
   )
@@ -333,6 +337,7 @@ const useStyles = () => {
       color: color.text_gray_low,
     },
     value: {
+      ...atoms.flex_1,
       ...atoms.text_right,
       ...atoms.body_2_md_regular,
       color: color.text_gray_max,
