@@ -33,7 +33,7 @@ const init = () => {
   }
 }
 
-export const useInitNotifications = () => {
-  useEffect(() => init(), [])
-  useTransactionReceivedNotifications()
+export const useInitNotifications = ({enabled}: {enabled: boolean}) => {
+  useEffect(() => (enabled ? init() : undefined), [enabled])
+  useTransactionReceivedNotifications({enabled})
 }

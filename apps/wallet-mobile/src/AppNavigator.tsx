@@ -38,6 +38,7 @@ import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from './features/WalletManager/common/hooks/useHasWallets'
 import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
+import {features} from './kernel/features'
 import {AppRoutes, defaultStackNavigationOptions} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
 
@@ -46,7 +47,7 @@ const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamL
 const prefixes = [...supportedPrefixes]
 
 export const AppNavigator = () => {
-  useInitNotifications()
+  useInitNotifications({enabled: features.notifications})
   useDeepLinkWatcher()
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()

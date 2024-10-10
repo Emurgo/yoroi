@@ -106,18 +106,20 @@ export const createTransactionReceivedNotification = (
 
 export const transactionReceivedSubject = new Subject<NotificationTypes.TransactionReceivedEvent>()
 
-export const useTransactionReceivedNotifications = () => {
+export const useTransactionReceivedNotifications = ({enabled}: {enabled: boolean}) => {
   const {walletManager} = useWalletManager()
   const asyncStorage = useAsyncStorage()
 
   React.useEffect(() => {
+    if (!enabled) return
     registerBackgroundFetchAsync()
     return () => {
       unregisterBackgroundFetchAsync()
     }
-  }, [])
+  }, [enabled])
 
   React.useEffect(() => {
+    if (!enabled) return
     const subscription = walletManager.syncWalletInfos$.subscribe(async (status) => {
       const walletInfos = Array.from(status.values())
       const walletsDoneSyncing = walletInfos.filter((info) => info.status === 'done')
@@ -131,7 +133,7 @@ export const useTransactionReceivedNotifications = () => {
     return () => {
       subscription.unsubscribe()
     }
-  }, [walletManager, asyncStorage])
+  }, [walletManager, asyncStorage, enabled])
 }
 
 const buildStorage = (appStorage: App.Storage, walletId: string) => {
