@@ -10,6 +10,12 @@ export const useStrings = () => {
     notEnoughFundsAlertTitle: intl.formatMessage(messages.notEnoughFundsAlertTitle),
     notEnoughFundsAlertMessage: intl.formatMessage(messages.notEnoughFundsAlertMessage),
     notEnoughFundsAlertOK: intl.formatMessage(messages.notEnoughFundsAlertOK),
+    collateralInfoModalLabel: intl.formatMessage(messages.collateralInfoModalLabel),
+    collateralInfoModalTitle: intl.formatMessage(messages.collateralInfoModalTitle),
+    collateralInfoModalText: intl.formatMessage(messages.collateralInfoModalText),
+    initialCollateralInfoModalTitle: intl.formatMessage(messages.initialCollateralInfoModalTitle),
+    initialCollateralInfoModalText: intl.formatMessage(messages.initialCollateralInfoModalText),
+    initialCollateralInfoModalButton: intl.formatMessage(messages.initialCollateralInfoModalButton),
   }
 }
 
@@ -41,5 +47,31 @@ const messages = defineMessages({
   notEnoughFundsAlertOK: {
     id: 'components.settings.collateral.notEnoughFundsAlertOK',
     defaultMessage: '!!!OK',
+  },
+  collateralInfoModalLabel: {
+    id: 'components.settings.collateral.collateralInfoModalLabel',
+    defaultMessage: '!!!Collateral creation',
+  },
+  collateralInfoModalTitle: {
+    id: 'components.settings.collateral.collateralInfoModalTitle',
+    defaultMessage: '!!!What is collateral?',
+  },
+  collateralInfoModalText: {
+    id: 'components.settings.collateral.collateralInfoModalText',
+    defaultMessage:
+      '!!!The collateral mechanism is an important feature that has been designed to ensure successful smart contract execution. It is used to guarantee that Cardano nodes are compensated for their work in case phase-2 validation fails.',
+  },
+  initialCollateralInfoModalTitle: {
+    id: 'components.settings.collateral.initialCollateralInfoModalTitle',
+    defaultMessage: '!!!Collateral creation',
+  },
+  initialCollateralInfoModalText: {
+    id: 'components.settings.collateral.initialCollateralInfoModalText',
+    defaultMessage:
+      '!!!The collateral mechanism is designed to ensure smart contracts on Cardano execute successfully. It guarantees that nodes are compensated for their work if a contract fails during validation.',
+  },
+  initialCollateralInfoModalButton: {
+    id: 'components.settings.collateral.initialCollateralInfoModalButton',
+    defaultMessage: '!!!Add collateral',
   },
 })

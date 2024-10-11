@@ -4,8 +4,8 @@ import {Balance, Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
+import {MediaPreview} from '../../../../components/MediaPreview/MediaPreview'
 import {Spacer} from '../../../../components/Spacer/Spacer'
-import {MediaPreview} from '../MediaPreview/MediaPreview'
 
 type Props = {
   amounts: ReadonlyArray<Portfolio.Token.Amount>

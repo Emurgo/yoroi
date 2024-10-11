@@ -5,9 +5,9 @@ import React from 'react'
 import {ImageStyle, StyleSheet, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import placeholderLight from '../../../../assets/img/nft-placeholder.png'
-import placeholderDark from '../../../../assets/img/nft-placeholder-dark.png'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import placeholderLight from '../../assets/img/nft-placeholder.png'
+import placeholderDark from '../../assets/img/nft-placeholder-dark.png'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 
 type MediaPreviewProps = {
   info: Portfolio.Token.Info
