@@ -139,7 +139,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
-    "@emurgo/yoroi-lib": "^1.2.1",
+    "@emurgo/yoroi-lib": "^1.2.3",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
@@ -175,7 +175,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@emurgo/yoroi-lib": "^1.2.1",
+    "@emurgo/yoroi-lib": "^1.2.3",
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
     "@yoroi/api": "1.5.2",
     "@yoroi/common": "1.5.4",
