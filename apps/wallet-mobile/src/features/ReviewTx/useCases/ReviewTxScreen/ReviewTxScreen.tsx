@@ -1,15 +1,15 @@
 import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Button} from '../../../../components/Button/Button'
 import {SafeArea} from '../../../../components/SafeArea'
-import {ReviewTxRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {useFormattedTx} from '../../common/hooks/useFormattedTx'
 import {useOnConfirm} from '../../common/hooks/useOnConfirm'
 import {useStrings} from '../../common/hooks/useStrings'
 import {useTxBody} from '../../common/hooks/useTxBody'
+import {useReviewTx} from '../../common/ReviewTxProvider'
 import {OverviewTab} from './Overview/OverviewTab'
 import {UTxOsTab} from './UTxOs/UTxOsTab'
 
@@ -18,28 +18,43 @@ const MaterialTab = createMaterialTopTabNavigator()
 export const ReviewTxScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {unsignedTx, operations, onSuccess, onError} = useReviewTx()
 
-  // TODO: move this to a context
-  const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
+  if (unsignedTx === null) throw new Error('ReviewTxScreen: missing unsignedTx')
+
   const {onConfirm} = useOnConfirm({
-    unsignedTx: params.unsignedTx,
-    onSuccess: params.onSuccess,
-    onError: params.onError,
+    unsignedTx,
+    onSuccess,
+    onError,
   })
 
   // TODO: add cbor arguments
-  const txBody = useTxBody({unsignedTx: params.unsignedTx})
+  const txBody = useTxBody({unsignedTx})
   const formatedTx = useFormattedTx(txBody)
 
-  const OverViewTabMemo = React.memo(() => <OverviewTab tx={formatedTx} />)
+  const OverViewTabMemo = React.memo(() => <OverviewTab tx={formatedTx} operations={operations} />)
   const UTxOsTabMemo = React.memo(() => <UTxOsTab tx={formatedTx} />)
 
   return (
     <SafeArea style={styles.root}>
       <MaterialTab.Navigator tabBar={TabBar}>
-        <MaterialTab.Screen name="overview" component={OverViewTabMemo} />
+        <MaterialTab.Screen name="overview">
+          {() => (
+            /* TODO: make scrollview general to use button border */
+            <ScrollView style={styles.root}>
+              <OverViewTabMemo />
+            </ScrollView>
+          )}
+        </MaterialTab.Screen>
 
-        <MaterialTab.Screen name="utxos" component={UTxOsTabMemo} />
+        <MaterialTab.Screen name="utxos">
+          {() => (
+            /* TODO: make scrollview general to use button border */
+            <ScrollView style={styles.root}>
+              <UTxOsTabMemo />
+            </ScrollView>
+          )}
+        </MaterialTab.Screen>
       </MaterialTab.Navigator>
 
       <Actions>
@@ -59,11 +74,11 @@ const TabBar = ({navigation, state}: MaterialTopTabBarProps) => {
         [strings.overviewTab, 'overview'],
         [strings.utxosTab, 'utxos'],
       ]}
-      style={styles.tabBar}
-      showsHorizontalScrollIndicator={false}
       renderItem={({item: [label, key], index}) => (
         <Tab key={key} active={state.index === index} label={label} onPress={() => navigation.navigate(key)} />
       )}
+      style={styles.tabBar}
+      showsHorizontalScrollIndicator={false}
       bounces={false}
       horizontal
     />

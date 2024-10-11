@@ -4,7 +4,7 @@ import {Animated, LayoutAnimation, StyleSheet, Text, TouchableOpacity, View} fro
 
 import {Icon} from '../../../components/Icon'
 
-export const CollapsibleSection = ({label, children}: {label: string; children: React.ReactNode}) => {
+export const Accordion = ({label, children}: {label: string; children: React.ReactNode}) => {
   const {styles, colors} = useStyles()
   const [isOpen, setIsOpen] = React.useState(false)
   const animatedHeight = React.useRef(new Animated.Value(0)).current
@@ -20,14 +20,12 @@ export const CollapsibleSection = ({label, children}: {label: string; children: 
   }
 
   return (
-    <>
-      <View style={styles.sectionHeader}>
+    <View>
+      <TouchableOpacity activeOpacity={0.5} onPress={toggleSection} style={styles.sectionHeader}>
         <Text style={styles.sectionHeaderText}>{label}</Text>
 
-        <TouchableOpacity activeOpacity={0.5} onPress={toggleSection}>
-          <Icon.Chevron direction={isOpen ? 'up' : 'down'} size={28} color={colors.chevron} />
-        </TouchableOpacity>
-      </View>
+        <Icon.Chevron direction={isOpen ? 'up' : 'down'} size={28} color={colors.chevron} />
+      </TouchableOpacity>
 
       <Animated.View
         style={[
@@ -43,7 +41,7 @@ export const CollapsibleSection = ({label, children}: {label: string; children: 
       >
         {children}
       </Animated.View>
-    </>
+    </View>
   )
 }
 

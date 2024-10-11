@@ -6,22 +6,21 @@ import * as React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
-import {Info} from '../../../../../components/Info/Info'
 import {Space} from '../../../../../components/Space/Space'
 import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {Quantities} from '../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {Address} from '../../../common/Address'
-import {CollapsibleSection} from '../../../common/CollapsibleSection'
+import {Accordion} from '../../../common/Accordion'
+import {CopiableText} from '../../../common/CopiableText'
 import {Divider} from '../../../common/Divider'
 import {useAddressType} from '../../../common/hooks/useAddressType'
-import {FormattedTx} from '../../../common/hooks/useFormattedTx'
 import {useStrings} from '../../../common/hooks/useStrings'
+import {ReviewTxState} from '../../../common/ReviewTxProvider'
 import {TokenItem} from '../../../common/TokenItem'
-import {FormattedOutputs} from '../../../common/types'
+import {FormattedOutputs, FormattedTx} from '../../../common/types'
 
-export const OverviewTab = ({tx}: {tx: FormattedTx}) => {
+export const OverviewTab = ({tx, operations}: {tx: FormattedTx; operations: ReviewTxState['operations']}) => {
   const {styles} = useStyles()
 
   const notOwnedOutputs = React.useMemo(() => tx.outputs.filter((output) => !output.ownAddress), [tx.outputs])
@@ -36,6 +35,8 @@ export const OverviewTab = ({tx}: {tx: FormattedTx}) => {
       <Divider verticalSpace="lg" />
 
       <SenderSection tx={tx} notOwnedOutputs={notOwnedOutputs} ownedOutputs={ownedOutputs} />
+
+      <OperationsSection operations={operations} />
     </View>
   )
 }
@@ -77,7 +78,7 @@ const FeeInfoItem = ({fee}: {fee: string}) => {
     <View style={styles.infoItem}>
       <Text style={styles.infoLabel}>{strings.feeLabel}</Text>
 
-      <Text style={styles.fee}>{fee}</Text>
+      <Text style={styles.fee}>{`-${fee}`}</Text>
     </View>
   )
 }
@@ -92,20 +93,25 @@ const SenderSection = ({
   ownedOutputs: FormattedOutputs
 }) => {
   const strings = useStrings()
+  const {styles} = useStyles()
   const address = ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address
 
   return (
-    <CollapsibleSection label={strings.myWalletLabel}>
+    <Accordion label={strings.myWalletLabel}>
       <Space height="lg" />
 
-      <Address address={address} />
+      <CopiableText textToCopy={address}>
+        <Text style={styles.addressText} numberOfLines={1} ellipsizeMode="middle">
+          {address}
+        </Text>
+      </CopiableText>
 
       <Space height="sm" />
 
       <SenderTokens tx={tx} notOwnedOutputs={notOwnedOutputs} />
 
       {notOwnedOutputs.length === 1 && <ReceiverSection notOwnedOutputs={notOwnedOutputs} />}
-    </CollapsibleSection>
+    </Accordion>
   )
 }
 
@@ -140,10 +146,10 @@ const SenderTokens = ({tx, notOwnedOutputs}: {tx: FormattedTx; notOwnedOutputs: 
 
         <Space fill />
 
-        <TokenItem label={totalPrimaryTokenSpentLabel} />
+        <TokenItem tokenInfo={wallet.portfolioPrimaryTokenInfo} label={totalPrimaryTokenSpentLabel} />
 
-        {notPrimaryTokenSent.map((token) => (
-          <TokenItem key={token.name} label={token.label} isPrimaryToken={false} />
+        {notPrimaryTokenSent.map((token, index) => (
+          <TokenItem key={index} tokenInfo={token.tokenInfo} label={token.label} isPrimaryToken={false} />
         ))}
       </View>
     </View>
@@ -179,9 +185,39 @@ const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs})
       <View style={styles.receiverAddress}>
         <Text>{isScriptAddress ? strings.receiveToScriptLabel : strings.receiveToLabel}:</Text>
 
-        <Address address={address} textStyle={styles.receiverSectionAddress} />
+        <CopiableText textToCopy={address}>
+          <Text style={[styles.addressText, styles.receiverSectionAddress]} numberOfLines={1} ellipsizeMode="middle">
+            {address}
+          </Text>
+        </CopiableText>
       </View>
     </>
+  )
+}
+
+const OperationsSection = ({operations}: {operations: ReviewTxState['operations']}) => {
+  if (operations === null || (Array.isArray(operations) && operations.length === 0)) return null
+
+  return (
+    <View>
+      <Divider verticalSpace="lg" />
+
+      <Accordion label="Operations">
+        <Space height="lg" />
+
+        {operations.map((operation, index) => {
+          if (index === 0) return operation
+
+          return (
+            <>
+              <Space height="sm" />
+
+              {operation}
+            </>
+          )
+        })}
+      </Accordion>
+    </View>
   )
 }
 
@@ -249,6 +285,11 @@ const useStyles = () => {
     receiverSectionAddress: {
       maxWidth: 260,
     },
+    addressText: {
+      ...atoms.flex_1,
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
+    },
   })
 
   const colors = {
@@ -285,7 +326,7 @@ const CreatedByInfoItem = () => {
 
 // 🚧 TODO: WIP 🚧
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ReceiverTokensSectionMultiReceiver = () => {
+/* const ReceiverTokensSectionMultiReceiver = () => {
   const {styles} = useStyles()
 
   return (
@@ -294,7 +335,7 @@ const ReceiverTokensSectionMultiReceiver = () => {
 
       <Space height="lg" />
 
-      <CollapsibleSection label="Other parties">
+      <Accordion label="Other parties">
         <Space height="lg" />
 
         <Info content="Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance" />
@@ -311,36 +352,36 @@ const ReceiverTokensSectionMultiReceiver = () => {
 
             <Space fill />
 
-            <TokenItem label="-20,204617 ADA" isSent={false} />
+            <TokenItem tokenId="12345" label="-20,204617 ADA" isSent={false} />
 
-            <TokenItem label="-10 Token 1" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="-10 Token 1" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="-100 Token 2" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="-100 Token 2" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="-1 Token 3" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="-1 Token 3" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="100000000000000000 Token 4" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="100000000000000000 Token 4" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="1000000 Token 5" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="1000000 Token 5" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="100 Token 6" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="100 Token 6" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="100000000000 Token 7" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="100000000000 Token 7" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="1 Token 8" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="1 Token 8" isPrimaryToken={false} isSent={false} />
 
-            <TokenItem label="1000 Token 9" isPrimaryToken={false} isSent={false} />
+            <TokenItem tokenId="12345" label="1000 Token 9" isPrimaryToken={false} isSent={false} />
           </View>
         </View>
-      </CollapsibleSection>
+      </Accordion>
 
       <Space height="lg" />
     </>
   )
-}
+} */
 
 // 🚧 TODO: WIP 🚧
-const ReceiverSectionLabel = () => {
+/* const ReceiverSectionLabel = () => {
   const {styles, colors} = useStyles()
 
   return (
@@ -352,4 +393,4 @@ const ReceiverSectionLabel = () => {
       <Text style={styles.tokenSectionLabel}>Receive</Text>
     </View>
   )
-}
+} */

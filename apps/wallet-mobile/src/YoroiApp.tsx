@@ -17,6 +17,7 @@ import {AuthProvider} from './features/Auth/AuthProvider'
 import {BrowserProvider} from './features/Discover/common/BrowserProvider'
 import {notificationManager} from './features/Notifications/useCases/common/notification-manager'
 import {PortfolioTokenActivityProvider} from './features/Portfolio/common/PortfolioTokenActivityProvider'
+import {ReviewTxProvider} from './features/ReviewTx/common/ReviewTxProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {AutomaticWalletOpenerProvider} from './features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
@@ -67,9 +68,11 @@ const Yoroi = () => {
                                 <PoolTransitionProvider>
                                   <BrowserProvider>
                                     <AutomaticWalletOpenerProvider>
-                                      <NotificationProvider manager={notificationManager}>
-                                        <InitApp />
-                                      </NotificationProvider>
+                                      <ReviewTxProvider>
+                                        <NotificationProvider manager={notificationManager}>
+                                          <InitApp />
+                                        </NotificationProvider>
+                                      </ReviewTxProvider>
                                     </AutomaticWalletOpenerProvider>
                                   </BrowserProvider>
                                 </PoolTransitionProvider>

@@ -9,7 +9,7 @@ import {Dimensions, InteractionManager, Platform, TouchableOpacity, TouchableOpa
 
 import {Icon} from '../components/Icon'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types/yoroi'
+import {YoroiUnsignedTx} from '../yoroi-wallets/types/yoroi'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
 
 // prettier-ignore
@@ -294,12 +294,7 @@ export type PortfolioRoutes = {
 }
 
 export type ReviewTxRoutes = {
-  'review-tx': {
-    unsignedTx?: YoroiUnsignedTx
-    cbor?: string
-    onSuccess: (signedTx: YoroiSignedTx) => void
-    onError: () => void
-  }
+  'review-tx': undefined
 }
 
 export type PortfolioTokenListTabRoutes = {
@@ -464,12 +459,11 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToTxReview: (params: ReviewTxRoutes['review-tx']) => {
+    navigateToTxReview: () => {
       navigation.navigate('manage-wallets', {
         screen: 'review-tx-routes',
         params: {
           screen: 'review-tx',
-          params,
         },
       })
     },

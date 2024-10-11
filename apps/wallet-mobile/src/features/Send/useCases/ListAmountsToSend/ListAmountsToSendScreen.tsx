@@ -22,6 +22,7 @@ import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {YoroiEntry, YoroiSignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {useSearch} from '../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../common/navigation'
@@ -38,6 +39,7 @@ export const ListAmountsToSendScreen = () => {
   const navigation = useNavigation()
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
+  const {unsignedTxChanged, onSuccessChanged, onErrorChanged} = useReviewTx()
 
   useOverridePreviousSendTxRoute('send-start-tx')
 
@@ -45,14 +47,7 @@ export const ListAmountsToSendScreen = () => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
   }, [navigation])
 
-  const {
-    memo,
-    targets,
-    selectedTargetIndex,
-    tokenSelectedChanged,
-    amountRemoved,
-    unsignedTxChanged: yoroiUnsignedTxChanged,
-  } = useTransfer()
+  const {memo, targets, selectedTargetIndex, tokenSelectedChanged, amountRemoved} = useTransfer()
   const {saveMemo} = useSaveMemo({wallet})
   const {amounts} = targets[selectedTargetIndex].entry
   const selectedTokensCounter = Object.keys(amounts).length
@@ -108,8 +103,10 @@ export const ListAmountsToSendScreen = () => {
     // NOTE: update on multi target support
     createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)], {
       onSuccess: (yoroiUnsignedTx) => {
-        yoroiUnsignedTxChanged(yoroiUnsignedTx)
-        navigateToTxReview({unsignedTx: yoroiUnsignedTx, onSuccess, onError})
+        unsignedTxChanged(yoroiUnsignedTx)
+        onSuccessChanged(onSuccess)
+        onErrorChanged(onError)
+        navigateToTxReview()
       },
     })
   }

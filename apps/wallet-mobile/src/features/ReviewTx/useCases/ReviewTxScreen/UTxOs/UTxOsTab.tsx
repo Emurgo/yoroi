@@ -3,13 +3,12 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Space} from '../../../../../components/Space/Space'
-import {Address} from '../../../common/Address'
-import {CollapsibleSection} from '../../../common/CollapsibleSection'
+import {Accordion} from '../../../common/Accordion'
+import {CopiableText} from '../../../common/CopiableText'
 import {Divider} from '../../../common/Divider'
-import {FormattedTx} from '../../../common/hooks/useFormattedTx'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {TokenItem} from '../../../common/TokenItem'
-import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs} from '../../../common/types'
+import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs, FormattedTx} from '../../../common/types'
 
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()
@@ -19,21 +18,21 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
     <View style={styles.root}>
       <Space height="lg" />
 
-      <CollapsibleSection label={`${strings.utxosInputsLabel} (${tx.inputs.length})`}>
+      <Accordion label={`${strings.utxosInputsLabel} (${tx.inputs.length})`}>
         <Inputs inputs={tx.inputs} />
-      </CollapsibleSection>
+      </Accordion>
 
       <Fee fee={tx.fee.label} />
 
-      <CollapsibleSection label={`${strings.utxosOutputsLabel} (${tx.outputs.length})`}>
+      <Accordion label={`${strings.utxosOutputsLabel} (${tx.outputs.length})`}>
         <Outputs outputs={tx.outputs} />
-      </CollapsibleSection>
+      </Accordion>
     </View>
   )
 }
 
 const Inputs = ({inputs}: {inputs: FormattedInputs}) => {
-  return inputs.map((input) => <Input key={input.txHash} input={input} />)
+  return inputs.map((input, index) => <Input key={`${input.address}-${index}`} input={input} />)
 }
 
 const Input = ({input}: {input: FormattedInput}) => {
@@ -49,25 +48,35 @@ const Input = ({input}: {input: FormattedInput}) => {
 
         <Space height="lg" />
 
-        <Address address={input.address} multiline />
+        <CopiableText textToCopy={input.address}>
+          <Text style={styles.addressText}>{input.address}</Text>
+        </CopiableText>
 
         <Space height="sm" />
 
-        <Address index={input.txIndex} address={input.txHash} multiline />
+        <CopiableText textToCopy={input.txHash}>
+          <Text style={styles.addressText}>{input.txHash}</Text>
+
+          <Space width="sm" />
+
+          <Text style={styles.index}>{`#${input.txIndex}`}</Text>
+
+          <Space width="sm" />
+        </CopiableText>
       </View>
 
       <Space height="sm" />
 
       <View style={styles.tokenItems}>
-        {input.assets.map((asset) => (
-          <TokenItem key={asset.name} label={asset.label} isPrimaryToken={asset.isPrimary} />
+        {input.assets.map((asset, index) => (
+          <TokenItem tokenInfo={asset.tokenInfo} key={index} label={asset.label} isPrimaryToken={asset.isPrimary} />
         ))}
       </View>
     </View>
   )
 }
 const Outputs = ({outputs}: {outputs: FormattedOutputs}) => {
-  return outputs.map((output) => <Output key={output.address} output={output} />)
+  return outputs.map((output, index) => <Output key={`${output.address}-${index}`} output={output} />)
 }
 
 const Output = ({output}: {output: FormattedOutput}) => {
@@ -83,14 +92,22 @@ const Output = ({output}: {output: FormattedOutput}) => {
 
         <Space height="lg" />
 
-        <Address address={output.address} multiline />
+        <CopiableText textToCopy={output.address}>
+          <Text style={styles.addressText}>{output.address}</Text>
+        </CopiableText>
       </View>
 
       <Space height="sm" />
 
       <View style={styles.tokenItems}>
-        {output.assets.map((asset) => (
-          <TokenItem isSent={false} key={asset.name} label={asset.label} isPrimaryToken={asset.isPrimary} />
+        {output.assets.map((asset, index) => (
+          <TokenItem
+            key={index}
+            tokenInfo={asset.tokenInfo}
+            isSent={false}
+            label={asset.label}
+            isPrimaryToken={asset.isPrimary}
+          />
         ))}
       </View>
     </View>
@@ -177,6 +194,15 @@ const useStyles = () => {
     },
     feeValue: {
       ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
+    },
+    addressText: {
+      ...atoms.flex_1,
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
+    },
+    index: {
+      ...atoms.body_2_md_medium,
       color: color.text_gray_medium,
     },
   })
