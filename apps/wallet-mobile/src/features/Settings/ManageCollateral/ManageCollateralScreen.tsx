@@ -1,6 +1,4 @@
-import {toBigInt} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -11,6 +9,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
+  useWindowDimensions,
   View,
   ViewProps,
 } from 'react-native'
@@ -21,20 +20,25 @@ import {Button} from '../../../components/Button/Button'
 import {CopyButton} from '../../../components/CopyButton'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
 import {Icon} from '../../../components/Icon'
+import {Info} from '../../../components/Icon/Info'
+import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {Text} from '../../../components/Text'
-import {SettingsStackRoutes, useUnsafeParams} from '../../../kernel/navigation'
+import {SettingsStackRoutes, useUnsafeParams, useWalletNavigation} from '../../../kernel/navigation'
 import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {RawUtxo} from '../../../yoroi-wallets/types/other'
-import {YoroiEntry} from '../../../yoroi-wallets/types/yoroi'
+import {YoroiEntry, YoroiSignedTx} from '../../../yoroi-wallets/types/yoroi'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {TokenAmountItem} from '../../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {useReviewTx} from '../../ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
+import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
 import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
 
@@ -44,23 +48,20 @@ export const ManageCollateralScreen = () => {
     wallet,
     meta: {addressMode},
   } = useSelectedWallet()
+  const screenHeight = useWindowDimensions().height
   const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
   const navigateTo = useNavigateTo()
+  const {openModal} = useModal()
   const strings = useStrings()
   const balances = useBalances(wallet)
+  const {navigateToTxReview} = useWalletNavigation()
+  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, operationsChanged} = useReviewTx()
   const lockedAmount = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
 
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 
-  const {
-    reset: resetSendState,
-    receiverResolveChanged,
-    amountChanged,
-    tokenSelectedChanged,
-    unsignedTxChanged: yoroiUnsignedTxChanged,
-  } = useTransfer()
   const {mutate: createUnsignedTx, isLoading: isLoadingTx} = useMutation({
     mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
     retry: false,
@@ -76,25 +77,27 @@ export const ManageCollateralScreen = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setCollateralId(collateralId)
   }
+
+  const onSuccess = (signedTx: YoroiSignedTx) => {
+    navigateTo.submittedTx()
+    const collateralId = `${signedTx.signedTx.id}:0`
+    setCollateralId(collateralId)
+  }
+
+  const onError = () => {
+    navigateTo.failedTx()
+  }
+
   const createCollateralTransaction = () => {
-    const address = wallet.externalAddresses[0]
-    const amount: Portfolio.Token.Amount = {
-      quantity: toBigInt(collateralConfig.minLovelace, wallet.portfolioPrimaryTokenInfo.decimals),
-      info: wallet.portfolioPrimaryTokenInfo,
-    }
-
-    // populate for confirmation screen
-    resetSendState()
-    receiverResolveChanged(address)
-    tokenSelectedChanged(amount.info.id)
-    amountChanged(amount)
-
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
     createUnsignedTx([createCollateralEntry(wallet)], {
       onSuccess: (yoroiUnsignedTx) => {
-        yoroiUnsignedTxChanged(yoroiUnsignedTx)
-        navigateTo.confirmTx()
+        unsignedTxChanged(yoroiUnsignedTx)
+        operationsChanged([<Operation key="0" />])
+        onSuccessChanged(onSuccess)
+        onErrorChanged(onError)
+        navigateToTxReview()
       },
     })
   }
@@ -124,6 +127,14 @@ export const ManageCollateralScreen = () => {
     }
 
     createCollateralTransaction()
+  }
+
+  const handleCollateralInfoModal = () => {
+    openModal(
+      strings.initialCollateralInfoModalTitle,
+      <InitialCollateralInfoModal onConfirm={handleGenerateCollateral} />,
+      Math.min(screenHeight * 0.9, 650),
+    )
   }
 
   const shouldShowPrimaryButton = !hasCollateral || didSpend
@@ -169,7 +180,7 @@ export const ManageCollateralScreen = () => {
       </ScrollView>
 
       {shouldShowPrimaryButton && (
-        <Button title={strings.generateCollateral} onPress={handleGenerateCollateral} disabled={isLoading} />
+        <Button title={strings.generateCollateral} onPress={handleCollateralInfoModal} disabled={isLoading} />
       )}
 
       {shouldShowBackButton && params?.backButton && (
@@ -223,27 +234,58 @@ const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
   )
 }
 
+const Operation = () => {
+  const {styles, colors} = useStyles()
+  const strings = useStrings()
+  const {openModal} = useModal()
+
+  const handleOnPressInfo = () => {
+    openModal(strings.collateralInfoModalTitle, <CollateralInfoModal />, 500)
+  }
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationText}>{strings.collateralInfoModalLabel}</Text>
+
+      <Space width="xs" />
+
+      <TouchableOpacity onPress={handleOnPressInfo}>
+        <Info size={24} color={colors.iconColor} />
+      </TouchableOpacity>
+    </View>
+  )
+}
+
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       backgroundColor: color.bg_color_max,
-      flex: 1,
-      paddingHorizontal: 16,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     amountItem: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.align_center,
     },
     heading: {
-      flex: 1,
+      ...atoms.flex_1,
       alignSelf: 'center',
     },
+    operation: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+    },
+    operationText: {
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
+    },
   })
+
   const colors = {
-    iconColor: color.gray_max,
+    iconColor: color.gray_900,
   }
 
-  return {styles, colors}
+  return {styles, colors} as const
 }

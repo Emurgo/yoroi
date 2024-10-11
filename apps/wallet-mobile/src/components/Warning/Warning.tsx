@@ -5,7 +5,10 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Icon} from '../Icon'
 import {Space} from '../Space/Space'
 
-type Props = {content: ReactNode; iconSize?: number}
+type Props = {
+  content: ReactNode
+  iconSize?: number
+}
 
 export const Warning = ({content, iconSize = 30}: Props) => {
   const {styles, colors} = useStyles()
@@ -26,8 +29,8 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     notice: {
       backgroundColor: color.sys_yellow_100,
-      padding: 12,
-      borderRadius: 8,
+      ...atoms.p_md,
+      ...atoms.rounded_sm,
     },
     text: {
       ...atoms.body_2_md_regular,
@@ -39,5 +42,5 @@ const useStyles = () => {
     yellow: color.sys_orange_500,
   }
 
-  return {colors, styles}
+  return {colors, styles} as const
 }

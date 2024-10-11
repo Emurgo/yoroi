@@ -24,6 +24,7 @@ import {useLinksShowActionResult} from './features/Links/common/useLinksShowActi
 import {MenuNavigator} from './features/Menu/Menu'
 import {PortfolioNavigator} from './features/Portfolio/PortfolioNavigator'
 import {CatalystNavigator} from './features/RegisterCatalyst/CatalystNavigator'
+import {ReviewTxNavigator} from './features/ReviewTx/ReviewTxNavigator'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
 import {NetworkTag} from './features/Settings/ChangeNetwork/NetworkTag'
@@ -258,6 +259,8 @@ export const WalletNavigator = () => {
 
         <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 
+        <Stack.Screen name="review-tx-routes" options={{headerShown: false}} component={ReviewTxNavigator} />
+
         <Stack.Screen
           name="voting-registration"
           options={{headerShown: false}}
@@ -296,7 +299,7 @@ const useStyles = () => {
     divider: color.gray_200,
   }
 
-  return {colors, styles}
+  return {colors, styles} as const
 }
 
 const messages = defineMessages({

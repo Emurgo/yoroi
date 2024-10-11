@@ -6,11 +6,11 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {FadeIn} from '../../../../../../components/FadeIn'
+import {MediaPreview} from '../../../../../../components/MediaPreview/MediaPreview'
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
 import {NftRoutes, useParams} from '../../../../../../kernel/navigation'
 import {isEmptyString} from '../../../../../../kernel/utils'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
-import {MediaPreview} from '../../../../common/MediaPreview/MediaPreview'
 
 type Params = NftRoutes['nft-details']
 
