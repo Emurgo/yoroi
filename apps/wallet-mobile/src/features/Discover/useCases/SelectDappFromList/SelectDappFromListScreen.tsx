@@ -3,6 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 
+import {SimpleTab} from '../../../../components/SimpleTab/SimpleTab'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
@@ -13,7 +14,6 @@ import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useStrings} from '../../common/useStrings'
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
 import {CountDAppsConnected} from './CountDAppsConnected/CountDAppsConnected'
-import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
 import {DAppListItem} from './DAppListItem/DAppListItem'
 import {DAppTypes} from './DAppTypes/DAppTypes'
 import {WelcomeDAppModal} from './WelcomeDAppModal'
@@ -153,13 +153,13 @@ const HeaderControl = ({
     <>
       {hasConnectedDapps && (
         <View style={styles.tabsContainer}>
-          <DAppExplorerTabItem
+          <SimpleTab
             name={strings.connected}
             isActive={currentTab === DAppTabs.connected}
             onPress={() => onTabChange(DAppTabs.connected)}
           />
 
-          <DAppExplorerTabItem
+          <SimpleTab
             name={strings.recommended}
             isActive={currentTab === DAppTabs.recommended}
             onPress={() => onTabChange(DAppTabs.recommended)}

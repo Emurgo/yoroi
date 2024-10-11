@@ -93,7 +93,6 @@ export const SaveReadOnlyWalletScreen = () => {
             <WalletInfoView normalizedPath={normalizedPath} publicKeyHex={publicKeyHex} />
           </Boundary>
         }
-        buttonStyle={styles.walletFormButtonStyle}
         isWaiting={isLoading}
       />
     </SafeAreaView>
@@ -145,9 +144,6 @@ const styles = StyleSheet.create({
   walletFormStyle: {
     paddingTop: 0,
     paddingHorizontal: 0,
-  },
-  walletFormButtonStyle: {
-    marginHorizontal: 0,
   },
 })
 

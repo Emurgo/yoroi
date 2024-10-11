@@ -39,7 +39,7 @@ export const EditBuyAmount = () => {
       touched={isBuyTouched}
       inputRef={buyInputRef}
       error={buyError}
-      testId="swap:buy-edit"
+      testID="swap:buy-edit"
     />
   )
 }

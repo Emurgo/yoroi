@@ -10,7 +10,6 @@ import {
   swapStorageMaker,
 } from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {TransferProvider} from '@yoroi/transfer'
 import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -25,6 +24,7 @@ import {useLinksShowActionResult} from './features/Links/common/useLinksShowActi
 import {MenuNavigator} from './features/Menu/Menu'
 import {PortfolioNavigator} from './features/Portfolio/PortfolioNavigator'
 import {CatalystNavigator} from './features/RegisterCatalyst/CatalystNavigator'
+import {ReviewTxNavigator} from './features/ReviewTx/ReviewTxNavigator'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
 import {NetworkTag} from './features/Settings/ChangeNetwork/NetworkTag'
@@ -149,6 +149,7 @@ const WalletTabNavigator = () => {
 
           <Tab.Screen
             name="portfolio"
+            initialParams={{screen: 'dashboard-portfolio'}}
             options={{
               tabBarIcon: ({focused}) =>
                 focused ? (
@@ -199,7 +200,6 @@ const WalletTabNavigator = () => {
                 ),
               tabBarLabel: strings.menuTabBarLabel,
               tabBarTestID: 'menuTabBarButton',
-              headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
             }}
           />
         </Tab.Navigator>
@@ -233,51 +233,51 @@ export const WalletNavigator = () => {
   }
 
   return (
-    <TransferProvider>
-      <SearchProvider>
-        <Stack.Navigator
-          screenOptions={{
-            ...navOptions,
-            headerLeft: undefined,
+    <SearchProvider>
+      <Stack.Navigator
+        screenOptions={{
+          ...navOptions,
+          headerLeft: undefined,
+        }}
+      >
+        <Stack.Screen
+          name="wallet-selection"
+          options={{
+            title: strings.walletSelectionScreenHeader,
+            headerTitle: ({children}) => <NetworkTag directChangeActive>{children}</NetworkTag>,
           }}
-        >
-          <Stack.Screen
-            name="wallet-selection"
-            options={{
-              title: strings.walletSelectionScreenHeader,
-              headerTitle: ({children}) => <NetworkTag directChangeActive>{children}</NetworkTag>,
-            }}
-            component={SelectWalletFromList}
-          />
+          component={SelectWalletFromList}
+        />
 
-          <Stack.Screen //
-            name="setup-wallet"
-            options={{headerShown: false}}
-            component={SetupWalletNavigator}
-          />
+        <Stack.Screen //
+          name="setup-wallet"
+          options={{headerShown: false}}
+          component={SetupWalletNavigator}
+        />
 
-          <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
+        <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
 
-          <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
+        <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 
-          <Stack.Screen
-            name="voting-registration"
-            options={{headerShown: false}}
-            getComponent={() => CatalystNavigator}
-          />
+        <Stack.Screen name="review-tx-routes" options={{headerShown: false}} component={ReviewTxNavigator} />
 
-          <Stack.Screen
-            name="toggle-analytics-settings"
-            options={{headerShown: false}}
-            component={ToggleAnalyticsSettingsNavigator}
-          />
+        <Stack.Screen
+          name="voting-registration"
+          options={{headerShown: false}}
+          getComponent={() => CatalystNavigator}
+        />
 
-          <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
+        <Stack.Screen
+          name="toggle-analytics-settings"
+          options={{headerShown: false}}
+          component={ToggleAnalyticsSettingsNavigator}
+        />
 
-          <Stack.Screen name="staking-dashboard" options={{headerShown: false}} component={DashboardNavigator} />
-        </Stack.Navigator>
-      </SearchProvider>
-    </TransferProvider>
+        <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
+
+        <Stack.Screen name="staking-dashboard" options={{headerShown: false}} component={DashboardNavigator} />
+      </Stack.Navigator>
+    </SearchProvider>
   )
 }
 
@@ -294,12 +294,12 @@ const useStyles = () => {
 
   const colors = {
     active: color.text_primary_max,
-    inactive: color.text_gray_medium,
+    inactive: color.text_gray_low,
     background: color.bg_color_max,
     divider: color.gray_200,
   }
 
-  return {colors, styles}
+  return {colors, styles} as const
 }
 
 const messages = defineMessages({

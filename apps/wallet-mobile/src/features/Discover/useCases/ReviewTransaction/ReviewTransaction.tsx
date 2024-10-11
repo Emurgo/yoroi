@@ -131,7 +131,7 @@ export const ReviewTransaction = () => {
       </ScrollView>
 
       <View style={[styles.buttonArea, {borderTopWidth: scrollbarShown ? 1 : 0}]}>
-        <Button title={strings.confirm} shelleyTheme onPress={handleOnConfirm} />
+        <Button title={strings.confirm} onPress={handleOnConfirm} />
       </View>
     </SafeAreaView>
   )
@@ -447,7 +447,7 @@ const useConnectorPromptRootKey = () => {
   }, [promptRootKey])
 }
 
-const useSignTxWithHW = () => {
+export const useSignTxWithHW = () => {
   const {confirmHWConnection, closeModal} = useConfirmHWConnectionModal()
   const {wallet, meta} = useSelectedWallet()
 

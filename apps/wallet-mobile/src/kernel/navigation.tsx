@@ -107,8 +107,7 @@ export const defaultMaterialTopTabNavigationOptions = (
 // ROUTES
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
-  'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
-  portfolio: NavigatorScreenParams<Portfolio2Routes>
+  portfolio: NavigatorScreenParams<PortfolioRoutes>
   discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
@@ -118,7 +117,7 @@ export type WalletStackRoutes = {
   'wallet-selection': undefined
   'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
-  'nft-details-routes': NavigatorScreenParams<NftRoutes>
+  'review-tx-routes': NavigatorScreenParams<ReviewTxRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
@@ -154,7 +153,6 @@ export type TxHistoryRoutes = {
   'receive-specific-amount': undefined
   'receive-multiple': undefined
   'send-start-tx': undefined
-  'send-confirm-tx': undefined
   'send-submitted-tx': {txId: string}
   'send-failed-tx': undefined
   'send-list-amounts-to-send': undefined
@@ -284,7 +282,7 @@ export type DashboardRoutes = {
   'delegation-failed-tx': undefined
 }
 
-export type Portfolio2Routes = {
+export type PortfolioRoutes = {
   'dashboard-portfolio': undefined
   'portfolio-tokens-list': undefined
   'portfolio-token-details': {id: Portfolio.Token.Id}
@@ -293,6 +291,15 @@ export type Portfolio2Routes = {
     id: string
   }
   history: NavigatorScreenParams<TxHistoryRoutes>
+}
+
+export type ReviewTxRoutes = {
+  'review-tx': undefined
+}
+
+export type PortfolioTokenListTabRoutes = {
+  'wallet-token': undefined
+  'dapps-token': undefined
 }
 
 export type VotingRegistrationRoutes = {
@@ -336,11 +343,7 @@ type MenuRoutes = {
   'voting-registration': undefined
 }
 
-type PortfolioRoutes = {
-  'portfolio-dashboard': undefined
-}
-
-export type AppRoutes = PortfolioRoutes & {
+export type AppRoutes = {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined
@@ -451,6 +454,15 @@ export const useWalletNavigation = () => {
           params: {
             screen: 'send-start-tx',
           },
+        },
+      })
+    },
+
+    navigateToTxReview: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'review-tx-routes',
+        params: {
+          screen: 'review-tx',
         },
       })
     },
@@ -625,7 +637,6 @@ const routesWithTabBar: Record<keyof WalletTabRoutes, string[]> = {
   portfolio: ['dashboard-portfolio'],
   discover: ['discover-select-dapp-from-list'],
   menu: ['_menu'],
-  'staking-dashboard': ['staking-dashboard-main'],
 }
 
 const getFocusedRouteName = (state: Partial<NavigationState> | NavigationState['routes'][0]['state']): string[] => {

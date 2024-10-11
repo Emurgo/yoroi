@@ -30,6 +30,8 @@ export const black: ThemedPalette = {
   el_gray_min: darkPalette.gray_400, // input stroke, disabled state for most components
   el_secondary: darkPalette.secondary_600, // success state
 
+  input_selected: `${darkPalette.primary_200}${opacity._80}`,
+
   mobile_overlay: `${darkPalette.black_static}${opacity._64}`, // mobile bottom sheet overlay
   mobile_bg_blur: `${darkPalette.gray_50}${opacity._80}`, // mobile bottom sheet background
 

@@ -18,50 +18,40 @@ export const SanchonetFaucetBanner = () => {
   }
 
   return (
-    <>
-      <View style={styles.root}>
-        <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradientColor}>
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>{strings.sanchoFaucetBannerTitle}</Text>
+    <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradientColor}>
+      <View style={styles.viewTitle}>
+        <Text style={styles.title}>{strings.sanchoFaucetBannerTitle}</Text>
 
-            <Space height="xs" />
-          </View>
-
-          <View style={styles.content}>
-            <View style={styles.contentInner}>
-              <Spacer height={8} />
-
-              <Text style={styles.text}>{strings.sanchoFaucetBannerText}</Text>
-
-              <Space height="lg" />
-
-              <Button
-                testID="rampOnOffButton"
-                shelleyTheme
-                title={strings.sanchoFaucetBannerButtonText}
-                onPress={handleOnPress}
-                style={styles.spaceButton}
-              />
-            </View>
-
-            <View style={styles.logo}>
-              <PreprodFaucetBannerLogo />
-            </View>
-          </View>
-        </LinearGradient>
+        <Space height="xs" />
       </View>
 
-      <Spacer height={18} />
-    </>
+      <View style={styles.content}>
+        <View style={styles.contentInner}>
+          <Spacer height={8} />
+
+          <Text style={styles.text}>{strings.sanchoFaucetBannerText}</Text>
+
+          <Space height="lg" />
+
+          <Button
+            testID="rampOnOffButton"
+            title={strings.sanchoFaucetBannerButtonText}
+            onPress={handleOnPress}
+            style={styles.spaceButton}
+          />
+        </View>
+
+        <View style={styles.logo}>
+          <PreprodFaucetBannerLogo />
+        </View>
+      </View>
+    </LinearGradient>
   )
 }
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-    },
     gradient: {
       ...atoms.flex_1,
       opacity: 1,

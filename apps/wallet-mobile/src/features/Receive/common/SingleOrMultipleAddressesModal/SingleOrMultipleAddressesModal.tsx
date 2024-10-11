@@ -3,7 +3,7 @@ import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
@@ -55,14 +55,9 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
       <Spacer fill height={16} />
 
       <View style={styles.actions}>
-        <Button
-          withoutBackground
-          textStyles={styles.multipleButtonTitle}
-          title={strings.selectMultiple}
-          onPress={handleOnMultiple}
-        />
+        <Button type={ButtonType.Text} title={strings.selectMultiple} onPress={handleOnMultiple} />
 
-        <Button shelleyTheme title={strings.singleAddressWallet} onPress={handleOnSingle} />
+        <Button title={strings.singleAddressWallet} onPress={handleOnSingle} />
       </View>
     </View>
   )
@@ -80,16 +75,16 @@ const useStyles = () => {
       ...atoms.py_lg,
     },
     actions: {
-      ...atoms.self_stretch,
+      ...atoms.flex_col,
+      ...atoms.gap_sm,
+      ...atoms.w_full,
+      height: 120,
     },
     details: {
       color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
       ...atoms.justify_center,
       ...atoms.text_center,
-    },
-    multipleButtonTitle: {
-      color: color.text_primary_max,
     },
   })
 

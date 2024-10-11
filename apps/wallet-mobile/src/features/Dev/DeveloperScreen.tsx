@@ -88,8 +88,6 @@ export const DeveloperScreen = () => {
           onPress={() => storageVersionMaker(rootStorage).remove()}
         />
 
-        <Button title="Portfolio" style={styles.button} onPress={() => navigation.navigate('portfolio-dashboard')} />
-
         <Button
           title="Logout"
           style={styles.button}
@@ -193,7 +191,6 @@ export const DeveloperScreen = () => {
             <Button
               disabled={isLoading || addresses.split(',').length > 50 || addresses.length === 0}
               style={styles.button}
-              shelleyTheme
               onPress={() => {
                 storage
                   .keys('/wallet/', false)

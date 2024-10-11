@@ -125,13 +125,7 @@ export const EditSlippageScreen = () => {
           </View>
         </ScrollView>
 
-        <Button
-          testID="applyButton"
-          shelleyTheme
-          title={strings.apply}
-          disabled={isButtonDisabled}
-          onPress={onSubmit}
-        />
+        <Button testID="applyButton" title={strings.apply} disabled={isButtonDisabled} onPress={onSubmit} />
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
@@ -215,7 +209,7 @@ const useStyles = () => {
 
   const colors = {
     background: color.gray_100,
-    cursor: color.text_gray_medium,
+    cursor: color.input_selected,
   }
 
   return {styles, colors}

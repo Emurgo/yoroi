@@ -5,7 +5,7 @@ import {Linking, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {z} from 'zod'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../../components/Button/Button'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation'
@@ -46,21 +46,11 @@ export const ShowSubmittedTxScreen = () => {
         <Spacer height={20} />
 
         {isString(params?.txId) && (
-          <Button
-            onPress={navigateToExplorer}
-            title={strings.seeOnExplorer}
-            style={styles.explorerButton}
-            outlineShelley
-          />
+          <Button type={ButtonType.Text} size="S" onPress={navigateToExplorer} title={strings.seeOnExplorer} />
         )}
 
         <View style={styles.bottomFixed}>
-          <Button
-            onPress={() => walletNavigate.navigateToTxHistory()}
-            title={strings.goToTransactions}
-            style={styles.button}
-            shelleyTheme
-          />
+          <Button onPress={() => walletNavigate.navigateToTxHistory()} title={strings.goToTransactions} />
         </View>
       </View>
     </SafeAreaView>
@@ -99,12 +89,6 @@ const useStyles = () => {
       ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 300,
-    },
-    button: {
-      paddingHorizontal: 20,
-    },
-    explorerButton: {
-      borderColor: 'transparent',
     },
   })
 

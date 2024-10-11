@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Alert, Platform, StyleSheet, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
@@ -39,7 +39,6 @@ export const SelectHwConnectionModal = () => {
 }
 
 const SelectBluetoothSection = () => {
-  const {styles, colors} = useStyles()
   const strings = useStrings()
   const {useUSBChanged: USBChanged, walletImplementationChanged, setupTypeChanged} = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
@@ -64,10 +63,9 @@ const SelectBluetoothSection = () => {
       <Space height="xl" />
 
       <Button
-        iconImage={<Icon.Bluetooth color={colors.blue} />}
-        textStyles={styles.buttonText}
+        type={ButtonType.Secondary}
         title={strings.hwModalBtButton}
-        outlineShelley
+        icon={Icon.Bluetooth}
         onPress={() => request()}
       />
     </>
@@ -75,7 +73,7 @@ const SelectBluetoothSection = () => {
 }
 
 const SelectUsbSection = () => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
   const isAndroidUsbSupported = useIsAndroidUsbSupported()
   const {useUSBChanged: USBChanged, walletImplementationChanged, setupTypeChanged} = useSetupWallet()
@@ -105,10 +103,9 @@ const SelectUsbSection = () => {
       <Space height="xl" />
 
       <Button
-        iconImage={<Icon.Usb color={colors.blue} />}
-        textStyles={styles.buttonText}
+        type={ButtonType.Secondary}
         title={strings.hwModalUsbButton}
-        outlineShelley
+        icon={Icon.Usb}
         onPress={() => {
           USBChanged(true)
           navigateHw()
@@ -128,9 +125,6 @@ const useStyles = () => {
     modalText: {
       ...atoms.body_1_lg_regular,
       color: color.text_gray_medium,
-    },
-    buttonText: {
-      ...atoms.py_lg,
     },
     iosWarning: {
       color: color.text_gray_low,

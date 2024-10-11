@@ -114,13 +114,7 @@ export const StartMultiTokenTxScreen = () => {
 
         <Actions style={isScrollBarShown && styles.actionsScroll}>
           <Padding>
-            <NextButton
-              onPress={handleOnNext}
-              title={strings.next}
-              disabled={!canGoNext}
-              testID="nextButton"
-              shelleyTheme
-            />
+            <NextButton onPress={handleOnNext} title={strings.next} disabled={!canGoNext} testID="nextButton" />
           </Padding>
         </Actions>
       </SafeAreaView>

@@ -3,7 +3,7 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {Button, ButtonType} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
@@ -126,11 +126,11 @@ const MainnetWarningDialog = ({onCancel, onOk}: {onCancel: () => void; onOk: () 
       <Spacer fill />
 
       <View style={styles.warningModalActions}>
-        <Button shelleyTheme outlineOnLight title="Cancel" block onPress={onCancel} />
+        <Button size="S" type={ButtonType.Secondary} title="Cancel" onPress={onCancel} />
 
         <Space width="lg" />
 
-        <Button shelleyTheme title="Switch" block onPress={onOk} />
+        <Button size="S" title="Switch" onPress={onOk} />
       </View>
     </View>
   )

@@ -5,9 +5,9 @@ import React from 'react'
 import {ImageStyle, StyleSheet, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import placeholderLight from '../../../../assets/img/nft-placeholder.png'
-import placeholderDark from '../../../../assets/img/nft-placeholder-dark.png'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import placeholderLight from '../../assets/img/nft-placeholder.png'
+import placeholderDark from '../../assets/img/nft-placeholder-dark.png'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 
 type MediaPreviewProps = {
   info: Portfolio.Token.Info
@@ -64,7 +64,13 @@ export const MediaPreview = ({
 
       {loading && (
         <View style={[styles.skeletonWrapper, {width, height}]}>
-          <SkeletonPlaceholder enabled borderRadius={blurRadius} highlightColor={color.gray_200} speed={1000}>
+          <SkeletonPlaceholder
+            enabled
+            borderRadius={blurRadius}
+            backgroundColor={color.gray_100}
+            highlightColor={color.gray_200}
+            speed={1000}
+          >
             <View style={{width, height}} />
           </SkeletonPlaceholder>
         </View>

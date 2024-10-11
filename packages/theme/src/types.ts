@@ -59,6 +59,7 @@ export type BasePalette = {
 
   black_static: HexColor
   white_static: HexColor
+  green_static: HexColor
 
   sys_magenta_700: HexColor
   sys_magenta_600: HexColor
@@ -103,6 +104,8 @@ export type ThemedPalette = BasePalette & {
   el_gray_medium: HexColor
   el_gray_min: HexColor
   el_secondary: HexColor
+
+  input_selected: HexColor
 
   web_overlay: HexColor
   web_bg_sidebar_active: HexColor

@@ -64,7 +64,6 @@ export const AboutRecoveryPhraseScreen = () => {
         <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
 
         <Button
-          shelleyTheme
           title={strings.next}
           onPress={() => navigation.navigate('setup-wallet-recovery-phrase-mnemonic')}
           testID="setup-step1-next-button"

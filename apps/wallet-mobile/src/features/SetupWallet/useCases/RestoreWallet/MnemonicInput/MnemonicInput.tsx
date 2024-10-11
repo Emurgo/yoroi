@@ -92,7 +92,7 @@ export const MnemonicInput = ({
             mnenonicRefs.forEach((ref) => ref.current?.selectWord(''))
             mnenonicRefs[0].current?.focus()
           }}
-          testId="clearAll-button"
+          testID="clearAll-button"
         />
       )}
 
@@ -101,11 +101,11 @@ export const MnemonicInput = ({
   )
 }
 
-const ClearAllButton = ({onPress, testId}: {onPress: () => void; testId?: string}) => {
+const ClearAllButton = ({onPress, testID}: {onPress: () => void; testID?: string}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   return (
-    <View style={styles.textView} testID={testId}>
+    <View style={styles.textView} testID={testID}>
       <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
         <Text style={styles.clearAll}>{strings.clearAll}</Text>
       </TouchableOpacity>
@@ -314,7 +314,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
         }}
         onBlur={handleOnBlur}
         cursorColor={colors.primary_600} // only works for android
-        selectionColor={Platform.OS === 'android' ? colors.gray_100 : undefined} // on ios, selectionColor changes cursor and selection
+        selectionColor={Platform.OS === 'android' ? colors.input_selected : undefined} // on ios, selectionColor changes cursor and selection
         keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
         keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
       />

@@ -1,19 +1,19 @@
 import {ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, ViewStyle} from 'react-native'
 
 import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types/other'
 import {Received} from '../Icon/Received'
 import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'
 import {MultiParty} from './MultiParty'
+import {IconProps} from './type'
 
-type Props = {
-  transaction: TransactionInfo
-  size?: number
-}
-
-export const Direction = ({transaction, size = defaultSize}: Props) => {
+export const Direction = ({
+  transaction,
+  size = defaultSize,
+  containerStyle,
+}: IconProps & {transaction: TransactionInfo; containerStyle?: ViewStyle}) => {
   const {color} = useTheme()
   const {direction} = transaction
 
@@ -21,7 +21,7 @@ export const Direction = ({transaction, size = defaultSize}: Props) => {
   const IconComponent = iconMap[direction]
 
   return (
-    <View style={[styles.icon, {backgroundColor: iconStyles?.background}]}>
+    <View style={[styles.icon, {backgroundColor: iconStyles?.background}, containerStyle]}>
       <IconComponent color={iconStyles?.icon} size={iconStyles.size ?? size} />
     </View>
   )

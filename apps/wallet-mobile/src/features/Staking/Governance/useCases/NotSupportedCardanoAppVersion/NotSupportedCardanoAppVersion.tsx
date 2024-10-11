@@ -41,7 +41,7 @@ export const NotSupportedCardanoAppVersion = () => {
       <Spacer fill />
 
       <Actions>
-        <Button block title={strings.notSupportedVersionButton} shelleyTheme onPress={handleOnPress} />
+        <Button title={strings.notSupportedVersionButton} onPress={handleOnPress} />
       </Actions>
     </SafeArea>
   )

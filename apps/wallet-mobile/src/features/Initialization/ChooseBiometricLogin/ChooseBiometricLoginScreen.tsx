@@ -6,7 +6,7 @@ import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button} from '../../../components/Button/Button'
+import {Button, ButtonType} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'
 import {useEnableAuthWithOs} from '../../Auth/common/hooks'
 import {useStrings} from '../common'
@@ -36,9 +36,8 @@ export const ChooseBiometricLoginScreen = () => {
 
       <View>
         <Button
+          type={ButtonType.Text}
           title={strings.ignoreButton}
-          withoutBackground
-          textStyles={styles.textOutlineButton}
           onPress={() => {
             setScreenShown()
           }}
@@ -49,7 +48,6 @@ export const ChooseBiometricLoginScreen = () => {
 
         <Button
           title={strings.enableButton}
-          style={styles.enableButton}
           onPress={async () => {
             const isSimulator = await DeviceInfo.isEmulator()
             if (isSimulator) {
@@ -96,12 +94,6 @@ const useStyles = () => {
       ...atoms.heading_3_medium,
       ...atoms.text_center,
       ...atoms.px_lg,
-    },
-    textOutlineButton: {
-      color: color.text_gray_max,
-    },
-    enableButton: {
-      backgroundColor: color.primary_500,
     },
   })
 

@@ -5,7 +5,7 @@ import {Chain, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSwapForm} from '../../../Swap/common/SwapFormProvider'
@@ -18,7 +18,7 @@ type Props = {
   tokenInfo: Portfolio.Token.Info
 }
 export const Actions = ({tokenInfo}: Props) => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const swap = useSwap()
@@ -45,35 +45,25 @@ export const Actions = ({tokenInfo}: Props) => {
       from_asset: [
         {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
       ],
-      to_asset: [
-        {asset_name: tokenInfo.name ?? '', asset_ticker: tokenInfo.ticker ?? '', policy_id: tokenInfo.id ?? ''},
-      ],
+      to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.id}],
       order_type: swap.orderData.type,
       slippage_tolerance: swap.orderData.slippage,
     })
 
-    navigateTo.swap()
+    navigateTo.resetTabAndSwap()
   }
 
   return (
     <View style={styles.root}>
       <View style={styles.container}>
         <Button
-          block
-          shelleyTheme
-          outlineOnLight
-          title={strings.send.toLocaleUpperCase()}
-          startContent={<Icon.Send color={colors.primary} size={24} />}
-          onPress={navigateTo.send}
+          type={ButtonType.Secondary}
+          title={strings.send}
+          icon={Icon.Send}
+          onPress={navigateTo.resetTabAndSend}
         />
 
-        <Button
-          block
-          shelleyTheme
-          title={strings.swap.toLocaleUpperCase()}
-          startContent={<Icon.Swap color={colors.white} size={24} />}
-          onPress={handleOnSwap}
-        />
+        <Button title={strings.swap} icon={Icon.Swap} onPress={handleOnSwap} />
       </View>
     </View>
   )

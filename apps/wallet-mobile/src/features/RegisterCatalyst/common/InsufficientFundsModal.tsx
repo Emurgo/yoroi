@@ -23,7 +23,7 @@ export const InsufficientFundsModal = () => {
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const fmtMinPrimaryBalance = formatter({
     info: wallet.portfolioPrimaryTokenInfo,
-    quantity: catalystConfig.displayedMinAda,
+    quantity: catalystConfig.minAda,
   })
   const fmtPrimaryBalance = formatter(primaryBalance)
 
@@ -36,7 +36,7 @@ export const InsufficientFundsModal = () => {
         })}
       </Text>
 
-      <Button shelleyTheme title={strings.back} onPress={closeModal} textStyles={styles.button} />
+      <Button title={strings.back} onPress={closeModal} />
 
       {Platform.OS === 'android' && <Space height="lg" />}
     </View>
@@ -63,14 +63,12 @@ const useStyles = () => {
     container: {
       ...atoms.px_lg,
       ...atoms.flex_1,
+      ...atoms.gap_lg,
       ...atoms.justify_between,
     },
     text: {
       color: color.gray_max,
       ...atoms.body_1_lg_regular,
-    },
-    button: {
-      ...atoms.button_1_lg,
     },
   })
 

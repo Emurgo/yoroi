@@ -42,14 +42,7 @@ export const BuyBannerBig = () => {
 
         <Space />
 
-        <Button
-          testID="rampOnOffButton"
-          mainTheme
-          title={strings.buyCrypto.toLocaleUpperCase()}
-          onPress={handleExchange}
-          style={styles.spaceButton}
-          textStyles={styles.spaceButtonText}
-        />
+        <Button testID="rampOnOffButton" size="S" title={strings.buyCrypto} onPress={handleExchange} />
       </LinearGradient>
     </View>
   )
@@ -70,9 +63,6 @@ const useStyles = () => {
       flexDirection: 'column',
       alignItems: 'center',
     },
-    spaceButtonText: {
-      ...atoms.p_0,
-    },
     label: {
       ...atoms.heading_3_medium,
       color: color.gray_max,
@@ -83,9 +73,6 @@ const useStyles = () => {
       ...atoms.px_2xl,
       color: color.gray_max,
       textAlign: 'center',
-    },
-    spaceButton: {
-      ...atoms.px_lg,
     },
   })
   const colors = {

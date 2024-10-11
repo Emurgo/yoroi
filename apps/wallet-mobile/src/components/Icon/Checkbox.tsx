@@ -1,11 +1,13 @@
 import * as React from 'react'
-import Svg, {ClipPath, Defs, G, Path, Rect, SvgProps} from 'react-native-svg'
+import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-export const Checkbox = (props: SvgProps) => {
+import {IconProps} from './type'
+
+export const Checkbox = ({size = 16, color = '#4B6DDE'}: IconProps) => {
   return (
-    <Svg width={16} height={16} viewBox="0 0 16 16" fill="none" {...props}>
+    <Svg width={size} height={size} viewBox="0 0 16 16" fill="none">
       <G clipPath="url(#clip0_24683_1099)">
-        <Rect width={16} height={16} rx={2} fill="#4B6DDE" />
+        <Rect width={size} height={size} rx={2} fill={color} />
 
         <Path
           fillRule="evenodd"
@@ -17,7 +19,7 @@ export const Checkbox = (props: SvgProps) => {
 
       <Defs>
         <ClipPath id="clip0_24683_1099">
-          <Rect width={16} height={16} rx={2} fill="#fff" />
+          <Rect width={size} height={size} rx={2} fill="#fff" />
         </ClipPath>
       </Defs>
     </Svg>

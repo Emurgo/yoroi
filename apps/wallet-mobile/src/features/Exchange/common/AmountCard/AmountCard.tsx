@@ -19,7 +19,7 @@ type AmountCardProps = {
   inputEditable?: boolean
   touched?: boolean
   amount: Portfolio.Token.Amount
-  testId?: string
+  testID?: string
 }
 
 export const AmountCard: React.FC<AmountCardProps> = ({
@@ -31,7 +31,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
   inputEditable,
   touched,
   amount,
-  testId,
+  testID,
 }: AmountCardProps) => {
   const [isFocused, setIsFocused] = React.useState(false)
 
@@ -75,7 +75,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               keyboardAppearance={isDark ? 'dark' : 'light'}
-              testID={testId}
+              testID={testID}
             />
           </Pressable>
 
@@ -196,7 +196,7 @@ const useStyles = () => {
   })
   const colors = {
     placeholder: color.gray_600,
-    focused: color.gray_600,
+    focused: color.input_selected,
     blur: color.gray_900,
   }
   return {styles, colors} as const

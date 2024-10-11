@@ -7,6 +7,7 @@ import {Accordion} from '../../../../../../components/Accordion/Accordion'
 import {CopyButton} from '../../../../../../components/CopyButton'
 import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {features} from '../../../../../../kernel/features'
+import {isEmptyString} from '../../../../../../kernel/utils'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioTokenDetailParams} from '../../../../common/hooks/useNavigateTo'
 import {useStrings} from '../../../../common/hooks/useStrings'
@@ -46,7 +47,7 @@ export const Overview = () => {
         <View style={styles.tokenInfoContainer}>
           <TokenInfoIcon size="sm" info={tokenInfo.info} imageStyle={styles.tokenLogo} />
 
-          <Text style={styles?.tokenName}>{tokenSymbol}</Text>
+          <Text style={styles.tokenName}>{tokenSymbol}</Text>
         </View>
 
         <Text style={styles.textBody}>{tokenInfo.info?.description}</Text>
@@ -58,7 +59,13 @@ export const Overview = () => {
 
           <Spacer height={4} />
 
-          <Text style={styles.textBody}>{tokenInfo.info?.website ?? '-'}</Text>
+          {!isEmptyString(tokenInfo.info?.website) ? (
+            <TouchableOpacity onPress={() => Linking.openURL(tokenInfo.info.website)}>
+              <Text style={styles.linkText}>{tokenInfo.info.website}</Text>
+            </TouchableOpacity>
+          ) : (
+            <Text style={styles.textBody}>-</Text>
+          )}
         </View>
 
         <Spacer height={24} />
@@ -70,9 +77,7 @@ export const Overview = () => {
 
               <Spacer height={4} />
 
-              <CopyButton value={policyId ?? ''} style={styles.copyButton}>
-                <Text style={styles.copyText}>{policyId ?? '--'}</Text>
-              </CopyButton>
+              <CopyButton title={policyId ?? '--'} value={policyId ?? ''} style={styles.copyButton} />
             </View>
 
             <Spacer height={24} />
@@ -82,9 +87,11 @@ export const Overview = () => {
 
               <Spacer height={4} />
 
-              <CopyButton value={tokenInfo.info?.fingerprint ?? ''} style={styles.copyButton}>
-                <Text style={styles.copyText}>{tokenInfo.info?.fingerprint ?? '--'}</Text>
-              </CopyButton>
+              <CopyButton
+                title={tokenInfo.info?.fingerprint ?? '--'}
+                value={tokenInfo.info?.fingerprint ?? ''}
+                style={styles.copyButton}
+              />
             </View>
 
             <Spacer height={24} />
@@ -107,8 +114,6 @@ export const Overview = () => {
           </View>
 
           <Spacer height={16} />
-
-          <View style={styles.divider} />
         </View>
       </Accordion>
 
@@ -163,26 +168,21 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.gap_lg,
     },
+    linkText: {
+      color: color.primary_500,
+      ...atoms.link_1_lg_underline,
+      ...atoms.flex_1,
+    },
     title: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
       color: color.gray_900,
-    },
-    divider: {
-      ...atoms.flex_1,
-      height: 1,
-      backgroundColor: color.gray_200,
     },
     copyButton: {
       ...atoms.flex_1,
       ...atoms.flex_row_reverse,
       ...atoms.align_start,
       ...atoms.gap_sm,
-    },
-    copyText: {
-      ...atoms.flex_1,
-      ...atoms.body_2_md_regular,
-      color: color.gray_600,
     },
   })
 

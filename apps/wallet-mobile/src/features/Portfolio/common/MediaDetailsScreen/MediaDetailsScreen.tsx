@@ -1,6 +1,6 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
-import {usePortfolioTokenDiscovery, usePortfolioTokenTraits} from '@yoroi/portfolio'
+import {traitValueExpander, usePortfolioTokenDiscovery, usePortfolioTokenTraits} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Explorers, Network, Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
@@ -19,6 +19,8 @@ import {
 import {Boundary} from '../../../../components/Boundary/Boundary'
 import {CopyButton} from '../../../../components/CopyButton'
 import {FadeIn} from '../../../../components/FadeIn'
+import {Hr} from '../../../../components/Hr/Hr'
+import {MediaPreview} from '../../../../components/MediaPreview/MediaPreview'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs/Tabs'
 import {Text} from '../../../../components/Text'
@@ -27,7 +29,6 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {NftRoutes} from '../../../../kernel/navigation'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioImageInvalidate} from '../hooks/usePortfolioImage'
-import {MediaPreview} from '../MediaPreview/MediaPreview'
 import {useNavigateTo} from '../navigation'
 
 export const MediaDetailsScreen = () => {
@@ -86,7 +87,7 @@ export const MediaDetailsScreen = () => {
             />
           </Tabs>
 
-          <Boundary>
+          <Boundary loading={{enabled: true}}>
             <Details info={amount.info} activeTab={activeTab} networkManager={networkManager} />
           </Boundary>
         </ScrollView>
@@ -157,15 +158,11 @@ const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
   )
 }
 
-const MetadataRow = ({title, copyText, children}: {title: string; children: ReactNode; copyText?: string}) => {
+const MetadataRow = ({title, children}: {title: string; children: ReactNode}) => {
   const styles = useStyles()
   return (
     <View style={styles.rowContainer}>
-      <View style={styles.rowBetween}>
-        <Text style={styles.title}>{title}</Text>
-
-        {copyText !== undefined ? <CopyButton value={copyText} /> : null}
-      </View>
+      <Text style={styles.title}>{title}</Text>
 
       <Spacer height={4} />
 
@@ -195,22 +192,16 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
         <Text style={styles.name}>{normalizeMetadataString(info.description)}</Text>
       </MetadataRow>
 
-      <MetadataRow title={strings.fingerprint} copyText={info.fingerprint}>
-        <Text style={styles.name}>{info.fingerprint}</Text>
+      <MetadataRow title={strings.fingerprint}>
+        <CopyButton title={info.fingerprint} value={info.fingerprint} />
       </MetadataRow>
 
-      <MetadataRow title={strings.policyId} copyText={policyId}>
-        <Text style={styles.name}>{policyId}</Text>
+      <MetadataRow title={strings.policyId}>
+        <CopyButton title={policyId} value={policyId} />
       </MetadataRow>
 
       {traits?.traits.map((trait) => (
-        <MetadataRow key={`${info.id}-trait-${trait.type}`} title={trait.type}>
-          <View style={styles.rowBetween}>
-            <Text style={styles.name}>{trait.value}</Text>
-
-            <Text style={styles.name}>{trait.rarity}</Text>
-          </View>
-        </MetadataRow>
+        <Trait key={`trait-${trait.type}`} trait={trait} />
       ))}
 
       <MetadataRow title={strings.detailsLinks}>
@@ -244,7 +235,7 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
         </View>
       </MetadataRow>
 
-      <HR />
+      <Hr />
 
       <Spacer height={24} />
     </View>
@@ -255,14 +246,29 @@ const normalizeMetadataString = (content?: unknown): string => {
   return !isString(content) || content.length === 0 ? '-' : content
 }
 
-const HR = () => (
-  <View
-    style={{
-      borderBottomWidth: 1,
-      borderColor: 'rgba(173, 174, 182, 0.3)',
-    }}
-  />
-)
+const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
+  const styles = useStyles()
+  const expandedTraitValue = traitValueExpander(trait.value)
+  const isOpenableLink = expandedTraitValue.type === 'link' && isSupportedUrl(expandedTraitValue.transformedValue)
+
+  return (
+    <MetadataRow title={trait.type}>
+      <View style={styles.rowBetween}>
+        {isOpenableLink && expandedTraitValue.type === 'link' ? (
+          <View style={[styles.linkContent, styles.flex]}>
+            <TouchableOpacity onPress={() => Linking.openURL(expandedTraitValue.transformedValue)}>
+              <Text style={styles.linkText}>{trait.value}</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <Text style={styles.name}>{trait.value}</Text>
+        )}
+
+        <Text style={styles.rarity}>{trait.rarity}</Text>
+      </View>
+    </MetadataRow>
+  )
+}
 
 const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
   const styles = useStyles()
@@ -272,9 +278,7 @@ const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
   return (
     <View>
       <View style={styles.copyMetadata}>
-        <CopyButton value={stringifiedMetadata} style={styles.copyButton}>
-          <Text style={styles.copyText}>{strings.copyMetadata}</Text>
-        </CopyButton>
+        <CopyButton title={strings.copyMetadata} value={stringifiedMetadata} style={styles.copyButton} />
       </View>
 
       <Spacer height={14} />
@@ -284,11 +288,16 @@ const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
   )
 }
 
+const isSupportedUrl = (url: string) => url.toLocaleLowerCase().startsWith('https')
+
 type ActiveTab = 'overview' | 'metadata'
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    flex: {
+      ...atoms.flex_1,
+    },
     copyButton: {
       flex: 1,
       display: 'flex',
@@ -303,14 +312,8 @@ const useStyles = () => {
     },
     linkText: {
       color: color.primary_500,
-      ...atoms.body_1_lg_regular,
-      flex: 1,
-      textDecorationLine: 'underline',
-    },
-    copyText: {
-      color: color.gray_900,
-      ...atoms.body_2_md_medium,
-      textTransform: 'uppercase',
+      ...atoms.link_1_lg_underline,
+      ...atoms.flex_1,
     },
     container: {
       flex: 1,
@@ -327,11 +330,10 @@ const useStyles = () => {
       paddingVertical: imagePadding,
     },
     rowBetween: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      flexWrap: 'nowrap',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_between,
+      ...atoms.gap_lg,
     },
     copyMetadata: {
       display: 'flex',
@@ -349,6 +351,13 @@ const useStyles = () => {
     name: {
       color: color.gray_600,
       ...atoms.body_2_md_regular,
+      ...atoms.flex_1,
+    },
+    rarity: {
+      minWidth: 60,
+      color: color.gray_600,
+      ...atoms.body_2_md_regular,
+      ...atoms.text_right,
     },
   })
   return styles

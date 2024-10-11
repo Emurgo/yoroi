@@ -133,7 +133,6 @@ const FullErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: Err
       {reset && (
         <Button
           title="Try again"
-          shelleyTheme
           onPress={() => {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             resetErrorBoundary()
@@ -163,7 +162,6 @@ const LargeErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: Er
       {reset && (
         <Button
           title="Try again"
-          shelleyTheme
           onPress={() => {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             resetErrorBoundary()
@@ -190,7 +188,6 @@ const SmallErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: Er
 
       {reset && (
         <Button
-          shelleyTheme
           title="Try again"
           onPress={() => {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
