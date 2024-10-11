@@ -58,7 +58,7 @@ export const ReviewTxScreen = () => {
       </MaterialTab.Navigator>
 
       <Actions>
-        <Button title={strings.confirm} shelleyTheme onPress={onConfirm} />
+        <Button title={strings.confirm} onPress={onConfirm} />
       </Actions>
     </SafeArea>
   )

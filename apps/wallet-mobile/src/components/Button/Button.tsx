@@ -1,203 +1,195 @@
-import {isNumber} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import React, {type ReactNode} from 'react'
-import {Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
+import React from 'react'
+import {ActivityIndicator, Pressable, PressableProps, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 
+import type {IconProps} from '../Icon/type'
 import {Text} from '../Text'
 
-export type ButtonProps = TouchableOpacityProps & {
-  title: string
-  outline?: boolean
-  outlineOnLight?: boolean
-  containerStyle?: ViewStyle
-  block?: boolean
-  iconImage?: number | ReactNode
-  withoutBackground?: boolean
-  shelleyTheme?: boolean
-  mainTheme?: boolean
-  warningTheme?: boolean
-  outlineShelley?: boolean
-  textStyles?: TextStyle
-  isCopying?: boolean
-  copiedText?: string
-  testId?: string
-  startContent?: ReactNode
-  endContent?: ReactNode
-}
+export const ButtonType = {
+  Primary: 'Primary',
+  Secondary: 'Secondary',
+  Critical: 'Critical',
+  Text: 'Text',
+  SecondaryText: 'SecondaryText',
+  Circle: 'Circle',
+  Link: 'Link',
+} as const
+
+export type ButtonType = (typeof ButtonType)[keyof typeof ButtonType]
+
+export type ButtonProps = {
+  type?: ButtonType
+  size?: 'M' | 'S'
+  title?: string
+  icon?: (p: IconProps) => React.JSX.Element
+  isLoading?: boolean
+  rightIcon?: boolean
+  style?: ViewStyle
+  fontOverride?: TextStyle
+} & Omit<PressableProps, 'style' | 'children'>
 
 export const Button = (props: ButtonProps) => {
-  const {
-    onPress,
-    title,
-    block,
-    style,
-    containerStyle,
-    outline,
-    outlineOnLight,
-    iconImage,
-    withoutBackground,
-    shelleyTheme,
-    mainTheme,
-    outlineShelley,
-    textStyles,
-    isCopying,
-    copiedText,
-    testId,
-    startContent,
-    endContent,
-    warningTheme,
-    ...rest
-  } = props
+  const {type, size, title, icon: Icon, isLoading, rightIcon, disabled, style, fontOverride, ...rest} = props
 
-  const {styles} = useStyles()
-  const {isDark} = useTheme()
+  const {styles, iconProps, iconPropsPressed} = useStyles({type, size, rightIcon, disabled, fontOverride})
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[block && styles.block, containerStyle]}
-      activeOpacity={0.5}
-      testID={testId}
+    <Pressable
+      disabled={isLoading || disabled}
+      style={({pressed}) => [styles.container, pressed && styles.containerPressed, style]}
       {...rest}
     >
-      {isCopying && (
-        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-          <Text style={styles.copiedText}>{copiedText}</Text>
-        </Animated.View>
+      {isLoading ? (
+        <ActivityIndicator {...iconProps} />
+      ) : (
+        ({pressed}) => (
+          <>
+            {Icon && (
+              <View style={styles.iconWrapper}>
+                <Icon {...(pressed ? iconPropsPressed : iconProps)} />
+              </View>
+            )}
+
+            {title != null && type !== ButtonType.Circle && (
+              <Text style={[styles.text, pressed && styles.textPressed]}>{title}</Text>
+            )}
+          </>
+        )
       )}
-
-      <View
-        style={[
-          styles.button,
-          outline && styles.buttonOutline,
-          outlineOnLight && styles.buttonOutlineOnLight,
-          props.disabled && styles.buttonDisabled,
-          withoutBackground && styles.buttonTransparent,
-          outlineShelley && styles.buttonOutlineShelley,
-          shelleyTheme && styles.shelleyTheme,
-          mainTheme && styles.mainTheme,
-          warningTheme && styles.warningTheme,
-          outlineOnLight && shelleyTheme && styles.shelleyOutlineOnLight,
-          style,
-        ]}
-      >
-        {isNumber(iconImage) ? <Image source={iconImage} /> : React.isValidElement(iconImage) ? iconImage : null}
-
-        {startContent != null ? startContent : null}
-
-        <Text
-          style={[
-            styles.text,
-            outlineOnLight && styles.textOutlineOnLight,
-            outlineOnLight && shelleyTheme && styles.textShelleyOutlineOnLight,
-            outlineShelley && styles.textOutlineShelley,
-            props.disabled && !outlineOnLight && styles.buttonDisabledText,
-            warningTheme && isDark && styles.warningThemeText,
-            textStyles,
-          ]}
-        >
-          {title}
-        </Text>
-
-        {endContent != null ? endContent : null}
-      </View>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 
-const useStyles = () => {
+type Colors = {
+  idle: string
+  pressed: string
+  disabled: string
+}
+
+const useStyles = ({
+  type = ButtonType.Primary,
+  size = 'M',
+  rightIcon,
+  disabled,
+  fontOverride,
+}: Pick<ButtonProps, 'type' | 'size' | 'rightIcon' | 'disabled' | 'fontOverride'>) => {
   const {color, atoms} = useTheme()
 
-  const buttonOutline = {
-    borderWidth: 2,
-    borderColor: color.gray_min,
-    backgroundColor: 'transparent',
+  const backgroundColors: Colors = {
+    [ButtonType.Primary]: {idle: color.primary_500, pressed: color.primary_600, disabled: color.primary_200},
+    [ButtonType.Secondary]: {idle: 'transparent', pressed: color.primary_100, disabled: 'transparent'},
+    [ButtonType.Critical]: {
+      idle: color.sys_magenta_500,
+      pressed: color.sys_magenta_600,
+      disabled: color.sys_magenta_300,
+    },
+    [ButtonType.Text]: {idle: 'transparent', pressed: color.gray_100, disabled: 'transparent'},
+    [ButtonType.SecondaryText]: {idle: 'transparent', pressed: color.gray_100, disabled: 'transparent'},
+    [ButtonType.Circle]: {idle: color.primary_500, pressed: color.primary_600, disabled: color.primary_200},
+    [ButtonType.Link]: {idle: 'transparent', pressed: 'transparent', disabled: 'transparent'},
+  }[type]
+
+  const foregroundColors: Colors = {
+    [ButtonType.Primary]: {idle: color.white_static, pressed: color.white_static, disabled: color.gray_min},
+    [ButtonType.Secondary]: {
+      idle: color.text_primary_medium,
+      pressed: color.text_primary_max,
+      disabled: color.text_primary_min,
+    },
+    [ButtonType.Critical]: {idle: color.white_static, pressed: color.white_static, disabled: color.white_static},
+    [ButtonType.Text]: {
+      idle: color.text_primary_medium,
+      pressed: color.text_primary_max,
+      disabled: color.text_primary_min,
+    },
+    [ButtonType.SecondaryText]: {
+      idle: color.text_gray_medium,
+      pressed: color.text_gray_max,
+      disabled: color.text_gray_min,
+    },
+    [ButtonType.Circle]: {idle: color.white_static, pressed: color.white_static, disabled: color.gray_min},
+    [ButtonType.Link]: {
+      idle: color.text_primary_medium,
+      pressed: color.text_primary_max,
+      disabled: color.text_primary_min,
+    },
+  }[type]
+
+  const backgroundColor = disabled ? backgroundColors.disabled : backgroundColors.idle
+  const foregroundColor = disabled ? foregroundColors.disabled : foregroundColors.idle
+
+  let shape: ViewStyle = {}
+  switch (type) {
+    case ButtonType.Primary:
+    case ButtonType.Secondary:
+    case ButtonType.Critical:
+      shape =
+        size === 'M'
+          ? {maxHeight: 56, ...atoms.py_lg, ...atoms.px_xl, ...atoms.gap_sm, ...atoms.rounded_sm}
+          : {maxHeight: 44, ...atoms.py_md, ...atoms.px_lg, ...atoms.gap_xs, ...atoms.rounded_sm}
+      break
+    case ButtonType.Text:
+    case ButtonType.SecondaryText:
+    case ButtonType.Link:
+      shape =
+        size === 'M'
+          ? {...atoms.p_md, ...atoms.gap_xs, ...atoms.rounded_sm}
+          : {...atoms.p_sm, ...atoms.gap_2xs, ...atoms.rounded_sm}
+      break
+    case ButtonType.Circle:
+      shape = {width: 56, height: 56, ...atoms.align_center, ...atoms.rounded_full}
+      break
   }
+  const font =
+    fontOverride ??
+    (type === ButtonType.Link
+      ? size === 'M'
+        ? atoms.link_1_lg
+        : atoms.link_2_md
+      : size === 'M'
+      ? atoms.button_1_lg
+      : atoms.button_2_md)
+
   const styles = StyleSheet.create({
-    block: {
-      flex: 1,
+    container: {
+      backgroundColor,
+      ...atoms.flex,
+      ...atoms.flex_grow,
+      ...atoms.flex_row,
+      ...atoms.align_start,
+      ...atoms.justify_center,
+      ...shape,
+      ...(rightIcon && atoms.flex_row_reverse),
+      ...(type === ButtonType.Secondary && {borderWidth: 2, borderColor: foregroundColor}),
     },
-    button: {
-      backgroundColor: color.secondary_500,
-      minHeight: 48,
-      maxHeight: 54,
-      borderRadius: 8,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+    containerPressed: {
+      backgroundColor: backgroundColors.pressed,
+      ...(type === ButtonType.Secondary && {borderColor: foregroundColors.pressed}),
     },
-    buttonTransparent: {
-      backgroundColor: 'transparent',
-    },
-    buttonOutline: {
-      ...buttonOutline,
-    },
-    mainTheme: {
-      backgroundColor: color.primary_500,
-    },
-    buttonOutlineOnLight: {
-      ...buttonOutline,
-      borderColor: color.secondary_500,
-    },
-    buttonOutlineShelley: {
-      ...buttonOutline,
-      borderColor: color.el_primary_medium,
+    iconWrapper: {
+      ...atoms.justify_center,
+      height: font.lineHeight ?? 22,
+      overflow: 'visible',
     },
     text: {
-      color: color.white_static,
-      ...atoms.body_2_md_medium,
-      ...atoms.p_sm,
-      textAlign: 'center',
-      textTransform: 'uppercase',
+      ...atoms.flex_shrink,
+      color: foregroundColor,
+      ...font,
     },
-    textOutlineOnLight: {
-      color: color.secondary_500,
-    },
-    textOutlineShelley: {
-      color: color.text_primary_medium,
-    },
-    buttonDisabled: {
-      opacity: 0.5,
-    },
-    buttonDisabledText: {
-      color: color.gray_min,
-    },
-    shelleyTheme: {
-      backgroundColor: color.primary_500,
-    },
-    shelleyOutlineOnLight: {
-      backgroundColor: 'transparent',
-      borderColor: color.primary_600,
-      borderWidth: 2,
-    },
-    textShelleyOutlineOnLight: {
-      color: color.primary_600,
-      fontWeight: '600',
-    },
-    isCopying: {
-      position: 'absolute',
-      backgroundColor: color.gray_max,
-      alignItems: 'center',
-      justifyContent: 'center',
-      top: -50,
-      alignSelf: 'center',
-      borderRadius: 4,
-      zIndex: 10,
-    },
-    copiedText: {
-      color: color.gray_min,
-      textAlign: 'center',
-      ...atoms.p_sm,
-      ...atoms.body_2_md_medium,
-    },
-    warningTheme: {
-      backgroundColor: color.sys_magenta_500,
-    },
-    warningThemeText: {
-      color: color.gray_min,
+    textPressed: {
+      color: foregroundColors.pressed,
     },
   })
 
-  return {styles} as const
+  const iconProps: IconProps = {
+    size: size === 'M' ? 28 : 24,
+    color: foregroundColor,
+  }
+
+  const iconPropsPressed: IconProps = {
+    size: iconProps.size,
+    color: foregroundColors.pressed,
+  }
+
+  return {styles, iconProps, iconPropsPressed} as const
 }

@@ -23,7 +23,7 @@ type Props = {
   inputRef?: React.RefObject<TextInput>
   inputEditable?: boolean
   error?: string
-  testId?: string
+  testID?: string
 }
 
 export const AmountCard = ({
@@ -36,7 +36,7 @@ export const AmountCard = ({
   inputRef,
   inputEditable = true,
   error,
-  testId,
+  testID,
 }: Props) => {
   const [isFocused, setIsFocused] = React.useState(false)
   const strings = useStrings()
@@ -63,7 +63,7 @@ export const AmountCard = ({
           <Pressable
             style={styles.amountWrapper}
             onPress={() => (!info ? navigateTo?.() : focusInput())}
-            testID={`${testId}-token-input`}
+            testID={`${testID}-token-input`}
           >
             <TextInput
               keyboardType="numeric"
@@ -81,7 +81,7 @@ export const AmountCard = ({
               selectTextOnFocus
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              testID={`${testId}-amount-input`}
+              testID={`${testID}-amount-input`}
               keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
               {...(!info && {onPressIn: navigateTo})}
             />

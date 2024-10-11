@@ -17,7 +17,6 @@ storiesOf('Receive ShareQRCodeCard', module)
       onLongPress={action('onLongPress')}
       title="Title"
       shareLabel="share label"
-      copiedText="copied text"
     />
   ))
 

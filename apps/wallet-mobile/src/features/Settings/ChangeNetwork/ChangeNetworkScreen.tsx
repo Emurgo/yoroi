@@ -68,7 +68,6 @@ export const useHandleOpenNetworkNoticeModal = () => {
 
         <View style={styles.actions}>
           <Button
-            shelleyTheme
             title={strings.networkNoticeButton}
             onPress={() => {
               closeModal()

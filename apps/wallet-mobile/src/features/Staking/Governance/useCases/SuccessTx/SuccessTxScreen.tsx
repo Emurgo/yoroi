@@ -66,11 +66,7 @@ export const SuccessTxScreen = () => {
 
       <Spacer fill />
 
-      <Button
-        title={navigateToStaking ? strings.goToStaking : strings.goToGovernance}
-        shelleyTheme
-        onPress={handleOnPress}
-      />
+      <Button title={navigateToStaking ? strings.goToStaking : strings.goToGovernance} onPress={handleOnPress} />
 
       <Spacer height={6} />
     </View>

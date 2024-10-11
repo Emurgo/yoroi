@@ -26,7 +26,7 @@ export const SubmittedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} />
     </SafeArea>
   )
 }

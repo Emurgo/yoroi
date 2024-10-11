@@ -1,17 +1,12 @@
 import React from 'react'
 import Svg, {Circle, G, Path} from 'react-native-svg'
 
-type Props = {
-  width: number
-  height: number
-  backgroundColor?: string
-  color?: string
-}
+import {IconProps} from './type'
 
-export const TotalAda = ({width, height, backgroundColor = '#F0F3F5', color = 'black'}: Props) => (
-  <Svg viewBox="0 0 44 44" {...{width, height}}>
+export const TotalAda = ({size = 44, color = 'black'}: IconProps) => (
+  <Svg viewBox="0 0 44 44" width={size} height={size}>
     <G id="icon/total-ada.inline" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-      <G id="icon/bg-for-icon" fill={backgroundColor}>
+      <G id="icon/bg-for-icon" fill="#F0F3F5">
         <Circle id="Oval-Copy-4" cx="22" cy="22" r="22" />
       </G>
 

@@ -57,7 +57,6 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
 
       <Button
         testID="swapButton"
-        shelleyTheme
         title={strings.sign}
         onPress={() => onSubmit?.(spendingPassword)}
         disabled={spendingPassword.length === 0}

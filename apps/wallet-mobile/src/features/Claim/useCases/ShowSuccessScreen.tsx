@@ -55,7 +55,7 @@ export const ShowSuccessScreen = () => {
           </>
         )}
 
-        <Button onPress={navigateTo.back} title={strings.ok} shelleyTheme />
+        <Button onPress={navigateTo.back} title={strings.ok} />
 
         <Spacer height={16} />
       </Actions>

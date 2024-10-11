@@ -51,7 +51,7 @@ export const ChooseMnemonicTypeScreen = () => {
           title={strings.choose15WordsMnemonicTitle}
           icon={<Mnemonic15Words style={styles.icon} />}
           onPress={handle15Words}
-          testId="mnemonic-15-word"
+          testID="mnemonic-15-word"
         />
 
         <Space height="lg" />
@@ -60,7 +60,7 @@ export const ChooseMnemonicTypeScreen = () => {
           title={strings.choose24WordsMnemonicTitle}
           icon={<Mnemonic24Words style={styles.icon} />}
           onPress={handle24Words}
-          testId="mnemonic-24-word"
+          testID="mnemonic-24-word"
         />
 
         <Space height="lg" />

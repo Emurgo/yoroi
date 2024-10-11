@@ -122,7 +122,6 @@ const WithdrawalTxForm = ({wallet, onDone}: {wallet: YoroiWallet; onDone: (withd
 
       <View style={[styles.actions, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
         <Button
-          shelleyTheme
           onPress={() => setDeregister(false)}
           title={strings.keepButton}
           disabled={!hasRewards || isLoading}

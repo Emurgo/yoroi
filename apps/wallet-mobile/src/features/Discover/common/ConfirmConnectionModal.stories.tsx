@@ -50,9 +50,9 @@ const WithButton = () => {
 
   return (
     <View>
-      <Button title="Open modal without warning" shelleyTheme onPress={handleOnPressNoWarning} />
+      <Button title="Open modal without warning" onPress={handleOnPressNoWarning} />
 
-      <Button title="Open modal with warning" shelleyTheme onPress={handleOnPressWarning} />
+      <Button title="Open modal with warning" onPress={handleOnPressWarning} />
     </View>
   )
 }
