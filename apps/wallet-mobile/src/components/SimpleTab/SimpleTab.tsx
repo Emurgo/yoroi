@@ -8,7 +8,7 @@ type Props = {
   onPress: () => void
 }
 
-export const DAppExplorerTabItem = ({name, onPress, isActive}: Props) => {
+export const SimpleTab = ({name, onPress, isActive}: Props) => {
   const {styles} = useStyles()
   return (
     <TouchableOpacity onPress={onPress} style={[styles.container, isActive && styles.containerActive]}>
@@ -34,5 +34,5 @@ const useStyles = () => {
     },
   })
 
-  return {styles}
+  return {styles} as const
 }

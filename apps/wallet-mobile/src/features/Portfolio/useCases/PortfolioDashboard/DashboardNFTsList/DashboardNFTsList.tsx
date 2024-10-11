@@ -5,12 +5,12 @@ import {FlatList, Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions
 import placeholderLight from '../../../../../assets/img/nft-placeholder.png'
 import placeholderDark from '../../../../../assets/img/nft-placeholder-dark.png'
 import {Icon} from '../../../../../components/Icon'
+import {MediaPreview} from '../../../../../components/MediaPreview/MediaPreview'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {useStrings} from '../../../common/hooks/useStrings'
-import {MediaPreview} from '../../../common/MediaPreview/MediaPreview'
 
 export const DashboardNFTsList = () => {
   const {styles, cardItemWidth} = useStyles()

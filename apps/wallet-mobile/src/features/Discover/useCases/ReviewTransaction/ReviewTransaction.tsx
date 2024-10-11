@@ -447,7 +447,7 @@ const useConnectorPromptRootKey = () => {
   }, [promptRootKey])
 }
 
-const useSignTxWithHW = () => {
+export const useSignTxWithHW = () => {
   const {confirmHWConnection, closeModal} = useConfirmHWConnectionModal()
   const {wallet, meta} = useSelectedWallet()
 
