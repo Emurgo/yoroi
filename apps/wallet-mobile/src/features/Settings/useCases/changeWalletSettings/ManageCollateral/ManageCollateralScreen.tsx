@@ -98,11 +98,6 @@ export const ManageCollateralScreen = () => {
         onSuccessChanged(onSuccess)
         onErrorChanged(onError)
         navigateToTxReview()
-        unsignedTxChanged(yoroiUnsignedTx)
-        operationsChanged([<Operation key="0" />])
-        onSuccessChanged(onSuccess)
-        onErrorChanged(onError)
-        navigateToTxReview()
       },
     })
   }
