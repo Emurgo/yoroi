@@ -69,6 +69,9 @@ const Yoroi = () => {
                                       <ReviewTxProvider>
                                         <InitApp />
                                       </ReviewTxProvider>
+                                      <ReviewTxProvider>
+                                        <InitApp />
+                                      </ReviewTxProvider>
                                     </AutomaticWalletOpenerProvider>
                                   </BrowserProvider>
                                 </PoolTransitionProvider>

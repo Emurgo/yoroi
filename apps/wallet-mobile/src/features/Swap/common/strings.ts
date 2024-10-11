@@ -7,6 +7,7 @@ export const useStrings = () => {
 
   return {
     swapTitle: intl.formatMessage(messages.swapTitle),
+    swapDetailsTitle: intl.formatMessage(messages.swapDetailsTitle),
     tokenSwap: intl.formatMessage(messages.tokenSwap),
     orderSwap: intl.formatMessage(messages.orderSwap),
     dex: intl.formatMessage(messages.dex),
@@ -178,6 +179,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
+  swapDetailsTitle: {
+    id: 'swap.swapScreen.swapDetailsTitle',
+    defaultMessage: '!!!Swap details',
+  },
   tokenSwap: {
     id: 'swap.swapScreen.tokenSwapTab',
     defaultMessage: '!!!Token swap',
@@ -299,7 +304,7 @@ const messages = defineMessages({
   },
   swapLiqProvFee: {
     id: 'swap.swapScreen.swapLiqProvFee',
-    defaultMessage: '!!!Liq. prov. fee',
+    defaultMessage: '!!!Liquidity provider fee',
   },
   swapLiquidityFeeInfo: {
     id: 'swap.swapScreen.swapLiquidityFeeInfo',

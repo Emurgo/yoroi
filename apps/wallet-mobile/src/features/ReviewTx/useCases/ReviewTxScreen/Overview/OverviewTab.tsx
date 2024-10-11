@@ -13,7 +13,7 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {Accordion} from '../../../common/Accordion'
 import {CopiableText} from '../../../common/CopiableText'
-import {Divider} from '../../../common/Divider'
+import {Divider} from '../../../../../components/Divider/Divider'
 import {useAddressType} from '../../../common/hooks/useAddressType'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {ReviewTxState} from '../../../common/ReviewTxProvider'

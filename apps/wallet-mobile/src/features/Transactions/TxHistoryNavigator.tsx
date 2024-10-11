@@ -45,6 +45,7 @@ import {
   ShowFailedTxScreen as FailedTxSwapScreen,
   ShowSubmittedTxScreen as SubmittedTxSwapScreen,
 } from '../Swap/useCases'
+import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
 import {ShowSanchoNoticeScreen} from '../Swap/useCases/ShowSanchoNoticeScreen/ShowSanchoNoticeScreen'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
@@ -250,6 +251,14 @@ export const TxHistoryNavigator = () => {
               />
 
               <Stack.Screen
+                name="swap-review"
+                component={ReviewSwap}
+                options={{
+                  title: strings.reviewSwapTitle,
+                }}
+              />
+
+              <Stack.Screen
                 name="swap-select-sell-token"
                 component={SelectSellTokenFromListScreen}
                 options={{
@@ -421,6 +430,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.swapTo',
     defaultMessage: '!!!Swap to',
   },
+  reviewSwapTitle: {
+    id: 'swap.review.title',
+    defaultMessage: '!!!Swap review',
+  },
   slippageTolerance: {
     id: 'swap.swapScreen.slippageTolerance',
     defaultMessage: '!!!Slippage Tolerance',
@@ -500,6 +513,7 @@ const useStrings = () => {
   return {
     claimShowSuccess: intl.formatMessage(messages.claimShowSuccessTitle),
     confirmationTransaction: intl.formatMessage(messages.confirmationTransaction),
+    reviewSwapTitle: intl.formatMessage(messages.reviewSwapTitle),
     confirmTitle: intl.formatMessage(messages.confirmTitle),
     describeSelectedAddressTitle: intl.formatMessage(messages.describeSelectedAddressTitle),
     editAmountTitle: intl.formatMessage(messages.editAmountTitle),
