@@ -2,18 +2,18 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
+import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../components/Icon'
-import {useCopy} from '../../../hooks/useCopy'
 
 export const CopiableText = ({children, textToCopy}: {children: React.ReactNode; textToCopy: string}) => {
   const {styles, colors} = useStyles()
-  const [, copy] = useCopy()
+  const {copy} = useCopy()
 
   return (
     <View style={styles.text}>
       {children}
 
-      <TouchableOpacity onPress={() => copy(textToCopy)} activeOpacity={0.5}>
+      <TouchableOpacity onPress={() => copy({text: textToCopy})} activeOpacity={0.5}>
         <Icon.Copy size={24} color={colors.copy} />
       </TouchableOpacity>
     </View>
