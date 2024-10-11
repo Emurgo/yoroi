@@ -7,7 +7,7 @@ import React from 'react'
 import {LogBox, StyleSheet} from 'react-native'
 import * as RNP from 'react-native-paper'
 import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context'
-import {enableFreeze, enableScreens} from 'react-native-screens'
+import {enableScreens} from 'react-native-screens'
 import {QueryClientProvider} from 'react-query'
 
 import {LoadingBoundary} from './components/Boundary/Boundary'
@@ -32,7 +32,6 @@ import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransi
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
 
 enableScreens(true)
-enableFreeze(true)
 
 if (disableLogbox) {
   LogBox.ignoreAllLogs()
@@ -66,10 +65,6 @@ const Yoroi = () => {
                                 <PoolTransitionProvider>
                                   <BrowserProvider>
                                     <AutomaticWalletOpenerProvider>
-                                      <ReviewTxProvider>
-                                        <InitApp />
-                                      </ReviewTxProvider>
-
                                       <ReviewTxProvider>
                                         <InitApp />
                                       </ReviewTxProvider>
