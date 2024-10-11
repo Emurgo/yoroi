@@ -2,10 +2,10 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, {FadeInDown, FadeInUp, FadeOut, FadeOutDown, Layout} from 'react-native-reanimated'
+import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
+import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
 import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useCopy} from '../../../../hooks/useCopy'
 import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../useStrings'
 
@@ -15,12 +15,12 @@ type SmallAddressCardProps = {
   loading?: boolean
   date?: string
   onPress?: () => void
-  testId?: string
+  testID?: string
 }
 
-export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testId}: SmallAddressCardProps) => {
+export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testID}: SmallAddressCardProps) => {
   const strings = useStrings()
-  const [isCopying, copy] = useCopy()
+  const {copy} = useCopy()
   const {styles, colors} = useStyles()
 
   if (loading) {
@@ -39,9 +39,9 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
         <TouchableOpacity
           style={styles.smallAddressCard}
           activeOpacity={0.6}
-          onLongPress={() => copy(address)}
+          onLongPress={(event) => copy({text: address, feedback: strings.addressCopiedMsg, event})}
           onPress={onPress}
-          testID={testId}
+          testID={testID}
         >
           <LinearGradient
             style={[StyleSheet.absoluteFill, {opacity: 1}]}
@@ -67,12 +67,6 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
       </Animated.View>
 
       <Spacer height={16} />
-
-      {isCopying && (
-        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-          <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
-        </Animated.View>
-      )}
     </>
   )
 }
@@ -130,22 +124,6 @@ const useStyles = () => {
     date: {
       ...atoms.body_2_md_regular,
       color: color.gray_700,
-    },
-    copiedText: {
-      color: color.gray_min,
-      textAlign: 'center',
-      padding: 8,
-      ...atoms.body_2_md_medium,
-    },
-    isCopying: {
-      position: 'absolute',
-      backgroundColor: color.gray_max,
-      alignItems: 'center',
-      justifyContent: 'center',
-      top: 0,
-      alignSelf: 'center',
-      borderRadius: 4,
-      zIndex: 10,
     },
   })
 

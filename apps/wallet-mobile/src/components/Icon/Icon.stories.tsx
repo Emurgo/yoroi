@@ -19,33 +19,33 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Received />} title="Received" />
 
-        <Item icon={<Icon.WalletAvatar image="" />} title="WalletAccount" />
+        <Item icon={<Icon.WalletAvatar />} title="WalletAccount" />
 
-        <Item icon={<Icon.Emurgo width={40} height={40} />} title="Emurgo" />
+        <Item icon={<Icon.Emurgo size={40} />} title="Emurgo" />
 
         <Item icon={<Icon.Check size={40} />} title="Check" />
 
-        <Item mode="dark" icon={<Icon.YoroiWallet height={40} width={40} />} title="YoroiWallet" />
+        <Item mode="dark" icon={<Icon.YoroiWallet size={40} />} title="YoroiWallet" />
 
-        <Item icon={<Icon.Cardano height={40} width={40} />} title="Cardano" />
+        <Item icon={<Icon.Cardano size={40} />} title="Cardano" />
 
         <Item icon={<Icon.Ada size={40} />} title="AdaIcon" />
 
-        <Item icon={<Icon.RewardManuallyPayout height={40} width={40} />} title="RewardManuallyPayout" />
+        <Item icon={<Icon.RewardManuallyPayout size={40} />} title="RewardManuallyPayout" />
 
-        <Item icon={<Icon.RewardWithdrawn height={40} width={40} />} title="RewardWithdrawn" />
+        <Item icon={<Icon.RewardWithdrawn size={40} />} title="RewardWithdrawn" />
 
-        <Item icon={<Icon.StakingKeyDeregistered height={40} width={40} />} title="StakingKeyDeregistered" />
+        <Item icon={<Icon.StakingKeyDeregistered size={40} />} title="StakingKeyDeregistered" />
 
-        <Item icon={<Icon.StakingKeyRegistered height={40} width={40} />} title="StakingKeyRegistered" />
+        <Item icon={<Icon.StakingKeyRegistered size={40} />} title="StakingKeyRegistered" />
 
         <Item icon={<Icon.Transaction size={40} />} title="Transaction" />
 
-        <Item icon={<Icon.TotalAda height={40} width={40} />} title="TotalAdaIcon" />
+        <Item icon={<Icon.TotalAda size={40} />} title="TotalAdaIcon" />
 
-        <Item icon={<Icon.TotalDelegated height={40} width={40} />} title="TotalDelegated" />
+        <Item icon={<Icon.TotalDelegated size={40} />} title="TotalDelegated" />
 
-        <Item icon={<Icon.TotalReward height={40} width={40} />} title="TotalReward" />
+        <Item icon={<Icon.TotalReward size={40} />} title="TotalReward" />
 
         <Item icon={<Icon.Chevron direction="down" />} title="ChevronDown" />
 

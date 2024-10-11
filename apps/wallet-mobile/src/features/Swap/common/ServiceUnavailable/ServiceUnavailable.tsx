@@ -29,7 +29,7 @@ export const ServiceUnavailable = ({resetErrorBoundary}: ServiceUnavailableProps
 
         <Spacer height={20} />
 
-        <Button onPress={resetErrorBoundary} title={strings.tryAgain} style={styles.button} shelleyTheme />
+        <Button onPress={resetErrorBoundary} title={strings.tryAgain} style={styles.button} />
       </View>
     </SafeAreaView>
   )

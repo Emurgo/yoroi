@@ -34,7 +34,7 @@ export const FailedTxScreen = () => {
 
         <Spacer height={16} />
 
-        <Button title={strings.tryAgain} textStyles={styles.button} shelleyTheme onPress={handleOnTryAgain} />
+        <Button title={strings.tryAgain} onPress={handleOnTryAgain} />
       </View>
     </SafeArea>
   )
@@ -68,10 +68,6 @@ const useStyles = () => {
       lineHeight: 24,
       color: color.gray_600,
       textAlign: 'center',
-    },
-    button: {
-      paddingHorizontal: 24,
-      paddingVertical: 15,
     },
   })
 

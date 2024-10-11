@@ -110,7 +110,6 @@ export const DelegationConfirmation = () => {
 
       <ConfirmTx
         buttonProps={{
-          shelleyTheme: true,
           title: strings.delegateButtonLabel,
         }}
         isProvidingPassword

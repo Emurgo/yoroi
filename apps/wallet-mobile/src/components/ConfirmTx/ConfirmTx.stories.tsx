@@ -47,7 +47,6 @@ storiesOf('ConfirmTx', module)
           useUSB={false}
           buttonProps={{
             title: 'DELEGATE',
-            shelleyTheme: true,
           }}
         />
       </WalletManagerProviderMock>

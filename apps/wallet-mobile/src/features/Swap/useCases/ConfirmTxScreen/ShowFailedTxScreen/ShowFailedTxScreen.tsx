@@ -26,7 +26,7 @@ export const ShowFailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={navigateTo.startSwap} title={strings.failedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={navigateTo.startSwap} title={strings.failedTxButton} style={styles.button} />
     </View>
   )
 }

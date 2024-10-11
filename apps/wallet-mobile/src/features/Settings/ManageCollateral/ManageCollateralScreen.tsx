@@ -180,16 +180,11 @@ export const ManageCollateralScreen = () => {
       </ScrollView>
 
       {shouldShowPrimaryButton && (
-        <Button
-          title={strings.generateCollateral}
-          onPress={handleCollateralInfoModal}
-          shelleyTheme
-          disabled={isLoading}
-        />
+        <Button title={strings.generateCollateral} onPress={handleCollateralInfoModal} disabled={isLoading} />
       )}
 
       {shouldShowBackButton && params?.backButton && (
-        <Button title={params.backButton.content} onPress={params.backButton.onPress} shelleyTheme />
+        <Button title={params.backButton.content} onPress={params.backButton.onPress} />
       )}
 
       <Space height="lg" />

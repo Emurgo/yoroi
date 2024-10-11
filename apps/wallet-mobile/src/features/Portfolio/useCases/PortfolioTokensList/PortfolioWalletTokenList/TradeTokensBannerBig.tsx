@@ -30,13 +30,7 @@ export const TradeTokensBannerBig = () => {
 
         <Spacer height={37} />
 
-        <Button
-          mainTheme
-          title={strings.startSwapping.toLocaleUpperCase()}
-          style={styles.spaceButton}
-          textStyles={styles.spaceButtonText}
-          onPress={handleSwap}
-        />
+        <Button title={strings.startSwapping} onPress={handleSwap} />
 
         <View style={styles.assetBox}>
           <TradeTokensAsset />
@@ -62,13 +56,6 @@ const useStyles = () => {
       ...atoms.relative,
       ...atoms.overflow_hidden,
       backgroundColor: color.bg_color_max,
-    },
-    spaceButtonText: {
-      ...atoms.p_0,
-    },
-    spaceButton: {
-      ...atoms.px_lg,
-      minHeight: 40,
     },
     title: {
       ...atoms.body_1_lg_medium,

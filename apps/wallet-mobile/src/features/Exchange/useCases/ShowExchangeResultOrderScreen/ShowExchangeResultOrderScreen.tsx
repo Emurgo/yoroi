@@ -108,7 +108,7 @@ export const ShowExchangeResultOrderScreen = () => {
         </View>
 
         <View style={styles.actions}>
-          <Button shelleyTheme onPress={handleOnClose} title={strings.close} />
+          <Button onPress={handleOnClose} title={strings.close} />
         </View>
       </SafeAreaView>
     </ExchangeProvider>

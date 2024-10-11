@@ -1,6 +1,7 @@
 import {Chain} from '@yoroi/types'
 import _ from 'lodash'
 import * as React from 'react'
+import {View} from 'react-native'
 
 import {useBalances, useTransactionInfos} from '../../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../../yoroi-wallets/utils/utils'
@@ -27,10 +28,21 @@ export const ShowBuyBanner = () => {
   const showSmallBanner = useShowBuyBannerSmall()
   const {resetShowBuyBannerSmall} = useResetShowBuyBannerSmall()
 
-  if (hasZeroPt && hasZeroTx && network === Chain.Network.Preprod) return <PreprodFaucetBanner />
-  if (hasZeroPt && hasZeroTx && network === Chain.Network.Sancho) return <SanchonetFaucetBanner />
-  if (hasZeroPt && hasZeroTx) return <BuyBannerBig />
-  if (showSmallBanner) return <BuyBannerSmall onClose={resetShowBuyBannerSmall} />
+  let banner = null
+  switch (true) {
+    case hasZeroPt && hasZeroTx && network === Chain.Network.Preprod:
+      banner = <PreprodFaucetBanner />
+      break
+    case hasZeroPt && hasZeroTx && network === Chain.Network.Sancho:
+      banner = <SanchonetFaucetBanner />
+      break
+    case hasZeroPt && hasZeroTx:
+      banner = <BuyBannerBig />
+      break
+    case showSmallBanner:
+      banner = <BuyBannerSmall onClose={resetShowBuyBannerSmall} />
+      break
+  }
 
-  return null
+  return banner ? <View style={{paddingBottom: 18}}>{banner}</View> : null
 }

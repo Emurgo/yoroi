@@ -36,7 +36,7 @@ export const PoolTransitionNotice = () => {
       </Text>
 
       <Actions>
-        <Button style={styles.noticeButton} onPress={navigateToUpdate} title={strings.update} block />
+        <Button style={styles.noticeButton} onPress={navigateToUpdate} title={strings.update} />
 
         <Space fill />
       </Actions>

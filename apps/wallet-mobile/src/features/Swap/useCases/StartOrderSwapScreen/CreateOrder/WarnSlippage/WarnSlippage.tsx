@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../../../components/Button/Button'
 import {useModal} from '../../../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {useStrings} from '../../../../common/strings'
@@ -50,19 +50,13 @@ export const WarnSlippage = ({onConfirm, slippage, ticker}: Props) => {
       <View style={styles.actions}>
         <Button
           testID="swapCancelButton"
-          outlineShelley
+          size="S"
+          type={ButtonType.Secondary}
           title={strings.limitPriceWarningBack}
           onPress={closeModal}
-          containerStyle={styles.buttonContainer}
         />
 
-        <Button
-          testID="swapConfirmButton"
-          shelleyTheme
-          title={strings.limitPriceWarningConfirm}
-          onPress={onConfirm}
-          containerStyle={styles.buttonContainer}
-        />
+        <Button testID="swapConfirmButton" size="S" title={strings.limitPriceWarningConfirm} onPress={onConfirm} />
       </View>
     </View>
   )
@@ -71,9 +65,6 @@ export const WarnSlippage = ({onConfirm, slippage, ticker}: Props) => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    buttonContainer: {
-      ...atoms.flex_1,
-    },
     actions: {
       ...atoms.align_center,
       ...atoms.justify_between,

@@ -44,13 +44,7 @@ export const AddressModal = ({address, path}: Props) => {
       <View style={styles.info}>
         <Text style={styles.subtitle}>{strings.walletAddress}</Text>
 
-        <View style={styles.row}>
-          <Text style={styles.address}>{address}</Text>
-
-          <Spacer width={16} />
-
-          <CopyButton value={address} />
-        </View>
+        <CopyButton title={address} value={address} />
 
         <Spacer width={8} />
 
@@ -68,25 +62,19 @@ export const AddressModal = ({address, path}: Props) => {
 
         <Text style={styles.subtitle}>{strings.staking}</Text>
 
-        <View style={styles.row}>
-          <Text style={styles.address}>{keyHashes?.staking}</Text>
+        {keyHashes?.staking != null && keyHashes.staking !== '' && (
+          <>
+            <CopyButton title={keyHashes.staking} value={keyHashes.staking} />
 
-          <Spacer width={16} />
-
-          <CopyButton value={keyHashes?.staking ?? ''} />
-        </View>
-
-        <Spacer width={8} />
+            <Spacer width={8} />
+          </>
+        )}
 
         <Text style={styles.subtitle}>{strings.spending}</Text>
 
-        <View style={styles.row}>
-          <Text style={styles.address}>{keyHashes?.spending}</Text>
-
-          <Spacer width={16} />
-
-          <CopyButton value={keyHashes?.spending ?? ''} />
-        </View>
+        {keyHashes?.spending != null && keyHashes.spending !== '' && (
+          <CopyButton title={keyHashes.spending} value={keyHashes.spending} />
+        )}
       </View>
     </ScrollView>
   )

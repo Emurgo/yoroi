@@ -32,7 +32,7 @@ const HWNotSupportedModal = ({onConfirm}: Props) => {
 
       <Spacer fill />
 
-      <Button title={strings.cancel} shelleyTheme onPress={onConfirm} />
+      <Button title={strings.cancel} onPress={onConfirm} />
     </>
   )
 }

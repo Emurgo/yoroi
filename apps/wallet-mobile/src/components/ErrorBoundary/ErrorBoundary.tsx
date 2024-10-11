@@ -84,7 +84,7 @@ const ErrorView = ({state}: {state: State}) => {
 
       {Platform.OS === 'android' && (
         <View style={{padding: 16}}>
-          <Button shelleyTheme onPress={() => BackHandler.exitApp()} title="OK" style={{width: '100%'}} />
+          <Button onPress={() => BackHandler.exitApp()} title="OK" style={{width: '100%'}} />
         </View>
       )}
     </View>

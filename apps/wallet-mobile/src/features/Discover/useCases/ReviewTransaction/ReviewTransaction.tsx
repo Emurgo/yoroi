@@ -131,7 +131,7 @@ export const ReviewTransaction = () => {
       </ScrollView>
 
       <View style={[styles.buttonArea, {borderTopWidth: scrollbarShown ? 1 : 0}]}>
-        <Button title={strings.confirm} shelleyTheme onPress={handleOnConfirm} />
+        <Button title={strings.confirm} onPress={handleOnConfirm} />
       </View>
     </SafeAreaView>
   )

@@ -1,11 +1,9 @@
 import React from 'react'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-type Props = {
-  size?: number
-}
+import {IconProps} from './type'
 
-export const SpectrumSwap = ({size = 36}: Props) => (
+export const SpectrumSwap = ({size = 36}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 44 41" fill="none">
     <G clipPath="url(#clip0_8294_205086)">
       <Path

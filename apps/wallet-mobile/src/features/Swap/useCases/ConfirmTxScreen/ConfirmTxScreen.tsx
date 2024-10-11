@@ -132,7 +132,6 @@ export const ConfirmTxScreen = () => {
         <Button
           disabled={isButtonDisabled}
           testID="swapButton"
-          shelleyTheme
           title={strings.confirm}
           onPress={() => {
             if (meta.isEasyConfirmationEnabled) {

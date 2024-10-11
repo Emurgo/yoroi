@@ -138,12 +138,7 @@ export const ListAmountsToSendScreen = () => {
 
         <Spacer height={33} />
 
-        <NextButton
-          onPress={onNext}
-          title={strings.next}
-          shelleyTheme
-          disabled={selectedTokensCounter === 0 || isLoading}
-        />
+        <NextButton onPress={onNext} title={strings.next} disabled={selectedTokensCounter === 0 || isLoading} />
       </Actions>
     </SafeAreaView>
   )
