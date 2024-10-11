@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   useWindowDimensions,
-  useWindowDimensions,
   View,
   ViewProps,
 } from 'react-native'
@@ -40,7 +39,6 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
-import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
 import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
 
@@ -51,17 +49,13 @@ export const ManageCollateralScreen = () => {
     meta: {addressMode},
   } = useSelectedWallet()
   const screenHeight = useWindowDimensions().height
-  const screenHeight = useWindowDimensions().height
   const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
   const navigateTo = useNavigateTo()
   const {openModal} = useModal()
-  const {openModal} = useModal()
   const strings = useStrings()
   const balances = useBalances(wallet)
-  const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, operationsChanged} = useReviewTx()
   const {navigateToTxReview} = useWalletNavigation()
   const {unsignedTxChanged, onSuccessChanged, onErrorChanged, operationsChanged} = useReviewTx()
   const lockedAmount = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
@@ -82,16 +76,6 @@ export const ManageCollateralScreen = () => {
   const handleSetCollateralId = (collateralId: RawUtxo['utxo_id']) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setCollateralId(collateralId)
-  }
-
-  const onSuccess = (signedTx: YoroiSignedTx) => {
-    navigateTo.submittedTx()
-    const collateralId = `${signedTx.signedTx.id}:0`
-    setCollateralId(collateralId)
-  }
-
-  const onError = () => {
-    navigateTo.failedTx()
   }
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
@@ -158,14 +142,6 @@ export const ManageCollateralScreen = () => {
     )
   }
 
-  const handleCollateralInfoModal = () => {
-    openModal(
-      strings.initialCollateralInfoModalTitle,
-      <InitialCollateralInfoModal onConfirm={handleGenerateCollateral} />,
-      Math.min(screenHeight * 0.9, 650),
-    )
-  }
-
   const shouldShowPrimaryButton = !hasCollateral || didSpend
   const shouldShowBackButton = !shouldShowPrimaryButton && !!params?.backButton
 
@@ -211,7 +187,6 @@ export const ManageCollateralScreen = () => {
       {shouldShowPrimaryButton && (
         <Button
           title={strings.generateCollateral}
-          onPress={handleCollateralInfoModal}
           onPress={handleCollateralInfoModal}
           shelleyTheme
           disabled={isLoading}
@@ -291,30 +266,7 @@ const Operation = () => {
   )
 }
 
-const Operation = () => {
-  const {styles, colors} = useStyles()
-  const strings = useStrings()
-  const {openModal} = useModal()
-
-  const handleOnPressInfo = () => {
-    openModal(strings.collateralInfoModalTitle, <CollateralInfoModal />, 500)
-  }
-
-  return (
-    <View style={styles.operation}>
-      <Text style={styles.operationText}>{strings.collateralInfoModalLabel}</Text>
-
-      <Space width="xs" />
-
-      <TouchableOpacity onPress={handleOnPressInfo}>
-        <Info size={24} color={colors.iconColor} />
-      </TouchableOpacity>
-    </View>
-  )
-}
-
 const useStyles = () => {
-  const {color, atoms} = useTheme()
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
@@ -345,18 +297,9 @@ const useStyles = () => {
       ...atoms.body_2_md_regular,
       color: color.text_gray_medium,
     },
-    operation: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    operationText: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
   })
 
   const colors = {
-    iconColor: color.gray_900,
     iconColor: color.gray_900,
   }
 

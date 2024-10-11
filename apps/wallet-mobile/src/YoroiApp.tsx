@@ -69,6 +69,7 @@ const Yoroi = () => {
                                       <ReviewTxProvider>
                                         <InitApp />
                                       </ReviewTxProvider>
+
                                       <ReviewTxProvider>
                                         <InitApp />
                                       </ReviewTxProvider>
