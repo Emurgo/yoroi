@@ -7,7 +7,10 @@ export enum ApiHttpStatusCode {
   Unauthorized = 401,
   Forbidden = 403,
   NotFound = 404,
+  MethodNotAllowed = 405,
+  ContentNotAcceptable = 406,
   TooEarly = 425,
   TooManyRequests = 429,
   InternalServerError = 500,
+  ServiceUnavailable = 503,
 }
