@@ -118,7 +118,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
           onLongPress={handleOnLongPressReceive}
         />
 
-        <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
+        <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.receiveLabel}</Text>
       </View>
 
       {!meta.isReadOnly && (
@@ -132,7 +132,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
               disabled={disabled}
             />
 
-            <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
+            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.sendLabel}</Text>
           </View>
 
           <View style={styles.centralized}>
@@ -144,7 +144,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
               disabled={disabled}
             />
 
-            <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
+            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.swapLabel}</Text>
           </View>
 
           <View style={styles.centralized}>
@@ -156,7 +156,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
               disabled={disabled}
             />
 
-            <Text style={styles.actionLabel}>{strings.exchange}</Text>
+            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.exchange}</Text>
           </View>
         </>
       )}
@@ -180,7 +180,10 @@ const useStyles = () => {
     actionLabel: {
       ...atoms.pt_sm,
       ...atoms.body_3_sm_medium,
-      color: color.gray_max,
+      color: color.text_gray_medium,
+    },
+    disabledLabel: {
+      color: color.text_gray_low,
     },
   })
 
