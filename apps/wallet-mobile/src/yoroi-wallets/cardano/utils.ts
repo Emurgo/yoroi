@@ -56,59 +56,6 @@ export const deriveRewardAddressFromAddress = async (address: string, chainId: n
   }
 }
 
-export const getAddressType = async (address: string) => {
-  const isKeyAddress = await getIsAddressKeyBech32Format(address)
-  if (isKeyAddress) return 'key'
-
-  const isScriptAddress = await getIsAddressScriptBech32Format(address)
-  if (isScriptAddress) return 'script'
-
-  const isRewardAddress = await getIsRewardAddressBech32Format(address)
-  if (isRewardAddress) return 'reward'
-
-  throw new Error('invalid address format')
-}
-
-const getIsAddressKeyBech32Format = async (address: string): Promise<boolean> => {
-  const {csl, release} = wrappedCsl()
-
-  try {
-    await csl.Ed25519KeyHash.fromBech32(address)
-    return true
-  } catch {
-    return false
-  } finally {
-    release()
-  }
-}
-
-const getIsAddressScriptBech32Format = async (address: string): Promise<boolean> => {
-  const {csl, release} = wrappedCsl()
-
-  try {
-    await csl.ScriptHash.fromBech32(address)
-    return true
-  } catch {
-    return false
-  } finally {
-    release()
-  }
-}
-
-const getIsRewardAddressBech32Format = async (addressBech32: string): Promise<boolean> => {
-  const {csl, release} = wrappedCsl()
-
-  try {
-    const address = await csl.Address.fromBech32(addressBech32)
-    await csl.RewardAddress.fromAddress(address)
-    return true
-  } catch {
-    return false
-  } finally {
-    release()
-  }
-}
-
 /**
  * Multi-asset related
  */

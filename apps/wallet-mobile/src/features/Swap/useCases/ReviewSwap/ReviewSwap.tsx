@@ -1,5 +1,6 @@
-import {useSwap} from '@yoroi/swap'
+import {getPoolUrlByProvider, useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
+import {capitalize} from 'lodash'
 import React from 'react'
 import {InteractionManager, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -7,19 +8,16 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {LoadingOverlay} from '../../../../components/LoadingOverlay/LoadingOverlay'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useSignAndSubmitTx} from '../../../../yoroi-wallets/hooks'
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
-import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
+import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {useNavigateTo} from '../../common/navigation'
+import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
-import {ConfirmTx} from '../ConfirmTxScreen/ConfirmTx'
-import {TransactionSummary} from '../ConfirmTxScreen/TransactionSummary'
+import {TransactionSummary} from './TransactionSummary'
 
 const BOTTOM_ACTION_SECTION = 220
 
@@ -27,12 +25,12 @@ export const ReviewSwap = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const styles = useStyles()
-  const {wallet, meta} = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
-  const {openModal, closeModal} = useModal()
   const {height: deviceHeight} = useWindowDimensions()
-  const signedTxRef = React.useRef<YoroiSignedTx | null>(null)
+  const {navigateToTxReview} = useWalletNavigation()
+  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, customReceiverTitleChanged, detailsChanged} =
+    useReviewTx()
 
   const {unsignedTx, orderData} = useSwap()
   const sellTokenInfo = orderData.amounts.sell?.info
@@ -44,11 +42,6 @@ export const ReviewSwap = () => {
   )
 
   const couldReceiveNoAssets = Quantities.isZero(minReceived)
-
-  const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
-    {id: wallet.id},
-    {onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey})},
-  )
 
   const trackSwapOrderSubmitted = () => {
     if (orderData.selectedPoolCalculation === undefined) return
@@ -72,38 +65,38 @@ export const ReviewSwap = () => {
     })
   }
 
-  const {signAndSubmitTx, isLoading: processingTx} = useSignAndSubmitTx(
-    {wallet},
-    {
-      signTx: {
-        useErrorBoundary: true,
-        onSuccess: (signedTx) => {
-          signedTxRef.current = signedTx
-        },
-      },
-      submitTx: {
-        onSuccess: () => {
-          trackSwapOrderSubmitted()
-          navigate.submittedTx(signedTxRef.current?.signedTx.id ?? '')
-        },
-        onError: () => {
-          navigate.failedTx()
-        },
-        useErrorBoundary: true,
-      },
-    },
-  )
+  const onSwapTxError = () => {
+    navigate.failedTx()
+  }
 
-  const onPasswordTxSuccess = (signedTx: YoroiSignedTx) => {
+  const onSwapTxSuccess = (signedTx: YoroiSignedTx) => {
     trackSwapOrderSubmitted()
-    closeModal()
     InteractionManager.runAfterInteractions(() => {
       navigate.submittedTx(signedTx.signedTx.id)
     })
   }
 
-  const txIsLoading = authenticating || processingTx
-  const isButtonDisabled = txIsLoading || couldReceiveNoAssets
+  const onNext = () => {
+    let liquidityPool: React.ReactNode = null
+    if (orderData.selectedPoolCalculation) {
+      const poolIcon = <PoolIcon providerId={orderData.selectedPoolCalculation.pool.provider} size={18} />
+      const poolProviderFormatted = capitalize(orderData.selectedPoolCalculation.pool.provider)
+      const poolUrl = getPoolUrlByProvider(orderData.selectedPoolCalculation.pool.provider)
+
+      liquidityPool = (
+        <LiquidityPool liquidityPoolIcon={poolIcon} liquidityPoolName={poolProviderFormatted} poolUrl={poolUrl} />
+      )
+    }
+
+    if (liquidityPool != null) customReceiverTitleChanged(liquidityPool)
+    detailsChanged({component: <TransactionSummary orderData={orderData} />, title: strings.swapDetailsTitle})
+    unsignedTxChanged(unsignedTx)
+    onSuccessChanged(onSwapTxSuccess)
+    onErrorChanged(onSwapTxError)
+    navigateToTxReview()
+  }
+
+  const isButtonDisabled = couldReceiveNoAssets
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -116,12 +109,10 @@ export const ReviewSwap = () => {
                 setContentHeight(height + BOTTOM_ACTION_SECTION)
               }}
             >
-              <TransactionSummary />
+              <TransactionSummary orderData={orderData} />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-
-        <LoadingOverlay loading={txIsLoading} />
       </View>
 
       <Actions
@@ -129,32 +120,7 @@ export const ReviewSwap = () => {
           ...(deviceHeight < contentHeight && styles.actionBorder),
         }}
       >
-        <Button
-          disabled={isButtonDisabled}
-          testID="swapButton"
-          shelleyTheme
-          title={strings.confirm}
-          onPress={() => {
-            if (meta.isEasyConfirmationEnabled) {
-              authWithOs()
-              return
-            }
-            openModal(
-              meta.isHW ? strings.chooseConnectionMethod : strings.signTransaction,
-              <View style={styles.modalContent}>
-                <ConfirmTx
-                  wallet={wallet}
-                  unsignedTx={unsignedTx}
-                  onSuccess={onPasswordTxSuccess}
-                  onCancel={closeModal}
-                />
-
-                <Spacer height={16} />
-              </View>,
-              meta.isHW ? 430 : 350,
-            )
-          }}
-        />
+        <Button disabled={isButtonDisabled} testID="swapButton" title={strings.next} onPress={onNext} />
       </Actions>
     </SafeAreaView>
   )
@@ -169,28 +135,21 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
+      ...atoms.flex_1,
+      ...atoms.pt_lg,
       backgroundColor: color.bg_color_max,
-      paddingTop: 16,
     },
     container: {
-      flex: 1,
+      ...atoms.flex_1,
+      ...atoms.justify_between,
       backgroundColor: color.bg_color_max,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
     },
     actions: {
-      padding: 16,
+      ...atoms.p_lg,
       backgroundColor: color.bg_color_max,
     },
-    modalContent: {
-      flex: 1,
-      alignSelf: 'stretch',
-      ...atoms.px_lg,
-    },
     scroll: {
-      paddingHorizontal: 16,
+      ...atoms.px_lg,
     },
     actionBorder: {
       borderTopWidth: 1,

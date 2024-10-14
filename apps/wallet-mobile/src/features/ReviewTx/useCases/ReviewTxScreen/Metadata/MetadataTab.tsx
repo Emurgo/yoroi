@@ -8,7 +8,7 @@ import {useStrings} from '../../../common/hooks/useStrings'
 
 type Props = {
   hash: string | null
-  metadata: string | null
+  metadata: {msg: Array<string>} | null
 }
 
 export const MetadataTab = ({metadata, hash}: Props) => {

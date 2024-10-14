@@ -11,6 +11,9 @@ export const useStrings = () => {
     title: intl.formatMessage(messages.title),
     utxosTab: intl.formatMessage(messages.utxosTab),
     overviewTab: intl.formatMessage(messages.overviewTab),
+    metadataTab: intl.formatMessage(messages.metadataTab),
+    metadataHash: intl.formatMessage(messages.metadataHash),
+    metadataJsonLabel: intl.formatMessage(messages.metadataJsonLabel),
     walletLabel: intl.formatMessage(messages.walletLabel),
     feeLabel: intl.formatMessage(messages.feeLabel),
     myWalletLabel: intl.formatMessage(messages.myWalletLabel),
@@ -51,6 +54,18 @@ const messages = defineMessages({
   overviewTab: {
     id: 'txReview.tabLabel.overview',
     defaultMessage: '!!!Overview',
+  },
+  metadataTab: {
+    id: 'txReview.tabLabel.metadataTab',
+    defaultMessage: '!!!Metadata',
+  },
+  metadataHash: {
+    id: 'txReview.metadata.metadataHash',
+    defaultMessage: '!!!Metadata hash',
+  },
+  metadataJsonLabel: {
+    id: 'txReview.metadata.metadataJsonLabel',
+    defaultMessage: '!!!Metadata',
   },
   walletLabel: {
     id: 'txReview.overview.wallet',

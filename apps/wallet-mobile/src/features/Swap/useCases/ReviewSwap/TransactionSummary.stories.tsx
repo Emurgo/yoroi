@@ -34,20 +34,21 @@ storiesOf('TransactionSummary', module) //
   })
 
 const TxSummary = ({calculation}: {calculation: SwapOrderCalculation}) => {
+  const orderData = {...mocks.confirmTx.orderData, selectedPoolCalculation: calculation}
   return (
     <WalletManagerProviderMock wallet={{...walletMocks.wallet}}>
       <SwapProvider
         initialState={{
           ...mockSwapStateDefault,
           unsignedTx: walletMocks.yoroiUnsignedTx,
-          orderData: {...mocks.confirmTx.orderData, selectedPoolCalculation: calculation},
+          orderData,
         }}
         swapManager={{
           ...mockSwapManager,
         }}
       >
         <SwapFormProvider>
-          <TransactionSummary />
+          <TransactionSummary orderData={orderData} />
         </SwapFormProvider>
       </SwapProvider>
     </WalletManagerProviderMock>

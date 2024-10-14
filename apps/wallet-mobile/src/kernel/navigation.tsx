@@ -178,7 +178,6 @@ type ClaimRoutes = {
 
 type SwapTokenRoutes = {
   'swap-start-swap': NavigatorScreenParams<SwapTabRoutes>
-  'swap-confirm-tx': undefined
   'swap-review': undefined
   'swap-select-sell-token': undefined
   'swap-select-buy-token': undefined

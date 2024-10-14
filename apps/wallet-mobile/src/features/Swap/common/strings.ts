@@ -57,7 +57,7 @@ export const useStrings = () => {
     spendingPassword: intl.formatMessage(messages.spendingPassword),
     sign: intl.formatMessage(messages.sign),
     searchTokens: intl.formatMessage(messages.searchTokens),
-    confirm: intl.formatMessage(messages.confirm),
+    next: intl.formatMessage(messages.next),
     chooseConnectionMethod: intl.formatMessage(messages.chooseConnectionMethod),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
@@ -578,9 +578,9 @@ const messages = defineMessages({
     id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select asset',
   },
-  confirm: {
-    id: 'components.send.confirmscreen.confirmButton',
-    defaultMessage: '!!!Confirm',
+  next: {
+    id: 'global.next',
+    defaultMessage: '!!!Next',
   },
   assignCollateral: {
     id: 'components.send.confirmscreen.assignCollateral',

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!This option will allow you to send transactions from your wallet just by confirming with fingerprint or face recognition with standard system fallback option. This makes your wallet less secure. This is a compromise between UX and security!",
     "file": "src/features/Settings/useCases/changeWalletSettings/EasyConfirmation/EnableEasyConfirmationScreen.tsx",
     "start": {
-      "line": 93,
+      "line": 92,
       "column": 17,
-      "index": 3312
+      "index": 3287
     },
     "end": {
-      "line": 101,
+      "line": 100,
       "column": 3,
-      "index": 3708
+      "index": 3683
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Please remember your master password, as you may need it in case your biometrics data are removed from the device.",
     "file": "src/features/Settings/useCases/changeWalletSettings/EasyConfirmation/EnableEasyConfirmationScreen.tsx",
     "start": {
-      "line": 102,
+      "line": 101,
       "column": 17,
-      "index": 3727
+      "index": 3702
     },
     "end": {
-      "line": 107,
+      "line": 106,
       "column": 3,
-      "index": 3964
+      "index": 3939
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Master password",
     "file": "src/features/Settings/useCases/changeWalletSettings/EasyConfirmation/EnableEasyConfirmationScreen.tsx",
     "start": {
-      "line": 108,
+      "line": 107,
       "column": 22,
-      "index": 3988
+      "index": 3963
     },
     "end": {
-      "line": 111,
+      "line": 110,
       "column": 3,
-      "index": 4116
+      "index": 4091
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Enable",
     "file": "src/features/Settings/useCases/changeWalletSettings/EasyConfirmation/EnableEasyConfirmationScreen.tsx",
     "start": {
-      "line": 112,
+      "line": 111,
       "column": 16,
-      "index": 4134
+      "index": 4109
     },
     "end": {
-      "line": 115,
+      "line": 114,
       "column": 3,
-      "index": 4245
+      "index": 4220
     }
   }
 ]

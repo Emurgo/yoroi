@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Not now",
     "file": "src/features/Settings/useCases/changeAppSettings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
     "start": {
-      "line": 57,
+      "line": 55,
       "column": 16,
-      "index": 1749
+      "index": 1669
     },
     "end": {
-      "line": 60,
+      "line": 58,
       "column": 3,
-      "index": 1853
+      "index": 1773
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Link",
     "file": "src/features/Settings/useCases/changeAppSettings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
     "start": {
-      "line": 61,
+      "line": 59,
       "column": 14,
-      "index": 1869
+      "index": 1789
     },
     "end": {
-      "line": 64,
+      "line": 62,
       "column": 3,
-      "index": 1968
+      "index": 1888
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Use your fingerprint",
     "file": "src/features/Settings/useCases/changeAppSettings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
     "start": {
-      "line": 65,
+      "line": 63,
       "column": 11,
-      "index": 1981
+      "index": 1901
     },
     "end": {
-      "line": 68,
+      "line": 66,
       "column": 3,
-      "index": 2093
+      "index": 2013
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!for faster, easier access",
     "file": "src/features/Settings/useCases/changeAppSettings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
     "start": {
-      "line": 69,
+      "line": 67,
       "column": 15,
-      "index": 2110
+      "index": 2030
     },
     "end": {
-      "line": 72,
+      "line": 70,
       "column": 3,
-      "index": 2231
+      "index": 2151
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!to your Yoroi wallet",
     "file": "src/features/Settings/useCases/changeAppSettings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
     "start": {
-      "line": 73,
+      "line": 71,
       "column": 15,
-      "index": 2248
+      "index": 2168
     },
     "end": {
-      "line": 76,
+      "line": 74,
       "column": 3,
-      "index": 2364
+      "index": 2284
     }
   }
 ]

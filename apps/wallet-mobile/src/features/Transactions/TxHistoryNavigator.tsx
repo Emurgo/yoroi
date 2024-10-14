@@ -39,7 +39,6 @@ import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartM
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
 import {
-  ConfirmTxScreen as ConfirmTxSwapScreen,
   EditSlippageScreen,
   SelectPoolFromListScreen,
   ShowFailedTxScreen as FailedTxSwapScreen,
@@ -239,14 +238,6 @@ export const TxHistoryNavigator = () => {
                 options={{
                   ...sendOptions(navigationOptions, color),
                   title: strings.swapTitle,
-                }}
-              />
-
-              <Stack.Screen
-                name="swap-confirm-tx"
-                component={ConfirmTxSwapScreen}
-                options={{
-                  title: strings.confirmationTransaction,
                 }}
               />
 
