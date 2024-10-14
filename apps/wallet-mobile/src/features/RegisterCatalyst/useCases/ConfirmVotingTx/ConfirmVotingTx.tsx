@@ -118,7 +118,7 @@ export const ConfirmVotingTx = () => {
         <Spacer fill />
 
         <Actions>
-          <Button title={strings.confirm} shelleyTheme onPress={onSubmit} />
+          <Button title={strings.confirm} onPress={onSubmit} />
         </Actions>
       </SafeAreaView>
     </KeyboardAvoidingView>

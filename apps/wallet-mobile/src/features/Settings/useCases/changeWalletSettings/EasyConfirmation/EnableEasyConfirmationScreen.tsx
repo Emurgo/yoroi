@@ -61,7 +61,6 @@ export const EnableEasyConfirmationScreen = () => {
             title={strings.enableButton}
             onPress={() => enableEasyConfirmation(rootPassword)}
             disabled={isEmptyString(rootPassword) || isLoading}
-            shelleyTheme
           />
         </Actions>
       </SafeAreaView>

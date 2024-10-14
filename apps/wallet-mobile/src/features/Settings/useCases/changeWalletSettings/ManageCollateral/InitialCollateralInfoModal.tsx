@@ -20,7 +20,7 @@ export const InitialCollateralInfoModal = ({onConfirm}: {onConfirm: () => void})
       <Space fill />
 
       <View style={styles.actions}>
-        <Button title={strings.initialCollateralInfoModalButton} mainTheme onPress={onConfirm} />
+        <Button title={strings.initialCollateralInfoModalButton} onPress={onConfirm} />
       </View>
     </View>
   )

@@ -66,7 +66,6 @@ export const RenameWalletScreen = () => {
             onPress={handleOnRename}
             title={strings.changeButton}
             disabled={hasErrors || isEmptyString(newWalletName)}
-            shelleyTheme
           />
         </View>
       </SafeAreaView>

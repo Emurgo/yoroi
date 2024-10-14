@@ -52,7 +52,7 @@ export const CreateExchangeButton = ({
 
   return (
     <View style={[styles.actions, style]}>
-      <Button testID="rampOnOffButton" shelleyTheme title={title} onPress={handleOnPress} disabled={disabled} />
+      <Button testID="rampOnOffButton" title={title} onPress={handleOnPress} disabled={disabled} />
     </View>
   )
 }

@@ -3,13 +3,9 @@ import {Image} from 'expo-image'
 import React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
 
-type Props = {
-  image: string
-  style?: ViewStyle
-  size?: number
-}
+import {IconProps} from './type'
 
-export const WalletAvatar = ({image = '', size = 40, style}: Props) => {
+export const WalletAvatar = ({image = '', size = 40, style}: IconProps & {image?: string; style?: ViewStyle}) => {
   const styles = useStyles()
 
   return (

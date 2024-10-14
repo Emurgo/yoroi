@@ -1,12 +1,9 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-type Props = {
-  size?: number
-  color?: string
-}
+import {IconProps} from './type'
 
-export const NftAsset = ({size = 36, color = 'black'}: Props) => (
+export const NftAsset = ({size = 36, color = 'black'}: IconProps) => (
   <Svg width={size} height={size} viewBox="-2 -2 28 28">
     <Path
       d="M7.70711 6.29289C7.42111 6.00689 6.99099 5.92134 6.61732 6.07612C6.24364 6.2309 6 6.59554 6 7V11C6 11.5523 6.44772 12 7 12C7.55228 12 8 11.5523 8 11V9.41421L10.2929 11.7071C10.5789 11.9931 11.009 12.0787 11.3827 11.9239C11.7564 11.7691 12 11.4045 12 11V7C12 6.44771 11.5523 6 11 6C10.4477 6 10 6.44771 10 7V8.58578L7.70711 6.29289Z"

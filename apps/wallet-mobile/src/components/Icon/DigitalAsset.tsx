@@ -1,12 +1,9 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-type Props = {
-  size?: number
-  color?: string
-}
+import {IconProps} from './type'
 
-export const DigitalAsset = ({size = 36, color = 'black'}: Props) => (
+export const DigitalAsset = ({size = 36, color = 'black'}: IconProps) => (
   <Svg width={size} height={size} viewBox="-2 -2 28 28">
     <Path
       d="M6 7C6 6.44772 6.44772 6 7 6H9C9.55228 6 10 6.44772 10 7V10H11C11.5523 10 12 10.4477 12 11C12 11.5523 11.5523 12 11 12H7C6.44772 12 6 11.5523 6 11C6 10.4477 6.44772 10 7 10H8V8H7C6.44772 8 6 7.55228 6 7Z"

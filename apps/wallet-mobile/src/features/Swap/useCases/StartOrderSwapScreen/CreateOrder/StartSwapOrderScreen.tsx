@@ -329,7 +329,7 @@ export const StartSwapOrderScreen = () => {
       </ScrollView>
 
       <Actions style={[(deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
-        <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
+        <Button testID="swapButton" title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
       </Actions>
     </View>
   )

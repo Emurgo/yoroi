@@ -23,7 +23,6 @@ type Props = {
     totalSteps: number
   }
   containerStyle?: ViewStyle
-  buttonStyle?: ViewStyle
   topContent?: React.ReactNode
   bottomContent?: React.ReactNode
   isWaiting?: boolean
@@ -34,7 +33,6 @@ export const WalletNameForm = ({
   image,
   progress,
   containerStyle,
-  buttonStyle,
   topContent,
   bottomContent,
   defaultWalletName,
@@ -92,10 +90,8 @@ export const WalletNameForm = ({
 
         <View style={styles.buttonContainer}>
           <Button
-            block
             onPress={() => onSubmit({name: name.trim()})}
             title={strings.save}
-            style={[styles.button, buttonStyle]}
             disabled={hasErrors || isWaiting}
             testID="saveWalletButton"
           />
@@ -127,10 +123,6 @@ const useStyles = () => {
     buttonContainer: {
       flexDirection: 'row',
       marginTop: 12,
-    },
-    button: {
-      marginHorizontal: 10,
-      marginVertical: 16,
     },
   })
 

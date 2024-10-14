@@ -2,16 +2,24 @@ import {useFocusEffect} from '@react-navigation/native'
 import {configCardanoLegacyTransfer, linksCardanoModuleMaker, linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView as RNScrollView, StyleSheet, Text, useWindowDimensions, View} from 'react-native'
+import {
+  GestureResponderEvent,
+  ScrollView as RNScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
+import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
+import {Icon} from '../../../components/Icon'
 import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
 import {ShareQRCodeCard} from '../../../components/ShareQRCodeCard/ShareQRCodeCard'
 import {TextInput} from '../../../components/TextInput/TextInput'
-import {useCopy} from '../../../hooks/useCopy'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
 import {editedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
@@ -81,7 +89,6 @@ export const RequestSpecificAmountScreen = () => {
 
         <View style={[styles.actions, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
           <Button
-            shelleyTheme
             onPress={handleOnGenerateLink}
             disabled={!hasAmount}
             title={strings.generateLink}
@@ -119,8 +126,7 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
   const content = hasAmount ? yoroiPaymentRequestLink : address
   const title = hasAmount ? `${amount} ${portfolioPrimaryTokenInfo.ticker.toLocaleUpperCase()}` : ''
 
-  const [isCopying, copy] = useCopy()
-  const handOnCopy = () => copy(content)
+  const {copy} = useCopy()
 
   return (
     <View style={[styles.container, styles.flex]}>
@@ -130,11 +136,12 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
             title={title}
             shareContent={content}
             qrContent={content}
-            onLongPress={handOnCopy}
-            testId="receive:specific-amount"
+            onLongPress={(event: GestureResponderEvent) =>
+              copy({text: content, feedback: strings.addressCopiedMsg, event})
+            }
+            testID="receive:specific-amount"
             onShare={() => track.receiveShareAddressClicked()}
             shareLabel={strings.shareLabel}
-            copiedText={strings.addressCopiedMsg}
           />
         ) : (
           <View style={styles.root}>
@@ -145,13 +152,10 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
 
       <View style={styles.actions}>
         <Button
-          shelleyTheme
-          onPress={handOnCopy}
+          onPress={(event: GestureResponderEvent) => copy({text: content, feedback: strings.copyLinkMsg, event})}
           disabled={!hasAmount}
           title={strings.copyLinkBtn}
-          iconImage={require('../../../assets/img/copy.png')}
-          isCopying={isCopying}
-          copiedText={strings.copyLinkMsg}
+          icon={Icon.Copy}
           testID="receive:request-specific-amount:copy-link-button"
         />
       </View>

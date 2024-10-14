@@ -1,12 +1,9 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-type Props = {
-  size?: number
-  color?: string
-}
+import {IconProps} from './type'
 
-export const Globe = ({size = 36, color = 'black'}: Props) => (
+export const Globe = ({size = 36, color = 'black'}: IconProps) => (
   <Svg width={size} height={size} viewBox="-2 -2 28 28">
     <Path
       fillRule="evenodd"

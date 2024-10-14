@@ -4,12 +4,12 @@
     "defaultMessage": "!!!General",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 227,
+      "line": 214,
       "column": 11,
       "index": 6771
     },
     "end": {
-      "line": 230,
+      "line": 217,
       "column": 3,
       "index": 6869
     }
@@ -19,12 +19,12 @@
     "defaultMessage": "!!!Actions",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 231,
+      "line": 218,
       "column": 11,
       "index": 6882
     },
     "end": {
-      "line": 234,
+      "line": 221,
       "column": 3,
       "index": 6980
     }
@@ -34,12 +34,12 @@
     "defaultMessage": "!!!Switch wallet",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 235,
+      "line": 222,
       "column": 16,
       "index": 6998
     },
     "end": {
-      "line": 238,
+      "line": 225,
       "column": 3,
       "index": 7107
     }
@@ -49,12 +49,12 @@
     "defaultMessage": "!!!Logout",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 239,
+      "line": 226,
       "column": 10,
       "index": 7119
     },
     "end": {
-      "line": 242,
+      "line": 229,
       "column": 3,
       "index": 7215
     }
@@ -64,12 +64,12 @@
     "defaultMessage": "!!!Wallet name",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 243,
+      "line": 230,
       "column": 14,
       "index": 7231
     },
     "end": {
-      "line": 246,
+      "line": 233,
       "column": 3,
       "index": 7336
     }
@@ -79,12 +79,12 @@
     "defaultMessage": "!!!Security",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 247,
+      "line": 234,
       "column": 12,
       "index": 7350
     },
     "end": {
-      "line": 250,
+      "line": 237,
       "column": 3,
       "index": 7450
     }
@@ -94,12 +94,12 @@
     "defaultMessage": "!!!Change spending password",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 251,
+      "line": 238,
       "column": 18,
       "index": 7470
     },
     "end": {
-      "line": 254,
+      "line": 241,
       "column": 3,
       "index": 7592
     }
@@ -109,12 +109,12 @@
     "defaultMessage": "!!!Easy transaction confirmation",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 255,
+      "line": 242,
       "column": 20,
       "index": 7614
     },
     "end": {
-      "line": 258,
+      "line": 245,
       "column": 3,
       "index": 7743
     }
@@ -124,12 +124,12 @@
     "defaultMessage": "!!!Skip the password and approve transactions with biometrics",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 259,
+      "line": 246,
       "column": 24,
       "index": 7769
     },
     "end": {
-      "line": 262,
+      "line": 249,
       "column": 3,
       "index": 7931
     }
@@ -139,12 +139,12 @@
     "defaultMessage": "!!!Remove wallet",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 263,
+      "line": 250,
       "column": 16,
       "index": 7949
     },
     "end": {
-      "line": 266,
+      "line": 253,
       "column": 3,
       "index": 8058
     }
@@ -154,12 +154,12 @@
     "defaultMessage": "!!!Collateral",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 267,
+      "line": 254,
       "column": 14,
       "index": 8074
     },
     "end": {
-      "line": 270,
+      "line": 257,
       "column": 3,
       "index": 8145
     }
@@ -169,12 +169,12 @@
     "defaultMessage": "!!!Multiple addresses",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 271,
+      "line": 258,
       "column": 21,
       "index": 8168
     },
     "end": {
-      "line": 274,
+      "line": 261,
       "column": 3,
       "index": 8254
     }
@@ -184,12 +184,12 @@
     "defaultMessage": "!!!Single address",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 275,
+      "line": 262,
       "column": 17,
       "index": 8273
     },
     "end": {
-      "line": 278,
+      "line": 265,
       "column": 3,
       "index": 8351
     }
@@ -199,12 +199,12 @@
     "defaultMessage": "!!!By enabling this you can operate with more wallet addresses",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 279,
+      "line": 266,
       "column": 25,
       "index": 8378
     },
     "end": {
-      "line": 282,
+      "line": 269,
       "column": 3,
       "index": 8509
     }
@@ -214,12 +214,12 @@
     "defaultMessage": "!!!Network:",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 284,
+      "line": 271,
       "column": 11,
       "index": 8570
     },
     "end": {
-      "line": 287,
+      "line": 274,
       "column": 3,
       "index": 8636
     }
@@ -229,12 +229,12 @@
     "defaultMessage": "!!!Wallet type:",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 288,
+      "line": 275,
       "column": 14,
       "index": 8652
     },
     "end": {
-      "line": 291,
+      "line": 278,
       "column": 3,
       "index": 8758
     }
@@ -244,12 +244,12 @@
     "defaultMessage": "!!!Byron-era wallet",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 292,
+      "line": 279,
       "column": 15,
       "index": 8775
     },
     "end": {
-      "line": 295,
+      "line": 282,
       "column": 3,
       "index": 8886
     }
@@ -259,12 +259,12 @@
     "defaultMessage": "!!!Shelley-era wallet",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 296,
+      "line": 283,
       "column": 17,
       "index": 8905
     },
     "end": {
-      "line": 299,
+      "line": 286,
       "column": 3,
       "index": 9020
     }
@@ -274,12 +274,12 @@
     "defaultMessage": "!!!Unknown Wallet Type",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 300,
+      "line": 287,
       "column": 21,
       "index": 9043
     },
     "end": {
-      "line": 303,
+      "line": 290,
       "column": 3,
       "index": 9163
     }
@@ -289,12 +289,12 @@
     "defaultMessage": "!!!About",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 304,
+      "line": 291,
       "column": 9,
       "index": 9174
     },
     "end": {
-      "line": 307,
+      "line": 294,
       "column": 3,
       "index": 9268
     }
@@ -304,12 +304,12 @@
     "defaultMessage": "!!!Resync",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
-      "line": 308,
+      "line": 295,
       "column": 10,
       "index": 9280
     },
     "end": {
-      "line": 311,
+      "line": 298,
       "column": 3,
       "index": 9382
     }

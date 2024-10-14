@@ -9,6 +9,7 @@ import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'rea
 import RNBootSplash from 'react-native-bootsplash'
 
 import StorybookScreen from '../.storybook'
+import {ClipboardProvider} from './components/Clipboard/ClipboardProvider'
 import {ModalProvider} from './components/Modal/ModalContext'
 import {ModalScreen} from './components/Modal/ModalScreen'
 import {useAuth} from './features/Auth/AuthProvider'
@@ -99,112 +100,114 @@ export const AppNavigator = () => {
       onReady={onReady}
       ref={navRef}
     >
-      <ModalProvider>
-        <Stack.Navigator
-          screenOptions={{
-            ...navOptions,
-            headerShown: false /* used only for transition */,
-          }}
-        >
-          {/* Not Authenticated */}
+      <ClipboardProvider>
+        <ModalProvider>
+          <Stack.Navigator
+            screenOptions={{
+              ...navOptions,
+              headerShown: false /* used only for transition */,
+            }}
+          >
+            {/* Not Authenticated */}
 
-          {isLoggedOut && (
-            <Stack.Group>
-              {firstAction === 'first-run' && (
-                <Stack.Screen name="first-run">
-                  {() => (
-                    <SearchProvider>
-                      <InitializationNavigator />
-                    </SearchProvider>
-                  )}
-                </Stack.Screen>
-              )}
-
-              {firstAction === 'show-agreement-changed-notice' && (
-                <Stack.Screen name="agreement-changed-notice">{() => <AgreementChangedNavigator />}</Stack.Screen>
-              )}
-
-              {firstAction === 'auth-with-pin' && (
-                <Stack.Screen
-                  name="custom-pin-auth"
-                  component={PinLoginScreen}
-                  options={{title: strings.loginPinTitle}}
-                />
-              )}
-
-              {firstAction === 'auth-with-os' && (
-                <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
-              )}
-
-              {firstAction === 'request-new-pin' && (
-                <Stack.Screen //
-                  name="enable-login-with-pin"
-                  component={CreatePinScreenWrapper}
-                  options={{title: strings.customPinTitle}}
-                />
-              )}
-            </Stack.Group>
-          )}
-
-          {/* Authenticated */}
-
-          {isLoggedIn && (
-            <>
+            {isLoggedOut && (
               <Stack.Group>
-                {afterLoginAction === 'choose-biometric-login' && (
-                  <Stack.Screen //
-                    name="choose-biometric-login"
-                    options={{headerShown: false}}
-                    component={ChooseBiometricLoginScreen}
+                {firstAction === 'first-run' && (
+                  <Stack.Screen name="first-run">
+                    {() => (
+                      <SearchProvider>
+                        <InitializationNavigator />
+                      </SearchProvider>
+                    )}
+                  </Stack.Screen>
+                )}
+
+                {firstAction === 'show-agreement-changed-notice' && (
+                  <Stack.Screen name="agreement-changed-notice">{() => <AgreementChangedNavigator />}</Stack.Screen>
+                )}
+
+                {firstAction === 'auth-with-pin' && (
+                  <Stack.Screen
+                    name="custom-pin-auth"
+                    component={PinLoginScreen}
+                    options={{title: strings.loginPinTitle}}
                   />
                 )}
 
-                {afterLoginAction === 'dark-theme-announcement' && (
-                  <Stack.Screen //
-                    name="dark-theme-announcement"
-                    options={{headerShown: false}}
-                    component={DarkThemeAnnouncement}
-                  />
+                {firstAction === 'auth-with-os' && (
+                  <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
                 )}
 
-                {afterLoginAction === 'setup-wallet' && (
+                {firstAction === 'request-new-pin' && (
                   <Stack.Screen //
-                    name="setup-wallet"
-                    options={{headerShown: false}}
-                    component={SetupWalletNavigator}
+                    name="enable-login-with-pin"
+                    component={CreatePinScreenWrapper}
+                    options={{title: strings.customPinTitle}}
                   />
-                )}
-
-                {afterLoginAction === 'manage-wallets' && (
-                  <Stack.Screen name="manage-wallets" getComponent={() => WalletNavigator} />
                 )}
               </Stack.Group>
+            )}
 
-              <Stack.Group
-                screenOptions={{
-                  presentation: 'transparentModal',
-                  ...(Platform.OS === 'android' && {...TransitionPresets.DefaultTransition}), // overriding general navigation settings
-                  cardStyle: {backgroundColor: 'transparent'}, // this is needed for the modal to be transparent
-                }}
-              >
-                <Stack.Screen name="modal" component={ModalScreen} />
+            {/* Authenticated */}
+
+            {isLoggedIn && (
+              <>
+                <Stack.Group>
+                  {afterLoginAction === 'choose-biometric-login' && (
+                    <Stack.Screen //
+                      name="choose-biometric-login"
+                      options={{headerShown: false}}
+                      component={ChooseBiometricLoginScreen}
+                    />
+                  )}
+
+                  {afterLoginAction === 'dark-theme-announcement' && (
+                    <Stack.Screen //
+                      name="dark-theme-announcement"
+                      options={{headerShown: false}}
+                      component={DarkThemeAnnouncement}
+                    />
+                  )}
+
+                  {afterLoginAction === 'setup-wallet' && (
+                    <Stack.Screen //
+                      name="setup-wallet"
+                      options={{headerShown: false}}
+                      component={SetupWalletNavigator}
+                    />
+                  )}
+
+                  {afterLoginAction === 'manage-wallets' && (
+                    <Stack.Screen name="manage-wallets" getComponent={() => WalletNavigator} />
+                  )}
+                </Stack.Group>
+
+                <Stack.Group
+                  screenOptions={{
+                    presentation: 'transparentModal',
+                    ...(Platform.OS === 'android' && {...TransitionPresets.DefaultTransition}), // overriding general navigation settings
+                    cardStyle: {backgroundColor: 'transparent'}, // this is needed for the modal to be transparent
+                  }}
+                >
+                  <Stack.Screen name="modal" component={ModalScreen} />
+                </Stack.Group>
+              </>
+            )}
+
+            {/* Development */}
+
+            {__DEV__ && (
+              <Stack.Group>
+                <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
+
+                <Stack.Screen name="storybook" component={StorybookScreen} />
+
+                <Stack.Screen name="playground" component={Playground} />
               </Stack.Group>
-            </>
-          )}
-
-          {/* Development */}
-
-          {__DEV__ && (
-            <Stack.Group>
-              <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
-
-              <Stack.Screen name="storybook" component={StorybookScreen} />
-
-              <Stack.Screen name="playground" component={Playground} />
-            </Stack.Group>
-          )}
-        </Stack.Navigator>
-      </ModalProvider>
+            )}
+          </Stack.Navigator>
+        </ModalProvider>
+      </ClipboardProvider>
     </NavigationContainer>
   )
 }

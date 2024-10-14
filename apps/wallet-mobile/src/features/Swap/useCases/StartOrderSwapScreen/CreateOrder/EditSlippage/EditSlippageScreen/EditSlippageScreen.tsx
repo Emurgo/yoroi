@@ -125,13 +125,7 @@ export const EditSlippageScreen = () => {
           </View>
         </ScrollView>
 
-        <Button
-          testID="applyButton"
-          shelleyTheme
-          title={strings.apply}
-          disabled={isButtonDisabled}
-          onPress={onSubmit}
-        />
+        <Button testID="applyButton" title={strings.apply} disabled={isButtonDisabled} onPress={onSubmit} />
       </SafeAreaView>
     </KeyboardAvoidingView>
   )

@@ -2,9 +2,9 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-type Props = {size: number; color?: string}
+import {IconProps} from './type'
 
-export const Switch = (props: Props) => {
+export const Switch = (props: IconProps) => {
   const {color: colors} = useTheme()
   const {size, color = colors.primary_500} = props
   return (

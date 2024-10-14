@@ -23,7 +23,7 @@ export const WithdrawWarningModal = ({onParticipatePress}: Props) => {
 
       <Spacer fill />
 
-      <Button title={strings.withdrawWarningButton} shelleyTheme onPress={onParticipatePress} />
+      <Button title={strings.withdrawWarningButton} onPress={onParticipatePress} />
 
       <Spacer height={24} />
     </View>

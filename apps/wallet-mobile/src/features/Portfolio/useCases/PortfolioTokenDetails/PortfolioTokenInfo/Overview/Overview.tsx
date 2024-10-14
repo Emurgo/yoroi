@@ -77,9 +77,7 @@ export const Overview = () => {
 
               <Spacer height={4} />
 
-              <CopyButton value={policyId ?? ''} style={styles.copyButton}>
-                <Text style={styles.copyText}>{policyId ?? '--'}</Text>
-              </CopyButton>
+              <CopyButton title={policyId ?? '--'} value={policyId ?? ''} style={styles.copyButton} />
             </View>
 
             <Spacer height={24} />
@@ -89,9 +87,11 @@ export const Overview = () => {
 
               <Spacer height={4} />
 
-              <CopyButton value={tokenInfo.info?.fingerprint ?? ''} style={styles.copyButton}>
-                <Text style={styles.copyText}>{tokenInfo.info?.fingerprint ?? '--'}</Text>
-              </CopyButton>
+              <CopyButton
+                title={tokenInfo.info?.fingerprint ?? '--'}
+                value={tokenInfo.info?.fingerprint ?? ''}
+                style={styles.copyButton}
+              />
             </View>
 
             <Spacer height={24} />
@@ -183,11 +183,6 @@ const useStyles = () => {
       ...atoms.flex_row_reverse,
       ...atoms.align_start,
       ...atoms.gap_sm,
-    },
-    copyText: {
-      ...atoms.flex_1,
-      ...atoms.body_2_md_regular,
-      color: color.gray_600,
     },
   })
 

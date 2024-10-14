@@ -4,11 +4,11 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
+import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../components/Icon'
 import {MediaPreview} from '../../../components/MediaPreview/MediaPreview'
 import {SimpleTab} from '../../../components/SimpleTab/SimpleTab'
 import {Space} from '../../../components/Space/Space'
-import {useCopy} from '../../../hooks/useCopy'
 import {time} from '../../../kernel/constants'
 import {isEmptyString} from '../../../kernel/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
@@ -99,7 +99,7 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
 const Json = ({discovery, isActive}: {discovery?: Portfolio.Token.Discovery; isActive: boolean}) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
-  const [, copy] = useCopy()
+  const {copy} = useCopy()
 
   if (!isActive || !discovery) return null
 
@@ -110,7 +110,7 @@ const Json = ({discovery, isActive}: {discovery?: Portfolio.Token.Discovery; isA
       <View style={styles.jsonHeader}>
         <Text style={styles.jsonLabel}>{strings.metadata}</Text>
 
-        <TouchableOpacity onPress={() => copy(stringifiedMetadata)} activeOpacity={0.5}>
+        <TouchableOpacity onPress={() => copy({text: stringifiedMetadata})} activeOpacity={0.5}>
           <Icon.Copy size={24} color={colors.copy} />
         </TouchableOpacity>
       </View>

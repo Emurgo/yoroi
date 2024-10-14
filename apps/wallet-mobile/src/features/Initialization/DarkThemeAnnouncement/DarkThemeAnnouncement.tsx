@@ -57,7 +57,7 @@ export const DarkThemeAnnouncement = () => {
         </View>
       </ScrollView>
 
-      <Button title={strings.continue} disabled={isSetScreenShownLoading} onPress={navigate} shelleyTheme />
+      <Button title={strings.continue} disabled={isSetScreenShownLoading} onPress={navigate} />
 
       {Platform.OS === 'android' && <Space height="lg" />}
     </SafeAreaView>

@@ -73,7 +73,6 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
       <View style={styles.actions}>
         <Button
           testID="confirmButton"
-          shelleyTheme
           title={strings.sign}
           onPress={() => onSubmit?.(spendingPassword)}
           disabled={spendingPassword.length === 0}

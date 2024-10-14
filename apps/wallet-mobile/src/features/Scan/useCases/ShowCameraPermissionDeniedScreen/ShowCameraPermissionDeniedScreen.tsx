@@ -1,15 +1,15 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {openSettings} from 'react-native-permissions'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
 import {useBlockGoBack, useWalletNavigation} from '../../../../kernel/navigation'
 import {useStrings} from '../../common/useStrings'
 import {CameraPermissionDeniedIllustration} from '../../illustrations/CameraPermissionDeniedIlustration'
-import {OpenDeviceAppSettingsButton} from './OpenDeviceAppSettingsButton'
 
 export const ShowCameraPermissionDeniedScreen = () => {
   const styles = useStyles()
@@ -29,11 +29,11 @@ export const ShowCameraPermissionDeniedScreen = () => {
       </ScrollView>
 
       <Actions>
-        <ContinueButton onPress={resetToTxHistory} title={strings.continue} outlineShelley />
+        <Button onPress={resetToTxHistory} title={strings.continue} size="S" type={ButtonType.Secondary} />
 
         <Spacer height={16} />
 
-        <OpenDeviceAppSettingsButton />
+        <Button onPress={openSettings} title={strings.openAppSettings} size="S" />
       </Actions>
     </SafeAreaView>
   )
@@ -75,5 +75,3 @@ const useStyles = () => {
   })
   return styles
 }
-
-const ContinueButton = Button

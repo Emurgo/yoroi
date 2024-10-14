@@ -23,13 +23,7 @@ export const ErrorScreen = () => {
 
       <Space height="lg" />
 
-      <Button
-        testID="rampOnOffErrorCloseButton"
-        shelleyTheme
-        title={strings.close}
-        style={styles.button}
-        onPress={closeModal}
-      />
+      <Button testID="rampOnOffErrorCloseButton" title={strings.close} style={styles.button} onPress={closeModal} />
     </View>
   )
 }

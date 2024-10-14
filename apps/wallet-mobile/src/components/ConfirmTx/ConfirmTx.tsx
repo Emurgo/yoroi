@@ -290,7 +290,6 @@ export const ConfirmTx = ({
           {...buttonProps}
           disabled={isConfirmationDisabled || isProcessing || disabled}
           testID="confirmTxButton"
-          shelleyTheme
         />
       </View>
 

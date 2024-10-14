@@ -7,14 +7,13 @@ import {Received} from '../Icon/Received'
 import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'
 import {MultiParty} from './MultiParty'
+import {IconProps} from './type'
 
-type Props = {
-  transaction: TransactionInfo
-  size?: number
-  containerStyle?: ViewStyle
-}
-
-export const Direction = ({transaction, size = defaultSize, containerStyle}: Props) => {
+export const Direction = ({
+  transaction,
+  size = defaultSize,
+  containerStyle,
+}: IconProps & {transaction: TransactionInfo; containerStyle?: ViewStyle}) => {
   const {color} = useTheme()
   const {direction} = transaction
 

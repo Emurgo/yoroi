@@ -5,7 +5,7 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'
@@ -58,11 +58,11 @@ export const RequestedAdaPaymentWithLinkScreen = ({
       </ScrollView>
 
       <Actions style={styles.actions}>
-        <Button block outlineShelley onPress={handleOnCancel} title={strings.cancel} />
+        <Button size="S" type={ButtonType.Secondary} onPress={handleOnCancel} title={strings.cancel} />
 
         <Spacer width={16} />
 
-        <Button block shelleyTheme onPress={onContinue} title={strings.continue} />
+        <Button size="S" onPress={onContinue} title={strings.continue} />
       </Actions>
     </SafeAreaView>
   )

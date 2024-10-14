@@ -46,7 +46,7 @@ export const UnverifiedDappModal = ({onConfirm}: Props) => {
       <Spacer fill />
 
       <View style={styles.actions}>
-        <Button title={strings.understand} shelleyTheme onPress={onConfirm} />
+        <Button title={strings.understand} onPress={onConfirm} />
       </View>
     </View>
   )

@@ -4,13 +4,12 @@ import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Chain} from '@yoroi/types'
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
+import {GestureResponderEvent, StyleSheet, View} from 'react-native'
 
+import {Button, ButtonType} from '../../../../components/Button/Button'
+import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../../components/Icon'
-import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
-import {useCopy} from '../../../../hooks/useCopy'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {useReceive} from '../../../Receive/common/ReceiveProvider'
@@ -23,14 +22,14 @@ import {useWalletManager} from '../../../WalletManager/context/WalletManagerProv
 import {useStrings} from '../../common/strings'
 
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
 
   const {isSingle, addressMode} = useAddressMode()
   const {next: nextReceiveAddress, used: usedAddresses} = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
-  const [isCopying, copy] = useCopy()
+  const {copy} = useCopy()
   const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
 
   const {reset: resetSendState} = useTransfer()
@@ -102,96 +101,65 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     navigateTo.receiveSingleAddress()
   }
 
-  const handleOnLongPressReceive = () => {
+  const handleOnLongPressReceive = (event: GestureResponderEvent) => {
     track.receiveCopyAddressClicked({copy_address_location: 'Long Press wallet Address'})
-    copy(nextReceiveAddress)
-  }
-
-  const iconProps = {
-    size: 24,
-    color: colors.actionColor,
+    copy({text: nextReceiveAddress, event})
   }
 
   return (
-    <View>
-      <Spacer height={16} />
-
+    <View style={styles.container}>
       <View style={styles.centralized}>
-        <View style={[styles.row, disabled && styles.disabled]}>
-          {isCopying && (
-            <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-              <Text style={styles.textCopy}>{strings.addressCopiedMsg}</Text>
-            </Animated.View>
-          )}
+        <Button
+          type={ButtonType.Circle}
+          icon={Icon.Received}
+          onPress={handleOnPressReceive}
+          testID="receiveButton"
+          disabled={disabled}
+          onLongPress={handleOnLongPressReceive}
+        />
 
-          <View style={styles.centralized}>
-            <TouchableOpacity
-              style={styles.actionIcon}
-              onPress={handleOnPressReceive}
-              testID="receiveButton"
-              disabled={disabled}
-              onLongPress={handleOnLongPressReceive}
-            >
-              <Icon.Received {...iconProps} />
-            </TouchableOpacity>
-
-            <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
-          </View>
-
-          {!meta.isReadOnly && <Spacer width={18} />}
-
-          {!meta.isReadOnly && (
-            <View style={styles.centralized}>
-              <TouchableOpacity
-                style={styles.actionIcon}
-                onPress={handleOnSend}
-                testID="sendButton"
-                disabled={disabled}
-              >
-                <Icon.Send {...iconProps} />
-              </TouchableOpacity>
-
-              <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
-            </View>
-          )}
-
-          {!meta.isReadOnly && (
-            <>
-              <Spacer width={18} />
-
-              <View style={styles.centralized}>
-                <TouchableOpacity
-                  style={styles.actionIcon}
-                  onPress={handleOnSwap}
-                  testID="swapButton"
-                  disabled={disabled}
-                >
-                  <Icon.Swap {...iconProps} />
-                </TouchableOpacity>
-
-                <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
-              </View>
-
-              <Spacer width={18} />
-
-              <View style={styles.centralized}>
-                <TouchableOpacity
-                  style={styles.actionIcon}
-                  onPress={handleOnExchange}
-                  testID="buyButton"
-                  disabled={disabled}
-                >
-                  <Icon.Exchange {...iconProps} />
-                </TouchableOpacity>
-
-                <Text style={styles.actionLabel}>{strings.exchange}</Text>
-              </View>
-            </>
-          )}
-        </View>
+        <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.receiveLabel}</Text>
       </View>
 
-      <Spacer height={21} />
+      {!meta.isReadOnly && (
+        <>
+          <View style={styles.centralized}>
+            <Button
+              type={ButtonType.Circle}
+              icon={Icon.Send}
+              onPress={handleOnSend}
+              testID="sendButton"
+              disabled={disabled}
+            />
+
+            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.sendLabel}</Text>
+          </View>
+
+          <View style={styles.centralized}>
+            <Button
+              type={ButtonType.Circle}
+              icon={Icon.Swap}
+              onPress={handleOnSwap}
+              testID="swapButton"
+              disabled={disabled}
+            />
+
+            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.swapLabel}</Text>
+          </View>
+
+          <View style={styles.centralized}>
+            <Button
+              type={ButtonType.Circle}
+              icon={Icon.Exchange}
+              onPress={handleOnExchange}
+              testID="buyButton"
+              disabled={disabled}
+            />
+
+            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.exchange}</Text>
+          </View>
+        </>
+      )}
     </View>
   )
 }
@@ -199,52 +167,27 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    container: {
+      ...atoms.py_xl,
+      ...atoms.flex_row,
+      ...atoms.justify_center,
+      ...atoms.gap_lg,
+    },
     centralized: {
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    row: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-    },
-    actionIcon: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: 56,
-      width: 56,
-      borderRadius: 28,
-      backgroundColor: color.primary_500,
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
     actionLabel: {
       ...atoms.pt_sm,
       ...atoms.body_3_sm_medium,
-      color: color.gray_max,
+      color: color.text_gray_medium,
     },
-    disabled: {
-      opacity: 0.5,
-    },
-    isCopying: {
-      position: 'absolute',
-      backgroundColor: color.gray_max,
-      alignItems: 'center',
-      justifyContent: 'center',
-      top: -40,
-      borderRadius: 4,
-      zIndex: 10,
-      left: -25,
-    },
-    textCopy: {
-      textAlign: 'center',
-      ...atoms.p_sm,
-      ...atoms.body_2_md_medium,
-      color: color.gray_min,
+    disabledLabel: {
+      color: color.text_gray_low,
     },
   })
 
-  const colors = {
-    actionColor: color.white_static,
-  }
-  return {styles, colors}
+  return {styles}
 }
 
 const useNavigateTo = () => {

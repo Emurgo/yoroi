@@ -25,7 +25,7 @@ export const FailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={navigation.goBack} title={strings.failedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={navigation.goBack} title={strings.failedTxButton} style={styles.button} />
     </SafeArea>
   )
 }

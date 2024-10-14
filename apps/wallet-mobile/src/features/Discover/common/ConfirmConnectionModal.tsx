@@ -110,7 +110,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo, showSing
 
       <Spacer height={46} />
 
-      <Button title={strings.confirmConnectionModalConnect} shelleyTheme onPress={onConfirm} />
+      <Button title={strings.confirmConnectionModalConnect} onPress={onConfirm} />
     </View>
   )
 }
