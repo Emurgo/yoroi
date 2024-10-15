@@ -46,11 +46,7 @@ const Screen = () => {
         <View style={{padding: 16, gap: 8}}>
           <Text style={{fontSize: 24}}>Notifications Playground</Text>
 
-          <Button
-            title="Trigger Transacrion Received Notification"
-            shelleyTheme
-            onPress={handleOnTriggerTransactionReceived}
-          />
+          <Button title="Trigger Transacrion Received Notification" onPress={handleOnTriggerTransactionReceived} />
 
           <Text style={{fontSize: 24}}>Settings</Text>
 
@@ -166,7 +162,7 @@ const NotificationSettings = () => {
 
   return (
     <View>
-      <Button title="Reset" shelleyTheme onPress={handleOnReset}></Button>
+      <Button title="Reset" onPress={handleOnReset}></Button>
 
       <View style={{gap: 16}}>
         <TransactionReceivedSetting
