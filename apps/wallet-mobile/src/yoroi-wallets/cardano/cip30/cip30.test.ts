@@ -27,7 +27,6 @@ describe('cip30ExtensionMaker', () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     console.log('test2', cip30)
     const result = await cip30.getBalance()
-    console.log('test3')
     expect(result).toBeDefined()
     expect(await (await result.coin()).toStr()).toBe('2282543724')
   })
