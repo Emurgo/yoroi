@@ -11,3 +11,6 @@ export class ApiErrorUnknown extends Error {}
 export class ApiErrorNetwork extends Error {}
 export class ApiErrorInvalidState extends Error {}
 export class ApiErrorResponseMalformed extends Error {}
+export class ApiErrorServiceUnavailable extends Error {}
+export class ApiErrorMethodNotAllowed extends Error {}
+export class ApiErrorContentNotAcceptable extends Error {}

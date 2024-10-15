@@ -98,7 +98,6 @@ export const VerifyRecoveryPhraseScreen = () => {
 
       <View style={[styles.actions, styles.padding]}>
         <Button
-          shelleyTheme
           title={strings.next}
           disabled={disabled}
           onPress={async () => {
@@ -111,7 +110,7 @@ export const VerifyRecoveryPhraseScreen = () => {
 
             navigation.navigate('setup-wallet-details-form')
           }}
-          testId="setup-next-button"
+          testID="setup-next-button"
         />
       </View>
     </SafeAreaView>

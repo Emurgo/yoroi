@@ -179,13 +179,7 @@ export const TxDetails = () => {
 
           <Label>{strings.transactionId}</Label>
 
-          <View style={styles.dataContainer}>
-            <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
-              {transaction.id}
-            </Text>
-
-            <CopyButton value={transaction.id} />
-          </View>
+          <CopyButton title={transaction.id} value={transaction.id} />
         </ScrollView>
 
         {network !== Chain.Network.Sancho && (
@@ -193,7 +187,6 @@ export const TxDetails = () => {
             <Button
               onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
               title={strings.openInExplorer}
-              shelleyTheme
             />
           </Actions>
         )}
@@ -397,11 +390,6 @@ const useStyles = () => {
     borderTop: {
       borderTopWidth: 1,
       borderColor: color.gray_200,
-    },
-    dataContainer: {
-      ...atoms.flex_row,
-      paddingRight: 70,
-      marginBottom: 20,
     },
     address: {
       color: color.text_gray_medium,

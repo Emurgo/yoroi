@@ -153,7 +153,6 @@ export const EditAmountScreen = () => {
           <ApplyButton
             onPress={handleOnApply}
             title={strings.apply.toLocaleUpperCase()}
-            shelleyTheme
             disabled={isUnableToSpend || !hasBalance || isZero}
           />
         </Actions>

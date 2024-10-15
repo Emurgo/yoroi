@@ -62,7 +62,7 @@ const PrimaryIcon = ({size = 'md', imageStyle}: {size?: 'sm' | 'md'; imageStyle?
   const {styles} = useStyles()
   return (
     <View style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, styles.primary, imageStyle]}>
-      <Icon.Cardano color="white" height={size === 'sm' ? 20 : 35} width={size === 'sm' ? 20 : 35} />
+      <Icon.Cardano color="white" size={size === 'sm' ? 20 : 35} />
     </View>
   )
 }

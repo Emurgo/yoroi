@@ -9,7 +9,7 @@ import {
   LedgerUserError,
   RejectedByUserError,
 } from '../../yoroi-wallets/hw/hw'
-import {Button} from '../Button/Button'
+import {Button, ButtonType} from '../Button/Button'
 import {Icon} from '../Icon'
 import {Space} from '../Space/Space'
 import {Text} from '../Text'
@@ -37,11 +37,11 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
       </View>
 
       <View style={styles.buttons}>
-        <Button shelleyTheme outlineOnLight block onPress={onCancel} title={strings.cancel} />
+        <Button size="S" type={ButtonType.Secondary} onPress={onCancel} title={strings.cancel} />
 
         <Space width="lg" />
 
-        <Button shelleyTheme block onPress={resetErrorBoundary} title={strings.tryAgain} />
+        <Button size="S" onPress={resetErrorBoundary} title={strings.tryAgain} />
       </View>
     </>
   )

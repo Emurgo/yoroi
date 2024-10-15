@@ -29,7 +29,7 @@ export const DisableEasyConfirmationScreen = () => {
       </View>
 
       <View style={styles.actions}>
-        <Button title={strings.disableButton} onPress={handleOnDisableConfirmation} shelleyTheme />
+        <Button title={strings.disableButton} onPress={handleOnDisableConfirmation} />
       </View>
     </SafeAreaView>
   )

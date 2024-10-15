@@ -25,5 +25,5 @@ const WithButton = () => {
     })
   }
 
-  return <Button title="Open Modal" shelleyTheme onPress={handleOnPress} />
+  return <Button title="Open Modal" onPress={handleOnPress} />
 }

@@ -1,11 +1,9 @@
 import * as React from 'react'
 import Svg, {Defs, Image, Pattern, Rect, Use} from 'react-native-svg'
 
-type Props = {
-  size?: number
-}
+import {IconProps} from './type'
 
-export const Google = ({size = 40}: Props) => (
+export const Google = ({size = 40}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 40 40" fill="none">
     <Rect width={40} height={40} rx={8} fill="url(#pattern0_21862_14624)" />
 

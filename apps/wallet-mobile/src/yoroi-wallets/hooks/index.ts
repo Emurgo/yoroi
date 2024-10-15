@@ -440,7 +440,10 @@ export const useFrontendFees = (
     suspense: true,
     queryKey: [wallet.id, 'frontend-fees'],
     ...options,
-    queryFn: () => wallet.api.getFrontendFees(),
+    queryFn: () =>
+      wallet.api.getFrontendFees().catch(() => ({
+        // TODO: Without this it break when offline. Needs better fixing
+      })),
   })
 
   return {

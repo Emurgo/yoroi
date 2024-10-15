@@ -222,7 +222,7 @@ export const ConfirmPin = () => {
 
       <Padding>
         <Actions>
-          <Button shelleyTheme onPress={() => onNext()} title={strings.continueButton} disabled={!done || isLoading} />
+          <Button onPress={() => onNext()} title={strings.continueButton} disabled={!done || isLoading} />
         </Actions>
       </Padding>
 

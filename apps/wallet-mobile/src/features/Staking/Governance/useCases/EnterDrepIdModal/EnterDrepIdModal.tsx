@@ -75,7 +75,6 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       <Button
         title={strings.confirm}
         disabled={isNonNullable(error) || drepId.length === 0 || !isFetched || isFetching}
-        shelleyTheme
         onPress={handleOnPress}
       />
 

@@ -205,7 +205,7 @@ export const ConfirmTxScreen = () => {
 
       <Spacer fill />
 
-      <Button title={strings.confirm} shelleyTheme onPress={onSubmit} />
+      <Button title={strings.confirm} onPress={onSubmit} />
 
       <Spacer height={26} />
     </View>

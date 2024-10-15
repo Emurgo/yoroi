@@ -60,7 +60,7 @@ export const DisplayPin = () => {
       <Spacer fill />
 
       <Actions>
-        <Button shelleyTheme onPress={() => onNext()} title={strings.continueButton} disabled={!checked} />
+        <Button onPress={() => onNext()} title={strings.continueButton} disabled={!checked} />
       </Actions>
     </SafeAreaView>
   )

@@ -156,8 +156,6 @@ export const Dashboard = () => {
             onPress={navigateTo.stakingCenter}
             title={intl.formatMessage(messages.stakingCenterButton)}
             disabled={meta.isReadOnly}
-            shelleyTheme
-            block
             testID="stakingCenterButton"
           />
         </Actions>

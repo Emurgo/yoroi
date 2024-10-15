@@ -73,7 +73,7 @@ const Modal = () => {
       <Text style={styles.welcomeText}>{strings.welcomeToYoroiDAppExplorerDescription}</Text>
 
       <View style={styles.actions}>
-        <Button shelleyTheme onPress={closeModal} title={strings.next} />
+        <Button onPress={closeModal} title={strings.next} />
       </View>
     </View>
   )
