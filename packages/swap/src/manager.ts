@@ -1,4 +1,7 @@
 import {App, Portfolio, Swap} from '@yoroi/types'
+import {makeOrderCalculations} from './helpers/orders/factories/makeOrderCalculations'
+import {getBestPoolCalculation} from './helpers/pools/getBestPoolCalculation'
+import {selectedPoolCalculationSelector} from './translators/reactjs/state/selectors/selectedPoolCalculationSelector'
 
 export const swapManagerMaker = ({
   swapStorage,
@@ -67,5 +70,8 @@ export const swapManagerMaker = ({
     frontendFeeTiers,
     aggregator,
     aggregatorTokenId,
+    makeOrderCalculations,
+    getBestPoolCalculation,
+    selectedPoolCalculationSelector,
   } as const
 }

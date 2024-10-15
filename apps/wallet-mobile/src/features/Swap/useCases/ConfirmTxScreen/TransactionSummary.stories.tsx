@@ -1,6 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import {tokenInfoMocks} from '@yoroi/portfolio'
-import {mockSwapManager, mockSwapStateDefault, orderMocks, SwapOrderCalculation, SwapProvider} from '@yoroi/swap'
+import {mockSwapManager, mockSwapStateDefault, orderMocks, SwapProvider} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -33,7 +34,7 @@ storiesOf('TransactionSummary', module) //
     )
   })
 
-const TxSummary = ({calculation}: {calculation: SwapOrderCalculation}) => {
+const TxSummary = ({calculation}: {calculation: Swap.OrderCalculation}) => {
   return (
     <WalletManagerProviderMock wallet={{...walletMocks.wallet}}>
       <SwapProvider

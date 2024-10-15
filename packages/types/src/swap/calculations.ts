@@ -1,4 +1,23 @@
-import {App, Portfolio, Swap} from '@yoroi/types'
+import {App, Portfolio, Swap} from '..'
+
+export type SwapMakeOrderCalculation = Readonly<{
+  orderType: Swap.OrderType
+  amounts: {
+    sell?: Portfolio.Token.Amount
+    buy?: Portfolio.Token.Amount
+  }
+  limitPrice?: string
+  pools: ReadonlyArray<Swap.Pool>
+  lpTokenHeld?: Portfolio.Token.Amount
+  slippage: number
+  side?: 'buy' | 'sell'
+  frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
+  tokens: {
+    ptInfo?: Portfolio.Token.Info
+    priceDenomination: number
+  }
+  priceDecimals?: number
+}>
 
 export type SwapOrderCalculation = Readonly<{
   order: {

@@ -4,7 +4,6 @@ import {freeze, produce} from 'immer'
 import {makeOrderCalculations} from '../../../helpers/orders/factories/makeOrderCalculations'
 import {selectedPoolCalculationSelector} from './selectors/selectedPoolCalculationSelector'
 import {getBestPoolCalculation} from '../../../helpers/pools/getBestPoolCalculation'
-import {SwapOrderCalculation} from '../../../types'
 
 export type SwapState = Readonly<{
   orderData: {
@@ -19,7 +18,7 @@ export type SwapState = Readonly<{
 
     // when limit can manually select a pool
     selectedPoolId?: string
-    selectedPoolCalculation?: SwapOrderCalculation
+    selectedPoolCalculation?: Swap.OrderCalculation
 
     slippage: number
 
@@ -36,8 +35,8 @@ export type SwapState = Readonly<{
     pools: ReadonlyArray<Swap.Pool>
 
     // derivaded data
-    calculations: ReadonlyArray<SwapOrderCalculation>
-    bestPoolCalculation?: SwapOrderCalculation
+    calculations: ReadonlyArray<Swap.OrderCalculation>
+    bestPoolCalculation?: Swap.OrderCalculation
   }
   unsignedTx: any
 }>
@@ -248,7 +247,12 @@ const orderReducer = (
           draft.orderData.calculations,
         )
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
 
         if (
           !draft.orderData.amounts.buy ||
@@ -279,7 +283,12 @@ const orderReducer = (
         draft.orderData.selectedPoolId = action.poolId
 
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
 
         if (
           !draft.orderData.amounts.sell ||
@@ -316,7 +325,12 @@ const orderReducer = (
           draft.orderData.calculations,
         )
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
         break
 
       // when switching and the type is limit can end up with weird amounts
@@ -347,7 +361,12 @@ const orderReducer = (
           draft.orderData.calculations,
         )
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
 
         if (
           !draft.orderData.amounts.buy ||
@@ -396,7 +415,12 @@ const orderReducer = (
           draft.orderData.calculations,
         )
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
 
         draft.orderData.limitPrice =
           state.orderData.type === 'limit'
@@ -428,7 +452,12 @@ const orderReducer = (
           draft.orderData.calculations,
         )
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
 
         if (
           !draft.orderData.amounts.buy ||
@@ -465,7 +494,12 @@ const orderReducer = (
           draft.orderData.calculations,
         )
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
 
         if (
           !draft.orderData.selectedPoolCalculation ||
@@ -501,7 +535,12 @@ const orderReducer = (
           draft.orderData.calculations,
         )
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
 
         if (
           !draft.orderData.selectedPoolCalculation ||
@@ -600,7 +639,12 @@ const orderReducer = (
           draft.orderData.calculations,
         )
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
 
         if (
           !draft.orderData.selectedPoolCalculation ||
@@ -633,7 +677,12 @@ const orderReducer = (
           draft.orderData.calculations,
         )
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
 
         if (
           !draft.orderData.amounts.buy ||
@@ -666,7 +715,12 @@ const orderReducer = (
           draft.orderData.calculations,
         )
         draft.orderData.selectedPoolCalculation =
-          selectedPoolCalculationSelector(draft.orderData)
+          selectedPoolCalculationSelector({
+            type: draft.orderData.type,
+            selectedPoolId: draft.orderData.selectedPoolId,
+            calculations: draft.orderData.calculations,
+            bestPoolCalculation: draft.orderData.bestPoolCalculation,
+          })
 
         draft.orderData.limitPrice = undefined
         draft.orderData.selectedPoolId = undefined

@@ -1,11 +1,17 @@
-import {SwapOrderCalculation} from '../../../../types'
-import {SwapState} from '../state'
+import {Swap} from '@yoroi/types'
 
-export const selectedPoolCalculationSelector = (
-  orderData: SwapState['orderData'],
-): SwapOrderCalculation | undefined => {
-  const {type, selectedPoolId, calculations, bestPoolCalculation} = orderData
-  let calculation: SwapOrderCalculation | undefined
+export const selectedPoolCalculationSelector = ({
+  type,
+  selectedPoolId,
+  calculations,
+  bestPoolCalculation,
+}: {
+  type: Swap.OrderType
+  selectedPoolId?: string
+  calculations: Array<Swap.OrderCalculation>
+  bestPoolCalculation?: Swap.OrderCalculation
+}): Swap.OrderCalculation | undefined => {
+  let calculation: Swap.OrderCalculation | undefined
 
   // can only select a pool if is a limit order type
   // otherwise will return the current state value for it
