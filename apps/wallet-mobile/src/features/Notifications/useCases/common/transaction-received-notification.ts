@@ -44,7 +44,7 @@ const syncAllWallets = async (walletManager: WalletManager) => {
   for (const id of ids) {
     const wallet = walletManager.getWalletById(id)
     if (!wallet) continue
-    await wallet.sync({isForced: true})
+    await wallet.sync({})
   }
 }
 

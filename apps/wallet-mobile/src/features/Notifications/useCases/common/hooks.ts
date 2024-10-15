@@ -1,5 +1,6 @@
 import {Notifications} from '@jamsinclair/react-native-notifications'
 import {NotificationBackgroundFetchResult} from '@jamsinclair/react-native-notifications'
+import React from 'react'
 import {PermissionsAndroid} from 'react-native'
 
 import {notificationManager} from './notification-manager'
