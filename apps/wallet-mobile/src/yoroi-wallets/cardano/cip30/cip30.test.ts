@@ -29,7 +29,6 @@ describe('cip30ExtensionMaker', () => {
     const result = await cip30.getBalance()
     console.log('test3')
     expect(result).toBeDefined()
-    console.log('test4')
     expect(await (await result.coin()).toStr()).toBe('2282543724')
   })
 
