@@ -4,8 +4,8 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
+import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {SkeletonPrimaryToken} from './SkeletonPrimaryToken'
 
 type Props = {

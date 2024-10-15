@@ -36,15 +36,15 @@ import {SelectTokenFromListScreen} from '../Send/useCases/ListAmountsToSend/AddT
 import {EditAmountScreen} from '../Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend/ListAmountsToSendScreen'
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
-import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
 import {
-  ConfirmTxScreen as ConfirmTxSwapScreen,
   EditSlippageScreen,
   SelectPoolFromListScreen,
   ShowFailedTxScreen as FailedTxSwapScreen,
   ShowSubmittedTxScreen as SubmittedTxSwapScreen,
 } from '../Swap/useCases'
+import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
 import {ShowSanchoNoticeScreen} from '../Swap/useCases/ShowSanchoNoticeScreen/ShowSanchoNoticeScreen'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
@@ -242,10 +242,10 @@ export const TxHistoryNavigator = () => {
               />
 
               <Stack.Screen
-                name="swap-confirm-tx"
-                component={ConfirmTxSwapScreen}
+                name="swap-review"
+                component={ReviewSwap}
                 options={{
-                  title: strings.confirmationTransaction,
+                  title: strings.reviewSwapTitle,
                 }}
               />
 
@@ -421,6 +421,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.swapTo',
     defaultMessage: '!!!Swap to',
   },
+  reviewSwapTitle: {
+    id: 'swap.review.title',
+    defaultMessage: '!!!Swap review',
+  },
   slippageTolerance: {
     id: 'swap.swapScreen.slippageTolerance',
     defaultMessage: '!!!Slippage Tolerance',
@@ -500,6 +504,7 @@ const useStrings = () => {
   return {
     claimShowSuccess: intl.formatMessage(messages.claimShowSuccessTitle),
     confirmationTransaction: intl.formatMessage(messages.confirmationTransaction),
+    reviewSwapTitle: intl.formatMessage(messages.reviewSwapTitle),
     confirmTitle: intl.formatMessage(messages.confirmTitle),
     describeSelectedAddressTitle: intl.formatMessage(messages.describeSelectedAddressTitle),
     editAmountTitle: intl.formatMessage(messages.editAmountTitle),

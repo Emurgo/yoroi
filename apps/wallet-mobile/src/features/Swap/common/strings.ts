@@ -7,6 +7,7 @@ export const useStrings = () => {
 
   return {
     swapTitle: intl.formatMessage(messages.swapTitle),
+    swapDetailsTitle: intl.formatMessage(messages.swapDetailsTitle),
     tokenSwap: intl.formatMessage(messages.tokenSwap),
     orderSwap: intl.formatMessage(messages.orderSwap),
     dex: intl.formatMessage(messages.dex),
@@ -56,7 +57,7 @@ export const useStrings = () => {
     spendingPassword: intl.formatMessage(messages.spendingPassword),
     sign: intl.formatMessage(messages.sign),
     searchTokens: intl.formatMessage(messages.searchTokens),
-    confirm: intl.formatMessage(messages.confirm),
+    next: intl.formatMessage(messages.next),
     chooseConnectionMethod: intl.formatMessage(messages.chooseConnectionMethod),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
@@ -177,6 +178,10 @@ const messages = defineMessages({
   swapTitle: {
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
+  },
+  swapDetailsTitle: {
+    id: 'swap.swapScreen.swapDetailsTitle',
+    defaultMessage: '!!!Swap details',
   },
   tokenSwap: {
     id: 'swap.swapScreen.tokenSwapTab',
@@ -299,7 +304,7 @@ const messages = defineMessages({
   },
   swapLiqProvFee: {
     id: 'swap.swapScreen.swapLiqProvFee',
-    defaultMessage: '!!!Liq. prov. fee',
+    defaultMessage: '!!!Liquidity provider fee',
   },
   swapLiquidityFeeInfo: {
     id: 'swap.swapScreen.swapLiquidityFeeInfo',
@@ -573,9 +578,9 @@ const messages = defineMessages({
     id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select asset',
   },
-  confirm: {
-    id: 'components.send.confirmscreen.confirmButton',
-    defaultMessage: '!!!Confirm',
+  next: {
+    id: 'global.next',
+    defaultMessage: '!!!Next',
   },
   assignCollateral: {
     id: 'components.send.confirmscreen.assignCollateral',

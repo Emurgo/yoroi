@@ -194,7 +194,7 @@ export const StartSwapOrderScreen = () => {
       ),
     })
 
-    navigateTo.confirmTx()
+    navigateTo.reviewSwap()
   }
 
   const createSwapOrder = (orderData: Swap.CreateOrderData) => {

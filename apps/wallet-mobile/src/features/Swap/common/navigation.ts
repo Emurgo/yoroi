@@ -13,7 +13,7 @@ export const useNavigateTo = () => {
     selectBuyToken: () => swapNavigation.navigate('swap-select-buy-token'),
     selectSellToken: () => swapNavigation.navigate('swap-select-sell-token'),
     startSwap: () => swapNavigation.navigate('swap-start-swap', {screen: 'token-swap'}),
-    confirmTx: () => swapNavigation.navigate('swap-confirm-tx'),
+    reviewSwap: () => swapNavigation.navigate('swap-review'),
     submittedTx: (txId: string) => swapNavigation.navigate('swap-submitted-tx', {txId}),
     failedTx: () => swapNavigation.navigate('swap-failed-tx'),
     swapOpenOrders: () =>
