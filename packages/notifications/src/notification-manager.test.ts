@@ -272,6 +272,30 @@ describe('NotificationManager', () => {
     manager.hydrate()
     await manager.destroy()
   })
+
+  it('should only store 100 events', async () => {
+    const manager = createManager()
+
+    for (let i = 0; i < 110; i++) {
+      await manager.events.push(createTransactionReceivedEvent())
+    }
+
+    const savedEvents = await manager.events.read()
+    expect(savedEvents).toHaveLength(100)
+  })
+
+  it('should should remove oldest events when reaching 100', async () => {
+    const manager = createManager()
+
+    for (let i = 0; i < 110; i++) {
+      await manager.events.push(createTransactionReceivedEvent({id: i}))
+    }
+
+    const savedEvents = await manager.events.read()
+    const expectedIds = Array.from({length: 100}, (_, i) => i + 10)
+    const savedIds = savedEvents.map((event) => event.id)
+    expect(savedIds.sort()).toEqual(expectedIds.sort())
+  })
 })
 
 const createTransactionReceivedEvent = (

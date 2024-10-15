@@ -1,6 +1,5 @@
 import {Notifications} from '@jamsinclair/react-native-notifications'
 import {NotificationBackgroundFetchResult} from '@jamsinclair/react-native-notifications'
-import {useEffect} from 'react'
 import {PermissionsAndroid} from 'react-native'
 
 import {notificationManager} from './notification-manager'
@@ -37,6 +36,6 @@ const init = () => {
 }
 
 export const useInitNotifications = ({enabled}: {enabled: boolean}) => {
-  useEffect(() => (enabled ? init() : undefined), [enabled])
+  React.useEffect(() => (enabled ? init() : undefined), [enabled])
   useTransactionReceivedNotifications({enabled})
 }

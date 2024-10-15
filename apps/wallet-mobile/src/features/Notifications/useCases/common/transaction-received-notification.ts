@@ -41,12 +41,11 @@ const unregisterBackgroundFetchAsync = () => {
 
 const syncAllWallets = async (walletManager: WalletManager) => {
   const ids = [...walletManager.walletMetas.keys()]
-  const promises = ids.map((id) => {
+  for (const id of ids) {
     const wallet = walletManager.getWalletById(id)
-    if (!wallet) return Promise.resolve()
-    return wallet.sync({isForced: true})
-  })
-  await Promise.all(promises)
+    if (!wallet) continue
+    await wallet.sync({isForced: true})
+  }
 }
 
 const checkForNewTransactions = async (walletManager: WalletManager, appStorage: App.Storage) => {

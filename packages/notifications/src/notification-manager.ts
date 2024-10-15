@@ -32,6 +32,7 @@ export const notificationManagerMaker = ({
     storage: eventsStorage,
     config,
     display,
+    eventsLimit: 100,
   })
 
   const clear = async () => {
@@ -73,10 +74,12 @@ const eventsManagerMaker = ({
   storage,
   config,
   display,
+  eventsLimit,
 }: {
   display: (event: Notifications.Event) => void
   storage: App.Storage<true, string>
   config: Notifications.Manager['config']
+  eventsLimit?: number
 }): {
   events: Notifications.Manager['events']
   unreadCounterByGroup$: BehaviorSubject<
@@ -125,7 +128,8 @@ const eventsManagerMaker = ({
         return
       }
       const allEvents = await events.read()
-      await storage.setItem('events', [...allEvents, event])
+      const newEvents = [event, ...allEvents].slice(0, eventsLimit)
+      await storage.setItem('events', newEvents)
       if (!event.isRead) {
         await updateUnreadCounter()
         display(event)
