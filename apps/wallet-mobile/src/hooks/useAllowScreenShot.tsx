@@ -6,7 +6,7 @@ import {Platform} from 'react-native'
 import {
   changeScreenShareNativeSettingOnAndroid,
   useScreenShareSettingEnabled,
-} from '../features/Settings/ScreenShare/ScreenShare'
+} from '../features/Settings/useCases/changeAppSettings/ScreenShare/ScreenShare'
 
 export const useAllowScreenshot = () => {
   const {data: screenShareSettingEnabled} = useScreenShareSettingEnabled()

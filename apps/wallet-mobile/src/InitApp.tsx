@@ -5,7 +5,7 @@ import {Platform, UIManager} from 'react-native'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
-import {useInitScreenShare} from './features/Settings/ScreenShare'
+import {useInitScreenShare} from './features/Settings/useCases/changeAppSettings/ScreenShare'
 import {useWalletManager} from './features/WalletManager/context/WalletManagerProvider'
 import {storageVersionMaker} from './kernel/storage/migrations/storageVersion'
 

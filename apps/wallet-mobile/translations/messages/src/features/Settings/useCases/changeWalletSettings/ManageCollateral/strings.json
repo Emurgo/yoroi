@@ -1,0 +1,197 @@
+[
+  {
+    "id": "components.settings.collateral.lockedAsCollateral",
+    "defaultMessage": "!!!Locked as collateral",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 23,
+      "column": 22,
+      "index": 1270
+    },
+    "end": {
+      "line": 26,
+      "column": 3,
+      "index": 1383
+    }
+  },
+  {
+    "id": "components.settings.collateral.removeCollateral",
+    "defaultMessage": "!!!If you want to return the amount locked as collateral to your balance press the remove icon",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 27,
+      "column": 20,
+      "index": 1405
+    },
+    "end": {
+      "line": 30,
+      "column": 3,
+      "index": 1587
+    }
+  },
+  {
+    "id": "components.settings.collateral.collateralSpent",
+    "defaultMessage": "!!!Your collateral is gone, please generate new collateral",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 31,
+      "column": 19,
+      "index": 1608
+    },
+    "end": {
+      "line": 34,
+      "column": 3,
+      "index": 1753
+    }
+  },
+  {
+    "id": "components.settings.collateral.generateCollateral",
+    "defaultMessage": "!!!Generate collateral",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 35,
+      "column": 22,
+      "index": 1777
+    },
+    "end": {
+      "line": 38,
+      "column": 3,
+      "index": 1889
+    }
+  },
+  {
+    "id": "components.settings.collateral.notEnoughFundsAlertTitle",
+    "defaultMessage": "!!!Not enough funds",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 39,
+      "column": 28,
+      "index": 1919
+    },
+    "end": {
+      "line": 42,
+      "column": 3,
+      "index": 2034
+    }
+  },
+  {
+    "id": "components.settings.collateral.notEnoughFundsAlertMessage",
+    "defaultMessage": "!!!We could not find enough funds in this wallet to create collateral.",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 43,
+      "column": 30,
+      "index": 2066
+    },
+    "end": {
+      "line": 46,
+      "column": 3,
+      "index": 2234
+    }
+  },
+  {
+    "id": "components.settings.collateral.notEnoughFundsAlertOK",
+    "defaultMessage": "!!!OK",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 47,
+      "column": 25,
+      "index": 2261
+    },
+    "end": {
+      "line": 50,
+      "column": 3,
+      "index": 2359
+    }
+  },
+  {
+    "id": "components.settings.collateral.collateralInfoModalLabel",
+    "defaultMessage": "!!!Collateral creation",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 51,
+      "column": 28,
+      "index": 2389
+    },
+    "end": {
+      "line": 54,
+      "column": 3,
+      "index": 2507
+    }
+  },
+  {
+    "id": "components.settings.collateral.collateralInfoModalTitle",
+    "defaultMessage": "!!!What is collateral?",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 55,
+      "column": 28,
+      "index": 2537
+    },
+    "end": {
+      "line": 58,
+      "column": 3,
+      "index": 2655
+    }
+  },
+  {
+    "id": "components.settings.collateral.collateralInfoModalText",
+    "defaultMessage": "!!!The collateral mechanism is an important feature that has been designed to ensure successful smart contract execution. It is used to guarantee that Cardano nodes are compensated for their work in case phase-2 validation fails.",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 59,
+      "column": 27,
+      "index": 2684
+    },
+    "end": {
+      "line": 63,
+      "column": 3,
+      "index": 3014
+    }
+  },
+  {
+    "id": "components.settings.collateral.initialCollateralInfoModalTitle",
+    "defaultMessage": "!!!Collateral creation",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 64,
+      "column": 35,
+      "index": 3051
+    },
+    "end": {
+      "line": 67,
+      "column": 3,
+      "index": 3176
+    }
+  },
+  {
+    "id": "components.settings.collateral.initialCollateralInfoModalText",
+    "defaultMessage": "!!!The collateral mechanism is designed to ensure smart contracts on Cardano execute successfully. It guarantees that nodes are compensated for their work if a contract fails during validation.",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 68,
+      "column": 34,
+      "index": 3212
+    },
+    "end": {
+      "line": 72,
+      "column": 3,
+      "index": 3513
+    }
+  },
+  {
+    "id": "components.settings.collateral.initialCollateralInfoModalButton",
+    "defaultMessage": "!!!Add collateral",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 73,
+      "column": 36,
+      "index": 3551
+    },
+    "end": {
+      "line": 76,
+      "column": 3,
+      "index": 3672
+    }
+  }
+]

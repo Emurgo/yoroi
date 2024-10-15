@@ -24,6 +24,9 @@ export const ReviewTxProvider = ({
     cborChanged: (cbor: ReviewTxState['cbor']) => dispatch({type: ReviewTxActionType.CborChanged, cbor}),
     operationsChanged: (operations: ReviewTxState['operations']) =>
       dispatch({type: ReviewTxActionType.OperationsChanged, operations}),
+    customReceiverTitleChanged: (customReceiverTitle: ReviewTxState['customReceiverTitle']) =>
+      dispatch({type: ReviewTxActionType.CustomReceiverTitleChanged, customReceiverTitle}),
+    detailsChanged: (details: ReviewTxState['details']) => dispatch({type: ReviewTxActionType.DetailsChanged, details}),
     onSuccessChanged: (onSuccess: ReviewTxState['onSuccess']) =>
       dispatch({type: ReviewTxActionType.OnSuccessChanged, onSuccess}),
     onErrorChanged: (onError: ReviewTxState['onError']) => dispatch({type: ReviewTxActionType.OnErrorChanged, onError}),
@@ -55,6 +58,14 @@ const reviewTxReducer = (state: ReviewTxState, action: ReviewTxAction) => {
         draft.operations = action.operations
         break
 
+      case ReviewTxActionType.CustomReceiverTitleChanged:
+        draft.customReceiverTitle = action.customReceiverTitle
+        break
+
+      case ReviewTxActionType.DetailsChanged:
+        draft.details = action.details
+        break
+
       case ReviewTxActionType.OnSuccessChanged:
         draft.onSuccess = action.onSuccess
         break
@@ -83,6 +94,14 @@ type ReviewTxAction =
       operations: ReviewTxState['operations']
     }
   | {
+      type: ReviewTxActionType.CustomReceiverTitleChanged
+      customReceiverTitle: ReviewTxState['customReceiverTitle']
+    }
+  | {
+      type: ReviewTxActionType.DetailsChanged
+      details: ReviewTxState['details']
+    }
+  | {
       type: ReviewTxActionType.OnSuccessChanged
       onSuccess: ReviewTxState['onSuccess']
     }
@@ -95,6 +114,8 @@ export type ReviewTxState = {
   unsignedTx: YoroiUnsignedTx | null
   cbor: string | null
   operations: Array<React.ReactNode> | null
+  customReceiverTitle: React.ReactNode | null
+  details: {title: string; component: React.ReactNode} | null
   onSuccess: ((signedTx: YoroiSignedTx) => void) | null
   onError: (() => void) | null
 }
@@ -103,6 +124,8 @@ type ReviewTxActions = {
   unsignedTxChanged: (unsignedTx: ReviewTxState['unsignedTx']) => void
   cborChanged: (cbor: ReviewTxState['cbor']) => void
   operationsChanged: (operations: ReviewTxState['operations']) => void
+  customReceiverTitleChanged: (customReceiverTitle: ReviewTxState['customReceiverTitle']) => void
+  detailsChanged: (details: ReviewTxState['details']) => void
   onSuccessChanged: (onSuccess: ReviewTxState['onSuccess']) => void
   onErrorChanged: (onError: ReviewTxState['onError']) => void
 }
@@ -111,6 +134,8 @@ const defaultState: ReviewTxState = Object.freeze({
   unsignedTx: null,
   cbor: null,
   operations: null,
+  customReceiverTitle: null,
+  details: null,
   onSuccess: null,
   onError: null,
 })
@@ -124,6 +149,8 @@ const initialReviewTxContext: ReviewTxContext = {
   unsignedTxChanged: missingInit,
   cborChanged: missingInit,
   operationsChanged: missingInit,
+  customReceiverTitleChanged: missingInit,
+  detailsChanged: missingInit,
   onSuccessChanged: missingInit,
   onErrorChanged: missingInit,
 }
@@ -132,6 +159,8 @@ enum ReviewTxActionType {
   UnsignedTxChanged = 'unsignedTxChanged',
   CborChanged = 'cborChanged',
   OperationsChanged = 'operationsChanged',
+  CustomReceiverTitleChanged = 'customReceiverTitleChanged',
+  DetailsChanged = 'detailsChanged',
   OnSuccessChanged = 'onSuccessChanged',
   OnErrorChanged = 'onErrorChanged',
 }

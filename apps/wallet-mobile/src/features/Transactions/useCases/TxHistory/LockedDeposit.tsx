@@ -6,7 +6,7 @@ import {StyleSheet, View} from 'react-native'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
 import {usePortfolioPrimaryBreakdown} from '../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
-import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
 

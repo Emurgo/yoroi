@@ -4,7 +4,7 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
+import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {aggregatePrimaryAmount} from '../../../common/helpers/aggregatePrimaryAmount'
 import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
