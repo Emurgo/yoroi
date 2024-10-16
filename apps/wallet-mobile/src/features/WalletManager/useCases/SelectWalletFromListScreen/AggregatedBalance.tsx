@@ -10,7 +10,7 @@ import {usePortfolioTokenActivity} from '../../../Portfolio/common/PortfolioToke
 import {BalanceCardContent} from '../../../Portfolio/useCases/PortfolioDashboard/BalanceCard/BalanceCardContent'
 import {BalanceCardSkeleton} from '../../../Portfolio/useCases/PortfolioDashboard/BalanceCard/BalanceCardSkeleton'
 import {BalanceHeaderCard} from '../../../Portfolio/useCases/PortfolioDashboard/BalanceCard/BalanceHeaderCard'
-import {useCurrencyPairing} from '../../../Settings/Currency/CurrencyContext'
+import {useCurrencyPairing} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {useSelectedNetwork} from '../../common/hooks/useSelectedNetwork'
 
 export const AggregatedBalance = () => {

@@ -4,7 +4,7 @@ import React from 'react'
 
 import {SafeArea} from '../../../components/SafeArea'
 import {defaultStackNavigationOptions} from '../../../kernel/navigation'
-import {NetworkTag} from '../../Settings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {useStrings} from './common/strings'

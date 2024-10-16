@@ -45,9 +45,6 @@ export {useSwapTokensOnlyVerified} from './translators/reactjs/hooks/useSwapToke
 export {useSwap} from './translators/reactjs/hooks/useSwap'
 export {supportedProviders, milkTokenId} from './translators/constants'
 
-// types
-export * from './types'
-
 // factories
 export {swapApiMaker} from './adapters/api-maker'
 export {swapManagerMaker} from './manager'
