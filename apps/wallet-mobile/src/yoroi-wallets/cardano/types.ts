@@ -10,7 +10,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
@@ -58,6 +58,7 @@ export type Pagination = {
 export interface YoroiWallet {
   id: string
   publicKeyHex: string
+  protocolParams: Api.Cardano.ProtocolParams
   readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
 
   // ---------------------------------------------------------------------------------------

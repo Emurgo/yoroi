@@ -11,7 +11,10 @@ import {Observable} from 'rxjs'
 
 import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
 import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardano/cardano-config'
-import {buildNetworkManagers} from '../../features/WalletManager/network-manager/network-manager'
+import {
+  buildNetworkManagers,
+  protocolParamsPlaceholder,
+} from '../../features/WalletManager/network-manager/network-manager'
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {TransactionInfo} from '../types/other'
@@ -69,6 +72,7 @@ const wallet: YoroiWallet = {
   allUtxos: utxos,
   collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
   accountVisual: 0,
+  protocolParams: protocolParamsPlaceholder,
 
   balance$: new Observable<Portfolio.Event.BalanceManager>(),
   balances: {

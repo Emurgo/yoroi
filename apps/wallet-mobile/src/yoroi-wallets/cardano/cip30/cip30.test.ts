@@ -23,7 +23,6 @@ describe('cip30ExtensionMaker', () => {
   })
 
   it('should support getBalance', async () => {
-    console.log('test-1')
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const result = await cip30.getBalance()
     expect(result).toBeDefined()
