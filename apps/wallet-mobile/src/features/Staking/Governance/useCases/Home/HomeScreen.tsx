@@ -366,39 +366,6 @@ const isTxConfirmed = (txId: string, txInfos: Record<string, TransactionInfo>) =
   return Object.values(txInfos).some((tx) => tx.id === txId)
 }
 
-const RegisterStakingKeyOperation = () => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-
-  return (
-    <View style={styles.operation}>
-      <Text style={styles.operationText}>{strings.registerStakingKey}</Text>
-    </View>
-  )
-}
-
-const AbstainOperation = () => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-
-  return (
-    <View style={styles.operation}>
-      <Text style={styles.operationText}>{strings.selectAbstain}</Text>
-    </View>
-  )
-}
-
-const NoConfidenceOperation = () => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-
-  return (
-    <View style={styles.operation}>
-      <Text style={styles.operationText}>{strings.selectNoConfidence}</Text>
-    </View>
-  )
-}
-
 const useStyles = () => {
   const {color, atoms} = useTheme()
 
@@ -429,14 +396,6 @@ const useStyles = () => {
     drepInfoDescription: {
       color: color.text_gray_low,
       ...atoms.body_3_sm_regular,
-    },
-    operation: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    operationText: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
     },
   })
 
