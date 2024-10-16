@@ -19,6 +19,8 @@ import {useWalletNavigation} from '../../../../kernel/navigation'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useStakingKey} from '../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
+import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
+import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {useBestBlock} from '../../../WalletManager/common/hooks/useBestBlock'
@@ -169,6 +171,7 @@ export const useGovernanceActions = () => {
 const RegisterStakingKeyOperation = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {wallet} = useSelectedWallet()
 
   return (
     <View style={styles.operation}>
@@ -176,7 +179,9 @@ const RegisterStakingKeyOperation = () => {
 
       <Space width="lg" />
 
-      <Text style={styles.operationValue}>2 ADA</Text>
+      <Text style={styles.operationValue}>
+        {formatTokenWithText(asQuantity(wallet.protocolParams.keyDeposit), wallet.portfolioPrimaryTokenInfo)}
+      </Text>
     </View>
   )
 }
