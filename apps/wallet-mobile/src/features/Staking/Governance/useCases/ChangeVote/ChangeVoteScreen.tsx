@@ -15,9 +15,8 @@ import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useCreateGovernanceTx, useStakingKey} from '../../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
-import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
+import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../common/helpers'
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
-import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
@@ -25,7 +24,6 @@ import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 export const ChangeVoteScreen = () => {
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
-  const navigateTo = useNavigateTo()
   const stakingKeyHash = useStakingKey(wallet)
   const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {suspense: true})
   const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
@@ -33,6 +31,7 @@ export const ChangeVoteScreen = () => {
   const {manager} = useGovernance()
   const [pendingVote, setPendingVote] = React.useState<GovernanceVote['kind'] | null>(null)
   const {styles} = useStyles()
+  const governanceActions = useGovernanceActions()
 
   const {createCertificate: createDelegationCertificate, isLoading: isCreatingDelegationCertificate} =
     useDelegationCertificate({
@@ -73,7 +72,11 @@ export const ChangeVoteScreen = () => {
               certificates: [certificate],
               addressMode: meta.addressMode,
             })
-            navigateTo.confirmTx({unsignedTx, vote})
+
+            governanceActions.handleDelegateAction({
+              unsignedTx,
+              drepID,
+            })
           },
         },
       )
@@ -93,7 +96,10 @@ export const ChangeVoteScreen = () => {
             certificates: [certificate],
             addressMode: meta.addressMode,
           })
-          navigateTo.confirmTx({unsignedTx, vote})
+
+          governanceActions.handleAbstainAction({
+            unsignedTx,
+          })
         },
       },
     )
@@ -112,7 +118,10 @@ export const ChangeVoteScreen = () => {
             certificates: [certificate],
             addressMode: meta.addressMode,
           })
-          navigateTo.confirmTx({unsignedTx, vote})
+
+          governanceActions.handleNoConfidenceAction({
+            unsignedTx,
+          })
         },
       },
     )
