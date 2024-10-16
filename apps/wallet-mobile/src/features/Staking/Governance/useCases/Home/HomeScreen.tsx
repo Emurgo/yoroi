@@ -278,9 +278,6 @@ const NeverParticipatedInGovernanceVariant = () => {
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await createGovernanceTxMutation.mutateAsync({certificates: certs, addressMode})
 
-          const operations = [<AbstainOperation key="0" />]
-          if (stakeCert !== null) [<RegisterStakingKeyOperation key="-1" />, ...operations]
-
           governanceActions.handleAbstainAction({
             unsignedTx,
             navigateToStakingOnSuccess: params?.navigateToStakingOnSuccess,
@@ -305,9 +302,6 @@ const NeverParticipatedInGovernanceVariant = () => {
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await createGovernanceTxMutation.mutateAsync({certificates: certs, addressMode})
-
-          const operations = [<NoConfidenceOperation key="0" />]
-          if (stakeCert !== null) [<RegisterStakingKeyOperation key="-1" />, ...operations]
 
           governanceActions.handleNoConfidenceAction({
             unsignedTx,
