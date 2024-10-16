@@ -1,6 +1,9 @@
 import {Portfolio, Swap} from '@yoroi/types'
 import {apiMocks} from './adapters/openswap-api/api.mocks'
 import {tokenInfoMocks} from '@yoroi/portfolio'
+import {makeOrderCalculations} from './helpers/orders/factories/makeOrderCalculations'
+import {getBestPoolCalculation} from './helpers/pools/getBestPoolCalculation'
+import {selectedPoolCalculationSelector} from './translators/reactjs/state/selectors/selectedPoolCalculationSelector'
 
 const loading = () => new Promise(() => {})
 const unknownError = () => Promise.reject(new Error('Unknown error'))
@@ -208,6 +211,9 @@ export const mockSwapManager: Swap.Manager = {
   primaryTokenInfo: tokenInfoMocks.primaryETH,
   aggregatorTokenId: undefined,
   frontendFeeTiers: [] as const,
+  makeOrderCalculations,
+  getBestPoolCalculation,
+  selectedPoolCalculationSelector,
 } as const
 
 export const mockSwapManagerDefault: Swap.Manager = {
@@ -241,4 +247,7 @@ export const mockSwapManagerDefault: Swap.Manager = {
   frontendFeeTiers: [] as const,
   aggregatorTokenId: undefined,
   aggregator: 'muesliswap',
+  makeOrderCalculations,
+  getBestPoolCalculation,
+  selectedPoolCalculationSelector,
 } as const

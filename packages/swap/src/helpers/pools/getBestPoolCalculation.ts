@@ -1,14 +1,14 @@
+import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-import {SwapOrderCalculation} from '../../types'
 
 export const getBestPoolCalculation = (
-  calculations: ReadonlyArray<SwapOrderCalculation>,
-): SwapOrderCalculation | undefined => {
+  calculations: Array<Swap.OrderCalculation>,
+): Swap.OrderCalculation | undefined => {
   return calculations.reduce(
     (
-      best: SwapOrderCalculation | undefined,
+      best: Swap.OrderCalculation | undefined,
       current,
-    ): SwapOrderCalculation | undefined => {
+    ): Swap.OrderCalculation | undefined => {
       if (!current.hasSupply) return best
 
       if (best === undefined) return current

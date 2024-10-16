@@ -1,5 +1,5 @@
+import {Swap} from '@yoroi/types'
 import {tokenInfoMocks} from '../../tokenInfo.mocks'
-import {SwapOrderCalculation} from '../../types'
 import {mocks} from '../mocks'
 import {getBestPoolCalculation} from './getBestPoolCalculation'
 
@@ -13,7 +13,7 @@ describe('getBestPoolCalculation', () => {
   })
 
   it('should skip no supply pools', () => {
-    const calculations: ReadonlyArray<SwapOrderCalculation> = [
+    const calculations: Array<Swap.OrderCalculation> = [
       {
         order: {
           side: 'buy',

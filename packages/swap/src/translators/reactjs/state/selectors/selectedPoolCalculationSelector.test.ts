@@ -1,21 +1,18 @@
-import {SwapOrderCalculation} from '../../../../types'
-import {SwapState} from '../state' // adjust the import path
-import {mockSwapStateDefault} from '../state.mocks'
+import {Swap} from '@yoroi/types'
 import {selectedPoolCalculationSelector} from './selectedPoolCalculationSelector'
 
 describe('selectedPoolCalculationSelector', () => {
   it('should return the best pool from calculations when type is limit and selectedPoolId matches', () => {
-    const orderData: SwapState['orderData'] = {
-      ...mockSwapStateDefault.orderData,
-      type: 'limit',
+    const orderData = {
+      type: 'limit' as Swap.OrderType,
       selectedPoolId: '1',
       calculations: [
-        {pool: {poolId: '1'}} as SwapOrderCalculation,
-        {pool: {poolId: '2'}} as SwapOrderCalculation,
+        {pool: {poolId: '1'}} as Swap.OrderCalculation,
+        {pool: {poolId: '2'}} as Swap.OrderCalculation,
       ],
       bestPoolCalculation: {
         pool: {poolId: '3'},
-      } as SwapOrderCalculation,
+      } as Swap.OrderCalculation,
     }
 
     const selected = selectedPoolCalculationSelector(orderData)
@@ -23,15 +20,14 @@ describe('selectedPoolCalculationSelector', () => {
   })
 
   it('should return the state bestPoolCalculation when no match is found in calculations', () => {
-    const orderData: SwapState['orderData'] = {
-      ...mockSwapStateDefault.orderData,
-      type: 'limit',
+    const orderData = {
+      type: 'limit' as Swap.OrderType,
       selectedPoolId: '3',
       calculations: [
-        {pool: {poolId: '1'}} as SwapOrderCalculation,
-        {pool: {poolId: '2'}} as SwapOrderCalculation,
+        {pool: {poolId: '1'}} as Swap.OrderCalculation,
+        {pool: {poolId: '2'}} as Swap.OrderCalculation,
       ],
-      bestPoolCalculation: {pool: {poolId: '3'}} as SwapOrderCalculation,
+      bestPoolCalculation: {pool: {poolId: '3'}} as Swap.OrderCalculation,
     }
 
     const selected = selectedPoolCalculationSelector(orderData)
@@ -39,15 +35,14 @@ describe('selectedPoolCalculationSelector', () => {
   })
 
   it('should return state bestPool when type is market', () => {
-    const orderData: SwapState['orderData'] = {
-      ...mockSwapStateDefault.orderData,
-      type: 'market',
+    const orderData = {
+      type: 'market' as Swap.OrderType,
       selectedPoolId: '1',
       calculations: [
-        {pool: {poolId: '1'}} as SwapOrderCalculation,
-        {pool: {poolId: '2'}} as SwapOrderCalculation,
+        {pool: {poolId: '1'}} as Swap.OrderCalculation,
+        {pool: {poolId: '2'}} as Swap.OrderCalculation,
       ],
-      bestPoolCalculation: {pool: {poolId: '3'}} as SwapOrderCalculation,
+      bestPoolCalculation: {pool: {poolId: '3'}} as Swap.OrderCalculation,
     }
 
     const selected = selectedPoolCalculationSelector(orderData)
@@ -55,15 +50,14 @@ describe('selectedPoolCalculationSelector', () => {
   })
 
   it('should return the the current bestPoolCalculation when no selectedPoolId', () => {
-    const orderData: SwapState['orderData'] = {
-      ...mockSwapStateDefault.orderData,
-      type: 'limit',
+    const orderData = {
+      type: 'limit' as Swap.OrderType,
       selectedPoolId: undefined,
       calculations: [
-        {pool: {poolId: '1'}} as SwapOrderCalculation,
-        {pool: {poolId: '2'}} as SwapOrderCalculation,
+        {pool: {poolId: '1'}} as Swap.OrderCalculation,
+        {pool: {poolId: '2'}} as Swap.OrderCalculation,
       ],
-      bestPoolCalculation: {pool: {poolId: '3'}} as SwapOrderCalculation,
+      bestPoolCalculation: {pool: {poolId: '3'}} as Swap.OrderCalculation,
     }
 
     const selected = selectedPoolCalculationSelector(orderData)

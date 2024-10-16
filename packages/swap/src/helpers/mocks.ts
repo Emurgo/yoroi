@@ -1,6 +1,5 @@
 import {Swap} from '@yoroi/types'
 
-import {SwapOrderCalculation} from '../types'
 import {tokenInfoMocks} from '../tokenInfo.mocks'
 
 const mockedPools1: Swap.Pool[] = [
@@ -600,7 +599,7 @@ const mockedPools8: Swap.Pool[] = [
   },
 ]
 
-const mockedOrderCalculations1: SwapOrderCalculation[] = [
+const mockedOrderCalculations1: Swap.OrderCalculation[] = [
   {
     order: {
       side: 'sell',
@@ -1197,7 +1196,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
   },
 ]
 
-const mockedOrderCalculations2: SwapOrderCalculation[] = [
+const mockedOrderCalculations2: Swap.OrderCalculation[] = [
   {
     order: {
       side: 'buy',
