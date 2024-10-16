@@ -7,7 +7,7 @@ import {Text} from '../../../../../components/Text'
 import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
 import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {formatPriceChange} from '../../../common/helpers/priceChange'
-import {TOKEN_CHART_INTERVAL, TokenChartInterval} from '../../../common/hooks/useGetPortfolioTokenChart'
+import {TokenChartInterval} from '../../../common/hooks/useGetPortfolioTokenChart'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 
@@ -35,17 +35,17 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
 
   const intervalLabel = React.useMemo(() => {
     switch (timeInterval) {
-      case TOKEN_CHART_INTERVAL.DAY:
+      case TokenChartInterval.DAY:
         return strings._24_hours
-      case TOKEN_CHART_INTERVAL.WEEK:
+      case TokenChartInterval.WEEK:
         return strings._1_week
-      case TOKEN_CHART_INTERVAL.MONTH:
+      case TokenChartInterval.MONTH:
         return strings._1_month
-      case TOKEN_CHART_INTERVAL.SIX_MONTHS:
+      case TokenChartInterval.SIX_MONTHS:
         return strings._6_months
-      case TOKEN_CHART_INTERVAL.YEAR:
+      case TokenChartInterval.YEAR:
         return strings._1_year
-      case TOKEN_CHART_INTERVAL.ALL:
+      case TokenChartInterval.ALL:
         return strings.all_time
       default:
         return strings._24_hours

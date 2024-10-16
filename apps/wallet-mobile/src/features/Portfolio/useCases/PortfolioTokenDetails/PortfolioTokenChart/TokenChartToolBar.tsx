@@ -4,7 +4,7 @@ import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
-import {type TokenChartInterval, TOKEN_CHART_INTERVAL} from '../../../common/hooks/useGetPortfolioTokenChart'
+import {TokenChartInterval} from '../../../common/hooks/useGetPortfolioTokenChart'
 
 interface Props {
   timeInterval: TokenChartInterval
@@ -21,7 +21,7 @@ export const TokenChartToolbar = ({timeInterval, disabled, onChange}: Props) => 
 
   return (
     <View style={styles.chartToolbar}>
-      {Object.values(TOKEN_CHART_INTERVAL).map((itv) => (
+      {Object.values(TokenChartInterval).map((itv) => (
         <TouchableOpacity
           onPress={() => handleChange(itv)}
           style={[itv === timeInterval ? styles.chartToolbarItemActive : {}, styles.chartToolbarItem]}
