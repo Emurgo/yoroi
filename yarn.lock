@@ -2069,10 +2069,10 @@
   resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs-gc/-/cardano-serialization-lib-nodejs-gc-12.1.1.tgz#09340d7292588d63d9566bbcd5c54098aa6f8829"
   integrity sha512-PRay6ceSQhH8OsOOUG4QwPU6u1wXFDMoxcHv4KENnIjLk8pKb0ggLr6S1GZ603YJRi9KLh+pw97yL08a8ZG0PA==
 
-"@emurgo/cardano-serialization-lib-nodejs@13.0.0", "@emurgo/cardano-serialization-lib-nodejs@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-13.0.0.tgz#8a8f33cc7a0d7f9245f591c92ea89efc11ef5224"
-  integrity sha512-mSnn01fVm2zAADeOZ5WU80IK7A8uEqDPq5nE7FPPb0BUtHM/UF3YIZ0JU8k0XBZYnGRtHCLNazLfWn6Adv0OuA==
+"@emurgo/cardano-serialization-lib-nodejs@13.1.0", "@emurgo/cardano-serialization-lib-nodejs@^13.1.0":
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-13.1.0.tgz#afa891a97a98dbbc36cfc5869da895ef5df11cbb"
+  integrity sha512-KBIBGEOjTWmilQ3VHTydtMgGSiJkVK14b5N+DwBp2kkO1IqwJyzFQOWDMkQGgEFuJ1Y4Yu05xyxph1JY9/m65w==
 
 "@emurgo/cip14-js@^3.0.1":
   version "3.0.1"
@@ -2096,27 +2096,32 @@
   resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-5.1.2.tgz#bc2dbe35c3ca9b45bb50a2f0cb75f90557bcec08"
   integrity sha512-+zR8DR/UEql/S5BBnA6sbEGKVRow7NHI896K8UDt5+W3J3cZVAZEsbm9faaH+DehpqvensVNHwxooxk30wEOpg==
 
-"@emurgo/cross-csl-core@6.0.0", "@emurgo/cross-csl-core@^6.0.0":
+"@emurgo/cross-csl-core@6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-6.1.0.tgz#769dee3f5635a99cce0f9e1baa7b9b99690e111a"
+  integrity sha512-eM6jyhiYkLhie0AKyRpvM1bFpvm3hnbwrbJKy/AB47fZUqbqn/BAIQScQ3tXce0Z9qQ24QLQLBLdqU5u3mL80A==
+
+"@emurgo/cross-csl-core@^6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-6.0.0.tgz#454d7161df733b04f4b9b81289144c5cef4de7bf"
   integrity sha512-BkoePOJrEE+yKBAPca7YZqSfpAzktvhMIYe6NAirXhp/pD5tSQ2mQUJuK4nUsWuizUxWo7BdAIwfmo7H3oEAPA==
 
-"@emurgo/cross-csl-mobile@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-6.0.0.tgz#89036bc0b21040d5aa47cc3da2405d3d6135baf1"
-  integrity sha512-magzQbDp9TEEra5U0Y+TEz3mgIdbpOxhczDkW2MpbTZRO83sO0+nTveB5TfPeU6TaUQ4QGb+i6O/fKXzdYX7Jw==
+"@emurgo/cross-csl-mobile@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-6.1.0.tgz#86c79fb0d9bad436f239faa8fd0b9e644c764ac9"
+  integrity sha512-xDtZyGiMv+BVkKzXM5SAGkl2w+tUGIoPm/1eNYz7dsDImcwzfEXLrsP4Uqw67UQcglVz/hSdkMSZTWRnkAL7Kw==
   dependencies:
-    "@emurgo/cross-csl-core" "6.0.0"
-    "@emurgo/csl-mobile-bridge" "^7.0.0"
+    "@emurgo/cross-csl-core" "6.1.0"
+    "@emurgo/csl-mobile-bridge" "^7.1.0"
 
-"@emurgo/cross-csl-nodejs@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-6.0.0.tgz#46bdd61491dc9e67706a655adddd8c891c1ad95a"
-  integrity sha512-gw7QSBCsKy63rTxzViPlg/3kiKDCnoQrlqRKOKsNUxGOi5+eOqhpwlHa0mVbiADcQppOQbxbzMUe8z9jf6BDuw==
+"@emurgo/cross-csl-nodejs@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-6.1.0.tgz#5683d96d5a7220c73a8b327a41c282796110553e"
+  integrity sha512-xcfAJNT+u4mUF9YEfLOl2m7tfOG/85AFQazuSh8nMVtfdqC8npkuGCSk/CtSB1wLfXG0Nd+e+S4vZfU4JCoVlQ==
   dependencies:
-    "@emurgo/cardano-serialization-lib-nodejs" "13.0.0"
+    "@emurgo/cardano-serialization-lib-nodejs" "13.1.0"
     "@emurgo/cardano-serialization-lib-nodejs-gc" "12.1.1"
-    "@emurgo/cross-csl-core" "6.0.0"
+    "@emurgo/cross-csl-core" "6.1.0"
 
 "@emurgo/cross-msl-core@1.0.0":
   version "1.0.0"
@@ -2147,10 +2152,10 @@
     "@emurgo/cardano-message-signing-nodejs" "1.0.1"
     "@emurgo/cross-msl-core" "1.0.0"
 
-"@emurgo/csl-mobile-bridge@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-7.0.0.tgz#50fd0bc06a1d1c1cbbbe128f541c18db49520f16"
-  integrity sha512-lnkWIn8nb996TLfGyQ4xW7/hGDjbIN9xrPUiCrIdMvQ4pMER5aN5XgR0zqYXS3J4djndTMeVcGZ9ZCbUypwILw==
+"@emurgo/csl-mobile-bridge@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-7.1.0.tgz#aa77001eae610c64444ab5336ee65b7014b2c133"
+  integrity sha512-9J5kgD8cLBaKAkfUDa1XacpUTnR7I3gWhaT3Rpr6YaJqctWqMLW2XgU7Q8oOG6i5S8I4s5uju/bXVDqiHCEliA==
   dependencies:
     base-64 "0.1.0"
 
