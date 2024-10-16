@@ -1,4 +1,3 @@
-import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import * as React from 'react'
@@ -24,14 +23,13 @@ import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
 export const PortfolioTokenDetailsScreen = () => {
   const strings = useStrings()
-  const {detailsTab, setDetailsTab, isTokenHistoryApiAvailable} = usePortfolio()
+  const {detailsTab, setDetailsTab} = usePortfolio()
   const {track} = useMetrics()
   const [isStickyTab, setIsStickyTab] = React.useState(false)
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const {wallet} = useSelectedWallet()
   const tokenInfo = wallet.balances.records.get(tokenId)?.info
-  const isPrimaryToken = isPrimaryTokenInfo(tokenInfo)
-  const HEADER_HEIGHT = isPrimaryToken || isTokenHistoryApiAvailable ? 304 : 85
+  const HEADER_HEIGHT = 304
   const {styles} = useStyles(HEADER_HEIGHT)
 
   if (!tokenInfo) throwLoggedError(new App.Errors.InvalidState('Token info not found, invalid state'))
@@ -92,13 +90,9 @@ export const PortfolioTokenDetailsScreen = () => {
 
                 <Spacer height={16} />
 
-                {(isPrimaryToken || isTokenHistoryApiAvailable) && (
-                  <>
-                    <PortfolioTokenChart />
+                <PortfolioTokenChart />
 
-                    <Spacer height={16} />
-                  </>
-                )}
+                <Spacer height={16} />
               </Animated.View>
 
               <Animated.View>{renderTabs}</Animated.View>

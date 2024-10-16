@@ -1,10 +1,6 @@
-import {invalid, isRight} from '@yoroi/common'
-import {Portfolio} from '@yoroi/types'
+import {invalid} from '@yoroi/common'
 import {produce} from 'immer'
 import * as React from 'react'
-import {useQuery} from 'react-query'
-
-import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 
 export const PortfolioDetailsTab = {
   Performance: 'Performance',
@@ -36,7 +32,6 @@ const defaultActions: PortfolioActions = {
 } as const
 
 const defaultState: PortfolioState = {
-  isTokenHistoryApiAvailable: false,
   isPrimaryTokenActive: false,
   detailsTab: PortfolioDetailsTab.Overview,
   listTab: PortfolioListTab.Wallet,
@@ -44,7 +39,6 @@ const defaultState: PortfolioState = {
 } as const
 
 type PortfolioState = {
-  isTokenHistoryApiAvailable: boolean
   isPrimaryTokenActive: boolean
   detailsTab: PortfolioDetailsTab
   listTab: PortfolioListTab
@@ -56,25 +50,6 @@ const PortfolioContext = React.createContext<PortfolioState & PortfolioActions>(
   ...defaultActions,
 })
 
-const useIsTokenHistoryApiAvailable = () => {
-  const {
-    networkManager: {tokenManager},
-  } = useSelectedNetwork()
-  const {data} = useQuery({
-    queryKey: ['isTokenHistoryApiAvailable'],
-    initialData: () => false,
-    queryFn: async () => {
-      const response = await tokenManager.api.tokenHistory(
-        '279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f.534e454b',
-        Portfolio.Token.HistoryPeriod.OneDay,
-      )
-      if (isRight(response)) return true
-      return false
-    },
-  })
-  return data ?? false
-}
-
 export const PortfolioProvider = ({
   children,
   initialState,
@@ -82,7 +57,6 @@ export const PortfolioProvider = ({
   children: React.ReactNode
   initialState?: Partial<PortfolioState>
 }) => {
-  const isTokenHistoryApiAvailable = useIsTokenHistoryApiAvailable()
   const [portfolioState, dispatch] = React.useReducer(portfolioReducer, {...defaultState, ...initialState})
 
   const actions = React.useRef<PortfolioActions>({
@@ -102,8 +76,8 @@ export const PortfolioProvider = ({
   }).current
 
   const context = React.useMemo<PortfolioState & PortfolioActions>(
-    () => ({...portfolioState, ...actions, isTokenHistoryApiAvailable}),
-    [actions, portfolioState, isTokenHistoryApiAvailable],
+    () => ({...portfolioState, ...actions}),
+    [actions, portfolioState],
   )
 
   return <PortfolioContext.Provider value={context}>{children}</PortfolioContext.Provider>
