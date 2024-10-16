@@ -5,7 +5,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {NetworkTag} from '../../features/Settings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../../features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '../../features/Staking/Governance/common/helpers'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {DashboardRoutes, defaultStackNavigationOptions} from '../../kernel/navigation'

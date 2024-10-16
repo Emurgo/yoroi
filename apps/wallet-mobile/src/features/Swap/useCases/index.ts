@@ -1,4 +1,3 @@
-export * from './ConfirmTxScreen/ConfirmTxScreen'
 export * from './ConfirmTxScreen/ShowFailedTxScreen/ShowFailedTxScreen'
 export * from './ConfirmTxScreen/ShowSubmittedTxScreen/ShowSubmittedTxScreen'
 export * from './StartOrderSwapScreen/CreateOrder/EditPool/SelectPoolFromListScreen/SelectPoolFromListScreen'

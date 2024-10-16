@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Animated, LayoutAnimation, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Animated, Easing, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../components/Icon'
 
@@ -10,12 +10,12 @@ export const Accordion = ({label, children}: {label: string; children: React.Rea
   const animatedHeight = React.useRef(new Animated.Value(0)).current
 
   const toggleSection = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setIsOpen(!isOpen)
     Animated.timing(animatedHeight, {
       toValue: isOpen ? 0 : 1,
       duration: 300,
       useNativeDriver: false,
+      easing: Easing.ease,
     }).start()
   }
 

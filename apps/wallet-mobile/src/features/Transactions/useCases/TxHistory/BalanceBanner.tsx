@@ -9,7 +9,7 @@ import {Icon} from '../../../../components/Icon'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {usePortfolioPrimaryBalance} from '../../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {

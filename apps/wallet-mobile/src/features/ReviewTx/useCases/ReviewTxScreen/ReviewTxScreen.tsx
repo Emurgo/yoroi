@@ -1,15 +1,28 @@
 import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {
+  FlatList,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import {Button} from '../../../../components/Button/Button'
 import {SafeArea} from '../../../../components/SafeArea'
+import {ScrollView} from '../../../../components/ScrollView/ScrollView'
+import {isEmptyString} from '../../../../kernel/utils'
+import {formatMetadata} from '../../common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '../../common/hooks/useFormattedTx'
 import {useOnConfirm} from '../../common/hooks/useOnConfirm'
 import {useStrings} from '../../common/hooks/useStrings'
 import {useTxBody} from '../../common/hooks/useTxBody'
 import {useReviewTx} from '../../common/ReviewTxProvider'
+import {MetadataTab} from './Metadata/MetadataTab'
 import {OverviewTab} from './Overview/OverviewTab'
 import {UTxOsTab} from './UTxOs/UTxOsTab'
 
@@ -18,7 +31,7 @@ const MaterialTab = createMaterialTopTabNavigator()
 export const ReviewTxScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {unsignedTx, operations, onSuccess, onError} = useReviewTx()
+  const {unsignedTx, operations, details, onSuccess, onError} = useReviewTx()
 
   if (unsignedTx === null) throw new Error('ReviewTxScreen: missing unsignedTx')
 
@@ -28,21 +41,27 @@ export const ReviewTxScreen = () => {
     onError,
   })
 
-  // TODO: add cbor arguments
+  // TODO: apply cbor
   const txBody = useTxBody({unsignedTx})
   const formatedTx = useFormattedTx(txBody)
+  const formattedMetadata = formatMetadata(unsignedTx, txBody)
 
-  const OverViewTabMemo = React.memo(() => <OverviewTab tx={formatedTx} operations={operations} />)
-  const UTxOsTabMemo = React.memo(() => <UTxOsTab tx={formatedTx} />)
+  const tabsData = [
+    [strings.overviewTab, 'overview'],
+    [strings.utxosTab, 'utxos'],
+  ]
+
+  if (!isEmptyString(formattedMetadata.hash) && formattedMetadata.metadata != null)
+    tabsData.push([strings.metadataTab, 'metadata'])
 
   return (
     <SafeArea style={styles.root}>
-      <MaterialTab.Navigator tabBar={TabBar}>
+      <MaterialTab.Navigator tabBar={(props) => <TabBar {...props} tabsData={tabsData} />}>
         <MaterialTab.Screen name="overview">
           {() => (
             /* TODO: make scrollview general to use button border */
             <ScrollView style={styles.root}>
-              <OverViewTabMemo />
+              <OverviewTab tx={formatedTx} operations={operations} details={details} />
             </ScrollView>
           )}
         </MaterialTab.Screen>
@@ -51,7 +70,16 @@ export const ReviewTxScreen = () => {
           {() => (
             /* TODO: make scrollview general to use button border */
             <ScrollView style={styles.root}>
-              <UTxOsTabMemo />
+              <UTxOsTab tx={formatedTx} />
+            </ScrollView>
+          )}
+        </MaterialTab.Screen>
+
+        <MaterialTab.Screen name="metadata">
+          {() => (
+            /* TODO: make scrollview general to use button border */
+            <ScrollView style={styles.root}>
+              <MetadataTab hash={formattedMetadata.hash} metadata={formattedMetadata.metadata} />
             </ScrollView>
           )}
         </MaterialTab.Screen>
@@ -64,16 +92,12 @@ export const ReviewTxScreen = () => {
   )
 }
 
-const TabBar = ({navigation, state}: MaterialTopTabBarProps) => {
+const TabBar = ({navigation, state, tabsData}: MaterialTopTabBarProps & {tabsData: Array<Array<string>>}) => {
   const {styles} = useStyles()
-  const strings = useStrings()
 
   return (
     <FlatList
-      data={[
-        [strings.overviewTab, 'overview'],
-        [strings.utxosTab, 'utxos'],
-      ]}
+      data={tabsData}
       renderItem={({item: [label, key], index}) => (
         <Tab key={key} active={state.index === index} label={label} onPress={() => navigation.navigate(key)} />
       )}
@@ -105,9 +129,9 @@ export const Tab = ({
   )
 }
 
-const Actions = ({children}: {children: React.ReactNode}) => {
+const Actions = ({children, style}: {children: React.ReactNode; style?: StyleProp<ViewStyle>}) => {
   const {styles} = useStyles()
-  return <View style={styles.actions}>{children}</View>
+  return <View style={[styles.actions, style]}>{children}</View>
 }
 
 const useStyles = () => {
@@ -154,5 +178,8 @@ const useStyles = () => {
     },
   })
 
-  return {styles} as const
+  const colors = {
+    lightGray: color.gray_200,
+  }
+  return {styles, colors} as const
 }

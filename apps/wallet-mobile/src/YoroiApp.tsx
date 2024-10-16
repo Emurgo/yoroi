@@ -7,7 +7,7 @@ import React from 'react'
 import {LogBox, StyleSheet} from 'react-native'
 import * as RNP from 'react-native-paper'
 import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context'
-import {enableFreeze, enableScreens} from 'react-native-screens'
+import {enableScreens} from 'react-native-screens'
 import {QueryClientProvider} from 'react-query'
 
 import {LoadingBoundary} from './components/Boundary/Boundary'
@@ -16,7 +16,7 @@ import {AuthProvider} from './features/Auth/AuthProvider'
 import {BrowserProvider} from './features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from './features/Portfolio/common/PortfolioTokenActivityProvider'
 import {ReviewTxProvider} from './features/ReviewTx/common/ReviewTxProvider'
-import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
+import {CurrencyProvider} from './features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {AutomaticWalletOpenerProvider} from './features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './features/WalletManager/wallet-manager'
@@ -32,7 +32,6 @@ import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransi
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
 
 enableScreens(true)
-enableFreeze(true)
 
 if (disableLogbox) {
   LogBox.ignoreAllLogs()

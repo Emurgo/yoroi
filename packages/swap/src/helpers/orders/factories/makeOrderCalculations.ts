@@ -1,13 +1,11 @@
-import {App, Portfolio, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
-import {SwapState} from '../../../translators/reactjs/state/state'
 import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
 import {getLiquidityProviderFee} from '../costs/getLiquidityProviderFee'
 import {getFrontendFee} from '../costs/getFrontendFee'
 import {getMarketPrice} from '../../prices/getMarketPrice'
 import {getBuyAmount} from '../amounts/getBuyAmount'
 import {getSellAmount} from '../amounts/getSellAmount'
-import {SwapOrderCalculation} from '../../../types'
 
 export const makeOrderCalculations = ({
   orderType,
@@ -20,27 +18,13 @@ export const makeOrderCalculations = ({
   frontendFeeTiers,
   tokens,
   priceDecimals = 10,
-}: Readonly<{
-  orderType: Swap.OrderType
-  amounts: {
-    sell?: Portfolio.Token.Amount
-    buy?: Portfolio.Token.Amount
-  }
-  limitPrice?: string
-  pools: ReadonlyArray<Swap.Pool>
-  lpTokenHeld?: Portfolio.Token.Amount
-  slippage: number
-  side?: 'buy' | 'sell'
-  frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
-  tokens: SwapState['orderData']['tokens']
-  priceDecimals?: number
-}>): Array<SwapOrderCalculation> => {
+}: Swap.MakeOrderCalculation): Array<Swap.OrderCalculation> => {
   if (!amounts.sell || !amounts.buy || !tokens.ptInfo) return []
 
   const isLimit = orderType === 'limit'
   const maybeLimitPrice = isLimit ? new BigNumber(limitPrice ?? 0) : undefined
 
-  const calculations = pools.map<SwapOrderCalculation>((pool) => {
+  const calculations = pools.map<Swap.OrderCalculation>((pool) => {
     const buy =
       side === 'sell'
         ? getBuyAmount(
@@ -197,7 +181,7 @@ export const makeOrderCalculations = ({
       info: tokens.ptInfo!,
     }
 
-    const result: SwapOrderCalculation = {
+    const result: Swap.OrderCalculation = {
       order: {
         side,
         slippage,

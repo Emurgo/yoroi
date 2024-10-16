@@ -1,11 +1,14 @@
 // 🚧 TODO: grouping by staking address 🚧
 
+import {CredKind} from '@emurgo/cross-csl-core'
 import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
+import {Divider} from '../../../../../components/Divider/Divider'
 import {Icon} from '../../../../../components/Icon'
+import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
 import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {Quantities} from '../../../../../yoroi-wallets/utils/utils'
@@ -13,14 +16,20 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {Accordion} from '../../../common/Accordion'
 import {CopiableText} from '../../../common/CopiableText'
-import {Divider} from '../../../common/Divider'
-import {useAddressType} from '../../../common/hooks/useAddressType'
 import {useStrings} from '../../../common/hooks/useStrings'
-import {ReviewTxState} from '../../../common/ReviewTxProvider'
+import {ReviewTxState, useReviewTx} from '../../../common/ReviewTxProvider'
 import {TokenItem} from '../../../common/TokenItem'
 import {FormattedOutputs, FormattedTx} from '../../../common/types'
 
-export const OverviewTab = ({tx, operations}: {tx: FormattedTx; operations: ReviewTxState['operations']}) => {
+export const OverviewTab = ({
+  tx,
+  operations,
+  details,
+}: {
+  tx: FormattedTx
+  operations: ReviewTxState['operations']
+  details: ReviewTxState['details']
+}) => {
   const {styles} = useStyles()
 
   const notOwnedOutputs = React.useMemo(() => tx.outputs.filter((output) => !output.ownAddress), [tx.outputs])
@@ -37,6 +46,8 @@ export const OverviewTab = ({tx, operations}: {tx: FormattedTx; operations: Revi
       <SenderSection tx={tx} notOwnedOutputs={notOwnedOutputs} ownedOutputs={ownedOutputs} />
 
       <OperationsSection operations={operations} />
+
+      <Details details={details} />
     </View>
   )
 }
@@ -94,7 +105,7 @@ const SenderSection = ({
 }) => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const address = ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address
+  const address = ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address ?? '-'
 
   return (
     <Accordion label={strings.myWalletLabel}>
@@ -172,24 +183,30 @@ const SenderSectionLabel = () => {
 }
 
 const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs}) => {
-  const address = notOwnedOutputs[0]?.rewardAddress ?? notOwnedOutputs[0]?.address
+  const address = notOwnedOutputs[0]?.rewardAddress ?? notOwnedOutputs[0]?.address ?? '-'
   const {styles} = useStyles()
   const strings = useStrings()
-  const addressType = useAddressType(address)
-  const isScriptAddress = addressType === 'script'
+  const {customReceiverTitle} = useReviewTx()
 
   return (
     <>
       <Space height="sm" />
 
       <View style={styles.receiverAddress}>
-        <Text>{isScriptAddress ? strings.receiveToScriptLabel : strings.receiveToLabel}:</Text>
+        <Text>
+          {notOwnedOutputs[0]?.addressKind === CredKind.Script && customReceiverTitle == null
+            ? strings.receiveToScriptLabel
+            : strings.receiveToLabel}
+          :
+        </Text>
 
-        <CopiableText textToCopy={address}>
-          <Text style={[styles.addressText, styles.receiverSectionAddress]} numberOfLines={1} ellipsizeMode="middle">
-            {address}
-          </Text>
-        </CopiableText>
+        {customReceiverTitle ?? (
+          <CopiableText textToCopy={address}>
+            <Text style={[styles.addressText, styles.receiverSectionAddress]} numberOfLines={1} ellipsizeMode="middle">
+              {address}
+            </Text>
+          </CopiableText>
+        )}
       </View>
     </>
   )
@@ -217,6 +234,29 @@ const OperationsSection = ({operations}: {operations: ReviewTxState['operations'
           )
         })}
       </Accordion>
+    </View>
+  )
+}
+
+const Details = ({details}: {details: ReviewTxState['details']}) => {
+  const {openModal} = useModal()
+  const {styles} = useStyles()
+
+  if (details == null) return null
+
+  const handleOnPress = () => {
+    openModal(details.title ?? '', <View style={styles.details}>{details.component}</View>, 550)
+  }
+
+  return (
+    <View>
+      <Space height="lg" />
+
+      <View style={styles.detailsRow}>
+        <TouchableOpacity onPress={handleOnPress} activeOpacity={0.5}>
+          <Text style={styles.detailsButton}>{details?.title}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
@@ -289,6 +329,18 @@ const useStyles = () => {
       ...atoms.flex_1,
       ...atoms.body_2_md_regular,
       color: color.text_gray_medium,
+    },
+    detailsRow: {
+      ...atoms.flex_1,
+      ...atoms.flex_row,
+      ...atoms.justify_end,
+    },
+    details: {
+      ...atoms.px_lg,
+    },
+    detailsButton: {
+      ...atoms.body_2_md_medium,
+      color: color.text_primary_medium,
     },
   })
 

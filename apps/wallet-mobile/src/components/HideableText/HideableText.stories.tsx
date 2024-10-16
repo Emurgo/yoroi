@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {Button} from '../Button/Button'
 import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'

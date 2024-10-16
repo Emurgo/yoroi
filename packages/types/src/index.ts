@@ -259,6 +259,10 @@ import {
   PortfolioTokenHistory,
   PortfolioTokenHistoryPeriod,
 } from './portfolio/history'
+import {
+  SwapMakeOrderCalculation,
+  SwapOrderCalculation,
+} from './swap/calculations'
 
 export namespace App {
   export namespace Errors {
@@ -347,6 +351,10 @@ export namespace Swap {
   export type SupportedProvider = SwapSupportedProvider
 
   export type Storage = SwapStorage
+
+  export type MakeOrderCalculation = SwapMakeOrderCalculation
+
+  export type OrderCalculation = SwapOrderCalculation
 }
 
 export namespace Balance {
