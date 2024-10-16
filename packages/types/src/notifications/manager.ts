@@ -14,6 +14,7 @@ export type NotificationManagerMakerProps = {
     Record<NotificationTrigger, Subject<NotificationEvent>>
   >
   display: (event: NotificationEvent) => void
+  eventsLimit?: number
 }
 
 export interface NotificationTransactionReceivedEvent

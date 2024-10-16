@@ -12,6 +12,7 @@ export const notificationManagerMaker = ({
   configStorage,
   subscriptions,
   display,
+  eventsLimit = 100,
 }: Notifications.ManagerMakerProps): Notifications.Manager => {
   const localSubscriptions: Subscription[] = []
 
@@ -32,7 +33,7 @@ export const notificationManagerMaker = ({
     storage: eventsStorage,
     config,
     display,
-    eventsLimit: 100,
+    eventsLimit,
   })
 
   const clear = async () => {
