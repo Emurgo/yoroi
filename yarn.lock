@@ -2096,15 +2096,10 @@
   resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-5.1.2.tgz#bc2dbe35c3ca9b45bb50a2f0cb75f90557bcec08"
   integrity sha512-+zR8DR/UEql/S5BBnA6sbEGKVRow7NHI896K8UDt5+W3J3cZVAZEsbm9faaH+DehpqvensVNHwxooxk30wEOpg==
 
-"@emurgo/cross-csl-core@6.1.0":
+"@emurgo/cross-csl-core@6.1.0", "@emurgo/cross-csl-core@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-6.1.0.tgz#769dee3f5635a99cce0f9e1baa7b9b99690e111a"
   integrity sha512-eM6jyhiYkLhie0AKyRpvM1bFpvm3hnbwrbJKy/AB47fZUqbqn/BAIQScQ3tXce0Z9qQ24QLQLBLdqU5u3mL80A==
-
-"@emurgo/cross-csl-core@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-6.0.0.tgz#454d7161df733b04f4b9b81289144c5cef4de7bf"
-  integrity sha512-BkoePOJrEE+yKBAPca7YZqSfpAzktvhMIYe6NAirXhp/pD5tSQ2mQUJuK4nUsWuizUxWo7BdAIwfmo7H3oEAPA==
 
 "@emurgo/cross-csl-mobile@^6.1.0":
   version "6.1.0"
