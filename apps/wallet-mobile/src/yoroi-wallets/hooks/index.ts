@@ -229,12 +229,12 @@ export const useVotingRegTx = (
     catalystKeyHex,
     supportsCIP36,
     addressMode,
-  }: {wallet: YoroiWallet; catalystKeyHex: string | null; supportsCIP36: boolean; addressMode: Wallet.AddressMode},
+  }: {wallet: YoroiWallet; catalystKeyHex: string; supportsCIP36: boolean; addressMode: Wallet.AddressMode},
   options?: UseQueryOptions<
-    VotingRegTxAndEncryptedKey | undefined,
+    VotingRegTxAndEncryptedKey,
     Error,
     VotingRegTxAndEncryptedKey,
-    [string | null, string, 'voting-reg-tx', string]
+    [string, string, 'voting-reg-tx', string]
   >,
 ) => {
   const query = useQuery({
@@ -243,10 +243,7 @@ export const useVotingRegTx = (
     cacheTime: 0,
     suspense: true,
     queryKey: [catalystKeyHex, wallet.id, 'voting-reg-tx', JSON.stringify({supportsCIP36})],
-    queryFn: async () => {
-      if (catalystKeyHex === null) return
-      return wallet.createVotingRegTx({catalystKeyHex, supportsCIP36, addressMode})
-    },
+    queryFn: () => wallet.createVotingRegTx({catalystKeyHex, supportsCIP36, addressMode}),
   })
 
   if (!query.data) throw new Error('invalid state')
