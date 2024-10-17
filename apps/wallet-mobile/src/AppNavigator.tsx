@@ -32,11 +32,14 @@ import {
   useShowDarkThemeAnnouncementScreen,
 } from './features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
+import {useInitNotifications} from './features/Notifications/useCases/common/hooks'
+import {NotificationsDevScreen} from './features/Notifications/useCases/NotificationsDevScreen'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from './features/WalletManager/common/hooks/useHasWallets'
 import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
+import {features} from './kernel/features'
 import {AppRoutes, defaultStackNavigationOptions} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
 
@@ -45,6 +48,7 @@ const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamL
 const prefixes = [...supportedPrefixes]
 
 export const AppNavigator = () => {
+  useInitNotifications({enabled: features.notifications})
   useDeepLinkWatcher()
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
@@ -203,6 +207,8 @@ export const AppNavigator = () => {
                 <Stack.Screen name="storybook" component={StorybookScreen} />
 
                 <Stack.Screen name="playground" component={Playground} />
+
+                <Stack.Screen name="notifications" component={NotificationsDevScreen} />
               </Stack.Group>
             )}
           </Stack.Navigator>
