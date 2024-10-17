@@ -46,7 +46,7 @@ export const EditAmountScreen = () => {
 
   const [quantity, setQuantity] = React.useState(initialQuantity)
   const [inputValue, setInputValue] = React.useState(
-    atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
+    initialQuantity === 0n ? '' : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
   )
   const spendable = isPrimary ? available - primaryBreakdown.lockedAsStorageCost : available
 
@@ -54,7 +54,7 @@ export const EditAmountScreen = () => {
 
   React.useEffect(() => {
     setQuantity(initialQuantity)
-    setInputValue(atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat())
+    setInputValue(initialQuantity === 0n ? '' : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat())
   }, [amount.info.decimals, initialQuantity])
 
   const isFocused = useIsFocused()
@@ -216,6 +216,7 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
       underlineColorAndroid="transparent"
       activeUnderlineColor="transparent"
       selectionColor={colors.selected}
+      cursorColor={colors.cursor}
       noHelper
     />
   )
@@ -272,7 +273,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    black: color.gray_max,
+    cursor: color.el_gray_max,
     selected: color.input_selected,
   }
   return {styles, colors} as const
