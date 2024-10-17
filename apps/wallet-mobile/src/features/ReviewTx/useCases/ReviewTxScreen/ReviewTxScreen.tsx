@@ -31,7 +31,8 @@ const MaterialTab = createMaterialTopTabNavigator()
 export const ReviewTxScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {unsignedTx, operations, details, onSuccess, onError} = useReviewTx()
+  const {unsignedTx, operations, details, onSuccess, onError, onNotSupportedCIP1694, onCIP36SupportChange} =
+    useReviewTx()
 
   if (unsignedTx === null) throw new Error('ReviewTxScreen: missing unsignedTx')
 
@@ -39,6 +40,8 @@ export const ReviewTxScreen = () => {
     unsignedTx,
     onSuccess,
     onError,
+    onNotSupportedCIP1694,
+    onCIP36SupportChange,
   })
 
   // TODO: apply cbor

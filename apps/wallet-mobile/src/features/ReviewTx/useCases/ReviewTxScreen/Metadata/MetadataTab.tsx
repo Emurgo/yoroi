@@ -5,13 +5,9 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Space} from '../../../../../components/Space/Space'
 import {CopiableText, CopyButton} from '../../../common/CopiableText'
 import {useStrings} from '../../../common/hooks/useStrings'
+import {FormattedMetadata} from '../../../common/types'
 
-type Props = {
-  hash: string | null
-  metadata: {msg: Array<string>} | null
-}
-
-export const MetadataTab = ({metadata, hash}: Props) => {
+export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
   const {styles} = useStyles()
   const strings = useStrings()
 

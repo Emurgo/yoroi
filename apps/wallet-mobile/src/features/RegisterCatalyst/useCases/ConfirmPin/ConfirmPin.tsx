@@ -9,8 +9,11 @@ import {Button} from '../../../../components/Button/Button'
 import {BACKSPACE, NumericKeyboard} from '../../../../components/NumericKeyboard'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import {generatePrivateKeyForCatalyst} from '../../../../yoroi-wallets/cardano/catalyst'
 import {encryptWithPassword} from '../../../../yoroi-wallets/cardano/catalyst/catalystCipher'
+import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description, PinBox, Row, Stepper} from '../../common/components'
 import {useStrings} from '../../common/strings'
@@ -19,16 +22,31 @@ export const ConfirmPin = () => {
   const strings = useStrings()
   const {isDark} = useTheme()
   const styles = useStyles()
-  const {pin, votingKeyEncryptedChanged, catalystKeyHexChanged} = useCatalyst()
+  const {pin, votingKeyEncryptedChanged} = useCatalyst()
   const navigateTo = useNavigateTo()
   const [currentActivePin, setCurrentActivePin] = React.useState(1)
+  const {wallet, meta} = useSelectedWallet()
+  const {onCIP36SupportChangeChanged, unsignedTxChanged, onSuccessChanged} = useReviewTx()
+  const {navigateToTxReview} = useWalletNavigation()
 
   const {generateVotingKeys, isLoading} = useGenerateVotingKeys({
-    onSuccess: ({catalystKeyHex, votingKeyEncrypted}) => {
+    onSuccess: async ({catalystKeyHex, votingKeyEncrypted}) => {
       votingKeyEncryptedChanged(votingKeyEncrypted)
-      catalystKeyHexChanged(catalystKeyHex)
 
-      navigateTo.confirmTx()
+      let votingRegTx = await wallet.createVotingRegTx({
+        catalystKeyHex,
+        supportsCIP36: true,
+        addressMode: meta.addressMode,
+      })
+
+      unsignedTxChanged(votingRegTx.votingRegTx)
+      onCIP36SupportChangeChanged(async (supportsCIP36: boolean) => {
+        votingRegTx = await wallet.createVotingRegTx({catalystKeyHex, supportsCIP36, addressMode: meta.addressMode})
+        unsignedTxChanged(votingRegTx.votingRegTx)
+      })
+      onSuccessChanged(navigateTo.qrCode)
+
+      navigateToTxReview()
     },
   })
 

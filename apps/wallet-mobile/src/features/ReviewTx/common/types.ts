@@ -58,7 +58,7 @@ export type FormattedTx = {
   fee: FormattedFee
 }
 
-export type Metadata = {
-  json: string | null
+export type FormattedMetadata = {
   hash: string | null
+  metadata: {msg: Array<unknown>} | null
 }

@@ -82,7 +82,8 @@ export const useGovernanceActions = () => {
   const {manager} = useGovernance()
   const {wallet} = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, operationsChanged} = useReviewTx()
+  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, operationsChanged, onNotSupportedCIP1694Changed} =
+    useReviewTx()
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)
   const {navigateToTxReview} = useWalletNavigation()
 
@@ -112,6 +113,9 @@ export const useGovernanceActions = () => {
     })
     onErrorChanged(() => navigateTo.txFailed())
     unsignedTxChanged(unsignedTx)
+    onNotSupportedCIP1694Changed(() => {
+      navigateTo.notSupportedVersion()
+    })
 
     navigateToTxReview()
   }
@@ -135,6 +139,9 @@ export const useGovernanceActions = () => {
     })
     onErrorChanged(() => navigateTo.txFailed())
     unsignedTxChanged(unsignedTx)
+    onNotSupportedCIP1694Changed(() => {
+      navigateTo.notSupportedVersion()
+    })
 
     navigateToTxReview()
   }
@@ -161,6 +168,9 @@ export const useGovernanceActions = () => {
     })
     onErrorChanged(() => navigateTo.txFailed())
     unsignedTxChanged(unsignedTx)
+    onNotSupportedCIP1694Changed(() => {
+      navigateTo.notSupportedVersion()
+    })
 
     navigateToTxReview()
   }
