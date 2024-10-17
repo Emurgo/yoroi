@@ -1,9 +1,9 @@
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import * as React from 'react'
+import {StyleSheet, TextInput, View} from 'react-native'
+import {InteractionManager} from 'react-native'
 
-import {BACKSPACE, NumericKeyboard} from '../../../components/NumericKeyboard'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {Text} from '../../../components/Text'
 
@@ -18,35 +18,52 @@ type Props = {
 
 export type PinInputRef = {
   clear: () => void
+  focus: () => void
 }
 
 export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
-  const {enabled = true, pinMaxLength, title, subtitles = [], onDone, onGoBack} = props
+  const {enabled = true, pinMaxLength, title, subtitles = [], onDone} = props
   const styles = useStyles()
 
   const [pin, setPin] = React.useState('')
+  const inputRef = React.useRef<TextInput>(null)
+  const {isDark} = useTheme()
+
+  React.useEffect(() => {
+    if (enabled) {
+      const interaction = InteractionManager.runAfterInteractions(() => {
+        const timer = setTimeout(() => {
+          inputRef.current?.focus()
+        }, 300)
+        return () => clearTimeout(timer)
+      })
+      return () => interaction.cancel()
+    }
+  }, [enabled])
 
   React.useImperativeHandle(ref, () => ({
     clear: () => {
       setPin('')
+      inputRef.current?.clear()
+      inputRef.current?.focus()
+    },
+    focus: () => {
+      inputRef.current?.focus()
     },
   }))
 
-  const onKeyDown = (value: string) => {
+  const handleTextChange = (value: string) => {
     if (!enabled) return
-    if (value === BACKSPACE) {
-      if (pin.length === 0) onGoBack?.()
-      setPin(pin.substring(0, pin.length - 1))
-      return
+
+    if (value.length > pinMaxLength) {
+      value = value.substring(0, pinMaxLength)
     }
 
-    if (pin.length === pinMaxLength) {
-      return
-    }
+    setPin(value)
 
-    const newPin = pin.concat(value)
-    setPin(newPin)
-    if (newPin.length === pinMaxLength) onDone(newPin)
+    if (value.length === pinMaxLength) {
+      onDone(value)
+    }
   }
 
   return (
@@ -71,7 +88,18 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
         </View>
       </View>
 
-      <NumericKeyboard onKeyDown={onKeyDown} />
+      <TextInput
+        ref={inputRef}
+        style={styles.hiddenInput}
+        keyboardType="numeric"
+        value={pin}
+        onChangeText={handleTextChange}
+        maxLength={pinMaxLength}
+        autoFocus={true}
+        caretHidden={true}
+        importantForAccessibility="no"
+        keyboardAppearance={isDark ? 'dark' : 'light'}
+      />
     </View>
   )
 })
@@ -90,7 +118,7 @@ const PinPlaceholder = ({isActive}: PinPlaceholderProps) => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     pinInput: {
@@ -135,6 +163,12 @@ const useStyles = () => {
     },
     pinCircleActive: {
       backgroundColor: color.primary_600,
+    },
+    hiddenInput: {
+      ...atoms.absolute,
+      opacity: 0,
+      height: 0,
+      width: 0,
     },
   })
   return styles
