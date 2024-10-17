@@ -12,4 +12,4 @@ export const governaceAfterBlock = freeze({
 
 export const agreementDate = 1691967600000
 
-export const loggerLevel: App.Logger.Level = isDev ? App.Logger.Level.Log : App.Logger.Level.Warn
+export const loggerLevel: App.Logger.Level = isDev ? App.Logger.Level.Debug : App.Logger.Level.Warn

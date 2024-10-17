@@ -2,11 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React, {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {
-  type TokenChartInterval,
-  TOKEN_CHART_INTERVAL,
-  useGetPortfolioTokenChart,
-} from '../../../common/hooks/useGetPortfolioTokenChart'
+import {TokenChartInterval, useGetPortfolioTokenChart} from '../../../common/hooks/useGetPortfolioTokenChart'
 import {ChartPlaceholder} from './ChartPlaceholder'
 import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'
@@ -18,7 +14,7 @@ export const PortfolioTokenChart = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const [timeInterval, setTimeInterval] = useState<TokenChartInterval>(TOKEN_CHART_INTERVAL.DAY)
+  const [timeInterval, setTimeInterval] = useState<TokenChartInterval>(TokenChartInterval.DAY)
 
   const {data, isFetching} = useGetPortfolioTokenChart(timeInterval)
 
