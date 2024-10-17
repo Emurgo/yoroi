@@ -5,7 +5,6 @@ import {ConfirmTxWithOsModal} from '../../../../components/ConfirmTxWithOsModal/
 import {ConfirmTxWithSpendingPasswordModal} from '../../../../components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
-import {useNavigateTo} from '../../../Staking/Governance/common/navigation'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './useStrings'
 
@@ -14,18 +13,21 @@ export const useOnConfirm = ({
   unsignedTx,
   onSuccess,
   onError,
+  onNotSupportedCIP1694,
+  onCIP36SupportChange,
 }: {
   onSuccess?: ((txId: YoroiSignedTx) => void) | null
   onError?: (() => void) | null
   cbor?: string
   unsignedTx?: YoroiUnsignedTx
+  onNotSupportedCIP1694?: (() => void) | null
+  onCIP36SupportChange?: ((isCIP36Supported: boolean) => void) | null
 }) => {
   if (unsignedTx === undefined) throw new Error('useOnConfirm: unsignedTx missing')
 
   const {meta} = useSelectedWallet()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
-  const navigateTo = useNavigateTo()
 
   const onConfirm = () => {
     if (meta.isHW) {
@@ -36,9 +38,12 @@ export const useOnConfirm = ({
           unsignedTx={unsignedTx}
           onSuccess={(signedTx) => onSuccess?.(signedTx)}
           onNotSupportedCIP1694={() => {
-            closeModal()
-            navigateTo.notSupportedVersion()
+            if (onNotSupportedCIP1694) {
+              closeModal()
+              onNotSupportedCIP1694()
+            }
           }}
+          onCIP36SupportChange={onCIP36SupportChange ?? undefined}
         />,
         400,
       )
