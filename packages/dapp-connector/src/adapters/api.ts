@@ -7,7 +7,6 @@ import {Chain} from '@yoroi/types'
 const dappListHosts: Readonly<Record<Chain.SupportedNetworks, string>> = freeze({
   [Chain.Network.Mainnet]: 'https://daehx1qv45z7c.cloudfront.net/data.json',
   [Chain.Network.Preprod]: 'https://daehx1qv45z7c.cloudfront.net/preprod.json',
-  [Chain.Network.Sancho]: 'https://daehx1qv45z7c.cloudfront.net/sancho.json',
   [Chain.Network.Preview]: 'https://daehx1qv45z7c.cloudfront.net/preview.json',
 })
 

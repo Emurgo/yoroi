@@ -20,12 +20,6 @@ export const GOVERNANCE_ENDPOINTS: Readonly<
     getDRepById:
       'https://yoroi-backend-zero-preprod.emurgornd.com/dreps/{{DREP_ID}}/state',
   },
-  [Chain.Network.Sancho]: {
-    getStakeKeyState:
-      'https://yoroi-backend-zero-sanchonet.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
-    getDRepById:
-      'https://yoroi-backend-zero-sanchonet.emurgornd.com/dreps/{{DREP_ID}}/state',
-  },
   [Chain.Network.Preview]: {
     getStakeKeyState:
       'https://yoroi-backend-zero-preview.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',

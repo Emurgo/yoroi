@@ -19,12 +19,11 @@ export const ShowDisclaimer = () => {
   const {orderType} = useExchange()
 
   const isPreprod = network === Chain.Network.Preprod
-  const isSancho = network === Chain.Network.Sancho
 
-  if ((isPreprod || isSancho) && orderType === 'buy') return null
+  if (isPreprod && orderType === 'buy') return null
 
   const contentDisclaimer =
-    (isPreprod || isSancho) && orderType === 'sell' ? strings.contentDisclaimerPreprod : strings.contentDisclaimer
+    isPreprod && orderType === 'sell' ? strings.contentDisclaimerPreprod : strings.contentDisclaimer
 
   return (
     <>

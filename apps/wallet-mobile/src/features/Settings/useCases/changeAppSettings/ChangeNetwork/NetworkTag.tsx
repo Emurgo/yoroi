@@ -37,8 +37,7 @@ export const NetworkTag = ({
   const strings = useStrings()
   const {track} = useMetrics()
 
-  const Tag =
-    selectedNetwork === Chain.Network.Sancho ? SanchoTag : selectedNetwork === Chain.Network.Preprod ? PreprodTag : null
+  const Tag = selectedNetwork === Chain.Network.Preprod ? PreprodTag : null
 
   const onPress = () => {
     if (directChangeActive && selectedNetwork !== Chain.Network.Mainnet) {
@@ -104,17 +103,6 @@ const PreprodTag = ({onPress, disabled}: {onPress: () => void; disabled: boolean
   )
 }
 
-const SanchoTag = ({onPress, disabled}: {onPress: () => void; disabled: boolean}) => {
-  const {styles} = useStyles()
-  const {name} = networkConfigs[Chain.Network.Sancho]
-
-  return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.5} style={styles.sanchonetLabel} disabled={disabled}>
-      <Text>{name}</Text>
-    </TouchableOpacity>
-  )
-}
-
 const MainnetWarningDialog = ({onCancel, onOk}: {onCancel: () => void; onOk: () => void}) => {
   const {styles} = useStyles()
   const strings = useStrings()
@@ -158,12 +146,6 @@ const useStyles = () => {
     },
     preprodTag: {
       backgroundColor: color.sys_yellow_500,
-      ...atoms.rounded_full,
-      ...atoms.px_sm,
-      ...atoms.py_xs,
-    },
-    sanchonetLabel: {
-      backgroundColor: color.el_secondary,
       ...atoms.rounded_full,
       ...atoms.px_sm,
       ...atoms.py_xs,

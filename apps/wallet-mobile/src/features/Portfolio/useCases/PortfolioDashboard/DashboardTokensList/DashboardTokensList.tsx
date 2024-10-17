@@ -7,7 +7,6 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View}
 import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {PreprodFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/PreprodFaucetBanner'
-import {SanchonetFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/SanchonetFaucetBanner'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
@@ -29,7 +28,6 @@ export const DashboardTokensList = () => {
   } = useWalletManager()
 
   const isPreprod = network === Chain.Network.Preprod
-  const isSancho = network === Chain.Network.Sancho
 
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
   const isJustADA = React.useMemo(() => {
@@ -47,11 +45,7 @@ export const DashboardTokensList = () => {
 
   const renderTokensList = () => {
     if (isZeroADABalance) {
-      return (
-        <View style={styles.container}>
-          {isPreprod ? <PreprodFaucetBanner /> : isSancho ? <SanchonetFaucetBanner /> : <BuyADABanner />}
-        </View>
-      )
+      return <View style={styles.container}>{isPreprod ? <PreprodFaucetBanner /> : <BuyADABanner />}</View>
     }
 
     if (isJustADA) {
