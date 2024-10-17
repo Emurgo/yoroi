@@ -28,19 +28,16 @@ const buildPortfolioTokenManager = ({network}: {network: Chain.SupportedNetworks
 export const buildPortfolioTokenManagers = () => {
   const mainnetPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Mainnet})
   const preprodPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Preprod})
-  const sanchoPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Sancho})
   const previewPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Preview})
 
   const tokenManagers: Readonly<{
     [Chain.Network.Mainnet]: Portfolio.Manager.Token
     [Chain.Network.Preprod]: Portfolio.Manager.Token
-    [Chain.Network.Sancho]: Portfolio.Manager.Token
     [Chain.Network.Preview]: Portfolio.Manager.Token
   }> = freeze(
     {
       [Chain.Network.Mainnet]: mainnetPortfolioTokenManager.tokenManager,
       [Chain.Network.Preprod]: preprodPortfolioTokenManager.tokenManager,
-      [Chain.Network.Sancho]: sanchoPortfolioTokenManager.tokenManager,
       [Chain.Network.Preview]: previewPortfolioTokenManager.tokenManager,
     },
     true,
@@ -49,13 +46,11 @@ export const buildPortfolioTokenManagers = () => {
   const tokenStorages: Readonly<{
     [Chain.Network.Mainnet]: App.Storage<false, Portfolio.Token.Id>
     [Chain.Network.Preprod]: App.Storage<false, Portfolio.Token.Id>
-    [Chain.Network.Sancho]: App.Storage<false, Portfolio.Token.Id>
     [Chain.Network.Preview]: App.Storage<false, Portfolio.Token.Id>
   }> = freeze(
     {
       [Chain.Network.Mainnet]: mainnetPortfolioTokenManager.storage,
       [Chain.Network.Preprod]: preprodPortfolioTokenManager.storage,
-      [Chain.Network.Sancho]: sanchoPortfolioTokenManager.storage,
       [Chain.Network.Preview]: previewPortfolioTokenManager.storage,
     },
     true,

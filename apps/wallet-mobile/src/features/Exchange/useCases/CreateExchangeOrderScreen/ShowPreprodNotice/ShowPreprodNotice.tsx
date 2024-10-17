@@ -18,9 +18,8 @@ export const ShowPreprodNotice = () => {
   const {orderType} = useExchange()
 
   const isPreprod = network === Chain.Network.Preprod
-  const isSancho = network === Chain.Network.Sancho
 
-  if ((isPreprod || isSancho) && orderType === 'buy')
+  if (isPreprod && orderType === 'buy')
     return (
       <View style={styles.container}>
         <Space height="_2xl" />

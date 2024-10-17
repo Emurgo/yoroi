@@ -4,7 +4,6 @@ import {freeze} from 'immer'
 import {isDev} from './env'
 
 export const governaceAfterBlock = freeze({
-  [Chain.Network.Sancho]: 0,
   [Chain.Network.Mainnet]: 10782931,
   [Chain.Network.Preprod]: 2639667,
   [Chain.Network.Preview]: Infinity,

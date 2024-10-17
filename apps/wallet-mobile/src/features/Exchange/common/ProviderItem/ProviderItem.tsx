@@ -24,11 +24,10 @@ export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disab
   const {orderType} = useExchange()
 
   const isPreprod = network === Chain.Network.Preprod
-  const isSancho = network === Chain.Network.Sancho
   const isMainnet = network === Chain.Network.Mainnet
   const isBuy = orderType === 'buy'
 
-  if ((isPreprod || isSancho) && isBuy) return null
+  if (isPreprod && isBuy) return null
 
   return (
     <>

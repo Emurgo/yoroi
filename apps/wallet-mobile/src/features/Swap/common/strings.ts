@@ -161,8 +161,6 @@ export const useStrings = () => {
     backToSwapOrders: intl.formatMessage(messages.backToSwapOrders),
     preprodNoticeTitle: intl.formatMessage(messages.preprodNoticeTitle),
     preprodNoticeText: intl.formatMessage(messages.preprodNoticeText),
-    sanchoNoticeTitle: intl.formatMessage(messages.sanchoNoticeTitle),
-    sanchoNoticeText: intl.formatMessage(messages.sanchoNoticeText),
   }
 }
 
@@ -284,14 +282,6 @@ const messages = defineMessages({
   },
   preprodNoticeText: {
     id: 'swap.swapScreen.preprodNoticeText',
-    defaultMessage: `!!!Switch to mainnet if you want to use the feature and swap real tokens`,
-  },
-  sanchoNoticeTitle: {
-    id: 'swap.swapScreen.sanchoNoticeTitle',
-    defaultMessage: `!!!Swap is not available on sanchonet`,
-  },
-  sanchoNoticeText: {
-    id: 'swap.swapScreen.sanchoNoticeText',
     defaultMessage: `!!!Switch to mainnet if you want to use the feature and swap real tokens`,
   },
   swapFeesTitle: {
