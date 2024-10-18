@@ -25,7 +25,7 @@ import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAm
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {useSearch} from '../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../common/navigation'
+import {useNavigateTo} from '../../common/navigation'
 import {toYoroiEntry} from '../../common/toYoroiEntry'
 import {AddTokenButton} from './AddToken/AddToken'
 import {RemoveAmountButton} from './RemoveAmount'
@@ -40,8 +40,6 @@ export const ListAmountsToSendScreen = () => {
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const {unsignedTxChanged, onSuccessChanged, onErrorChanged} = useReviewTx()
-
-  useOverridePreviousSendTxRoute('send-start-tx')
 
   useLayoutEffect(() => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
@@ -76,7 +74,7 @@ export const ListAmountsToSendScreen = () => {
     // use case: redirect to add token screen if there is no token left
     if (selectedTokensCounter === 1) {
       clearSearch()
-      navigateTo.addToken()
+      navigateTo.addToken(true)
     }
     amountRemoved(tokenId)
   }

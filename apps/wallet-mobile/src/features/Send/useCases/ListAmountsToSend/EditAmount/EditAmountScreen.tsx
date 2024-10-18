@@ -20,7 +20,7 @@ import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfo
 import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../../common/navigation'
+import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
@@ -50,8 +50,6 @@ export const EditAmountScreen = () => {
   )
   const spendable = isPrimary ? available - primaryBreakdown.lockedAsStorageCost : available
 
-  useOverridePreviousSendTxRoute(initialQuantity === 0n ? 'send-select-token-from-list' : 'send-list-amounts-to-send')
-
   React.useEffect(() => {
     setQuantity(initialQuantity)
     setInputValue(initialQuantity === 0n ? '' : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat())
@@ -60,13 +58,13 @@ export const EditAmountScreen = () => {
   const isFocused = useIsFocused()
   React.useEffect(() => {
     return () => {
-      if (quantity === 0n && !isFocused) {
+      if (amount.quantity === 0n && !isFocused) {
         InteractionManager.runAfterInteractions(() => {
           amountRemoved(selectedTokenId)
         })
       }
     }
-  }, [amountRemoved, isFocused, quantity, selectedTokenId])
+  }, [amount.quantity, amountRemoved, isFocused, selectedTokenId])
 
   const hasBalance = available >= quantity
   // primary can have locked amount
