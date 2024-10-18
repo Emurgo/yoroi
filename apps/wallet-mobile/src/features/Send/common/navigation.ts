@@ -8,8 +8,8 @@ export const useNavigateTo = () => {
 
   return useRef({
     selectedTokens: () => navigation.navigate('send-list-amounts-to-send'),
-    addToken: (removePrevious?: boolean) => {
-      if (removePrevious) navigation.pop()
+    addToken: ({shouldPopPrevious}: {shouldPopPrevious?: boolean} = {shouldPopPrevious = false}) => {
+      if (shouldPopPrevious) navigation.pop()
       navigation.navigate('send-select-token-from-list')
     },
     startTx: () => navigation.navigate('send-start-tx'),
