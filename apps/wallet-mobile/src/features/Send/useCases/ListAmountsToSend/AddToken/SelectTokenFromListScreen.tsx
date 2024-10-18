@@ -17,7 +17,6 @@ import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/Toke
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {limitOfSecondaryAmountsPerTx} from '../../../common/constants'
-import {useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
 import {useStrings} from '../../../common/strings'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
@@ -73,10 +72,6 @@ export const SelectTokenFromListScreen = () => {
   const currentAmountsSize = Object.keys(currentAmounts).length
   const secondaryAmountsCounter = currentAmountsSize - (hasPrimary ? 1 : 0)
   const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
-
-  // to redirect the user automatically there is no amount added
-  const hasTokensSelected = currentAmountsSize > 0
-  useOverridePreviousSendTxRoute(hasTokensSelected ? 'send-list-amounts-to-send' : 'send-start-tx')
 
   const handleOnPressNFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('nfts')), [])
   const handleOnPressFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('fts')), [])
