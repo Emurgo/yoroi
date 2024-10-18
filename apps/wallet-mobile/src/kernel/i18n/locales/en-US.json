@@ -1246,5 +1246,10 @@
   "txReview.tokenDetails.overViewTab.symbol.label": "Symbol",
   "txReview.tokenDetails.overViewTab.description.label": "Description",
   "txReview.tokenDetails.overViewTab.details.label": "Details on",
-  "txReview.tokenDetails.title": "Asset Details"
+  "txReview.tokenDetails.title": "Asset Details",
+  "txReview.operations.registerStakingKey": "Register staking key deposit",
+  "txReview.operations.selectAbstain": "Select abstain",
+  "txReview.operations.selectNoConfidence": "Select no confidence",
+  "txReview.operations.delegateVotingToDRep": "Delegate voting to",
+  "txReview.operations.delegateStake": "Stake entire wallet balance to"
 }

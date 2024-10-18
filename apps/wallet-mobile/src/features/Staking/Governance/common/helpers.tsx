@@ -4,30 +4,29 @@ import {
   governanceApiMaker,
   governanceManagerMaker,
   GovernanceProvider,
-  useBech32DRepID,
   useGovernance,
   useStakingKeyState,
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
-import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
 
-import {Space} from '../../../../components/Space/Space'
 import {governaceAfterBlock} from '../../../../kernel/config'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useStakingKey} from '../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
-import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
-import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
+import {
+  AbstainOperation,
+  DelegateVotingToDrepOperation,
+  NoConfidenceOperation,
+  RegisterStakingKeyOperation,
+} from '../../../ReviewTx/common/operations'
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {useBestBlock} from '../../../WalletManager/common/hooks/useBestBlock'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
-import {useStrings} from './strings'
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
   const stakingKeyHash = useStakingKey(wallet)
@@ -100,7 +99,7 @@ export const useGovernanceActions = () => {
   }) => {
     let operations = [
       <GovernanceProvider key="0" manager={manager}>
-        <DelegateOperation drepID={drepID} />
+        <DelegateVotingToDrepOperation drepID={drepID} />
       </GovernanceProvider>,
     ]
 
@@ -176,85 +175,4 @@ export const useGovernanceActions = () => {
   }
 
   return {handleDelegateAction, handleAbstainAction, handleNoConfidenceAction} as const
-}
-
-const RegisterStakingKeyOperation = () => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-  const {wallet} = useSelectedWallet()
-
-  return (
-    <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.registerStakingKey}</Text>
-
-      <Space width="lg" />
-
-      <Text style={styles.operationValue}>
-        {formatTokenWithText(asQuantity(wallet.protocolParams.keyDeposit), wallet.portfolioPrimaryTokenInfo)}
-      </Text>
-    </View>
-  )
-}
-
-const AbstainOperation = () => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-
-  return (
-    <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.selectAbstain}</Text>
-    </View>
-  )
-}
-
-const NoConfidenceOperation = () => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-
-  return (
-    <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.selectNoConfidence}</Text>
-    </View>
-  )
-}
-
-const DelegateOperation = ({drepID}: {drepID: string}) => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-
-  const {data: bech32DrepId} = useBech32DRepID(drepID)
-
-  return (
-    <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.delegateVotingToDRep}</Text>
-
-      <Space width="lg" />
-
-      <Text style={styles.operationValue}>{bech32DrepId ?? drepID}</Text>
-    </View>
-  )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    operation: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_start,
-    },
-    operationLabel: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_low,
-    },
-    operationValue: {
-      ...atoms.flex_1,
-      ...atoms.text_right,
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-  })
-
-  return {styles} as const
 }

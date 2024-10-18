@@ -48,7 +48,7 @@ export const TokenItem = ({
       style={[styles.sentTokenItem, !isPrimaryToken && styles.notPrimarySentTokenItem]}
       disabled={isPrimaryToken}
     >
-      <Text style={[styles.tokenSentItemText, !isPrimaryToken && styles.notPrimarySentTokenItemText]}>-{label}</Text>
+      <Text style={[styles.tokenSentItemText, !isPrimaryToken && styles.notPrimarySentTokenItemText]}>{label}</Text>
     </TouchableOpacity>
   )
 }

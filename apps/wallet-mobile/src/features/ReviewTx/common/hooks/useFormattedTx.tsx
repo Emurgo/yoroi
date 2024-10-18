@@ -51,7 +51,12 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   const formattedOutputs = useFormattedOutputs(wallet, outputs, portfolioTokenInfos)
   const formattedFee = formatFee(wallet, data)
 
-  return {inputs: formattedInputs, outputs: formattedOutputs, fee: formattedFee}
+  return {
+    inputs: formattedInputs,
+    outputs: formattedOutputs,
+    fee: formattedFee,
+    certificates: data.certs ?? null,
+  }
 }
 
 export const useFormattedInputs = (
