@@ -74,7 +74,7 @@ export const ListAmountsToSendScreen = () => {
     // use case: redirect to add token screen if there is no token left
     if (selectedTokensCounter === 1) {
       clearSearch()
-      navigateTo.addToken(true)
+      navigateTo.addToken({shouldPopPrevious: true})
     }
     amountRemoved(tokenId)
   }
