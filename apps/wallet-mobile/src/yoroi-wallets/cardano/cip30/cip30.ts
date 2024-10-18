@@ -204,7 +204,7 @@ class CIP30Extension {
       const txBody = await tx.body()
       const signedTx = await csl.Transaction.new(txBody, witnesses, undefined)
 
-      const txId = (await hashTransaction(csl, signedTx)).toHex()
+      const txId = await (await hashTransaction(csl, signedTx)).toHex()
 
       const signedTxBytes = await signedTx.toBytes()
       await this.wallet.submitTransaction(Buffer.from(signedTxBytes).toString('base64'))

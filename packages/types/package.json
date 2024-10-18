@@ -101,7 +101,7 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.5.12",
     "axios": "^1.5.0",
-    "bignumber.js": "^9.0.1",
+    "bignumber.js": "9.0.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
@@ -119,7 +119,7 @@
   "peerDependencies": {
     "@emurgo/yoroi-lib": "^1.2.3",
     "axios": "^1.5.0",
-    "bignumber.js": "^9.0.1",
+    "bignumber.js": "9.0.1",
     "rxjs": "^7.8.1"
   },
   "packageManager": "yarn@1.22.21",

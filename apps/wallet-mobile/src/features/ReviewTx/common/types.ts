@@ -1,13 +1,13 @@
-import {Balance, Portfolio} from '@yoroi/types'
 import {
   TransactionBodyJSON,
   TransactionInputsJSON,
-  TransactionOutputJSON,
+  TransactionOutputsJSON,
 } from '@emurgo/cardano-serialization-lib-nodejs'
+import {Balance, Portfolio} from '@yoroi/types'
 
 export type TransactionBody = TransactionBodyJSON
 export type TransactionInputs = TransactionInputsJSON
-export type TransactionOutputs = TransactionOutputJSON
+export type TransactionOutputs = TransactionOutputsJSON
 
 export type FormattedInput = {
   assets: Array<{
