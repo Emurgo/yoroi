@@ -1,15 +1,14 @@
 import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
-import {NavigationProp, NavigationState, NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
+import {NavigationState, NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp, TransitionPresets} from '@react-navigation/stack'
 import {isKeyOf} from '@yoroi/common'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Chain, Portfolio, Scan} from '@yoroi/types'
 import React from 'react'
-import {Dimensions, InteractionManager, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../components/Icon'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
-import {compareArrays} from '../yoroi-wallets/utils/utils'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -641,66 +640,3 @@ const getFocusedRouteName = (state: Partial<NavigationState> | NavigationState['
 
   return [name]
 }
-
-function useKeepRoutesInHistory(routesToKeep: string[]) {
-  const navigation = useNavigation()
-  const [initialRouteId] = React.useState(() => getNavigationRouteId(navigation))
-
-  React.useEffect(() => {
-    const currentRouteId = getNavigationRouteId(navigation)
-
-    if (currentRouteId !== initialRouteId) {
-      return
-    }
-    const {routes} = navigation.getState()
-    const currentRouteNames = routes.map((r) => r.name)
-
-    if (compareArrays(currentRouteNames, routesToKeep)) {
-      return
-    }
-
-    const newRoutes = routes.filter((r) => routesToKeep.includes(r.name))
-
-    const task = InteractionManager.runAfterInteractions(() => {
-      const newState = {
-        index: newRoutes.length - 1,
-        routes: newRoutes.map((r) => ({...r, state: undefined})),
-        routeNames: newRoutes.map((r) => r.name),
-      }
-      navigation.reset(newState)
-    })
-
-    return () => task.cancel()
-  }, [navigation, initialRouteId, routesToKeep])
-}
-
-export function useOverridePreviousRoute<RouteName extends string>(previousRouteName: RouteName) {
-  const navigation = useNavigation()
-  const [initialRouteName] = React.useState(() => getNavigationRouteName(navigation))
-  const allRouteNames: string[] = navigation.getState().routes.map((route) => route.name)
-  const previousRouteIndex = allRouteNames.indexOf(previousRouteName)
-  const currentRouteIndex = allRouteNames.indexOf(initialRouteName)
-
-  let newRoutes = allRouteNames
-  if (previousRouteIndex < currentRouteIndex) {
-    newRoutes = allRouteNames.filter((routeName, index) => index <= previousRouteIndex || index >= currentRouteIndex)
-  }
-
-  if (previousRouteIndex > currentRouteIndex) {
-    newRoutes = allRouteNames.filter((routeName, index) => index < currentRouteIndex)
-    newRoutes.push(previousRouteName, initialRouteName)
-  }
-
-  useKeepRoutesInHistory(newRoutes)
-}
-
-function getNavigationRouteId(navigation: NavigationProp<ReactNavigation.RootParamList>) {
-  const state = navigation.getState()
-  return state.routes[state.index].key
-}
-
-function getNavigationRouteName(navigation: NavigationProp<ReactNavigation.RootParamList>) {
-  return selectRouteName(navigation.getState())
-}
-
-const selectRouteName = (state: NavigationState) => state.routes[state.index].name
