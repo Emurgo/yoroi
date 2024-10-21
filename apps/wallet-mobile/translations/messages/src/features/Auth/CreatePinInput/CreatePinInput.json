@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Enter PIN",
     "file": "src/features/Auth/CreatePinInput/CreatePinInput.tsx",
     "start": {
-      "line": 78,
+      "line": 88,
       "column": 17,
-      "index": 2443
+      "index": 2729
     },
     "end": {
-      "line": 81,
+      "line": 91,
       "column": 3,
-      "index": 2551
+      "index": 2837
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Choose a new PIN to quickly access your wallet",
     "file": "src/features/Auth/CreatePinInput/CreatePinInput.tsx",
     "start": {
-      "line": 82,
+      "line": 92,
       "column": 20,
-      "index": 2573
+      "index": 2859
     },
     "end": {
-      "line": 85,
+      "line": 95,
       "column": 3,
-      "index": 2721
+      "index": 3007
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Repeat PIN",
     "file": "src/features/Auth/CreatePinInput/CreatePinInput.tsx",
     "start": {
-      "line": 86,
+      "line": 96,
       "column": 29,
-      "index": 2752
+      "index": 3038
     },
     "end": {
-      "line": 89,
+      "line": 99,
       "column": 3,
-      "index": 2868
+      "index": 3154
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Repeat a new PIN to quickly access your wallet",
     "file": "src/features/Auth/CreatePinInput/CreatePinInput.tsx",
     "start": {
-      "line": 90,
+      "line": 100,
       "column": 32,
-      "index": 2902
+      "index": 3188
     },
     "end": {
-      "line": 93,
+      "line": 103,
       "column": 3,
-      "index": 3056
+      "index": 3342
     }
   }
 ]
