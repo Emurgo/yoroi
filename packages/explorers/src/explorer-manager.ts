@@ -44,26 +44,6 @@ export const explorerManager: Readonly<
         `https://preprod.cexplorer.io/stake/${stakeAddress}`,
     },
   },
-  [Chain.Network.Sancho]: {
-    [Explorers.Explorer.CardanoScan]: {
-      token: (fingerprint) =>
-        `https://sancho.cardanoscan.io/token/${fingerprint}`,
-      address: (address) => `https://sancho.cardanoscan.io/address/${address}`,
-      tx: (txHash) => `https://sancho.cardanoscan.io/transaction/${txHash}`,
-      pool: (poolId) => `https://sancho.cardanoscan.io/pool/${poolId}`,
-      stake: (stakeAddress) =>
-        `https://sancho.cardanoscan.io/stakeKey/${stakeAddress}`,
-    },
-    [Explorers.Explorer.CExplorer]: {
-      token: (fingerprint) =>
-        `https://sancho.cexplorer.io/asset/${fingerprint}`,
-      address: (address) => `https://sancho.cexplorer.io/address/${address}`,
-      tx: (txHash) => `https://sancho.cexplorer.io/tx/${txHash}`,
-      pool: (poolId) => `https://sancho.cexplorer.io/pool/${poolId}`,
-      stake: (stakeAddress) =>
-        `https://sancho.cexplorer.io/stake/${stakeAddress}`,
-    },
-  },
   [Chain.Network.Preview]: {
     [Explorers.Explorer.CardanoScan]: {
       token: (fingerprint) =>

@@ -32,7 +32,6 @@ export const Actions = ({tokenInfo}: Props) => {
 
   const handleOnSwap = () => {
     if (network === Chain.Network.Preprod) return navigateTo.swapPreprodNotice()
-    if (network === Chain.Network.Sancho) return navigateTo.swapSanchoNotice()
 
     swapForm.resetSwapForm()
 

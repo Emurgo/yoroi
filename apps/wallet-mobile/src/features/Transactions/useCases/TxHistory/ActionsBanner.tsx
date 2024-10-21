@@ -58,11 +58,6 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
       return
     }
 
-    if (network === Chain.Network.Sancho) {
-      navigateTo.swapSanchoNotice()
-      return
-    }
-
     resetSwapForm()
 
     track.swapInitiated({
@@ -199,7 +194,6 @@ const useNavigateTo = () => {
     receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
     swap: () => navigation.navigate('swap-start-swap', {screen: 'token-swap'}),
     swapPreprodNotice: () => navigation.navigate('swap-preprod-notice'),
-    swapSanchoNotice: () => navigation.navigate('swap-sancho-notice'),
     exchange: () => navigation.navigate('exchange-create-order'),
   }
 }

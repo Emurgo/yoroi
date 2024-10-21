@@ -24,13 +24,8 @@ export const NoFundsScreen = () => {
   } = useWalletManager()
 
   const handleOnTryAgain = () => {
-    if (network === Chain.Network.Sancho) {
-      Linking.openURL('https://sancho.network/faucet/')
-      return
-    }
-
     if (network === Chain.Network.Preprod) {
-      Linking.openURL('https://sancho.network/faucet/')
+      Linking.openURL('https://docs.cardano.org/cardano-testnets/tools/faucet/')
       return
     }
 

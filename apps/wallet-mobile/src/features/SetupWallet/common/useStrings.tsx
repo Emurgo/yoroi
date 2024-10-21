@@ -23,10 +23,8 @@ export const useStrings = () => {
     connectWalletButtonCard: intl.formatMessage(messages.connectWalletButtonCard),
     cardanoMainnet: intl.formatMessage(messages.cardanoMainnet),
     cardanoTestnet: intl.formatMessage(messages.cardanoTestnet),
-    cardanoSanchonet: intl.formatMessage(messages.cardanoSanchonet),
     cardanoMainnetDescription: intl.formatMessage(messages.cardanoMainnetDescription),
     cardanoTestnetDescription: intl.formatMessage(messages.cardanoTestnetDescription),
-    cardanoSanchonetDescription: intl.formatMessage(messages.cardanoSanchonetDescription),
 
     continueButton: intl.formatMessage(messages.continueButton),
     next: intl.formatMessage(messages.next),
@@ -180,10 +178,6 @@ const messages = Object.freeze(
       id: 'components.walletinit.walletinitmenu.cardanoTestnetbutton.title',
       defaultMessage: '!!!Cardano Preprod Testnet',
     },
-    cardanoSanchonet: {
-      id: 'components.walletinit.walletinitmenu.cardanoSanchonetbutton.title',
-      defaultMessage: '!!!Cardano SanchoNet',
-    },
     cardanoMainnetDescription: {
       id: 'components.walletinit.walletinitmenu.cardanoMainnetbutton.description',
       defaultMessage: '!!!Works with real ADA',
@@ -191,10 +185,6 @@ const messages = Object.freeze(
     cardanoTestnetDescription: {
       id: 'components.walletinit.walletinitmenu.cardanoTestnetbutton.description',
       defaultMessage: '!!!Works with test ADA (tADA)',
-    },
-    cardanoSanchonetDescription: {
-      id: 'components.walletinit.walletinitmenu.cardanoSanchonetbutton.description',
-      defaultMessage: '!!!Testnet for rolling out governance',
     },
     aboutRecoveryPhraseTitle: {
       id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhrase.title',

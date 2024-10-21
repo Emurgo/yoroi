@@ -32,11 +32,14 @@ import {explorerManager} from '@yoroi/explorers'
 const mainnetExplorer = explorerManager[Chain.Network.Mainnet]
 
 // Generate URLs using CardanoScan explorer
-const tokenUrl = mainnetExplorer[Explorers.Explorer.CardanoScan].token('fingerprint')
-const addressUrl = mainnetExplorer[Explorers.Explorer.CardanoScan].address('address')
+const tokenUrl =
+  mainnetExplorer[Explorers.Explorer.CardanoScan].token('fingerprint')
+const addressUrl =
+  mainnetExplorer[Explorers.Explorer.CardanoScan].address('address')
 const txUrl = mainnetExplorer[Explorers.Explorer.CardanoScan].tx('txHash')
 const poolUrl = mainnetExplorer[Explorers.Explorer.CardanoScan].pool('poolId')
-const stakeUrl = mainnetExplorer[Explorers.Explorer.CardanoScan].stake('stakeAddress')
+const stakeUrl =
+  mainnetExplorer[Explorers.Explorer.CardanoScan].stake('stakeAddress')
 
 console.log(tokenUrl) // Output: https://cardanoscan.io/token/fingerprint
 console.log(addressUrl) // Output: https://cardanoscan.io/address/address
@@ -55,12 +58,12 @@ Networks:
 
 1. Mainnet: The live network for Cardano.
 2. Preprod: The pre-production network for testing.
-3. Sancho: The temporary Conway test network for governance.
-4. Preview: A preview network for new features.
+3. Preview: A preview network for new features.
 
 Explorers:
 
 1. CardanoScan: A popular Cardano blockchain explorer.
+
    1. [Twitter ![X](https://img.icons8.com/ios-filled/12/000000/x.png)](https://twitter.com/cardanoscan.io)
    2. [Discord ![Discord](https://img.icons8.com/ios-filled/12/000000/discord-logo.png)](https://discord.gg/WQFPHNXcz8)
    3. [Explorer](https://cardanoscan.io)
@@ -103,7 +106,7 @@ If you are a developer working on a new Cardano explorer and want to add support
         pool: (poolId: string) => `https://yourexplorer.io/pool/${poolId}`,
         stake: (stakeAddress: string) => `https://yourexplorer.io/stake/${stakeAddress}`,
      },
-   }, 
+   },
    ```
 
 3. Test Your Implementation

@@ -11,10 +11,6 @@ describe('toChainSupportedNetwork', () => {
     expect(toChainSupportedNetwork(1)).toBe(Chain.Network.Mainnet)
   })
 
-  it('should return Chain.Network.Sancho for networkId 450', () => {
-    expect(toChainSupportedNetwork(450)).toBe(Chain.Network.Sancho)
-  })
-
   it('should return Chain.Network.Preprod for unknown networkId', () => {
     expect(toChainSupportedNetwork(999 as never)).toBe(Chain.Network.Preprod)
   })

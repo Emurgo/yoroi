@@ -39,20 +39,8 @@ describe('State Actions', () => {
     expect(state.votingKeyEncrypted).toBe(votingKeyEncrypted)
   })
 
-  it('CatalystKeyHexChanged', () => {
-    const catalystKeyHex = 'super-complex-hex'
-    const action: CatalystAction = {
-      type: CatalystActionType.CatalystKeyHexChanged,
-      catalystKeyHex,
-    }
-
-    const state = catalystReducer(catalystDefaultState, action)
-    expect(state.catalystKeyHex).toBe(catalystKeyHex)
-  })
-
   it('Reset', () => {
     const votingKeyEncrypted = 'super-complex-voting-key'
-    const catalystKeyHex = 'super-complex-catalyst-key'
     const action: CatalystAction = {
       type: CatalystActionType.Reset,
     }
@@ -62,12 +50,10 @@ describe('State Actions', () => {
         ...catalystDefaultState,
         pin: '1234',
         votingKeyEncrypted,
-        catalystKeyHex,
       },
       action,
     )
     expect(state.pin).toBe(null)
     expect(state.votingKeyEncrypted).toBe(null)
-    expect(state.catalystKeyHex).toBe(null)
   })
 })

@@ -101,17 +101,6 @@ export const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<N
 
     legacyApiBaseUrl: 'https://preprod-backend.yoroiwallet.com/api',
   },
-  [Chain.Network.Sancho]: {
-    network: Chain.Network.Sancho,
-    primaryTokenInfo: primaryTokenInfoAnyTestnet,
-    chainId: 0,
-    protocolMagic: 4,
-    eras: [shelleyEraConfig],
-    name: 'Sancho',
-    isMainnet: false,
-
-    legacyApiBaseUrl: 'https://sanchonet-backend.yoroiwallet.com/api',
-  },
   // NOTE: not supported yet on mobile
   [Chain.Network.Preview]: {
     network: Chain.Network.Preview,

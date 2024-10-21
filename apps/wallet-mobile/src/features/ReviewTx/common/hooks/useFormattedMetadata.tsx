@@ -1,13 +1,18 @@
-import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
-import {TransactionBody} from '../types'
+import _ from 'lodash'
 
-export const formatMetadata = (unsignedTx: YoroiUnsignedTx, txBody: TransactionBody) => {
+import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
+import {FormattedMetadata, TransactionBody} from '../types'
+
+export const formatMetadata = (unsignedTx: YoroiUnsignedTx, txBody: TransactionBody): FormattedMetadata => {
   const hash = txBody.auxiliary_data_hash ?? null
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const metadata = unsignedTx.metadata?.['674']?.['msg' as any] ?? null
+  const msg = unsignedTx.metadata?.['674']?.['msg' as any] ?? JSON.stringify({})
+
+  const metadata = hash != null && typeof msg == 'string' ? {msg: [JSON.parse(msg) as unknown]} : null
 
   return {
     hash,
-    metadata: {msg: [JSON.parse(metadata)]},
+    metadata,
   }
 }

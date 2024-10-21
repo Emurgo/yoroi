@@ -12,7 +12,6 @@ import {useShowBuyBannerSmall} from '../useShowBuyBannerSmall'
 import {BuyBannerBig} from './BuyBannerBig'
 import {BuyBannerSmall} from './BuyBannerSmall'
 import {PreprodFaucetBanner} from './PreprodFaucetBanner'
-import {SanchonetFaucetBanner} from './SanchonetFaucetBanner'
 
 export const ShowBuyBanner = () => {
   const {wallet} = useSelectedWallet()
@@ -32,9 +31,6 @@ export const ShowBuyBanner = () => {
   switch (true) {
     case hasZeroPt && hasZeroTx && network === Chain.Network.Preprod:
       banner = <PreprodFaucetBanner />
-      break
-    case hasZeroPt && hasZeroTx && network === Chain.Network.Sancho:
-      banner = <SanchonetFaucetBanner />
       break
     case hasZeroPt && hasZeroTx:
       banner = <BuyBannerBig />

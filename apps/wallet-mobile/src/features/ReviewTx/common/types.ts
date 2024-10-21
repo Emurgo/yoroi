@@ -1,4 +1,5 @@
 import {
+  CertificatesJSON,
   TransactionBodyJSON,
   TransactionInputsJSON,
   TransactionOutputsJSON,
@@ -56,9 +57,12 @@ export type FormattedTx = {
   inputs: FormattedInputs
   outputs: FormattedOutputs
   fee: FormattedFee
+  certificates: Certificates
 }
 
-export type Metadata = {
-  json: string | null
+export type FormattedMetadata = {
   hash: string | null
+  metadata: {msg: Array<unknown>} | null
 }
+
+export type Certificates = CertificatesJSON | null

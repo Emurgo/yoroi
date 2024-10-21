@@ -25,15 +25,6 @@ describe('getWalletFactory', () => {
     expect(result).toBeDefined()
   })
 
-  it('should return the correct wallet factory for Sancho', () => {
-    const network = Chain.Network.Sancho
-    const implementation: Wallet.Implementation = 'cardano-cip1852'
-
-    const result = getWalletFactory({network, implementation})
-
-    expect(result).toBeDefined()
-  })
-
   it('should return the correct wallet factory for Mainnet with implementation "haskell-byron"', () => {
     const network = Chain.Network.Mainnet
     const implementation: Wallet.Implementation = 'cardano-bip44'
