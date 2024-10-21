@@ -24,7 +24,7 @@ export const InsufficientFundsModal = () => {
 
   const fmtMinPrimaryBalance = formatter({
     info: wallet.portfolioPrimaryTokenInfo,
-    quantity: fund.info.votingPowerThreshold,
+    quantity: BigInt(fund.info.votingPowerThreshold),
   })
   const fmtPrimaryBalance = formatter(primaryBalance)
 

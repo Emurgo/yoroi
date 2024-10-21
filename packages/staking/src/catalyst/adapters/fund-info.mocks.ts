@@ -5,7 +5,7 @@ export const mockCatalystApiFundInfo: Catalyst.CatalystApiFundInfo = {
   fund_name: 'Fund12',
   fund_goal:
     "{'timestamp': '2024-06-25T17:29:31Z', 'themes': ['API', 'DAO', 'DApp', 'Data tools', 'DeFi', 'Education', 'Events', 'Exchanges', 'Explorers', 'Gaming', 'Governance', 'Identity solutions', 'NFTs', 'RealFi', 'SDK', 'Wallet', 'Cardano Ambassadors', 'Marketing', 'Hackathon', 'Incubation', 'Regional expansion', 'Standards and regulation', 'Translation', 'Dev ecosystem collaboration', 'Dev team', 'Developer tools', 'SPOs', 'Node', 'Other']}",
-  voting_power_threshold: 500000000,
+  voting_power_threshold: 25000000,
   fund_start_time: '2024-06-27T12:00:00Z',
   fund_end_time: '2024-07-11T11:00:00Z',
   next_fund_start_time: '1970-01-01T00:00:00Z',
