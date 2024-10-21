@@ -9,7 +9,6 @@ import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, View} fro
 
 import {Icon} from '../components/Icon'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types/yoroi'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -190,10 +189,6 @@ export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
 export type StakingCenterRoutes = {
   'staking-center-main': undefined
-  'delegation-confirmation': {
-    poolId: string
-    yoroiUnsignedTx: YoroiUnsignedTx
-  }
   'delegation-failed-tx': undefined
 }
 
@@ -273,10 +268,6 @@ export type BrowserRoutes = {
 export type DashboardRoutes = {
   'staking-dashboard-main': undefined
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
-  'delegation-confirmation': {
-    poolId: string
-    yoroiUnsignedTx: YoroiUnsignedTx
-  }
   'delegation-failed-tx': undefined
 }
 
