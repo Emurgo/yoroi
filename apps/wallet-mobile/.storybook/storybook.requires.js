@@ -283,7 +283,6 @@ const getStories = () => {
     "./src/legacy/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx": require("../src/legacy/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx"),
     "./src/legacy/HW/LedgerConnect/LedgerConnect.stories.tsx": require("../src/legacy/HW/LedgerConnect/LedgerConnect.stories.tsx"),
     "./src/legacy/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories.tsx": require("../src/legacy/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories.tsx"),
-    "./src/legacy/Staking/DelegationConfirmation/DelegationConfirmation.stories.tsx": require("../src/legacy/Staking/DelegationConfirmation/DelegationConfirmation.stories.tsx"),
     "./src/legacy/Staking/FailedTx/FailedTxScreen.stories.tsx": require("../src/legacy/Staking/FailedTx/FailedTxScreen.stories.tsx"),
     "./src/legacy/Staking/PoolDetails/PoolDetailScreen.stories.tsx": require("../src/legacy/Staking/PoolDetails/PoolDetailScreen.stories.tsx"),
     "./src/legacy/Staking/PoolTransition/PoolTransitionModal.stories.tsx": require("../src/legacy/Staking/PoolTransition/PoolTransitionModal.stories.tsx"),

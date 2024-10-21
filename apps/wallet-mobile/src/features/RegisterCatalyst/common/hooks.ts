@@ -8,13 +8,13 @@ import {queryInfo} from '../../../kernel/query-client'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {isShelley} from '../../../yoroi-wallets/cardano/utils'
 import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {catalystConfig} from '../../WalletManager/common/adapters/cardano/catalyst-config'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const useCanVote = (wallet: YoroiWallet) => {
   const {meta} = useSelectedWallet()
   const amount = usePortfolioPrimaryBalance({wallet})
-  const sufficientFunds = amount.quantity >= catalystConfig.minAda
+  const {fund} = useCatalystCurrentFund()
+  const sufficientFunds = amount.quantity >= fund.info.votingPowerThreshold
 
   return {
     canVote: !meta.isReadOnly && isShelley(meta.implementation),

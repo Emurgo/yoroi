@@ -44,6 +44,7 @@ describe('Validators', () => {
         tallyingEnd: new Date('2022-01-30'),
         resultsUrl: 'https://results.com',
         surveyUrl: 'https://survey.com',
+        votingPowerThreshold: 25000000,
       }
 
       expect(parseFundInfo(validData)).toEqual(validData)
@@ -84,6 +85,7 @@ describe('Validators', () => {
         tallyingEnd: new Date('2022-01-30'),
         resultsUrl: 'https://results.com',
         surveyUrl: 'https://survey.com',
+        votingPowerThreshold: 25000000,
       }
 
       expect(isFundInfo(validData)).toBe(true)

@@ -94,6 +94,7 @@ export namespace Catalyst {
     tallyingEnd: Date
     resultsUrl: string
     surveyUrl: string
+    votingPowerThreshold: number
   }
 
   export type FundChallenge = {

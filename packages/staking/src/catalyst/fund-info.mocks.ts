@@ -81,4 +81,5 @@ export const mockFundInfo: Catalyst.FundInfo = {
   resultsUrl: 'https://projectcatalyst.io/funds/12',
   surveyUrl:
     'https://docs.google.com/forms/d/e/1FAIpQLSdg76N8zAtZn35hclY2pEDf9mY0wUb-vsejfaYZJqoW-CZDrg/viewform?usp=sf_link',
+  votingPowerThreshold: 25000000,
 }

@@ -1,7 +1,5 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {catalystManagerMaker, CatalystProvider} from '@yoroi/staking'
-import {catalystApiMaker} from '@yoroi/staking/src'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -21,11 +19,6 @@ import {DisplayPin} from './useCases/DisplayPin/DisplayPin'
 import {DownloadCatalystAppScreen} from './useCases/DownloadCatalystAppScreen/DownloadCatalystAppScreen'
 import {QrCode} from './useCases/ShowQrCode/ShowQrCode'
 
-const catalystApi = catalystApiMaker()
-const catalystManager = catalystManagerMaker({
-  api: catalystApi,
-})
-
 const Stack = createStackNavigator<VotingRegistrationRoutes>()
 export const CatalystNavigator = () => {
   const {atoms, color} = useTheme()
@@ -41,35 +34,33 @@ export const CatalystNavigator = () => {
   const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   return (
-    <CatalystProvider manager={catalystManager}>
-      <Stack.Navigator
-        screenOptions={{
-          ...navigationOptions,
-          title: strings.title,
-          headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-        }}
-      >
-        <Stack.Group>
-          {/* STEP 1 */}
-          <Stack.Screen name="download-catalyst">
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <DownloadCatalystAppScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+    <Stack.Navigator
+      screenOptions={{
+        ...navigationOptions,
+        title: strings.title,
+        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+      }}
+    >
+      <Stack.Group>
+        {/* STEP 1 */}
+        <Stack.Screen name="download-catalyst">
+          {() => (
+            <Boundary loading={{size: 'full'}}>
+              <DownloadCatalystAppScreen />
+            </Boundary>
+          )}
+        </Stack.Screen>
 
-          {/* STEP 2 */}
-          <Stack.Screen name="display-pin" component={DisplayPin} />
+        {/* STEP 2 */}
+        <Stack.Screen name="display-pin" component={DisplayPin} />
 
-          {/* STEP 3 */}
-          <Stack.Screen name="confirm-pin" component={ConfirmPin} />
+        {/* STEP 3 */}
+        <Stack.Screen name="confirm-pin" component={ConfirmPin} />
 
-          {/* STEP 4 */}
-          <Stack.Screen component={QrCode} name="qr-code" options={{...navigationOptions, headerLeft: () => null}} />
-        </Stack.Group>
-      </Stack.Navigator>
-    </CatalystProvider>
+        {/* STEP 4 */}
+        <Stack.Screen component={QrCode} name="qr-code" options={{...navigationOptions, headerLeft: () => null}} />
+      </Stack.Group>
+    </Stack.Navigator>
   )
 }
 
