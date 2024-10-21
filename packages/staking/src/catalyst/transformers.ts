@@ -17,7 +17,7 @@ export function toFundInfo(
       tallyingEnd: new Date(fundInfo.tallying_end),
       resultsUrl: fundInfo.results_url,
       surveyUrl: fundInfo.survey_url,
-      votingPowerThreshold: BigInt(fundInfo.voting_power_threshold),
+      votingPowerThreshold: fundInfo.voting_power_threshold,
 
       challenges: fundInfo.challenges?.map((challenge) => ({
         id: challenge.id,

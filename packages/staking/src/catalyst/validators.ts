@@ -25,7 +25,7 @@ export const FundInfoSchema = z.object({
   tallyingEnd: z.date(),
   resultsUrl: z.string(),
   surveyUrl: z.string(),
-  votingPowerThreshold: z.bigint(),
+  votingPowerThreshold: z.number(),
 })
 
 export const isFundInfo =
