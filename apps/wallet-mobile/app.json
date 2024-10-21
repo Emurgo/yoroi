@@ -9,5 +9,10 @@
     ],
     "sdkVersion": "48.0.0",
     "entryPoint": ".vscode/exponentIndex.js"
+  },
+  "ios": {
+    "infoPlist": {
+      "UIBackgroundModes": ["fetch", "remote-notification"]
+    }
   }
 }

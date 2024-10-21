@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/notifications",
-  "version": "1.5.2",
+  "version": "1.0.0",
   "description": "The Notifications package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -114,10 +114,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 60,
-        "functions": 60,
-        "lines": 60,
-        "statements": 60
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
       }
     },
     "modulePathIgnorePatterns": [
@@ -216,5 +216,8 @@
         "preset": "angular"
       }
     }
+  },
+  "dependencies": {
+    "rxjs": "^7.8.1"
   }
 }

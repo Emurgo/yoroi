@@ -174,6 +174,8 @@ export const DeveloperScreen = () => {
           title="RO Mainnet For Forced Addresses"
         />
 
+        <Button style={styles.button} onPress={() => navigation.navigate('notifications')} title="Notifications" />
+
         {!wallet?.isMainnet && (
           <>
             <TextInput

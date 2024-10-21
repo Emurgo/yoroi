@@ -2828,6 +2828,11 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
+"@jamsinclair/react-native-notifications@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@jamsinclair/react-native-notifications/-/react-native-notifications-5.1.1.tgz#7723735caca9ea4c3ae9685fd7dc407eb56737c5"
+  integrity sha512-LAbcDnwVLR5CSLtUuHXp6WQJtbtpjic2k9fgJ5OCbzFyvr8mZ6JHPFqTavQQOTawcMhKvwKpMVUGgxvEn5G4vg==
+
 "@jest/console@^28.1.3":
   version "28.1.3"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-28.1.3.tgz#2030606ec03a18c31803b8a36382762e447655df"
@@ -11391,6 +11396,13 @@ expo-asset@~8.9.1:
     path-browserify "^1.0.0"
     url-parse "^1.5.9"
 
+expo-background-fetch@^11.8.1:
+  version "11.8.1"
+  resolved "https://registry.yarnpkg.com/expo-background-fetch/-/expo-background-fetch-11.8.1.tgz#7ead9ab486d8fcc97181541f9283163e257bc172"
+  integrity sha512-WkWgj1RZsBjIt/J2HvYhfNi+8WEM6vEptuUj6r/vW9w+kXzDo5z/+pkr7YnPgQIhc4P7Z/j7TlM43azUpIEFZA==
+  dependencies:
+    expo-task-manager "~11.7.2"
+
 expo-barcode-scanner@~12.3.2:
   version "12.3.2"
   resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-12.3.2.tgz#d0023e8c9a3a8cef769bbc2080b5c275188affe8"
@@ -11501,6 +11513,13 @@ expo-system-ui@~2.2.1:
   dependencies:
     "@react-native/normalize-color" "^2.0.0"
     debug "^4.3.2"
+
+expo-task-manager@11.7.3, expo-task-manager@~11.7.2:
+  version "11.7.3"
+  resolved "https://registry.yarnpkg.com/expo-task-manager/-/expo-task-manager-11.7.3.tgz#2d8b0d983e2a73fba4f1f4d65f36ef0db9356ebd"
+  integrity sha512-ueIOi638o+gRYeCIb9GHVEbdIIvAKqAmm4AllcjDJIrmqB240uA+5a5YwfHm7WUrSthIqHlIzLMFcnMTFxf/9w==
+  dependencies:
+    unimodules-app-loader "~4.5.0"
 
 "expo@>=48.0.0-0 <49.0.0":
   version "48.0.20"
@@ -22446,6 +22465,11 @@ unicode-property-aliases-ecmascript@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/unicode-property-aliases-ecmascript/-/unicode-property-aliases-ecmascript-2.1.0.tgz#43d41e3be698bd493ef911077c9b131f827e8ccd"
   integrity sha512-6t3foTQI9qne+OZoVQB/8x8rk2k1eVy1gRXhV3oFQ5T6R1dqQ1xtin3XqSlx3+ATBkliTaR/hHyJBm+LVPNM8w==
+
+unimodules-app-loader@~4.5.0:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/unimodules-app-loader/-/unimodules-app-loader-4.5.1.tgz#6c8cf83617b6556e99b102fac8a6bbf011abe605"
+  integrity sha512-yQAsoL0jsCjld1C/iWS4tB5a6LZTb8+enZ9mpt9t9zHYw7YZgeInmW7yz5QZAgVE93ZMPN3SudZHWiXGuD4Wfg==
 
 union-value@^1.0.0:
   version "1.0.1"
