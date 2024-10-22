@@ -109,7 +109,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionName "5.0.1"
-        versionCode 726
+        versionCode 727
         testBuildType System.getProperty('testBuildType', 'debug')
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
