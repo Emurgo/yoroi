@@ -2,6 +2,7 @@ import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
 import {NotificationProvider} from '@yoroi/notifications'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
+import {catalystApiMaker, catalystManagerMaker, CatalystProvider} from '@yoroi/staking'
 import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
@@ -40,6 +41,10 @@ if (disableLogbox) {
 } else {
   LogBox.ignoreLogs(['Require cycle:'])
 }
+const catalystApi = catalystApiMaker()
+const catalystManager = catalystManagerMaker({
+  api: catalystApi,
+})
 
 const metricsManager = makeMetricsManager()
 
@@ -67,11 +72,13 @@ const Yoroi = () => {
                                 <PoolTransitionProvider>
                                   <BrowserProvider>
                                     <AutomaticWalletOpenerProvider>
-                                      <ReviewTxProvider>
-                                        <NotificationProvider manager={notificationManager}>
-                                          <InitApp />
-                                        </NotificationProvider>
-                                      </ReviewTxProvider>
+                                      <CatalystProvider manager={catalystManager}>
+                                        <ReviewTxProvider>
+                                          <NotificationProvider manager={notificationManager}>
+                                            <InitApp />
+                                          </NotificationProvider>
+                                        </ReviewTxProvider>
+                                      </CatalystProvider>
                                     </AutomaticWalletOpenerProvider>
                                   </BrowserProvider>
                                 </PoolTransitionProvider>
