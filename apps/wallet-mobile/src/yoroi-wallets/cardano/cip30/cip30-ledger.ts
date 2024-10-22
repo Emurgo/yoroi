@@ -29,7 +29,7 @@ class CIP30LedgerExtension {
       const transactionSetTag = await has_transaction_set_tag(await txBody.toBytes())
 
       if (transactionSetTag === TransactionSetsState.MixedSets) {
-        throw new Error('Mixed transaction sets are not supported when using a HW wallet')
+        throw new Error('CIP30LedgerExtension.signTx: Mixed transaction sets are not supported when using a HW wallet')
       }
 
       const payload = await toLedgerSignRequest(
