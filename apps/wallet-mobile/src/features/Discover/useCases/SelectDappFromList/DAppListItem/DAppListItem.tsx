@@ -2,7 +2,16 @@ import {useDappConnector} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {Alert, Linking, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
+import {
+  Alert,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
@@ -93,7 +102,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
     openModal(
       strings.dAppActions,
-      <View style={styles.rootDialog}>
+      <ScrollView style={styles.rootDialog} bounces={false}>
         <View style={styles.dAppInfo}>
           <Image source={{uri: logo}} style={styles.dAppLogoDialog} />
 
@@ -127,7 +136,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
         </View>
 
         <Spacer fill />
-      </View>,
+      </ScrollView>,
       dialogHeight,
     )
   }
