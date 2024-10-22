@@ -22,11 +22,11 @@ class CIP30LedgerExtension {
   async signTx(cbor: string, partial: boolean, hwDeviceInfo: HW.DeviceInfo, useUSB: boolean): Promise<Transaction> {
     const {csl, release} = wrappedCsl()
     try {
-      const tx = await csl.FixedTransaction.fromHex(cbor)
+      const tx = await csl.Transaction.fromHex(cbor)
       if (!partial) await assertHasAllSigners(cbor, this.wallet, this.meta)
       const txBody = await tx.body()
 
-      const transactionSetTag = await has_transaction_set_tag(await txBody.toBytes())
+      const transactionSetTag = await has_transaction_set_tag(await tx.toBytes())
 
       if (transactionSetTag === TransactionSetsState.MixedSets) {
         throw new Error('CIP30LedgerExtension.signTx: Mixed transaction sets are not supported when using a HW wallet')
