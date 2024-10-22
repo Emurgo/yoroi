@@ -5,11 +5,10 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {NetworkTag} from '../../features/Settings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../../features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '../../features/Staking/Governance/common/helpers'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {DashboardRoutes, defaultStackNavigationOptions} from '../../kernel/navigation'
-import {DelegationConfirmation} from '../Staking/DelegationConfirmation'
 import {FailedTxScreen} from '../Staking/FailedTx/FailedTxScreen'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
@@ -43,8 +42,6 @@ export const DashboardNavigator = () => {
           name="staking-center"
           component={StakingCenter}
         />
-
-        <Stack.Screen name="delegation-confirmation" component={DelegationConfirmation} />
 
         <Stack.Screen name="delegation-failed-tx" component={FailedTxScreen} />
       </Stack.Navigator>

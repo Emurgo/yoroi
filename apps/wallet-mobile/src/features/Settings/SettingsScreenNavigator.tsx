@@ -18,26 +18,32 @@ import {
 } from '../../kernel/navigation'
 import {ChangePinScreen} from '../Auth/ChangePinScreen'
 import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
-import {About} from './About'
-import {ApplicationSettingsScreen} from './ApplicationSettings'
-import {ChangeLanguageScreen} from './ChangeLanguage'
-import {ChangeNetworkScreen, useHandleOpenNetworkNoticeModal} from './ChangeNetwork/ChangeNetworkScreen'
-import {NetworkTag} from './ChangeNetwork/NetworkTag'
-import {PreparingNetworkScreen} from './ChangeNetwork/PreparingNetworkScreen'
-import {ChangePasswordScreen} from './ChangePassword'
-import {ChangeThemeScreen} from './ChangeTheme/ChangeThemeScreen'
-import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
-import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
-import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
-import {ManageCollateralScreen} from './ManageCollateral'
-import {FailedTxScreen} from './ManageCollateral/ConfirmTx/FailedTx/FailedTxScreen'
-import {SubmittedTxScreen} from './ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen'
-import {PrivacyPolicyScreen} from './PrivacyPolicy'
-import {RemoveWalletScreen} from './RemoveWallet'
-import {RenameWalletScreen} from './RenameWalletScreen/RenameWalletScreen'
-import {SystemLogScreen} from './SystemLogScreen/SystemLogScreen'
-import {TermsOfServiceScreen} from './TermsOfService'
-import {WalletSettingsScreen} from './WalletSettings'
+import {About} from './useCases/changeAppSettings/About'
+import {ApplicationSettingsScreen} from './useCases/changeAppSettings/ApplicationSettingsScreen'
+import {ChangeLanguageScreen} from './useCases/changeAppSettings/ChangeLanguage'
+import {
+  ChangeNetworkScreen,
+  useHandleOpenNetworkNoticeModal,
+} from './useCases/changeAppSettings/ChangeNetwork/ChangeNetworkScreen'
+import {NetworkTag} from './useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {PreparingNetworkScreen} from './useCases/changeAppSettings/ChangeNetwork/PreparingNetworkScreen'
+import {ChangeThemeScreen} from './useCases/changeAppSettings/ChangeTheme/ChangeThemeScreen'
+import {ChangeCurrencyScreen} from './useCases/changeAppSettings/Currency/ChangeCurrencyScreen'
+import {EnableLoginWithOsScreen} from './useCases/changeAppSettings/EnableLoginWithOs'
+import {PrivacyPolicyScreen} from './useCases/changeAppSettings/PrivacyPolicy'
+import {SystemLogScreen} from './useCases/changeAppSettings/SystemLogScreen/SystemLogScreen'
+import {TermsOfServiceScreen} from './useCases/changeAppSettings/TermsOfService'
+import {ChangePasswordScreen} from './useCases/changeWalletSettings/ChangePassword'
+import {
+  DisableEasyConfirmationScreen,
+  EnableEasyConfirmationScreen,
+} from './useCases/changeWalletSettings/EasyConfirmation'
+import {ManageCollateralScreen} from './useCases/changeWalletSettings/ManageCollateral'
+import {FailedTxScreen} from './useCases/changeWalletSettings/ManageCollateral/ConfirmTx/FailedTx/FailedTxScreen'
+import {SubmittedTxScreen} from './useCases/changeWalletSettings/ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen'
+import {RemoveWalletScreen} from './useCases/changeWalletSettings/RemoveWallet'
+import {RenameWalletScreen} from './useCases/changeWalletSettings/RenameWalletScreen/RenameWalletScreen'
+import {WalletSettingsScreen} from './useCases/changeWalletSettings/WalletSettingsScreen'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
@@ -137,8 +143,8 @@ export const SettingsScreenNavigator = () => {
         options={{
           title: strings.networkTitle,
           headerRight: () => (
-            <TouchableOpacity onPress={handleOpenModal} activeOpacity={0.5}>
-              <Icon.Info size={24} color={color.gray_900} style={{...atoms.px_lg}} />
+            <TouchableOpacity onPress={handleOpenModal} activeOpacity={0.5} style={{...atoms.px_lg}}>
+              <Icon.Info size={24} color={color.gray_900} />
             </TouchableOpacity>
           ),
         }}

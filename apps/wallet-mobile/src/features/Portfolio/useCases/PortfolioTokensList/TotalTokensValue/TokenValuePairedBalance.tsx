@@ -5,7 +5,7 @@ import * as React from 'react'
 import {StyleSheet, Text} from 'react-native'
 
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {SkeletonPairedToken} from './SkeletonPairedToken'
 
 type Props = {

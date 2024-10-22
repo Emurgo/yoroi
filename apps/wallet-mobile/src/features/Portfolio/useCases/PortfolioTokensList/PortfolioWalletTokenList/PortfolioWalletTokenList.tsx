@@ -9,7 +9,6 @@ import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {makeList} from '../../../../../kernel/utils'
 import {PreprodFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/PreprodFaucetBanner'
-import {SanchonetFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/SanchonetFaucetBanner'
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
@@ -90,7 +89,6 @@ export const PortfolioWalletTokenList = () => {
   }, [isSearching, search, track])
 
   const isPreprod = network === Chain.Network.Preprod
-  const isSancho = network === Chain.Network.Sancho
 
   const renderFooterList = () => {
     if (isSearching) return null
@@ -110,7 +108,7 @@ export const PortfolioWalletTokenList = () => {
         <View>
           <Spacer height={16} />
 
-          {isPreprod ? <PreprodFaucetBanner /> : isSancho ? <SanchonetFaucetBanner /> : <BuyADABanner />}
+          {isPreprod ? <PreprodFaucetBanner /> : <BuyADABanner />}
         </View>
       )
     }

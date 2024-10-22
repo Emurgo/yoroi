@@ -3,7 +3,6 @@ import {AppApi} from '@yoroi/api'
 
 import {makeOrderCalculations} from './makeOrderCalculations'
 import {mocks} from '../../mocks'
-import {SwapOrderCalculation} from '../../../types'
 import {SwapState} from '../../../translators/reactjs/state/state'
 import {tokenInfoMocks} from '../../../tokenInfo.mocks'
 
@@ -40,7 +39,7 @@ describe('makeOrderCalculations', () => {
       frontendFeeTiers,
     })
 
-    expect(calculations[0]).toStrictEqual<SwapOrderCalculation>({
+    expect(calculations[0]).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -150,9 +149,9 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
+    const calculation: Swap.OrderCalculation = calculations[0]!
 
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -231,7 +230,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.3379136660',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 3, buy B)', () => {
     const pool = mocks.mockedPools5[0] as Swap.Pool
@@ -262,9 +261,9 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
+    const calculation: Swap.OrderCalculation = calculations[0]!
 
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'buy',
         slippage: 0,
@@ -343,7 +342,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.3379136754',
       },
       pool: pool,
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 4, buy A, reversed case 3) ', () => {
     const pool = mocks.mockedPools5[1] as Swap.Pool
@@ -374,9 +373,9 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
+    const calculation: Swap.OrderCalculation = calculations[0]!
 
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'buy',
         slippage: 0,
@@ -455,7 +454,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.3379136754',
       },
       pool: pool,
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 5, with slippage)', () => {
     const pool = mocks.mockedPools5[2] as Swap.Pool
@@ -562,7 +561,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '1.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 6, zero supply)', () => {
     const pool = mocks.mockedPools5[3] as Swap.Pool
@@ -667,7 +666,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 7, sell A, not enough supply)', () => {
     const pool = mocks.mockedPools5[4] as Swap.Pool
@@ -773,7 +772,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '-100.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 8, buy A, not enough supply)', () => {
     const pool = mocks.mockedPools5[4] as Swap.Pool
@@ -879,7 +878,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '-99.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 9, sell A, A supply is zero)', () => {
     const pool = mocks.mockedPools5[5] as Swap.Pool
@@ -985,7 +984,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 10, sell A, B supply is zero)', () => {
     const pool = mocks.mockedPools5[6] as Swap.Pool
@@ -1091,7 +1090,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 11, buy A, A supply is zero)', () => {
     const pool = mocks.mockedPools5[5] as Swap.Pool
@@ -1194,7 +1193,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 12, buy A, B supply is zero)', () => {
     const pool = mocks.mockedPools5[6] as Swap.Pool
@@ -1300,7 +1299,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 13, sell B, B supply is zero)', () => {
     const pool = mocks.mockedPools5[6] as Swap.Pool
@@ -1406,7 +1405,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 14, sell B, A supply is zero)', () => {
     const pool = mocks.mockedPools5[5] as Swap.Pool
@@ -1512,7 +1511,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 15, buy B, B supply is zero)', () => {
     const pool = mocks.mockedPools5[6] as Swap.Pool
@@ -1615,7 +1614,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 16, buy B, A supply is zero)', () => {
     const pool = mocks.mockedPools5[5] as Swap.Pool
@@ -1721,7 +1720,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 17, buy A, limit price)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
@@ -1752,8 +1751,8 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    const calculation: Swap.OrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'buy',
         slippage: 0,
@@ -1827,7 +1826,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '100.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 18, sell A, limit price)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
@@ -1858,8 +1857,8 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    const calculation: Swap.OrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -1933,7 +1932,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '100.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 19, buy B, limit price)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
@@ -1964,8 +1963,8 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    const calculation: Swap.OrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'buy',
         slippage: 0,
@@ -2039,7 +2038,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '100.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 20, sell B, limit price)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
@@ -2070,8 +2069,8 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    const calculation: Swap.OrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2145,7 +2144,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '100.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 21, no FEF test)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
@@ -2176,8 +2175,8 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    const calculation: Swap.OrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2251,7 +2250,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 22, full FEF test)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
@@ -2285,8 +2284,8 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    const calculation: Swap.OrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2368,7 +2367,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 23, discount 1 FEF test)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
@@ -2402,8 +2401,8 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    const calculation: Swap.OrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2485,7 +2484,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 24, discount 2 FEF test)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
@@ -2519,8 +2518,8 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    const calculation: Swap.OrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2602,7 +2601,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '0.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 25, zero sell)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
@@ -2636,8 +2635,8 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    const calculation: Swap.OrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2711,7 +2710,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '-100.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 26, zero buy)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
@@ -2745,8 +2744,8 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation: SwapOrderCalculation = calculations[0]!
-    expect(calculation).toStrictEqual<SwapOrderCalculation>({
+    const calculation: Swap.OrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<Swap.OrderCalculation>({
       order: {
         side: 'buy',
         slippage: 0,
@@ -2820,7 +2819,7 @@ describe('makeOrderCalculations', () => {
         priceImpact: '-100.0000000000',
       },
       pool: pools[0],
-    } as SwapOrderCalculation)
+    } as Swap.OrderCalculation)
   })
   it('should calculate all fees and amounts correctly (case 27, zero pt sell side)', () => {
     const pool: Swap.Pool = mocks.mockedPools7[1]!
@@ -2853,7 +2852,7 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const expectedCalculation: SwapOrderCalculation = {
+    const expectedCalculation: Swap.OrderCalculation = {
       order: {
         side: 'buy',
         slippage: 0,
@@ -2961,7 +2960,7 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const expectedCalculation: SwapOrderCalculation = {
+    const expectedCalculation: Swap.OrderCalculation = {
       order: {
         side: 'sell',
         slippage: 0,
@@ -3069,7 +3068,7 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const expectedCalculation: SwapOrderCalculation = {
+    const expectedCalculation: Swap.OrderCalculation = {
       order: {
         side: 'sell',
         slippage: 0,
@@ -3177,7 +3176,7 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const expectedCalculation: SwapOrderCalculation = {
+    const expectedCalculation: Swap.OrderCalculation = {
       order: {
         side: 'sell',
         slippage: 0,
@@ -3285,7 +3284,7 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const expectedCalculation: SwapOrderCalculation = {
+    const expectedCalculation: Swap.OrderCalculation = {
       order: {
         side: 'buy',
         slippage: 0,
@@ -3393,7 +3392,7 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const expectedCalculation: SwapOrderCalculation = {
+    const expectedCalculation: Swap.OrderCalculation = {
       order: {
         side: 'buy',
         slippage: 0,

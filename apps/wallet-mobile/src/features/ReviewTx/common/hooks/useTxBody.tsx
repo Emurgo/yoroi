@@ -2,8 +2,9 @@ import {useQuery} from 'react-query'
 
 import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
+import {TransactionBody} from '../types'
 
-export const useTxBody = ({cbor, unsignedTx}: {cbor?: string; unsignedTx?: YoroiUnsignedTx}) => {
+export const useTxBody = ({cbor, unsignedTx}: {cbor?: string; unsignedTx?: YoroiUnsignedTx}): TransactionBody => {
   const query = useQuery(
     ['useTxBody', cbor, unsignedTx],
     async () => {

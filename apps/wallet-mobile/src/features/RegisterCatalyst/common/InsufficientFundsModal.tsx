@@ -9,8 +9,8 @@ import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
 import globalMessages, {confirmationMessages} from '../../../kernel/i18n/global-messages'
 import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {catalystConfig} from '../../WalletManager/common/adapters/cardano/catalyst-config'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useCatalystCurrentFund} from './hooks'
 
 const formatter = amountFormatter({template: `{{value}} {{ticker}}`, dropTraillingZeros: true})
 
@@ -19,11 +19,12 @@ export const InsufficientFundsModal = () => {
   const styles = useStyles()
   const {wallet} = useSelectedWallet()
   const {closeModal} = useModal()
-
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
+  const {fund} = useCatalystCurrentFund()
+
   const fmtMinPrimaryBalance = formatter({
     info: wallet.portfolioPrimaryTokenInfo,
-    quantity: catalystConfig.minAda,
+    quantity: BigInt(fund.info.votingPowerThreshold),
   })
   const fmtPrimaryBalance = formatter(primaryBalance)
 
@@ -36,7 +37,7 @@ export const InsufficientFundsModal = () => {
         })}
       </Text>
 
-      <Button shelleyTheme title={strings.back} onPress={closeModal} textStyles={styles.button} />
+      <Button title={strings.back} onPress={closeModal} />
 
       {Platform.OS === 'android' && <Space height="lg" />}
     </View>
@@ -63,14 +64,12 @@ const useStyles = () => {
     container: {
       ...atoms.px_lg,
       ...atoms.flex_1,
+      ...atoms.gap_lg,
       ...atoms.justify_between,
     },
     text: {
       color: color.gray_max,
       ...atoms.body_1_lg_regular,
-    },
-    button: {
-      ...atoms.button_1_lg,
     },
   })
 

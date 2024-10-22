@@ -5,7 +5,7 @@ import {Chain, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSwapForm} from '../../../Swap/common/SwapFormProvider'
@@ -18,7 +18,7 @@ type Props = {
   tokenInfo: Portfolio.Token.Info
 }
 export const Actions = ({tokenInfo}: Props) => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const swap = useSwap()
@@ -32,7 +32,6 @@ export const Actions = ({tokenInfo}: Props) => {
 
   const handleOnSwap = () => {
     if (network === Chain.Network.Preprod) return navigateTo.swapPreprodNotice()
-    if (network === Chain.Network.Sancho) return navigateTo.swapSanchoNotice()
 
     swapForm.resetSwapForm()
 
@@ -57,21 +56,13 @@ export const Actions = ({tokenInfo}: Props) => {
     <View style={styles.root}>
       <View style={styles.container}>
         <Button
-          block
-          shelleyTheme
-          outlineOnLight
-          title={strings.send.toLocaleUpperCase()}
-          startContent={<Icon.Send color={colors.primary} size={24} />}
+          type={ButtonType.Secondary}
+          title={strings.send}
+          icon={Icon.Send}
           onPress={navigateTo.resetTabAndSend}
         />
 
-        <Button
-          block
-          shelleyTheme
-          title={strings.swap.toLocaleUpperCase()}
-          startContent={<Icon.Swap color={colors.white} size={24} />}
-          onPress={handleOnSwap}
-        />
+        <Button title={strings.swap} icon={Icon.Swap} onPress={handleOnSwap} />
       </View>
     </View>
   )

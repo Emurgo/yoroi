@@ -2,7 +2,6 @@
 import {useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import {Chain} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
@@ -35,10 +34,9 @@ import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
 import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
-import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useBestBlock} from '../../../WalletManager/common/hooks/useBestBlock'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {messages, useStrings} from '../../common/strings'
 import AddressModal from './AddressModal/AddressModal'
 import {AssetList} from './AssetList'
@@ -52,9 +50,6 @@ export const TxDetails = () => {
   const intl = useIntl()
   const {id} = useRoute().params as Params
   const {wallet} = useSelectedWallet()
-  const {
-    selected: {network},
-  } = useWalletManager()
   const explorers = wallet.networkManager.explorers
   const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
@@ -179,24 +174,15 @@ export const TxDetails = () => {
 
           <Label>{strings.transactionId}</Label>
 
-          <View style={styles.dataContainer}>
-            <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
-              {transaction.id}
-            </Text>
-
-            <CopyButton value={transaction.id} />
-          </View>
+          <CopyButton title={transaction.id} value={transaction.id} />
         </ScrollView>
 
-        {network !== Chain.Network.Sancho && (
-          <Actions style={styles.borderTop}>
-            <Button
-              onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
-              title={strings.openInExplorer}
-              shelleyTheme
-            />
-          </Actions>
-        )}
+        <Actions style={styles.borderTop}>
+          <Button
+            onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
+            title={strings.openInExplorer}
+          />
+        </Actions>
       </FadeIn>
     </SafeAreaView>
   )
@@ -397,11 +383,6 @@ const useStyles = () => {
     borderTop: {
       borderTopWidth: 1,
       borderColor: color.gray_200,
-    },
-    dataContainer: {
-      ...atoms.flex_row,
-      paddingRight: 70,
-      marginBottom: 20,
     },
     address: {
       color: color.text_gray_medium,

@@ -7,6 +7,7 @@ export const useStrings = () => {
 
   return {
     swapTitle: intl.formatMessage(messages.swapTitle),
+    swapDetailsTitle: intl.formatMessage(messages.swapDetailsTitle),
     tokenSwap: intl.formatMessage(messages.tokenSwap),
     orderSwap: intl.formatMessage(messages.orderSwap),
     dex: intl.formatMessage(messages.dex),
@@ -56,7 +57,7 @@ export const useStrings = () => {
     spendingPassword: intl.formatMessage(messages.spendingPassword),
     sign: intl.formatMessage(messages.sign),
     searchTokens: intl.formatMessage(messages.searchTokens),
-    confirm: intl.formatMessage(messages.confirm),
+    next: intl.formatMessage(messages.next),
     chooseConnectionMethod: intl.formatMessage(messages.chooseConnectionMethod),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
@@ -160,8 +161,6 @@ export const useStrings = () => {
     backToSwapOrders: intl.formatMessage(messages.backToSwapOrders),
     preprodNoticeTitle: intl.formatMessage(messages.preprodNoticeTitle),
     preprodNoticeText: intl.formatMessage(messages.preprodNoticeText),
-    sanchoNoticeTitle: intl.formatMessage(messages.sanchoNoticeTitle),
-    sanchoNoticeText: intl.formatMessage(messages.sanchoNoticeText),
   }
 }
 
@@ -177,6 +176,10 @@ const messages = defineMessages({
   swapTitle: {
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
+  },
+  swapDetailsTitle: {
+    id: 'swap.swapScreen.swapDetailsTitle',
+    defaultMessage: '!!!Swap details',
   },
   tokenSwap: {
     id: 'swap.swapScreen.tokenSwapTab',
@@ -281,14 +284,6 @@ const messages = defineMessages({
     id: 'swap.swapScreen.preprodNoticeText',
     defaultMessage: `!!!Switch to mainnet if you want to use the feature and swap real tokens`,
   },
-  sanchoNoticeTitle: {
-    id: 'swap.swapScreen.sanchoNoticeTitle',
-    defaultMessage: `!!!Swap is not available on sanchonet`,
-  },
-  sanchoNoticeText: {
-    id: 'swap.swapScreen.sanchoNoticeText',
-    defaultMessage: `!!!Switch to mainnet if you want to use the feature and swap real tokens`,
-  },
   swapFeesTitle: {
     id: 'swap.swapScreen.swapFeesTitle',
     defaultMessage: `!!!Fees`,
@@ -299,7 +294,7 @@ const messages = defineMessages({
   },
   swapLiqProvFee: {
     id: 'swap.swapScreen.swapLiqProvFee',
-    defaultMessage: '!!!Liq. prov. fee',
+    defaultMessage: '!!!Liquidity provider fee',
   },
   swapLiquidityFeeInfo: {
     id: 'swap.swapScreen.swapLiquidityFeeInfo',
@@ -573,9 +568,9 @@ const messages = defineMessages({
     id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select asset',
   },
-  confirm: {
-    id: 'components.send.confirmscreen.confirmButton',
-    defaultMessage: '!!!Confirm',
+  next: {
+    id: 'global.next',
+    defaultMessage: '!!!Next',
   },
   assignCollateral: {
     id: 'components.send.confirmscreen.assignCollateral',

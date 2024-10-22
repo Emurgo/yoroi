@@ -4,10 +4,17 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {
+  ActivityIndicator,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '../../components/Boundary/Boundary'
 import {Icon} from '../../components/Icon'
 import {useModal} from '../../components/Modal/ModalContext'
 import {Spacer} from '../../components/Spacer/Spacer'
@@ -19,7 +26,7 @@ import {usePrefetchStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
 import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTransition'
 import {useCanVote} from '../RegisterCatalyst/common/hooks'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
-import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance/common/helpers'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 
@@ -82,13 +89,23 @@ export const Menu = () => {
           />
         )}
 
-        <Boundary loading={{size: 'small', style: {padding: 16}}} error={{size: 'inline'}}>
-          <Catalyst //
+        <React.Suspense
+          fallback={
+            <Item
+              disabled
+              onPress={() => null}
+              label={strings.catalystVoting}
+              left={<Icon.Catalyst size={24} color={color.gray_600} />}
+              right={<ActivityIndicator color={color.gray_600} />}
+            />
+          }
+        >
+          <Catalyst
             label={strings.catalystVoting}
             onPress={navigateTo.catalystVoting}
             left={<Icon.Catalyst size={24} color={color.gray_600} />}
           />
-        </Boundary>
+        </React.Suspense>
 
         <KnowledgeBase //
           label={strings.knowledgeBase}

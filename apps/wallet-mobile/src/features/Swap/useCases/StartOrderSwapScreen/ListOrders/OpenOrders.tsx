@@ -10,7 +10,7 @@ import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../../components/Button/Button'
 import {
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
@@ -34,7 +34,7 @@ import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {usePortfolioTokenInfos} from '../../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {TokenInfoIcon} from '../../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch} from '../../../../Search/SearchContext'
-import {getCollateralAmountInLovelace} from '../../../../Settings/ManageCollateral/helpers'
+import {getCollateralAmountInLovelace} from '../../../../Settings/useCases/changeWalletSettings/ManageCollateral/helpers'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
@@ -661,19 +661,11 @@ const ModalContentButtons = ({onBack, onConfirm}: {onBack: () => void; onConfirm
   const {styles} = useStyles()
   return (
     <View style={styles.buttons}>
-      <Button
-        title={strings.listOrdersSheetBack}
-        style={{backgroundColor: 'transparent'}}
-        onPress={onBack}
-        block
-        withoutBackground
-        outlineShelley
-        shelleyTheme
-      />
+      <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={onBack} />
 
       <Spacer width={20} />
 
-      <Button title={strings.listOrdersSheetConfirm} onPress={onConfirm} warningTheme block />
+      <Button type={ButtonType.Critical} title={strings.listOrdersSheetConfirm} onPress={onConfirm} />
     </View>
   )
 }

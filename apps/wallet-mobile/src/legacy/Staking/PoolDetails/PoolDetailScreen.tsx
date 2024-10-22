@@ -48,7 +48,6 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
       <Spacer fill />
 
       <Button
-        shelleyTheme
         onPress={handleOnPress}
         title={strings.next}
         style={styles.button}

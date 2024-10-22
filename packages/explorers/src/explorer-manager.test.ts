@@ -37,22 +37,6 @@ describe('explorerManager', () => {
           stake: expect.any(Function),
         },
       },
-      [Chain.Network.Sancho]: {
-        [Explorers.Explorer.CardanoScan]: {
-          token: expect.any(Function),
-          address: expect.any(Function),
-          tx: expect.any(Function),
-          pool: expect.any(Function),
-          stake: expect.any(Function),
-        },
-        [Explorers.Explorer.CExplorer]: {
-          token: expect.any(Function),
-          address: expect.any(Function),
-          tx: expect.any(Function),
-          pool: expect.any(Function),
-          stake: expect.any(Function),
-        },
-      },
       [Chain.Network.Preview]: {
         [Explorers.Explorer.CardanoScan]: {
           token: expect.any(Function),
@@ -140,41 +124,6 @@ describe('explorerManager', () => {
     expect(
       preprodExplorer[Explorers.Explorer.CExplorer].stake('stakeAddress'),
     ).toBe('https://preprod.cexplorer.io/stake/stakeAddress')
-  })
-
-  it('should generate the correct URLs for Sancho', () => {
-    const sanchoExplorer = explorerManager[Chain.Network.Sancho]
-    expect(
-      sanchoExplorer[Explorers.Explorer.CardanoScan].token('fingerprint'),
-    ).toBe('https://sancho.cardanoscan.io/token/fingerprint')
-    expect(
-      sanchoExplorer[Explorers.Explorer.CardanoScan].address('address'),
-    ).toBe('https://sancho.cardanoscan.io/address/address')
-    expect(sanchoExplorer[Explorers.Explorer.CardanoScan].tx('txHash')).toBe(
-      'https://sancho.cardanoscan.io/transaction/txHash',
-    )
-    expect(sanchoExplorer[Explorers.Explorer.CardanoScan].pool('poolId')).toBe(
-      'https://sancho.cardanoscan.io/pool/poolId',
-    )
-    expect(
-      sanchoExplorer[Explorers.Explorer.CardanoScan].stake('stakeAddress'),
-    ).toBe('https://sancho.cardanoscan.io/stakeKey/stakeAddress')
-
-    expect(
-      sanchoExplorer[Explorers.Explorer.CExplorer].token('fingerprint'),
-    ).toBe('https://sancho.cexplorer.io/asset/fingerprint')
-    expect(
-      sanchoExplorer[Explorers.Explorer.CExplorer].address('address'),
-    ).toBe('https://sancho.cexplorer.io/address/address')
-    expect(sanchoExplorer[Explorers.Explorer.CExplorer].tx('txHash')).toBe(
-      'https://sancho.cexplorer.io/tx/txHash',
-    )
-    expect(sanchoExplorer[Explorers.Explorer.CExplorer].pool('poolId')).toBe(
-      'https://sancho.cexplorer.io/pool/poolId',
-    )
-    expect(
-      sanchoExplorer[Explorers.Explorer.CExplorer].stake('stakeAddress'),
-    ).toBe('https://sancho.cexplorer.io/stake/stakeAddress')
   })
 
   it('should generate the correct URLs for Preview', () => {

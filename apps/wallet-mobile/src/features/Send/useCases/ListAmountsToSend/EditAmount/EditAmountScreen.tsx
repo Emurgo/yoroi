@@ -20,7 +20,7 @@ import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfo
 import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../../common/navigation'
+import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
@@ -46,27 +46,25 @@ export const EditAmountScreen = () => {
 
   const [quantity, setQuantity] = React.useState(initialQuantity)
   const [inputValue, setInputValue] = React.useState(
-    atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
+    initialQuantity === 0n ? '' : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
   )
   const spendable = isPrimary ? available - primaryBreakdown.lockedAsStorageCost : available
 
-  useOverridePreviousSendTxRoute(initialQuantity === 0n ? 'send-select-token-from-list' : 'send-list-amounts-to-send')
-
   React.useEffect(() => {
     setQuantity(initialQuantity)
-    setInputValue(atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat())
+    setInputValue(initialQuantity === 0n ? '' : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat())
   }, [amount.info.decimals, initialQuantity])
 
   const isFocused = useIsFocused()
   React.useEffect(() => {
     return () => {
-      if (quantity === 0n && !isFocused) {
+      if (amount.quantity === 0n && !isFocused) {
         InteractionManager.runAfterInteractions(() => {
           amountRemoved(selectedTokenId)
         })
       }
     }
-  }, [amountRemoved, isFocused, quantity, selectedTokenId])
+  }, [amount.quantity, amountRemoved, isFocused, selectedTokenId])
 
   const hasBalance = available >= quantity
   // primary can have locked amount
@@ -153,7 +151,6 @@ export const EditAmountScreen = () => {
           <ApplyButton
             onPress={handleOnApply}
             title={strings.apply.toLocaleUpperCase()}
-            shelleyTheme
             disabled={isUnableToSpend || !hasBalance || isZero}
           />
         </Actions>
@@ -217,6 +214,7 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
       underlineColorAndroid="transparent"
       activeUnderlineColor="transparent"
       selectionColor={colors.selected}
+      cursorColor={colors.cursor}
       noHelper
     />
   )
@@ -273,7 +271,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    black: color.gray_max,
+    cursor: color.el_gray_max,
     selected: color.input_selected,
   }
   return {styles, colors} as const

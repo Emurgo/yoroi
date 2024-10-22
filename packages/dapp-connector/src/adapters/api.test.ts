@@ -76,18 +76,6 @@ describe('dappConnectorApiMaker', () => {
       })
     })
 
-    it('should support sancho', async () => {
-      const fakeResult = {tag: 'right' as const, value: {data: await managerMock.getDAppList()}} as const
-      const fakeFetchData = () => Promise.resolve(fakeResult)
-      const result = await dappConnectorApiMaker({request: fakeFetchData as any}).getDApps({
-        network: Chain.Network.Sancho,
-      })
-      expect(result).toEqual({
-        ...fakeResult.value.data,
-        dapps: fakeResult.value.data.dapps.map((d) => ({...d, logo: 'https://daehx1qv45z7c.cloudfront.net/icon.png'})),
-      })
-    })
-
     it('should throw on unsupported chain id', async () => {
       const fakeResult = {tag: 'right' as const, value: {data: await managerMock.getDAppList()}} as const
       const fakeFetchData = () => Promise.resolve(fakeResult)

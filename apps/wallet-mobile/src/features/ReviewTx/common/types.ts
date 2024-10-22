@@ -1,8 +1,10 @@
 import {
+  CertificatesJSON,
   TransactionBodyJSON,
   TransactionInputsJSON,
   TransactionOutputsJSON,
 } from '@emurgo/cardano-serialization-lib-nodejs'
+import {CredKind} from '@emurgo/cross-csl-core'
 import {Balance, Portfolio} from '@yoroi/types'
 
 export type TransactionBody = TransactionBodyJSON
@@ -18,6 +20,7 @@ export type FormattedInput = {
     isPrimary: boolean
   }>
   address: string | undefined
+  addressKind: CredKind | null
   rewardAddress: string | null
   ownAddress: boolean
   txIndex: number
@@ -35,6 +38,7 @@ export type FormattedOutput = {
     isPrimary: boolean
   }>
   address: string
+  addressKind: CredKind | null
   rewardAddress: string | null
   ownAddress: boolean
 }
@@ -53,4 +57,12 @@ export type FormattedTx = {
   inputs: FormattedInputs
   outputs: FormattedOutputs
   fee: FormattedFee
+  certificates: Certificates
 }
+
+export type FormattedMetadata = {
+  hash: string | null
+  metadata: {msg: Array<unknown>} | null
+}
+
+export type Certificates = CertificatesJSON | null

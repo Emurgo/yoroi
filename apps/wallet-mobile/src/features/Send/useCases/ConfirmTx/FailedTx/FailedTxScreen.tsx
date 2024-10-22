@@ -27,12 +27,7 @@ export const FailedTxScreen = () => {
 
       <Space height="xl" />
 
-      <Button
-        onPress={navigateTo.startTxAfterReset}
-        title={strings.failedTxButton}
-        style={styles.button}
-        shelleyTheme
-      />
+      <Button onPress={navigateTo.startTxAfterReset} title={strings.failedTxButton} style={styles.button} />
     </SafeArea>
   )
 }

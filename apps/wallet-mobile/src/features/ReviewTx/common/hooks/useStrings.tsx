@@ -11,6 +11,9 @@ export const useStrings = () => {
     title: intl.formatMessage(messages.title),
     utxosTab: intl.formatMessage(messages.utxosTab),
     overviewTab: intl.formatMessage(messages.overviewTab),
+    metadataTab: intl.formatMessage(messages.metadataTab),
+    metadataHash: intl.formatMessage(messages.metadataHash),
+    metadataJsonLabel: intl.formatMessage(messages.metadataJsonLabel),
     walletLabel: intl.formatMessage(messages.walletLabel),
     feeLabel: intl.formatMessage(messages.feeLabel),
     myWalletLabel: intl.formatMessage(messages.myWalletLabel),
@@ -32,6 +35,11 @@ export const useStrings = () => {
     description: intl.formatMessage(messages.description),
     details: intl.formatMessage(messages.details),
     tokenDetailsTitle: intl.formatMessage(messages.tokenDetailsTitle),
+    registerStakingKey: intl.formatMessage(messages.registerStakingKey),
+    selectAbstain: intl.formatMessage(messages.selectAbstain),
+    selectNoConfidence: intl.formatMessage(messages.selectNoConfidence),
+    delegateVotingToDRep: intl.formatMessage(messages.delegateVotingToDRep),
+    delegateStake: intl.formatMessage(messages.delegateStake),
   }
 }
 
@@ -51,6 +59,18 @@ const messages = defineMessages({
   overviewTab: {
     id: 'txReview.tabLabel.overview',
     defaultMessage: '!!!Overview',
+  },
+  metadataTab: {
+    id: 'txReview.tabLabel.metadataTab',
+    defaultMessage: '!!!Metadata',
+  },
+  metadataHash: {
+    id: 'txReview.metadata.metadataHash',
+    defaultMessage: '!!!Metadata hash',
+  },
+  metadataJsonLabel: {
+    id: 'txReview.metadata.metadataJsonLabel',
+    defaultMessage: '!!!Metadata',
   },
   walletLabel: {
     id: 'txReview.overview.wallet',
@@ -135,5 +155,25 @@ const messages = defineMessages({
   tokenDetailsTitle: {
     id: 'txReview.tokenDetails.title',
     defaultMessage: '!!!Asset Details',
+  },
+  registerStakingKey: {
+    id: 'txReview.operations.registerStakingKey',
+    defaultMessage: '!!!Register staking key deposit',
+  },
+  selectAbstain: {
+    id: 'txReview.operations.selectAbstain',
+    defaultMessage: '!!!Select abstain',
+  },
+  selectNoConfidence: {
+    id: 'txReview.operations.selectNoConfidence',
+    defaultMessage: '!!!Select no confidence',
+  },
+  delegateVotingToDRep: {
+    id: 'txReview.operations.delegateVotingToDRep',
+    defaultMessage: '!!!Delegate voting to',
+  },
+  delegateStake: {
+    id: 'txReview.operations.delegateStake',
+    defaultMessage: '!!!Stake entire wallet balance to',
   },
 })

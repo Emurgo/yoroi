@@ -4,12 +4,11 @@ import React from 'react'
 
 import {SafeArea} from '../../../components/SafeArea'
 import {defaultStackNavigationOptions} from '../../../kernel/navigation'
-import {NetworkTag} from '../../Settings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {useStrings} from './common/strings'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
-import {ConfirmTxScreen} from './useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from './useCases/FailedTx/FailedTxScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
 import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'
@@ -42,12 +41,6 @@ export const GovernanceNavigator = () => {
             name="staking-gov-change-vote"
             component={ChangeVoteScreen}
             options={{title: strings.governanceCentreTitle}}
-          />
-
-          <Stack.Screen
-            name="staking-gov-confirm-tx"
-            component={ConfirmTxScreen}
-            options={{title: strings.confirmTxTitle}}
           />
 
           <Stack.Screen name="staking-gov-tx-success" component={SuccessTxScreen} options={txStatusOptions} />

@@ -242,7 +242,7 @@ const WordSuggestionList = ({
 
 const WordSuggestionButton = ({title, onPress}: {title: string; onPress: () => void}) => {
   const {styles} = useStyles()
-  return <Button onPress={onPress} style={styles.suggestion} textStyles={styles.suggestionText} title={title} />
+  return <Button onPress={onPress} style={styles.suggestion} title={title} />
 }
 
 const useBold = () => {
@@ -301,11 +301,6 @@ const useStyles = () => {
       borderWidth: 2,
       borderRadius: 8,
       backgroundColor: 'transparent',
-    },
-    suggestionText: {
-      ...atoms.body_1_lg_regular,
-      textTransform: 'none',
-      color: color.text_primary_medium,
     },
     suggestionArea: {
       backgroundColor: color.bg_color_max,

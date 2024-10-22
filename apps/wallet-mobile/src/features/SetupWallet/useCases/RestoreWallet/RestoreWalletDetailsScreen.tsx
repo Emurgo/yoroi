@@ -168,7 +168,7 @@ export const RestoreWalletDetailsScreen = () => {
 
         <Space height="sm" />
 
-        <Button title={strings.continueButton} shelleyTheme onPress={closeModal} />
+        <Button title={strings.continueButton} onPress={closeModal} />
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
@@ -203,7 +203,7 @@ export const RestoreWalletDetailsScreen = () => {
 
         <Space height="sm" />
 
-        <Button title={strings.continueButton} shelleyTheme onPress={closeModal} />
+        <Button title={strings.continueButton} onPress={closeModal} />
       </View>,
       HEIGHT_MODAL_CHECKSUM,
     )
@@ -296,7 +296,6 @@ export const RestoreWalletDetailsScreen = () => {
 
         <View>
           <Button
-            shelleyTheme
             title={strings.next}
             onPress={() =>
               createWallet({
@@ -308,7 +307,7 @@ export const RestoreWalletDetailsScreen = () => {
                 accountVisual,
               })
             }
-            testId="setup-restore-step2-next-button"
+            testID="setup-restore-step2-next-button"
             disabled={disabled}
           />
         </View>

@@ -1,5 +1,6 @@
 /* eslint-disable no-empty */
 import {SendToken} from '@emurgo/yoroi-lib'
+import {invalid} from '@yoroi/common'
 import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
@@ -13,7 +14,7 @@ import {toAssetNameHex, toPolicyId} from './api/utils'
 import {withMinAmounts} from './getMinAmounts'
 import {MultiToken} from './MultiToken'
 import {CardanoTypes} from './types'
-import {wrappedCsl as getCSL} from './wrappedCsl'
+import {wrappedCsl as getCSL, wrappedCsl} from './wrappedCsl'
 
 export const deriveRewardAddressHex = async (
   accountPubKeyHex: string,
@@ -31,44 +32,22 @@ export const deriveRewardAddressHex = async (
   return result
 }
 
-export const getAddressType = async (address: string) => {
-  const isKeyAddress = await getIsAddressKeyBech32Format(address)
-  if (isKeyAddress) return 'key'
+export const deriveRewardAddressFromAddress = async (address: string, chainId: number): Promise<string> => {
+  const {csl, release} = wrappedCsl()
 
-  const isScriptAddress = await getIsAddressScriptBech32Format(address)
-  if (isScriptAddress) return 'script'
-
-  const isRewardAddress = await getIsRewardAddressBech32Format(address)
-  if (isRewardAddress) return 'reward'
-
-  throw new Error('invalid address format')
-}
-
-const getIsAddressKeyBech32Format = async (address: string): Promise<boolean> => {
   try {
-    await CardanoMobile.Ed25519KeyHash.fromBech32(address)
-    return true
-  } catch {
-    return false
-  }
-}
+    const result = await csl.Address.fromBech32(address)
+      .then((address) => csl.BaseAddress.fromAddress(address))
+      .then((baseAddress) => baseAddress?.stakeCred() ?? invalid('invalid base address'))
+      .then((stakeCredential) => csl.RewardAddress.new(chainId, stakeCredential))
+      .then((rewardAddress) => rewardAddress.toAddress())
+      .then((rewardAddrAsAddress) => rewardAddrAsAddress.toBech32(undefined))
+      .catch((error) => error)
 
-const getIsAddressScriptBech32Format = async (address: string): Promise<boolean> => {
-  try {
-    await CardanoMobile.ScriptHash.fromBech32(address)
-    return true
-  } catch {
-    return false
-  }
-}
-
-const getIsRewardAddressBech32Format = async (addressBech32: string): Promise<boolean> => {
-  try {
-    const address = await CardanoMobile.Address.fromBech32(addressBech32)
-    await CardanoMobile.RewardAddress.fromAddress(address)
-    return true
-  } catch {
-    return false
+    if (typeof result !== 'string') throw new Error('Its not possible to derive reward address')
+    return result
+  } finally {
+    release()
   }
 }
 

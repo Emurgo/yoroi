@@ -14,12 +14,14 @@ export const useOnConfirm = ({
   onSuccess,
   onError,
   onNotSupportedCIP1694,
+  onCIP36SupportChange,
 }: {
   onSuccess?: ((txId: YoroiSignedTx) => void) | null
   onError?: (() => void) | null
   cbor?: string
   unsignedTx?: YoroiUnsignedTx
-  onNotSupportedCIP1694?: () => void
+  onNotSupportedCIP1694?: (() => void) | null
+  onCIP36SupportChange?: ((isCIP36Supported: boolean) => void) | null
 }) => {
   if (unsignedTx === undefined) throw new Error('useOnConfirm: unsignedTx missing')
 
@@ -35,7 +37,13 @@ export const useOnConfirm = ({
           onCancel={closeModal}
           unsignedTx={unsignedTx}
           onSuccess={(signedTx) => onSuccess?.(signedTx)}
-          onNotSupportedCIP1694={onNotSupportedCIP1694}
+          onNotSupportedCIP1694={() => {
+            if (onNotSupportedCIP1694) {
+              closeModal()
+              onNotSupportedCIP1694()
+            }
+          }}
+          onCIP36SupportChange={onCIP36SupportChange ?? undefined}
         />,
         400,
       )

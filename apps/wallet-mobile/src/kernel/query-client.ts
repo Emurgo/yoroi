@@ -1,7 +1,28 @@
 import {freeze} from 'immer'
 import {QueryClient} from 'react-query'
 
+import {ptPriceQueryFn, TokenChartInterval} from '../features/Portfolio/common/hooks/useGetPortfolioTokenChart'
+
 const queryClient = new QueryClient()
+
+const prefetchPtPriceHistory = () => {
+  Object.values(TokenChartInterval).forEach((TokenChartInterval) => {
+    queryClient.prefetchQuery<
+      Awaited<ReturnType<typeof ptPriceQueryFn>>,
+      Error,
+      Awaited<ReturnType<typeof ptPriceQueryFn>>,
+      ['ptPriceHistory', TokenChartInterval]
+    >({
+      queryKey: ['ptPriceHistory', TokenChartInterval],
+      queryFn: ptPriceQueryFn,
+      cacheTime: Infinity,
+      staleTime: Infinity,
+    })
+  })
+}
+
+prefetchPtPriceHistory()
+
 const keyToPersist = 'persist'
 /*
 const queryPersistorStorageKey = 'react-query-persistor'

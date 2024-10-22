@@ -25,25 +25,13 @@ export const CreateExchangeButton = ({
   } = useWalletManager()
 
   const isPreprod = network === Chain.Network.Preprod
-  const isSancho = network === Chain.Network.Sancho
   const isBuy = orderType === 'buy'
 
-  const title = isBuy
-    ? isPreprod
-      ? strings.createOrderPreprodFaucetButtonText
-      : isSancho
-      ? strings.createOrderSanchonetFaucetButtonText
-      : strings.proceed
-    : strings.proceed
+  const title = isBuy ? (isPreprod ? strings.createOrderPreprodFaucetButtonText : strings.proceed) : strings.proceed
 
   const handleOnPress = () => {
     if (isPreprod && isBuy) {
       handleOnPressOnPreprod()
-      return
-    }
-
-    if (isSancho && isBuy) {
-      handleOnPressOnSanchonet()
       return
     }
 
@@ -52,17 +40,13 @@ export const CreateExchangeButton = ({
 
   return (
     <View style={[styles.actions, style]}>
-      <Button testID="rampOnOffButton" shelleyTheme title={title} onPress={handleOnPress} disabled={disabled} />
+      <Button testID="rampOnOffButton" title={title} onPress={handleOnPress} disabled={disabled} />
     </View>
   )
 }
 
 const handleOnPressOnPreprod = () => {
   Linking.openURL('https://docs.cardano.org/cardano-testnets/tools/faucet/')
-}
-
-const handleOnPressOnSanchonet = () => {
-  Linking.openURL('https://sancho.network/faucet/')
 }
 
 const useStyles = () => {

@@ -112,6 +112,16 @@ const isValidPoolId = async (poolId: string): Promise<boolean> => {
   }
 }
 
+export const getPoolBech32Id = async (poolId: string) => {
+  const {csl, release} = wrappedCsl()
+  try {
+    const keyHash = await csl.Ed25519KeyHash.fromHex(poolId)
+    return keyHash.toBech32('pool')
+  } finally {
+    release()
+  }
+}
+
 const isValidPoolHash = async (poolHash: string): Promise<boolean> => {
   if (poolHash.length === 0) return false
 

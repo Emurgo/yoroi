@@ -20,7 +20,6 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
   } = useWalletManager()
 
   const isPreprod = network === Chain.Network.Preprod
-  const isSancho = network === Chain.Network.Sancho
 
   const {wallet} = useSelectedWallet()
   const balance = usePortfolioPrimaryBalance({wallet})
@@ -72,7 +71,7 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
     ],
   )
 
-  if (isPreprod || isSancho) return null
+  if (isPreprod) return null
 
   return (
     <>

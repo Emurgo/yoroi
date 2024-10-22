@@ -1,0 +1,77 @@
+[
+  {
+    "id": "components.settings.biometricslinkscreen.notNowButton",
+    "defaultMessage": "!!!Not now",
+    "file": "src/features/Settings/useCases/changeAppSettings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
+    "start": {
+      "line": 55,
+      "column": 16,
+      "index": 1669
+    },
+    "end": {
+      "line": 58,
+      "column": 3,
+      "index": 1773
+    }
+  },
+  {
+    "id": "components.settings.biometricslinkscreen.linkButton",
+    "defaultMessage": "!!!Link",
+    "file": "src/features/Settings/useCases/changeAppSettings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
+    "start": {
+      "line": 59,
+      "column": 14,
+      "index": 1789
+    },
+    "end": {
+      "line": 62,
+      "column": 3,
+      "index": 1888
+    }
+  },
+  {
+    "id": "components.settings.biometricslinkscreen.heading",
+    "defaultMessage": "!!!Use your fingerprint",
+    "file": "src/features/Settings/useCases/changeAppSettings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
+    "start": {
+      "line": 63,
+      "column": 11,
+      "index": 1901
+    },
+    "end": {
+      "line": 66,
+      "column": 3,
+      "index": 2013
+    }
+  },
+  {
+    "id": "components.settings.biometricslinkscreen.subHeading1",
+    "defaultMessage": "!!!for faster, easier access",
+    "file": "src/features/Settings/useCases/changeAppSettings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
+    "start": {
+      "line": 67,
+      "column": 15,
+      "index": 2030
+    },
+    "end": {
+      "line": 70,
+      "column": 3,
+      "index": 2151
+    }
+  },
+  {
+    "id": "components.settings.biometricslinkscreen.subHeading2",
+    "defaultMessage": "!!!to your Yoroi wallet",
+    "file": "src/features/Settings/useCases/changeAppSettings/EnableLoginWithOs/EnableLoginWithOsScreen.tsx",
+    "start": {
+      "line": 71,
+      "column": 15,
+      "index": 2168
+    },
+    "end": {
+      "line": 74,
+      "column": 3,
+      "index": 2284
+    }
+  }
+]

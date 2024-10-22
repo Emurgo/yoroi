@@ -1,10 +1,13 @@
-import {invalid, isNonNullable} from '@yoroi/common'
+// import {CredKind} from '@emurgo/csl-mobile-bridge'
+import {CredKind} from '@emurgo/cross-csl-core'
+import {isNonNullable} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
 import _ from 'lodash'
 import {useQuery} from 'react-query'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {deriveRewardAddressFromAddress} from '../../../../yoroi-wallets/cardano/utils'
 import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
 import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
 import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
@@ -14,12 +17,13 @@ import {
   FormattedFee,
   FormattedInputs,
   FormattedOutputs,
+  FormattedTx,
   TransactionBody,
   TransactionInputs,
   TransactionOutputs,
 } from '../types'
 
-export const useFormattedTx = (data: TransactionBody) => {
+export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   const {wallet} = useSelectedWallet()
 
   const inputs = data?.inputs ?? []
@@ -47,7 +51,12 @@ export const useFormattedTx = (data: TransactionBody) => {
   const formattedOutputs = useFormattedOutputs(wallet, outputs, portfolioTokenInfos)
   const formattedFee = formatFee(wallet, data)
 
-  return {inputs: formattedInputs, outputs: formattedOutputs, fee: formattedFee}
+  return {
+    inputs: formattedInputs,
+    outputs: formattedOutputs,
+    fee: formattedFee,
+    certificates: data.certs ?? null,
+  }
 }
 
 export const useFormattedInputs = (
@@ -93,9 +102,13 @@ const formatInputs = async (
     inputs.map(async (input) => {
       const receiveUTxO = getUtxoByTxIdAndIndex(wallet, input.transaction_id, input.index)
       const address = receiveUTxO?.receiver
-      const rewardAddress =
-        address !== undefined ? await deriveRewardAddressFromAddress(address, wallet.networkManager.chainId) : null
       const coin = receiveUTxO?.amount != null ? asQuantity(receiveUTxO.amount) : null
+
+      const addressKind = address != null ? await getAddressKind(address) : null
+      const rewardAddress =
+        address != null && addressKind === CredKind.Key
+          ? await deriveAddress(address, wallet.networkManager.chainId)
+          : null
 
       const primaryAssets =
         coin != null
@@ -130,6 +143,7 @@ const formatInputs = async (
       return {
         assets: [...primaryAssets, ...multiAssets].filter(isNonNullable),
         address,
+        addressKind: addressKind ?? null,
         rewardAddress,
         ownAddress: address != null && isOwnedAddress(wallet, address),
         txIndex: input.index,
@@ -147,8 +161,11 @@ const formatOutputs = async (
   return Promise.all(
     outputs.map(async (output) => {
       const address = output.address
-      const rewardAddress = await deriveRewardAddressFromAddress(address, wallet.networkManager.chainId)
       const coin = asQuantity(output.amount.coin)
+
+      const addressKind = await getAddressKind(address)
+      const rewardAddress =
+        addressKind === CredKind.Key ? await deriveAddress(address, wallet.networkManager.chainId) : null
 
       const primaryAssets = [
         {
@@ -183,6 +200,7 @@ const formatOutputs = async (
       return {
         assets,
         address,
+        addressKind,
         rewardAddress,
         ownAddress: isOwnedAddress(wallet, address),
       }
@@ -202,20 +220,21 @@ export const formatFee = (wallet: YoroiWallet, data: TransactionBody): Formatted
   }
 }
 
-export const deriveRewardAddressFromAddress = async (address: string, chainId: number): Promise<string> => {
+const deriveAddress = async (address: string, chainId: number) => {
+  try {
+    return await deriveRewardAddressFromAddress(address, chainId)
+  } catch {
+    return null
+  }
+}
+
+const getAddressKind = async (addressBech32: string): Promise<CredKind | null> => {
   const {csl, release} = wrappedCsl()
 
   try {
-    const result = await csl.Address.fromBech32(address)
-      .then((address) => csl.BaseAddress.fromAddress(address))
-      .then((baseAddress) => baseAddress?.stakeCred() ?? invalid('invalid base address'))
-      .then((stakeCredential) => csl.RewardAddress.new(chainId, stakeCredential))
-      .then((rewardAddress) => rewardAddress.toAddress())
-      .then((rewardAddrAsAddress) => rewardAddrAsAddress.toBech32(undefined))
-      .catch((error) => error)
-
-    if (typeof result !== 'string') throw new Error('Its not possible to derive reward address')
-    return result
+    const address = await csl.Address.fromBech32(addressBech32)
+    const addressKind = await (await address.paymentCred())?.kind()
+    return addressKind ?? null
   } finally {
     release()
   }

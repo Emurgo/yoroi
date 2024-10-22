@@ -4,14 +4,14 @@
     "defaultMessage": "!!!My read-only wallet",
     "file": "src/features/SetupWallet/legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 155,
+      "line": 151,
       "column": 21,
-      "index": 4929
+      "index": 4821
     },
     "end": {
-      "line": 158,
+      "line": 154,
       "column": 3,
-      "index": 5056
+      "index": 4948
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Checksum label",
     "file": "src/features/SetupWallet/legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 159,
+      "line": 155,
       "column": 17,
-      "index": 5075
+      "index": 4967
     },
     "end": {
-      "line": 162,
+      "line": 158,
       "column": 3,
-      "index": 5189
+      "index": 5081
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Wallet Address(es):",
     "file": "src/features/SetupWallet/legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 163,
+      "line": 159,
       "column": 22,
-      "index": 5213
+      "index": 5105
     },
     "end": {
-      "line": 166,
+      "line": 162,
       "column": 3,
-      "index": 5337
+      "index": 5229
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Key:",
     "file": "src/features/SetupWallet/legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 167,
+      "line": 163,
       "column": 7,
-      "index": 5346
+      "index": 5238
     },
     "end": {
-      "line": 170,
+      "line": 166,
       "column": 3,
-      "index": 5444
+      "index": 5336
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Derivation path:",
     "file": "src/features/SetupWallet/legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 171,
+      "line": 167,
       "column": 18,
-      "index": 5464
+      "index": 5356
     },
     "end": {
-      "line": 174,
+      "line": 170,
       "column": 3,
-      "index": 5585
+      "index": 5477
     }
   }
 ]

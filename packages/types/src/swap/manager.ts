@@ -3,6 +3,8 @@ import {PortfolioTokenInfo} from '../portfolio/info'
 import {PortfolioTokenId} from '../portfolio/token'
 import {SwapAggregator} from './aggregator'
 import {SwapApi} from './api'
+import {SwapMakeOrderCalculation, SwapOrderCalculation} from './calculations'
+import {SwapOrderType} from './order'
 import {SwapPoolProvider} from './pool'
 import {SwapStorage} from './storage'
 
@@ -37,4 +39,16 @@ export type SwapManager = Readonly<{
   aggregator: SwapAggregator
   aggregatorTokenId?: PortfolioTokenId
   frontendFeeTiers: ReadonlyArray<AppFrontendFeeTier>
+  makeOrderCalculations(
+    args: SwapMakeOrderCalculation,
+  ): Array<SwapOrderCalculation>
+  getBestPoolCalculation(
+    calculations: Array<SwapOrderCalculation>,
+  ): SwapOrderCalculation | undefined
+  selectedPoolCalculationSelector(args: {
+    type: SwapOrderType
+    selectedPoolId?: string
+    calculations: Array<SwapOrderCalculation>
+    bestPoolCalculation?: SwapOrderCalculation
+  }): SwapOrderCalculation | undefined
 }>

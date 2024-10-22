@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
 import {useIsUsbSupported} from '../../../../legacy/HW'
@@ -30,8 +30,7 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
         <Text style={styles.paragraph}>{strings.bluetoothExplanation}</Text>
 
         <Button
-          outlineOnLight
-          shelleyTheme
+          type={ButtonType.Secondary}
           onPress={() => request()}
           title={strings.bluetoothButton}
           testID="connectWithBLEButton"
@@ -42,8 +41,7 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
         <Text style={styles.paragraph}>{strings.usbExplanation}</Text>
 
         <Button
-          outlineOnLight
-          shelleyTheme
+          type={ButtonType.Secondary}
           onPress={onSelectUSB}
           title={strings.usbButton}
           disabled={!isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}

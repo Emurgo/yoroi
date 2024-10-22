@@ -10,7 +10,7 @@ import {Text} from '../../components/Text'
 import {isEmptyString} from '../../kernel/utils'
 import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
-import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from './useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 

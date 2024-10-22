@@ -391,22 +391,6 @@ export const apiConfig: ApiConfig = freeze(
       tokenImageInvalidate:
         'https://preprod.processed-media.yoroiwallet.com/invalidate',
     },
-    [Chain.Network.Sancho]: {
-      tokenDiscovery:
-        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/discovery',
-      tokenInfo:
-        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/info',
-      tokenInfos:
-        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/info/multi',
-      tokenTraits:
-        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/nft/traits',
-      tokenActivity:
-        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/activity/multi',
-      tokenHistory:
-        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/history/price',
-      tokenImageInvalidate:
-        'https://preprod.processed-media.yoroiwallet.com/invalidate',
-    },
     [Chain.Network.Preview]: {
       tokenDiscovery:
         'https://yoroi-backend-zero-preview.emurgornd.com/tokens/discovery',

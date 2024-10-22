@@ -1,14 +1,10 @@
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-type Props = {
-  width?: number
-  height?: number
-  color?: string
-}
+import {IconProps} from './type'
 
-export const RewardWithdrawn = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
-  <Svg viewBox="0 0 36 36" {...{width, height}}>
+export const RewardWithdrawn = ({size = 36, color = '#6B7384'}: IconProps) => (
+  <Svg viewBox="0 0 36 36" width={size} height={size}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -425.000000)" fill={color}>
         <G transform="translate(760.000000, 425.000000)">

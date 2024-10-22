@@ -18,7 +18,7 @@ export const useStrings = () => {
     drepKey: intl.formatMessage(messages.drepKey),
     delegatingToADRep: intl.formatMessage(messages.delegatingToADRep),
     abstaining: intl.formatMessage(messages.abstaining),
-    delegateVotingToDRep: (drepID: string) => intl.formatMessage(messages.delegateVotingToDRep, {drepID}),
+    delegateVotingToDRep: intl.formatMessage(messages.delegateVotingToDRep),
     selectAbstain: intl.formatMessage(messages.selectAbstain),
     selectNoConfidence: intl.formatMessage(messages.selectNoConfidence),
     operations: intl.formatMessage(messages.operations),
@@ -124,7 +124,7 @@ const messages = defineMessages({
   },
   delegateVotingToDRep: {
     id: 'components.governance.delegateVotingToDRep',
-    defaultMessage: '!!!Delegate voting to \n{drepID}',
+    defaultMessage: '!!!Delegate voting to',
   },
   selectAbstain: {
     id: 'components.governance.selectAbstain',
@@ -255,7 +255,7 @@ const messages = defineMessages({
   },
   registerStakingKey: {
     id: 'components.governance.registerStakingKey',
-    defaultMessage: '!!!Register staking key',
+    defaultMessage: '!!!Register staking key deposit',
   },
   enterDrepIDInfo: {
     id: 'components.governance.enterDrepIDInfo',

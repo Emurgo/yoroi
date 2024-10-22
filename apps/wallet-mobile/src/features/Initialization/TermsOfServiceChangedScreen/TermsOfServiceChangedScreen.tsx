@@ -68,7 +68,7 @@ export const TermsOfServiceChangedScreen = () => {
 
         <Spacer fill />
 
-        <Button title={strings.continue} shelleyTheme disabled={!accepted} onPress={onPressContinue} />
+        <Button title={strings.continue} disabled={!accepted} onPress={onPressContinue} />
       </ScrollView>
     </SafeAreaView>
   )

@@ -24,13 +24,8 @@ export const NoFundsScreen = () => {
   } = useWalletManager()
 
   const handleOnTryAgain = () => {
-    if (network === Chain.Network.Sancho) {
-      Linking.openURL('https://sancho.network/faucet/')
-      return
-    }
-
     if (network === Chain.Network.Preprod) {
-      Linking.openURL('https://sancho.network/faucet/')
+      Linking.openURL('https://docs.cardano.org/cardano-testnets/tools/faucet/')
       return
     }
 
@@ -52,7 +47,7 @@ export const NoFundsScreen = () => {
 
         <Space height="lg" />
 
-        <Button title={buttonText} textStyles={styles.button} shelleyTheme onPress={handleOnTryAgain} />
+        <Button title={buttonText} onPress={handleOnTryAgain} />
 
         <Spacer fill />
 
@@ -81,10 +76,6 @@ const useStyles = () => {
       ...atoms.text_center,
       maxWidth: 320,
       color: color.gray_max,
-    },
-    button: {
-      ...atoms.px_xl,
-      ...atoms.py_lg,
     },
   })
 

@@ -31,7 +31,7 @@ export const OsLoginScreen = () => {
       </MiddleSection>
 
       <BottomSection>
-        <Button title={strings.title} disabled={isLoading} shelleyTheme onPress={() => authWithOs()} />
+        <Button title={strings.title} disabled={isLoading} onPress={() => authWithOs()} />
       </BottomSection>
     </SafeAreaView>
   )

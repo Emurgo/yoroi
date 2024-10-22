@@ -4,7 +4,7 @@ import React from 'react'
 
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, NftRoutes} from '../../kernel/navigation'
-import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useStrings} from './common/hooks/useStrings'
 import {MediaDetailsScreen} from './common/MediaDetailsScreen/MediaDetailsScreen'
 import {ListMediaGalleryScreen} from './useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen'

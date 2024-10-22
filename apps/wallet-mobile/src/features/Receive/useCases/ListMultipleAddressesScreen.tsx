@@ -59,7 +59,7 @@ export const ListMultipleAddressesScreen = () => {
           selectedAddressChanged(item.address)
           navigate.showAddressDetails()
         }}
-        testId={`receive:small-address-card-${index + 1}`} // Add index + 1 to include count
+        testID={`receive:small-address-card-${index + 1}`} // Add index + 1 to include count
         // date={}  // TODO define with project
       />
     ),
@@ -127,7 +127,6 @@ export const ListMultipleAddressesScreen = () => {
         layout={Layout}
       >
         <Button
-          shelleyTheme
           title={strings.generateButton}
           disabled={hasReachedGapLimit}
           onPress={handleOnGenerateNewReceiveAddress}

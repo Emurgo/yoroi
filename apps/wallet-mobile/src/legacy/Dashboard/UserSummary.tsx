@@ -4,12 +4,12 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button} from '../../components/Button/Button'
+import {Button, ButtonType} from '../../components/Button/Button'
 import {Icon} from '../../components/Icon'
 import {Space} from '../../components/Space/Space'
 import {Text} from '../../components/Text'
 import {TitledCard} from '../../components/TitledCard'
-import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {formatAdaWithText} from '../../yoroi-wallets/utils/format'
@@ -37,12 +37,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
       <View style={styles.stats}>
         <View style={styles.row}>
           <View style={styles.icon}>
-            <Icon.TotalAda
-              color={color.el_primary_medium}
-              backgroundColor={color.gray_200}
-              width={ICON_DIM}
-              height={ICON_DIM}
-            />
+            <Icon.TotalAda color={color.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
@@ -64,12 +59,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
         <View style={styles.row}>
           <View style={styles.icon}>
-            <Icon.TotalReward
-              color={color.el_primary_medium}
-              backgroundColor={color.gray_200}
-              width={ICON_DIM}
-              height={ICON_DIM}
-            />
+            <Icon.TotalReward color={color.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
@@ -91,12 +81,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
         <View style={styles.row}>
           <View style={styles.icon}>
-            <Icon.TotalDelegated
-              color={color.el_primary_medium}
-              backgroundColor={color.gray_200}
-              width={ICON_DIM}
-              height={ICON_DIM}
-            />
+            <Icon.TotalDelegated color={color.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
@@ -116,17 +101,15 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
         <Space height="lg" />
 
-        <View style={styles.row}>
-          <Button
-            disabled={disableWithdraw}
-            outlineOnLight
-            shelleyTheme
-            onPress={onWithdraw}
-            title={strings.withdrawButtonTitle}
-            style={styles.withdrawButton}
-            testID="userSummaryWithdrawButton"
-          />
-        </View>
+        <Button
+          type={ButtonType.Secondary}
+          disabled={disableWithdraw}
+          size="S"
+          style={styles.withdrawButton}
+          onPress={onWithdraw}
+          title={strings.withdrawButtonTitle}
+          testID="userSummaryWithdrawButton"
+        />
       </View>
     </TitledCard>
   )
@@ -157,7 +140,7 @@ const useStyles = () => {
       ...atoms.body_1_lg_medium,
     },
     withdrawButton: {
-      ...atoms.px_lg,
+      ...atoms.self_start,
     },
   })
 
