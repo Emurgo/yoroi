@@ -145,7 +145,7 @@
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
     "@yoroi/types": "1.5.8",
-    "bignumber.js": "9.0.1",
+    "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",

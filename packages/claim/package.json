@@ -155,7 +155,7 @@
     "@yoroi/common": "^1.5.4",
     "@yoroi/portfolio": "1.0.3",
     "@yoroi/types": "1.5.8",
-    "bignumber.js": "9.0.1",
+    "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
