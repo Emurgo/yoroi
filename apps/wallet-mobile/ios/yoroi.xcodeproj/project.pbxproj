@@ -846,6 +846,7 @@
 				ENVFILE = "$(PODS_ROOT)/../../.env";
 				INFOPLIST_FILE = yoroi/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Yoroi;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -890,6 +891,7 @@
 				ENVFILE = "$(PODS_ROOT)/../../.env.production";
 				INFOPLIST_FILE = yoroi/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Yoroi;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

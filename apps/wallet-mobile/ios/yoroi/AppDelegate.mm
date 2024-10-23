@@ -1,6 +1,7 @@
 #import <React/RCTLinkingManager.h>
 #import "AppDelegate.h"
 #import "RNBootSplash.h"
+#import "RNNotifications.h"
 
 #import <React/RCTBundleURLProvider.h>
 
@@ -16,6 +17,7 @@
   // react-native-bootsplash
   UIView *rootView = self.window.rootViewController.view;
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
+  [RNNotifications startMonitorNotifications];
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
@@ -53,4 +55,17 @@
                   continueUserActivity:userActivity
                     restorationHandler:restorationHandler];
 }
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+  [RNNotifications didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+  [RNNotifications didFailToRegisterForRemoteNotificationsWithError:error];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+  [RNNotifications didReceiveBackgroundNotification:userInfo withCompletionHandler:completionHandler];
+}
+
 @end

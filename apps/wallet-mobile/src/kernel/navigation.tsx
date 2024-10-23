@@ -347,6 +347,7 @@ export type AppRoutes = {
   'choose-biometric-login': undefined
   'dark-theme-announcement': undefined
   'setup-wallet': undefined
+  notifications: undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
