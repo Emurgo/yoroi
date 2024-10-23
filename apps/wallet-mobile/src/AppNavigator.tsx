@@ -4,9 +4,11 @@ import {isString} from '@yoroi/common'
 import {supportedPrefixes} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
+import {useEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
+import SystemNavigationBar from 'react-native-system-navigation-bar'
 
 import StorybookScreen from '../.storybook'
 import {ModalProvider} from './components/Modal/ModalContext'
@@ -38,8 +40,6 @@ import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
 import {AppRoutes, defaultStackNavigationOptions} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
-import {useEffect} from 'react'
-import SystemNavigationBar from 'react-native-system-navigation-bar'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
