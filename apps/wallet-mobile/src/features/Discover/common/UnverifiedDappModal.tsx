@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
@@ -38,7 +38,7 @@ export const UnverifiedDappModal = ({onConfirm}: Props) => {
   const strings = useStrings()
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} bounces={false}>
       <View style={styles.line}>
         <Text style={styles.text}>{strings.disclaimerModalText}</Text>
       </View>
@@ -48,7 +48,7 @@ export const UnverifiedDappModal = ({onConfirm}: Props) => {
       <View style={styles.actions}>
         <Button title={strings.understand} shelleyTheme onPress={onConfirm} />
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
