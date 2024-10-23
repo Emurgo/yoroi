@@ -8,7 +8,7 @@ import {useEffect} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQuery} from 'react-query'
+import {useMutation, useQuery} from 'react-query'
 import {z} from 'zod'
 
 import {Button} from '../../../../components/Button/Button'
@@ -17,6 +17,7 @@ import {Icon} from '../../../../components/Icon'
 import {ScrollView} from '../../../../components/ScrollView/ScrollView'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
+import {logger} from '../../../../kernel/logger/logger'
 import {useParams} from '../../../../kernel/navigation'
 import {cip30LedgerExtensionMaker} from '../../../../yoroi-wallets/cardano/cip30/cip30-ledger'
 import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
@@ -25,6 +26,7 @@ import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
 import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useConfirmHWConnectionModal} from '../../common/ConfirmHWConnectionModal'
+import {isUserRejectedError, userRejectedError} from '../../common/errors'
 import {usePromptRootKey} from '../../common/hooks'
 import {useStrings} from '../../common/useStrings'
 
@@ -54,7 +56,7 @@ export const ReviewTransaction = () => {
 
   const {styles} = useStyles()
 
-  const signTxWithHW = useSignTxWithHW()
+  const {sign: signTxWithHW} = useSignTxWithHW()
 
   const handleOnConfirm = async () => {
     if (!params.isHW) {
@@ -63,8 +65,13 @@ export const ReviewTransaction = () => {
       return
     }
 
-    const signature = await signTxWithHW(params.cbor, params.partial)
-    params.onConfirm(signature)
+    signTxWithHW(
+      {cbor: params.cbor, partial: params.partial},
+      {
+        onSuccess: (signature) => params.onConfirm(signature),
+        onError: (error) => logger.error('ReviewTransaction::handleOnConfirm', {error}),
+      },
+    )
   }
 
   useEffect(() => {
@@ -437,7 +444,7 @@ const useConnectorPromptRootKey = () => {
             return Promise.resolve()
           },
           onClose: () => {
-            if (shouldResolveOnClose) reject(new Error('User rejected'))
+            if (shouldResolveOnClose) reject(userRejectedError())
           },
         })
       } catch (error) {
@@ -451,15 +458,15 @@ export const useSignTxWithHW = () => {
   const {confirmHWConnection, closeModal} = useConfirmHWConnectionModal()
   const {wallet, meta} = useSelectedWallet()
 
-  return React.useCallback(
-    (cbor: string, partial?: boolean) => {
+  const mutationFn = React.useCallback(
+    (options: {cbor: string; partial?: boolean}) => {
       return new Promise<Transaction>((resolve, reject) => {
         let shouldResolveOnClose = true
         confirmHWConnection({
           onConfirm: async ({transportType, deviceInfo}) => {
             try {
               const cip30 = cip30LedgerExtensionMaker(wallet, meta)
-              const tx = await cip30.signTx(cbor, partial ?? false, deviceInfo, transportType === 'USB')
+              const tx = await cip30.signTx(options.cbor, options.partial ?? false, deviceInfo, transportType === 'USB')
               shouldResolveOnClose = false
               return resolve(tx)
             } catch (error) {
@@ -469,11 +476,19 @@ export const useSignTxWithHW = () => {
             }
           },
           onClose: () => {
-            if (shouldResolveOnClose) reject(new Error('User rejected'))
+            if (shouldResolveOnClose) reject(userRejectedError())
           },
         })
       })
     },
     [confirmHWConnection, wallet, meta, closeModal],
   )
+
+  const mutation = useMutation<Transaction, Error, {cbor: string; partial?: boolean}>({
+    mutationFn,
+    useErrorBoundary: (error) => !isUserRejectedError(error),
+    mutationKey: ['useSignTxWithHW'],
+  })
+
+  return {...mutation, sign: mutation.mutate}
 }

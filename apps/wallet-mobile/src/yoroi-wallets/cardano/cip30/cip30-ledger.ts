@@ -1,4 +1,5 @@
 import {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {has_transaction_set_tag, TransactionSetsState} from '@emurgo/csl-mobile-bridge'
 import {createSignedLedgerTxFromCbor} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {HW, Wallet} from '@yoroi/types'
@@ -24,6 +25,12 @@ class CIP30LedgerExtension {
       const tx = await csl.Transaction.fromHex(cbor)
       if (!partial) await assertHasAllSigners(cbor, this.wallet, this.meta)
       const txBody = await tx.body()
+
+      const transactionSetTag = await has_transaction_set_tag(await tx.toBytes())
+
+      if (transactionSetTag === TransactionSetsState.MixedSets) {
+        throw new Error('CIP30LedgerExtension.signTx: Mixed transaction sets are not supported when using a HW wallet')
+      }
 
       const payload = await toLedgerSignRequest(
         csl,

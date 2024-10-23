@@ -119,8 +119,8 @@ export const resolver: Resolver = {
 
       if (result === null || result.length === 0) {
         const balance = await context.wallet.getBalance('*')
-        const coin = BigNumber(await (await balance.coin()).toStr())
-        if (coin.isGreaterThan(BigNumber(value))) {
+        const coin = new BigNumber(await (await balance.coin()).toStr())
+        if (coin.isGreaterThan(new BigNumber(value))) {
           try {
             const utxo = await context.wallet.sendReorganisationTx(value)
             return [await utxo.toHex()]

@@ -26,7 +26,7 @@ export function toBigInt(
     typeof quantity === 'string'
       ? quantity.replace(/(?!^-)[^\d.-]/g, '')
       : quantity
-  const bigNumber = BigNumber(sanitized || 0)
+  const bigNumber = new BigNumber(sanitized || 0)
 
   const scaledNumber = bigNumber.shiftedBy(decimalPlaces)
 
