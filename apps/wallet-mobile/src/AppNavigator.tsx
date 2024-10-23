@@ -7,6 +7,7 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
+import SystemNavigationBar from 'react-native-system-navigation-bar'
 
 import StorybookScreen from '../.storybook'
 import {ModalProvider} from './components/Modal/ModalContext'
@@ -49,7 +50,12 @@ export const AppNavigator = () => {
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
   useHideScreenInAppSwitcher()
-  const {atoms, color} = useTheme()
+  const {atoms, color, colorScheme} = useTheme()
+
+  React.useEffect(() => {
+    const buttonsColor = colorScheme === 'default-dark' ? 'light' : 'dark'
+    SystemNavigationBar.setNavigationColor('transparent', buttonsColor, 'navigation')
+  }, [colorScheme])
 
   useAutoLogout()
 
