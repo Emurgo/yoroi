@@ -4,7 +4,6 @@ import {isString} from '@yoroi/common'
 import {supportedPrefixes} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {useEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
@@ -53,7 +52,7 @@ export const AppNavigator = () => {
   useHideScreenInAppSwitcher()
   const {atoms, color, colorScheme} = useTheme()
 
-  useEffect(() => {
+  React.useEffect(() => {
     const buttonsColor = colorScheme === 'default-dark' ? 'light' : 'dark'
     SystemNavigationBar.setNavigationColor('transparent', buttonsColor, 'navigation')
   }, [colorScheme])
