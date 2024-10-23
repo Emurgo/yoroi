@@ -38,6 +38,8 @@ import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
 import {AppRoutes, defaultStackNavigationOptions} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
+import {useEffect} from 'react'
+import SystemNavigationBar from 'react-native-system-navigation-bar'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -49,7 +51,12 @@ export const AppNavigator = () => {
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
   useHideScreenInAppSwitcher()
-  const {atoms, color} = useTheme()
+  const {atoms, color, colorScheme} = useTheme()
+
+  useEffect(() => {
+    const buttonsColor = colorScheme === 'default-dark' ? 'light' : 'dark'
+    SystemNavigationBar.setNavigationColor('transparent', buttonsColor, 'navigation')
+  }, [colorScheme])
 
   useAutoLogout()
 
