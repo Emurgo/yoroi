@@ -62,7 +62,11 @@ export const AppNavigator = () => {
   const {isLoggedIn, isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs({
     onSuccess: login,
-    onSettled: () => RNBootSplash.hide({fade: true}),
+    onSettled: async () => {
+      await RNBootSplash.hide({fade: true})
+      const buttonsColor = colorScheme === 'default-dark' ? 'light' : 'dark'
+      SystemNavigationBar.setNavigationColor('transparent', buttonsColor, 'navigation')
+    },
   })
 
   const firstAction = useFirstAction()
