@@ -2,11 +2,12 @@ import {NavigationContainer, NavigationContainerRef} from '@react-navigation/nat
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack'
 import {isString} from '@yoroi/common'
 import {supportedPrefixes} from '@yoroi/links'
-import {useTheme} from '@yoroi/theme'
+import {ThemedPalette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
+import SystemNavigationBar from 'react-native-system-navigation-bar'
 
 import StorybookScreen from '../.storybook'
 import {ModalProvider} from './components/Modal/ModalContext'
@@ -43,20 +44,34 @@ const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
 const prefixes = [...supportedPrefixes]
 
+const changeNavigationBarColor = (colorScheme: 'default-dark' | 'default-light', color: ThemedPalette) => {
+  const buttonsColor = colorScheme === 'default-dark' ? 'light' : 'dark'
+  // Using 'transparent' or 'translucent' background breaks KeyboardAvoidingView
+  // https://github.com/kadiraydinli/react-native-system-navigation-bar/issues/38
+  SystemNavigationBar.setNavigationColor(color.bg_color_max, buttonsColor, 'navigation')
+}
+
 export const AppNavigator = () => {
   useDeepLinkWatcher()
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
   useHideScreenInAppSwitcher()
-  const {atoms, color} = useTheme()
+  const {atoms, color, colorScheme} = useTheme()
+
+  React.useEffect(() => {
+    changeNavigationBarColor(colorScheme, color)
+  }, [colorScheme, color])
 
   useAutoLogout()
 
   const {isLoggedIn, isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs({
     onSuccess: login,
-    onSettled: () => RNBootSplash.hide({fade: true}),
+    onSettled: async () => {
+      await RNBootSplash.hide({fade: true})
+      changeNavigationBarColor(colorScheme, color)
+    },
   })
 
   const firstAction = useFirstAction()
