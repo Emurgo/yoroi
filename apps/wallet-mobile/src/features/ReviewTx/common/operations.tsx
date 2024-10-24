@@ -12,7 +12,7 @@ import {asQuantity} from '../../../yoroi-wallets/utils/utils'
 import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
-import {Certificate, CertificateTypes, FormattedCertificates} from './types'
+import {CertificateType, FormattedTx} from './types'
 
 export const StakeRegistrationOperation = () => {
   const {styles} = useStyles()
@@ -119,25 +119,25 @@ export const VoteDelegationOperation = ({drepID}: {drepID: string}) => {
   )
 }
 
-export const useOperations = (certificates: FormattedCertificates | null) => {
+export const useOperations = (certificates: FormattedTx['certificates']) => {
   if (certificates === null) return []
 
-  return certificates.reduce<React.ReactNode[]>((acc, [certificateKind, CertificateData], index) => {
-    switch (certificateKind) {
-      case CertificateTypes.StakeRegistration:
+  return certificates.reduce<React.ReactNode[]>((acc, certificate, index) => {
+    switch (certificate.type) {
+      case CertificateType.StakeRegistration:
         return [...acc, <StakeRegistrationOperation key={index} />]
 
-      case CertificateTypes.StakeDeregistration:
+      case CertificateType.StakeDeregistration:
         return [...acc, <StakeDeregistrationOperation key={index} />]
 
-      case CertificateTypes.StakeDelegation: {
-        const poolKeyHash = (CertificateData as Certificate[CertificateTypes.StakeDelegation]).pool_keyhash ?? null
+      case CertificateType.StakeDelegation: {
+        const poolKeyHash = certificate.value.pool_keyhash ?? null
         if (poolKeyHash == null) return acc
         return [...acc, <StakeDelegateOperation key={index} poolId={poolKeyHash} />]
       }
 
-      case CertificateTypes.VoteDelegation: {
-        const drep = (CertificateData as Certificate[CertificateTypes.VoteDelegation]).drep
+      case CertificateType.VoteDelegation: {
+        const drep = certificate.value.drep
 
         if (drep === 'AlwaysAbstain') return [...acc, <AbstainOperation key={index} />]
         if (drep === 'AlwaysNoConfidence') return [...acc, <NoConfidenceOperation key={index} />]

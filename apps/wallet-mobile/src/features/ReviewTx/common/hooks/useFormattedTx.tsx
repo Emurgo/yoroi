@@ -1,4 +1,3 @@
-// import {CredKind} from '@emurgo/csl-mobile-bridge'
 import {CredKind} from '@emurgo/cross-csl-core'
 import {isNonNullable} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
@@ -14,8 +13,7 @@ import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
 import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {
-  Certificates,
-  FormattedCertificates,
+  FormattedCertificate,
   FormattedFee,
   FormattedInputs,
   FormattedOutputs,
@@ -52,7 +50,7 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   const formattedInputs = useFormattedInputs(wallet, inputs, portfolioTokenInfos)
   const formattedOutputs = useFormattedOutputs(wallet, outputs, portfolioTokenInfos)
   const formattedFee = formatFee(wallet, data)
-  const formattedCertificates = formatCertificates(data.certs as Certificates)
+  const formattedCertificates = formatCertificates(data.certs)
 
   return {
     inputs: formattedInputs,
@@ -223,8 +221,13 @@ export const formatFee = (wallet: YoroiWallet, data: TransactionBody): Formatted
   }
 }
 
-const formatCertificates = (certificates: Certificates) => {
-  return certificates.flatMap(Object.entries) as FormattedCertificates
+const formatCertificates = (certificates: TransactionBody['certs']) => {
+  return (
+    certificates?.map((cert) => {
+      const [type, certificate] = Object.entries(cert)[0]
+      return {type, certificate} as unknown as FormattedCertificate
+    }) ?? null
+  )
 }
 
 const deriveAddress = async (address: string, chainId: number) => {
