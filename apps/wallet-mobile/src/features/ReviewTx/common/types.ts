@@ -1,24 +1,8 @@
 import {
-  CommitteeColdResignJSON,
-  CommitteeHotAuthJSON,
-  DRepDeregistrationJSON,
-  DRepRegistrationJSON,
-  DRepUpdateJSON,
-  GenesisKeyDelegationJSON,
-  MoveInstantaneousRewardsCertJSON,
-  PoolRegistrationJSON,
-  PoolRetirementJSON,
-  StakeAndVoteDelegationJSON,
-  StakeDelegationJSON,
-  StakeDeregistrationJSON,
-  StakeRegistrationAndDelegationJSON,
-  StakeRegistrationJSON,
-  StakeVoteRegistrationAndDelegationJSON,
+  CertificateJSON,
   TransactionBodyJSON,
   TransactionInputsJSON,
   TransactionOutputsJSON,
-  VoteDelegationJSON,
-  VoteRegistrationAndDelegationJSON,
 } from '@emurgo/cardano-serialization-lib-nodejs'
 import {CredKind} from '@emurgo/cross-csl-core'
 import {Balance, Portfolio} from '@yoroi/types'
@@ -73,7 +57,7 @@ export type FormattedTx = {
   inputs: FormattedInputs
   outputs: FormattedOutputs
   fee: FormattedFee
-  certificates: FormattedCertificates | null
+  certificates: FormattedCertificate[] | null
 }
 
 export type FormattedMetadata = {
@@ -81,45 +65,41 @@ export type FormattedMetadata = {
   metadata: {msg: Array<unknown>} | null
 }
 
-export type Certificates = Array<Certificate>
-export type FormattedCertificates = Array<[CertificateTypes, Certificate[CertificateTypes]]>
+type AssertEqual<T, Expected> = T extends Expected
+  ? Expected extends T
+    ? true
+    : ['Type', Expected, 'is not equal to', T]
+  : ['Type', T, 'is not equal to', Expected]
 
-export type Certificate = {
-  StakeRegistration: StakeRegistrationJSON
-  StakeDeregistration: StakeDeregistrationJSON
-  StakeDelegation: StakeDelegationJSON
-  PoolRegistration: PoolRegistrationJSON
-  PoolRetirement: PoolRetirementJSON
-  GenesisKeyDelegation: GenesisKeyDelegationJSON
-  MoveInstantaneousRewardsCert: MoveInstantaneousRewardsCertJSON
-  CommitteeHotAuth: CommitteeHotAuthJSON
-  CommitteeColdResign: CommitteeColdResignJSON
-  DRepDeregistration: DRepDeregistrationJSON
-  DRepRegistration: DRepRegistrationJSON
-  DRepUpdate: DRepUpdateJSON
-  StakeAndVoteDelegation: StakeAndVoteDelegationJSON
-  StakeRegistrationAndDelegation: StakeRegistrationAndDelegationJSON
-  StakeVoteRegistrationAndDelegation: StakeVoteRegistrationAndDelegationJSON
-  VoteDelegation: VoteDelegationJSON
-  VoteRegistrationAndDelegation: VoteRegistrationAndDelegationJSON
-}
+type UnionToIntersection<U> = (U extends unknown ? (x: U) => void : never) extends (x: infer I) => void ? I : never
 
-export enum CertificateTypes {
-  StakeRegistration = 'StakeRegistration',
-  StakeDeregistration = 'StakeDeregistration',
-  StakeDelegation = 'StakeDelegation',
-  PoolRegistration = 'PoolRegistration',
-  PoolRetirement = 'PoolRetirement',
-  GenesisKeyDelegation = 'GenesisKeyDelegation',
-  MoveInstantaneousRewardsCert = 'MoveInstantaneousRewardsCert',
-  CommitteeHotAuth = 'CommitteeHotAuth',
-  CommitteeColdResign = 'CommitteeColdResign',
-  DRepDeregistration = 'DRepDeregistration',
-  DRepRegistration = 'DRepRegistration',
-  DRepUpdate = 'DRepUpdate',
-  StakeAndVoteDelegation = 'StakeAndVoteDelegation',
-  StakeRegistrationAndDelegation = 'StakeRegistrationAndDelegation',
-  StakeVoteRegistrationAndDelegation = 'StakeVoteRegistrationAndDelegation',
-  VoteDelegation = 'VoteDelegation',
-  VoteRegistrationAndDelegation = 'VoteRegistrationAndDelegation',
-}
+type Transformed<T> = {
+  [K in keyof UnionToIntersection<T>]: {type: K; value: UnionToIntersection<T>[K]}
+}[keyof UnionToIntersection<T>]
+
+export type FormattedCertificate = Transformed<CertificateJSON>
+
+export const CertificateType = {
+  StakeRegistration: 'StakeRegistration',
+  StakeDeregistration: 'StakeDeregistration',
+  StakeDelegation: 'StakeDelegation',
+  PoolRegistration: 'PoolRegistration',
+  PoolRetirement: 'PoolRetirement',
+  GenesisKeyDelegation: 'GenesisKeyDelegation',
+  MoveInstantaneousRewardsCert: 'MoveInstantaneousRewardsCert',
+  CommitteeHotAuth: 'CommitteeHotAuth',
+  CommitteeColdResign: 'CommitteeColdResign',
+  DRepDeregistration: 'DRepDeregistration',
+  DRepRegistration: 'DRepRegistration',
+  DRepUpdate: 'DRepUpdate',
+  StakeAndVoteDelegation: 'StakeAndVoteDelegation',
+  StakeRegistrationAndDelegation: 'StakeRegistrationAndDelegation',
+  StakeVoteRegistrationAndDelegation: 'StakeVoteRegistrationAndDelegation',
+  VoteDelegation: 'VoteDelegation',
+  VoteRegistrationAndDelegation: 'VoteRegistrationAndDelegation',
+} as const
+
+export type CerificateType = (typeof CertificateType)[keyof typeof CertificateType]
+
+// Makes sure CertificateType lists all the certificates in CertificateJSON
+export type AssertAllImplementedCertTypes = AssertEqual<CerificateType, keyof UnionToIntersection<CertificateJSON>>
