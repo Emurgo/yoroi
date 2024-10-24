@@ -11,42 +11,32 @@ import {PleaseWaitView} from '../../../components/PleaseWaitModal'
 import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
 import {Space} from '../../../components/Space/Space'
 import {Warning} from '../../../components/Warning/Warning'
+import {StakeRewardsWithdrawalOperation} from '../../../features/ReviewTx/common/operations'
+import {useReviewTx} from '../../../features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {confirmationMessages, ledgerMessages, txLabels} from '../../../kernel/i18n/global-messages'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useWithdrawalTx} from '../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types/yoroi'
-import {delay} from '../../../yoroi-wallets/utils/timeUtils'
 import {Quantities} from '../../../yoroi-wallets/utils/utils'
 import {useStakingInfo} from '../StakePoolInfos'
-import {ConfirmTx} from './ConfirmTx/ConfirmTx'
 type Props = {
   wallet: YoroiWallet
 }
 
 export const WithdrawStakingRewards = ({wallet}: Props) => {
   const strings = useWithdrawStakingRewardsStrings()
-  const {closeModal, openModal} = useModal()
-  const {resetToTxHistory} = useWalletNavigation()
+  const {closeModal} = useModal()
+  const {navigateToTxReview} = useWalletNavigation()
+  const {unsignedTxChanged, operationsChanged} = useReviewTx()
 
-  const handleOnConfirm = async (withdrawalTx: YoroiUnsignedTx) => {
+  const handleOnConfirm = (withdrawalTx: YoroiUnsignedTx) => {
     closeModal()
 
-    await delay(1000)
-
-    openModal(
-      strings.confirmTx,
-      <Boundary>
-        <ConfirmTx
-          wallet={wallet}
-          unsignedTx={withdrawalTx}
-          onSuccess={() => resetToTxHistory()}
-          onCancel={() => closeModal()}
-        />
-      </Boundary>,
-      450,
-    )
+    unsignedTxChanged(withdrawalTx)
+    operationsChanged([<StakeRewardsWithdrawalOperation key="0" />])
+    navigateToTxReview()
   }
 
   return (

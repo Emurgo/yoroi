@@ -31,9 +31,10 @@ export const ReviewTxProvider = ({
       dispatch({type: ReviewTxActionType.OnSuccessChanged, onSuccess}),
     onErrorChanged: (onError: ReviewTxState['onError']) => dispatch({type: ReviewTxActionType.OnErrorChanged, onError}),
     onNotSupportedCIP1694Changed: (onNotSupportedCIP1694: ReviewTxState['onNotSupportedCIP1694']) =>
-      dispatch({type: ReviewTxActionType.onNotSupportedCIP1694Changed, onNotSupportedCIP1694}),
+      dispatch({type: ReviewTxActionType.OnNotSupportedCIP1694Changed, onNotSupportedCIP1694}),
     onCIP36SupportChangeChanged: (onCIP36SupportChange: ReviewTxState['onCIP36SupportChange']) =>
-      dispatch({type: ReviewTxActionType.onCIP36SupportChangeChanged, onCIP36SupportChange}),
+      dispatch({type: ReviewTxActionType.OnCIP36SupportChangeChanged, onCIP36SupportChange}),
+    reset: () => dispatch({type: ReviewTxActionType.Reset}),
   }).current
 
   const context = React.useMemo(
@@ -78,12 +79,24 @@ const reviewTxReducer = (state: ReviewTxState, action: ReviewTxAction) => {
         draft.onError = action.onError
         break
 
-      case ReviewTxActionType.onNotSupportedCIP1694Changed:
+      case ReviewTxActionType.OnNotSupportedCIP1694Changed:
         draft.onNotSupportedCIP1694 = action.onNotSupportedCIP1694
         break
 
-      case ReviewTxActionType.onCIP36SupportChangeChanged:
+      case ReviewTxActionType.OnCIP36SupportChangeChanged:
         draft.onCIP36SupportChange = action.onCIP36SupportChange
+        break
+
+      case ReviewTxActionType.Reset:
+        draft.unsignedTx = castDraft(defaultState.unsignedTx)
+        draft.cbor = defaultState.cbor
+        draft.operations = defaultState.operations
+        draft.customReceiverTitle = defaultState.customReceiverTitle
+        draft.details = defaultState.details
+        draft.onSuccess = defaultState.onSuccess
+        draft.onError = defaultState.onError
+        draft.onNotSupportedCIP1694 = defaultState.onNotSupportedCIP1694
+        draft.onCIP36SupportChange = defaultState.onCIP36SupportChange
         break
 
       default:
@@ -122,12 +135,15 @@ type ReviewTxAction =
       onError: ReviewTxState['onError']
     }
   | {
-      type: ReviewTxActionType.onNotSupportedCIP1694Changed
+      type: ReviewTxActionType.OnNotSupportedCIP1694Changed
       onNotSupportedCIP1694: ReviewTxState['onNotSupportedCIP1694']
     }
   | {
-      type: ReviewTxActionType.onCIP36SupportChangeChanged
+      type: ReviewTxActionType.OnCIP36SupportChangeChanged
       onCIP36SupportChange: ReviewTxState['onCIP36SupportChange']
+    }
+  | {
+      type: ReviewTxActionType.Reset
     }
 
 export type ReviewTxState = {
@@ -152,6 +168,7 @@ type ReviewTxActions = {
   onErrorChanged: (onError: ReviewTxState['onError']) => void
   onNotSupportedCIP1694Changed: (onNotSupportedCIP1694: ReviewTxState['onNotSupportedCIP1694']) => void
   onCIP36SupportChangeChanged: (onCIP36SupportChange: ReviewTxState['onCIP36SupportChange']) => void
+  reset: () => void
 }
 
 const defaultState: ReviewTxState = Object.freeze({
@@ -181,6 +198,7 @@ const initialReviewTxContext: ReviewTxContext = {
   onErrorChanged: missingInit,
   onNotSupportedCIP1694Changed: missingInit,
   onCIP36SupportChangeChanged: missingInit,
+  reset: missingInit,
 }
 
 enum ReviewTxActionType {
@@ -191,8 +209,9 @@ enum ReviewTxActionType {
   DetailsChanged = 'detailsChanged',
   OnSuccessChanged = 'onSuccessChanged',
   OnErrorChanged = 'onErrorChanged',
-  onNotSupportedCIP1694Changed = 'onNotSupportedCIP1694Changed',
-  onCIP36SupportChangeChanged = 'onCIP36SupportChangeChanged',
+  OnNotSupportedCIP1694Changed = 'onNotSupportedCIP1694Changed',
+  OnCIP36SupportChangeChanged = 'onCIP36SupportChangeChanged',
+  Reset = 'reset',
 }
 
 type ReviewTxContext = ReviewTxState & ReviewTxActions

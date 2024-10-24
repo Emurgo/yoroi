@@ -9,7 +9,6 @@ import {useQueryClient} from 'react-query'
 
 import {PleaseWaitModal} from '../../../components/PleaseWaitModal'
 import {Spacer} from '../../../components/Spacer/Spacer'
-import {DelegateStakeOperation, RegisterStakingKeyOperation} from '../../../features/ReviewTx/common/operations'
 import {useReviewTx} from '../../../features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../features/WalletManager/context/WalletManagerProvider'
@@ -20,7 +19,7 @@ import {logger} from '../../../kernel/logger/logger'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {StakingCenterRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
 import {NotEnoughMoneyToSendError} from '../../../yoroi-wallets/cardano/types'
-import {useStakingInfo, useStakingTx} from '../../Dashboard/StakePoolInfos'
+import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {
@@ -36,9 +35,7 @@ export const StakingCenter = () => {
   const {track} = useMetrics()
   const {plate} = walletManager.checksum(wallet.publicKeyHex)
   const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, operationsChanged} = useReviewTx()
-  const stakingInfo = useStakingInfo(wallet, {suspense: true})
-  const hasStakingKeyRegistered = stakingInfo?.data?.status !== 'not-registered'
+  const {unsignedTxChanged, onSuccessChanged, onErrorChanged} = useReviewTx()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -57,10 +54,6 @@ export const StakingCenter = () => {
       onSuccess: (yoroiUnsignedTx) => {
         if (selectedPoolId == null) return
 
-        let operations = [<DelegateStakeOperation poolId={selectedPoolId} key="0" />]
-        if (!hasStakingKeyRegistered) operations = [<RegisterStakingKeyOperation key="-1" />, ...operations]
-
-        operationsChanged(operations)
         unsignedTxChanged(yoroiUnsignedTx)
         onSuccessChanged(() => {
           queryClient.resetQueries([wallet.id, 'stakingInfo'])

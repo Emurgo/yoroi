@@ -40,6 +40,9 @@ export const useStrings = () => {
     selectNoConfidence: intl.formatMessage(messages.selectNoConfidence),
     delegateVotingToDRep: intl.formatMessage(messages.delegateVotingToDRep),
     delegateStake: intl.formatMessage(messages.delegateStake),
+    deregisterStakingKey: intl.formatMessage(messages.deregisterStakingKey),
+    rewardsWithdrawalLabel: intl.formatMessage(messages.rewardsWithdrawalLabel),
+    rewardsWithdrawalText: intl.formatMessage(messages.rewardsWithdrawalText),
   }
 }
 
@@ -159,6 +162,18 @@ const messages = defineMessages({
   registerStakingKey: {
     id: 'txReview.operations.registerStakingKey',
     defaultMessage: '!!!Register staking key deposit',
+  },
+  deregisterStakingKey: {
+    id: 'txReview.operations.deregisterStakingKey',
+    defaultMessage: '!!!Deregister staking key',
+  },
+  rewardsWithdrawalLabel: {
+    id: 'txReview.operations.rewardsWithdrawal.label',
+    defaultMessage: '!!!Staking',
+  },
+  rewardsWithdrawalText: {
+    id: 'txReview.operations.rewardsWithdrawal.text',
+    defaultMessage: '!!!Rewards withdrawal',
   },
   selectAbstain: {
     id: 'txReview.operations.selectAbstain',
