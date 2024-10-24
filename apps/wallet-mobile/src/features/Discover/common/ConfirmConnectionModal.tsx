@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {Linking, StyleSheet, Text, View} from 'react-native'
+import {Linking, ScrollView, StyleSheet, Text, View} from 'react-native'
 
 import {Button} from '../../../components/Button/Button'
 import {Icon} from '../../../components/Icon'
@@ -67,7 +67,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo, showSing
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root} bounces={false}>
       <View style={styles.imagesLine}>
         <Icon.YoroiApp size={48} />
 
@@ -111,7 +111,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo, showSing
       <Spacer height={46} />
 
       <Button title={strings.confirmConnectionModalConnect} onPress={onConfirm} />
-    </View>
+    </ScrollView>
   )
 }
 
