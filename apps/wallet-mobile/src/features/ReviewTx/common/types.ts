@@ -1,8 +1,24 @@
 import {
-  CertificatesJSON,
+  CommitteeColdResignJSON,
+  CommitteeHotAuthJSON,
+  DRepDeregistrationJSON,
+  DRepRegistrationJSON,
+  DRepUpdateJSON,
+  GenesisKeyDelegationJSON,
+  MoveInstantaneousRewardsCertJSON,
+  PoolRegistrationJSON,
+  PoolRetirementJSON,
+  StakeAndVoteDelegationJSON,
+  StakeDelegationJSON,
+  StakeDeregistrationJSON,
+  StakeRegistrationAndDelegationJSON,
+  StakeRegistrationJSON,
+  StakeVoteRegistrationAndDelegationJSON,
   TransactionBodyJSON,
   TransactionInputsJSON,
   TransactionOutputsJSON,
+  VoteDelegationJSON,
+  VoteRegistrationAndDelegationJSON,
 } from '@emurgo/cardano-serialization-lib-nodejs'
 import {CredKind} from '@emurgo/cross-csl-core'
 import {Balance, Portfolio} from '@yoroi/types'
@@ -57,7 +73,7 @@ export type FormattedTx = {
   inputs: FormattedInputs
   outputs: FormattedOutputs
   fee: FormattedFee
-  certificates: Certificates
+  certificates: FormattedCertificates | null
 }
 
 export type FormattedMetadata = {
@@ -65,4 +81,45 @@ export type FormattedMetadata = {
   metadata: {msg: Array<unknown>} | null
 }
 
-export type Certificates = CertificatesJSON | null
+export type Certificates = Array<Certificate>
+export type FormattedCertificates = Array<[CertificateTypes, Certificate[CertificateTypes]]>
+
+export type Certificate = {
+  StakeRegistration: StakeRegistrationJSON
+  StakeDeregistration: StakeDeregistrationJSON
+  StakeDelegation: StakeDelegationJSON
+  PoolRegistration: PoolRegistrationJSON
+  PoolRetirement: PoolRetirementJSON
+  GenesisKeyDelegation: GenesisKeyDelegationJSON
+  MoveInstantaneousRewardsCert: MoveInstantaneousRewardsCertJSON
+  CommitteeHotAuth: CommitteeHotAuthJSON
+  CommitteeColdResign: CommitteeColdResignJSON
+  DRepDeregistration: DRepDeregistrationJSON
+  DRepRegistration: DRepRegistrationJSON
+  DRepUpdate: DRepUpdateJSON
+  StakeAndVoteDelegation: StakeAndVoteDelegationJSON
+  StakeRegistrationAndDelegation: StakeRegistrationAndDelegationJSON
+  StakeVoteRegistrationAndDelegation: StakeVoteRegistrationAndDelegationJSON
+  VoteDelegation: VoteDelegationJSON
+  VoteRegistrationAndDelegation: VoteRegistrationAndDelegationJSON
+}
+
+export enum CertificateTypes {
+  StakeRegistration = 'StakeRegistration',
+  StakeDeregistration = 'StakeDeregistration',
+  StakeDelegation = 'StakeDelegation',
+  PoolRegistration = 'PoolRegistration',
+  PoolRetirement = 'PoolRetirement',
+  GenesisKeyDelegation = 'GenesisKeyDelegation',
+  MoveInstantaneousRewardsCert = 'MoveInstantaneousRewardsCert',
+  CommitteeHotAuth = 'CommitteeHotAuth',
+  CommitteeColdResign = 'CommitteeColdResign',
+  DRepDeregistration = 'DRepDeregistration',
+  DRepRegistration = 'DRepRegistration',
+  DRepUpdate = 'DRepUpdate',
+  StakeAndVoteDelegation = 'StakeAndVoteDelegation',
+  StakeRegistrationAndDelegation = 'StakeRegistrationAndDelegation',
+  StakeVoteRegistrationAndDelegation = 'StakeVoteRegistrationAndDelegation',
+  VoteDelegation = 'VoteDelegation',
+  VoteRegistrationAndDelegation = 'VoteRegistrationAndDelegation',
+}

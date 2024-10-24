@@ -17,17 +17,18 @@ import {useWalletManager} from '../../../../WalletManager/context/WalletManagerP
 import {Accordion} from '../../../common/Accordion'
 import {CopiableText} from '../../../common/CopiableText'
 import {useStrings} from '../../../common/hooks/useStrings'
+import {useOperations} from '../../../common/operations'
 import {ReviewTxState, useReviewTx} from '../../../common/ReviewTxProvider'
 import {TokenItem} from '../../../common/TokenItem'
 import {FormattedOutputs, FormattedTx} from '../../../common/types'
 
 export const OverviewTab = ({
   tx,
-  operations,
+  extraOperations,
   details,
 }: {
   tx: FormattedTx
-  operations: ReviewTxState['operations']
+  extraOperations: ReviewTxState['operations']
   details: ReviewTxState['details']
 }) => {
   const {styles} = useStyles()
@@ -45,7 +46,7 @@ export const OverviewTab = ({
 
       <SenderSection tx={tx} notOwnedOutputs={notOwnedOutputs} ownedOutputs={ownedOutputs} />
 
-      <OperationsSection operations={operations} />
+      <OperationsSection tx={tx} extraOperations={extraOperations} />
 
       <Details details={details} />
     </View>
@@ -212,8 +213,10 @@ const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs})
   )
 }
 
-const OperationsSection = ({operations}: {operations: ReviewTxState['operations']}) => {
-  if (operations === null || (Array.isArray(operations) && operations.length === 0)) return null
+const OperationsSection = ({tx, extraOperations}: {tx: FormattedTx; extraOperations: ReviewTxState['operations']}) => {
+  const operations = useOperations(tx.certificates)
+
+  if (extraOperations === null && tx.certificates === null) return null
 
   return (
     <View>
@@ -222,7 +225,7 @@ const OperationsSection = ({operations}: {operations: ReviewTxState['operations'
       <Accordion label="Operations">
         <Space height="lg" />
 
-        {operations.map((operation, index) => {
+        {[...operations, ...(extraOperations ?? [])].map((operation, index) => {
           if (index === 0) return operation
 
           return (

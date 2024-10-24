@@ -14,6 +14,8 @@ import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
 import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {
+  Certificates,
+  FormattedCertificates,
   FormattedFee,
   FormattedInputs,
   FormattedOutputs,
@@ -50,12 +52,13 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   const formattedInputs = useFormattedInputs(wallet, inputs, portfolioTokenInfos)
   const formattedOutputs = useFormattedOutputs(wallet, outputs, portfolioTokenInfos)
   const formattedFee = formatFee(wallet, data)
+  const formattedCertificates = formatCertificates(data.certs as Certificates)
 
   return {
     inputs: formattedInputs,
     outputs: formattedOutputs,
     fee: formattedFee,
-    certificates: data.certs ?? null,
+    certificates: formattedCertificates,
   }
 }
 
@@ -218,6 +221,10 @@ export const formatFee = (wallet: YoroiWallet, data: TransactionBody): Formatted
     quantity: fee,
     isPrimary: true,
   }
+}
+
+const formatCertificates = (certificates: Certificates) => {
+  return certificates.flatMap(Object.entries) as FormattedCertificates
 }
 
 const deriveAddress = async (address: string, chainId: number) => {
