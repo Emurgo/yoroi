@@ -6,6 +6,7 @@ import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 import {useQueryClient} from 'react-query'
+import {useQueryClient} from 'react-query'
 
 import {PleaseWaitModal} from '../../../components/PleaseWaitModal'
 import {Spacer} from '../../../components/Spacer/Spacer'
@@ -18,6 +19,7 @@ import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {StakingCenterRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
+import {StakingCenterRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
 import {NotEnoughMoneyToSendError} from '../../../yoroi-wallets/cardano/types'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
@@ -27,6 +29,7 @@ export const StakingCenter = () => {
   const navigation = useNavigation<StakingCenterRouteNavigation>()
   const {isDark} = useTheme()
   const {styles} = useStyles()
+  const queryClient = useQueryClient()
   const queryClient = useQueryClient()
 
   const {languageCode} = useLanguage()

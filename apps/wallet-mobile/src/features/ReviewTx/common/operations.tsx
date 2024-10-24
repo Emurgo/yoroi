@@ -137,13 +137,12 @@ export const useOperations = (certificates: FormattedCertificates | null) => {
       }
 
       case CertificateTypes.VoteDelegation: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const drep: any = (CertificateData as Certificate[CertificateTypes.VoteDelegation]).drep
+        const drep = (CertificateData as Certificate[CertificateTypes.VoteDelegation]).drep
 
         if (drep === 'AlwaysAbstain') return [...acc, <AbstainOperation key={index} />]
         if (drep === 'AlwaysNoConfidence') return [...acc, <NoConfidenceOperation key={index} />]
 
-        const drepId = drep.KeyHash ?? drep.ScriptHash ?? ''
+        const drepId = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
         return [...acc, <VoteDelegationOperation key={index} drepID={drepId} />]
       }
 

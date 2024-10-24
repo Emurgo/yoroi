@@ -1,7 +1,7 @@
 import * as CSL from '@emurgo/cross-csl-core'
 import {TransactionWitnessSet, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {init} from '@emurgo/cross-msl-mobile'
-import {RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
+import {hashTransaction, RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {Balance, Wallet} from '@yoroi/types'
@@ -203,14 +203,10 @@ class CIP30Extension {
       const tx = await csl.Transaction.fromHex(cbor)
       const txBody = await tx.body()
       const signedTx = await csl.Transaction.new(txBody, witnesses, undefined)
-
-      const txId = await signedTx
-        .body()
-        .then((txBody) => csl.hashTransaction(txBody))
-        .then((hash) => hash.toBytes())
-        .then((bytes) => Buffer.from(bytes).toString('hex'))
-
       const signedTxBytes = await signedTx.toBytes()
+
+      const txId = await (await hashTransaction(csl, signedTxBytes)).toHex()
+
       await this.wallet.submitTransaction(Buffer.from(signedTxBytes).toString('base64'))
       return getTransactionUnspentOutput({
         txId,

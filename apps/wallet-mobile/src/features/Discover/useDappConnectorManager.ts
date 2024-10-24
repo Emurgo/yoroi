@@ -6,6 +6,7 @@ import {InteractionManager} from 'react-native'
 
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
+import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
 import {usePromptRootKey} from './common/hooks'
 import {useShowHWNotSupportedModal} from './common/HWNotSupportedModal'
@@ -44,7 +45,7 @@ export const useDappConnectorManager = () => {
               onCancel: () => {
                 if (!shouldResolve) return
                 shouldResolve = false
-                reject(new Error('User rejected'))
+                reject(userRejectedError())
               },
             })
           })
@@ -67,7 +68,7 @@ export const useDappConnectorManager = () => {
               onCancel: () => {
                 if (!shouldResolve) return
                 shouldResolve = false
-                reject(new Error('User rejected'))
+                reject(userRejectedError())
               },
             })
           })
@@ -98,7 +99,7 @@ const useSignData = () => {
               return Promise.resolve()
             },
             onClose: () => {
-              if (shouldResolveOnClose) reject(new Error('User rejected'))
+              if (shouldResolveOnClose) reject(userRejectedError())
             },
           })
         } catch (error) {
@@ -120,10 +121,10 @@ const useSignDataWithHW = () => {
         onConfirm: () => {
           closeModal()
           shouldResolveOnClose = false
-          return reject(new Error('User rejected'))
+          return reject(userRejectedError())
         },
         onClose: () => {
-          if (shouldResolveOnClose) reject(new Error('User rejected'))
+          if (shouldResolveOnClose) reject(userRejectedError())
         },
       })
     })

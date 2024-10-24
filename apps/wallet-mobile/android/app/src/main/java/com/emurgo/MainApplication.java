@@ -2,6 +2,7 @@ package com.emurgo;
 import android.content.res.Configuration;
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
+import com.wix.reactnativenotifications.RNNotificationsPackage;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

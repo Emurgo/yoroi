@@ -141,6 +141,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         storage: accountStorage.join('utxos/'),
         apiUrl: legacyApiBaseUrl,
       })
+
       const transactionManager = await TransactionManager.create(accountStorage.join('txs/'))
       // TODO: revisit memos should be per network and shouldn't be cleared on wallet clear (unless user selects it)
       const memosManager = await makeMemosManager(accountStorage.join('memos/'))
