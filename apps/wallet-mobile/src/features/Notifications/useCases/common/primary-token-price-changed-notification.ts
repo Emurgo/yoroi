@@ -25,6 +25,7 @@ if (!TaskManager.isTaskDefined(backgroundTaskId)) {
   TaskManager.defineTask(backgroundTaskId, async () => {
     const notifications = await buildNotifications(appStorage)
     notifications.forEach((notification) => notificationManager.events.push(notification))
+
     const hasNewData = notifications.length > 0
     return hasNewData ? BackgroundFetch.BackgroundFetchResult.NewData : BackgroundFetch.BackgroundFetchResult.NoData
   })
