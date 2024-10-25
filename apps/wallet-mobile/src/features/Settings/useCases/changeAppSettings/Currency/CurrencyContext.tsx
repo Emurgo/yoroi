@@ -55,6 +55,10 @@ export const getCurrencySymbol = async (storage: App.Storage) => {
   return defaultCurrency
 }
 
+export const formatCurrency = (value: number, currency: CurrencySymbol) => {
+  return `${value.toFixed(configCurrencies[currency].decimals)} ${currency}`
+}
+
 const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error, CurrencySymbol> = {}) => {
   const queryClient = useQueryClient()
   const storage = useAsyncStorage()
