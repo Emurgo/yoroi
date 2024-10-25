@@ -1,8 +1,6 @@
 import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
 import {mountAsyncStorage} from '@yoroi/common'
 import {Notifications as NotificationTypes} from '@yoroi/types'
-
-import {configCurrencies} from '../../../../kernel/constants'
 import {formatCurrency, getCurrencySymbol} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
 export const generateNotificationId = (): number => {
