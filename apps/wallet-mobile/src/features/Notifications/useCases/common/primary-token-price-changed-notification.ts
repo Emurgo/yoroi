@@ -24,8 +24,8 @@ if (!TaskManager.isTaskDefined(backgroundTaskId)) {
   const appStorage = mountAsyncStorage({path: '/'})
   TaskManager.defineTask(backgroundTaskId, async () => {
     const notifications = await buildNotifications(appStorage)
-    const hasNewData = notifications.length > 0
     notifications.forEach((notification) => notificationManager.events.push(notification))
+    const hasNewData = notifications.length > 0
     return hasNewData ? BackgroundFetch.BackgroundFetchResult.NewData : BackgroundFetch.BackgroundFetchResult.NoData
   })
 }
