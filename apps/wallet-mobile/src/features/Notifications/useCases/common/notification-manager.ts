@@ -3,7 +3,7 @@ import {notificationManagerMaker} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
 
 import {displayNotificationEvent} from './notifications'
-import {primaryTokenPriceChangedSubject} from './primary-token-price-updated-notification'
+import {primaryTokenPriceChangedSubject} from './primary-token-price-changed-notification'
 import {transactionReceivedSubject} from './transaction-received-notification'
 
 const appStorage = mountAsyncStorage({path: '/'})

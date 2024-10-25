@@ -14,10 +14,10 @@ import {notificationManager} from './notification-manager'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './storage'
 
-const backgroundTaskId = 'yoroi-primary-token-price-updated-background-fetch'
+const backgroundTaskId = 'yoroi-primary-token-price-changed-background-fetch'
 const refetchIntervalInSeconds = 60 * 10
 const refetchIntervalInMilliseconds = refetchIntervalInSeconds * 1000
-const storageKey = 'notifications/primary-token-price-updated/'
+const storageKey = 'notifications/primary-token-price-changed/'
 
 // Check is needed for hot reloading, as task can not be defined twice
 if (!TaskManager.isTaskDefined(backgroundTaskId)) {
@@ -54,7 +54,7 @@ const buildNotifications = async (
     const changeInPercent = (Math.abs(close - open) / open) * 100
 
     if (changeInPercent >= primaryTokenChangeNotificationConfig.thresholdInPercent) {
-      const event = createPrimaryTokenPriceUpdatedNotification({previousPrice: open, nextPrice: close})
+      const event = createPrimaryTokenPriceChangedNotification({previousPrice: open, nextPrice: close})
       notifications.push(event)
       await storage.addValues([dateString])
     }
@@ -101,7 +101,7 @@ const unregisterBackgroundFetchAsync = () => {
   return BackgroundFetch.unregisterTaskAsync(backgroundTaskId)
 }
 
-const createPrimaryTokenPriceUpdatedNotification = (
+const createPrimaryTokenPriceChangedNotification = (
   metadata: NotificationTypes.PrimaryTokenPriceChangedEvent['metadata'],
 ): NotificationTypes.PrimaryTokenPriceChangedEvent => {
   return {
