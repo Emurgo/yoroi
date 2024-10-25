@@ -5,19 +5,24 @@ import * as BackgroundFetch from 'expo-background-fetch'
 import * as TaskManager from 'expo-task-manager'
 import * as React from 'react'
 import {Subject} from 'rxjs'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {generateNotificationId} from './notifications'
+
 import {time} from '../../../../kernel/constants'
 import {fetchPtPriceActivity} from '../../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
 import {getCurrencySymbol} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {notificationManager} from './notification-manager'
+import {generateNotificationId} from './notifications'
+import {buildProcessedNotificationsStorage} from './storage'
 
-const BACKGROUND_FETCH_TASK = 'yoroi-primary-token-price-updated-background-fetch'
+const backgroundTaskId = 'yoroi-primary-token-price-updated-background-fetch'
+const refetchIntervalInSeconds = 60 * 10
+const refetchIntervalInMilliseconds = refetchIntervalInSeconds * 1000
+const storageKey = 'notifications/primary-token-price-updated/'
 
 // Check is needed for hot reloading, as task can not be defined twice
-if (!TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK)) {
+if (!TaskManager.isTaskDefined(backgroundTaskId)) {
   const appStorage = mountAsyncStorage({path: '/'})
-  TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
+  TaskManager.defineTask(backgroundTaskId, async () => {
     const notifications = await buildNotifications(appStorage)
     const hasNewData = notifications.length > 0
     notifications.forEach((notification) => notificationManager.events.push(notification))
@@ -25,27 +30,14 @@ if (!TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK)) {
   })
 }
 
-const registerBackgroundFetchAsync = () => {
-  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-    minimumInterval: 60 * 10,
-    stopOnTerminate: false,
-    startOnBoot: true,
-  })
-}
-
-const unregisterBackgroundFetchAsync = () => {
-  return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK)
-}
-
 const buildNotifications = async (
   appStorage: App.Storage,
 ): Promise<NotificationTypes.PrimaryTokenPriceChangedEvent[]> => {
   const notifications: NotificationTypes.PrimaryTokenPriceChangedEvent[] = []
-  const storage = buildStorage(appStorage)
+  const storage = buildProcessedNotificationsStorage(appStorage.join(storageKey))
   const date = new Date()
   const dateString = date.toDateString()
 
-  console.log('building notifications', dateString, await storage.getValues())
   if (await storage.includes(dateString)) {
     return []
   }
@@ -61,8 +53,7 @@ const buildNotifications = async (
     const open = tickers[1]?.prices[currency] ?? 1
     const changeInPercent = (Math.abs(close - open) / open) * 100
 
-    if (changeInPercent >= primaryTokenChangeNotificationConfig.thresholdInPercent || changeInPercent > 0) {
-      // TODO: Remove or true
+    if (changeInPercent >= primaryTokenChangeNotificationConfig.thresholdInPercent) {
       const event = createPrimaryTokenPriceUpdatedNotification({previousPrice: open, nextPrice: close})
       notifications.push(event)
       await storage.addValues([dateString])
@@ -70,18 +61,6 @@ const buildNotifications = async (
   }
 
   return notifications
-}
-
-export const createPrimaryTokenPriceUpdatedNotification = (
-  metadata: NotificationTypes.PrimaryTokenPriceChangedEvent['metadata'],
-): NotificationTypes.PrimaryTokenPriceChangedEvent => {
-  return {
-    trigger: NotificationTypes.Trigger.PrimaryTokenPriceChanged,
-    id: generateNotificationId(),
-    date: new Date().toISOString(),
-    isRead: false,
-    metadata,
-  } as const
 }
 
 export const primaryTokenPriceChangedSubject = new Subject<NotificationTypes.PrimaryTokenPriceChangedEvent>()
@@ -100,43 +79,36 @@ export const usePrimaryTokenPriceChangedNotification = ({enabled}: {enabled: boo
 
   React.useEffect(() => {
     if (!enabled) return
+
     const interval = setInterval(async () => {
       const notifications = await buildNotifications(asyncStorage)
       notifications.forEach((notification) => primaryTokenPriceChangedSubject.next(notification))
-    }, 5 * 1000) // todo: change to 10 minutes
+    }, refetchIntervalInMilliseconds)
 
-    return () => {
-      clearInterval(interval)
-    }
+    return () => clearInterval(interval)
   }, [walletManager, asyncStorage, enabled])
 }
 
-const buildStorage = (appStorage: App.Storage) => {
-  const storage = appStorage.join(`notifications/primary-token-price-changed-notification-history/`)
+const registerBackgroundFetchAsync = () => {
+  return BackgroundFetch.registerTaskAsync(backgroundTaskId, {
+    minimumInterval: refetchIntervalInSeconds,
+    stopOnTerminate: false,
+    startOnBoot: true,
+  })
+}
 
-  const getValues = async () => {
-    return (await storage.getItem<string[]>('processed')) || []
-  }
+const unregisterBackgroundFetchAsync = () => {
+  return BackgroundFetch.unregisterTaskAsync(backgroundTaskId)
+}
 
-  const addValues = async (values: string[]) => {
-    const processed = await getValues()
-    const newProcessed = [...processed, ...values]
-    await storage.setItem('processed', newProcessed)
-  }
-
-  const includes = async (value: string) => {
-    const processed = await getValues()
-    return processed.includes(value)
-  }
-
-  const clear = async () => {
-    await storage.setItem('processed', [])
-  }
-
+const createPrimaryTokenPriceUpdatedNotification = (
+  metadata: NotificationTypes.PrimaryTokenPriceChangedEvent['metadata'],
+): NotificationTypes.PrimaryTokenPriceChangedEvent => {
   return {
-    getValues,
-    addValues,
-    includes,
-    clear,
-  }
+    trigger: NotificationTypes.Trigger.PrimaryTokenPriceChanged,
+    id: generateNotificationId(),
+    date: new Date().toISOString(),
+    isRead: false,
+    metadata,
+  } as const
 }

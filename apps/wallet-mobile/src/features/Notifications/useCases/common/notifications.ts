@@ -1,5 +1,8 @@
 import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
+import {mountAsyncStorage} from '@yoroi/common'
 import {Notifications as NotificationTypes} from '@yoroi/types'
+
+import {getCurrencySymbol} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
 export const generateNotificationId = (): number => {
   return generateRandomInteger(0, Number.MAX_SAFE_INTEGER)
@@ -13,11 +16,23 @@ const generateRandomInteger = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export const displayNotificationEvent = (notificationEvent: NotificationTypes.Event) => {
+export const displayNotificationEvent = async (notificationEvent: NotificationTypes.Event) => {
   if (notificationEvent.trigger === NotificationTypes.Trigger.TransactionReceived) {
     sendNotification({
       title: 'Transaction received',
       body: 'You have received a new transaction',
+      id: notificationEvent.id,
+    })
+  }
+
+  if (notificationEvent.trigger === NotificationTypes.Trigger.PrimaryTokenPriceChanged) {
+    const appStorage = mountAsyncStorage({path: '/'})
+    const currencyCode = await getCurrencySymbol(appStorage)
+    const newPrice = `${notificationEvent.metadata.nextPrice.toFixed(2)}${currencyCode}`
+
+    sendNotification({
+      title: 'Primary token price changed',
+      body: `The price of the primary token has changed to ${newPrice}`,
       id: notificationEvent.id,
     })
   }

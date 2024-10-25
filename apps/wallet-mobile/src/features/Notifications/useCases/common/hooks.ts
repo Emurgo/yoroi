@@ -5,8 +5,8 @@ import {PermissionsAndroid} from 'react-native'
 
 import {notificationManager} from './notification-manager'
 import {parseNotificationId} from './notifications'
-import {useTransactionReceivedNotifications} from './transaction-received-notification'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-updated-notification'
+import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
 let initialized = false
 

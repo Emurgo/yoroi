@@ -1,4 +1,4 @@
-import {BehaviorSubject, Subscription} from 'rxjs'
+import {BehaviorSubject, Subject, Subscription} from 'rxjs'
 import {App, Notifications} from '@yoroi/types'
 
 type EventsStorageData = ReadonlyArray<Notifications.Event>
@@ -19,8 +19,11 @@ export const notificationManagerMaker = ({
   const hydrate = () => {
     const triggers = getAllTriggers()
     triggers.forEach((trigger) => {
-      const subscription = subscriptions?.[trigger]?.subscribe(
-        (event: Notifications.Event) => events.push(event),
+      const observable = subscriptions?.[trigger] as
+        | Subject<Notifications.Event>
+        | undefined
+      const subscription = observable?.subscribe((event: Notifications.Event) =>
+        events.push(event),
       )
       if (subscription) {
         localSubscriptions.push(subscription)
