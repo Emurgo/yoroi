@@ -1,5 +1,3 @@
-import {PoolInfoApi} from '@emurgo/yoroi-lib'
-import {useBech32DRepID} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, View} from 'react-native'
@@ -7,14 +5,16 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useQuery} from 'react-query'
 
 import {Space} from '../../../components/Space/Space'
-import {getPoolBech32Id} from '../../../yoroi-wallets/cardano/delegationUtils'
+import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
+import {usePoolInfo} from '../../../yoroi-wallets/hooks'
 import {formatTokenWithText} from '../../../yoroi-wallets/utils/format'
 import {asQuantity} from '../../../yoroi-wallets/utils/utils'
 import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
+import {CertificateType, FormattedTx} from './types'
 
-export const RegisterStakingKeyOperation = () => {
+export const StakeRegistrationOperation = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
@@ -31,7 +31,32 @@ export const RegisterStakingKeyOperation = () => {
     </View>
   )
 }
-export const DelegateStakeOperation = ({poolId}: {poolId: string}) => {
+
+export const StakeDeregistrationOperation = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationLabel}>{strings.deregisterStakingKey}</Text>
+    </View>
+  )
+}
+
+export const StakeRewardsWithdrawalOperation = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationLabel}>{strings.rewardsWithdrawalLabel}</Text>
+
+      <Text style={styles.operationValue}>{strings.rewardsWithdrawalText}</Text>
+    </View>
+  )
+}
+
+export const StakeDelegateOperation = ({poolId}: {poolId: string}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const poolInfo = usePoolInfo({poolId})
@@ -53,23 +78,6 @@ export const DelegateStakeOperation = ({poolId}: {poolId: string}) => {
       </TouchableOpacity>
     </View>
   )
-}
-
-export const usePoolInfo = ({poolId}: {poolId: string}) => {
-  const {networkManager} = useSelectedNetwork()
-  const poolInfoApi = React.useMemo(
-    () => new PoolInfoApi(networkManager.legacyApiBaseUrl),
-    [networkManager.legacyApiBaseUrl],
-  )
-  const poolInfo = useQuery({
-    queryKey: ['usePoolInfoStakeOperation', poolId],
-    queryFn: async () => {
-      const poolBech32Id = await getPoolBech32Id(poolId)
-      return poolInfoApi.getSingleExplorerPoolInfo(poolBech32Id)
-    },
-  })
-
-  return poolInfo?.data ?? null
 }
 
 export const AbstainOperation = () => {
@@ -94,11 +102,11 @@ export const NoConfidenceOperation = () => {
   )
 }
 
-export const DelegateVotingToDrepOperation = ({drepID}: {drepID: string}) => {
+export const VoteDelegationOperation = ({drepID}: {drepID: string}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
-  const {data: bech32DrepId} = useBech32DRepID(drepID)
+  const bech32DrepId = useDrepBech32Id(drepID)
 
   return (
     <View style={styles.operation}>
@@ -109,6 +117,58 @@ export const DelegateVotingToDrepOperation = ({drepID}: {drepID: string}) => {
       <Text style={styles.operationValue}>{bech32DrepId ?? drepID}</Text>
     </View>
   )
+}
+
+export const useOperations = (certificates: FormattedTx['certificates']) => {
+  if (certificates === null) return []
+
+  return certificates.reduce<React.ReactNode[]>((acc, certificate, index) => {
+    switch (certificate.type) {
+      case CertificateType.StakeRegistration:
+        return [...acc, <StakeRegistrationOperation key={index} />]
+
+      case CertificateType.StakeDeregistration:
+        return [...acc, <StakeDeregistrationOperation key={index} />]
+
+      case CertificateType.StakeDelegation: {
+        const poolKeyHash = certificate.value.pool_keyhash ?? null
+        if (poolKeyHash == null) return acc
+        return [...acc, <StakeDelegateOperation key={index} poolId={poolKeyHash} />]
+      }
+
+      case CertificateType.VoteDelegation: {
+        const drep = certificate.value.drep
+
+        if (drep === 'AlwaysAbstain') return [...acc, <AbstainOperation key={index} />]
+        if (drep === 'AlwaysNoConfidence') return [...acc, <NoConfidenceOperation key={index} />]
+
+        const drepId = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
+        return [...acc, <VoteDelegationOperation key={index} drepID={drepId} />]
+      }
+
+      default:
+        return acc
+    }
+  }, [])
+}
+
+export const getDrepBech32Id = async (poolId: string) => {
+  const {csl, release} = wrappedCsl()
+  try {
+    const keyHash = await csl.Ed25519KeyHash.fromHex(poolId)
+    return keyHash.toBech32('drep')
+  } finally {
+    release()
+  }
+}
+
+export const useDrepBech32Id = (poolId: string) => {
+  const query = useQuery({
+    queryKey: ['drepBech32', poolId],
+    queryFn: () => getDrepBech32Id(poolId),
+  })
+
+  return query?.data ?? null
 }
 
 const useStyles = () => {

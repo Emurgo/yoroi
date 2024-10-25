@@ -6,6 +6,7 @@ import {ConfirmTxWithSpendingPasswordModal} from '../../../../components/Confirm
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useReviewTx} from '../ReviewTxProvider'
 import {useStrings} from './useStrings'
 
 // TODO: make it compatible with CBOR signing
@@ -28,6 +29,16 @@ export const useOnConfirm = ({
   const {meta} = useSelectedWallet()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
+  const {reset} = useReviewTx()
+
+  const handleOnSuccess = (signedTx: YoroiSignedTx) => {
+    onSuccess?.(signedTx)
+    reset()
+  }
+  const handleOnError = () => {
+    onError?.()
+    reset()
+  }
 
   const onConfirm = () => {
     if (meta.isHW) {
@@ -36,7 +47,7 @@ export const useOnConfirm = ({
         <ConfirmTxWithHwModal
           onCancel={closeModal}
           unsignedTx={unsignedTx}
-          onSuccess={(signedTx) => onSuccess?.(signedTx)}
+          onSuccess={handleOnSuccess}
           onNotSupportedCIP1694={() => {
             if (onNotSupportedCIP1694) {
               closeModal()
@@ -55,8 +66,8 @@ export const useOnConfirm = ({
         strings.signTransaction,
         <ConfirmTxWithSpendingPasswordModal
           unsignedTx={unsignedTx}
-          onSuccess={(signedTx) => onSuccess?.(signedTx)}
-          onError={onError ?? undefined}
+          onSuccess={handleOnSuccess}
+          onError={handleOnError}
         />,
       )
       return
@@ -65,11 +76,7 @@ export const useOnConfirm = ({
     if (!meta.isHW && meta.isEasyConfirmationEnabled) {
       openModal(
         strings.signTransaction,
-        <ConfirmTxWithOsModal
-          unsignedTx={unsignedTx}
-          onSuccess={(signedTx) => onSuccess?.(signedTx)}
-          onError={onError ?? undefined}
-        />,
+        <ConfirmTxWithOsModal unsignedTx={unsignedTx} onSuccess={handleOnSuccess} onError={handleOnError} />,
       )
       return
     }

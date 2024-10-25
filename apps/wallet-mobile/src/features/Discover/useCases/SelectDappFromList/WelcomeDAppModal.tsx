@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Image, StyleSheet, Text, View} from 'react-native'
+import {Image, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import IllustrationDAppImage from '../../../../assets/img/illustration-dapp.png'
@@ -67,7 +67,7 @@ const Modal = () => {
   const {closeModal} = useModal()
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} bounces={false}>
       <Image source={IllustrationDAppImage} style={styles.welcomeImage} />
 
       <Text style={styles.welcomeText}>{strings.welcomeToYoroiDAppExplorerDescription}</Text>
@@ -75,6 +75,6 @@ const Modal = () => {
       <View style={styles.actions}>
         <Button onPress={closeModal} title={strings.next} />
       </View>
-    </View>
+    </ScrollView>
   )
 }

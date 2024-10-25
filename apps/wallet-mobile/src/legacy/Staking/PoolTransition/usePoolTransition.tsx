@@ -7,7 +7,6 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useQuery} from 'react-query'
 
-import {DelegateStakeOperation} from '../../../features/ReviewTx/common/operations'
 import {useReviewTx} from '../../../features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedNetwork} from '../../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
@@ -41,7 +40,7 @@ export const usePoolTransition = () => {
   const {wallet, meta} = useSelectedWallet()
   const {networkManager} = useSelectedNetwork()
   const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, operationsChanged} = useReviewTx()
+  const {unsignedTxChanged, onSuccessChanged, onErrorChanged} = useReviewTx()
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
   const poolInfoApi = React.useMemo(
     () => new PoolInfoApi(networkManager.legacyApiBaseUrl),
@@ -65,7 +64,6 @@ export const usePoolTransition = () => {
   const navigateToUpdate = React.useCallback(async () => {
     try {
       const yoroiUnsignedTx = await createDelegationTx(wallet, poolId, meta)
-      operationsChanged([<DelegateStakeOperation poolId={poolId} key="0" />])
       unsignedTxChanged(yoroiUnsignedTx)
       onSuccessChanged(() => {
         resetToTxHistory()
@@ -85,7 +83,6 @@ export const usePoolTransition = () => {
     wallet,
     poolId,
     meta,
-    operationsChanged,
     unsignedTxChanged,
     onSuccessChanged,
     onErrorChanged,

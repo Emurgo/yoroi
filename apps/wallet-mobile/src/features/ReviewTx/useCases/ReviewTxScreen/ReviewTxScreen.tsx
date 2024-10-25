@@ -64,7 +64,7 @@ export const ReviewTxScreen = () => {
           {() => (
             /* TODO: make scrollview general to use button border */
             <ScrollView style={styles.root}>
-              <OverviewTab tx={formatedTx} operations={operations} details={details} />
+              <OverviewTab tx={formatedTx} extraOperations={operations} details={details} />
             </ScrollView>
           )}
         </MaterialTab.Screen>

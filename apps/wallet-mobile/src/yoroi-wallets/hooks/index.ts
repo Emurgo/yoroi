@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {walletChecksum} from '@emurgo/cip4-js'
 import {Certificate} from '@emurgo/cross-csl-core'
+import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {mountMMKVStorage, observableStorageMaker, parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
 import {themeStorageMaker} from '@yoroi/theme'
@@ -25,6 +26,7 @@ import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
+import {getPoolBech32Id} from '../cardano/delegationUtils'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TxSubmissionStatus} from '../types/other'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
@@ -701,4 +703,21 @@ export const useThemeStorageMaker = () => {
   const themeStorage = themeStorageMaker({storage: themeDiscoveryStorage})
 
   return themeStorage
+}
+
+export const usePoolInfo = ({poolId}: {poolId: string}) => {
+  const {networkManager} = useSelectedNetwork()
+  const poolInfoApi = React.useMemo(
+    () => new PoolInfoApi(networkManager.legacyApiBaseUrl),
+    [networkManager.legacyApiBaseUrl],
+  )
+  const poolInfo = useQuery({
+    queryKey: ['usePoolInfoStakeOperation', poolId],
+    queryFn: async () => {
+      const poolBech32Id = await getPoolBech32Id(poolId)
+      return poolInfoApi.getSingleExplorerPoolInfo(poolBech32Id)
+    },
+  })
+
+  return poolInfo?.data ?? null
 }

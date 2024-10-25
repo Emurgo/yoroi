@@ -255,7 +255,6 @@ const NeverParticipatedInGovernanceVariant = () => {
               unsignedTx,
               drepID,
               navigateToStakingOnSuccess: params?.navigateToStakingOnSuccess,
-              hasStakeCert: stakeCert !== null,
             })
           },
         },
@@ -281,7 +280,6 @@ const NeverParticipatedInGovernanceVariant = () => {
           governanceActions.handleAbstainAction({
             unsignedTx,
             navigateToStakingOnSuccess: params?.navigateToStakingOnSuccess,
-            hasStakeCert: stakeCert !== null,
           })
         },
       },
@@ -306,7 +304,6 @@ const NeverParticipatedInGovernanceVariant = () => {
           governanceActions.handleNoConfidenceAction({
             unsignedTx,
             navigateToStakingOnSuccess: params?.navigateToStakingOnSuccess,
-            hasStakeCert: stakeCert !== null,
           })
         },
       },

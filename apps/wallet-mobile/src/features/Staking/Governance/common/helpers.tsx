@@ -3,8 +3,6 @@ import {
   type StakingKeyState,
   governanceApiMaker,
   governanceManagerMaker,
-  GovernanceProvider,
-  useGovernance,
   useStakingKeyState,
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
@@ -16,12 +14,6 @@ import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useStakingKey} from '../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
-import {
-  AbstainOperation,
-  DelegateVotingToDrepOperation,
-  NoConfidenceOperation,
-  RegisterStakingKeyOperation,
-} from '../../../ReviewTx/common/operations'
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {useBestBlock} from '../../../WalletManager/common/hooks/useBestBlock'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
@@ -78,34 +70,21 @@ export const useGovernanceManagerMaker = () => {
 }
 
 export const useGovernanceActions = () => {
-  const {manager} = useGovernance()
   const {wallet} = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, operationsChanged, onNotSupportedCIP1694Changed} =
-    useReviewTx()
+  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, onNotSupportedCIP1694Changed} = useReviewTx()
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)
   const {navigateToTxReview} = useWalletNavigation()
 
   const handleDelegateAction = ({
     drepID,
     unsignedTx,
-    hasStakeCert = false,
     navigateToStakingOnSuccess = false,
   }: {
     drepID: string
     unsignedTx: YoroiUnsignedTx
-    hasStakeCert?: boolean
     navigateToStakingOnSuccess?: boolean
   }) => {
-    let operations = [
-      <GovernanceProvider key="0" manager={manager}>
-        <DelegateVotingToDrepOperation drepID={drepID} />
-      </GovernanceProvider>,
-    ]
-
-    if (hasStakeCert) operations = [<RegisterStakingKeyOperation key="-1" />, ...operations]
-
-    operationsChanged(operations)
     onSuccessChanged((signedTx) => {
       updateLatestGovernanceAction({kind: 'delegate-to-drep', drepID, txID: signedTx.signedTx.id})
       navigateTo.txSuccess({navigateToStaking: navigateToStakingOnSuccess ?? false, kind: 'delegate'})
@@ -121,17 +100,11 @@ export const useGovernanceActions = () => {
 
   const handleAbstainAction = ({
     unsignedTx,
-    hasStakeCert = false,
     navigateToStakingOnSuccess = false,
   }: {
     unsignedTx: YoroiUnsignedTx
-    hasStakeCert?: boolean
     navigateToStakingOnSuccess?: boolean
   }) => {
-    let operations = [<AbstainOperation key="0" />]
-    if (hasStakeCert) operations = [<RegisterStakingKeyOperation key="-1" />, ...operations]
-
-    operationsChanged(operations)
     onSuccessChanged((signedTx) => {
       updateLatestGovernanceAction({kind: 'vote', vote: 'abstain', txID: signedTx.signedTx.id})
       navigateTo.txSuccess({navigateToStaking: navigateToStakingOnSuccess ?? false, kind: 'abstain'})
@@ -147,17 +120,11 @@ export const useGovernanceActions = () => {
 
   const handleNoConfidenceAction = ({
     unsignedTx,
-    hasStakeCert = false,
     navigateToStakingOnSuccess = false,
   }: {
     unsignedTx: YoroiUnsignedTx
-    hasStakeCert?: boolean
     navigateToStakingOnSuccess?: boolean
   }) => {
-    let operations = [<NoConfidenceOperation key="0" />]
-    if (hasStakeCert) operations = [<RegisterStakingKeyOperation key="-1" />, ...operations]
-
-    operationsChanged(operations)
     onSuccessChanged((signedTx) => {
       updateLatestGovernanceAction({kind: 'vote', vote: 'no-confidence', txID: signedTx.signedTx.id})
       navigateTo.txSuccess({
