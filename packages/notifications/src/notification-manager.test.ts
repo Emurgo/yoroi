@@ -245,7 +245,8 @@ describe('NotificationManager', () => {
 
     const event = createTransactionReceivedEvent()
 
-    const notificationSubscription = new BehaviorSubject(event)
+    const notificationSubscription =
+      new BehaviorSubject<Notifications.TransactionReceivedEvent>(event)
 
     const manager = notificationManagerMaker({
       eventsStorage,

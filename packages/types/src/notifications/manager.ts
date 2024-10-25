@@ -10,9 +10,11 @@ export enum NotificationTrigger {
 export type NotificationManagerMakerProps = {
   eventsStorage: AppStorage<true, string>
   configStorage: AppStorage<true, string>
-  subscriptions?: Partial<
-    Record<NotificationTrigger, Subject<NotificationEvent>>
-  >
+  subscriptions?: Partial<{
+    [NotificationTrigger.TransactionReceived]: Subject<NotificationTransactionReceivedEvent>
+    [NotificationTrigger.RewardsUpdated]: Subject<NotificationRewardsUpdatedEvent>
+    [NotificationTrigger.PrimaryTokenPriceChanged]: Subject<NotificationPrimaryTokenPriceChangedEvent>
+  }>
   display: (event: NotificationEvent) => void
   eventsLimit?: number
 }
@@ -43,7 +45,9 @@ export interface NotificationPrimaryTokenPriceChangedEvent
 
 export type NotificationGroup = 'transaction-history' | 'portfolio'
 
-export type NotificationEvent = NotificationTransactionReceivedEvent
+export type NotificationEvent =
+  | NotificationTransactionReceivedEvent
+  | NotificationPrimaryTokenPriceChangedEvent
 
 type NotificationEventId = number
 

@@ -5,6 +5,7 @@ import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-q
 import {configCurrencies, supportedCurrencies} from '../../../../../kernel/constants'
 import {usePrimaryTokenActivity} from '../../../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
 import {ConfigCurrencies, CurrencySymbol} from '../../../../../yoroi-wallets/types/other'
+import {App} from '@yoroi/types'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
 export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
@@ -37,19 +38,21 @@ const useCurrency = () => {
   const storage = useAsyncStorage()
   const query = useQuery<CurrencySymbol, Error>({
     queryKey: ['currencySymbol'],
-    queryFn: async () => {
-      const currencySymbol = await storage.join('appSettings/').getItem('currencySymbol', parseCurrencySymbol)
-
-      if (currencySymbol != null) {
-        const stillSupported = Object.values(supportedCurrencies).includes(currencySymbol)
-        if (stillSupported) return currencySymbol
-      }
-
-      return defaultCurrency
-    },
+    queryFn: () => getCurrencySymbol(storage),
   })
 
   return query.data ?? defaultCurrency
+}
+
+export const getCurrencySymbol = async (storage: App.Storage) => {
+  const currencySymbol = await storage.join('appSettings/').getItem('currencySymbol', parseCurrencySymbol)
+
+  if (currencySymbol != null) {
+    const stillSupported = Object.values(supportedCurrencies).includes(currencySymbol)
+    if (stillSupported) return currencySymbol
+  }
+
+  return defaultCurrency
 }
 
 const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error, CurrencySymbol> = {}) => {
