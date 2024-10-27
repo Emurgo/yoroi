@@ -6,6 +6,8 @@ import {Boundary} from '../../components/Boundary/Boundary'
 import {defaultStackNavigationOptions, ReviewTxRoutes} from '../../kernel/navigation'
 import {useStrings} from './common/hooks/useStrings'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
+import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
+import {SubmittedTxScreen} from './useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 
 export const Stack = createStackNavigator<ReviewTxRoutes>()
 
@@ -26,6 +28,10 @@ export const ReviewTxNavigator = () => {
           </Boundary>
         )}
       </Stack.Screen>
+
+      <Stack.Screen name="review-tx-submitted-tx" component={SubmittedTxScreen} options={{headerShown: false}} />
+
+      <Stack.Screen name="review-tx-failed-tx" component={FailedTxScreen} options={{headerShown: false}} />
     </Stack.Navigator>
   )
 }

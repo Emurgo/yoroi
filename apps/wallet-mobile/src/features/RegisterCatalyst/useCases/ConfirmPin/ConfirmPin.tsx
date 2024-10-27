@@ -26,7 +26,7 @@ export const ConfirmPin = () => {
   const navigateTo = useNavigateTo()
   const [currentActivePin, setCurrentActivePin] = React.useState(1)
   const {wallet, meta} = useSelectedWallet()
-  const {onCIP36SupportChangeChanged, unsignedTxChanged, onSuccessChanged} = useReviewTx()
+  const {unsignedTxChanged} = useReviewTx()
   const {navigateToTxReview} = useWalletNavigation()
 
   const {generateVotingKeys, isLoading} = useGenerateVotingKeys({
@@ -40,13 +40,13 @@ export const ConfirmPin = () => {
       })
 
       unsignedTxChanged(votingRegTx.votingRegTx)
-      onCIP36SupportChangeChanged(async (supportsCIP36: boolean) => {
-        votingRegTx = await wallet.createVotingRegTx({catalystKeyHex, supportsCIP36, addressMode: meta.addressMode})
-        unsignedTxChanged(votingRegTx.votingRegTx)
+      navigateToTxReview({
+        onCIP36SupportChange: async (supportsCIP36: boolean) => {
+          votingRegTx = await wallet.createVotingRegTx({catalystKeyHex, supportsCIP36, addressMode: meta.addressMode})
+          unsignedTxChanged(votingRegTx.votingRegTx)
+        },
+        onSuccess: navigateTo.qrCode,
       })
-      onSuccessChanged(navigateTo.qrCode)
-
-      navigateToTxReview()
     },
   })
 

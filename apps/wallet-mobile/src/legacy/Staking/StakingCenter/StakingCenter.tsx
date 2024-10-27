@@ -1,4 +1,4 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -17,14 +17,12 @@ import {useLanguage} from '../../../kernel/i18n'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {StakingCenterRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
-import {NotEnoughMoneyToSendError} from '../../../yoroi-wallets/cardano/types'
+import {useWalletNavigation} from '../../../kernel/navigation'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {
   const intl = useIntl()
-  const navigation = useNavigation<StakingCenterRouteNavigation>()
   const {isDark} = useTheme()
   const {styles} = useStyles()
   const queryClient = useQueryClient()
@@ -34,8 +32,8 @@ export const StakingCenter = () => {
   const {walletManager} = useWalletManager()
   const {track} = useMetrics()
   const {plate} = walletManager.checksum(wallet.publicKeyHex)
-  const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged} = useReviewTx()
+  const {navigateToTxReview} = useWalletNavigation()
+  const {unsignedTxChanged} = useReviewTx()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -55,20 +53,7 @@ export const StakingCenter = () => {
         if (selectedPoolId == null) return
 
         unsignedTxChanged(yoroiUnsignedTx)
-        onSuccessChanged(() => {
-          queryClient.resetQueries([wallet.id, 'stakingInfo'])
-          resetToTxHistory()
-        })
-        onErrorChanged(() => navigation.navigate('delegation-failed-tx'))
-        navigateToTxReview()
-      },
-      onError: (error) => {
-        if (error instanceof NotEnoughMoneyToSendError) {
-          navigation.navigate('delegation-failed-tx')
-        } else {
-          logger.error(error as Error)
-          navigation.navigate('delegation-failed-tx')
-        }
+        navigateToTxReview({onSuccess: () => queryClient.resetQueries([wallet.id, 'stakingInfo'])})
       },
     },
   )

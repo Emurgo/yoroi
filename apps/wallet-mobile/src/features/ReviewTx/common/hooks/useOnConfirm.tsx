@@ -6,7 +6,7 @@ import {ConfirmTxWithSpendingPasswordModal} from '../../../../components/Confirm
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useReviewTx} from '../ReviewTxProvider'
+import {useNavigateTo} from './useNavigateTo'
 import {useStrings} from './useStrings'
 
 // TODO: make it compatible with CBOR signing
@@ -29,15 +29,15 @@ export const useOnConfirm = ({
   const {meta} = useSelectedWallet()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
-  const {reset} = useReviewTx()
+  const navigateTo = useNavigateTo()
 
   const handleOnSuccess = (signedTx: YoroiSignedTx) => {
     onSuccess?.(signedTx)
-    reset()
+    navigateTo.showSubmittedTxScreen()
   }
   const handleOnError = () => {
     onError?.()
-    reset()
+    navigateTo.showFailedTxScreen()
   }
 
   const onConfirm = () => {

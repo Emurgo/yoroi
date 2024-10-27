@@ -63,7 +63,7 @@ export const Dashboard = () => {
   const walletNavigateTo = useWalletNavigation()
 
   const handleOnParticipatePress = () => {
-    walletNavigateTo.navigateToGovernanceCentre({navigateToStakingOnSuccess: true})
+    walletNavigateTo.navigateToGovernanceCentre()
   }
 
   const onWithdraw = () => {

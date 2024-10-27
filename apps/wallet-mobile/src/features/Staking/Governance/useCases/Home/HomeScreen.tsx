@@ -17,7 +17,6 @@ import {StyleSheet, Text, View} from 'react-native'
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useUnsafeParams} from '../../../../../kernel/navigation'
 import {useStakingInfo} from '../../../../../legacy/Dashboard/StakePoolInfos'
 import {
   useCreateGovernanceTx,
@@ -30,7 +29,7 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../common/helpers'
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
-import {Routes, useNavigateTo} from '../../common/navigation'
+import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
@@ -189,7 +188,6 @@ const NeverParticipatedInGovernanceVariant = () => {
   const {manager} = useGovernance()
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
-  const params = useUnsafeParams<Routes['staking-gov-home']>()
   const {track} = useMetrics()
   const [pendingVote, setPendingVote] = React.useState<GovernanceVote['kind'] | null>(null)
   const governanceActions = useGovernanceActions()
@@ -254,7 +252,6 @@ const NeverParticipatedInGovernanceVariant = () => {
             governanceActions.handleDelegateAction({
               unsignedTx,
               drepID,
-              navigateToStakingOnSuccess: params?.navigateToStakingOnSuccess,
             })
           },
         },
@@ -279,7 +276,6 @@ const NeverParticipatedInGovernanceVariant = () => {
 
           governanceActions.handleAbstainAction({
             unsignedTx,
-            navigateToStakingOnSuccess: params?.navigateToStakingOnSuccess,
           })
         },
       },
@@ -303,7 +299,6 @@ const NeverParticipatedInGovernanceVariant = () => {
 
           governanceActions.handleNoConfidenceAction({
             unsignedTx,
-            navigateToStakingOnSuccess: params?.navigateToStakingOnSuccess,
           })
         },
       },

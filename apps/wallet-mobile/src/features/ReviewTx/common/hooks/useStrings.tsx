@@ -43,6 +43,12 @@ export const useStrings = () => {
     deregisterStakingKey: intl.formatMessage(messages.deregisterStakingKey),
     rewardsWithdrawalLabel: intl.formatMessage(messages.rewardsWithdrawalLabel),
     rewardsWithdrawalText: intl.formatMessage(messages.rewardsWithdrawalText),
+    submittedTxTitle: intl.formatMessage(messages.submittedTxTitle),
+    submittedTxText: intl.formatMessage(messages.submittedTxText),
+    submittedTxButton: intl.formatMessage(messages.submittedTxButton),
+    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
+    failedTxText: intl.formatMessage(messages.failedTxText),
+    failedTxButton: intl.formatMessage(messages.failedTxButton),
   }
 }
 
@@ -190,5 +196,29 @@ const messages = defineMessages({
   delegateStake: {
     id: 'txReview.operations.delegateStake',
     defaultMessage: '!!!Stake entire wallet balance to',
+  },
+  submittedTxTitle: {
+    id: 'txReview.submittedTxTitle',
+    defaultMessage: '!!!Transaction submitted',
+  },
+  submittedTxText: {
+    id: 'txReview.submittedTxText',
+    defaultMessage: '!!!Check this transaction in the list of wallet transactions',
+  },
+  submittedTxButton: {
+    id: 'txReview.submittedTxButton',
+    defaultMessage: '!!!Go to transactions',
+  },
+  failedTxTitle: {
+    id: 'txReview.failedTxTitle',
+    defaultMessage: '!!!Transaction failed',
+  },
+  failedTxText: {
+    id: 'txReview.failedTxText',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+  },
+  failedTxButton: {
+    id: 'txReview.failedTxButton',
+    defaultMessage: '!!!Go to transactions',
   },
 })

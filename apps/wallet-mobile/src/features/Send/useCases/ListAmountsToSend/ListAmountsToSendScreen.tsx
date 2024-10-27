@@ -39,7 +39,7 @@ export const ListAmountsToSendScreen = () => {
   const navigation = useNavigation()
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged} = useReviewTx()
+  const {unsignedTxChanged} = useReviewTx()
 
   useLayoutEffect(() => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
@@ -83,7 +83,6 @@ export const ListAmountsToSendScreen = () => {
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
     track.sendSummarySubmitted(sendProperties)
-    navigateTo.submittedTx(signedTx.signedTx.id)
 
     if (memo.length > 0) {
       saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
@@ -92,7 +91,6 @@ export const ListAmountsToSendScreen = () => {
 
   const onError = () => {
     track.sendSummarySubmitted(sendProperties)
-    navigateTo.failedTx()
   }
 
   const onNext = () => {
@@ -102,9 +100,7 @@ export const ListAmountsToSendScreen = () => {
     createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)], {
       onSuccess: (yoroiUnsignedTx) => {
         unsignedTxChanged(yoroiUnsignedTx)
-        onSuccessChanged(onSuccess)
-        onErrorChanged(onError)
-        navigateToTxReview()
+        navigateToTxReview({onSuccess, onError})
       },
     })
   }

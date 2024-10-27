@@ -39,7 +39,6 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
-import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
 
 export const ManageCollateralScreen = () => {
@@ -52,12 +51,11 @@ export const ManageCollateralScreen = () => {
   const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
-  const navigateTo = useNavigateTo()
   const {openModal} = useModal()
   const strings = useStrings()
   const balances = useBalances(wallet)
   const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, operationsChanged} = useReviewTx()
+  const {unsignedTxChanged, operationsChanged} = useReviewTx()
   const lockedAmount = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
 
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
@@ -79,13 +77,8 @@ export const ManageCollateralScreen = () => {
   }
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
-    navigateTo.submittedTx()
     const collateralId = `${signedTx.signedTx.id}:0`
     setCollateralId(collateralId)
-  }
-
-  const onError = () => {
-    navigateTo.failedTx()
   }
 
   const createCollateralTransaction = () => {
@@ -95,9 +88,7 @@ export const ManageCollateralScreen = () => {
       onSuccess: (yoroiUnsignedTx) => {
         unsignedTxChanged(yoroiUnsignedTx)
         operationsChanged([<Operation key="0" />])
-        onSuccessChanged(onSuccess)
-        onErrorChanged(onError)
-        navigateToTxReview()
+        navigateToTxReview({onSuccess})
       },
     })
   }

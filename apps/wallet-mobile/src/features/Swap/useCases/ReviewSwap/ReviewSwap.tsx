@@ -2,7 +2,7 @@ import {getPoolUrlByProvider, useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {capitalize} from 'lodash'
 import React from 'react'
-import {InteractionManager, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
+import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -10,11 +10,9 @@ import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {YoroiSignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
-import {useNavigateTo} from '../../common/navigation'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
 import {TransactionSummary} from './TransactionSummary'
@@ -25,12 +23,10 @@ export const ReviewSwap = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const styles = useStyles()
-  const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {height: deviceHeight} = useWindowDimensions()
   const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, customReceiverTitleChanged, detailsChanged} =
-    useReviewTx()
+  const {unsignedTxChanged, customReceiverTitleChanged, detailsChanged} = useReviewTx()
 
   const {unsignedTx, orderData} = useSwap()
   const sellTokenInfo = orderData.amounts.sell?.info
@@ -65,15 +61,8 @@ export const ReviewSwap = () => {
     })
   }
 
-  const onSwapTxError = () => {
-    navigate.failedTx()
-  }
-
-  const onSwapTxSuccess = (signedTx: YoroiSignedTx) => {
+  const onSwapTxSuccess = () => {
     trackSwapOrderSubmitted()
-    InteractionManager.runAfterInteractions(() => {
-      navigate.submittedTx(signedTx.signedTx.id)
-    })
   }
 
   const onNext = () => {
@@ -91,9 +80,7 @@ export const ReviewSwap = () => {
     if (liquidityPool != null) customReceiverTitleChanged(liquidityPool)
     detailsChanged({component: <TransactionSummary orderData={orderData} />, title: strings.swapDetailsTitle})
     unsignedTxChanged(unsignedTx)
-    onSuccessChanged(onSwapTxSuccess)
-    onErrorChanged(onSwapTxError)
-    navigateToTxReview()
+    navigateToTxReview({onSuccess: onSwapTxSuccess})
   }
 
   const isButtonDisabled = couldReceiveNoAssets

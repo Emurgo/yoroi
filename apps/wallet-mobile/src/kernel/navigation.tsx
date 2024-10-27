@@ -9,6 +9,7 @@ import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, View} fro
 
 import {Icon} from '../components/Icon'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
+import {YoroiSignedTx} from '../yoroi-wallets/types/yoroi'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -151,8 +152,6 @@ export type TxHistoryRoutes = {
   'receive-specific-amount': undefined
   'receive-multiple': undefined
   'send-start-tx': undefined
-  'send-submitted-tx': {txId: string}
-  'send-failed-tx': undefined
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
@@ -181,15 +180,12 @@ type SwapTokenRoutes = {
   'swap-select-buy-token': undefined
   'swap-edit-slippage': undefined
   'swap-select-pool': undefined
-  'swap-submitted-tx': {txId: string}
-  'swap-failed-tx': undefined
   'swap-preprod-notice': undefined
 }
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
 export type StakingCenterRoutes = {
   'staking-center-main': undefined
-  'delegation-failed-tx': undefined
 }
 
 export type SwapTabRoutes = {
@@ -243,9 +239,6 @@ export type SettingsStackRoutes = {
       onPress: () => void
     }
   }
-  'collateral-confirm-tx': undefined
-  'collateral-tx-submitted': undefined
-  'collateral-tx-failed': undefined
 }
 
 export type ToggleAnalyticsSettingsRoutes = {
@@ -268,7 +261,6 @@ export type BrowserRoutes = {
 export type DashboardRoutes = {
   'staking-dashboard-main': undefined
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
-  'delegation-failed-tx': undefined
 }
 
 export type PortfolioRoutes = {
@@ -283,7 +275,14 @@ export type PortfolioRoutes = {
 }
 
 export type ReviewTxRoutes = {
-  'review-tx': undefined
+  'review-tx'?: {
+    onSuccess?: (signedTx: YoroiSignedTx) => void
+    onError?: () => void
+    onNotSupportedCIP1694?: () => void
+    onCIP36SupportChange?: (supportsCIP36: boolean) => void
+  }
+  'review-tx-submitted-tx': undefined
+  'review-tx-failed-tx': undefined
 }
 
 export type PortfolioTokenListTabRoutes = {
@@ -448,11 +447,12 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToTxReview: () => {
+    navigateToTxReview: (params?: ReviewTxRoutes['review-tx']) => {
       navigation.navigate('manage-wallets', {
         screen: 'review-tx-routes',
         params: {
           screen: 'review-tx',
+          params,
         },
       })
     },
@@ -581,14 +581,11 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToGovernanceCentre: ({navigateToStakingOnSuccess = false} = {}) => {
+    navigateToGovernanceCentre: () => {
       navigation.navigate('manage-wallets', {
         screen: 'governance',
         params: {
           screen: 'staking-gov-home',
-          params: {
-            navigateToStakingOnSuccess,
-          },
         },
       })
     },

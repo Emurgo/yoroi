@@ -72,73 +72,41 @@ export const useGovernanceManagerMaker = () => {
 export const useGovernanceActions = () => {
   const {wallet} = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged, onNotSupportedCIP1694Changed} = useReviewTx()
+  const {unsignedTxChanged} = useReviewTx()
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)
   const {navigateToTxReview} = useWalletNavigation()
 
-  const handleDelegateAction = ({
-    drepID,
-    unsignedTx,
-    navigateToStakingOnSuccess = false,
-  }: {
-    drepID: string
-    unsignedTx: YoroiUnsignedTx
-    navigateToStakingOnSuccess?: boolean
-  }) => {
-    onSuccessChanged((signedTx) => {
-      updateLatestGovernanceAction({kind: 'delegate-to-drep', drepID, txID: signedTx.signedTx.id})
-      navigateTo.txSuccess({navigateToStaking: navigateToStakingOnSuccess ?? false, kind: 'delegate'})
-    })
-    onErrorChanged(() => navigateTo.txFailed())
+  const handleDelegateAction = ({drepID, unsignedTx}: {drepID: string; unsignedTx: YoroiUnsignedTx}) => {
     unsignedTxChanged(unsignedTx)
-    onNotSupportedCIP1694Changed(() => {
-      navigateTo.notSupportedVersion()
-    })
 
-    navigateToTxReview()
+    navigateToTxReview({
+      onSuccess: (signedTx) => {
+        updateLatestGovernanceAction({kind: 'delegate-to-drep', drepID, txID: signedTx.signedTx.id})
+      },
+      onNotSupportedCIP1694: navigateTo.notSupportedVersion,
+    })
   }
 
-  const handleAbstainAction = ({
-    unsignedTx,
-    navigateToStakingOnSuccess = false,
-  }: {
-    unsignedTx: YoroiUnsignedTx
-    navigateToStakingOnSuccess?: boolean
-  }) => {
-    onSuccessChanged((signedTx) => {
-      updateLatestGovernanceAction({kind: 'vote', vote: 'abstain', txID: signedTx.signedTx.id})
-      navigateTo.txSuccess({navigateToStaking: navigateToStakingOnSuccess ?? false, kind: 'abstain'})
-    })
-    onErrorChanged(() => navigateTo.txFailed())
+  const handleAbstainAction = ({unsignedTx}: {unsignedTx: YoroiUnsignedTx}) => {
     unsignedTxChanged(unsignedTx)
-    onNotSupportedCIP1694Changed(() => {
-      navigateTo.notSupportedVersion()
-    })
 
-    navigateToTxReview()
+    navigateToTxReview({
+      onSuccess: (signedTx) => {
+        updateLatestGovernanceAction({kind: 'vote', vote: 'abstain', txID: signedTx.signedTx.id})
+      },
+      onNotSupportedCIP1694: navigateTo.notSupportedVersion,
+    })
   }
 
-  const handleNoConfidenceAction = ({
-    unsignedTx,
-    navigateToStakingOnSuccess = false,
-  }: {
-    unsignedTx: YoroiUnsignedTx
-    navigateToStakingOnSuccess?: boolean
-  }) => {
-    onSuccessChanged((signedTx) => {
-      updateLatestGovernanceAction({kind: 'vote', vote: 'no-confidence', txID: signedTx.signedTx.id})
-      navigateTo.txSuccess({
-        navigateToStaking: navigateToStakingOnSuccess ?? false,
-        kind: 'no-confidence',
-      })
-    })
-    onErrorChanged(() => navigateTo.txFailed())
+  const handleNoConfidenceAction = ({unsignedTx}: {unsignedTx: YoroiUnsignedTx}) => {
     unsignedTxChanged(unsignedTx)
-    onNotSupportedCIP1694Changed(() => {
-      navigateTo.notSupportedVersion()
-    })
 
-    navigateToTxReview()
+    navigateToTxReview({
+      onSuccess: (signedTx) => {
+        updateLatestGovernanceAction({kind: 'vote', vote: 'no-confidence', txID: signedTx.signedTx.id})
+      },
+      onNotSupportedCIP1694: navigateTo.notSupportedVersion,
+    })
   }
 
   return {handleDelegateAction, handleAbstainAction, handleNoConfidenceAction} as const

@@ -14,8 +14,6 @@ export const useNavigateTo = () => {
     selectSellToken: () => swapNavigation.navigate('swap-select-sell-token'),
     startSwap: () => swapNavigation.navigate('swap-start-swap', {screen: 'token-swap'}),
     reviewSwap: () => swapNavigation.navigate('swap-review'),
-    submittedTx: (txId: string) => swapNavigation.navigate('swap-submitted-tx', {txId}),
-    failedTx: () => swapNavigation.navigate('swap-failed-tx'),
     swapOpenOrders: () =>
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',

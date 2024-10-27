@@ -30,20 +30,13 @@ import {ListMultipleAddressesScreen} from '../Receive/useCases/ListMultipleAddre
 import {RequestSpecificAmountScreen} from '../Receive/useCases/RequestSpecificAmountScreen'
 import {ScanCodeScreen} from '../Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
-import {FailedTxScreen} from '../Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
-import {SubmittedTxScreen} from '../Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {SelectTokenFromListScreen} from '../Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend/ListAmountsToSendScreen'
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
-import {
-  EditSlippageScreen,
-  SelectPoolFromListScreen,
-  ShowFailedTxScreen as FailedTxSwapScreen,
-  ShowSubmittedTxScreen as SubmittedTxSwapScreen,
-} from '../Swap/useCases'
+import {EditSlippageScreen, SelectPoolFromListScreen} from '../Swap/useCases'
 import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
@@ -274,18 +267,6 @@ export const TxHistoryNavigator = () => {
               />
 
               <Stack.Screen
-                name="swap-submitted-tx"
-                component={SubmittedTxSwapScreen}
-                options={{headerShown: false, gestureEnabled: false}}
-              />
-
-              <Stack.Screen
-                name="swap-failed-tx"
-                component={FailedTxSwapScreen}
-                options={{headerShown: false, gestureEnabled: false}}
-              />
-
-              <Stack.Screen
                 name="send-start-tx"
                 options={{
                   title: strings.sendTitle,
@@ -340,18 +321,6 @@ export const TxHistoryNavigator = () => {
                   </Boundary>
                 )}
               </Stack.Screen>
-
-              <Stack.Screen
-                name="send-submitted-tx"
-                component={SubmittedTxScreen}
-                options={{headerShown: false, gestureEnabled: false}}
-              />
-
-              <Stack.Screen
-                name="send-failed-tx"
-                component={FailedTxScreen}
-                options={{headerShown: false, gestureEnabled: false}}
-              />
 
               <Stack.Screen //
                 name="scan-start"

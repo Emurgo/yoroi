@@ -39,8 +39,6 @@ import {
   EnableEasyConfirmationScreen,
 } from './useCases/changeWalletSettings/EasyConfirmation'
 import {ManageCollateralScreen} from './useCases/changeWalletSettings/ManageCollateral'
-import {FailedTxScreen} from './useCases/changeWalletSettings/ManageCollateral/ConfirmTx/FailedTx/FailedTxScreen'
-import {SubmittedTxScreen} from './useCases/changeWalletSettings/ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {RemoveWalletScreen} from './useCases/changeWalletSettings/RemoveWallet'
 import {RenameWalletScreen} from './useCases/changeWalletSettings/RenameWalletScreen/RenameWalletScreen'
 import {WalletSettingsScreen} from './useCases/changeWalletSettings/WalletSettingsScreen'
@@ -190,23 +188,6 @@ export const SettingsScreenNavigator = () => {
           title: strings.collateral,
         }}
         component={ManageCollateralScreen}
-      />
-
-      <Stack.Screen //
-        name="collateral-tx-submitted"
-        options={{
-          title: strings.collateral,
-          headerLeft: () => null,
-        }}
-        component={SubmittedTxScreen}
-      />
-
-      <Stack.Screen //
-        name="collateral-tx-failed"
-        options={{
-          title: strings.collateral,
-        }}
-        component={FailedTxScreen}
       />
 
       <Stack.Screen

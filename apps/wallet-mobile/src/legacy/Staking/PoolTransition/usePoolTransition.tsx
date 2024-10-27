@@ -1,6 +1,5 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {PoolInfoApi} from '@emurgo/yoroi-lib'
-import {useNavigation} from '@react-navigation/native'
 import {Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -11,7 +10,7 @@ import {useReviewTx} from '../../../features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedNetwork} from '../../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {features} from '../../../kernel/features'
-import {AppRouteNavigation, StakingCenterRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
+import {useWalletNavigation} from '../../../kernel/navigation'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {useStakingInfo} from '../../Dashboard/StakePoolInfos'
@@ -35,12 +34,10 @@ const createDelegationTx = async (wallet: YoroiWallet, poolId: string, meta: Wal
 }
 
 export const usePoolTransition = () => {
-  const navigation = useNavigation<StakingCenterRouteNavigation & AppRouteNavigation>()
-
   const {wallet, meta} = useSelectedWallet()
   const {networkManager} = useSelectedNetwork()
-  const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
-  const {unsignedTxChanged, onSuccessChanged, onErrorChanged} = useReviewTx()
+  const {navigateToTxReview} = useWalletNavigation()
+  const {unsignedTxChanged} = useReviewTx()
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
   const poolInfoApi = React.useMemo(
     () => new PoolInfoApi(networkManager.legacyApiBaseUrl),
@@ -62,34 +59,10 @@ export const usePoolTransition = () => {
   const poolId = poolTransition?.suggested.hash ?? ''
 
   const navigateToUpdate = React.useCallback(async () => {
-    try {
-      const yoroiUnsignedTx = await createDelegationTx(wallet, poolId, meta)
-      unsignedTxChanged(yoroiUnsignedTx)
-      onSuccessChanged(() => {
-        resetToTxHistory()
-      })
-      onErrorChanged(() => navigation.navigate('delegation-failed-tx'))
-      navigateToTxReview()
-    } catch (err) {
-      navigation.navigate('manage-wallets', {
-        screen: 'staking-dashboard',
-        params: {
-          screen: 'delegation-failed-tx',
-          initial: false,
-        },
-      })
-    }
-  }, [
-    wallet,
-    poolId,
-    meta,
-    unsignedTxChanged,
-    onSuccessChanged,
-    onErrorChanged,
-    navigateToTxReview,
-    resetToTxHistory,
-    navigation,
-  ])
+    const yoroiUnsignedTx = await createDelegationTx(wallet, poolId, meta)
+    unsignedTxChanged(yoroiUnsignedTx)
+    navigateToTxReview()
+  }, [wallet, poolId, meta, unsignedTxChanged, navigateToTxReview])
 
   return {
     ...poolTransitionQuery,

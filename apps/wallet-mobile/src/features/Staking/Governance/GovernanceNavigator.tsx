@@ -9,11 +9,9 @@ import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {useStrings} from './common/strings'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
-import {FailedTxScreen} from './useCases/FailedTx/FailedTxScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
 import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'
 import {NotSupportedCardanoAppVersion} from './useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion'
-import {SuccessTxScreen} from './useCases/SuccessTx/SuccessTxScreen'
 
 const Stack = NavigationStack
 
@@ -42,10 +40,6 @@ export const GovernanceNavigator = () => {
             component={ChangeVoteScreen}
             options={{title: strings.governanceCentreTitle}}
           />
-
-          <Stack.Screen name="staking-gov-tx-success" component={SuccessTxScreen} options={txStatusOptions} />
-
-          <Stack.Screen name="staking-gov-tx-failed" component={FailedTxScreen} options={txStatusOptions} />
 
           <Stack.Screen
             name="staking-gov-not-supported-version"

@@ -2,12 +2,12 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {Text} from '../../../../components/Text'
-import {useIsUsbSupported} from '../../../../legacy/HW'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../yoroi-wallets/hw/hw'
-import {useStrings} from '../../common/strings'
+import {useStrings} from '../../features/Swap/common/strings'
+import {useIsUsbSupported} from '../../legacy/HW'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '../../yoroi-wallets/hw/hw'
+import {Button, ButtonType} from '../Button/Button'
+import {Spacer} from '../Spacer/Spacer'
+import {Text} from '../Text'
 
 type Props = {
   onSelectUSB: () => void

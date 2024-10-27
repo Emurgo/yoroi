@@ -15,6 +15,7 @@ import {
 import {Button} from '../../../../components/Button/Button'
 import {SafeArea} from '../../../../components/SafeArea'
 import {ScrollView} from '../../../../components/ScrollView/ScrollView'
+import {ReviewTxRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {formatMetadata} from '../../common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '../../common/hooks/useFormattedTx'
@@ -31,17 +32,17 @@ const MaterialTab = createMaterialTopTabNavigator()
 export const ReviewTxScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {unsignedTx, operations, details, onSuccess, onError, onNotSupportedCIP1694, onCIP36SupportChange} =
-    useReviewTx()
+  const {unsignedTx, operations, details} = useReviewTx()
+  const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
 
   if (unsignedTx === null) throw new Error('ReviewTxScreen: missing unsignedTx')
 
   const {onConfirm} = useOnConfirm({
     unsignedTx,
-    onSuccess,
-    onError,
-    onNotSupportedCIP1694,
-    onCIP36SupportChange,
+    onSuccess: params?.onSuccess,
+    onError: params?.onError,
+    onNotSupportedCIP1694: params?.onNotSupportedCIP1694,
+    onCIP36SupportChange: params?.onCIP36SupportChange,
   })
 
   // TODO: apply cbor

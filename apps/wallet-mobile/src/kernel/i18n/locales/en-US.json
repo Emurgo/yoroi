@@ -1254,5 +1254,11 @@
   "txReview.operations.selectAbstain": "Select abstain",
   "txReview.operations.selectNoConfidence": "Select no confidence",
   "txReview.operations.delegateVotingToDRep": "Delegate voting to",
-  "txReview.operations.delegateStake": "Stake entire wallet balance to"
+  "txReview.operations.delegateStake": "Stake entire wallet balance to",
+  "txReview.submittedTxTitle": "Transaction submitted",
+  "txReview.submittedTxText": "Check this transaction in the list of wallet transactions",
+  "txReview.submittedTxButton": "Go to transactions",
+  "txReview.failedTxTitle": "Transaction failed",
+  "txReview.failedTxText": "Your transaction has not been processed properly due to technical issues",
+  "txReview.failedTxButton": "Go to transactions"
 }
