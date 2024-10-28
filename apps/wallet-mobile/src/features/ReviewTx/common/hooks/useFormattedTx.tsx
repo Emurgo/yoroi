@@ -225,7 +225,7 @@ const formatCertificates = (certificates: TransactionBody['certs']) => {
   return (
     certificates?.map((cert) => {
       const [type, certificate] = Object.entries(cert)[0]
-      return {type, certificate} as unknown as FormattedCertificate
+      return {type, value: certificate} as unknown as FormattedCertificate
     }) ?? null
   )
 }

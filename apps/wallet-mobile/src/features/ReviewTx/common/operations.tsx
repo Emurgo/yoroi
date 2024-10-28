@@ -1,17 +1,18 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Linking, StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useQuery} from 'react-query'
 
+import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
 import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
 import {usePoolInfo} from '../../../yoroi-wallets/hooks'
 import {formatTokenWithText} from '../../../yoroi-wallets/utils/format'
 import {asQuantity} from '../../../yoroi-wallets/utils/utils'
-import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
+import {PoolDetails} from './PoolDetails'
 import {CertificateType, FormattedTx} from './types'
 
 export const StakeRegistrationOperation = () => {
@@ -60,7 +61,12 @@ export const StakeDelegateOperation = ({poolId}: {poolId: string}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const poolInfo = usePoolInfo({poolId})
-  const {networkManager} = useSelectedNetwork()
+  const {openModal} = useModal()
+  const {height: windowHeight} = useWindowDimensions()
+
+  const handleShowPoolDetails = () => {
+    openModal(strings.poolDetailsTitle, <PoolDetails poolInfo={poolInfo} />, windowHeight * 0.8)
+  }
 
   const poolInfoText = poolInfo != null ? `[${poolInfo.ticker}] ${poolInfo.name}` : poolId
 
@@ -70,10 +76,7 @@ export const StakeDelegateOperation = ({poolId}: {poolId: string}) => {
 
       <Space width="lg" />
 
-      <TouchableOpacity
-        activeOpacity={0.5}
-        onPress={() => Linking.openURL(networkManager.explorers.cardanoscan.pool(poolId))}
-      >
+      <TouchableOpacity activeOpacity={0.5} onPress={handleShowPoolDetails}>
         <Text style={styles.operationLink}>{poolInfoText}</Text>
       </TouchableOpacity>
     </View>
