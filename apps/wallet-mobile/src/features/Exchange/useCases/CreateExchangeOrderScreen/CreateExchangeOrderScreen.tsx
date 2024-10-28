@@ -1,4 +1,4 @@
-import {atomicFormatter} from '@yoroi/common'
+import {atomicBreakdown} from '@yoroi/common'
 import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
@@ -12,7 +12,6 @@ import {Icon} from '../../../../components/Icon'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {banxaTestWallet} from '../../../../kernel/env'
-import {decimalDot} from '../../../../kernel/i18n/languages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {delay} from '../../../../yoroi-wallets/utils/timeUtils'
@@ -58,9 +57,7 @@ export const CreateExchangeOrderScreen = () => {
   const {height: deviceHeight} = useWindowDimensions()
 
   const quantity = BigInt(amount.value)
-  const orderAmount = Number(
-    atomicFormatter({value: quantity, decimalPlaces: wallet.portfolioPrimaryTokenInfo.decimals, format: decimalDot}),
-  )
+  const orderAmount = atomicBreakdown(quantity, wallet.portfolioPrimaryTokenInfo.decimals).bn.toNumber()
   const returnUrl = encodeURIComponent(
     linksYoroiModuleMaker('yoroi').exchange.order.showCreateResult({
       provider: providerSelected?.id ?? '',
