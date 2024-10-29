@@ -7,6 +7,7 @@ import {notificationManager} from './notification-manager'
 import {parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
+import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 
 let initialized = false
 
@@ -41,4 +42,5 @@ export const useInitNotifications = ({enabled}: {enabled: boolean}) => {
   React.useEffect(() => (enabled ? init() : undefined), [enabled])
   useTransactionReceivedNotifications({enabled})
   usePrimaryTokenPriceChangedNotification({enabled})
+  useRewardsUpdatedNotifications({enabled})
 }
