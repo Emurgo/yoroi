@@ -1,15 +1,18 @@
+import {mountAsyncStorage, useAsyncStorage} from '@yoroi/common'
+import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import * as BackgroundFetch from 'expo-background-fetch'
 import * as TaskManager from 'expo-task-manager'
 import * as React from 'react'
-import {mountAsyncStorage, useAsyncStorage} from '@yoroi/common'
+import {Subject} from 'rxjs'
+
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {walletManager} from '../../../WalletManager/wallet-manager'
 import {notificationManager} from './notification-manager'
-import {Notifications as NotificationTypes} from '@yoroi/types'
 import {generateNotificationId} from './notifications'
-import {Subject} from 'rxjs'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
+import {buildProcessedNotificationsStorage} from './storage'
 
 const backgroundTaskId = 'yoroi-rewards-updated-notifications-background-fetch'
+const storageKey = 'rewards-updated-notification-history'
 const backgroundSyncInMinutes = 60 * 10
 
 // Check is needed for hot reloading, as task can not be defined twice
@@ -32,6 +35,35 @@ const registerBackgroundFetchAsync = () => {
     stopOnTerminate: false,
     startOnBoot: true,
   })
+}
+
+const buildNotifications = async (appStorage: App.Storage) => {
+  const walletIds = [...walletManager.walletMetas.keys()]
+  const notifications: NotificationTypes.RewardsUpdatedEvent[] = []
+
+  for (const walletId of walletIds) {
+    const wallet = walletManager.getWalletById(walletId)
+    if (!wallet) continue
+    const storage = buildProcessedNotificationsStorage(appStorage.join(`wallet/${walletId}/${storageKey}/`))
+    const stakingInfo = await wallet.getStakingInfo()
+    if (stakingInfo.status !== 'staked') continue
+    const {rewards} = stakingInfo
+
+    if (await storage.isEmpty()) {
+      await storage.setValues([rewards])
+    }
+
+    const [latestReward] = await storage.getValues()
+
+    if (latestReward === rewards) {
+      continue
+    }
+
+    await storage.setValues([rewards])
+    notifications.push(createRewardsUpdatedNotification())
+  }
+
+  return notifications
 }
 
 const unregisterBackgroundFetchAsync = () => {

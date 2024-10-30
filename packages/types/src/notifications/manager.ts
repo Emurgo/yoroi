@@ -48,6 +48,7 @@ export type NotificationGroup = 'transaction-history' | 'portfolio'
 export type NotificationEvent =
   | NotificationTransactionReceivedEvent
   | NotificationPrimaryTokenPriceChangedEvent
+  | NotificationRewardsUpdatedEvent
 
 type NotificationEventId = number
 
