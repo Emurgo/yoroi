@@ -44,9 +44,11 @@ const buildNotifications = async (appStorage: App.Storage) => {
   for (const walletId of walletIds) {
     const wallet = walletManager.getWalletById(walletId)
     if (!wallet) continue
+
     const storage = buildProcessedNotificationsStorage(appStorage.join(`wallet/${walletId}/${storageKey}/`))
     const stakingInfo = await wallet.getStakingInfo()
     if (stakingInfo.status !== 'staked') continue
+
     const {rewards} = stakingInfo
 
     if (await storage.isEmpty()) {
@@ -55,9 +57,7 @@ const buildNotifications = async (appStorage: App.Storage) => {
 
     const [latestReward] = await storage.getValues()
 
-    if (latestReward === rewards) {
-      continue
-    }
+    if (latestReward === rewards) continue
 
     await storage.setValues([rewards])
     notifications.push(createRewardsUpdatedNotification())
