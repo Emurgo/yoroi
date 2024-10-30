@@ -3,10 +3,14 @@ import {useAsyncStorage} from '@yoroi/common'
 import {DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
+import {useMutation} from 'react-query'
 
+import {logger} from '../../kernel/logger/logger'
+import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
-import {userRejectedError} from './common/errors'
+import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
+import {isUserRejectedError, userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
 import {usePromptRootKey} from './common/hooks'
 import {useShowHWNotSupportedModal} from './common/HWNotSupportedModal'
@@ -24,6 +28,9 @@ export const useDappConnectorManager = () => {
   const signData = useSignData()
   const signDataWithHW = useSignDataWithHW()
 
+  const promptRootKey = useConnectorPromptRootKey()
+  const {sign: signTxWithHW} = useSignTxWithHW()
+
   return React.useMemo(
     () =>
       createDappConnector({
@@ -35,10 +42,10 @@ export const useDappConnectorManager = () => {
             let shouldResolve = true
             navigateTo.reviewTransaction({
               cbor,
-              isHW: false,
-              onConfirm: (rootKey) => {
+              onConfirm: async () => {
                 if (!shouldResolve) return
                 shouldResolve = false
+                const rootKey = await promptRootKey()
                 resolve(rootKey)
                 navigateTo.browseDapp()
               },
@@ -57,12 +64,16 @@ export const useDappConnectorManager = () => {
             let shouldResolve = true
             navigateTo.reviewTransaction({
               cbor,
-              partial,
-              isHW: true,
-              onConfirm: (tx) => {
+              onConfirm: () => {
                 if (!shouldResolve) return
                 shouldResolve = false
-                resolve(tx)
+                signTxWithHW(
+                  {cbor, partial},
+                  {
+                    onSuccess: (signature) => resolve(signature),
+                    onError: (error) => logger.error('ReviewTransaction::handleOnConfirm', {error}),
+                  },
+                )
                 navigateTo.browseDapp()
               },
               onCancel: () => {
@@ -75,7 +86,7 @@ export const useDappConnectorManager = () => {
         },
         signDataWithHW,
       }),
-    [appStorage, wallet, confirmConnection, signData, meta, navigateTo, signDataWithHW],
+    [appStorage, wallet, confirmConnection, signData, meta, signDataWithHW, navigateTo, promptRootKey, signTxWithHW],
   )
 }
 
@@ -177,4 +188,68 @@ const useConfirmConnection = () => {
     },
     [openConfirmConnectionModal, openUnverifiedDappModal, closeModal],
   )
+}
+
+const useConnectorPromptRootKey = () => {
+  const promptRootKey = usePromptRootKey()
+
+  return React.useCallback(() => {
+    return new Promise<string>((resolve, reject) => {
+      let shouldResolveOnClose = true
+
+      try {
+        promptRootKey({
+          onConfirm: (rootKey) => {
+            resolve(rootKey)
+            shouldResolveOnClose = false
+            return Promise.resolve()
+          },
+          onClose: () => {
+            if (shouldResolveOnClose) reject(userRejectedError())
+          },
+        })
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }, [promptRootKey])
+}
+
+export const useSignTxWithHW = () => {
+  const {confirmHWConnection, closeModal} = useConfirmHWConnectionModal()
+  const {wallet, meta} = useSelectedWallet()
+
+  const mutationFn = React.useCallback(
+    (options: {cbor: string; partial?: boolean}) => {
+      return new Promise<Transaction>((resolve, reject) => {
+        let shouldResolveOnClose = true
+        confirmHWConnection({
+          onConfirm: async ({transportType, deviceInfo}) => {
+            try {
+              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+              const tx = await cip30.signTx(options.cbor, options.partial ?? false, deviceInfo, transportType === 'USB')
+              shouldResolveOnClose = false
+              return resolve(tx)
+            } catch (error) {
+              reject(error)
+            } finally {
+              closeModal()
+            }
+          },
+          onClose: () => {
+            if (shouldResolveOnClose) reject(userRejectedError())
+          },
+        })
+      })
+    },
+    [confirmHWConnection, wallet, meta, closeModal],
+  )
+
+  const mutation = useMutation<Transaction, Error, {cbor: string; partial?: boolean}>({
+    mutationFn,
+    useErrorBoundary: (error) => !isUserRejectedError(error),
+    mutationKey: ['useSignTxWithHW'],
+  })
+
+  return {...mutation, sign: mutation.mutate}
 }

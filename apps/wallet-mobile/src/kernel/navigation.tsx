@@ -276,6 +276,7 @@ export type PortfolioRoutes = {
 
 export type ReviewTxRoutes = {
   'review-tx'?: {
+    onConfirm?: () => void
     onSuccess?: (signedTx: YoroiSignedTx) => void
     onError?: () => void
     onNotSupportedCIP1694?: () => void
