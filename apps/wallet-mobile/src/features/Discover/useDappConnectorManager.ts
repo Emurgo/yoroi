@@ -6,7 +6,9 @@ import {InteractionManager} from 'react-native'
 import {useMutation} from 'react-query'
 
 import {logger} from '../../kernel/logger/logger'
+import {useWalletNavigation} from '../../kernel/navigation'
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
+import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
@@ -22,6 +24,8 @@ export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
   const navigateTo = useNavigateTo()
   const {wallet, meta} = useSelectedWallet()
+  const {navigateToTxReview} = useWalletNavigation()
+  const {cborChanged} = useReviewTx()
 
   const confirmConnection = useConfirmConnection()
 
@@ -40,8 +44,8 @@ export const useDappConnectorManager = () => {
         signTx: (cbor) => {
           return new Promise<string>((resolve, reject) => {
             let shouldResolve = true
-            navigateTo.reviewTransaction({
-              cbor,
+            cborChanged(cbor)
+            navigateToTxReview({
               onConfirm: async () => {
                 if (!shouldResolve) return
                 shouldResolve = false
@@ -62,8 +66,8 @@ export const useDappConnectorManager = () => {
         signTxWithHW: (cbor, partial) => {
           return new Promise<Transaction>((resolve, reject) => {
             let shouldResolve = true
-            navigateTo.reviewTransaction({
-              cbor,
+            cborChanged(cbor)
+            navigateToTxReview({
               onConfirm: () => {
                 if (!shouldResolve) return
                 shouldResolve = false
@@ -86,7 +90,19 @@ export const useDappConnectorManager = () => {
         },
         signDataWithHW,
       }),
-    [appStorage, wallet, confirmConnection, signData, meta, signDataWithHW, navigateTo, promptRootKey, signTxWithHW],
+    [
+      appStorage,
+      wallet,
+      confirmConnection,
+      signData,
+      meta,
+      signDataWithHW,
+      cborChanged,
+      navigateToTxReview,
+      promptRootKey,
+      navigateTo,
+      signTxWithHW,
+    ],
   )
 }
 

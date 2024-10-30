@@ -20,12 +20,10 @@ export const useOnConfirm = ({
   onSuccess?: ((txId: YoroiSignedTx) => void) | null
   onError?: (() => void) | null
   cbor?: string
-  unsignedTx?: YoroiUnsignedTx
+  unsignedTx?: YoroiUnsignedTx | null
   onNotSupportedCIP1694?: (() => void) | null
   onCIP36SupportChange?: ((isCIP36Supported: boolean) => void) | null
 }) => {
-  if (unsignedTx === undefined) throw new Error('useOnConfirm: unsignedTx missing')
-
   const {meta} = useSelectedWallet()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
@@ -41,7 +39,7 @@ export const useOnConfirm = ({
   }
 
   const onConfirm = () => {
-    if (meta.isHW) {
+    if (meta.isHW && unsignedTx) {
       openModal(
         strings.signTransaction,
         <ConfirmTxWithHwModal
@@ -61,7 +59,7 @@ export const useOnConfirm = ({
       return
     }
 
-    if (!meta.isHW && !meta.isEasyConfirmationEnabled) {
+    if (!meta.isHW && !meta.isEasyConfirmationEnabled && unsignedTx) {
       openModal(
         strings.signTransaction,
         <ConfirmTxWithSpendingPasswordModal
@@ -73,7 +71,7 @@ export const useOnConfirm = ({
       return
     }
 
-    if (!meta.isHW && meta.isEasyConfirmationEnabled) {
+    if (!meta.isHW && meta.isEasyConfirmationEnabled && unsignedTx) {
       openModal(
         strings.signTransaction,
         <ConfirmTxWithOsModal unsignedTx={unsignedTx} onSuccess={handleOnSuccess} onError={handleOnError} />,

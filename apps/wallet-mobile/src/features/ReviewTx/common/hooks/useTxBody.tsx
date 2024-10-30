@@ -4,13 +4,19 @@ import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {TransactionBody} from '../types'
 
-export const useTxBody = ({cbor, unsignedTx}: {cbor?: string; unsignedTx?: YoroiUnsignedTx}): TransactionBody => {
+export const useTxBody = ({
+  cbor,
+  unsignedTx,
+}: {
+  cbor?: string | null
+  unsignedTx?: YoroiUnsignedTx | null
+}): TransactionBody => {
   const query = useQuery(
     ['useTxBody', cbor, unsignedTx],
     async () => {
-      if (cbor !== undefined) {
+      if (cbor != undefined) {
         return getCborTxBody(cbor)
-      } else if (unsignedTx !== undefined) {
+      } else if (unsignedTx != undefined) {
         return getUnsignedTxTxBody(unsignedTx)
       } else {
         throw new Error('useTxBody: missing cbor and unsignedTx')
