@@ -4,6 +4,7 @@ import {Notifications} from '@yoroi/types'
 
 import {displayNotificationEvent} from './notifications'
 import {primaryTokenPriceChangedSubject} from './primary-token-price-changed-notification'
+import {rewardsUpdatedSubject} from './rewards-updated-notification'
 import {transactionReceivedSubject} from './transaction-received-notification'
 
 const appStorage = mountAsyncStorage({path: '/'})
@@ -16,5 +17,6 @@ export const notificationManager = notificationManagerMaker({
   subscriptions: {
     [Notifications.Trigger.TransactionReceived]: transactionReceivedSubject,
     [Notifications.Trigger.PrimaryTokenPriceChanged]: primaryTokenPriceChangedSubject,
+    [Notifications.Trigger.RewardsUpdated]: rewardsUpdatedSubject,
   },
 })
