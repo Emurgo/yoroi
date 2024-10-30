@@ -1,6 +1,7 @@
 import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
 import {mountAsyncStorage} from '@yoroi/common'
 import {Notifications as NotificationTypes} from '@yoroi/types'
+import {NotificationTrigger} from '@yoroi/types/lib/typescript/notifications/manager'
 
 import {formatCurrency, getCurrencySymbol} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
@@ -33,6 +34,14 @@ export const displayNotificationEvent = async (notificationEvent: NotificationTy
     sendNotification({
       title: 'Primary token price changed',
       body: `The price of the primary token has changed to ${newPrice}.`,
+      id: notificationEvent.id,
+    })
+  }
+
+  if (notificationEvent.trigger === NotificationTrigger.RewardsUpdated) {
+    sendNotification({
+      title: 'Rewards updated',
+      body: 'Your rewards have been updated',
       id: notificationEvent.id,
     })
   }

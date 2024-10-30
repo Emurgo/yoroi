@@ -45,7 +45,8 @@ const buildNotifications = async (appStorage: App.Storage) => {
     const wallet = walletManager.getWalletById(walletId)
     if (!wallet) continue
 
-    const storage = buildProcessedNotificationsStorage(appStorage.join(`wallet/${walletId}/${storageKey}/`))
+    const fullStorageKey = `wallet/${walletId}/${wallet.networkManager.network}/${storageKey}/` as const
+    const storage = buildProcessedNotificationsStorage(appStorage.join(fullStorageKey))
     const stakingInfo = await wallet.getStakingInfo()
     if (stakingInfo.status !== 'staked') continue
 
