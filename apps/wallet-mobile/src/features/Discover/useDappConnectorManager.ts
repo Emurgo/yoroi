@@ -75,7 +75,10 @@ export const useDappConnectorManager = () => {
                   {cbor, partial},
                   {
                     onSuccess: (signature) => resolve(signature),
-                    onError: (error) => logger.error('ReviewTransaction::handleOnConfirm', {error}),
+                    onError: (error) => {
+                      logger.error('ReviewTransaction::handleOnConfirm', {error})
+                      reject(error)
+                    },
                   },
                 )
                 navigateTo.browseDapp()
