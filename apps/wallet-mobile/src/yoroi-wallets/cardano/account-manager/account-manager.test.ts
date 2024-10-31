@@ -61,16 +61,6 @@ describe('AddressChain', () => {
     expect(chain?.getIndexOfAddress(getAddr(14))).toBe(14)
   })
 
-  it('throws on bad indexOf', async () => {
-    expect.assertions(1)
-
-    await chain?.initialize()
-    expect(() => {
-      // note: throws and logs error "Assertion failed: getIndexOfAddress:: is not my address"
-      chain?.getIndexOfAddress('wrong')
-    }).toThrow()
-  })
-
   it('can continue after rehydrating', async () => {
     const chainId = 1
     const pubKey44 =

@@ -141,7 +141,6 @@
     "@yoroi/theme": "^2.0.0",
     "@yoroi/transfer": "^1.0.1",
     "add": "2.0.6",
-    "assert": "^2.0.0",
     "axios": "^1.5.0",
     "base-64": "^1.0.0",
     "bignumber.js": "^9.0.1",

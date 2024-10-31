@@ -1,5 +1,3 @@
-import assert from 'assert'
-
 import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {CardanoMobile} from '../../wallets'
 
@@ -20,7 +18,6 @@ export const isValidPath = (path: unknown): boolean => {
 }
 
 export const isCIP1852AccountPath = (path: Array<number>): boolean => {
-  assert(isValidPath(path), 'invalid bip44 path')
   // note: allows non-zero accounts
   return (
     path.length === 3 &&

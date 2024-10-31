@@ -6,7 +6,6 @@ import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi} from '@yoroi/api'
 import {isNonNullable} from '@yoroi/common'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
-import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import {freeze} from 'immer'
@@ -252,7 +251,6 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
       const candidateAddresses = this.internalChain.addresses
       const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
-      assert(unseen.length > 0, 'Cannot find change address')
       const changeAddress = _.first(unseen)
       if (!changeAddress) throwLoggedError('CardanoWallet: getChangeAddress unable to resolve change address')
       return changeAddress
@@ -1086,7 +1084,6 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
     private _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
       _.mapValues(perAddressTxs, (txs) => {
-        assert(!!txs, 'perAddressTxs cointains false-ish value')
         return txs.length > 0
       }),
     )

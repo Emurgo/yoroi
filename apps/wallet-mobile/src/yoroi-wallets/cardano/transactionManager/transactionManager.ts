@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {isArray, parseSafe, PromiseAllLimited} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import assert from 'assert'
 import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
@@ -478,7 +477,6 @@ const confirmationCountsSelector = (state: TransactionManagerState) => {
       ...tx.inputs.map(getBlockNum),
       ...tx.outputs.map(getBlockNum),
     ])
-    assert(tx.blockNum, 'Successfull tx should have blockNum')
 
     return bestBlockNum - (tx as any).blockNum
   })
