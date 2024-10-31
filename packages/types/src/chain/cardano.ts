@@ -5,16 +5,80 @@ import {
 } from '@emurgo/yoroi-lib'
 
 import {BalanceAmounts} from '../balance/token'
+import {NumbersRatio} from '../numbers/ratio'
 
 export type ChainCardanoProtocolParams = Readonly<{
-  coinsPerUtxoByte: string
-  keyDeposit: string
   linearFee: {
-    coefficient: string
     constant: string
+    coefficient: string
   }
+  minFeeReferenceScript: {
+    coinsPerByte: NumbersRatio
+    tierStepBytes: string
+    multiplier: string
+  }
+  coinsPerUtxoByte: string
   poolDeposit: string
+  keyDeposit: string
   epoch: number
+  maxBlockBodySize: string
+  maxBlockHeaderSize: string
+  maxTxSize: string
+  maxReferenceScriptsSize: string
+  stakePoolPledgeInfluence: NumbersRatio
+  monetaryExpansion: NumbersRatio
+  treasuryExpansion: NumbersRatio
+  minPoolCost: string
+  maxExecutionUnits: {
+    perTransaction: {
+      memory: string
+      cpu: string
+    }
+    perBlock: {
+      memory: string
+      cpu: string
+    }
+  }
+  scriptExecutionPrices: {
+    memory: NumbersRatio
+    cpu: NumbersRatio
+  }
+  maxCollateralInputs: string
+  collateralPercentage: string
+  maxValueSize: string
+  version: {
+    major: string
+    minor: string
+  }
+  governanceActionDeposit: string
+  delegateRepresentativeDeposit: string
+  constitutionalCommitteeMinSize: string
+  constitutionalCommitteeMaxTermLength: string
+  governanceActionLifetime: string
+  delegateRepresentativeMaxIdleTime: string
+  desiredNumberOfStakePools: string
+  stakePoolRetirementEpochBound: string
+  votingThresholds: {
+    stakePool: {
+      noConfidence: NumbersRatio
+      committeeNormal: NumbersRatio
+      committeeNoConfidence: NumbersRatio
+      hardFork: NumbersRatio
+      ppSecurity: NumbersRatio
+    }
+    delegateRep: {
+      noConfidence: NumbersRatio
+      committeeNormal: NumbersRatio
+      committeeNoConfidence: NumbersRatio
+      constitution: NumbersRatio
+      hardFork: NumbersRatio
+      ppNetwork: NumbersRatio
+      ppEconomic: NumbersRatio
+      ppTechnical: NumbersRatio
+      ppGovernance: NumbersRatio
+      treasury: NumbersRatio
+    }
+  }
 }>
 
 export type ChainCardanoBestBlock = Readonly<{
