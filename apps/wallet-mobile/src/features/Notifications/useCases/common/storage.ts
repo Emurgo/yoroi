@@ -11,6 +11,10 @@ export const buildProcessedNotificationsStorage = (storage: App.Storage) => {
     await storage.setItem('processed', newProcessed)
   }
 
+  const setValues = async (values: string[]) => {
+    await storage.setItem('processed', values)
+  }
+
   const includes = async (value: string) => {
     const processed = await getValues()
     return processed.includes(value)
@@ -20,10 +24,17 @@ export const buildProcessedNotificationsStorage = (storage: App.Storage) => {
     await storage.setItem('processed', [])
   }
 
+  const isEmpty = async () => {
+    const processed = await getValues()
+    return processed.length === 0
+  }
+
   return {
     getValues,
     addValues,
     includes,
     clear,
+    setValues,
+    isEmpty,
   }
 }

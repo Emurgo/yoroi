@@ -36,6 +36,14 @@ export const displayNotificationEvent = async (notificationEvent: NotificationTy
       id: notificationEvent.id,
     })
   }
+
+  if (notificationEvent.trigger === NotificationTypes.Trigger.RewardsUpdated) {
+    sendNotification({
+      title: 'Rewards updated',
+      body: 'Your rewards have been updated',
+      id: notificationEvent.id,
+    })
+  }
 }
 
 const sendNotification = (options: {title: string; body: string; id: number}) => {
