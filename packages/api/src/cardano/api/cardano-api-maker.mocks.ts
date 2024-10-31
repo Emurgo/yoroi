@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import {Api} from '@yoroi/types'
-import {paramsMockResponse} from './protocol-params.mocks'
+import {protocolParamsMockResponse} from './protocol-params.mocks'
 import {bestBlockMockResponse} from './best-block.mocks'
 
 const loading = () => new Promise(() => {})
@@ -17,9 +17,9 @@ const delayedResponse = <T = never>({
   })
 
 const getProtocolParams = {
-  success: () => Promise.resolve(paramsMockResponse),
+  success: () => Promise.resolve(protocolParamsMockResponse),
   delayed: (timeout?: number) =>
-    delayedResponse({data: paramsMockResponse, timeout}),
+    delayedResponse({data: protocolParamsMockResponse, timeout}),
   empty: () => Promise.resolve({}),
   loading,
   error: {
