@@ -3,7 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {Api} from '@yoroi/types'
-import assert from 'assert'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -267,13 +266,9 @@ const useStyles = () => {
 
 class StorageError extends Error {}
 
-const checkPathFormat = (path: string) => path.startsWith('/') && !path.endsWith('/')
-
 const parseJson = (json: string) => (json !== null ? JSON.parse(json) : undefined)
 
 const read = async (path: string) => {
-  assert(checkPathFormat(path), 'Wrong storage key path')
-
   try {
     const text = await AsyncStorage.getItem(path)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -284,8 +279,6 @@ const read = async (path: string) => {
 }
 
 const readMany = async (paths: Array<string>) => {
-  assert(_.every(paths, checkPathFormat), 'Wrong storage key path')
-
   try {
     const items = await AsyncStorage.multiGet(paths)
 
@@ -297,10 +290,6 @@ const readMany = async (paths: Array<string>) => {
 }
 
 const write = async (path: string, data: any) => {
-  assert(path.startsWith('/'), 'Wrong storage key path')
-  assert(!path.endsWith('/'), 'Wrong storage key path')
-  assert(data !== undefined, 'Cannot store undefined')
-
   try {
     await AsyncStorage.setItem(path, JSON.stringify(data))
   } catch (error) {
@@ -309,9 +298,6 @@ const write = async (path: string, data: any) => {
 }
 
 const remove = async (path: string) => {
-  assert(path.startsWith('/'), 'Wrong storage key path')
-  assert(!path.endsWith('/'), 'Wrong storage key path')
-
   try {
     await AsyncStorage.removeItem(path)
   } catch (error) {

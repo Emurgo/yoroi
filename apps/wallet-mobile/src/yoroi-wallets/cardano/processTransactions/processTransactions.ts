@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {isArray, isString} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
-import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 
 import {
@@ -235,7 +234,6 @@ export const processTxHistoryData = (
     amount = brutto.joinSubtractMutable(totalFee)
     fee = remoteFee ?? totalFee
   } else {
-    assert(ownInputs.length === 0, 'This cannot be receiving transaction')
     direction = TRANSACTION_DIRECTION.RECEIVED
     amount = brutto
     fee = null

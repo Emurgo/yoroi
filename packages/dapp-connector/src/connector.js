@@ -79,6 +79,10 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   const callExternalMethod = (method, args = undefined, options = {}) => {
     const requestId = getRandomId()
 
+    if (apisWhichRequireWindowFocus.includes(method) && !isWindowVisible()) {
+      return new Promise(() => throwUserRejectedError())
+    }
+
     if (options?.doNotWaitForResponse) {
       postMessage({id: requestId, method, source: 'dapp-connector', params: {args, browserContext: getContext()}})
       return Promise.resolve()
@@ -103,6 +107,19 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
     logMessage('Unhandled rejection:' + serializeError(event.reason))
   })
 
+  const isWindowVisible = () => {
+    return document.visibilityState === 'visible'
+  }
+
+  const getUserRejectedError = () => {
+    return new CIP30Error('User Rejected', -3)
+  }
+
+  const throwUserRejectedError = () => {
+    logMessage('User Rejected')
+    throw getUserRejectedError()
+  }
+
   /**
    * @param {Error | Object} error
    * @returns {string}
@@ -113,6 +130,8 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
     }
     return JSON.stringify(error)
   }
+
+  const apisWhichRequireWindowFocus = ['api.getCollateral', 'api.signTx', 'api.signData', 'api.cip95.signData']
 
   window.addEventListener('message', (event) => {
     if (!event.data || typeof event.data.id !== 'string') return
@@ -134,8 +153,7 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
    */
   const createApi = async (cardanoEnableResponse) => {
     if (!cardanoEnableResponse) {
-      logMessage('User Rejected')
-      throw new CIP30Error('User Rejected', -3)
+      return throwUserRejectedError()
     }
 
     localStorage.setItem('yoroi-session-id', sessionId)
@@ -212,16 +230,18 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   }
 
   /**
-   * @param {Error} error
+   * @param {Error | String} error
    * @returns {CIP30Error}
    */
   const normalizeError = (error) => {
-    if (error.message.toLowerCase().includes('user rejected')) {
+    const message = typeof error === 'string' ? error : error.message
+
+    if (message.toLowerCase().includes('user rejected')) {
       logMessage('User Rejected')
-      return new CIP30Error('User Rejected', -3)
+      return getUserRejectedError()
     }
-    logMessage('Error:' + error.message)
-    return new CIP30Error(error.message, -1)
+    logMessage('Error:' + message)
+    return new CIP30Error(message, -1)
   }
 
   const walletObj = Object.freeze({
