@@ -79,6 +79,10 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   const callExternalMethod = (method, args = undefined, options = {}) => {
     const requestId = getRandomId()
 
+    if (apisWhichRequireWindowFocus.includes(method) && !isWindowVisible()) {
+      return new Promise(() => throwUserRejectedError())
+    }
+
     if (options?.doNotWaitForResponse) {
       postMessage({id: requestId, method, source: 'dapp-connector', params: {args, browserContext: getContext()}})
       return Promise.resolve()
@@ -127,6 +131,8 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
     return JSON.stringify(error)
   }
 
+  const apisWhichRequireWindowFocus = ['api.getCollateral', 'api.signTx', 'api.signData', 'api.cip95.signData']
+
   window.addEventListener('message', (event) => {
     if (!event.data || typeof event.data.id !== 'string') return
     logMessage('Received message ' + JSON.stringify(event.data))
@@ -160,21 +166,19 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
       getExtensions: (...args) => callExternalMethod('api.getExtensions', args),
       getNetworkId: (...args) => callExternalMethod('api.getNetworkId', args),
       getUtxos: (...args) => callExternalMethod('api.getUtxos', args),
-      getCollateral: (...args) =>
-        isWindowVisible() ? callExternalMethod('api.getCollateral', args) : throwUserRejectedError(),
+      getCollateral: (...args) => callExternalMethod('api.getCollateral', args),
       getBalance: (...args) => callExternalMethod('api.getBalance', args),
       getUsedAddresses: (...args) => callExternalMethod('api.getUsedAddresses', args),
       getUnusedAddresses: (...args) => callExternalMethod('api.getUnusedAddresses', args),
       getChangeAddress: (...args) => callExternalMethod('api.getChangeAddress', args),
       getRewardAddresses: (...args) => callExternalMethod('api.getRewardAddresses', args),
-      signTx: (...args) => (isWindowVisible() ? callExternalMethod('api.signTx', args) : throwUserRejectedError()),
-      signData: (...args) => (isWindowVisible() ? callExternalMethod('api.signData', args) : throwUserRejectedError()),
+      signTx: (...args) => callExternalMethod('api.signTx', args),
+      signData: (...args) => callExternalMethod('api.signData', args),
       submitTx: (...args) => callExternalMethod('api.submitTx', args),
       experimental: {on: () => {}},
       cip95: supportsCIP95
         ? {
-            signData: (...args) =>
-              isWindowVisible() ? callExternalMethod('api.cip95.signData', args) : throwUserRejectedError(),
+            signData: (...args) => callExternalMethod('api.cip95.signData', args),
             getPubDRepKey: (...args) => callExternalMethod('api.cip95.getPubDRepKey', args),
             getRegisteredPubStakeKeys: (...args) => callExternalMethod('api.cip95.getRegisteredPubStakeKeys', args),
             getUnregisteredPubStakeKeys: (...args) => callExternalMethod('api.cip95.getUnregisteredPubStakeKeys', args),
