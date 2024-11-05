@@ -31,7 +31,9 @@ export const useStrings = () => {
     poolId: intl.formatMessage(messages.poolId),
     poolHash: intl.formatMessage(messages.poolHash),
     poolSize: intl.formatMessage(messages.poolSize),
-    poolFee: intl.formatMessage(messages.poolFee),
+    poolTaxFix: intl.formatMessage(messages.poolTaxFix),
+    poolTaxRatio: intl.formatMessage(messages.poolTaxRatio),
+    poolPledge: intl.formatMessage(messages.poolPledge),
     poolRoa: intl.formatMessage(messages.poolRoa),
     poolShare: intl.formatMessage(messages.poolShare),
     poolSaturation: intl.formatMessage(messages.poolSaturation),
@@ -169,9 +171,17 @@ const messages = defineMessages({
     id: 'txReview.poolDetails.poolSaturation.label',
     defaultMessage: '!!!Saturation',
   },
-  poolFee: {
-    id: 'txReview.poolDetails.poolFee.label',
-    defaultMessage: '!!!Fee',
+  poolTaxFix: {
+    id: 'txReview.poolDetails.taxFix.label',
+    defaultMessage: '!!!Tax fix',
+  },
+  poolTaxRatio: {
+    id: 'txReview.poolDetails.taxRatio.label',
+    defaultMessage: '!!!Tax ratio',
+  },
+  poolPledge: {
+    id: 'txReview.poolDetails.pledge.label',
+    defaultMessage: '!!!Pledge',
   },
   fingerprint: {
     id: 'txReview.tokenDetails.fingerprint.label',

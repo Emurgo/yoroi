@@ -1,47 +1,97 @@
-import {ExplorerPoolInfo} from '@emurgo/yoroi-lib'
+import {FullPoolIfo} from '@emurgo/yoroi-lib'
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
 import {Space} from '../../../components/Space/Space'
 import {isEmptyString} from '../../../kernel/utils'
 import {formatTokenWithText} from '../../../yoroi-wallets/utils/format'
-import {asQuantity} from '../../../yoroi-wallets/utils/utils'
+import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {CopiableText} from './CopiableText'
+import {ExplorerInfoLinks} from './ExplorerInfoLinks'
 import {useStrings} from './hooks/useStrings'
+import {generatePoolName} from './operations'
 
-export const PoolDetails = ({poolInfo}: {poolInfo: ExplorerPoolInfo | null}) => {
+export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolIfo}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  console.log('poolInfo', JSON.stringify(poolInfo, null, 2))
+
+  const {chain, explorer} = poolInfo
+
+  const lastChainPoolInfo = chain?.history.at(-1) ?? null
+  const poolName = generatePoolName(poolInfo)
+
   return (
-    <View style={styles.root}>
-      <PoolIcon imageUrl={poolInfo?.pic} />
+    <ScrollView bounces={false} style={styles.root}>
+      <PoolIcon imageUrl={explorer?.pic} />
 
       <Space height="sm" />
 
-      <PoolId poolId={poolInfo?.id} />
+      <Row>
+        <Text style={styles.title}>{poolName}</Text>
+      </Row>
 
-      <Space width="lg" />
+      <Space height="xl" />
 
-      <PoolHash poolHash={poolInfo?.hash} />
+      <PoolId poolId={explorer?.id} />
 
-      <Space width="lg" />
+      <Space height="lg" />
+
+      <PoolHash poolHash={explorer?.hash} />
+
+      <Space height="lg" />
 
       <Info
         label={strings.poolSize}
-        value={formatTokenWithText(asQuantity(poolInfo?.stake ?? '-'), wallet.portfolioPrimaryTokenInfo)}
+        value={formatTokenWithText(asQuantity(explorer?.stake ?? Quantities.zero), wallet.portfolioPrimaryTokenInfo)}
       />
 
-      <Info label={strings.poolRoa} value={`${poolInfo?.roa ?? '-'}%`} />
+      <Space height="sm" />
 
-      <Info label={strings.poolShare} value={`${poolInfo?.share ?? '-'}%`} />
+      <Info label={strings.poolRoa} value={`${explorer?.roa ?? '-'}%`} />
 
-      <Info label={strings.poolSaturation} value={`${poolInfo?.saturation ?? '-'}%`} />
-    </View>
+      <Space height="sm" />
+
+      <Info label={strings.poolShare} value={`${explorer?.share ?? '-'}%`} />
+
+      <Space height="sm" />
+
+      <Info label={strings.poolSaturation} value={`${explorer?.saturation ?? '-'}%`} />
+
+      <Space height="sm" />
+
+      <Info
+        label={strings.poolTaxFix}
+        value={formatTokenWithText(asQuantity(explorer?.taxFix ?? Quantities.zero), wallet.portfolioPrimaryTokenInfo)}
+      />
+
+      <Space width="sm" />
+
+      <Info label={strings.poolTaxRatio} value={`${explorer?.taxRatio ?? '-'}%`} />
+
+      <Space width="sm" />
+
+      <Info
+        label={strings.poolPledge}
+        value={formatTokenWithText(
+          asQuantity(
+            (lastChainPoolInfo?.payload as {poolParams: {pledge: string}})?.['poolParams']?.['pledge'] ??
+              Quantities.zero,
+          ),
+          wallet.portfolioPrimaryTokenInfo,
+        )}
+      />
+
+      <Space height="lg" />
+
+      {poolInfo.explorer && !isEmptyString(poolInfo.explorer.id) && (
+        <ExplorerInfoLinks id={poolInfo.explorer.id} type="pool" />
+      )}
+    </ScrollView>
   )
 }
 
@@ -149,7 +199,11 @@ const useStyles = () => {
     },
     row: {
       ...atoms.flex_row,
-      ...atoms.justify_between,
+      ...atoms.justify_center,
+    },
+    title: {
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_medium,
     },
   })
 

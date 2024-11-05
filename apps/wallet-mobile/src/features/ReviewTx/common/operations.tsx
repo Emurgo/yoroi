@@ -1,3 +1,4 @@
+import {FullPoolIfo} from '@emurgo/yoroi-lib'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
@@ -68,7 +69,7 @@ export const StakeDelegateOperation = ({poolId}: {poolId: string}) => {
     openModal(strings.poolDetailsTitle, <PoolDetails poolInfo={poolInfo} />, windowHeight * 0.8)
   }
 
-  const poolInfoText = poolInfo != null ? `[${poolInfo.ticker}] ${poolInfo.name}` : poolId
+  const poolName = generatePoolName(poolInfo) ?? poolId
 
   return (
     <View style={styles.operation}>
@@ -77,10 +78,14 @@ export const StakeDelegateOperation = ({poolId}: {poolId: string}) => {
       <Space width="lg" />
 
       <TouchableOpacity activeOpacity={0.5} onPress={handleShowPoolDetails}>
-        <Text style={styles.operationLink}>{poolInfoText}</Text>
+        <Text style={styles.operationLink}>{poolName}</Text>
       </TouchableOpacity>
     </View>
   )
+}
+
+export const generatePoolName = (poolInfo: FullPoolIfo) => {
+  return poolInfo.explorer != null ? `[${poolInfo.explorer.ticker}] ${poolInfo.explorer.name}` : null
 }
 
 export const AbstainOperation = () => {

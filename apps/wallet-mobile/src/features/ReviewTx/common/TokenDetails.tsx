@@ -2,7 +2,7 @@ import {usePortfolioTokenDiscovery} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../components/Icon'
@@ -13,10 +13,13 @@ import {time} from '../../../kernel/constants'
 import {isEmptyString} from '../../../kernel/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {CopiableText} from './CopiableText'
+import {ExplorerInfoLinks} from './ExplorerInfoLinks'
 import {useStrings} from './hooks/useStrings'
 
-export const TokenDetails = ({tokenInfo}: {tokenInfo: Portfolio.Token.Info}) => {
+export const TokenDetails = ({tokenInfo}: {tokenInfo: Portfolio.Token.Info | undefined}) => {
   const {styles} = useStyles()
+
+  if (tokenInfo == null) return null
 
   return (
     <View style={styles.root}>
@@ -31,7 +34,7 @@ export const TokenDetails = ({tokenInfo}: {tokenInfo: Portfolio.Token.Info}) => 
 
 const Header = ({info}: {info: Portfolio.Token.Info}) => {
   const {styles} = useStyles()
-  const [policyId, assetName] = info.id.split('.')
+  const [policyId, assetName] = info?.id.split('.') ?? ['', '']
 
   const title = !isEmptyString(info.ticker) ? info.ticker : !isEmptyString(info.name) ? info.name : ''
 
@@ -146,7 +149,7 @@ const Overview = ({
 
         <Description info={info} />
 
-        <Links info={info} />
+        <ExplorerInfoLinks id={info.id} type="token" />
       </ScrollView>
     )
   }
@@ -156,7 +159,7 @@ const Overview = ({
 
       <Description info={info} />
 
-      <Links info={info} />
+      <ExplorerInfoLinks id={info.id} type="token" />
     </ScrollView>
   )
 }
@@ -273,39 +276,6 @@ const Description = ({info}: {info: Portfolio.Token.Info}) => {
   )
 }
 
-const Links = ({info}: {info: Portfolio.Token.Info}) => {
-  const {styles} = useStyles()
-  const {wallet} = useSelectedWallet()
-  const strings = useStrings()
-
-  const handleOpenLink = async (direction: 'cardanoscan' | 'adaex') => {
-    if (info == null) return
-    if (direction === 'cardanoscan') {
-      await Linking.openURL(wallet.networkManager.explorers.cardanoscan.token(info.id))
-    } else {
-      await Linking.openURL(wallet.networkManager.explorers.cexplorer.token(info.id))
-    }
-  }
-
-  return (
-    <View>
-      <Space width="sm" />
-
-      <Text style={styles.label}>{strings.details}</Text>
-
-      <View style={styles.linkGroup}>
-        <TouchableOpacity onPress={() => handleOpenLink('cardanoscan')}>
-          <Text style={styles.link}>Cardanoscan</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => handleOpenLink('adaex')}>
-          <Text style={styles.link}>Adaex</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  )
-}
-
 const Row = ({children}: {children: React.ReactNode}) => {
   const {styles} = useStyles()
   return <View style={styles.row}>{children}</View>
@@ -348,14 +318,6 @@ const useStyles = () => {
     },
     tabs: {
       ...atoms.flex_row,
-    },
-    link: {
-      ...atoms.link_1_lg_underline,
-      color: color.text_primary_medium,
-    },
-    linkGroup: {
-      ...atoms.flex_row,
-      ...atoms.gap_lg,
     },
     copiableText: {
       ...atoms.flex_1,
