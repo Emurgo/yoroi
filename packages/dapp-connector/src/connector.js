@@ -230,16 +230,19 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   }
 
   /**
-   * @param {Error} error
+   * @param {Error | String} error
    * @returns {CIP30Error}
    */
   const normalizeError = (error) => {
-    if (error.message.toLowerCase().includes('user rejected')) {
+    const message = typeof error === 'string' ? error : error.message
+
+    logMessage(`normalize error: ${message}`)
+    if (message.toLowerCase().includes('user rejected')) {
       logMessage('User Rejected')
       return new CIP30Error('User Rejected', -3)
     }
-    logMessage('Error:' + error.message)
-    return new CIP30Error(error.message, -1)
+    logMessage('Error:' + message)
+    return new CIP30Error(message, -1)
   }
 
   const walletObj = Object.freeze({
