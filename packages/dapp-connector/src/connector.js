@@ -236,7 +236,6 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   const normalizeError = (error) => {
     const message = typeof error === 'string' ? error : error.message
 
-    logMessage(`normalize error: ${message}`)
     if (message.toLowerCase().includes('user rejected')) {
       logMessage('User Rejected')
       return new CIP30Error('User Rejected', -3)
