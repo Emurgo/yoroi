@@ -238,7 +238,7 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
 
     if (message.toLowerCase().includes('user rejected')) {
       logMessage('User Rejected')
-      return new CIP30Error('User Rejected', -3)
+      return getUserRejectedError()
     }
     logMessage('Error:' + message)
     return new CIP30Error(message, -1)
