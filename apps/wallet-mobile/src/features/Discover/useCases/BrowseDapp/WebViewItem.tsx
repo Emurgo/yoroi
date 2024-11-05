@@ -125,6 +125,7 @@ export const WebViewItem = ({tab, index}: Props) => {
             injectedJavaScriptBeforeContentLoaded={initScript}
             onMessage={handleEvent}
             style={[styles.roundedInsideContainer]}
+            allowsFullscreenVideo={isTabActive}
           />
 
           {tabsOpen && (
