@@ -1,5 +1,5 @@
 import {getProtocolParams, isProtocolParamsResponse} from './protocol-params'
-import {paramsMockResponse} from './protocol-params.mocks'
+import {protocolParamsMockResponse} from './protocol-params.mocks'
 import axios from 'axios'
 
 jest.mock('axios')
@@ -8,13 +8,17 @@ const mockedAxios = axios as jest.MockedFunction<typeof axios>
 describe('getProtocolParams', () => {
   const baseUrl = 'https://localhost'
   const mockFetch = jest.fn()
-  const customFetcher = jest.fn().mockResolvedValue(paramsMockResponse)
+  const customFetcher = jest.fn().mockResolvedValue(protocolParamsMockResponse)
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
 
   it('returns parsed data when response is valid', async () => {
-    mockFetch.mockResolvedValue(paramsMockResponse)
+    mockFetch.mockResolvedValue(protocolParamsMockResponse)
     const protocolParams = getProtocolParams(baseUrl, mockFetch)
     const result = await protocolParams()
-    expect(result).toEqual(paramsMockResponse)
+    expect(result).toEqual(protocolParamsMockResponse)
   })
 
   it('throws an error if response is not valid', async () => {
@@ -39,16 +43,16 @@ describe('getProtocolParams', () => {
     const protocolParams = getProtocolParams(baseUrl, customFetcher)
     const result = await protocolParams()
     expect(customFetcher).toHaveBeenCalled()
-    expect(result).toEqual(paramsMockResponse)
+    expect(result).toEqual(protocolParamsMockResponse)
   })
   it('uses fetcher and returns data on successful fetch', async () => {
-    mockedAxios.mockResolvedValue({data: paramsMockResponse})
+    mockedAxios.mockResolvedValue({data: protocolParamsMockResponse})
 
     const protocolParams = getProtocolParams(baseUrl)
     const result = await protocolParams()
 
     expect(mockedAxios).toHaveBeenCalled()
-    expect(result).toEqual(paramsMockResponse)
+    expect(result).toEqual(protocolParamsMockResponse)
   })
 
   it('throws an error on network issues', async () => {
@@ -60,11 +64,11 @@ describe('getProtocolParams', () => {
 })
 describe('isProtocolParamsResponse', () => {
   it('returns true for a valid protocol parameters response', () => {
-    expect(isProtocolParamsResponse(paramsMockResponse)).toBe(true)
+    expect(isProtocolParamsResponse(protocolParamsMockResponse)).toBe(true)
   })
 
   it('returns false for an invalid protocol parameters response', () => {
-    const invalidResponse = {...paramsMockResponse, epoch: 'invalid'}
+    const invalidResponse = {...protocolParamsMockResponse, epoch: 'invalid'}
     expect(isProtocolParamsResponse(invalidResponse)).toBe(false)
   })
 

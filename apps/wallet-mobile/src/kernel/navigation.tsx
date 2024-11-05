@@ -250,7 +250,6 @@ export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 export type DiscoverRoutes = {
   'discover-browser': NavigatorScreenParams<BrowserRoutes>
   'discover-select-dapp-from-list': undefined
-  'discover-review-tx': {cbor: string}
 }
 
 export type BrowserRoutes = {
@@ -276,6 +275,8 @@ export type PortfolioRoutes = {
 
 export type ReviewTxRoutes = {
   'review-tx'?: {
+    onConfirm?: () => void
+    onCancel?: () => void
     onSuccess?: (signedTx: YoroiSignedTx) => void
     onError?: () => void
     onNotSupportedCIP1694?: () => void

@@ -1,4 +1,4 @@
-import {atomicFormatter} from '@yoroi/common'
+import {atomicBreakdown} from '@yoroi/common'
 import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
@@ -57,9 +57,7 @@ export const CreateExchangeOrderScreen = () => {
   const {height: deviceHeight} = useWindowDimensions()
 
   const quantity = BigInt(amount.value)
-  const orderAmount = Number(
-    atomicFormatter({value: quantity, decimalPlaces: wallet.portfolioPrimaryTokenInfo.decimals}),
-  )
+  const orderAmount = atomicBreakdown(quantity, wallet.portfolioPrimaryTokenInfo.decimals).bn.toNumber()
   const returnUrl = encodeURIComponent(
     linksYoroiModuleMaker('yoroi').exchange.order.showCreateResult({
       provider: providerSelected?.id ?? '',

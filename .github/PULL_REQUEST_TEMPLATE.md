@@ -2,7 +2,4 @@
 
 ##### Ticket
 
-YOMO-
-
-> [!NOTE]
-> Please create the ticket if missing it.
+YV-

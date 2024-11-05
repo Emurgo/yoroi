@@ -1,4 +1,3 @@
-import assert from 'assert'
 import _ from 'lodash'
 
 import type {
@@ -30,7 +29,6 @@ export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
   baseApiUrl: string,
 ): Promise<{isLast: boolean; transactions: Array<RawTransaction>}> => {
-  assert(request.addresses.length <= limitApiRecords, 'fetchNewTxHistory: too many addresses')
   const transactions = await fetchDefault<Array<RawTransaction>>('v2/txs/history', request, baseApiUrl)
 
   return {
@@ -40,7 +38,6 @@ export const fetchNewTxHistory = async (
 }
 
 export const filterUsedAddresses = async (addresses: Addresses, baseApiUrl: string): Promise<Addresses> => {
-  assert(addresses.length <= limitApiRecords, 'filterUsedAddresses: too many addresses')
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
   const used = await fetchDefault<Addresses>('v2/addresses/filterUsed', {addresses: copy}, baseApiUrl)
@@ -57,7 +54,6 @@ export const submitTransaction = async (signedTx: string, baseApiUrl: string): P
 }
 
 export const getAccountState = (request: AccountStateRequest, baseApiUrl: string): Promise<AccountStateResponse> => {
-  assert(request.addresses.length <= limitApiRecords, 'getAccountState: too many addresses')
   return fetchDefault('account/state', request, baseApiUrl)
 }
 

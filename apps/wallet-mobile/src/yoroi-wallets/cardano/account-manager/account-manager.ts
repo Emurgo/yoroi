@@ -1,6 +1,5 @@
 import {parseSafe} from '@yoroi/common'
 import {App, Wallet} from '@yoroi/types'
-import assert from 'assert'
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
@@ -132,8 +131,6 @@ export class AddressChain {
     lastUsedIndex = 0,
     lastUsedIndexVisual = lastUsedIndex,
   ) {
-    assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
-
     this._addressGenerator = addressGenerator
     this._blockSize = blockSize
     this._gapLimit = gapLimit
@@ -177,7 +174,6 @@ export class AddressChain {
     // is initialized && addresses
     chain._extendAddresses(addresses)
     chain._isInitialized = true
-    chain._selfCheck()
     return chain
   }
 
@@ -194,7 +190,6 @@ export class AddressChain {
   }
 
   _extendAddresses(newAddresses: Array<string>) {
-    assert(_.intersection(this._addresses, newAddresses).length === 0, 'extendAddresses received an existing address')
     this._addresses = [...this._addresses, ...newAddresses]
     this._subscriptions.forEach((handler) => handler(newAddresses))
   }
@@ -214,9 +209,7 @@ export class AddressChain {
   }
 
   _getLastBlock() {
-    this._selfCheck()
     const block = _.takeRight(this.addresses, this._blockSize)
-    assert(block.length === this._blockSize, 'AddressChain::_getLastBlock(): block length')
     return block
   }
 
@@ -224,11 +217,6 @@ export class AddressChain {
     if (this._isInitialized) return
     await this._discoverNewBlock()
     this._isInitialized = true
-  }
-
-  _selfCheck() {
-    assert(this._isInitialized, 'AddressChain::_selfCheck(): isInitialized')
-    assert(this._addresses.length % this._blockSize === 0, 'AddressChain::_selfCheck(): lengths')
   }
 
   async sync(filterFn: AsyncAddressFilter) {
@@ -239,7 +227,6 @@ export class AddressChain {
   }
 
   async _syncStep(filterFn: AsyncAddressFilter) {
-    this._selfCheck()
     const block = this._getLastBlock()
     const used = await filterFn(block)
 
@@ -272,7 +259,6 @@ export class AddressChain {
   }
 
   getIndexOfAddress(address: string): number {
-    assert(this.isMyAddress(address), 'getIndexOfAddress:: is not my address')
     const idx = this.addressToIdxMap[address]
     return idx
   }

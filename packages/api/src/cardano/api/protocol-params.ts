@@ -25,17 +25,84 @@ export const parseProtocolParamsResponse = (
   return isProtocolParamsResponse(data) ? data : undefined
 }
 
-const AppProtocolParamsSchema = z.object({
-  coinsPerUtxoByte: z.string(),
-  keyDeposit: z.string(),
-  linearFee: z.object({
-    coefficient: z.string(),
-    constant: z.string(),
-  }),
-  poolDeposit: z.string(),
-  epoch: z.number().nonnegative(),
+const RatioSchema = z.object({
+  numerator: z.string(),
+  denominator: z.string(),
 })
 
-export const isProtocolParamsResponse = createTypeGuardFromSchema(
-  AppProtocolParamsSchema,
-)
+const ProtocolParamsSchema = z.object({
+  linearFee: z.object({
+    constant: z.string(),
+    coefficient: z.string(),
+  }),
+  minFeeReferenceScript: z.object({
+    coinsPerByte: RatioSchema,
+    tierStepBytes: z.string(),
+    multiplier: z.string(),
+  }),
+  coinsPerUtxoByte: z.string(),
+  poolDeposit: z.string(),
+  keyDeposit: z.string(),
+  epoch: z.number().nonnegative(),
+  maxBlockBodySize: z.string(),
+  maxBlockHeaderSize: z.string(),
+  maxTxSize: z.string(),
+  maxReferenceScriptsSize: z.string(),
+  stakePoolPledgeInfluence: RatioSchema,
+  monetaryExpansion: RatioSchema,
+  treasuryExpansion: RatioSchema,
+  minPoolCost: z.string(),
+  maxExecutionUnits: z.object({
+    perTransaction: z.object({
+      memory: z.string(),
+      cpu: z.string(),
+    }),
+    perBlock: z.object({
+      memory: z.string(),
+      cpu: z.string(),
+    }),
+  }),
+  scriptExecutionPrices: z.object({
+    memory: RatioSchema,
+    cpu: RatioSchema,
+  }),
+  maxCollateralInputs: z.string(),
+  collateralPercentage: z.string(),
+  maxValueSize: z.string(),
+  version: z.object({
+    major: z.string(),
+    minor: z.string(),
+  }),
+  governanceActionDeposit: z.string(),
+  delegateRepresentativeDeposit: z.string(),
+  constitutionalCommitteeMinSize: z.string(),
+  constitutionalCommitteeMaxTermLength: z.string(),
+  governanceActionLifetime: z.string(),
+  delegateRepresentativeMaxIdleTime: z.string(),
+  desiredNumberOfStakePools: z.string(),
+  stakePoolRetirementEpochBound: z.string(),
+  votingThresholds: z.object({
+    stakePool: z.object({
+      noConfidence: RatioSchema,
+      committeeNormal: RatioSchema,
+      committeeNoConfidence: RatioSchema,
+      hardFork: RatioSchema,
+      ppSecurity: RatioSchema,
+    }),
+    delegateRep: z.object({
+      noConfidence: RatioSchema,
+      committeeNormal: RatioSchema,
+      committeeNoConfidence: RatioSchema,
+      constitution: RatioSchema,
+      hardFork: RatioSchema,
+      ppNetwork: RatioSchema,
+      ppEconomic: RatioSchema,
+      ppTechnical: RatioSchema,
+      ppGovernance: RatioSchema,
+      treasury: RatioSchema,
+    }),
+  }),
+})
+
+export const isProtocolParamsResponse =
+  createTypeGuardFromSchema(ProtocolParamsSchema)

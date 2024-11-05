@@ -17,7 +17,7 @@ import {SafeArea} from '../../../../components/SafeArea'
 import {ScrollView} from '../../../../components/ScrollView/ScrollView'
 import {ReviewTxRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {formatMetadata} from '../../common/hooks/useFormattedMetadata'
+import {useFormattedMetadata} from '../../common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '../../common/hooks/useFormattedTx'
 import {useOnConfirm} from '../../common/hooks/useOnConfirm'
 import {useStrings} from '../../common/hooks/useStrings'
@@ -32,10 +32,10 @@ const MaterialTab = createMaterialTopTabNavigator()
 export const ReviewTxScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {unsignedTx, operations, details} = useReviewTx()
+  const {unsignedTx, operations, details, cbor} = useReviewTx()
   const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
 
-  if (unsignedTx === null) throw new Error('ReviewTxScreen: missing unsignedTx')
+  if (unsignedTx == null && cbor == null) throw new Error('ReviewTxScreen: missing cbor and unsignedTx')
 
   const {onConfirm} = useOnConfirm({
     unsignedTx,
@@ -45,18 +45,33 @@ export const ReviewTxScreen = () => {
     onCIP36SupportChange: params?.onCIP36SupportChange,
   })
 
-  // TODO: apply cbor
-  const txBody = useTxBody({unsignedTx})
+  const txBody = useTxBody({cbor, unsignedTx})
   const formatedTx = useFormattedTx(txBody)
-  const formattedMetadata = formatMetadata(unsignedTx, txBody)
+  const formattedMetadata = useFormattedMetadata({unsignedTx, cbor, txBody})
 
   const tabsData = [
     [strings.overviewTab, 'overview'],
     [strings.utxosTab, 'utxos'],
   ]
 
-  if (!isEmptyString(formattedMetadata.hash) && formattedMetadata.metadata != null)
+  if (!isEmptyString(formattedMetadata?.hash) && formattedMetadata?.metadata != null)
     tabsData.push([strings.metadataTab, 'metadata'])
+
+  React.useEffect(() => {
+    return () => {
+      params?.onCancel?.()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleOnConfirm = () => {
+    if (params?.onConfirm) {
+      params?.onConfirm()
+      return
+    }
+
+    onConfirm()
+  }
 
   return (
     <SafeArea style={styles.root}>
@@ -83,14 +98,14 @@ export const ReviewTxScreen = () => {
           {() => (
             /* TODO: make scrollview general to use button border */
             <ScrollView style={styles.root}>
-              <MetadataTab hash={formattedMetadata.hash} metadata={formattedMetadata.metadata} />
+              <MetadataTab hash={formattedMetadata?.hash ?? null} metadata={formattedMetadata?.metadata ?? null} />
             </ScrollView>
           )}
         </MaterialTab.Screen>
       </MaterialTab.Navigator>
 
       <Actions>
-        <Button title={strings.confirm} onPress={onConfirm} />
+        <Button title={strings.confirm} onPress={handleOnConfirm} />
       </Actions>
     </SafeArea>
   )

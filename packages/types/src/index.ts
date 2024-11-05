@@ -274,6 +274,7 @@ import {
   SwapMakeOrderCalculation,
   SwapOrderCalculation,
 } from './swap/calculations'
+import {NumbersRatio} from './numbers/ratio'
 
 export namespace App {
   export namespace Errors {
@@ -484,6 +485,7 @@ export namespace Api {
 export namespace Numbers {
   export type Locale = NumberLocale
   export type AtomicValue = NumbersAtomicValue
+  export type Ratio = NumbersRatio
 
   export namespace Errors {
     export class InvalidAtomicValue extends NumbersErrorInvalidAtomicValue {}
