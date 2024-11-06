@@ -14,7 +14,7 @@ export const useNavigateTo = () => {
       navigation.navigate('portfolio-token-details', {id: params.id}),
     nftsList: () => navigation.navigate('portfolio-nfts', {screen: 'nft-gallery'}),
     nftDetails: (id: Portfolio.Token.Id) =>
-      navigation.navigate('portfolio-nfts', {screen: 'nft-details', params: {id}, initial: false}),
+      navigation.navigate('portfolio-nfts', {screen: 'nft-details', params: {id}, initial: true}),
     resetTabAndSend: () => {
       navigation.reset({index: 0, routes: [{name: 'dashboard-portfolio'}]})
       navigation.navigate('history', {screen: 'send-start-tx'})
