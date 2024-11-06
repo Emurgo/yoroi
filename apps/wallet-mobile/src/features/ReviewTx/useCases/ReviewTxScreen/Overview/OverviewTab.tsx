@@ -4,7 +4,7 @@ import {CredKind} from '@emurgo/cross-csl-core'
 import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Linking, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import {Divider} from '../../../../../components/Divider/Divider'
 import {Icon} from '../../../../../components/Icon'
@@ -21,6 +21,7 @@ import {useOperations} from '../../../common/operations'
 import {ReviewTxState, useReviewTx} from '../../../common/ReviewTxProvider'
 import {TokenItem} from '../../../common/TokenItem'
 import {FormattedOutputs, FormattedTx} from '../../../common/types'
+import {WalletBalance} from '../../../common/WalletBalance'
 
 export const OverviewTab = ({
   tx,
@@ -58,8 +59,18 @@ const WalletInfoSection = ({tx}: {tx: FormattedTx}) => {
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
+  const {openModal} = useModal()
   const {plate, seed} = walletManager.checksum(wallet.publicKeyHex)
   const seedImage = new Blockies({seed}).asBase64()
+  const {height: windowHeight} = useWindowDimensions()
+
+  const handleShowWalletBalance = () => {
+    openModal(
+      strings.walletBalanceTitle,
+      <WalletBalance image={seedImage} plate={plate} name={meta.name} />,
+      windowHeight * 0.8,
+    )
+  }
 
   return (
     <>
@@ -71,7 +82,9 @@ const WalletInfoSection = ({tx}: {tx: FormattedTx}) => {
 
           <Space width="xs" />
 
-          <Text style={styles.walletInfoText}>{`${plate} | ${meta.name}`}</Text>
+          <TouchableOpacity activeOpacity={0.5} onPress={handleShowWalletBalance}>
+            <Text style={styles.walletInfoText}>{`${plate} | ${meta.name}`}</Text>
+          </TouchableOpacity>
         </View>
       </View>
 

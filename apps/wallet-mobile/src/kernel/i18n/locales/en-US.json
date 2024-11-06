@@ -1256,6 +1256,7 @@
   "txReview.tokenDetails.overViewTab.description.label": "Description",
   "txReview.tokenDetails.overViewTab.details.label": "Details on",
   "txReview.tokenDetails.title": "Asset Details",
+  "txReview.walletBalance.title": "Wallet balance",
   "txReview.poolDetails.title": "Pool Details",
   "txReview.operations.registerStakingKey": "Register staking key deposit",
   "txReview.operations.deregisterStakingKey": "Deregister staking key",
