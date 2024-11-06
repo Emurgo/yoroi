@@ -11,7 +11,7 @@ export const ExplorerInfoLinks = ({id, type}: {id: string; type: 'token' | 'pool
   const {wallet} = useSelectedWallet()
   const strings = useStrings()
 
-  const handleOpenLink = async (direction: 'cardanoscan' | 'adaex') => {
+  const handleOpenLink = async (explorer: Explorers.Explorer) => {
     if (id == null) return
     if (direction === 'cardanoscan') {
       await Linking.openURL(wallet.networkManager.explorers.cardanoscan[type](id))
