@@ -1,4 +1,5 @@
 import {useTheme} from '@yoroi/theme'
+import {Explorers} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
@@ -28,15 +29,20 @@ export const ExplorerInfoLinks = ({id, type}: {id: string; type: 'token' | 'pool
 
       <View style={styles.linkGroup}>
         <TouchableOpacity onPress={() => handleOpenLink(Explorers.Explorer.CardanoScan)}>
-          <Text style={styles.link}>Cardanoscan</Text>
+          <Text style={styles.link}>{explorerNames[Explorers.Explorer.CardanoScan]}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => handleOpenLink(Explorers.Explorer.CExplorer)}>
-          <Text style={styles.link}>Adaex</Text>
+          <Text style={styles.link}>{explorerNames[Explorers.Explorer.CExplorer]}</Text>
         </TouchableOpacity>
       </View>
     </View>
   )
+}
+
+const explorerNames = {
+  [Explorers.Explorer.CardanoScan]: 'Cardanoscan',
+  [Explorers.Explorer.CExplorer]: 'Adaex',
 }
 
 const useStyles = () => {
