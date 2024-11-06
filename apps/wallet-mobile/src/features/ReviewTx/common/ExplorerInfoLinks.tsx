@@ -13,7 +13,7 @@ export const ExplorerInfoLinks = ({id, type}: {id: string; type: 'token' | 'pool
 
   const handleOpenLink = async (explorer: Explorers.Explorer) => {
     if (id == null) return
-    if (direction === 'cardanoscan') {
+    if (explorer === Explorers.Explorer.CardanoScan) {
       await Linking.openURL(wallet.networkManager.explorers.cardanoscan[type](id))
     } else {
       await Linking.openURL(wallet.networkManager.explorers.cexplorer[type](id))
