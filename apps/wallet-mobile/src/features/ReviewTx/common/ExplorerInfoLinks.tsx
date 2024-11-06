@@ -27,7 +27,7 @@ export const ExplorerInfoLinks = ({id, type}: {id: string; type: 'token' | 'pool
       <Text style={styles.label}>{strings.details}</Text>
 
       <View style={styles.linkGroup}>
-        <TouchableOpacity onPress={() => handleOpenLink('cardanoscan')}>
+        <TouchableOpacity onPress={() => handleOpenLink(Explorers.Explorer.CardanoScan)}>
           <Text style={styles.link}>Cardanoscan</Text>
         </TouchableOpacity>
 
