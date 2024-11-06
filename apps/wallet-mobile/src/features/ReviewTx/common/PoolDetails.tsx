@@ -1,4 +1,4 @@
-import {FullPoolIfo} from '@emurgo/yoroi-lib'
+import {FullPoolInfo} from '@emurgo/yoroi-lib'
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
@@ -15,7 +15,7 @@ import {ExplorerInfoLinks} from './ExplorerInfoLinks'
 import {useStrings} from './hooks/useStrings'
 import {generatePoolName} from './operations'
 
-export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolIfo}) => {
+export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()

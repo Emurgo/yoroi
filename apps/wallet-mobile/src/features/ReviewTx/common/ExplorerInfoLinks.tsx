@@ -1,4 +1,5 @@
 import {useTheme} from '@yoroi/theme'
+import {Explorers} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
@@ -11,9 +12,9 @@ export const ExplorerInfoLinks = ({id, type}: {id: string; type: 'token' | 'pool
   const {wallet} = useSelectedWallet()
   const strings = useStrings()
 
-  const handleOpenLink = async (direction: 'cardanoscan' | 'adaex') => {
+  const handleOpenLink = async (explorer: Explorers.Explorer) => {
     if (id == null) return
-    if (direction === 'cardanoscan') {
+    if (explorer === Explorers.Explorer.CardanoScan) {
       await Linking.openURL(wallet.networkManager.explorers.cardanoscan[type](id))
     } else {
       await Linking.openURL(wallet.networkManager.explorers.cexplorer[type](id))
@@ -27,16 +28,21 @@ export const ExplorerInfoLinks = ({id, type}: {id: string; type: 'token' | 'pool
       <Text style={styles.label}>{strings.details}</Text>
 
       <View style={styles.linkGroup}>
-        <TouchableOpacity onPress={() => handleOpenLink('cardanoscan')}>
-          <Text style={styles.link}>Cardanoscan</Text>
+        <TouchableOpacity onPress={() => handleOpenLink(Explorers.Explorer.CardanoScan)}>
+          <Text style={styles.link}>{explorerNames[Explorers.Explorer.CardanoScan]}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleOpenLink('adaex')}>
-          <Text style={styles.link}>Adaex</Text>
+        <TouchableOpacity onPress={() => handleOpenLink(Explorers.Explorer.CExplorer)}>
+          <Text style={styles.link}>{explorerNames[Explorers.Explorer.CExplorer]}</Text>
         </TouchableOpacity>
       </View>
     </View>
   )
+}
+
+const explorerNames = {
+  [Explorers.Explorer.CardanoScan]: 'Cardanoscan',
+  [Explorers.Explorer.CExplorer]: 'Adaex',
 }
 
 const useStyles = () => {
