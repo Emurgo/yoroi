@@ -16,8 +16,8 @@ export const WalletBalance = ({image, plate, name}: {image: string; plate: strin
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
-  const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
-  const nftsList = React.useMemo(() => balances.nfts ?? [], [balances.nfts])
+  const ftList = balances.fts ?? []
+  const nftsList = balances.nfts ?? []
 
   return (
     <View style={styles.root}>
@@ -41,18 +41,18 @@ export const WalletBalance = ({image, plate, name}: {image: string; plate: strin
 
       <Space height="lg" />
 
-      <AssetsSquares>
-        <AssetSquare count={tokensList.length} list={tokensList} title={strings.walletBalanceTokensTitle} />
+      <TokenSquares>
+        <TokenSquare count={ftList.length} list={ftList} title={strings.walletBalanceTokensTitle} />
 
         <Space width="lg" />
 
-        <AssetSquare count={nftsList.length} list={nftsList} title={strings.walletBalanceNFTsTitle} />
-      </AssetsSquares>
+        <TokenSquare count={nftsList.length} list={nftsList} title={strings.walletBalanceNFTsTitle} />
+      </TokenSquares>
     </View>
   )
 }
 
-const AssetSquare = ({
+const TokenSquare = ({
   title,
   count,
   list,
@@ -83,12 +83,12 @@ const AssetSquare = ({
 
       <Text style={styles.squareCount}>{count}</Text>
 
-      <AssetList assetList={list} />
+      <TokenList assetList={list} />
     </View>
   )
 }
 
-const AssetsSquares = ({children}: {children: React.ReactNode}) => {
+const TokenSquares = ({children}: {children: React.ReactNode}) => {
   const {styles} = useStyles()
 
   return <View style={styles.squares}>{children}</View>
@@ -99,7 +99,7 @@ const Container = ({children}: {children: React.ReactNode}) => {
   return <View style={styles.container}>{children}</View>
 }
 
-const AssetList = ({assetList}: {assetList: PortfolioTokenBalances['fts'] | PortfolioTokenBalances['nfts']}) => {
+const TokenList = ({assetList}: {assetList: PortfolioTokenBalances['fts'] | PortfolioTokenBalances['nfts']}) => {
   const {styles} = useStyles()
 
   return (
