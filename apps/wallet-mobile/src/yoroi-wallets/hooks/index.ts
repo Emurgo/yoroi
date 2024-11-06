@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {walletChecksum} from '@emurgo/cip4-js'
 import {Certificate} from '@emurgo/cross-csl-core'
-import {FullPoolIfo, PoolInfoApi} from '@emurgo/yoroi-lib'
+import {FullPoolInfo, PoolInfoApi} from '@emurgo/yoroi-lib'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {mountMMKVStorage, observableStorageMaker, parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
 import {themeStorageMaker} from '@yoroi/theme'
@@ -704,7 +704,7 @@ export const useThemeStorageMaker = () => {
   return themeStorage
 }
 
-export const usePoolInfo = ({poolId}: {poolId: string}): FullPoolIfo => {
+export const usePoolInfo = ({poolId}: {poolId: string}): FullPoolInfo => {
   const {networkManager} = useSelectedNetwork()
   const poolInfoApi = React.useMemo(
     () => new PoolInfoApi(networkManager.legacyApiBaseUrl),

@@ -1,4 +1,4 @@
-import {FullPoolIfo} from '@emurgo/yoroi-lib'
+import {FullPoolInfo} from '@emurgo/yoroi-lib'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
@@ -84,7 +84,7 @@ export const StakeDelegateOperation = ({poolId}: {poolId: string}) => {
   )
 }
 
-export const generatePoolName = (poolInfo: FullPoolIfo) => {
+export const generatePoolName = (poolInfo: FullPoolInfo) => {
   return poolInfo.explorer != null ? `[${poolInfo.explorer.ticker}] ${poolInfo.explorer.name}` : null
 }
 
