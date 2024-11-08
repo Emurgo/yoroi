@@ -29,7 +29,7 @@ export const formatMetadata = async (
     const metadata674 = await generalTransactionMetadata?.get(await csl.BigNum.fromStr('674'))
     if (metadata674) {
       const decodedMetadata = await csl.decodeMetadatumToJsonStr(metadata674, MetadataJsonSchema.BasicConversions)
-      const msg = [parseMsg(JSON.parse(decodedMetadata)?.msg ?? [])]
+      const msg = [parseMsg(JSON.parse(decodedMetadata)?.msg ?? [''])]
       metadata = {msg}
     }
 
