@@ -44,10 +44,11 @@ export const formatMetadata = async (
 
 const parseMsg = (msg: Array<string>) => {
   if (msg.length > 1) {
+    const message = msg.join('')
     try {
-      return JSON.parse(msg.join(''))
+      return JSON.parse(message)
     } catch {
-      return ''
+      return message
     }
   }
   return msg[0]
