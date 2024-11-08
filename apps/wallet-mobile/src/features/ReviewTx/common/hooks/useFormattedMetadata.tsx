@@ -15,24 +15,22 @@ export const formatMetadata = async (
 
   try {
     const hash = txBody.auxiliary_data_hash ?? null
-
     let metadata = null
+    let generalTransactionMetadata = null
 
-    if (unsignedTx != null) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const msg = unsignedTx.metadata?.['674']?.['msg' as any] ?? JSON.stringify({})
-      metadata = hash != null && typeof msg == 'string' ? {msg: [JSON.parse(msg) as unknown]} : null
-    } else if (cbor != null) {
+    if (unsignedTx != null && unsignedTx.unsignedTx.auxiliaryData && hash != null) {
+      generalTransactionMetadata = await unsignedTx.unsignedTx.auxiliaryData?.metadata()
+    } else if (cbor != null && hash != null) {
       const tx = await csl.Transaction.fromBytes(Buffer.from(cbor, 'hex'))
       const auxiliaryData = await tx.auxiliaryData()
-      const generalTransactionMetadata = await auxiliaryData?.metadata()
-      const metadata674 = await generalTransactionMetadata?.get(await csl.BigNum.fromStr('674'))
+      generalTransactionMetadata = await auxiliaryData?.metadata()
+    }
 
-      if (metadata674) {
-        const decodedMetadata = await csl.decodeMetadatumToJsonStr(metadata674, MetadataJsonSchema.BasicConversions)
-        const msg = JSON.parse(decodedMetadata)?.msg ?? JSON.stringify({})
-        metadata = hash != null ? {msg: [msg]} : null
-      }
+    const metadata674 = await generalTransactionMetadata?.get(await csl.BigNum.fromStr('674'))
+    if (metadata674) {
+      const decodedMetadata = await csl.decodeMetadatumToJsonStr(metadata674, MetadataJsonSchema.BasicConversions)
+      const msg = JSON.parse(decodedMetadata)?.msg ?? JSON.stringify({})
+      metadata = {msg}
     }
 
     return {

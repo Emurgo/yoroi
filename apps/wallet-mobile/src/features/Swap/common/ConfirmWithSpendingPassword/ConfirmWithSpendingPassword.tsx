@@ -77,6 +77,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     modalText: {
       paddingHorizontal: 70,
