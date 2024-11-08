@@ -22,7 +22,7 @@ export type FormattedInput = {
   address: string | undefined
   addressKind: CredKind | null
   rewardAddress: string | null
-  ownAddress: boolean
+  ownAddress: boolean | null
   txIndex: number
   txHash: string
 }

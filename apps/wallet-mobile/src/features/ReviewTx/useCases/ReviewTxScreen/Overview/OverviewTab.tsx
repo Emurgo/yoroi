@@ -3,6 +3,7 @@
 import {CredKind} from '@emurgo/cross-csl-core'
 import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
+import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
@@ -34,6 +35,7 @@ export const OverviewTab = ({
   details?: {title: string; component: React.ReactNode}
 }) => {
   const {styles} = useStyles()
+  const operations = useOperations(tx.certificates)
 
   const notOwnedOutputs = React.useMemo(() => tx.outputs.filter((output) => !output.ownAddress), [tx.outputs])
   const ownedOutputs = React.useMemo(() => tx.outputs.filter((output) => output.ownAddress), [tx.outputs])
@@ -51,9 +53,10 @@ export const OverviewTab = ({
         notOwnedOutputs={notOwnedOutputs}
         ownedOutputs={ownedOutputs}
         receiverCustomTitle={receiverCustomTitle}
+        operationsFee={operations.totalFee}
       />
 
-      <OperationsSection tx={tx} extraOperations={extraOperations} />
+      <OperationsSection operations={operations.components} extraOperations={extraOperations} />
 
       <Details details={details} />
     </View>
@@ -119,11 +122,13 @@ const SenderSection = ({
   notOwnedOutputs,
   ownedOutputs,
   receiverCustomTitle,
+  operationsFee,
 }: {
   tx: FormattedTx
   notOwnedOutputs: FormattedOutputs
   ownedOutputs: FormattedOutputs
   receiverCustomTitle?: React.ReactNode
+  operationsFee: Balance.Quantity
 }) => {
   const strings = useStrings()
   const {styles} = useStyles()
@@ -141,7 +146,7 @@ const SenderSection = ({
 
       <Space height="sm" />
 
-      <SenderTokens tx={tx} notOwnedOutputs={notOwnedOutputs} />
+      <SenderTokens tx={tx} notOwnedOutputs={notOwnedOutputs} operationsFee={operationsFee} />
 
       {notOwnedOutputs.length === 1 && (
         <ReceiverSection receiverCustomTitle={receiverCustomTitle} notOwnedOutputs={notOwnedOutputs} />
@@ -151,7 +156,15 @@ const SenderSection = ({
 }
 
 // 🚧 TODO: ADD MULTIRECEIVER SUPPORT 🚧
-const SenderTokens = ({tx, notOwnedOutputs}: {tx: FormattedTx; notOwnedOutputs: FormattedOutputs}) => {
+const SenderTokens = ({
+  tx,
+  notOwnedOutputs,
+  operationsFee,
+}: {
+  tx: FormattedTx
+  notOwnedOutputs: FormattedOutputs
+  operationsFee: Balance.Quantity
+}) => {
   const {styles} = useStyles()
 
   const {wallet} = useSelectedWallet()
@@ -164,8 +177,8 @@ const SenderTokens = ({tx, notOwnedOutputs}: {tx: FormattedTx; notOwnedOutputs: 
     [notOwnedOutputs],
   )
   const totalPrimaryTokenSpent = React.useMemo(
-    () => Quantities.sum([totalPrimaryTokenSent, tx.fee.quantity]),
-    [totalPrimaryTokenSent, tx.fee.quantity],
+    () => Quantities.sum([totalPrimaryTokenSent, tx.fee.quantity, operationsFee]),
+    [totalPrimaryTokenSent, tx.fee.quantity, operationsFee],
   )
   const totalPrimaryTokenSpentLabel = formatTokenWithText(totalPrimaryTokenSpent, wallet.portfolioPrimaryTokenInfo)
 
@@ -241,10 +254,14 @@ const ReceiverSection = ({
   )
 }
 
-const OperationsSection = ({tx, extraOperations}: {tx: FormattedTx; extraOperations?: Array<React.ReactNode>}) => {
-  const operations = useOperations(tx.certificates)
-
-  if (extraOperations == null && tx.certificates == null) return null
+const OperationsSection = ({
+  operations,
+  extraOperations,
+}: {
+  operations: Array<React.ReactNode>
+  extraOperations?: Array<React.ReactNode>
+}) => {
+  if (extraOperations == null && operations?.length === 0) return null
 
   return (
     <View>

@@ -6,8 +6,8 @@ import {Icon} from '../../../components/Icon'
 
 export const Accordion = ({label, children}: {label: string; children: React.ReactNode}) => {
   const {styles, colors} = useStyles()
-  const [isOpen, setIsOpen] = React.useState(false)
-  const animatedHeight = React.useRef(new Animated.Value(0)).current
+  const [isOpen, setIsOpen] = React.useState(true)
+  const animatedHeight = React.useRef(new Animated.Value(1)).current
 
   const toggleSection = () => {
     setIsOpen(!isOpen)

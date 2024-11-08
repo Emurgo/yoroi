@@ -1,5 +1,6 @@
 import {FullPoolInfo} from '@emurgo/yoroi-lib'
 import {useTheme} from '@yoroi/theme'
+import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -10,13 +11,13 @@ import {Space} from '../../../components/Space/Space'
 import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
 import {usePoolInfo} from '../../../yoroi-wallets/hooks'
 import {formatTokenWithText} from '../../../yoroi-wallets/utils/format'
-import {asQuantity} from '../../../yoroi-wallets/utils/utils'
+import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 import {PoolDetails} from './PoolDetails'
 import {CertificateType, FormattedTx} from './types'
 
-export const StakeRegistrationOperation = () => {
+export const StakeRegistrationOperation = ({fee}: {fee: Balance.Quantity}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
@@ -27,9 +28,7 @@ export const StakeRegistrationOperation = () => {
 
       <Space width="lg" />
 
-      <Text style={styles.operationValue}>
-        {formatTokenWithText(asQuantity(wallet.protocolParams.keyDeposit), wallet.portfolioPrimaryTokenInfo)}
-      </Text>
+      <Text style={styles.operationValue}>{formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}</Text>
     </View>
   )
 }
@@ -128,36 +127,53 @@ export const VoteDelegationOperation = ({drepID}: {drepID: string}) => {
 }
 
 export const useOperations = (certificates: FormattedTx['certificates']) => {
-  if (certificates === null) return []
+  const {wallet} = useSelectedWallet()
+  if (certificates === null) return {components: [], totalFee: Quantities.zero}
 
-  return certificates.reduce<React.ReactNode[]>((acc, certificate, index) => {
-    switch (certificate.type) {
-      case CertificateType.StakeRegistration:
-        return [...acc, <StakeRegistrationOperation key={index} />]
+  return certificates.reduce<{components: React.ReactNode[]; totalFee: Balance.Quantity}>(
+    (acc, certificate, index) => {
+      switch (certificate.type) {
+        case CertificateType.StakeRegistration: {
+          const fee = asQuantity(wallet.protocolParams.keyDeposit)
+          return {
+            components: [...acc.components, <StakeRegistrationOperation fee={fee} key={index} />],
+            totalFee: Quantities.sum([fee, acc.totalFee]),
+          }
+        }
 
-      case CertificateType.StakeDeregistration:
-        return [...acc, <StakeDeregistrationOperation key={index} />]
+        case CertificateType.StakeDeregistration:
+          return {components: [...acc.components, <StakeDeregistrationOperation key={index} />], totalFee: acc.totalFee}
 
-      case CertificateType.StakeDelegation: {
-        const poolKeyHash = certificate.value.pool_keyhash ?? null
-        if (poolKeyHash == null) return acc
-        return [...acc, <StakeDelegateOperation key={index} poolId={poolKeyHash} />]
+        case CertificateType.StakeDelegation: {
+          const poolKeyHash = certificate.value.pool_keyhash ?? null
+          if (poolKeyHash == null) return acc
+          return {
+            components: [...acc.components, <StakeDelegateOperation key={index} poolId={poolKeyHash} />],
+            totalFee: acc.totalFee,
+          }
+        }
+
+        case CertificateType.VoteDelegation: {
+          const drep = certificate.value.drep
+
+          if (drep === 'AlwaysAbstain')
+            return {components: [...acc.components, <AbstainOperation key={index} />], totalFee: acc.totalFee}
+          if (drep === 'AlwaysNoConfidence')
+            return {components: [...acc.components, <NoConfidenceOperation key={index} />], totalFee: acc.totalFee}
+
+          const drepId = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
+          return {
+            components: [...acc.components, <VoteDelegationOperation key={index} drepID={drepId} />],
+            totalFee: acc.totalFee,
+          }
+        }
+
+        default:
+          return acc
       }
-
-      case CertificateType.VoteDelegation: {
-        const drep = certificate.value.drep
-
-        if (drep === 'AlwaysAbstain') return [...acc, <AbstainOperation key={index} />]
-        if (drep === 'AlwaysNoConfidence') return [...acc, <NoConfidenceOperation key={index} />]
-
-        const drepId = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
-        return [...acc, <VoteDelegationOperation key={index} drepID={drepId} />]
-      }
-
-      default:
-        return acc
-    }
-  }, [])
+    },
+    {components: [], totalFee: Quantities.zero},
+  )
 }
 
 export const getDrepBech32Id = async (poolId: string) => {

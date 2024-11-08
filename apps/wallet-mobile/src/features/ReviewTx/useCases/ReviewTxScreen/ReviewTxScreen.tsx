@@ -46,6 +46,7 @@ export const ReviewTxScreen = () => {
   })
 
   const txBody = useTxBody({cbor, unsignedTx})
+
   const formatedTx = useFormattedTx(txBody)
   const formattedMetadata = useFormattedMetadata({txBody, unsignedTx, cbor})
 

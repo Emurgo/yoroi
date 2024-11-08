@@ -37,7 +37,6 @@ const Inputs = ({inputs}: {inputs: FormattedInputs}) => {
 
 const Input = ({input}: {input: FormattedInput}) => {
   const {styles} = useStyles()
-  if (input?.address === undefined) throw new Error('UTxOsTab: input invalid address')
 
   return (
     <View>
@@ -48,8 +47,8 @@ const Input = ({input}: {input: FormattedInput}) => {
 
         <Space height="lg" />
 
-        <CopiableText textToCopy={input.address}>
-          <Text style={styles.addressText}>{input.address}</Text>
+        <CopiableText textToCopy={input.address ?? '-'}>
+          <Text style={styles.addressText}>{input.address ?? '-'}</Text>
         </CopiableText>
 
         <Space height="sm" />
@@ -81,7 +80,6 @@ const Outputs = ({outputs}: {outputs: FormattedOutputs}) => {
 
 const Output = ({output}: {output: FormattedOutput}) => {
   const {styles} = useStyles()
-  if (output?.address === undefined) throw new Error('UTxOsTab: input invalid address')
 
   return (
     <View>
@@ -92,8 +90,8 @@ const Output = ({output}: {output: FormattedOutput}) => {
 
         <Space height="lg" />
 
-        <CopiableText textToCopy={output.address}>
-          <Text style={styles.addressText}>{output.address}</Text>
+        <CopiableText textToCopy={output.address ?? '-'}>
+          <Text style={styles.addressText}>{output.address ?? '-'}</Text>
         </CopiableText>
       </View>
 
@@ -133,11 +131,12 @@ const Fee = ({fee}: {fee: string}) => {
   )
 }
 
-const UtxoTitle = ({isInput, isOwnAdddress}: {isOwnAdddress: boolean; isInput: boolean}) => {
+const UtxoTitle = ({isInput, isOwnAdddress}: {isOwnAdddress: boolean | null; isInput: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
-  const label = isOwnAdddress ? strings.utxosYourAddressLabel : strings.utxosForeignAddressLabel
+  const label =
+    isOwnAdddress != null ? (isOwnAdddress ? strings.utxosYourAddressLabel : strings.utxosForeignAddressLabel) : '-'
 
   return (
     <View style={styles.utxoTitle}>

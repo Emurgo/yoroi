@@ -146,7 +146,7 @@ const formatInputs = async (
         address,
         addressKind: addressKind ?? null,
         rewardAddress,
-        ownAddress: address != null && isOwnedAddress(wallet, address),
+        ownAddress: address != null ? isOwnedAddress(wallet, address) : null,
         txIndex: input.index,
         txHash: input.transaction_id,
       }
