@@ -43,6 +43,10 @@ const reviewTxReducer = (state: ReviewTxState, action: ReviewTxAction) => {
         draft.unsignedTx = castDraft(action.unsignedTx)
         break
 
+      case ReviewTxActionType.CborChanged:
+        draft.cbor = action.cbor
+        break
+
       case ReviewTxActionType.Reset:
         draft.unsignedTx = castDraft(defaultState.unsignedTx)
         draft.cbor = defaultState.cbor
