@@ -275,6 +275,9 @@ export type PortfolioRoutes = {
 
 export type ReviewTxRoutes = {
   'review-tx'?: {
+    operations?: Array<React.ReactNode>
+    receiverCustomTitle?: React.ReactNode
+    details?: {title: string; component: React.ReactNode}
     onConfirm?: () => void
     onCancel?: () => void
     onSuccess?: (signedTx: YoroiSignedTx) => void

@@ -26,7 +26,7 @@ export const ReviewSwap = () => {
   const {track} = useMetrics()
   const {height: deviceHeight} = useWindowDimensions()
   const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged, customReceiverTitleChanged, detailsChanged} = useReviewTx()
+  const {unsignedTxChanged} = useReviewTx()
 
   const {unsignedTx, orderData} = useSwap()
   const sellTokenInfo = orderData.amounts.sell?.info
@@ -77,10 +77,12 @@ export const ReviewSwap = () => {
       )
     }
 
-    if (liquidityPool != null) customReceiverTitleChanged(liquidityPool)
-    detailsChanged({component: <TransactionSummary orderData={orderData} />, title: strings.swapDetailsTitle})
     unsignedTxChanged(unsignedTx)
-    navigateToTxReview({onSuccess: onSwapTxSuccess})
+    navigateToTxReview({
+      onSuccess: onSwapTxSuccess,
+      receiverCustomTitle: liquidityPool ?? undefined,
+      details: {component: <TransactionSummary orderData={orderData} />, title: strings.swapDetailsTitle},
+    })
   }
 
   const isButtonDisabled = couldReceiveNoAssets

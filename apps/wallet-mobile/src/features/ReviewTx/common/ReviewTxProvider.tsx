@@ -22,11 +22,6 @@ export const ReviewTxProvider = ({
     unsignedTxChanged: (unsignedTx: ReviewTxState['unsignedTx']) =>
       dispatch({type: ReviewTxActionType.UnsignedTxChanged, unsignedTx}),
     cborChanged: (cbor: ReviewTxState['cbor']) => dispatch({type: ReviewTxActionType.CborChanged, cbor}),
-    operationsChanged: (operations: ReviewTxState['operations']) =>
-      dispatch({type: ReviewTxActionType.OperationsChanged, operations}),
-    customReceiverTitleChanged: (customReceiverTitle: ReviewTxState['customReceiverTitle']) =>
-      dispatch({type: ReviewTxActionType.CustomReceiverTitleChanged, customReceiverTitle}),
-    detailsChanged: (details: ReviewTxState['details']) => dispatch({type: ReviewTxActionType.DetailsChanged, details}),
     reset: () => dispatch({type: ReviewTxActionType.Reset}),
   }).current
 
@@ -48,28 +43,9 @@ const reviewTxReducer = (state: ReviewTxState, action: ReviewTxAction) => {
         draft.unsignedTx = castDraft(action.unsignedTx)
         break
 
-      case ReviewTxActionType.CborChanged:
-        draft.cbor = action.cbor
-        break
-
-      case ReviewTxActionType.OperationsChanged:
-        draft.operations = action.operations
-        break
-
-      case ReviewTxActionType.CustomReceiverTitleChanged:
-        draft.customReceiverTitle = action.customReceiverTitle
-        break
-
-      case ReviewTxActionType.DetailsChanged:
-        draft.details = action.details
-        break
-
       case ReviewTxActionType.Reset:
         draft.unsignedTx = castDraft(defaultState.unsignedTx)
         draft.cbor = defaultState.cbor
-        draft.operations = defaultState.operations
-        draft.customReceiverTitle = defaultState.customReceiverTitle
-        draft.details = defaultState.details
         break
 
       default:
@@ -88,44 +64,23 @@ type ReviewTxAction =
       cbor: ReviewTxState['cbor']
     }
   | {
-      type: ReviewTxActionType.OperationsChanged
-      operations: ReviewTxState['operations']
-    }
-  | {
-      type: ReviewTxActionType.CustomReceiverTitleChanged
-      customReceiverTitle: ReviewTxState['customReceiverTitle']
-    }
-  | {
-      type: ReviewTxActionType.DetailsChanged
-      details: ReviewTxState['details']
-    }
-  | {
       type: ReviewTxActionType.Reset
     }
 
 export type ReviewTxState = {
   unsignedTx: YoroiUnsignedTx | null
   cbor: string | null
-  operations: Array<React.ReactNode> | null
-  customReceiverTitle: React.ReactNode | null
-  details: {title: string; component: React.ReactNode} | null
 }
 
 type ReviewTxActions = {
   unsignedTxChanged: (unsignedTx: ReviewTxState['unsignedTx']) => void
   cborChanged: (cbor: ReviewTxState['cbor']) => void
-  operationsChanged: (operations: ReviewTxState['operations']) => void
-  customReceiverTitleChanged: (customReceiverTitle: ReviewTxState['customReceiverTitle']) => void
-  detailsChanged: (details: ReviewTxState['details']) => void
   reset: () => void
 }
 
 const defaultState: ReviewTxState = Object.freeze({
   unsignedTx: null,
   cbor: null,
-  operations: null,
-  customReceiverTitle: null,
-  details: null,
 })
 
 function missingInit() {
@@ -136,18 +91,12 @@ const initialReviewTxContext: ReviewTxContext = {
   ...defaultState,
   unsignedTxChanged: missingInit,
   cborChanged: missingInit,
-  operationsChanged: missingInit,
-  customReceiverTitleChanged: missingInit,
-  detailsChanged: missingInit,
   reset: missingInit,
 }
 
 enum ReviewTxActionType {
   UnsignedTxChanged = 'unsignedTxChanged',
   CborChanged = 'cborChanged',
-  OperationsChanged = 'operationsChanged',
-  CustomReceiverTitleChanged = 'customReceiverTitleChanged',
-  DetailsChanged = 'detailsChanged',
   Reset = 'reset',
 }
 

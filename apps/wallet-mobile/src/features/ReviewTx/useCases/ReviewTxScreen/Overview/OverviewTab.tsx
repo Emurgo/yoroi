@@ -18,7 +18,6 @@ import {Accordion} from '../../../common/Accordion'
 import {CopiableText} from '../../../common/CopiableText'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {useOperations} from '../../../common/operations'
-import {ReviewTxState, useReviewTx} from '../../../common/ReviewTxProvider'
 import {TokenItem} from '../../../common/TokenItem'
 import {FormattedOutputs, FormattedTx} from '../../../common/types'
 import {WalletBalance} from '../../../common/WalletBalance'
@@ -26,11 +25,13 @@ import {WalletBalance} from '../../../common/WalletBalance'
 export const OverviewTab = ({
   tx,
   extraOperations,
+  receiverCustomTitle,
   details,
 }: {
   tx: FormattedTx
-  extraOperations: ReviewTxState['operations']
-  details: ReviewTxState['details']
+  extraOperations?: Array<React.ReactNode>
+  receiverCustomTitle?: React.ReactNode
+  details?: {title: string; component: React.ReactNode}
 }) => {
   const {styles} = useStyles()
 
@@ -45,7 +46,12 @@ export const OverviewTab = ({
 
       <Divider verticalSpace="lg" />
 
-      <SenderSection tx={tx} notOwnedOutputs={notOwnedOutputs} ownedOutputs={ownedOutputs} />
+      <SenderSection
+        tx={tx}
+        notOwnedOutputs={notOwnedOutputs}
+        ownedOutputs={ownedOutputs}
+        receiverCustomTitle={receiverCustomTitle}
+      />
 
       <OperationsSection tx={tx} extraOperations={extraOperations} />
 
@@ -112,10 +118,12 @@ const SenderSection = ({
   tx,
   notOwnedOutputs,
   ownedOutputs,
+  receiverCustomTitle,
 }: {
   tx: FormattedTx
   notOwnedOutputs: FormattedOutputs
   ownedOutputs: FormattedOutputs
+  receiverCustomTitle?: React.ReactNode
 }) => {
   const strings = useStrings()
   const {styles} = useStyles()
@@ -135,7 +143,9 @@ const SenderSection = ({
 
       <SenderTokens tx={tx} notOwnedOutputs={notOwnedOutputs} />
 
-      {notOwnedOutputs.length === 1 && <ReceiverSection notOwnedOutputs={notOwnedOutputs} />}
+      {notOwnedOutputs.length === 1 && (
+        <ReceiverSection receiverCustomTitle={receiverCustomTitle} notOwnedOutputs={notOwnedOutputs} />
+      )}
     </Accordion>
   )
 }
@@ -196,11 +206,16 @@ const SenderSectionLabel = () => {
   )
 }
 
-const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs}) => {
+const ReceiverSection = ({
+  notOwnedOutputs,
+  receiverCustomTitle,
+}: {
+  notOwnedOutputs: FormattedOutputs
+  receiverCustomTitle?: React.ReactNode
+}) => {
   const address = notOwnedOutputs[0]?.rewardAddress ?? notOwnedOutputs[0]?.address ?? '-'
   const {styles} = useStyles()
   const strings = useStrings()
-  const {customReceiverTitle} = useReviewTx()
 
   return (
     <>
@@ -208,13 +223,13 @@ const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs})
 
       <View style={styles.receiverAddress}>
         <Text>
-          {notOwnedOutputs[0]?.addressKind === CredKind.Script && customReceiverTitle == null
+          {notOwnedOutputs[0]?.addressKind === CredKind.Script && receiverCustomTitle == null
             ? strings.receiveToScriptLabel
             : strings.receiveToLabel}
           :
         </Text>
 
-        {customReceiverTitle ?? (
+        {receiverCustomTitle ?? (
           <CopiableText textToCopy={address}>
             <Text style={[styles.addressText, styles.receiverSectionAddress]} numberOfLines={1} ellipsizeMode="middle">
               {address}
@@ -226,10 +241,10 @@ const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs})
   )
 }
 
-const OperationsSection = ({tx, extraOperations}: {tx: FormattedTx; extraOperations: ReviewTxState['operations']}) => {
+const OperationsSection = ({tx, extraOperations}: {tx: FormattedTx; extraOperations?: Array<React.ReactNode>}) => {
   const operations = useOperations(tx.certificates)
 
-  if (extraOperations === null && tx.certificates === null) return null
+  if (extraOperations == null && tx.certificates == null) return null
 
   return (
     <View>
@@ -254,7 +269,7 @@ const OperationsSection = ({tx, extraOperations}: {tx: FormattedTx; extraOperati
   )
 }
 
-const Details = ({details}: {details: ReviewTxState['details']}) => {
+const Details = ({details}: {details?: {title: string; component: React.ReactNode}}) => {
   const {openModal} = useModal()
   const {styles} = useStyles()
 

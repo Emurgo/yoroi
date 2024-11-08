@@ -32,7 +32,7 @@ const MaterialTab = createMaterialTopTabNavigator()
 export const ReviewTxScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {unsignedTx, operations, details, cbor} = useReviewTx()
+  const {unsignedTx, cbor} = useReviewTx()
   const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
 
   if (unsignedTx == null && cbor == null) throw new Error('ReviewTxScreen: missing cbor and unsignedTx')
@@ -47,7 +47,7 @@ export const ReviewTxScreen = () => {
 
   const txBody = useTxBody({cbor, unsignedTx})
   const formatedTx = useFormattedTx(txBody)
-  const formattedMetadata = useFormattedMetadata({unsignedTx, cbor, txBody})
+  const formattedMetadata = useFormattedMetadata({txBody, unsignedTx, cbor})
 
   const tabsData = [
     [strings.overviewTab, 'overview'],
@@ -80,7 +80,12 @@ export const ReviewTxScreen = () => {
           {() => (
             /* TODO: make scrollview general to use button border */
             <ScrollView style={styles.root}>
-              <OverviewTab tx={formatedTx} extraOperations={operations} details={details} />
+              <OverviewTab
+                tx={formatedTx}
+                extraOperations={params?.operations}
+                details={params?.details}
+                receiverCustomTitle={params?.receiverCustomTitle}
+              />
             </ScrollView>
           )}
         </MaterialTab.Screen>

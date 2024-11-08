@@ -29,14 +29,13 @@ export const WithdrawStakingRewards = ({wallet}: Props) => {
   const strings = useWithdrawStakingRewardsStrings()
   const {closeModal} = useModal()
   const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged, operationsChanged} = useReviewTx()
+  const {unsignedTxChanged} = useReviewTx()
 
   const handleOnConfirm = (withdrawalTx: YoroiUnsignedTx) => {
     closeModal()
 
     unsignedTxChanged(withdrawalTx)
-    operationsChanged([<StakeRewardsWithdrawalOperation key="0" />])
-    navigateToTxReview()
+    navigateToTxReview({operations: [<StakeRewardsWithdrawalOperation key="0" />]})
   }
 
   return (

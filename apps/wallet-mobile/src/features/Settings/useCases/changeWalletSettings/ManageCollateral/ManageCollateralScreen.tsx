@@ -55,7 +55,7 @@ export const ManageCollateralScreen = () => {
   const strings = useStrings()
   const balances = useBalances(wallet)
   const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged, operationsChanged} = useReviewTx()
+  const {unsignedTxChanged} = useReviewTx()
   const lockedAmount = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
 
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
@@ -87,8 +87,7 @@ export const ManageCollateralScreen = () => {
     createUnsignedTx([createCollateralEntry(wallet)], {
       onSuccess: (yoroiUnsignedTx) => {
         unsignedTxChanged(yoroiUnsignedTx)
-        operationsChanged([<Operation key="0" />])
-        navigateToTxReview({onSuccess})
+        navigateToTxReview({onSuccess, operations: [<Operation key="0" />]})
       },
     })
   }

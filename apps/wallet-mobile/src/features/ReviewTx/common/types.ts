@@ -62,7 +62,7 @@ export type FormattedTx = {
 
 export type FormattedMetadata = {
   hash: string | null
-  metadata: {msg: Array<unknown>} | null
+  metadata: {msg: Array<string>} | null
 }
 
 type AssertEqual<T, Expected> = T extends Expected
