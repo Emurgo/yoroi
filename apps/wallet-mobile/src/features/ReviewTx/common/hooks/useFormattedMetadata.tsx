@@ -47,7 +47,7 @@ const parseMsg = (msg: Array<string>) => {
     try {
       return JSON.parse(msg.join(''))
     } catch {
-      return msg[0]
+      return ''
     }
   }
   return msg[0]
