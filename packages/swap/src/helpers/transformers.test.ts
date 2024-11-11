@@ -2,9 +2,9 @@ import {Balance, Portfolio, Swap} from '@yoroi/types'
 import {tokenInfoMocks} from '@yoroi/portfolio'
 
 import {asTokenFingerprint, transformersMaker} from './transformers'
-import {openswapMocks} from '../adapters/openswap-api/openswap.mocks'
-import {apiMocks} from '../adapters/openswap-api/api.mocks'
-import {PriceAddress, TokenAddress} from '../adapters/openswap-api/types'
+import {openswapMocks} from '../adapters/api/openswap-api/openswap.mocks'
+import {apiMocks} from '../adapters/api/openswap-api/api.mocks'
+import {PriceAddress, TokenAddress} from '../adapters/api/openswap-api/types'
 
 const primaryTokenInfo = tokenInfoMocks.primaryETH
 const transformers = transformersMaker(primaryTokenInfo)

@@ -1,10 +1,10 @@
 import {Portfolio, Swap} from '@yoroi/types'
-
-import {swapApiMaker} from './api-maker'
-import {openswapMocks} from './openswap-api/openswap.mocks'
-import {apiMocks} from './openswap-api/api.mocks'
-import {OpenSwapApi} from './openswap-api/api'
 import {tokenInfoMocks} from '@yoroi/portfolio'
+
+import {OpenSwapApi} from './openswap-api/api'
+import {openswapMocks} from './openswap-api/openswap.mocks'
+import {swapApiMaker} from './api-maker'
+import {apiMocks} from './openswap-api/api.mocks'
 
 const stakingKey = 'someStakingKey'
 const primaryTokenInfo = tokenInfoMocks.primaryETH

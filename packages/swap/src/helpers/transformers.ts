@@ -13,7 +13,7 @@ import {
   OpenOrder,
   TokenPair,
   TokenPairsResponse,
-} from '../adapters/openswap-api/types'
+} from '../adapters/api/openswap-api/types'
 
 const asPolicyIdAndAssetName = (tokenId: string): [string, string] => {
   return tokenId.split('.') as [string, string]

@@ -5,7 +5,7 @@ export {
   swapManagerMocks,
 } from './manager.mocks'
 export {mockSwapStateDefault} from './translators/reactjs/state/state.mocks'
-export {apiMocks} from './adapters/openswap-api/api.mocks'
+export {apiMocks} from './adapters/api/openswap-api/api.mocks'
 export {mocks as orderMocks} from './helpers/mocks'
 
 // orders amounts
@@ -46,7 +46,8 @@ export {useSwap} from './translators/reactjs/hooks/useSwap'
 export {supportedProviders, milkTokenId} from './translators/constants'
 
 // factories
-export {swapApiMaker} from './adapters/api-maker'
+export {swapApiMaker} from './adapters/api/openswap-api/api-maker'
+export {dexhunterApiMaker} from './adapters/api/dexhunter-api/api-maker'
 export {swapManagerMaker} from './manager'
 export {
   swapStorageMaker,

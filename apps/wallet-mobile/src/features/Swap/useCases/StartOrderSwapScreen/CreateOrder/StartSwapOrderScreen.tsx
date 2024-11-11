@@ -11,7 +11,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {Button} from '../../../../../components/Button/Button'
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
-import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'
+import {frontendFeeAddressMainnet, frontendFeeAddressPreprod, isDev} from '../../../../../kernel/env'
 import {useIsKeyboardOpen} from '../../../../../kernel/keyboard/useIsKeyboardOpen'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
@@ -28,6 +28,7 @@ import {useSwapForm} from '../../../common/SwapFormProvider'
 import {useSwapTx} from '../../../common/useSwapTx'
 import {AmountActions} from './Actions/AmountActions/AmountActions'
 import {OrderActions} from './Actions/OrderActions/OrderActions'
+import {DexhunterPlayground} from './DexhunterPlayground'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditPrice} from './EditPrice/EditPrice'
@@ -325,6 +326,8 @@ export const StartSwapOrderScreen = () => {
           <EditSlippage />
 
           <ShowPoolActions />
+
+          {isDev && <DexhunterPlayground />}
         </View>
       </ScrollView>
 

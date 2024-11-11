@@ -3,7 +3,7 @@ import {renderHook, act} from '@testing-library/react-hooks'
 
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {mockSwapManager} from '../../../manager.mocks'
-import {apiMocks} from '../../../adapters/openswap-api/api.mocks'
+import {apiMocks} from '../../../adapters/api/openswap-api/api.mocks'
 import {useSwapCreateOrder} from './useSwapCreateOrder'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 

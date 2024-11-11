@@ -1,5 +1,5 @@
 import {Portfolio, Swap} from '@yoroi/types'
-import {apiMocks} from './adapters/openswap-api/api.mocks'
+import {apiMocks} from './adapters/api/openswap-api/api.mocks'
 import {tokenInfoMocks} from '@yoroi/portfolio'
 import {makeOrderCalculations} from './helpers/orders/factories/makeOrderCalculations'
 import {getBestPoolCalculation} from './helpers/pools/getBestPoolCalculation'
