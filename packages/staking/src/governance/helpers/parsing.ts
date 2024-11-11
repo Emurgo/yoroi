@@ -149,6 +149,6 @@ const base32ToHex = (base32: string): string | null => {
   return base32Words?.words ? convertBase32ToHex(base32Words.words) : null
 }
 
-const convertBase32ToHex = (data: number[]): string => {
-  return Buffer.from(bech32Module.fromWords(data)).toString('hex')
+const convertBase32ToHex = (words: number[]): string => {
+  return Buffer.from(bech32Module.fromWords(words)).toString('hex')
 }
