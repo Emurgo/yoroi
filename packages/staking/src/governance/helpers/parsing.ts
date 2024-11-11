@@ -8,6 +8,16 @@ export const parseDrepId = async (
   const isPotentiallyValidHex = /^(22|23)[0-9a-fA-F]{56}$/.test(drepId)
 
   if (
+    drepId.startsWith('drep_vkh1') &&
+    (await isValidBech32KeyHash(drepId, cardano))
+  ) {
+    return {
+      type: 'key',
+      hash: await convertBech32KeyHashToHex(drepId, cardano),
+    }
+  }
+
+  if (
     drepId.startsWith('drep1') &&
     (await isValidBech32KeyHash(drepId, cardano))
   ) {

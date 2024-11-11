@@ -50,6 +50,18 @@ describe('parseDrepId', () => {
     })
   })
 
+  it('should parse a drep_vkh1 key hash in bech32 format', async () => {
+    const result = await parseDrepId(
+      'drep_vkh1km69g7ksf8t5g0h9d9tkrcd2tezxelx0wtr76rv2mrkl549k89t',
+      cardano,
+    )
+
+    expect(result).toStrictEqual({
+      hash: 'b6f4547ad049d7443ee5695761e1aa5e446cfccf72c7ed0d8ad8edfa',
+      type: 'key',
+    })
+  })
+
   it('should parse a script hash in bech32 format', async () => {
     const result = await parseDrepId(
       'drep_script18cgl8kdnjculhww4n3h0a3ahc85ahjcsg53u0f93jnz9c0339av',
