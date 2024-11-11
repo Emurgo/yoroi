@@ -107,7 +107,7 @@ describe('createGovernanceManager', () => {
         'drep_script1r73ah4wa3zqhw2fpnzyyj2lnya5zwjftkakgfk094y3mkerc53c'
 
       const errorMessage =
-        'Invalid script DRep ID. Must have a valid bech32 format'
+        'Invalid DRep ID. Must have a valid key or script bech32 format'
 
       await expect(() =>
         governanceManager.validateDRepID(invalidbech32Address),
@@ -118,7 +118,7 @@ describe('createGovernanceManager', () => {
         'drep1r73ah4wa3zqhw2fpnzyyj2lnya5zwjftkakgfk094y3mkerc53cs'
 
       const errorMessage =
-        'Invalid key DRep ID. Must have a valid bech32 format'
+        'Invalid DRep ID. Must have a valid key or script bech32 format'
 
       await expect(() =>
         governanceManager.validateDRepID(invalidbech32Address),
