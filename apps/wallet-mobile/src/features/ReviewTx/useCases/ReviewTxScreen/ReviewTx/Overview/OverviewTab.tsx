@@ -1,27 +1,26 @@
-// 🚧 TODO: grouping by staking address 🚧
-
 import {CredKind} from '@emurgo/cross-csl-core'
 import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
-import {Divider} from '../../../../../components/Divider/Divider'
-import {Icon} from '../../../../../components/Icon'
-import {useModal} from '../../../../../components/Modal/ModalContext'
-import {Space} from '../../../../../components/Space/Space'
-import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
-import {Quantities} from '../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {Accordion} from '../../../common/Accordion'
-import {CopiableText} from '../../../common/CopiableText'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {useOperations} from '../../../common/operations'
-import {TokenItem} from '../../../common/TokenItem'
-import {FormattedOutputs, FormattedTx} from '../../../common/types'
-import {WalletBalance} from '../../../common/WalletBalance'
+import {Divider} from '../../../../../../components/Divider/Divider'
+import {Icon} from '../../../../../../components/Icon'
+import {Info} from '../../../../../../components/Info/Info'
+import {useModal} from '../../../../../../components/Modal/ModalContext'
+import {Space} from '../../../../../../components/Space/Space'
+import {formatTokenWithText} from '../../../../../../yoroi-wallets/utils/format'
+import {Quantities} from '../../../../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../../../WalletManager/context/WalletManagerProvider'
+import {Accordion} from '../../../../common/Accordion'
+import {CopiableText} from '../../../../common/CopiableText'
+import {useStrings} from '../../../../common/hooks/useStrings'
+import {useOperations} from '../../../../common/operations'
+import {TokenItem} from '../../../../common/TokenItem'
+import {FormattedOutput, FormattedOutputs, FormattedTx} from '../../../../common/types'
+import {WalletBalance} from '../../../../common/WalletBalance'
 
 export const OverviewTab = ({
   tx,
@@ -48,13 +47,19 @@ export const OverviewTab = ({
 
       <Divider verticalSpace="lg" />
 
-      <SenderSection
+      <MyWalletSection
         tx={tx}
         notOwnedOutputs={notOwnedOutputs}
         ownedOutputs={ownedOutputs}
         receiverCustomTitle={receiverCustomTitle}
         operationsFee={operations.totalFee}
       />
+
+      {notOwnedOutputs.length === 1 && (
+        <OneExternalPartySection receiverCustomTitle={receiverCustomTitle} output={notOwnedOutputs[0]} />
+      )}
+
+      {notOwnedOutputs.length > 1 && <MultiExternalPartiesSection outputs={notOwnedOutputs} />}
 
       <OperationsSection operations={operations.components} extraOperations={extraOperations} />
 
@@ -117,11 +122,10 @@ const FeeInfoItem = ({fee}: {fee: string}) => {
   )
 }
 
-const SenderSection = ({
+const MyWalletSection = ({
   tx,
   notOwnedOutputs,
   ownedOutputs,
-  receiverCustomTitle,
   operationsFee,
 }: {
   tx: FormattedTx
@@ -142,21 +146,18 @@ const SenderSection = ({
         <Text style={styles.addressText} numberOfLines={1} ellipsizeMode="middle">
           {address}
         </Text>
+
+        {ownedOutputs[0]?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} />}
       </CopiableText>
 
       <Space height="sm" />
 
-      <SenderTokens tx={tx} notOwnedOutputs={notOwnedOutputs} operationsFee={operationsFee} />
-
-      {notOwnedOutputs.length === 1 && (
-        <ReceiverSection receiverCustomTitle={receiverCustomTitle} notOwnedOutputs={notOwnedOutputs} />
-      )}
+      <MyWalletTokens tx={tx} notOwnedOutputs={notOwnedOutputs} operationsFee={operationsFee} />
     </Accordion>
   )
 }
 
-// 🚧 TODO: ADD MULTIRECEIVER SUPPORT 🚧
-const SenderTokens = ({
+const MyWalletTokens = ({
   tx,
   notOwnedOutputs,
   operationsFee,
@@ -166,7 +167,6 @@ const SenderTokens = ({
   operationsFee: Balance.Quantity
 }) => {
   const {styles} = useStyles()
-
   const {wallet} = useSelectedWallet()
 
   const totalPrimaryTokenSent = React.useMemo(
@@ -189,8 +189,8 @@ const SenderTokens = ({
 
   return (
     <View style={styles.tokensSection}>
-      <View style={styles.senderTokenItems}>
-        <SenderSectionLabel />
+      <View style={styles.tokenItems}>
+        <MyWalletSectionLabel />
 
         <Space fill />
 
@@ -204,7 +204,7 @@ const SenderTokens = ({
   )
 }
 
-const SenderSectionLabel = () => {
+const MyWalletSectionLabel = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
 
@@ -219,14 +219,14 @@ const SenderSectionLabel = () => {
   )
 }
 
-const ReceiverSection = ({
-  notOwnedOutputs,
+const OneExternalPartySection = ({
+  output,
   receiverCustomTitle,
 }: {
-  notOwnedOutputs: FormattedOutputs
+  output: FormattedOutput
   receiverCustomTitle?: React.ReactNode
 }) => {
-  const address = notOwnedOutputs[0]?.rewardAddress ?? notOwnedOutputs[0]?.address ?? '-'
+  const address = output?.rewardAddress ?? output?.address ?? '-'
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -234,9 +234,9 @@ const ReceiverSection = ({
     <>
       <Space height="sm" />
 
-      <View style={styles.receiverAddress}>
-        <Text>
-          {notOwnedOutputs[0]?.addressKind === CredKind.Script && receiverCustomTitle == null
+      <View style={styles.externalPartyAddress}>
+        <Text style={styles.externalPartyAddressText}>
+          {output?.addressKind === CredKind.Script && receiverCustomTitle == null
             ? strings.receiveToScriptLabel
             : strings.receiveToLabel}
           :
@@ -247,10 +247,88 @@ const ReceiverSection = ({
             <Text style={[styles.addressText, styles.receiverSectionAddress]} numberOfLines={1} ellipsizeMode="middle">
               {address}
             </Text>
+
+            {output?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} />}
           </CopiableText>
         )}
       </View>
     </>
+  )
+}
+
+const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => {
+  const {styles} = useStyles()
+  const {wallet} = useSelectedWallet()
+
+  const receivers = outputs.map((output, index) => {
+    const totalPrimaryToken = output.assets.filter((asset) => asset.isPrimary)[0]?.quantity ?? Quantities.zero
+    const totalPrimaryTokenLabel = formatTokenWithText(totalPrimaryToken, wallet.portfolioPrimaryTokenInfo)
+    const notPrimaryToken = output.assets.filter((asset) => !asset.isPrimary)
+    const address = output?.rewardAddress ?? output?.address ?? '-'
+
+    return (
+      <View key={index}>
+        <Space height="lg" />
+
+        <CopiableText textToCopy={address}>
+          <Text style={styles.addressText} numberOfLines={1} ellipsizeMode="middle">
+            {address}
+          </Text>
+
+          {output?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} />}
+        </CopiableText>
+
+        <Space height="sm" />
+
+        <View style={styles.tokensSection}>
+          <View style={styles.tokenItems}>
+            <ExternalPartiesSectionLabel />
+
+            <Space fill />
+
+            <TokenItem tokenInfo={wallet.portfolioPrimaryTokenInfo} label={totalPrimaryTokenLabel} isSent={false} />
+
+            {notPrimaryToken.map((token, index) => (
+              <TokenItem
+                key={index}
+                tokenInfo={token.tokenInfo}
+                label={token.label}
+                isPrimaryToken={false}
+                isSent={false}
+              />
+            ))}
+          </View>
+        </View>
+      </View>
+    )
+  })
+
+  return (
+    <View>
+      <Divider verticalSpace="lg" />
+
+      <Accordion label="Other parties">
+        <Space height="lg" />
+
+        <Info content="Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance" />
+
+        {receivers}
+      </Accordion>
+    </View>
+  )
+}
+
+const ExternalPartiesSectionLabel = () => {
+  const {styles, colors} = useStyles()
+
+  return (
+    <View style={styles.tokensSectionLabel}>
+      <Icon.Received size={30} color={colors.received} />
+
+      <Space width="_2xs" />
+
+      <Text style={styles.tokenSectionLabel}>Receive</Text>
+    </View>
   )
 }
 
@@ -337,21 +415,21 @@ const useStyles = () => {
       color: color.gray_900,
       ...atoms.body_2_md_regular,
     },
-    link: {
-      color: color.text_primary_medium,
-      ...atoms.body_2_md_medium,
-    },
-    receiverAddress: {
+    externalPartyAddress: {
       ...atoms.flex_row,
       ...atoms.align_center,
       ...atoms.flex_row,
       ...atoms.justify_between,
     },
+    externalPartyAddressText: {
+      ...atoms.body_2_md_medium,
+      color: color.text_gray_medium,
+    },
     tokenSectionLabel: {
       ...atoms.body_2_md_regular,
       color: color.gray_900,
     },
-    senderTokenItems: {
+    tokenItems: {
       ...atoms.flex_wrap,
       ...atoms.flex_row,
       ...atoms.justify_end,
@@ -399,98 +477,3 @@ const useStyles = () => {
 
   return {styles, colors} as const
 }
-
-// 🚧 WORK IN PROGRESS BELOW 🚧
-
-//  🚧 TODO: WIP 🚧
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const CreatedByInfoItem = () => {
-  const {styles} = useStyles()
-
-  return (
-    <View style={styles.infoItem}>
-      <Text style={styles.infoLabel}>Created By</Text>
-
-      <View style={styles.plate}>
-        {/* <SvgComponent /> */}
-
-        <Space width="xs" />
-
-        <TouchableOpacity onPress={() => Linking.openURL('https://google.com')}>
-          <Text style={styles.link}>dapp.org</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  )
-}
-
-// 🚧 TODO: WIP 🚧
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-/* const ReceiverTokensSectionMultiReceiver = () => {
-  const {styles} = useStyles()
-
-  return (
-    <>
-      <Divider />
-
-      <Space height="lg" />
-
-      <Accordion label="Other parties">
-        <Space height="lg" />
-
-        <Info content="Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance" />
-
-        <Space height="lg" />
-
-        <Address address="stake1u948jr02falxxqphnv3g3rkd3mdzqmtqq3x0tjl39m7dqngqg0fxp" />
-
-        <Space height="sm" />
-
-        <View style={styles.tokensSection}>
-          <View style={styles.senderTokenItems}>
-            <ReceiverSectionLabel />
-
-            <Space fill />
-
-            <TokenItem tokenId="12345" label="-20,204617 ADA" isSent={false} />
-
-            <TokenItem tokenId="12345" label="-10 Token 1" isPrimaryToken={false} isSent={false} />
-
-            <TokenItem tokenId="12345" label="-100 Token 2" isPrimaryToken={false} isSent={false} />
-
-            <TokenItem tokenId="12345" label="-1 Token 3" isPrimaryToken={false} isSent={false} />
-
-            <TokenItem tokenId="12345" label="100000000000000000 Token 4" isPrimaryToken={false} isSent={false} />
-
-            <TokenItem tokenId="12345" label="1000000 Token 5" isPrimaryToken={false} isSent={false} />
-
-            <TokenItem tokenId="12345" label="100 Token 6" isPrimaryToken={false} isSent={false} />
-
-            <TokenItem tokenId="12345" label="100000000000 Token 7" isPrimaryToken={false} isSent={false} />
-
-            <TokenItem tokenId="12345" label="1 Token 8" isPrimaryToken={false} isSent={false} />
-
-            <TokenItem tokenId="12345" label="1000 Token 9" isPrimaryToken={false} isSent={false} />
-          </View>
-        </View>
-      </Accordion>
-
-      <Space height="lg" />
-    </>
-  )
-} */
-
-// 🚧 TODO: WIP 🚧
-/* const ReceiverSectionLabel = () => {
-  const {styles, colors} = useStyles()
-
-  return (
-    <View style={styles.tokensSectionLabel}>
-      <Icon.Received size={30} color={colors.received} />
-
-      <Space width="_2xs" />
-
-      <Text style={styles.tokenSectionLabel}>Receive</Text>
-    </View>
-  )
-} */

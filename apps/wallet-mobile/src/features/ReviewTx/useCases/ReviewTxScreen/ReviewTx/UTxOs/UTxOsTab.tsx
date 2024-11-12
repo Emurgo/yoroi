@@ -2,13 +2,13 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Divider} from '../../../../../components/Divider/Divider'
-import {Space} from '../../../../../components/Space/Space'
-import {Accordion} from '../../../common/Accordion'
-import {CopiableText} from '../../../common/CopiableText'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {TokenItem} from '../../../common/TokenItem'
-import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs, FormattedTx} from '../../../common/types'
+import {Divider} from '../../../../../../components/Divider/Divider'
+import {Space} from '../../../../../../components/Space/Space'
+import {Accordion} from '../../../../common/Accordion'
+import {CopiableText} from '../../../../common/CopiableText'
+import {useStrings} from '../../../../common/hooks/useStrings'
+import {TokenItem} from '../../../../common/TokenItem'
+import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs, FormattedTx} from '../../../../common/types'
 
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()

@@ -2,10 +2,10 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Space} from '../../../../../components/Space/Space'
-import {CopiableText, CopyButton} from '../../../common/CopiableText'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {FormattedMetadata} from '../../../common/types'
+import {Space} from '../../../../../../components/Space/Space'
+import {CopiableText, CopyButton} from '../../../../common/CopiableText'
+import {useStrings} from '../../../../common/hooks/useStrings'
+import {FormattedMetadata} from '../../../../common/types'
 
 export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
   const {styles} = useStyles()

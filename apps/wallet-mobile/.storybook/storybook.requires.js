@@ -165,6 +165,7 @@ const getStories = () => {
     "./src/features/Receive/common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal.stories.tsx": require("../src/features/Receive/common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal.stories.tsx"),
     "./src/features/Receive/common/SmallAddressCard/SmallAddressCard.stories.tsx": require("../src/features/Receive/common/SmallAddressCard/SmallAddressCard.stories.tsx"),
     "./src/features/RegisterCatalyst/useCases/ShowQrCode/ShowQrCode.stories.tsx": require("../src/features/RegisterCatalyst/useCases/ShowQrCode/ShowQrCode.stories.tsx"),
+    "./src/features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/ReviewTx.stories.tsx": require("../src/features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/ReviewTx.stories.tsx"),
     "./src/features/Scan/illustrations/Ilustrations.stories.tsx": require("../src/features/Scan/illustrations/Ilustrations.stories.tsx"),
     "./src/features/Scan/useCases/ScanCodeScreen.stories.tsx": require("../src/features/Scan/useCases/ScanCodeScreen.stories.tsx"),
     "./src/features/Scan/useCases/ShowCameraPermissionDeniedScreen/OpenDeviceAppSettingsButton.stories.tsx": require("../src/features/Scan/useCases/ShowCameraPermissionDeniedScreen/OpenDeviceAppSettingsButton.stories.tsx"),
