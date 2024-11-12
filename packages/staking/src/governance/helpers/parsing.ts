@@ -1,53 +1,78 @@
 import {CardanoTypes} from '../../types'
+import {bech32 as bech32Module} from 'bech32'
 
 export const parseDrepId = async (
   drepId: string,
   cardano: CardanoTypes.Wasm,
 ): Promise<{type: 'key'; hash: string} | {type: 'script'; hash: string}> => {
-  const keyPrefix = drepId.startsWith('drep1')
-  const scriptPrefix = drepId.startsWith('drep_script1')
+  const isPotentiallyValidHex = /^(22|23)[0-9a-fA-F]{56}$/.test(drepId)
 
-  if (!keyPrefix && !scriptPrefix)
-    throw new Error(
-      'Invalid DRep ID. Must have a valid key or script bech32 format',
-    )
-
-  if (keyPrefix) {
-    const isValidDrepKeyHashBech32Format = await getIsValidDrepKeyBech32Format(
-      drepId,
-      cardano,
-    )
-
-    if (!isValidDrepKeyHashBech32Format)
-      throw new Error('Invalid key DRep ID. Must have a valid bech32 format')
-
-    const keyHash = await convertBech32ToKeyHash(drepId, cardano)
-    const type = 'key'
-
+  if (
+    drepId.startsWith('drep_vkh1') &&
+    (await isValidBech32KeyHash(drepId, cardano))
+  ) {
     return {
-      type,
-      hash: keyHash,
+      type: 'key',
+      hash: await convertBech32KeyHashToHex(drepId, cardano),
     }
   }
 
-  const isValidDrepScriptBech32Format = await getIsValidDrepScriptBech32Format(
-    drepId,
-    cardano,
-  )
-
-  if (!isValidDrepScriptBech32Format)
-    throw new Error('Invalid script DRep ID. Must have a valid bech32 format')
-
-  const scriptHash = await convertBech32ToScriptHash(drepId, cardano)
-  const type = 'script'
-
-  return {
-    type,
-    hash: scriptHash,
+  if (
+    drepId.startsWith('drep1') &&
+    (await isValidBech32KeyHash(drepId, cardano))
+  ) {
+    return {
+      type: 'key',
+      hash: await convertBech32KeyHashToHex(drepId, cardano),
+    }
   }
+
+  if (
+    drepId.startsWith('drep_script1') &&
+    (await isValidBech32ScriptHash(drepId, cardano))
+  ) {
+    return {
+      type: 'script',
+      hash: await convertBech32ScriptHashToHex(drepId, cardano),
+    }
+  }
+
+  if (drepId.startsWith('drep1') && drepId.length === 58) {
+    const base32Parsed = base32ToHex(drepId)
+    if (!base32Parsed) {
+      throw new Error('Invalid key DRep ID. Must have 58 hex characters')
+    }
+    return parseDrepId(base32Parsed, cardano)
+  }
+
+  if (
+    isPotentiallyValidHex &&
+    drepId.startsWith('22') &&
+    (await isValidHexKeyHash(drepId.substr(2), cardano))
+  ) {
+    return {
+      type: 'key',
+      hash: drepId.substr(2),
+    }
+  }
+
+  if (
+    isPotentiallyValidHex &&
+    drepId.startsWith('23') &&
+    (await isValidHexScriptHash(drepId.substr(2), cardano))
+  ) {
+    return {
+      type: 'script',
+      hash: drepId.substr(2),
+    }
+  }
+
+  throw new Error(
+    'Invalid DRep ID. Must have a valid key or script bech32 format',
+  )
 }
 
-const getIsValidDrepKeyBech32Format = async (
+const isValidBech32KeyHash = async (
   drepId: string,
   cardano: CardanoTypes.Wasm,
 ): Promise<boolean> => {
@@ -59,7 +84,7 @@ const getIsValidDrepKeyBech32Format = async (
   }
 }
 
-const getIsValidDrepScriptBech32Format = async (
+const isValidBech32ScriptHash = async (
   drepId: string,
   cardano: CardanoTypes.Wasm,
 ): Promise<boolean> => {
@@ -71,7 +96,31 @@ const getIsValidDrepScriptBech32Format = async (
   }
 }
 
-const convertBech32ToKeyHash = async (
+const isValidHexScriptHash = async (
+  drepId: string,
+  cardano: CardanoTypes.Wasm,
+): Promise<boolean> => {
+  try {
+    await cardano.ScriptHash.fromHex(drepId)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+const isValidHexKeyHash = async (
+  drepId: string,
+  cardano: CardanoTypes.Wasm,
+): Promise<boolean> => {
+  try {
+    await cardano.Ed25519KeyHash.fromHex(drepId)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+const convertBech32KeyHashToHex = async (
   drepId: string,
   cardano: CardanoTypes.Wasm,
 ): Promise<string> => {
@@ -79,7 +128,7 @@ const convertBech32ToKeyHash = async (
   return await keyHash.toHex()
 }
 
-const convertBech32ToScriptHash = async (
+const convertBech32ScriptHashToHex = async (
   drepId: string,
   cardano: CardanoTypes.Wasm,
 ): Promise<string> => {
@@ -93,4 +142,13 @@ export const convertHexKeyHashToBech32Format = async (
 ): Promise<string> => {
   const keyHash = await cardano.Ed25519KeyHash.fromHex(drepId)
   return await keyHash.toBech32('drep')
+}
+
+const base32ToHex = (base32: string): string | null => {
+  const base32Words = bech32Module.decodeUnsafe(base32, base32.length)
+  return base32Words?.words ? convertBase32ToHex(base32Words.words) : null
+}
+
+const convertBase32ToHex = (words: number[]): string => {
+  return Buffer.from(bech32Module.fromWords(words)).toString('hex')
 }
