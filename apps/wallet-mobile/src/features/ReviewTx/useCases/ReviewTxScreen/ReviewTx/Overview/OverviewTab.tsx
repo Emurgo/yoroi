@@ -259,6 +259,7 @@ const OneExternalPartySection = ({
 const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => {
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
+  const strings = useStrings()
 
   const receivers = outputs.map((output, index) => {
     const totalPrimaryToken = output.assets.filter((asset) => asset.isPrimary)[0]?.quantity ?? Quantities.zero
@@ -307,10 +308,10 @@ const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => 
     <View>
       <Divider verticalSpace="lg" />
 
-      <Accordion label="Other parties">
+      <Accordion label={strings.multiExternalPartiesSectionLabel}>
         <Space height="lg" />
 
-        <Info content="Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance" />
+        <Info content={strings.multiExternalPartiesSectionNotice} />
 
         {receivers}
       </Accordion>
@@ -320,6 +321,7 @@ const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => 
 
 const ExternalPartiesSectionLabel = () => {
   const {styles, colors} = useStyles()
+  const strings = useStrings()
 
   return (
     <View style={styles.tokensSectionLabel}>
@@ -327,7 +329,7 @@ const ExternalPartiesSectionLabel = () => {
 
       <Space width="_2xs" />
 
-      <Text style={styles.tokenSectionLabel}>Receive</Text>
+      <Text style={styles.tokenSectionLabel}>{strings.receiveLabel}</Text>
     </View>
   )
 }
@@ -339,13 +341,14 @@ const OperationsSection = ({
   operations: Array<React.ReactNode>
   extraOperations?: Array<React.ReactNode>
 }) => {
+  const strings = useStrings()
   if (extraOperations == null && operations?.length === 0) return null
 
   return (
     <View>
       <Divider verticalSpace="lg" />
 
-      <Accordion label="Operations">
+      <Accordion label={strings.operationsLabel}>
         <Space height="lg" />
 
         {[...operations, ...(extraOperations ?? [])].map((operation, index) => {

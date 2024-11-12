@@ -62,6 +62,10 @@ export const useStrings = () => {
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
+    multiExternalPartiesSectionLabel: intl.formatMessage(messages.multiExternalPartiesSectionLabel),
+    multiExternalPartiesSectionNotice: intl.formatMessage(messages.multiExternalPartiesSectionNotice),
+    receiveLabel: intl.formatMessage(messages.receiveLabel),
+    operationsLabel: intl.formatMessage(messages.operationsLabel),
   }
 }
 
@@ -285,5 +289,22 @@ const messages = defineMessages({
   failedTxButton: {
     id: 'txReview.failedTxButton',
     defaultMessage: '!!!Go to transactions',
+  },
+  multiExternalPartiesSectionLabel: {
+    id: 'txReview.overview.multiExternalPartiesSectionLabel',
+    defaultMessage: '!!!Other parties',
+  },
+  multiExternalPartiesSectionNotice: {
+    id: 'txReview.overview.multiExternalPartiesSectionNotice',
+    defaultMessage:
+      "!!!Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance",
+  },
+  receiveLabel: {
+    id: 'txReview.receiveLabel',
+    defaultMessage: '!!!Receive',
+  },
+  operationsLabel: {
+    id: 'txReview.operationsLabel',
+    defaultMessage: '!!!Operations',
   },
 })

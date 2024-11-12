@@ -1273,5 +1273,9 @@
   "txReview.failedTxText": "Your transaction has not been processed properly due to technical issues",
   "txReview.failedTxButton": "Go to transactions",
   "txReview.walletBalanceTokens.title": "Tokens",
-  "txReview.walletBalanceNFTs.title": "NFTs"
+  "txReview.walletBalanceNFTs.title": "NFTs",
+  "txReview.overview.multiExternalPartiesSectionLabel": "Other parties",
+  "txReview.overview.multiExternalPartiesSectionNotice": "Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance",
+  "txReview.receiveLabel": "Receive",
+  "txReview.operationsLabel": "Operations"
 }
