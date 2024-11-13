@@ -28,6 +28,7 @@ const Component = ({formattedTx}: {formattedTx: FormattedTx}) => {
       operations={undefined}
       details={undefined}
       receiverCustomTitle={undefined}
+      createdBy={undefined}
       onConfirm={action('onConfirm')}
     />
   )
