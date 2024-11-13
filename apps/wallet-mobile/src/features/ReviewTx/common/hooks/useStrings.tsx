@@ -72,6 +72,7 @@ export const useStrings = () => {
     receiveLabel: intl.formatMessage(messages.receiveLabel),
     operationsLabel: intl.formatMessage(messages.operationsLabel),
     policyIdLabel: intl.formatMessage(messages.policyIdLabel),
+    createdBy: intl.formatMessage(messages.createdBy),
   }
 }
 
@@ -336,5 +337,9 @@ const messages = defineMessages({
   policyIdLabel: {
     id: 'txReview.policyIdLabel',
     defaultMessage: '!!!Policy ID',
+  },
+  createdBy: {
+    id: 'txReview.createdBy',
+    defaultMessage: '!!!Created by',
   },
 })

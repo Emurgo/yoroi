@@ -9,7 +9,9 @@ import {logger} from '../../kernel/logger/logger'
 import {useWalletNavigation} from '../../kernel/navigation'
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
 import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
+import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
+import {useBrowser} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {isUserRejectedError, userRejectedError} from './common/errors'
@@ -26,6 +28,7 @@ export const useDappConnectorManager = () => {
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
   const {cborChanged} = useReviewTx()
+  const {dApp} = useBrowser()
 
   const confirmConnection = useConfirmConnection()
 
@@ -46,6 +49,9 @@ export const useDappConnectorManager = () => {
             let shouldResolve = true
             cborChanged(cbor)
             navigateToTxReview({
+              createdBy: dApp?.uri != null && dApp?.logo != null && (
+                <CreatedByInfoItem logo={dApp.logo} url={dApp.uri} />
+              ),
               onConfirm: async () => {
                 if (!shouldResolve) return
                 shouldResolve = false
@@ -68,6 +74,9 @@ export const useDappConnectorManager = () => {
             let shouldResolve = true
             cborChanged(cbor)
             navigateToTxReview({
+              createdBy: dApp?.uri != null && dApp?.logo != null && (
+                <CreatedByInfoItem logo={dApp.logo} url={dApp.uri} />
+              ),
               onConfirm: () => {
                 if (!shouldResolve) return
                 shouldResolve = false
@@ -102,6 +111,8 @@ export const useDappConnectorManager = () => {
       signDataWithHW,
       cborChanged,
       navigateToTxReview,
+      dApp?.uri,
+      dApp?.logo,
       promptRootKey,
       navigateTo,
       signTxWithHW,

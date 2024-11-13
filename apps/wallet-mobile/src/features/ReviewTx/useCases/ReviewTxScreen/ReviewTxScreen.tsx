@@ -49,6 +49,7 @@ export const ReviewTxScreen = () => {
       operations={params?.operations}
       details={params?.details}
       receiverCustomTitle={params?.receiverCustomTitle}
+      createdBy={params?.createdBy}
       onConfirm={handleOnConfirm}
     />
   )

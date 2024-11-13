@@ -32,6 +32,7 @@ export const ReviewTx = ({
   operations,
   details,
   receiverCustomTitle,
+  createdBy,
   onConfirm,
 }: {
   formattedTx: FormattedTx
@@ -39,6 +40,7 @@ export const ReviewTx = ({
   operations: Array<React.ReactNode> | undefined
   details: {title: string; component: React.ReactNode} | undefined
   receiverCustomTitle: React.ReactNode | undefined
+  createdBy: React.ReactNode | undefined
   onConfirm: () => void
 }) => {
   const {styles} = useStyles()
@@ -67,6 +69,7 @@ export const ReviewTx = ({
                 tx={formattedTx}
                 extraOperations={operations}
                 details={details}
+                createdBy={createdBy}
                 receiverCustomTitle={receiverCustomTitle}
               />
             </ScrollView>

@@ -39,7 +39,7 @@ type Props = {
 }
 export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const {styles, colors} = useStyles()
-  const {addTab, setTabActive, tabs} = useBrowser()
+  const {addTab, setTabActive, tabs, updateDApp} = useBrowser()
   const navigateTo = useNavigateTo()
   const {openModal, closeModal} = useModal()
   const insets = useSafeAreaInsets()
@@ -68,6 +68,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     const id = uuid.v4()
     addTab(dApp.uri, id)
     setTabActive(tabs.length)
+    updateDApp(dApp)
 
     navigateTo.browseDapp()
   }

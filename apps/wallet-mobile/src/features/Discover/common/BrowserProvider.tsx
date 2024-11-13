@@ -3,6 +3,7 @@ import {produce} from 'immer'
 import * as React from 'react'
 
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {DAppItem} from './helpers'
 
 const defaultActions: BrowserActions = {
   addTab: () => invalid('missing init'),
@@ -10,12 +11,14 @@ const defaultActions: BrowserActions = {
   updateTab: () => invalid('missing init'),
   removeTab: () => invalid('missing init'),
   openTabs: () => invalid('missing init'),
+  updateDApp: () => invalid('missing init'),
 } as const
 
 const defaultState: BrowserState = {
   tabs: [],
   tabActiveIndex: -1,
   tabsOpen: false,
+  dApp: null,
 } as const
 
 export type TabItem = {
@@ -27,6 +30,7 @@ type BrowserState = {
   tabs: TabItem[]
   tabActiveIndex: number
   tabsOpen: boolean
+  dApp: DAppItem | null
 }
 
 const BrowserContext = React.createContext<BrowserState & BrowserActions>({
@@ -83,6 +87,9 @@ export const BrowserProvider = ({
     openTabs: (isOpen) => {
       dispatch({type: BrowserActionType.OpenTabs, isOpen})
     },
+    updateDApp: (dApp) => {
+      dispatch({type: BrowserActionType.UpdateDApp, dApp})
+    },
   }).current
 
   const context = React.useMemo<BrowserState & BrowserActions>(
@@ -103,6 +110,7 @@ enum BrowserActionType {
   UpdateTab = 'updateTab',
   RemoveTab = 'removeTab',
   OpenTabs = 'openTabs',
+  UpdateDApp = 'updateDApp',
 }
 
 type BrowserContextAction =
@@ -133,6 +141,10 @@ type BrowserContextAction =
       type: BrowserActionType.OpenTabs
       isOpen: boolean
     }
+  | {
+      type: BrowserActionType.UpdateDApp
+      dApp: DAppItem | null
+    }
 
 type BrowserActions = Readonly<{
   addTab: (url: string, id: string) => void
@@ -140,6 +152,7 @@ type BrowserActions = Readonly<{
   updateTab: (tabIndex: number, tabInfo: Partial<Omit<TabItem, 'id'>>) => void
   removeTab: (index: number) => void
   openTabs: (isOpen: boolean) => void
+  updateDApp: (dApp: DAppItem | null) => void
 }>
 
 const browserReducer = (state: BrowserState, action: BrowserContextAction): BrowserState => {
@@ -170,6 +183,10 @@ const browserReducer = (state: BrowserState, action: BrowserContextAction): Brow
 
       case BrowserActionType.OpenTabs:
         draft.tabsOpen = action.isOpen
+        break
+
+      case BrowserActionType.UpdateDApp:
+        draft.dApp = action.dApp
         break
     }
   })

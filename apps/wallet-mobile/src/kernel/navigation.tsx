@@ -278,6 +278,7 @@ export type ReviewTxRoutes = {
     operations?: Array<React.ReactNode>
     receiverCustomTitle?: React.ReactNode
     details?: {title: string; component: React.ReactNode}
+    createdBy?: React.ReactNode
     onConfirm?: () => void
     onCancel?: () => void
     onSuccess?: (signedTx: YoroiSignedTx) => void
