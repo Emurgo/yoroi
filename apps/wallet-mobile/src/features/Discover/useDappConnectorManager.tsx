@@ -1,6 +1,6 @@
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useAsyncStorage} from '@yoroi/common'
-import {DappConnector} from '@yoroi/dapp-connector'
+import {DappConnector, useDappList} from '@yoroi/dapp-connector'
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
 import {useMutation} from 'react-query'
@@ -28,7 +28,13 @@ export const useDappConnectorManager = () => {
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
   const {cborChanged} = useReviewTx()
-  const {dApp} = useBrowser()
+
+  const {data: list} = useDappList({suspense: true})
+  const {tabs, tabActiveIndex} = useBrowser()
+  const activeTab = tabs[tabActiveIndex]
+  const activeUrl = activeTab.url
+  const activeOrigin = new URL(activeUrl).origin
+  const matchingDapp = list?.dapps.find((d) => d.origins.includes(activeOrigin))
 
   const confirmConnection = useConfirmConnection()
 
@@ -49,8 +55,8 @@ export const useDappConnectorManager = () => {
             let shouldResolve = true
             cborChanged(cbor)
             navigateToTxReview({
-              createdBy: dApp?.uri != null && dApp?.logo != null && (
-                <CreatedByInfoItem logo={dApp.logo} url={dApp.uri} />
+              createdBy: matchingDapp?.uri != null && matchingDapp?.logo != null && (
+                <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />
               ),
               onConfirm: async () => {
                 if (!shouldResolve) return
@@ -74,8 +80,8 @@ export const useDappConnectorManager = () => {
             let shouldResolve = true
             cborChanged(cbor)
             navigateToTxReview({
-              createdBy: dApp?.uri != null && dApp?.logo != null && (
-                <CreatedByInfoItem logo={dApp.logo} url={dApp.uri} />
+              createdBy: matchingDapp?.uri != null && matchingDapp?.logo != null && (
+                <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />
               ),
               onConfirm: () => {
                 if (!shouldResolve) return
@@ -111,8 +117,8 @@ export const useDappConnectorManager = () => {
       signDataWithHW,
       cborChanged,
       navigateToTxReview,
-      dApp?.uri,
-      dApp?.logo,
+      matchingDapp?.uri,
+      matchingDapp?.logo,
       promptRootKey,
       navigateTo,
       signTxWithHW,
