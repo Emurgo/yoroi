@@ -34,7 +34,7 @@ export const OverviewTab = ({
   extraOperations?: Array<React.ReactNode>
   receiverCustomTitle?: React.ReactNode
   details?: {title: string; component: React.ReactNode}
-  createdBy: React.ReactNode | undefined
+  createdBy?: React.ReactNode
 }) => {
   const {styles} = useStyles()
   const operations = useOperations(tx.certificates)
@@ -71,7 +71,7 @@ export const OverviewTab = ({
   )
 }
 
-const WalletInfoSection = ({tx, createdBy}: {tx: FormattedTx; createdBy: React.ReactNode}) => {
+const WalletInfoSection = ({tx, createdBy}: {tx: FormattedTx; createdBy?: React.ReactNode}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()

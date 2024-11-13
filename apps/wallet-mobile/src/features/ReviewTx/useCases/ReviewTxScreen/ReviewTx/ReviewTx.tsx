@@ -36,11 +36,11 @@ export const ReviewTx = ({
   onConfirm,
 }: {
   formattedTx: FormattedTx
-  formattedMetadata: FormattedMetadata | undefined
-  operations: Array<React.ReactNode> | undefined
-  details: {title: string; component: React.ReactNode} | undefined
-  receiverCustomTitle: React.ReactNode | undefined
-  createdBy: React.ReactNode | undefined
+  formattedMetadata?: FormattedMetadata
+  operations?: Array<React.ReactNode>
+  details?: {title: string; component: React.ReactNode}
+  receiverCustomTitle?: React.ReactNode
+  createdBy?: React.ReactNode
   onConfirm: () => void
 }) => {
   const {styles} = useStyles()
