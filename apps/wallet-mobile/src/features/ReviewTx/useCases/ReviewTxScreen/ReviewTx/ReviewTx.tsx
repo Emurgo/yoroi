@@ -15,11 +15,14 @@ import {
 import {Button} from '../../../../../components/Button/Button'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
+import {isEmptyString} from '../../../../../kernel/utils'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {FormattedMetadata, FormattedTx} from '../../../common/types'
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
 import {OverviewTab} from '../ReviewTx/Overview/OverviewTab'
 import {UTxOsTab} from '../ReviewTx/UTxOs/UTxOsTab'
+import {MintTab} from './Mint/MintTab'
+import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
 
 const MaterialTab = createMaterialTopTabNavigator()
 
@@ -46,12 +49,19 @@ export const ReviewTx = ({
     [strings.utxosTab, 'utxos'],
   ]
 
+  const showMetadataTab = !isEmptyString(formattedMetadata?.hash) && formattedMetadata?.metadata != null
+  const showMintTab = !!formattedTx.mint
+  const showReferenceInoutsTab = !!formattedTx.referenceInputs
+
+  if (showMetadataTab) tabsData.push([strings.metadataTab, 'metadata'])
+  if (showMintTab) tabsData.push([strings.mintTab, 'mint'])
+  if (showReferenceInoutsTab) tabsData.push([strings.referenceInputsTab, 'reference_inputs'])
+
   return (
     <SafeArea style={styles.root}>
       <MaterialTab.Navigator tabBar={(props) => <TabBar {...props} tabsData={tabsData} />}>
         <MaterialTab.Screen name="overview">
           {() => (
-            /* TODO: make scrollview general to use button border */
             <ScrollView style={styles.root}>
               <OverviewTab
                 tx={formattedTx}
@@ -65,21 +75,41 @@ export const ReviewTx = ({
 
         <MaterialTab.Screen name="utxos">
           {() => (
-            /* TODO: make scrollview general to use button border */
             <ScrollView style={styles.root}>
               <UTxOsTab tx={formattedTx} />
             </ScrollView>
           )}
         </MaterialTab.Screen>
 
-        <MaterialTab.Screen name="metadata">
-          {() => (
-            /* TODO: make scrollview general to use button border */
-            <ScrollView style={styles.root}>
-              <MetadataTab hash={formattedMetadata?.hash ?? null} metadata={formattedMetadata?.metadata ?? null} />
-            </ScrollView>
-          )}
-        </MaterialTab.Screen>
+        {showMetadataTab && (
+          <MaterialTab.Screen name="metadata">
+            {() => (
+              <ScrollView style={styles.root}>
+                <MetadataTab hash={formattedMetadata?.hash ?? null} metadata={formattedMetadata?.metadata ?? null} />
+              </ScrollView>
+            )}
+          </MaterialTab.Screen>
+        )}
+
+        {showMintTab && (
+          <MaterialTab.Screen name="mint">
+            {() => (
+              <ScrollView style={styles.root}>
+                <MintTab mintData={formattedTx.mint} />
+              </ScrollView>
+            )}
+          </MaterialTab.Screen>
+        )}
+
+        {showReferenceInoutsTab && (
+          <MaterialTab.Screen name="reference_inputs">
+            {() => (
+              <ScrollView style={styles.root}>
+                <ReferenceInputsTab referenceInputs={formattedTx.referenceInputs} />
+              </ScrollView>
+            )}
+          </MaterialTab.Screen>
+        )}
       </MaterialTab.Navigator>
 
       <Actions>

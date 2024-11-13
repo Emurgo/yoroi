@@ -1222,6 +1222,7 @@
   "txReview.tabLabel.utxos": "UTxOs",
   "txReview.tabLabel.overview": "Overview",
   "txReview.tabLabel.metadataTab": "Metadata",
+  "txReview.tabLabel.mint": "Mint",
   "txReview.overview.wallet": "Wallet",
   "txReview.fee": "Fee",
   "txReview.overview.myWalletLabel": "Your Wallet",
@@ -1272,10 +1273,15 @@
   "txReview.failedTxTitle": "Transaction failed",
   "txReview.failedTxText": "Your transaction has not been processed properly due to technical issues",
   "txReview.failedTxButton": "Go to transactions",
+  "txReview.infraestructureIssueTitle": "Something unexpected happened",
+  "txReview.infraestructureIssueText": "Please go back and try again. If this keep happening, contact our support team.",
+  "txReview.infraestructureIssueButton": "Go to transactions",
   "txReview.walletBalanceTokens.title": "Tokens",
   "txReview.walletBalanceNFTs.title": "NFTs",
   "txReview.overview.multiExternalPartiesSectionLabel": "Other parties",
   "txReview.overview.multiExternalPartiesSectionNotice": "Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance",
   "txReview.receiveLabel": "Receive",
-  "txReview.operationsLabel": "Operations"
+  "txReview.operationsLabel": "Operations",
+  "txReview.policyIdLabel": "Policy ID",
+  "txReview.tabLabel.referenceInputs": "Reference inputs"
 }

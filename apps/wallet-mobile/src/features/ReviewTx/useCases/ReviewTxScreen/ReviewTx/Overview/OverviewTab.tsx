@@ -244,7 +244,11 @@ const OneExternalPartySection = ({
 
         {receiverCustomTitle ?? (
           <CopiableText textToCopy={address}>
-            <Text style={[styles.addressText, styles.receiverSectionAddress]} numberOfLines={1} ellipsizeMode="middle">
+            <Text
+              style={[styles.addressText, styles.externalPartiesSectionAddress]}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
               {address}
             </Text>
 
@@ -451,7 +455,7 @@ const useStyles = () => {
       width: 24,
       height: 24,
     },
-    receiverSectionAddress: {
+    externalPartiesSectionAddress: {
       maxWidth: 260,
     },
     addressText: {

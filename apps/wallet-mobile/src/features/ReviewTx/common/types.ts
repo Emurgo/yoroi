@@ -58,6 +58,8 @@ export type FormattedTx = {
   outputs: FormattedOutputs
   fee: FormattedFee
   certificates: FormattedCertificate[] | null
+  mint: Array<[Portfolio.Token.Info, string]> | null
+  referenceInputs: TransactionBodyJSON['reference_inputs']
 }
 
 export type FormattedMetadata = {

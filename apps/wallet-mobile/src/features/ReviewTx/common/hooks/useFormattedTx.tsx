@@ -44,19 +44,25 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
     return tokenIds
   })
 
-  const tokenIds = _.uniq<Portfolio.Token.Id>([...inputTokenIds, ...outputTokenIds])
+  const mintTokenIds =
+    data.mint?.map(([policyId, asset]) => `${policyId}.${Object.keys(asset)[0] ?? ''}` as Portfolio.Token.Id) ?? []
+
+  const tokenIds = _.uniq<Portfolio.Token.Id>([...inputTokenIds, ...outputTokenIds, ...mintTokenIds])
   const portfolioTokenInfos = usePortfolioTokenInfos({wallet, tokenIds}, {suspense: true})
 
   const formattedInputs = useFormattedInputs(wallet, inputs, portfolioTokenInfos)
   const formattedOutputs = useFormattedOutputs(wallet, outputs, portfolioTokenInfos)
   const formattedFee = formatFee(wallet, data)
   const formattedCertificates = formatCertificates(data.certs)
+  const formattedMintData = formatMintData(data.mint, portfolioTokenInfos)
 
   return {
     inputs: formattedInputs,
     outputs: formattedOutputs,
     fee: formattedFee,
     certificates: formattedCertificates,
+    mint: formattedMintData,
+    referenceInputs: data.reference_inputs,
   }
 }
 
@@ -228,6 +234,18 @@ const formatCertificates = (certificates: TransactionBody['certs']) => {
       return {type, value: certificate} as unknown as FormattedCertificate
     }) ?? null
   )
+}
+
+const formatMintData = (
+  mintData: TransactionBody['mint'] | null,
+  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
+) => {
+  if (mintData == null) return null
+  return (mintData?.flatMap(([policyId, tokens]) =>
+    Object.entries(tokens)
+      .map(([assetNameHex, count]) => [portfolioTokenInfos.tokenInfos?.get(`${policyId}.${assetNameHex}`), count])
+      .filter(([tokenInfo]) => tokenInfo != null),
+  ) ?? []) as Array<[Portfolio.Token.Info, string]>
 }
 
 const deriveAddress = async (address: string, chainId: number) => {

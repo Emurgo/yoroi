@@ -1,17 +1,14 @@
 import * as React from 'react'
 
 import {ReviewTxRoutes, useUnsafeParams} from '../../../../kernel/navigation'
-import {isEmptyString} from '../../../../kernel/utils'
 import {useFormattedMetadata} from '../../common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '../../common/hooks/useFormattedTx'
 import {useOnConfirm} from '../../common/hooks/useOnConfirm'
-import {useStrings} from '../../common/hooks/useStrings'
 import {useTxBody} from '../../common/hooks/useTxBody'
 import {useReviewTx} from '../../common/ReviewTxProvider'
 import {ReviewTx} from './ReviewTx/ReviewTx'
 
 export const ReviewTxScreen = () => {
-  const strings = useStrings()
   const {unsignedTx, cbor} = useReviewTx()
   const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
 
@@ -29,14 +26,6 @@ export const ReviewTxScreen = () => {
   const formattedTx = useFormattedTx(txBody)
   const formattedMetadata = useFormattedMetadata({txBody, unsignedTx, cbor})
 
-  const tabsData = [
-    [strings.overviewTab, 'overview'],
-    [strings.utxosTab, 'utxos'],
-  ]
-
-  if (!isEmptyString(formattedMetadata?.hash) && formattedMetadata?.metadata != null)
-    tabsData.push([strings.metadataTab, 'metadata'])
-
   React.useEffect(() => {
     return () => {
       params?.onCancel?.()
@@ -52,8 +41,6 @@ export const ReviewTxScreen = () => {
 
     onConfirm()
   }
-
-  console.log('formattedTx', JSON.stringify(formattedTx, null, 2))
 
   return (
     <ReviewTx

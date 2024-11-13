@@ -7,6 +7,7 @@ import {defaultStackNavigationOptions, ReviewTxRoutes} from '../../kernel/naviga
 import {useStrings} from './common/hooks/useStrings'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
+import {InfraestructureIssueScreen} from './useCases/ShowInfraestructureIssueScreen/InfraestructureIssueScreen'
 import {SubmittedTxScreen} from './useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 
 export const Stack = createStackNavigator<ReviewTxRoutes>()
@@ -14,6 +15,8 @@ export const Stack = createStackNavigator<ReviewTxRoutes>()
 export const ReviewTxNavigator = () => {
   const {atoms, color} = useTheme()
   const strings = useStrings()
+
+  const fallback = React.useCallback(() => <InfraestructureIssueScreen />, [])
 
   return (
     <Stack.Navigator
@@ -23,7 +26,11 @@ export const ReviewTxNavigator = () => {
     >
       <Stack.Screen name="review-tx" options={{title: strings.title}}>
         {() => (
-          <Boundary>
+          <Boundary
+            error={{
+              fallback,
+            }}
+          >
             <ReviewTxScreen />
           </Boundary>
         )}

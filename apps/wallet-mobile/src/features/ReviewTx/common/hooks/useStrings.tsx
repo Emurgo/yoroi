@@ -12,6 +12,8 @@ export const useStrings = () => {
     utxosTab: intl.formatMessage(messages.utxosTab),
     overviewTab: intl.formatMessage(messages.overviewTab),
     metadataTab: intl.formatMessage(messages.metadataTab),
+    mintTab: intl.formatMessage(messages.mintTab),
+    referenceInputsTab: intl.formatMessage(messages.referenceInputsTab),
     metadataHash: intl.formatMessage(messages.metadataHash),
     metadataJsonLabel: intl.formatMessage(messages.metadataJsonLabel),
     walletLabel: intl.formatMessage(messages.walletLabel),
@@ -60,12 +62,16 @@ export const useStrings = () => {
     submittedTxText: intl.formatMessage(messages.submittedTxText),
     submittedTxButton: intl.formatMessage(messages.submittedTxButton),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
+    infraestructureIssueTitle: intl.formatMessage(messages.infraestructureIssueTitle),
+    infraestructureIssueText: intl.formatMessage(messages.infraestructureIssueText),
+    infraestructureIssueButton: intl.formatMessage(messages.infraestructureIssueButton),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
     multiExternalPartiesSectionLabel: intl.formatMessage(messages.multiExternalPartiesSectionLabel),
     multiExternalPartiesSectionNotice: intl.formatMessage(messages.multiExternalPartiesSectionNotice),
     receiveLabel: intl.formatMessage(messages.receiveLabel),
     operationsLabel: intl.formatMessage(messages.operationsLabel),
+    policyIdLabel: intl.formatMessage(messages.policyIdLabel),
   }
 }
 
@@ -85,6 +91,14 @@ const messages = defineMessages({
   overviewTab: {
     id: 'txReview.tabLabel.overview',
     defaultMessage: '!!!Overview',
+  },
+  mintTab: {
+    id: 'txReview.tabLabel.mint',
+    defaultMessage: '!!!Mint',
+  },
+  referenceInputsTab: {
+    id: 'txReview.tabLabel.referenceInputs',
+    defaultMessage: '!!!Reference inputs',
   },
   metadataTab: {
     id: 'txReview.tabLabel.metadataTab',
@@ -290,6 +304,18 @@ const messages = defineMessages({
     id: 'txReview.failedTxButton',
     defaultMessage: '!!!Go to transactions',
   },
+  infraestructureIssueTitle: {
+    id: 'txReview.infraestructureIssueTitle',
+    defaultMessage: '!!!Something unexpected happened',
+  },
+  infraestructureIssueText: {
+    id: 'txReview.infraestructureIssueText',
+    defaultMessage: '!!!Please go back and try again. If this keep happening, contact our support team.',
+  },
+  infraestructureIssueButton: {
+    id: 'txReview.infraestructureIssueButton',
+    defaultMessage: '!!!Go to transactions',
+  },
   multiExternalPartiesSectionLabel: {
     id: 'txReview.overview.multiExternalPartiesSectionLabel',
     defaultMessage: '!!!Other parties',
@@ -306,5 +332,9 @@ const messages = defineMessages({
   operationsLabel: {
     id: 'txReview.operationsLabel',
     defaultMessage: '!!!Operations',
+  },
+  policyIdLabel: {
+    id: 'txReview.policyIdLabel',
+    defaultMessage: '!!!Policy ID',
   },
 })
