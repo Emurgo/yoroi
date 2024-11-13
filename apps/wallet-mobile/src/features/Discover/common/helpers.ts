@@ -64,9 +64,9 @@ type CreateDappConnectorOptions = {
   wallet: YoroiWallet
   meta: Wallet.Meta
   confirmConnection: (origin: string, manager: DappConnector) => Promise<boolean>
-  signTx: (cbor: string) => Promise<string>
+  signTx: (options: {cbor: string; manager: DappConnector}) => Promise<string>
   signData: (address: string, payload: string) => Promise<string>
-  signTxWithHW: (cbor: string, partial?: boolean) => Promise<Transaction>
+  signTxWithHW: (options: {cbor: string; partial?: boolean; manager: DappConnector}) => Promise<Transaction>
   signDataWithHW: (address: string, payload: string) => Promise<{signature: string; key: string}>
 }
 
@@ -115,17 +115,17 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     },
     signTx: async (cbor: string, partial?: boolean) => {
       if (meta.isHW) {
-        const tx = await options.signTxWithHW(cbor, partial)
+        const tx = await options.signTxWithHW({cbor, partial, manager})
         return tx.witnessSet()
       }
 
-      const rootKey = await signTx(cbor)
+      const rootKey = await signTx({cbor, manager})
       return cip30.signTx(rootKey, cbor, partial)
     },
     sendReorganisationTx: async (value?: string) => {
       const cbor = await cip30.buildReorganisationTx(value)
       if (meta.isHW) {
-        const signedTx = await options.signTxWithHW(cbor, false)
+        const signedTx = await options.signTxWithHW({cbor, partial: false, manager})
         const base64 = Buffer.from(await signedTx.toBytes()).toString('base64')
         await wallet.submitTransaction(base64)
         return getTransactionUnspentOutput({
@@ -135,7 +135,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
         })
       }
 
-      const rootKey = await signTx(cbor)
+      const rootKey = await signTx({cbor, manager})
       const witnesses = await cip30.signTx(rootKey, cbor, false)
       return cip30.sendReorganisationTx(cbor, witnesses)
     },
