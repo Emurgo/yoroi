@@ -9,7 +9,9 @@ import {logger} from '../../kernel/logger/logger'
 import {useWalletNavigation} from '../../kernel/navigation'
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
 import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
+import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
+import {useBrowser} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {isUserRejectedError, userRejectedError} from './common/errors'
@@ -26,6 +28,10 @@ export const useDappConnectorManager = () => {
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
   const {cborChanged} = useReviewTx()
+  const {tabs, tabActiveIndex} = useBrowser()
+  const activeTab = tabs[tabActiveIndex]
+  const activeTabUrl = activeTab?.url
+  const activeTabOrigin = activeTabUrl === undefined ? null : new URL(activeTabUrl).origin
 
   const confirmConnection = useConfirmConnection()
 
@@ -35,77 +41,85 @@ export const useDappConnectorManager = () => {
   const promptRootKey = useConnectorPromptRootKey()
   const {sign: signTxWithHW} = useSignTxWithHW()
 
+  const handleSignTx = React.useCallback(
+    ({cbor, manager}: {cbor: string; manager: DappConnector}) => {
+      return new Promise<string>((resolve, reject) => {
+        let shouldResolve = true
+        cborChanged(cbor)
+        return manager.getDAppList().then(({dapps}) => {
+          const matchingDapp =
+            activeTabOrigin != null ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin)) : null
+          navigateToTxReview({
+            createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
+            onConfirm: async () => {
+              if (!shouldResolve) return
+              shouldResolve = false
+              const rootKey = await promptRootKey()
+              resolve(rootKey)
+              navigateTo.browseDapp()
+            },
+            onCancel: () => {
+              if (!shouldResolve) return
+              shouldResolve = false
+              reject(userRejectedError())
+            },
+          })
+        })
+      })
+    },
+    [activeTabOrigin, cborChanged, navigateToTxReview, promptRootKey, navigateTo],
+  )
+
+  const handleSignTxWithHW = React.useCallback(
+    ({cbor, partial, manager}: {cbor: string; partial?: boolean; manager: DappConnector}) => {
+      return new Promise<Transaction>((resolve, reject) => {
+        let shouldResolve = true
+        cborChanged(cbor)
+        return manager.getDAppList().then(({dapps}) => {
+          const matchingDapp =
+            activeTabOrigin != null ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin)) : null
+          navigateToTxReview({
+            createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
+            onConfirm: () => {
+              if (!shouldResolve) return
+              shouldResolve = false
+              signTxWithHW(
+                {cbor, partial},
+                {
+                  onSuccess: (signature) => resolve(signature),
+                  onError: (error) => {
+                    logger.error('ReviewTransaction::handleOnConfirm', {error})
+                    reject(error)
+                  },
+                },
+              )
+              navigateTo.browseDapp()
+            },
+            onCancel: () => {
+              if (!shouldResolve) return
+              shouldResolve = false
+              reject(userRejectedError())
+            },
+          })
+        })
+      })
+    },
+    [activeTabOrigin, cborChanged, navigateToTxReview, navigateTo, signTxWithHW],
+  )
+
   return React.useMemo(
     () =>
       createDappConnector({
         appStorage,
         wallet,
         confirmConnection,
-        signTx: (cbor) => {
-          return new Promise<string>((resolve, reject) => {
-            let shouldResolve = true
-            cborChanged(cbor)
-            navigateToTxReview({
-              onConfirm: async () => {
-                if (!shouldResolve) return
-                shouldResolve = false
-                const rootKey = await promptRootKey()
-                resolve(rootKey)
-                navigateTo.browseDapp()
-              },
-              onCancel: () => {
-                if (!shouldResolve) return
-                shouldResolve = false
-                reject(userRejectedError())
-              },
-            })
-          })
-        },
+        signTx: handleSignTx,
         signData,
         meta,
-        signTxWithHW: (cbor, partial) => {
-          return new Promise<Transaction>((resolve, reject) => {
-            let shouldResolve = true
-            cborChanged(cbor)
-            navigateToTxReview({
-              onConfirm: () => {
-                if (!shouldResolve) return
-                shouldResolve = false
-                signTxWithHW(
-                  {cbor, partial},
-                  {
-                    onSuccess: (signature) => resolve(signature),
-                    onError: (error) => {
-                      logger.error('ReviewTransaction::handleOnConfirm', {error})
-                      reject(error)
-                    },
-                  },
-                )
-                navigateTo.browseDapp()
-              },
-              onCancel: () => {
-                if (!shouldResolve) return
-                shouldResolve = false
-                reject(userRejectedError())
-              },
-            })
-          })
-        },
+        signTxWithHW: handleSignTxWithHW,
         signDataWithHW,
       }),
-    [
-      appStorage,
-      wallet,
-      confirmConnection,
-      signData,
-      meta,
-      signDataWithHW,
-      cborChanged,
-      navigateToTxReview,
-      promptRootKey,
-      navigateTo,
-      signTxWithHW,
-    ],
+    [appStorage, wallet, confirmConnection, handleSignTx, signData, meta, handleSignTxWithHW, signDataWithHW],
   )
 }
 

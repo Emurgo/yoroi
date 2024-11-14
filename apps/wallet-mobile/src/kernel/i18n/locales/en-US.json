@@ -1283,5 +1283,6 @@
   "txReview.receiveLabel": "Receive",
   "txReview.operationsLabel": "Operations",
   "txReview.policyIdLabel": "Policy ID",
-  "txReview.tabLabel.referenceInputs": "Reference inputs"
+  "txReview.tabLabel.referenceInputs": "Reference inputs",
+  "txReview.createdBy": "Created by"
 }

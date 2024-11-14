@@ -2,8 +2,9 @@ import {CredKind} from '@emurgo/cross-csl-core'
 import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
+import {Image} from 'expo-image'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {Linking, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import {Divider} from '../../../../../../components/Divider/Divider'
 import {Icon} from '../../../../../../components/Icon'
@@ -27,11 +28,13 @@ export const OverviewTab = ({
   extraOperations,
   receiverCustomTitle,
   details,
+  createdBy,
 }: {
   tx: FormattedTx
   extraOperations?: Array<React.ReactNode>
   receiverCustomTitle?: React.ReactNode
   details?: {title: string; component: React.ReactNode}
+  createdBy?: React.ReactNode
 }) => {
   const {styles} = useStyles()
   const operations = useOperations(tx.certificates)
@@ -43,7 +46,7 @@ export const OverviewTab = ({
     <View style={styles.root}>
       <Space height="lg" />
 
-      <WalletInfoSection tx={tx} />
+      <WalletInfoSection tx={tx} createdBy={createdBy} />
 
       <Divider verticalSpace="lg" />
 
@@ -68,7 +71,7 @@ export const OverviewTab = ({
   )
 }
 
-const WalletInfoSection = ({tx}: {tx: FormattedTx}) => {
+const WalletInfoSection = ({tx, createdBy}: {tx: FormattedTx; createdBy?: React.ReactNode}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
@@ -103,6 +106,14 @@ const WalletInfoSection = ({tx}: {tx: FormattedTx}) => {
       </View>
 
       <Space height="sm" />
+
+      {createdBy != null && (
+        <>
+          {createdBy}
+
+          <Space height="sm" />
+        </>
+      )}
 
       <FeeInfoItem fee={tx.fee.label} />
     </>
@@ -394,6 +405,27 @@ const Details = ({details}: {details?: {title: string; component: React.ReactNod
   )
 }
 
+export const CreatedByInfoItem = ({logo, url}: {logo?: string; url: string}) => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.infoItem}>
+      <Text style={styles.infoLabel}>{strings.createdBy}</Text>
+
+      <View style={styles.plate}>
+        {logo != null && <Image source={{uri: logo}} style={styles.logo} />}
+
+        <Space width="xs" />
+
+        <TouchableOpacity onPress={() => Linking.openURL(url)}>
+          <Text style={styles.link}>{url.replace(/^https?:\/\//, '').replace(/\/+$/, '')}</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+}
+
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
@@ -474,6 +506,14 @@ const useStyles = () => {
     detailsButton: {
       ...atoms.body_2_md_medium,
       color: color.text_primary_medium,
+    },
+    link: {
+      color: color.text_primary_medium,
+      ...atoms.body_2_md_medium,
+    },
+    logo: {
+      width: 24,
+      height: 24,
     },
   })
 

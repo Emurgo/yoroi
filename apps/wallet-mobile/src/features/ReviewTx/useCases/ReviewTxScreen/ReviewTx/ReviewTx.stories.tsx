@@ -21,14 +21,5 @@ storiesOf('Review Tx Screen', module)
   .add('Multi Asset Tx / Multi Receiver', () => <Component formattedTx={mocks.formattedTxs.multiAssetMultiReceiver} />)
 
 const Component = ({formattedTx}: {formattedTx: FormattedTx}) => {
-  return (
-    <ReviewTx
-      formattedTx={formattedTx}
-      formattedMetadata={undefined}
-      operations={undefined}
-      details={undefined}
-      receiverCustomTitle={undefined}
-      onConfirm={action('onConfirm')}
-    />
-  )
+  return <ReviewTx formattedTx={formattedTx} onConfirm={action('onConfirm')} />
 }
