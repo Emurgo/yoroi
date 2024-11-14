@@ -715,6 +715,7 @@ export const usePoolInfo = ({poolId}: {poolId: string}): FullPoolInfo => {
     queryFn: async () => {
       return poolInfoApi.getSingleFullPoolInfo(poolId)
     },
+    suspense: true,
   })
 
   return poolInfo?.data ?? {chain: null, explorer: null}

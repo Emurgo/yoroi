@@ -9,10 +9,10 @@ import {useReviewTx} from '../../common/ReviewTxProvider'
 import {ReviewTx} from './ReviewTx/ReviewTx'
 
 export const ReviewTxScreen = () => {
-  const {unsignedTx, cbor} = useReviewTx()
+  const {unsignedTx} = useReviewTx()
   const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
 
-  if (unsignedTx == null && cbor == null) throw new Error('ReviewTxScreen: missing cbor and unsignedTx')
+  if (unsignedTx == null && params?.cbor == null) throw new Error('ReviewTxScreen: missing cbor and unsignedTx')
 
   const {onConfirm} = useOnConfirm({
     unsignedTx,
@@ -22,9 +22,9 @@ export const ReviewTxScreen = () => {
     onCIP36SupportChange: params?.onCIP36SupportChange,
   })
 
-  const txBody = useTxBody({cbor, unsignedTx})
+  const txBody = useTxBody({cbor: params?.cbor, unsignedTx})
   const formattedTx = useFormattedTx(txBody)
-  const formattedMetadata = useFormattedMetadata({txBody, unsignedTx, cbor})
+  const formattedMetadata = useFormattedMetadata({txBody, unsignedTx, cbor: params?.cbor ?? null})
 
   React.useEffect(() => {
     return () => {

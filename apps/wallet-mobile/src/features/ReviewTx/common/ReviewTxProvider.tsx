@@ -1,3 +1,12 @@
+/**
+ * DEPRECATED: This provider needs to be maintained because unsignedTx
+ * can change during the CATALYST registration funnel (CIP36)
+ *
+ * will be eliminated in the very near future
+ *
+ * TODO: eliminate the use of unsigned tx entirely
+ */
+
 import {castDraft, produce} from 'immer'
 import _ from 'lodash'
 import React from 'react'
@@ -21,8 +30,6 @@ export const ReviewTxProvider = ({
   const actions = React.useRef<ReviewTxActions>({
     unsignedTxChanged: (unsignedTx: ReviewTxState['unsignedTx']) =>
       dispatch({type: ReviewTxActionType.UnsignedTxChanged, unsignedTx}),
-    cborChanged: (cbor: ReviewTxState['cbor']) => dispatch({type: ReviewTxActionType.CborChanged, cbor}),
-    reset: () => dispatch({type: ReviewTxActionType.Reset}),
   }).current
 
   const context = React.useMemo(
@@ -43,48 +50,27 @@ const reviewTxReducer = (state: ReviewTxState, action: ReviewTxAction) => {
         draft.unsignedTx = castDraft(action.unsignedTx)
         break
 
-      case ReviewTxActionType.CborChanged:
-        draft.cbor = action.cbor
-        break
-
-      case ReviewTxActionType.Reset:
-        draft.unsignedTx = castDraft(defaultState.unsignedTx)
-        draft.cbor = defaultState.cbor
-        break
-
       default:
         throw new Error('[ReviewTxContext] invalid action')
     }
   })
 }
 
-type ReviewTxAction =
-  | {
-      type: ReviewTxActionType.UnsignedTxChanged
-      unsignedTx: ReviewTxState['unsignedTx']
-    }
-  | {
-      type: ReviewTxActionType.CborChanged
-      cbor: ReviewTxState['cbor']
-    }
-  | {
-      type: ReviewTxActionType.Reset
-    }
+type ReviewTxAction = {
+  type: ReviewTxActionType.UnsignedTxChanged
+  unsignedTx: ReviewTxState['unsignedTx']
+}
 
 export type ReviewTxState = {
   unsignedTx: YoroiUnsignedTx | null
-  cbor: string | null
 }
 
 type ReviewTxActions = {
   unsignedTxChanged: (unsignedTx: ReviewTxState['unsignedTx']) => void
-  cborChanged: (cbor: ReviewTxState['cbor']) => void
-  reset: () => void
 }
 
 const defaultState: ReviewTxState = Object.freeze({
   unsignedTx: null,
-  cbor: null,
 })
 
 function missingInit() {
@@ -94,14 +80,10 @@ function missingInit() {
 const initialReviewTxContext: ReviewTxContext = {
   ...defaultState,
   unsignedTxChanged: missingInit,
-  cborChanged: missingInit,
-  reset: missingInit,
 }
 
 enum ReviewTxActionType {
   UnsignedTxChanged = 'unsignedTxChanged',
-  CborChanged = 'cborChanged',
-  Reset = 'reset',
 }
 
 type ReviewTxContext = ReviewTxState & ReviewTxActions
