@@ -87,7 +87,7 @@ export const CertificateType = {
   StakeDelegation: 'StakeDelegation', //
   PoolRegistration: 'PoolRegistration', //
   PoolRetirement: 'PoolRetirement', //
-  GenesisKeyDelegation: 'GenesisKeyDelegation',
+  GenesisKeyDelegation: 'GenesisKeyDelegation', //
   MoveInstantaneousRewardsCert: 'MoveInstantaneousRewardsCert', //
   CommitteeHotAuth: 'CommitteeHotAuth', //
   CommitteeColdResign: 'CommitteeColdResign', //
