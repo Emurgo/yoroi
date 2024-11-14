@@ -205,7 +205,7 @@ const MyWalletTokens = ({
 
         <Space fill />
 
-        <TokenItem tokenInfo={wallet.portfolioPrimaryTokenInfo} label={totalPrimaryTokenSpentLabel} />
+        <TokenItem tokenInfo={wallet.portfolioPrimaryTokenInfo} label={`-${totalPrimaryTokenSpentLabel}`} />
 
         {notPrimaryTokenSent.map((token, index) => (
           <TokenItem key={index} tokenInfo={token.tokenInfo} label={token.label} isPrimaryToken={false} />
