@@ -275,6 +275,7 @@ export type PortfolioRoutes = {
 
 export type ReviewTxRoutes = {
   'review-tx'?: {
+    cbor?: string
     operations?: Array<React.ReactNode>
     receiverCustomTitle?: React.ReactNode
     details?: {title: string; component: React.ReactNode}

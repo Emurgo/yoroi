@@ -8,7 +8,6 @@ import {useMutation} from 'react-query'
 import {logger} from '../../kernel/logger/logger'
 import {useWalletNavigation} from '../../kernel/navigation'
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
-import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useBrowser} from './common/BrowserProvider'
@@ -27,7 +26,6 @@ export const useDappConnectorManager = () => {
   const navigateTo = useNavigateTo()
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
-  const {cborChanged} = useReviewTx()
   const {tabs, tabActiveIndex} = useBrowser()
   const activeTab = tabs[tabActiveIndex]
   const activeTabUrl = activeTab?.url
@@ -45,11 +43,11 @@ export const useDappConnectorManager = () => {
     ({cbor, manager}: {cbor: string; manager: DappConnector}) => {
       return new Promise<string>((resolve, reject) => {
         let shouldResolve = true
-        cborChanged(cbor)
         return manager.getDAppList().then(({dapps}) => {
           const matchingDapp =
             activeTabOrigin != null ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin)) : null
           navigateToTxReview({
+            cbor,
             createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
             onConfirm: async () => {
               if (!shouldResolve) return
@@ -67,18 +65,18 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [activeTabOrigin, cborChanged, navigateToTxReview, promptRootKey, navigateTo],
+    [activeTabOrigin, navigateToTxReview, promptRootKey, navigateTo],
   )
 
   const handleSignTxWithHW = React.useCallback(
     ({cbor, partial, manager}: {cbor: string; partial?: boolean; manager: DappConnector}) => {
       return new Promise<Transaction>((resolve, reject) => {
         let shouldResolve = true
-        cborChanged(cbor)
         return manager.getDAppList().then(({dapps}) => {
           const matchingDapp =
             activeTabOrigin != null ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin)) : null
           navigateToTxReview({
+            cbor,
             createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
             onConfirm: () => {
               if (!shouldResolve) return
@@ -104,7 +102,7 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [activeTabOrigin, cborChanged, navigateToTxReview, navigateTo, signTxWithHW],
+    [activeTabOrigin, navigateToTxReview, navigateTo, signTxWithHW],
   )
 
   return React.useMemo(

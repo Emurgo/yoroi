@@ -334,6 +334,7 @@ export const useDrepBech32Id = (poolId: string) => {
   const query = useQuery({
     queryKey: ['drepBech32', poolId],
     queryFn: () => getDrepBech32Id(poolId),
+    suspense: true,
   })
 
   return query?.data ?? null
