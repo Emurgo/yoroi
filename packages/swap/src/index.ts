@@ -46,7 +46,8 @@ export {useSwap} from './translators/reactjs/hooks/useSwap'
 export {supportedProviders, milkTokenId} from './translators/constants'
 
 // factories
-export {swapApiMaker} from './adapters/api-maker'
+export {swapApiMaker} from './adapters/openswap-api/api-maker'
+export {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
 export {swapManagerMaker} from './manager'
 export {
   swapStorageMaker,

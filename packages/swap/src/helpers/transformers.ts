@@ -1,24 +1,7 @@
 import AssetFingerprint from '@emurgo/cip14-js'
-import {Swap, Balance, Portfolio} from '@yoroi/types'
-import {isString} from '@yoroi/common'
 import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 
-import {Quantities} from '../utils/quantities'
-import {supportedProviders} from '../translators/constants'
-import {asQuantity} from '../utils/asQuantity'
-import {
-  CompletedOrder,
-  LiquidityPool,
-  ListTokensResponse,
-  OpenOrder,
-  TokenPair,
-  TokenPairsResponse,
-} from '../adapters/openswap-api/types'
-
-const asPolicyIdAndAssetName = (tokenId: string): [string, string] => {
-  return tokenId.split('.') as [string, string]
-}
-
+/*
 export const transformersMaker = (primaryTokenInfo: Portfolio.Token.Info) => {
   const asOpenswapTokenId = (yoroiTokenId: string) => {
     const [policyId, assetName] = asPolicyIdAndAssetName(yoroiTokenId)
@@ -255,12 +238,6 @@ export const transformersMaker = (primaryTokenInfo: Portfolio.Token.Info) => {
     return yoroiAmount
   }
 
-  /**
-   *  Filter out pools that are not supported by Yoroi
-   *
-   * @param openswapLiquidityPools
-   * @returns {Swap.Pool[]}
-   */
   const asYoroiPools = (
     openswapLiquidityPools: LiquidityPool[],
   ): Swap.Pool[] => {
@@ -292,6 +269,7 @@ export const transformersMaker = (primaryTokenInfo: Portfolio.Token.Info) => {
     asYoroiPortfolioTokenInfosFromPairs,
   }
 }
+*/
 
 export const asTokenFingerprint = ({
   policyId,
@@ -310,10 +288,4 @@ export const asTokenFingerprint = ({
 export const asTokenName = (hex: string) => {
   const {asciiName, hexName} = AssetNameUtils.resolveProperties(hex)
   return asciiName ?? hexName
-}
-
-function isSupportedProvider(
-  provider: string,
-): provider is Swap.SupportedProvider {
-  return supportedProviders.includes(provider as Swap.SupportedProvider)
 }

@@ -5,23 +5,21 @@ import {
   BalanceQuantity,
   BalanceToken,
 } from './balance/token'
-import {SwapApi} from './swap/api'
-import {SwapProtocol} from './swap/protocol'
 import {
-  SwapCancelOrderData,
-  SwapCompletedOrder,
-  SwapCreateOrderData,
-  SwapCreateOrderResponse,
-  SwapOpenOrder,
-  SwapOrderType,
-} from './swap/order'
-import {SwapPool, SwapPoolProvider, SwapSupportedProvider} from './swap/pool'
-import {SwapStorage} from './swap/storage'
-import {SwapManager} from './swap/manager'
+  SwapAggregator,
+  SwapApi,
+  SwapCancelRequest,
+  SwapCancelResponse,
+  SwapCreateRequest,
+  SwapCreateResponse,
+  SwapEstimateRequest,
+  SwapEstimateResponse,
+  SwapOrder,
+  SwapSplit,
+} from './swap/api'
 import {AppStorage, AppStorageFolderName} from './app/storage'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 import {NumberLocale} from './intl/numbers'
-import {SwapAggregator} from './swap/aggregator'
 import {
   ResolverAddressesResponse,
   ResolverAddressResponse,
@@ -270,11 +268,8 @@ import {
   NotificationTransactionReceivedEvent,
   NotificationTrigger,
 } from './notifications/manager'
-import {
-  SwapMakeOrderCalculation,
-  SwapOrderCalculation,
-} from './swap/calculations'
 import {NumbersRatio} from './numbers/ratio'
+import {SwapStorage} from './swap/storage'
 
 export namespace App {
   export namespace Errors {
@@ -340,7 +335,21 @@ export namespace App {
 }
 
 export namespace Swap {
-  export interface Api extends SwapApi {}
+  export type Api = SwapApi
+  export type Order = SwapOrder
+  export type Aggregator = SwapAggregator
+  export const Aggregator = SwapAggregator
+  export type CancelRequest = SwapCancelRequest
+  export type CancelResponse = SwapCancelResponse
+  export type EstimateRequest = SwapEstimateRequest
+  export type EstimateResponse = SwapEstimateResponse
+  export type CreateRequest = SwapCreateRequest
+  export type CreateResponse = SwapCreateResponse
+  export type Split = SwapSplit
+
+  export type Storage = SwapStorage
+
+  /*
   export type Manager = SwapManager
 
   export type OpenOrder = SwapOpenOrder
@@ -362,11 +371,11 @@ export namespace Swap {
   export type PoolProvider = SwapPoolProvider
   export type SupportedProvider = SwapSupportedProvider
 
-  export type Storage = SwapStorage
 
   export type MakeOrderCalculation = SwapMakeOrderCalculation
 
   export type OrderCalculation = SwapOrderCalculation
+  */
 }
 
 export namespace Balance {

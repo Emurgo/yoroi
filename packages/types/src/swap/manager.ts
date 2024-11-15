@@ -1,3 +1,4 @@
+/*
 import {AppFrontendFeeTier} from '../api/app'
 import {PortfolioTokenInfo} from '../portfolio/info'
 import {PortfolioTokenId} from '../portfolio/token'
@@ -52,3 +53,4 @@ export type SwapManager = Readonly<{
     bestPoolCalculation?: SwapOrderCalculation
   }): SwapOrderCalculation | undefined
 }>
+*/
