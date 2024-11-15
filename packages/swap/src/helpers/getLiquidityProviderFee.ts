@@ -1,5 +1,4 @@
 import {Portfolio} from '@yoroi/types'
-import {ceilDivision} from '../../../utils/ceilDivision'
 
 export const getLiquidityProviderFee = (
   poolFee: string,

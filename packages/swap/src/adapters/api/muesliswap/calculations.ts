@@ -5,7 +5,7 @@ export const estimateCalculation = (
   pools: Pools,
   estimate: Swap.EstimateRequest,
   primaryTokenInfo: Portfolio.Token.Info,
-  frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>,
+  frontendFeeTiers?: ReadonlyArray<App.FrontendFeeTier>,
   lpTokenHeld?: number,
 ): Swap.EstimateResponse => {
   const totalInSupply = pools.reduce(
@@ -116,11 +116,13 @@ export const estimateCalculation = (
   )
 
   // TODO check units
-  const frontendFee = getFrontendFee({
-    ptAmount,
-    frontendFeeTiers,
-    lpTokenHeld,
-  })
+  const frontendFee = frontendFeeTiers
+    ? getFrontendFee({
+        ptAmount,
+        frontendFeeTiers,
+        lpTokenHeld,
+      })
+    : 0
 
   const aggregatorFee = 0
 

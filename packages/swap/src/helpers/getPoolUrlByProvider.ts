@@ -1,10 +1,10 @@
-import {Swap} from '@yoroi/types'
+import {Provider} from '../adapters/api/muesliswap/types'
 
-export const getPoolUrlByProvider = (provider: Swap.PoolProvider): string => {
+export const getPoolUrlByProvider = (provider: Provider): string => {
   return (poolUrls[provider] ?? poolUrls.muesliswap_v1) as string
 }
 
-const poolUrls: Record<Swap.PoolProvider, string> = {
+const poolUrls: Record<Provider, string> = {
   minswap: 'https://minswap.org',
   sundaeswap: 'https://sundae.fi',
   wingriders: 'https://www.wingriders.com',

@@ -15,8 +15,8 @@ import {transformersMaker} from './transformers'
 import {estimateCalculation} from './calculations'
 
 export type MuesliswapApiConfig = {
-  frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
-  lpTokenHeld?: number
+  frontendFeeTiers?: ReadonlyArray<App.FrontendFeeTier>
+  getLpTokensHeld?: () => number
   addressHex: string
   address: string
   primaryTokenInfo: Portfolio.Token.Info
@@ -29,7 +29,7 @@ export const muesliswapApiMaker = (
 ): Readonly<Swap.Api> => {
   const {
     frontendFeeTiers,
-    lpTokenHeld,
+    getLpTokensHeld = () => 0,
     stakingKey,
     addressHex,
     primaryTokenInfo,
@@ -198,7 +198,7 @@ export const muesliswapApiMaker = (
                   body,
                   primaryTokenInfo,
                   frontendFeeTiers,
-                  lpTokenHeld,
+                  getLpTokensHeld(),
                 ),
               },
             },

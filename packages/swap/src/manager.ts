@@ -1,77 +1,58 @@
-import {App, Portfolio, Swap} from '@yoroi/types'
-import {makeOrderCalculations} from './helpers/orders/factories/makeOrderCalculations'
-import {getBestPoolCalculation} from './helpers/pools/getBestPoolCalculation'
-import {selectedPoolCalculationSelector} from './translators/reactjs/state/selectors/selectedPoolCalculationSelector'
+import {Portfolio, Swap} from '@yoroi/types'
+import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
+import {
+  muesliswapApiMaker,
+  milkTokenId,
+  oldMilkTokenId,
+} from './adapters/api/muesliswap/api-maker'
 
-export const swapManagerMaker = ({
-  swapStorage,
-  swapApi,
-  frontendFeeTiers,
-  aggregatorTokenId,
-  aggregator,
-}: {
-  swapStorage: Swap.Storage
-  swapApi: Swap.Api
-  frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
-  aggregatorTokenId?: Portfolio.Token.Id
-  aggregator: Swap.Aggregator
-}): Readonly<Swap.Manager> => {
-  const {clear: clearStorage, slippage} = swapStorage
-  const {
-    getPrice,
-    getPools,
-    getOpenOrders,
-    getCompletedOrders,
-    getTokenPairs,
-    getTokens,
-    cancelOrder,
-    createOrder,
+export const swapManagerMaker: Swap.ManagerMaker = ({
+  address,
+  addressHex,
+  aggregatedFrontendFeeTiers,
+  network,
+  primaryTokenInfo,
+  stakingKey,
+  storage,
+}) => {
+  const aggregatorTokensHeld: {
+    muesliswap: number
+    dexhunter: number
+  } = {muesliswap: 0, dexhunter: 0}
+
+  const updateAggregatorTokensHeld = (
+    values: ReadonlyArray<Portfolio.Token.Amount>,
+  ) => {
+    aggregatorTokensHeld.muesliswap = values.reduce(
+      (acc, curr) =>
+        acc +
+        (curr.info.id === milkTokenId || curr.info.id === oldMilkTokenId
+          ? Number(curr.quantity)
+          : 0),
+      0,
+    )
+  }
+
+  const dexhunterApi = dexhunterApiMaker({address, network, primaryTokenInfo})
+  const muesliswapApi = muesliswapApiMaker({
+    address,
+    addressHex,
+    frontendFeeTiers: aggregatedFrontendFeeTiers.muesliswap,
+    network,
     primaryTokenInfo,
     stakingKey,
-    supportedProviders,
-  } = swapApi
-
-  const order = {
-    cancel: cancelOrder,
-    create: createOrder,
-    list: {
-      byStatusOpen: getOpenOrders,
-      byStatusCompleted: getCompletedOrders,
-    } as const,
-  }
-
-  const price = {
-    byPair: getPrice,
-  } as const
-
-  const pools = {
-    list: {
-      byPair: getPools,
-    } as const,
-  }
-
-  const tokens = {
-    list: {
-      byPair: getTokenPairs,
-      onlyVerified: getTokens,
-    } as const,
-  }
+    getLpTokensHeld: () => aggregatorTokensHeld.muesliswap,
+  })
 
   return {
-    price,
-    clearStorage,
-    slippage,
-    order,
-    tokens,
-    pools,
-    primaryTokenInfo,
-    stakingKey,
-    supportedProviders,
-    frontendFeeTiers,
-    aggregator,
-    aggregatorTokenId,
-    makeOrderCalculations,
-    getBestPoolCalculation,
-    selectedPoolCalculationSelector,
-  } as const
+    api: apiMaker([dexhunterApi, muesliswapApi]),
+    clearStorage: storage.clear,
+    slippage: storage.slippage,
+    updateAggregatorTokensHeld,
+    aggregatorTokenIds: [milkTokenId, oldMilkTokenId],
+  }
+}
+
+const apiMaker = (adapters: Array<Swap.Api>): Swap.Api => {
+  return adapters[0]!
 }

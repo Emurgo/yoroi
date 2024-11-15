@@ -270,6 +270,7 @@ import {
 } from './notifications/manager'
 import {NumbersRatio} from './numbers/ratio'
 import {SwapStorage} from './swap/storage'
+import {SwapManager, SwapManagerMaker} from './swap/manager'
 
 export namespace App {
   export namespace Errors {
@@ -346,36 +347,9 @@ export namespace Swap {
   export type CreateRequest = SwapCreateRequest
   export type CreateResponse = SwapCreateResponse
   export type Split = SwapSplit
-
   export type Storage = SwapStorage
-
-  /*
   export type Manager = SwapManager
-
-  export type OpenOrder = SwapOpenOrder
-  export type CompletedOrder = SwapCompletedOrder
-  export type CreateOrderData = SwapCreateOrderData
-  export type CancelOrderData = SwapCancelOrderData
-  export type Order = SwapOpenOrder | SwapCompletedOrder
-  export type CreateOrderResponse = SwapCreateOrderResponse
-  export type OpenOrderResponse = SwapOpenOrder[]
-  export type CompletedOrderResponse = SwapCompletedOrder[]
-  export type OrderType = SwapOrderType
-
-  export type Protocol = SwapProtocol
-
-  export type Aggregator = SwapAggregator
-
-  export type Pool = SwapPool
-  export type PoolResponse = SwapPool[]
-  export type PoolProvider = SwapPoolProvider
-  export type SupportedProvider = SwapSupportedProvider
-
-
-  export type MakeOrderCalculation = SwapMakeOrderCalculation
-
-  export type OrderCalculation = SwapOrderCalculation
-  */
+  export type ManagerMaker = SwapManagerMaker
 }
 
 export namespace Balance {
