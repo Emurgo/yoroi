@@ -5,6 +5,8 @@ on:
 
 jobs:
   build:
+    if: github.event.pull_request.draft == false
+
     runs-on: macos-13
     steps:         
       - uses: maxim-lobanov/setup-xcode@v1
