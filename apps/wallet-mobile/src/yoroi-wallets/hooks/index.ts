@@ -46,10 +46,8 @@ const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
     enabled: !isNightly && !isDev,
   })
 
-  if (query.data == null) throw new Error('invalid state')
-
   if (isNightly || isDev) return true
-  return query.data
+  return query.data ?? true
 }
 
 const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
