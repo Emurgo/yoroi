@@ -205,9 +205,9 @@ const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean})
   const onToggleCrashReports = () => {
     setIsLocalEnabled((prevState) => {
       if (prevState) {
-        enable()
-      } else {
         disable()
+      } else {
+        enable()
       }
 
       return !prevState
