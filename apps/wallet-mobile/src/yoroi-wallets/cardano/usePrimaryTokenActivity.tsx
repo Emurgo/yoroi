@@ -19,8 +19,8 @@ type PrimaryTokenActivity = {
 }
 const defaultPrimaryTokenActivity: PrimaryTokenActivity = {
   ts: 0,
-  close: 1,
-  open: 1,
+  close: 0,
+  open: 0,
 }
 
 export const usePrimaryTokenActivity = ({
