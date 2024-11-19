@@ -57,8 +57,6 @@ export const DownloadCatalystAppScreen = () => {
   const votingEnd = `${formatDate(fund.info.votingEnd)}: ${strings.votingEnd}`
   const votingResults = `${formatDate(fund.info.tallyingEnd)}: ${strings.votingResults}`
 
-  const disabled = wallet.isMainnet && fund.status.registration !== 'running'
-
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <Stepper title={strings.title} currentStep={1} totalSteps={3} />
@@ -98,7 +96,7 @@ export const DownloadCatalystAppScreen = () => {
       </ScrollView>
 
       <Actions>
-        <Button shelleyTheme onPress={onNext} title={strings.continueButton} disabled={disabled} />
+        <Button shelleyTheme onPress={onNext} title={strings.continueButton} />
       </Actions>
     </SafeAreaView>
   )
