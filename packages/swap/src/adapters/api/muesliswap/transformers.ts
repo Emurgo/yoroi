@@ -247,22 +247,14 @@ export const transformersMaker = ({
       response: (
         res: ConstructSwapDatumResponse,
         estimate: Swap.EstimateResponse,
-      ): Swap.CreateResponse => {
-        const cbor: string = swapCreateCbor(res)
-
-        return {
-          cbor,
-          ...estimate,
-          totalInput: estimate.totalInput ?? estimate.splits[0]?.amountIn ?? 0,
-        }
-      },
+      ): Swap.CreateResponse => ({
+        aggregator: Swap.Aggregator.Muesliswap,
+        contractAddress: res.address,
+        datumData: res.datum,
+        datumHash: res.hash,
+        ...estimate,
+        totalInput: estimate.totalInput ?? estimate.splits[0]?.amountIn ?? 0,
+      }),
     },
   } as const
 }
-
-// TODO: Transform contractAddress, datum, hash into cbor, code in StartSwapOrderScreen.tsx
-const swapCreateCbor = ({
-  address: contractAddress,
-  datum,
-  hash,
-}: ConstructSwapDatumResponse) => `${contractAddress}${datum}${hash}`
