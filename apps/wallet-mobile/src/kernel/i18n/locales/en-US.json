@@ -30,6 +30,7 @@
   "api.error.tooManyRequests": "Too many requests, wait a bit and try again",
   "api.error.unauthorized": "You are not authorized to access this resource",
   "api.error.unknown": "An error that is unknown for the app happened, please try again",
+  "catalyst.snapshot.start": "Snapshot start",
   "catalyst.registration.start": "Registration start",
   "catalyst.voting.start": "Voting start",
   "catalyst.voting.end": "Voting end",

@@ -15,6 +15,7 @@ export const useStrings = () => {
     iUnderstandButton: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
     attention: intl.formatMessage(globalMessages.attention),
     registrationStart: intl.formatMessage(messages.registrationStart),
+    snapshotStart: intl.formatMessage(messages.snapshotStart),
     votingStart: intl.formatMessage(messages.votingStart),
     votingEnd: intl.formatMessage(messages.votingEnd),
     votingResults: intl.formatMessage(messages.votingResults),
@@ -70,6 +71,10 @@ const messages = defineMessages({
   registrationStart: {
     id: 'catalyst.registration.start',
     defaultMessage: '!!!Registration start',
+  },
+  snapshotStart: {
+    id: 'catalyst.snapshot.start',
+    defaultMessage: '!!!Snapshot start',
   },
   votingStart: {
     id: 'catalyst.voting.start',

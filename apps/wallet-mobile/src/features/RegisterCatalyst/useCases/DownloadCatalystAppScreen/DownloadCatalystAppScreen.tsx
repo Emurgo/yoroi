@@ -52,7 +52,7 @@ export const DownloadCatalystAppScreen = () => {
   }, [openModal, stakingInfo?.status, strings.attention])
 
   const fundName = fund.info.fundName
-  const registrationStart = `${formatDate(fund.info.snapshotStart)}: ${strings.registrationStart}`
+  const registrationStart = `${formatDate(fund.info.snapshotStart)}: ${strings.snapshotStart}`
   const votingStart = `${formatDate(fund.info.votingStart)}: ${strings.votingStart}`
   const votingEnd = `${formatDate(fund.info.votingEnd)}: ${strings.votingEnd}`
   const votingResults = `${formatDate(fund.info.tallyingEnd)}: ${strings.votingResults}`
