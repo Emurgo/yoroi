@@ -14,6 +14,10 @@ export const useTxBody = ({
   const query = useQuery(
     ['useTxBody', cbor, unsignedTx],
     async () => {
+      // ORDER IS IMPORTANT
+      // cbor comes from navigation params and unsigned tx from provider
+      // Reason is unsignedTx can change during the CATALYST registration funnel (CIP36)
+      // TODO: eliminate the use of unsigned tx entirely
       if (cbor != undefined) {
         return getCborTxBody(cbor)
       } else if (unsignedTx != undefined) {

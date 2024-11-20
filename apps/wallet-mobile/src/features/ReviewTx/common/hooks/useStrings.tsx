@@ -51,6 +51,14 @@ export const useStrings = () => {
     walletBalanceNFTsTitle: intl.formatMessage(messages.walletBalanceNFTsTitle),
     poolDetailsTitle: intl.formatMessage(messages.poolDetailsTitle),
     registerStakingKey: intl.formatMessage(messages.registerStakingKey),
+    poolRegistration: intl.formatMessage(messages.poolRegistration),
+    poolRetirement: intl.formatMessage(messages.poolRetirement),
+    moveInstantaneousRewards: intl.formatMessage(messages.moveInstantaneousRewards),
+    committeeHotAuthorization: intl.formatMessage(messages.committeeHotAuthorization),
+    committeeColdResign: intl.formatMessage(messages.committeeColdResign),
+    drepUpdate: intl.formatMessage(messages.drepUpdate),
+    drepRegistration: intl.formatMessage(messages.drepRegistration),
+    drepDeregistration: intl.formatMessage(messages.drepDeregistration),
     selectAbstain: intl.formatMessage(messages.selectAbstain),
     selectNoConfidence: intl.formatMessage(messages.selectNoConfidence),
     delegateVotingToDRep: intl.formatMessage(messages.delegateVotingToDRep),
@@ -253,9 +261,41 @@ const messages = defineMessages({
     id: 'txReview.operations.registerStakingKey',
     defaultMessage: '!!!Register staking key deposit',
   },
+  drepRegistration: {
+    id: 'txReview.operations.drepRegistration',
+    defaultMessage: '!!!Register as a DRep deposit',
+  },
+  poolRegistration: {
+    id: 'txReview.operations.poolRegistration',
+    defaultMessage: '!!!Pool registration deposit',
+  },
+  poolRetirement: {
+    id: 'txReview.operations.poolRetirement',
+    defaultMessage: '!!!Pool retirement',
+  },
+  drepUpdate: {
+    id: 'txReview.operations.drepUpdate',
+    defaultMessage: '!!!Drep update',
+  },
+  drepDeregistration: {
+    id: 'txReview.operations.drepDeregistration',
+    defaultMessage: '!!!Deregister as a DRep',
+  },
   deregisterStakingKey: {
     id: 'txReview.operations.deregisterStakingKey',
     defaultMessage: '!!!Deregister staking key',
+  },
+  moveInstantaneousRewards: {
+    id: 'txReview.operations.moveInstantaneousRewards',
+    defaultMessage: '!!!Move instantaneus rewards',
+  },
+  committeeHotAuthorization: {
+    id: 'txReview.operations.committeeHotAuthorization',
+    defaultMessage: '!!!Committee hot authorization',
+  },
+  committeeColdResign: {
+    id: 'txReview.operations.committeeColdResign',
+    defaultMessage: '!!!Committee cold resign',
   },
   rewardsWithdrawalLabel: {
     id: 'txReview.operations.rewardsWithdrawal.label',

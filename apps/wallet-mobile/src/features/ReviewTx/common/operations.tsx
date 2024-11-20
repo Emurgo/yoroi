@@ -57,7 +57,7 @@ export const StakeRewardsWithdrawalOperation = () => {
   )
 }
 
-export const StakeDelegateOperation = ({poolId}: {poolId: string}) => {
+export const StakeDelegationOperation = ({poolId}: {poolId: string}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const poolInfo = usePoolInfo({poolId})
@@ -126,6 +126,101 @@ export const VoteDelegationOperation = ({drepID}: {drepID: string}) => {
   )
 }
 
+export const DrepRegistrationOperation = ({fee}: {fee: Balance.Quantity}) => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+  const {wallet} = useSelectedWallet()
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationLabel}>{strings.drepRegistration}</Text>
+
+      <Space width="lg" />
+
+      <Text style={styles.operationValue}>{formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}</Text>
+    </View>
+  )
+}
+
+export const DrepDeregistrationOperation = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationLabel}>{strings.drepDeregistration}</Text>
+    </View>
+  )
+}
+
+export const PoolRegistrationOperation = ({fee}: {fee: Balance.Quantity}) => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+  const {wallet} = useSelectedWallet()
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationLabel}>{strings.poolRegistration}</Text>
+
+      <Space width="lg" />
+
+      <Text style={styles.operationValue}>{formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}</Text>
+    </View>
+  )
+}
+
+export const PoolRetirementOperation = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationLabel}>{strings.poolRetirement}</Text>
+    </View>
+  )
+}
+export const DrepUpdateOperation = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationLabel}>{strings.drepUpdate}</Text>
+    </View>
+  )
+}
+export const MoveInstantaneousRewardsOperation = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationLabel}>{strings.moveInstantaneousRewards}</Text>
+    </View>
+  )
+}
+export const CommitteeHotAuthorizationOperation = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationLabel}>{strings.committeeHotAuthorization}</Text>
+    </View>
+  )
+}
+
+export const CommitteeColdResignOperation = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.operation}>
+      <Text style={styles.operationLabel}>{strings.committeeColdResign}</Text>
+    </View>
+  )
+}
+
 export const useOperations = (certificates: FormattedTx['certificates']) => {
   const {wallet} = useSelectedWallet()
   if (certificates === null) return {components: [], totalFee: Quantities.zero}
@@ -148,7 +243,7 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
           const poolKeyHash = certificate.value.pool_keyhash ?? null
           if (poolKeyHash == null) return acc
           return {
-            components: [...acc.components, <StakeDelegateOperation key={index} poolId={poolKeyHash} />],
+            components: [...acc.components, <StakeDelegationOperation key={index} poolId={poolKeyHash} />],
             totalFee: acc.totalFee,
           }
         }
@@ -164,6 +259,55 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
           const drepId = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
           return {
             components: [...acc.components, <VoteDelegationOperation key={index} drepID={drepId} />],
+            totalFee: acc.totalFee,
+          }
+        }
+
+        case CertificateType.DRepRegistration: {
+          const fee = asQuantity(wallet.protocolParams.keyDeposit)
+          return {
+            components: [...acc.components, <DrepRegistrationOperation fee={fee} key={index} />],
+            totalFee: Quantities.sum([fee, acc.totalFee]),
+          }
+        }
+
+        case CertificateType.DRepDeregistration: {
+          return {components: [...acc.components, <DrepDeregistrationOperation key={index} />], totalFee: acc.totalFee}
+        }
+
+        case CertificateType.PoolRegistration: {
+          const fee = asQuantity(wallet.protocolParams.poolDeposit)
+          return {
+            components: [...acc.components, <PoolRegistrationOperation fee={fee} key={index} />],
+            totalFee: Quantities.sum([fee, acc.totalFee]),
+          }
+        }
+
+        case CertificateType.PoolRetirement: {
+          return {components: [...acc.components, <PoolRetirementOperation key={index} />], totalFee: acc.totalFee}
+        }
+
+        case CertificateType.DRepUpdate: {
+          return {components: [...acc.components, <DrepUpdateOperation key={index} />], totalFee: acc.totalFee}
+        }
+
+        case CertificateType.MoveInstantaneousRewardsCert: {
+          return {
+            components: [...acc.components, <MoveInstantaneousRewardsOperation key={index} />],
+            totalFee: acc.totalFee,
+          }
+        }
+
+        case CertificateType.CommitteeHotAuth: {
+          return {
+            components: [...acc.components, <CommitteeHotAuthorizationOperation key={index} />],
+            totalFee: acc.totalFee,
+          }
+        }
+
+        case CertificateType.CommitteeColdResign: {
+          return {
+            components: [...acc.components, <CommitteeColdResignOperation key={index} />],
             totalFee: acc.totalFee,
           }
         }
@@ -190,6 +334,7 @@ export const useDrepBech32Id = (poolId: string) => {
   const query = useQuery({
     queryKey: ['drepBech32', poolId],
     queryFn: () => getDrepBech32Id(poolId),
+    suspense: true,
   })
 
   return query?.data ?? null
