@@ -26,6 +26,7 @@ import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
+import {convertBech32ToHex} from '../cardano/common/signatureUtils'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TxSubmissionStatus} from '../types/other'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
@@ -120,6 +121,14 @@ export const useStakingKey = (wallet: YoroiWallet) => {
       .then((h) => h.toBytes())
       .then((bytes) => Buffer.from(bytes).toString('hex'))
   const result = useQuery([wallet.id, 'stakingKey'], getPublicKeyHex, {suspense: true})
+  if (!result.data) throw new Error('invalid state')
+  return result.data
+}
+
+export const useAddressHex = (wallet: YoroiWallet) => {
+  const result = useQuery([wallet.id, 'addressHex'], () => convertBech32ToHex(wallet.externalAddresses[0]), {
+    suspense: true,
+  })
   if (!result.data) throw new Error('invalid state')
   return result.data
 }
@@ -449,7 +458,7 @@ export const useFrontendFees = (
 
   return {
     ...query,
-    frontendFees: query.data,
+    aggregatedFrontendFeeTiers: query.data,
   }
 }
 

@@ -216,7 +216,7 @@ export const transformersMaker = ({
               }
             },
           )
-          .filter((pool) => pool !== null),
+          .filter(<T>(pool: T | null): pool is T => pool !== null),
     },
     constructSwapDatum: {
       request: (

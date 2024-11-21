@@ -92,7 +92,7 @@ export const estimateCalculation = (
         priceImpact,
       }
     })
-    .filter((split) => split !== null)
+    .filter(<T>(split: T | null): split is T => split !== null)
 
   if (availableSplits.length === 0) throw new Error()
 
