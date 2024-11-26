@@ -164,7 +164,7 @@ export const onlyAdaOneReceiver: FormattedTx = {
   },
   certificates: null,
   mint: null,
-  referenceInputs: null,
+  referenceInputs: [],
 }
 
 export const onlyAdaOneReceiverReferenceInputs: FormattedTx = {
@@ -331,12 +331,38 @@ export const onlyAdaOneReceiverReferenceInputs: FormattedTx = {
   mint: null,
   referenceInputs: [
     {
-      transaction_id: 'f38eb82a583b61d914d6b838509ab38c4bd398c410c9218682fb69fd702df1c4',
-      index: 1,
-    },
-    {
-      transaction_id: 'f38eb82a583b61d914d6b838509ab38c4bd398c410c9218682fb69fd702df1c4',
-      index: 0,
+      assets: [
+        {
+          tokenInfo: {
+            id: '.',
+            nature: Portfolio.Token.Nature.Primary,
+            type: Portfolio.Token.Type.FT,
+            application: Portfolio.Token.Application.Coin,
+            status: Portfolio.Token.Status.Valid,
+            fingerprint: '',
+            decimals: 6,
+            name: 'ADA',
+            ticker: 'ADA',
+            symbol: '₳',
+            reference: '',
+            tag: '',
+            website: 'https://www.cardano.org/',
+            originalImage: '',
+            description: 'Cardano',
+          },
+          name: 'ADA',
+          label: '10.618074 ADA',
+          quantity: '10618074',
+          isPrimary: true,
+        },
+      ],
+      address:
+        'addr1qykrmfm7qmhpvmt6xkapegwun67wf75pcghm7p3a78gmm470ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqrqg5yh',
+      addressKind: 0,
+      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      ownAddress: true,
+      txIndex: 0,
+      txHash: '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
     },
   ],
 }
@@ -544,7 +570,7 @@ export const onlyAdaOneReceiverMint: FormattedTx = {
       '1',
     ],
   ],
-  referenceInputs: null,
+  referenceInputs: [],
 }
 
 export const multiAssetOneReceiver: FormattedTx = {
@@ -862,7 +888,7 @@ export const multiAssetOneReceiver: FormattedTx = {
   },
   certificates: null,
   mint: null,
-  referenceInputs: null,
+  referenceInputs: [],
 }
 
 const onlyAdaMultiReceiver: FormattedTx = {
@@ -1082,7 +1108,7 @@ const onlyAdaMultiReceiver: FormattedTx = {
   },
   certificates: null,
   mint: null,
-  referenceInputs: null,
+  referenceInputs: [],
 }
 
 const multiAssetMultiReceiver: FormattedTx = {
@@ -1325,7 +1351,7 @@ const multiAssetMultiReceiver: FormattedTx = {
   },
   certificates: null,
   mint: null,
-  referenceInputs: null,
+  referenceInputs: [],
 }
 
 export const mocks = {
