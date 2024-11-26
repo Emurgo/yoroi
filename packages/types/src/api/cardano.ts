@@ -146,3 +146,25 @@ export type ApiTokenIdentity = {
   name: string
   nameHex: string
 }
+
+export type ApiUtxoDataRequest = {
+  txHash: string
+  txIndex: number
+}
+
+export type ApiUtxoDataAsset = {
+  assetId: string
+  policyId: string
+  name: string
+  amount: string
+}
+
+export type ApiUtxoData = {
+  output: {
+    address: string
+    amount: string
+    dataHash: string | null
+    assets: Array<ApiUtxoDataAsset>
+  }
+  spendingTxHash: string | null
+}

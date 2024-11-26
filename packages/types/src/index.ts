@@ -99,6 +99,9 @@ import {
   ApiTokenSupplyRecord,
   ApiTokenSupplyResponse,
   ApiTokeSupplyRequest,
+  ApiUtxoData,
+  ApiUtxoDataAsset,
+  ApiUtxoDataRequest,
 } from './api/cardano'
 import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
 import {
@@ -475,9 +478,14 @@ export namespace Api {
     export type ProtocolParams = ChainCardanoProtocolParams
     export type BestBlock = ChainCardanoBestBlock
 
+    export type UtxoDataRequest = ApiUtxoDataRequest
+    export type UtxoDataAsset = ApiUtxoDataAsset
+    export type UtxoData = ApiUtxoData
+
     export interface Api {
       getProtocolParams: () => Promise<ChainCardanoProtocolParams>
       getBestBlock: () => Promise<ChainCardanoBestBlock>
+      getUtxoData: (request: UtxoDataRequest) => Promise<ApiUtxoData>
     }
   }
 }

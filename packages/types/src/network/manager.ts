@@ -1,3 +1,4 @@
+import {ApiUtxoData, ApiUtxoDataRequest} from '../api/cardano'
 import {AppObservableStorage} from '../app/observable-storage'
 import {
   ChainCardanoProtocolParams,
@@ -25,6 +26,7 @@ export type NetworkConfig = {
 export type NetworkApi = {
   protocolParams: () => Promise<Readonly<ChainCardanoProtocolParams>>
   bestBlock: () => Promise<ChainCardanoBestBlock>
+  utxoData: (request: ApiUtxoDataRequest) => Promise<ApiUtxoData>
 }
 export type NetworkManager = Readonly<
   {
