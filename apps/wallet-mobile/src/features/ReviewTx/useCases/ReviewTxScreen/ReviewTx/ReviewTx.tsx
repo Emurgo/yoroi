@@ -53,7 +53,7 @@ export const ReviewTx = ({
 
   const showMetadataTab = !isEmptyString(formattedMetadata?.hash) && formattedMetadata?.metadata != null
   const showMintTab = !!formattedTx.mint
-  const showReferenceInoutsTab = !!formattedTx.referenceInputs
+  const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
 
   if (showMetadataTab) tabsData.push([strings.metadataTab, 'metadata'])
   if (showMintTab) tabsData.push([strings.mintTab, 'mint'])
