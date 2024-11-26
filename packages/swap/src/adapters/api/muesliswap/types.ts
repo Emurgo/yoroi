@@ -41,180 +41,132 @@ export type TokensResponse = Array<{
   }
 }>
 
-export type OrdersAggregatorResponse = Array<{
-  fromToken: {
-    address: {
-      policyId: string
-      name: string
-    }
-    symbol: string
-    image: string
-    decimalPlaces: number
-  }
-  toToken: {
-    address: {
-      policyId: string
-      name: string
-    }
-    symbol: string
-    image: string
-    decimalPlaces: number
-  }
-  batchToken: {
-    address: {
-      policyId: string
-      name: string
-    }
-    symbol: string
-    decimalPlaces: number
-  }
-  batcherFee: string
-  fromAmount: string
-  toAmount: string
-  attachedValues: [
-    {
-      address: {
-        policyId: string
-        name: string
-      }
-      amount: string
-    },
-  ]
-  owner: string
-  sender: string
-  providerSpecifics?: string
-  txHash: string
-  outputIdx: 0
-  status: 'open' | string
-  provider: string
-  placedAt?: number
-  finalizedAt?: number
-  batcherAddress: string
+export type OpenOrdersResponse = Array<{
+  from_token: Portfolio.Token.Id
+  to_token: Portfolio.Token.Id
+  from_amount: number
+  to_amount: number
+  user_address: string
+  dex: Provider
+  utxo: string // tx_hash#output_idx
 }>
 
-export type OrdersHistoryResponse = Array<{
-  attachedLvl: number
-  finalizedAt: number
-  fromAmount: string
-  fromToken: TokensResponse[0]['info']
-  outputIdx: number | null
-  paidAmount: string
-  placedAt: number
-  pubKeyHash: string
-  receivedAmount: string | number
-  status: 'matched' | string
-  toAmount: string
-  toToken: TokensResponse[0]['info']
+export type HistoryOrdersResponse = Array<{
+  dex: Provider
+  aggregator: null
+  fromToken: Portfolio.Token.Id
+  toToken: Portfolio.Token.Id
+  fromAmount: number
+  toAmount: number
+  paidAmount: number
+  receivedAmount: number
+  batcherFee: number
+  attachedValues: Array<{
+    amount: number
+    token: string
+  }>
+  sender: string
+  beneficiary: string
   txHash: string
-  scriptVersion?: string
-  aggregatorPlatform?: string | null
-  stakeKeyHash?: string
-  dex?: string
+  outputIdx: number
+  deposit: number
+  status: string | 'open' | 'matched'
+  placedAt: number
+  finalizedAt: number | null
+  finalizedTxHash: string | null
+  providerSpecifics: {
+    allowPartial?: boolean
+    contractVersion?: number
+    poolId?: string
+    swapDirection?: number
+  } | null
 }>
 
 export type CancelRequest = {
-  utxo: string // order UTxO from the smart contract to cancel. e.g. "txhash#0".
-  collateralUtxo: string // collateral UTxOs to use for canceling the order in cbor format.
-  wallet: string // address of the wallet that owns the order in cbor format.
+  tx_hash: string
+  ouput_idx: number
 }
 
 export type CancelResponse = {
-  status: 'success' | string
-  cbor: string
+  tx_cbor: string
 }
 
 export const Provider = {
-  minswap: 'minswap',
-  sundaeswap: 'sundaeswap',
-  wingriders: 'wingriders',
-  muesliswap: 'muesliswap',
-  muesliswap_v1: 'muesliswap_v1',
-  muesliswap_v2: 'muesliswap_v2',
-  muesliswap_v3: 'muesliswap_v3',
-  muesliswap_v4: 'muesliswap_v4',
-  vyfi: 'vyfi',
-  spectrum: 'spectrum',
+  Muesliswap_v2: 'muesliswap-v2',
+  Minswap_v1: 'minswap-v1',
+  Minswap_v2: 'minswap-v2',
+  Spectrum_v1: 'spectrum-v1',
+  Teddy_v1: 'teddy-v1',
+  Wingriders_v1: 'wingriders-v1',
+  Vyfi_v1: 'vyfi-v1',
+  Sundaeswap_v1: 'sundaeswap-v1',
+  Sundaeswap_v3: 'sundaeswap-v3',
 } as const
 
 export type Provider = (typeof Provider)[keyof typeof Provider]
 
-export type LiquidityPoolRequest = {
-  'only-verified': 'y' | 'n'
-  'token-a': string
-  'token-b': string
-  'providers': string
+export type LimitOrderRequest = {
+  buy_token: string
+  sell_token: string
+  buy_amount: number
+  sell_amount: number
+  user_address: string
+  dex: Provider
+  partner?: string
 }
 
-export type PoolToken = {
-  address: {
-    policyId: string
-    name: string
-  }
-  symbol?: string
-  image?: string
-  decimalPlaces: number
-  amount: string
-  status: string
-  priceAda: number
+export type CreateOrderRequest = {
+  buy_token: string
+  sell_token: string
+  buy_amount?: number
+  sell_amount?: number
+  user_address: string
+  slippage?: number
+  dex?: Array<Provider>
+  partner?: string
 }
-export type LiquidityPoolResponse = Array<{
-  tokenA: PoolToken
-  tokenB: PoolToken
-  feeToken: Omit<PoolToken, 'amount' | 'status' | 'priceAda'>
-  batcherFee: string
-  lvlDeposit: string
-  poolFee: string
-  lpToken: {
-    address?: {
-      policyId: string
-      name: string
-    }
-    amount?: string
-  }
-  poolId: string
-  provider: Provider
-  txHash?: string
-  outputIdx?: number
-  volume24h?: number
-  volume7d?: number
-  liquidityApy?: number
-  priceASqrt?: any
-  priceBSqrt?: any
-  batcherAddress: string
-}>
 
-export type Pools = Array<{
-  tokenIn: Portfolio.Token.Id
-  tokenOut: Portfolio.Token.Id
-  tokenInDecimals: number
-  tokenOutDecimals: number
-  tokenInSupply: number
-  tokenOutSupply: number
-  tokenInPtPrice: number
-  tokenOutPtPrice: number
+export type QuoteRequest = {
+  buy_token: string
+  sell_token: string
+  buy_amount?: number
+  sell_amount?: number
+  slippage?: number
+  dex?: Array<Provider>
+}
+
+export type Split = {
+  amount_in: number
+  total_lvl_attached: number
   deposit: number
-  lpTokenId?: Portfolio.Token.Id
-  batcherFee: number
-  fee: number
-  poolId: string
-  provider: Provider
-}>
-
-export type ConstructSwapDatumRequest = {
-  walletAddr: string
-  protocol: Provider
-  poolId: string
-  sellTokenPolicyID: string
-  sellTokenNameHex: string
-  sellAmount: string
-  buyTokenPolicyID: string
-  buyTokenNameHex: string
-  buyAmount: string
+  batcher_fee: number
+  expected_output: number
+  source_id: string
+  initial_price: number
+  final_price: number
+  price_impact: number
+  dex: Provider
+  pool_fee: number
+  expected_output_without_slippage: number
+}
+export type QuoteResponse = {
+  total_lvl_attached: number
+  total_deposit: number
+  total_batcher_fee: number
+  total_output: number
+  total_input: number
+  buy_token_decimals: number
+  sell_token_decimals: number
+  net_price: number
+  total_output_without_slippage: number
+  splits: Array<Split>
 }
 
-export type ConstructSwapDatumResponse = {
-  status: 'success' | string
-  datum: string
-  hash: string
-  address: string
+export type CreateOrderResponse = {
+  quote: QuoteResponse
+  tx_cbor: string
+}
+
+export type LimitOrderResponse = {
+  tx_cbor: string
 }

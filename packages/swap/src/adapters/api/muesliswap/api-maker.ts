@@ -1,22 +1,18 @@
 import {FetchData, fetchData, isLeft} from '@yoroi/common'
-import {Api, App, Chain, Portfolio, Swap} from '@yoroi/types'
+import {Chain, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
-import {memoize} from 'lodash-es'
 import {
   CancelRequest,
   CancelResponse,
-  ConstructSwapDatumResponse,
-  LiquidityPoolResponse,
-  OrdersAggregatorResponse,
-  OrdersHistoryResponse,
+  OpenOrdersResponse,
+  HistoryOrdersResponse,
   TokensResponse,
+  CreateOrderResponse,
+  QuoteResponse,
 } from './types'
 import {transformersMaker} from './transformers'
-import {estimateCalculation} from './calculations'
 
 export type MuesliswapApiConfig = {
-  frontendFeeTiers?: ReadonlyArray<App.FrontendFeeTier>
-  getLpTokensHeld?: () => number
   addressHex: string
   address: string
   primaryTokenInfo: Portfolio.Token.Info
@@ -27,15 +23,7 @@ export type MuesliswapApiConfig = {
 export const muesliswapApiMaker = (
   config: MuesliswapApiConfig,
 ): Readonly<Swap.Api> => {
-  const {
-    frontendFeeTiers,
-    getLpTokensHeld = () => 0,
-    stakingKey,
-    addressHex,
-    primaryTokenInfo,
-    network,
-    request = fetchData,
-  } = config
+  const {address, addressHex, network, request = fetchData} = config
 
   if (network !== Chain.Network.Mainnet)
     return new Proxy(
@@ -64,48 +52,6 @@ export const muesliswapApiMaker = (
 
   const transformers = transformersMaker(config)
 
-  // Asking for pools on every amount change would be bad UI and third party API spam
-  const getLiquidityPools = memoize(
-    async (body: Swap.EstimateRequest) => {
-      const params = transformers.liquidityPools.request(body)
-
-      const response = await request<LiquidityPoolResponse>(
-        {
-          method: 'get',
-          url: apiUrls.liquidityPools,
-          headers,
-        },
-        {
-          params,
-        },
-      )
-
-      if (isLeft(response)) return response
-
-      return freeze(
-        {
-          tag: 'right' as const,
-          value: {
-            status: response.value.status,
-            data: transformers.liquidityPools.response(
-              response.value.data,
-              body,
-            ),
-          },
-        },
-        true,
-      )
-    },
-    ({tokenIn, tokenOut, dex, blacklistedDexes}) =>
-      [
-        new Date().getMinutes(), // cache every minute
-        tokenIn,
-        tokenOut,
-        dex,
-        blacklistedDexes?.join(),
-      ].join('_'),
-  )
-
   return freeze(
     {
       async tokens() {
@@ -131,27 +77,27 @@ export const muesliswapApiMaker = (
 
       async orders() {
         const [historyResponse, aggregatorResponse] = await Promise.all([
-          request<OrdersHistoryResponse>(
+          request<HistoryOrdersResponse>(
             {
               method: 'get',
-              url: apiUrls.ordersHistory,
+              url: apiUrls.orderHistory,
               headers,
             },
             {
               params: {
-                'stake-key-hash': stakingKey,
+                user_address: address,
               },
             },
           ),
-          request<OrdersAggregatorResponse>(
+          request<OpenOrdersResponse>(
             {
               method: 'get',
-              url: apiUrls.ordersAggregator,
+              url: apiUrls.openOrders,
               headers,
             },
             {
               params: {
-                wallet: addressHex,
+                user_address: addressHex,
               },
             },
           ),
@@ -166,10 +112,10 @@ export const muesliswapApiMaker = (
             value: {
               status: 200,
               data: [
-                ...transformers.ordersHistory.response(
+                ...transformers.orderHistory.response(
                   historyResponse.value.data,
                 ),
-                ...transformers.ordersAggregator.response(
+                ...transformers.openOrders.response(
                   aggregatorResponse.value.data,
                 ),
               ],
@@ -180,10 +126,18 @@ export const muesliswapApiMaker = (
       },
 
       async estimate(body: Swap.EstimateRequest) {
-        // This cache is very dumb, clear on ocasion so it doesn't accumulate too many entries
-        if (body.amountIn === 0) getLiquidityPools.cache.clear?.()
+        const params = transformers.quote.request(body)
 
-        const response = await getLiquidityPools(body)
+        const response = await request<QuoteResponse>(
+          {
+            method: 'get',
+            url: apiUrls.create,
+            headers,
+          },
+          {
+            params,
+          },
+        )
 
         if (isLeft(response)) return response
 
@@ -193,13 +147,7 @@ export const muesliswapApiMaker = (
               tag: 'right',
               value: {
                 status: response.value.status,
-                data: estimateCalculation(
-                  response.value.data,
-                  body,
-                  primaryTokenInfo,
-                  frontendFeeTiers,
-                  getLpTokensHeld(),
-                ),
+                data: transformers.quote.response(response.value.data),
               },
             },
             true,
@@ -220,22 +168,12 @@ export const muesliswapApiMaker = (
       },
 
       async create(body: Swap.CreateRequest) {
-        const estimateResponse: Api.Response<Swap.EstimateResponse> =
-          await this.estimate({...body, slippage: body.slippage ?? 0})
-
-        if (isLeft(estimateResponse)) return estimateResponse
-
-        const lastEstimate = estimateResponse.value.data
-
-        const params = transformers.constructSwapDatum.request(
-          body,
-          lastEstimate.splits[0]!,
-        )
-
-        const response = await request<ConstructSwapDatumResponse>(
+        // TODO LIMIT
+        const params = transformers.create.request(body)
+        const response = await request<CreateOrderResponse>(
           {
             method: 'get',
-            url: apiUrls.constructSwapDatum,
+            url: apiUrls.create,
             headers,
           },
           {
@@ -250,10 +188,7 @@ export const muesliswapApiMaker = (
             tag: 'right',
             value: {
               status: response.value.status,
-              data: transformers.constructSwapDatum.response(
-                response.value.data,
-                lastEstimate,
-              ),
+              data: transformers.create.response(response.value.data),
             },
           },
           true,
@@ -294,14 +229,10 @@ export const muesliswapApiMaker = (
 
 const apiUrls = {
   tokens: 'https://api.muesliswap.com/list',
-  ordersHistory: 'https://api.muesliswap.com/orders/v3/history',
-  ordersAggregator: 'https://api.muesliswap.com/orders/aggregator',
-  liquidityPools: 'https://api.muesliswap.com/liquidity/pools',
-  constructSwapDatum: 'https://aggregator.muesliswap.com/constructSwapDatum',
-  cancel: 'https://aggregator.muesliswap.com/cancelSwapTransaction',
+  orderHistory: 'https://aggregator-v2.muesliswap.com/order_history',
+  openOrders: 'https://aggregator-v2.muesliswap.com/open_orders',
+  quote: 'https://aggregator-v2.muesliswap.com/quote',
+  create: 'https://aggregator-v2.muesliswap.com/order',
+  createLimit: 'https://aggregator-v2.muesliswap.com/limit_order',
+  cancel: 'https://aggregator-v2.muesliswap.com/cancel',
 } as const
-
-export const milkTokenId =
-  'afbe91c0b44b3040e360057bf8354ead8c49c4979ae6ab7c4fbdc9eb.4d494c4b7632'
-export const oldMilkTokenId =
-  '8a1cfae21368b8bebbbed9800fec304e95cce39a2a57dc35e2e3ebaa.4d494c4b'

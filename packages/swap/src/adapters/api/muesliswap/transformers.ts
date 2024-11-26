@@ -2,14 +2,14 @@ import {Portfolio, Swap} from '@yoroi/types'
 import {
   CancelRequest,
   CancelResponse,
-  ConstructSwapDatumRequest,
-  ConstructSwapDatumResponse,
-  LiquidityPoolRequest,
-  LiquidityPoolResponse,
-  OrdersAggregatorResponse,
-  OrdersHistoryResponse,
-  Pools,
+  CreateOrderRequest,
+  CreateOrderResponse,
+  HistoryOrdersResponse,
+  OpenOrdersResponse,
   Provider,
+  QuoteRequest,
+  QuoteResponse,
+  Split,
   TokensResponse,
 } from './types'
 import {MuesliswapApiConfig} from './api-maker'
@@ -18,7 +18,6 @@ import {asTokenFingerprint, asTokenName} from '../../../helpers/transformers'
 export const transformersMaker = ({
   primaryTokenInfo,
   address,
-  addressHex,
 }: MuesliswapApiConfig) => {
   const asYoroiTokenId = ({
     policyId,
@@ -70,43 +69,30 @@ export const transformersMaker = ({
           }
         }),
     },
-    ordersAggregator: {
-      response: (res: OrdersAggregatorResponse): Array<Swap.Order> =>
+    openOrders: {
+      response: (res: OpenOrdersResponse): Array<Swap.Order> =>
         res.map(
-          ({
-            provider,
-            placedAt,
-            finalizedAt,
-            status,
-            fromToken: {address: fromToken},
-            toToken: {address: toToken},
-            fromAmount,
-            toAmount,
-            txHash,
-            outputIdx,
-          }) => ({
+          ({dex, from_amount, from_token, to_amount, to_token, utxo}) => ({
             aggregator: Swap.Aggregator.Muesliswap,
-            dex: provider,
-            placedAt: placedAt ? placedAt * 1000 : undefined,
-            lastUpdate: finalizedAt ? finalizedAt * 1000 : undefined,
-            status,
-            tokenIn: asYoroiTokenId(fromToken),
-            tokenOut: asYoroiTokenId(toToken),
-            amountIn: Number(fromAmount),
+            dex,
+            status: 'open',
+            tokenIn: from_token,
+            tokenOut: to_token,
+            amountIn: from_amount,
             actualAmountOut: 0,
-            expectedAmountOut: Number(toAmount),
-            txHash,
-            updateTxHash: txHash,
-            outputIndex: outputIdx ?? 0,
+            expectedAmountOut: to_amount,
+            txHash: utxo.split('#')[0],
+            updateTxHash: utxo.split('#')[0],
+            outputIndex: Number(utxo.split('#')[1] ?? 0),
           }),
         ),
     },
-    ordersHistory: {
-      response: (res: OrdersHistoryResponse): Array<Swap.Order> =>
+    orderHistory: {
+      response: (res: HistoryOrdersResponse): Array<Swap.Order> =>
         res.map(
           ({
-            fromToken: {address: fromToken},
-            toToken: {address: toToken},
+            fromToken,
+            toToken,
             placedAt,
             finalizedAt,
             receivedAmount,
@@ -122,11 +108,11 @@ export const transformersMaker = ({
             placedAt: placedAt ? placedAt * 1000 : undefined,
             lastUpdate: finalizedAt ? finalizedAt * 1000 : undefined,
             status,
-            tokenIn: asYoroiTokenId(fromToken),
-            tokenOut: asYoroiTokenId(toToken),
-            amountIn: Number(fromAmount),
-            actualAmountOut: Number(receivedAmount),
-            expectedAmountOut: Number(toAmount),
+            tokenIn: fromToken,
+            tokenOut: toToken,
+            amountIn: fromAmount,
+            actualAmountOut: receivedAmount,
+            expectedAmountOut: toAmount,
             txHash,
             updateTxHash: txHash,
             outputIndex: outputIdx ?? 0,
@@ -134,127 +120,135 @@ export const transformersMaker = ({
         ),
     },
     cancel: {
-      request: ({order, collateral}: Swap.CancelRequest): CancelRequest => ({
-        wallet: addressHex,
-        utxo: `${order.txHash ?? ''}#${order.outputIndex}`,
-        collateralUtxo: collateral ?? '',
+      request: ({order}: Swap.CancelRequest): CancelRequest => ({
+        tx_hash: order.txHash ?? '',
+        ouput_idx: order.outputIndex ?? 0,
       }),
-      response: ({cbor = ''}: CancelResponse): Swap.CancelResponse => ({
-        cbor,
+      response: ({tx_cbor = ''}: CancelResponse): Swap.CancelResponse => ({
+        cbor: tx_cbor,
       }),
     },
-    liquidityPools: {
+    quote: {
       request: ({
         dex,
         blacklistedDexes,
         tokenIn,
         tokenOut,
-      }: Swap.EstimateRequest): LiquidityPoolRequest => ({
-        'only-verified': 'y',
-        'providers': dex
-          ? dex
-          : Object.values(Provider)
-              .filter((provider) => !blacklistedDexes?.includes(provider))
-              .join(),
-        'token-a': tokenIn,
-        'token-b': tokenOut,
+        amountIn,
+        amountOut,
+        slippage,
+      }: Swap.EstimateRequest): QuoteRequest => ({
+        dex: dex
+          ? [dex as Provider]
+          : Object.values(Provider).filter(
+              (provider) => !blacklistedDexes?.includes(provider),
+            ),
+        sell_token: tokenIn,
+        buy_token: tokenOut,
+        buy_amount: amountOut,
+        sell_amount: amountIn,
+        slippage,
       }),
-      response: (
-        pools: LiquidityPoolResponse,
-        {tokenIn, tokenOut}: Swap.EstimateRequest,
-      ): Pools =>
-        pools
-          .map(
-            ({
-              feeToken,
-              batcherFee,
-              poolFee,
-              lvlDeposit,
-              lpToken,
-              tokenA,
-              tokenB,
-              provider,
-              poolId,
-            }) => {
-              // Don't support pools with fees different than Ada yet
-              if (primaryTokenInfo.id !== asYoroiTokenId(feeToken.address))
-                return null
-
-              const A = {
-                price: tokenA.priceAda,
-                id: asYoroiTokenId(tokenA.address),
-                amount: Number(tokenA.amount),
-                decimals: tokenA.decimalPlaces,
-              }
-              const B = {
-                price: tokenB.priceAda,
-                id: asYoroiTokenId(tokenB.address),
-                amount: Number(tokenB.amount),
-                decimals: tokenB.decimalPlaces,
-              }
-              const [input, output] = tokenIn === A.id ? [A, B] : [B, A]
-
-              if (input.id !== tokenIn || input.id !== tokenOut) return null
-
-              return {
-                tokenIn: input.id,
-                tokenOut: output.id,
-                tokenInDecimals: input.decimals,
-                tokenOutDecimals: output.decimals,
-                tokenInSupply: Number(input.amount),
-                tokenOutSupply: Number(output.amount),
-                tokenInPtPrice: input.price,
-                tokenOutPtPrice: output.price,
-                deposit: Number(lvlDeposit),
-                lpTokenId: lpToken.address
-                  ? asYoroiTokenId(lpToken.address)
-                  : undefined,
-                batcherFee: Number(batcherFee),
-                fee: Number(poolFee),
-                poolId,
-                provider,
-              }
-            },
-          )
-          .filter(<T>(pool: T | null): pool is T => pool !== null),
+      response: ({
+        // buy_token_decimals,
+        // sell_token_decimals,
+        net_price,
+        splits,
+        total_batcher_fee,
+        total_deposit,
+        total_input,
+        total_lvl_attached,
+        total_output,
+        total_output_without_slippage,
+      }: QuoteResponse): Swap.EstimateResponse => ({
+        aggregatorFee: 0,
+        frontendFee: 0,
+        batcherFee: total_batcher_fee,
+        deposits: total_deposit,
+        totalFee: total_lvl_attached,
+        totalInput: total_input,
+        totalOutput: total_output,
+        netPrice: net_price,
+        totalOutputWithoutSlippage: total_output_without_slippage,
+        splits: splits.map(transformSplit),
+      }),
     },
-    constructSwapDatum: {
-      request: (
-        {tokenIn, tokenOut}: Swap.CreateRequest,
-        {dex, poolId, amountIn, expectedOutput}: Swap.Split,
-      ): ConstructSwapDatumRequest => {
-        const [sellTokenPolicyID, sellTokenNameHex] = tokenIn.split('.') as [
-          string,
-          string,
-        ]
-        const [buyTokenPolicyID, buyTokenNameHex] = tokenOut.split('.') as [
-          string,
-          string,
-        ]
-
-        return {
-          walletAddr: address,
-          protocol: dex as Provider,
-          poolId,
-          sellTokenPolicyID,
-          sellTokenNameHex,
-          sellAmount: amountIn.toString(),
-          buyTokenPolicyID,
-          buyTokenNameHex,
-          buyAmount: expectedOutput.toString(),
-        }
-      },
-      response: (
-        res: ConstructSwapDatumResponse,
-        estimate: Swap.EstimateResponse,
-      ): Swap.CreateResponse => ({
+    create: {
+      request: ({
+        dex,
+        blacklistedDexes,
+        tokenIn,
+        tokenOut,
+        amountIn,
+        slippage,
+      }: Swap.CreateRequest): CreateOrderRequest => ({
+        dex: dex
+          ? [dex as Provider]
+          : Object.values(Provider).filter(
+              (provider) => !blacklistedDexes?.includes(provider),
+            ),
+        sell_token: tokenIn,
+        buy_token: tokenOut,
+        sell_amount: amountIn,
+        slippage,
+        user_address: address,
+      }),
+      response: ({
+        quote: {
+          // buy_token_decimals,
+          // sell_token_decimals,
+          net_price,
+          splits,
+          total_batcher_fee,
+          total_deposit,
+          total_input,
+          total_lvl_attached,
+          total_output,
+          total_output_without_slippage,
+        },
+        tx_cbor,
+      }: CreateOrderResponse): Swap.CreateResponse => ({
+        cbor: tx_cbor,
         aggregator: Swap.Aggregator.Muesliswap,
-        contractAddress: res.address,
-        datumData: res.datum,
-        datumHash: res.hash,
-        ...estimate,
-        totalInput: estimate.totalInput ?? estimate.splits[0]?.amountIn ?? 0,
+        aggregatorFee: 0,
+        frontendFee: 0,
+        batcherFee: total_batcher_fee,
+        deposits: total_deposit,
+        totalFee: total_lvl_attached,
+        totalInput: total_input,
+        totalOutput: total_output,
+        netPrice: net_price,
+        totalOutputWithoutSlippage: total_output_without_slippage,
+        splits: splits.map(transformSplit),
       }),
     },
   } as const
 }
+
+const transformSplit = ({
+  amount_in,
+  batcher_fee,
+  deposit,
+  dex,
+  expected_output,
+  expected_output_without_slippage,
+  final_price,
+  initial_price,
+  pool_fee,
+  price_impact,
+  source_id,
+}: Split): Swap.Split => ({
+  amountIn: amount_in,
+  batcherFee: batcher_fee,
+  deposits: deposit,
+  dex,
+  expectedOutput: expected_output,
+  expectedOutputWithoutSlippage: expected_output_without_slippage,
+  fee: pool_fee,
+  finalPrice: final_price,
+  initialPrice: initial_price,
+  poolFee: pool_fee,
+  poolId: source_id,
+  priceDistortion: price_impact,
+  priceImpact: price_impact,
+})

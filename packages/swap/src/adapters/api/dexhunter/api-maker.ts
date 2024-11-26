@@ -196,18 +196,4 @@ const apiPaths = {
   reverseEstimate: '/swap/reverseEstimate', // POST
   build: '/swap/build', // POST
   sign: '/swap/sign', // POST
-  averagePrice: ({
-    tokenInId,
-    tokenOutId,
-  }: {
-    tokenInId: string
-    tokenOutId: string
-  }) => `/swap/averagePrice/${tokenInId}/${tokenOutId}`, // GET
-  wallet: '/swap/wallet', // POST
-  charts: '/charts', // POST
-  dcaCancel: '/dca/cancel', // POST
-  dcaCreate: '/dca/create', // POST
-  dcaEstimate: '/dca/estimate', // POST
-  dcaByAdress: ({address}: {address: string}) => `/dca/${address}`, // GET
-  markingSubmit: '/marking/submit', // POST
 } as const

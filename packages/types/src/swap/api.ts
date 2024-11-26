@@ -95,7 +95,6 @@ export type SwapCreateRequest = {
     }
 )
 
-// Leaks aggregator because of current challenge creating a cbor inside package
 export type SwapCreateResponse = {
   splits: SwapSplit[]
   batcherFee: number
@@ -107,26 +106,12 @@ export type SwapCreateResponse = {
   totalInput: number
   totalOutput: number
   totalOutputWithoutSlippage?: number
-} & (
-  | {
-      aggregator: typeof SwapAggregator.Muesliswap
-      datumData: string
-      datumHash: string
-      contractAddress: string
-      cbor?: undefined
-    }
-  | {
-      aggregator: typeof SwapAggregator.Dexhunter
-      datumData?: undefined
-      datumHash?: undefined
-      contractAddress?: undefined
-      cbor: string
-    }
-)
+  aggregator: SwapAggregator
+  cbor: string
+}
 
 export type SwapCancelRequest = {
   order: SwapOrder
-  collateral?: string
 }
 
 export type SwapCancelResponse = {
