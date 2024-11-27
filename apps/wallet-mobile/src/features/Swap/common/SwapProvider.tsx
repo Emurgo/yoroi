@@ -1,17 +1,12 @@
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
-import {BigNumber} from 'bignumber.js'
 import {produce} from 'immer'
 import React from 'react'
-import {Keyboard, TextInput} from 'react-native'
+import {TextInput} from 'react-native'
 
-import {useLanguage} from '../../../kernel/i18n'
-import {useAddressHex, useFrontendFees, useStakingKey} from '../../../yoroi-wallets/hooks'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
+import {useAddressHex, useStakingKey} from '../../../yoroi-wallets/hooks'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {PRICE_PRECISION} from './constants'
-import {useStrings} from './strings'
 
 export const useSwap = () => React.useContext(SwapContext)
 
@@ -19,7 +14,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const {wallet} = useSelectedWallet()
   const network = wallet.networkManager.network
   const balances = usePortfolioBalances({wallet})
-  const {aggregatedFrontendFeeTiers = {}} = useFrontendFees(wallet)
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = useAddressHex(wallet)
@@ -27,27 +21,18 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     const storage = swapStorageMaker()
     return swapManagerMaker({
       storage,
-      aggregatedFrontendFeeTiers,
       network,
       stakingKey,
       address,
       addressHex,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
     })
-  }, [aggregatedFrontendFeeTiers, network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
-
-  const {updateAggregatorTokensHeld, aggregatorTokenIds} = swapManager
-
-  React.useEffect(() => {
-    updateAggregatorTokensHeld(aggregatorTokenIds.map((id) => balances.records.get(id)).filter((a) => a !== undefined))
-  }, [aggregatorTokenIds, balances.records, updateAggregatorTokensHeld])
-
-  const {numberLocale} = useLanguage()
-  const strings = useStrings()
+  }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
 
   const tokenOutInputRef = React.useRef<TextInput | null>(null)
   const tokenInInputRef = React.useRef<TextInput | null>(null)
   const wantedPriceInputRef = React.useRef<TextInput | null>(null)
+  const slippageInputRef = React.useRef<TextInput | null>(null)
 
   const primaryTokenBalance = usePortfolioPrimaryBalance({wallet}).quantity
   /*
@@ -65,12 +50,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       tokenOutInputRef,
       tokenInInputRef,
       wantedPriceInputRef,
-      onChangeSellQuantity,
-      onChangeBuyQuantity,
-      onChangeLimitPrice,
-      ...actions,
+      slippageInputRef,
+      api: swapManager.api,
+      dispatch,
     }),
-    [state, onChangeSellQuantity, onChangeBuyQuantity, onChangeLimitPrice, actions],
+    [state, swapManager.api],
   )
 
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>
@@ -79,121 +63,108 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 const swapReducer = (state: SwapState, action: SwapAction) => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case SwapActionType.SellTouched:
-        draft.sellQuantity.isTouched = true
-        draft.sellQuantity.displayValue = ''
-        draft.sellQuantity.error = undefined
+      case SwapAction.TokenInInputTouched:
+        draft.tokenInInput.isTouched = true
+        draft.tokenInInput.displayValue = ''
+        draft.tokenInInput.error = undefined
 
         break
-
-      case SwapActionType.BuyTouched:
-        draft.buyQuantity.isTouched = true
-        draft.buyQuantity.displayValue = ''
-        draft.buyQuantity.error = undefined
-
-        break
-
-      case SwapActionType.SwitchTouched:
-        draft.sellQuantity.isTouched = state.buyQuantity.isTouched
-        draft.buyQuantity.isTouched = state.sellQuantity.isTouched
-        draft.sellQuantity.displayValue = state.buyQuantity.displayValue
-        draft.buyQuantity.displayValue = state.sellQuantity.displayValue
-        draft.sellQuantity.error = undefined
-        draft.buyQuantity.error = undefined
+      case SwapAction.TokenOutInputTouched:
+        draft.tokenOutInput.isTouched = true
+        draft.tokenOutInput.displayValue = ''
+        draft.tokenOutInput.error = undefined
 
         break
-
-      case SwapActionType.PoolTouched:
-        draft.selectedPool.isTouched = true
-
-        break
-
-      case SwapActionType.PoolDefaulted:
-        draft.selectedPool = defaultState.selectedPool
+      case SwapAction.TokenInIdChanged:
+        draft.tokenInInput.displayValue = action.value ?? ''
 
         break
-
-      case SwapActionType.ResetSwap:
-        return defaultState
-
-      case SwapActionType.ResetQuantities:
-        return state
-
-      case SwapActionType.CanSwapChanged:
-        draft.canSwap = action.canSwap
-
+      case SwapAction.TokenOutIdChanged:
         break
-
-      case SwapActionType.SellInputValueChanged:
-        if (state.sellQuantity.isTouched) draft.sellQuantity.displayValue = action.value
-
+      case SwapAction.TokenInAmountChanged:
         break
-
-      case SwapActionType.BuyInputValueChanged:
-        if (state.buyQuantity.isTouched) draft.buyQuantity.displayValue = action.value
-
+      case SwapAction.TokenOutAmountChanged:
         break
-
-      case SwapActionType.LimitPriceInputValueChanged:
-        draft.limitPrice.displayValue = action.value
-
+      case SwapAction.TokenInErrorChanged:
         break
-
-      case SwapActionType.SellAmountErrorChanged:
-        draft.sellQuantity.error = action.error
-
+      case SwapAction.TokenOutErrorChanged:
         break
-
-      case SwapActionType.BuyAmountErrorChanged:
-        draft.buyQuantity.error = action.error
-
+      case SwapAction.WantedPriceInputChanged:
         break
-
+      case SwapAction.SwitchTouched:
+        break
+      case SwapAction.DexSelectorTouched:
+        break
+      case SwapAction.ResetAmounts:
+        break
+      case SwapAction.ResetForm:
+        break
       default:
         throw new Error(`swapReducer invalid action`)
     }
   })
 }
 
+export const SwapAction = {
+  TokenInInputTouched: 'TokenInInputTouched',
+  TokenOutInputTouched: 'TokenOutInputTouched',
+  TokenInIdChanged: 'TokenInIdChanged',
+  TokenOutIdChanged: 'TokenOutIdChanged',
+  TokenInAmountChanged: 'TokenInAmountChanged',
+  TokenOutAmountChanged: 'TokenOutAmountChanged',
+  TokenInErrorChanged: 'TokenInErrorChanged',
+  TokenOutErrorChanged: 'TokenOutErrorChanged',
+  WantedPriceInputChanged: 'WantedPriceInputChanged',
+  SwitchTouched: 'SwitchTouched',
+  DexSelectorTouched: 'DexSelectorTouched',
+  ResetAmounts: 'ResetAmounts',
+  ResetForm: 'ResetForm',
+} as const
+
+export type SwapAction = {
+  type: (typeof SwapAction)[keyof typeof SwapAction]
+  value?: string
+}
+
 const defaultState: SwapState = Object.freeze({
-  sellQuantity: {
+  tokenInInput: {
     isTouched: true,
     disabled: false,
     error: undefined,
     displayValue: '',
   },
-  buyQuantity: {
+  tokenOutInput: {
     isTouched: false,
     disabled: false,
     error: undefined,
     displayValue: '',
   },
-  selectedPool: {
+  selectedDex: {
     isTouched: false,
   },
-  limitPrice: {
+  wantedPrice: {
     displayValue: '',
   },
   canSwap: false,
 })
 
 type SwapState = {
-  sellQuantity: {
+  tokenInInput: {
     isTouched: boolean
     disabled: boolean
     error: string | undefined
     displayValue: string
   }
-  buyQuantity: {
+  tokenOutInput: {
     isTouched: boolean
     disabled: boolean
     error: string | undefined
     displayValue: string
   }
-  selectedPool: {
+  selectedDex: {
     isTouched: boolean
   }
-  limitPrice: {
+  wantedPrice: {
     displayValue: string
   }
   canSwap: boolean
@@ -203,9 +174,15 @@ type SwapContext = SwapState & {
   tokenInInputRef: React.RefObject<TextInput> | undefined
   tokenOutInputRef: React.RefObject<TextInput> | undefined
   wantedPriceInputRef: React.RefObject<TextInput> | undefined
-  onChangeSellQuantity: (text: string) => void
-  onChangeBuyQuantity: (text: string) => void
-  onChangeLimitPrice: (text: string) => void
+  slippageInputRef: React.RefObject<TextInput> | undefined
+  dispatch: React.Dispatch<SwapAction>
 }
 
-const SwapContext = React.createContext<SwapContext>(initialExchangeFormContext)
+const SwapContext = React.createContext<SwapContext>({
+  ...defaultState,
+  tokenInInputRef: undefined,
+  tokenOutInputRef: undefined,
+  wantedPriceInputRef: undefined,
+  slippageInputRef: undefined,
+  dispatch: () => null,
+})

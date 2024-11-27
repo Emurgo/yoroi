@@ -9,6 +9,7 @@ import {
   TokensResponse,
   CreateOrderResponse,
   QuoteResponse,
+  LimitOrderResponse,
 } from './types'
 import {transformersMaker} from './transformers'
 
@@ -168,12 +169,16 @@ export const muesliswapApiMaker = (
       },
 
       async create(body: Swap.CreateRequest) {
-        // TODO LIMIT
-        const params = transformers.create.request(body)
-        const response = await request<CreateOrderResponse>(
+        const kind: 'create' | 'createLimit' =
+          body.wantedPrice !== undefined ? 'createLimit' : 'create'
+
+        const params = transformers[kind].request(body)
+        const response = await request<
+          CreateOrderResponse | LimitOrderResponse
+        >(
           {
             method: 'get',
-            url: apiUrls.create,
+            url: apiUrls[kind],
             headers,
           },
           {
@@ -188,7 +193,7 @@ export const muesliswapApiMaker = (
             tag: 'right',
             value: {
               status: response.value.status,
-              data: transformers.create.response(response.value.data),
+              data: transformers[kind].response(response.value.data as any),
             },
           },
           true,

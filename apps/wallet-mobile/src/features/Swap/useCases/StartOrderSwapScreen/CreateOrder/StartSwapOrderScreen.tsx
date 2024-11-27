@@ -1,59 +1,38 @@
-import {isString} from '@yoroi/common'
-import {usePortfolioTokenInfo} from '@yoroi/portfolio'
-import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {Swap} from '@yoroi/types'
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {Alert, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
+import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button} from '../../../../../components/Button/Button'
-import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
-import {frontendFeeAddressMainnet, frontendFeeAddressPreprod, isDev} from '../../../../../kernel/env'
 import {useIsKeyboardOpen} from '../../../../../kernel/keyboard/useIsKeyboardOpen'
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../../../kernel/navigation'
-import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
-import {YoroiEntry} from '../../../../../yoroi-wallets/types/yoroi'
-import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils/utils'
-import {useDisableSearchOnBar} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
-import {getPriceImpactRisk} from '../../../common/helpers'
-import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {useSwapForm} from '../../../common/SwapFormProvider'
-import {useSwapTx} from '../../../common/useSwapTx'
 import {AmountActions} from './Actions/AmountActions/AmountActions'
 import {OrderActions} from './Actions/OrderActions/OrderActions'
-import {DexhunterPlayground} from './DexhunterPlayground'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditPrice} from './EditPrice/EditPrice'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
-import {WarnLimitPrice} from './WarnLimitPrice/WarnLimitPrice'
-import {WarnPriceImpact} from './WarnPriceImpact/WarnPriceImpact'
-import {WarnSlippage} from './WarnSlippage/WarnSlippage'
 
-const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
+// const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
 
 export const StartSwapOrderScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const styles = useStyles()
+  const {height: deviceHeight} = useWindowDimensions()
+  const isKeyboardOpen = useIsKeyboardOpen()
+
+  /*
   const navigateTo = useNavigateTo()
   const {navigateToTxHistory} = useWalletNavigation()
   const {orderData, unsignedTxChanged, poolPairsChanged} = useSwap()
   const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const {openModal} = useModal()
-  const {height: deviceHeight} = useWindowDimensions()
   const priceImpactRisk = getPriceImpactRisk(Number(orderData.selectedPoolCalculation?.prices.priceImpact))
-  const isKeyboardOpen = useIsKeyboardOpen()
 
   const {
     sellQuantity: {isTouched: isSellTouched},
@@ -103,20 +82,6 @@ export const StartSwapOrderScreen = () => {
     if (orderData.selectedPoolId === orderData.bestPoolCalculation?.pool.poolId) poolDefaulted()
   }, [orderData.selectedPoolId, orderData.bestPoolCalculation, poolDefaulted])
 
-  const {createUnsignedTx, isLoading} = useSwapTx({
-    onSuccess: (yoroiUnsignedTx) => {
-      unsignedTxChanged(yoroiUnsignedTx)
-      swap()
-    },
-    onError: (error) => {
-      if (error instanceof NotEnoughMoneyToSendError) {
-        sellAmountErrorChanged(strings.notEnoughFeeBalance)
-        return
-      }
-
-      Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error.message))
-    },
-  })
 
   const {createOrderData} = useSwapCreateOrder({
     onSuccess: (orderResponse: Swap.CreateOrderResponse) => {
@@ -293,8 +258,7 @@ export const StartSwapOrderScreen = () => {
 
     createUnsignedSwapTx()
   }
-
-  const disabled = isLoading || !canSwap
+*/
 
   return (
     <View style={[styles.root, styles.flex]}>
@@ -326,13 +290,11 @@ export const StartSwapOrderScreen = () => {
           <EditSlippage />
 
           <ShowPoolActions />
-
-          {isDev && <DexhunterPlayground />}
         </View>
       </ScrollView>
 
       <Actions style={[(deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
-        <Button testID="swapButton" title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
+        <Button testID="swapButton" title={strings.swapTitle} />
       </Actions>
     </View>
   )
