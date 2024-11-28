@@ -30,11 +30,17 @@ export const useOnConfirm = ({
   const navigateTo = useNavigateTo()
 
   const handleOnSuccess = (signedTx: YoroiSignedTx) => {
-    onSuccess?.(signedTx)
+    if (onSuccess) {
+      onSuccess(signedTx)
+      return
+    }
     navigateTo.showSubmittedTxScreen()
   }
   const handleOnError = () => {
-    onError?.()
+    if (onError) {
+      onError()
+      return
+    }
     navigateTo.showFailedTxScreen()
   }
 

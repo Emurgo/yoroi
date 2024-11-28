@@ -12,6 +12,8 @@ import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
 import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'
 import {NotSupportedCardanoAppVersion} from './useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion'
+import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
+import {SubmittedTxScreen} from './useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 
 const Stack = NavigationStack
 
@@ -52,6 +54,10 @@ export const GovernanceNavigator = () => {
             component={NoFundsScreen}
             options={{title: strings.governanceCentreTitle}}
           />
+
+          <Stack.Screen name="staking-gov-submitted-tx" component={SubmittedTxScreen} options={{headerShown: false}} />
+
+          <Stack.Screen name="staking-gov-failed-tx" component={FailedTxScreen} options={{headerShown: false}} />
         </Stack.Navigator>
       </SafeArea>
     </GovernanceProvider>

@@ -13,6 +13,7 @@ import {useWalletNavigation} from '../../../../kernel/navigation'
 import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
+import {useNavigateTo} from '../../common/navigation'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
 import {TransactionSummary} from './TransactionSummary'
@@ -27,6 +28,7 @@ export const ReviewSwap = () => {
   const {height: deviceHeight} = useWindowDimensions()
   const {navigateToTxReview} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
+  const navigateTo = useNavigateTo()
 
   const {unsignedTx, orderData} = useSwap()
   const sellTokenInfo = orderData.amounts.sell?.info
@@ -63,6 +65,11 @@ export const ReviewSwap = () => {
 
   const onSwapTxSuccess = () => {
     trackSwapOrderSubmitted()
+    navigateTo.submittedTx()
+  }
+
+  const onSwapTxError = () => {
+    navigateTo.failedTx()
   }
 
   const onNext = () => {
@@ -80,6 +87,7 @@ export const ReviewSwap = () => {
     unsignedTxChanged(unsignedTx)
     navigateToTxReview({
       onSuccess: onSwapTxSuccess,
+      onError: onSwapTxError,
       receiverCustomTitle: liquidityPool ?? undefined,
       details: {component: <TransactionSummary orderData={orderData} />, title: strings.swapDetailsTitle},
     })

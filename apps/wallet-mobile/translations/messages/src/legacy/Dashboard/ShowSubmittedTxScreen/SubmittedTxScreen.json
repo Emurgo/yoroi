@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.delegation.submittedTx.title",
+    "defaultMessage": "!!!Transaction signed",
+    "file": "src/legacy/Dashboard/ShowSubmittedTxScreen/SubmittedTxScreen.tsx",
+    "start": {
+      "line": 92,
+      "column": 20,
+      "index": 2370
+    },
+    "end": {
+      "line": 95,
+      "column": 3,
+      "index": 2471
+    }
+  },
+  {
+    "id": "components.delegation.submittedTx.text",
+    "defaultMessage": "!!!Check this transaction in the list of wallet transactions.",
+    "file": "src/legacy/Dashboard/ShowSubmittedTxScreen/SubmittedTxScreen.tsx",
+    "start": {
+      "line": 96,
+      "column": 19,
+      "index": 2492
+    },
+    "end": {
+      "line": 99,
+      "column": 3,
+      "index": 2632
+    }
+  },
+  {
+    "id": "components.delegation.submittedTx.button",
+    "defaultMessage": "!!!Close",
+    "file": "src/legacy/Dashboard/ShowSubmittedTxScreen/SubmittedTxScreen.tsx",
+    "start": {
+      "line": 100,
+      "column": 21,
+      "index": 2655
+    },
+    "end": {
+      "line": 103,
+      "column": 3,
+      "index": 2744
+    }
+  }
+]

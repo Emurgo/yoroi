@@ -14,6 +14,8 @@ export const useNavigateTo = () => {
     selectSellToken: () => swapNavigation.navigate('swap-select-sell-token'),
     startSwap: () => swapNavigation.navigate('swap-start-swap', {screen: 'token-swap'}),
     reviewSwap: () => swapNavigation.navigate('swap-review'),
+    submittedTx: () => swapNavigation.navigate('swap-submitted-tx'),
+    failedTx: () => swapNavigation.navigate('swap-failed-tx'),
     swapOpenOrders: () =>
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
@@ -23,6 +25,19 @@ export const useNavigateTo = () => {
             screen: 'swap-start-swap',
             params: {
               screen: 'orders',
+            },
+          },
+        },
+      }),
+    resetToStartSwap: () =>
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap-start-swap',
+            params: {
+              screen: 'token-swap',
             },
           },
         },

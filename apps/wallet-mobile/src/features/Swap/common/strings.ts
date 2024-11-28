@@ -161,6 +161,12 @@ export const useStrings = () => {
     backToSwapOrders: intl.formatMessage(messages.backToSwapOrders),
     preprodNoticeTitle: intl.formatMessage(messages.preprodNoticeTitle),
     preprodNoticeText: intl.formatMessage(messages.preprodNoticeText),
+    failedTxScreenTitle: intl.formatMessage(messages.failedTxScreenTitle),
+    failedTxScreenText: intl.formatMessage(messages.failedTxScreenText),
+    failedTxScreenButton: intl.formatMessage(messages.failedTxScreenButton),
+    submittedTxScreenTitle: intl.formatMessage(messages.submittedTxScreenTitle),
+    submittedTxScreenText: intl.formatMessage(messages.submittedTxScreenText),
+    submittedTxScreenButton: intl.formatMessage(messages.submittedTxScreenButton),
   }
 }
 
@@ -694,5 +700,30 @@ const messages = defineMessages({
   backToSwapOrders: {
     id: 'swap.swapScreen.backToSwapOrders',
     defaultMessage: '!!!Back to swap orders',
+  },
+  failedTxScreenTitle: {
+    id: 'swap.failedTxScreen.title',
+    defaultMessage: '!!!Transaction failed',
+  },
+  failedTxScreenText: {
+    id: 'swap.failedTxScreen.text',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
+  },
+  failedTxScreenButton: {
+    id: 'swap.failedTxScreen.button',
+    defaultMessage: '!!!Try again',
+  },
+  submittedTxScreenTitle: {
+    id: 'swap.submittedTxScreen.title',
+    defaultMessage: '!!!Transaction signed',
+  },
+  submittedTxScreenText: {
+    id: 'swap.submittedTxScreen.text',
+    defaultMessage:
+      '!!!In a few minutes, your transactions will be displayed both in the list of transactions and Open swap orders.',
+  },
+  submittedTxScreenButton: {
+    id: 'swap.submittedTxScreen.button',
+    defaultMessage: '!!!Close',
   },
 })
