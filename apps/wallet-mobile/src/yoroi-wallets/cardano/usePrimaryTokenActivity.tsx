@@ -46,8 +46,8 @@ export const usePrimaryTokenActivity = ({
         // NOTE: transformer
         const tickers = response.value.data.tickers
         const ts = tickers[0]?.timestamp ?? 0
-        const close = tickers[0]?.prices[to] ?? 1
-        const open = tickers[1]?.prices[to] ?? 1
+        const close = tickers[0]?.prices[to] ?? 0
+        const open = tickers[1]?.prices[to] ?? 0
         return {
           ts,
           close,
