@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
-import {isNightly, isProduction} from '../../../../kernel/env'
+import {isNightly} from '../../../../kernel/env'
 import {useLanguage} from '../../../../kernel/i18n'
 import {themeNames} from '../../../../kernel/i18n/global-messages'
 import {defaultLanguage} from '../../../../kernel/i18n/languages'
@@ -40,7 +40,7 @@ export const ApplicationSettingsScreen = () => {
   const {network} = useSelectedNetwork()
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
-  const displayScreenShareSetting = Platform.OS === 'android' && !isProduction
+  const displayScreenShareSetting = Platform.OS === 'android'
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
