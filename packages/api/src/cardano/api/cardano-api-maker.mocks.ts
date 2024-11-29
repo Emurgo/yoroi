@@ -2,6 +2,7 @@
 import {Api} from '@yoroi/types'
 import {protocolParamsMockResponse} from './protocol-params.mocks'
 import {bestBlockMockResponse} from './best-block.mocks'
+import {mockUtxoData} from './utxo-data.mocks'
 
 const loading = () => new Promise(() => {})
 const unknownError = () => Promise.reject(new Error('Unknown error'))
@@ -38,7 +39,18 @@ const getBestBlock = {
   },
 }
 
+const getUtxoData = {
+  success: () => Promise.resolve(mockUtxoData),
+  delayed: (timeout?: number) => delayedResponse({data: mockUtxoData, timeout}),
+  empty: () => Promise.resolve({}),
+  loading,
+  error: {
+    unknown: unknownError,
+  },
+}
+
 export const mockCardanoApi: Api.Cardano.Api = {
   getProtocolParams: getProtocolParams.success,
   getBestBlock: getBestBlock.success,
+  getUtxoData: getUtxoData.success,
 } as const

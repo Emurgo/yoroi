@@ -31,7 +31,7 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   )
 }
 
-const Inputs = ({inputs}: {inputs: FormattedInputs}) => {
+export const Inputs = ({inputs}: {inputs: FormattedInputs}) => {
   return inputs.map((input, index) => <Input key={`${input.address}-${index}`} input={input} />)
 }
 

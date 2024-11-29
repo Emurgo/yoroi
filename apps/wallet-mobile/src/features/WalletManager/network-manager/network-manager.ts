@@ -254,7 +254,7 @@ export function buildNetworkManagers({
       const networkRootStorage = mountMMKVStorage({path: `/`, id: `${network}.manager.v1`})
       const rootStorage = observableStorageMaker(networkRootStorage)
       const legacyRootStorage = observableStorageMaker(mountAsyncStorage({path: `/legacy/${network}/v1/`}))
-      const {getProtocolParams, getBestBlock} = apiMaker({network: config.network})
+      const {getProtocolParams, getBestBlock, getUtxoData} = apiMaker({network: config.network})
       const api = {
         protocolParams: () =>
           getProtocolParams().catch((error) => {
@@ -262,6 +262,7 @@ export function buildNetworkManagers({
             return Promise.resolve(protocolParamsPlaceholder)
           }),
         bestBlock: getBestBlock,
+        utxoData: getUtxoData,
       }
 
       const info = dateToEpochInfo(config.eras)

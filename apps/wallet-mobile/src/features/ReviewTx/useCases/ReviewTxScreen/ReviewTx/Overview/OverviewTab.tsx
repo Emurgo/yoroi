@@ -465,8 +465,8 @@ const useStyles = () => {
       color: color.text_gray_medium,
     },
     tokenSectionLabel: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_900,
+      ...atoms.body_1_lg_medium,
+      color: color.text_gray_medium,
     },
     tokenItems: {
       ...atoms.flex_wrap,

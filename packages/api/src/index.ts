@@ -2,6 +2,7 @@ import {appApiMaker} from './app/api/app-api-maker'
 import {mockAppApi} from './app/api/app-api-maker.mocks'
 import {getFrontendFees} from './app/api/frontend-fees'
 import {getProtocolParams} from './cardano/api/protocol-params'
+import {getUtxoData} from './cardano/api/utxo-data'
 import {mockGetFrontendFees} from './app/api/frontend-fees.mocks'
 
 import {
@@ -41,6 +42,7 @@ export const CardanoApi = {
   getOnChainMetadatas,
   getTokenSupply,
   getProtocolParams,
+  getUtxoData,
   mockGetOnChainMetadatas,
   isNftMetadata,
   isFtMetadata,
