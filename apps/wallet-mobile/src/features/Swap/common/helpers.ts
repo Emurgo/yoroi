@@ -1,17 +1,12 @@
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import {HW} from '@yoroi/types'
-import {SwapApi} from '@yoroi/types/src/swap/api'
-import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
 import {normalisePtId} from '../../../kernel/helpers/normalisePtId'
-import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
-import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
 import {SwapPriceImpactRisk} from './types'
 
+/*
 export const useCancelOrderWithHw = (
   {cancelOrder}: {cancelOrder: SwapApi['cancelOrder']},
   options?: UseMutationOptions<
@@ -42,7 +37,7 @@ export const useCancelOrderWithHw = (
     cancelOrder: mutation.mutate,
   }
 }
-
+*/
 type OrderTxMetadata = {
   sellTokenId: string
   buyTokenId: string

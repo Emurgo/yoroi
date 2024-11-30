@@ -1,33 +1,22 @@
-import {getPoolUrlByProvider, useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../../kernel/navigation'
-import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
-import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
-import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
-import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
-import {useStrings} from '../../common/strings'
-import {TransactionSummary} from './TransactionSummary'
 
 const BOTTOM_ACTION_SECTION = 220
 
 export const ReviewSwap = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
-  const strings = useStrings()
   const styles = useStyles()
-  const {track} = useMetrics()
   const {height: deviceHeight} = useWindowDimensions()
+  /*
+  const strings = useStrings()
+  const {track} = useMetrics()
   const {navigateToTxReview} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
-
   const {unsignedTx, orderData} = useSwap()
   const sellTokenInfo = orderData.amounts.sell?.info
   const buyTokenInfo = orderData.amounts.buy?.info
@@ -86,7 +75,7 @@ export const ReviewSwap = () => {
   }
 
   const isButtonDisabled = couldReceiveNoAssets
-
+*/
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <View style={styles.container}>
@@ -98,7 +87,7 @@ export const ReviewSwap = () => {
                 setContentHeight(height + BOTTOM_ACTION_SECTION)
               }}
             >
-              <TransactionSummary orderData={orderData} />
+              {/* <TransactionSummary orderData={orderData} /> */}
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -109,7 +98,7 @@ export const ReviewSwap = () => {
           ...(deviceHeight < contentHeight && styles.actionBorder),
         }}
       >
-        <Button disabled={isButtonDisabled} testID="swapButton" title={strings.next} onPress={onNext} />
+        {/* <Button disabled={isButtonDisabled} testID="swapButton" title={strings.next} onPress={onNext} /> */}
       </Actions>
     </SafeAreaView>
   )

@@ -5,7 +5,6 @@ import {TextInput} from 'react-native'
 
 import {useAddressHex, useStakingKey} from '../../../yoroi-wallets/hooks'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
-import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const useSwap = () => React.useContext(SwapContext)
@@ -13,7 +12,7 @@ export const useSwap = () => React.useContext(SwapContext)
 export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const {wallet} = useSelectedWallet()
   const network = wallet.networkManager.network
-  const balances = usePortfolioBalances({wallet})
+  const _balances = usePortfolioBalances({wallet})
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = useAddressHex(wallet)
@@ -34,7 +33,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const wantedPriceInputRef = React.useRef<TextInput | null>(null)
   const slippageInputRef = React.useRef<TextInput | null>(null)
 
-  const primaryTokenBalance = usePortfolioPrimaryBalance({wallet}).quantity
   /*
   const hasTokenInBalance = balances.records.get(tokenIn)?.quantity ?? 0n >= tokenInAmount
 

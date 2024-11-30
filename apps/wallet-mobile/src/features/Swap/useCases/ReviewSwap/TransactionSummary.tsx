@@ -1,24 +1,6 @@
-import {getPoolUrlByProvider, SwapState} from '@yoroi/swap'
-import {useTheme} from '@yoroi/theme'
-import {capitalize} from 'lodash'
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
-
-import {Divider} from '../../../../components/Divider/Divider'
-import {Icon} from '../../../../components/Icon'
-import {Space} from '../../../../components/Space/Space'
-import {Text} from '../../../../components/Text'
-import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
-import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, PRICE_PRECISION} from '../../common/constants'
-import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
-import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
-import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
-import {useStrings} from '../../common/strings'
-import {useSwapForm} from '../../common/SwapFormProvider'
-
-export const TransactionSummary = ({orderData}: {orderData: SwapState['orderData']}) => {
+export const TransactionSummary = () => {
+  return null
+  /*
   const strings = useStrings()
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
@@ -185,8 +167,9 @@ export const TransactionSummary = ({orderData}: {orderData: SwapState['orderData
       })}
     </View>
   )
+    */
 }
-
+/*
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
@@ -259,3 +242,4 @@ const useStyles = () => {
 
   return {styles, colors} as const
 }
+*/

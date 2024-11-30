@@ -1,7 +1,7 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Keyboard, StyleSheet} from 'react-native'
+import {Keyboard, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView} from '../../components/KeyboardAvoidingView/KeyboardAvoidingView'
@@ -10,7 +10,7 @@ import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kerne
 import {useSearch} from '../Search/SearchContext'
 import {useStrings} from './common/strings'
 import {StartSwapOrderScreen} from './useCases/StartOrderSwapScreen/CreateOrder/StartSwapOrderScreen'
-import {ListOrders} from './useCases/StartOrderSwapScreen/ListOrders/ListOrders'
+// import {ListOrders} from './useCases/StartOrderSwapScreen/ListOrders/ListOrders'
 
 const Tab = createMaterialTopTabNavigator<SwapTabRoutes>()
 export const SwapTabNavigator = () => {
@@ -61,7 +61,7 @@ export const SwapTabNavigator = () => {
               },
             }}
             name="orders"
-            getComponent={() => ListOrders}
+            getComponent={() => View}
           />
         </Tab.Navigator>
       </SafeAreaView>

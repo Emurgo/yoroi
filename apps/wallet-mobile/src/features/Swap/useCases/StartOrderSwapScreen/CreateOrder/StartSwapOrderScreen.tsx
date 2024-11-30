@@ -7,13 +7,6 @@ import {Button} from '../../../../../components/Button/Button'
 import {Space} from '../../../../../components/Space/Space'
 import {useIsKeyboardOpen} from '../../../../../kernel/keyboard/useIsKeyboardOpen'
 import {useStrings} from '../../../common/strings'
-import {AmountActions} from './Actions/AmountActions/AmountActions'
-import {OrderActions} from './Actions/OrderActions/OrderActions'
-import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
-import {ShowPoolActions} from './EditPool/ShowPoolActions'
-import {EditPrice} from './EditPrice/EditPrice'
-import {EditSellAmount} from './EditSellAmount/EditSellAmount'
-import {EditSlippage} from './EditSlippage/EditSlippage'
 
 // const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
@@ -271,7 +264,7 @@ export const StartSwapOrderScreen = () => {
             setContentHeight(height + BOTTOM_ACTION_SECTION)
           }}
         >
-          <OrderActions />
+          {/*           <OrderActions />
 
           <EditSellAmount />
 
@@ -289,7 +282,7 @@ export const StartSwapOrderScreen = () => {
 
           <EditSlippage />
 
-          <ShowPoolActions />
+          <ShowPoolActions /> */}
         </View>
       </ScrollView>
 

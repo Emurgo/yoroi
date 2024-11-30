@@ -36,11 +36,11 @@ import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend/ListAm
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
-import {EditSlippageScreen, SelectPoolFromListScreen} from '../Swap/useCases'
+// import {EditSlippageScreen, SelectPoolFromListScreen} from '../Swap/useCases'
 import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
-import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
-import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+// import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
+// import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
@@ -232,6 +232,7 @@ export const TxHistoryNavigator = () => {
                 }}
               />
 
+              {/* 
               <Stack.Screen
                 name="swap-select-sell-token"
                 component={SelectSellTokenFromListScreen}
@@ -265,7 +266,7 @@ export const TxHistoryNavigator = () => {
                   title: strings.selectPool,
                 }}
               />
-
+ */}
               <Stack.Screen
                 name="send-start-tx"
                 options={{

@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native'
-import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Chain} from '@yoroi/types'
@@ -15,7 +14,6 @@ import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {useReceive} from '../../../Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../../../Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '../../../Receive/common/useReceiveAddressesStatus'
-import {useSwapForm} from '../../../Swap/common/SwapFormProvider'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -33,8 +31,6 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
 
   const {reset: resetSendState} = useTransfer()
-  const {orderData} = useSwap()
-  const {resetSwapForm} = useSwapForm()
 
   const {track} = useMetrics()
 
@@ -42,10 +38,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     selected: {network},
   } = useWalletManager()
 
-  const {
-    meta,
-    wallet: {portfolioPrimaryTokenInfo},
-  } = useSelectedWallet()
+  const {meta} = useSelectedWallet()
 
   const handleOnSend = () => {
     navigateTo.send()
@@ -57,7 +50,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
       navigateTo.swapPreprodNotice()
       return
     }
-
+    /* 
     resetSwapForm()
 
     track.swapInitiated({
@@ -68,7 +61,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
       order_type: orderData.type,
       slippage_tolerance: orderData.slippage,
     })
-
+ */
     navigateTo.swap()
   }
 

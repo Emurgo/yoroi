@@ -1,27 +1,6 @@
-import {usePortfolioTokenInfo} from '@yoroi/portfolio'
-import {useSwap} from '@yoroi/swap'
-import {useTheme} from '@yoroi/theme'
-import {Swap} from '@yoroi/types'
-import {capitalize} from 'lodash'
-import React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-
-import {
-  ExpandableInfoCard,
-  HeaderWrapper,
-  HiddenInfoWrapper,
-} from '../../../../../../components/ExpandableInfoCard/ExpandableInfoCard'
-import {useModal} from '../../../../../../components/Modal/ModalContext'
-import {Spacer} from '../../../../../../components/Spacer/Spacer'
-import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo} from '../../../../common/navigation'
-import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
-import {useStrings} from '../../../../common/strings'
-import {useSwapForm} from '../../../../common/SwapFormProvider'
-import {SwapInfoLink} from '../../../../common/SwapInfoLink/SwapInfoLink'
-
 export const ShowPoolActions = () => {
+  return null
+  /*
   const strings = useStrings()
   const styles = useStyles()
   const [isExpanded, setIsExpanded] = React.useState(true)
@@ -87,8 +66,9 @@ export const ShowPoolActions = () => {
       <ExpandableInfoCard header={totalFeesTitle} info={feeBreakdown} expanded={isExpanded} />
     </View>
   )
+    */
 }
-
+/*
 const FeeBreakdown = ({totalFees, orderType}: {totalFees: string; orderType: Swap.OrderType}) => {
   return orderType === 'limit' ? (
     <ShowLimitOrderFeeBreakdown totalFees={totalFees} />
@@ -335,3 +315,4 @@ const useStyles = () => {
 
   return styles
 }
+*/

@@ -1,6 +1,6 @@
 import {amountFormatter, infoExtractName, isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Portfolio, Swap} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
@@ -21,7 +21,7 @@ type TokenAmountItemProps = {
   inWallet?: boolean
   variant?: 'swap'
   priceImpactRisk?: SwapPriceImpactRisk
-  orderType?: Swap.OrderType
+  orderType?: 'limit' | 'market'
 }
 
 export const TokenAmountItem = ({

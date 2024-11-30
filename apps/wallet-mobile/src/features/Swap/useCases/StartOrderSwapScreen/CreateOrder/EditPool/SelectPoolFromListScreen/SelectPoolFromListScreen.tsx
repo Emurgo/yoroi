@@ -1,14 +1,6 @@
-import {useSwap} from '@yoroi/swap'
-import {useTheme} from '@yoroi/theme'
-import React from 'react'
-import {ScrollView, StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
-
-import {Counter} from '../../../../../common/Counter/Counter'
-import {SelectPoolFromList} from '../../../../../common/SelectPool/SelectPoolFromList/SelectPoolFromList'
-import {useStrings} from '../../../../../common/strings'
-
 export const SelectPoolFromListScreen = () => {
+  return null
+  /*
   const strings = useStrings()
   const {orderData} = useSwap()
   const styles = useStyles()
@@ -26,8 +18,9 @@ export const SelectPoolFromListScreen = () => {
       <Counter counter={poolCounter} unitsText={strings.pools(poolCounter)} closingText={strings.available} />
     </SafeAreaView>
   )
+    */
 }
-
+/*
 const useStyles = () => {
   const {color} = useTheme()
 
@@ -40,3 +33,4 @@ const useStyles = () => {
 
   return styles
 }
+*/
