@@ -6,6 +6,7 @@ import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useQuery} from 'react-query'
 
+import {Icon} from '../../../components/Icon'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
 import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
@@ -17,47 +18,65 @@ import {useStrings} from './hooks/useStrings'
 import {PoolDetails} from './PoolDetails'
 import {CertificateType, FormattedTx} from './types'
 
-export const StakeRegistrationOperation = ({fee}: {fee: Balance.Quantity}) => {
+export const StakeRegistrationOperation = ({
+  fee,
+  showWarning,
+  strike,
+}: {
+  fee: Balance.Quantity
+  showWarning: boolean
+  strike: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.registerStakingKey}</Text>
+      <Label label={strings.registerStakingKey} showWarning={showWarning} strike={strike} />
 
       <Space width="lg" />
 
-      <Text style={styles.operationValue}>{formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}</Text>
+      <Text style={[styles.operationValue, strike && styles.strike]}>
+        {formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}
+      </Text>
     </View>
   )
 }
 
-export const StakeDeregistrationOperation = () => {
+export const StakeDeregistrationOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.deregisterStakingKey}</Text>
+      <Label label={strings.deregisterStakingKey} showWarning={showWarning} strike={strike} />
     </View>
   )
 }
 
-export const StakeRewardsWithdrawalOperation = () => {
+export const StakeRewardsWithdrawalOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.rewardsWithdrawalLabel}</Text>
+      <Label label={strings.rewardsWithdrawalLabel} showWarning={showWarning} strike={strike} />
 
-      <Text style={styles.operationValue}>{strings.rewardsWithdrawalText}</Text>
+      <Text style={[styles.operationValue, strike && styles.strike]}>{strings.rewardsWithdrawalText}</Text>
     </View>
   )
 }
 
-export const StakeDelegationOperation = ({poolId}: {poolId: string}) => {
+export const StakeDelegationOperation = ({
+  poolId,
+  showWarning,
+  strike,
+}: {
+  poolId: string
+  showWarning: boolean
+  strike: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const poolInfo = usePoolInfo({poolId})
@@ -72,12 +91,12 @@ export const StakeDelegationOperation = ({poolId}: {poolId: string}) => {
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.delegateStake}</Text>
+      <Label label={strings.delegateStake} showWarning={showWarning} strike={strike} />
 
       <Space width="lg" />
 
       <TouchableOpacity activeOpacity={0.5} onPress={handleShowPoolDetails}>
-        <Text style={styles.operationLink}>{poolName}</Text>
+        <Text style={[styles.operationLink, strike && styles.strike]}>{poolName}</Text>
       </TouchableOpacity>
     </View>
   )
@@ -87,29 +106,37 @@ export const generatePoolName = (poolInfo: FullPoolInfo) => {
   return poolInfo.explorer != null ? `[${poolInfo.explorer.ticker}] ${poolInfo.explorer.name}` : null
 }
 
-export const AbstainOperation = () => {
+export const AbstainOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.selectAbstain}</Text>
+      <Label label={strings.selectAbstain} showWarning={showWarning} strike={strike} />
     </View>
   )
 }
 
-export const NoConfidenceOperation = () => {
+export const NoConfidenceOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.selectNoConfidence}</Text>
+      <Label label={strings.selectNoConfidence} showWarning={showWarning} strike={strike} />
     </View>
   )
 }
 
-export const VoteDelegationOperation = ({drepID}: {drepID: string}) => {
+export const VoteDelegationOperation = ({
+  drepID,
+  showWarning,
+  strike,
+}: {
+  drepID: string
+  showWarning: boolean
+  strike: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -117,134 +144,242 @@ export const VoteDelegationOperation = ({drepID}: {drepID: string}) => {
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.delegateVotingToDRep}</Text>
+      <Label label={strings.delegateVotingToDRep} showWarning={showWarning} strike={strike} />
 
       <Space width="lg" />
 
-      <Text style={styles.operationValue}>{bech32DrepId ?? drepID}</Text>
+      <Text style={[styles.operationValue, strike && styles.strike]}>{bech32DrepId ?? drepID}</Text>
     </View>
   )
 }
 
-export const DrepRegistrationOperation = ({fee}: {fee: Balance.Quantity}) => {
+export const DrepRegistrationOperation = ({
+  fee,
+  showWarning,
+  strike,
+}: {
+  fee: Balance.Quantity
+  showWarning: boolean
+  strike: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.drepRegistration}</Text>
+      <Label label={strings.drepRegistration} showWarning={showWarning} strike={strike} />
 
       <Space width="lg" />
 
-      <Text style={styles.operationValue}>{formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}</Text>
+      <Text style={[styles.operationValue, strike && styles.strike]}>
+        {formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}
+      </Text>
     </View>
   )
 }
 
-export const DrepDeregistrationOperation = () => {
+export const DrepDeregistrationOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.drepDeregistration}</Text>
+      <Label label={strings.drepDeregistration} showWarning={showWarning} strike={strike} />
     </View>
   )
 }
 
-export const PoolRegistrationOperation = ({fee}: {fee: Balance.Quantity}) => {
+export const PoolRegistrationOperation = ({
+  fee,
+  showWarning,
+  strike,
+}: {
+  fee: Balance.Quantity
+  showWarning: boolean
+  strike: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.poolRegistration}</Text>
+      <Label label={strings.poolRegistration} showWarning={showWarning} strike={strike} />
 
       <Space width="lg" />
 
-      <Text style={styles.operationValue}>{formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}</Text>
+      <Text style={[styles.operationValue, strike && styles.strike]}>
+        {formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}
+      </Text>
     </View>
   )
 }
 
-export const PoolRetirementOperation = () => {
+export const PoolRetirementOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.poolRetirement}</Text>
+      <Label label={strings.poolRetirement} showWarning={showWarning} strike={strike} />
     </View>
   )
 }
-export const DrepUpdateOperation = () => {
+export const DrepUpdateOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.drepUpdate}</Text>
+      <Label label={strings.drepUpdate} showWarning={showWarning} strike={strike} />
     </View>
   )
 }
-export const MoveInstantaneousRewardsOperation = () => {
+export const MoveInstantaneousRewardsOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.moveInstantaneousRewards}</Text>
+      <Label label={strings.moveInstantaneousRewards} showWarning={showWarning} strike={strike} />
     </View>
   )
 }
-export const CommitteeHotAuthorizationOperation = () => {
+export const CommitteeHotAuthorizationOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.committeeHotAuthorization}</Text>
+      <Label label={strings.committeeHotAuthorization} showWarning={showWarning} strike={strike} />
     </View>
   )
 }
 
-export const CommitteeColdResignOperation = () => {
+export const CommitteeColdResignOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationLabel}>{strings.committeeColdResign}</Text>
+      <Label label={strings.committeeColdResign} showWarning={showWarning} strike={strike} />
     </View>
   )
 }
 
+const Label = ({label, showWarning, strike}: {label: string; showWarning: boolean; strike: boolean}) => {
+  const {colors, styles} = useStyles()
+  return (
+    <View style={styles.operationLabelContainer}>
+      <Text style={[styles.operationLabel, strike && styles.strike]}>{label}</Text>
+
+      {showWarning && (
+        <View style={styles.infoIcon}>
+          <Icon.Info size={24} color={colors.warning} />
+        </View>
+      )}
+    </View>
+  )
+}
+
+type OperationsCount = Record<CertificateType, number>
+export type Operations = {
+  components: Array<{
+    duplicated: boolean
+    type: CertificateType
+    component: React.ReactNode
+  }>
+  totalFee: Balance.Quantity
+  operationCount: OperationsCount
+}
 export const useOperations = (certificates: FormattedTx['certificates']) => {
   const {wallet} = useSelectedWallet()
-  if (certificates === null) return {components: [], totalFee: Quantities.zero}
+  const operationCount = {} as OperationsCount
 
-  return certificates.reduce<{components: React.ReactNode[]; totalFee: Balance.Quantity}>(
+  if (certificates === null)
+    return {
+      components: [] as Operations['components'],
+      totalFee: Quantities.zero,
+      operationCount,
+    }
+
+  const certificatesTypes = certificates.map((cert) => cert.type)
+  certificatesTypes.forEach((cert) => updateOperationsCount(cert, operationCount))
+
+  return certificates.reduce<Operations>(
     (acc, certificate, index) => {
+      const fistElementIndex = certificatesTypes.indexOf(certificate.type)
+      const isFistElement = fistElementIndex === index
+      const isNotFirstElementDuplicated = operationCount[certificate.type] > 1 && !isFistElement
+      const isFirstElementDuplicated = operationCount[certificate.type] > 1 && isFistElement
+
       switch (certificate.type) {
         case CertificateType.StakeRegistration: {
           const fee = asQuantity(wallet.protocolParams.keyDeposit)
+
           return {
-            components: [...acc.components, <StakeRegistrationOperation fee={fee} key={index} />],
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <StakeRegistrationOperation
+                    fee={fee}
+                    key={index}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.StakeRegistration,
+              },
+            ],
             totalFee: Quantities.sum([fee, acc.totalFee]),
+            operationCount,
           }
         }
 
         case CertificateType.StakeDeregistration:
-          return {components: [...acc.components, <StakeDeregistrationOperation key={index} />], totalFee: acc.totalFee}
+          return {
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <StakeDeregistrationOperation
+                    key={index}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.StakeDeregistration,
+              },
+            ],
+            totalFee: acc.totalFee,
+            operationCount,
+          }
 
         case CertificateType.StakeDelegation: {
           const poolKeyHash = certificate.value.pool_keyhash ?? null
           if (poolKeyHash == null) return acc
           return {
-            components: [...acc.components, <StakeDelegationOperation key={index} poolId={poolKeyHash} />],
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <StakeDelegationOperation
+                    key={index}
+                    poolId={poolKeyHash}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.StakeDelegation,
+              },
+            ],
             totalFee: acc.totalFee,
+            operationCount,
           }
         }
 
@@ -252,63 +387,235 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
           const drep = certificate.value.drep
 
           if (drep === 'AlwaysAbstain')
-            return {components: [...acc.components, <AbstainOperation key={index} />], totalFee: acc.totalFee}
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <AbstainOperation
+                      key={index}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+              operationCount,
+            }
           if (drep === 'AlwaysNoConfidence')
-            return {components: [...acc.components, <NoConfidenceOperation key={index} />], totalFee: acc.totalFee}
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <NoConfidenceOperation
+                      showWarning={isFirstElementDuplicated}
+                      key={index}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+              operationCount,
+            }
 
           const drepId = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
           return {
-            components: [...acc.components, <VoteDelegationOperation key={index} drepID={drepId} />],
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <VoteDelegationOperation
+                    key={index}
+                    drepID={drepId}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.VoteDelegation,
+              },
+            ],
             totalFee: acc.totalFee,
+            operationCount,
           }
         }
 
         case CertificateType.DRepRegistration: {
           const fee = asQuantity(wallet.protocolParams.keyDeposit)
           return {
-            components: [...acc.components, <DrepRegistrationOperation fee={fee} key={index} />],
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <DrepRegistrationOperation
+                    fee={fee}
+                    key={index}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.DRepRegistration,
+              },
+            ],
             totalFee: Quantities.sum([fee, acc.totalFee]),
+            operationCount,
           }
         }
 
         case CertificateType.DRepDeregistration: {
-          return {components: [...acc.components, <DrepDeregistrationOperation key={index} />], totalFee: acc.totalFee}
+          return {
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <DrepDeregistrationOperation
+                    key={index}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.DRepDeregistration,
+              },
+            ],
+            totalFee: acc.totalFee,
+            operationCount,
+          }
         }
 
         case CertificateType.PoolRegistration: {
           const fee = asQuantity(wallet.protocolParams.poolDeposit)
           return {
-            components: [...acc.components, <PoolRegistrationOperation fee={fee} key={index} />],
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <PoolRegistrationOperation
+                    fee={fee}
+                    key={index}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.PoolRegistration,
+              },
+            ],
             totalFee: Quantities.sum([fee, acc.totalFee]),
+            operationCount,
           }
         }
 
         case CertificateType.PoolRetirement: {
-          return {components: [...acc.components, <PoolRetirementOperation key={index} />], totalFee: acc.totalFee}
+          return {
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <PoolRetirementOperation
+                    key={index}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.PoolRetirement,
+              },
+            ],
+            totalFee: acc.totalFee,
+            operationCount,
+          }
         }
 
         case CertificateType.DRepUpdate: {
-          return {components: [...acc.components, <DrepUpdateOperation key={index} />], totalFee: acc.totalFee}
+          return {
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <DrepUpdateOperation
+                    key={index}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.DRepUpdate,
+              },
+            ],
+            totalFee: acc.totalFee,
+            operationCount,
+          }
         }
 
         case CertificateType.MoveInstantaneousRewardsCert: {
           return {
-            components: [...acc.components, <MoveInstantaneousRewardsOperation key={index} />],
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <MoveInstantaneousRewardsOperation
+                    key={index}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.MoveInstantaneousRewardsCert,
+              },
+            ],
             totalFee: acc.totalFee,
+            operationCount,
           }
         }
 
         case CertificateType.CommitteeHotAuth: {
           return {
-            components: [...acc.components, <CommitteeHotAuthorizationOperation key={index} />],
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <CommitteeHotAuthorizationOperation
+                    key={index}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.CommitteeHotAuth,
+              },
+            ],
             totalFee: acc.totalFee,
+            operationCount,
           }
         }
 
         case CertificateType.CommitteeColdResign: {
           return {
-            components: [...acc.components, <CommitteeColdResignOperation key={index} />],
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <CommitteeColdResignOperation
+                    key={index}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.CommitteeColdResign,
+              },
+            ],
             totalFee: acc.totalFee,
+            operationCount,
           }
         }
 
@@ -316,8 +623,20 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
           return acc
       }
     },
-    {components: [], totalFee: Quantities.zero},
+    {components: [], totalFee: Quantities.zero, operationCount: {} as OperationsCount},
   )
+}
+
+const updateOperationsCount = (operation: CertificateType, operationsCount: OperationsCount) => {
+  let count = operationsCount[operation]
+
+  if (count != null) {
+    operationsCount[operation] = ++count
+    return operationsCount
+  }
+
+  operationsCount[operation] = 1
+  return operationsCount
 }
 
 export const getDrepBech32Id = async (poolId: string) => {
@@ -353,6 +672,10 @@ const useStyles = () => {
       ...atoms.body_2_md_regular,
       color: color.text_gray_low,
     },
+    operationLabelContainer: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+    },
     operationValue: {
       ...atoms.flex_1,
       ...atoms.text_right,
@@ -363,7 +686,18 @@ const useStyles = () => {
       ...atoms.body_2_md_regular,
       color: color.text_primary_medium,
     },
+    strike: {
+      textDecorationLine: 'line-through',
+      textDecorationStyle: 'solid',
+    },
+    infoIcon: {
+      ...atoms.pb_2xs,
+    },
   })
 
-  return {styles} as const
+  const colors = {
+    warning: color.sys_orange_500,
+  }
+
+  return {styles, colors} as const
 }

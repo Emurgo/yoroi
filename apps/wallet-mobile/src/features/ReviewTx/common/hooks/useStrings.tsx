@@ -81,6 +81,9 @@ export const useStrings = () => {
     operationsLabel: intl.formatMessage(messages.operationsLabel),
     policyIdLabel: intl.formatMessage(messages.policyIdLabel),
     createdBy: intl.formatMessage(messages.createdBy),
+    operationsLogTitle: intl.formatMessage(messages.operationsLogTitle),
+    operationsLogWarningText: intl.formatMessage(messages.operationsLogWarningText),
+    operationsLogWarningTitle: intl.formatMessage(messages.operationsLogWarningTitle),
   }
 }
 
@@ -308,6 +311,18 @@ const messages = defineMessages({
   selectAbstain: {
     id: 'txReview.operations.selectAbstain',
     defaultMessage: '!!!Select abstain',
+  },
+  operationsLogTitle: {
+    id: 'txReview.operations.log.title',
+    defaultMessage: '!!!Operations log',
+  },
+  operationsLogWarningTitle: {
+    id: 'txReview.operations.warning.title',
+    defaultMessage: '!!!Unusual operations detected',
+  },
+  operationsLogWarningText: {
+    id: 'txReview.operations.warning.text',
+    defaultMessage: '!!!Please check the operations log before confirming this transaction.',
   },
   selectNoConfidence: {
     id: 'txReview.operations.selectNoConfidence',
