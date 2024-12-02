@@ -11,7 +11,7 @@ type Props = {
   title?: string
 }
 
-export const Warning = ({content, iconSize = 30, title}: Props) => {
+export const Warning = ({content, iconSize = 30, title = ''}: Props) => {
   const {styles, colors} = useStyles()
 
   return (
@@ -21,7 +21,7 @@ export const Warning = ({content, iconSize = 30, title}: Props) => {
 
         <Space width="sm" />
 
-        <Text style={styles.title}>{title ?? ''}</Text>
+        <Text style={styles.title}>{title}</Text>
       </View>
 
       <Space height="sm" />
