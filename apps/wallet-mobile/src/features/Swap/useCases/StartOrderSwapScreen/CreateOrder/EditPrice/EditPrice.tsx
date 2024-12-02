@@ -1,12 +1,9 @@
-import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils/utils'
-import {PRICE_PRECISION} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
-import {useSwapForm} from '../../../../common/SwapFormProvider'
+import {useSwap} from '../../../../common/SwapProvider'
 import {ShowPriceImpact} from './ShowPriceImpact'
 
 const BORDER_SIZE = 1
@@ -17,23 +14,10 @@ export const EditPrice = () => {
   const {styles, colors} = useStyles()
   const {isDark} = useTheme()
 
-  const {orderData} = useSwap()
-  const sellTokenInfo = orderData.amounts.sell?.info
-  const buyTokenInfo = orderData.amounts.buy?.info
-  const disabled = orderData.type === 'market'
-
-  const prices = orderData.selectedPoolCalculation?.prices
-  const formattedPrice = Quantities.format(
-    asQuantity(orderData.selectedPoolCalculation?.prices.actualPrice ?? Quantities.zero),
-    orderData.tokens.priceDenomination,
-    PRICE_PRECISION,
-  )
-
-  const {
-    limitPrice: {displayValue: limitDisplayValue},
-    limitInputRef,
-    onChangeLimitPrice,
-  } = useSwapForm()
+  const swapForm = useSwap()
+  const sellTokenInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? 'unkown.')
+  const buyTokenInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? 'unkown.')
+  const disabled = swapForm.orderType === 'market'
 
   const tokenToSellName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
   const tokenToBuyName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
@@ -48,15 +32,15 @@ export const EditPrice = () => {
           <TextInput
             keyboardType="numeric"
             autoComplete="off"
-            value={limitDisplayValue}
+            value={disabled ? String(swapForm.estimate?.netPrice ?? 0) : swapForm.wantedPrice.displayValue}
             placeholder="0"
-            onChangeText={onChangeLimitPrice}
+            onChangeText={(value) => swapForm.dispatch({type: 'WantedPriceInputChanged', value})}
             allowFontScaling
             selectionColor={colors.cursor}
             style={styles.amountInput}
             underlineColorAndroid="transparent"
             editable={!disabled}
-            ref={limitInputRef}
+            ref={swapForm.wantedPriceInputRef}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
@@ -68,11 +52,11 @@ export const EditPrice = () => {
         </View>
       </View>
 
-      {orderData.type === 'market' && (
+      {swapForm.orderType === 'market' && (
         <ShowPriceImpact
-          priceImpact={Number(prices?.priceImpact)}
-          formattedPrice={formattedPrice}
-          pair={`${tokenToSellName}/${tokenToBuyName}`}
+          priceImpact={Number(swapForm.estimate?.splits[0].priceImpact)}
+          formattedPrice={String(swapForm.estimate?.splits[0].priceImpact ?? 0)}
+          pair={pair}
         />
       )}
     </>

@@ -1,10 +1,14 @@
+import {primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
+import {Portfolio, Swap} from '@yoroi/types'
 import {produce} from 'immer'
 import React from 'react'
 import {TextInput} from 'react-native'
+import {useQuery} from 'react-query'
 
 import {useAddressHex, useStakingKey} from '../../../yoroi-wallets/hooks'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioTokenInfos} from '../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const useSwap = () => React.useContext(SwapContext)
@@ -28,6 +32,17 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     })
   }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
 
+  const {data: tokenIds = []} = useQuery([network], async () => {
+    const res = await swapManager.api.tokens()
+    if (res.tag === 'right') return res.value.data.map(({id}) => id)
+    return []
+  })
+
+  const {tokenInfos = new Map<`${string}.${string}`, Portfolio.Token.Info>()} = usePortfolioTokenInfos(
+    {wallet, tokenIds},
+    {suspense: true},
+  )
+
   const tokenOutInputRef = React.useRef<TextInput | null>(null)
   const tokenInInputRef = React.useRef<TextInput | null>(null)
   const wantedPriceInputRef = React.useRef<TextInput | null>(null)
@@ -45,6 +60,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const context = React.useMemo(
     () => ({
       ...state,
+      tokenInfos,
       tokenOutInputRef,
       tokenInInputRef,
       wantedPriceInputRef,
@@ -52,7 +68,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       api: swapManager.api,
       dispatch,
     }),
-    [state, swapManager.api],
+    [state, swapManager.api, tokenInfos],
   )
 
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>
@@ -61,6 +77,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 const swapReducer = (state: SwapState, action: SwapAction) => {
   return produce(state, (draft) => {
     switch (action.type) {
+      case SwapAction.ChangeOrderType:
+        draft.orderType = action.value
+        break
       case SwapAction.TokenInInputTouched:
         draft.tokenInInput.isTouched = true
         draft.tokenInInput.displayValue = ''
@@ -104,6 +123,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 }
 
 export const SwapAction = {
+  ChangeOrderType: 'ChangeOrderType',
   TokenInInputTouched: 'TokenInInputTouched',
   TokenOutInputTouched: 'TokenOutInputTouched',
   TokenInIdChanged: 'TokenInIdChanged',
@@ -119,23 +139,47 @@ export const SwapAction = {
   ResetForm: 'ResetForm',
 } as const
 
-export type SwapAction = {
-  type: (typeof SwapAction)[keyof typeof SwapAction]
-  value?: string
+type SwapActionValueMap = {
+  ChangeOrderType: 'limit' | 'market'
+  TokenInInputTouched: undefined
+  TokenOutInputTouched: undefined
+  TokenInIdChanged: string
+  TokenOutIdChanged: string
+  TokenInAmountChanged: string
+  TokenOutAmountChanged: string
+  TokenInErrorChanged: string
+  TokenOutErrorChanged: string
+  WantedPriceInputChanged: string
+  SwitchTouched: undefined
+  DexSelectorTouched: undefined
+  ResetAmounts: undefined
+  ResetForm: undefined
 }
 
+export type SwapAction = {
+  [K in keyof SwapActionValueMap]: SwapActionValueMap[K] extends undefined
+    ? {type: K}
+    : {type: K; value: SwapActionValueMap[K]}
+}[keyof SwapActionValueMap]
+
 const defaultState: SwapState = Object.freeze({
+  orderType: 'market',
   tokenInInput: {
     isTouched: true,
+    tokenId: primaryTokenId,
     disabled: false,
     error: undefined,
     displayValue: '',
   },
   tokenOutInput: {
     isTouched: false,
+    tokenId: undefined,
     disabled: false,
     error: undefined,
     displayValue: '',
+  },
+  slippageInput: {
+    displayValue: '1',
   },
   selectedDex: {
     isTouched: false,
@@ -144,19 +188,26 @@ const defaultState: SwapState = Object.freeze({
     displayValue: '',
   },
   canSwap: false,
-})
+  estimate: undefined,
+} as const)
 
 type SwapState = {
+  orderType: 'market' | 'limit'
   tokenInInput: {
     isTouched: boolean
+    tokenId?: Portfolio.Token.Id
     disabled: boolean
     error: string | undefined
     displayValue: string
   }
   tokenOutInput: {
     isTouched: boolean
+    tokenId?: Portfolio.Token.Id
     disabled: boolean
     error: string | undefined
+    displayValue: string
+  }
+  slippageInput: {
     displayValue: string
   }
   selectedDex: {
@@ -166,9 +217,11 @@ type SwapState = {
     displayValue: string
   }
   canSwap: boolean
+  estimate?: Swap.EstimateResponse
 }
 
 type SwapContext = SwapState & {
+  tokenInfos: Map<`${string}.${string}`, Portfolio.Token.Info>
   tokenInInputRef: React.RefObject<TextInput> | undefined
   tokenOutInputRef: React.RefObject<TextInput> | undefined
   wantedPriceInputRef: React.RefObject<TextInput> | undefined
@@ -178,6 +231,7 @@ type SwapContext = SwapState & {
 
 const SwapContext = React.createContext<SwapContext>({
   ...defaultState,
+  tokenInfos: new Map<`${string}.${string}`, Portfolio.Token.Info>(),
   tokenInInputRef: undefined,
   tokenOutInputRef: undefined,
   wantedPriceInputRef: undefined,

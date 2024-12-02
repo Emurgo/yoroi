@@ -1,12 +1,21 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../../components/Button/Button'
+import {Icon} from '../../../../../components/Icon'
+import {RefreshButton} from '../../../../../components/RefreshButton/RefreshButton'
 import {Space} from '../../../../../components/Space/Space'
 import {useIsKeyboardOpen} from '../../../../../kernel/keyboard/useIsKeyboardOpen'
+import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {AmountCard} from '../../../common/AmountCard/AmountCard'
+import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
+import {useSwap} from '../../../common/SwapProvider'
+import {EditPrice} from './EditPrice/EditPrice'
+import {ShowSlippageInfo} from './EditSlippage/ShowSlippageInfo'
 
 // const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
@@ -17,6 +26,10 @@ export const StartSwapOrderScreen = () => {
   const styles = useStyles()
   const {height: deviceHeight} = useWindowDimensions()
   const isKeyboardOpen = useIsKeyboardOpen()
+  const {wallet} = useSelectedWallet()
+  const balances = usePortfolioBalances({wallet})
+  const swapForm = useSwap()
+  const navigate = useNavigateTo()
 
   /*
   const navigateTo = useNavigateTo()
@@ -264,21 +277,92 @@ export const StartSwapOrderScreen = () => {
             setContentHeight(height + BOTTOM_ACTION_SECTION)
           }}
         >
-          {/*           <OrderActions />
+          <View style={styles.container}>
+            <View style={styles.between}>
+              <View style={styles.group}>
+                <Button
+                  onPress={() => swapForm.dispatch({type: 'ChangeOrderType', value: 'market'})}
+                  type={ButtonType.SecondaryText}
+                  title={strings.marketButton}
+                  size="S"
+                  {...(swapForm.orderType === 'market' && {style: styles.activeButton})}
+                />
 
-          <EditSellAmount />
+                <Button
+                  onPress={() => swapForm.dispatch({type: 'ChangeOrderType', value: 'limit'})}
+                  type={ButtonType.SecondaryText}
+                  title={strings.limitButton}
+                  size="S"
+                  {...(swapForm.orderType === 'limit' && {style: styles.activeButton})}
+                />
+              </View>
 
-          <Space height="lg" />
+              <View>
+                <RefreshButton disabled={!swapForm.tokenInInput.isTouched || !swapForm.tokenOutInput.isTouched} />
+              </View>
+            </View>
 
-          <AmountActions />
+            <AmountCard
+              label={strings.swapFrom}
+              onChange={(value) => swapForm.dispatch({type: 'TokenInAmountChanged', value})}
+              value={swapForm.tokenInInput.displayValue}
+              amount={balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.')}
+              wallet={wallet}
+              navigateTo={navigate.selectSellToken}
+              touched={swapForm.tokenInInput.isTouched}
+              inputRef={swapForm.tokenInInputRef}
+              error={swapForm.tokenInInput.error}
+              testID="swap:sell-edit"
+            />
 
-          <Space height="lg" />
+            <View style={styles.between}>
+              <View>
+                <Button
+                  type={ButtonType.Text}
+                  icon={Icon.Switch}
+                  onPress={() => swapForm.dispatch({type: 'SwitchTouched'})}
+                />
+              </View>
 
-          <EditBuyAmount />
+              <View>
+                <Button
+                  type={ButtonType.Text}
+                  onPress={() => swapForm.dispatch({type: 'ResetAmounts'})}
+                  title={strings.clear}
+                />
+              </View>
+            </View>
 
-          <Space height="lg" />
+            <AmountCard
+              label={strings.swapTo}
+              onChange={(value) => swapForm.dispatch({type: 'TokenOutAmountChanged', value})}
+              value={swapForm.tokenOutInput.displayValue}
+              amount={balances.records.get(swapForm.tokenOutInput.tokenId ?? 'unknown.')}
+              wallet={wallet}
+              navigateTo={navigate.selectBuyToken}
+              touched={swapForm.tokenOutInput.isTouched}
+              inputRef={swapForm.tokenOutInputRef}
+              error={swapForm.tokenOutInput.error}
+              testID="swap:buy-edit"
+            />
 
-          <EditPrice />
+            <EditPrice />
+
+            <View style={styles.container}>
+              <ShowSlippageInfo />
+
+              <View style={styles.group}>
+                <Text style={styles.text}>{`${swapForm.slippageInput.displayValue}%`}</Text>
+
+                <Space width="xs" />
+
+                <Button onPress={navigate.editSlippage} type={ButtonType.SecondaryText} icon={Icon.Edit} />
+              </View>
+            </View>
+          </View>
+
+          {/*
+
 
           <EditSlippage />
 
@@ -286,16 +370,11 @@ export const StartSwapOrderScreen = () => {
         </View>
       </ScrollView>
 
-      <Actions style={[(deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
+      <View style={[styles.actions, (deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
         <Button testID="swapButton" title={strings.swapTitle} />
-      </Actions>
+      </View>
     </View>
   )
-}
-
-const Actions = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
-  return <View style={[styles.actions, style]} {...props} />
 }
 
 const useStyles = () => {
@@ -304,6 +383,9 @@ const useStyles = () => {
     root: {
       backgroundColor: color.bg_color_max,
       ...atoms.pb_lg,
+    },
+    container: {
+      ...atoms.gap_lg,
     },
     flex: {
       ...atoms.flex_1,
@@ -318,6 +400,20 @@ const useStyles = () => {
     actionBorder: {
       ...atoms.border_t,
       borderTopColor: color.gray_200,
+    },
+    activeButton: {
+      backgroundColor: color.el_gray_min,
+    },
+    between: {
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+    },
+    group: {
+      ...atoms.flex_row,
+      ...atoms.gap_md,
+    },
+    text: {
+      ...atoms.body_1_lg_regular,
     },
   })
   return styles

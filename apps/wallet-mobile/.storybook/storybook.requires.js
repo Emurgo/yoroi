@@ -226,7 +226,6 @@ const getStories = () => {
     "./src/features/Staking/Governance/useCases/NoFunds/NoFundsScreen.stories.tsx": require("../src/features/Staking/Governance/useCases/NoFunds/NoFundsScreen.stories.tsx"),
     "./src/features/Staking/Governance/useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion.stories.tsx": require("../src/features/Staking/Governance/useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion.stories.tsx"),
     "./src/features/Swap/common/AmountCard/AmountCard.stories.tsx": require("../src/features/Swap/common/AmountCard/AmountCard.stories.tsx"),
-    "./src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx": require("../src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx"),
     "./src/features/Swap/common/ConfirmWithSpendingPassword/ConfirmWithSpendingPassword.stories.tsx": require("../src/features/Swap/common/ConfirmWithSpendingPassword/ConfirmWithSpendingPassword.stories.tsx"),
     "./src/features/Swap/common/ServiceUnavailable/ServiceUnavailable.stories.tsx": require("../src/features/Swap/common/ServiceUnavailable/ServiceUnavailable.stories.tsx"),
     "./src/features/Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen.stories.tsx": require("../src/features/Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen.stories.tsx"),
