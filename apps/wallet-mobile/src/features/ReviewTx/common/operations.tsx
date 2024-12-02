@@ -24,8 +24,8 @@ export const StakeRegistrationOperation = ({
   strike,
 }: {
   fee: Balance.Quantity
-  showWarning: boolean
-  strike: boolean
+  showWarning?: boolean
+  strike?: boolean
 }) => {
   const {styles} = useStyles()
   const strings = useStrings()
@@ -44,7 +44,7 @@ export const StakeRegistrationOperation = ({
   )
 }
 
-export const StakeDeregistrationOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
+export const StakeDeregistrationOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -55,7 +55,7 @@ export const StakeDeregistrationOperation = ({showWarning, strike}: {showWarning
   )
 }
 
-export const StakeRewardsWithdrawalOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
+export const StakeRewardsWithdrawalOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -74,8 +74,8 @@ export const StakeDelegationOperation = ({
   strike,
 }: {
   poolId: string
-  showWarning: boolean
-  strike: boolean
+  showWarning?: boolean
+  strike?: boolean
 }) => {
   const {styles} = useStyles()
   const strings = useStrings()
@@ -106,7 +106,7 @@ export const generatePoolName = (poolInfo: FullPoolInfo) => {
   return poolInfo.explorer != null ? `[${poolInfo.explorer.ticker}] ${poolInfo.explorer.name}` : null
 }
 
-export const AbstainOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
+export const AbstainOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -117,7 +117,7 @@ export const AbstainOperation = ({showWarning, strike}: {showWarning: boolean; s
   )
 }
 
-export const NoConfidenceOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
+export const NoConfidenceOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -134,8 +134,8 @@ export const VoteDelegationOperation = ({
   strike,
 }: {
   drepID: string
-  showWarning: boolean
-  strike: boolean
+  showWarning?: boolean
+  strike?: boolean
 }) => {
   const {styles} = useStyles()
   const strings = useStrings()
@@ -159,8 +159,8 @@ export const DrepRegistrationOperation = ({
   strike,
 }: {
   fee: Balance.Quantity
-  showWarning: boolean
-  strike: boolean
+  showWarning?: boolean
+  strike?: boolean
 }) => {
   const {styles} = useStyles()
   const strings = useStrings()
@@ -179,7 +179,7 @@ export const DrepRegistrationOperation = ({
   )
 }
 
-export const DrepDeregistrationOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
+export const DrepDeregistrationOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -196,8 +196,8 @@ export const PoolRegistrationOperation = ({
   strike,
 }: {
   fee: Balance.Quantity
-  showWarning: boolean
-  strike: boolean
+  showWarning?: boolean
+  strike?: boolean
 }) => {
   const {styles} = useStyles()
   const strings = useStrings()
@@ -216,7 +216,7 @@ export const PoolRegistrationOperation = ({
   )
 }
 
-export const PoolRetirementOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
+export const PoolRetirementOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -226,7 +226,7 @@ export const PoolRetirementOperation = ({showWarning, strike}: {showWarning: boo
     </View>
   )
 }
-export const DrepUpdateOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
+export const DrepUpdateOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -236,7 +236,7 @@ export const DrepUpdateOperation = ({showWarning, strike}: {showWarning: boolean
     </View>
   )
 }
-export const MoveInstantaneousRewardsOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
+export const MoveInstantaneousRewardsOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -246,7 +246,13 @@ export const MoveInstantaneousRewardsOperation = ({showWarning, strike}: {showWa
     </View>
   )
 }
-export const CommitteeHotAuthorizationOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
+export const CommitteeHotAuthorizationOperation = ({
+  showWarning,
+  strike,
+}: {
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -257,7 +263,7 @@ export const CommitteeHotAuthorizationOperation = ({showWarning, strike}: {showW
   )
 }
 
-export const CommitteeColdResignOperation = ({showWarning, strike}: {showWarning: boolean; strike: boolean}) => {
+export const CommitteeColdResignOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -268,7 +274,7 @@ export const CommitteeColdResignOperation = ({showWarning, strike}: {showWarning
   )
 }
 
-const Label = ({label, showWarning, strike}: {label: string; showWarning: boolean; strike: boolean}) => {
+const Label = ({label, showWarning, strike}: {label: string; showWarning?: boolean; strike?: boolean}) => {
   const {colors, styles} = useStyles()
   return (
     <View style={styles.operationLabelContainer}>
