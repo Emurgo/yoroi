@@ -1,6 +1,5 @@
 import {FlashList} from '@shopify/flash-list'
 import {sortTokenInfos} from '@yoroi/portfolio'
-import {useSwap, useSwapTokensOnlyVerified} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React from 'react'
@@ -8,26 +7,23 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '../../../../../../../components/Boundary/Boundary'
-import {Icon} from '../../../../../../../components/Icon'
-import {Spacer} from '../../../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../../../components/Text'
-import {useMetrics} from '../../../../../../../kernel/metrics/metricsManager'
-import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
-import {usePortfolioBalances} from '../../../../../../Portfolio/common/hooks/usePortfolioBalances'
-import {
-  AmountItemPlaceholder,
-  TokenAmountItem,
-} from '../../../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSearch, useSearchOnNavBar} from '../../../../../../Search/SearchContext'
-import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
-import {useSelectedWallet} from '../../../../../../WalletManager/common/hooks/useSelectedWallet'
-import {Counter} from '../../../../../common/Counter/Counter'
-import {filterBySearch} from '../../../../../common/filterBySearch'
-import {useNavigateTo} from '../../../../../common/navigation'
-import {ServiceUnavailable} from '../../../../../common/ServiceUnavailable/ServiceUnavailable'
-import {useStrings} from '../../../../../common/strings'
-import {useSwapForm} from '../../../../../common/SwapFormProvider'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {Icon} from '../../../../components/Icon'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
+import {AmountItemPlaceholder, TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
+import {NoAssetFoundImage} from '../../../Send/common/NoAssetFoundImage'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {Counter} from '../../common/Counter/Counter'
+import {filterBySearch} from '../../common/filterBySearch'
+import {useNavigateTo} from '../../common/navigation'
+import {ServiceUnavailable} from '../../common/ServiceUnavailable/ServiceUnavailable'
+import {useStrings} from '../../common/strings'
+import {useSwap} from '../../common/SwapProvider'
 
 export const SelectBuyTokenFromListScreen = () => {
   const strings = useStrings()
@@ -73,7 +69,7 @@ const TokenList = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const {wallet} = useSelectedWallet()
-  const tokenInfos = useSwapTokensOnlyVerified()
+  const {tokenInfos} = useSwap()
   const {search: assetSearchTerm} = useSearch()
   const balances = usePortfolioBalances({wallet})
 
@@ -81,7 +77,7 @@ const TokenList = () => {
 
   const [filteredTokenList, someInWallet] = React.useMemo(() => {
     const list = sortTokenInfos({
-      secondaryTokenInfos: tokenInfos.filter(filterBySearch(assetSearchTerm)),
+      secondaryTokenInfos: Array.from(tokenInfos.values()).filter(filterBySearch(assetSearchTerm)),
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
     })
     const set = new Set(list.map(({id}) => id))
@@ -153,19 +149,14 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
   // NOTE: no need to subscribe to the balance
   const balanceAvailable = wallet.balances.records.get(id)?.quantity ?? 0n
   const {closeSearch} = useSearch()
-  const {buyTokenInfoChanged, orderData, resetQuantities} = useSwap()
-  const {
-    sellQuantity: {isTouched: isSellTouched},
-    buyQuantity: {isTouched: isBuyTouched},
-    buyTouched,
-    switchTokens,
-  } = useSwapForm()
+  const swapForm = useSwap()
+
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
 
   const inUserWallet = walletTokenIds.includes(tokenInfo.id)
-  const shouldUpdateToken = id !== orderData.amounts.buy?.info.id || !isBuyTouched
-  const shouldSwitchTokens = id === orderData.amounts.sell?.info.id && isSellTouched
+  const shouldUpdateToken = id !== swapForm.tokenOutInput.tokenId || !swapForm.tokenOutInput.isTouched
+  const shouldSwitchTokens = id === swapForm.tokenInInput.tokenId && swapForm.tokenInInput.isTouched
 
   const handleOnTokenSelection = () => {
     const [policyId] = id.split('.')
@@ -175,13 +166,13 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
 
     // useCase - switch tokens when selecting the same already selected token on the other side
     if (shouldSwitchTokens) {
-      resetQuantities()
-      switchTokens()
+      swapForm.dispatch({type: 'ResetAmounts'})
+      swapForm.dispatch({type: 'SwitchTouched'})
     }
 
     if (shouldUpdateToken) {
-      buyTokenInfoChanged(tokenInfo)
-      buyTouched()
+      swapForm.dispatch({type: 'TokenInIdChanged', value: id})
+      swapForm.dispatch({type: 'TokenInInputTouched'})
     }
     navigateTo.startSwap()
     closeSearch()

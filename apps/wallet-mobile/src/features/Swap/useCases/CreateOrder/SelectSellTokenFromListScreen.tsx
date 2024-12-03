@@ -1,25 +1,24 @@
 import {FlashList} from '@shopify/flash-list'
 import {infoFilterByName} from '@yoroi/portfolio'
-import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Spacer} from '../../../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../../../components/Text'
-import {useMetrics} from '../../../../../../../kernel/metrics/metricsManager'
-import {getTokenIdParts} from '../../../../../../Portfolio/common/helpers/get-token-id-parts'
-import {usePortfolioBalances} from '../../../../../../Portfolio/common/hooks/usePortfolioBalances'
-import {TokenAmountItem} from '../../../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSearch, useSearchOnNavBar} from '../../../../../../Search/SearchContext'
-import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
-import {useSelectedWallet} from '../../../../../../WalletManager/common/hooks/useSelectedWallet'
-import {Counter} from '../../../../../common/Counter/Counter'
-import {useNavigateTo} from '../../../../../common/navigation'
-import {useStrings} from '../../../../../common/strings'
-import {useSwapForm} from '../../../../../common/SwapFormProvider'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {getTokenIdParts} from '../../../Portfolio/common/helpers/get-token-id-parts'
+import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
+import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
+import {NoAssetFoundImage} from '../../../Send/common/NoAssetFoundImage'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {Counter} from '../../common/Counter/Counter'
+import {useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
+import {useSwap} from '../../common/SwapProvider'
 
 export const SelectSellTokenFromListScreen = () => {
   const strings = useStrings()
@@ -100,19 +99,14 @@ const TokenList = () => {
 const SelectableToken = ({amount}: {amount: Portfolio.Token.Amount}) => {
   const styles = useStyles()
   const {closeSearch} = useSearch()
-  const {sellTokenInfoChanged, orderData, resetQuantities} = useSwap()
-  const {
-    buyQuantity: {isTouched: isBuyTouched},
-    sellQuantity: {isTouched: isSellTouched},
-    sellTouched,
-    switchTokens,
-  } = useSwapForm()
+  const swapForm = useSwap()
+
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
   const {policyId} = getTokenIdParts(amount.info.id)
 
-  const shouldUpdateToken = amount.info.id !== orderData.amounts.sell?.info.id || !isSellTouched
-  const shouldSwitchTokens = amount.info.id === orderData.amounts.buy?.info.id && isBuyTouched
+  const shouldUpdateToken = amount.info.id !== swapForm.tokenInInput.tokenId || !swapForm.tokenInInput.isTouched
+  const shouldSwitchTokens = amount.info.id === swapForm.tokenOutInput.tokenId && swapForm.tokenOutInput.isTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetFromChanged({
@@ -121,13 +115,13 @@ const SelectableToken = ({amount}: {amount: Portfolio.Token.Amount}) => {
 
     // useCase - switch tokens when selecting the same already selected token on the other side
     if (shouldSwitchTokens) {
-      resetQuantities()
-      switchTokens()
+      swapForm.dispatch({type: 'ResetAmounts'})
+      swapForm.dispatch({type: 'SwitchTouched'})
     }
 
     if (shouldUpdateToken) {
-      sellTouched()
-      sellTokenInfoChanged(amount.info)
+      swapForm.dispatch({type: 'TokenInInputTouched'})
+      swapForm.dispatch({type: 'TokenInIdChanged', value: amount.info.id})
     }
 
     navigateTo.startSwap()
