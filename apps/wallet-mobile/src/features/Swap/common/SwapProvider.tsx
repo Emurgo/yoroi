@@ -93,30 +93,61 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.TokenInIdChanged:
-        draft.tokenInInput.displayValue = action.value ?? ''
+        draft.tokenInInput.tokenId = action.value
 
         break
       case SwapAction.TokenOutIdChanged:
+        draft.tokenInInput.tokenId = action.value
+
         break
       case SwapAction.TokenInAmountChanged:
+        draft.tokenInInput.displayValue = action.value
+
         break
       case SwapAction.TokenOutAmountChanged:
+        draft.tokenOutInput.displayValue = action.value
+
         break
       case SwapAction.TokenInErrorChanged:
+        draft.tokenInInput.error = action.value
+
         break
       case SwapAction.TokenOutErrorChanged:
+        draft.tokenOutInput.error = action.value
+
         break
       case SwapAction.SlippageInputChanged:
+        draft.slippageInput.displayValue = String(action.value)
+
         break
       case SwapAction.WantedPriceInputChanged:
+        draft.wantedPrice.displayValue = action.value
+
         break
       case SwapAction.SwitchTouched:
+        draft.tokenOutInput.isTouched = state.tokenInInput.isTouched
+        draft.tokenOutInput.tokenId = state.tokenInInput.tokenId
+        draft.tokenOutInput.displayValue = ''
+        draft.tokenOutInput.error = undefined
+
+        draft.tokenInInput.isTouched = state.tokenOutInput.isTouched
+        draft.tokenInInput.tokenId = state.tokenOutInput.tokenId
+        draft.tokenInInput.displayValue = ''
+        draft.tokenInInput.error = undefined
+
         break
       case SwapAction.DexSelectorTouched:
         break
       case SwapAction.ResetAmounts:
+        draft.tokenInInput.displayValue = ''
+        draft.tokenOutInput.displayValue = ''
+
+        draft.tokenInInput.error = undefined
+        draft.tokenOutInput.error = undefined
+
         break
       case SwapAction.ResetForm:
+        draft = defaultState
         break
       default:
         throw new Error(`swapReducer invalid action`)
@@ -146,8 +177,8 @@ type SwapActionValueMap = {
   ChangeOrderType: 'limit' | 'market'
   TokenInInputTouched: undefined
   TokenOutInputTouched: undefined
-  TokenInIdChanged: string
-  TokenOutIdChanged: string
+  TokenInIdChanged: Portfolio.Token.Id
+  TokenOutIdChanged: Portfolio.Token.Id
   TokenInAmountChanged: string
   TokenOutAmountChanged: string
   TokenInErrorChanged: string
