@@ -3,19 +3,20 @@ import * as React from 'react'
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, ButtonType} from '../../../../../components/Button/Button'
-import {Icon} from '../../../../../components/Icon'
-import {RefreshButton} from '../../../../../components/RefreshButton/RefreshButton'
-import {Space} from '../../../../../components/Space/Space'
-import {useIsKeyboardOpen} from '../../../../../kernel/keyboard/useIsKeyboardOpen'
-import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {AmountCard} from '../../../common/AmountCard/AmountCard'
-import {useNavigateTo} from '../../../common/navigation'
-import {useStrings} from '../../../common/strings'
-import {useSwap} from '../../../common/SwapProvider'
-import {EditPrice} from './EditPrice/EditPrice'
-import {ShowSlippageInfo} from './EditSlippage/ShowSlippageInfo'
+import {Button, ButtonType} from '../../../../components/Button/Button'
+import {Icon} from '../../../../components/Icon'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {RefreshButton} from '../../../../components/RefreshButton/RefreshButton'
+import {Space} from '../../../../components/Space/Space'
+import {useIsKeyboardOpen} from '../../../../kernel/keyboard/useIsKeyboardOpen'
+import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {AmountCard} from '../../common/AmountCard/AmountCard'
+import {useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
+import {useSwap} from '../../common/SwapProvider'
+import {EditPrice} from './EditPrice'
+import {ShowPoolActions} from './ShowPoolActions'
 
 // const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
@@ -23,13 +24,14 @@ const BOTTOM_ACTION_SECTION = 180
 export const StartSwapOrderScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, atoms} = useStyles()
   const {height: deviceHeight} = useWindowDimensions()
   const isKeyboardOpen = useIsKeyboardOpen()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const swapForm = useSwap()
   const navigate = useNavigateTo()
+  const {openModal} = useModal()
 
   /*
   const navigateTo = useNavigateTo()
@@ -348,25 +350,37 @@ export const StartSwapOrderScreen = () => {
 
             <EditPrice />
 
-            <View style={styles.container}>
-              <ShowSlippageInfo />
-
-              <View style={styles.group}>
-                <Text style={styles.text}>{`${swapForm.slippageInput.displayValue}%`}</Text>
-
-                <Space width="xs" />
-
-                <Button onPress={navigate.editSlippage} type={ButtonType.SecondaryText} icon={Icon.Edit} />
+            <View style={styles.between}>
+              <View>
+                <Button
+                  fontOverride={styles.slippageLabel}
+                  onPress={() =>
+                    openModal(
+                      strings.slippageTolerance,
+                      <Text style={styles.textContent}>{strings.slippageToleranceInfo}</Text>,
+                    )
+                  }
+                  type={ButtonType.SecondaryText}
+                  title={strings.slippageTolerance}
+                  rightIcon
+                  icon={Icon.Info}
+                />
               </View>
+
+              <View>
+                <Button
+                  fontOverride={atoms.heading_3_regular}
+                  onPress={navigate.editSlippage}
+                  type={ButtonType.SecondaryText}
+                  title={`${swapForm.slippageInput.displayValue}%`}
+                  rightIcon
+                  icon={Icon.Edit}
+                />
+              </View>
+
+              <ShowPoolActions />
             </View>
           </View>
-
-          {/*
-
-
-          <EditSlippage />
-
-          <ShowPoolActions /> */}
         </View>
       </ScrollView>
 
@@ -411,10 +425,18 @@ const useStyles = () => {
     group: {
       ...atoms.flex_row,
       ...atoms.gap_md,
+      ...atoms.align_center,
     },
-    text: {
+    textContent: {
+      color: color.gray_900,
+      ...atoms.body_1_lg_regular,
+      ...atoms.px_lg,
+    },
+    slippageLabel: {
+      color: color.text_gray_low,
       ...atoms.body_1_lg_regular,
     },
   })
-  return styles
+
+  return {styles, atoms}
 }

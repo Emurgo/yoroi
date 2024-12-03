@@ -229,7 +229,6 @@ const getStories = () => {
     "./src/features/Swap/common/ConfirmWithSpendingPassword/ConfirmWithSpendingPassword.stories.tsx": require("../src/features/Swap/common/ConfirmWithSpendingPassword/ConfirmWithSpendingPassword.stories.tsx"),
     "./src/features/Swap/common/ServiceUnavailable/ServiceUnavailable.stories.tsx": require("../src/features/Swap/common/ServiceUnavailable/ServiceUnavailable.stories.tsx"),
     "./src/features/Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen.stories.tsx": require("../src/features/Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen.stories.tsx"),
-    "./src/features/Swap/useCases/StartOrderSwapScreen/CreateOrder/EditPool/SelectPoolFromListScreen/SelectPoolFromListScreen.stories.tsx": require("../src/features/Swap/useCases/StartOrderSwapScreen/CreateOrder/EditPool/SelectPoolFromListScreen/SelectPoolFromListScreen.stories.tsx"),
     "./src/features/ToggleAnalyticsSettings/ToggleAnalyticsSettings.stories.tsx": require("../src/features/ToggleAnalyticsSettings/ToggleAnalyticsSettings.stories.tsx"),
     "./src/features/Transactions/useCases/TxDetails/AddressModal/AddressModal.stories.tsx": require("../src/features/Transactions/useCases/TxDetails/AddressModal/AddressModal.stories.tsx"),
     "./src/features/Transactions/useCases/TxDetails/AssetList.stories.tsx": require("../src/features/Transactions/useCases/TxDetails/AssetList.stories.tsx"),

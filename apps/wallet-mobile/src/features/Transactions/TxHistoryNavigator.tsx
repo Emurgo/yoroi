@@ -36,6 +36,7 @@ import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend/ListAm
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
+import {EditSlippageScreen} from '../Swap/useCases/CreateOrder/EditSlippageScreen'
 // import {EditSlippageScreen, SelectPoolFromListScreen} from '../Swap/useCases'
 import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
@@ -232,8 +233,7 @@ export const TxHistoryNavigator = () => {
                 }}
               />
 
-              {/* 
-              <Stack.Screen
+              {/*               <Stack.Screen
                 name="swap-select-sell-token"
                 component={SelectSellTokenFromListScreen}
                 options={{
@@ -251,6 +251,15 @@ export const TxHistoryNavigator = () => {
                 }}
               />
 
+<Stack.Screen
+                name="swap-select-pool"
+                component={SelectPoolFromListScreen}
+                options={{
+                  title: strings.selectPool,
+                }}
+              />
+ */}
+
               <Stack.Screen
                 name="swap-edit-slippage"
                 component={EditSlippageScreen}
@@ -259,14 +268,6 @@ export const TxHistoryNavigator = () => {
                 }}
               />
 
-              <Stack.Screen
-                name="swap-select-pool"
-                component={SelectPoolFromListScreen}
-                options={{
-                  title: strings.selectPool,
-                }}
-              />
- */}
               <Stack.Screen
                 name="send-start-tx"
                 options={{

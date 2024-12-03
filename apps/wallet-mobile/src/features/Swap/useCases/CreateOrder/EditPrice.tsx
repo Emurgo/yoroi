@@ -2,8 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {useStrings} from '../../../../common/strings'
-import {useSwap} from '../../../../common/SwapProvider'
+import {useStrings} from '../../common/strings'
+import {useSwap} from '../../common/SwapProvider'
 import {ShowPriceImpact} from './ShowPriceImpact'
 
 const BORDER_SIZE = 1

@@ -106,6 +106,8 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
       case SwapAction.TokenOutErrorChanged:
         break
+      case SwapAction.SlippageInputChanged:
+        break
       case SwapAction.WantedPriceInputChanged:
         break
       case SwapAction.SwitchTouched:
@@ -133,6 +135,7 @@ export const SwapAction = {
   TokenInErrorChanged: 'TokenInErrorChanged',
   TokenOutErrorChanged: 'TokenOutErrorChanged',
   WantedPriceInputChanged: 'WantedPriceInputChanged',
+  SlippageInputChanged: 'SlippageInputChanged',
   SwitchTouched: 'SwitchTouched',
   DexSelectorTouched: 'DexSelectorTouched',
   ResetAmounts: 'ResetAmounts',
@@ -150,6 +153,7 @@ type SwapActionValueMap = {
   TokenInErrorChanged: string
   TokenOutErrorChanged: string
   WantedPriceInputChanged: string
+  SlippageInputChanged: number
   SwitchTouched: undefined
   DexSelectorTouched: undefined
   ResetAmounts: undefined

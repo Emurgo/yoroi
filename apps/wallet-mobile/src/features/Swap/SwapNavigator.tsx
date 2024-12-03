@@ -9,7 +9,7 @@ import {useIsKeyboardOpen} from '../../kernel/keyboard/useIsKeyboardOpen'
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kernel/navigation'
 import {useSearch} from '../Search/SearchContext'
 import {useStrings} from './common/strings'
-import {StartSwapOrderScreen} from './useCases/StartOrderSwapScreen/CreateOrder/StartSwapOrderScreen'
+import {StartSwapOrderScreen} from './useCases/CreateOrder/StartSwapOrderScreen'
 // import {ListOrders} from './useCases/StartOrderSwapScreen/ListOrders/ListOrders'
 
 const Tab = createMaterialTopTabNavigator<SwapTabRoutes>()

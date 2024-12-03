@@ -1,19 +1,19 @@
-import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {TextInput} from '../../../../../../../components/TextInput/TextInput'
-import {useLanguage} from '../../../../../../../kernel/i18n'
-import {NumberLocale} from '../../../../../../../kernel/i18n/languages'
-import {useMetrics} from '../../../../../../../kernel/metrics/metricsManager'
-import {Quantities} from '../../../../../../../yoroi-wallets/utils/utils'
-import {useNavigateTo} from '../../../../../common/navigation'
-import {useStrings} from '../../../../../common/strings'
+import {Button} from '../../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {TextInput} from '../../../../components/TextInput/TextInput'
+import {useLanguage} from '../../../../kernel/i18n'
+import {NumberLocale} from '../../../../kernel/i18n/languages'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {Quantities} from '../../../../yoroi-wallets/utils/utils'
+import {useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
+import {useSwap} from '../../common/SwapProvider'
 
 type ManualChoice = {
   label: 'Manual'
@@ -45,10 +45,12 @@ export const EditSlippageScreen = () => {
   const {numberLocale} = useLanguage()
   const {styles, colors} = useStyles()
 
-  const {slippageChanged, orderData} = useSwap()
-  const defaultSelectedChoice = getChoiceBySlippage(orderData.slippage, numberLocale)
+  const swapForm = useSwap()
+  const defaultSelectedChoice = getChoiceBySlippage(Number(swapForm.slippageInput.displayValue), numberLocale)
   const defaultInputValue =
-    defaultSelectedChoice.label === 'Manual' ? new BigNumber(orderData.slippage).toFormat(numberLocale) : ''
+    defaultSelectedChoice.label === 'Manual'
+      ? new BigNumber(swapForm.slippageInput.displayValue).toFormat(numberLocale)
+      : ''
 
   const [selectedChoiceLabel, setSelectedChoiceLabel] = React.useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = React.useState(defaultInputValue)
@@ -72,7 +74,7 @@ export const EditSlippageScreen = () => {
   const onSubmit = () => {
     const slippage = selectedChoice.label === 'Manual' ? parseNumber(inputValue, numberLocale) : selectedChoice.value
     track.swapSlippageChanged({slippage_tolerance: slippage})
-    slippageChanged(slippage)
+    swapForm.dispatch({type: 'SlippageInputChanged', value: slippage})
     navigate.startSwap()
   }
 
