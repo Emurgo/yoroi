@@ -4,7 +4,6 @@ import {freeze} from 'immer'
 import {
   CancelRequest,
   CancelResponse,
-  OpenOrdersResponse,
   HistoryOrdersResponse,
   TokensResponse,
   CreateOrderResponse,
@@ -24,7 +23,7 @@ export type MuesliswapApiConfig = {
 export const muesliswapApiMaker = (
   config: MuesliswapApiConfig,
 ): Readonly<Swap.Api> => {
-  const {address, addressHex, network, request = fetchData} = config
+  const {address, network, request = fetchData} = config
 
   if (network !== Chain.Network.Mainnet)
     return new Proxy(
@@ -77,49 +76,27 @@ export const muesliswapApiMaker = (
       },
 
       async orders() {
-        const [historyResponse, aggregatorResponse] = await Promise.all([
-          request<HistoryOrdersResponse>(
-            {
-              method: 'get',
-              url: apiUrls.orderHistory,
-              headers,
+        const response = await request<HistoryOrdersResponse>(
+          {
+            method: 'get',
+            url: apiUrls.orderHistory,
+            headers,
+          },
+          {
+            params: {
+              user_address: address,
             },
-            {
-              params: {
-                user_address: address,
-              },
-            },
-          ),
-          request<OpenOrdersResponse>(
-            {
-              method: 'get',
-              url: apiUrls.openOrders,
-              headers,
-            },
-            {
-              params: {
-                user_address: addressHex,
-              },
-            },
-          ),
-        ])
+          },
+        )
 
-        if (isLeft(historyResponse)) return historyResponse
-        if (isLeft(aggregatorResponse)) return aggregatorResponse
+        if (isLeft(response)) return response
 
         return freeze(
           {
             tag: 'right',
             value: {
               status: 200,
-              data: [
-                ...transformers.orderHistory.response(
-                  historyResponse.value.data,
-                ),
-                ...transformers.openOrders.response(
-                  aggregatorResponse.value.data,
-                ),
-              ],
+              data: transformers.orderHistory.response(response.value.data),
             },
           },
           true,

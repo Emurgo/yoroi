@@ -32,6 +32,12 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     })
   }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
 
+  const {data: orders = []} = useQuery([network, stakingKey], async () => {
+    const res = await swapManager.api.orders()
+    if (res.tag === 'right') return res.value.data
+    return []
+  })
+
   const {data: tokenIds = []} = useQuery([network], async () => {
     const res = await swapManager.api.tokens()
     if (res.tag === 'right') return res.value.data.map(({id}) => id)
@@ -66,6 +72,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       wantedPriceInputRef,
       slippageInputRef,
       api: swapManager.api,
+      orders,
       dispatch,
     }),
     [state, swapManager.api, tokenInfos],
@@ -261,6 +268,7 @@ type SwapContext = SwapState & {
   tokenOutInputRef: React.RefObject<TextInput> | undefined
   wantedPriceInputRef: React.RefObject<TextInput> | undefined
   slippageInputRef: React.RefObject<TextInput> | undefined
+  orders?: Array<Swap.Order>
   dispatch: React.Dispatch<SwapAction>
 }
 
@@ -271,5 +279,6 @@ const SwapContext = React.createContext<SwapContext>({
   tokenOutInputRef: undefined,
   wantedPriceInputRef: undefined,
   slippageInputRef: undefined,
+  orders: undefined,
   dispatch: () => null,
 })
