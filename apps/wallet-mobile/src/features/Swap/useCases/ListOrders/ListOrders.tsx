@@ -216,6 +216,15 @@ const Order = ({data}: {data: Swap.Order}) => {
             )}
           </React.Fragment>
         )}
+
+        {data.status === 'open' && (
+          <Button
+            style={styles.cancelButton}
+            type={ButtonType.SecondaryText}
+            title={strings.listOrdersSheetButtonText}
+            onPress={() => null}
+          />
+        )}
       </View>
     </View>
   )
@@ -347,6 +356,9 @@ const useStyles = () => {
     inlineLink: {
       padding: 0,
       justifyContent: 'flex-end',
+    },
+    cancelButton: {
+      ...atoms.self_start,
     },
   })
   return {styles, color}
