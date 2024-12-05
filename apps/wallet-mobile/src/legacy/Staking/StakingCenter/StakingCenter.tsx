@@ -18,6 +18,7 @@ import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../kernel/navigation'
+import {useNavigateTo} from '../../Dashboard/Dashboard'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
 
@@ -34,6 +35,7 @@ export const StakingCenter = () => {
   const {plate} = walletManager.checksum(wallet.publicKeyHex)
   const {navigateToTxReview} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
+  const navigateTo = useNavigateTo()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -44,6 +46,16 @@ export const StakingCenter = () => {
   const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(null)
   const [isContentLoaded, setIsContentLoaded] = React.useState(false)
 
+  const onSuccess = () => {
+    queryClient.resetQueries([wallet.id, 'stakingInfo'])
+    navigateTo.submittedTx()
+  }
+
+  const onError = () => {
+    queryClient.resetQueries([wallet.id, 'stakingInfo'])
+    navigateTo.failedTx()
+  }
+
   const {isLoading} = useStakingTx(
     {wallet, poolId: selectedPoolId ?? undefined, meta},
     {
@@ -53,7 +65,7 @@ export const StakingCenter = () => {
         if (selectedPoolId == null) return
 
         unsignedTxChanged(yoroiUnsignedTx)
-        navigateToTxReview({onSuccess: () => queryClient.resetQueries([wallet.id, 'stakingInfo'])})
+        navigateToTxReview({onSuccess, onError})
       },
     },
   )

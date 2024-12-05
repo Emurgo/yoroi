@@ -33,15 +33,18 @@ import {ShowCameraPermissionDeniedScreen} from '../Scan/useCases/ShowCameraPermi
 import {SelectTokenFromListScreen} from '../Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend/ListAmountsToSendScreen'
+import {FailedTxScreen as SendFailedTxScreen} from '../Send/useCases/ShowFailedTxScreen/FailedTxScreen'
+import {SubmittedTxScreen as SendSubmittedTxScreen} from '../Send/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
 import {EditSlippageScreen} from '../Swap/useCases/CreateOrder/EditSlippageScreen'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectSellTokenFromListScreen'
-// import {EditSlippageScreen, SelectPoolFromListScreen} from '../Swap/useCases'
 import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
+import {FailedTxScreen as SwapFailedTxScreen} from '../Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
+import {SubmittedTxScreen as SwapSubmittedTxScreen} from '../Swap/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
@@ -251,21 +254,36 @@ export const TxHistoryNavigator = () => {
                 }}
               />
 
+              <Stack.Screen
+                name="swap-edit-slippage"
+                component={EditSlippageScreen}
+                options={{
+                  title: strings.slippageTolerance,
+                }}
+              />
+
               {/*
-<Stack.Screen
+              <Stack.Screen
                 name="swap-select-pool"
                 component={SelectPoolFromListScreen}
                 options={{
                   title: strings.selectPool,
                 }}
               />
- */}
+*/}
+              <Stack.Screen
+                name="swap-submitted-tx"
+                component={SwapSubmittedTxScreen}
+                options={{
+                  headerShown: false,
+                }}
+              />
 
               <Stack.Screen
-                name="swap-edit-slippage"
-                component={EditSlippageScreen}
+                name="swap-failed-tx"
+                component={SwapFailedTxScreen}
                 options={{
-                  title: strings.slippageTolerance,
+                  headerShown: false,
                 }}
               />
 
@@ -324,6 +342,24 @@ export const TxHistoryNavigator = () => {
                   </Boundary>
                 )}
               </Stack.Screen>
+
+              <Stack.Screen //
+                name="send-submitted-tx"
+                options={{
+                  headerShown: false,
+                  ...sendOptions(navigationOptions, color),
+                }}
+                component={SendSubmittedTxScreen}
+              />
+
+              <Stack.Screen //
+                name="send-failed-tx"
+                options={{
+                  headerShown: false,
+                  ...sendOptions(navigationOptions, color),
+                }}
+                component={SendFailedTxScreen}
+              />
 
               <Stack.Screen //
                 name="scan-start"

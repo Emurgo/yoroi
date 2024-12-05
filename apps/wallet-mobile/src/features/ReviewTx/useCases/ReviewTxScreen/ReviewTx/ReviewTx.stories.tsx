@@ -19,6 +19,7 @@ storiesOf('Review Tx Screen', module)
   .add('Only Ada Tx / Multi Receiver', () => <Component formattedTx={mocks.formattedTxs.onlyAdaMultiReceiver} />)
   .add('Multi Asset Tx / One Receiver', () => <Component formattedTx={mocks.formattedTxs.multiAssetOneReceiver} />)
   .add('Multi Asset Tx / Multi Receiver', () => <Component formattedTx={mocks.formattedTxs.multiAssetMultiReceiver} />)
+  .add('Operations Warning', () => <Component formattedTx={mocks.formattedTxs.operationsWarning} />)
 
 const Component = ({formattedTx}: {formattedTx: FormattedTx}) => {
   return <ReviewTx formattedTx={formattedTx} onConfirm={action('onConfirm')} />

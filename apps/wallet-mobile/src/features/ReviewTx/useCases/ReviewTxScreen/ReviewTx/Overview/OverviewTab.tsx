@@ -4,13 +4,14 @@ import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {Linking, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {Linking, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import {Divider} from '../../../../../../components/Divider/Divider'
 import {Icon} from '../../../../../../components/Icon'
 import {Info} from '../../../../../../components/Info/Info'
 import {useModal} from '../../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../../components/Space/Space'
+import {Warning} from '../../../../../../components/Warning/Warning'
 import {formatTokenWithText} from '../../../../../../yoroi-wallets/utils/format'
 import {Quantities} from '../../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
@@ -18,7 +19,7 @@ import {useWalletManager} from '../../../../../WalletManager/context/WalletManag
 import {Accordion} from '../../../../common/Accordion'
 import {CopiableText} from '../../../../common/CopiableText'
 import {useStrings} from '../../../../common/hooks/useStrings'
-import {useOperations} from '../../../../common/operations'
+import {Operations, useOperations} from '../../../../common/operations'
 import {TokenItem} from '../../../../common/TokenItem'
 import {FormattedOutput, FormattedOutputs, FormattedTx} from '../../../../common/types'
 import {WalletBalance} from '../../../../common/WalletBalance'
@@ -38,13 +39,23 @@ export const OverviewTab = ({
 }) => {
   const {styles} = useStyles()
   const operations = useOperations(tx.certificates)
+  const strings = useStrings()
 
   const notOwnedOutputs = React.useMemo(() => tx.outputs.filter((output) => !output.ownAddress), [tx.outputs])
   const ownedOutputs = React.useMemo(() => tx.outputs.filter((output) => output.ownAddress), [tx.outputs])
+  const componentsDuplicated = operations.components.find((component) => component.duplicated)
 
   return (
     <View style={styles.root}>
       <Space height="lg" />
+
+      {componentsDuplicated && (
+        <>
+          <Warning title={strings.operationsLogWarningTitle} content={strings.operationsLogWarningText} />
+
+          <Space height="lg" />
+        </>
+      )}
 
       <WalletInfoSection tx={tx} createdBy={createdBy} />
 
@@ -64,7 +75,7 @@ export const OverviewTab = ({
 
       {notOwnedOutputs.length > 1 && <MultiExternalPartiesSection outputs={notOwnedOutputs} />}
 
-      <OperationsSection operations={operations.components} extraOperations={extraOperations} />
+      <OperationsSection operations={operations} extraOperations={extraOperations} />
 
       <Details details={details} />
     </View>
@@ -353,11 +364,16 @@ const OperationsSection = ({
   operations,
   extraOperations,
 }: {
-  operations: Array<React.ReactNode>
+  operations: Operations
   extraOperations?: Array<React.ReactNode>
 }) => {
   const strings = useStrings()
-  if (extraOperations == null && operations?.length === 0) return null
+  if (extraOperations == null && operations.components?.length === 0) return null
+
+  const componentsNotDuplicated = operations.components
+    .filter((component) => !component.duplicated)
+    .map(({component}) => component)
+  const componentDuplicated = operations.components.filter((component) => component.duplicated)
 
   return (
     <View>
@@ -366,7 +382,40 @@ const OperationsSection = ({
       <Accordion label={strings.operationsLabel}>
         <Space height="lg" />
 
-        {[...operations, ...(extraOperations ?? [])].map((operation, index) => {
+        {[...componentsNotDuplicated, ...(extraOperations ?? [])].map((operation, index) => {
+          if (index === 0) return operation
+
+          return (
+            <>
+              <Space height="sm" />
+
+              {operation}
+            </>
+          )
+        })}
+
+        {componentDuplicated.length > 0 && (
+          <Details
+            details={{title: strings.operationsLogTitle, component: <OperationsModal operations={operations} />}}
+          />
+        )}
+      </Accordion>
+    </View>
+  )
+}
+
+const OperationsModal = ({operations}: {operations: Operations}) => {
+  const strings = useStrings()
+  const components = operations.components.map(({component}) => component)
+
+  return (
+    <View>
+      <Warning title={strings.operationsLogWarningTitle} content={strings.operationsLogWarningText} />
+
+      <Accordion label={strings.operationsLabel}>
+        <Space height="lg" />
+
+        {components.map((operation, index) => {
           if (index === 0) return operation
 
           return (
@@ -389,7 +438,13 @@ const Details = ({details}: {details?: {title: string; component: React.ReactNod
   if (details == null) return null
 
   const handleOnPress = () => {
-    openModal(details.title ?? '', <View style={styles.details}>{details.component}</View>, 550)
+    openModal(
+      details.title ?? '',
+      <ScrollView bounces={false} style={styles.details}>
+        {details.component}
+      </ScrollView>,
+      400,
+    )
   }
 
   return (
@@ -496,7 +551,6 @@ const useStyles = () => {
       color: color.text_gray_medium,
     },
     detailsRow: {
-      ...atoms.flex_1,
       ...atoms.flex_row,
       ...atoms.justify_end,
     },

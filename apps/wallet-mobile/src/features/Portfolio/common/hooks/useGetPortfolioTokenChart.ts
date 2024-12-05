@@ -45,7 +45,9 @@ const getTimestamps = (timeInterval: TokenChartInterval) => {
   }[timeInterval ?? TokenChartInterval.DAY]
 
   const step = (now - from) / resolution
-  return Array.from({length: resolution}, (_, i) => from + Math.round(step * i))
+  const spread = Array.from({length: resolution}, (_, i) => from + Math.round(step * i))
+  spread.push(now)
+  return spread
 }
 
 const ptTicker = networkConfigs[Chain.Network.Mainnet].primaryTokenInfo.ticker

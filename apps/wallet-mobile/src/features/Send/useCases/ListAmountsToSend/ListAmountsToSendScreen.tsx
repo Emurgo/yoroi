@@ -87,10 +87,13 @@ export const ListAmountsToSendScreen = () => {
     if (memo.length > 0) {
       saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
     }
+
+    navigateTo.submittedTx()
   }
 
   const onError = () => {
     track.sendSummarySubmitted(sendProperties)
+    navigateTo.failedTx()
   }
 
   const onNext = () => {

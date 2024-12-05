@@ -253,7 +253,7 @@ const messages = defineMessages({
   },
   submittedTxTitle: {
     id: 'components.send.sendscreen.submittedTxTitle',
-    defaultMessage: '!!!Transaction submitted',
+    defaultMessage: '!!!Transaction signed',
   },
   submittedTxText: {
     id: 'components.send.sendscreen.submittedTxText',
@@ -261,7 +261,7 @@ const messages = defineMessages({
   },
   submittedTxButton: {
     id: 'components.send.sendscreen.submittedTxButton',
-    defaultMessage: '!!!Go to transactions',
+    defaultMessage: '!!!Close',
   },
   failedTxTitle: {
     id: 'components.send.sendscreen.failedTxTitle',

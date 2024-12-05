@@ -11,6 +11,8 @@ import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSe
 import {DashboardRoutes, defaultStackNavigationOptions} from '../../kernel/navigation'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
+import {FailedTxScreen} from './ShowFailedTxScreen/FailedTxScreen'
+import {SubmittedTxScreen} from './ShowSubmittedTxScreen/SubmittedTxScreen'
 
 const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {
@@ -40,6 +42,22 @@ export const DashboardNavigator = () => {
         <Stack.Screen //
           name="staking-center"
           component={StakingCenter}
+        />
+
+        <Stack.Screen //
+          name="staking-submitted-tx"
+          component={SubmittedTxScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen //
+          name="staking-failed-tx"
+          component={FailedTxScreen}
+          options={{
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     </GovernanceProvider>

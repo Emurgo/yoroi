@@ -67,6 +67,12 @@ export const useStrings = () => {
     readyToCollectRewards: intl.formatMessage(messages.readyToCollectRewards),
     notSupportedVersionButton: intl.formatMessage(messages.notSupportedVersionButton),
     scriptNotSupported: intl.formatMessage(messages.scriptNotSupported),
+    submittedTxButton: intl.formatMessage(messages.submittedTxButton),
+    submittedTxText: intl.formatMessage(messages.submittedTxText),
+    submittedTxTitle: intl.formatMessage(messages.submittedTxTitle),
+    failedTxButton: intl.formatMessage(messages.failedTxButton),
+    failedTxText: intl.formatMessage(messages.failedTxText),
+    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
   }
 }
 
@@ -284,5 +290,30 @@ const messages = defineMessages({
   scriptNotSupported: {
     id: 'components.governance.scriptNotSupported',
     defaultMessage: '!!!Script DReps ids will be supported soon.',
+  },
+  submittedTxTitle: {
+    id: 'components.governance.submittedTxTitle',
+    defaultMessage: '!!!Transaction signed',
+  },
+  submittedTxText: {
+    id: 'components.governance.submittedTxText',
+    defaultMessage:
+      '!!!This transaction can take a while!\n\nParticipating in the Cardano Governance gives you the opportunity to participate in the voting as well as withdraw your staking rewards.',
+  },
+  submittedTxButton: {
+    id: 'components.governance.submittedTxButton',
+    defaultMessage: '!!!Close',
+  },
+  failedTxTitle: {
+    id: 'components.governance.failedTxTitle',
+    defaultMessage: '!!!Transaction failed',
+  },
+  failedTxText: {
+    id: 'components.governance.failedTxText',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+  },
+  failedTxButton: {
+    id: 'components.governance.failedTxButton',
+    defaultMessage: '!!!Try again',
   },
 })

@@ -101,7 +101,7 @@ export const CertificateType = {
   VoteRegistrationAndDelegation: 'VoteRegistrationAndDelegation', // NO
 } as const
 
-export type CerificateType = (typeof CertificateType)[keyof typeof CertificateType]
+export type CertificateType = (typeof CertificateType)[keyof typeof CertificateType]
 
 // Makes sure CertificateType lists all the certificates in CertificateJSON
-export type AssertAllImplementedCertTypes = AssertEqual<CerificateType, keyof UnionToIntersection<CertificateJSON>>
+export type AssertAllImplementedCertTypes = AssertEqual<CertificateType, keyof UnionToIntersection<CertificateJSON>>

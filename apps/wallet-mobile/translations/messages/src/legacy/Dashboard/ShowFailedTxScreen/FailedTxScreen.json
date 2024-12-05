@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.delegation.failedTx.title",
+    "defaultMessage": "!!!Transaction error",
+    "file": "src/legacy/Dashboard/ShowFailedTxScreen/FailedTxScreen.tsx",
+    "start": {
+      "line": 91,
+      "column": 17,
+      "index": 2311
+    },
+    "end": {
+      "line": 94,
+      "column": 3,
+      "index": 2408
+    }
+  },
+  {
+    "id": "components.delegation.failedTx.text",
+    "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues.",
+    "file": "src/legacy/Dashboard/ShowFailedTxScreen/FailedTxScreen.tsx",
+    "start": {
+      "line": 95,
+      "column": 16,
+      "index": 2426
+    },
+    "end": {
+      "line": 98,
+      "column": 3,
+      "index": 2578
+    }
+  },
+  {
+    "id": "components.delegation.failedTx.button",
+    "defaultMessage": "!!!Try again",
+    "file": "src/legacy/Dashboard/ShowFailedTxScreen/FailedTxScreen.tsx",
+    "start": {
+      "line": 99,
+      "column": 18,
+      "index": 2598
+    },
+    "end": {
+      "line": 102,
+      "column": 3,
+      "index": 2688
+    }
+  }
+]

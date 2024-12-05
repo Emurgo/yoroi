@@ -82,7 +82,9 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       onSuccess: (signedTx) => {
         updateLatestGovernanceAction({kind: 'delegate-to-drep', drepID, txID: signedTx.signedTx.id})
+        navigateTo.submittedTx()
       },
+      onError: navigateTo.failedTx,
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
     })
   }
@@ -93,7 +95,9 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       onSuccess: (signedTx) => {
         updateLatestGovernanceAction({kind: 'vote', vote: 'abstain', txID: signedTx.signedTx.id})
+        navigateTo.submittedTx()
       },
+      onError: navigateTo.failedTx,
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
     })
   }
@@ -104,7 +108,9 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       onSuccess: (signedTx) => {
         updateLatestGovernanceAction({kind: 'vote', vote: 'no-confidence', txID: signedTx.signedTx.id})
+        navigateTo.submittedTx()
       },
+      onError: navigateTo.failedTx,
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
     })
   }

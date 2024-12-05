@@ -15,6 +15,8 @@ export const useNavigateTo = () => {
     startTx: () => navigation.navigate('send-start-tx'),
     editAmount: () => navigation.navigate('send-edit-amount'),
     reader: () => navigation.navigate('scan-start', {insideFeature: 'send'}),
+    submittedTx: () => navigation.navigate('send-submitted-tx'),
+    failedTx: () => navigation.navigate('send-failed-tx'),
     startTxAfterReset: () =>
       navigation.reset({
         index: 0,

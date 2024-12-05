@@ -17,6 +17,8 @@ export const ReviewSwap = () => {
   const {track} = useMetrics()
   const {navigateToTxReview} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
+  const navigateTo = useNavigateTo()
+
   const {unsignedTx, orderData} = useSwap()
   const sellTokenInfo = orderData.amounts.sell?.info
   const buyTokenInfo = orderData.amounts.buy?.info
@@ -52,6 +54,11 @@ export const ReviewSwap = () => {
 
   const onSwapTxSuccess = () => {
     trackSwapOrderSubmitted()
+    navigateTo.submittedTx()
+  }
+
+  const onSwapTxError = () => {
+    navigateTo.failedTx()
   }
 
   const onNext = () => {
@@ -69,6 +76,7 @@ export const ReviewSwap = () => {
     unsignedTxChanged(unsignedTx)
     navigateToTxReview({
       onSuccess: onSwapTxSuccess,
+      onError: onSwapTxError,
       receiverCustomTitle: liquidityPool ?? undefined,
       details: {component: <TransactionSummary orderData={orderData} />, title: strings.swapDetailsTitle},
     })
