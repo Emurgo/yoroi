@@ -72,7 +72,6 @@ const getStories = () => {
     "./src/components/ErrorBoundary/ExpandableItem/ExpandableItem.stories.tsx": require("../src/components/ErrorBoundary/ExpandableItem/ExpandableItem.stories.tsx"),
     "./src/components/ErrorModal/ErrorModal.stories.tsx": require("../src/components/ErrorModal/ErrorModal.stories.tsx"),
     "./src/components/ErrorPanel/ErrorPanel.stories.tsx": require("../src/components/ErrorPanel/ErrorPanel.stories.tsx"),
-    "./src/components/ExpandableInfoCard/ExpandableInfoCard.stories.tsx": require("../src/components/ExpandableInfoCard/ExpandableInfoCard.stories.tsx"),
     "./src/components/HideableText/HideableText.stories.tsx": require("../src/components/HideableText/HideableText.stories.tsx"),
     "./src/components/Icon/Icon.stories.tsx": require("../src/components/Icon/Icon.stories.tsx"),
     "./src/components/InfoBanner/InfoBanner.stories.tsx": require("../src/components/InfoBanner/InfoBanner.stories.tsx"),

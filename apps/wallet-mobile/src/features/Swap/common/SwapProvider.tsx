@@ -75,7 +75,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       orders,
       dispatch,
     }),
-    [state, swapManager.api, tokenInfos],
+    [state, swapManager.api, orders, tokenInfos],
   )
 
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>

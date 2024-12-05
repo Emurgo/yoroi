@@ -9,6 +9,8 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {Boundary} from '../../../../components/Boundary/Boundary'
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {Space} from '../../../../components/Space/Space'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
@@ -18,6 +20,7 @@ import {EmptyCompletedOrdersIllustration} from '../../common/Illustrations/Empty
 import {EmptyOpenOrdersIllustration} from '../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {ServiceUnavailable} from '../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../common/strings'
+import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
 import {useSwap} from '../../common/SwapProvider'
 
 type Filter = 'open' | 'completed'
@@ -105,7 +108,7 @@ const Content = ({filter}: {filter: Filter}) => {
         <FlatList
           contentContainerStyle={styles.list}
           data={orders}
-          renderItem={({item}) => <Order data={item} />}
+          renderItem={({item}) => <Order order={item} />}
           keyExtractor={(item) => item.txHash ?? item.customId ?? ''}
           ListEmptyComponent={<ListEmptyComponent filter={filter} />}
         />
@@ -122,9 +125,9 @@ const Content = ({filter}: {filter: Filter}) => {
   )
 }
 
-const tokenName = (token?: Portfolio.Token.Info) => token?.name ?? token?.ticker ?? token?.id ?? '-'
+const tokenName = (token?: Portfolio.Token.Info) => token?.ticker ?? token?.name ?? token?.id ?? '-'
 
-const Order = ({data}: {data: Swap.Order}) => {
+const Order = ({order}: {order: Swap.Order}) => {
   const intl = useIntl()
   const strings = useStrings()
   const {
@@ -135,16 +138,18 @@ const Order = ({data}: {data: Swap.Order}) => {
   const {styles, color} = useStyles()
   const [expanded, setExpanded] = React.useState<boolean>(false)
   const swapForm = useSwap()
-  const tokenInInfo = swapForm.tokenInfos.get(data.tokenIn)
-  const tokenOutInfo = swapForm.tokenInfos.get(data.tokenOut)
+  const tokenInInfo = swapForm.tokenInfos.get(order.tokenIn)
+  const tokenOutInfo = swapForm.tokenInfos.get(order.tokenOut)
 
-  const amountOut = data.actualAmountOut === 0 ? data.expectedAmountOut : data.actualAmountOut
-  const price = amountOut === 0 ? 0 : data.amountIn / amountOut
+  const amountOut = order.actualAmountOut === 0 ? order.expectedAmountOut : order.actualAmountOut
+  const price = amountOut === 0 ? 0 : order.amountIn / amountOut
 
-  const amountOutStr = String(Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0)))
-  const priceStr = String(Number(price.toFixed(tokenOutInfo?.decimals ?? 0))) // TODO
+  const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
+  const priceStr = `${Number(price.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenInInfo)}/${tokenName(
+    tokenOutInfo,
+  )}`
 
-  const lastTxHash = data.updateTxHash ?? data.txHash ?? ''
+  const lastTxHash = order.updateTxHash ?? order.txHash ?? ''
   const shortenedTxHash = `${lastTxHash.substring(0, 9)}...${lastTxHash.substring(
     lastTxHash.length - 4,
     lastTxHash.length,
@@ -175,20 +180,20 @@ const Order = ({data}: {data: Swap.Order}) => {
 
         <Row label={strings.listOrdersSheetAssetAmount} value={amountOutStr} />
 
-        {data.placedAt !== undefined && (
+        {order.placedAt !== undefined && (
           <Row
             label={strings.listOrdersTimeCreated}
-            value={intl.formatDate(new Date(data.placedAt), {
+            value={intl.formatDate(new Date(order.placedAt), {
               dateStyle: 'medium',
               timeStyle: 'short',
             })}
           />
         )}
 
-        {data.lastUpdate !== undefined && (
+        {order.lastUpdate !== undefined && (
           <Row
             label={strings.listOrdersTimeCompleted}
-            value={intl.formatDate(new Date(data.lastUpdate), {
+            value={intl.formatDate(new Date(order.lastUpdate), {
               dateStyle: 'medium',
               timeStyle: 'short',
             })}
@@ -197,9 +202,9 @@ const Order = ({data}: {data: Swap.Order}) => {
 
         {expanded && (
           <React.Fragment>
-            <Row label={strings.listOrdersTotal} value={String(data.amountIn)} />
+            <Row label={strings.listOrdersTotal} value={`${order.amountIn} ${tokenName(tokenInInfo)}`} />
 
-            <Row label={strings.dex.toUpperCase()} value={data.dex} />
+            <Row label={strings.dex.toUpperCase()} value={order.dex} />
 
             {lastTxHash !== '' && (
               <Row
@@ -217,16 +222,66 @@ const Order = ({data}: {data: Swap.Order}) => {
           </React.Fragment>
         )}
 
-        {data.status === 'open' && (
-          <Button
-            style={styles.cancelButton}
-            type={ButtonType.SecondaryText}
-            title={strings.listOrdersSheetButtonText}
-            onPress={() => null}
-          />
+        {order.status === 'open' && tokenInInfo && (
+          <OrderCancellation order={order} tokenInInfo={tokenInInfo} price={priceStr} amount={amountOutStr} />
         )}
       </View>
     </View>
+  )
+}
+
+const OrderCancellation = ({
+  order,
+  tokenInInfo,
+  price,
+  amount,
+}: {
+  order: Swap.Order
+  tokenInInfo: Portfolio.Token.Info
+  price: string
+  amount: string
+}) => {
+  const strings = useStrings()
+  const {styles} = useStyles()
+  const {openModal, closeModal} = useModal()
+  // TODO
+  const onOrderCancelConfirm = () => null
+
+  const onPress = React.useCallback(
+    () =>
+      openModal(
+        strings.listOrdersSheetTitle,
+        <View style={styles.root}>
+          <Row label={strings.listOrdersSheetAssetPrice} value={price} />
+
+          <Row label={strings.listOrdersSheetAssetAmount} value={amount} />
+
+          <Row label={strings.listOrdersSheetTotalReturned} value={`${order.amountIn} ${tokenName(tokenInInfo)}`} />
+
+          <Row label={strings.listOrdersSheetCancellationFee} value="" />
+
+          <SwapInfoLink />
+
+          <Space fill />
+
+          <View style={styles.group}>
+            <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={closeModal} />
+
+            <Button type={ButtonType.Critical} title={strings.listOrdersSheetConfirm} onPress={onOrderCancelConfirm} />
+          </View>
+        </View>,
+        400,
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [amount, closeModal, openModal, order.amountIn, price, tokenInInfo],
+  )
+  return (
+    <Button
+      style={styles.cancelButton}
+      type={ButtonType.SecondaryText}
+      title={strings.listOrdersSheetButtonText}
+      onPress={onPress}
+    />
   )
 }
 
@@ -359,6 +414,7 @@ const useStyles = () => {
     },
     cancelButton: {
       ...atoms.self_start,
+      ...atoms.px_0,
     },
   })
   return {styles, color}
