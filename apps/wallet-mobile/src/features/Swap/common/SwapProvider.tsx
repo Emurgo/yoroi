@@ -104,7 +104,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.TokenOutIdChanged:
-        draft.tokenInInput.tokenId = action.value
+        draft.tokenOutInput.tokenId = action.value
 
         break
       case SwapAction.TokenInAmountChanged:

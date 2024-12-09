@@ -171,8 +171,8 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
     }
 
     if (shouldUpdateToken) {
-      swapForm.dispatch({type: 'TokenInIdChanged', value: id})
-      swapForm.dispatch({type: 'TokenInInputTouched'})
+      swapForm.dispatch({type: 'TokenOutIdChanged', value: id})
+      swapForm.dispatch({type: 'TokenOutInputTouched'})
     }
     navigateTo.startSwap()
     closeSearch()
