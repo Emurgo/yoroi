@@ -40,6 +40,7 @@ import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/N
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
 import {EditSlippageScreen} from '../Swap/useCases/CreateOrder/EditSlippageScreen'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectBuyTokenFromListScreen'
+import {SelectProviderScreen} from '../Swap/useCases/CreateOrder/SelectProviderScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectSellTokenFromListScreen'
 import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {FailedTxScreen as SwapFailedTxScreen} from '../Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
@@ -262,15 +263,14 @@ export const TxHistoryNavigator = () => {
                 }}
               />
 
-              {/*
               <Stack.Screen
-                name="swap-select-pool"
-                component={SelectPoolFromListScreen}
+                name="swap-select-provider"
+                component={SelectProviderScreen}
                 options={{
                   title: strings.selectPool,
                 }}
               />
-*/}
+
               <Stack.Screen
                 name="swap-submitted-tx"
                 component={SwapSubmittedTxScreen}

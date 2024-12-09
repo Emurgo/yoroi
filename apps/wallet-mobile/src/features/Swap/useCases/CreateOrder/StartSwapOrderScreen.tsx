@@ -351,7 +351,9 @@ export const StartSwapOrderScreen = () => {
             <EditPrice />
 
             <View style={styles.between}>
-              <View>
+              <View style={styles.slippage}>
+                <Text style={styles.slippageLabel}>{strings.slippageTolerance}</Text>
+
                 <Button
                   fontOverride={styles.slippageLabel}
                   onPress={() =>
@@ -361,8 +363,6 @@ export const StartSwapOrderScreen = () => {
                     )
                   }
                   type={ButtonType.SecondaryText}
-                  title={strings.slippageTolerance}
-                  rightIcon
                   icon={Icon.Info}
                 />
               </View>
@@ -394,6 +394,11 @@ export const StartSwapOrderScreen = () => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
+    slippage: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.gap_xs,
+    },
     root: {
       backgroundColor: color.bg_color_max,
       ...atoms.pb_lg,

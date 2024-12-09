@@ -1,4 +1,4 @@
-export const SelectPoolFromListScreen = () => {
+export const SelectProviderScreen = () => {
   return null
   /*
   const strings = useStrings()
