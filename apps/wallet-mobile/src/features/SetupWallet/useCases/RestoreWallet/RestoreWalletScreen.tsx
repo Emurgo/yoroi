@@ -242,11 +242,11 @@ const WordSuggestionList = ({
 
 const WordSuggestionButton = ({title, onPress}: {title: string; onPress: () => void}) => {
   const {styles} = useStyles()
-    return (
-      <TouchableOpacity style={styles.suggestion} onPress={onPress}>
-        <Text style={styles.suggestionText}>{title}</Text>
-      </TouchableOpacity>
-    )
+  return (
+    <TouchableOpacity style={styles.suggestion} onPress={onPress}>
+      <Text style={styles.suggestionText}>{title}</Text>
+    </TouchableOpacity>
+  )
 }
 
 const useBold = () => {
@@ -306,11 +306,11 @@ const useStyles = () => {
       borderColor: color.primary_300,
       borderWidth: 2,
       borderRadius: 8,
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
     },
     suggestionText: {
       color: color.text_primary_medium,
-       ...atoms.body_1_lg_regular,
+      ...atoms.body_1_lg_regular,
     },
     suggestionArea: {
       backgroundColor: color.bg_color_max,
