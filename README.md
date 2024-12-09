@@ -58,3 +58,4 @@ See the [contributing guide](https://github.com/Emurgo/yoroi/blob/develop/CONTRI
 ## License
 
 Yoroi is released under the Apache License. See the [LICENSE](https://github.com/Emurgo/yoroi/blob/develop/LICENSE) file for more details.
+
