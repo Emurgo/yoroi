@@ -13,9 +13,11 @@ type CopyButtonProps = {
   children?: React.ReactNode
   style?: StyleProp<ViewStyle>
   message?: string
+  offsetX?: number
+  offsetY?: number
 }
 
-export const CopyButton = ({title, value, onCopy, message}: CopyButtonProps) => {
+export const CopyButton = ({title, value, onCopy, message, offsetX, offsetY}: CopyButtonProps) => {
   const {isCopying, copy} = useCopy()
   const {atoms} = useTheme()
 
@@ -28,7 +30,7 @@ export const CopyButton = ({title, value, onCopy, message}: CopyButtonProps) => 
       icon={isCopying ? Icon.CopySuccess : Icon.Copy}
       rightIcon
       onPress={(event) => {
-        copy({text: value, feedback: message, event})
+        copy({text: value, feedback: message, event, offsetX, offsetY})
         onCopy?.()
       }}
     />

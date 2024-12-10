@@ -24,12 +24,12 @@ export const ClipboardProvider = ({children}: Props) => {
   const styles = useStyles()
   const [copied, setCopied] = React.useState<CopiedState | null>(null)
   const {height, width} = useWindowDimensions()
-  const copy: ClipboardContext['copy'] = ({text, feedback = 'Copied', event}) => {
+  const copy: ClipboardContext['copy'] = ({text, feedback = 'Copied', event, offsetX = 0, offsetY = 0}) => {
     Clipboard.setString(text)
     setCopied({
       feedback,
-      locationY: event ? event.nativeEvent.pageY - 50 : height * 0.85,
-      locationX: (event?.nativeEvent.pageX ?? width * 0.5) - feedback.length * 4,
+      locationY: (event ? event.nativeEvent.pageY - 50 : height * 0.85) + offsetY,
+      locationX: (event?.nativeEvent.pageX ?? width * 0.5) - feedback.length * 4 + offsetX,
     })
     setTimeout(() => setCopied(null), FEEDBACK_TIMEOUT)
   }
@@ -70,6 +70,8 @@ type CopyProps = {
   text: string
   feedback?: string
   event?: GestureResponderEvent
+  offsetX?: number
+  offsetY?: number
 }
 type ClipboardContext = {
   copy: (a: CopyProps) => void
