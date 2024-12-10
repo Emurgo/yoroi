@@ -21,7 +21,6 @@ import {
 } from './types'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {DexhunterApiConfig} from './api-maker'
-import {SwapProvider} from '@yoroi/types/lib/typescript/swap/api'
 
 const tokenIdToDexhunter = (tokenId: Portfolio.Token.Id) =>
   isPrimaryToken(tokenId) ? 'ADA' : tokenId.replace('.', '')
@@ -237,7 +236,7 @@ export const transformersMaker = ({
       request: ({
         amountIn,
         blacklistedDexes,
-        dex = SwapProvider.Splash_v1,
+        dex = Swap.Provider.Splash_v1,
         multiples,
         tokenIn,
         tokenOut,

@@ -1,6 +1,6 @@
 import {primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
-import {Portfolio, Swap} from '@yoroi/types'
+import {Api, Portfolio, Swap} from '@yoroi/types'
 import {produce} from 'immer'
 import React from 'react'
 import {TextInput} from 'react-native'
@@ -63,6 +63,42 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 */
   const [state, dispatch] = React.useReducer(swapReducer, defaultState)
 
+  React.useEffect(() => {
+    if (state.reqres === 'response') return
+
+    if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) return
+
+    console.log('Running effect', {
+      slippage: state.slippageInput.value,
+      tokenIn: state.tokenInInput.tokenId,
+      tokenOut: state.tokenOutInput.tokenId,
+      amountIn: Number(state.tokenInInput.value),
+      // amountOut: Number(state.tokenOutInput:value),
+      blacklistedDexes: [],
+      dex: state.selectedDex.value,
+      wantedPrice: Number(state.wantedPrice),
+    })
+
+    swapManager.api
+      .estimate({
+        slippage: state.slippageInput.value,
+        tokenIn: state.tokenInInput.tokenId,
+        tokenOut: state.tokenOutInput.tokenId,
+        amountIn: Number(state.tokenInInput.value),
+        // amountOut: Number(state.tokenOutInput:value),
+        blacklistedDexes: [],
+        dex: state.selectedDex.value,
+        // wantedPrice: Number(state.wantedPrice),
+      })
+      .then((response) => {
+        if (response.tag === 'left') {
+          dispatch({type: SwapAction.EstimateError, value: response.error})
+        } else {
+          dispatch({type: SwapAction.EstimateResponse, value: response.value.data})
+        }
+      })
+  }, [state, swapManager.api])
+
   const context = React.useMemo(
     () => ({
       ...state,
@@ -71,11 +107,10 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       tokenInInputRef,
       wantedPriceInputRef,
       slippageInputRef,
-      api: swapManager.api,
       orders,
       dispatch,
     }),
-    [state, swapManager.api, orders, tokenInfos],
+    [state, orders, tokenInfos],
   )
 
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>
@@ -83,19 +118,22 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
 const swapReducer = (state: SwapState, action: SwapAction) => {
   return produce(state, (draft) => {
+    draft.reqres = 'request'
+    draft.lastInputTouched = 'in'
+
     switch (action.type) {
       case SwapAction.ChangeOrderType:
         draft.orderType = action.value
         break
       case SwapAction.TokenInInputTouched:
         draft.tokenInInput.isTouched = true
-        draft.tokenInInput.displayValue = ''
+        draft.tokenInInput.value = ''
         draft.tokenInInput.error = undefined
 
         break
       case SwapAction.TokenOutInputTouched:
         draft.tokenOutInput.isTouched = true
-        draft.tokenOutInput.displayValue = ''
+        draft.tokenOutInput.value = ''
         draft.tokenOutInput.error = undefined
 
         break
@@ -108,11 +146,12 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.TokenInAmountChanged:
-        draft.tokenInInput.displayValue = action.value
+        draft.tokenInInput.value = action.value
 
         break
       case SwapAction.TokenOutAmountChanged:
-        draft.tokenOutInput.displayValue = action.value
+        draft.tokenOutInput.value = action.value
+        draft.lastInputTouched = 'out'
 
         break
       case SwapAction.TokenInErrorChanged:
@@ -124,30 +163,31 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.SlippageInputChanged:
-        draft.slippageInput.displayValue = String(action.value)
+        draft.slippageInput.value = action.value
 
         break
       case SwapAction.WantedPriceInputChanged:
-        draft.wantedPrice.displayValue = action.value
+        draft.wantedPrice.value = action.value
+        draft.lastInputTouched = 'limit'
 
         break
       case SwapAction.SwitchTouched:
         draft.tokenOutInput.isTouched = state.tokenInInput.isTouched
         draft.tokenOutInput.tokenId = state.tokenInInput.tokenId
-        draft.tokenOutInput.displayValue = ''
+        draft.tokenOutInput.value = ''
         draft.tokenOutInput.error = undefined
 
         draft.tokenInInput.isTouched = state.tokenOutInput.isTouched
         draft.tokenInInput.tokenId = state.tokenOutInput.tokenId
-        draft.tokenInInput.displayValue = ''
+        draft.tokenInInput.value = ''
         draft.tokenInInput.error = undefined
 
         break
       case SwapAction.DexSelectorTouched:
         break
       case SwapAction.ResetAmounts:
-        draft.tokenInInput.displayValue = ''
-        draft.tokenOutInput.displayValue = ''
+        draft.tokenInInput.value = ''
+        draft.tokenOutInput.value = ''
 
         draft.tokenInInput.error = undefined
         draft.tokenOutInput.error = undefined
@@ -155,6 +195,13 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
       case SwapAction.ResetForm:
         draft = defaultState
+        break
+      case SwapAction.EstimateResponse:
+        draft.reqres = 'response'
+        draft.tokenOutInput.value = String(action.value.totalOutputWithoutSlippage ?? 0)
+        break
+      case SwapAction.EstimateError:
+        console.log(' SwapAction.EstimateError ', action.value)
         break
       default:
         throw new Error(`swapReducer invalid action`)
@@ -178,6 +225,8 @@ export const SwapAction = {
   DexSelectorTouched: 'DexSelectorTouched',
   ResetAmounts: 'ResetAmounts',
   ResetForm: 'ResetForm',
+  EstimateResponse: 'EstimateResponse',
+  EstimateError: 'EstimateError',
 } as const
 
 type SwapActionValueMap = {
@@ -196,6 +245,8 @@ type SwapActionValueMap = {
   DexSelectorTouched: undefined
   ResetAmounts: undefined
   ResetForm: undefined
+  EstimateResponse: Swap.EstimateResponse
+  EstimateError: Api.ResponseError
 }
 
 export type SwapAction = {
@@ -205,58 +256,64 @@ export type SwapAction = {
 }[keyof SwapActionValueMap]
 
 const defaultState: SwapState = Object.freeze({
+  reqres: 'response',
   orderType: 'market',
+  lastInputTouched: 'in',
   tokenInInput: {
     isTouched: true,
     tokenId: primaryTokenId,
     disabled: false,
     error: undefined,
-    displayValue: '',
+    value: '',
   },
   tokenOutInput: {
     isTouched: false,
     tokenId: undefined,
     disabled: false,
     error: undefined,
-    displayValue: '',
+    value: '',
   },
   slippageInput: {
-    displayValue: '1',
+    value: 1,
   },
   selectedDex: {
     isTouched: false,
+    value: undefined,
   },
   wantedPrice: {
-    displayValue: '',
+    value: '',
   },
   canSwap: false,
   estimate: undefined,
 } as const)
 
 type SwapState = {
+  reqres: 'request' | 'response'
   orderType: 'market' | 'limit'
+  lastInputTouched: 'in' | 'out' | 'limit'
   tokenInInput: {
     isTouched: boolean
     tokenId?: Portfolio.Token.Id
     disabled: boolean
     error: string | undefined
-    displayValue: string
+    value: string
   }
   tokenOutInput: {
     isTouched: boolean
     tokenId?: Portfolio.Token.Id
     disabled: boolean
     error: string | undefined
-    displayValue: string
+    value: string
   }
   slippageInput: {
-    displayValue: string
+    value: number
   }
   selectedDex: {
     isTouched: boolean
+    value?: Swap.Provider
   }
   wantedPrice: {
-    displayValue: string
+    value: string
   }
   canSwap: boolean
   estimate?: Swap.EstimateResponse

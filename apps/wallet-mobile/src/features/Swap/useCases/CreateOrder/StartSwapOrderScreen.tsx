@@ -307,7 +307,7 @@ export const StartSwapOrderScreen = () => {
             <AmountCard
               label={strings.swapFrom}
               onChange={(value) => swapForm.dispatch({type: 'TokenInAmountChanged', value})}
-              value={swapForm.tokenInInput.displayValue}
+              value={swapForm.tokenInInput.value}
               amount={balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.')}
               wallet={wallet}
               navigateTo={navigate.selectSellToken}
@@ -338,7 +338,7 @@ export const StartSwapOrderScreen = () => {
             <AmountCard
               label={strings.swapTo}
               onChange={(value) => swapForm.dispatch({type: 'TokenOutAmountChanged', value})}
-              value={swapForm.tokenOutInput.displayValue}
+              value={swapForm.tokenOutInput.value}
               amount={balances.records.get(swapForm.tokenOutInput.tokenId ?? 'unknown.')}
               wallet={wallet}
               navigateTo={navigate.selectBuyToken}
@@ -372,7 +372,7 @@ export const StartSwapOrderScreen = () => {
                   fontOverride={atoms.heading_3_regular}
                   onPress={navigate.editSlippage}
                   type={ButtonType.SecondaryText}
-                  title={`${swapForm.slippageInput.displayValue}%`}
+                  title={`${swapForm.slippageInput.value}%`}
                   rightIcon
                   icon={Icon.Edit}
                 />

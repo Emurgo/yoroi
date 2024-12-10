@@ -46,11 +46,9 @@ export const EditSlippageScreen = () => {
   const {styles, colors} = useStyles()
 
   const swapForm = useSwap()
-  const defaultSelectedChoice = getChoiceBySlippage(Number(swapForm.slippageInput.displayValue), numberLocale)
+  const defaultSelectedChoice = getChoiceBySlippage(Number(swapForm.slippageInput.value), numberLocale)
   const defaultInputValue =
-    defaultSelectedChoice.label === 'Manual'
-      ? new BigNumber(swapForm.slippageInput.displayValue).toFormat(numberLocale)
-      : ''
+    defaultSelectedChoice.label === 'Manual' ? new BigNumber(swapForm.slippageInput.value).toFormat(numberLocale) : ''
 
   const [selectedChoiceLabel, setSelectedChoiceLabel] = React.useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = React.useState(defaultInputValue)

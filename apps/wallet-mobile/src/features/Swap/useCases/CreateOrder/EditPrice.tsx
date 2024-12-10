@@ -32,7 +32,7 @@ export const EditPrice = () => {
           <TextInput
             keyboardType="numeric"
             autoComplete="off"
-            value={disabled ? String(swapForm.estimate?.netPrice ?? 0) : swapForm.wantedPrice.displayValue}
+            value={disabled ? String(swapForm.estimate?.netPrice ?? 0) : swapForm.wantedPrice.value}
             placeholder="0"
             onChangeText={(value) => swapForm.dispatch({type: 'WantedPriceInputChanged', value})}
             allowFontScaling

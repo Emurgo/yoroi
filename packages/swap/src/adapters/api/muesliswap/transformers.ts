@@ -16,7 +16,6 @@ import {
 } from './types'
 import {MuesliswapApiConfig} from './api-maker'
 import {asTokenFingerprint, asTokenName} from '../../../helpers/transformers'
-import {SwapProvider} from '@yoroi/types/lib/typescript/swap/api'
 
 export const transformersMaker = ({
   primaryTokenInfo,
@@ -134,7 +133,7 @@ export const transformersMaker = ({
     },
     quote: {
       request: ({
-        dex = SwapProvider.Muesliswap_v2,
+        dex = Swap.Provider.Muesliswap_v2,
         blacklistedDexes,
         tokenIn,
         tokenOut,
@@ -228,7 +227,7 @@ export const transformersMaker = ({
     },
     createLimit: {
       request: ({
-        dex = SwapProvider.Muesliswap_v2,
+        dex = Swap.Provider.Muesliswap_v2,
         tokenIn,
         tokenOut,
         amountIn,
