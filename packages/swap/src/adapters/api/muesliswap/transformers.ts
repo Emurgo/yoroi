@@ -16,6 +16,7 @@ import {
 } from './types'
 import {MuesliswapApiConfig} from './api-maker'
 import {asTokenFingerprint, asTokenName} from '../../../helpers/transformers'
+import {SwapProvider} from '@yoroi/types/lib/typescript/swap/api'
 
 export const transformersMaker = ({
   primaryTokenInfo,
@@ -103,11 +104,11 @@ export const transformersMaker = ({
             txHash,
             finalizedTxHash,
             status,
-            dex = 'muesliswap',
+            dex = Provider.Muesliswap_v2,
             outputIdx,
           }) => ({
             aggregator: Swap.Aggregator.Muesliswap,
-            dex,
+            dex: toSwapProvider(dex),
             placedAt: placedAt ? placedAt * 1000 : undefined,
             lastUpdate: finalizedAt ? finalizedAt * 1000 : undefined,
             status,
@@ -133,7 +134,7 @@ export const transformersMaker = ({
     },
     quote: {
       request: ({
-        dex,
+        dex = SwapProvider.Muesliswap_v2,
         blacklistedDexes,
         tokenIn,
         tokenOut,
@@ -142,7 +143,7 @@ export const transformersMaker = ({
         slippage,
       }: Swap.EstimateRequest): QuoteRequest => ({
         dex: dex
-          ? [dex as Provider]
+          ? [fromSwapProvider(dex)]
           : Object.values(Provider).filter(
               (provider) => !blacklistedDexes?.includes(provider),
             ),
@@ -186,7 +187,7 @@ export const transformersMaker = ({
         slippage,
       }: Swap.CreateRequest): CreateOrderRequest => ({
         dex: dex
-          ? [dex as Provider]
+          ? [fromSwapProvider(dex)]
           : Object.values(Provider).filter(
               (provider) => !blacklistedDexes?.includes(provider),
             ),
@@ -227,13 +228,13 @@ export const transformersMaker = ({
     },
     createLimit: {
       request: ({
-        dex,
+        dex = SwapProvider.Muesliswap_v2,
         tokenIn,
         tokenOut,
         amountIn,
         wantedPrice = 0,
       }: Swap.CreateRequest): LimitOrderRequest => ({
-        dex: dex as Provider,
+        dex: fromSwapProvider(dex),
         sell_token: tokenIn,
         buy_token: tokenOut,
         sell_amount: amountIn,
@@ -275,7 +276,7 @@ const transformSplit = ({
   amountIn: amount_in,
   batcherFee: batcher_fee,
   deposits: deposit,
-  dex,
+  dex: toSwapProvider(dex),
   expectedOutput: expected_output,
   expectedOutputWithoutSlippage: expected_output_without_slippage,
   fee: pool_fee,
@@ -286,3 +287,31 @@ const transformSplit = ({
   priceDistortion: price_impact,
   priceImpact: price_impact,
 })
+
+const toSwapProvider = (dex: Provider): Swap.Provider =>
+  ({
+    [Provider.Minswap_v1]: Swap.Provider.Minswap_v1,
+    [Provider.Minswap_v2]: Swap.Provider.Minswap_v2,
+    [Provider.Wingriders_v1]: Swap.Provider.Wingriders_v1,
+    [Provider.Vyfi_v1]: Swap.Provider.Vyfi_v1,
+    [Provider.Sundaeswap_v1]: Swap.Provider.Sundaeswap_v1,
+    [Provider.Sundaeswap_v3]: Swap.Provider.Sundaeswap_v3,
+    [Provider.Muesliswap_v2]: Swap.Provider.Muesliswap_v2,
+    [Provider.Spectrum_v1]: Swap.Provider.Spectrum_v1,
+    [Provider.Teddy_v1]: Swap.Provider.Teddy_v1,
+  }[dex])
+
+const fromSwapProvider = (dex: Swap.Provider): Provider =>
+  ({
+    [Swap.Provider.Minswap_v1]: Provider.Minswap_v1,
+    [Swap.Provider.Minswap_v2]: Provider.Minswap_v2,
+    [Swap.Provider.Wingriders_v1]: Provider.Wingriders_v1,
+    [Swap.Provider.Wingriders_v2]: undefined,
+    [Swap.Provider.Vyfi_v1]: Provider.Vyfi_v1,
+    [Swap.Provider.Sundaeswap_v1]: Provider.Sundaeswap_v1,
+    [Swap.Provider.Sundaeswap_v3]: Provider.Sundaeswap_v3,
+    [Swap.Provider.Splash_v1]: undefined,
+    [Swap.Provider.Teddy_v1]: Provider.Teddy_v1,
+    [Swap.Provider.Muesliswap_v2]: Provider.Muesliswap_v2,
+    [Swap.Provider.Spectrum_v1]: Provider.Spectrum_v1,
+  }[dex] ?? Provider.Muesliswap_v2)

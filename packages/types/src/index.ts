@@ -15,6 +15,7 @@ import {
   SwapEstimateRequest,
   SwapEstimateResponse,
   SwapOrder,
+  SwapProvider,
   SwapSplit,
 } from './swap/api'
 import {AppStorage, AppStorageFolderName} from './app/storage'
@@ -343,6 +344,8 @@ export namespace Swap {
   export type Order = SwapOrder
   export type Aggregator = SwapAggregator
   export const Aggregator = SwapAggregator
+  export type Provider = SwapProvider
+  export const Provider = SwapProvider
   export type CancelRequest = SwapCancelRequest
   export type CancelResponse = SwapCancelResponse
   export type EstimateRequest = SwapEstimateRequest

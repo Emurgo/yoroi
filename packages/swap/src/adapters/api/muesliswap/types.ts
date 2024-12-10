@@ -1,5 +1,19 @@
 import {Portfolio} from '@yoroi/types'
 
+export const Provider = {
+  Muesliswap_v2: 'muesliswap-v2',
+  Minswap_v1: 'minswap-v1',
+  Minswap_v2: 'minswap-v2',
+  Spectrum_v1: 'spectrum-v1',
+  Teddy_v1: 'teddy-v1',
+  Wingriders_v1: 'wingriders-v1',
+  Vyfi_v1: 'vyfi-v1',
+  Sundaeswap_v1: 'sundaeswap-v1',
+  Sundaeswap_v3: 'sundaeswap-v3',
+} as const
+
+export type Provider = (typeof Provider)[keyof typeof Provider]
+
 export type TokensResponse = Array<{
   info: {
     supply: {
@@ -90,20 +104,6 @@ export type CancelRequest = {
 export type CancelResponse = {
   tx_cbor: string
 }
-
-export const Provider = {
-  Muesliswap_v2: 'muesliswap-v2',
-  Minswap_v1: 'minswap-v1',
-  Minswap_v2: 'minswap-v2',
-  Spectrum_v1: 'spectrum-v1',
-  Teddy_v1: 'teddy-v1',
-  Wingriders_v1: 'wingriders-v1',
-  Vyfi_v1: 'vyfi-v1',
-  Sundaeswap_v1: 'sundaeswap-v1',
-  Sundaeswap_v3: 'sundaeswap-v3',
-} as const
-
-export type Provider = (typeof Provider)[keyof typeof Provider]
 
 export type LimitOrderRequest = {
   buy_token: string
