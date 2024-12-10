@@ -98,7 +98,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const handleOnLongPressReceive = (event: GestureResponderEvent) => {
     track.receiveCopyAddressClicked({copy_address_location: 'Long Press wallet Address'})
-    copy({text: nextReceiveAddress, event})
+    copy({text: nextReceiveAddress, event, feedback: strings.copiedLabel})
   }
 
   return (
