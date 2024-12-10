@@ -40,7 +40,7 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
 
         <Space height="lg" />
 
-        <Text>{metadataFormatted}</Text>
+        <Text style={styles.metadataText}>{metadataFormatted}</Text>
       </View>
     </View>
   )
@@ -79,6 +79,10 @@ const useStyles = () => {
     metadataLabel: {
       ...atoms.body_1_lg_medium,
       color: color.text_gray_medium,
+    },
+    metadataText: {
+      color: color.text_gray_medium,
+      ...atoms.body_2_md_regular,
     },
   })
 
