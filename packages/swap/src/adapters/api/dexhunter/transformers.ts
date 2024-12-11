@@ -396,5 +396,6 @@ const fromSwapProvider = (dex: Swap.Provider): Provider | undefined =>
     [Swap.Provider.Splash_v1]: Provider.Splash_v1,
     [Swap.Provider.Teddy_v1]: undefined,
     [Swap.Provider.Muesliswap_v2]: undefined,
+    [Swap.Provider.Muesliswap_clp]: undefined,
     [Swap.Provider.Spectrum_v1]: undefined,
   }[dex])

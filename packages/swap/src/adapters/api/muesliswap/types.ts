@@ -2,6 +2,7 @@ import {Portfolio} from '@yoroi/types'
 
 export const Provider = {
   Muesliswap_v2: 'muesliswap-v2',
+  Muesliswap_clp: 'muesliswap-clp',
   Minswap_v1: 'minswap-v1',
   Minswap_v2: 'minswap-v2',
   Spectrum_v1: 'spectrum-v1',
@@ -113,6 +114,7 @@ export type LimitOrderRequest = {
   user_address: string
   dex: Provider
   partner?: string
+  numbers_have_decimals: boolean
 }
 
 export type CreateOrderRequest = {
@@ -124,6 +126,7 @@ export type CreateOrderRequest = {
   slippage?: number
   dex?: Array<Provider>
   partner?: string
+  numbers_have_decimals: boolean
 }
 
 export type QuoteRequest = {
@@ -133,6 +136,7 @@ export type QuoteRequest = {
   sell_amount?: number
   slippage?: number
   dex?: Array<Provider>
+  numbers_have_decimals: boolean
 }
 
 export type Split = {

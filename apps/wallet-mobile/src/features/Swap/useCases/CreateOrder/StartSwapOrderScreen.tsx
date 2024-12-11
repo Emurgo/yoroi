@@ -308,7 +308,12 @@ export const StartSwapOrderScreen = () => {
               label={strings.swapFrom}
               onChange={(value) => swapForm.dispatch({type: 'TokenInAmountChanged', value})}
               value={swapForm.tokenInInput.value}
-              amount={balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.')}
+              amount={
+                balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.') ?? {
+                  info: swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? 'unknown.'),
+                  quantity: balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.')?.quantity,
+                }
+              }
               wallet={wallet}
               navigateTo={navigate.selectSellToken}
               touched={swapForm.tokenInInput.isTouched}
@@ -339,7 +344,10 @@ export const StartSwapOrderScreen = () => {
               label={strings.swapTo}
               onChange={(value) => swapForm.dispatch({type: 'TokenOutAmountChanged', value})}
               value={swapForm.tokenOutInput.value}
-              amount={balances.records.get(swapForm.tokenOutInput.tokenId ?? 'unknown.')}
+              amount={{
+                info: swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? 'unknown.'),
+                quantity: balances.records.get(swapForm.tokenOutInput.tokenId ?? 'unknown.')?.quantity,
+              }}
               wallet={wallet}
               navigateTo={navigate.selectBuyToken}
               touched={swapForm.tokenOutInput.isTouched}

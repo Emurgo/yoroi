@@ -68,17 +68,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
     if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) return
 
-    console.log('Running effect', {
-      slippage: state.slippageInput.value,
-      tokenIn: state.tokenInInput.tokenId,
-      tokenOut: state.tokenOutInput.tokenId,
-      amountIn: Number(state.tokenInInput.value),
-      // amountOut: Number(state.tokenOutInput:value),
-      blacklistedDexes: [],
-      dex: state.selectedDex.value,
-      wantedPrice: Number(state.wantedPrice),
-    })
-
     swapManager.api
       .estimate({
         slippage: state.slippageInput.value,
@@ -198,10 +187,14 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
       case SwapAction.EstimateResponse:
         draft.reqres = 'response'
+        draft.estimate = action.value
         draft.tokenOutInput.value = String(action.value.totalOutputWithoutSlippage ?? 0)
+
         break
       case SwapAction.EstimateError:
-        console.log(' SwapAction.EstimateError ', action.value)
+        draft.estimate = undefined
+        draft.tokenOutInput.error = action.value.message
+
         break
       default:
         throw new Error(`swapReducer invalid action`)

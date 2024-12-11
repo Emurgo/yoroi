@@ -13,6 +13,7 @@ export const SwapProvider = {
   Minswap_v1: 'minswap-v1',
   Minswap_v2: 'minswap-v2',
   Muesliswap_v2: 'muesliswap-v2',
+  Muesliswap_clp: 'muesliswap-clp',
   Spectrum_v1: 'spectrum-v1',
   Sundaeswap_v1: 'sundaeswap-v1',
   Sundaeswap_v3: 'sundaeswap-v3',

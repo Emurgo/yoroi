@@ -45,7 +45,8 @@ export const AmountCard = ({
 
   const noTokenSelected = !touched
   const info = amount?.info
-  const name = info?.ticker ?? info?.name ?? ''
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  const name = info?.ticker || info?.name || ''
   const formattedAmount = !info ? '0' : formatTokenWithText(amount?.quantity ?? 0n, info, 18)
 
   const focusInput = () => {

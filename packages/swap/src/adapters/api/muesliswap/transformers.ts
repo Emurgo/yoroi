@@ -133,7 +133,7 @@ export const transformersMaker = ({
     },
     quote: {
       request: ({
-        dex = Swap.Provider.Muesliswap_v2,
+        dex,
         blacklistedDexes,
         tokenIn,
         tokenOut,
@@ -151,6 +151,7 @@ export const transformersMaker = ({
         buy_amount: amountOut,
         sell_amount: amountIn,
         slippage,
+        numbers_have_decimals: true,
       }),
       response: ({
         // buy_token_decimals,
@@ -195,6 +196,7 @@ export const transformersMaker = ({
         sell_amount: amountIn,
         slippage,
         user_address: address,
+        numbers_have_decimals: true,
       }),
       response: ({
         quote: {
@@ -239,6 +241,7 @@ export const transformersMaker = ({
         sell_amount: amountIn,
         buy_amount: amountIn * wantedPrice,
         user_address: address,
+        numbers_have_decimals: true,
       }),
       // LimitOrderResponse doesn't have quote data :(
       response: ({tx_cbor}: LimitOrderResponse): Swap.CreateResponse => ({
@@ -296,6 +299,7 @@ const toSwapProvider = (dex: Provider): Swap.Provider =>
     [Provider.Sundaeswap_v1]: Swap.Provider.Sundaeswap_v1,
     [Provider.Sundaeswap_v3]: Swap.Provider.Sundaeswap_v3,
     [Provider.Muesliswap_v2]: Swap.Provider.Muesliswap_v2,
+    [Provider.Muesliswap_clp]: Swap.Provider.Muesliswap_clp,
     [Provider.Spectrum_v1]: Swap.Provider.Spectrum_v1,
     [Provider.Teddy_v1]: Swap.Provider.Teddy_v1,
   }[dex])
@@ -312,5 +316,6 @@ const fromSwapProvider = (dex: Swap.Provider): Provider =>
     [Swap.Provider.Splash_v1]: undefined,
     [Swap.Provider.Teddy_v1]: Provider.Teddy_v1,
     [Swap.Provider.Muesliswap_v2]: Provider.Muesliswap_v2,
+    [Swap.Provider.Muesliswap_clp]: Provider.Muesliswap_clp,
     [Swap.Provider.Spectrum_v1]: Provider.Spectrum_v1,
   }[dex] ?? Provider.Muesliswap_v2)

@@ -106,12 +106,10 @@ export const muesliswapApiMaker = (
       async estimate(body: Swap.EstimateRequest) {
         const params = transformers.quote.request(body)
 
-        console.log({params})
-
         const response = await request<QuoteResponse>(
           {
-            method: 'get',
-            url: apiUrls.create,
+            method: 'post',
+            url: apiUrls.quote,
             headers,
           },
           {
@@ -132,7 +130,7 @@ export const muesliswapApiMaker = (
             },
             true,
           )
-        } finally {
+        } catch (e) {
           return freeze(
             {
               tag: 'left',
@@ -156,7 +154,7 @@ export const muesliswapApiMaker = (
           CreateOrderResponse | LimitOrderResponse
         >(
           {
-            method: 'get',
+            method: 'post',
             url: apiUrls[kind],
             headers,
           },
