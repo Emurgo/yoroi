@@ -51,6 +51,7 @@ export const useStrings = () => {
     SELF: intl.formatMessage(txTypeMessages.SELF),
     MULTI: intl.formatMessage(txTypeMessages.MULTI),
     assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
+    copiedLabel: intl.formatMessage(messages.copiedLabel),
   }
 }
 
@@ -178,6 +179,10 @@ export const messages = defineMessages({
   copyLabel: {
     id: 'components.receive.addressmodal.copyLabel',
     defaultMessage: '!!!Copy address',
+  },
+  copiedLabel: {
+    id: 'components.receive.addressmodal.copiedLabel',
+    defaultMessage: '!!!Address Copied',
   },
   spending: {
     id: 'components.receive.addressmodal.spendingKeyHash',

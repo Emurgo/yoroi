@@ -3,7 +3,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
-import {Dimensions, Keyboard, Platform, StyleSheet, Text, View} from 'react-native'
+import {Dimensions, Keyboard, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -242,7 +242,11 @@ const WordSuggestionList = ({
 
 const WordSuggestionButton = ({title, onPress}: {title: string; onPress: () => void}) => {
   const {styles} = useStyles()
-  return <Button onPress={onPress} style={styles.suggestion} title={title} />
+  return (
+    <TouchableOpacity style={styles.suggestion} onPress={onPress}>
+      <Text style={styles.suggestionText}>{title}</Text>
+    </TouchableOpacity>
+  )
 }
 
 const useBold = () => {
@@ -297,10 +301,16 @@ const useStyles = () => {
       paddingBottom: dynamicPaddingBottom,
     },
     suggestion: {
+      ...atoms.px_lg,
+      ...atoms.py_sm,
       borderColor: color.primary_300,
       borderWidth: 2,
       borderRadius: 8,
       backgroundColor: 'transparent',
+    },
+    suggestionText: {
+      color: color.text_primary_medium,
+      ...atoms.body_1_lg_regular,
     },
     suggestionArea: {
       backgroundColor: color.bg_color_max,
