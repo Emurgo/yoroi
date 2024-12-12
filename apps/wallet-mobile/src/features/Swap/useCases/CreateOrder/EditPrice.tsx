@@ -11,7 +11,7 @@ const BORDER_SIZE = 1
 export const EditPrice = () => {
   const strings = useStrings()
   const [isFocused, setIsFocused] = React.useState(false)
-  const {styles, colors} = useStyles()
+  const {styles, color} = useStyles()
   const {isDark} = useTheme()
 
   const swapForm = useSwap()
@@ -34,9 +34,10 @@ export const EditPrice = () => {
             autoComplete="off"
             value={disabled ? String(swapForm.estimate?.netPrice ?? 0) : swapForm.wantedPrice.value}
             placeholder="0"
+            placeholderTextColor={color.gray_600}
             onChangeText={(value) => swapForm.dispatch({type: 'WantedPriceInputChanged', value})}
             allowFontScaling
-            selectionColor={colors.cursor}
+            selectionColor={color.input_selected}
             style={styles.amountInput}
             underlineColorAndroid="transparent"
             editable={!disabled}
@@ -120,8 +121,6 @@ const useStyles = () => {
       justifyContent: 'center',
     },
   })
-  const colors = {
-    cursor: color.input_selected,
-  }
-  return {styles, colors} as const
+
+  return {styles, color} as const
 }
