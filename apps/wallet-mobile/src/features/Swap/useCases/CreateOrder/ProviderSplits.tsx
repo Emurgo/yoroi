@@ -1,73 +1,105 @@
-export const ShowPoolActions = () => {
-  return null
-  /*
+import {useTheme} from '@yoroi/theme'
+import * as React from 'react'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+
+import {Button, ButtonType} from '../../../../components/Button/Button'
+import {Icon} from '../../../../components/Icon'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {useNavigateTo} from '../../common/navigation'
+import {ProviderIcon} from '../../common/ProviderIcon/ProviderIcon'
+import {useStrings} from '../../common/strings'
+import {useSwap} from '../../common/SwapProvider'
+
+export const ProviderSplits = () => {
   const strings = useStrings()
-  const styles = useStyles()
-  const [isExpanded, setIsExpanded] = React.useState(true)
+  const {styles, color} = useStyles()
+  const [expanded, setExpanded] = React.useState(true)
 
   const navigateTo = useNavigateTo()
-  const handleOnChangePool = () => navigateTo.selectPool()
 
-  const {orderData} = useSwap()
-  const {selectedPoolCalculation: calculation, amounts} = orderData
+  const swapForm = useSwap()
 
-  const {wallet} = useSelectedWallet()
-  const sellTokenInfo = orderData.amounts.sell?.info
-  const sellTokenName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
+  const dex = swapForm.estimate?.splits[0]?.dex
 
-  const {
-    buyQuantity: {isTouched: isBuyTouched},
-    sellQuantity: {isTouched: isSellTouched},
-    selectedPool: {isTouched: isPoolTouched},
-  } = useSwapForm()
-  if (!isBuyTouched || !isSellTouched || calculation === undefined) return null
+  const title = `${dex} ${strings.autoPool}`
 
-  const {cost, pool} = calculation
-  const {decimals, ticker} = wallet.portfolioPrimaryTokenInfo
-
-  const totalFees = Quantities.format(
-    asQuantity((cost.batcherFee.quantity + cost.frontendFeeInfo.fee.quantity).toString()),
-    decimals,
-  )
-  const titleTotalFeesFormatted = `${strings.total}: ${Quantities.format(
-    asQuantity(amounts.sell?.quantity.toString() ?? '0'),
-    sellTokenInfo?.decimals ?? 0,
-  )} ${sellTokenName} + ${totalFees} ${ticker}`
-  const handleOnExpand = () => setIsExpanded((state) => !state)
-  const totalFeesTitle = (
-    <HeaderWrapper expanded={isExpanded} onPress={handleOnExpand}>
-      <Text style={styles.bold}>{titleTotalFeesFormatted}</Text>
-    </HeaderWrapper>
-  )
-
-  const poolStatus = orderData.type === 'limit' && isPoolTouched ? '' : ` ${strings.autoPool}`
-  const poolProviderFormatted = capitalize(pool.provider)
-  const poolTitle = `${poolProviderFormatted}${poolStatus}`
-
-  const feeBreakdown = <FeeBreakdown totalFees={totalFees} orderType={orderData.type} />
   return (
     <View>
-      <View style={[styles.flex, styles.between]}>
-        <View style={styles.flex}>
-          <PoolIcon size={25} providerId={pool.provider} />
+      <View style={styles.between}>
+        <View style={styles.composedText}>
+          {dex !== undefined && (
+            <>
+              <View style={styles.providerIcon}>
+                <ProviderIcon size={25} provider={dex} />
+              </View>
 
-          <Spacer width={10} />
-
-          <Text style={styles.bolder}>{poolTitle}</Text>
+              <Text style={styles.bolder}>{title}</Text>
+            </>
+          )}
         </View>
 
-        {orderData.type === 'limit' && (
-          <TouchableOpacity onPress={handleOnChangePool}>
-            <Text style={styles.change}>{strings.changePool}</Text>
-          </TouchableOpacity>
+        {swapForm.orderType === 'limit' && (
+          <View style={styles.changeDex}>
+            <Button type={ButtonType.Text} onPress={navigateTo.selectProvider} title={strings.changePool} />
+          </View>
         )}
       </View>
 
-      <ExpandableInfoCard header={totalFeesTitle} info={feeBreakdown} expanded={isExpanded} />
+      {swapForm.estimate !== undefined && (
+        <View style={styles.card}>
+          <TouchableOpacity onPress={() => setExpanded(!expanded)}>
+            <View style={styles.between}>
+              <Text style={styles.heading}>{`${strings.total}: ${swapForm.estimate?.totalInput}`}</Text>
+
+              <Icon.Chevron direction={expanded ? 'up' : 'down'} color={color.el_gray_max} size={24} />
+            </View>
+          </TouchableOpacity>
+
+          {expanded && (
+            <View style={styles.list}>
+              <Row
+                label={strings.swapMinAdaTitle}
+                description={strings.swapMinAda}
+                value={swapForm.estimate?.deposits}
+              />
+
+              <Row
+                label={strings.swapMinReceivedTitle}
+                description={strings.swapMinReceived}
+                value={swapForm.estimate?.totalOutput}
+              />
+            </View>
+          )}
+        </View>
+      )}
     </View>
   )
-    */
 }
+
+const Row = ({label, description, value}: {label: string; description?: string; value: string | React.ReactNode}) => {
+  const {styles} = useStyles()
+  const {openModal} = useModal()
+
+  return (
+    <View style={styles.row}>
+      <View style={styles.composedText}>
+        <Text style={styles.rowLabel}>{label}</Text>
+
+        {description !== undefined && (
+          <Button
+            style={styles.info}
+            onPress={() => openModal(label, <Text style={styles.textContent}>{description}</Text>)}
+            type={ButtonType.SecondaryText}
+            icon={Icon.Info}
+          />
+        )}
+      </View>
+
+      {typeof value === 'string' ? <Text style={styles.rowValue}>{value}</Text> : value}
+    </View>
+  )
+}
+
 /*
 const FeeBreakdown = ({totalFees, orderType}: {totalFees: string; orderType: Swap.OrderType}) => {
   return orderType === 'limit' ? (
@@ -269,50 +301,68 @@ const useBold = () => {
     b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
   }
 }
-
+*/
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    flex: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    between: {
-      ...atoms.justify_between,
-    },
-    modalText: {
-      ...atoms.text_left,
-      ...atoms.body_1_lg_regular,
-      color: color.gray_900,
-    },
-    text: {
-      ...atoms.text_right,
-      ...atoms.body_1_lg_regular,
-      color: color.gray_900,
-      ...atoms.flex_wrap,
-      ...atoms.flex_1,
-    },
-
-    modalContent: {
-      ...atoms.flex_1,
-      ...atoms.justify_between,
-      ...atoms.px_lg,
-    },
-    change: {
-      color: color.text_primary_medium,
-      ...atoms.body_2_md_medium,
-      textTransform: 'uppercase',
-    },
-    bold: {
-      color: color.gray_max,
-      ...atoms.body_1_lg_regular,
-    },
     bolder: {
       color: color.gray_max,
       ...atoms.body_1_lg_medium,
     },
+    card: {
+      ...atoms.p_lg,
+      ...atoms.border,
+      borderRadius: 8,
+      borderColor: color.gray_200,
+      backgroundColor: color.bg_color_max,
+    },
+    between: {
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+    },
+    providerIcon: {
+      ...atoms.pb_lg,
+      ...atoms.pr_lg,
+      ...atoms.pt_lg,
+    },
+    changeDex: {
+      ...atoms.self_center,
+    },
+    list: {
+      ...atoms.pt_md,
+      ...atoms.gap_xs,
+    },
+    heading: {
+      ...atoms.body_1_lg_medium,
+      color: color.text_gray_medium,
+    },
+    row: {
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+    },
+    rowLabel: {
+      ...atoms.body_1_lg_regular,
+      color: color.text_gray_low,
+    },
+    rowValue: {
+      ...atoms.body_1_lg_regular,
+      ...atoms.self_center,
+      color: color.text_gray_medium,
+    },
+    composedText: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.gap_xs,
+    },
+    textContent: {
+      color: color.gray_900,
+      ...atoms.body_1_lg_regular,
+      ...atoms.px_lg,
+    },
+    info: {
+      ...atoms.p_0,
+    },
   })
 
-  return styles
+  return {styles, color}
 }
-*/

@@ -16,7 +16,7 @@ import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 import {EditPrice} from './EditPrice'
-import {ShowPoolActions} from './ShowPoolActions'
+import {ProviderSplits} from './ProviderSplits'
 
 // const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
@@ -24,7 +24,7 @@ const BOTTOM_ACTION_SECTION = 180
 export const StartSwapOrderScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
-  const {styles, atoms} = useStyles()
+  const {styles} = useStyles()
   const {height: deviceHeight} = useWindowDimensions()
   const isKeyboardOpen = useIsKeyboardOpen()
   const {wallet} = useSelectedWallet()
@@ -363,7 +363,6 @@ export const StartSwapOrderScreen = () => {
                 <Text style={styles.slippageLabel}>{strings.slippageTolerance}</Text>
 
                 <Button
-                  fontOverride={styles.slippageLabel}
                   onPress={() =>
                     openModal(
                       strings.slippageTolerance,
@@ -377,7 +376,6 @@ export const StartSwapOrderScreen = () => {
 
               <View>
                 <Button
-                  fontOverride={atoms.heading_3_regular}
                   onPress={navigate.editSlippage}
                   type={ButtonType.SecondaryText}
                   title={`${swapForm.slippageInput.value}%`}
@@ -385,9 +383,9 @@ export const StartSwapOrderScreen = () => {
                   icon={Icon.Edit}
                 />
               </View>
-
-              <ShowPoolActions />
             </View>
+
+            <ProviderSplits />
           </View>
         </View>
       </ScrollView>

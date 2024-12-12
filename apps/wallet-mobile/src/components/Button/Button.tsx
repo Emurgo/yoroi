@@ -133,8 +133,8 @@ const useStyles = ({
     case ButtonType.Link:
       shape =
         size === 'M'
-          ? {...atoms.p_md, ...atoms.gap_xs, ...atoms.rounded_sm}
-          : {...atoms.p_sm, ...atoms.gap_2xs, ...atoms.rounded_sm}
+          ? {maxHeight: 40, ...atoms.py_sm, ...atoms.px_md, ...atoms.gap_xs, ...atoms.rounded_sm}
+          : {maxHeight: 32, ...atoms.p_xs, ...atoms.px_sm, ...atoms.gap_2xs, ...atoms.rounded_sm}
       break
     case ButtonType.Circle:
       shape = {width: 56, height: 56, ...atoms.align_center, ...atoms.rounded_full}
@@ -182,7 +182,8 @@ const useStyles = ({
   })
 
   const iconProps: IconProps = {
-    size: size === 'M' ? 28 : 24,
+    size:
+      type === ButtonType.Text || type === ButtonType.SecondaryText ? (size === 'M' ? 24 : 20) : size === 'M' ? 28 : 24,
     color: foregroundColor,
   }
 
