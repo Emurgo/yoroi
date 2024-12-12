@@ -155,6 +155,7 @@ const useStyles = ({
       backgroundColor,
       ...atoms.flex,
       ...atoms.flex_row,
+      ...atoms.flex_grow,
       ...atoms.align_start,
       ...atoms.justify_center,
       ...shape,
