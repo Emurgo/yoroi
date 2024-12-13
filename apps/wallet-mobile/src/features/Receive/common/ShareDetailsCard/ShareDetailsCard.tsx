@@ -46,9 +46,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
         <View style={styles.textRow}>
           <Text style={styles.textAddressDetails}>{address}</Text>
 
-          <View>
-            <Copy value={address} onCopy={handleAddressOnCopy} message={strings.addressCopiedMsg} />
-          </View>
+          <CopyButton value={address} onCopy={handleAddressOnCopy} message={strings.addressCopiedMsg} />
         </View>
       </View>
 
@@ -59,7 +57,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
           <View style={styles.textRow}>
             <Text style={styles.textAddressDetails}>{stakingHash}</Text>
 
-            <Copy value={stakingHash} message={strings.addressCopiedMsg} />
+            <CopyButton value={stakingHash} message={strings.addressCopiedMsg} />
           </View>
         </View>
       )}
@@ -71,7 +69,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
           <View style={styles.textRow}>
             <Text style={styles.textAddressDetails}>{spendingHash}</Text>
 
-            <Copy value={spendingHash} message={strings.addressCopiedMsg} />
+            <CopyButton value={spendingHash} message={strings.addressCopiedMsg} />
           </View>
         </View>
       )}
@@ -85,14 +83,6 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
           </View>
         </View>
       )}
-    </View>
-  )
-}
-
-const Copy = ({value, message, onCopy}: {value: string; message: string; onCopy?: () => void}) => {
-  return (
-    <View>
-      <CopyButton value={value} message={message} onCopy={onCopy} offsetX={-50} offsetY={-10} />
     </View>
   )
 }
