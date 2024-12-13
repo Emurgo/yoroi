@@ -98,27 +98,47 @@ async function formatLedgerWithdrawals(
 ): Promise<Array<Withdrawal>> {
   const result: Array<Withdrawal> = []
 
-  const withdrawalKeys = await withdrawals.keys()
-  for (let i = 0; i < (await withdrawalKeys.len()); i++) {
-    const rewardAddress = await withdrawalKeys.get(i)
+  const keys = await withdrawals.keys()
+  const keysLength = await keys.len()
+  for (let i = 0; i < keysLength; i++) {
+    const rewardAddress = await keys.get(i)
     const withdrawalAmount = await withdrawals.get(rewardAddress)
     if (withdrawalAmount == null) {
       throw new Error(`formatLedgerWithdrawals should never happen`)
     }
-
-    const rewardAddressPayload = Buffer.from(await rewardAddress.toAddress().then((a) => a.toBytes())).toString('hex')
+    const rewardAddressPayload = await (await rewardAddress.toAddress()).toHex()
     const addressing = addressingMap(rewardAddressPayload)
-    if (addressing == null) {
-      throw new Error(`formatLedgerWithdrawals Ledger can only withdraw from own address ${rewardAddressPayload}`)
+    let stakeCredential: null | Withdrawal['stakeCredential'] = null
+    if (addressing != null) {
+      stakeCredential = {
+        type: CredentialParamsType.KEY_PATH,
+        keyPath: addressing.path,
+      }
+    } else {
+      const cred = await rewardAddress.paymentCred()
+      const maybeKeyHash = await cred.toKeyhash()
+      const maybeScriptHash = await cred.toScripthash()
+      if (maybeKeyHash) {
+        stakeCredential = {
+          type: CredentialParamsType.KEY_HASH,
+          keyHashHex: await maybeKeyHash.toHex(),
+        }
+      } else if (maybeScriptHash) {
+        stakeCredential = {
+          type: CredentialParamsType.SCRIPT_HASH,
+          scriptHashHex: await maybeScriptHash.toHex(),
+        }
+      }
+    }
+    if (stakeCredential === null) {
+      throw new Error('Failed to resolve credential type for reward address: ' + rewardAddressPayload)
     }
     result.push({
       amount: await withdrawalAmount.toStr(),
-      stakeCredential: {
-        type: CredentialParamsType.KEY_PATH,
-        keyPath: addressing.path,
-      },
+      stakeCredential,
     })
   }
+
   return result
 }
 async function formatLedgerCertificates(
