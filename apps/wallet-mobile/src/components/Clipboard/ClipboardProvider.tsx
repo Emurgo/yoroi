@@ -75,8 +75,6 @@ type CopyProps = {
   text: string
   feedback?: string
   event?: GestureResponderEvent
-  offsetX?: number
-  offsetY?: number
 }
 type ClipboardContext = {
   copy: (a: CopyProps) => void
