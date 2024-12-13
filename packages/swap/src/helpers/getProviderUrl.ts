@@ -1,6 +1,6 @@
 import {Swap} from '@yoroi/types'
 
-export const getPoolUrlByProvider = (provider: Swap.Provider): string => {
+export const getProviderUrl = (provider: Swap.Provider): string => {
   return (poolUrls[provider] ?? poolUrls[Swap.Provider.Muesliswap_v2]) as string
 }
 

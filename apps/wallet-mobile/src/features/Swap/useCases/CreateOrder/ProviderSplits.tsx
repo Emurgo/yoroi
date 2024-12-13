@@ -6,7 +6,7 @@ import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useNavigateTo} from '../../common/navigation'
-import {ProviderIcon} from '../../common/ProviderIcon/ProviderIcon'
+import {ProviderIcon} from '../../common/Provider/ProviderIcon'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 

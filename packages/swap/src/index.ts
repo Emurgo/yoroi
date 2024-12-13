@@ -1,5 +1,5 @@
 export {swapManagerMaker} from './manager'
-export {getPoolUrlByProvider} from './helpers/getPoolUrlByProvider'
+export {getProviderUrl} from './helpers/getProviderUrl'
 export {
   swapStorageMaker,
   swapStorageSlippageKey,

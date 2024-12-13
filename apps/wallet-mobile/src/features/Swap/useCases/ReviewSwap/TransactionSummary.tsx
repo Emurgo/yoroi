@@ -1,64 +1,56 @@
-export const TransactionSummary = () => {
-  return null
-  /*
+import {useTheme} from '@yoroi/theme'
+import {capitalize} from 'lodash'
+import React from 'react'
+import {StyleSheet, Text, View} from 'react-native'
+
+import {Divider} from '../../../../components/Divider/Divider'
+import {Icon} from '../../../../components/Icon'
+import {Space} from '../../../../components/Space/Space'
+import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from '../../common/constants'
+import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
+import {Provider} from '../../common/Provider/Provider'
+import {useStrings} from '../../common/strings'
+import {SwapContext} from '../../common/SwapProvider'
+
+export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
   const {
-    limitPrice: {displayValue: limitDisplayValue},
-  } = useSwapForm()
-  const {amounts, selectedPoolCalculation: calculation, type} = orderData
+    wantedPrice: {value: wantedPrice},
+    orderType,
+  } = swapForm
 
-  // should never happen
-  if (!calculation || !amounts.buy || !amounts.sell) throw new Error('No selected pool calculation/amounts found')
-  const {pool, cost, prices} = calculation
+  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? '.unknown')
+  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? '.unknown')
 
-  const priceImpact = prices.priceImpact
-  const formattedActualPrice = Quantities.format(
-    asQuantity(prices.actualPrice),
-    orderData.tokens.priceDenomination,
-    PRICE_PRECISION,
-  )
+  if (tokenInInfo === undefined || tokenOutInfo === undefined) throw new Error('Missing tokenInfos')
+  const amountIn = {info: tokenInInfo, quantity: BigInt(Number(swapForm.createTx?.totalInput) ?? 0)}
+  const amountOut = {info: tokenOutInfo, quantity: BigInt(Number(swapForm.createTx?.totalInput) ?? 0)}
 
-  const priceImpactRisk = getPriceImpactRisk(Number(priceImpact))
+  const priceImpactRisk = getPriceImpactRisk(Number(swapForm.createTx?.splits[0].priceImpact))
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
-  const priceImpactRiskTextColor = type === 'market' ? priceImpactRiskTheme.text : styles.text.color
+  const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : styles.text.color
 
-  const sellTokenInfo = amounts.sell.info
-  const buyTokenInfo = amounts.buy.info
+  const tokenToSellName = tokenInInfo.ticker ?? tokenInInfo.name
+  const tokenToBuyName = tokenOutInfo.ticker ?? tokenOutInfo.name
 
-  const tokenToSellName = sellTokenInfo.ticker ?? sellTokenInfo.name
-  const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
+  const priceInfoValue = `${wantedPrice} ${tokenToSellName}/${tokenToBuyName}`
+  const minAdaInfoValue = `${swapForm.createTx?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`
+  const totalFee = `${swapForm.createTx?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`
+  const minReceivedInfoValue = `${swapForm.createTx?.totalOutput} ${tokenToBuyName}`
 
-  const formattedFeeText = `${Quantities.format(
-    asQuantity((cost.batcherFee.quantity + cost.frontendFeeInfo.fee.quantity).toString()),
-    wallet.portfolioPrimaryTokenInfo.decimals,
-  )} ${wallet.portfolioPrimaryTokenInfo.ticker}`
-  const poolProviderFormatted = capitalize(pool.provider)
-  const poolUrl = getPoolUrlByProvider(pool.provider)
-
-  const liqFeeQuantity = Quantities.format(asQuantity(cost.liquidityFee.quantity.toString()), sellTokenInfo.decimals)
-  const liqFeeQuantityFormatted = `${liqFeeQuantity} ${tokenToSellName}`
-
-  const poolIcon = <PoolIcon providerId={pool.provider} size={18} />
-
-  const priceInfoValue = `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`
-  const minAdaInfoValue = `${Quantities.format(
-    asQuantity(cost.deposit.quantity.toString()),
-    wallet.portfolioPrimaryTokenInfo.decimals,
-  )} ${wallet.portfolioPrimaryTokenInfo.ticker}`
-  const minReceivedInfoValue = `${Quantities.format(
-    asQuantity(calculation.buyAmountWithSlippage.quantity.toString()),
-    buyTokenInfo.decimals,
-  )} ${tokenToBuyName}`
+  const provider = swapForm.createTx?.splits[0]?.dex
 
   const feesInfo = [
     {
       label: strings.dex.toUpperCase(),
-      value: <LiquidityPool liquidityPoolIcon={poolIcon} liquidityPoolName={poolProviderFormatted} poolUrl={poolUrl} />,
+      value: provider !== undefined ? <Provider provider={provider} /> : '',
     },
     {
-      label: `${capitalize(type)} ${strings.price}`,
+      label: `${capitalize(orderType)} ${strings.price}`,
       value: <Text style={[styles.text, styles.alignRight]}>{priceInfoValue}</Text>,
     },
     {
@@ -74,19 +66,19 @@ export const TransactionSummary = () => {
               {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
               <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
-                {Math.ceil(Number(priceImpact) * 100) / 100}%
+                {swapForm.createTx?.splits[0]?.priceImpact}%
               </Text>
             </View>
 
             <View style={{flexDirection: 'row'}}>
               <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
-                {`(${formattedActualPrice} ${tokenToSellName}/${tokenToBuyName})`}
+                {`(${swapForm.createTx?.netPrice} ${tokenToSellName}/${tokenToBuyName})`}
               </Text>
             </View>
           </View>
         ),
       warning: priceImpactRisk === 'high',
-      hidden: orderData.type === 'limit',
+      hidden: orderType === 'limit',
     },
     {
       label: strings.swapMinAdaTitle,
@@ -94,11 +86,7 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapFeesTitle,
-      value: <Text style={styles.text}>{formattedFeeText}</Text>,
-    },
-    {
-      label: strings.swapLiqProvFee,
-      value: <Text style={styles.text}>{liqFeeQuantityFormatted}</Text>,
+      value: <Text style={styles.text}>{totalFee}</Text>,
     },
     {
       label: strings.swapMinReceivedTitle,
@@ -112,7 +100,7 @@ export const TransactionSummary = () => {
 
   return (
     <View>
-      {(priceImpactRisk === 'moderate' || priceImpactRisk === 'high') && type === 'market' && (
+      {(priceImpactRisk === 'moderate' || priceImpactRisk === 'high') && orderType === 'market' && (
         <View style={[styles.banner, {backgroundColor: priceImpactRiskTheme.background}]}>
           {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
@@ -134,13 +122,13 @@ export const TransactionSummary = () => {
 
       <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
 
-      <TokenAmountItem amount={amounts.sell} orderType={type} />
+      <TokenAmountItem amount={amountIn} orderType={orderType} />
 
       <Space height="lg" />
 
       <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
 
-      <TokenAmountItem amount={amounts.buy} priceImpactRisk={priceImpactRisk} orderType={type} />
+      <TokenAmountItem amount={amountOut} priceImpactRisk={priceImpactRisk} orderType={orderType} />
 
       <Divider verticalSpace="lg" />
 
@@ -167,9 +155,8 @@ export const TransactionSummary = () => {
       })}
     </View>
   )
-    */
 }
-/*
+
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
@@ -242,4 +229,3 @@ const useStyles = () => {
 
   return {styles, colors} as const
 }
-*/

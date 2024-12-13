@@ -228,11 +228,13 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.reqres = 'response'
         draft.estimate = action.value
         draft.tokenOutInput.value = String(action.value.totalOutputWithoutSlippage ?? 0)
+        draft.canSwap = true
 
         break
       case SwapAction.EstimateError:
         draft.estimate = undefined
         draft.tokenOutInput.error = action.value.message
+        draft.canSwap = false
 
         break
       case SwapAction.CreateResponse:
@@ -368,7 +370,7 @@ type SwapState = {
   createTx?: Swap.CreateResponse
 }
 
-type SwapContext = SwapState & {
+export type SwapContext = SwapState & {
   tokenInfos: Map<`${string}.${string}`, Portfolio.Token.Info>
   tokenInInputRef: React.RefObject<TextInput> | undefined
   tokenOutInputRef: React.RefObject<TextInput> | undefined
