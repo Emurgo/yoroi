@@ -10,10 +10,12 @@ import {useAddressHex, useStakingKey} from '../../../yoroi-wallets/hooks'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenInfos} from '../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useNavigateTo} from './navigation'
 
 export const useSwap = () => React.useContext(SwapContext)
 
 export const SwapProvider = ({children}: {children: React.ReactNode}) => {
+  const navigate = useNavigateTo()
   const {wallet} = useSelectedWallet()
   const network = wallet.networkManager.network
   const _balances = usePortfolioBalances({wallet})
@@ -88,6 +90,38 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       })
   }, [state, swapManager.api])
 
+  const create = React.useCallback(() => {
+    if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) return
+
+    swapManager.api
+      .create({
+        slippage: state.slippageInput.value,
+        tokenIn: state.tokenInInput.tokenId,
+        tokenOut: state.tokenOutInput.tokenId,
+        amountIn: Number(state.tokenInInput.value),
+        // amountOut: Number(state.tokenOutInput:value),
+        blacklistedDexes: [],
+        dex: state.selectedDex.value,
+        // wantedPrice: Number(state.wantedPrice),
+      })
+      .then((response) => {
+        if (response.tag === 'left') {
+          dispatch({type: SwapAction.CreateError, value: response.error})
+        } else {
+          dispatch({type: SwapAction.CreateResponse, value: response.value.data})
+          navigate.reviewSwap()
+        }
+      })
+  }, [
+    navigate,
+    state.selectedDex.value,
+    state.slippageInput.value,
+    state.tokenInInput.tokenId,
+    state.tokenInInput.value,
+    state.tokenOutInput.tokenId,
+    swapManager.api,
+  ])
+
   const context = React.useMemo(
     () => ({
       ...state,
@@ -98,8 +132,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       slippageInputRef,
       orders,
       dispatch,
+      create,
     }),
-    [state, orders, tokenInfos],
+    [state, tokenInfos, orders, create],
   )
 
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>
@@ -174,6 +209,10 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
       case SwapAction.DexSelectorTouched:
         break
+      case SwapAction.Refresh:
+        draft.lastInputTouched = state.lastInputTouched
+
+        break
       case SwapAction.ResetAmounts:
         draft.tokenInInput.value = ''
         draft.tokenOutInput.value = ''
@@ -193,6 +232,15 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
       case SwapAction.EstimateError:
         draft.estimate = undefined
+        draft.tokenOutInput.error = action.value.message
+
+        break
+      case SwapAction.CreateResponse:
+        draft.createTx = action.value
+
+        break
+      case SwapAction.CreateError:
+        draft.createTx = undefined
         draft.tokenOutInput.error = action.value.message
 
         break
@@ -216,10 +264,13 @@ export const SwapAction = {
   SlippageInputChanged: 'SlippageInputChanged',
   SwitchTouched: 'SwitchTouched',
   DexSelectorTouched: 'DexSelectorTouched',
+  Refresh: 'Refresh',
   ResetAmounts: 'ResetAmounts',
   ResetForm: 'ResetForm',
   EstimateResponse: 'EstimateResponse',
   EstimateError: 'EstimateError',
+  CreateResponse: 'CreateResponse',
+  CreateError: 'CreateError',
 } as const
 
 type SwapActionValueMap = {
@@ -236,10 +287,13 @@ type SwapActionValueMap = {
   SlippageInputChanged: number
   SwitchTouched: undefined
   DexSelectorTouched: undefined
+  Refresh: undefined
   ResetAmounts: undefined
   ResetForm: undefined
   EstimateResponse: Swap.EstimateResponse
   EstimateError: Api.ResponseError
+  CreateResponse: Swap.CreateResponse
+  CreateError: Api.ResponseError
 }
 
 export type SwapAction = {
@@ -278,6 +332,7 @@ const defaultState: SwapState = Object.freeze({
   },
   canSwap: false,
   estimate: undefined,
+  createTx: undefined,
 } as const)
 
 type SwapState = {
@@ -310,6 +365,7 @@ type SwapState = {
   }
   canSwap: boolean
   estimate?: Swap.EstimateResponse
+  createTx?: Swap.CreateResponse
 }
 
 type SwapContext = SwapState & {
@@ -320,6 +376,7 @@ type SwapContext = SwapState & {
   slippageInputRef: React.RefObject<TextInput> | undefined
   orders?: Array<Swap.Order>
   dispatch: React.Dispatch<SwapAction>
+  create: () => void
 }
 
 const SwapContext = React.createContext<SwapContext>({
@@ -331,4 +388,5 @@ const SwapContext = React.createContext<SwapContext>({
   slippageInputRef: undefined,
   orders: undefined,
   dispatch: () => null,
+  create: () => null,
 })

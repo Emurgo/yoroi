@@ -300,7 +300,10 @@ export const StartSwapOrderScreen = () => {
               </View>
 
               <View>
-                <RefreshButton disabled={!swapForm.tokenInInput.isTouched || !swapForm.tokenOutInput.isTouched} />
+                <RefreshButton
+                  onPress={() => swapForm.dispatch({type: 'Refresh'})}
+                  disabled={!swapForm.tokenInInput.isTouched || !swapForm.tokenOutInput.isTouched}
+                />
               </View>
             </View>
 
@@ -391,7 +394,7 @@ export const StartSwapOrderScreen = () => {
       </ScrollView>
 
       <View style={[styles.actions, (deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
-        <Button testID="swapButton" title={strings.swapTitle} />
+        <Button testID="swapButton" title={strings.swapTitle} disabled={!swapForm.canSwap} onPress={swapForm.create} />
       </View>
     </View>
   )
