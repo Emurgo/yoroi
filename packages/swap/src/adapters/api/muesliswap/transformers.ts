@@ -15,74 +15,53 @@ import {
   TokensResponse,
 } from './types'
 import {MuesliswapApiConfig} from './api-maker'
-import {asTokenFingerprint, asTokenName} from '../../../helpers/transformers'
 
 export const transformersMaker = ({
   primaryTokenInfo,
   address,
 }: MuesliswapApiConfig) => {
-  const asYoroiTokenId = ({
-    policyId,
-    name,
-  }: {
-    policyId: string
-    name: string
-  }): Portfolio.Token.Id => {
-    const possibleTokenId = `${policyId}.${name}`
-    // openswap is inconsistent about ADA
-    // sometimes is '.', '' or 'lovelace'
-
-    if (
-      policyId === '' ||
-      possibleTokenId === '.' ||
-      possibleTokenId === 'lovelace.'
-    )
-      return primaryTokenInfo.id
-    return `${policyId}.${name}`
-  }
-
   return {
     tokens: {
       response: (res: TokensResponse): Array<Portfolio.Token.Info> =>
-        res.map(({info}) => {
-          const id = asYoroiTokenId(info.address)
+        res
+          .map(({ticker, name, policyId, hexName, decimals}) => {
+            const id = `${policyId}.${hexName}`
 
-          const isPrimary = id === primaryTokenInfo.id
-          if (isPrimary) return primaryTokenInfo
-          return {
-            id,
-            fingerprint: asTokenFingerprint({
-              policyId: info.address.policyId,
-              assetNameHex: info.address.name,
-            }),
-            name: asTokenName(info.address.name),
-            decimals: info.decimalPlaces,
-            description: info.description,
-            originalImage: info.image ?? '',
-            type: Portfolio.Token.Type.FT,
-            nature: Portfolio.Token.Nature.Secondary,
-            ticker: info.symbol,
-            symbol: info.sign ?? '',
-            status: Portfolio.Token.Status.Valid,
-            application: Portfolio.Token.Application.General,
-            reference: '',
-            tag: '',
-            website: info.website,
-          }
-        }),
+            const isPrimary = id === primaryTokenInfo.id
+            if (isPrimary) return primaryTokenInfo
+            if (decimals === null) return null
+            return {
+              id,
+              fingerprint: '',
+              name,
+              decimals,
+              description: '',
+              originalImage: '',
+              type: Portfolio.Token.Type.FT,
+              nature: Portfolio.Token.Nature.Secondary,
+              ticker,
+              symbol: '',
+              status: Portfolio.Token.Status.Valid,
+              application: Portfolio.Token.Application.General,
+              reference: '',
+              tag: '',
+              website: '',
+            }
+          })
+          .filter((v): v is Portfolio.Token.Info => !!v),
     },
     openOrders: {
-      response: (res: OpenOrdersResponse): Array<Swap.Order> =>
-        res.map(
+      response: ({orders}: OpenOrdersResponse): Array<Swap.Order> =>
+        orders.map(
           ({dex, from_amount, from_token, to_amount, to_token, utxo}) => ({
             aggregator: Swap.Aggregator.Muesliswap,
             dex,
             status: 'open',
             tokenIn: from_token,
             tokenOut: to_token,
-            amountIn: from_amount,
+            amountIn: Number(from_amount),
             actualAmountOut: 0,
-            expectedAmountOut: to_amount,
+            expectedAmountOut: Number(to_amount),
             txHash: utxo.split('#')[0],
             updateTxHash: utxo.split('#')[0],
             outputIndex: Number(utxo.split('#')[1] ?? 0),
@@ -90,8 +69,8 @@ export const transformersMaker = ({
         ),
     },
     orderHistory: {
-      response: (res: HistoryOrdersResponse): Array<Swap.Order> =>
-        res.map(
+      response: ({orders}: HistoryOrdersResponse): Array<Swap.Order> =>
+        orders.map(
           ({
             fromToken,
             toToken,
@@ -113,9 +92,9 @@ export const transformersMaker = ({
             status,
             tokenIn: fromToken,
             tokenOut: toToken,
-            amountIn: fromAmount,
-            actualAmountOut: receivedAmount,
-            expectedAmountOut: toAmount,
+            amountIn: Number(fromAmount),
+            actualAmountOut: Number(receivedAmount),
+            expectedAmountOut: Number(toAmount),
             txHash,
             updateTxHash: finalizedTxHash ?? txHash,
             outputIndex: outputIdx ?? 0,
@@ -125,7 +104,7 @@ export const transformersMaker = ({
     cancel: {
       request: ({order}: Swap.CancelRequest): CancelRequest => ({
         tx_hash: order.txHash ?? '',
-        ouput_idx: order.outputIndex ?? 0,
+        output_idx: order.outputIndex ?? 0,
       }),
       response: ({tx_cbor = ''}: CancelResponse): Swap.CancelResponse => ({
         cbor: tx_cbor,

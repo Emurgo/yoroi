@@ -1,5 +1,6 @@
+import {isLeft} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import {Portfolio, Swap} from '@yoroi/types'
+import {Api, Portfolio, Swap} from '@yoroi/types'
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {useIntl} from 'react-intl'
@@ -15,6 +16,7 @@ import {useWalletNavigation} from '../../../../kernel/navigation'
 import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
+import {primaryTokenInfoMainnet} from '../../../WalletManager/network-manager/network-manager'
 import {Counter} from '../../common/Counter/Counter'
 import {EmptyCompletedOrdersIllustration} from '../../common/Illustrations/EmptyCompletedOrdersIllustration'
 import {EmptyOpenOrdersIllustration} from '../../common/Illustrations/EmptyOpenOrdersIllustration'
@@ -145,9 +147,7 @@ const Order = ({order}: {order: Swap.Order}) => {
   const price = amountOut === 0 ? 0 : order.amountIn / amountOut
 
   const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
-  const priceStr = `${Number(price.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenInInfo)}/${tokenName(
-    tokenOutInfo,
-  )}`
+  const priceStr = `${Number(price.toFixed(6))} ${tokenName(tokenInInfo)}/${tokenName(tokenOutInfo)}`
 
   const lastTxHash = order.updateTxHash ?? order.txHash ?? ''
   const shortenedTxHash = `${lastTxHash.substring(0, 9)}...${lastTxHash.substring(
@@ -230,58 +230,116 @@ const Order = ({order}: {order: Swap.Order}) => {
   )
 }
 
-const OrderCancellation = ({
-  order,
-  tokenInInfo,
-  price,
-  amount,
-}: {
+type CancellationProps = {
   order: Swap.Order
   tokenInInfo: Portfolio.Token.Info
   price: string
   amount: string
-}) => {
+}
+
+const OrderCancellation = ({order, tokenInInfo, price, amount}: CancellationProps) => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const {openModal, closeModal} = useModal()
-  // TODO
-  const onOrderCancelConfirm = () => null
+  const {openModal} = useModal()
+  const swapForm = useSwap()
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
-  const onPress = React.useCallback(
-    () =>
-      openModal(
-        strings.listOrdersSheetTitle,
-        <View style={styles.root}>
-          <Row label={strings.listOrdersSheetAssetPrice} value={price} />
+  const onPress = async () => {
+    setIsLoading(true)
+    const response = await swapForm.cancel({order})
+    setIsLoading(false)
 
-          <Row label={strings.listOrdersSheetAssetAmount} value={amount} />
+    openModal(
+      strings.listOrdersSheetTitle,
+      <OrderCancellationConfirmation
+        order={order}
+        tokenInInfo={tokenInInfo}
+        price={price}
+        amount={amount}
+        response={response}
+      />,
+      400,
+    )
+  }
 
-          <Row label={strings.listOrdersSheetTotalReturned} value={`${order.amountIn} ${tokenName(tokenInInfo)}`} />
-
-          <Row label={strings.listOrdersSheetCancellationFee} value="" />
-
-          <SwapInfoLink />
-
-          <Space fill />
-
-          <View style={styles.group}>
-            <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={closeModal} />
-
-            <Button type={ButtonType.Critical} title={strings.listOrdersSheetConfirm} onPress={onOrderCancelConfirm} />
-          </View>
-        </View>,
-        400,
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [amount, closeModal, openModal, order.amountIn, price, tokenInInfo],
-  )
   return (
     <Button
       style={styles.cancelButton}
       type={ButtonType.SecondaryText}
       title={strings.listOrdersSheetButtonText}
+      isLoading={isLoading}
       onPress={onPress}
     />
+  )
+}
+
+const OrderCancellationConfirmation = ({
+  order,
+  tokenInInfo,
+  price,
+  amount,
+  response,
+}: CancellationProps & {response: Api.Response<Swap.CancelResponse>}) => {
+  const strings = useStrings()
+  const {styles} = useStyles()
+  const {closeModal} = useModal()
+  const {navigateToTxReview} = useWalletNavigation()
+
+  if (isLeft(response))
+    return (
+      <View style={styles.root}>
+        <Text style={styles.errorMessage}>{response.error.message}</Text>
+
+        <View>
+          <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={closeModal} />
+        </View>
+      </View>
+    )
+
+  const onOrderCancelConfirm = () => {
+    navigateToTxReview({
+      cbor: response.value.data.cbor,
+      details: {
+        title: strings.listOrdersSheetTitle,
+        component: (
+          <View>
+            <Text style={styles.rowLabel}>{strings.listOrdersTxId}</Text>
+
+            <Text style={styles.rowValue}>{order.txHash}</Text>
+          </View>
+        ),
+      },
+    })
+  }
+
+  const fee = response.value.data.additionalCancellationFee
+
+  return (
+    <View style={styles.root}>
+      <React.Fragment>
+        <Row label={strings.listOrdersSheetAssetPrice} value={price} />
+
+        <Row label={strings.listOrdersSheetAssetAmount} value={amount} />
+
+        <Row label={strings.listOrdersSheetTotalReturned} value={`${order.amountIn} ${tokenName(tokenInInfo)}`} />
+
+        {fee !== undefined && (
+          <Row label={strings.listOrdersSheetCancellationFee} value={`${fee} ${primaryTokenInfoMainnet.ticker}}`} />
+        )}
+
+        <SwapInfoLink />
+      </React.Fragment>
+
+      <Space fill />
+
+      <View style={styles.group}>
+        <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={closeModal} />
+
+        {response.value.data.cbor !== undefined && (
+          <Button type={ButtonType.Critical} title={strings.listOrdersSheetConfirm} onPress={onOrderCancelConfirm} />
+        )}
+      </View>
+    </View>
   )
 }
 
@@ -415,6 +473,10 @@ const useStyles = () => {
     cancelButton: {
       ...atoms.self_start,
       ...atoms.px_0,
+    },
+    errorMessage: {
+      ...atoms.body_3_sm_regular,
+      color: color.text_warning,
     },
   })
   return {styles, color}

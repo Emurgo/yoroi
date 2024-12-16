@@ -1,5 +1,5 @@
 import {FetchData, fetchData, isLeft} from '@yoroi/common'
-import {Chain, Portfolio, Swap} from '@yoroi/types'
+import {Api, Chain, Left, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
 import {
   CancelRequest,
@@ -50,6 +50,8 @@ export const muesliswapApiMaker = (
     'Accept': 'application/json',
   }
 
+  const baseUrl = baseUrls[network]
+
   const transformers = transformersMaker(config)
 
   return freeze(
@@ -57,11 +59,11 @@ export const muesliswapApiMaker = (
       async tokens() {
         const response = await request<TokensResponse>({
           method: 'get',
-          url: apiUrls.tokens,
+          url: `${baseUrl}${apiPaths.tokens}`,
           headers,
         })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMuesliError(response)
 
         return freeze(
           {
@@ -79,37 +81,52 @@ export const muesliswapApiMaker = (
         const response = await request<HistoryOrdersResponse>(
           {
             method: 'get',
-            url: apiUrls.orderHistory,
+            url: `${baseUrl}${apiPaths.orderHistory}`,
             headers,
           },
           {
             params: {
               user_address: address,
+              numbers_have_decimals: true,
             },
           },
         )
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMuesliError(response)
 
-        return freeze(
-          {
-            tag: 'right',
-            value: {
-              status: 200,
-              data: transformers.orderHistory.response(response.value.data),
+        try {
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: 200,
+                data: transformers.orderHistory.response(response.value.data),
+              },
             },
-          },
-          true,
-        )
+            true,
+          )
+        } catch (e) {
+          return freeze(
+            {
+              tag: 'left',
+              error: {
+                status: -3,
+                message: 'Failed to transform orderHistory',
+                responseData: response.value.data,
+              },
+            },
+            true,
+          )
+        }
       },
 
       async estimate(body: Swap.EstimateRequest) {
         const params = transformers.quote.request(body)
-
+        // TODO quote limit
         const response = await request<QuoteResponse>(
           {
             method: 'post',
-            url: apiUrls.quote,
+            url: `${baseUrl}${apiPaths.quote}`,
             headers,
           },
           {
@@ -117,7 +134,7 @@ export const muesliswapApiMaker = (
           },
         )
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMuesliError(response)
 
         try {
           return freeze(
@@ -155,7 +172,7 @@ export const muesliswapApiMaker = (
         >(
           {
             method: 'post',
-            url: apiUrls[kind],
+            url: `${baseUrl}${apiPaths[kind]}`,
             headers,
           },
           {
@@ -163,7 +180,7 @@ export const muesliswapApiMaker = (
           },
         )
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMuesliError(response)
 
         return freeze(
           {
@@ -183,7 +200,7 @@ export const muesliswapApiMaker = (
         const response = await request<CancelResponse>(
           {
             method: 'post',
-            url: apiUrls.cancel,
+            url: `${baseUrl}${apiPaths.cancel}`,
             headers,
           },
           {
@@ -191,7 +208,7 @@ export const muesliswapApiMaker = (
           },
         )
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMuesliError(response)
 
         return freeze(
           {
@@ -209,12 +226,28 @@ export const muesliswapApiMaker = (
   )
 }
 
-const apiUrls = {
-  tokens: 'https://api.muesliswap.com/list',
-  orderHistory: 'https://aggregator-v2.muesliswap.com/order_history',
-  openOrders: 'https://aggregator-v2.muesliswap.com/open_orders',
-  quote: 'https://aggregator-v2.muesliswap.com/quote',
-  create: 'https://aggregator-v2.muesliswap.com/order',
-  createLimit: 'https://aggregator-v2.muesliswap.com/limit_order',
-  cancel: 'https://aggregator-v2.muesliswap.com/cancel',
+const parseMuesliError = ({
+  tag,
+  error,
+}: Left<Api.ResponseError>): Left<Api.ResponseError> => ({
+  tag,
+  error: {
+    ...error,
+    message: JSON.stringify((error.responseData as any)?.detail, null, 2),
+  },
+})
+
+const baseUrls = {
+  [Chain.Network.Mainnet]: 'https://aggregator-v2.muesliswap.com',
+} as const
+
+const apiPaths = {
+  tokens: '/tokens',
+  orderHistory: '/order_history',
+  openOrders: '/open_orders',
+  quote: '/quote',
+  limitQuote: '/limit_order_quote',
+  create: '/order',
+  createLimit: '/limit_order',
+  cancel: '/cancel',
 } as const

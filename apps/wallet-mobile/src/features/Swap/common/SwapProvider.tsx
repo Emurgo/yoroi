@@ -133,8 +133,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       orders,
       dispatch,
       create,
+      cancel: swapManager.api.cancel,
     }),
-    [state, tokenInfos, orders, create],
+    [state, tokenInfos, orders, create, swapManager.api.cancel],
   )
 
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>
@@ -335,6 +336,8 @@ const defaultState: SwapState = Object.freeze({
   canSwap: false,
   estimate: undefined,
   createTx: undefined,
+  cancelTx: undefined,
+  cancelError: undefined,
 } as const)
 
 type SwapState = {
@@ -379,6 +382,7 @@ export type SwapContext = SwapState & {
   orders?: Array<Swap.Order>
   dispatch: React.Dispatch<SwapAction>
   create: () => void
+  cancel: Swap.Api['cancel']
 }
 
 const SwapContext = React.createContext<SwapContext>({
@@ -391,4 +395,5 @@ const SwapContext = React.createContext<SwapContext>({
   orders: undefined,
   dispatch: () => null,
   create: () => null,
+  cancel: () => new Promise((res) => res),
 })

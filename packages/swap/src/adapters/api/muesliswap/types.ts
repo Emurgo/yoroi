@@ -16,90 +16,64 @@ export const Provider = {
 export type Provider = (typeof Provider)[keyof typeof Provider]
 
 export type TokensResponse = Array<{
-  info: {
-    supply: {
-      total: string // total circulating supply of the token, without decimals.
-      circulating: string | null // if set the circulating supply of the token, if null the amount in circulation is unknown.
-    }
-    status: 'verified' | 'unverified' | 'scam' | 'outdated'
-    address: {
-      policyId: string // policy id of the token.
-      name: string // hexadecimal representation of token name.
-    }
-    symbol: string // shorthand token symbol.
-    image?: string // http link to the token image.
-    website: string
-    description: string
-    decimalPlaces: number // number of decimal places of the token, i.e. 6 for ADA and 0 for MILK.
-    categories: string[] // encoding categories as ids.
-    sign?: string // token sign, i.e. "₳" for ADA.
-  }
-  price: {
-    volume: {
-      base: string // float, trading volume 24h in base currency (e.g. ADA).
-      quote: string // float, trading volume 24h in quote currency.
-    }
-    volumeChange: {
-      base: number // float, percent change of trading volume in comparison to previous 24h.
-      quote: number // float, percent change of trading volume in comparison to previous 24h.
-    }
-    price: number // live trading price in base currency (e.g. ADA).
-    askPrice: number // lowest ask price in base currency (e.g. ADA).
-    bidPrice: number // highest bid price in base currency (e.g. ADA).
-    priceChange: {
-      '24h': string // float, price change last 24 hours.
-      '7d': string // float, price change last 7 days.
-    }
-    quoteDecimalPlaces: number // decimal places of quote token.
-    baseDecimalPlaces: number // decimal places of base token.
-    price10d: number[] //float, prices of this tokens averaged for the last 10 days, in chronological order i.e.oldest first.
-  }
+  ticker: string
+  name: string
+  policyId: string
+  hexName: string
+  decimals: number | null
+  verified: boolean
 }>
 
-export type OpenOrdersResponse = Array<{
-  from_token: Portfolio.Token.Id
-  to_token: Portfolio.Token.Id
-  from_amount: number
-  to_amount: number
-  user_address: string
-  dex: Provider
-  utxo: string // tx_hash#output_idx
-}>
-
-export type HistoryOrdersResponse = Array<{
-  dex: Provider
-  aggregator: null
-  fromToken: Portfolio.Token.Id
-  toToken: Portfolio.Token.Id
-  fromAmount: number
-  toAmount: number
-  paidAmount: number
-  receivedAmount: number
-  batcherFee: number
-  attachedValues: Array<{
-    amount: number
-    token: string
+export type OpenOrdersResponse = {
+  orders: Array<{
+    from_token: Portfolio.Token.Id
+    to_token: Portfolio.Token.Id
+    from_amount: string
+    to_amount: string
+    user_address: string
+    dex: Provider
+    utxo: string // tx_hash#output_idx
   }>
-  sender: string
-  beneficiary: string
-  txHash: string
-  outputIdx: number
-  deposit: number
-  status: string | 'open' | 'matched'
-  placedAt: number
-  finalizedAt: number | null
-  finalizedTxHash: string | null
-  providerSpecifics: {
-    allowPartial?: boolean
-    contractVersion?: number
-    poolId?: string
-    swapDirection?: number
-  } | null
-}>
+  numbers_have_decimals: boolean
+}
+
+export type HistoryOrdersResponse = {
+  orders: Array<{
+    dex: Provider
+    aggregator: null
+    fromToken: Portfolio.Token.Id
+    toToken: Portfolio.Token.Id
+    fromAmount: string
+    toAmount: string
+    paidAmount: string
+    receivedAmount: string
+    batcherFee: string
+    attachedValues: Array<{
+      amount: number
+      token: string
+    }>
+    sender: string
+    beneficiary: string
+    txHash: string
+    outputIdx: number
+    deposit: string
+    status: 'open' | 'matched' | 'canceled' | 'partially_matched'
+    placedAt: number
+    finalizedAt: number | null
+    finalizedTxHash: string | null
+    providerSpecifics: {
+      allowPartial?: boolean
+      contractVersion?: number
+      poolId?: string
+      swapDirection?: number
+    } | null
+  }>
+  numbers_have_decimals: boolean
+}
 
 export type CancelRequest = {
   tx_hash: string
-  ouput_idx: number
+  output_idx: number
 }
 
 export type CancelResponse = {
