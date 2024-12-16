@@ -761,7 +761,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = yoroiTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -802,7 +802,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENVFILE = "$(PODS_ROOT)/../../.env";
 				INFOPLIST_FILE = yoroiTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1088,6 +1088,7 @@
 				ENVFILE = "$(PODS_ROOT)/../../.env.nightly";
 				INFOPLIST_FILE = nightly.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Yoroi Nightly";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1132,6 +1133,7 @@
 				ENVFILE = "$(PODS_ROOT)/../../.env.nightly";
 				INFOPLIST_FILE = nightly.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Yoroi Nightly";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
