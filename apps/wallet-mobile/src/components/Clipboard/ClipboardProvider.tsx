@@ -25,11 +25,16 @@ export const ClipboardProvider = ({children}: Props) => {
   const [copied, setCopied] = React.useState<CopiedState | null>(null)
   const {height, width} = useWindowDimensions()
   const copy: ClipboardContext['copy'] = ({text, feedback = 'Copied', event}) => {
+    const baseLocationX = (event?.nativeEvent.pageX ?? width * 0.5) - feedback.length * 4
+    const maxX = width - 20 - feedback.length * 8
+    const minX = 20 + feedback.length * 8
+    const locationX = Math.min(Math.max(baseLocationX, minX), maxX)
+
     Clipboard.setString(text)
     setCopied({
       feedback,
       locationY: event ? event.nativeEvent.pageY - 50 : height * 0.85,
-      locationX: (event?.nativeEvent.pageX ?? width * 0.5) - feedback.length * 4,
+      locationX,
     })
     setTimeout(() => setCopied(null), FEEDBACK_TIMEOUT)
   }

@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
-import {isNightly} from '../../../../kernel/env'
+import {isDev, isNightly} from '../../../../kernel/env'
 import {useLanguage} from '../../../../kernel/i18n'
 import {themeNames} from '../../../../kernel/i18n/global-messages'
 import {defaultLanguage} from '../../../../kernel/i18n/languages'
@@ -205,16 +205,16 @@ const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean})
   const onToggleCrashReports = () => {
     setIsLocalEnabled((prevState) => {
       if (prevState) {
-        enable()
-      } else {
         disable()
+      } else {
+        enable()
       }
 
       return !prevState
     })
   }
 
-  return <SettingsSwitch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={isNightly} />
+  return <SettingsSwitch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={isNightly || isDev} />
 }
 
 // to avoid switch jumps

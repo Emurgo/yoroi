@@ -36,7 +36,6 @@ import {Utxos} from '../utils/utils'
 const crashReportsStorageKey = 'sendCrashReports'
 
 export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = AsyncStorage) => {
-  if (isNightly || isDev) return true
   const data = await storage.getItem(crashReportsStorageKey)
   return parseBoolean(data) ?? false
 }
@@ -46,11 +45,11 @@ const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
     suspense: true,
     queryKey: [crashReportsStorageKey],
     queryFn: () => getCrashReportsEnabled(storage),
+    enabled: !isNightly && !isDev,
   })
 
-  if (query.data == null) throw new Error('invalid state')
-
-  return query.data
+  if (isNightly || isDev) return true
+  return query.data ?? true
 }
 
 const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {

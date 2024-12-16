@@ -64,7 +64,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
 
     const screenWidth = Dimensions.get('window').width
     const x0 = 0 // x0 position
-    const chartWidth = screenWidth - x0
+    const chartWidth = screenWidth - x0 - 16 // 16 = padding
     const xN = x0 + chartWidth // xN position
     const xDistance = chartWidth / dataSize // The width of each coordinate point
 

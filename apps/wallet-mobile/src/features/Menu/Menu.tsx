@@ -188,7 +188,7 @@ const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {canVote, sufficientFunds} = useCanVote(wallet)
+  const {sufficientFunds} = useCanVote(wallet)
   const {openModal} = useModal()
   const screenHeight = useWindowDimensions().height
   const modalHeight = Math.min(screenHeight * 0.8, 256)
@@ -200,7 +200,7 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
       openModal(strings.attention, <InsufficientFundsModal />, modalHeight)
     }
   }
-  return <Item label={label} onPress={handlePress} left={left} disabled={!canVote} />
+  return <Item label={label} onPress={handlePress} left={left} />
 }
 
 const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
