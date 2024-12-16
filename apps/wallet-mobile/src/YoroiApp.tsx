@@ -13,6 +13,7 @@ import {enableScreens} from 'react-native-screens'
 import {QueryClientProvider} from 'react-query'
 
 import {LoadingBoundary} from './components/Boundary/Boundary'
+import {ClipboardProvider} from './components/Clipboard/ClipboardProvider'
 import {ErrorBoundary} from './components/ErrorBoundary/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {BrowserProvider} from './features/Discover/common/BrowserProvider'
@@ -57,43 +58,45 @@ const Yoroi = () => {
   return (
     <AsyncStorageProvider storage={rootStorage}>
       <ThemeProvider storage={themeStorage}>
-        <ErrorBoundary>
-          <MetricsProvider metricsManager={metricsManager}>
-            <QueryClientProvider client={queryInfo.queryClient}>
-              <WalletManagerProvider walletManager={walletManager}>
-                <CurrencyProvider>
-                  <PortfolioTokenActivityProvider>
-                    <LoadingBoundary style={StyleSheet.absoluteFill}>
-                      <LanguageProvider>
-                        <AuthProvider>
-                          <TransferProvider>
-                            <LinksProvider>
-                              <SetupWalletProvider>
-                                <PoolTransitionProvider>
-                                  <BrowserProvider>
-                                    <AutomaticWalletOpenerProvider>
-                                      <CatalystProvider manager={catalystManager}>
-                                        <ReviewTxProvider>
-                                          <NotificationProvider manager={notificationManager}>
-                                            <InitApp />
-                                          </NotificationProvider>
-                                        </ReviewTxProvider>
-                                      </CatalystProvider>
-                                    </AutomaticWalletOpenerProvider>
-                                  </BrowserProvider>
-                                </PoolTransitionProvider>
-                              </SetupWalletProvider>
-                            </LinksProvider>
-                          </TransferProvider>
-                        </AuthProvider>
-                      </LanguageProvider>
-                    </LoadingBoundary>
-                  </PortfolioTokenActivityProvider>
-                </CurrencyProvider>
-              </WalletManagerProvider>
-            </QueryClientProvider>
-          </MetricsProvider>
-        </ErrorBoundary>
+        <ClipboardProvider>
+          <ErrorBoundary>
+            <MetricsProvider metricsManager={metricsManager}>
+              <QueryClientProvider client={queryInfo.queryClient}>
+                <WalletManagerProvider walletManager={walletManager}>
+                  <CurrencyProvider>
+                    <PortfolioTokenActivityProvider>
+                      <LoadingBoundary style={StyleSheet.absoluteFill}>
+                        <LanguageProvider>
+                          <AuthProvider>
+                            <TransferProvider>
+                              <LinksProvider>
+                                <SetupWalletProvider>
+                                  <PoolTransitionProvider>
+                                    <BrowserProvider>
+                                      <AutomaticWalletOpenerProvider>
+                                        <CatalystProvider manager={catalystManager}>
+                                          <ReviewTxProvider>
+                                            <NotificationProvider manager={notificationManager}>
+                                              <InitApp />
+                                            </NotificationProvider>
+                                          </ReviewTxProvider>
+                                        </CatalystProvider>
+                                      </AutomaticWalletOpenerProvider>
+                                    </BrowserProvider>
+                                  </PoolTransitionProvider>
+                                </SetupWalletProvider>
+                              </LinksProvider>
+                            </TransferProvider>
+                          </AuthProvider>
+                        </LanguageProvider>
+                      </LoadingBoundary>
+                    </PortfolioTokenActivityProvider>
+                  </CurrencyProvider>
+                </WalletManagerProvider>
+              </QueryClientProvider>
+            </MetricsProvider>
+          </ErrorBoundary>
+        </ClipboardProvider>
       </ThemeProvider>
     </AsyncStorageProvider>
   )
