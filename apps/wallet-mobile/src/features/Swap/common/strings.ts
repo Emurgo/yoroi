@@ -605,7 +605,7 @@ const messages = defineMessages({
   },
   failedTxText: {
     id: 'components.send.sendscreen.failedTxText',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
   },
   failedTxButton: {
     id: 'components.send.sendscreen.failedTxButton',
@@ -719,8 +719,7 @@ const messages = defineMessages({
   },
   submittedTxScreenText: {
     id: 'swap.submittedTxScreen.text',
-    defaultMessage:
-      '!!!In a few minutes, your transactions will be displayed both in the list of transactions and Open swap orders.',
+    defaultMessage: `!!!It will show up in the transaction list once it's confirmed by the network.`,
   },
   submittedTxScreenButton: {
     id: 'swap.submittedTxScreen.button',

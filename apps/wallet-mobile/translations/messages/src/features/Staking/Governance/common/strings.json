@@ -481,7 +481,7 @@
   },
   {
     "id": "components.governance.transactionFailedDescription",
-    "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues",
+    "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 213,
@@ -491,7 +491,7 @@
     "end": {
       "line": 216,
       "column": 3,
-      "index": 9918
+      "index": 9919
     }
   },
   {
@@ -501,12 +501,12 @@
     "start": {
       "line": 217,
       "column": 12,
-      "index": 9932
+      "index": 9933
     },
     "end": {
       "line": 220,
       "column": 3,
-      "index": 10015
+      "index": 10016
     }
   },
   {
@@ -516,12 +516,12 @@
     "start": {
       "line": 221,
       "column": 10,
-      "index": 10027
+      "index": 10028
     },
     "end": {
       "line": 224,
       "column": 3,
-      "index": 10106
+      "index": 10107
     }
   },
   {
@@ -531,12 +531,12 @@
     "start": {
       "line": 225,
       "column": 14,
-      "index": 10122
+      "index": 10123
     },
     "end": {
       "line": 228,
       "column": 3,
-      "index": 10215
+      "index": 10216
     }
   },
   {
@@ -546,12 +546,12 @@
     "start": {
       "line": 229,
       "column": 24,
-      "index": 10241
+      "index": 10242
     },
     "end": {
       "line": 232,
       "column": 3,
-      "index": 10343
+      "index": 10344
     }
   },
   {
@@ -561,12 +561,12 @@
     "start": {
       "line": 233,
       "column": 30,
-      "index": 10375
+      "index": 10376
     },
     "end": {
       "line": 237,
       "column": 3,
-      "index": 10666
+      "index": 10667
     }
   },
   {
@@ -576,12 +576,12 @@
     "start": {
       "line": 238,
       "column": 25,
-      "index": 10693
+      "index": 10694
     },
     "end": {
       "line": 241,
       "column": 3,
-      "index": 10805
+      "index": 10806
     }
   },
   {
@@ -591,12 +591,12 @@
     "start": {
       "line": 242,
       "column": 15,
-      "index": 10822
+      "index": 10823
     },
     "end": {
       "line": 245,
       "column": 3,
-      "index": 10915
+      "index": 10916
     }
   },
   {
@@ -606,12 +606,12 @@
     "start": {
       "line": 246,
       "column": 35,
-      "index": 10952
+      "index": 10953
     },
     "end": {
       "line": 249,
       "column": 3,
-      "index": 11084
+      "index": 11085
     }
   },
   {
@@ -621,12 +621,12 @@
     "start": {
       "line": 250,
       "column": 34,
-      "index": 11120
+      "index": 11121
     },
     "end": {
       "line": 253,
       "column": 3,
-      "index": 11294
+      "index": 11295
     }
   },
   {
@@ -636,12 +636,12 @@
     "start": {
       "line": 254,
       "column": 14,
-      "index": 11310
+      "index": 11311
     },
     "end": {
       "line": 257,
       "column": 3,
-      "index": 11398
+      "index": 11399
     }
   },
   {
@@ -651,12 +651,12 @@
     "start": {
       "line": 258,
       "column": 10,
-      "index": 11410
+      "index": 11411
     },
     "end": {
       "line": 261,
       "column": 3,
-      "index": 11497
+      "index": 11498
     }
   },
   {
@@ -666,12 +666,12 @@
     "start": {
       "line": 262,
       "column": 22,
-      "index": 11521
+      "index": 11522
     },
     "end": {
       "line": 265,
       "column": 3,
-      "index": 11633
+      "index": 11634
     }
   },
   {
@@ -681,12 +681,12 @@
     "start": {
       "line": 266,
       "column": 19,
-      "index": 11654
+      "index": 11655
     },
     "end": {
       "line": 269,
       "column": 3,
-      "index": 11810
+      "index": 11811
     }
   },
   {
@@ -696,12 +696,12 @@
     "start": {
       "line": 270,
       "column": 15,
-      "index": 11827
+      "index": 11828
     },
     "end": {
       "line": 273,
       "column": 3,
-      "index": 11917
+      "index": 11918
     }
   },
   {
@@ -711,12 +711,12 @@
     "start": {
       "line": 274,
       "column": 25,
-      "index": 11944
+      "index": 11945
     },
     "end": {
       "line": 277,
       "column": 3,
-      "index": 12073
+      "index": 12074
     }
   },
   {
@@ -726,12 +726,12 @@
     "start": {
       "line": 278,
       "column": 28,
-      "index": 12103
+      "index": 12104
     },
     "end": {
       "line": 281,
       "column": 3,
-      "index": 12198
+      "index": 12199
     }
   },
   {
@@ -741,12 +741,12 @@
     "start": {
       "line": 282,
       "column": 34,
-      "index": 12234
+      "index": 12235
     },
     "end": {
       "line": 285,
       "column": 3,
-      "index": 12394
+      "index": 12395
     }
   },
   {
@@ -756,12 +756,12 @@
     "start": {
       "line": 286,
       "column": 29,
-      "index": 12425
+      "index": 12426
     },
     "end": {
       "line": 289,
       "column": 3,
-      "index": 12538
+      "index": 12539
     }
   },
   {
@@ -771,12 +771,12 @@
     "start": {
       "line": 290,
       "column": 22,
-      "index": 12562
+      "index": 12563
     },
     "end": {
       "line": 293,
       "column": 3,
-      "index": 12686
+      "index": 12687
     }
   },
   {
@@ -786,27 +786,27 @@
     "start": {
       "line": 294,
       "column": 20,
-      "index": 12708
+      "index": 12709
     },
     "end": {
       "line": 297,
       "column": 3,
-      "index": 12808
+      "index": 12809
     }
   },
   {
     "id": "components.governance.submittedTxText",
-    "defaultMessage": "!!!This transaction can take a while!\n\nParticipating in the Cardano Governance gives you the opportunity to participate in the voting as well as withdraw your staking rewards.",
+    "defaultMessage": "!!!It will show up in the transaction list once it's confirmed by the network.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 298,
       "column": 19,
-      "index": 12829
+      "index": 12830
     },
     "end": {
-      "line": 302,
+      "line": 301,
       "column": 3,
-      "index": 13090
+      "index": 12986
     }
   },
   {
@@ -814,14 +814,14 @@
     "defaultMessage": "!!!Close",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 303,
+      "line": 302,
       "column": 21,
-      "index": 13113
+      "index": 13009
     },
     "end": {
-      "line": 306,
+      "line": 305,
       "column": 3,
-      "index": 13201
+      "index": 13097
     }
   },
   {
@@ -829,29 +829,29 @@
     "defaultMessage": "!!!Transaction failed",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 307,
+      "line": 306,
       "column": 17,
-      "index": 13220
+      "index": 13116
     },
     "end": {
-      "line": 310,
+      "line": 309,
       "column": 3,
-      "index": 13317
+      "index": 13213
     }
   },
   {
     "id": "components.governance.failedTxText",
-    "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues",
+    "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 311,
+      "line": 310,
       "column": 16,
-      "index": 13335
+      "index": 13231
     },
     "end": {
-      "line": 314,
+      "line": 313,
       "column": 3,
-      "index": 13485
+      "index": 13382
     }
   },
   {
@@ -859,14 +859,14 @@
     "defaultMessage": "!!!Try again",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 315,
+      "line": 314,
       "column": 18,
-      "index": 13505
+      "index": 13402
     },
     "end": {
-      "line": 318,
+      "line": 317,
       "column": 3,
-      "index": 13594
+      "index": 13491
     }
   }
 ]

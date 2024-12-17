@@ -991,7 +991,7 @@
   },
   {
     "id": "txReview.failedTxText",
-    "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues",
+    "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues.",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
       "line": 355,
@@ -1001,7 +1001,7 @@
     "end": {
       "line": 358,
       "column": 3,
-      "index": 12904
+      "index": 12905
     }
   },
   {
@@ -1011,12 +1011,12 @@
     "start": {
       "line": 359,
       "column": 18,
-      "index": 12924
+      "index": 12925
     },
     "end": {
       "line": 362,
       "column": 3,
-      "index": 13009
+      "index": 13010
     }
   },
   {
@@ -1026,12 +1026,12 @@
     "start": {
       "line": 363,
       "column": 29,
-      "index": 13040
+      "index": 13041
     },
     "end": {
       "line": 366,
       "column": 3,
-      "index": 13147
+      "index": 13148
     }
   },
   {
@@ -1041,12 +1041,12 @@
     "start": {
       "line": 367,
       "column": 28,
-      "index": 13177
+      "index": 13178
     },
     "end": {
       "line": 370,
       "column": 3,
-      "index": 13333
+      "index": 13334
     }
   },
   {
@@ -1056,12 +1056,12 @@
     "start": {
       "line": 371,
       "column": 30,
-      "index": 13365
+      "index": 13366
     },
     "end": {
       "line": 374,
       "column": 3,
-      "index": 13462
+      "index": 13463
     }
   },
   {
@@ -1071,12 +1071,12 @@
     "start": {
       "line": 375,
       "column": 36,
-      "index": 13500
+      "index": 13501
     },
     "end": {
       "line": 378,
       "column": 3,
-      "index": 13607
+      "index": 13608
     }
   },
   {
@@ -1086,12 +1086,12 @@
     "start": {
       "line": 379,
       "column": 37,
-      "index": 13646
+      "index": 13647
     },
     "end": {
       "line": 383,
       "column": 3,
-      "index": 13858
+      "index": 13859
     }
   },
   {
@@ -1101,12 +1101,12 @@
     "start": {
       "line": 384,
       "column": 16,
-      "index": 13876
+      "index": 13877
     },
     "end": {
       "line": 387,
       "column": 3,
-      "index": 13948
+      "index": 13949
     }
   },
   {
@@ -1116,12 +1116,12 @@
     "start": {
       "line": 388,
       "column": 19,
-      "index": 13969
+      "index": 13970
     },
     "end": {
       "line": 391,
       "column": 3,
-      "index": 14047
+      "index": 14048
     }
   },
   {
@@ -1131,12 +1131,12 @@
     "start": {
       "line": 392,
       "column": 17,
-      "index": 14066
+      "index": 14067
     },
     "end": {
       "line": 395,
       "column": 3,
-      "index": 14141
+      "index": 14142
     }
   },
   {
@@ -1146,12 +1146,12 @@
     "start": {
       "line": 396,
       "column": 13,
-      "index": 14156
+      "index": 14157
     },
     "end": {
       "line": 399,
       "column": 3,
-      "index": 14228
+      "index": 14229
     }
   }
 ]

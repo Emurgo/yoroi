@@ -212,7 +212,7 @@ const messages = defineMessages({
   },
   transactionFailedDescription: {
     id: 'components.governance.transactionFailedDescription',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
   },
   tryAgain: {
     id: 'components.governance.tryAgain',
@@ -297,8 +297,7 @@ const messages = defineMessages({
   },
   submittedTxText: {
     id: 'components.governance.submittedTxText',
-    defaultMessage:
-      '!!!This transaction can take a while!\n\nParticipating in the Cardano Governance gives you the opportunity to participate in the voting as well as withdraw your staking rewards.',
+    defaultMessage: `!!!It will show up in the transaction list once it's confirmed by the network.`,
   },
   submittedTxButton: {
     id: 'components.governance.submittedTxButton',
@@ -310,7 +309,7 @@ const messages = defineMessages({
   },
   failedTxText: {
     id: 'components.governance.failedTxText',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
   },
   failedTxButton: {
     id: 'components.governance.failedTxButton',
