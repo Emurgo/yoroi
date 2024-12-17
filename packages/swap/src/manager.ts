@@ -27,5 +27,5 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
 }
 
 const apiMaker = (adapters: Array<Swap.Api>): Swap.Api => {
-  return adapters[0]!
+  return adapters[1]!
 }

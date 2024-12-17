@@ -192,6 +192,9 @@ export const transformersMaker = ({
         totalFee: total_fee,
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output_without_slippage,
+        totalInput:
+          splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0) ??
+          undefined,
       }),
     },
     reverseEstimate: {

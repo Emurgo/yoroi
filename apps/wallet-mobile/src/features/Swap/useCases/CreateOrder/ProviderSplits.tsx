@@ -76,7 +76,15 @@ export const ProviderSplits = () => {
   )
 }
 
-const Row = ({label, description, value}: {label: string; description?: string; value: string | React.ReactNode}) => {
+const Row = ({
+  label,
+  description,
+  value,
+}: {
+  label: string
+  description?: string
+  value: number | string | React.ReactNode
+}) => {
   const {styles} = useStyles()
   const {openModal} = useModal()
 
@@ -95,7 +103,7 @@ const Row = ({label, description, value}: {label: string; description?: string; 
         )}
       </View>
 
-      {typeof value === 'string' ? <Text style={styles.rowValue}>{value}</Text> : value}
+      {typeof value === 'string' || typeof value === 'number' ? <Text style={styles.rowValue}>{value}</Text> : value}
     </View>
   )
 }
