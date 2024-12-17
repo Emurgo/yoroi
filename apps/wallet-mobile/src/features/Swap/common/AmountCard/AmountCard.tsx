@@ -22,7 +22,7 @@ type Props = {
   touched?: boolean
   inputRef?: React.RefObject<TextInput>
   inputEditable?: boolean
-  error?: string
+  error: string | null
   testID?: string
 }
 
