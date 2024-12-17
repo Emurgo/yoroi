@@ -60,13 +60,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const wantedPriceInputRef = React.useRef<TextInput | null>(null)
   const slippageInputRef = React.useRef<TextInput | null>(null)
 
-  /*
-  const hasTokenInBalance = balances.records.get(tokenIn)?.quantity ?? 0n >= tokenInAmount
-
-  const isSellPt = orderData.amounts.sell?.info.id === wallet.portfolioPrimaryTokenInfo.id
-  const ptTotalRequired = orderData.selectedPoolCalculation?.cost.ptTotalRequired.quantity ?? 0n
-  const hasPtBalance = primaryTokenBalance >= (!isSellPt ? 0n : sellQuantity + ptTotalRequired)
-*/
   const [state, dispatch] = React.useReducer(swapReducer, defaultState)
 
   React.useEffect(() => {
@@ -161,14 +154,19 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       })
   }, [
     navigate,
+    state.estimate?.splits,
+    state.estimate?.totalFee,
     state.orderType,
     state.selectedDex.value,
     state.slippageInput.value,
     state.tokenInInput.tokenId,
     state.tokenInInput.value,
     state.tokenOutInput.tokenId,
+    state.tokenOutInput.value,
     state.wantedPrice,
     swapManager.api,
+    tokenInfos,
+    track,
   ])
 
   const context = React.useMemo(
