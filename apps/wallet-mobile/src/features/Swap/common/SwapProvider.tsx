@@ -81,7 +81,12 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   React.useEffect(() => {
     if (state.reqres === 'response') return
 
-    if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) return
+    if (
+      state.tokenInInput.tokenId === undefined ||
+      state.tokenOutInput.tokenId === undefined ||
+      (state.tokenInInput.value === '' && state.tokenOutInput.value === '')
+    )
+      return
 
     swapManager.api
       .estimate({
@@ -200,11 +205,15 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.TokenInErrorChanged:
+        draft.lastInputTouched = state.lastInputTouched
         draft.tokenInInput.error = action.value
+        draft.reqres = 'response'
 
         break
       case SwapAction.TokenOutErrorChanged:
+        draft.lastInputTouched = state.lastInputTouched
         draft.tokenOutInput.error = action.value
+        draft.reqres = 'response'
 
         break
       case SwapAction.SlippageInputChanged:
@@ -245,10 +254,16 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft = defaultState
         break
       case SwapAction.EstimateResponse:
+        draft.lastInputTouched = state.lastInputTouched
         draft.reqres = 'response'
         draft.estimate = action.value
-        draft.tokenOutInput.value = String(action.value.totalOutputWithoutSlippage ?? 0)
+        draft.tokenOutInput.error = null
         draft.canSwap = true
+        if (state.lastInputTouched === 'in') {
+          draft.tokenOutInput.value = String(action.value.totalOutputWithoutSlippage ?? 0)
+        } else {
+          draft.tokenInInput.value = String(action.value.totalInput ?? 0)
+        }
 
         break
       case SwapAction.EstimateError:
