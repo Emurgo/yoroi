@@ -6,6 +6,7 @@ import React from 'react'
 import {TextInput} from 'react-native'
 import {useQuery} from 'react-query'
 
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useAddressHex, useStakingKey} from '../../../yoroi-wallets/hooks'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenInfos} from '../../Portfolio/common/hooks/usePortfolioTokenInfos'
@@ -18,6 +19,7 @@ export const useSwap = () => React.useContext(SwapContext)
 export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const navigate = useNavigateTo()
   const strings = useStrings()
+  const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const network = wallet.networkManager.network
   const balances = usePortfolioBalances({wallet})
@@ -115,6 +117,28 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   const create = React.useCallback(() => {
     if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) return
+
+    const tokenInInfo = tokenInfos.get(state.tokenInInput.tokenId)
+    const tokenOutInfo = tokenInfos.get(state.tokenOutInput.tokenId)
+
+    track.swapOrderSelected({
+      from_asset: [
+        {
+          asset_name: tokenInInfo?.name,
+          asset_ticker: tokenInInfo?.ticker,
+          policy_id: tokenInInfo?.id.split('.')[0],
+        },
+      ],
+      to_asset: [
+        {asset_name: tokenOutInfo?.name, asset_ticker: tokenOutInfo?.ticker, policy_id: tokenOutInfo?.id.split('.')[0]},
+      ],
+      order_type: state.orderType,
+      slippage_tolerance: state.slippageInput.value,
+      from_amount: state.tokenInInput.value,
+      to_amount: state.tokenOutInput.value,
+      pool_source: state.estimate?.splits[0].poolId ?? '',
+      swap_fees: state.estimate?.totalFee,
+    })
 
     swapManager.api
       .create({
