@@ -44,7 +44,7 @@ export type SwapOrder = {
 }
 
 export type SwapEstimateRequest = {
-  slippage: number
+  slippage: number // unused for limit, but can't figure out how to combine the type with the below amountOut spec. Harmless since client does have the value
   tokenIn: PortfolioTokenId
   tokenOut: PortfolioTokenId
   dex?: SwapProvider

@@ -11,14 +11,16 @@ import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBal
 import {usePortfolioTokenInfos} from '../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from './navigation'
+import {useStrings} from './strings'
 
 export const useSwap = () => React.useContext(SwapContext)
 
 export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const navigate = useNavigateTo()
+  const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const network = wallet.networkManager.network
-  const _balances = usePortfolioBalances({wallet})
+  const balances = usePortfolioBalances({wallet})
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = useAddressHex(wallet)
@@ -66,6 +68,17 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const [state, dispatch] = React.useReducer(swapReducer, defaultState)
 
   React.useEffect(() => {
+    const tokenAmount = balances.records.get(state.tokenInInput.tokenId ?? '.unknown')
+    const tokenBalance = Number(tokenAmount?.quantity ?? 0n) / 10 ** (tokenAmount?.info?.decimals ?? 0)
+    const hasEnoughBalance = tokenBalance >= Number(state.tokenInInput.value)
+    if (!hasEnoughBalance) {
+      dispatch({type: 'TokenInErrorChanged', value: strings.notEnoughBalance})
+    } else {
+      dispatch({type: 'TokenInErrorChanged', value: null})
+    }
+  }, [balances.records, state.tokenInInput.tokenId, state.tokenInInput.value, strings.notEnoughBalance])
+
+  React.useEffect(() => {
     if (state.reqres === 'response') return
 
     if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) return
@@ -75,11 +88,16 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         slippage: state.slippageInput.value,
         tokenIn: state.tokenInInput.tokenId,
         tokenOut: state.tokenOutInput.tokenId,
-        amountIn: Number(state.tokenInInput.value),
-        // amountOut: Number(state.tokenOutInput:value),
+        ...(state.lastInputTouched === 'in'
+          ? {
+              amountIn: Number(state.tokenInInput.value),
+              ...(state.orderType === 'limit' && {wantedPrice: Number(state.wantedPrice)}),
+            }
+          : {
+              amountOut: Number(state.tokenOutInput.value),
+            }),
         blacklistedDexes: [],
         dex: state.selectedDex.value,
-        // wantedPrice: Number(state.wantedPrice),
       })
       .then((response) => {
         if (response.tag === 'left') {
@@ -95,14 +113,14 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
     swapManager.api
       .create({
-        slippage: state.slippageInput.value,
         tokenIn: state.tokenInInput.tokenId,
         tokenOut: state.tokenOutInput.tokenId,
         amountIn: Number(state.tokenInInput.value),
-        // amountOut: Number(state.tokenOutInput:value),
+        ...(state.orderType === 'limit'
+          ? {wantedPrice: Number(state.wantedPrice)}
+          : {slippage: state.slippageInput.value}),
         blacklistedDexes: [],
         dex: state.selectedDex.value,
-        // wantedPrice: Number(state.wantedPrice),
       })
       .then((response) => {
         if (response.tag === 'left') {
@@ -114,11 +132,13 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       })
   }, [
     navigate,
+    state.orderType,
     state.selectedDex.value,
     state.slippageInput.value,
     state.tokenInInput.tokenId,
     state.tokenInInput.value,
     state.tokenOutInput.tokenId,
+    state.wantedPrice,
     swapManager.api,
   ])
 
@@ -153,13 +173,13 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
       case SwapAction.TokenInInputTouched:
         draft.tokenInInput.isTouched = true
         draft.tokenInInput.value = ''
-        draft.tokenInInput.error = undefined
+        draft.tokenInInput.error = null
 
         break
       case SwapAction.TokenOutInputTouched:
         draft.tokenOutInput.isTouched = true
         draft.tokenOutInput.value = ''
-        draft.tokenOutInput.error = undefined
+        draft.tokenOutInput.error = null
 
         break
       case SwapAction.TokenInIdChanged:
@@ -193,19 +213,18 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
       case SwapAction.WantedPriceInputChanged:
         draft.wantedPrice.value = action.value
-        draft.lastInputTouched = 'limit'
 
         break
       case SwapAction.SwitchTouched:
         draft.tokenOutInput.isTouched = state.tokenInInput.isTouched
         draft.tokenOutInput.tokenId = state.tokenInInput.tokenId
         draft.tokenOutInput.value = ''
-        draft.tokenOutInput.error = undefined
+        draft.tokenOutInput.error = null
 
         draft.tokenInInput.isTouched = state.tokenOutInput.isTouched
         draft.tokenInInput.tokenId = state.tokenOutInput.tokenId
         draft.tokenInInput.value = ''
-        draft.tokenInInput.error = undefined
+        draft.tokenInInput.error = null
 
         break
       case SwapAction.DexSelectorTouched:
@@ -218,8 +237,8 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.tokenInInput.value = ''
         draft.tokenOutInput.value = ''
 
-        draft.tokenInInput.error = undefined
-        draft.tokenOutInput.error = undefined
+        draft.tokenInInput.error = null
+        draft.tokenOutInput.error = null
 
         break
       case SwapAction.ResetForm:
@@ -284,8 +303,8 @@ type SwapActionValueMap = {
   TokenOutIdChanged: Portfolio.Token.Id
   TokenInAmountChanged: string
   TokenOutAmountChanged: string
-  TokenInErrorChanged: string
-  TokenOutErrorChanged: string
+  TokenInErrorChanged: string | null
+  TokenOutErrorChanged: string | null
   WantedPriceInputChanged: string
   SlippageInputChanged: number
   SwitchTouched: undefined
@@ -313,14 +332,14 @@ const defaultState: SwapState = Object.freeze({
     isTouched: true,
     tokenId: primaryTokenId,
     disabled: false,
-    error: undefined,
+    error: null,
     value: '',
   },
   tokenOutInput: {
     isTouched: false,
     tokenId: undefined,
     disabled: false,
-    error: undefined,
+    error: null,
     value: '',
   },
   slippageInput: {
@@ -343,19 +362,19 @@ const defaultState: SwapState = Object.freeze({
 type SwapState = {
   reqres: 'request' | 'response'
   orderType: 'market' | 'limit'
-  lastInputTouched: 'in' | 'out' | 'limit'
+  lastInputTouched: 'in' | 'out'
   tokenInInput: {
     isTouched: boolean
     tokenId?: Portfolio.Token.Id
     disabled: boolean
-    error: string | undefined
+    error: string | null
     value: string
   }
   tokenOutInput: {
     isTouched: boolean
     tokenId?: Portfolio.Token.Id
     disabled: boolean
-    error: string | undefined
+    error: string | null
     value: string
   }
   slippageInput: {
