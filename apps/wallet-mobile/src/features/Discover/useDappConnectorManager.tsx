@@ -278,7 +278,7 @@ export const useSignTxWithHW = () => {
 
   const mutation = useMutation<Transaction, Error, {cbor: string; partial?: boolean}>({
     mutationFn,
-    useErrorBoundary: (error) => !isUserRejectedError(error),
+    useErrorBoundary: (error) => !isUserRejectedError(error) && !error.message.toLowerCase().includes('rejected'),
     mutationKey: ['useSignTxWithHW'],
   })
 
