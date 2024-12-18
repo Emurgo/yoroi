@@ -21,7 +21,7 @@ export const ProviderSplits = () => {
 
   const dex = swapForm.estimate?.splits[0]?.dex
 
-  const title = `${dex} ${strings.autoPool}`
+  const title = `${dex}${swapForm.selectedDex.isTouched ? '' : ` ${strings.autoPool}`}`
 
   return (
     <View>

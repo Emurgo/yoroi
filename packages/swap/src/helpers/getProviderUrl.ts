@@ -9,6 +9,7 @@ const poolUrls: Record<Swap.Provider, string> = {
   [Swap.Provider.Muesliswap_clp]: 'https://muesliswap.com',
   [Swap.Provider.Minswap_v1]: 'https://minswap.org',
   [Swap.Provider.Minswap_v2]: 'https://minswap.org',
+  [Swap.Provider.Minswap_stable]: 'https://minswap.org',
   [Swap.Provider.Spectrum_v1]: 'https://app.spectrum.fi/cardano',
   [Swap.Provider.Teddy_v1]: 'teddy-v1',
   [Swap.Provider.Wingriders_v1]: 'https://www.wingriders.com',

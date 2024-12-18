@@ -143,6 +143,15 @@ export const transformersMaker = ({
           }),
         ),
     },
+    providers: {
+      response: (): Swap.ProvidersResponse =>
+        Object.values(Provider)
+          .map(toSwapProvider)
+          .map((provider) => ({
+            aggregator: Swap.Aggregator.Dexhunter,
+            provider,
+          })),
+    },
     cancel: {
       request: ({order}: Swap.CancelRequest): CancelRequest => ({
         address,
@@ -391,6 +400,7 @@ const fromSwapProvider = (dex: Swap.Provider): Provider | undefined =>
   ({
     [Swap.Provider.Minswap_v1]: Provider.Minswap_v1,
     [Swap.Provider.Minswap_v2]: Provider.Minswap_v2,
+    [Swap.Provider.Minswap_stable]: undefined,
     [Swap.Provider.Wingriders_v1]: Provider.Wingriders_v1,
     [Swap.Provider.Wingriders_v2]: Provider.Wingriders_v2,
     [Swap.Provider.Vyfi_v1]: Provider.Vyfi_v1,

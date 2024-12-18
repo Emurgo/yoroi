@@ -12,6 +12,7 @@ export type SwapAggregator =
 export const SwapProvider = {
   Minswap_v1: 'minswap-v1',
   Minswap_v2: 'minswap-v2',
+  Minswap_stable: 'minswap-stable',
   Muesliswap_v2: 'muesliswap-v2',
   Muesliswap_clp: 'muesliswap-clp',
   Spectrum_v1: 'spectrum-v1',
@@ -25,6 +26,24 @@ export const SwapProvider = {
 } as const
 
 export type SwapProvider = (typeof SwapProvider)[keyof typeof SwapProvider]
+
+export type SwapProvidersRequest = {
+  tokenA: PortfolioTokenId
+  tokenB: PortfolioTokenId
+}
+
+export type SwapProvidersResponse = Array<{
+  aggregator: SwapAggregator
+  provider: SwapProvider
+  tokenA?: PortfolioTokenId
+  tokenB?: PortfolioTokenId
+  tokenALiquidity?: number
+  tokenBLiquidity?: number
+  poolId?: string
+  poolFee?: number
+  batcherFee?: number
+  deposit?: number
+}>
 
 export type SwapOrder = {
   aggregator: SwapAggregator
@@ -138,6 +157,9 @@ export type SwapCancelResponse = {
 export type SwapApi = Readonly<{
   orders: () => Promise<Readonly<ApiResponse<Array<SwapOrder>>>>
   tokens: () => Promise<Readonly<ApiResponse<Array<PortfolioTokenInfo>>>>
+  providers(
+    args: SwapProvidersRequest,
+  ): Promise<Readonly<ApiResponse<SwapProvidersResponse>>>
   estimate(
     args: SwapEstimateRequest,
   ): Promise<Readonly<ApiResponse<SwapEstimateResponse>>>

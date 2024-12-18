@@ -18,6 +18,7 @@ const icons: Record<Swap.Provider, FunctionComponent<{size?: number}>> = {
   [Swap.Provider.Muesliswap_clp]: Icon.MuesliSwap,
   [Swap.Provider.Minswap_v1]: Icon.MinSwap,
   [Swap.Provider.Minswap_v2]: Icon.MinSwap,
+  [Swap.Provider.Minswap_stable]: Icon.MinSwap,
   [Swap.Provider.Spectrum_v1]: Icon.SpectrumSwap,
   [Swap.Provider.Teddy_v1]: Icon.Swap,
   [Swap.Provider.Wingriders_v1]: Icon.WingRiders,

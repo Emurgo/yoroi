@@ -5,6 +5,7 @@ export const Provider = {
   Muesliswap_clp: 'muesliswap-clp',
   Minswap_v1: 'minswap-v1',
   Minswap_v2: 'minswap-v2',
+  Minswap_stable: 'minswap-stable',
   Spectrum_v1: 'spectrum-v1',
   Teddy_v1: 'teddy-v1',
   Wingriders_v1: 'wingriders-v1',
@@ -14,6 +15,36 @@ export const Provider = {
 } as const
 
 export type Provider = (typeof Provider)[keyof typeof Provider]
+
+export type ProvidersResponse = Record<
+  Provider,
+  {
+    batcher_fee: number
+    deposit: number
+    cancellation_mem: number
+    cancellation_steps: number
+  }
+>
+
+export type PoolsRequest = {
+  dex?: Provider[]
+  token_a: Portfolio.Token.Id
+  token_b: Portfolio.Token.Id
+}
+
+export type PoolsResponse = Array<{
+  provider: Provider
+  token_a: Portfolio.Token.Id
+  token_b: Portfolio.Token.Id
+  token_a_liquidity: number
+  token_b_liquidity: number
+  pool_id: string
+  pool_fee: number
+  utxo: string
+  batcher_address: string | null
+  price_a: number | null
+  price_b: number | null
+}>
 
 export type TokensResponse = Array<{
   ticker: string
@@ -88,7 +119,7 @@ export type LimitOrderRequest = {
   user_address: string
   dex: Provider
   partner?: string
-  numbers_have_decimals: boolean
+  numbers_have_decimals?: boolean
 }
 
 export type CreateOrderRequest = {
@@ -100,7 +131,7 @@ export type CreateOrderRequest = {
   slippage?: number
   dex?: Array<Provider>
   partner?: string
-  numbers_have_decimals: boolean
+  numbers_have_decimals?: boolean
 }
 
 export type QuoteRequest = {
@@ -110,7 +141,18 @@ export type QuoteRequest = {
   sell_amount?: number
   slippage?: number
   dex?: Array<Provider>
-  numbers_have_decimals: boolean
+  partner?: string
+  numbers_have_decimals?: boolean
+}
+
+export type LimitQuoteRequest = {
+  buy_token: string
+  sell_token: string
+  buy_amount: number
+  sell_amount: number
+  dex?: Provider
+  partner?: string
+  numbers_have_decimals?: boolean
 }
 
 export type Split = {
@@ -146,5 +188,8 @@ export type CreateOrderResponse = {
 }
 
 export type LimitOrderResponse = {
+  quote: QuoteResponse
   tx_cbor: string
 }
+
+export type LimitQuoteResponse = QuoteResponse

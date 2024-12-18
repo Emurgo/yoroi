@@ -38,13 +38,13 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     })
   }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
 
-  const {data: orders = []} = useQuery([network, stakingKey], async () => {
+  const {data: orders = []} = useQuery(['swapOrders', network, stakingKey], async () => {
     const res = await swapManager.api.orders()
     if (res.tag === 'right') return res.value.data
     return []
   })
 
-  const {data: tokenIds = []} = useQuery([network], async () => {
+  const {data: tokenIds = []} = useQuery(['swapTokenIds', network], async () => {
     const res = await swapManager.api.tokens()
     if (res.tag === 'right') return res.value.data.map(({id}) => id)
     return []
@@ -61,6 +61,21 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const slippageInputRef = React.useRef<TextInput | null>(null)
 
   const [state, dispatch] = React.useReducer(swapReducer, defaultState)
+
+  const {data: providers = []} = useQuery(
+    ['swapProviders', network, state.tokenInInput.tokenId, state.tokenOutInput.tokenId],
+    async () => {
+      if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) throw Error()
+
+      const res = await swapManager.api.providers({
+        tokenA: state.tokenInInput.tokenId,
+        tokenB: state.tokenOutInput.tokenId,
+      })
+      if (res.tag === 'right') return res.value.data
+      return []
+    },
+    {enabled: state.tokenInInput.tokenId !== undefined && state.tokenOutInput.tokenId !== undefined},
+  )
 
   React.useEffect(() => {
     const tokenAmount = balances.records.get(state.tokenInInput.tokenId ?? '.unknown')
@@ -172,6 +187,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const context = React.useMemo(
     () => ({
       ...state,
+      providers,
       tokenInfos,
       tokenOutInputRef,
       tokenInInputRef,
@@ -182,7 +198,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       create,
       cancel: swapManager.api.cancel,
     }),
-    [state, tokenInfos, orders, create, swapManager.api.cancel],
+    [state, providers, tokenInfos, orders, create, swapManager.api.cancel],
   )
 
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>
@@ -211,10 +227,12 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
       case SwapAction.TokenInIdChanged:
         draft.tokenInInput.tokenId = action.value
+        draft.selectedDex.isTouched = false
 
         break
       case SwapAction.TokenOutIdChanged:
         draft.tokenOutInput.tokenId = action.value
+        draft.selectedDex.isTouched = false
 
         break
       case SwapAction.TokenInAmountChanged:
@@ -259,6 +277,9 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.DexSelectorTouched:
+        draft.selectedDex.isTouched = true
+        draft.selectedDex.value = action.value
+
         break
       case SwapAction.Refresh:
         draft.lastInputTouched = state.lastInputTouched
@@ -345,7 +366,7 @@ type SwapActionValueMap = {
   WantedPriceInputChanged: string
   SlippageInputChanged: number
   SwitchTouched: undefined
-  DexSelectorTouched: undefined
+  DexSelectorTouched: Swap.Provider
   Refresh: undefined
   ResetAmounts: undefined
   ResetForm: undefined
@@ -430,6 +451,7 @@ type SwapState = {
 }
 
 export type SwapContext = SwapState & {
+  providers: Swap.ProvidersResponse
   tokenInfos: Map<`${string}.${string}`, Portfolio.Token.Info>
   tokenInInputRef: React.RefObject<TextInput> | undefined
   tokenOutInputRef: React.RefObject<TextInput> | undefined
@@ -443,6 +465,7 @@ export type SwapContext = SwapState & {
 
 const SwapContext = React.createContext<SwapContext>({
   ...defaultState,
+  providers: [],
   tokenInfos: new Map<`${string}.${string}`, Portfolio.Token.Info>(),
   tokenInInputRef: undefined,
   tokenOutInputRef: undefined,

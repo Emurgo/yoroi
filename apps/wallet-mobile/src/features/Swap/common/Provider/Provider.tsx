@@ -7,7 +7,7 @@ import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {ProviderIcon} from './ProviderIcon'
 
-export const Provider = ({provider}: {provider: Swap.Provider}) => {
+export const Provider = ({provider, noLink = false}: {provider: Swap.Provider; noLink?: boolean}) => {
   const styles = useStyles()
 
   return (
@@ -16,10 +16,14 @@ export const Provider = ({provider}: {provider: Swap.Provider}) => {
 
       <Spacer width={4} />
 
-      <TouchableOpacity onPress={() => Linking.openURL(getProviderUrl(provider))} style={styles.liquidityPoolLink}>
+      <TouchableOpacity
+        onPress={() => Linking.openURL(getProviderUrl(provider))}
+        style={styles.liquidityPoolLink}
+        disabled={noLink}
+      >
         <Text style={styles.liquidityPoolText}>{`${provider.charAt(0).toUpperCase()}${provider
           .slice(1)
-          .replace(/-.*/, '')}`}</Text>
+          .replace(/-/, ' ')}`}</Text>
       </TouchableOpacity>
     </View>
   )

@@ -126,32 +126,34 @@ export const StartSwapOrderScreen = () => {
 
             <EditPrice />
 
-            <View style={styles.between}>
-              <View style={styles.slippage}>
-                <Text style={styles.slippageLabel}>{strings.slippageTolerance}</Text>
+            {swapForm.orderType === 'market' && (
+              <View style={styles.between}>
+                <View style={styles.slippage}>
+                  <Text style={styles.slippageLabel}>{strings.slippageTolerance}</Text>
 
-                <Button
-                  onPress={() =>
-                    openModal(
-                      strings.slippageTolerance,
-                      <Text style={styles.textContent}>{strings.slippageToleranceInfo}</Text>,
-                    )
-                  }
-                  type={ButtonType.SecondaryText}
-                  icon={Icon.Info}
-                />
-              </View>
+                  <Button
+                    onPress={() =>
+                      openModal(
+                        strings.slippageTolerance,
+                        <Text style={styles.textContent}>{strings.slippageToleranceInfo}</Text>,
+                      )
+                    }
+                    type={ButtonType.SecondaryText}
+                    icon={Icon.Info}
+                  />
+                </View>
 
-              <View>
-                <Button
-                  onPress={navigate.editSlippage}
-                  type={ButtonType.SecondaryText}
-                  title={`${swapForm.slippageInput.value}%`}
-                  rightIcon
-                  icon={Icon.Edit}
-                />
+                <View>
+                  <Button
+                    onPress={navigate.editSlippage}
+                    type={ButtonType.SecondaryText}
+                    title={`${swapForm.slippageInput.value}%`}
+                    rightIcon
+                    icon={Icon.Edit}
+                  />
+                </View>
               </View>
-            </View>
+            )}
 
             <ProviderSplits />
           </View>

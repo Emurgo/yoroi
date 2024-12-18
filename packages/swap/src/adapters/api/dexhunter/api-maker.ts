@@ -1,5 +1,5 @@
 import {FetchData, fetchData, isLeft} from '@yoroi/common'
-import {Chain, Portfolio, Swap} from '@yoroi/types'
+import {Api, Chain, Left, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
 import {
   CancelResponse,
@@ -65,7 +65,7 @@ export const dexhunterApiMaker = (
           headers,
         })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseDhError(response)
 
         return freeze(
           {
@@ -86,7 +86,7 @@ export const dexhunterApiMaker = (
           headers,
         })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseDhError(response)
 
         return freeze(
           {
@@ -94,6 +94,19 @@ export const dexhunterApiMaker = (
             value: {
               status: response.value.status,
               data: transformers.orders.response(response.value.data),
+            },
+          },
+          true,
+        )
+      },
+
+      async providers(_body: Swap.ProvidersRequest) {
+        return freeze(
+          {
+            tag: 'right',
+            value: {
+              status: 200,
+              data: transformers.providers.response(),
             },
           },
           true,
@@ -117,7 +130,7 @@ export const dexhunterApiMaker = (
           data: transformers[kind].request(body),
         })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseDhError(response)
 
         return freeze(
           {
@@ -142,7 +155,7 @@ export const dexhunterApiMaker = (
           data: transformers[kind].request(body),
         })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseDhError(response)
 
         return freeze(
           {
@@ -164,7 +177,7 @@ export const dexhunterApiMaker = (
           data: transformers.cancel.request(body),
         })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseDhError(response)
 
         return freeze(
           {
@@ -181,6 +194,17 @@ export const dexhunterApiMaker = (
     true,
   )
 }
+
+const parseDhError = ({
+  tag,
+  error,
+}: Left<Api.ResponseError>): Left<Api.ResponseError> => ({
+  tag,
+  error: {
+    ...error,
+    message: JSON.stringify(error.responseData as any, null, 2),
+  },
+})
 
 const baseUrls = {
   [Chain.Network.Mainnet]: 'https://api-us.dexhunterv3.app',

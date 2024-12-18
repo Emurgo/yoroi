@@ -1,4 +1,4 @@
-import {FetchData, fetchData, isLeft} from '@yoroi/common'
+import {FetchData, fetchData, isLeft, isRight} from '@yoroi/common'
 import {Api, Chain, Left, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
 import {
@@ -9,6 +9,9 @@ import {
   CreateOrderResponse,
   QuoteResponse,
   LimitOrderResponse,
+  ProvidersResponse,
+  PoolsResponse,
+  LimitQuoteResponse,
 } from './types'
 import {transformersMaker} from './transformers'
 
@@ -53,6 +56,15 @@ export const muesliswapApiMaker = (
   const baseUrl = baseUrls[network]
 
   const transformers = transformersMaker(config)
+
+  let providersInfo: ProvidersResponse = {} as ProvidersResponse
+  request<ProvidersResponse>({
+    method: 'get',
+    url: `${baseUrl}${apiPaths.providers}`,
+    headers,
+  }).then((res) => {
+    if (isRight(res)) providersInfo = res.value.data
+  })
 
   return freeze(
     {
@@ -120,10 +132,44 @@ export const muesliswapApiMaker = (
         }
       },
 
+      async providers(body: Swap.ProvidersRequest) {
+        const params = transformers.providers.request(body)
+
+        const response = await request<PoolsResponse>(
+          {
+            method: 'get',
+            url: `${baseUrl}${apiPaths.pools}`,
+            headers,
+          },
+          {
+            params,
+          },
+        )
+
+        if (isLeft(response)) return parseMuesliError(response)
+
+        return freeze(
+          {
+            tag: 'right',
+            value: {
+              status: response.value.status,
+              data: transformers.providers.response(
+                response.value.data,
+                providersInfo,
+              ),
+            },
+          },
+          true,
+        )
+      },
+
       async estimate(body: Swap.EstimateRequest) {
-        const params = transformers.quote.request(body)
-        // TODO quote limit
-        const response = await request<QuoteResponse>(
+        const kind: 'quote' | 'limitQuote' =
+          body.wantedPrice !== undefined ? 'limitQuote' : 'quote'
+
+        const params = transformers[kind].request(body)
+
+        const response = await request<QuoteResponse | LimitQuoteResponse>(
           {
             method: 'post',
             url: `${baseUrl}${apiPaths.quote}`,
@@ -250,4 +296,6 @@ const apiPaths = {
   create: '/order',
   createLimit: '/limit_order',
   cancel: '/cancel',
+  pools: '/pools',
+  providers: '/providers',
 } as const

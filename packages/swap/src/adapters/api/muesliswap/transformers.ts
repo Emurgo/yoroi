@@ -7,8 +7,12 @@ import {
   HistoryOrdersResponse,
   LimitOrderRequest,
   LimitOrderResponse,
+  LimitQuoteRequest,
   OpenOrdersResponse,
+  PoolsRequest,
+  PoolsResponse,
   Provider,
+  ProvidersResponse,
   QuoteRequest,
   QuoteResponse,
   Split,
@@ -101,6 +105,42 @@ export const transformersMaker = ({
           }),
         ),
     },
+    providers: {
+      request: ({tokenA, tokenB}: Swap.ProvidersRequest): PoolsRequest => ({
+        token_a: tokenA,
+        token_b: tokenB,
+      }),
+      response: (
+        pools: PoolsResponse = [],
+        providersInfo: ProvidersResponse,
+      ): Swap.ProvidersResponse =>
+        pools.map(
+          ({
+            pool_fee,
+            pool_id,
+            provider,
+            token_a,
+            token_a_liquidity,
+            token_b,
+            token_b_liquidity,
+          }) => ({
+            aggregator: Swap.Aggregator.Muesliswap,
+            provider,
+            batcherFee:
+              (providersInfo[provider]?.batcher_fee ?? 0) /
+              (10 * primaryTokenInfo.decimals),
+            deposit:
+              (providersInfo[provider]?.deposit ?? 0) /
+              (10 * primaryTokenInfo.decimals),
+            poolFee: pool_fee,
+            poolId: pool_id,
+            tokenA: token_a,
+            tokenALiquidity: token_a_liquidity,
+            tokenB: token_b,
+            tokenBLiquidity: token_b_liquidity,
+          }),
+        ),
+    },
     cancel: {
       request: ({order}: Swap.CancelRequest): CancelRequest => ({
         tx_hash: order.txHash ?? '',
@@ -108,6 +148,22 @@ export const transformersMaker = ({
       }),
       response: ({tx_cbor = ''}: CancelResponse): Swap.CancelResponse => ({
         cbor: tx_cbor,
+      }),
+    },
+    limitQuote: {
+      request: ({
+        dex,
+        tokenIn,
+        tokenOut,
+        amountIn = 0,
+        wantedPrice = 0,
+      }: Swap.EstimateRequest): LimitQuoteRequest => ({
+        dex: fromSwapProvider(dex ?? Swap.Provider.Muesliswap_v2),
+        sell_token: tokenIn,
+        buy_token: tokenOut,
+        sell_amount: amountIn,
+        buy_amount: amountIn * wantedPrice,
+        numbers_have_decimals: true,
       }),
     },
     quote: {
@@ -273,6 +329,7 @@ const toSwapProvider = (dex: Provider): Swap.Provider =>
   ({
     [Provider.Minswap_v1]: Swap.Provider.Minswap_v1,
     [Provider.Minswap_v2]: Swap.Provider.Minswap_v2,
+    [Provider.Minswap_stable]: Swap.Provider.Minswap_stable,
     [Provider.Wingriders_v1]: Swap.Provider.Wingriders_v1,
     [Provider.Vyfi_v1]: Swap.Provider.Vyfi_v1,
     [Provider.Sundaeswap_v1]: Swap.Provider.Sundaeswap_v1,
@@ -287,6 +344,7 @@ const fromSwapProvider = (dex: Swap.Provider): Provider =>
   ({
     [Swap.Provider.Minswap_v1]: Provider.Minswap_v1,
     [Swap.Provider.Minswap_v2]: Provider.Minswap_v2,
+    [Swap.Provider.Minswap_stable]: Provider.Minswap_stable,
     [Swap.Provider.Wingriders_v1]: Provider.Wingriders_v1,
     [Swap.Provider.Wingriders_v2]: undefined,
     [Swap.Provider.Vyfi_v1]: Provider.Vyfi_v1,
