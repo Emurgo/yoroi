@@ -6,6 +6,7 @@ import {Image} from 'expo-image'
 import * as React from 'react'
 import {Linking, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
+import {Button} from '../../../../../../components/Button/Button'
 import {Divider} from '../../../../../../components/Divider/Divider'
 import {Icon} from '../../../../../../components/Icon'
 import {Info} from '../../../../../../components/Info/Info'
@@ -23,6 +24,7 @@ import {Operations, useOperations} from '../../../../common/operations'
 import {TokenItem} from '../../../../common/TokenItem'
 import {FormattedOutput, FormattedOutputs, FormattedTx} from '../../../../common/types'
 import {WalletBalance} from '../../../../common/WalletBalance'
+import {OperationsNoticeIcon} from '../../../../illustrations/OperationsNoticeIcon'
 
 export const OverviewTab = ({
   tx,
@@ -40,6 +42,7 @@ export const OverviewTab = ({
   const {styles} = useStyles()
   const operations = useOperations(tx.certificates)
   const strings = useStrings()
+  const {openModal} = useModal()
 
   const notOwnedOutputs = React.useMemo(() => tx.outputs.filter((output) => !output.ownAddress), [tx.outputs])
   const ownedOutputs = React.useMemo(() => tx.outputs.filter((output) => output.ownAddress), [tx.outputs])
@@ -47,6 +50,24 @@ export const OverviewTab = ({
     () => operations.components.find((component) => component.duplicated),
     [operations.components],
   )
+
+  React.useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout> | undefined
+
+    const openOperationsNotice = () => {
+      clearTimeout(timeout)
+
+      timeout = setTimeout(() => {
+        openModal(strings.operationsNoticeTitle, <OperationsNotice />, 570)
+      }, 500)
+    }
+
+    if (operations.components.length > 0) openOperationsNotice()
+
+    return () => clearTimeout(timeout)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <View style={styles.root}>
@@ -484,6 +505,30 @@ export const CreatedByInfoItem = ({logo, url}: {logo?: string; url: string}) => 
   )
 }
 
+export const OperationsNotice = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+  const {closeModal} = useModal()
+
+  return (
+    <View style={styles.modal}>
+      <Space height="lg" />
+
+      <OperationsNoticeIcon />
+
+      <Space height="_2xl" />
+
+      <Text style={styles.modalText}>{strings.operationsNoticeText}</Text>
+
+      <Space fill />
+
+      <View style={styles.actions}>
+        <Button title={strings.operationsNoticeButton} onPress={closeModal} />
+      </View>
+    </View>
+  )
+}
+
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
@@ -571,6 +616,19 @@ const useStyles = () => {
     logo: {
       width: 24,
       height: 24,
+    },
+    modal: {
+      ...atoms.flex_1,
+      ...atoms.px_lg,
+      ...atoms.align_center,
+    },
+    modalText: {
+      ...atoms.text_center,
+      ...atoms.body_1_lg_regular,
+      color: color.text_gray_medium,
+    },
+    actions: {
+      alignSelf: 'stretch',
     },
   })
 

@@ -84,6 +84,9 @@ export const useStrings = () => {
     operationsLogTitle: intl.formatMessage(messages.operationsLogTitle),
     operationsLogWarningText: intl.formatMessage(messages.operationsLogWarningText),
     operationsLogWarningTitle: intl.formatMessage(messages.operationsLogWarningTitle),
+    operationsNoticeText: intl.formatMessage(messages.operationsNoticeText),
+    operationsNoticeButton: intl.formatMessage(messages.operationsNoticeButton),
+    operationsNoticeTitle: intl.formatMessage(messages.operationsNoticeTitle),
   }
 }
 
@@ -396,5 +399,18 @@ const messages = defineMessages({
   createdBy: {
     id: 'txReview.createdBy',
     defaultMessage: '!!!Created by',
+  },
+  operationsNoticeText: {
+    id: 'txReview.overview.operationsNoticeText',
+    defaultMessage:
+      '!!!You are about to interact with operations, which are key components used in governance and various blockchain activities. These include Cardano Governance Certificates, as outlined in CIP-0095, which facilitate governance transactions.',
+  },
+  operationsNoticeButton: {
+    id: 'txReview.overview.operationsNoticeButton',
+    defaultMessage: '!!!Ok',
+  },
+  operationsNoticeTitle: {
+    id: 'txReview.overview.operationsNoticeTitle',
+    defaultMessage: '!!!What are operations?',
   },
 })

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Confirm",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 91,
+      "line": 94,
       "column": 11,
-      "index": 5427
+      "index": 5664
     },
     "end": {
-      "line": 94,
+      "line": 97,
       "column": 3,
-      "index": 5494
+      "index": 5731
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!UTxOs",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 95,
+      "line": 98,
       "column": 9,
-      "index": 5505
+      "index": 5742
     },
     "end": {
-      "line": 98,
+      "line": 101,
       "column": 3,
-      "index": 5568
+      "index": 5805
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!UTxOs",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 99,
+      "line": 102,
       "column": 12,
-      "index": 5582
+      "index": 5819
     },
     "end": {
-      "line": 102,
+      "line": 105,
       "column": 3,
-      "index": 5654
+      "index": 5891
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Overview",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 103,
+      "line": 106,
       "column": 15,
-      "index": 5671
+      "index": 5908
     },
     "end": {
-      "line": 106,
+      "line": 109,
       "column": 3,
-      "index": 5749
+      "index": 5986
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Mint",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 107,
+      "line": 110,
       "column": 11,
-      "index": 5762
+      "index": 5999
     },
     "end": {
-      "line": 110,
+      "line": 113,
       "column": 3,
-      "index": 5832
+      "index": 6069
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Reference inputs",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 111,
+      "line": 114,
       "column": 22,
-      "index": 5856
+      "index": 6093
     },
     "end": {
-      "line": 114,
+      "line": 117,
       "column": 3,
-      "index": 5949
+      "index": 6186
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Metadata",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 115,
+      "line": 118,
       "column": 15,
-      "index": 5966
+      "index": 6203
     },
     "end": {
-      "line": 118,
+      "line": 121,
       "column": 3,
-      "index": 6047
+      "index": 6284
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Metadata hash",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 119,
+      "line": 122,
       "column": 16,
-      "index": 6065
+      "index": 6302
     },
     "end": {
-      "line": 122,
+      "line": 125,
       "column": 3,
-      "index": 6152
+      "index": 6389
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Metadata",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 123,
+      "line": 126,
       "column": 21,
-      "index": 6175
+      "index": 6412
     },
     "end": {
-      "line": 126,
+      "line": 129,
       "column": 3,
-      "index": 6262
+      "index": 6499
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Wallet",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 127,
+      "line": 130,
       "column": 15,
-      "index": 6279
+      "index": 6516
     },
     "end": {
-      "line": 130,
+      "line": 133,
       "column": 3,
-      "index": 6353
+      "index": 6590
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Fee",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 131,
+      "line": 134,
       "column": 12,
-      "index": 6367
+      "index": 6604
     },
     "end": {
-      "line": 134,
+      "line": 137,
       "column": 3,
-      "index": 6426
+      "index": 6663
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Your Wallet",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 135,
+      "line": 138,
       "column": 17,
-      "index": 6445
+      "index": 6682
     },
     "end": {
-      "line": 138,
+      "line": 141,
       "column": 3,
-      "index": 6531
+      "index": 6768
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Send",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 139,
+      "line": 142,
       "column": 13,
-      "index": 6546
+      "index": 6783
     },
     "end": {
-      "line": 142,
+      "line": 145,
       "column": 3,
-      "index": 6621
+      "index": 6858
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!To",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 143,
+      "line": 146,
       "column": 18,
-      "index": 6641
+      "index": 6878
     },
     "end": {
-      "line": 146,
+      "line": 149,
       "column": 3,
-      "index": 6719
+      "index": 6956
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!To script",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 147,
+      "line": 150,
       "column": 24,
-      "index": 6745
+      "index": 6982
     },
     "end": {
-      "line": 150,
+      "line": 153,
       "column": 3,
-      "index": 6836
+      "index": 7073
     }
   },
   {
@@ -229,14 +229,14 @@
     "defaultMessage": "!!!Inputs",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 151,
+      "line": 154,
       "column": 20,
-      "index": 6858
+      "index": 7095
     },
     "end": {
-      "line": 154,
+      "line": 157,
       "column": 3,
-      "index": 6939
+      "index": 7176
     }
   },
   {
@@ -244,14 +244,14 @@
     "defaultMessage": "!!!Outputs",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 155,
+      "line": 158,
       "column": 21,
-      "index": 6962
+      "index": 7199
     },
     "end": {
-      "line": 158,
+      "line": 161,
       "column": 3,
-      "index": 7045
+      "index": 7282
     }
   },
   {
@@ -259,14 +259,14 @@
     "defaultMessage": "!!!Your address",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 159,
+      "line": 162,
       "column": 25,
-      "index": 7072
+      "index": 7309
     },
     "end": {
-      "line": 162,
+      "line": 165,
       "column": 3,
-      "index": 7164
+      "index": 7401
     }
   },
   {
@@ -274,14 +274,14 @@
     "defaultMessage": "!!!Foreign address",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 163,
+      "line": 166,
       "column": 28,
-      "index": 7194
+      "index": 7431
     },
     "end": {
-      "line": 166,
+      "line": 169,
       "column": 3,
-      "index": 7292
+      "index": 7529
     }
   },
   {
@@ -289,14 +289,14 @@
     "defaultMessage": "!!!Overview",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 167,
+      "line": 170,
       "column": 12,
-      "index": 7306
+      "index": 7543
     },
     "end": {
-      "line": 170,
+      "line": 173,
       "column": 3,
-      "index": 7397
+      "index": 7634
     }
   },
   {
@@ -304,14 +304,14 @@
     "defaultMessage": "!!!JSON",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 171,
+      "line": 174,
       "column": 8,
-      "index": 7407
+      "index": 7644
     },
     "end": {
-      "line": 174,
+      "line": 177,
       "column": 3,
-      "index": 7490
+      "index": 7727
     }
   },
   {
@@ -319,14 +319,14 @@
     "defaultMessage": "!!!Metadata",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 175,
+      "line": 178,
       "column": 12,
-      "index": 7504
+      "index": 7741
     },
     "end": {
-      "line": 178,
+      "line": 181,
       "column": 3,
-      "index": 7594
+      "index": 7831
     }
   },
   {
@@ -334,14 +334,14 @@
     "defaultMessage": "!!!Policy ID",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 179,
+      "line": 182,
       "column": 12,
-      "index": 7608
+      "index": 7845
     },
     "end": {
-      "line": 182,
+      "line": 185,
       "column": 3,
-      "index": 7697
+      "index": 7934
     }
   },
   {
@@ -349,14 +349,14 @@
     "defaultMessage": "!!!Pool ID",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 183,
+      "line": 186,
       "column": 10,
-      "index": 7709
+      "index": 7946
     },
     "end": {
-      "line": 186,
+      "line": 189,
       "column": 3,
-      "index": 7793
+      "index": 8030
     }
   },
   {
@@ -364,14 +364,14 @@
     "defaultMessage": "!!!Hash",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 187,
+      "line": 190,
       "column": 12,
-      "index": 7807
+      "index": 8044
     },
     "end": {
-      "line": 190,
+      "line": 193,
       "column": 3,
-      "index": 7890
+      "index": 8127
     }
   },
   {
@@ -379,14 +379,14 @@
     "defaultMessage": "!!!Pool size",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 191,
+      "line": 194,
       "column": 12,
-      "index": 7904
+      "index": 8141
     },
     "end": {
-      "line": 194,
+      "line": 197,
       "column": 3,
-      "index": 7992
+      "index": 8229
     }
   },
   {
@@ -394,14 +394,14 @@
     "defaultMessage": "!!!ROA 30d",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 195,
+      "line": 198,
       "column": 11,
-      "index": 8005
+      "index": 8242
     },
     "end": {
-      "line": 198,
+      "line": 201,
       "column": 3,
-      "index": 8090
+      "index": 8327
     }
   },
   {
@@ -409,14 +409,14 @@
     "defaultMessage": "!!!Share",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 199,
+      "line": 202,
       "column": 13,
-      "index": 8105
+      "index": 8342
     },
     "end": {
-      "line": 202,
+      "line": 205,
       "column": 3,
-      "index": 8190
+      "index": 8427
     }
   },
   {
@@ -424,14 +424,14 @@
     "defaultMessage": "!!!Saturation",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 203,
+      "line": 206,
       "column": 18,
-      "index": 8210
+      "index": 8447
     },
     "end": {
-      "line": 206,
+      "line": 209,
       "column": 3,
-      "index": 8305
+      "index": 8542
     }
   },
   {
@@ -439,14 +439,14 @@
     "defaultMessage": "!!!Tax fix",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 207,
+      "line": 210,
       "column": 14,
-      "index": 8321
+      "index": 8558
     },
     "end": {
-      "line": 210,
+      "line": 213,
       "column": 3,
-      "index": 8405
+      "index": 8642
     }
   },
   {
@@ -454,14 +454,14 @@
     "defaultMessage": "!!!Tax ratio",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 211,
+      "line": 214,
       "column": 16,
-      "index": 8423
+      "index": 8660
     },
     "end": {
-      "line": 214,
+      "line": 217,
       "column": 3,
-      "index": 8511
+      "index": 8748
     }
   },
   {
@@ -469,14 +469,14 @@
     "defaultMessage": "!!!Pledge",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 215,
+      "line": 218,
       "column": 14,
-      "index": 8527
+      "index": 8764
     },
     "end": {
-      "line": 218,
+      "line": 221,
       "column": 3,
-      "index": 8610
+      "index": 8847
     }
   },
   {
@@ -484,14 +484,14 @@
     "defaultMessage": "!!!Fingerprint",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 219,
+      "line": 222,
       "column": 15,
-      "index": 8627
+      "index": 8864
     },
     "end": {
-      "line": 222,
+      "line": 225,
       "column": 3,
-      "index": 8721
+      "index": 8958
     }
   },
   {
@@ -499,14 +499,14 @@
     "defaultMessage": "!!!Name",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 223,
+      "line": 226,
       "column": 8,
-      "index": 8731
+      "index": 8968
     },
     "end": {
-      "line": 226,
+      "line": 229,
       "column": 3,
-      "index": 8823
+      "index": 9060
     }
   },
   {
@@ -514,14 +514,14 @@
     "defaultMessage": "!!!Token Supply",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 227,
+      "line": 230,
       "column": 15,
-      "index": 8840
+      "index": 9077
     },
     "end": {
-      "line": 230,
+      "line": 233,
       "column": 3,
-      "index": 8947
+      "index": 9184
     }
   },
   {
@@ -529,14 +529,14 @@
     "defaultMessage": "!!!Symbol",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 231,
+      "line": 234,
       "column": 10,
-      "index": 8959
+      "index": 9196
     },
     "end": {
-      "line": 234,
+      "line": 237,
       "column": 3,
-      "index": 9055
+      "index": 9292
     }
   },
   {
@@ -544,14 +544,14 @@
     "defaultMessage": "!!!Description",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 235,
+      "line": 238,
       "column": 15,
-      "index": 9072
+      "index": 9309
     },
     "end": {
-      "line": 238,
+      "line": 241,
       "column": 3,
-      "index": 9178
+      "index": 9415
     }
   },
   {
@@ -559,14 +559,14 @@
     "defaultMessage": "!!!Details on",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 239,
+      "line": 242,
       "column": 11,
-      "index": 9191
+      "index": 9428
     },
     "end": {
-      "line": 242,
+      "line": 245,
       "column": 3,
-      "index": 9292
+      "index": 9529
     }
   },
   {
@@ -574,14 +574,14 @@
     "defaultMessage": "!!!Asset Details",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 243,
+      "line": 246,
       "column": 21,
-      "index": 9315
+      "index": 9552
     },
     "end": {
-      "line": 246,
+      "line": 249,
       "column": 3,
-      "index": 9399
+      "index": 9636
     }
   },
   {
@@ -589,14 +589,14 @@
     "defaultMessage": "!!!Wallet balance",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 247,
+      "line": 250,
       "column": 22,
-      "index": 9423
+      "index": 9660
     },
     "end": {
-      "line": 250,
+      "line": 253,
       "column": 3,
-      "index": 9509
+      "index": 9746
     }
   },
   {
@@ -604,14 +604,14 @@
     "defaultMessage": "!!!Tokens",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 251,
+      "line": 254,
       "column": 28,
-      "index": 9539
+      "index": 9776
     },
     "end": {
-      "line": 254,
+      "line": 257,
       "column": 3,
-      "index": 9623
+      "index": 9860
     }
   },
   {
@@ -619,14 +619,14 @@
     "defaultMessage": "!!!NFTs",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 255,
+      "line": 258,
       "column": 26,
-      "index": 9651
+      "index": 9888
     },
     "end": {
-      "line": 258,
+      "line": 261,
       "column": 3,
-      "index": 9731
+      "index": 9968
     }
   },
   {
@@ -634,14 +634,14 @@
     "defaultMessage": "!!!Pool Details",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 259,
+      "line": 262,
       "column": 20,
-      "index": 9753
+      "index": 9990
     },
     "end": {
-      "line": 262,
+      "line": 265,
       "column": 3,
-      "index": 9835
+      "index": 10072
     }
   },
   {
@@ -649,14 +649,14 @@
     "defaultMessage": "!!!Register staking key deposit",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 263,
+      "line": 266,
       "column": 22,
-      "index": 9859
+      "index": 10096
     },
     "end": {
-      "line": 266,
+      "line": 269,
       "column": 3,
-      "index": 9969
+      "index": 10206
     }
   },
   {
@@ -664,14 +664,14 @@
     "defaultMessage": "!!!Register as a DRep deposit",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 267,
+      "line": 270,
       "column": 20,
-      "index": 9991
+      "index": 10228
     },
     "end": {
-      "line": 270,
+      "line": 273,
       "column": 3,
-      "index": 10097
+      "index": 10334
     }
   },
   {
@@ -679,14 +679,14 @@
     "defaultMessage": "!!!Pool registration deposit",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 271,
+      "line": 274,
       "column": 20,
-      "index": 10119
+      "index": 10356
     },
     "end": {
-      "line": 274,
+      "line": 277,
       "column": 3,
-      "index": 10224
+      "index": 10461
     }
   },
   {
@@ -694,14 +694,14 @@
     "defaultMessage": "!!!Pool retirement",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 275,
+      "line": 278,
       "column": 18,
-      "index": 10244
+      "index": 10481
     },
     "end": {
-      "line": 278,
+      "line": 281,
       "column": 3,
-      "index": 10337
+      "index": 10574
     }
   },
   {
@@ -709,14 +709,14 @@
     "defaultMessage": "!!!Drep update",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 279,
+      "line": 282,
       "column": 14,
-      "index": 10353
+      "index": 10590
     },
     "end": {
-      "line": 282,
+      "line": 285,
       "column": 3,
-      "index": 10438
+      "index": 10675
     }
   },
   {
@@ -724,14 +724,14 @@
     "defaultMessage": "!!!Deregister as a DRep",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 283,
+      "line": 286,
       "column": 22,
-      "index": 10462
+      "index": 10699
     },
     "end": {
-      "line": 286,
+      "line": 289,
       "column": 3,
-      "index": 10564
+      "index": 10801
     }
   },
   {
@@ -739,14 +739,14 @@
     "defaultMessage": "!!!Deregister staking key",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 287,
+      "line": 290,
       "column": 24,
-      "index": 10590
+      "index": 10827
     },
     "end": {
-      "line": 290,
+      "line": 293,
       "column": 3,
-      "index": 10696
+      "index": 10933
     }
   },
   {
@@ -754,14 +754,14 @@
     "defaultMessage": "!!!Move instantaneus rewards",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 291,
+      "line": 294,
       "column": 28,
-      "index": 10726
+      "index": 10963
     },
     "end": {
-      "line": 294,
+      "line": 297,
       "column": 3,
-      "index": 10839
+      "index": 11076
     }
   },
   {
@@ -769,14 +769,14 @@
     "defaultMessage": "!!!Committee hot authorization",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 295,
+      "line": 298,
       "column": 29,
-      "index": 10870
+      "index": 11107
     },
     "end": {
-      "line": 298,
+      "line": 301,
       "column": 3,
-      "index": 10986
+      "index": 11223
     }
   },
   {
@@ -784,14 +784,14 @@
     "defaultMessage": "!!!Committee cold resign",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 299,
+      "line": 302,
       "column": 23,
-      "index": 11011
+      "index": 11248
     },
     "end": {
-      "line": 302,
+      "line": 305,
       "column": 3,
-      "index": 11115
+      "index": 11352
     }
   },
   {
@@ -799,14 +799,14 @@
     "defaultMessage": "!!!Staking",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 303,
+      "line": 306,
       "column": 26,
-      "index": 11143
+      "index": 11380
     },
     "end": {
-      "line": 306,
+      "line": 309,
       "column": 3,
-      "index": 11237
+      "index": 11474
     }
   },
   {
@@ -814,14 +814,14 @@
     "defaultMessage": "!!!Rewards withdrawal",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 307,
+      "line": 310,
       "column": 25,
-      "index": 11264
+      "index": 11501
     },
     "end": {
-      "line": 310,
+      "line": 313,
       "column": 3,
-      "index": 11368
+      "index": 11605
     }
   },
   {
@@ -829,14 +829,14 @@
     "defaultMessage": "!!!Select abstain",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 311,
+      "line": 314,
       "column": 17,
-      "index": 11387
+      "index": 11624
     },
     "end": {
-      "line": 314,
+      "line": 317,
       "column": 3,
-      "index": 11478
+      "index": 11715
     }
   },
   {
@@ -844,14 +844,14 @@
     "defaultMessage": "!!!Operations log",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 315,
+      "line": 318,
       "column": 22,
-      "index": 11502
+      "index": 11739
     },
     "end": {
-      "line": 318,
+      "line": 321,
       "column": 3,
-      "index": 11589
+      "index": 11826
     }
   },
   {
@@ -859,14 +859,14 @@
     "defaultMessage": "!!!Unusual operations detected",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 319,
+      "line": 322,
       "column": 29,
-      "index": 11620
+      "index": 11857
     },
     "end": {
-      "line": 322,
+      "line": 325,
       "column": 3,
-      "index": 11724
+      "index": 11961
     }
   },
   {
@@ -874,14 +874,14 @@
     "defaultMessage": "!!!Please check the operations log before confirming this transaction.",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 323,
+      "line": 326,
       "column": 28,
-      "index": 11754
+      "index": 11991
     },
     "end": {
-      "line": 326,
+      "line": 329,
       "column": 3,
-      "index": 11897
+      "index": 12134
     }
   },
   {
@@ -889,14 +889,14 @@
     "defaultMessage": "!!!Select no confidence",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 327,
+      "line": 330,
       "column": 22,
-      "index": 11921
+      "index": 12158
     },
     "end": {
-      "line": 330,
+      "line": 333,
       "column": 3,
-      "index": 12023
+      "index": 12260
     }
   },
   {
@@ -904,14 +904,14 @@
     "defaultMessage": "!!!Delegate voting to",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 331,
+      "line": 334,
       "column": 24,
-      "index": 12049
+      "index": 12286
     },
     "end": {
-      "line": 334,
+      "line": 337,
       "column": 3,
-      "index": 12151
+      "index": 12388
     }
   },
   {
@@ -919,14 +919,14 @@
     "defaultMessage": "!!!Stake entire wallet balance to",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 335,
+      "line": 338,
       "column": 17,
-      "index": 12170
+      "index": 12407
     },
     "end": {
-      "line": 338,
+      "line": 341,
       "column": 3,
-      "index": 12277
+      "index": 12514
     }
   },
   {
@@ -934,14 +934,14 @@
     "defaultMessage": "!!!Transaction submitted",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 339,
+      "line": 342,
       "column": 20,
-      "index": 12299
+      "index": 12536
     },
     "end": {
-      "line": 342,
+      "line": 345,
       "column": 3,
-      "index": 12389
+      "index": 12626
     }
   },
   {
@@ -949,14 +949,14 @@
     "defaultMessage": "!!!Check this transaction in the list of wallet transactions",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 343,
+      "line": 346,
       "column": 19,
-      "index": 12410
+      "index": 12647
     },
     "end": {
-      "line": 346,
+      "line": 349,
       "column": 3,
-      "index": 12535
+      "index": 12772
     }
   },
   {
@@ -964,14 +964,14 @@
     "defaultMessage": "!!!Go to transactions",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 347,
+      "line": 350,
       "column": 21,
-      "index": 12558
+      "index": 12795
     },
     "end": {
-      "line": 350,
+      "line": 353,
       "column": 3,
-      "index": 12646
+      "index": 12883
     }
   },
   {
@@ -979,14 +979,14 @@
     "defaultMessage": "!!!Transaction failed",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 351,
+      "line": 354,
       "column": 17,
-      "index": 12665
+      "index": 12902
     },
     "end": {
-      "line": 354,
+      "line": 357,
       "column": 3,
-      "index": 12749
+      "index": 12986
     }
   },
   {
@@ -994,14 +994,14 @@
     "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues.",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 355,
+      "line": 358,
       "column": 16,
-      "index": 12767
+      "index": 13004
     },
     "end": {
-      "line": 358,
+      "line": 361,
       "column": 3,
-      "index": 12905
+      "index": 13142
     }
   },
   {
@@ -1009,14 +1009,14 @@
     "defaultMessage": "!!!Go to transactions",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 359,
+      "line": 362,
       "column": 18,
-      "index": 12925
+      "index": 13162
     },
     "end": {
-      "line": 362,
+      "line": 365,
       "column": 3,
-      "index": 13010
+      "index": 13247
     }
   },
   {
@@ -1024,14 +1024,14 @@
     "defaultMessage": "!!!Something unexpected happened",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 363,
+      "line": 366,
       "column": 29,
-      "index": 13041
+      "index": 13278
     },
     "end": {
-      "line": 366,
+      "line": 369,
       "column": 3,
-      "index": 13148
+      "index": 13385
     }
   },
   {
@@ -1039,14 +1039,14 @@
     "defaultMessage": "!!!Please go back and try again. If this keep happening, contact our support team.",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 367,
+      "line": 370,
       "column": 28,
-      "index": 13178
+      "index": 13415
     },
     "end": {
-      "line": 370,
+      "line": 373,
       "column": 3,
-      "index": 13334
+      "index": 13571
     }
   },
   {
@@ -1054,14 +1054,14 @@
     "defaultMessage": "!!!Go to transactions",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 371,
+      "line": 374,
       "column": 30,
-      "index": 13366
+      "index": 13603
     },
     "end": {
-      "line": 374,
+      "line": 377,
       "column": 3,
-      "index": 13463
+      "index": 13700
     }
   },
   {
@@ -1069,14 +1069,14 @@
     "defaultMessage": "!!!Other parties",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 375,
+      "line": 378,
       "column": 36,
-      "index": 13501
+      "index": 13738
     },
     "end": {
-      "line": 378,
+      "line": 381,
       "column": 3,
-      "index": 13608
+      "index": 13845
     }
   },
   {
@@ -1084,14 +1084,14 @@
     "defaultMessage": "!!!Here are displayed other parties that are involved into this transaction. They don't affect your wallet balance",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 379,
+      "line": 382,
       "column": 37,
-      "index": 13647
+      "index": 13884
     },
     "end": {
-      "line": 383,
+      "line": 386,
       "column": 3,
-      "index": 13859
+      "index": 14096
     }
   },
   {
@@ -1099,14 +1099,14 @@
     "defaultMessage": "!!!Receive",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 384,
+      "line": 387,
       "column": 16,
-      "index": 13877
+      "index": 14114
     },
     "end": {
-      "line": 387,
+      "line": 390,
       "column": 3,
-      "index": 13949
+      "index": 14186
     }
   },
   {
@@ -1114,14 +1114,14 @@
     "defaultMessage": "!!!Operations",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 388,
+      "line": 391,
       "column": 19,
-      "index": 13970
+      "index": 14207
     },
     "end": {
-      "line": 391,
+      "line": 394,
       "column": 3,
-      "index": 14048
+      "index": 14285
     }
   },
   {
@@ -1129,14 +1129,14 @@
     "defaultMessage": "!!!Policy ID",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 392,
+      "line": 395,
       "column": 17,
-      "index": 14067
+      "index": 14304
     },
     "end": {
-      "line": 395,
+      "line": 398,
       "column": 3,
-      "index": 14142
+      "index": 14379
     }
   },
   {
@@ -1144,14 +1144,59 @@
     "defaultMessage": "!!!Created by",
     "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
     "start": {
-      "line": 396,
+      "line": 399,
       "column": 13,
-      "index": 14157
+      "index": 14394
     },
     "end": {
-      "line": 399,
+      "line": 402,
       "column": 3,
-      "index": 14229
+      "index": 14466
+    }
+  },
+  {
+    "id": "txReview.overview.operationsNoticeText",
+    "defaultMessage": "!!!You are about to interact with operations, which are key components used in governance and various blockchain activities. These include Cardano Governance Certificates, as outlined in CIP-0095, which facilitate governance transactions.",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 403,
+      "column": 24,
+      "index": 14492
+    },
+    "end": {
+      "line": 407,
+      "column": 3,
+      "index": 14815
+    }
+  },
+  {
+    "id": "txReview.overview.operationsNoticeButton",
+    "defaultMessage": "!!!Ok",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 408,
+      "column": 26,
+      "index": 14843
+    },
+    "end": {
+      "line": 411,
+      "column": 3,
+      "index": 14929
+    }
+  },
+  {
+    "id": "txReview.overview.operationsNoticeTitle",
+    "defaultMessage": "!!!What are operations?",
+    "file": "src/features/ReviewTx/common/hooks/useStrings.tsx",
+    "start": {
+      "line": 412,
+      "column": 25,
+      "index": 14956
+    },
+    "end": {
+      "line": 415,
+      "column": 3,
+      "index": 15059
     }
   }
 ]
