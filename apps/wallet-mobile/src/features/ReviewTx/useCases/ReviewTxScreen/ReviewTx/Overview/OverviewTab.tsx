@@ -1,10 +1,12 @@
 import {CredKind} from '@emurgo/cross-csl-core'
+import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {Linking, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {useQuery} from 'react-query'
 
 import {Button} from '../../../../../../components/Button/Button'
 import {Divider} from '../../../../../../components/Divider/Divider'
@@ -42,7 +44,7 @@ export const OverviewTab = ({
   const {styles} = useStyles()
   const operations = useOperations(tx.certificates)
   const strings = useStrings()
-  const {openModal} = useModal()
+  useShowOperationsNotice(operations)
 
   const notOwnedOutputs = React.useMemo(() => tx.outputs.filter((output) => !output.ownAddress), [tx.outputs])
   const ownedOutputs = React.useMemo(() => tx.outputs.filter((output) => output.ownAddress), [tx.outputs])
@@ -50,24 +52,6 @@ export const OverviewTab = ({
     () => operations.components.find((component) => component.duplicated),
     [operations.components],
   )
-
-  React.useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout> | undefined
-
-    const openOperationsNotice = () => {
-      clearTimeout(timeout)
-
-      timeout = setTimeout(() => {
-        openModal(strings.operationsNoticeTitle, <OperationsNotice />, 570)
-      }, 500)
-    }
-
-    if (operations.components.length > 0) openOperationsNotice()
-
-    return () => clearTimeout(timeout)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <View style={styles.root}>
@@ -509,6 +493,12 @@ export const OperationsNotice = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {closeModal} = useModal()
+  const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
+
+  const handleOnpress = () => {
+    setOperationsNoticeShown()
+    closeModal()
+  }
 
   return (
     <View style={styles.modal}>
@@ -523,10 +513,56 @@ export const OperationsNotice = () => {
       <Space fill />
 
       <View style={styles.actions}>
-        <Button title={strings.operationsNoticeButton} onPress={closeModal} />
+        <Button title={strings.operationsNoticeButton} onPress={handleOnpress} />
       </View>
     </View>
   )
+}
+
+const operationsNoticeShownKey = 'operations-notice-shown-key'
+const useShowOperationsNotice = (operations: Operations) => {
+  const storage = useAsyncStorage()
+  const {openModal} = useModal()
+  const strings = useStrings()
+
+  const query = useQuery({
+    useErrorBoundary: true,
+    suspense: true,
+    queryKey: ['useShowOperationsNotice'],
+    queryFn: () => storage.getItem(operationsNoticeShownKey).then((value) => parseBoolean(value) ?? true),
+    enabled: operations.components.length > 0,
+  })
+
+  React.useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout> | undefined
+
+    const openOperationsNotice = () => {
+      clearTimeout(timeout)
+
+      timeout = setTimeout(() => {
+        openModal(strings.operationsNoticeTitle, <OperationsNotice />, 570)
+      }, 500)
+    }
+
+    if (query.data) openOperationsNotice()
+
+    return () => clearTimeout(timeout)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+}
+
+const useSetOperationsNoticeShown = () => {
+  const storage = useAsyncStorage()
+
+  const mutation = useMutationWithInvalidations({
+    mutationFn: async () => storage.setItem(operationsNoticeShownKey, JSON.stringify(false)),
+    invalidateQueries: [['useSetOperationsNoticeShown']],
+  })
+
+  return {
+    ...mutation,
+    setOperationsNoticeShown: mutation.mutate,
+  }
 }
 
 const useStyles = () => {
