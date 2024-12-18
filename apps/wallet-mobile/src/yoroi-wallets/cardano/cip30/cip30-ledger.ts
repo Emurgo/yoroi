@@ -1,5 +1,5 @@
-import {SignedTransactionData} from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {Transaction} from '@emurgo/cross-csl-core'
+import {createSignedLedgerTxFromCbor} from '@emurgo/yoroi-lib'
 import {HW, Wallet} from '@yoroi/types'
 
 import {toLedgerSignRequest} from '../../../features/Discover/common/ledger'
@@ -7,7 +7,7 @@ import {cardanoConfig} from '../../../features/WalletManager/common/adapters/car
 import {assertHasAllSigners} from '../common/signatureUtils'
 import {signTxWithLedger} from '../hw/hw'
 import {YoroiWallet} from '../types'
-import {derivePublicByAddressing, getAddressedUtxos, getHexAddressingMap} from '../utils'
+import {getAddressedUtxos, getHexAddressingMap} from '../utils'
 import {wrappedCsl} from '../wrappedCsl'
 
 export const cip30LedgerExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
@@ -56,48 +56,4 @@ class CIP30LedgerExtension {
       release()
     }
   }
-}
-
-export const createSignedLedgerTxFromCbor = async (
-  wasm: WasmModuleProxy,
-  cbor: string,
-  signedData: SignedTransactionData,
-  purpose: number,
-  publicKeyHex: string,
-): Promise<Uint8Array> => {
-  const fixedTx = await wasm.FixedTransaction.fromHex(cbor)
-  if (!fixedTx) throw new Error('invalid tx hex')
-
-  const witSet = await fixedTx.witnessSet()
-  const vkeys = (await witSet.vkeys()) || (await wasm.Vkeywitnesses.new())
-
-  const addressing = {
-    path: [
-      purpose,
-      2147485463, // CARDANO
-      2147483648,
-    ],
-    startLevel: 1,
-  }
-
-  const key = await wasm.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
-  const keyLevel = addressing.startLevel + addressing.path.length - 1
-
-  for (let i = 0; i < signedData.witnesses.length; i++) {
-    const addressKey = await derivePublicByAddressing(
-      {startLevel: 1, path: signedData.witnesses[i].path},
-      {level: keyLevel, key},
-    )
-    const witness = await wasm.Vkeywitness.new(
-      await wasm.Vkey.new(await addressKey.toRawKey()),
-      await wasm.Ed25519Signature.fromBytes(Buffer.from(signedData.witnesses[i].witnessSignatureHex, 'hex')),
-    )
-    if (!witness) throw new Error('invalid tx hex, could not generate vkey witness')
-    await vkeys.add(witness)
-  }
-
-  await witSet.setVkeys(vkeys)
-  await fixedTx.setWitnessSet(await witSet.toBytes())
-
-  return fixedTx.toBytes()
 }

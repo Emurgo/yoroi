@@ -1,6 +1,6 @@
 /* eslint-disable no-empty */
-import {Bip32PublicKey, WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {Addressing, SendToken} from '@emurgo/yoroi-lib'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {SendToken} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {invalid} from '@yoroi/common'
 import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
@@ -282,24 +282,4 @@ export const getAddressedUtxos = (wallet: YoroiWallet) => {
       assets: utxo.assets,
     }
   })
-}
-
-export const derivePublicByAddressing = async (
-  addressing: Addressing,
-  startingFrom: {
-    key: Bip32PublicKey
-    level: number
-  },
-) => {
-  if (startingFrom.level + 1 < addressing.startLevel) {
-    throw new Error('derivePublicByAddressing: keyLevel < startLevel')
-  }
-
-  let derivedKey = startingFrom.key
-
-  for (let i = startingFrom.level - addressing.startLevel + 1; i < addressing.path.length; i++) {
-    derivedKey = await derivedKey.derive(addressing.path[i])
-  }
-
-  return derivedKey
 }

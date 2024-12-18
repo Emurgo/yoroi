@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {walletChecksum} from '@emurgo/cip4-js'
 import * as CSL from '@emurgo/cross-csl-core'
-import {signRawTransaction} from '@emurgo/yoroi-lib'
+import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi} from '@yoroi/api'
 import {isNonNullable} from '@yoroi/common'
@@ -41,7 +41,6 @@ import {Cardano, CardanoMobile} from '../wallets'
 import {AccountManager, accountManagerMaker, Addresses} from './account-manager/account-manager'
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
-import {createSignedLedgerTxFromCbor} from './cip30/cip30-ledger'
 import {filterAddressesByStakingKey, getDelegationStatus} from './delegationUtils'
 import {
   doesCardanoAppVersionSupportCIP36,
