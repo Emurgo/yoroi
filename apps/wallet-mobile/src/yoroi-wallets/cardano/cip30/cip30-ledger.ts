@@ -198,8 +198,6 @@ const createSignedLedgerTxFromCbor = async (
   const ledgerTxHashHex = signedData.txHashHex
 
   if (id !== ledgerTxHashHex) {
-    console.log('signed tx', Buffer.from(await signedTx.toBytes()).toString('hex'))
-    console.log('original tx', cbor)
     throw new Error(`buildLedgerSignedTx: TxId mismatch. Ledger: ${ledgerTxHashHex} Reconstructed: ${id}`)
   }
 
@@ -254,7 +252,7 @@ const getHexAddressingMap = async (csl: WasmModuleProxy, wallet: YoroiWallet) =>
 }
 
 const getAddressedUtxos = (wallet: YoroiWallet) => {
-  return wallet.utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
+  return wallet.allUtxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
     const addressing = wallet.getAddressing(utxo.receiver)
 
     return {

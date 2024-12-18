@@ -3,7 +3,6 @@ import 'cbor-rn-prereqs'
 import {
   AddressType,
   AssetGroup,
-  BIP32Path,
   Certificate as LedgerCertificate,
   CertificateType,
   CredentialParamsType,
