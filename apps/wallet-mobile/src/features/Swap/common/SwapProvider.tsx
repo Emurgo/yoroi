@@ -261,7 +261,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.WantedPriceInputChanged:
-        draft.wantedPrice.value = action.value
+        draft.wantedPrice = action.value
 
         break
       case SwapAction.SwitchTouched:
@@ -302,6 +302,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.estimate = action.value
         draft.tokenOutInput.error = null
         draft.canSwap = true
+        draft.wantedPrice = state.wantedPrice === '' ? String(action.value.netPrice) : state.wantedPrice
         if (state.lastInputTouched === 'in') {
           draft.tokenOutInput.value = String(action.value.totalOutputWithoutSlippage ?? 0)
         } else {
@@ -407,9 +408,7 @@ const defaultState: SwapState = Object.freeze({
     isTouched: false,
     value: undefined,
   },
-  wantedPrice: {
-    value: '',
-  },
+  wantedPrice: '',
   canSwap: false,
   estimate: undefined,
   createTx: undefined,
@@ -442,9 +441,7 @@ type SwapState = {
     isTouched: boolean
     value?: Swap.Provider
   }
-  wantedPrice: {
-    value: string
-  }
+  wantedPrice: string
   canSwap: boolean
   estimate?: Swap.EstimateResponse
   createTx?: Swap.CreateResponse
