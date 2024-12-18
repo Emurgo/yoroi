@@ -66,8 +66,8 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   ])
   const portfolioTokenInfos = usePortfolioTokenInfos({wallet, tokenIds}, {suspense: true})
 
-  const formattedInputs = useFormattedInputs(wallet, inputs, portfolioTokenInfos, inputUtxos)
-  const formattedReferenceInputs = useFormattedInputs(wallet, inputs, portfolioTokenInfos, referenceInputUtxos)
+  const formattedInputs = useFormattedInputs(wallet, portfolioTokenInfos, inputUtxos)
+  const formattedReferenceInputs = useFormattedInputs(wallet, portfolioTokenInfos, referenceInputUtxos)
   const formattedOutputs = useFormattedOutputs(wallet, outputs, portfolioTokenInfos)
   const formattedFee = formatFee(wallet, data)
   const formattedCertificates = formatCertificates(data.certs)
@@ -85,13 +85,12 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
 
 export const useFormattedInputs = (
   wallet: YoroiWallet,
-  inputs: TransactionInputs,
   tokenInfosResult: ReturnType<typeof usePortfolioTokenInfos>,
   inputUtxos: ReturnType<typeof useUtxos>,
 ) => {
   const query = useQuery<FormattedInputs>(
-    ['useFormattedInputs', inputs, inputUtxos],
-    async () => formatInputs(wallet, inputs, tokenInfosResult, inputUtxos),
+    ['useFormattedInputs', inputUtxos],
+    async () => formatInputs(wallet, tokenInfosResult, inputUtxos),
     {
       suspense: true,
     },
@@ -120,19 +119,13 @@ export const useFormattedOutputs = (
 
 const formatInputs = async (
   wallet: YoroiWallet,
-  inputs: TransactionInputs,
   portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
   inputUtxos: ReturnType<typeof useUtxos>,
 ): Promise<FormattedInputs> => {
-  if (inputUtxos.length === 0) return Promise.resolve([])
-
   return Promise.all(
-    inputs.map(async (input) => {
-      const receiveUTxO = inputUtxos.find(
-        (utxo) => utxo?.tx_hash === input.transaction_id && utxo?.tx_index === input.index,
-      )
-      const address = receiveUTxO?.receiver
-      const coin = receiveUTxO?.amount != null ? asQuantity(receiveUTxO.amount) : null
+    inputUtxos.map(async (utxo) => {
+      const address = utxo?.receiver
+      const coin = utxo?.amount != null ? asQuantity(utxo.amount) : null
 
       const addressKind = address != null ? await getAddressKind(address) : null
       const rewardAddress =
@@ -154,7 +147,7 @@ const formatInputs = async (
           : []
 
       const multiAssets =
-        receiveUTxO?.assets
+        utxo?.assets
           .map((a) => {
             const tokenInfo = portfolioTokenInfos.tokenInfos?.get(a.assetId as Portfolio.Token.Id)
             if (!tokenInfo) return null
@@ -176,8 +169,8 @@ const formatInputs = async (
         addressKind: addressKind ?? null,
         rewardAddress,
         ownAddress: address != null ? isOwnedAddress(wallet, address) : null,
-        txIndex: input.index,
-        txHash: input.transaction_id,
+        txIndex: utxo.tx_index,
+        txHash: utxo.tx_hash,
       }
     }),
   )
