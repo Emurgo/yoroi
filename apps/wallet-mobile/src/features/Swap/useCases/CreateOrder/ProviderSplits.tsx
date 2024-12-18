@@ -6,7 +6,7 @@ import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useNavigateTo} from '../../common/navigation'
-import {ProviderIcon} from '../../common/Provider/ProviderIcon'
+import {Provider} from '../../common/Provider/Provider'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 
@@ -21,20 +21,16 @@ export const ProviderSplits = () => {
 
   const dex = swapForm.estimate?.splits[0]?.dex
 
-  const title = `${dex}${swapForm.selectedDex.isTouched ? '' : ` ${strings.autoPool}`}`
-
   return (
     <View>
       <View style={styles.between}>
         <View style={styles.composedText}>
           {dex !== undefined && (
-            <>
-              <View style={styles.providerIcon}>
-                <ProviderIcon size={25} provider={dex} />
-              </View>
-
-              <Text style={styles.bolder}>{title}</Text>
-            </>
+            <Provider
+              provider={dex}
+              append={`${swapForm.selectedDex.isTouched ? '' : ` ${strings.autoPool}`}`}
+              noLink
+            />
           )}
         </View>
 
@@ -313,10 +309,6 @@ const useBold = () => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    bolder: {
-      color: color.gray_max,
-      ...atoms.body_1_lg_medium,
-    },
     card: {
       ...atoms.p_lg,
       ...atoms.border,
@@ -327,11 +319,6 @@ const useStyles = () => {
     between: {
       ...atoms.flex_row,
       ...atoms.justify_between,
-    },
-    providerIcon: {
-      ...atoms.pb_lg,
-      ...atoms.pr_lg,
-      ...atoms.pt_lg,
     },
     changeDex: {
       ...atoms.self_center,

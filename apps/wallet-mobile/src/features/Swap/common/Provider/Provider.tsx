@@ -7,23 +7,31 @@ import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {ProviderIcon} from './ProviderIcon'
 
-export const Provider = ({provider, noLink = false}: {provider: Swap.Provider; noLink?: boolean}) => {
+export const Provider = ({
+  provider,
+  append = '',
+  noLink = false,
+}: {
+  provider: Swap.Provider
+  append?: string
+  noLink?: boolean
+}) => {
   const styles = useStyles()
 
   return (
-    <View style={styles.liquidityPool}>
+    <View style={styles.container}>
       <ProviderIcon provider={provider} size={18} />
 
       <Spacer width={4} />
 
       <TouchableOpacity
         onPress={() => Linking.openURL(getProviderUrl(provider))}
-        style={styles.liquidityPoolLink}
+        style={styles.button}
         disabled={noLink}
       >
-        <Text style={styles.liquidityPoolText}>{`${provider.charAt(0).toUpperCase()}${provider
+        <Text style={[styles.text, !noLink && styles.link]}>{`${provider.charAt(0).toUpperCase()}${provider
           .slice(1)
-          .replace(/-/, ' ')}`}</Text>
+          .replace(/-/, ' ')}${append}`}</Text>
       </TouchableOpacity>
     </View>
   )
@@ -32,15 +40,17 @@ export const Provider = ({provider, noLink = false}: {provider: Swap.Provider; n
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    liquidityPoolLink: {
+    button: {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    liquidityPoolText: {
-      color: color.text_primary_medium,
+    text: {
       ...atoms.body_1_lg_medium,
     },
-    liquidityPool: {
+    link: {
+      color: color.text_primary_medium,
+    },
+    container: {
       flexDirection: 'row',
       alignItems: 'center',
     },
