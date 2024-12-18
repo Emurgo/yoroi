@@ -297,7 +297,6 @@ export type Operations = {
     component: React.ReactNode
   }>
   totalFee: Balance.Quantity
-  operationCount: OperationsCount
 }
 export const useOperations = (certificates: FormattedTx['certificates']) => {
   const {wallet} = useSelectedWallet()
@@ -307,7 +306,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
     return {
       components: [] as Operations['components'],
       totalFee: Quantities.zero,
-      operationCount,
     }
 
   const certificatesTypes = certificates.map((cert) => cert.type)
@@ -341,7 +339,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: Quantities.sum([fee, acc.totalFee]),
-            operationCount,
           }
         }
 
@@ -362,7 +359,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: acc.totalFee,
-            operationCount,
           }
 
         case CertificateType.StakeDelegation: {
@@ -385,7 +381,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: acc.totalFee,
-            operationCount,
           }
         }
 
@@ -409,7 +404,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
                 },
               ],
               totalFee: acc.totalFee,
-              operationCount,
             }
           if (drep === 'AlwaysNoConfidence')
             return {
@@ -428,7 +422,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
                 },
               ],
               totalFee: acc.totalFee,
-              operationCount,
             }
 
           const drepId = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
@@ -449,7 +442,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: acc.totalFee,
-            operationCount,
           }
         }
 
@@ -472,7 +464,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: Quantities.sum([fee, acc.totalFee]),
-            operationCount,
           }
         }
 
@@ -493,7 +484,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: acc.totalFee,
-            operationCount,
           }
         }
 
@@ -516,7 +506,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: Quantities.sum([fee, acc.totalFee]),
-            operationCount,
           }
         }
 
@@ -537,7 +526,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: acc.totalFee,
-            operationCount,
           }
         }
 
@@ -558,7 +546,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: acc.totalFee,
-            operationCount,
           }
         }
 
@@ -579,7 +566,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: acc.totalFee,
-            operationCount,
           }
         }
 
@@ -600,7 +586,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: acc.totalFee,
-            operationCount,
           }
         }
 
@@ -621,7 +606,6 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               },
             ],
             totalFee: acc.totalFee,
-            operationCount,
           }
         }
 
@@ -629,7 +613,7 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
           return acc
       }
     },
-    {components: [], totalFee: Quantities.zero, operationCount: {} as OperationsCount},
+    {components: [], totalFee: Quantities.zero},
   )
 }
 

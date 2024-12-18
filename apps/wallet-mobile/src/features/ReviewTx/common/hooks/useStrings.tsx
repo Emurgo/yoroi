@@ -354,7 +354,7 @@ const messages = defineMessages({
   },
   failedTxText: {
     id: 'txReview.failedTxText',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
   },
   failedTxButton: {
     id: 'txReview.failedTxButton',

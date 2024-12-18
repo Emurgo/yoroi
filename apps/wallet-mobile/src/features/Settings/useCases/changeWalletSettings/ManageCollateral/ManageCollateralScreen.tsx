@@ -51,7 +51,7 @@ export const ManageCollateralScreen = () => {
   const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const balances = useBalances(wallet)
   const {navigateToTxReview} = useWalletNavigation()
@@ -95,6 +95,8 @@ export const ManageCollateralScreen = () => {
   const isLoading = isLoadingTx || isLoadingCollateral
 
   const handleGenerateCollateral = () => {
+    closeModal()
+
     const utxos = utxosMaker(wallet.utxos)
     const possibleCollateralId = utxos.drawnCollateral()
 

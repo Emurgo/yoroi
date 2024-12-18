@@ -1576,7 +1576,7 @@
   },
   {
     "id": "components.send.sendscreen.failedTxText",
-    "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues",
+    "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
       "line": 606,
@@ -1586,7 +1586,7 @@
     "end": {
       "line": 609,
       "column": 3,
-      "index": 25255
+      "index": 25256
     }
   },
   {
@@ -1596,12 +1596,12 @@
     "start": {
       "line": 610,
       "column": 18,
-      "index": 25275
+      "index": 25276
     },
     "end": {
       "line": 613,
       "column": 3,
-      "index": 25369
+      "index": 25370
     }
   },
   {
@@ -1611,12 +1611,12 @@
     "start": {
       "line": 614,
       "column": 20,
-      "index": 25391
+      "index": 25392
     },
     "end": {
       "line": 617,
       "column": 3,
-      "index": 25485
+      "index": 25486
     }
   },
   {
@@ -1626,12 +1626,12 @@
     "start": {
       "line": 618,
       "column": 19,
-      "index": 25506
+      "index": 25507
     },
     "end": {
       "line": 621,
       "column": 3,
-      "index": 25610
+      "index": 25611
     }
   },
   {
@@ -1641,12 +1641,12 @@
     "start": {
       "line": 622,
       "column": 23,
-      "index": 25635
+      "index": 25636
     },
     "end": {
       "line": 625,
       "column": 3,
-      "index": 25758
+      "index": 25759
     }
   },
   {
@@ -1656,12 +1656,12 @@
     "start": {
       "line": 626,
       "column": 10,
-      "index": 25770
+      "index": 25771
     },
     "end": {
       "line": 629,
       "column": 3,
-      "index": 25885
+      "index": 25886
     }
   },
   {
@@ -1671,12 +1671,12 @@
     "start": {
       "line": 630,
       "column": 20,
-      "index": 25907
+      "index": 25908
     },
     "end": {
       "line": 633,
       "column": 3,
-      "index": 26007
+      "index": 26008
     }
   },
   {
@@ -1686,12 +1686,12 @@
     "start": {
       "line": 634,
       "column": 12,
-      "index": 26021
+      "index": 26022
     },
     "end": {
       "line": 637,
       "column": 3,
-      "index": 26124
+      "index": 26125
     }
   },
   {
@@ -1701,12 +1701,12 @@
     "start": {
       "line": 638,
       "column": 24,
-      "index": 26150
+      "index": 26151
     },
     "end": {
       "line": 641,
       "column": 3,
-      "index": 26244
+      "index": 26245
     }
   },
   {
@@ -1716,12 +1716,12 @@
     "start": {
       "line": 642,
       "column": 23,
-      "index": 26269
+      "index": 26270
     },
     "end": {
       "line": 646,
       "column": 3,
-      "index": 26472
+      "index": 26473
     }
   },
   {
@@ -1731,12 +1731,12 @@
     "start": {
       "line": 647,
       "column": 31,
-      "index": 26505
+      "index": 26506
     },
     "end": {
       "line": 650,
       "column": 3,
-      "index": 26598
+      "index": 26599
     }
   },
   {
@@ -1746,12 +1746,12 @@
     "start": {
       "line": 651,
       "column": 31,
-      "index": 26631
+      "index": 26632
     },
     "end": {
       "line": 654,
       "column": 3,
-      "index": 26766
+      "index": 26767
     }
   },
   {
@@ -1761,12 +1761,12 @@
     "start": {
       "line": 655,
       "column": 19,
-      "index": 26787
+      "index": 26788
     },
     "end": {
       "line": 658,
       "column": 3,
-      "index": 26885
+      "index": 26886
     }
   },
   {
@@ -1776,12 +1776,12 @@
     "start": {
       "line": 659,
       "column": 22,
-      "index": 26909
+      "index": 26910
     },
     "end": {
       "line": 662,
       "column": 3,
-      "index": 27032
+      "index": 27033
     }
   },
   {
@@ -1791,12 +1791,12 @@
     "start": {
       "line": 663,
       "column": 24,
-      "index": 27058
+      "index": 27059
     },
     "end": {
       "line": 666,
       "column": 3,
-      "index": 27161
+      "index": 27162
     }
   },
   {
@@ -1806,12 +1806,12 @@
     "start": {
       "line": 667,
       "column": 30,
-      "index": 27193
+      "index": 27194
     },
     "end": {
       "line": 670,
       "column": 3,
-      "index": 27298
+      "index": 27299
     }
   },
   {
@@ -1821,12 +1821,12 @@
     "start": {
       "line": 671,
       "column": 25,
-      "index": 27325
+      "index": 27326
     },
     "end": {
       "line": 674,
       "column": 3,
-      "index": 27425
+      "index": 27426
     }
   },
   {
@@ -1836,12 +1836,12 @@
     "start": {
       "line": 675,
       "column": 15,
-      "index": 27442
+      "index": 27443
     },
     "end": {
       "line": 678,
       "column": 3,
-      "index": 27525
+      "index": 27526
     }
   },
   {
@@ -1851,12 +1851,12 @@
     "start": {
       "line": 679,
       "column": 23,
-      "index": 27550
+      "index": 27551
     },
     "end": {
       "line": 682,
       "column": 3,
-      "index": 27659
+      "index": 27660
     }
   },
   {
@@ -1866,12 +1866,12 @@
     "start": {
       "line": 683,
       "column": 30,
-      "index": 27691
+      "index": 27692
     },
     "end": {
       "line": 687,
       "column": 3,
-      "index": 27881
+      "index": 27882
     }
   },
   {
@@ -1881,12 +1881,12 @@
     "start": {
       "line": 688,
       "column": 34,
-      "index": 27917
+      "index": 27918
     },
     "end": {
       "line": 691,
       "column": 3,
-      "index": 28097
+      "index": 28098
     }
   },
   {
@@ -1896,12 +1896,12 @@
     "start": {
       "line": 692,
       "column": 19,
-      "index": 28118
+      "index": 28119
     },
     "end": {
       "line": 695,
       "column": 3,
-      "index": 28287
+      "index": 28288
     }
   },
   {
@@ -1911,12 +1911,12 @@
     "start": {
       "line": 696,
       "column": 11,
-      "index": 28300
+      "index": 28301
     },
     "end": {
       "line": 699,
       "column": 3,
-      "index": 28394
+      "index": 28395
     }
   },
   {
@@ -1926,12 +1926,12 @@
     "start": {
       "line": 700,
       "column": 20,
-      "index": 28416
+      "index": 28417
     },
     "end": {
       "line": 703,
       "column": 3,
-      "index": 28511
+      "index": 28512
     }
   },
   {
@@ -1941,12 +1941,12 @@
     "start": {
       "line": 704,
       "column": 23,
-      "index": 28536
+      "index": 28537
     },
     "end": {
       "line": 707,
       "column": 3,
-      "index": 28623
+      "index": 28624
     }
   },
   {
@@ -1956,12 +1956,12 @@
     "start": {
       "line": 708,
       "column": 22,
-      "index": 28647
+      "index": 28648
     },
     "end": {
       "line": 711,
       "column": 3,
-      "index": 28788
+      "index": 28789
     }
   },
   {
@@ -1971,12 +1971,12 @@
     "start": {
       "line": 712,
       "column": 24,
-      "index": 28814
+      "index": 28815
     },
     "end": {
       "line": 715,
       "column": 3,
-      "index": 28893
+      "index": 28894
     }
   },
   {
@@ -1986,27 +1986,27 @@
     "start": {
       "line": 716,
       "column": 26,
-      "index": 28921
+      "index": 28922
     },
     "end": {
       "line": 719,
       "column": 3,
-      "index": 29011
+      "index": 29012
     }
   },
   {
     "id": "swap.submittedTxScreen.text",
-    "defaultMessage": "!!!In a few minutes, your transactions will be displayed both in the list of transactions and Open swap orders.",
+    "defaultMessage": "!!!It will show up in the transaction list once it's confirmed by the network.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
       "line": 720,
       "column": 25,
-      "index": 29038
+      "index": 29039
     },
     "end": {
-      "line": 724,
+      "line": 723,
       "column": 3,
-      "index": 29223
+      "index": 29185
     }
   },
   {
@@ -2014,14 +2014,14 @@
     "defaultMessage": "!!!Close",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 725,
+      "line": 724,
       "column": 27,
-      "index": 29252
+      "index": 29214
     },
     "end": {
-      "line": 728,
+      "line": 727,
       "column": 3,
-      "index": 29330
+      "index": 29292
     }
   }
 ]

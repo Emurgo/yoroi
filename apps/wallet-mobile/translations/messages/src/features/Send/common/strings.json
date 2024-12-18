@@ -634,7 +634,7 @@
   },
   {
     "id": "components.send.sendscreen.submittedTxText",
-    "defaultMessage": "!!!Check this transaction in the list of wallet transactions",
+    "defaultMessage": "!!!It will show up in the transaction list once it's confirmed by the network.",
     "file": "src/features/Send/common/strings.tsx",
     "start": {
       "line": 258,
@@ -644,7 +644,7 @@
     "end": {
       "line": 261,
       "column": 3,
-      "index": 11681
+      "index": 11699
     }
   },
   {
@@ -654,12 +654,12 @@
     "start": {
       "line": 262,
       "column": 21,
-      "index": 11704
+      "index": 11722
     },
     "end": {
       "line": 265,
       "column": 3,
-      "index": 11797
+      "index": 11815
     }
   },
   {
@@ -669,12 +669,12 @@
     "start": {
       "line": 266,
       "column": 17,
-      "index": 11816
+      "index": 11834
     },
     "end": {
       "line": 269,
       "column": 3,
-      "index": 11918
+      "index": 11936
     }
   },
   {
@@ -684,12 +684,12 @@
     "start": {
       "line": 270,
       "column": 16,
-      "index": 11936
+      "index": 11954
     },
     "end": {
       "line": 273,
       "column": 3,
-      "index": 12091
+      "index": 12109
     }
   },
   {
@@ -699,12 +699,12 @@
     "start": {
       "line": 274,
       "column": 18,
-      "index": 12111
+      "index": 12129
     },
     "end": {
       "line": 277,
       "column": 3,
-      "index": 12205
+      "index": 12223
     }
   },
   {
@@ -714,12 +714,12 @@
     "start": {
       "line": 278,
       "column": 9,
-      "index": 12216
+      "index": 12234
     },
     "end": {
       "line": 281,
       "column": 3,
-      "index": 12289
+      "index": 12307
     }
   },
   {
@@ -729,12 +729,12 @@
     "start": {
       "line": 282,
       "column": 23,
-      "index": 12314
+      "index": 12332
     },
     "end": {
       "line": 285,
       "column": 3,
-      "index": 12441
+      "index": 12459
     }
   },
   {
@@ -744,12 +744,12 @@
     "start": {
       "line": 286,
       "column": 19,
-      "index": 12462
+      "index": 12480
     },
     "end": {
       "line": 289,
       "column": 3,
-      "index": 12563
+      "index": 12581
     }
   },
   {
@@ -759,12 +759,12 @@
     "start": {
       "line": 290,
       "column": 23,
-      "index": 12588
+      "index": 12606
     },
     "end": {
       "line": 293,
       "column": 3,
-      "index": 12707
+      "index": 12725
     }
   },
   {
@@ -774,12 +774,12 @@
     "start": {
       "line": 294,
       "column": 22,
-      "index": 12731
+      "index": 12749
     },
     "end": {
       "line": 298,
       "column": 3,
-      "index": 12943
+      "index": 12961
     }
   },
   {
@@ -789,12 +789,12 @@
     "start": {
       "line": 299,
       "column": 29,
-      "index": 12974
+      "index": 12992
     },
     "end": {
       "line": 302,
       "column": 3,
-      "index": 13109
+      "index": 13127
     }
   },
   {
@@ -804,12 +804,12 @@
     "start": {
       "line": 303,
       "column": 37,
-      "index": 13148
+      "index": 13166
     },
     "end": {
       "line": 307,
       "column": 3,
-      "index": 13333
+      "index": 13351
     }
   },
   {
@@ -819,12 +819,12 @@
     "start": {
       "line": 308,
       "column": 34,
-      "index": 13369
+      "index": 13387
     },
     "end": {
       "line": 311,
       "column": 3,
-      "index": 13475
+      "index": 13493
     }
   },
   {
@@ -834,12 +834,12 @@
     "start": {
       "line": 312,
       "column": 37,
-      "index": 13514
+      "index": 13532
     },
     "end": {
       "line": 316,
       "column": 3,
-      "index": 13706
+      "index": 13724
     }
   },
   {
@@ -849,12 +849,12 @@
     "start": {
       "line": 318,
       "column": 13,
-      "index": 13722
+      "index": 13740
     },
     "end": {
       "line": 321,
       "column": 3,
-      "index": 13801
+      "index": 13819
     }
   },
   {
@@ -864,12 +864,12 @@
     "start": {
       "line": 322,
       "column": 26,
-      "index": 13829
+      "index": 13847
     },
     "end": {
       "line": 325,
       "column": 3,
-      "index": 13939
+      "index": 13957
     }
   },
   {
@@ -879,12 +879,12 @@
     "start": {
       "line": 326,
       "column": 26,
-      "index": 13967
+      "index": 13985
     },
     "end": {
       "line": 329,
       "column": 3,
-      "index": 14058
+      "index": 14076
     }
   }
 ]

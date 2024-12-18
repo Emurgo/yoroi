@@ -95,7 +95,7 @@ const messages = defineMessages({
   },
   submittedTxText: {
     id: 'components.delegation.submittedTx.text',
-    defaultMessage: '!!!Check this transaction in the list of wallet transactions.',
+    defaultMessage: `!!!It will show up in the transaction list once it's confirmed by the network.`,
   },
   submittedTxButton: {
     id: 'components.delegation.submittedTx.button',

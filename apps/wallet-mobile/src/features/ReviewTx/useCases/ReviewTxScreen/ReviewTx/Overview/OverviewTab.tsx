@@ -43,13 +43,16 @@ export const OverviewTab = ({
 
   const notOwnedOutputs = React.useMemo(() => tx.outputs.filter((output) => !output.ownAddress), [tx.outputs])
   const ownedOutputs = React.useMemo(() => tx.outputs.filter((output) => output.ownAddress), [tx.outputs])
-  const componentsDuplicated = operations.components.find((component) => component.duplicated)
+  const operationsComponentsDuplicated = React.useMemo(
+    () => operations.components.find((component) => component.duplicated),
+    [operations.components],
+  )
 
   return (
     <View style={styles.root}>
       <Space height="lg" />
 
-      {componentsDuplicated && (
+      {operationsComponentsDuplicated && (
         <>
           <Warning title={strings.operationsLogWarningTitle} content={strings.operationsLogWarningText} />
 
@@ -157,7 +160,7 @@ const MyWalletSection = ({
   operationsFee: Balance.Quantity
 }) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const address = ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address ?? '-'
 
   return (
@@ -169,7 +172,7 @@ const MyWalletSection = ({
           {address}
         </Text>
 
-        {ownedOutputs[0]?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} />}
+        {ownedOutputs[0]?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} color={colors.icon} />}
       </CopiableText>
 
       <Space height="sm" />
@@ -249,7 +252,7 @@ const OneExternalPartySection = ({
   receiverCustomTitle?: React.ReactNode
 }) => {
   const address = output?.rewardAddress ?? output?.address ?? '-'
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const strings = useStrings()
 
   return (
@@ -274,7 +277,7 @@ const OneExternalPartySection = ({
               {address}
             </Text>
 
-            {output?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} />}
+            {output?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} color={colors.icon} />}
           </CopiableText>
         )}
       </View>
@@ -283,7 +286,7 @@ const OneExternalPartySection = ({
 }
 
 const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const {wallet} = useSelectedWallet()
   const strings = useStrings()
 
@@ -302,7 +305,7 @@ const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => 
             {address}
           </Text>
 
-          {output?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} />}
+          {output?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} color={colors.icon} />}
         </CopiableText>
 
         <Space height="sm" />
@@ -574,6 +577,7 @@ const useStyles = () => {
   const colors = {
     send: color.primary_500,
     received: color.green_static,
+    icon: color.el_gray_medium,
   }
 
   return {styles, colors} as const

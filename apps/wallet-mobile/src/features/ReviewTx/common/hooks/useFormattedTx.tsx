@@ -90,7 +90,7 @@ export const useFormattedInputs = (
   inputUtxos: ReturnType<typeof useUtxos>,
 ) => {
   const query = useQuery<FormattedInputs>(
-    ['useFormattedInputs', inputs],
+    ['useFormattedInputs', inputs, inputUtxos],
     async () => formatInputs(wallet, inputs, tokenInfosResult, inputUtxos),
     {
       suspense: true,
@@ -124,6 +124,8 @@ const formatInputs = async (
   portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
   inputUtxos: ReturnType<typeof useUtxos>,
 ): Promise<FormattedInputs> => {
+  if (inputUtxos.length === 0) return Promise.resolve([])
+
   return Promise.all(
     inputs.map(async (input) => {
       const receiveUTxO = inputUtxos.find(
@@ -309,7 +311,9 @@ const getUtxo = async (wallet: YoroiWallet, txHash: string, txIndex: number, get
 
   if (!internalUtxo) {
     const externalUtxo = await getUtxoData({txHash, txIndex})
-    return externalUtxo != null ? toRawUtxo(externalUtxo, txHash, txIndex) : null
+    if (externalUtxo == null) throw new Error('useUtxos: utxo not found')
+
+    return toRawUtxo(externalUtxo, txHash, txIndex)
   }
 
   return internalUtxo

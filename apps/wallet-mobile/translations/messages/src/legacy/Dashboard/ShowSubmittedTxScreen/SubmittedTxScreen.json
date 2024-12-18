@@ -16,7 +16,7 @@
   },
   {
     "id": "components.delegation.submittedTx.text",
-    "defaultMessage": "!!!Check this transaction in the list of wallet transactions.",
+    "defaultMessage": "!!!It will show up in the transaction list once it's confirmed by the network.",
     "file": "src/legacy/Dashboard/ShowSubmittedTxScreen/SubmittedTxScreen.tsx",
     "start": {
       "line": 96,
@@ -26,7 +26,7 @@
     "end": {
       "line": 99,
       "column": 3,
-      "index": 2637
+      "index": 2654
     }
   },
   {
@@ -36,12 +36,12 @@
     "start": {
       "line": 100,
       "column": 21,
-      "index": 2660
+      "index": 2677
     },
     "end": {
       "line": 103,
       "column": 3,
-      "index": 2749
+      "index": 2766
     }
   }
 ]
