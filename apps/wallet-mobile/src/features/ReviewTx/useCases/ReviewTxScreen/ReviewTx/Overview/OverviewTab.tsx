@@ -519,7 +519,7 @@ export const OperationsNotice = () => {
   )
 }
 
-const operationsNoticeShownKey = 'operations-notice-shown-key'
+const operationsNoticeShownKey = 'operations-notice-shown-key-adddddd'
 const useShowOperationsNotice = (operations: Operations) => {
   const storage = useAsyncStorage()
   const {openModal} = useModal()
@@ -530,7 +530,6 @@ const useShowOperationsNotice = (operations: Operations) => {
     suspense: true,
     queryKey: ['useShowOperationsNotice'],
     queryFn: () => storage.getItem(operationsNoticeShownKey).then((value) => parseBoolean(value) ?? true),
-    enabled: operations.components.length > 0,
   })
 
   React.useEffect(() => {
@@ -544,7 +543,7 @@ const useShowOperationsNotice = (operations: Operations) => {
       }, 500)
     }
 
-    if (query.data) openOperationsNotice()
+    if (operations.components.length > 0 && query.data) openOperationsNotice()
 
     return () => clearTimeout(timeout)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -556,7 +555,7 @@ const useSetOperationsNoticeShown = () => {
 
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => storage.setItem(operationsNoticeShownKey, JSON.stringify(false)),
-    invalidateQueries: [['useSetOperationsNoticeShown']],
+    invalidateQueries: [['useShowOperationsNotice']],
   })
 
   return {
