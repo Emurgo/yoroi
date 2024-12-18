@@ -519,7 +519,7 @@ export const OperationsNotice = () => {
   )
 }
 
-const operationsNoticeShownKey = 'operations-notice-shown-key-adddddd'
+const operationsNoticeShownKey = 'operations-notice-shown-key'
 const useShowOperationsNotice = (operations: Operations) => {
   const storage = useAsyncStorage()
   const {openModal} = useModal()
