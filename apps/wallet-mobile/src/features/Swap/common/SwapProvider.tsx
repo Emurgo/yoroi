@@ -63,7 +63,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const [state, dispatch] = React.useReducer(swapReducer, defaultState)
 
   const {data: providers = []} = useQuery(
-    ['swapProviders', network, state.tokenInInput.tokenId, state.tokenOutInput.tokenId],
+    ['swapProviders', network, swapManager.config.adapter, state.tokenInInput.tokenId, state.tokenOutInput.tokenId],
     async () => {
       if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) throw Error()
 
@@ -294,6 +294,8 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
       case SwapAction.Refresh:
         draft.lastInputTouched = state.lastInputTouched
+        draft.tokenInInput.error = null
+        draft.tokenOutInput.error = null
 
         break
       case SwapAction.ResetAmounts:

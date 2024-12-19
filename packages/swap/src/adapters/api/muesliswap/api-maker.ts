@@ -172,7 +172,7 @@ export const muesliswapApiMaker = (
         const response = await request<QuoteResponse | LimitQuoteResponse>(
           {
             method: 'post',
-            url: `${baseUrl}${apiPaths.quote}`,
+            url: `${baseUrl}${apiPaths[kind]}`,
             headers,
           },
           {

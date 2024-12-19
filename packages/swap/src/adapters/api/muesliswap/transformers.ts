@@ -128,10 +128,10 @@ export const transformersMaker = ({
             provider,
             batcherFee:
               (providersInfo[provider]?.batcher_fee ?? 0) /
-              (10 * primaryTokenInfo.decimals),
+              10 ** primaryTokenInfo.decimals,
             deposit:
               (providersInfo[provider]?.deposit ?? 0) /
-              (10 * primaryTokenInfo.decimals),
+              10 ** primaryTokenInfo.decimals,
             poolFee: pool_fee,
             poolId: pool_id,
             tokenA: token_a,
