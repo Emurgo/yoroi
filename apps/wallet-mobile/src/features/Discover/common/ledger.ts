@@ -220,6 +220,15 @@ export async function toLedgerSignRequest(
   additionalRequiredSigners: Array<string> = [],
 ): Promise<SignTransactionRequest> {
   const parsedCbor = await cbor.decode(rawTxBody)
+  const tagsState = await csl.hasTransactionSetTag(
+    await (await csl.FixedTransaction.newFromBodyBytes(await txBody.toBytes())).toBytes(),
+  )
+
+  if (tagsState === csl.TransactionSetsState.MixedSets) {
+    throw new Error('Transaction with mixed sets cannot be signed by Ledger')
+  }
+
+  const txHasSetTags = tagsState === csl.TransactionSetsState.AllSetsHaveTag
 
   async function formatInputs(inputs: TransactionInputs): Promise<Array<TxInput>> {
     const formatted = []
@@ -533,6 +542,9 @@ export async function toLedgerSignRequest(
       referenceInputs: formattedReferenceInputs,
     },
     additionalWitnessPaths,
+    options: {
+      tagCborSets: txHasSetTags,
+    },
   }
 }
 

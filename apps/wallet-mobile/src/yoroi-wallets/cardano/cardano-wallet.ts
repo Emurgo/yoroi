@@ -13,6 +13,7 @@ import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 import {Observable} from 'rxjs'
 
+import {toLedgerSignRequest} from '../../features/Discover/common/ledger'
 import {buildPortfolioBalanceManager} from '../../features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
 import {makeMemosManager, MemosManager} from '../../features/Transactions/common/memos/memosManager'
@@ -40,7 +41,6 @@ import {Cardano, CardanoMobile} from '../wallets'
 import {AccountManager, accountManagerMaker, Addresses} from './account-manager/account-manager'
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
-import {createSwapCancellationLedgerPayload} from './common/signatureUtils'
 import {filterAddressesByStakingKey, getDelegationStatus} from './delegationUtils'
 import {
   doesCardanoAppVersionSupportCIP36,
@@ -64,7 +64,7 @@ import {
   YoroiWallet,
 } from './types'
 import {yoroiUnsignedTx} from './unsignedTx/unsignedTx'
-import {deriveRewardAddressHex, toRecipients} from './utils'
+import {deriveRewardAddressHex, getAddressedUtxos, getHexAddressingMap, toRecipients} from './utils'
 import {makeUtxoManager, UtxoManager} from './utxoManager/utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
 
@@ -882,14 +882,18 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<void> {
-      const stakeVkeyHash = await this.getStakingKey().then((key) => key.hash())
-      const payload = await createSwapCancellationLedgerPayload(
-        cbor,
-        this,
+      const tx = await CardanoMobile.Transaction.fromHex(cbor)
+      const txBody = await tx.body()
+      const payload = await toLedgerSignRequest(
+        CardanoMobile,
+        txBody,
         this.networkManager.chainId,
         this.networkManager.protocolMagic,
-        (address: string) => this.getAddressing(address),
-        stakeVkeyHash,
+        await getHexAddressingMap(CardanoMobile, this),
+        await getHexAddressingMap(CardanoMobile, this),
+        getAddressedUtxos(this),
+        await txBody.toBytes(),
+        [],
       )
 
       const signedLedgerTx = await signTxWithLedger(payload, hwDeviceInfo, useUSB)
@@ -897,7 +901,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       const bytes = await createSignedLedgerTxFromCbor(
         CardanoMobile,
         cbor,
-        signedLedgerTx.witnesses,
+        signedLedgerTx,
         implementationConfig.derivations.base.harden.purpose,
         this.publicKeyHex,
       )
