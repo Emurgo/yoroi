@@ -1,11 +1,17 @@
 import {ChainSupportedNetworks} from '../chain/network'
 import {PortfolioTokenInfo} from '../portfolio/info'
-import {SwapApi} from './api'
+import {SwapAggregator, SwapApi} from './api'
 import {SwapStorage} from './storage'
+
+export type SwapManagerConfig = {
+  adapter: 'auto' | SwapAggregator
+}
 
 export type SwapManager = Readonly<{
   clearStorage: SwapStorage['clear']
   slippage: SwapStorage['slippage']
+  assignConfig(v: SwapManagerConfig): SwapManagerConfig
+  config: SwapManagerConfig
   api: SwapApi
 }>
 

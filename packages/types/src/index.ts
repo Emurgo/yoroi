@@ -276,7 +276,7 @@ import {
 } from './notifications/manager'
 import {NumbersRatio} from './numbers/ratio'
 import {SwapStorage} from './swap/storage'
-import {SwapManager, SwapManagerMaker} from './swap/manager'
+import {SwapManager, SwapManagerConfig, SwapManagerMaker} from './swap/manager'
 
 export namespace App {
   export namespace Errors {
@@ -360,6 +360,7 @@ export namespace Swap {
   export type Storage = SwapStorage
   export type Manager = SwapManager
   export type ManagerMaker = SwapManagerMaker
+  export type ManagerConfig = SwapManagerConfig
 }
 
 export namespace Balance {

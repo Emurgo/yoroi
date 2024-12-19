@@ -38,13 +38,13 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     })
   }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
 
-  const {data: orders = []} = useQuery(['swapOrders', network, stakingKey], async () => {
+  const {data: orders = []} = useQuery(['swapOrders', network, stakingKey, swapManager.config.adapter], async () => {
     const res = await swapManager.api.orders()
     if (res.tag === 'right') return res.value.data
     return []
   })
 
-  const {data: tokenIds = []} = useQuery(['swapTokenIds', network], async () => {
+  const {data: tokenIds = []} = useQuery(['swapTokenIds', network, swapManager.config.adapter], async () => {
     const res = await swapManager.api.tokens()
     if (res.tag === 'right') return res.value.data.map(({id}) => id)
     return []
@@ -197,8 +197,19 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       dispatch,
       create,
       cancel: swapManager.api.cancel,
+      managerConfig: swapManager.config,
+      assignManagerConfig: swapManager.assignConfig,
     }),
-    [state, providers, tokenInfos, orders, create, swapManager.api.cancel],
+    [
+      state,
+      providers,
+      tokenInfos,
+      orders,
+      create,
+      swapManager.api.cancel,
+      swapManager.config,
+      swapManager.assignConfig,
+    ],
   )
 
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>
@@ -458,6 +469,8 @@ export type SwapContext = SwapState & {
   dispatch: React.Dispatch<SwapAction>
   create: () => void
   cancel: Swap.Api['cancel']
+  managerConfig: Swap.ManagerConfig
+  assignManagerConfig: Swap.Manager['assignConfig']
 }
 
 const SwapContext = React.createContext<SwapContext>({
@@ -472,4 +485,6 @@ const SwapContext = React.createContext<SwapContext>({
   dispatch: () => null,
   create: () => null,
   cancel: () => new Promise((res) => res),
+  managerConfig: {adapter: 'auto'},
+  assignManagerConfig: () => ({adapter: 'auto'}),
 })

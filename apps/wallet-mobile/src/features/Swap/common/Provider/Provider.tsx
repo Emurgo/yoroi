@@ -45,7 +45,9 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     text: {
+      ...atoms.py_2xs,
       ...atoms.body_1_lg_medium,
+      color: color.text_gray_medium,
     },
     link: {
       color: color.text_primary_medium,

@@ -195,6 +195,7 @@ export type StakingCenterRoutes = {
 export type SwapTabRoutes = {
   'token-swap': undefined
   orders: undefined
+  'manager-config': undefined
 }
 
 type ExchangeRoutes = {
