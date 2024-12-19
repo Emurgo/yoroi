@@ -14,10 +14,7 @@ export type TransactionOutputs = TransactionOutputsJSON
 export type FormattedInput = {
   assets: Array<{
     tokenInfo: Portfolio.Token.Info
-    name: string
-    label: string
     quantity: Balance.Quantity
-    isPrimary: boolean
   }>
   address: string | undefined
   addressKind: CredKind | null
@@ -32,10 +29,7 @@ export type FormattedInputs = Array<FormattedInput>
 export type FormattedOutput = {
   assets: Array<{
     tokenInfo: Portfolio.Token.Info
-    name: string
-    label: string
     quantity: Balance.Quantity
-    isPrimary: boolean
   }>
   address: string
   addressKind: CredKind | null
@@ -47,10 +41,7 @@ export type FormattedOutputs = Array<FormattedOutput>
 
 export type FormattedFee = {
   tokenInfo: Portfolio.Token.Info
-  name: string
-  label: string
   quantity: Balance.Quantity
-  isPrimary: boolean
 }
 
 export type FormattedTx = {
