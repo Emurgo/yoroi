@@ -1314,5 +1314,8 @@
   "txReview.operationsLabel": "Operations",
   "txReview.policyIdLabel": "Policy ID",
   "txReview.tabLabel.referenceInputs": "Reference inputs",
-  "txReview.createdBy": "Created by"
+  "txReview.createdBy": "Created by",
+  "txReview.overview.operationsNoticeText": "You are about to interact with operations, which are key components used in governance and various blockchain activities. These include Cardano Governance Certificates, as outlined in CIP-0095, which facilitate governance transactions.",
+  "txReview.overview.operationsNoticeButton": "Ok",
+  "txReview.overview.operationsNoticeTitle": "What are operations?"
 }
