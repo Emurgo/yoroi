@@ -256,16 +256,11 @@ export const useSignTxWithHW = () => {
         let shouldResolveOnClose = true
         confirmHWConnection({
           onConfirm: async ({transportType, deviceInfo}) => {
-            try {
-              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
-              const tx = await cip30.signTx(options.cbor, options.partial ?? false, deviceInfo, transportType === 'USB')
-              shouldResolveOnClose = false
-              return resolve(tx)
-            } catch (error) {
-              reject(error)
-            } finally {
-              closeModal()
-            }
+            const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+            const tx = await cip30.signTx(options.cbor, options.partial ?? false, deviceInfo, transportType === 'USB')
+            shouldResolveOnClose = false
+            // TODO: Fix here
+            return resolve(tx)
           },
           onClose: () => {
             if (shouldResolveOnClose) reject(userRejectedError())
@@ -278,7 +273,7 @@ export const useSignTxWithHW = () => {
 
   const mutation = useMutation<Transaction, Error, {cbor: string; partial?: boolean}>({
     mutationFn,
-    useErrorBoundary: (error) => !isUserRejectedError(error) && !error.message.toLowerCase().includes('rejected'),
+    useErrorBoundary: false,
     mutationKey: ['useSignTxWithHW'],
   })
 
