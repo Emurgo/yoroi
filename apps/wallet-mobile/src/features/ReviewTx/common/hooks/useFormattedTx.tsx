@@ -1,6 +1,5 @@
 import {CredKind} from '@emurgo/cross-csl-core'
 import {isNonNullable} from '@yoroi/common'
-import {infoExtractName} from '@yoroi/portfolio'
 import {ApiUtxoData, Portfolio} from '@yoroi/types'
 import {NetworkApi} from '@yoroi/types/lib/typescript/network/manager'
 import _ from 'lodash'
@@ -9,7 +8,6 @@ import {useQuery} from 'react-query'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {deriveRewardAddressFromAddress} from '../../../../yoroi-wallets/cardano/utils'
 import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
-import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
 import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
 import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
@@ -138,10 +136,7 @@ const formatInputs = async (
           ? [
               {
                 tokenInfo: wallet.portfolioPrimaryTokenInfo,
-                name: wallet.portfolioPrimaryTokenInfo.name,
-                label: formatTokenWithText(coin, wallet.portfolioPrimaryTokenInfo),
                 quantity: coin,
-                isPrimary: true,
               },
             ]
           : []
@@ -155,10 +150,7 @@ const formatInputs = async (
 
             return {
               tokenInfo,
-              name: infoExtractName(tokenInfo),
-              label: formatTokenWithText(quantity, tokenInfo),
               quantity: quantity,
-              isPrimary: false,
             }
           })
           .filter(Boolean) ?? []
@@ -193,10 +185,7 @@ const formatOutputs = async (
       const primaryAssets = [
         {
           tokenInfo: wallet.portfolioPrimaryTokenInfo,
-          name: wallet.portfolioPrimaryTokenInfo.name,
-          label: formatTokenWithText(coin, wallet.portfolioPrimaryTokenInfo),
           quantity: coin,
-          isPrimary: true,
         },
       ]
 
@@ -209,10 +198,7 @@ const formatOutputs = async (
 
               return {
                 tokenInfo,
-                name: infoExtractName(tokenInfo),
-                label: formatTokenWithText(quantity, tokenInfo),
                 quantity,
-                isPrimary: false,
               }
             })
           })
@@ -236,10 +222,7 @@ export const formatFee = (wallet: YoroiWallet, data: TransactionBody): Formatted
 
   return {
     tokenInfo: wallet.portfolioPrimaryTokenInfo,
-    name: wallet.portfolioPrimaryTokenInfo.name,
-    label: formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo),
     quantity: fee,
-    isPrimary: true,
   }
 }
 

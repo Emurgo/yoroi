@@ -2,7 +2,7 @@ import {CredKind} from '@emurgo/cross-csl-core'
 import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {Linking, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
@@ -134,7 +134,7 @@ const WalletInfoSection = ({tx, createdBy}: {tx: FormattedTx; createdBy?: React.
         </>
       )}
 
-      <FeeInfoItem fee={tx.fee.label} />
+      <FeeInfoItem fee={formatTokenWithText(tx.fee.quantity, wallet.portfolioPrimaryTokenInfo)} />
     </>
   )
 }
@@ -202,7 +202,7 @@ const MyWalletTokens = ({
   const totalPrimaryTokenSent = React.useMemo(
     () =>
       notOwnedOutputs
-        .flatMap((output) => output.assets.filter((asset) => asset.isPrimary))
+        .flatMap((output) => output.assets.filter((asset) => asset.tokenInfo.nature === Portfolio.Token.Nature.Primary))
         .reduce((previous, current) => Quantities.sum([previous, current.quantity]), Quantities.zero),
     [notOwnedOutputs],
   )
@@ -213,7 +213,10 @@ const MyWalletTokens = ({
   const totalPrimaryTokenSpentLabel = formatTokenWithText(totalPrimaryTokenSpent, wallet.portfolioPrimaryTokenInfo)
 
   const notPrimaryTokenSent = React.useMemo(
-    () => notOwnedOutputs.flatMap((output) => output.assets.filter((asset) => !asset.isPrimary)),
+    () =>
+      notOwnedOutputs.flatMap((output) =>
+        output.assets.filter((asset) => asset.tokenInfo.nature !== Portfolio.Token.Nature.Primary),
+      ),
     [notOwnedOutputs],
   )
 
@@ -227,7 +230,12 @@ const MyWalletTokens = ({
         <TokenItem tokenInfo={wallet.portfolioPrimaryTokenInfo} label={`-${totalPrimaryTokenSpentLabel}`} />
 
         {notPrimaryTokenSent.map((token, index) => (
-          <TokenItem key={index} tokenInfo={token.tokenInfo} label={token.label} isPrimaryToken={false} />
+          <TokenItem
+            key={index}
+            tokenInfo={token.tokenInfo}
+            label={formatTokenWithText(token.quantity, token.tokenInfo)}
+            isPrimaryToken={false}
+          />
         ))}
       </View>
     </View>
@@ -296,9 +304,11 @@ const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => 
   const strings = useStrings()
 
   const receivers = outputs.map((output, index) => {
-    const totalPrimaryToken = output.assets.filter((asset) => asset.isPrimary)[0]?.quantity ?? Quantities.zero
+    const totalPrimaryToken =
+      output.assets.filter((asset) => asset.tokenInfo.nature === Portfolio.Token.Nature.Primary)[0]?.quantity ??
+      Quantities.zero
     const totalPrimaryTokenLabel = formatTokenWithText(totalPrimaryToken, wallet.portfolioPrimaryTokenInfo)
-    const notPrimaryToken = output.assets.filter((asset) => !asset.isPrimary)
+    const notPrimaryToken = output.assets.filter((asset) => asset.tokenInfo.nature !== Portfolio.Token.Nature.Primary)
     const address = output?.rewardAddress ?? output?.address ?? '-'
 
     return (
@@ -327,7 +337,7 @@ const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => 
               <TokenItem
                 key={index}
                 tokenInfo={token.tokenInfo}
-                label={token.label}
+                label={formatTokenWithText(token.quantity, token.tokenInfo)}
                 isPrimaryToken={false}
                 isSent={false}
               />

@@ -21,7 +21,7 @@ export const formatMetadata = async (
     if (unsignedTx != null && unsignedTx.unsignedTx.auxiliaryData && hash != null) {
       generalTransactionMetadata = await unsignedTx.unsignedTx.auxiliaryData?.metadata()
     } else if (cbor != null && hash != null) {
-      const tx = await csl.Transaction.fromBytes(Buffer.from(cbor, 'hex'))
+      const tx = await csl.Transaction.fromHex(cbor)
       const auxiliaryData = await tx.auxiliaryData()
       generalTransactionMetadata = await auxiliaryData?.metadata()
     }

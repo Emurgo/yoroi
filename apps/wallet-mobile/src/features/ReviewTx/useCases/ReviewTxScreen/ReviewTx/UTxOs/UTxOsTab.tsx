@@ -1,9 +1,12 @@
 import {useTheme} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Divider} from '../../../../../../components/Divider/Divider'
 import {Space} from '../../../../../../components/Space/Space'
+import {formatTokenWithText} from '../../../../../../yoroi-wallets/utils/format'
+import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Accordion} from '../../../../common/Accordion'
 import {CopiableText} from '../../../../common/CopiableText'
 import {useStrings} from '../../../../common/hooks/useStrings'
@@ -13,6 +16,7 @@ import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs, Form
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {wallet} = useSelectedWallet()
 
   return (
     <View style={styles.root}>
@@ -22,7 +26,7 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
         <Inputs inputs={tx.inputs} />
       </Accordion>
 
-      <Fee fee={tx.fee.label} />
+      <Fee fee={formatTokenWithText(tx.fee.quantity, wallet.portfolioPrimaryTokenInfo)} />
 
       <Accordion label={`${strings.utxosOutputsLabel} (${tx.outputs.length})`}>
         <Outputs outputs={tx.outputs} />
@@ -67,9 +71,12 @@ const Input = ({input}: {input: FormattedInput}) => {
       <Space height="sm" />
 
       <View style={styles.tokenItems}>
-        {input.assets.map((asset, index) => (
-          <TokenItem tokenInfo={asset.tokenInfo} key={index} label={asset.label} isPrimaryToken={asset.isPrimary} />
-        ))}
+        {input.assets.map((asset, index) => {
+          const isPrimary = asset.tokenInfo.nature === Portfolio.Token.Nature.Primary
+          const label = formatTokenWithText(asset.quantity, asset.tokenInfo)
+
+          return <TokenItem tokenInfo={asset.tokenInfo} key={index} label={label} isPrimaryToken={isPrimary} />
+        })}
       </View>
     </View>
   )
@@ -98,15 +105,20 @@ const Output = ({output}: {output: FormattedOutput}) => {
       <Space height="sm" />
 
       <View style={styles.tokenItems}>
-        {output.assets.map((asset, index) => (
-          <TokenItem
-            key={index}
-            tokenInfo={asset.tokenInfo}
-            isSent={false}
-            label={asset.label}
-            isPrimaryToken={asset.isPrimary}
-          />
-        ))}
+        {output.assets.map((asset, index) => {
+          const isPrimary = asset.tokenInfo.nature === Portfolio.Token.Nature.Primary
+          const label = formatTokenWithText(asset.quantity, asset.tokenInfo)
+
+          return (
+            <TokenItem
+              key={index}
+              tokenInfo={asset.tokenInfo}
+              isSent={false}
+              label={label}
+              isPrimaryToken={isPrimary}
+            />
+          )
+        })}
       </View>
     </View>
   )
