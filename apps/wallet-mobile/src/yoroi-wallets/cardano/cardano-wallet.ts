@@ -718,7 +718,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
     async resync() {
       await this.clear()
-      return this.sync()
+      return this.sync({isForced: true})
     }
     // end sync
 

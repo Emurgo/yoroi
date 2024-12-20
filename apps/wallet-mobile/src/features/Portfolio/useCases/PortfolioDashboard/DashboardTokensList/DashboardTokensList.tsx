@@ -32,7 +32,7 @@ export const DashboardTokensList = () => {
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
 
   const isJustADA = React.useMemo(() => {
-    if (tokenList.length !== 1) return false
+    if (tokensList.length !== 1) return false
     const tokenInfo = tokensList[0].info
     const isPrimary = isPrimaryToken(tokenInfo)
     return isPrimary
