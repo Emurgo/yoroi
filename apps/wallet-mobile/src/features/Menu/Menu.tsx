@@ -89,7 +89,7 @@ export const Menu = () => {
           />
         )}
 
-        {/*  <React.Suspense
+        <React.Suspense
           fallback={
             <Item
               disabled
@@ -105,7 +105,7 @@ export const Menu = () => {
             onPress={navigateTo.catalystVoting}
             left={<Icon.Catalyst size={24} color={color.gray_600} />}
           />
-        </React.Suspense> */}
+        </React.Suspense>
 
         <KnowledgeBase //
           label={strings.knowledgeBase}
