@@ -39,7 +39,9 @@ const getLedgerPermissions = () => {
   return permissions
 }
 
-export class BluetoothDisabledError extends LocalizableError {
+export class BaseLedgerError extends LocalizableError {}
+
+export class BluetoothDisabledError extends BaseLedgerError {
   constructor() {
     super({
       id: ledgerMessages.bluetoothDisabledError.id,
@@ -47,7 +49,7 @@ export class BluetoothDisabledError extends LocalizableError {
     })
   }
 }
-export class GeneralConnectionError extends LocalizableError {
+export class GeneralConnectionError extends BaseLedgerError {
   constructor() {
     super({
       id: ledgerMessages.connectionError.id,
@@ -56,7 +58,7 @@ export class GeneralConnectionError extends LocalizableError {
   }
 }
 // note: uses same message as above.
-export class LedgerUserError extends LocalizableError {
+export class LedgerUserError extends BaseLedgerError {
   constructor() {
     super({
       id: ledgerMessages.connectionError.id,
@@ -64,7 +66,7 @@ export class LedgerUserError extends LocalizableError {
     })
   }
 }
-export class RejectedByUserError extends LocalizableError {
+export class RejectedByUserError extends BaseLedgerError {
   constructor() {
     super({
       id: ledgerMessages.rejectedByUserError.id,
@@ -73,7 +75,7 @@ export class RejectedByUserError extends LocalizableError {
   }
 }
 
-export class AdaAppClosedError extends LocalizableError {
+export class AdaAppClosedError extends BaseLedgerError {
   constructor() {
     super({
       id: ledgerMessages.appOpened.id,

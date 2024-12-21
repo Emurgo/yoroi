@@ -22,6 +22,7 @@ import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
 import {
   AdaAppClosedError,
+  BaseLedgerError,
   GeneralConnectionError,
   HARDWARE_WALLETS,
   LedgerUserError,
@@ -40,7 +41,7 @@ type LedgerConnectionResponse = {
   serialHex: string
 }
 
-export class DeprecatedAdaAppError extends LocalizableError {
+export class DeprecatedAdaAppError extends BaseLedgerError {
   constructor() {
     super({
       id: ledgerMessages.deprecatedAdaAppError.id,
