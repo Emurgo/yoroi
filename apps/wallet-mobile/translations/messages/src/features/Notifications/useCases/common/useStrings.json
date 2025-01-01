@@ -1,0 +1,47 @@
+[
+  {
+    "id": "notifications.tapToView",
+    "defaultMessage": "!!!Tap to view",
+    "file": "src/features/Notifications/useCases/common/useStrings.tsx",
+    "start": {
+      "line": 14,
+      "column": 13,
+      "index": 378
+    },
+    "end": {
+      "line": 17,
+      "column": 3,
+      "index": 456
+    }
+  },
+  {
+    "id": "notifications.stakingRewardsReceived",
+    "defaultMessage": "!!!Staking rewards received",
+    "file": "src/features/Notifications/useCases/common/useStrings.tsx",
+    "start": {
+      "line": 18,
+      "column": 26,
+      "index": 484
+    },
+    "end": {
+      "line": 21,
+      "column": 3,
+      "index": 588
+    }
+  },
+  {
+    "id": "notifications.assetsReceived",
+    "defaultMessage": "!!!Assets received",
+    "file": "src/features/Notifications/useCases/common/useStrings.tsx",
+    "start": {
+      "line": 22,
+      "column": 18,
+      "index": 608
+    },
+    "end": {
+      "line": 25,
+      "column": 3,
+      "index": 695
+    }
+  }
+]

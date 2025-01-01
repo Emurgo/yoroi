@@ -11,7 +11,6 @@ export const notificationManagerMaker = ({
   eventsStorage,
   configStorage,
   subscriptions,
-  display,
   eventsLimit = 100,
 }: Notifications.ManagerMakerProps): Notifications.Manager => {
   const localSubscriptions: Subscription[] = []
@@ -32,10 +31,9 @@ export const notificationManagerMaker = ({
   }
 
   const config = configManagerMaker({storage: configStorage})
-  const {events, unreadCounterByGroup$} = eventsManagerMaker({
+  const {events, unreadCounterByGroup$, newEvents$} = eventsManagerMaker({
     storage: eventsStorage,
     config,
-    display,
     eventsLimit,
   })
 
@@ -56,6 +54,7 @@ export const notificationManagerMaker = ({
     events,
     config,
     unreadCounterByGroup$,
+    newEvents$,
   }
 }
 
@@ -77,19 +76,13 @@ const notificationTriggerGroups: Record<
 const eventsManagerMaker = ({
   storage,
   config,
-  display,
   eventsLimit,
 }: {
-  display: (event: Notifications.Event) => void
   storage: App.Storage<true, string>
   config: Notifications.Manager['config']
   eventsLimit?: number
-}): {
-  events: Notifications.Manager['events']
-  unreadCounterByGroup$: BehaviorSubject<
-    Readonly<Map<Notifications.Group, number>>
-  >
-} => {
+}) => {
+  const newEvents$ = new Subject<Notifications.Event>()
   const unreadCounterByGroup$ = new BehaviorSubject<
     Map<Notifications.Group, number>
   >(buildUnreadCounterDefaultValue())
@@ -136,7 +129,7 @@ const eventsManagerMaker = ({
       await storage.setItem('events', newEvents)
       if (!event.isRead) {
         await updateUnreadCounter()
-        display(event)
+        newEvents$.next(event)
       }
     },
     clear: async (): Promise<void> => {
@@ -144,7 +137,7 @@ const eventsManagerMaker = ({
       unreadCounterByGroup$.next(buildUnreadCounterDefaultValue())
     },
   }
-  return {events, unreadCounterByGroup$}
+  return {events, unreadCounterByGroup$, newEvents$}
 }
 
 const configManagerMaker = ({

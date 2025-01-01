@@ -55,6 +55,7 @@ describe('useReceivedNotificationEvents', () => {
           isSentByUser: false,
           nextTxsCounter: 1,
           previousTxsCounter: 0,
+          walletId: 'walletId',
         },
         date: new Date().toISOString(),
         trigger: Notifications.Trigger.TransactionReceived,

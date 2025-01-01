@@ -1,8 +1,5 @@
 import {useAsyncStorage} from '@yoroi/common'
-import {mountAsyncStorage} from '@yoroi/common/src'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
-import * as BackgroundFetch from 'expo-background-fetch'
-import * as TaskManager from 'expo-task-manager'
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
@@ -10,45 +7,10 @@ import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {TRANSACTION_DIRECTION} from '../../../../yoroi-wallets/types/other'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {walletManager} from '../../../WalletManager/wallet-manager'
-import {notificationManager} from './notification-manager'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './storage'
 
-const backgroundTaskId = 'yoroi-transaction-received-notifications-background-fetch'
 const storageKey = 'transaction-received-notification-history'
-
-// Check is needed for hot reloading, as task can not be defined twice
-if (!TaskManager.isTaskDefined(backgroundTaskId)) {
-  const appStorage = mountAsyncStorage({path: '/'})
-  TaskManager.defineTask(backgroundTaskId, async () => {
-    await syncAllWallets()
-    const notifications = await buildNotifications(appStorage)
-    notifications.forEach((notification) => notificationManager.events.push(notification))
-    const hasNewData = notifications.length > 0
-    return hasNewData ? BackgroundFetch.BackgroundFetchResult.NewData : BackgroundFetch.BackgroundFetchResult.NoData
-  })
-}
-
-const registerBackgroundFetchAsync = () => {
-  return BackgroundFetch.registerTaskAsync(backgroundTaskId, {
-    minimumInterval: 60 * 10,
-    stopOnTerminate: false,
-    startOnBoot: true,
-  })
-}
-
-const unregisterBackgroundFetchAsync = () => {
-  return BackgroundFetch.unregisterTaskAsync(backgroundTaskId)
-}
-
-const syncAllWallets = async () => {
-  const ids = [...walletManager.walletMetas.keys()]
-  for (const id of ids) {
-    const wallet = walletManager.getWalletById(id)
-    if (!wallet) continue
-    await wallet.sync({})
-  }
-}
 
 const buildNotifications = async (appStorage: App.Storage) => {
   const walletIds = [...walletManager.walletMetas.keys()]
@@ -82,6 +44,7 @@ const buildNotifications = async (appStorage: App.Storage) => {
         isSentByUser: wallet.transactions[id]?.direction === TRANSACTION_DIRECTION.SENT,
         nextTxsCounter: newTxIds.length + processed.length,
         previousTxsCounter: processed.length,
+        walletId,
       }
       notifications.push(createTransactionReceivedNotification(metadata))
     })
@@ -97,7 +60,7 @@ const getTxIds = (wallet: YoroiWallet) => {
 
 export const createTransactionReceivedNotification = (
   metadata: NotificationTypes.TransactionReceivedEvent['metadata'],
-) => {
+): NotificationTypes.TransactionReceivedEvent => {
   return {
     id: generateNotificationId(),
     date: new Date().toISOString(),
@@ -112,14 +75,6 @@ export const transactionReceivedSubject = new Subject<NotificationTypes.Transact
 export const useTransactionReceivedNotifications = ({enabled}: {enabled: boolean}) => {
   const {walletManager} = useWalletManager()
   const asyncStorage = useAsyncStorage()
-
-  React.useEffect(() => {
-    if (!enabled) return
-    registerBackgroundFetchAsync()
-    return () => {
-      unregisterBackgroundFetchAsync()
-    }
-  }, [enabled])
 
   React.useEffect(() => {
     if (!enabled) return

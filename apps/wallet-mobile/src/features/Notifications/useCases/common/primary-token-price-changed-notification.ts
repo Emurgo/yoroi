@@ -1,8 +1,5 @@
 import {isRight, useAsyncStorage} from '@yoroi/common'
-import {mountAsyncStorage} from '@yoroi/common/src'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
-import * as BackgroundFetch from 'expo-background-fetch'
-import * as TaskManager from 'expo-task-manager'
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
@@ -14,22 +11,9 @@ import {notificationManager} from './notification-manager'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './storage'
 
-const backgroundTaskId = 'yoroi-primary-token-price-changed-background-fetch'
 const refetchIntervalInSeconds = 60 * 10
 const refetchIntervalInMilliseconds = refetchIntervalInSeconds * 1000
 const storageKey = 'notifications/primary-token-price-changed/'
-
-// Check is needed for hot reloading, as task can not be defined twice
-if (!TaskManager.isTaskDefined(backgroundTaskId)) {
-  const appStorage = mountAsyncStorage({path: '/'})
-  TaskManager.defineTask(backgroundTaskId, async () => {
-    const notifications = await buildNotifications(appStorage)
-    notifications.forEach((notification) => notificationManager.events.push(notification))
-
-    const hasNewData = notifications.length > 0
-    return hasNewData ? BackgroundFetch.BackgroundFetchResult.NewData : BackgroundFetch.BackgroundFetchResult.NoData
-  })
-}
 
 const buildNotifications = async (
   appStorage: App.Storage,
@@ -72,14 +56,6 @@ export const usePrimaryTokenPriceChangedNotification = ({enabled}: {enabled: boo
 
   React.useEffect(() => {
     if (!enabled) return
-    registerBackgroundFetchAsync()
-    return () => {
-      unregisterBackgroundFetchAsync()
-    }
-  }, [enabled])
-
-  React.useEffect(() => {
-    if (!enabled) return
 
     const interval = setInterval(async () => {
       const notifications = await buildNotifications(asyncStorage)
@@ -88,18 +64,6 @@ export const usePrimaryTokenPriceChangedNotification = ({enabled}: {enabled: boo
 
     return () => clearInterval(interval)
   }, [walletManager, asyncStorage, enabled])
-}
-
-const registerBackgroundFetchAsync = () => {
-  return BackgroundFetch.registerTaskAsync(backgroundTaskId, {
-    minimumInterval: refetchIntervalInSeconds,
-    stopOnTerminate: false,
-    startOnBoot: true,
-  })
-}
-
-const unregisterBackgroundFetchAsync = () => {
-  return BackgroundFetch.unregisterTaskAsync(backgroundTaskId)
 }
 
 const createPrimaryTokenPriceChangedNotification = (

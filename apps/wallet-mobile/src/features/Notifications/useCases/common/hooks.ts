@@ -51,7 +51,7 @@ const init = () => {
 export const useInitNotifications = ({enabled}: {enabled: boolean}) => {
   React.useEffect(() => (enabled ? init() : undefined), [enabled])
   useTransactionReceivedNotifications({enabled})
-  usePrimaryTokenPriceChangedNotification({enabled})
+  usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
   useRewardsUpdatedNotifications({enabled})
   usePushNotifications({enabled})
 }

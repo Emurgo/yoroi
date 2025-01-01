@@ -10,7 +10,6 @@ const createManager = () => {
   return notificationManagerMaker({
     eventsStorage,
     configStorage,
-    display: jest.fn(),
   })
 }
 
@@ -256,7 +255,6 @@ describe('NotificationManager', () => {
         [Notifications.Trigger.RewardsUpdated]: new Subject(),
         [Notifications.Trigger.PrimaryTokenPriceChanged]: new Subject(),
       },
-      display: jest.fn(),
     })
 
     manager.hydrate()
@@ -311,6 +309,7 @@ const createTransactionReceivedEvent = (
     nextTxsCounter: 1,
     txId: '1',
     isSentByUser: true,
+    walletId: 'walletId',
   },
   ...overrides,
 })

@@ -15,7 +15,6 @@ export type NotificationManagerMakerProps = {
     [NotificationTrigger.RewardsUpdated]: Subject<NotificationRewardsUpdatedEvent>
     [NotificationTrigger.PrimaryTokenPriceChanged]: Subject<NotificationPrimaryTokenPriceChangedEvent>
   }>
-  display: (event: NotificationEvent) => void
   eventsLimit?: number
 }
 
@@ -23,6 +22,7 @@ export interface NotificationTransactionReceivedEvent
   extends NotificationEventBase {
   trigger: NotificationTrigger.TransactionReceived
   metadata: {
+    walletId: string
     previousTxsCounter: number
     nextTxsCounter: number
     txId: string
@@ -32,6 +32,9 @@ export interface NotificationTransactionReceivedEvent
 
 export interface NotificationRewardsUpdatedEvent extends NotificationEventBase {
   trigger: NotificationTrigger.RewardsUpdated
+  metadata: {
+    walletId: string
+  }
 }
 
 export interface NotificationPrimaryTokenPriceChangedEvent
@@ -78,6 +81,8 @@ export type NotificationManager = {
   unreadCounterByGroup$: BehaviorSubject<
     Readonly<Map<NotificationGroup, number>>
   >
+
+  newEvents$: Subject<NotificationEvent>
 
   // Events represent a notification event that was trigger by a config rule
   events: {
