@@ -155,18 +155,14 @@ export type SwapCancelResponse = {
   additionalCancellationFee?: number
 }
 export type SwapApi = Readonly<{
-  orders: () => Promise<Readonly<ApiResponse<Array<SwapOrder>>>>
-  tokens: () => Promise<Readonly<ApiResponse<Array<PortfolioTokenInfo>>>>
+  orders: () => Promise<ApiResponse<Array<SwapOrder>>>
+  tokens: () => Promise<ApiResponse<Array<PortfolioTokenInfo>>>
   providers(
     args: SwapProvidersRequest,
-  ): Promise<Readonly<ApiResponse<SwapProvidersResponse>>>
+  ): Promise<ApiResponse<SwapProvidersResponse>>
   estimate(
     args: SwapEstimateRequest,
-  ): Promise<Readonly<ApiResponse<SwapEstimateResponse>>>
-  create(
-    args: SwapCreateRequest,
-  ): Promise<Readonly<ApiResponse<SwapCreateResponse>>>
-  cancel: (
-    args: SwapCancelRequest,
-  ) => Promise<Readonly<ApiResponse<SwapCancelResponse>>>
+  ): Promise<ApiResponse<SwapEstimateResponse>>
+  create(args: SwapCreateRequest): Promise<ApiResponse<SwapCreateResponse>>
+  cancel: (args: SwapCancelRequest) => Promise<ApiResponse<SwapCancelResponse>>
 }>
