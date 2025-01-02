@@ -18,10 +18,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
-  const {
-    wantedPrice: {value: wantedPrice},
-    orderType,
-  } = swapForm
+  const {wantedPrice, orderType} = swapForm
 
   const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? '.unknown')
   const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? '.unknown')
