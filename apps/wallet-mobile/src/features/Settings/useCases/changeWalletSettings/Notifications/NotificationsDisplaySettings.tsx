@@ -2,17 +2,21 @@ import {isString, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/co
 import {App} from '@yoroi/types'
 import {useQuery} from 'react-query'
 
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 
 const defaultNotificationsEnabled = true
 
 export const useNotificationDisplaySettings = () => {
   const storage = useAsyncStorage()
-  const selectedWallet = useSelectedWallet()
-  const selectedWalletId = selectedWallet.wallet.id
+  const walletManager = useWalletManager()
+  const selectedWalletId = walletManager.selected.wallet?.id
   const query = useQuery({
     queryKey: ['settings', selectedWalletId, 'notifications'],
-    queryFn: () => getNotificationDisplaySettings(storage, selectedWalletId),
+    queryFn: () => {
+      if (!isString(selectedWalletId)) return defaultNotificationsEnabled
+      return getNotificationDisplaySettings(storage, selectedWalletId)
+    },
+    enabled: isString(selectedWalletId),
   })
 
   return query.data ?? defaultNotificationsEnabled
@@ -20,9 +24,12 @@ export const useNotificationDisplaySettings = () => {
 
 export const useChangeNotificationDisplaySettings = () => {
   const storage = useAsyncStorage()
-  const selectedWallet = useSelectedWallet()
-  const selectedWalletId = selectedWallet.wallet.id
-  const mutationFn = (value: boolean) => changeNotificationDisplaySettings(storage, selectedWalletId, value)
+  const walletManager = useWalletManager()
+  const selectedWalletId = walletManager.selected.wallet?.id
+  const mutationFn = async (value: boolean) => {
+    if (!isString(selectedWalletId)) throw new Error('useChangeNotificationDisplaySettings: No wallet selected')
+    await changeNotificationDisplaySettings(storage, selectedWalletId, value)
+  }
   return useMutationWithInvalidations({
     mutationFn,
     invalidateQueries: [['settings', selectedWalletId, 'notifications']],
