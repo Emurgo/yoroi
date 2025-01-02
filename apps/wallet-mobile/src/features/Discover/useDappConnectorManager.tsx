@@ -8,12 +8,13 @@ import {useMutation} from 'react-query'
 import {logger} from '../../kernel/logger/logger'
 import {useWalletNavigation} from '../../kernel/navigation'
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
+import {BaseLedgerError} from '../../yoroi-wallets/hw/hw'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useBrowser} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
-import {isUserRejectedError, userRejectedError} from './common/errors'
+import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
 import {usePromptRootKey} from './common/hooks'
 import {useShowHWNotSupportedModal} from './common/HWNotSupportedModal'
@@ -253,22 +254,32 @@ export const useSignTxWithHW = () => {
   const mutationFn = React.useCallback(
     (options: {cbor: string; partial?: boolean}) => {
       return new Promise<Transaction>((resolve, reject) => {
-        let shouldResolveOnClose = true
+        let isClosed = false
         confirmHWConnection({
           onConfirm: async ({transportType, deviceInfo}) => {
             try {
               const cip30 = cip30LedgerExtensionMaker(wallet, meta)
               const tx = await cip30.signTx(options.cbor, options.partial ?? false, deviceInfo, transportType === 'USB')
-              shouldResolveOnClose = false
-              return resolve(tx)
+              resolve(tx)
+              isClosed = true
+              closeModal()
             } catch (error) {
+              if (error instanceof BaseLedgerError) {
+                throw error
+              }
               reject(error)
-            } finally {
+              isClosed = true
               closeModal()
             }
           },
+          onCancel: () => {
+            reject(userRejectedError())
+            isClosed = true
+            closeModal()
+          },
           onClose: () => {
-            if (shouldResolveOnClose) reject(userRejectedError())
+            if (isClosed) return
+            reject(userRejectedError())
           },
         })
       })
@@ -278,7 +289,7 @@ export const useSignTxWithHW = () => {
 
   const mutation = useMutation<Transaction, Error, {cbor: string; partial?: boolean}>({
     mutationFn,
-    useErrorBoundary: (error) => !isUserRejectedError(error) && !error.message.toLowerCase().includes('rejected'),
+    useErrorBoundary: false,
     mutationKey: ['useSignTxWithHW'],
   })
 

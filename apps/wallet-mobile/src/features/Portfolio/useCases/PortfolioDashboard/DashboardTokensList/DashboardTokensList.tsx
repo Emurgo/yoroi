@@ -30,8 +30,9 @@ export const DashboardTokensList = () => {
   const isPreprod = network === Chain.Network.Preprod
 
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
+
   const isJustADA = React.useMemo(() => {
-    if (tokensList.length >= 2) return false
+    if (tokensList.length !== 1) return false
     const tokenInfo = tokensList[0].info
     const isPrimary = isPrimaryToken(tokenInfo)
     return isPrimary

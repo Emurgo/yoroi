@@ -1,10 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useCallback, useState} from 'react'
+import {ErrorBoundary} from 'react-error-boundary'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
+import {useMutation} from 'react-query'
 
 import {LedgerTransportSwitch} from '../../../components/LedgerTransportSwitch/LedgerTransportSwitch'
 import {useModal} from '../../../components/Modal/ModalContext'
+import {ModalError} from '../../../components/ModalError/ModalError'
 import {Text} from '../../../components/Text'
 import {LedgerConnect} from '../../../legacy/HW'
 import {withBLE, withUSB} from '../../../yoroi-wallets/hw/hwWallet'
@@ -14,9 +17,12 @@ import {useStrings} from './useStrings'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
+type OnConfirmOptions = {transportType: TransportType; deviceInfo: HW.DeviceInfo}
 
 type Props = {
-  onConfirm: (options: {transportType: TransportType; deviceInfo: HW.DeviceInfo}) => void
+  onConfirm: (options: OnConfirmOptions) => Promise<void>
+  onClose: () => void
+  onCancel: () => void
 }
 
 const modalHeight = 350
@@ -25,21 +31,36 @@ export const useConfirmHWConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const confirmHWConnection = useCallback(
-    ({onConfirm, onClose}: {onConfirm: Props['onConfirm']; onClose: () => void}) => {
-      openModal(strings.signTransaction, <ConfirmHWConnectionModal onConfirm={onConfirm} />, modalHeight, onClose)
+    ({onConfirm, onClose, onCancel}: Props) => {
+      openModal(
+        strings.signTransaction,
+        <ErrorBoundary
+          fallbackRender={({error, resetErrorBoundary}) => (
+            <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />
+          )}
+        >
+          <ConfirmHWConnectionModal onConfirm={onConfirm} />
+        </ErrorBoundary>,
+        modalHeight,
+        onClose,
+      )
     },
     [openModal, strings.signTransaction],
   )
   return {confirmHWConnection, closeModal}
 }
 
-const ConfirmHWConnectionModal = ({onConfirm}: Props) => {
+const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
   const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
   const {meta} = useSelectedWallet()
   const strings = useStrings()
   const {styles, colors} = useStyles()
+  const {mutate: handleOnConfirm} = useMutation<void, Error, OnConfirmOptions>({
+    mutationFn: onConfirm,
+    useErrorBoundary: true,
+  })
 
   const onSelectTransport = (transportType: TransportType) => {
     setTransportType(transportType)
@@ -50,14 +71,14 @@ const ConfirmHWConnectionModal = ({onConfirm}: Props) => {
     setStep('loading')
     const hwDeviceInfo = withBLE(meta, deviceId)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
-    onConfirm({transportType: 'BLE', deviceInfo: hwDeviceInfo})
+    handleOnConfirm({transportType: 'BLE', deviceInfo: hwDeviceInfo})
   }
 
   const onConnectUSB = (deviceObj: HW.DeviceObj) => {
     setStep('loading')
     const hwDeviceInfo = withUSB(meta, deviceObj)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
-    onConfirm({transportType: 'USB', deviceInfo: hwDeviceInfo})
+    handleOnConfirm({transportType: 'USB', deviceInfo: hwDeviceInfo})
   }
 
   if (step === 'select-transport') {

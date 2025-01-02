@@ -1,3 +1,4 @@
+import {usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import * as React from 'react'
@@ -28,7 +29,16 @@ export const PortfolioTokenDetailsScreen = () => {
   const [isStickyTab, setIsStickyTab] = React.useState(false)
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const {wallet} = useSelectedWallet()
-  const tokenInfo = wallet.balances.records.get(tokenId)?.info
+  const {tokenInfo} = usePortfolioTokenInfo(
+    {
+      getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+      id: tokenId,
+      network: wallet.networkManager.network,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+    },
+    {suspense: true},
+  )
+
   const HEADER_HEIGHT = 304
   const {styles} = useStyles(HEADER_HEIGHT)
 
