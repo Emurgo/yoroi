@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "526970676782",
-    "project_id": "yoroi-mobile-99140",
-    "storage_bucket": "yoroi-mobile-99140.firebasestorage.app"
+    "project_number": "1028338182097",
+    "project_id": "yoroi-mobile-dev-1",
+    "storage_bucket": "yoroi-mobile-dev-1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:526970676782:android:ca69aadf225bb5e1a021bf",
+        "mobilesdk_app_id": "1:1028338182097:android:19a81ded2005af76bca2f0",
         "android_client_info": {
           "package_name": "com.emurgo.dev"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDRxPyhvvI1QSSE7cjc12ac7uJnOa7SY1w"
+          "current_key": "AIzaSyABpYF2WWAlu66c_1UmyCA9VcBgg8RcLRA"
         }
       ],
       "services": {
