@@ -7,25 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:526970676782:android:ca69aadf225bb5e1a021bf",
-        "android_client_info": {
-          "package_name": "com.emurgo.dev"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDRxPyhvvI1QSSE7cjc12ac7uJnOa7SY1w"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:526970676782:android:ce7b04c50c003146a021bf",
         "android_client_info": {
           "package_name": "com.emurgo.nightly"
