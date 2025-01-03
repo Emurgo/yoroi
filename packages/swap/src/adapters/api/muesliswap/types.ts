@@ -156,29 +156,31 @@ export type LimitQuoteRequest = {
 }
 
 export type Split = {
-  amount_in: number
-  total_lvl_attached: number
-  deposit: number
-  batcher_fee: number
-  expected_output: number
+  amount_in: number | string
+  total_lvl_attached: number | string
+  deposit: number | string
+  batcher_fee: number | string
+  expected_output: number | string
   source_id: string
   initial_price: number
   final_price: number
   price_impact: number
   dex: Provider
   pool_fee: number
-  expected_output_without_slippage: number
+  expected_output_without_slippage: number | string
 }
 export type QuoteResponse = {
-  total_lvl_attached: number
-  total_deposit: number
-  total_batcher_fee: number
-  total_output: number
-  total_input: number
+  total_lvl_attached: number | string
+  total_deposit: number | string
+  total_batcher_fee: number | string
+  total_output: number | string
+  total_input: number | string
   buy_token_decimals: number
   sell_token_decimals: number
   net_price: number
-  total_output_without_slippage: number
+  net_price_imact: number
+  frontend_fee: number | string
+  total_output_without_slippage: number | string
   splits: Array<Split>
 }
 

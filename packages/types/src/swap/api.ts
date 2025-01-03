@@ -56,7 +56,7 @@ export type SwapOrder = {
   amountIn: number
   actualAmountOut: number
   expectedAmountOut: number
-  txHash?: string
+  txHash: string
   outputIndex?: number
   updateTxHash?: string
   customId?: string

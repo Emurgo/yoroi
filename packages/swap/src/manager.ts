@@ -92,25 +92,117 @@ const autoApiMaker = (
       },
 
       async orders() {
-        return adapters.muesliswap.orders()
+        const [dexhunterResponse, muesliswapResponse] = await Promise.all([
+          adapters.dexhunter.orders(),
+          adapters.muesliswap.orders(),
+        ])
+
+        if (isLeft(dexhunterResponse)) return muesliswapResponse
+        if (isLeft(muesliswapResponse)) return dexhunterResponse
+
+        const merged: Record<Swap.Order['txHash'], Swap.Order> = {}
+        const append = (order: Swap.Order) => {
+          if (
+            merged[order.txHash] === undefined ||
+            order.aggregator === Swap.Aggregator.Dexhunter
+          )
+            merged[order.txHash] = order
+        }
+
+        muesliswapResponse.value.data.forEach(append)
+        dexhunterResponse.value.data.forEach(append)
+
+        return {
+          tag: 'right',
+          value: {
+            status: 200,
+            data: Object.values(merged),
+          },
+        }
       },
 
       async providers(body: Swap.ProvidersRequest) {
-        return adapters.muesliswap.providers(body)
+        const [dexhunterResponse, muesliswapResponse] = await Promise.all([
+          adapters.dexhunter.providers(body),
+          adapters.muesliswap.providers(body),
+        ])
+
+        if (isLeft(dexhunterResponse)) return muesliswapResponse
+        if (isLeft(muesliswapResponse)) return dexhunterResponse
+
+        return {
+          tag: 'right',
+          value: {
+            status: 200,
+            data: [
+              ...dexhunterResponse.value.data,
+              ...muesliswapResponse.value.data,
+            ],
+          },
+        }
       },
 
       async estimate(body: Swap.EstimateRequest) {
-        return adapters.muesliswap.estimate(body)
+        const [dexhunterResponse, muesliswapResponse] = await Promise.all([
+          adapters.dexhunter.estimate(body),
+          adapters.muesliswap.estimate(body),
+        ])
+
+        if (isLeft(dexhunterResponse)) return muesliswapResponse
+        if (isLeft(muesliswapResponse)) return dexhunterResponse
+
+        const bestEstimate = [
+          dexhunterResponse.value.data,
+          muesliswapResponse.value.data,
+        ].reduce(getBestSwap, dexhunterResponse.value.data)
+
+        return {
+          tag: 'right',
+          value: {
+            status: 200,
+            data: bestEstimate,
+          },
+        }
       },
 
       async create(body: Swap.CreateRequest) {
-        return adapters.muesliswap.create(body)
+        const [dexhunterResponse, muesliswapResponse] = await Promise.all([
+          adapters.dexhunter.create(body),
+          adapters.muesliswap.create(body),
+        ])
+
+        if (isLeft(dexhunterResponse)) return muesliswapResponse
+        if (isLeft(muesliswapResponse)) return dexhunterResponse
+
+        const bestCreate = [
+          dexhunterResponse.value.data,
+          muesliswapResponse.value.data,
+        ].reduce(getBestSwap, dexhunterResponse.value.data)
+
+        return {
+          tag: 'right',
+          value: {
+            status: 200,
+            data: bestCreate,
+          },
+        }
       },
 
       async cancel(body: Swap.CancelRequest) {
-        return adapters.muesliswap.cancel(body)
+        return body.order.aggregator === Swap.Aggregator.Muesliswap
+          ? adapters.muesliswap.cancel(body)
+          : adapters.dexhunter.cancel(body)
       },
     },
     true,
   )
+}
+
+const getBestSwap = <T extends Swap.EstimateResponse | Swap.CreateResponse>(
+  best: T,
+  candidate: T,
+): T => {
+  // TODO: Could use more logic to account for fees
+  if (candidate.totalOutput > best.totalOutput) return candidate
+  return best
 }

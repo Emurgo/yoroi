@@ -6,6 +6,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Divider} from '../../../../components/Divider/Divider'
 import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
+import {isDev} from '../../../../kernel/env'
 import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from '../../common/constants'
@@ -24,8 +25,14 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? '.unknown')
 
   if (tokenInInfo === undefined || tokenOutInfo === undefined) throw new Error('Missing tokenInfos')
-  const amountIn = {info: tokenInInfo, quantity: BigInt(Number(swapForm.createTx?.totalInput) ?? 0)}
-  const amountOut = {info: tokenOutInfo, quantity: BigInt(Number(swapForm.createTx?.totalInput) ?? 0)}
+  const amountIn = {
+    info: tokenInInfo,
+    quantity: BigInt((Number(swapForm.createTx?.totalInput) ?? 0) * 10 ** tokenInInfo.decimals),
+  }
+  const amountOut = {
+    info: tokenOutInfo,
+    quantity: BigInt((Number(swapForm.createTx?.totalInput) ?? 0) * 10 ** tokenOutInfo.decimals),
+  }
 
   const priceImpactRisk = getPriceImpactRisk(Number(swapForm.createTx?.splits[0].priceImpact))
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
@@ -42,6 +49,11 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const provider = swapForm.createTx?.splits[0]?.dex
 
   const feesInfo = [
+    {
+      label: 'Agreggator',
+      value: <Text style={styles.text}>{swapForm.createTx?.aggregator ?? ''}</Text>,
+      hidden: !isDev,
+    },
     {
       label: strings.dex.toUpperCase(),
       value: provider !== undefined ? <Provider provider={provider} /> : '',

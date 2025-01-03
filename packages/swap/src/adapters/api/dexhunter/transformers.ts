@@ -364,7 +364,6 @@ export const transformersMaker = ({
       }: BuildResponse): Swap.CreateResponse => ({
         aggregator: Swap.Aggregator.Dexhunter,
         cbor,
-        splits: splits?.map(transformSplit) ?? [],
         batcherFee: batcher_fee,
         deposits,
         aggregatorFee: dexhunter_fee,
@@ -374,6 +373,7 @@ export const transformersMaker = ({
         totalInput: total_input,
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output_without_slippage,
+        splits: splits?.map(transformSplit) ?? [],
       }),
     },
     sign: {
