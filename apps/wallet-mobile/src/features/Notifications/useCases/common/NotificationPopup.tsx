@@ -1,7 +1,8 @@
 import {useTheme} from '@yoroi/theme'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useRef} from 'react'
+import {Animated, Dimensions, PanResponder, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'
@@ -11,11 +12,14 @@ import {useStrings} from './useStrings'
 type Props = {
   event: Notifications.Event
   onPress: () => void
+  onCancel: () => void
 }
 
-export const NotificationPopup = ({event, onPress}: Props) => {
+export const NotificationPopup = ({event, onPress, onCancel}: Props) => {
   const navigation = useWalletNavigation()
   const strings = useStrings()
+
+  const {pan, panResponder} = usePanAnimation({onRelease: onCancel})
 
   if (event.trigger === Notifications.Trigger.TransactionReceived) {
     return (
@@ -33,19 +37,58 @@ export const NotificationPopup = ({event, onPress}: Props) => {
 
   if (event.trigger === Notifications.Trigger.RewardsUpdated) {
     return (
-      <NotificationItem
-        onPress={() => {
-          onPress()
-          navigation.navigateToStakingDashboard()
+      <Animated.View
+        style={{
+          transform: [{translateX: pan.x}],
         }}
-        icon={<RewardsUpdatedIcon />}
-        title={strings.stakingRewardsReceived}
-        description={strings.tapToView}
-      />
+        {...panResponder.panHandlers}
+      >
+        <NotificationItem
+          onPress={() => {
+            onPress()
+            navigation.navigateToStakingDashboard()
+          }}
+          icon={<RewardsUpdatedIcon />}
+          title={strings.stakingRewardsReceived}
+          description={strings.tapToView}
+        />
+      </Animated.View>
     )
   }
 
   return null
+}
+
+const usePanAnimation = ({onRelease}: {onRelease: () => void}) => {
+  const pan = useRef(new Animated.ValueXY()).current
+  const screenWidth = Dimensions.get('window').width
+  const screenLimitInPercentAfterWhichShouldRelease = 0.3
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: (e, gestureState) => {
+        if (gestureState.dx > 0) {
+          Animated.event([null, {dx: pan.x, dy: pan.y}], {useNativeDriver: false})(e, gestureState)
+        }
+      },
+      onPanResponderRelease: (e, gestureState) => {
+        if (gestureState.dx > screenWidth * screenLimitInPercentAfterWhichShouldRelease) {
+          Animated.spring(pan, {
+            toValue: {x: screenWidth, y: 0},
+            useNativeDriver: false,
+          }).start(() => onRelease())
+        } else {
+          Animated.spring(pan, {
+            toValue: {x: 0, y: 0},
+            useNativeDriver: false,
+          }).start()
+        }
+      },
+    }),
+  ).current
+
+  return {pan, panResponder}
 }
 
 const NotificationItem = ({

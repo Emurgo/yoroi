@@ -23,7 +23,12 @@ export const NotificationUIHandler = () => {
   return (
     <NotificationStack>
       {displayed.map((event) => (
-        <NotificationPopup key={event.id} event={event} onPress={() => removeEvent(event.id)} />
+        <NotificationPopup
+          key={event.id}
+          event={event}
+          onCancel={() => removeEvent(event.id)}
+          onPress={() => removeEvent(event.id)}
+        />
       ))}
     </NotificationStack>
   )
