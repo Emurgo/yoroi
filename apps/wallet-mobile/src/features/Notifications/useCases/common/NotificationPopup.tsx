@@ -96,6 +96,7 @@ const RewardsUpdatedIcon = () => {
     </View>
   )
 }
+
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
