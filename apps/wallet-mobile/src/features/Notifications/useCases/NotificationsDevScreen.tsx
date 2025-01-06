@@ -18,7 +18,6 @@ import {Text} from '../../../components/Text'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {notificationManager} from './common/notification-manager'
 import {createTransactionReceivedNotification} from './common/transaction-received-notification'
-import {NotificationUIHandler} from './NotificationUIHandler'
 
 export const NotificationsDevScreen = () => {
   return (
@@ -47,8 +46,6 @@ const Screen = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'top', 'left', 'right']}>
-      <NotificationUIHandler />
-
       <ScrollView>
         <View style={{padding: 16, gap: 8}}>
           <Text style={{fontSize: 24}}>Notifications Playground</Text>

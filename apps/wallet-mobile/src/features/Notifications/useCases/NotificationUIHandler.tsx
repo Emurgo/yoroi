@@ -9,6 +9,7 @@ import {NotificationPopup} from './common/NotificationPopup'
 import {NotificationStack} from './common/NotificationStack'
 
 const displayLimit = 3
+const displayTime = 20 * 1000
 
 export const NotificationUIHandler = () => {
   const enabled = useNotificationDisplaySettings()
@@ -34,8 +35,6 @@ export const NotificationUIHandler = () => {
   )
 }
 
-const notificationDisplayTime = 20 * 1000
-
 const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
   const manager = useNotificationManager()
   const walletManager = useWalletManager()
@@ -46,7 +45,7 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
     if (!enabled) return
     const pushEvent = (event: Notifications.Event) => {
       setEvents((e) => [...e, event])
-      setTimeout(() => setEvents((e) => e.filter((ev) => ev.id !== event.id)), notificationDisplayTime)
+      setTimeout(() => setEvents((e) => e.filter((ev) => ev.id !== event.id)), displayTime)
     }
 
     const subscription = manager.newEvents$.subscribe((event) => {
