@@ -1,12 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
-import {useRef} from 'react'
-import {Animated, Dimensions, PanResponder, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'
 import {useWalletNavigation} from '../../../../kernel/navigation'
+import {SwipeOutWrapper} from './SwipeOutWrapper'
 import {useStrings} from './useStrings'
 
 type Props = {
@@ -19,30 +19,25 @@ export const NotificationPopup = ({event, onPress, onCancel}: Props) => {
   const navigation = useWalletNavigation()
   const strings = useStrings()
 
-  const {pan, panResponder} = usePanAnimation({onRelease: onCancel})
-
   if (event.trigger === Notifications.Trigger.TransactionReceived) {
     return (
-      <NotificationItem
-        onPress={() => {
-          onPress()
-          navigation.navigateToTxHistory()
-        }}
-        icon={<TransactionReceivedIcon />}
-        title={strings.assetsReceived}
-        description={strings.tapToView}
-      />
+      <SwipeOutWrapper onSwipeOut={onCancel}>
+        <NotificationItem
+          onPress={() => {
+            onPress()
+            navigation.navigateToTxHistory()
+          }}
+          icon={<TransactionReceivedIcon />}
+          title={strings.assetsReceived}
+          description={strings.tapToView}
+        />
+      </SwipeOutWrapper>
     )
   }
 
   if (event.trigger === Notifications.Trigger.RewardsUpdated) {
     return (
-      <Animated.View
-        style={{
-          transform: [{translateX: pan.x}],
-        }}
-        {...panResponder.panHandlers}
-      >
+      <SwipeOutWrapper onSwipeOut={onCancel}>
         <NotificationItem
           onPress={() => {
             onPress()
@@ -52,43 +47,11 @@ export const NotificationPopup = ({event, onPress, onCancel}: Props) => {
           title={strings.stakingRewardsReceived}
           description={strings.tapToView}
         />
-      </Animated.View>
+      </SwipeOutWrapper>
     )
   }
 
   return null
-}
-
-const usePanAnimation = ({onRelease}: {onRelease: () => void}) => {
-  const pan = useRef(new Animated.ValueXY()).current
-  const screenWidth = Dimensions.get('window').width
-  const screenLimitInPercentAfterWhichShouldRelease = 0.3
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: (e, gestureState) => {
-        if (gestureState.dx > 0) {
-          Animated.event([null, {dx: pan.x, dy: pan.y}], {useNativeDriver: false})(e, gestureState)
-        }
-      },
-      onPanResponderRelease: (e, gestureState) => {
-        if (gestureState.dx > screenWidth * screenLimitInPercentAfterWhichShouldRelease) {
-          Animated.spring(pan, {
-            toValue: {x: screenWidth, y: 0},
-            useNativeDriver: false,
-          }).start(() => onRelease())
-        } else {
-          Animated.spring(pan, {
-            toValue: {x: 0, y: 0},
-            useNativeDriver: false,
-          }).start()
-        }
-      },
-    }),
-  ).current
-
-  return {pan, panResponder}
 }
 
 const NotificationItem = ({
