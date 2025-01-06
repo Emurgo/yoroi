@@ -1,7 +1,12 @@
 import * as React from 'react'
 import {Animated, Dimensions, PanResponder} from 'react-native'
 
-export const SwipeOutWrapper = ({children, onSwipeOut}: {children: React.ReactNode; onSwipeOut: () => void}) => {
+type Props = {
+  children: React.ReactNode
+  onSwipeOut: () => void
+}
+
+export const SwipeOutWrapper = ({children, onSwipeOut}: Props) => {
   const {pan, panResponder} = usePanAnimation({onRelease: onSwipeOut})
 
   return (
