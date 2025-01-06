@@ -7,6 +7,7 @@ import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
 import {Backspace} from './Backspace'
 import {Backward} from './Backward'
+import {Bell} from './Bell'
 import {Bio} from './Bio'
 import {Bluetooth} from './Bluetooth'
 import {Bug} from './Bug'
@@ -286,4 +287,5 @@ export const Icon = {
   InfoCircle,
   AngleUp,
   AngleDown,
+  Bell,
 }

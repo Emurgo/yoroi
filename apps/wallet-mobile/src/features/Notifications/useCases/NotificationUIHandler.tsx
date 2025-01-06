@@ -8,18 +8,21 @@ import {useWalletManager} from '../../WalletManager/context/WalletManagerProvide
 import {NotificationPopup} from './common/NotificationPopup'
 import {NotificationStack} from './common/NotificationStack'
 
+const displayLimit = 3
+
 export const NotificationUIHandler = () => {
   const enabled = useNotificationDisplaySettings()
   const {events, removeEvent} = useCollectNewNotifications({enabled})
   const reversed = useMemo(() => [...events].reverse(), [events])
+  const displayed = reversed.slice(0, displayLimit)
 
-  if (reversed.length === 0) {
+  if (displayed.length === 0) {
     return null
   }
 
   return (
     <NotificationStack>
-      {reversed.map((event) => (
+      {displayed.map((event) => (
         <NotificationPopup key={event.id} event={event} onPress={() => removeEvent(event.id)} />
       ))}
     </NotificationStack>
