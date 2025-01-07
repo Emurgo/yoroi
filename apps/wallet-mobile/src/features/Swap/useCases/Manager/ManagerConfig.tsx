@@ -53,9 +53,8 @@ export const ManagerConfig = () => {
       </View>
 
       <Text style={styles.warn}>
-        Manager is only for developer mode, allows to pick which dex aggregator is used. Auto currently defaults to
-        Muesliswap, but the plan is to use both at the same time and get the best result for swap estimates, and the
-        merged list for order history.
+        Manager is only for developer mode, allows to pick which dex aggregator is used. Auto uses both at the same time
+        and gets the best result for swap estimates, the merged list for order history, merged list for tokens.
       </Text>
     </View>
   )
