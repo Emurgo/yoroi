@@ -6,6 +6,7 @@ import errorImage from '../../assets/img/error.png'
 import {logger} from '../../kernel/logger/logger'
 import {Button} from '../Button/Button'
 import {CopyButton} from '../CopyButton'
+import {Space} from '../Space/Space'
 import {Spacer} from '../Spacer/Spacer'
 import {ExpandableItem} from './ExpandableItem'
 
@@ -51,23 +52,25 @@ const ErrorView = ({state}: {state: State}) => {
 
   return (
     <View style={styles.root}>
+      <Spacer height={70} />
+
       <ScrollView style={styles.scroll}>
         <View style={styles.headerView}>
           <Text style={styles.title}>Oops!!! Something went wrong.</Text>
 
-          <Spacer height={24} />
+          <Space height="xl" />
 
           <Image source={errorImage} />
         </View>
 
-        <Spacer height={16} />
+        <Space height="lg" />
 
         <Text style={styles.paragraph}>
           Please consider sending this error to Yoroi mobile support. Unfortunately, we can not recover from this error.
           You need to relaunch the app.
         </Text>
 
-        <Spacer height={16} />
+        <Space height="lg" />
 
         <View style={styles.errorSection}>
           <View style={styles.errorSectionHeader}>
@@ -76,15 +79,15 @@ const ErrorView = ({state}: {state: State}) => {
             <CopyButton value={`${state.error}:${state.errorInfo}`} />
           </View>
 
-          <Spacer height={16} />
+          <Space height="lg" />
 
           <ExpandableItem label="Show error" content={state.errorInfo} />
         </View>
       </ScrollView>
 
       {Platform.OS === 'android' && (
-        <View style={{padding: 16}}>
-          <Button onPress={() => BackHandler.exitApp()} title="OK" style={{width: '100%'}} />
+        <View style={styles.actions}>
+          <Button onPress={() => BackHandler.exitApp()} title="OK" />
         </View>
       )}
     </View>
@@ -96,21 +99,21 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.px_lg,
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingTop: 70,
+      ...atoms.pb_lg,
+      ...atoms.flex_1,
+      ...atoms.justify_center,
+      ...atoms.align_center,
       backgroundColor: color.bg_color_max,
     },
     scroll: {
-      width: '100%',
+      ...atoms.w_full,
     },
     title: {
       ...atoms.heading_4_regular,
       color: color.el_gray_max,
     },
     headerView: {
-      alignItems: 'center',
+      ...atoms.align_center,
     },
     paragraph: {
       ...atoms.body_2_md_regular,
@@ -121,9 +124,12 @@ const useStyles = () => {
       color: color.el_gray_max,
     },
     errorSectionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
       color: color.el_gray_max,
+    },
+    actions: {
+      ...atoms.w_full,
     },
   })
   return styles
