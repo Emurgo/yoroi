@@ -248,11 +248,13 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
       case SwapAction.TokenInAmountChanged:
         draft.tokenInInput.value = action.value
+        if (action.value === '' || action.value === '0') draft.tokenOutInput.value = '0'
 
         break
       case SwapAction.TokenOutAmountChanged:
         draft.tokenOutInput.value = action.value
         draft.lastInputTouched = 'out'
+        if (action.value === '' || action.value === '0') draft.tokenInInput.value = '0'
 
         break
       case SwapAction.TokenInErrorChanged:

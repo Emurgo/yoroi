@@ -41,7 +41,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const tokenToSellName = tokenInInfo.ticker ?? tokenInInfo.name
   const tokenToBuyName = tokenOutInfo.ticker ?? tokenOutInfo.name
 
-  const priceInfoValue = `${swapForm.createTx?.netPrice} ${tokenToSellName}/${tokenToBuyName}`
+  const priceInfoValue = `${swapForm.createTx?.netPrice} ${tokenToBuyName}/${tokenToSellName}`
   const minAdaInfoValue = `${swapForm.createTx?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const totalFee = `${swapForm.createTx?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const minReceivedInfoValue = `${swapForm.createTx?.totalOutput} ${tokenToBuyName}`
@@ -81,7 +81,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
             <View style={{flexDirection: 'row'}}>
               <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
-                {`(${swapForm.createTx?.netPrice} ${tokenToSellName}/${tokenToBuyName})`}
+                {`(${swapForm.createTx?.netPrice} ${tokenToBuyName}/${tokenToSellName})`}
               </Text>
             </View>
           </View>

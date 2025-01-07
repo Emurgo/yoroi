@@ -21,7 +21,7 @@ export const EditPrice = () => {
 
   const tokenToSellName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
   const tokenToBuyName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
-  const pair = `${tokenToSellName}/${tokenToBuyName}`
+  const pair = `${tokenToBuyName}/${tokenToSellName}`
 
   return (
     <>
