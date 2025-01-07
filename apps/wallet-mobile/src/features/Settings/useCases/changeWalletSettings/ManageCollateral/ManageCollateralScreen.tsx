@@ -54,7 +54,7 @@ export const ManageCollateralScreen = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const balances = useBalances(wallet)
-  const {navigateToTxReview} = useWalletNavigation()
+  const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
   const lockedAmount = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
 
@@ -79,6 +79,7 @@ export const ManageCollateralScreen = () => {
   const onSuccess = (signedTx: YoroiSignedTx) => {
     const collateralId = `${signedTx.signedTx.id}:0`
     setCollateralId(collateralId)
+    resetToTxHistory()
   }
 
   const createCollateralTransaction = () => {

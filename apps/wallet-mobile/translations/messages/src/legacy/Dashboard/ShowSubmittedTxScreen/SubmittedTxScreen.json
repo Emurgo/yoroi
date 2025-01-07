@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Transaction signed",
     "file": "src/legacy/Dashboard/ShowSubmittedTxScreen/SubmittedTxScreen.tsx",
     "start": {
-      "line": 92,
+      "line": 91,
       "column": 20,
-      "index": 2375
+      "index": 2361
     },
     "end": {
-      "line": 95,
+      "line": 94,
       "column": 3,
-      "index": 2476
+      "index": 2462
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!It will show up in the transaction list once it's confirmed by the network.",
     "file": "src/legacy/Dashboard/ShowSubmittedTxScreen/SubmittedTxScreen.tsx",
     "start": {
-      "line": 96,
+      "line": 95,
       "column": 19,
-      "index": 2497
+      "index": 2483
     },
     "end": {
-      "line": 99,
+      "line": 98,
       "column": 3,
-      "index": 2654
+      "index": 2640
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Close",
     "file": "src/legacy/Dashboard/ShowSubmittedTxScreen/SubmittedTxScreen.tsx",
     "start": {
-      "line": 100,
+      "line": 99,
       "column": 21,
-      "index": 2677
+      "index": 2663
     },
     "end": {
-      "line": 103,
+      "line": 102,
       "column": 3,
-      "index": 2766
+      "index": 2752
     }
   }
 ]

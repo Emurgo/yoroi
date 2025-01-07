@@ -8,14 +8,14 @@ import {SafeArea} from '../../../components/SafeArea'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {FailedTxIcon} from '../../../features/ReviewTx/illustrations/FailedTxIcon'
-import {useBlockGoBack} from '../../../kernel/navigation'
-import {useNavigateTo} from '../Dashboard'
+import {useBlockGoBack, useWalletNavigation} from '../../../kernel/navigation'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()
   const {styles} = useStyles()
   const strings = useStrings()
-  const navigateTo = useNavigateTo()
+
+  const {resetToTxHistory} = useWalletNavigation()
 
   return (
     <SafeArea style={styles.root}>
@@ -34,7 +34,7 @@ export const FailedTxScreen = () => {
       <Space fill />
 
       <Actions>
-        <Button onPress={navigateTo.stakingCenter} title={strings.failedTxButton} style={styles.button} />
+        <Button onPress={resetToTxHistory} title={strings.failedTxButton} style={styles.button} />
       </Actions>
     </SafeArea>
   )
