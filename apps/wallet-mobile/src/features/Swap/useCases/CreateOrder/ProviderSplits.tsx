@@ -5,6 +5,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
 import {Provider} from '../../common/Provider/Provider'
 import {useStrings} from '../../common/strings'
@@ -14,6 +15,7 @@ export const ProviderSplits = () => {
   const strings = useStrings()
   const {styles, color} = useStyles()
   const [expanded, setExpanded] = React.useState(true)
+  const {wallet} = useSelectedWallet()
 
   const navigateTo = useNavigateTo()
 
@@ -45,7 +47,9 @@ export const ProviderSplits = () => {
         <View style={styles.card}>
           <TouchableOpacity onPress={() => setExpanded(!expanded)}>
             <View style={styles.between}>
-              <Text style={styles.heading}>{`${strings.total}: ${swapForm.estimate?.totalInput}`}</Text>
+              <Text style={styles.heading}>{`${strings.total}: ${swapForm.estimate?.totalInput} ${
+                swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? '.unknown')?.ticker
+              }`}</Text>
 
               <Icon.Chevron direction={expanded ? 'up' : 'down'} color={color.el_gray_max} size={24} />
             </View>
@@ -56,13 +60,21 @@ export const ProviderSplits = () => {
               <Row
                 label={strings.swapMinAdaTitle}
                 description={strings.swapMinAda}
-                value={swapForm.estimate?.deposits}
+                value={`${swapForm.estimate?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
+              />
+
+              <Row
+                label={strings.swapFeesTitle}
+                description={strings.swapFees}
+                value={`${swapForm.estimate?.batcherFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
               />
 
               <Row
                 label={strings.swapMinReceivedTitle}
                 description={strings.swapMinReceived}
-                value={swapForm.estimate?.totalOutput}
+                value={`${swapForm.estimate?.totalOutput} ${
+                  swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? '.unknown')?.ticker
+                }`}
               />
             </View>
           )}
