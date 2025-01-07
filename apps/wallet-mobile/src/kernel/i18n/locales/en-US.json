@@ -486,6 +486,8 @@
   "components.settings.walletsettingscreen.unknownWalletType": "Unknown Wallet Type",
   "components.settings.walletsettingscreen.walletName": "Wallet name",
   "components.settings.walletsettingscreen.walletType": "Wallet type:",
+  "components.settings.walletsettingscreen.inAppNotifications": "In-app notifications",
+  "components.settings.walletsettingscreen.allowNotifications": "Allow notifications",
   "components.somethingWentWrong.title": "Oops!",
   "components.somethingWentWrong.description": "Something went wrong.\nTry to reload this page or restart the app.",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Delegate",
@@ -1317,5 +1319,8 @@
   "txReview.createdBy": "Created by",
   "txReview.overview.operationsNoticeText": "You are about to interact with operations, which are key components used in governance and various blockchain activities. These include Cardano Governance Certificates, as outlined in CIP-0095, which facilitate governance transactions.",
   "txReview.overview.operationsNoticeButton": "Ok",
-  "txReview.overview.operationsNoticeTitle": "What are operations?"
+  "txReview.overview.operationsNoticeTitle": "What are operations?",
+  "notifications.tapToView": "Tap to view",
+  "notifications.stakingRewardsReceived": "Staking rewards received",
+  "notifications.assetsReceived": "Assets received"
 }

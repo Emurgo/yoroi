@@ -33,7 +33,7 @@ export const ShowCameraPermissionDeniedScreen = () => {
 
         <Spacer height={16} />
 
-        <Button onPress={openSettings} title={strings.openAppSettings} size="S" />
+        <Button onPress={() => openSettings()} title={strings.openAppSettings} size="S" />
       </Actions>
     </SafeAreaView>
   )

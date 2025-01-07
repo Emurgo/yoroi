@@ -15,6 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '../../../components/Button/Button'
 import {ScrollView} from '../../../components/ScrollView/ScrollView'
 import {Text} from '../../../components/Text'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {notificationManager} from './common/notification-manager'
 import {createTransactionReceivedNotification} from './common/transaction-received-notification'
 
@@ -28,6 +29,8 @@ export const NotificationsDevScreen = () => {
 
 const Screen = () => {
   const manager = useNotificationManager()
+  const walletManager = useWalletManager()
+  const selectedWalletId = walletManager.selected.wallet?.id ?? 'walletId'
 
   const handleOnTriggerTransactionReceived = () => {
     manager.events.push(
@@ -36,6 +39,7 @@ const Screen = () => {
         nextTxsCounter: 1,
         txId: '123',
         isSentByUser: false,
+        walletId: selectedWalletId,
       }),
     )
   }

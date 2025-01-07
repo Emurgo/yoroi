@@ -87,6 +87,11 @@
 		<string>Rubik-SemiBoldItalic.ttf</string>
 		<string>Rubik-VariableFont_wght.ttf</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -107,9 +112,5 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIBackgroundModes</key>
-	<array>
-        <string>fetch</string>
-    </array>
 </dict>
 </plist>

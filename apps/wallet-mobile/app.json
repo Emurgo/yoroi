@@ -5,7 +5,15 @@
     "name": "yoroi",
     "slug": "yoroi",
     "plugins": [
-      "sentry-expo"
+      "sentry-expo",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
     ],
     "sdkVersion": "48.0.0",
     "entryPoint": ".vscode/exponentIndex.js",

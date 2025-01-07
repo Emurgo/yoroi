@@ -2,6 +2,7 @@
 #import "AppDelegate.h"
 #import "RNBootSplash.h"
 #import "RNNotifications.h"
+#import <Firebase.h>
 
 #import <React/RCTBundleURLProvider.h>
 
@@ -17,6 +18,26 @@
   // react-native-bootsplash
   UIView *rootView = self.window.rootViewController.view;
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
+
+  #ifdef BUILD_VARIANT
+      NSString *env = @BUILD_VARIANT;
+  #else
+      NSString *env = @"PRODUCTION"; // Default
+  #endif
+  
+  NSString *filePath;
+
+  if ([env isEqualToString:@"NIGHTLY"]) {
+      filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-Nightly" ofType:@"plist"];
+  } else {
+      filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-Production" ofType:@"plist"];
+  }
+
+  if (filePath) {
+      FIROptions *options = [[FIROptions alloc] initWithContentsOfFile:filePath];
+      [FIRApp configureWithOptions:options];
+  }
+
   [RNNotifications startMonitorNotifications];
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];

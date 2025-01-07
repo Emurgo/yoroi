@@ -34,6 +34,7 @@ import {
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
 import {useInitNotifications} from './features/Notifications/useCases/common/hooks'
 import {NotificationsDevScreen} from './features/Notifications/useCases/NotificationsDevScreen'
+import {NotificationUIHandler} from './features/Notifications/useCases/NotificationUIHandler'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from './features/WalletManager/common/hooks/useHasWallets'
@@ -118,6 +119,8 @@ export const AppNavigator = () => {
       onReady={onReady}
       ref={navRef}
     >
+      <NotificationUIHandler />
+
       <ModalProvider>
         <Stack.Navigator
           screenOptions={{

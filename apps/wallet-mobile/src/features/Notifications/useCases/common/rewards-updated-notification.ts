@@ -1,41 +1,16 @@
-import {mountAsyncStorage, useAsyncStorage} from '@yoroi/common'
+import {useAsyncStorage} from '@yoroi/common'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
-import * as BackgroundFetch from 'expo-background-fetch'
-import * as TaskManager from 'expo-task-manager'
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {walletManager} from '../../../WalletManager/wallet-manager'
-import {notificationManager} from './notification-manager'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './storage'
 
-const backgroundTaskId = 'yoroi-rewards-updated-notifications-background-fetch'
 const storageKey = 'rewards-updated-notification-history'
-const backgroundSyncInMinutes = 60 * 10
-
-// Check is needed for hot reloading, as task can not be defined twice
-if (!TaskManager.isTaskDefined(backgroundTaskId)) {
-  const appStorage = mountAsyncStorage({path: '/'})
-  TaskManager.defineTask(backgroundTaskId, async () => {
-    await syncAllWallets()
-    const notifications = await buildNotifications(appStorage)
-    notifications.forEach((notification) => notificationManager.events.push(notification))
-    const hasNewData = notifications.length > 0
-    return hasNewData ? BackgroundFetch.BackgroundFetchResult.NewData : BackgroundFetch.BackgroundFetchResult.NoData
-  })
-}
 
 export const rewardsUpdatedSubject = new Subject<NotificationTypes.RewardsUpdatedEvent>()
-
-const registerBackgroundFetchAsync = () => {
-  return BackgroundFetch.registerTaskAsync(backgroundTaskId, {
-    minimumInterval: backgroundSyncInMinutes,
-    stopOnTerminate: false,
-    startOnBoot: true,
-  })
-}
 
 const buildNotifications = async (appStorage: App.Storage) => {
   const walletIds = [...walletManager.walletMetas.keys()]
@@ -61,45 +36,27 @@ const buildNotifications = async (appStorage: App.Storage) => {
     if (latestReward === rewards) continue
 
     await storage.setValues([rewards])
-    notifications.push(createRewardsUpdatedNotification())
+    notifications.push(createRewardsUpdatedNotification(walletId))
   }
 
   return notifications
 }
 
-const unregisterBackgroundFetchAsync = () => {
-  return BackgroundFetch.unregisterTaskAsync(backgroundTaskId)
-}
-
-const syncAllWallets = async () => {
-  const ids = [...walletManager.walletMetas.keys()]
-  for (const id of ids) {
-    const wallet = walletManager.getWalletById(id)
-    if (!wallet) continue
-    await wallet.sync({})
-  }
-}
-
-const createRewardsUpdatedNotification = () => {
+const createRewardsUpdatedNotification = (walletId: string): NotificationTypes.RewardsUpdatedEvent => {
   return {
     id: generateNotificationId(),
     date: new Date().toISOString(),
     isRead: false,
     trigger: NotificationTypes.Trigger.RewardsUpdated,
+    metadata: {
+      walletId,
+    },
   } as const
 }
 
 export const useRewardsUpdatedNotifications = ({enabled}: {enabled: boolean}) => {
   const {walletManager} = useWalletManager()
   const asyncStorage = useAsyncStorage()
-
-  React.useEffect(() => {
-    if (!enabled) return
-    registerBackgroundFetchAsync()
-    return () => {
-      unregisterBackgroundFetchAsync()
-    }
-  }, [enabled])
 
   React.useEffect(() => {
     if (!enabled) return

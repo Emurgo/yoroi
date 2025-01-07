@@ -7,6 +7,5 @@ export const createManagerMock = () => {
   return notificationManagerMaker({
     eventsStorage,
     configStorage,
-    display: jest.fn(),
   })
 }

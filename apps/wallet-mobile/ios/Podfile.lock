@@ -56,8 +56,78 @@ PODS:
     - React-Core (= 0.71.14)
     - React-jsi (= 0.71.14)
     - ReactCommon/turbomodule/core (= 0.71.14)
+  - Firebase/CoreOnly (11.5.0):
+    - FirebaseCore (= 11.5.0)
+  - Firebase/Messaging (11.5.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 11.5.0)
+  - FirebaseCore (11.5.0):
+    - FirebaseCoreInternal (= 11.5)
+    - GoogleUtilities/Environment (~> 8.0)
+    - GoogleUtilities/Logger (~> 8.0)
+  - FirebaseCoreExtension (11.5.0):
+    - FirebaseCore (= 11.5)
+  - FirebaseCoreInternal (11.5.0):
+    - "GoogleUtilities/NSData+zlib (~> 8.0)"
+  - FirebaseInstallations (11.5.0):
+    - FirebaseCore (= 11.5)
+    - GoogleUtilities/Environment (~> 8.0)
+    - GoogleUtilities/UserDefaults (~> 8.0)
+    - PromisesObjC (~> 2.4)
+  - FirebaseMessaging (11.5.0):
+    - FirebaseCore (= 11.5)
+    - FirebaseInstallations (~> 11.0)
+    - GoogleDataTransport (~> 10.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
+    - GoogleUtilities/Environment (~> 8.0)
+    - GoogleUtilities/Reachability (~> 8.0)
+    - GoogleUtilities/UserDefaults (~> 8.0)
+    - nanopb (~> 3.30910.0)
   - fmt (6.2.1)
   - glog (0.3.5)
+  - GoogleDataTransport (10.1.0):
+    - nanopb (~> 3.30910.0)
+    - PromisesObjC (~> 2.4)
+  - GoogleUtilities (8.0.2):
+    - GoogleUtilities/AppDelegateSwizzler (= 8.0.2)
+    - GoogleUtilities/Environment (= 8.0.2)
+    - GoogleUtilities/Logger (= 8.0.2)
+    - GoogleUtilities/MethodSwizzler (= 8.0.2)
+    - GoogleUtilities/Network (= 8.0.2)
+    - "GoogleUtilities/NSData+zlib (= 8.0.2)"
+    - GoogleUtilities/Privacy (= 8.0.2)
+    - GoogleUtilities/Reachability (= 8.0.2)
+    - GoogleUtilities/SwizzlerTestHelpers (= 8.0.2)
+    - GoogleUtilities/UserDefaults (= 8.0.2)
+  - GoogleUtilities/AppDelegateSwizzler (8.0.2):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Environment (8.0.2):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Logger (8.0.2):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/MethodSwizzler (8.0.2):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Network (8.0.2):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Privacy
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (8.0.2)":
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Privacy (8.0.2)
+  - GoogleUtilities/Reachability (8.0.2):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/SwizzlerTestHelpers (8.0.2):
+    - GoogleUtilities/MethodSwizzler
+  - GoogleUtilities/UserDefaults (8.0.2):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
   - hermes-engine (0.71.14):
     - hermes-engine/Pre-built (= 0.71.14)
   - hermes-engine/Pre-built (0.71.14)
@@ -87,18 +157,12 @@ PODS:
     - MMKVCore (~> 1.3.3)
   - MMKVCore (1.3.3)
   - MultiplatformBleAdapter (0.1.9)
-  - Permission-BluetoothPeripheral (3.8.4):
-    - RNPermissions
-  - Permission-Camera (3.8.4):
-    - RNPermissions
-  - Permission-FaceID (3.8.4):
-    - RNPermissions
-  - Permission-LocationAccuracy (3.8.4):
-    - RNPermissions
-  - Permission-LocationAlways (3.8.4):
-    - RNPermissions
-  - Permission-LocationWhenInUse (3.8.4):
-    - RNPermissions
+  - nanopb (3.30910.0):
+    - nanopb/decode (= 3.30910.0)
+    - nanopb/encode (= 3.30910.0)
+  - nanopb/decode (3.30910.0)
+  - nanopb/encode (3.30910.0)
+  - PromisesObjC (2.4.0)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -366,11 +430,12 @@ PODS:
   - react-native-mmkv (2.11.0):
     - MMKV (>= 1.2.13)
     - React-Core
-  - react-native-notifications (5.1.1):
+  - react-native-notifications (5.1.0):
     - React-Core
   - react-native-pager-view (6.2.0):
     - React-Core
-  - react-native-quick-base64 (2.0.6):
+  - react-native-quick-base64 (2.1.2):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-randombytes (3.6.0):
     - React-Core
@@ -481,6 +546,14 @@ PODS:
     - React-Core
   - RNDeviceInfo (6.0.1):
     - React
+  - RNFBApp (21.5.0):
+    - Firebase/CoreOnly (= 11.5.0)
+    - React-Core
+  - RNFBMessaging (21.5.0):
+    - Firebase/Messaging (= 11.5.0)
+    - FirebaseCoreExtension
+    - React-Core
+    - RNFBApp
   - RNFlashList (1.4.3):
     - React-Core
   - RNGestureHandler (2.12.0):
@@ -489,7 +562,7 @@ PODS:
     - React-Core
   - RNLocalize (3.0.2):
     - React-Core
-  - RNPermissions (3.8.4):
+  - RNPermissions (5.2.1):
     - React-Core
   - RNReanimated (3.3.0):
     - DoubleConversion
@@ -576,14 +649,9 @@ DEPENDENCIES:
   - FBLazyVector (from `../../../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../../../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../../../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - GoogleUtilities
   - hermes-engine (from `../../../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
-  - Permission-BluetoothPeripheral (from `../../../node_modules/react-native-permissions/ios/BluetoothPeripheral`)
-  - Permission-Camera (from `../../../node_modules/react-native-permissions/ios/Camera`)
-  - Permission-FaceID (from `../../../node_modules/react-native-permissions/ios/FaceID`)
-  - Permission-LocationAccuracy (from `../../../node_modules/react-native-permissions/ios/LocationAccuracy`)
-  - Permission-LocationAlways (from `../../../node_modules/react-native-permissions/ios/LocationAlways`)
-  - Permission-LocationWhenInUse (from `../../../node_modules/react-native-permissions/ios/LocationWhenInUse`)
   - RCT-Folly (from `../../../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../../../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../../../node_modules/react-native/Libraries/TypeSafety`)
@@ -605,7 +673,7 @@ DEPENDENCIES:
   - "react-native-haskell-shelley (from `../../../node_modules/@emurgo/csl-mobile-bridge`)"
   - "react-native-message_signing-library (from `../../../node_modules/@emurgo/msl-mobile-bridge`)"
   - react-native-mmkv (from `../../../node_modules/react-native-mmkv`)
-  - "react-native-notifications (from `../../../node_modules/@jamsinclair/react-native-notifications`)"
+  - react-native-notifications (from `../../../node_modules/react-native-notifications`)
   - react-native-pager-view (from `../../../node_modules/react-native-pager-view`)
   - react-native-quick-base64 (from `../../../node_modules/react-native-quick-base64`)
   - react-native-randombytes (from `../../../node_modules/react-native-randombytes`)
@@ -633,6 +701,8 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../../../node_modules/@react-native-masked-view/masked-view`)"
   - "RNDateTimePicker (from `../../../node_modules/@react-native-community/datetimepicker`)"
   - RNDeviceInfo (from `../../../node_modules/react-native-device-info`)
+  - "RNFBApp (from `../../../node_modules/@react-native-firebase/app`)"
+  - "RNFBMessaging (from `../../../node_modules/@react-native-firebase/messaging`)"
   - "RNFlashList (from `../../../node_modules/@shopify/flash-list`)"
   - RNGestureHandler (from `../../../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../../../node_modules/react-native-keychain`)
@@ -648,7 +718,15 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Firebase
+    - FirebaseCore
+    - FirebaseCoreExtension
+    - FirebaseCoreInternal
+    - FirebaseInstallations
+    - FirebaseMessaging
     - fmt
+    - GoogleDataTransport
+    - GoogleUtilities
     - libaom
     - libavif
     - libevent
@@ -657,6 +735,8 @@ SPEC REPOS:
     - MMKV
     - MMKVCore
     - MultiplatformBleAdapter
+    - nanopb
+    - PromisesObjC
     - SDWebImage
     - SDWebImageAVIFCoder
     - SDWebImageSVGCoder
@@ -714,18 +794,6 @@ EXTERNAL SOURCES:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/glog.podspec"
   hermes-engine:
     :podspec: "../../../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
-  Permission-BluetoothPeripheral:
-    :path: "../../../node_modules/react-native-permissions/ios/BluetoothPeripheral"
-  Permission-Camera:
-    :path: "../../../node_modules/react-native-permissions/ios/Camera"
-  Permission-FaceID:
-    :path: "../../../node_modules/react-native-permissions/ios/FaceID"
-  Permission-LocationAccuracy:
-    :path: "../../../node_modules/react-native-permissions/ios/LocationAccuracy"
-  Permission-LocationAlways:
-    :path: "../../../node_modules/react-native-permissions/ios/LocationAlways"
-  Permission-LocationWhenInUse:
-    :path: "../../../node_modules/react-native-permissions/ios/LocationWhenInUse"
   RCT-Folly:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -767,7 +835,7 @@ EXTERNAL SOURCES:
   react-native-mmkv:
     :path: "../../../node_modules/react-native-mmkv"
   react-native-notifications:
-    :path: "../../../node_modules/@jamsinclair/react-native-notifications"
+    :path: "../../../node_modules/react-native-notifications"
   react-native-pager-view:
     :path: "../../../node_modules/react-native-pager-view"
   react-native-quick-base64:
@@ -822,6 +890,10 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@react-native-community/datetimepicker"
   RNDeviceInfo:
     :path: "../../../node_modules/react-native-device-info"
+  RNFBApp:
+    :path: "../../../node_modules/@react-native-firebase/app"
+  RNFBMessaging:
+    :path: "../../../node_modules/@react-native-firebase/messaging"
   RNFlashList:
     :path: "../../../node_modules/@shopify/flash-list"
   RNGestureHandler:
@@ -870,8 +942,16 @@ SPEC CHECKSUMS:
   EXTaskManager: 07d427a5213dd275c13b6b6c07bba35a672e6698
   FBLazyVector: 12ea01e587c9594e7b144e1bfc86ac4d9ac28fde
   FBReactNativeSpec: faca7d16c37626ca5780a87adef703817722fe61
+  Firebase: 7a56fe4f56b5ab81b86a6822f5b8f909ae6fc7e2
+  FirebaseCore: 93abc05437f8064cd2bc0a53b768fb0bc5a1d006
+  FirebaseCoreExtension: ddb2eb987f736b714d30f6386795b52c4670439e
+  FirebaseCoreInternal: f47dd28ae7782e6a4738aad3106071a8fe0af604
+  FirebaseInstallations: d8063d302a426d114ac531cd82b1e335a0565745
+  FirebaseMessaging: 9f4e42053241bd45ce8565c881bfdd9c1df2f7da
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
+  GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   hermes-engine: d7cc127932c89c53374452d6f93473f1970d8e88
   libaom: 144606b1da4b5915a1054383c3a4459ccdb3c661
   libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
@@ -881,12 +961,8 @@ SPEC CHECKSUMS:
   MMKV: f902fb6719da13c2ab0965233d8963a59416f911
   MMKVCore: d26e4d3edd5cb8588c2569222cbd8be4231374e9
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
-  Permission-BluetoothPeripheral: 2b88a131074edafd8a46a5cda4ba610ec986d2fb
-  Permission-Camera: 7ec9ee99704766ff9b90198183387a7f5d82b0c1
-  Permission-FaceID: 2e7d5070c6df9315c6ed8de8fb22fed69a762b0d
-  Permission-LocationAccuracy: a38ddb5c5d0b8e656f3c86e4a500f9bb88bc099d
-  Permission-LocationAlways: 8fd5518716c3045f9c4edf77b901126098d79b60
-  Permission-LocationWhenInUse: 24d97eeb25d8ff9f2232e070f792eeb1360ccaf0
+  nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
+  PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: e9df143e880d0e879e7a498dc06923d728809c79
   RCTTypeSafety: c2d89c8308829c12c038ec1f431191eaa0d8c15c
@@ -907,9 +983,9 @@ SPEC CHECKSUMS:
   react-native-haskell-shelley: d69d9b9a7122067b9ee36b76c78c6436d4fc1aba
   react-native-message_signing-library: 040317fed382be05d79e2ecbe5852d1a20ce68df
   react-native-mmkv: e97c0c79403fb94577e5d902ab1ebd42b0715b43
-  react-native-notifications: 985b8e492eeceeaf697aa3f08a1ad30b76a21d9f
+  react-native-notifications: 4601a5a8db4ced6ae7cfc43b44d35fe437ac50c4
   react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
-  react-native-quick-base64: 62290829c619fbabca4c41cfec75ae759d08fc1c
+  react-native-quick-base64: 61228d753294ae643294a75fece8e0e80b7558a6
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: 9697629f7b2cda43cf52169bb7e0767d330648c2
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
@@ -928,18 +1004,20 @@ SPEC CHECKSUMS:
   React-RCTText: b3bd40bc71bca0c3e2cc5ce2c40870a438f303b1
   React-RCTVibration: 64e412b9ac684c4edc938fa1187135ada9af7faf
   React-runtimeexecutor: ffe826b7b1cfbc32a35ed5b64d5886c0ff75f501
-  ReactCommon: 7f3dd5e98a9ec627c6b03d26c062bf37ea9fc888
+  ReactCommon: 6f0ee30fda78283c31310e585f7236748e13330d
   RNBootSplash: 85f6b879c080e958afdb4c62ee04497b05fd7552
   RNCAsyncStorage: c913ede1fa163a71cea118ed4670bbaaa4b511bb
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDateTimePicker: 4cb76f42ef1411f5e0cfc69758b7d9d7a30e12e4
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
+  RNFBApp: 4a9c103e65ea4de297e9b80df6f8d21974b0ce9d
+  RNFBMessaging: 5bfa868add9fb8d1a824f026d369d739ce202d3f
   RNFlashList: ade81b4e928ebd585dd492014d40fb8d0e848aab
   RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
   RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
   RNLocalize: dbea38dcb344bf80ff18a1757b1becf11f70cae4
-  RNPermissions: f1b49dd05fa9b83993cd05a9ee115247944d8f1a
+  RNPermissions: bd4e8932db57d658a7fd0395bc0ea8a344e28405
   RNReanimated: d6b4b867b6d1ee0798f5fb372708fa4bb8d66029
   RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
   RNSentry: f9e637773502a61c7b455c4ce65bc7008ce22a6e
@@ -955,6 +1033,6 @@ SPEC CHECKSUMS:
   Yoga: e71803b4c1fff832ccf9b92541e00f9b873119b9
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: 09a3c8236b8655c1bc6f4dd9d56c009f5bdf0939
+PODFILE CHECKSUM: 1558354ff834d5745d243d7f917d3b95f424404a
 
 COCOAPODS: 1.15.2

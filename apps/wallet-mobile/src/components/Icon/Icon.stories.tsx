@@ -304,6 +304,8 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Bluetooth />} title="Bluetooth" />
 
         <Item icon={<Icon.Usb />} title="Usb" />
+
+        <Item icon={<Icon.Bell />} title="Bell" />
       </ScrollView>
     </FilterProvider>
   )

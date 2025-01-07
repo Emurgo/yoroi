@@ -1,6 +1,6 @@
-import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
 import {mountAsyncStorage} from '@yoroi/common'
 import {Notifications as NotificationTypes} from '@yoroi/types'
+import {Notification, Notifications} from 'react-native-notifications'
 
 import {formatCurrency, getCurrencySymbol} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
@@ -46,7 +46,7 @@ export const displayNotificationEvent = async (notificationEvent: NotificationTy
   }
 }
 
-const sendNotification = (options: {title: string; body: string; id: number}) => {
+export const sendNotification = (options: {title: string; body: string; id: number}) => {
   const notification = new Notification({
     title: options.title,
     body: options.body,
