@@ -19,7 +19,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
-  const {wantedPrice, orderType} = swapForm
+  const {orderType} = swapForm
 
   const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? '.unknown')
   const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? '.unknown')
@@ -31,7 +31,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   }
   const amountOut = {
     info: tokenOutInfo,
-    quantity: BigInt((Number(swapForm.createTx?.totalInput) ?? 0) * 10 ** tokenOutInfo.decimals),
+    quantity: BigInt((Number(swapForm.createTx?.totalOutputWithoutSlippage) ?? 0) * 10 ** tokenOutInfo.decimals),
   }
 
   const priceImpactRisk = getPriceImpactRisk(Number(swapForm.createTx?.splits[0].priceImpact))
@@ -41,7 +41,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const tokenToSellName = tokenInInfo.ticker ?? tokenInInfo.name
   const tokenToBuyName = tokenOutInfo.ticker ?? tokenOutInfo.name
 
-  const priceInfoValue = `${wantedPrice} ${tokenToSellName}/${tokenToBuyName}`
+  const priceInfoValue = `${swapForm.createTx?.netPrice} ${tokenToSellName}/${tokenToBuyName}`
   const minAdaInfoValue = `${swapForm.createTx?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const totalFee = `${swapForm.createTx?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const minReceivedInfoValue = `${swapForm.createTx?.totalOutput} ${tokenToBuyName}`
