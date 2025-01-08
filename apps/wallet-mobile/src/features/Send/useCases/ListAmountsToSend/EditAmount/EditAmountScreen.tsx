@@ -75,6 +75,7 @@ export const EditAmountScreen = () => {
     (text: string) => {
       try {
         const [input, quantity] = Quantities.parseFromText(text, amount.info.decimals ?? 0, numberLocale)
+
         setInputValue(input)
         setQuantity(BigInt(quantity))
       } catch (error) {
@@ -85,10 +86,9 @@ export const EditAmountScreen = () => {
   )
 
   const handleOnMaxBalance = React.useCallback(() => {
-    const [input, quantity] = Quantities.parseFromText(spendable.toString(), amount.info.decimals ?? 0, numberLocale)
-    setInputValue(input)
-    setQuantity(BigInt(quantity))
-  }, [amount.info.decimals, numberLocale, spendable])
+    setInputValue(atomicBreakdown(spendable, amount.info.decimals).bn.toFormat())
+    setQuantity(spendable)
+  }, [amount.info.decimals, spendable])
 
   const handleOnApply = React.useCallback(() => {
     amountChanged({

@@ -8,14 +8,13 @@ import {SafeArea} from '../../../components/SafeArea'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {SuccessfulTxIcon} from '../../../features/ReviewTx/illustrations/SuccessfulTxIcon'
-import {useBlockGoBack} from '../../../kernel/navigation'
-import {useNavigateTo} from '../Dashboard'
+import {useBlockGoBack, useWalletNavigation} from '../../../kernel/navigation'
 
 export const SubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
   const {styles} = useStyles()
-  const navigateTo = useNavigateTo()
+  const {resetToTxHistory} = useWalletNavigation()
 
   return (
     <SafeArea style={styles.root}>
@@ -34,7 +33,7 @@ export const SubmittedTxScreen = () => {
       <Space fill />
 
       <Actions>
-        <Button onPress={navigateTo.submittedTx} title={strings.submittedTxButton} style={styles.button} />
+        <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} />
       </Actions>
     </SafeArea>
   )
