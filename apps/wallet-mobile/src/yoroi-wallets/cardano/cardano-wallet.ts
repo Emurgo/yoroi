@@ -882,17 +882,14 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<void> {
-      const tx = await CardanoMobile.Transaction.fromHex(cbor)
-      const txBody = await tx.body()
       const payload = await toLedgerSignRequest(
         CardanoMobile,
-        txBody,
+        cbor,
         this.networkManager.chainId,
         this.networkManager.protocolMagic,
         await getHexAddressingMap(CardanoMobile, this),
         await getHexAddressingMap(CardanoMobile, this),
         getAddressedUtxos(this),
-        await txBody.toBytes(),
         [],
       )
 
