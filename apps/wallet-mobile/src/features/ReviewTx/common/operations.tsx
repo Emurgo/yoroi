@@ -13,6 +13,7 @@ import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
 import {usePoolInfo} from '../../../yoroi-wallets/hooks'
 import {formatTokenWithText} from '../../../yoroi-wallets/utils/format'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
+import {formatDrepHash} from '../../Staking/Governance/common/drep'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 import {PoolDetails} from './PoolDetails'
@@ -142,7 +143,7 @@ export const VoteDelegationOperation = ({
   const {styles} = useStyles()
   const strings = useStrings()
 
-  const label = `${type}: ${hash}` // TODO: Show hash in cip129 format
+  const label = formatDrepHash(hash, type)
 
   return (
     <View style={styles.operation}>

@@ -26,6 +26,7 @@ import {
 import {TransactionInfo} from '../../../../../yoroi-wallets/types/other'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
+import {formatDrepHash} from '../../common/drep'
 import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../common/helpers'
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useNavigateTo} from '../../common/navigation'
@@ -95,7 +96,7 @@ const ParticipatingInGovernanceVariant = ({
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
 
-  const displayedHash = action.kind === 'delegate' ? `${action.type}: ${action.hash}` : null // TODO: Show in cip129 format
+  const displayedHash = action.kind === 'delegate' ? formatDrepHash(action.hash, action.type) : null
 
   const actionTitles = {
     abstain: strings.actionAbstainTitle,

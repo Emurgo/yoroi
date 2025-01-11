@@ -11,5 +11,9 @@ export {
   useBech32DRepID,
 } from './translators/react'
 export {governanceApiMaker, type GovernanceApi} from './api'
-export {parseDrepId, convertHexKeyHashToBech32Format} from './helpers'
+export {
+  parseDrepId,
+  convertHexKeyHashToBech32Format,
+  convertDrepHashToCIP129Format,
+} from './helpers'
 export type {StakingKeyState} from './types'

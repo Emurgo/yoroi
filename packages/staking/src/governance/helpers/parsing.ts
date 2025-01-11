@@ -152,3 +152,18 @@ const base32ToHex = (base32: string): string | null => {
 const convertBase32ToHex = (words: number[]): string => {
   return Buffer.from(bech32Module.fromWords(words)).toString('hex')
 }
+
+export const convertDrepHashToCIP129Format = (
+  hash: string,
+  kind: 'key' | 'script',
+) => {
+  const prefix = kind === 'script' ? '23' : '22'
+  return hexToBase32(prefix + hash, 'drep')
+}
+
+const hexToBase32 = (hex: string, prefix: string): string => {
+  return bech32Module.encode(
+    prefix,
+    bech32Module.toWords(Buffer.from(hex, 'hex')),
+  )
+}
