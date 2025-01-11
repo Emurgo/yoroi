@@ -129,18 +129,20 @@ export const NoConfidenceOperation = ({showWarning, strike}: {showWarning?: bool
 }
 
 export const VoteDelegationOperation = ({
-  drepID,
+  hash,
+  type,
   showWarning,
   strike,
 }: {
-  drepID: string
+  hash: string
+  type: 'key' | 'script'
   showWarning?: boolean
   strike?: boolean
 }) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
-  const bech32DrepId = useDrepBech32Id(drepID)
+  const label = `${type}: ${hash}` // TODO: Show hash in cip129 format
 
   return (
     <View style={styles.operation}>
@@ -148,7 +150,7 @@ export const VoteDelegationOperation = ({
 
       <Space width="lg" />
 
-      <Text style={[styles.operationValue, strike && styles.strike]}>{bech32DrepId ?? drepID}</Text>
+      <Text style={[styles.operationValue, strike && styles.strike]}>{label}</Text>
     </View>
   )
 }
@@ -424,7 +426,8 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               totalFee: acc.totalFee,
             }
 
-          const drepId = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
+          const hash = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
+          const type = 'KeyHash' in drep ? 'key' : 'script'
           return {
             components: [
               ...acc.components,
@@ -432,7 +435,8 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
                 component: (
                   <VoteDelegationOperation
                     key={index}
-                    drepID={drepId}
+                    hash={hash}
+                    type={type}
                     showWarning={isFirstElementDuplicated}
                     strike={isNotFirstElementDuplicated}
                   />

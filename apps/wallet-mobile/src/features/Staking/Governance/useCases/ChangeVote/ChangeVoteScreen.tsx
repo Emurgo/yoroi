@@ -48,7 +48,7 @@ export const ChangeVoteScreen = () => {
 
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
-  const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
+  const openDRepIdModal = (onSubmit: (options: {hash: string; type: 'script' | 'key'}) => void) => {
     openModal(
       strings.enterDRepID,
       <GovernanceProvider manager={manager}>
@@ -59,13 +59,12 @@ export const ChangeVoteScreen = () => {
   }
 
   const handleDelegate = () => {
-    openDRepIdModal(async (drepID) => {
+    openDRepIdModal(async (options) => {
       const stakingKey = await wallet.getStakingKey()
-      const vote = {kind: 'delegate', drepID} as const
-      setPendingVote(vote.kind)
+      setPendingVote('delegate')
 
       createDelegationCertificate(
-        {drepID, stakingKey},
+        {hash: options.hash, type: options.type, stakingKey},
         {
           onSuccess: async (certificate) => {
             const unsignedTx = await createGovernanceTxMutation.mutateAsync({
@@ -75,7 +74,8 @@ export const ChangeVoteScreen = () => {
 
             governanceActions.handleDelegateAction({
               unsignedTx,
-              drepID,
+              hash: options.hash,
+              type: options.type,
             })
           },
         },
@@ -85,8 +85,7 @@ export const ChangeVoteScreen = () => {
 
   const handleAbstain = async () => {
     const stakingKey = await wallet.getStakingKey()
-    const vote = {kind: 'abstain'} as const
-    setPendingVote(vote.kind)
+    setPendingVote('abstain')
 
     createVotingCertificate(
       {vote: 'abstain', stakingKey},
@@ -107,8 +106,7 @@ export const ChangeVoteScreen = () => {
 
   const handleNoConfidence = async () => {
     const stakingKey = await wallet.getStakingKey()
-    const vote = {kind: 'no-confidence'} as const
-    setPendingVote(vote.kind)
+    setPendingVote('no-confidence')
 
     createVotingCertificate(
       {vote: 'no-confidence', stakingKey},

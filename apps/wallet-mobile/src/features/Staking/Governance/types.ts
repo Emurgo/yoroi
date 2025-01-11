@@ -1,4 +1,7 @@
-export type GovernanceVote = {kind: 'abstain'} | {kind: 'no-confidence'} | {kind: 'delegate'; drepID: string}
+export type GovernanceVote =
+  | {kind: 'abstain'}
+  | {kind: 'no-confidence'}
+  | {kind: 'delegate'; hash: string; type: 'key' | 'script'}
 
 export enum GovernanceKindMap {
   abstain = 'Abstain',

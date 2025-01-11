@@ -62,7 +62,8 @@ const votedDrepStakeKeyState: StakingKeyState = {
     tx: 'txId',
     slot: 1,
     epoch: 1,
-    drepID: 'drepId',
+    hash: 'drepId',
+    type: 'key',
   },
 }
 

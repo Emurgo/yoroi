@@ -79,6 +79,7 @@ type GetStakingKeyStateResponse = {
     epoch: number
     slot: number
     drep: 'no_confidence' | 'abstain' | string // string refers to DRepId
+    drepKind?: 'scripthash' | 'keyhash'
   }
 }
 

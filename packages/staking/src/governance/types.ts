@@ -26,7 +26,7 @@ export type StakingKeyState = {
     (
       | {action: 'no-confidence'}
       | {action: 'abstain'}
-      | {action: 'drep'; drepID: DRepId}
+      | {action: 'drep'; hash: DRepId; type: 'script' | 'key'}
     )
 }
 

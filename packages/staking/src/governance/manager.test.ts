@@ -141,6 +141,7 @@ describe('createGovernanceManager', () => {
       const manager = governanceManagerMaker(options)
       const certificate = await manager.createDelegationCertificate(
         drepId,
+        'key',
         stakingKey,
       )
       expect(certificate).toBeDefined()
@@ -177,7 +178,8 @@ describe('createGovernanceManager', () => {
       const action: GovernanceAction = {
         kind: 'delegate-to-drep',
         txID: 'txID',
-        drepID: 'drepID',
+        hash: 'drepID',
+        type: 'key',
       }
       await manager.setLatestGovernanceAction(action)
       const latestGovernanceAction = await manager.getLatestGovernanceAction()
