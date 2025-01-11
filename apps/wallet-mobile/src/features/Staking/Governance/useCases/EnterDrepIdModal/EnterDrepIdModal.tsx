@@ -24,16 +24,10 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {retry: false, enabled: drepId.length > 0})
 
-  const handleOnPress = () => {
-    parseDrepId(drepId, CardanoMobile).then(({type, hash}) => {
-      if (type === 'key') {
-        onSubmit?.(hash)
-        return
-      }
-
-      Alert.alert(strings.error, strings.scriptNotSupported)
-    })
-  }
+  const handleOnPress = () =>
+    parseDrepId(drepId, CardanoMobile)
+      .then(({hash}) => onSubmit?.(hash))
+      .catch(() => Alert.alert(strings.error, strings.invalidDRepId))
 
   const handleOnLinkPress = () => {
     Linking.openURL(FIND_DREPS_LINK)

@@ -73,6 +73,7 @@ export const useStrings = () => {
     failedTxButton: intl.formatMessage(messages.failedTxButton),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
+    invalidDRepId: intl.formatMessage(messages.invalidDRepId),
   }
 }
 
@@ -314,5 +315,9 @@ const messages = defineMessages({
   failedTxButton: {
     id: 'components.governance.failedTxButton',
     defaultMessage: '!!!Try again',
+  },
+  invalidDRepId: {
+    id: 'components.governance.invalidDRepId',
+    defaultMessage: '!!!Invalid DRep ID.',
   },
 })

@@ -163,6 +163,7 @@
   "components.governance.enterDrepIDInfo": "Identify your preferred DRep and enter their ID below to delegate your vote",
   "components.governance.enterPassword": "Enter password to sign this transaction",
   "components.governance.findDRepHere": "Find a DRep here",
+  "components.governance.invalidDRepId": "Invalid DRep ID",
   "components.governance.goToGovernance": "Go to Governance",
   "components.governance.goToStaking": "Go to staking",
   "components.governance.goToWallet": "Go to wallet",
