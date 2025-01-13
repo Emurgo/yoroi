@@ -62,7 +62,7 @@ export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}
 
   if (step === 'connect-transport') {
     return (
-      <ScrollView>
+      <ScrollView style={styles.scroll}>
         <LedgerConnect useUSB={transportType === 'USB'} onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
       </ScrollView>
     )
@@ -85,6 +85,9 @@ const useStyles = () => {
       ...atoms.align_center,
       ...atoms.justify_center,
       ...atoms.gap_2xl,
+      ...atoms.px_lg,
+    },
+    scroll: {
       ...atoms.px_lg,
     },
     text: {
