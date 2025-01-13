@@ -5,7 +5,6 @@ import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 import {randomBytes} from 'react-native-randombytes'
 
 import {wrappedCsl} from '../wrappedCsl'
-import {CardanoMobile} from '../../wallets'
 
 const mnemonicStrengh = 160
 
@@ -13,7 +12,7 @@ export const generateAdaMnemonic = () => generateMnemonic(mnemonicStrengh, rando
 
 export const generateWalletRootKey = async (mnemonic: string, csl: WasmModuleProxy) => {
   const bip39entropy = mnemonicToEntropy(mnemonic)
-  const emptyPassword = Uint8Array.from([])
+  const emptyPassword = Buffer.from('')
   const rootKey = await csl.Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), emptyPassword)
 
   return rootKey
@@ -26,11 +25,3 @@ export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
   release()
   return rootKey
 }
-
-const mnemonic =
-  'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon share'
-
-const result = mnemonicToEntropy(mnemonic)
-const emptyPassword = Uint8Array.from([])
-
-CardanoMobile.Bip32PrivateKey.fromBip39Entropy(Buffer.from(result, 'hex'), emptyPassword)
