@@ -1,4 +1,8 @@
-import {convertHexKeyHashToBech32Format, parseDrepId} from './parsing'
+import {
+  convertDrepHashToCIP129Format,
+  convertHexKeyHashToBech32Format,
+  parseDrepId,
+} from './parsing'
 import {init} from '@emurgo/cross-csl-nodejs'
 
 describe('convertHexKeyHashToBech32Format', () => {
@@ -82,5 +86,16 @@ describe('parseDrepId', () => {
       hash: '3e11f3d9b39639fbb9d59c6efec7b7c1e9dbcb104523c7a4b194c45c',
       type: 'script',
     })
+  })
+})
+
+describe('convertDrepHashToCIP129Format', () => {
+  it('should convert a hex drep hash to a CIP129 string', () => {
+    expect(
+      convertDrepHashToCIP129Format(
+        '429b12461640cefd3a4a192f7c531d8f6c6d33610b727f481eb22d39',
+        'script',
+      ),
+    ).toBe('drep1ydpfkyjxzeqvalf6fgvj7lznrk8kcmfnvy9hyl6gr6ez6wgsjaelx')
   })
 })

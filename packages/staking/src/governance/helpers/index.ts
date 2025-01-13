@@ -1,1 +1,5 @@
-export {parseDrepId, convertHexKeyHashToBech32Format} from './parsing'
+export {
+  parseDrepId,
+  convertHexKeyHashToBech32Format,
+  convertDrepHashToCIP129Format,
+} from './parsing'

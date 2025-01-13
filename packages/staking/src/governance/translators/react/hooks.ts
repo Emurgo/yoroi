@@ -73,7 +73,7 @@ export const useDelegationCertificate = (
   options: UseMutationOptions<
     CardanoTypes.Certificate,
     Error,
-    {drepID: string; stakingKey: CardanoTypes.PublicKey}
+    {hash: string; type: 'script' | 'key'; stakingKey: CardanoTypes.PublicKey}
   > = {},
 ) => {
   const {manager} = useGovernance()
@@ -82,7 +82,8 @@ export const useDelegationCertificate = (
     mutationKey: ['governanceDelegationCertificate'],
     mutationFn: async (variables) =>
       await manager.createDelegationCertificate(
-        variables.drepID,
+        variables.hash,
+        variables.type,
         variables.stakingKey,
       ),
     ...options,

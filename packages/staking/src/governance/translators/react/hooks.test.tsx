@@ -72,14 +72,16 @@ describe('Governance Translators React', () => {
     )
     act(() => {
       result.current.mutate({
-        drepID: 'drepId',
+        hash: 'drepId',
+        type: 'key',
         kind: 'delegate-to-drep',
         txID: 'txId',
       })
     })
     await waitFor(() => result.current.isSuccess)
     expect(manager.setLatestGovernanceAction).toHaveBeenCalledWith({
-      drepID: 'drepId',
+      hash: 'drepId',
+      type: 'key',
       kind: 'delegate-to-drep',
       txID: 'txId',
     })
@@ -101,11 +103,16 @@ describe('Governance Translators React', () => {
       .then((x) => x.toRawKey())
     const {result} = renderHook(() => useDelegationCertificate(), {wrapper})
     await waitFor(() =>
-      result.current.createCertificate({drepID: 'drepId', stakingKey}),
+      result.current.createCertificate({
+        hash: 'drepId',
+        type: 'key',
+        stakingKey,
+      }),
     )
     await waitFor(() => result.current.isSuccess)
     expect(manager.createDelegationCertificate).toHaveBeenCalledWith(
       'drepId',
+      'key',
       stakingKey,
     )
   })

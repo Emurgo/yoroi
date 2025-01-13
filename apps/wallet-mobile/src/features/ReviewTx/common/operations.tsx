@@ -13,6 +13,7 @@ import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
 import {usePoolInfo} from '../../../yoroi-wallets/hooks'
 import {formatTokenWithText} from '../../../yoroi-wallets/utils/format'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
+import {formatDrepHash} from '../../Staking/Governance/common/drep'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 import {PoolDetails} from './PoolDetails'
@@ -129,18 +130,20 @@ export const NoConfidenceOperation = ({showWarning, strike}: {showWarning?: bool
 }
 
 export const VoteDelegationOperation = ({
-  drepID,
+  hash,
+  type,
   showWarning,
   strike,
 }: {
-  drepID: string
+  hash: string
+  type: 'key' | 'script'
   showWarning?: boolean
   strike?: boolean
 }) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
-  const bech32DrepId = useDrepBech32Id(drepID)
+  const label = formatDrepHash(hash, type)
 
   return (
     <View style={styles.operation}>
@@ -148,7 +151,7 @@ export const VoteDelegationOperation = ({
 
       <Space width="lg" />
 
-      <Text style={[styles.operationValue, strike && styles.strike]}>{bech32DrepId ?? drepID}</Text>
+      <Text style={[styles.operationValue, strike && styles.strike]}>{label}</Text>
     </View>
   )
 }
@@ -424,7 +427,8 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               totalFee: acc.totalFee,
             }
 
-          const drepId = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
+          const hash = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
+          const type = 'KeyHash' in drep ? 'key' : 'script'
           return {
             components: [
               ...acc.components,
@@ -432,7 +436,8 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
                 component: (
                   <VoteDelegationOperation
                     key={index}
-                    drepID={drepId}
+                    hash={hash}
+                    type={type}
                     showWarning={isFirstElementDuplicated}
                     strike={isNotFirstElementDuplicated}
                   />

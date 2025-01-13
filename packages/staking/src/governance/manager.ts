@@ -17,7 +17,8 @@ export type VoteKind = 'abstain' | 'no-confidence'
 export type GovernanceAction =
   | {
       kind: 'delegate-to-drep'
-      drepID: string
+      hash: string
+      type: 'script' | 'key'
       txID: string
     }
   | {
@@ -30,11 +31,13 @@ export type GovernanceManager = {
   readonly network: Chain.Network
   validateDRepID: (drepID: string) => Promise<void>
   createDelegationCertificate: (
-    drepID: string,
+    hash: string,
+    type: 'script' | 'key',
     stakingKey: CardanoTypes.PublicKey,
   ) => Promise<CardanoTypes.Certificate>
   createLedgerDelegationPayload: (
-    drepID: string,
+    hash: string,
+    type: 'script' | 'key',
     stakingKey: CardanoTypes.PublicKey,
   ) => Promise<object>
   createVotingCertificate: (
@@ -91,32 +94,50 @@ class Manager implements GovernanceManager {
         } as const
       }
 
-      const {tx, slot, epoch, drep} = response.drepDelegation
+      const {tx, slot, epoch, drep, drepKind} = response.drepDelegation
       return {
-        drepDelegation: {action: 'drep', tx, slot, epoch, drepID: drep},
+        drepDelegation: {
+          action: 'drep',
+          tx,
+          slot,
+          epoch,
+          hash: drep,
+          type: drepKind === 'scripthash' ? 'script' : 'key',
+        },
       } as const
     }
     return {}
   }
 
   async createDelegationCertificate(
-    drepID: string,
+    hash: string,
+    type: 'script' | 'key',
     stakingKey: CardanoTypes.PublicKey,
   ): Promise<CardanoTypes.Certificate> {
-    const {Certificate, Ed25519KeyHash, Credential, VoteDelegation, DRep} =
-      this.config.cardano
+    const {
+      Certificate,
+      Ed25519KeyHash,
+      Credential,
+      VoteDelegation,
+      DRep,
+      ScriptHash,
+    } = this.config.cardano
 
     const stakingCredential = await Credential.fromKeyhash(
       await stakingKey.hash(),
     )
 
+    const votingDelegation =
+      type === 'key'
+        ? await DRep.newKeyHash(
+            await Ed25519KeyHash.fromBytes(Buffer.from(hash, 'hex')),
+          )
+        : await DRep.newScriptHash(
+            await ScriptHash.fromBytes(Buffer.from(hash, 'hex')),
+          )
+
     return await Certificate.newVoteDelegation(
-      await VoteDelegation.new(
-        stakingCredential,
-        await DRep.newKeyHash(
-          await Ed25519KeyHash.fromBytes(Buffer.from(drepID, 'hex')),
-        ),
-      ),
+      await VoteDelegation.new(stakingCredential, votingDelegation),
     )
   }
 
@@ -145,6 +166,7 @@ class Manager implements GovernanceManager {
 
   async createLedgerDelegationPayload(
     _drepID: string,
+    _type: 'script' | 'key',
     _stakingKey: CardanoTypes.PublicKey,
   ): Promise<object> {
     throw new Error('Not implemented')
@@ -213,4 +235,4 @@ class Manager implements GovernanceManager {
   }
 }
 
-const LATEST_ACTION_KEY = 'latest-action'
+const LATEST_ACTION_KEY = 'latest-action-v2'

@@ -3,7 +3,6 @@ import {useFocusEffect} from '@react-navigation/native'
 import {isNonNullable, isString} from '@yoroi/common'
 import {
   GovernanceProvider,
-  useBech32DRepID,
   useDelegationCertificate,
   useGovernance,
   useLatestGovernanceAction,
@@ -27,6 +26,7 @@ import {
 import {TransactionInfo} from '../../../../../yoroi-wallets/types/other'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
+import {formatDrepHash} from '../../common/drep'
 import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../common/helpers'
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useNavigateTo} from '../../common/navigation'
@@ -64,7 +64,7 @@ export const HomeScreen = () => {
 
   if (txPendingDisplayed && isNonNullable(lastSubmittedTx)) {
     if (lastSubmittedTx.kind === 'delegate-to-drep') {
-      const action: GovernanceVote = {kind: 'delegate', drepID: lastSubmittedTx.drepID}
+      const action: GovernanceVote = {kind: 'delegate', hash: lastSubmittedTx.hash, type: lastSubmittedTx.type}
       return <ParticipatingInGovernanceVariant action={action} isTxPending />
     }
     if (lastSubmittedTx.kind === 'vote' && lastSubmittedTx.vote === 'abstain') {
@@ -95,9 +95,8 @@ const ParticipatingInGovernanceVariant = ({
   const strings = useStrings()
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
-  const {data: bech32DrepId} = useBech32DRepID(action.kind === 'delegate' ? action.drepID : '', {
-    enabled: action.kind === 'delegate',
-  })
+
+  const displayedHash = action.kind === 'delegate' ? formatDrepHash(action.hash, action.type) : null
 
   const actionTitles = {
     abstain: strings.actionAbstainTitle,
@@ -133,7 +132,7 @@ const ParticipatingInGovernanceVariant = ({
           >
             <Text style={styles.drepInfoTitle}>{strings.drepID}</Text>
 
-            <Text style={styles.drepInfoDescription}>{bech32DrepId ?? action.drepID}</Text>
+            <Text style={styles.drepInfoDescription}>{displayedHash}</Text>
           </Action>
         )}
 
@@ -220,7 +219,7 @@ const NeverParticipatedInGovernanceVariant = () => {
     },
   })
 
-  const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
+  const openDRepIdModal = (onSubmit: (options: {hash: string; type: 'key' | 'script'}) => void) => {
     track.governanceChooseDrepPageViewed()
 
     openModal(
@@ -233,14 +232,13 @@ const NeverParticipatedInGovernanceVariant = () => {
   }
 
   const handleDelegate = () => {
-    openDRepIdModal(async (drepID) => {
-      const vote = {kind: 'delegate', drepID} as const
+    openDRepIdModal(async (options) => {
       const stakingKey = await wallet.getStakingKey()
 
-      setPendingVote(vote.kind)
+      setPendingVote('delegate')
 
       createDelegationCertificate(
-        {drepID, stakingKey},
+        {hash: options.hash, type: options.type, stakingKey},
         {
           onSuccess: async (certificate) => {
             const stakeCert = needsToRegisterStakingKey
@@ -251,7 +249,8 @@ const NeverParticipatedInGovernanceVariant = () => {
 
             governanceActions.handleDelegateAction({
               unsignedTx,
-              drepID,
+              hash: options.hash,
+              type: options.type,
             })
           },
         },
@@ -261,8 +260,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleAbstain = async () => {
     const stakingKey = await wallet.getStakingKey()
-    const vote = {kind: 'abstain'} as const
-    setPendingVote(vote.kind)
+    setPendingVote('abstain')
 
     createVotingCertificate(
       {vote: 'abstain', stakingKey},
@@ -284,8 +282,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleNoConfidence = async () => {
     const stakingKey = await wallet.getStakingKey()
-    const vote = {kind: 'no-confidence'} as const
-    setPendingVote(vote.kind)
+    setPendingVote('no-confidence')
 
     createVotingCertificate(
       {vote: 'no-confidence', stakingKey},

@@ -12,7 +12,7 @@ import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {useStrings} from '../../common/strings'
 
 type Props = {
-  onSubmit?: (drepId: string) => void
+  onSubmit?: (options: {type: 'key' | 'script'; hash: string}) => void
 }
 
 const FIND_DREPS_LINK = ''
@@ -24,16 +24,10 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {retry: false, enabled: drepId.length > 0})
 
-  const handleOnPress = () => {
-    parseDrepId(drepId, CardanoMobile).then(({type, hash}) => {
-      if (type === 'key') {
-        onSubmit?.(hash)
-        return
-      }
-
-      Alert.alert(strings.error, strings.scriptNotSupported)
-    })
-  }
+  const handleOnPress = () =>
+    parseDrepId(drepId, CardanoMobile)
+      .then(({hash, type}) => onSubmit?.({hash, type}))
+      .catch(() => Alert.alert(strings.error, strings.invalidDRepId))
 
   const handleOnLinkPress = () => {
     Linking.openURL(FIND_DREPS_LINK)

@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/staking",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "The Staking package of Yoroi SDK",
   "keywords": [
     "yoroi",
