@@ -25,14 +25,13 @@ import {
   Certificates,
   Credential,
   MultiAsset,
-  TransactionBody,
   TransactionInputs,
   TransactionOutput,
   WasmModuleProxy,
   Withdrawals,
 } from '@emurgo/cross-csl-core'
 import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
-import cbor from 'cbor'
+import cborUtils from 'cbor'
 
 async function toLedgerTokenBundle(assets?: MultiAsset): Promise<Array<AssetGroup> | null> {
   if (assets == null) return null
@@ -210,19 +209,16 @@ type AddressMap = {[addressHex: string]: Array<number>}
 
 export async function toLedgerSignRequest(
   csl: WasmModuleProxy,
-  txBody: TransactionBody,
+  cbor: string,
   networkId: number,
   protocolMagic: number,
   ownUtxoAddressMap: AddressMap,
   ownStakeAddressMap: AddressMap,
   addressedUtxos: Array<CardanoAddressedUtxo>,
-  rawTxBody: cbor.Decoder.BufferLike,
   additionalRequiredSigners: Array<string> = [],
 ): Promise<SignTransactionRequest> {
-  const parsedCbor = await cbor.decode(rawTxBody)
-  const tagsState = await csl.hasTransactionSetTag(
-    await (await csl.FixedTransaction.newFromBodyBytes(await txBody.toBytes())).toBytes(),
-  )
+  const hex = new Uint8Array(Buffer.from(cbor, 'hex'))
+  const tagsState = await csl.hasTransactionSetTag(hex)
 
   if (tagsState === csl.TransactionSetsState.MixedSets) {
     throw new Error('Transaction with mixed sets cannot be signed by Ledger')
@@ -399,6 +395,8 @@ export async function toLedgerSignRequest(
     }
   }
 
+  const txBody = await (await csl.FixedTransaction.fromHex(cbor)).body()
+  const parsedCbor = await cborUtils.decode(await txBody.toBytes())
   const outputs: TxOutput[] = []
   const nativeOutputs = await txBody.outputs()
   for (let i = 0; i < (await nativeOutputs.len()); i++) {
