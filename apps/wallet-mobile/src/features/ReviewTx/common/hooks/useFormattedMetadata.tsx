@@ -44,7 +44,7 @@ export const formatMetadata = async (
 
 const parseMsg = (msg: Array<string>) => {
   if (msg.length > 1) {
-    const message = msg.join('')
+    const message = msg.join('') ?? ''
     try {
       return JSON.parse(message)
     } catch {

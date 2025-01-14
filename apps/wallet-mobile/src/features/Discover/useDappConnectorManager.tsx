@@ -3,17 +3,14 @@ import {useAsyncStorage} from '@yoroi/common'
 import {DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
-import {useMutation} from 'react-query'
 
 import {logger} from '../../kernel/logger/logger'
 import {useWalletNavigation} from '../../kernel/navigation'
-import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
-import {BaseLedgerError} from '../../yoroi-wallets/hw/hw'
+import {Options, useSignTxWithHW} from '../ReviewTx/common/hooks/useSignTxWithHW'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useBrowser} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
-import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
 import {usePromptRootKey} from './common/hooks'
@@ -38,7 +35,7 @@ export const useDappConnectorManager = () => {
   const signDataWithHW = useSignDataWithHW()
 
   const promptRootKey = useConnectorPromptRootKey()
-  const {sign: signTxWithHW} = useSignTxWithHW()
+  const signTxWithHW = useConnectorSignTxWithHW()
 
   const handleSignTx = React.useCallback(
     ({cbor, manager}: {cbor: string; manager: DappConnector}) => {
@@ -222,6 +219,39 @@ const useConfirmConnection = () => {
   )
 }
 
+const useConnectorSignTxWithHW = () => {
+  const {sign} = useSignTxWithHW()
+
+  return React.useCallback(
+    (options: Options) => {
+      return new Promise<Transaction>((resolve, reject) => {
+        let isClosed = false
+        try {
+          sign({
+            ...options,
+            onConfirm: (tx: Transaction) => {
+              resolve(tx)
+              isClosed = false
+              return Promise.resolve()
+            },
+            onCancel: () => {
+              reject(userRejectedError())
+              isClosed = true
+            },
+            onClose: () => {
+              if (isClosed) return
+              reject(userRejectedError())
+            },
+          })
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+    [sign],
+  )
+}
+
 const useConnectorPromptRootKey = () => {
   const promptRootKey = usePromptRootKey()
 
@@ -245,53 +275,4 @@ const useConnectorPromptRootKey = () => {
       }
     })
   }, [promptRootKey])
-}
-
-export const useSignTxWithHW = () => {
-  const {confirmHWConnection, closeModal} = useConfirmHWConnectionModal()
-  const {wallet, meta} = useSelectedWallet()
-
-  const mutationFn = React.useCallback(
-    (options: {cbor: string; partial?: boolean}) => {
-      return new Promise<Transaction>((resolve, reject) => {
-        let isClosed = false
-        confirmHWConnection({
-          onConfirm: async ({transportType, deviceInfo}) => {
-            try {
-              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
-              const tx = await cip30.signTx(options.cbor, options.partial ?? false, deviceInfo, transportType === 'USB')
-              resolve(tx)
-              isClosed = true
-              closeModal()
-            } catch (error) {
-              if (error instanceof BaseLedgerError) {
-                throw error
-              }
-              reject(error)
-              isClosed = true
-              closeModal()
-            }
-          },
-          onCancel: () => {
-            reject(userRejectedError())
-            isClosed = true
-            closeModal()
-          },
-          onClose: () => {
-            if (isClosed) return
-            reject(userRejectedError())
-          },
-        })
-      })
-    },
-    [confirmHWConnection, wallet, meta, closeModal],
-  )
-
-  const mutation = useMutation<Transaction, Error, {cbor: string; partial?: boolean}>({
-    mutationFn,
-    useErrorBoundary: false,
-    mutationKey: ['useSignTxWithHW'],
-  })
-
-  return {...mutation, sign: mutation.mutate}
 }

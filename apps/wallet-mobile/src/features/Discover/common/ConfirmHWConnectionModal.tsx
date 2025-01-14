@@ -21,8 +21,8 @@ type OnConfirmOptions = {transportType: TransportType; deviceInfo: HW.DeviceInfo
 
 type Props = {
   onConfirm: (options: OnConfirmOptions) => Promise<void>
-  onClose: () => void
-  onCancel: () => void
+  onClose?: () => void
+  onCancel?: () => void
 }
 
 const modalHeight = 350
