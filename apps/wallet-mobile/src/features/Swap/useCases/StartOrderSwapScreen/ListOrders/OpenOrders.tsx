@@ -43,7 +43,6 @@ import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {SwapInfoLink} from '../../../common/SwapInfoLink/SwapInfoLink'
 import {getCancellationOrderFee} from './helpers'
 import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
 
@@ -585,10 +584,6 @@ const ModalContent = ({
       <Spacer height={35} />
 
       <ModalContentRow label={strings.listOrdersSheetCancellationFee} value={fee} />
-
-      <Spacer height={10} />
-
-      <SwapInfoLink />
 
       <Spacer fill />
 
