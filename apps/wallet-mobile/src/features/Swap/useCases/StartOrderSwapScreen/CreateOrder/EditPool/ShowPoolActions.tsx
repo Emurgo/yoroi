@@ -68,7 +68,7 @@ export const ShowPoolActions = () => {
   const feeBreakdown = <FeeBreakdown totalFees={totalFees} orderType={orderData.type} />
   return (
     <View>
-      <View style={[styles.flex, styles.between]}>
+      <View style={styles.header}>
         <View style={styles.flex}>
           <PoolIcon size={25} providerId={pool.provider} />
 
@@ -297,8 +297,11 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.align_center,
     },
-    between: {
+    header: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
       ...atoms.justify_between,
+      ...atoms.pb_md,
     },
     modalText: {
       ...atoms.text_left,
