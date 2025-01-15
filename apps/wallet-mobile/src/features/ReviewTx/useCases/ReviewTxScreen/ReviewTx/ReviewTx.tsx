@@ -201,10 +201,10 @@ const useStyles = () => {
     },
     indicator: {
       ...atoms.absolute,
-      bottom: 0,
-      height: 2,
+      bottom: -2,
+      height: 2.5,
       width: '100%',
-      backgroundColor: color.primary_500,
+      backgroundColor: color.el_primary_medium,
     },
   })
 
