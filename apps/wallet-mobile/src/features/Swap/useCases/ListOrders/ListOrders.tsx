@@ -326,8 +326,6 @@ const OrderCancellationConfirmation = ({
         {fee !== undefined && (
           <Row label={strings.listOrdersSheetCancellationFee} value={`${fee} ${primaryTokenInfoMainnet.ticker}}`} />
         )}
-
-        <SwapInfoLink />
       </React.Fragment>
 
       <Space fill />
