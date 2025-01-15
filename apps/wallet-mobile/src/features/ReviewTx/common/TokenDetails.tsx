@@ -140,7 +140,7 @@ const Overview = ({
 
   if (info.type === 'ft') {
     return (
-      <ScrollView bounces={false}>
+      <View>
         <Name info={info} />
 
         <Symbol info={info} />
@@ -150,17 +150,17 @@ const Overview = ({
         <Description info={info} />
 
         <ExplorerInfoLinks id={info.id} type="token" />
-      </ScrollView>
+      </View>
     )
   }
   return (
-    <ScrollView bounces={false}>
+    <View>
       <Name info={info} />
 
       <Description info={info} />
 
       <ExplorerInfoLinks id={info.id} type="token" />
-    </ScrollView>
+    </View>
   )
 }
 

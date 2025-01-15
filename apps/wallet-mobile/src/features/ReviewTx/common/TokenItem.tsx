@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, useWindowDimensions} from 'react-native'
+import {ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {useStrings} from './hooks/useStrings'
@@ -24,7 +24,13 @@ export const TokenItem = ({
   const {height: windowHeight} = useWindowDimensions()
 
   const handleShowTokenDetails = () => {
-    openModal(strings.tokenDetailsTitle, <TokenDetails tokenInfo={tokenInfo} />, windowHeight * 0.8)
+    openModal(
+      strings.tokenDetailsTitle,
+      <ScrollView bounces={false}>
+        <TokenDetails tokenInfo={tokenInfo} />
+      </ScrollView>,
+      windowHeight * 0.8,
+    )
   }
 
   if (!isSent)
