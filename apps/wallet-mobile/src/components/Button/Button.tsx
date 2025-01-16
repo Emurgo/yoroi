@@ -96,7 +96,7 @@ const useStyles = ({
       pressed: color.text_primary_max,
       disabled: color.text_primary_min,
     },
-    [ButtonType.Critical]: {idle: color.white_static, pressed: color.white_static, disabled: color.white_static},
+    [ButtonType.Critical]: {idle: color.gray_min, pressed: color.gray_min, disabled: color.gray_min},
     [ButtonType.Text]: {
       idle: color.text_primary_medium,
       pressed: color.text_primary_max,

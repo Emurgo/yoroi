@@ -116,7 +116,7 @@ const WalletInfoSection = ({tx, createdBy}: {tx: FormattedTx; createdBy?: React.
         <View style={styles.plate}>
           <Icon.WalletAvatar image={seedImage} style={styles.walletChecksum} size={24} />
 
-          <Space width="xs" />
+          <Space width="sm" />
 
           <TouchableOpacity activeOpacity={0.5} onPress={handleShowWalletBalance}>
             <Text style={styles.walletInfoText}>{`${plate} | ${meta.name}`}</Text>
@@ -177,7 +177,13 @@ const MyWalletSection = ({
           {address}
         </Text>
 
-        {ownedOutputs[0]?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} color={colors.icon} />}
+        {ownedOutputs[0]?.addressKind === CredKind.Script && (
+          <>
+            <Space width="xs" />
+
+            <Icon.DigitalAsset size={24} color={colors.icon} />
+          </>
+        )}
       </CopiableText>
 
       <Space height="sm" />
@@ -273,12 +279,7 @@ const OneExternalPartySection = ({
       <Space height="sm" />
 
       <View style={styles.externalPartyAddress}>
-        <Text style={styles.externalPartyAddressText}>
-          {output?.addressKind === CredKind.Script && receiverCustomTitle == null
-            ? strings.receiveToScriptLabel
-            : strings.receiveToLabel}
-          :
-        </Text>
+        <Text style={styles.externalPartyAddressText}>{strings.receiveToLabel}:</Text>
 
         {receiverCustomTitle ?? (
           <CopiableText textToCopy={address}>
@@ -290,7 +291,13 @@ const OneExternalPartySection = ({
               {address}
             </Text>
 
-            {output?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} color={colors.icon} />}
+            {output?.addressKind === CredKind.Script && (
+              <>
+                <Space width="xs" />
+
+                <Icon.DigitalAsset size={24} color={colors.icon} />
+              </>
+            )}
           </CopiableText>
         )}
       </View>
@@ -320,7 +327,13 @@ const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => 
             {address}
           </Text>
 
-          {output?.addressKind === CredKind.Script && <Icon.DigitalAsset size={24} color={colors.icon} />}
+          {output?.addressKind === CredKind.Script && (
+            <>
+              <Space width="xs" />
+
+              <Icon.DigitalAsset size={24} color={colors.icon} />
+            </>
+          )}
         </CopiableText>
 
         <Space height="sm" />
@@ -489,7 +502,7 @@ export const CreatedByInfoItem = ({logo, url}: {logo?: string; url: string}) => 
       <View style={styles.plate}>
         {logo != null && <Image source={{uri: logo}} style={styles.logo} />}
 
-        <Space width="xs" />
+        <Space width="sm" />
 
         <TouchableOpacity onPress={() => Linking.openURL(url)}>
           <Text style={styles.link}>{url.replace(/^https?:\/\//, '').replace(/\/+$/, '')}</Text>
@@ -678,7 +691,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    send: color.primary_500,
+    send: color.el_primary_medium,
     received: color.green_static,
     icon: color.el_gray_medium,
   }

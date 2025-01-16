@@ -4,6 +4,7 @@ import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../components/Icon'
+import {Space} from '../../../components/Space/Space'
 
 export const CopiableText = ({
   children,
@@ -20,6 +21,8 @@ export const CopiableText = ({
     <View style={[styles.text, style]}>
       {children}
 
+      <Space width="xs" />
+
       <CopyButton textToCopy={textToCopy} />
     </View>
   )
@@ -30,7 +33,7 @@ export const CopyButton = ({textToCopy}: {textToCopy: string}) => {
   const {copy} = useCopy()
   return (
     <TouchableOpacity onPress={() => copy({text: textToCopy})} activeOpacity={0.5}>
-      <Icon.Copy size={24} color={colors.copy} />
+      <Icon.Copy size={25} color={colors.copy} />
     </TouchableOpacity>
   )
 }
