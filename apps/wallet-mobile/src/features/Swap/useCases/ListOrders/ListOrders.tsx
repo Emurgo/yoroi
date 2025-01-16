@@ -22,7 +22,6 @@ import {EmptyCompletedOrdersIllustration} from '../../common/Illustrations/Empty
 import {EmptyOpenOrdersIllustration} from '../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {ServiceUnavailable} from '../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../common/strings'
-import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
 import {useSwap} from '../../common/SwapProvider'
 
 type Filter = 'open' | 'completed'
