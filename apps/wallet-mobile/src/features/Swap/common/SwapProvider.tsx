@@ -247,13 +247,21 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.TokenInAmountChanged:
-        draft.tokenInInput.value = action.value
+        try {
+          draft.tokenInInput.value = String(Number(action.value))
+        } catch {
+          break
+        }
         if (action.value === '' || action.value === '0') draft.tokenOutInput.value = '0'
 
         break
       case SwapAction.TokenOutAmountChanged:
-        draft.tokenOutInput.value = action.value
-        draft.lastInputTouched = 'out'
+        try {
+          draft.lastInputTouched = 'out'
+          draft.tokenOutInput.value = String(Number(action.value))
+        } catch {
+          break
+        }
         if (action.value === '' || action.value === '0') draft.tokenInInput.value = '0'
 
         break
@@ -274,7 +282,11 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.WantedPriceInputChanged:
-        draft.wantedPrice = action.value
+        try {
+          draft.wantedPrice = String(Number(action.value))
+        } catch {
+          break
+        }
 
         break
       case SwapAction.SwitchTouched:

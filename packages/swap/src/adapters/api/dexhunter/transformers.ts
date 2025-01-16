@@ -242,7 +242,10 @@ export const transformersMaker = ({
         totalFee: total_fee,
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
-        totalInput: total_input,
+        totalInput:
+          (total_input ||
+            splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0)) ??
+          undefined,
       }),
     },
     limitEstimate: {
@@ -285,7 +288,10 @@ export const transformersMaker = ({
         totalFee: total_fee,
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
-        totalInput: total_input,
+        totalInput:
+          (total_input ||
+            splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0)) ??
+          undefined,
       }),
     },
     limitBuild: {
@@ -328,7 +334,10 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         totalFee: totalFee,
-        totalInput: total_input,
+        totalInput:
+          (total_input ||
+            splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0)) ??
+          0,
         totalOutput: total_output,
       }),
     },
@@ -370,7 +379,10 @@ export const transformersMaker = ({
         frontendFee: partner_fee,
         netPrice: net_price,
         totalFee: total_fee,
-        totalInput: total_input,
+        totalInput:
+          (total_input ||
+            splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0)) ??
+          0,
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output_without_slippage,
         splits: splits?.map(transformSplit) ?? [],
