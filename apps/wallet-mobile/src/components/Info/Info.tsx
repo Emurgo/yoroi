@@ -40,7 +40,7 @@ const useStyles = () => {
 
   const colors = {
     yellow: color.sys_orange_500,
-    blue: color.primary_500,
+    blue: color.el_primary_medium,
   }
 
   return {colors, styles} as const

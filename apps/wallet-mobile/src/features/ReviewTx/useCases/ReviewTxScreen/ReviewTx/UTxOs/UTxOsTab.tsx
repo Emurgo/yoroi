@@ -31,6 +31,8 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
       <Accordion label={`${strings.utxosOutputsLabel} (${tx.outputs.length})`}>
         <Outputs outputs={tx.outputs} />
       </Accordion>
+
+      <Space height="lg" />
     </View>
   )
 }
@@ -176,7 +178,7 @@ const useStyles = () => {
     utxoTitleCircleInput: {
       width: 12,
       height: 12,
-      backgroundColor: color.primary_500,
+      backgroundColor: color.el_primary_medium,
       ...atoms.rounded_full,
     },
     utxoTitleCircleOutput: {
