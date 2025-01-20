@@ -7,12 +7,17 @@ type Props = {
 }
 
 export const SwipeOutWrapper = ({children, onSwipeOut}: Props) => {
-  const {pan, panResponder} = usePanAnimation({onRelease: onSwipeOut})
+  const {pan, panResponder, fadeIn, opacity} = usePanAnimation({onRelease: onSwipeOut})
+
+  React.useEffect(() => {
+    setTimeout(() => fadeIn(), 100)
+  }, [fadeIn])
 
   return (
     <Animated.View
       style={{
         transform: [{translateX: pan.x}],
+        opacity,
       }}
       {...panResponder.panHandlers}
     >
@@ -23,8 +28,17 @@ export const SwipeOutWrapper = ({children, onSwipeOut}: Props) => {
 
 const usePanAnimation = ({onRelease}: {onRelease: () => void}) => {
   const pan = React.useRef(new Animated.ValueXY()).current
+  const opacity = React.useRef(new Animated.Value(0)).current
   const screenWidth = Dimensions.get('window').width
   const screenLimitInPercentAfterWhichShouldRelease = 0.3
+
+  const fadeIn = React.useCallback(() => {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: false,
+    }).start()
+  }, [opacity])
 
   const panResponder = React.useRef(
     PanResponder.create({
@@ -50,5 +64,5 @@ const usePanAnimation = ({onRelease}: {onRelease: () => void}) => {
     }),
   ).current
 
-  return {pan, panResponder}
+  return {pan, panResponder, fadeIn, opacity}
 }

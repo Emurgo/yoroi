@@ -38,8 +38,22 @@ export const NotificationUIHandler = () => {
 const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
   const manager = useNotificationManager()
   const walletManager = useWalletManager()
-  const selectedWalletId = walletManager.selected.wallet?.id
-  const [events, setEvents] = React.useState<Notifications.Event[]>([])
+  const selectedWalletId = walletManager.selected.wallet?.id ?? ''
+  const [events, setEvents] = React.useState<Notifications.Event[]>([
+    {
+      date: '2025-01-16T15:26:33.213Z',
+      id: 8930536706311822,
+      isRead: false,
+      metadata: {
+        isSentByUser: false,
+        nextTxsCounter: 9,
+        previousTxsCounter: 8,
+        txId: '977441499aef81a5e4f93bc8a9d0de68526c09b58f8cfb62dbaf53549942e7bb',
+        walletId: '85dd7b5e-682b-4240-9b19-5020dafd772e',
+      },
+      trigger: 'TransactionReceived' as any,
+    },
+  ])
 
   React.useEffect(() => {
     if (!enabled) return
@@ -49,6 +63,7 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
     }
 
     const subscription = manager.newEvents$.subscribe((event) => {
+      console.log('new event', event)
       if (event.trigger === Notifications.Trigger.RewardsUpdated && event.metadata.walletId === selectedWalletId) {
         pushEvent(event)
       }
