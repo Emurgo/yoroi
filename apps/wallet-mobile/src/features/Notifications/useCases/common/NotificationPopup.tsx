@@ -13,15 +13,16 @@ type Props = {
   event: Notifications.Event
   onPress: () => void
   onCancel: () => void
+  onExpired: () => void
 }
 
-export const NotificationPopup = ({event, onPress, onCancel}: Props) => {
+export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) => {
   const navigation = useWalletNavigation()
   const strings = useStrings()
 
   if (event.trigger === Notifications.Trigger.TransactionReceived) {
     return (
-      <SwipeOutWrapper onSwipeOut={onCancel}>
+      <SwipeOutWrapper onSwipeOut={onCancel} onExpired={onExpired}>
         <NotificationItem
           onPress={() => {
             onPress()
@@ -37,7 +38,7 @@ export const NotificationPopup = ({event, onPress, onCancel}: Props) => {
 
   if (event.trigger === Notifications.Trigger.RewardsUpdated) {
     return (
-      <SwipeOutWrapper onSwipeOut={onCancel}>
+      <SwipeOutWrapper onSwipeOut={onCancel} onExpired={onExpired}>
         <NotificationItem
           onPress={() => {
             onPress()

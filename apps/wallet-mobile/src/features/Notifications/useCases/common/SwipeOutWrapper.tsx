@@ -1,16 +1,27 @@
 import * as React from 'react'
-import {Animated, Dimensions, PanResponder} from 'react-native'
+import {Animated, Dimensions, Easing, PanResponder} from 'react-native'
+import {useEffect} from 'react'
 
 type Props = {
   children: React.ReactNode
   onSwipeOut: () => void
+  onExpired: () => void
 }
 
-export const SwipeOutWrapper = ({children, onSwipeOut}: Props) => {
-  const {pan, panResponder, fadeIn, opacity} = usePanAnimation({onRelease: onSwipeOut})
+const notificationDisplayTime = 20 * 1000 // 20 seconds
+const fadeInTime = 200
+const fadeOutPaddingTime = 100
+
+export const SwipeOutWrapper = ({children, onSwipeOut, onExpired}: Props) => {
+  const {pan, panResponder, fadeIn, opacity, fadeOut} = usePanAnimation({onRelease: onSwipeOut})
+
+  useEffect(() => {
+    setTimeout(() => onExpired(), notificationDisplayTime)
+    setTimeout(() => fadeOut(), notificationDisplayTime - fadeInTime - fadeOutPaddingTime)
+  }, [])
 
   React.useEffect(() => {
-    setTimeout(() => fadeIn(), 100)
+    setTimeout(() => fadeIn(), 1)
   }, [fadeIn])
 
   return (
@@ -35,8 +46,18 @@ const usePanAnimation = ({onRelease}: {onRelease: () => void}) => {
   const fadeIn = React.useCallback(() => {
     Animated.timing(opacity, {
       toValue: 1,
-      duration: 200,
+      duration: fadeInTime,
       useNativeDriver: false,
+      easing: Easing.inOut(Easing.ease),
+    }).start()
+  }, [opacity])
+
+  const fadeOut = React.useCallback(() => {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: fadeInTime,
+      useNativeDriver: false,
+      easing: Easing.inOut(Easing.ease),
     }).start()
   }, [opacity])
 
@@ -64,5 +85,5 @@ const usePanAnimation = ({onRelease}: {onRelease: () => void}) => {
     }),
   ).current
 
-  return {pan, panResponder, fadeIn, opacity}
+  return {pan, panResponder, fadeIn, fadeOut, opacity}
 }

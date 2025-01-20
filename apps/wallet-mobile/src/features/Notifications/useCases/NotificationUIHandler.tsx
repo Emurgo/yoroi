@@ -9,7 +9,6 @@ import {NotificationPopup} from './common/NotificationPopup'
 import {NotificationStack} from './common/NotificationStack'
 
 const displayLimit = 3
-const displayTime = 20 * 1000
 
 export const NotificationUIHandler = () => {
   const enabled = useNotificationDisplaySettings()
@@ -29,6 +28,7 @@ export const NotificationUIHandler = () => {
           event={event}
           onCancel={() => removeEvent(event.id)}
           onPress={() => removeEvent(event.id)}
+          onExpired={() => removeEvent(event.id)}
         />
       ))}
     </NotificationStack>
@@ -59,11 +59,9 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
     if (!enabled) return
     const pushEvent = (event: Notifications.Event) => {
       setEvents((e) => [...e, event])
-      setTimeout(() => setEvents((e) => e.filter((ev) => ev.id !== event.id)), displayTime)
     }
 
     const subscription = manager.newEvents$.subscribe((event) => {
-      console.log('new event', event)
       if (event.trigger === Notifications.Trigger.RewardsUpdated && event.metadata.walletId === selectedWalletId) {
         pushEvent(event)
       }
