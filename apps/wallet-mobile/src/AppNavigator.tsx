@@ -119,8 +119,6 @@ export const AppNavigator = () => {
       onReady={onReady}
       ref={navRef}
     >
-      <NotificationUIHandler />
-
       <ModalProvider>
         <Stack.Navigator
           screenOptions={{
@@ -229,6 +227,8 @@ export const AppNavigator = () => {
           )}
         </Stack.Navigator>
       </ModalProvider>
+
+      <NotificationUIHandler />
     </NavigationContainer>
   )
 }
