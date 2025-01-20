@@ -227,6 +227,7 @@ export const AppNavigator = () => {
           )}
         </Stack.Navigator>
       </ModalProvider>
+
       <NotificationUIHandler />
     </NavigationContainer>
   )

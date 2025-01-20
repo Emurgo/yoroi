@@ -13,16 +13,18 @@ const fadeOutPaddingTime = 100
 
 export const SwipeOutWrapper = ({children, onSwipeOut, onExpired}: Props) => {
   const {pan, panResponder, fadeIn, opacity, fadeOut, translateY} = usePanAnimation({onRelease: onSwipeOut})
+  const onExpiredRef = React.useRef(onExpired)
+  onExpiredRef.current = onExpired
 
   React.useEffect(() => {
-    const expiredTimeout = setTimeout(() => onExpired(), notificationDisplayTime)
+    const expiredTimeout = setTimeout(() => onExpiredRef.current(), notificationDisplayTime)
     const fadeOutTimeout = setTimeout(() => fadeOut(), notificationDisplayTime - fadeInTime - fadeOutPaddingTime)
 
     return () => {
       clearTimeout(expiredTimeout)
       clearTimeout(fadeOutTimeout)
     }
-  }, [])
+  }, [fadeIn, fadeOut])
 
   React.useEffect(() => {
     // When executed without setTimeout, the animation does not start
