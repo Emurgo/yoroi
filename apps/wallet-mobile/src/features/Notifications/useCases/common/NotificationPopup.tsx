@@ -122,7 +122,7 @@ const useStyles = () => {
       ...atoms.gap_xs,
     },
     title: {
-      ...atoms.body_2_md_regular,
+      ...atoms.body_2_md_medium,
       ...atoms.font_semibold,
     },
     description: {
