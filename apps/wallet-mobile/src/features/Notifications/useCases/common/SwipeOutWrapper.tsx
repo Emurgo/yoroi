@@ -27,7 +27,6 @@ export const SwipeOutWrapper = ({children, onSwipeOut, onExpired}: Props) => {
   }, [fadeIn, fadeOut])
 
   React.useLayoutEffect(() => {
-    // When executed without setTimeout, the animation does not start
     const fadeInTimeout = setTimeout(() => fadeIn(), 1)
     return () => clearTimeout(fadeInTimeout)
   }, [fadeIn])
