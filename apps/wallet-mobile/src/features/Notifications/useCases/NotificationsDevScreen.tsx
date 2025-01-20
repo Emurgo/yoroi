@@ -31,7 +31,6 @@ const Screen = () => {
   const manager = useNotificationManager()
   const walletManager = useWalletManager()
   const selectedWalletId = walletManager.selected.wallet?.id ?? ''
-  console.log('selectedWalletId', selectedWalletId)
 
   const handleOnTriggerTransactionReceived = () => {
     manager.events.push(

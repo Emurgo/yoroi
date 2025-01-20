@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {Animated, Dimensions, Easing, PanResponder} from 'react-native'
-import {useEffect} from 'react'
 
 type Props = {
   children: React.ReactNode
@@ -15,7 +14,7 @@ const fadeOutPaddingTime = 100
 export const SwipeOutWrapper = ({children, onSwipeOut, onExpired}: Props) => {
   const {pan, panResponder, fadeIn, opacity, fadeOut, translateY} = usePanAnimation({onRelease: onSwipeOut})
 
-  useEffect(() => {
+  React.useEffect(() => {
     const expiredTimeout = setTimeout(() => onExpired(), notificationDisplayTime)
     const fadeOutTimeout = setTimeout(() => fadeOut(), notificationDisplayTime - fadeInTime - fadeOutPaddingTime)
 
