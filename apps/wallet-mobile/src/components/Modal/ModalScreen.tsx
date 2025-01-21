@@ -58,7 +58,7 @@ export const ModalScreen = () => {
             styles.animatedView,
           ]}
         >
-          <ScrollView style={[styles.rounded, styles.sheet]}>
+          <View style={[styles.rounded, styles.sheet]}>
             <LoadingOverlay loading={isLoading} style={styles.rounded} />
 
             <Header onResponderMove={onResponderMove} onStartShouldSetResponder={() => true} />
@@ -70,7 +70,7 @@ export const ModalScreen = () => {
             {footer !== undefined && (
               <View style={[styles.actions, isScrollBarShown && styles.actionsScroll]}>{footer}</View>
             )}
-          </ScrollView>
+          </View>
         </Animated.View>
       </KeyboardAvoidingView>
 
