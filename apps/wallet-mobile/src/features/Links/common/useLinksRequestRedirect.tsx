@@ -14,7 +14,7 @@ export const useLinksRequestRedirect = (redirectTo?: string) => {
   const askToRedirect = React.useCallback(
     (link: string) => {
       const content = <AskToRedirectScreen link={link} />
-      openModal(strings.askToRedirectTitle, content, heightBreakpoint)
+      openModal({title: strings.askToRedirectTitle, content: content, height: heightBreakpoint})
     },
     [openModal, strings.askToRedirectTitle],
   )

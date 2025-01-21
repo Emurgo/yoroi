@@ -197,7 +197,7 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
     if (sufficientFunds) {
       onPress()
     } else {
-      openModal(strings.attention, <InsufficientFundsModal />, modalHeight)
+      openModal({title: strings.attention, content: <InsufficientFundsModal />, height: modalHeight})
     }
   }
   return <Item label={label} onPress={handlePress} left={left} />

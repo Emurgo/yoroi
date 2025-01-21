@@ -18,11 +18,11 @@ export const usePoolTransitionModal = () => {
 
   React.useEffect(() => {
     if (!shownWallets.includes(wallet.id) && isPoolRetiring && poolTransition !== null) {
-      openModal(
-        strings.title,
-        <PoolTransitionModal poolTransition={poolTransition} onContinue={navigateToUpdate} />,
-        modalHeight,
-      )
+      openModal({
+        title: strings.title,
+        content: <PoolTransitionModal poolTransition={poolTransition} onContinue={navigateToUpdate} />,
+        height: modalHeight,
+      })
       setShownWallets(() => [wallet.id, ...shownWallets])
     }
   }, [

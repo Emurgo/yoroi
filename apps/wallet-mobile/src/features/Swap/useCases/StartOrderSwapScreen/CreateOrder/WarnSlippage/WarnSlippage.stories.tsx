@@ -27,10 +27,10 @@ storiesOf('Swap Warn Slippage', module)
         onPress={() => {
           content !== undefined
             ? closeModal()
-            : openModal(
-                strings.slippageWarningTitle,
-                <WarnSlippage slippage={10} onConfirm={closeModal} ticker="MILK" />,
-              )
+            : openModal({
+                title: strings.slippageWarningTitle,
+                content: <WarnSlippage slippage={10} onConfirm={closeModal} ticker="MILK" />,
+              })
         }}
       />
     )

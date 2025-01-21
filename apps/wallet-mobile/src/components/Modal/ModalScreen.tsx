@@ -6,6 +6,7 @@ import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
 import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
+import {ScrollView, useScrollView} from '../ScrollView/ScrollView'
 import {Spacer} from '../Spacer/Spacer'
 import {FullModalScreen} from './FullModalScreen'
 import {useModal} from './ModalContext'
@@ -13,10 +14,11 @@ import {useModal} from './ModalContext'
 export const ModalScreen = () => {
   const styles = useStyles()
   const {current} = useCardAnimation()
-  const {height, closeModal, content, isOpen, isLoading, full} = useModal()
+  const {height, closeModal, content, footer, isOpen, isLoading, full} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
   // NOTE: this is to fill the bottom of the screen with the same color as the modal
   const {bottom} = useSafeAreaInsets()
+  const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
 
   const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
     if (swipeLocationY < nativeEvent.locationY && isOpen) {
@@ -56,13 +58,19 @@ export const ModalScreen = () => {
             styles.animatedView,
           ]}
         >
-          <View style={[styles.rounded, styles.sheet]}>
+          <ScrollView style={[styles.rounded, styles.sheet]}>
             <LoadingOverlay loading={isLoading} style={styles.rounded} />
 
             <Header onResponderMove={onResponderMove} onStartShouldSetResponder={() => true} />
 
-            {content}
-          </View>
+            <ScrollView ref={scrollViewRef} onScrollBarChange={setIsScrollBarShown}>
+              {content}
+            </ScrollView>
+
+            {footer !== undefined && (
+              <View style={[styles.actions, isScrollBarShown && styles.actionsScroll]}>{footer}</View>
+            )}
+          </ScrollView>
         </Animated.View>
       </KeyboardAvoidingView>
 
@@ -146,6 +154,13 @@ const useStyles = () => {
       height: 4,
       width: 32,
       borderRadius: 10,
+    },
+    actions: {
+      ...atoms.p_lg,
+    },
+    actionsScroll: {
+      ...atoms.border_t,
+      borderTopColor: color.gray_200,
     },
   })
   return styles

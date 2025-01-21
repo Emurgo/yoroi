@@ -24,13 +24,15 @@ export const TokenItem = ({
   const {height: windowHeight} = useWindowDimensions()
 
   const handleShowTokenDetails = () => {
-    openModal(
-      strings.tokenDetailsTitle,
-      <ScrollView bounces={false}>
-        <TokenDetails tokenInfo={tokenInfo} />
-      </ScrollView>,
-      windowHeight * 0.8,
-    )
+    openModal({
+      title: strings.tokenDetailsTitle,
+      content: (
+        <ScrollView bounces={false}>
+          <TokenDetails tokenInfo={tokenInfo} />
+        </ScrollView>
+      ),
+      height: windowHeight * 0.8,
+    })
   }
 
   if (!isSent)

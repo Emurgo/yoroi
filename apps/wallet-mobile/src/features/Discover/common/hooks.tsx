@@ -83,16 +83,21 @@ export const usePromptRootKey = () => {
       }
 
       if (meta.isEasyConfirmationEnabled) {
-        openModal(title ?? strings.confirmTx, <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, modalHeight, onClose)
+        openModal({
+          title: title ?? strings.confirmTx,
+          content: <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />,
+          height: modalHeight,
+          onClose,
+        })
         return
       }
 
-      openModal(
-        title ?? strings.confirmTx,
-        <ConfirmRawTxWithPassword summary={summary} onConfirm={handleOnConfirm} />,
-        modalHeight,
+      openModal({
+        title: title ?? strings.confirmTx,
+        content: <ConfirmRawTxWithPassword summary={summary} onConfirm={handleOnConfirm} />,
+        height: modalHeight,
         onClose,
-      )
+      })
     },
     [meta.isHW, meta.isEasyConfirmationEnabled, openModal, strings.confirmTx, closeModal],
   )

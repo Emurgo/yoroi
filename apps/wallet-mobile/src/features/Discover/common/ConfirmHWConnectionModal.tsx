@@ -25,25 +25,25 @@ type Props = {
   onCancel: () => void
 }
 
-const modalHeight = 350
-
 export const useConfirmHWConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const confirmHWConnection = useCallback(
     ({onConfirm, onClose, onCancel}: Props) => {
-      openModal(
-        strings.signTransaction,
-        <ErrorBoundary
-          fallbackRender={({error, resetErrorBoundary}) => (
-            <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />
-          )}
-        >
-          <ConfirmHWConnectionModal onConfirm={onConfirm} />
-        </ErrorBoundary>,
-        modalHeight,
+      openModal({
+        title: strings.signTransaction,
+        content: (
+          <ErrorBoundary
+            fallbackRender={({error, resetErrorBoundary}) => (
+              <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />
+            )}
+          >
+            <ConfirmHWConnectionModal onConfirm={onConfirm} />
+          </ErrorBoundary>
+        ),
+        height: 350,
         onClose,
-      )
+      })
     },
     [openModal, strings.signTransaction],
   )

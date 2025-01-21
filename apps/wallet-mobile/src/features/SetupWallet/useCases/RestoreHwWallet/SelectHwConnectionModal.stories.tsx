@@ -11,7 +11,7 @@ const Wrapper = () => {
   const {openModal} = useModal()
 
   const handleOpenModal = React.useCallback(() => {
-    openModal('Modal Test', <SelectHwConnectionModal />, 340)
+    openModal({title: 'Modal Test', content: <SelectHwConnectionModal />, height: 340})
   }, [openModal])
 
   return (

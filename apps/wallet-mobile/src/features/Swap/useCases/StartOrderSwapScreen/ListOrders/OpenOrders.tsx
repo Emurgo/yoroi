@@ -171,18 +171,20 @@ export const OpenOrders = () => {
       return
     }
 
-    openModal(
-      strings.signTransaction,
-      <ConfirmRawTx
-        cancelOrder={swapApiOrder.cancel}
-        utxo={order.utxo}
-        bech32Address={order.owner}
-        onCancel={closeModal}
-        onConfirm={(rootKey) => onRawTxConfirm(rootKey, order)}
-        onHWConfirm={() => onRawTxHwConfirm(order)}
-      />,
-      400,
-    )
+    openModal({
+      title: strings.signTransaction,
+      content: (
+        <ConfirmRawTx
+          cancelOrder={swapApiOrder.cancel}
+          utxo={order.utxo}
+          bech32Address={order.owner}
+          onCancel={closeModal}
+          onConfirm={(rootKey) => onRawTxConfirm(rootKey, order)}
+          onHWConfirm={() => onRawTxHwConfirm(order)}
+        />
+      ),
+      height: 400,
+    })
   }
 
   const handleCollateralError = () => {
@@ -271,22 +273,24 @@ export const OpenOrders = () => {
 
     try {
       const fee = await getFee(utxo, collateralUtxo, bech32Address)
-      openModal(
-        strings.listOrdersSheetTitle,
-        <ModalContent
-          assetFromIcon={<TokenInfoIcon info={fromTokenInfo} size="sm" />}
-          assetToIcon={<TokenInfoIcon info={toTokenInfo} size="sm" />}
-          onConfirm={() => onOrderCancelConfirm(order)}
-          onBack={closeModal}
-          assetFromLabel={assetFromLabel}
-          assetToLabel={assetToLabel}
-          assetAmount={`${tokenAmount} ${assetToLabel}`}
-          assetPrice={`${tokenPrice} ${assetFromLabel}/${assetToLabel}`}
-          totalReturned={totalReturned}
-          fee={fee}
-        />,
-        460,
-      )
+      openModal({
+        title: strings.listOrdersSheetTitle,
+        content: (
+          <ModalContent
+            assetFromIcon={<TokenInfoIcon info={fromTokenInfo} size="sm" />}
+            assetToIcon={<TokenInfoIcon info={toTokenInfo} size="sm" />}
+            onConfirm={() => onOrderCancelConfirm(order)}
+            onBack={closeModal}
+            assetFromLabel={assetFromLabel}
+            assetToLabel={assetToLabel}
+            assetAmount={`${tokenAmount} ${assetToLabel}`}
+            assetPrice={`${tokenPrice} ${assetFromLabel}/${assetToLabel}`}
+            totalReturned={totalReturned}
+            fee={fee}
+          />
+        ),
+        height: 460,
+      })
     } catch (error) {
       setIsLoading(false)
       if (error instanceof SubmitTxInsufficientCollateralError) {

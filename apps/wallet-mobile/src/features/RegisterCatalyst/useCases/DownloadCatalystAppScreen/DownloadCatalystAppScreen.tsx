@@ -48,7 +48,8 @@ export const DownloadCatalystAppScreen = () => {
   )
 
   React.useEffect(() => {
-    if (stakingInfo?.status === 'not-registered') openModal(strings.attention, <WarningModal />, 300)
+    if (stakingInfo?.status === 'not-registered')
+      openModal({title: strings.attention, content: <WarningModal />, height: 300})
   }, [openModal, stakingInfo?.status, strings.attention])
 
   const fundName = fund.info.fundName

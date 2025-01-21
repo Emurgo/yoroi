@@ -22,7 +22,7 @@ export const WelcomeDAppModal = () => {
   React.useEffect(() => {
     if (loadingGetShowedWelcomeDApp || isShowedWelcomeDApp) return
 
-    openModal(strings.welcomeToYoroiDAppExplorer, <Modal />, dialogHeight)
+    openModal({title: strings.welcomeToYoroiDAppExplorer, content: <Modal />, height: dialogHeight})
     setShowedWelcomeDApp()
   }, [
     dialogHeight,

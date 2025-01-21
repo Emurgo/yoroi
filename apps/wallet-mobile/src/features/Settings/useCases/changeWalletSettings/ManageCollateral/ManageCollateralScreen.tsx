@@ -123,11 +123,11 @@ export const ManageCollateralScreen = () => {
   }
 
   const handleCollateralInfoModal = () => {
-    openModal(
-      strings.initialCollateralInfoModalTitle,
-      <InitialCollateralInfoModal onConfirm={handleGenerateCollateral} />,
-      Math.min(screenHeight * 0.9, 650),
-    )
+    openModal({
+      title: strings.initialCollateralInfoModalTitle,
+      content: <InitialCollateralInfoModal onConfirm={handleGenerateCollateral} />,
+      height: Math.min(screenHeight * 0.9, 650),
+    })
   }
 
   const shouldShowPrimaryButton = !hasCollateral || didSpend
@@ -233,7 +233,7 @@ const Operation = () => {
   const {openModal} = useModal()
 
   const handleOnPressInfo = () => {
-    openModal(strings.collateralInfoModalTitle, <CollateralInfoModal />, 500)
+    openModal({title: strings.collateralInfoModalTitle, content: <CollateralInfoModal />, height: 500})
   }
 
   return (

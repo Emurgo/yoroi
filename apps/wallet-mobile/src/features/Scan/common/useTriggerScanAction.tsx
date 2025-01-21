@@ -101,7 +101,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: Scan.Featu
           />
         )
 
-        openModal(stringsClaim.askConfirmationTitle, claimContent, 400)
+        openModal({title: stringsClaim.askConfirmationTitle, content: claimContent, height: 400})
         break
       }
     }

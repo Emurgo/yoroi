@@ -43,15 +43,17 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
     if (duplicatedAccountWalletMeta) {
       const {plate, seed} = walletManager.checksum(hwDeviceInfo.bip44AccountPublic)
 
-      openModal(
-        strings.restoreDuplicatedWalletModalTitle,
-        <WalletDuplicatedModal
-          plate={plate}
-          seed={seed}
-          duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
-          duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
-        />,
-      )
+      openModal({
+        title: strings.restoreDuplicatedWalletModalTitle,
+        content: (
+          <WalletDuplicatedModal
+            plate={plate}
+            seed={seed}
+            duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
+            duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
+          />
+        ),
+      })
       return
     }
 

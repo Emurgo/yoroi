@@ -28,18 +28,20 @@ const Initial = () => {
               onPress={() => {
                 content !== undefined
                   ? closeModal()
-                  : openModal(
-                      strings.limitPriceWarningTitle,
-                      <WalletManagerProviderMock wallet={walletMocks.wallet}>
-                        <WarnLimitPrice
-                          orderData={orderData}
-                          onConfirm={() => {
-                            closeModal()
-                            action('onConfirm')
-                          }}
-                        />
-                      </WalletManagerProviderMock>,
-                    )
+                  : openModal({
+                      title: strings.limitPriceWarningTitle,
+                      content: (
+                        <WalletManagerProviderMock wallet={walletMocks.wallet}>
+                          <WarnLimitPrice
+                            orderData={orderData}
+                            onConfirm={() => {
+                              closeModal()
+                              action('onConfirm')
+                            }}
+                          />
+                        </WalletManagerProviderMock>
+                      ),
+                    })
               }}
             />
           </View>

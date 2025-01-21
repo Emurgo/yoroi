@@ -100,45 +100,47 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
       return handleOpenDApp()
     }
 
-    openModal(
-      strings.dAppActions,
-      <ScrollView style={styles.rootDialog} bounces={false}>
-        <View style={styles.dAppInfo}>
-          <Image source={{uri: logo}} style={styles.dAppLogoDialog} />
+    openModal({
+      title: strings.dAppActions,
+      content: (
+        <ScrollView style={styles.rootDialog} bounces={false}>
+          <View style={styles.dAppInfo}>
+            <Image source={{uri: logo}} style={styles.dAppLogoDialog} />
 
-          <Text style={styles.dAppName}>{dApp.name}</Text>
-        </View>
+            <Text style={styles.dAppName}>{dApp.name}</Text>
+          </View>
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        {dApp.isSingleAddress && (
-          <>
-            <Space height="lg" />
+          {dApp.isSingleAddress && (
+            <>
+              <Space height="lg" />
 
-            <SingleAddressDAppWarning />
-          </>
-        )}
+              <SingleAddressDAppWarning />
+            </>
+          )}
 
-        <Space height="lg" />
+          <Space height="lg" />
 
-        <InfoBanner iconSize={20} content={strings.disconnectWarning} />
+          <InfoBanner iconSize={20} content={strings.disconnectWarning} />
 
-        <Space height="lg" />
+          <Space height="lg" />
 
-        <View>
-          <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp color={colors.icon} />} title={strings.openDApp} />
+          <View>
+            <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp color={colors.icon} />} title={strings.openDApp} />
 
-          <DAppAction
-            onPress={() => handleConfirmDisconnect(dApp)}
-            icon={<Icon.Disconnect color={colors.icon} />}
-            title={strings.disconnectWalletFromDApp}
-          />
-        </View>
+            <DAppAction
+              onPress={() => handleConfirmDisconnect(dApp)}
+              icon={<Icon.Disconnect color={colors.icon} />}
+              title={strings.disconnectWalletFromDApp}
+            />
+          </View>
 
-        <Spacer fill />
-      </ScrollView>,
-      dialogHeight,
-    )
+          <Spacer fill />
+        </ScrollView>
+      ),
+      height: dialogHeight,
+    })
   }
 
   return (

@@ -21,7 +21,10 @@ export const ShowSlippageInfo = () => {
 
       <TouchableOpacity
         onPress={() => {
-          openModal(strings.slippageTolerance, <Text style={styles.sheetContent}>{strings.slippageToleranceInfo}</Text>)
+          openModal({
+            title: strings.slippageTolerance,
+            content: <Text style={styles.sheetContent}>{strings.slippageToleranceInfo}</Text>,
+          })
         }}
       >
         <Icon.Info size={24} color={colors.icon} />

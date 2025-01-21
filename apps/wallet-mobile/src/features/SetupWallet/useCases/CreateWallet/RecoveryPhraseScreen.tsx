@@ -41,43 +41,45 @@ export const RecoveryPhraseScreen = () => {
   )
 
   const handleOnShowModal = React.useCallback(() => {
-    openModal(
-      strings.recoveryPhraseModalTitle,
-      <View style={styles.modal}>
-        <CardAboutPhrase
-          title={strings.recoveryPhraseCardTitle}
-          linesOfText={[
-            strings.recoveryPhraseCardFirstItem,
-            strings.recoveryPhraseCardSecondItem,
-            strings.recoveryPhraseCardThirdItem,
-            strings.recoveryPhraseCardFourthItem,
-            strings.recoveryPhraseCardFifthItem,
-          ]}
-        />
+    openModal({
+      title: strings.recoveryPhraseModalTitle,
+      content: (
+        <View style={styles.modal}>
+          <CardAboutPhrase
+            title={strings.recoveryPhraseCardTitle}
+            linesOfText={[
+              strings.recoveryPhraseCardFirstItem,
+              strings.recoveryPhraseCardSecondItem,
+              strings.recoveryPhraseCardThirdItem,
+              strings.recoveryPhraseCardFourthItem,
+              strings.recoveryPhraseCardFifthItem,
+            ]}
+          />
 
-        <Spacer fill />
+          <Spacer fill />
 
-        <LearnMoreButton
-          onPress={() => {
-            Linking.openURL(YoroiZendeskLink)
-          }}
-        />
+          <LearnMoreButton
+            onPress={() => {
+              Linking.openURL(YoroiZendeskLink)
+            }}
+          />
 
-        <Space height="xl" />
+          <Space height="xl" />
 
-        <Button
-          title={strings.continueButton}
-          onPress={() => {
-            closeModal()
-            showCreateWalletInfoModalChanged(false)
-          }}
-          testID="setup-step2-continue-button"
-        />
+          <Button
+            title={strings.continueButton}
+            onPress={() => {
+              closeModal()
+              showCreateWalletInfoModalChanged(false)
+            }}
+            testID="setup-step2-continue-button"
+          />
 
-        <Space height="_2xl" />
-      </View>,
-      552,
-    )
+          <Space height="_2xl" />
+        </View>
+      ),
+      height: 552,
+    })
   }, [
     closeModal,
     openModal,

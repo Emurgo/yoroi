@@ -101,11 +101,11 @@ const WalletInfoSection = ({tx, createdBy}: {tx: FormattedTx; createdBy?: React.
   const {height: windowHeight} = useWindowDimensions()
 
   const handleShowWalletBalance = () => {
-    openModal(
-      strings.walletBalanceTitle,
-      <WalletBalance image={seedImage} plate={plate} name={meta.name} />,
-      windowHeight * 0.8,
-    )
+    openModal({
+      title: strings.walletBalanceTitle,
+      content: <WalletBalance image={seedImage} plate={plate} name={meta.name} />,
+      height: windowHeight * 0.8,
+    })
   }
 
   return (
@@ -469,13 +469,15 @@ const Details = ({details}: {details?: {title: string; component: React.ReactNod
   if (details == null) return null
 
   const handleOnPress = () => {
-    openModal(
-      details.title ?? '',
-      <ScrollView bounces={false} style={styles.details}>
-        {details.component}
-      </ScrollView>,
-      400,
-    )
+    openModal({
+      title: details.title ?? '',
+      content: (
+        <ScrollView bounces={false} style={styles.details}>
+          {details.component}
+        </ScrollView>
+      ),
+      height: 400,
+    })
   }
 
   return (
@@ -562,8 +564,8 @@ const useShowOperationsNotice = (operations: Operations) => {
       clearTimeout(timeout)
 
       timeout = setTimeout(() => {
-        openModal(strings.operationsNoticeTitle, <OperationsNotice />, 570)
-      }, 500)
+        openModal({title: strings.operationsNoticeTitle, content: <OperationsNotice />, height: 570}), 500
+      })
     }
 
     if (operations.components.length > 0 && query.data) openOperationsNotice()

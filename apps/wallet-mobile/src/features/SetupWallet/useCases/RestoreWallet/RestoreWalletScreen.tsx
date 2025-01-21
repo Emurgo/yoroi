@@ -117,15 +117,17 @@ export const RestoreWalletScreen = () => {
     if (duplicatedAccountWalletMeta) {
       const {plate, seed} = walletManager.checksum(accountPubKeyHex)
 
-      openModal(
-        strings.restoreDuplicatedWalletModalTitle,
-        <WalletDuplicatedModal
-          plate={plate}
-          seed={seed}
-          duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
-          duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
-        />,
-      )
+      openModal({
+        title: strings.restoreDuplicatedWalletModalTitle,
+        content: (
+          <WalletDuplicatedModal
+            plate={plate}
+            seed={seed}
+            duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
+            duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
+          />
+        ),
+      })
 
       return
     }

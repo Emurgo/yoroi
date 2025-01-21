@@ -17,7 +17,12 @@ export const useShowHWNotSupportedModal = () => {
   const strings = useStrings()
   const showHWNotSupportedModal = React.useCallback(
     ({onConfirm, onClose}: {onConfirm: Props['onConfirm']; onClose: () => void}) => {
-      openModal(strings.continueOnLedger, <HWNotSupportedModal onConfirm={onConfirm} />, modalHeight, onClose)
+      openModal({
+        title: strings.continueOnLedger,
+        content: <HWNotSupportedModal onConfirm={onConfirm} />,
+        height: modalHeight,
+        onClose,
+      })
     },
     [openModal, strings.continueOnLedger],
   )

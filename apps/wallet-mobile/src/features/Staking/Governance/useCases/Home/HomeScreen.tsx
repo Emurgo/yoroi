@@ -222,13 +222,15 @@ const NeverParticipatedInGovernanceVariant = () => {
   const openDRepIdModal = (onSubmit: (options: {hash: string; type: 'key' | 'script'}) => void) => {
     track.governanceChooseDrepPageViewed()
 
-    openModal(
-      strings.enterDRepID,
-      <GovernanceProvider manager={manager}>
-        <EnterDrepIdModal onSubmit={onSubmit} />
-      </GovernanceProvider>,
-      360,
-    )
+    openModal({
+      title: strings.enterDRepID,
+      content: (
+        <GovernanceProvider manager={manager}>
+          <EnterDrepIdModal onSubmit={onSubmit} />
+        </GovernanceProvider>
+      ),
+      height: 360,
+    })
   }
 
   const handleDelegate = () => {

@@ -55,11 +55,11 @@ export const DescribeSelectedAddressScreen = () => {
   )
   React.useEffect(() => {
     isShowingMultipleAddressInfo &&
-      openModal(
-        strings.singleOrMultiple,
-        <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />,
-        singleOrMultipleAddressesModalHeight,
-      )
+      openModal({
+        title: strings.singleOrMultiple,
+        content: <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />,
+        height: singleOrMultipleAddressesModalHeight,
+      })
   }, [
     isShowingMultipleAddressInfo,
     isSingle,

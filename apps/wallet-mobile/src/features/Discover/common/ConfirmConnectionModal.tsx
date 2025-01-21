@@ -39,22 +39,24 @@ export const useOpenConfirmConnectionModal = () => {
         ? confirmConnectionModalWithWarningHeight
         : confirmConnectionModalHeight
 
-      openModal(
-        strings.confirmConnectionModalTitle,
-        <ConfirmConnectionModal
-          name={props.name}
-          website={props.website}
-          logo={props.logo}
-          showSingleAddressWarning={props.showSingleAddressWarning}
-          onConfirm={() => {
-            track.discoverWebViewBottomSheetConnectClicked()
-            props.onConfirm()
-            closeModal()
-          }}
-        />,
-        modalHeight,
-        props.onClose,
-      )
+      openModal({
+        title: strings.confirmConnectionModalTitle,
+        content: (
+          <ConfirmConnectionModal
+            name={props.name}
+            website={props.website}
+            logo={props.logo}
+            showSingleAddressWarning={props.showSingleAddressWarning}
+            onConfirm={() => {
+              track.discoverWebViewBottomSheetConnectClicked()
+              props.onConfirm()
+              closeModal()
+            }}
+          />
+        ),
+        height: modalHeight,
+        onClose: props.onClose,
+      })
     },
     [openModal, strings.confirmConnectionModalTitle, track, closeModal],
   )

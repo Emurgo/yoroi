@@ -53,33 +53,35 @@ export const useHandleOpenNetworkNoticeModal = () => {
   }, [networkNoticeShown, setNetworkNoticeShown])
 
   const handleOpenModal = () => {
-    openModal(
-      strings.networkNoticeTitle,
-      <View style={styles.modal}>
-        <Text style={styles.modalText}>{strings.networkNoticeMessage}</Text>
+    openModal({
+      title: strings.networkNoticeTitle,
+      content: (
+        <View style={styles.modal}>
+          <Text style={styles.modalText}>{strings.networkNoticeMessage}</Text>
 
-        <Space height="lg" />
+          <Space height="lg" />
 
-        <Text style={styles.modalTextTitle}>{strings.networkNoticeListTitle}</Text>
+          <Text style={styles.modalTextTitle}>{strings.networkNoticeListTitle}</Text>
 
-        <Text style={styles.modalText}>{strings.networkNoticeList}</Text>
+          <Text style={styles.modalText}>{strings.networkNoticeList}</Text>
 
-        <Spacer fill />
+          <Spacer fill />
 
-        <View style={styles.actions}>
-          <Button
-            title={strings.networkNoticeButton}
-            onPress={() => {
-              closeModal()
-            }}
-          />
+          <View style={styles.actions}>
+            <Button
+              title={strings.networkNoticeButton}
+              onPress={() => {
+                closeModal()
+              }}
+            />
+          </View>
+
+          {Platform.OS === 'android' && <Space height="lg" />}
         </View>
-
-        {Platform.OS === 'android' && <Space height="lg" />}
-      </View>,
-      450,
-      () => handleOnClose(),
-    )
+      ),
+      height: 450,
+      onClose: () => handleOnClose(),
+    })
   }
 
   return {handleOpenModal}

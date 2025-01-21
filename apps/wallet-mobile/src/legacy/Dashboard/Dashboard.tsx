@@ -68,14 +68,18 @@ export const Dashboard = () => {
 
   const onWithdraw = () => {
     if (isGovernanceFeatureEnabled && !isParticipatingInGovernance) {
-      openModal(
-        governanceStrings.withdrawWarningTitle,
-        <WithdrawWarningModal onParticipatePress={handleOnParticipatePress} />,
-      )
+      openModal({
+        title: governanceStrings.withdrawWarningTitle,
+        content: <WithdrawWarningModal onParticipatePress={handleOnParticipatePress} />,
+      })
       return
     }
 
-    openModal('', <WithdrawStakingRewards wallet={wallet} />, Math.min(windowHeight * 0.9, 704))
+    openModal({
+      title: '',
+      content: <WithdrawStakingRewards wallet={wallet} />,
+      height: Math.min(windowHeight * 0.9, 704),
+    })
   }
 
   return (

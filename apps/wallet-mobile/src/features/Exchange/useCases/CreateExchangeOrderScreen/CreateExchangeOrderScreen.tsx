@@ -99,7 +99,7 @@ export const CreateExchangeOrderScreen = () => {
 
         await delay(1000)
 
-        openModal('', <ErrorScreen />, undefined, undefined, true)
+        openModal({content: <ErrorScreen />, full: true})
       },
       onSuccess: (referralLink) => {
         closeModal()
@@ -120,7 +120,7 @@ export const CreateExchangeOrderScreen = () => {
   const handleOnExchange = () => {
     createReferralLink()
     setupSignalTimeout(3000)
-    openModal('', <LoadingLinkScreen />, undefined, undefined, true)
+    openModal({content: <LoadingLinkScreen />, full: true})
   }
 
   const handleOnListProvidersByOrderType = () => {

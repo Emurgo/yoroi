@@ -44,18 +44,20 @@ export const NetworkTag = ({
       const nextNetwork = availableNetworks[(availableNetworks.indexOf(selectedNetwork) + 1) % availableNetworks.length]
 
       if (nextNetwork === Chain.Network.Mainnet) {
-        openModal(
-          strings.networkTagModalTitle,
-          <MainnetWarningDialog
-            onCancel={closeModal}
-            onOk={() => {
-              track.networkSelected({to_network: nextNetwork, from_network: selectedNetwork})
-              walletManager.setSelectedNetwork(nextNetwork)
-              closeModal()
-            }}
-          />,
-          280,
-        )
+        openModal({
+          title: strings.networkTagModalTitle,
+          content: (
+            <MainnetWarningDialog
+              onCancel={closeModal}
+              onOk={() => {
+                track.networkSelected({to_network: nextNetwork, from_network: selectedNetwork})
+                walletManager.setSelectedNetwork(nextNetwork)
+                closeModal()
+              }}
+            />
+          ),
+          height: 280,
+        })
 
         return
       }

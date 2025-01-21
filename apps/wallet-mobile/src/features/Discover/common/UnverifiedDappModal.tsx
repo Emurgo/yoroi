@@ -21,12 +21,12 @@ export const useOpenUnverifiedDappModal = () => {
 
   const open = React.useCallback(
     (options: {onClose: () => void; onConfirm: () => void}) => {
-      openModal(
-        strings.disclaimerModalTitle,
-        <UnverifiedDappModal onConfirm={options.onConfirm} />,
-        unverifiedDappModalHeight + insets.bottom,
-        options.onClose,
-      )
+      openModal({
+        title: strings.disclaimerModalTitle,
+        content: <UnverifiedDappModal onConfirm={options.onConfirm} />,
+        height: unverifiedDappModalHeight + insets.bottom,
+        onClose: options.onClose,
+      })
     },
     [insets.bottom, openModal, strings.disclaimerModalTitle],
   )
