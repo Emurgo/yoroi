@@ -22,7 +22,6 @@ export const useOnConfirm = ({cbor, partial, onSuccess, onError, onCancel, onClo
   const {promptRootKey} = usePromptRootKey()
 
   const handleOnSuccess = ({rootKey, tx}: {tx?: Transaction; rootKey?: string}) => {
-    // TODO: generalize onSuccess
     if (onSuccess) {
       onSuccess({rootKey, tx})
       return
