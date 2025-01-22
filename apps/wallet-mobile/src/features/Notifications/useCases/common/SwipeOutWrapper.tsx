@@ -1,18 +1,40 @@
 import * as React from 'react'
-import {Animated, Dimensions, PanResponder} from 'react-native'
+import {Animated, Dimensions, Easing, PanResponder} from 'react-native'
 
 type Props = {
   children: React.ReactNode
   onSwipeOut: () => void
+  onExpired: () => void
 }
 
-export const SwipeOutWrapper = ({children, onSwipeOut}: Props) => {
-  const {pan, panResponder} = usePanAnimation({onRelease: onSwipeOut})
+const notificationDisplayTime = 20 * 1000 // 20 seconds
+const fadeInTime = 200
+const fadeOutPaddingTime = 100
+
+export const SwipeOutWrapper = ({children, onSwipeOut, onExpired}: Props) => {
+  const {pan, panResponder, fadeIn, opacity, fadeOut, translateY} = usePanAnimation({onRelease: onSwipeOut})
+  const onExpiredRef = React.useRef(onExpired)
+  onExpiredRef.current = onExpired
+
+  React.useEffect(() => {
+    const expiredTimeout = setTimeout(() => onExpiredRef.current(), notificationDisplayTime)
+    const fadeOutTimeout = setTimeout(() => fadeOut(), notificationDisplayTime - fadeInTime - fadeOutPaddingTime)
+
+    return () => {
+      clearTimeout(expiredTimeout)
+      clearTimeout(fadeOutTimeout)
+    }
+  }, [fadeIn, fadeOut])
+
+  React.useLayoutEffect(() => {
+    fadeIn()
+  }, [fadeIn])
 
   return (
     <Animated.View
       style={{
-        transform: [{translateX: pan.x}],
+        transform: [{translateX: pan.x}, {translateY}],
+        opacity,
       }}
       {...panResponder.panHandlers}
     >
@@ -23,8 +45,44 @@ export const SwipeOutWrapper = ({children, onSwipeOut}: Props) => {
 
 const usePanAnimation = ({onRelease}: {onRelease: () => void}) => {
   const pan = React.useRef(new Animated.ValueXY()).current
+  const opacity = React.useRef(new Animated.Value(0)).current
+  const translateY = React.useRef(new Animated.Value(-50)).current
   const screenWidth = Dimensions.get('window').width
   const screenLimitInPercentAfterWhichShouldRelease = 0.3
+
+  const fadeIn = React.useCallback(() => {
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: fadeInTime,
+        useNativeDriver: false,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: fadeInTime,
+        useNativeDriver: false,
+        easing: Easing.inOut(Easing.ease),
+      }),
+    ]).start()
+  }, [opacity, translateY])
+
+  const fadeOut = React.useCallback(() => {
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: fadeInTime,
+        useNativeDriver: false,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      Animated.timing(translateY, {
+        toValue: -50,
+        duration: fadeInTime,
+        useNativeDriver: false,
+        easing: Easing.inOut(Easing.ease),
+      }),
+    ]).start()
+  }, [opacity, translateY])
 
   const panResponder = React.useRef(
     PanResponder.create({
@@ -50,5 +108,5 @@ const usePanAnimation = ({onRelease}: {onRelease: () => void}) => {
     }),
   ).current
 
-  return {pan, panResponder}
+  return {pan, panResponder, fadeIn, fadeOut, opacity, translateY}
 }

@@ -27,7 +27,7 @@ const useStyles = () => {
       left: 0,
       right: 0,
       ...atoms.z_50,
-      ...atoms.p_lg,
+      ...atoms.px_lg,
     },
     flex: {
       ...atoms.gap_sm,
