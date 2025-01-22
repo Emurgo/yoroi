@@ -13,24 +13,14 @@ import {useStrings} from '../useStrings'
 export const WalletDuplicatedModal = ({
   plate,
   seed,
-  duplicatedAccountWalletMetaId,
   duplicatedAccountWalletMetaName,
 }: {
   plate: string
   seed: string
-  duplicatedAccountWalletMetaId: string
   duplicatedAccountWalletMetaName: string
 }) => {
   const {styles} = useStyles()
   const strings = useStrings()
-
-  const {resetToTxHistory} = useWalletNavigation()
-  const {walletManager} = useWalletManager()
-
-  const handleOpenWalletWithDuplicatedName = React.useCallback(() => {
-    walletManager.setSelectedWalletId(duplicatedAccountWalletMetaId)
-    resetToTxHistory()
-  }, [walletManager, duplicatedAccountWalletMetaId, resetToTxHistory])
 
   return (
     <View style={styles.modal}>
@@ -51,15 +41,32 @@ export const WalletDuplicatedModal = ({
       </View>
 
       <Space fill />
-
-      <Button
-        title={strings.restoreDuplicatedWalletModalButton}
-        style={styles.button}
-        onPress={handleOpenWalletWithDuplicatedName}
-      />
-
-      <Space height="xl" />
     </View>
+  )
+}
+
+export const WalletDuplicatedModalActions = ({
+  duplicatedAccountWalletMetaId,
+}: {
+  duplicatedAccountWalletMetaId: string
+}) => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  const {resetToTxHistory} = useWalletNavigation()
+  const {walletManager} = useWalletManager()
+
+  const handleOpenWalletWithDuplicatedName = React.useCallback(() => {
+    walletManager.setSelectedWalletId(duplicatedAccountWalletMetaId)
+    resetToTxHistory()
+  }, [walletManager, duplicatedAccountWalletMetaId, resetToTxHistory])
+
+  return (
+    <Button
+      title={strings.restoreDuplicatedWalletModalButton}
+      style={styles.button}
+      onPress={handleOpenWalletWithDuplicatedName}
+    />
   )
 }
 

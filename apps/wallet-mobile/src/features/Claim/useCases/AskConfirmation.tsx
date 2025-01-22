@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Platform, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
+import {Platform, StyleSheet, Text, View} from 'react-native'
 
 import {Button, ButtonType} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
@@ -11,47 +11,33 @@ type Props = {
   address: string
   url: string
   code: string
-  onContinue: () => void
 }
-export const AskConfirmation = ({address, url, code, onContinue}: Props) => {
+export const AskConfirmation = ({address, url, code}: Props) => {
   const strings = useStrings()
-  const {closeModal, isLoading} = useModal()
   const domain = getDomain(url)
   const styles = useStyles()
 
   return (
     <View style={styles.root}>
-      <ScrollView contentContainerStyle={{flex: 1}} bounces={false}>
-        <Text style={styles.warning}>{strings.addressSharingWarning}</Text>
+      <Text style={styles.warning}>{strings.addressSharingWarning}</Text>
 
-        <Spacer height={20} />
+      <Spacer height={20} />
 
-        <Text style={styles.monospace}>{address}</Text>
+      <Text style={styles.monospace}>{address}</Text>
 
-        <Spacer fill />
+      <Spacer fill />
 
-        <Item label={strings.domain} value={domain} />
+      <Item label={strings.domain} value={domain} />
 
-        <Spacer height={16} />
+      <Spacer height={16} />
 
-        <Item label={strings.code} value={code} />
+      <Item label={strings.code} value={code} />
 
-        <Spacer fill />
-      </ScrollView>
-
-      <Actions>
-        <Button size="S" type={ButtonType.Secondary} title={strings.cancel} onPress={closeModal} disabled={isLoading} />
-
-        <Button size="S" title={strings.continue} onPress={onContinue} disabled={isLoading} />
-      </Actions>
+      <Spacer fill />
     </View>
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
-  return <View style={[style, styles.actions]} {...props} />
-}
 const Item = ({label, value}: {label: string; value: string}) => {
   const styles = useStyles()
   return (
@@ -61,6 +47,20 @@ const Item = ({label, value}: {label: string; value: string}) => {
       <Text ellipsizeMode="middle" numberOfLines={1} style={styles.rowValue}>
         {value}
       </Text>
+    </View>
+  )
+}
+
+export const AskConfirmationActions = ({onContinue}: {onContinue: () => void}) => {
+  const strings = useStrings()
+  const {closeModal, isLoading} = useModal()
+  const styles = useStyles()
+
+  return (
+    <View style={styles.actions}>
+      <Button size="S" type={ButtonType.Secondary} title={strings.cancel} onPress={closeModal} disabled={isLoading} />
+
+      <Button size="S" title={strings.continue} onPress={onContinue} disabled={isLoading} />
     </View>
   )
 }

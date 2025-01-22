@@ -163,36 +163,35 @@ export const WalletDetailsScreen = () => {
       title: strings.walletDetailsModalTitle,
       content: (
         <View style={styles.modal}>
-          <ScrollView bounces={false}>
-            <View style={styles.modalContent}>
-              <CardAboutPhrase
-                title={strings.walletNameModalCardTitle}
-                linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
-              />
-
-              <CardAboutPhrase
-                title={strings.walletPasswordModalCardTitle}
-                linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
-              />
-            </View>
-          </ScrollView>
-
           <View style={styles.modalContent}>
-            <LearnMoreButton
-              onPress={() => {
-                Linking.openURL(YoroiZendeskLink)
-              }}
+            <CardAboutPhrase
+              title={strings.walletNameModalCardTitle}
+              linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
             />
 
-            <Button
-              title={strings.continueButton}
-              onPress={() => {
-                closeModal()
-                showRestoreWalletInfoModalChanged(false)
-              }}
-              testID="setup-modal-continue-button"
+            <CardAboutPhrase
+              title={strings.walletPasswordModalCardTitle}
+              linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
             />
           </View>
+        </View>
+      ),
+      footer: (
+        <View style={styles.modalContent}>
+          <LearnMoreButton
+            onPress={() => {
+              Linking.openURL(YoroiZendeskLink)
+            }}
+          />
+
+          <Button
+            title={strings.continueButton}
+            onPress={() => {
+              closeModal()
+              showRestoreWalletInfoModalChanged(false)
+            }}
+            testID="setup-modal-continue-button"
+          />
         </View>
       ),
       height: HEIGHT_MODAL_NAME_PASSWORD,
@@ -224,28 +223,27 @@ export const WalletDetailsScreen = () => {
       title: strings.walletDetailsModalTitle,
       content: (
         <View style={styles.modal}>
-          <ScrollView bounces={false}>
-            <CardAboutPhrase
-              title={strings.walletChecksumModalCardTitle}
-              checksumImage={seed}
-              checksumLine={1}
-              linesOfText={[
-                strings.walletChecksumModalCardFirstItem,
-                strings.walletChecksumModalCardSecondItem(plate),
-                strings.walletChecksumModalCardThirdItem,
-              ]}
-            />
-          </ScrollView>
+          <CardAboutPhrase
+            title={strings.walletChecksumModalCardTitle}
+            checksumImage={seed}
+            checksumLine={1}
+            linesOfText={[
+              strings.walletChecksumModalCardFirstItem,
+              strings.walletChecksumModalCardSecondItem(plate),
+              strings.walletChecksumModalCardThirdItem,
+            ]}
+          />
+        </View>
+      ),
+      footer: (
+        <View style={styles.modalContent}>
+          <LearnMoreButton
+            onPress={() => {
+              Linking.openURL(YoroiZendeskLink)
+            }}
+          />
 
-          <View style={styles.modalContent}>
-            <LearnMoreButton
-              onPress={() => {
-                Linking.openURL(YoroiZendeskLink)
-              }}
-            />
-
-            <Button title={strings.continueButton} onPress={closeModal} />
-          </View>
+          <Button title={strings.continueButton} onPress={closeModal} />
         </View>
       ),
       height: HEIGHT_MODAL_CHECKSUM,

@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
@@ -149,9 +149,9 @@ const ConfirmTxWithHwModalContent = ({
 
   if (step === 'connect-transport') {
     return (
-      <ScrollView style={styles.scroll}>
+      <View style={styles.wrapper}>
         <LedgerConnect useUSB={transportType === 'USB'} onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
-      </ScrollView>
+      </View>
     )
   }
 
@@ -167,7 +167,7 @@ const ConfirmTxWithHwModalContent = ({
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    scroll: {
+    wrapper: {
       ...atoms.px_lg,
     },
     container: {

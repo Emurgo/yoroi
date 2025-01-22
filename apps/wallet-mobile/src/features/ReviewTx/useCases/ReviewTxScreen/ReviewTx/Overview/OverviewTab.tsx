@@ -5,7 +5,7 @@ import {useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {Linking, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {Linking, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {Button} from '../../../../../../components/Button/Button'
@@ -471,11 +471,7 @@ const Details = ({details}: {details?: {title: string; component: React.ReactNod
   const handleOnPress = () => {
     openModal({
       title: details.title ?? '',
-      content: (
-        <ScrollView bounces={false} style={styles.details}>
-          {details.component}
-        </ScrollView>
-      ),
+      content: <View style={styles.details}>{details.component}</View>,
       height: 400,
     })
   }

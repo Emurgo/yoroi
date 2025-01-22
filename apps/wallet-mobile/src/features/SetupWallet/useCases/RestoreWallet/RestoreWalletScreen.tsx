@@ -18,7 +18,10 @@ import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/useStrings'
-import {WalletDuplicatedModal} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
+import {
+  WalletDuplicatedModal,
+  WalletDuplicatedModalActions,
+} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {MnemonicInput} from './MnemonicInput/MnemonicInput'
 
 export type MnemonicWordInputRef = {
@@ -123,10 +126,10 @@ export const RestoreWalletScreen = () => {
           <WalletDuplicatedModal
             plate={plate}
             seed={seed}
-            duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
             duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
           />
         ),
+        footer: <WalletDuplicatedModalActions duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id} />,
       })
 
       return

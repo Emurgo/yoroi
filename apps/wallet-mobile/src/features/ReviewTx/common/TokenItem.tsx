@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, useWindowDimensions} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {useStrings} from './hooks/useStrings'
@@ -26,11 +26,7 @@ export const TokenItem = ({
   const handleShowTokenDetails = () => {
     openModal({
       title: strings.tokenDetailsTitle,
-      content: (
-        <ScrollView bounces={false}>
-          <TokenDetails tokenInfo={tokenInfo} />
-        </ScrollView>
-      ),
+      content: <TokenDetails tokenInfo={tokenInfo} />,
       height: windowHeight * 0.8,
     })
   }

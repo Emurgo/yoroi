@@ -2,7 +2,6 @@ import * as React from 'react'
 
 import {Button} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
-import {Spacer} from '../../../components/Spacer/Spacer'
 import {Text} from '../../../components/Text'
 import {useStrings} from './useStrings'
 
@@ -19,25 +18,13 @@ export const useShowHWNotSupportedModal = () => {
     ({onConfirm, onClose}: {onConfirm: Props['onConfirm']; onClose: () => void}) => {
       openModal({
         title: strings.continueOnLedger,
-        content: <HWNotSupportedModal onConfirm={onConfirm} />,
+        content: <Text>{strings.signDataNotSupported}</Text>,
+        footer: <Button title={strings.cancel} onPress={onConfirm} />,
         height: modalHeight,
         onClose,
       })
     },
-    [openModal, strings.continueOnLedger],
+    [openModal, strings.cancel, strings.continueOnLedger, strings.signDataNotSupported],
   )
   return {showHWNotSupportedModal, closeModal}
-}
-
-const HWNotSupportedModal = ({onConfirm}: Props) => {
-  const strings = useStrings()
-  return (
-    <>
-      <Text>{strings.signDataNotSupported}</Text>
-
-      <Spacer fill />
-
-      <Button title={strings.cancel} onPress={onConfirm} />
-    </>
-  )
 }

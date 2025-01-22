@@ -48,7 +48,7 @@ export const useHandleOpenNetworkNoticeModal = () => {
     onSuccess: () => refetch(),
   })
 
-  const handleOnClose = React.useCallback(() => {
+  const onClose = React.useCallback(() => {
     if (!networkNoticeShown) setNetworkNoticeShown()
   }, [networkNoticeShown, setNetworkNoticeShown])
 
@@ -67,20 +67,12 @@ export const useHandleOpenNetworkNoticeModal = () => {
 
           <Spacer fill />
 
-          <View style={styles.actions}>
-            <Button
-              title={strings.networkNoticeButton}
-              onPress={() => {
-                closeModal()
-              }}
-            />
-          </View>
-
           {Platform.OS === 'android' && <Space height="lg" />}
         </View>
       ),
+      footer: <Button title={strings.networkNoticeButton} onPress={closeModal} />,
       height: 450,
-      onClose: () => handleOnClose(),
+      onClose,
     })
   }
 
@@ -137,9 +129,6 @@ const useStyles = () => {
     modalTextTitle: {
       ...atoms.body_1_lg_medium,
       color: color.gray_900,
-    },
-    actions: {
-      ...atoms.pt_lg,
     },
   })
 

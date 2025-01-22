@@ -65,18 +65,17 @@ export const RecoveryPhraseScreen = () => {
           />
 
           <Space height="xl" />
-
-          <Button
-            title={strings.continueButton}
-            onPress={() => {
-              closeModal()
-              showCreateWalletInfoModalChanged(false)
-            }}
-            testID="setup-step2-continue-button"
-          />
-
-          <Space height="_2xl" />
         </View>
+      ),
+      footer: (
+        <Button
+          title={strings.continueButton}
+          onPress={() => {
+            closeModal()
+            showCreateWalletInfoModalChanged(false)
+          }}
+          testID="setup-step2-continue-button"
+        />
       ),
       height: 552,
     })

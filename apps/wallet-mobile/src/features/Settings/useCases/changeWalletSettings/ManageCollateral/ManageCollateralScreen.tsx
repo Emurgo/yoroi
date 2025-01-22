@@ -125,7 +125,8 @@ export const ManageCollateralScreen = () => {
   const handleCollateralInfoModal = () => {
     openModal({
       title: strings.initialCollateralInfoModalTitle,
-      content: <InitialCollateralInfoModal onConfirm={handleGenerateCollateral} />,
+      content: <InitialCollateralInfoModal />,
+      footer: <Button title={strings.initialCollateralInfoModalButton} onPress={handleGenerateCollateral} />,
       height: Math.min(screenHeight * 0.9, 650),
     })
   }

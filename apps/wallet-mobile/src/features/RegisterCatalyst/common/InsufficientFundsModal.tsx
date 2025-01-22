@@ -4,10 +4,8 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
-import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
-import globalMessages, {confirmationMessages} from '../../../kernel/i18n/global-messages'
+import globalMessages from '../../../kernel/i18n/global-messages'
 import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useCatalystCurrentFund} from './hooks'
@@ -18,7 +16,6 @@ export const InsufficientFundsModal = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {wallet} = useSelectedWallet()
-  const {closeModal} = useModal()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const {fund} = useCatalystCurrentFund()
 
@@ -37,8 +34,6 @@ export const InsufficientFundsModal = () => {
         })}
       </Text>
 
-      <Button title={strings.back} onPress={closeModal} />
-
       {Platform.OS === 'android' && <Space height="lg" />}
     </View>
   )
@@ -53,7 +48,6 @@ const useStrings = () => {
         requiredBalance,
         currentBalance,
       }),
-    back: intl.formatMessage(confirmationMessages.commonButtons.backButton),
   }
 }
 

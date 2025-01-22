@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useCallback, useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useMutation} from 'react-query'
 
 import {LedgerTransportSwitch} from '../../../components/LedgerTransportSwitch/LedgerTransportSwitch'
@@ -91,11 +91,7 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
   }
 
   if (step === 'connect-transport') {
-    return (
-      <ScrollView>
-        <LedgerConnect useUSB={transportType === 'USB'} onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
-      </ScrollView>
-    )
+    return <LedgerConnect useUSB={transportType === 'USB'} onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
   }
 
   return (

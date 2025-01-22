@@ -7,22 +7,114 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Button, ButtonType} from '../../../components/Button/Button'
 import {Icon} from '../../../components/Icon'
 import {useModal} from '../../../components/Modal/ModalContext'
-import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
 import {Space} from '../../../components/Space/Space'
 import {formatTimeSpan} from '../../../yoroi-wallets/utils/timeUtils'
 import {useStrings} from './usePoolTransition'
 
-export const PoolTransitionModal = ({
-  poolTransition,
-  onContinue,
-}: {
-  poolTransition: PoolTransition
-  onContinue: () => Promise<void> | void
-}) => {
+export const PoolTransitionModal = ({poolTransition}: {poolTransition: PoolTransition}) => {
+  const strings = useStrings()
+  const {styles, colors} = useStyles()
+  const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
+  const isActive = timeSpan > 0
+
+  return (
+    <View style={styles.modal}>
+      <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
+
+      <Space height="lg" />
+
+      <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
+        <Row>
+          <Text style={styles.label}>{strings.currentPool}</Text>
+
+          <View style={styles.poolTicker}>
+            {poolTransition.current.pic != null && (
+              <Image source={{uri: poolTransition.current.pic}} style={styles.pic} />
+            )}
+
+            <Text
+              style={styles.poolTickerText}
+            >{`[${poolTransition.current.ticker}] ${poolTransition.current.name}`}</Text>
+          </View>
+        </Row>
+
+        <Row>
+          <Text style={styles.label}>{strings.estimatedRoa}</Text>
+
+          <Text style={styles.currentValue}>{poolTransition.current.roa} %</Text>
+        </Row>
+
+        <Row>
+          <Text style={styles.label}>{strings.fee}</Text>
+
+          <Text style={styles.currentValue}>{formatFee(poolTransition.current.taxRatio)} %</Text>
+        </Row>
+
+        <Text style={styles.warning}>
+          <Text style={styles.warningText}>{isActive ? strings.poolWillStopRewards : strings.poolNoRewards}</Text>
+
+          {isActive && (
+            <Text style={styles.warningTimer}>
+              {'\n'}
+
+              {formatTimeSpan(timeSpan)}
+            </Text>
+          )}
+        </Text>
+      </View>
+
+      <Space height="sm" />
+
+      <View style={styles.arrowDown}>
+        <Icon.ArrowDown size={17} color={colors.arrow} />
+      </View>
+
+      <Space height="sm" />
+
+      <View style={styles.card}>
+        <LinearGradient
+          style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 8}]}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0.5}}
+          colors={colors.backgroundGradientCard}
+        />
+
+        <Row>
+          <Text style={styles.label}>{strings.newPool}</Text>
+
+          <View style={styles.poolTicker}>
+            {poolTransition.suggested.pic != null && (
+              <Image source={{uri: poolTransition.suggested.pic}} style={styles.pic} />
+            )}
+
+            <Text
+              style={styles.poolTickerText}
+            >{`[${poolTransition.suggested.ticker}] ${poolTransition.suggested.name}`}</Text>
+          </View>
+        </Row>
+
+        <Row>
+          <Text style={styles.label}>{strings.estimatedRoa}</Text>
+
+          <Text style={styles.suggestedValue}>{poolTransition.suggested.roa} %</Text>
+        </Row>
+
+        <Row>
+          <Text style={styles.label}>{strings.fee}</Text>
+
+          <Text style={styles.suggestedValue}>{formatFee(poolTransition.suggested.taxRatio)} %</Text>
+        </Row>
+
+        <Text style={styles.currentValue}>{strings.poolGeneratesRewards}</Text>
+      </View>
+    </View>
+  )
+}
+
+export const PoolTransitionModalActions = ({onContinue}: {onContinue: () => Promise<void> | void}) => {
   const [isLoading, setIsLoading] = React.useState(false)
   const strings = useStrings()
-  const {isScrollBarShown, scrollViewRef, setIsScrollBarShown} = useScrollView()
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
 
   const {closeModal} = useModal()
 
@@ -39,121 +131,11 @@ export const PoolTransitionModal = ({
       closeModal()
     }
   }
-
-  const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
-  const isActive = timeSpan > 0
-
   return (
-    <View style={styles.modal}>
-      <ScrollView ref={scrollViewRef} contentContainerStyle={styles.scroll} onScrollBarChange={setIsScrollBarShown}>
-        <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
+    <View style={styles.actions}>
+      <Button type={ButtonType.SecondaryText} title={strings.skipNoRewards} onPress={handleOnSkip} />
 
-        <Space height="lg" />
-
-        <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
-          <Row>
-            <Text style={styles.label}>{strings.currentPool}</Text>
-
-            <View style={styles.poolTicker}>
-              {poolTransition.current.pic != null && (
-                <Image source={{uri: poolTransition.current.pic}} style={styles.pic} />
-              )}
-
-              <Text
-                style={styles.poolTickerText}
-              >{`[${poolTransition.current.ticker}] ${poolTransition.current.name}`}</Text>
-            </View>
-          </Row>
-
-          <Row>
-            <Text style={styles.label}>{strings.estimatedRoa}</Text>
-
-            <Text style={styles.currentValue}>{poolTransition.current.roa} %</Text>
-          </Row>
-
-          <Row>
-            <Text style={styles.label}>{strings.fee}</Text>
-
-            <Text style={styles.currentValue}>{formatFee(poolTransition.current.taxRatio)} %</Text>
-          </Row>
-
-          <Text style={styles.warning}>
-            <Text style={styles.warningText}>{isActive ? strings.poolWillStopRewards : strings.poolNoRewards}</Text>
-
-            {isActive && (
-              <Text style={styles.warningTimer}>
-                {'\n'}
-
-                {formatTimeSpan(timeSpan)}
-              </Text>
-            )}
-          </Text>
-        </View>
-
-        <Space height="sm" />
-
-        <ArrowDown />
-
-        <Space height="sm" />
-
-        <View style={styles.card}>
-          <LinearGradient
-            style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 8}]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0.5}}
-            colors={colors.backgroundGradientCard}
-          />
-
-          <Row>
-            <Text style={styles.label}>{strings.newPool}</Text>
-
-            <View style={styles.poolTicker}>
-              {poolTransition.suggested.pic != null && (
-                <Image source={{uri: poolTransition.suggested.pic}} style={styles.pic} />
-              )}
-
-              <Text
-                style={styles.poolTickerText}
-              >{`[${poolTransition.suggested.ticker}] ${poolTransition.suggested.name}`}</Text>
-            </View>
-          </Row>
-
-          <Row>
-            <Text style={styles.label}>{strings.estimatedRoa}</Text>
-
-            <Text style={styles.suggestedValue}>{poolTransition.suggested.roa} %</Text>
-          </Row>
-
-          <Row>
-            <Text style={styles.label}>{strings.fee}</Text>
-
-            <Text style={styles.suggestedValue}>{formatFee(poolTransition.suggested.taxRatio)} %</Text>
-          </Row>
-
-          <Text style={styles.currentValue}>{strings.poolGeneratesRewards}</Text>
-        </View>
-
-        <Space height="xl" />
-      </ScrollView>
-
-      {isScrollBarShown && <View style={styles.line} />}
-
-      <Actions>
-        <Button type={ButtonType.SecondaryText} title={strings.skipNoRewards} onPress={handleOnSkip} />
-
-        <Button title={strings.updateKeepEarning} onPress={handleOnUpdate} disabled={isLoading} />
-      </Actions>
-
-      <Space height="xl" />
-    </View>
-  )
-}
-
-const ArrowDown = () => {
-  const {styles, colors} = useStyles()
-  return (
-    <View style={styles.arrowDown}>
-      <Icon.ArrowDown size={17} color={colors.arrow} />
+      <Button title={strings.updateKeepEarning} onPress={handleOnUpdate} disabled={isLoading} />
     </View>
   )
 }
@@ -164,10 +146,9 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     modal: {
       ...atoms.flex_1,
-    },
-    scroll: {
       ...atoms.px_lg,
     },
+
     card: {
       borderRadius: 8,
       gap: 8,
@@ -222,10 +203,6 @@ const useStyles = () => {
       ...atoms.align_center,
       height: 24,
     },
-    line: {
-      height: StyleSheet.hairlineWidth,
-      backgroundColor: color.gray_200,
-    },
     actions: {
       ...atoms.px_lg,
       gap: 4,
@@ -246,11 +223,6 @@ const useStyles = () => {
   }
 
   return {styles, colors} as const
-}
-
-const Actions = (props: ViewProps) => {
-  const {styles} = useStyles()
-  return <View {...props} style={styles.actions} />
 }
 
 const Row = (props: ViewProps) => {
