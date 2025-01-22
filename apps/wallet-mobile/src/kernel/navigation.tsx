@@ -8,8 +8,8 @@ import React from 'react'
 import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../components/Icon'
+import {OnConfirm} from '../features/ReviewTx/common/hooks/useOnConfirm'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
-import {YoroiSignedTx} from '../yoroi-wallets/types/yoroi'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -282,14 +282,16 @@ export type PortfolioRoutes = {
 export type ReviewTxRoutes = {
   'review-tx'?: {
     cbor?: string
+    partial?: boolean
     operations?: Array<React.ReactNode>
     receiverCustomTitle?: React.ReactNode
     details?: {title: string; component: React.ReactNode}
     createdBy?: React.ReactNode
     onConfirm?: () => void
-    onCancel?: () => void
-    onSuccess?: (signedTx: YoroiSignedTx) => void
-    onError?: () => void
+    onCancel?: OnConfirm['onCancel']
+    onSuccess?: OnConfirm['onSuccess']
+    onError?: OnConfirm['onError']
+    onClose?: OnConfirm['onClose']
     onNotSupportedCIP1694?: () => void
     onCIP36SupportChange?: (supportsCIP36: boolean) => void
   }

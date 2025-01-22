@@ -7,12 +7,13 @@ import {BaseLedgerError} from '../../../../yoroi-wallets/hw/hw'
 import {useConfirmHWConnectionModal} from '../../../Discover/common/ConfirmHWConnectionModal'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
-export type Options = {
+export type SignTxWithHW = {
   cbor: string
   partial?: boolean
-  onConfirm?: (tx: Transaction) => void
   onCancel?: () => void
   onClose?: () => void
+  onSuccess?: (tx: Transaction) => void
+  onError?: (error: unknown) => void
 }
 
 export const useSignTxWithHW = () => {
@@ -20,7 +21,7 @@ export const useSignTxWithHW = () => {
   const {wallet, meta} = useSelectedWallet()
 
   const mutationFn = React.useCallback(
-    (data: {cbor: string; partial?: boolean}, options: Options) => {
+    (options: SignTxWithHW) => {
       return new Promise<Transaction>((resolve, reject) => {
         confirmHWConnection({
           onConfirm: async ({transportType, deviceInfo}) => {
@@ -28,11 +29,13 @@ export const useSignTxWithHW = () => {
               const cip30 = cip30LedgerExtensionMaker(wallet, meta)
               const tx = await cip30.signTx(options.cbor, options.partial ?? false, deviceInfo, transportType === 'USB')
               resolve(tx)
+              if (options.onSuccess) options.onSuccess(tx)
               closeModal()
             } catch (error) {
               if (error instanceof BaseLedgerError) {
                 throw error
               }
+              if (options.onError) options.onError(error)
               reject(error)
               closeModal()
             }
@@ -51,8 +54,8 @@ export const useSignTxWithHW = () => {
     mutationKey: ['useSignTxWithHW'],
   })
 
-  const sign = (data: {cbor: string; partial?: boolean}, options: Options) => {
-    mutation.mutate(data, options)
+  const sign = (options: SignTxWithHW) => {
+    mutation.mutate(options)
   }
 
   return {...mutation, sign}

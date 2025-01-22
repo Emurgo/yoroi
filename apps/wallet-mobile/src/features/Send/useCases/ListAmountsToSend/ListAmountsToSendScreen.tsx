@@ -81,7 +81,8 @@ export const ListAmountsToSendScreen = () => {
 
   const sendProperties = React.useMemo(() => assetsToSendProperties({amounts}), [amounts])
 
-  const onSuccess = (signedTx: YoroiSignedTx) => {
+  const handleOnSuccess = (signedTx?: YoroiSignedTx) => {
+    if (signedTx?.signedTx?.id == null) throw new Error('ListAmountsToSendScreen:: invalid state')
     track.sendSummarySubmitted(sendProperties)
 
     if (memo.length > 0) {
@@ -103,7 +104,7 @@ export const ListAmountsToSendScreen = () => {
     createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)], {
       onSuccess: (yoroiUnsignedTx) => {
         unsignedTxChanged(yoroiUnsignedTx)
-        navigateToTxReview({onSuccess, onError})
+        navigateToTxReview({onSuccess: (args) => handleOnSuccess(args?.signedTx), onError})
       },
     })
   }

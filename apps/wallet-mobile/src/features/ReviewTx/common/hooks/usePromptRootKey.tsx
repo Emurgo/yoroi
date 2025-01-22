@@ -7,8 +7,9 @@ import {ConfirmRawTxWithPassword} from '../../../Swap/common/ConfirmRawTx/Confir
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type PromptRootKeyOptions = {
-  onConfirm: (rootKey: string) => Promise<void>
-  onClose: () => void
+  onSuccess: (rootKey: string) => void
+  onError?: (error: unknown) => void
+  onClose?: () => void
   title?: string
   summary?: string
 }
@@ -19,16 +20,21 @@ export const usePromptRootKey = () => {
   const strings = useStrings()
   const modalHeight = 350
 
-  return React.useCallback(
-    ({onConfirm, onClose, title, summary}: PromptRootKeyOptions) => {
-      const handleOnConfirm = async (rootKey: string) => {
-        const result = await onConfirm(rootKey)
+  const promptRootKey = React.useCallback(
+    ({onSuccess, onError, onClose, title, summary}: PromptRootKeyOptions) => {
+      const handleOnConfirm = (rootKey: string) => {
+        const result = onSuccess(rootKey)
         closeModal()
         return result
       }
 
       if (meta.isEasyConfirmationEnabled) {
-        openModal(title ?? strings.confirmTx, <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, modalHeight, onClose)
+        openModal(
+          title ?? strings.confirmTx,
+          <ConfirmRawTxWithOs onSuccess={handleOnConfirm} onError={onError} />,
+          modalHeight,
+          onClose,
+        )
         return
       }
 
@@ -39,6 +45,8 @@ export const usePromptRootKey = () => {
         onClose,
       )
     },
-    [meta.isEasyConfirmationEnabled, openModal, strings.confirmTx, closeModal],
+    [closeModal, meta.isEasyConfirmationEnabled, openModal, strings.confirmTx],
   )
+
+  return {promptRootKey} as const
 }

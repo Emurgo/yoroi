@@ -2,13 +2,8 @@ import {DappConnectorManager, useDappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {useModal} from '../../../components/Modal/ModalContext'
 import {logger} from '../../../kernel/logger/logger'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
-import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {useStrings} from './useStrings'
 import {walletConfig} from './wallet-config'
 
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
@@ -55,45 +50,4 @@ const getInitScript = (sessionId: string, dappConnector: DappConnectorManager) =
     walletName: walletConfig.name,
     sessionId,
   })
-}
-
-type PromptRootKeyOptions = {
-  onConfirm: (rootKey: string) => Promise<void>
-  onClose: () => void
-  title?: string
-  summary?: string
-}
-
-export const usePromptRootKey = () => {
-  const {openModal, closeModal} = useModal()
-  const {meta} = useSelectedWallet()
-  const strings = useStrings()
-  const modalHeight = 350
-
-  return React.useCallback(
-    ({onConfirm, onClose, title, summary}: PromptRootKeyOptions) => {
-      const handleOnConfirm = async (rootKey: string) => {
-        const result = await onConfirm(rootKey)
-        closeModal()
-        return result
-      }
-
-      if (meta.isHW) {
-        throw new Error('Not implemented yet')
-      }
-
-      if (meta.isEasyConfirmationEnabled) {
-        openModal(title ?? strings.confirmTx, <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, modalHeight, onClose)
-        return
-      }
-
-      openModal(
-        title ?? strings.confirmTx,
-        <ConfirmRawTxWithPassword summary={summary} onConfirm={handleOnConfirm} />,
-        modalHeight,
-        onClose,
-      )
-    },
-    [meta.isHW, meta.isEasyConfirmationEnabled, openModal, strings.confirmTx, closeModal],
-  )
 }

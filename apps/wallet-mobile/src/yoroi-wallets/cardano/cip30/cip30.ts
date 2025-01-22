@@ -227,11 +227,11 @@ const remoteAssetToMultiasset = async (csl: WasmModuleProxy, remoteAssets: UtxoA
   const multiasset = await csl.MultiAsset.new()
   for (const policyHex of Object.keys(groupedAssets)) {
     const assetGroup = groupedAssets[policyHex]
-    const policyId = await csl.ScriptHash.fromBytes(Buffer.from(policyHex, 'hex'))
+    const policyId = await csl.ScriptHash.fromBytes(new Uint8Array(Buffer.from(policyHex, 'hex')))
     const assets = await csl.Assets.new()
     for (const asset of assetGroup) {
       await assets.insert(
-        await csl.AssetName.new(Buffer.from(toAssetNameHex(asset.assetId), 'hex')),
+        await csl.AssetName.new(new Uint8Array(Buffer.from(toAssetNameHex(asset.assetId), 'hex'))),
         await csl.BigNum.fromStr(asset.amount),
       )
     }

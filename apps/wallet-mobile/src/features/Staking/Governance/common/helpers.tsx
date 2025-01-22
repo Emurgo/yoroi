@@ -88,8 +88,9 @@ export const useGovernanceActions = () => {
     unsignedTxChanged(unsignedTx)
 
     navigateToTxReview({
-      onSuccess: (signedTx) => {
-        updateLatestGovernanceAction({kind: 'delegate-to-drep', hash, type, txID: signedTx.signedTx.id})
+      onSuccess: (args) => {
+        if (args?.signedTx?.signedTx?.id == null) throw new Error('useGovernanceActions:: invalid state')
+        updateLatestGovernanceAction({kind: 'delegate-to-drep', hash, type, txID: args.signedTx.signedTx.id})
         navigateTo.submittedTx()
       },
       onError: navigateTo.failedTx,
@@ -101,8 +102,9 @@ export const useGovernanceActions = () => {
     unsignedTxChanged(unsignedTx)
 
     navigateToTxReview({
-      onSuccess: (signedTx) => {
-        updateLatestGovernanceAction({kind: 'vote', vote: 'abstain', txID: signedTx.signedTx.id})
+      onSuccess: (args) => {
+        if (args?.signedTx?.signedTx?.id == null) throw new Error('useGovernanceActions:: invalid state')
+        updateLatestGovernanceAction({kind: 'vote', vote: 'abstain', txID: args?.signedTx.signedTx.id})
         navigateTo.submittedTx()
       },
       onError: navigateTo.failedTx,
@@ -114,8 +116,9 @@ export const useGovernanceActions = () => {
     unsignedTxChanged(unsignedTx)
 
     navigateToTxReview({
-      onSuccess: (signedTx) => {
-        updateLatestGovernanceAction({kind: 'vote', vote: 'no-confidence', txID: signedTx.signedTx.id})
+      onSuccess: (args) => {
+        if (args?.signedTx?.signedTx?.id == null) throw new Error('useGovernanceActions:: invalid state')
+        updateLatestGovernanceAction({kind: 'vote', vote: 'no-confidence', txID: args?.signedTx.signedTx.id})
         navigateTo.submittedTx()
       },
       onError: navigateTo.failedTx,

@@ -76,7 +76,8 @@ export const ManageCollateralScreen = () => {
     setCollateralId(collateralId)
   }
 
-  const onSuccess = (signedTx: YoroiSignedTx) => {
+  const handleOnSuccess = (signedTx?: YoroiSignedTx) => {
+    if (signedTx?.signedTx?.id == null) throw new Error('ManageCollateralScreen:: invalid state')
     const collateralId = `${signedTx.signedTx.id}:0`
     setCollateralId(collateralId)
     resetToTxHistory()
@@ -88,7 +89,7 @@ export const ManageCollateralScreen = () => {
     createUnsignedTx([createCollateralEntry(wallet)], {
       onSuccess: (yoroiUnsignedTx) => {
         unsignedTxChanged(yoroiUnsignedTx)
-        navigateToTxReview({onSuccess, operations: [<Operation key="0" />]})
+        navigateToTxReview({onSuccess: (args) => handleOnSuccess(args?.signedTx), operations: [<Operation key="0" />]})
       },
     })
   }

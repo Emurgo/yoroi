@@ -1,89 +1,68 @@
-import * as React from 'react'
+import {Transaction} from '@emurgo/cross-csl-core'
 
-import {ConfirmTxWithHwModal} from '../../../../components/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
-import {ConfirmTxWithOsModal} from '../../../../components/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
-import {ConfirmTxWithSpendingPasswordModal} from '../../../../components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
+import {YoroiSignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from './useNavigateTo'
-import {useStrings} from './useStrings'
+import {usePromptRootKey} from './usePromptRootKey'
+import {useSignTxWithHW} from './useSignTxWithHW'
 
-// TODO: make it compatible with CBOR signing
-export const useOnConfirm = ({
-  unsignedTx,
-  onSuccess,
-  onError,
-  onNotSupportedCIP1694,
-  onCIP36SupportChange,
-}: {
-  onSuccess?: ((txId: YoroiSignedTx) => void) | null
-  onError?: (() => void) | null
-  cbor?: string
-  unsignedTx?: YoroiUnsignedTx | null
-  onNotSupportedCIP1694?: (() => void) | null
-  onCIP36SupportChange?: ((isCIP36Supported: boolean) => void) | null
-}) => {
+export type OnConfirm = {
+  cbor?: string | null
+  partial?: boolean
+  onSuccess?: (args?: {tx?: Transaction; rootKey?: string; signedTx?: YoroiSignedTx}) => void
+  onError?: ((error: unknown) => void) | null
+  onCancel?: () => void
+  onClose?: () => void
+}
+
+export const useOnConfirm = ({cbor, partial, onSuccess, onError, onCancel, onClose}: OnConfirm) => {
   const {meta} = useSelectedWallet()
-  const {openModal, closeModal} = useModal()
-  const strings = useStrings()
   const navigateTo = useNavigateTo()
+  const {sign} = useSignTxWithHW()
+  const {promptRootKey} = usePromptRootKey()
 
-  const handleOnSuccess = (signedTx: YoroiSignedTx) => {
+  const handleOnSuccess = ({rootKey, tx}: {tx?: Transaction; rootKey?: string}) => {
+    // TODO: generalize onSuccess
     if (onSuccess) {
-      onSuccess(signedTx)
+      onSuccess({rootKey, tx})
       return
     }
+
     navigateTo.showSubmittedTxScreen()
   }
-  const handleOnError = () => {
+
+  const handleOnError = (error: unknown) => {
     if (onError) {
-      onError()
+      onError(error)
       return
     }
+
     navigateTo.showFailedTxScreen()
   }
 
   const onConfirm = () => {
-    if (meta.isHW && unsignedTx) {
-      openModal(
-        strings.signTransaction,
-        <ConfirmTxWithHwModal
-          onCancel={closeModal}
-          unsignedTx={unsignedTx}
-          onSuccess={handleOnSuccess}
-          onNotSupportedCIP1694={() => {
-            if (onNotSupportedCIP1694) {
-              closeModal()
-              onNotSupportedCIP1694()
-            }
-          }}
-          onCIP36SupportChange={onCIP36SupportChange ?? undefined}
-        />,
-        400,
-      )
+    if (meta.isHW && cbor != null) {
+      sign({
+        cbor,
+        partial,
+        onCancel,
+        onClose,
+        onSuccess: (tx: Transaction) => handleOnSuccess({tx}),
+        onError: handleOnError,
+      })
       return
     }
 
-    if (!meta.isHW && !meta.isEasyConfirmationEnabled && unsignedTx) {
-      openModal(
-        strings.signTransaction,
-        <ConfirmTxWithSpendingPasswordModal
-          unsignedTx={unsignedTx}
-          onSuccess={handleOnSuccess}
-          onError={handleOnError}
-        />,
-      )
+    if (!meta.isHW) {
+      promptRootKey({
+        onSuccess: (rootKey: string) => handleOnSuccess({rootKey}),
+        onError: handleOnError,
+        onClose,
+      })
       return
     }
 
-    if (!meta.isHW && meta.isEasyConfirmationEnabled && unsignedTx) {
-      openModal(
-        strings.signTransaction,
-        <ConfirmTxWithOsModal unsignedTx={unsignedTx} onSuccess={handleOnSuccess} onError={handleOnError} />,
-      )
-      return
-    }
+    throw new Error('useOnConfirm:: invalid state')
   }
 
   return {onConfirm} as const

@@ -6,14 +6,14 @@ import {InteractionManager} from 'react-native'
 
 import {logger} from '../../kernel/logger/logger'
 import {useWalletNavigation} from '../../kernel/navigation'
-import {Options, useSignTxWithHW} from '../ReviewTx/common/hooks/useSignTxWithHW'
+import {isEmptyString} from '../../kernel/utils'
+import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useBrowser} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
-import {usePromptRootKey} from './common/hooks'
 import {useShowHWNotSupportedModal} from './common/HWNotSupportedModal'
 import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
 import {useNavigateTo} from './common/useNavigateTo'
@@ -34,9 +34,6 @@ export const useDappConnectorManager = () => {
   const signData = useSignData()
   const signDataWithHW = useSignDataWithHW()
 
-  const promptRootKey = useConnectorPromptRootKey()
-  const signTxWithHW = useConnectorSignTxWithHW()
-
   const handleSignTx = React.useCallback(
     ({cbor, manager}: {cbor: string; manager: DappConnector}) => {
       return new Promise<string>((resolve, reject) => {
@@ -47,11 +44,14 @@ export const useDappConnectorManager = () => {
           navigateToTxReview({
             cbor,
             createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
-            onConfirm: async () => {
-              if (!shouldResolve) return
+            onSuccess: (args) => {
               shouldResolve = false
-              const rootKey = await promptRootKey()
-              resolve(rootKey)
+              if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
+                reject('useDappConnectorManager::handleSignTx: invalid state')
+                return
+              }
+
+              resolve(args?.rootKey)
               navigateTo.browseDapp()
             },
             onCancel: () => {
@@ -59,11 +59,18 @@ export const useDappConnectorManager = () => {
               shouldResolve = false
               reject(userRejectedError())
             },
+            onClose: () => {
+              if (shouldResolve) reject(userRejectedError())
+            },
+            onError: (error) => {
+              logger.error('useDappConnectorManager::handleSignTx', {error})
+              reject(error)
+            },
           })
         })
       })
     },
-    [activeTabOrigin, navigateToTxReview, promptRootKey, navigateTo],
+    [activeTabOrigin, navigateToTxReview, navigateTo],
   )
 
   const handleSignTxWithHW = React.useCallback(
@@ -75,32 +82,35 @@ export const useDappConnectorManager = () => {
             activeTabOrigin != null ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin)) : null
           navigateToTxReview({
             cbor,
+            partial,
             createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
-            onConfirm: () => {
-              if (!shouldResolve) return
+            onSuccess: (args) => {
               shouldResolve = false
-              signTxWithHW(
-                {cbor, partial},
-                {
-                  onSuccess: (signature) => resolve(signature),
-                  onError: (error) => {
-                    logger.error('ReviewTransaction::handleOnConfirm', {error})
-                    reject(error)
-                  },
-                },
-              )
+              if (!args?.tx) {
+                reject('useDappConnectorManager::handleSignTxWithHW: invalid state')
+                return
+              }
+              resolve(args?.tx)
               navigateTo.browseDapp()
+            },
+            onError: (error) => {
+              logger.error('useDappConnectorManager::handleSignTxWithHW', {error})
+              reject(error)
             },
             onCancel: () => {
               if (!shouldResolve) return
               shouldResolve = false
               reject(userRejectedError())
             },
+            onClose: () => {
+              if (!shouldResolve) return
+              reject(userRejectedError())
+            },
           })
         })
       })
     },
-    [activeTabOrigin, navigateToTxReview, navigateTo, signTxWithHW],
+    [activeTabOrigin, navigateToTxReview, navigateTo],
   )
 
   return React.useMemo(
@@ -120,7 +130,7 @@ export const useDappConnectorManager = () => {
 }
 
 const useSignData = () => {
-  const promptRootKey = usePromptRootKey()
+  const {promptRootKey} = usePromptRootKey()
   const strings = useStrings()
 
   return React.useCallback(
@@ -133,7 +143,7 @@ const useSignData = () => {
           promptRootKey({
             title,
             summary,
-            onConfirm: (rootKey) => {
+            onSuccess: (rootKey) => {
               resolve(rootKey)
               shouldResolveOnClose = false
               return Promise.resolve()
@@ -217,62 +227,4 @@ const useConfirmConnection = () => {
     },
     [openConfirmConnectionModal, openUnverifiedDappModal, closeModal],
   )
-}
-
-const useConnectorSignTxWithHW = () => {
-  const {sign} = useSignTxWithHW()
-
-  return React.useCallback(
-    (options: Options) => {
-      return new Promise<Transaction>((resolve, reject) => {
-        let isClosed = false
-        try {
-          sign({
-            ...options,
-            onConfirm: (tx: Transaction) => {
-              resolve(tx)
-              isClosed = false
-              return Promise.resolve()
-            },
-            onCancel: () => {
-              reject(userRejectedError())
-              isClosed = true
-            },
-            onClose: () => {
-              if (isClosed) return
-              reject(userRejectedError())
-            },
-          })
-        } catch (error) {
-          reject(error)
-        }
-      })
-    },
-    [sign],
-  )
-}
-
-const useConnectorPromptRootKey = () => {
-  const promptRootKey = usePromptRootKey()
-
-  return React.useCallback(() => {
-    return new Promise<string>((resolve, reject) => {
-      let shouldResolveOnClose = true
-
-      try {
-        promptRootKey({
-          onConfirm: (rootKey) => {
-            resolve(rootKey)
-            shouldResolveOnClose = false
-            return Promise.resolve()
-          },
-          onClose: () => {
-            if (shouldResolveOnClose) reject(userRejectedError())
-          },
-        })
-      } catch (error) {
-        reject(error)
-      }
-    })
-  }, [promptRootKey])
 }

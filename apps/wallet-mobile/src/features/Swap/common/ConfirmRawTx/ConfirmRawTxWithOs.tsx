@@ -8,14 +8,20 @@ import {getErrorMessage} from '../errors'
 import {useStrings} from '../strings'
 import {ActivityIndicator} from './ActivityIndicator'
 
-export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {
+export const ConfirmRawTxWithOs = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: (rootKey: string) => void
+  onError?: (error: unknown) => void
+}) => {
   const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
   const styles = useStyles()
 
   const {authWithOs, error} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
-    {onSuccess: (rootKey) => onConfirm?.(rootKey)},
+    {onSuccess: (rootKey) => onSuccess?.(rootKey)},
   )
 
   useEffect(() => {
@@ -26,6 +32,11 @@ export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) =
   const errorMessage = error ? getErrorMessage(error, strings) : null
 
   if (errorMessage != null) {
+    if (onError) {
+      onError(errorMessage)
+      return
+    }
+
     return (
       <View style={styles.center}>
         <Text style={styles.errorMessage} numberOfLines={3}>

@@ -38,7 +38,7 @@ export const ConfirmRawTx = ({onConfirm, onHWConfirm, onCancel, utxo, bech32Addr
   }
 
   if (meta.isEasyConfirmationEnabled) {
-    return <ConfirmRawTxWithOs onConfirm={onConfirm} />
+    return <ConfirmRawTxWithOs onSuccess={onConfirm} />
   }
 
   return <ConfirmRawTxWithPassword onConfirm={onConfirm} />

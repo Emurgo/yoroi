@@ -5,11 +5,12 @@ import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelected
 import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
 type Props = {
-  onConfirm?: (rootKey: string) => Promise<void>
+  onConfirm?: (rootKey: string) => void
+  onError?: () => void
   summary?: string
 }
 
-export const ConfirmRawTxWithPassword = ({onConfirm, summary}: Props) => {
+export const ConfirmRawTxWithPassword = ({onConfirm, onError, summary}: Props) => {
   const {wallet} = useSelectedWallet()
 
   const handlePasswordConfirm = async (password: string) => {
@@ -17,24 +18,38 @@ export const ConfirmRawTxWithPassword = ({onConfirm, summary}: Props) => {
     return onConfirm?.(rootKey)
   }
 
-  return <PasswordInput onConfirm={handlePasswordConfirm} summary={summary} />
+  return <PasswordInput onConfirm={handlePasswordConfirm} onError={onError} summary={summary} />
 }
 
-const PasswordInput = ({onConfirm, summary}: {onConfirm: (password: string) => Promise<void>; summary?: string}) => {
+const PasswordInput = ({
+  onConfirm,
+  onError,
+  summary,
+}: {
+  onConfirm: (password: string) => void
+  onError?: () => void
+  summary?: string
+}) => {
   const [error, setError] = useState<Error | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const onConfirmPress = async (password: string) => {
+  const onConfirmPress = (password: string) => {
     setError(null)
     setLoading(true)
     try {
-      await onConfirm(password)
+      onConfirm(password)
     } catch (e: unknown) {
+      if (onError) {
+        setLoading(false)
+        onError()
+        return
+      }
+
       if (e instanceof Error) {
+        setLoading(false)
         setError(e)
       }
     }
-    setLoading(false)
   }
 
   const handlePasswordChange = () => {
