@@ -27,7 +27,7 @@ export const SwipeOutWrapper = ({children, onSwipeOut, onExpired}: Props) => {
   }, [fadeIn, fadeOut])
 
   React.useLayoutEffect(() => {
-    fadeIn()
+    requestAnimationFrame(() => fadeIn())
   }, [fadeIn])
 
   return (
