@@ -18,6 +18,7 @@ import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types/yoroi'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils/utils'
+import {ShowDisclaimer} from '../../../../Legal/Disclaimer/ShowDisclaimer'
 import {useDisableSearchOnBar} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
@@ -299,6 +300,8 @@ export const StartSwapOrderScreen = () => {
 
   return (
     <View style={[styles.root, styles.flex]}>
+      <ShowDisclaimer type="swap" />
+
       <ScrollView style={styles.padding}>
         <Space height="lg" />
 

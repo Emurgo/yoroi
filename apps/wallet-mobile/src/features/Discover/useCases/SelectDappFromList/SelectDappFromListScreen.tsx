@@ -6,11 +6,13 @@ import {FlatList, StyleSheet, View} from 'react-native'
 import {SimpleTab} from '../../../../components/SimpleTab/SimpleTab'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {ShowDisclaimer} from '../../../Legal/Disclaimer/ShowDisclaimer'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
 import {NetworkTag} from '../../../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {ChainDAppsWarning} from '../../common/ChainDAppsWarning'
 import {getGoogleSearchItem} from '../../common/helpers'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
+import {useShowWelcomeDApp} from '../../common/useShowWelcomeDApp'
 import {useStrings} from '../../common/useStrings'
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
 import {CountDAppsConnected} from './CountDAppsConnected/CountDAppsConnected'
@@ -31,6 +33,7 @@ export const SelectDappFromListScreen = () => {
   const [currentTab, setCurrentTab] = React.useState<TDAppTabs>('connected')
   const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>([])
   const {track} = useMetrics()
+  const {isShowedWelcomeDApp} = useShowWelcomeDApp()
 
   React.useEffect(() => {
     if (currentTab === 'recommended') {
@@ -75,6 +78,8 @@ export const SelectDappFromListScreen = () => {
   return (
     <>
       <WelcomeDAppModal />
+
+      <ShowDisclaimer type="dapps" disabled={!isShowedWelcomeDApp} />
 
       <View style={[styles.root]}>
         <ChainDAppsWarning />

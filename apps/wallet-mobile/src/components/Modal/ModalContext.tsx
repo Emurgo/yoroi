@@ -10,6 +10,8 @@ type ModalState = {
   footer?: React.ReactNode
   isLoading: boolean
   full: boolean
+  canContinue?: boolean
+  canDiscard: boolean
 }
 type ModalActions = {
   openModal: (args: {
@@ -19,8 +21,11 @@ type ModalActions = {
     footer?: React.ReactNode
     full?: boolean
     onClose?: () => void
+    canContinue?: boolean
+    canDiscard?: boolean
   }) => void
   closeModal: () => void
+  setCanContinue: (v: boolean) => void
   startLoading: () => void
   stopLoading: () => void
 }
@@ -53,14 +58,15 @@ export const ModalProvider = ({
         onCloseRef.current?.()
       }
     },
-    openModal: ({title = '', content, height, onClose, full = false, footer}) => {
+    openModal: ({title = '', content, height, onClose, full = false, footer, canContinue, canDiscard = true}) => {
       Keyboard.dismiss()
-      dispatch({type: 'open', title, content, footer, height, full})
+      dispatch({type: 'open', title, content, footer, height, full, canContinue, canDiscard})
       navigation.navigate('modal')
       onCloseRef.current = onClose
     },
     startLoading: () => dispatch({type: 'startLoading'}),
     stopLoading: () => dispatch({type: 'stopLoading'}),
+    setCanContinue: (v) => dispatch({type: 'canContinue', canContinue: v}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [state, actions])
@@ -76,10 +82,13 @@ type ModalAction =
       footer: ModalState['footer']
       title: ModalState['title']
       full: ModalState['full']
+      canContinue: ModalState['canContinue']
+      canDiscard: ModalState['canDiscard']
     }
   | {type: 'close'}
   | {type: 'startLoading'}
   | {type: 'stopLoading'}
+  | {type: 'canContinue'; canContinue: boolean}
 
 const modalReducer = (state: ModalState, action: ModalAction) => {
   switch (action.type) {
@@ -104,6 +113,9 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
     case 'startLoading':
       return {...state, isLoading: true}
 
+    case 'canContinue':
+      return {...state, canContinue: action.canContinue}
+
     default:
       throw new Error(`modalReducer invalid action`)
   }
@@ -117,6 +129,7 @@ const defaultState: ModalState = Object.freeze({
   isOpen: false,
   isLoading: false,
   full: false,
+  canDiscard: true,
 })
 
 const getLastRouteName = (navigation: NavigationProp<ReactNavigation.RootParamList>) => {

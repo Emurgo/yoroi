@@ -14,7 +14,7 @@ import {useModal} from './ModalContext'
 export const ModalScreen = () => {
   const styles = useStyles()
   const {current} = useCardAnimation()
-  const {height, closeModal, content, footer, isOpen, isLoading, full} = useModal()
+  const {height, closeModal, content, footer, isOpen, isLoading, full, canDiscard} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
   // NOTE: this is to fill the bottom of the screen with the same color as the modal
   const {bottom} = useSafeAreaInsets()
@@ -38,7 +38,7 @@ export const ModalScreen = () => {
 
   return (
     <SafeAreaView style={styles.backdrop}>
-      <Pressable style={styles.cancellableArea} onPress={closeModal} />
+      <Pressable style={styles.cancellableArea} {...(canDiscard && {onPress: closeModal})} />
 
       <KeyboardAvoidingView style={styles.root} keyboardVerticalOffset={0}>
         <Animated.View

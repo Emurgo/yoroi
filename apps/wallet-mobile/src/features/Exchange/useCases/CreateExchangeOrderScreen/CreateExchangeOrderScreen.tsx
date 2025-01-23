@@ -15,6 +15,7 @@ import {banxaTestWallet} from '../../../../kernel/env'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {delay} from '../../../../yoroi-wallets/utils/timeUtils'
+import {ShowDisclaimer} from '../../../Legal/Disclaimer/ShowDisclaimer'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
@@ -27,7 +28,6 @@ import {EditAmount} from './EditAmount/EditAmount'
 import {ErrorScreen} from './LoadingLink/ErrorScreen'
 import {LoadingLinkScreen} from './LoadingLink/LoadingScreen'
 import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
-import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 import {ShowPreprodNotice} from './ShowPreprodNotice/ShowPreprodNotice'
 
 const BOTTOM_ACTION_SECTION = 180
@@ -164,7 +164,7 @@ export const CreateExchangeOrderScreen = () => {
               disabled
             />
 
-            <ShowDisclaimer />
+            <ShowDisclaimer type="exchange" />
           </View>
         </ScrollView>
 
