@@ -1,5 +1,5 @@
 import {BalanceQuantity} from '../balance/token'
-import {SwapAggregator} from '../swap/aggregator'
+import {SwapAggregator} from '../swap/api'
 
 export interface AppApi {
   getFrontendFees(): Promise<AppFrontendFeesResponse>

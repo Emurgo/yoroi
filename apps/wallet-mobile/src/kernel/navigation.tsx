@@ -181,7 +181,7 @@ type SwapTokenRoutes = {
   'swap-select-sell-token': undefined
   'swap-select-buy-token': undefined
   'swap-edit-slippage': undefined
-  'swap-select-pool': undefined
+  'swap-select-provider': undefined
   'swap-preprod-notice': undefined
   'swap-submitted-tx': undefined
   'swap-failed-tx': undefined
@@ -195,6 +195,7 @@ export type StakingCenterRoutes = {
 export type SwapTabRoutes = {
   'token-swap': undefined
   orders: undefined
+  'manager-config': undefined
 }
 
 type ExchangeRoutes = {

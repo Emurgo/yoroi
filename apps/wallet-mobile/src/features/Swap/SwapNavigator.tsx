@@ -1,19 +1,19 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
-import {useSwap, useSwapTokensOnlyVerified} from '@yoroi/swap'
+import {EventArg} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView} from '../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {isDev} from '../../kernel/env'
 import {useIsKeyboardOpen} from '../../kernel/keyboard/useIsKeyboardOpen'
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kernel/navigation'
-import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
 import {useSearch} from '../Search/SearchContext'
-import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './common/strings'
-import {StartSwapOrderScreen} from './useCases/StartOrderSwapScreen/CreateOrder/StartSwapOrderScreen'
-import {ListOrders} from './useCases/StartOrderSwapScreen/ListOrders/ListOrders'
+import {StartSwapOrderScreen} from './useCases/CreateOrder/StartSwapOrderScreen'
+import {ListOrders} from './useCases/ListOrders/ListOrders'
+import {ManagerConfig} from './useCases/Manager/ManagerConfig'
 
 const Tab = createMaterialTopTabNavigator<SwapTabRoutes>()
 export const SwapTabNavigator = () => {
@@ -22,40 +22,19 @@ export const SwapTabNavigator = () => {
   const {atoms, color} = useTheme()
   const isKeyboardOpen = useIsKeyboardOpen()
 
-  // state data
-  const {wallet} = useSelectedWallet()
-  const {
-    aggregatorTokenId,
-    lpTokenHeldChanged,
-    frontendFeeTiers,
-    frontendFeeTiersChanged,
-    sellTokenInfoChanged,
-    primaryTokenInfoChanged,
-  } = useSwap()
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const lpTokenHeld = usePortfolioBalances({wallet}).records.get(aggregatorTokenId!)
-
-  // initialize sell with / and primary token
-  React.useEffect(() => {
-    sellTokenInfoChanged(wallet.portfolioPrimaryTokenInfo)
-    primaryTokenInfoChanged(wallet.portfolioPrimaryTokenInfo)
-  }, [primaryTokenInfoChanged, sellTokenInfoChanged, wallet.portfolioPrimaryTokenInfo])
-
-  // update the fee tiers
-  React.useEffect(() => {
-    frontendFeeTiersChanged(frontendFeeTiers)
-  }, [frontendFeeTiers, frontendFeeTiersChanged])
-
-  // update lp token balance
-  React.useEffect(() => {
-    if (aggregatorTokenId == null) return
-
-    lpTokenHeldChanged(lpTokenHeld)
-  }, [aggregatorTokenId, lpTokenHeld, lpTokenHeldChanged])
-
-  useSwapTokensOnlyVerified({suspense: false})
-
   const {visible: isSearchBarVisible} = useSearch()
+
+  const listeners = {
+    tabPress: (e: EventArg<'tabPress', true, undefined>) => {
+      // if the keyboard is open, the user needs to close first the keyboard
+      // then, press again the tab to change screen
+      // to avoid screen freezing
+      if (isKeyboardOpen) {
+        Keyboard.dismiss()
+        e.preventDefault()
+      }
+    },
+  }
 
   return (
     <KeyboardAvoidingView style={[styles.flex, styles.root]}>
@@ -64,41 +43,17 @@ export const SwapTabNavigator = () => {
           screenOptions={({route}) => ({
             ...defaultMaterialTopTabNavigationOptions(atoms, color),
             ...(isSearchBarVisible && {tabBarStyle: {height: 0}}),
-            tabBarLabel: route.name === 'token-swap' ? strings.tokenSwap : strings.orderSwap,
+            tabBarLabel: {'token-swap': strings.tokenSwap, orders: strings.orderSwap, 'manager-config': 'Manager'}[
+              route.name
+            ],
           })}
           style={styles.tab}
         >
-          <Tab.Screen
-            listeners={{
-              tabPress: (e) => {
-                // if the keyboard is open, the user needs to close first the keyboard
-                // then, press again the tab to change screen
-                // to avoid screen freezing
-                if (isKeyboardOpen) {
-                  Keyboard.dismiss()
-                  e.preventDefault()
-                }
-              },
-            }}
-            name="token-swap"
-            component={StartSwapOrderScreen}
-          />
+          <Tab.Screen listeners={listeners} name="token-swap" component={StartSwapOrderScreen} />
 
-          <Tab.Screen
-            listeners={{
-              tabPress: (e) => {
-                // if the keyboard is open, the user needs to close first the keyboard
-                // then, press again the tab to change screen
-                // to avoid screen freezing
-                if (isKeyboardOpen) {
-                  Keyboard.dismiss()
-                  e.preventDefault()
-                }
-              },
-            }}
-            name="orders"
-            getComponent={() => ListOrders}
-          />
+          <Tab.Screen listeners={listeners} name="orders" getComponent={() => ListOrders} />
+
+          {isDev && <Tab.Screen listeners={listeners} name="manager-config" component={ManagerConfig} />}
         </Tab.Navigator>
       </SafeAreaView>
     </KeyboardAvoidingView>

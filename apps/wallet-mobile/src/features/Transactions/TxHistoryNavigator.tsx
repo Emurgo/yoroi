@@ -38,13 +38,14 @@ import {SubmittedTxScreen as SendSubmittedTxScreen} from '../Send/useCases/ShowS
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
-import {EditSlippageScreen, SelectPoolFromListScreen} from '../Swap/useCases'
+import {EditSlippageScreen} from '../Swap/useCases/CreateOrder/EditSlippageScreen'
+import {SelectBuyTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectBuyTokenFromListScreen'
+import {SelectProviderScreen} from '../Swap/useCases/CreateOrder/SelectProviderScreen'
+import {SelectSellTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectSellTokenFromListScreen'
 import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {FailedTxScreen as SwapFailedTxScreen} from '../Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
 import {SubmittedTxScreen as SwapSubmittedTxScreen} from '../Swap/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
-import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
-import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
@@ -263,8 +264,8 @@ export const TxHistoryNavigator = () => {
               />
 
               <Stack.Screen
-                name="swap-select-pool"
-                component={SelectPoolFromListScreen}
+                name="swap-select-provider"
+                component={SelectProviderScreen}
                 options={{
                   title: strings.selectPool,
                 }}

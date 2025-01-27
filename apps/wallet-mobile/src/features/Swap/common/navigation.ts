@@ -8,7 +8,7 @@ export const useNavigateTo = () => {
   const navigation = useNavigation()
 
   return useRef({
-    selectPool: () => swapNavigation.navigate('swap-select-pool'),
+    selectProvider: () => swapNavigation.navigate('swap-select-provider'),
     editSlippage: () => swapNavigation.navigate('swap-edit-slippage'),
     selectBuyToken: () => swapNavigation.navigate('swap-select-buy-token'),
     selectSellToken: () => swapNavigation.navigate('swap-select-sell-token'),
