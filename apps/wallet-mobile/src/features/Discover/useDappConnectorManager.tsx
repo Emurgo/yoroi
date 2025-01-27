@@ -62,9 +62,13 @@ export const useDappConnectorManager = () => {
               reject(userRejectedError())
             },
             onClose: () => {
-              if (shouldResolve) reject(userRejectedError())
+              if (shouldResolve) {
+                shouldResolve = false
+                reject(userRejectedError())
+              }
             },
             onError: (error) => {
+              shouldResolve = false
               logger.error('useDappConnectorManager::handleSignTx', {error})
               reject(error)
             },
@@ -96,6 +100,7 @@ export const useDappConnectorManager = () => {
               navigateTo.browseDapp()
             },
             onError: (error) => {
+              shouldResolve = false
               logger.error('useDappConnectorManager::handleSignTxWithHW', {error})
               reject(error)
             },
@@ -106,6 +111,7 @@ export const useDappConnectorManager = () => {
             },
             onClose: () => {
               if (!shouldResolve) return
+              shouldResolve = false
               reject(userRejectedError())
             },
           })
