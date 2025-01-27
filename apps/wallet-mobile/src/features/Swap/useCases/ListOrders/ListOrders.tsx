@@ -239,14 +239,33 @@ type CancellationProps = {
 const OrderCancellation = ({order, tokenInInfo, price, amount}: CancellationProps) => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const swapForm = useSwap()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const {navigateToTxReview} = useWalletNavigation()
 
   const onPress = async () => {
     setIsLoading(true)
     const response = await swapForm.cancel({order})
     setIsLoading(false)
+
+    const onOrderCancelConfirm = () => {
+      if (isLeft(response)) return
+
+      navigateToTxReview({
+        cbor: response.value.data.cbor,
+        details: {
+          title: strings.listOrdersSheetTitle,
+          component: (
+            <View>
+              <Text style={styles.rowLabel}>{strings.listOrdersTxId}</Text>
+
+              <Text style={styles.rowValue}>{order.txHash}</Text>
+            </View>
+          ),
+        },
+      })
+    }
 
     openModal({
       title: strings.listOrdersSheetTitle,
@@ -258,6 +277,17 @@ const OrderCancellation = ({order, tokenInInfo, price, amount}: CancellationProp
           amount={amount}
           response={response}
         />
+      ),
+      footer: isLeft(response) ? (
+        <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={closeModal} />
+      ) : (
+        <View style={styles.group}>
+          <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={closeModal} />
+
+          {response.value.data.cbor !== undefined && (
+            <Button type={ButtonType.Critical} title={strings.listOrdersSheetConfirm} onPress={onOrderCancelConfirm} />
+          )}
+        </View>
       ),
       height: 400,
     })
@@ -283,35 +313,13 @@ const OrderCancellationConfirmation = ({
 }: CancellationProps & {response: Api.Response<Swap.CancelResponse>}) => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const {closeModal} = useModal()
-  const {navigateToTxReview} = useWalletNavigation()
 
   if (isLeft(response))
     return (
       <View style={styles.root}>
         <Text style={styles.errorMessage}>{response.error.message}</Text>
-
-        <View>
-          <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={closeModal} />
-        </View>
       </View>
     )
-
-  const onOrderCancelConfirm = () => {
-    navigateToTxReview({
-      cbor: response.value.data.cbor,
-      details: {
-        title: strings.listOrdersSheetTitle,
-        component: (
-          <View>
-            <Text style={styles.rowLabel}>{strings.listOrdersTxId}</Text>
-
-            <Text style={styles.rowValue}>{order.txHash}</Text>
-          </View>
-        ),
-      },
-    })
-  }
 
   const fee = response.value.data.additionalCancellationFee
 
@@ -330,14 +338,6 @@ const OrderCancellationConfirmation = ({
       </React.Fragment>
 
       <Space fill />
-
-      <View style={styles.group}>
-        <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={closeModal} />
-
-        {response.value.data.cbor !== undefined && (
-          <Button type={ButtonType.Critical} title={strings.listOrdersSheetConfirm} onPress={onOrderCancelConfirm} />
-        )}
-      </View>
     </View>
   )
 }
