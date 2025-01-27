@@ -48,41 +48,46 @@ export const useLegacyOnConfirm = ({
     }
     const {isHW, isEasyConfirmationEnabled} = meta
     if (isHW) {
-      openModal(
-        strings.signTransaction,
-        <ConfirmTxWithHwModal
-          onCancel={closeModal}
-          unsignedTx={unsignedTx}
-          onSuccess={handleOnSuccess}
-          onNotSupportedCIP1694={() => {
-            if (onNotSupportedCIP1694) {
-              closeModal()
-              onNotSupportedCIP1694()
-            }
-          }}
-          onCIP36SupportChange={onCIP36SupportChange ?? undefined}
-        />,
-        400,
-      )
+      openModal({
+        title: strings.signTransaction,
+        content: (
+          <ConfirmTxWithHwModal
+            onCancel={closeModal}
+            unsignedTx={unsignedTx}
+            onSuccess={handleOnSuccess}
+            onNotSupportedCIP1694={() => {
+              if (onNotSupportedCIP1694) {
+                closeModal()
+                onNotSupportedCIP1694()
+              }
+            }}
+            onCIP36SupportChange={onCIP36SupportChange ?? undefined}
+          />
+        ),
+        height: 400,
+      })
       return
     }
 
     if (!isHW && !isEasyConfirmationEnabled) {
-      openModal(
-        strings.signTransaction,
-        <ConfirmTxWithSpendingPasswordModal
-          unsignedTx={unsignedTx}
-          onSuccess={handleOnSuccess}
-          onError={handleOnError}
-        />,
-      )
+      openModal({
+        title: strings.signTransaction,
+        content: (
+          <ConfirmTxWithSpendingPasswordModal
+            unsignedTx={unsignedTx}
+            onSuccess={handleOnSuccess}
+            onError={handleOnError}
+          />
+        ),
+        height: 400,
+      })
       return
     }
 
-    openModal(
-      strings.signTransaction,
-      <ConfirmTxWithOsModal unsignedTx={unsignedTx} onSuccess={handleOnSuccess} onError={handleOnError} />,
-    )
+    openModal({
+      title: strings.signTransaction,
+      content: <ConfirmTxWithOsModal unsignedTx={unsignedTx} onSuccess={handleOnSuccess} onError={handleOnError} />,
+    })
   }
 
   return {legacyOnConfirm} as const

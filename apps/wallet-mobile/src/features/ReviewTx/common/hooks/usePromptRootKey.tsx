@@ -29,21 +29,21 @@ export const usePromptRootKey = () => {
       }
 
       if (meta.isEasyConfirmationEnabled) {
-        openModal(
-          title ?? strings.confirmTx,
-          <ConfirmRawTxWithOs onSuccess={handleOnConfirm} onError={onError} />,
-          modalHeight,
+        openModal({
+          title: title ?? strings.confirmTx,
+          content: <ConfirmRawTxWithOs onSuccess={handleOnConfirm} onError={onError} />,
+          height: modalHeight,
           onClose,
-        )
+        })
         return
       }
 
-      openModal(
-        title ?? strings.confirmTx,
-        <ConfirmRawTxWithPassword summary={summary} onConfirm={handleOnConfirm} />,
-        modalHeight,
+      openModal({
+        title: title ?? strings.confirmTx,
+        content: <ConfirmRawTxWithPassword summary={summary} onConfirm={handleOnConfirm} />,
+        height: modalHeight,
         onClose,
-      )
+      })
     },
     [closeModal, meta.isEasyConfirmationEnabled, openModal, strings.confirmTx],
   )
