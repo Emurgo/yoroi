@@ -3,7 +3,6 @@ import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
 
 import {Space} from '../../../components/Space/Space'
 import {isEmptyString} from '../../../kernel/utils'
@@ -26,7 +25,7 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
   const poolName = generatePoolName(poolInfo)
 
   return (
-    <ScrollView bounces={false} style={styles.root}>
+    <View style={styles.root}>
       <PoolIcon imageUrl={explorer?.pic} />
 
       <Space height="sm" />
@@ -91,7 +90,7 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
       {poolInfo.explorer && !isEmptyString(poolInfo.explorer.id) && (
         <ExplorerInfoLinks id={poolInfo.explorer.id} type="pool" />
       )}
-    </ScrollView>
+    </View>
   )
 }
 

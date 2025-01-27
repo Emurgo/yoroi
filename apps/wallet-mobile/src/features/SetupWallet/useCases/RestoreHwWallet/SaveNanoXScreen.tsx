@@ -122,74 +122,64 @@ export const SaveNanoXScreen = () => {
   }, [accountVisual, createWallet, hwDeviceInfo, name, walletImplementation])
 
   const showModalTipsPassword = () => {
-    openModal(
-      strings.walletDetailsModalTitle,
-      <View style={[styles.flex, styles.modal]}>
-        <ScrollView bounces={false}>
-          <View>
-            <CardAboutPhrase
-              title={strings.walletNameModalCardTitle}
-              linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
-            />
+    openModal({
+      title: strings.walletDetailsModalTitle,
+      content: (
+        <View style={[styles.flex, styles.modal]}>
+          <CardAboutPhrase
+            title={strings.walletNameModalCardTitle}
+            linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
+          />
 
-            <Space height="lg" />
+          <Space height="lg" />
 
-            <CardAboutPhrase
-              title={strings.walletPasswordModalCardTitle}
-              linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
-            />
+          <CardAboutPhrase
+            title={strings.walletPasswordModalCardTitle}
+            linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
+          />
 
-            <Space height="lg" />
+          <Space height="lg" />
 
-            <LearnMoreButton
-              onPress={() => {
-                Linking.openURL(YoroiZendeskLink)
-              }}
-            />
-          </View>
-        </ScrollView>
-
-        <Space height="sm" />
-
-        <Button title={strings.continueButton} onPress={closeModal} />
-      </View>,
-      HEIGHT_MODAL_NAME_PASSWORD,
-    )
+          <LearnMoreButton
+            onPress={() => {
+              Linking.openURL(YoroiZendeskLink)
+            }}
+          />
+        </View>
+      ),
+      footer: <Button title={strings.continueButton} onPress={closeModal} />,
+      height: HEIGHT_MODAL_NAME_PASSWORD,
+    })
   }
 
   const showModalTipsPlateNumber = () => {
-    openModal(
-      strings.walletDetailsModalTitle,
-      <View style={[styles.flex, styles.modal]}>
-        <ScrollView bounces={false}>
-          <View>
-            <CardAboutPhrase
-              title={strings.walletChecksumModalCardTitle}
-              checksumImage={seed}
-              checksumLine={1}
-              linesOfText={[
-                strings.walletChecksumModalCardFirstItem,
-                strings.walletChecksumModalCardSecondItem(plate),
-                strings.walletChecksumModalCardThirdItem,
-              ]}
-            />
+    openModal({
+      title: strings.walletDetailsModalTitle,
+      content: (
+        <View style={[styles.flex, styles.modal]}>
+          <CardAboutPhrase
+            title={strings.walletChecksumModalCardTitle}
+            checksumImage={seed}
+            checksumLine={1}
+            linesOfText={[
+              strings.walletChecksumModalCardFirstItem,
+              strings.walletChecksumModalCardSecondItem(plate),
+              strings.walletChecksumModalCardThirdItem,
+            ]}
+          />
 
-            <Space height="lg" />
+          <Space height="lg" />
 
-            <LearnMoreButton
-              onPress={() => {
-                Linking.openURL(YoroiZendeskLink)
-              }}
-            />
-          </View>
-        </ScrollView>
-
-        <Space height="sm" />
-
-        <Button title={strings.continueButton} onPress={closeModal} />
-      </View>,
-      HEIGHT_MODAL_CHECKSUM,
-    )
+          <LearnMoreButton
+            onPress={() => {
+              Linking.openURL(YoroiZendeskLink)
+            }}
+          />
+        </View>
+      ),
+      footer: <Button title={strings.continueButton} onPress={closeModal} />,
+      height: HEIGHT_MODAL_CHECKSUM,
+    })
   }
 
   return (

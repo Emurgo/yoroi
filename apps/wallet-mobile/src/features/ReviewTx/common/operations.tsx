@@ -85,7 +85,11 @@ export const StakeDelegationOperation = ({
   const {height: windowHeight} = useWindowDimensions()
 
   const handleShowPoolDetails = () => {
-    openModal(strings.poolDetailsTitle, <PoolDetails poolInfo={poolInfo} />, windowHeight * 0.8)
+    openModal({
+      title: strings.poolDetailsTitle,
+      content: <PoolDetails poolInfo={poolInfo} />,
+      height: windowHeight * 0.8,
+    })
   }
 
   const poolName = generatePoolName(poolInfo) ?? poolId

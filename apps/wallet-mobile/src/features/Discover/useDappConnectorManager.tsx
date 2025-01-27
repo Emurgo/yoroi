@@ -7,14 +7,16 @@ import {InteractionManager} from 'react-native'
 import {logger} from '../../kernel/logger/logger'
 import {useWalletNavigation} from '../../kernel/navigation'
 import {isEmptyString} from '../../kernel/utils'
+import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
+import {BaseLedgerError} from '../../yoroi-wallets/hw/hw'
 import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useBrowser} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
+import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
-import {useShowHWNotSupportedModal} from './common/HWNotSupportedModal'
 import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
 import {useNavigateTo} from './common/useNavigateTo'
 import {useStrings} from './common/useStrings'
@@ -162,23 +164,44 @@ const useSignData = () => {
 }
 
 const useSignDataWithHW = () => {
-  const {showHWNotSupportedModal, closeModal} = useShowHWNotSupportedModal()
+  const {confirmHWConnection, closeModal} = useConfirmHWConnectionModal()
+  const {wallet, meta} = useSelectedWallet()
 
-  return React.useCallback(() => {
-    return new Promise<{signature: string; key: string}>((_resolve, reject) => {
-      let shouldResolveOnClose = true
-      showHWNotSupportedModal({
-        onConfirm: () => {
-          closeModal()
-          shouldResolveOnClose = false
-          return reject(userRejectedError())
-        },
-        onClose: () => {
-          if (shouldResolveOnClose) reject(userRejectedError())
-        },
+  return React.useCallback(
+    (address: string, payload: string) => {
+      return new Promise<{signature: string; key: string}>((resolve, reject) => {
+        let isClosed = false
+        confirmHWConnection({
+          onConfirm: async ({transportType, deviceInfo}) => {
+            try {
+              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+              const result = await cip30.signData(address, payload, deviceInfo, transportType === 'USB')
+              resolve(result)
+              isClosed = true
+              closeModal()
+            } catch (error) {
+              if (error instanceof BaseLedgerError) {
+                throw error
+              }
+              reject(error)
+              isClosed = true
+              closeModal()
+            }
+          },
+          onCancel: () => {
+            reject(userRejectedError())
+            isClosed = true
+            closeModal()
+          },
+          onClose: () => {
+            if (isClosed) return
+            reject(userRejectedError())
+          },
+        })
       })
-    })
-  }, [showHWNotSupportedModal, closeModal])
+    },
+    [confirmHWConnection, wallet, meta, closeModal],
+  )
 }
 
 const useConfirmConnection = () => {

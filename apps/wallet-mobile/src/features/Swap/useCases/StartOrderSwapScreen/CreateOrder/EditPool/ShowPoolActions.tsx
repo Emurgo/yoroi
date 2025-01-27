@@ -167,7 +167,7 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
         )
 
         const handleOpenModal = () => {
-          openModal(fee.label, modalContent)
+          openModal({title: fee.label, content: modalContent})
         }
 
         return (
@@ -265,7 +265,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
         )
 
         const handleOpenModal = () => {
-          openModal(fee.title ?? fee.label, modalContent)
+          openModal({title: fee.title ?? fee.label, content: modalContent})
         }
 
         return (

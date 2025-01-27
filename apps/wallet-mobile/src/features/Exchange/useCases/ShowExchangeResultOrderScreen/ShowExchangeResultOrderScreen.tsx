@@ -47,7 +47,7 @@ export const ShowExchangeResultOrderScreen = () => {
   }
 
   const handleOnShowDetails = () => {
-    openModal(strings.buySellCrypto, <DescribeAction />)
+    openModal({title: strings.buySellCrypto, content: <DescribeAction />})
   }
 
   const {showOrderDetails, Logo, name, showProviderDetails} = sanitizeParams(params)

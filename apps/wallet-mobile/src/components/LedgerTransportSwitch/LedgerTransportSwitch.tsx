@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Alert, ScrollView, StyleSheet, View} from 'react-native'
+import {Alert, StyleSheet, View} from 'react-native'
 
 import {useStrings} from '../../features/Swap/common/strings'
 import {useIsUsbSupported} from '../../legacy/HW'
@@ -25,32 +25,30 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
   })
 
   return (
-    <ScrollView>
-      <View style={styles.content}>
-        <Text style={styles.paragraph}>{strings.bluetoothExplanation}</Text>
+    <View style={styles.content}>
+      <Text style={styles.paragraph}>{strings.bluetoothExplanation}</Text>
 
-        <Button
-          type={ButtonType.Secondary}
-          onPress={() => request()}
-          title={strings.bluetoothButton}
-          testID="connectWithBLEButton"
-        />
+      <Button
+        type={ButtonType.Secondary}
+        onPress={() => request()}
+        title={strings.bluetoothButton}
+        testID="connectWithBLEButton"
+      />
 
-        <Spacer height={16} />
+      <Spacer height={16} />
 
-        <Text style={styles.paragraph}>{strings.usbExplanation}</Text>
+      <Text style={styles.paragraph}>{strings.usbExplanation}</Text>
 
-        <Button
-          type={ButtonType.Secondary}
-          onPress={onSelectUSB}
-          title={strings.usbButton}
-          disabled={!isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
-          testID="connectWithUSBButton"
-        />
+      <Button
+        type={ButtonType.Secondary}
+        onPress={onSelectUSB}
+        title={strings.usbButton}
+        disabled={!isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
+        testID="connectWithUSBButton"
+      />
 
-        <Text style={styles.infoText}>{strings.usbConnectionIsBlocked}</Text>
-      </View>
-    </ScrollView>
+      <Text style={styles.infoText}>{strings.usbConnectionIsBlocked}</Text>
+    </View>
   )
 }
 

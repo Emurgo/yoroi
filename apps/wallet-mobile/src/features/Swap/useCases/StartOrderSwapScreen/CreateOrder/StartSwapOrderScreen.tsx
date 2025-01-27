@@ -18,6 +18,7 @@ import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types/yoroi'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils/utils'
+import {ShowDisclaimer} from '../../../../Legal/Disclaimer/ShowDisclaimer'
 import {useDisableSearchOnBar} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
@@ -253,11 +254,11 @@ export const StartSwapOrderScreen = () => {
     if (orderData.selectedPoolCalculation === undefined) return
 
     if (priceImpactRisk === 'high' && orderData.type === 'market') {
-      openModal(
-        strings.warning,
-        <WarnPriceImpact onContinue={createUnsignedSwapTx} priceImpactRisk={priceImpactRisk} />,
-        400,
-      )
+      openModal({
+        title: strings.warning,
+        content: <WarnPriceImpact onContinue={createUnsignedSwapTx} priceImpactRisk={priceImpactRisk} />,
+        height: 400,
+      })
       return
     }
 
@@ -266,11 +267,11 @@ export const StartSwapOrderScreen = () => {
       const limitPrice = new BigNumber(orderData.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
-        openModal(
-          strings.limitPriceWarningTitle,
-          <WarnLimitPrice orderData={orderData} onConfirm={createUnsignedSwapTx} />,
-          400,
-        )
+        openModal({
+          title: strings.limitPriceWarningTitle,
+          content: <WarnLimitPrice orderData={orderData} onConfirm={createUnsignedSwapTx} />,
+          height: 400,
+        })
         return
       }
     }
@@ -282,11 +283,13 @@ export const StartSwapOrderScreen = () => {
     const buyTokenSwapTicker = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? ''
 
     if (Quantities.isZero(minReceived)) {
-      openModal(
-        strings.slippageWarningTitle,
-        <WarnSlippage onConfirm={createUnsignedSwapTx} slippage={orderData.slippage} ticker={buyTokenSwapTicker} />,
-        350,
-      )
+      openModal({
+        title: strings.slippageWarningTitle,
+        content: (
+          <WarnSlippage onConfirm={createUnsignedSwapTx} slippage={orderData.slippage} ticker={buyTokenSwapTicker} />
+        ),
+        height: 350,
+      })
       return
     }
 
@@ -297,6 +300,8 @@ export const StartSwapOrderScreen = () => {
 
   return (
     <View style={[styles.root, styles.flex]}>
+      <ShowDisclaimer type="swap" />
+
       <ScrollView style={styles.padding}>
         <Space height="lg" />
 

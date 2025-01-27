@@ -98,7 +98,7 @@ export const useLinksRequestAction = () => {
         <RequestedAdaPaymentWithLinkScreen onContinue={handleOnContinue} params={params} isTrusted={isTrusted} />
       )
 
-      openModal(title, content, heightBreakpoint)
+      openModal({title: title, content: content, height: heightBreakpoint})
     },
     [strings.trustedPaymentRequestedTitle, strings.untrustedPaymentRequestedTitle, startTransferWithLink, openModal],
   )
@@ -151,7 +151,7 @@ export const useLinksRequestAction = () => {
         <RequestedBrowserLaunchDappUrlScreen onContinue={handleOnContinue} params={params} isTrusted={isTrusted} />
       )
 
-      openModal(title, content, heightBreakpoint)
+      openModal({title: title, content: content, height: heightBreakpoint})
     },
     [launchDappUrl, openModal, strings.trustedBrowserLaunchDappUrlTitle, strings.untrustedBrowserLaunchDappUrlTitle],
   )

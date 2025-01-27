@@ -8,7 +8,7 @@ import {Alert, Linking} from 'react-native'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {useClaimErrorResolver} from '../../../features/Claim/common/useClaimErrorResolver'
 import {useStrings as useStringsClaim} from '../../../features/Claim/common/useStrings'
-import {AskConfirmation} from '../../../features/Claim/useCases/AskConfirmation'
+import {AskConfirmation, AskConfirmationActions} from '../../../features/Claim/useCases/AskConfirmation'
 import {pastedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from './useNavigateTo'
@@ -18,6 +18,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: Scan.Featu
     wallet: {portfolioPrimaryTokenInfo},
   } = useSelectedWallet()
   const {openModal, closeModal, startLoading, stopLoading} = useModal()
+
   const navigateTo = useNavigateTo()
 
   const {
@@ -92,16 +93,13 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: Scan.Featu
           startLoading()
           claimTokens(scanAction)
         }
-        const claimContent = (
-          <AskConfirmation
-            address={address}
-            url={scanAction.url}
-            code={scanAction.code}
-            onContinue={handleOnContinue}
-          />
-        )
 
-        openModal(stringsClaim.askConfirmationTitle, claimContent, 400)
+        openModal({
+          title: stringsClaim.askConfirmationTitle,
+          content: <AskConfirmation address={address} url={scanAction.url} code={scanAction.code} />,
+          footer: <AskConfirmationActions onContinue={handleOnContinue} />,
+          height: 400,
+        })
         break
       }
     }

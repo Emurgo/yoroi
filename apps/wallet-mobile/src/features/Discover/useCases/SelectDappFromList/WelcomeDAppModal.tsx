@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {Image, StyleSheet, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import IllustrationDAppImage from '../../../../assets/img/illustration-dapp.png'
@@ -9,28 +9,42 @@ import {useModal} from '../../../../components/Modal/ModalContext'
 import {useShowWelcomeDApp} from '../../common/useShowWelcomeDApp'
 import {useStrings} from '../../common/useStrings'
 
-const WELCOME_DAPP_MODAL_HEIGHT = 494
-
 export const WelcomeDAppModal = () => {
   const strings = useStrings()
+  const {styles} = useStyles()
   const insets = useSafeAreaInsets()
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const {isShowedWelcomeDApp, setShowedWelcomeDApp, loadingGetShowedWelcomeDApp} = useShowWelcomeDApp()
-
-  const dialogHeight = WELCOME_DAPP_MODAL_HEIGHT + insets.bottom
 
   React.useEffect(() => {
     if (loadingGetShowedWelcomeDApp || isShowedWelcomeDApp) return
 
-    openModal(strings.welcomeToYoroiDAppExplorer, <Modal />, dialogHeight)
+    openModal({
+      title: strings.welcomeToYoroiDAppExplorer,
+      content: (
+        <View style={styles.container}>
+          <Image source={IllustrationDAppImage} style={styles.welcomeImage} />
+
+          <Text style={styles.welcomeText}>{strings.welcomeToYoroiDAppExplorerDescription}</Text>
+        </View>
+      ),
+      footer: <Button onPress={closeModal} title={strings.next} />,
+      height: 494 + insets.bottom,
+    })
     setShowedWelcomeDApp()
   }, [
-    dialogHeight,
+    closeModal,
+    insets.bottom,
     isShowedWelcomeDApp,
     loadingGetShowedWelcomeDApp,
     openModal,
     setShowedWelcomeDApp,
+    strings.next,
     strings.welcomeToYoroiDAppExplorer,
+    strings.welcomeToYoroiDAppExplorerDescription,
+    styles.container,
+    styles.welcomeImage,
+    styles.welcomeText,
   ])
 
   return <></>
@@ -45,9 +59,6 @@ const useStyles = () => {
       color: color.gray_900,
       marginTop: 16,
     },
-    actions: {
-      ...atoms.py_lg,
-    },
     welcomeImage: {
       ...atoms.w_full,
       height: 200,
@@ -59,22 +70,4 @@ const useStyles = () => {
   })
 
   return {styles} as const
-}
-
-const Modal = () => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-  const {closeModal} = useModal()
-
-  return (
-    <ScrollView style={styles.container} bounces={false}>
-      <Image source={IllustrationDAppImage} style={styles.welcomeImage} />
-
-      <Text style={styles.welcomeText}>{strings.welcomeToYoroiDAppExplorerDescription}</Text>
-
-      <View style={styles.actions}>
-        <Button onPress={closeModal} title={strings.next} />
-      </View>
-    </ScrollView>
-  )
 }

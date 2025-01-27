@@ -15,7 +15,7 @@ export const useShowOpenOrderModal = () => {
 
   const handleShowOpenOrderModal = React.useCallback(
     (order: IOpenOrders) => {
-      openModal('', <OpenOrderModal splitTokenSymbol="/" tokenInfo={order} />, dialogHeight)
+      openModal({content: <OpenOrderModal splitTokenSymbol="/" tokenInfo={order} />, height: dialogHeight})
     },
     [dialogHeight, openModal],
   )

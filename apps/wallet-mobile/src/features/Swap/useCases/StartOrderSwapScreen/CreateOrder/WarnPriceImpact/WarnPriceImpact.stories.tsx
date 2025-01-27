@@ -28,16 +28,18 @@ storiesOf('Swap Warn Price Impact', module)
         onPress={() => {
           content !== undefined
             ? closeModal()
-            : openModal(
-                strings.warning,
-                <WarnPriceImpact
-                  onContinue={() => {
-                    closeModal()
-                    action('onContinue')
-                  }}
-                  priceImpactRisk="high"
-                />,
-              )
+            : openModal({
+                title: strings.warning,
+                content: (
+                  <WarnPriceImpact
+                    onContinue={() => {
+                      closeModal()
+                      action('onContinue')
+                    }}
+                    priceImpactRisk="high"
+                  />
+                ),
+              })
         }}
       />
     )
