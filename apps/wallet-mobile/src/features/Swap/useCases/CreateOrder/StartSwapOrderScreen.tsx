@@ -133,10 +133,10 @@ export const StartSwapOrderScreen = () => {
 
                   <Button
                     onPress={() =>
-                      openModal(
-                        strings.slippageTolerance,
-                        <Text style={styles.textContent}>{strings.slippageToleranceInfo}</Text>,
-                      )
+                      openModal({
+                        title: strings.slippageTolerance,
+                        content: <Text style={styles.textContent}>{strings.slippageToleranceInfo}</Text>,
+                      })
                     }
                     type={ButtonType.SecondaryText}
                     icon={Icon.Info}

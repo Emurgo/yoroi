@@ -248,17 +248,19 @@ const OrderCancellation = ({order, tokenInInfo, price, amount}: CancellationProp
     const response = await swapForm.cancel({order})
     setIsLoading(false)
 
-    openModal(
-      strings.listOrdersSheetTitle,
-      <OrderCancellationConfirmation
-        order={order}
-        tokenInInfo={tokenInInfo}
-        price={price}
-        amount={amount}
-        response={response}
-      />,
-      400,
-    )
+    openModal({
+      title: strings.listOrdersSheetTitle,
+      content: (
+        <OrderCancellationConfirmation
+          order={order}
+          tokenInInfo={tokenInInfo}
+          price={price}
+          amount={amount}
+          response={response}
+        />
+      ),
+      height: 400,
+    })
   }
 
   return (

@@ -104,7 +104,7 @@ const Row = ({
         {description !== undefined && (
           <Button
             style={styles.info}
-            onPress={() => openModal(label, <Text style={styles.textContent}>{description}</Text>)}
+            onPress={() => openModal({title: label, content: <Text style={styles.textContent}>{description}</Text>})}
             type={ButtonType.SecondaryText}
             icon={Icon.Info}
           />
