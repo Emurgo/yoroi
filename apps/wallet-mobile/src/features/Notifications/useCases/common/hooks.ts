@@ -12,7 +12,7 @@ import {useTransactionReceivedNotifications} from './transaction-received-notifi
 
 let initialized = false
 
-const init = () => {
+const initPushNotifications = () => {
   if (initialized) return
   initialized = true
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
@@ -39,21 +39,26 @@ const init = () => {
     },
   )
 
-  notificationManager.hydrate()
-
   return () => {
-    notificationManager.destroy()
     notificationOpenedSubscription.remove()
     unsubscribeFromForegroundMessage()
   }
 }
 
-export const useInitNotifications = ({enabled}: {enabled: boolean}) => {
-  React.useEffect(() => (enabled ? init() : undefined), [enabled])
-  useTransactionReceivedNotifications({enabled})
+const initLocalNotifications = () => {
+  notificationManager.hydrate()
+  return () => {
+    notificationManager.destroy()
+  }
+}
+
+export const useInitNotifications = ({localEnabled, pushEnabled}: {localEnabled: boolean; pushEnabled: boolean}) => {
+  React.useEffect(() => (localEnabled ? initLocalNotifications() : undefined), [localEnabled])
+  React.useEffect(() => (pushEnabled ? initPushNotifications() : undefined), [pushEnabled])
+  useTransactionReceivedNotifications({enabled: localEnabled})
   usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
-  useRewardsUpdatedNotifications({enabled})
-  usePushNotifications({enabled})
+  useRewardsUpdatedNotifications({enabled: localEnabled})
+  usePushNotifications({enabled: pushEnabled})
 }
 
 const usePushNotifications = ({enabled}: {enabled: boolean}) => {
