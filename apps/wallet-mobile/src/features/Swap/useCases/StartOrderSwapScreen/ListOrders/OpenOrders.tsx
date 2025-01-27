@@ -53,8 +53,9 @@ export const OpenOrders = () => {
   const intl = useIntl()
   const {wallet, meta} = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
-  const {navigateToTxHistory} = useWalletNavigation()
+  const {navigateToTxReview} = useWalletNavigation()
   const [isLoading, setIsLoading] = React.useState(false)
+  const navigateTo = useNavigateTo()
 
   const orders = useSwapOrdersByStatusOpen()
   const {numberLocale} = useLanguage()
@@ -125,34 +126,34 @@ export const OpenOrders = () => {
     })
   }
 
-  const onRawTxConfirm = async (rootKey: string, order: MappedOpenOrder) => {
+  const onRawTxConfirm = async (rootKey: string, order: MappedOpenOrder, cbor: string) => {
     try {
-      const tx = await createCancellationTxAndSign(order.id, rootKey)
+      const tx = await createCancellationTxAndSign(order.id, rootKey, cbor)
       if (!tx) return
       await wallet.submitTransaction(tx.txBase64)
       trackCancellationSubmitted(order)
+      navigateTo.submittedTx()
       closeModal()
-      navigateToTxHistory()
     } catch (error) {
       if (error instanceof SubmitTxInsufficientCollateralError) {
         handleCollateralError()
         return
       }
-      throw error
+      navigateTo.failedTx()
     }
   }
 
   const onRawTxHwConfirm = (order: MappedOpenOrder) => {
     try {
       trackCancellationSubmitted(order)
+      navigateTo.submittedTx()
       closeModal()
-      navigateToTxHistory()
     } catch (error) {
       if (error instanceof SubmitTxInsufficientCollateralError) {
         handleCollateralError()
         return
       }
-      throw error
+      navigateTo.failedTx()
     }
   }
 
@@ -163,7 +164,18 @@ export const OpenOrders = () => {
     return !!collateral.utxo && collateral.amount.quantity >= BigInt(getCollateralAmountInLovelace())
   }
 
-  const onOrderCancelConfirm = (order: MappedOpenOrder) => {
+  const generateSwapCancellationCbor = async (bech32Address: string, utxo: string) => {
+    const collateralUtxo = await getCollateralUtxo()
+    const addressHex = await convertBech32ToHex(bech32Address)
+    const cbor = await swapApiOrder.cancel({
+      utxos: {collateral: collateralUtxo, order: utxo},
+      address: addressHex,
+    })
+
+    return cbor
+  }
+
+  const onOrderCancelConfirm = async (order: MappedOpenOrder) => {
     if (!isString(order.utxo) || !isString(order.owner)) return
 
     if (!hasCollateral()) {
@@ -171,18 +183,27 @@ export const OpenOrders = () => {
       return
     }
 
-    openModal(
-      strings.signTransaction,
-      <ConfirmRawTx
-        cancelOrder={swapApiOrder.cancel}
-        utxo={order.utxo}
-        bech32Address={order.owner}
-        onCancel={closeModal}
-        onConfirm={(rootKey) => onRawTxConfirm(rootKey, order)}
-        onHWConfirm={() => onRawTxHwConfirm(order)}
-      />,
-      400,
-    )
+    const cbor = await generateSwapCancellationCbor(order.owner, order.utxo)
+
+    navigateToTxReview({
+      cbor,
+      onConfirm: () => {
+        if (!isString(order.utxo) || !isString(order.owner)) return
+
+        openModal(
+          strings.signTransaction,
+          <ConfirmRawTx
+            cancelOrder={swapApiOrder.cancel}
+            utxo={order.utxo}
+            bech32Address={order.owner}
+            onCancel={closeModal}
+            onConfirm={(rootKey) => onRawTxConfirm(rootKey, order, cbor)}
+            onHWConfirm={() => onRawTxHwConfirm(order)}
+          />,
+          400,
+        )
+      },
+    })
   }
 
   const handleCollateralError = () => {
@@ -207,18 +228,12 @@ export const OpenOrders = () => {
   const createCancellationTxAndSign = async (
     orderId: string,
     rootKey: string,
+    cbor: string,
   ): Promise<{txBase64: string} | undefined> => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
-    const {utxo, owner: bech32Address} = order
 
     try {
-      const collateralUtxo = await getCollateralUtxo()
-      const addressHex = await convertBech32ToHex(bech32Address)
-      const cbor = await swapApiOrder.cancel({
-        utxos: {collateral: collateralUtxo, order: utxo},
-        address: addressHex,
-      })
       const signers = await getTransactionSigners(cbor, wallet, meta)
       const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
       const response = await wallet.signRawTx(cbor, keys)

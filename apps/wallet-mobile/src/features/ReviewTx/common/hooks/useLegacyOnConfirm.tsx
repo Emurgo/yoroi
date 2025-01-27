@@ -43,7 +43,11 @@ export const useLegacyOnConfirm = ({
   }
 
   const legacyOnConfirm = () => {
-    if (meta.isHW && unsignedTx) {
+    if (!unsignedTx) {
+      throw new Error('useLegacyOnConfirm:: unsignedTx is required')
+    }
+    const {isHW, isEasyConfirmationEnabled} = meta
+    if (isHW) {
       openModal(
         strings.signTransaction,
         <ConfirmTxWithHwModal
@@ -63,7 +67,7 @@ export const useLegacyOnConfirm = ({
       return
     }
 
-    if (!meta.isHW && !meta.isEasyConfirmationEnabled && unsignedTx) {
+    if (!isHW && !isEasyConfirmationEnabled) {
       openModal(
         strings.signTransaction,
         <ConfirmTxWithSpendingPasswordModal
@@ -75,15 +79,10 @@ export const useLegacyOnConfirm = ({
       return
     }
 
-    if (!meta.isHW && meta.isEasyConfirmationEnabled && unsignedTx) {
-      openModal(
-        strings.signTransaction,
-        <ConfirmTxWithOsModal unsignedTx={unsignedTx} onSuccess={handleOnSuccess} onError={handleOnError} />,
-      )
-      return
-    }
-
-    throw new Error('useLegacyOnConfirm:: invalid state')
+    openModal(
+      strings.signTransaction,
+      <ConfirmTxWithOsModal unsignedTx={unsignedTx} onSuccess={handleOnSuccess} onError={handleOnError} />,
+    )
   }
 
   return {legacyOnConfirm} as const

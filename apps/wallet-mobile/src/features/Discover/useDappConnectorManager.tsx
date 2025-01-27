@@ -47,7 +47,7 @@ export const useDappConnectorManager = () => {
             onSuccess: (args) => {
               shouldResolve = false
               if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
-                reject('useDappConnectorManager::handleSignTx: invalid state')
+                reject(new Error('useDappConnectorManager::handleSignTx: invalid state'))
                 return
               }
 
@@ -87,7 +87,7 @@ export const useDappConnectorManager = () => {
             onSuccess: (args) => {
               shouldResolve = false
               if (!args?.tx) {
-                reject('useDappConnectorManager::handleSignTxWithHW: invalid state')
+                reject(new Error('useDappConnectorManager::handleSignTxWithHW: invalid state'))
                 return
               }
               resolve(args?.tx)
