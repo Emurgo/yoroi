@@ -39,9 +39,10 @@ import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
-import {WithdrawStakingRewards} from './WithdrawStakingRewards/WithdrawStakingRewards'
+import {useWithdrawStakingRewardsStrings, WithdrawStakingRewards} from './WithdrawStakingRewards/WithdrawStakingRewards'
 
 export const Dashboard = () => {
+  const strings = useWithdrawStakingRewardsStrings()
   const {styles} = useStyles()
   const intl = useIntl()
   const navigateTo = useNavigateTo()
@@ -68,14 +69,18 @@ export const Dashboard = () => {
 
   const onWithdraw = () => {
     if (isGovernanceFeatureEnabled && !isParticipatingInGovernance) {
-      openModal(
-        governanceStrings.withdrawWarningTitle,
-        <WithdrawWarningModal onParticipatePress={handleOnParticipatePress} />,
-      )
+      openModal({
+        title: governanceStrings.withdrawWarningTitle,
+        content: <WithdrawWarningModal onParticipatePress={handleOnParticipatePress} />,
+      })
       return
     }
 
-    openModal('', <WithdrawStakingRewards wallet={wallet} />, Math.min(windowHeight * 0.9, 704))
+    openModal({
+      title: strings.warningModalTitle,
+      content: <WithdrawStakingRewards wallet={wallet} />,
+      height: Math.min(windowHeight * 0.9, 730),
+    })
   }
 
   return (

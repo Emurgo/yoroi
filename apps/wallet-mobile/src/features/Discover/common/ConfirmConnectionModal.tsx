@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {Linking, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {Linking, StyleSheet, Text, View} from 'react-native'
 
 import {Button} from '../../../components/Button/Button'
 import {Icon} from '../../../components/Icon'
@@ -17,15 +17,15 @@ type Props = {
   name: string
   website: string
   logo: string
-  onConfirm: () => void
   showSingleAddressWarning: boolean
 }
 
 type OpenModalProps = {
   onClose: () => void
+  onConfirm: () => void
 } & Props
 
-const confirmConnectionModalHeight = 400
+const confirmConnectionModalHeight = 420
 const confirmConnectionModalWithWarningHeight = 530
 
 export const useOpenConfirmConnectionModal = () => {
@@ -39,35 +39,42 @@ export const useOpenConfirmConnectionModal = () => {
         ? confirmConnectionModalWithWarningHeight
         : confirmConnectionModalHeight
 
-      openModal(
-        strings.confirmConnectionModalTitle,
-        <ConfirmConnectionModal
-          name={props.name}
-          website={props.website}
-          logo={props.logo}
-          showSingleAddressWarning={props.showSingleAddressWarning}
-          onConfirm={() => {
-            track.discoverWebViewBottomSheetConnectClicked()
-            props.onConfirm()
-            closeModal()
-          }}
-        />,
-        modalHeight,
-        props.onClose,
-      )
+      openModal({
+        title: strings.confirmConnectionModalTitle,
+        content: (
+          <ConfirmConnectionModal
+            name={props.name}
+            website={props.website}
+            logo={props.logo}
+            showSingleAddressWarning={props.showSingleAddressWarning}
+          />
+        ),
+        footer: (
+          <Button
+            title={strings.confirmConnectionModalConnect}
+            onPress={() => {
+              track.discoverWebViewBottomSheetConnectClicked()
+              props.onConfirm()
+              closeModal()
+            }}
+          />
+        ),
+        height: modalHeight,
+        onClose: props.onClose,
+      })
     },
-    [openModal, strings.confirmConnectionModalTitle, track, closeModal],
+    [openModal, strings.confirmConnectionModalTitle, strings.confirmConnectionModalConnect, track, closeModal],
   )
   return {openConfirmConnectionModal: open, closeModal}
 }
 
-export const ConfirmConnectionModal = ({name, website, onConfirm, logo, showSingleAddressWarning}: Props) => {
+export const ConfirmConnectionModal = ({name, website, logo, showSingleAddressWarning}: Props) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 
   return (
-    <ScrollView style={styles.root} bounces={false}>
+    <View style={styles.root}>
       <View style={styles.imagesLine}>
         <Icon.YoroiApp size={48} />
 
@@ -109,9 +116,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo, showSing
       </View>
 
       <Spacer height={46} />
-
-      <Button title={strings.confirmConnectionModalConnect} onPress={onConfirm} />
-    </ScrollView>
+    </View>
   )
 }
 

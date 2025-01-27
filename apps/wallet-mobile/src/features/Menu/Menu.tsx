@@ -15,11 +15,12 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {Button} from '../../components/Button/Button'
 import {Icon} from '../../components/Icon'
 import {useModal} from '../../components/Modal/ModalContext'
 import {Spacer} from '../../components/Spacer/Spacer'
 import {Text} from '../../components/Text'
-import globalMessages from '../../kernel/i18n/global-messages'
+import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
 import {usePrefetchStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
@@ -189,15 +190,20 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {sufficientFunds} = useCanVote(wallet)
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const screenHeight = useWindowDimensions().height
-  const modalHeight = Math.min(screenHeight * 0.8, 256)
+  const modalHeight = Math.min(screenHeight * 0.8, 280)
 
   const handlePress = () => {
     if (sufficientFunds) {
       onPress()
     } else {
-      openModal(strings.attention, <InsufficientFundsModal />, modalHeight)
+      openModal({
+        title: strings.attention,
+        content: <InsufficientFundsModal />,
+        footer: <Button title={strings.back} onPress={closeModal} />,
+        height: modalHeight,
+      })
     }
   }
   return <Item label={label} onPress={handlePress} left={left} />
@@ -236,6 +242,7 @@ const useStrings = () => {
 
   return {
     attention: intl.formatMessage(globalMessages.attention),
+    back: intl.formatMessage(confirmationMessages.commonButtons.backButton),
     catalystVoting: intl.formatMessage(messages.catalystVoting),
     settings: intl.formatMessage(messages.settings),
     stakingCenter: intl.formatMessage(messages.stakingCenter),

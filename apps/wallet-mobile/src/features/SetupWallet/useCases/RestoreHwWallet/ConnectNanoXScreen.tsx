@@ -18,7 +18,10 @@ import {getHWDeviceInfo} from '../../../../yoroi-wallets/cardano/hw/hw'
 import {Device} from '../../../../yoroi-wallets/types/hw'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/useStrings'
-import {WalletDuplicatedModal} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
+import {
+  WalletDuplicatedModal,
+  WalletDuplicatedModalActions,
+} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
 
 type Props = {
   defaultDevices?: Array<Device> // for storybook
@@ -43,15 +46,17 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
     if (duplicatedAccountWalletMeta) {
       const {plate, seed} = walletManager.checksum(hwDeviceInfo.bip44AccountPublic)
 
-      openModal(
-        strings.restoreDuplicatedWalletModalTitle,
-        <WalletDuplicatedModal
-          plate={plate}
-          seed={seed}
-          duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
-          duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
-        />,
-      )
+      openModal({
+        title: strings.restoreDuplicatedWalletModalTitle,
+        content: (
+          <WalletDuplicatedModal
+            plate={plate}
+            seed={seed}
+            duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
+          />
+        ),
+        footer: <WalletDuplicatedModalActions duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id} />,
+      })
       return
     }
 

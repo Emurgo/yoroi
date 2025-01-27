@@ -15,7 +15,6 @@ const Initial = () => {
   return (
     <ConfirmConnectionModal
       logo="https://daehx1qv45z7c.cloudfront.net/cardano-spot.png"
-      onConfirm={action('onConfirm')}
       name="Example DApp"
       website="example.com"
       showSingleAddressWarning={false}

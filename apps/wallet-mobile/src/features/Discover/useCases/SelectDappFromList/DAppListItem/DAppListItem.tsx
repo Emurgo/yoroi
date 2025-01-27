@@ -2,19 +2,11 @@ import {useDappConnector} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {
-  Alert,
-  Linking,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import {Alert, Linking, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
+import {Button, ButtonType} from '../../../../../components/Button/Button'
 import {Icon} from '../../../../../components/Icon'
 import {InfoBanner} from '../../../../../components/InfoBanner/InfoBanner'
 import {useModal} from '../../../../../components/Modal/ModalContext'
@@ -38,7 +30,7 @@ type Props = {
   onPress?: () => void
 }
 export const DAppListItem = ({dApp, connected, onPress}: Props) => {
-  const {styles, colors} = useStyles()
+  const {styles, atoms} = useStyles()
   const {addTab, setTabActive, tabs} = useBrowser()
   const navigateTo = useNavigateTo()
   const {openModal, closeModal} = useModal()
@@ -100,45 +92,58 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
       return handleOpenDApp()
     }
 
-    openModal(
-      strings.dAppActions,
-      <ScrollView style={styles.rootDialog} bounces={false}>
-        <View style={styles.dAppInfo}>
-          <Image source={{uri: logo}} style={styles.dAppLogoDialog} />
+    openModal({
+      title: strings.dAppActions,
+      content: (
+        <View style={styles.rootDialog}>
+          <View style={styles.dAppInfo}>
+            <Image source={{uri: logo}} style={styles.dAppLogoDialog} />
 
-          <Text style={styles.dAppName}>{dApp.name}</Text>
+            <Text style={styles.dAppName}>{dApp.name}</Text>
+          </View>
+
+          <Spacer height={16} />
+
+          {dApp.isSingleAddress && (
+            <>
+              <Space height="lg" />
+
+              <SingleAddressDAppWarning />
+            </>
+          )}
+
+          <Space height="lg" />
+
+          <InfoBanner iconSize={20} content={strings.disconnectWarning} />
+
+          <Space height="lg" />
         </View>
+      ),
+      footer: (
+        <View style={styles.actions}>
+          <Button
+            type={ButtonType.SecondaryText}
+            fontOverride={atoms.body_1_lg_medium}
+            style={styles.button}
+            onPress={handleOpenDApp}
+            icon={Icon.DApp}
+            title={strings.openDApp}
+            size="S"
+          />
 
-        <Spacer height={16} />
-
-        {dApp.isSingleAddress && (
-          <>
-            <Space height="lg" />
-
-            <SingleAddressDAppWarning />
-          </>
-        )}
-
-        <Space height="lg" />
-
-        <InfoBanner iconSize={20} content={strings.disconnectWarning} />
-
-        <Space height="lg" />
-
-        <View>
-          <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp color={colors.icon} />} title={strings.openDApp} />
-
-          <DAppAction
+          <Button
+            type={ButtonType.SecondaryText}
+            fontOverride={atoms.body_1_lg_medium}
+            style={styles.button}
             onPress={() => handleConfirmDisconnect(dApp)}
-            icon={<Icon.Disconnect color={colors.icon} />}
+            icon={Icon.Disconnect}
             title={strings.disconnectWalletFromDApp}
+            size="S"
           />
         </View>
-
-        <Spacer fill />
-      </ScrollView>,
-      dialogHeight,
-    )
+      ),
+      height: dialogHeight,
+    })
   }
 
   return (
@@ -171,23 +176,6 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
         </View>
       </View>
     </TouchableWithoutFeedback>
-  )
-}
-
-type DAppActionProps = {
-  icon: React.ReactNode
-  title: string
-  onPress: () => void
-}
-const DAppAction = ({icon: IconAction, title, onPress}: DAppActionProps) => {
-  const {styles} = useStyles()
-
-  return (
-    <TouchableOpacity style={styles.touchDAppAction} onPress={onPress}>
-      {IconAction}
-
-      <Text style={styles.actionTitle}>{title}</Text>
-    </TouchableOpacity>
   )
 }
 
@@ -267,15 +255,13 @@ const useStyles = () => {
       alignItems: 'center',
       gap: 8,
     },
-    touchDAppAction: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 12,
-      ...atoms.py_lg,
+    actions: {
+      ...atoms.align_start,
+      ...atoms.gap_lg,
+      ...atoms.pb_lg,
     },
-    actionTitle: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_max,
+    button: {
+      ...atoms.gap_lg,
     },
     warningText: {
       ...atoms.body_2_md_regular,
@@ -286,10 +272,5 @@ const useStyles = () => {
     },
   })
 
-  const colors = {
-    icon: color.primary_900,
-    dappIcon: color.gray_600,
-  }
-
-  return {styles, colors} as const
+  return {styles, atoms} as const
 }

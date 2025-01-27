@@ -1,11 +1,13 @@
+import {MessageAddressFieldType, MessageData} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {Transaction} from '@emurgo/cross-csl-core'
 import {createSignedLedgerTxFromCbor} from '@emurgo/yoroi-lib'
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {HW, Wallet} from '@yoroi/types'
 
 import {toLedgerSignRequest} from '../../../features/Discover/common/ledger'
 import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {assertHasAllSigners} from '../common/signatureUtils'
-import {signTxWithLedger} from '../hw/hw'
+import {signMessageWithLedger, signTxWithLedger} from '../hw/hw'
 import {YoroiWallet} from '../types'
 import {getAddressedUtxos, getHexAddressingMap} from '../utils'
 import {wrappedCsl} from '../wrappedCsl'
@@ -16,6 +18,33 @@ export const cip30LedgerExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta
 
 class CIP30LedgerExtension {
   constructor(private wallet: YoroiWallet, private meta: Wallet.Meta) {}
+
+  async signData(
+    address: string,
+    payload: string,
+    hwDeviceInfo: HW.DeviceInfo,
+    useUSB: boolean,
+  ): Promise<{signature: string; key: string}> {
+    const {csl, release} = wrappedCsl()
+    try {
+      const normalizedAddress = await normalizeToAddress(csl, address)
+      if (!normalizedAddress) throw new Error('Invalid address')
+      const ledgerPayload: MessageData = {
+        messageHex: payload,
+        signingPath: this.wallet.getAddressing(await normalizedAddress.toBech32(undefined)).path,
+        hashPayload: false,
+        preferHexDisplay: false,
+        addressFieldType: MessageAddressFieldType.KEY_HASH,
+      }
+      const response = await signMessageWithLedger(ledgerPayload, hwDeviceInfo, useUSB)
+      return {
+        signature: response.signatureHex,
+        key: response.signingPublicKeyHex,
+      }
+    } finally {
+      release()
+    }
+  }
 
   async signTx(cbor: string, partial: boolean, hwDeviceInfo: HW.DeviceInfo, useUSB: boolean): Promise<Transaction> {
     const {csl, release} = wrappedCsl()

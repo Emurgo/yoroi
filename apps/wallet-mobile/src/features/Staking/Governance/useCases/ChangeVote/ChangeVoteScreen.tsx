@@ -49,13 +49,15 @@ export const ChangeVoteScreen = () => {
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
   const openDRepIdModal = (onSubmit: (options: {hash: string; type: 'script' | 'key'}) => void) => {
-    openModal(
-      strings.enterDRepID,
-      <GovernanceProvider manager={manager}>
-        <EnterDrepIdModal onSubmit={onSubmit} />
-      </GovernanceProvider>,
-      360,
-    )
+    openModal({
+      title: strings.enterDRepID,
+      content: (
+        <GovernanceProvider manager={manager}>
+          <EnterDrepIdModal onSubmit={onSubmit} />
+        </GovernanceProvider>
+      ),
+      height: 360,
+    })
   }
 
   const handleDelegate = () => {

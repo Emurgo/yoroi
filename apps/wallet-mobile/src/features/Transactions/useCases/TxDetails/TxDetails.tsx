@@ -82,8 +82,7 @@ export const TxDetails = () => {
   }
 
   const openAddressModal = (address: string) =>
-    openModal(strings.addessModalTitle, <AddressModal address={address} />, modalHeight)
-
+    openModal({title: strings.addessModalTitle, content: <AddressModal address={address} />, height: modalHeight})
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
       <FadeIn style={styles.fade}>

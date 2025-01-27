@@ -159,10 +159,10 @@ export const WalletDetailsScreen = () => {
   }, [accountVisual, createWallet, mnemonic, name, password, track, walletImplementation])
 
   const showModalTipsPassword = React.useCallback(() => {
-    openModal(
-      strings.walletDetailsModalTitle,
-      <View style={styles.modal}>
-        <ScrollView bounces={false}>
+    openModal({
+      title: strings.walletDetailsModalTitle,
+      content: (
+        <View style={styles.modal}>
           <View style={styles.modalContent}>
             <CardAboutPhrase
               title={strings.walletNameModalCardTitle}
@@ -174,8 +174,9 @@ export const WalletDetailsScreen = () => {
               linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
             />
           </View>
-        </ScrollView>
-
+        </View>
+      ),
+      footer: (
         <View style={styles.modalContent}>
           <LearnMoreButton
             onPress={() => {
@@ -192,9 +193,9 @@ export const WalletDetailsScreen = () => {
             testID="setup-modal-continue-button"
           />
         </View>
-      </View>,
-      HEIGHT_MODAL_NAME_PASSWORD,
-    )
+      ),
+      height: HEIGHT_MODAL_NAME_PASSWORD,
+    })
   }, [
     HEIGHT_MODAL_NAME_PASSWORD,
     closeModal,
@@ -218,10 +219,10 @@ export const WalletDetailsScreen = () => {
   }, [showRestoreWalletInfoModal])
 
   const showModalTipsPlateNumber = () => {
-    openModal(
-      strings.walletDetailsModalTitle,
-      <View style={styles.modal}>
-        <ScrollView bounces={false}>
+    openModal({
+      title: strings.walletDetailsModalTitle,
+      content: (
+        <View style={styles.modal}>
           <CardAboutPhrase
             title={strings.walletChecksumModalCardTitle}
             checksumImage={seed}
@@ -232,8 +233,9 @@ export const WalletDetailsScreen = () => {
               strings.walletChecksumModalCardThirdItem,
             ]}
           />
-        </ScrollView>
-
+        </View>
+      ),
+      footer: (
         <View style={styles.modalContent}>
           <LearnMoreButton
             onPress={() => {
@@ -243,9 +245,9 @@ export const WalletDetailsScreen = () => {
 
           <Button title={strings.continueButton} onPress={closeModal} />
         </View>
-      </View>,
-      HEIGHT_MODAL_CHECKSUM,
-    )
+      ),
+      height: HEIGHT_MODAL_CHECKSUM,
+    })
   }
 
   return (

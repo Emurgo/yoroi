@@ -23,7 +23,7 @@ export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const styles = useStyles()
   const {fund} = useCatalystCurrentFund()
   const intl = useIntl()
@@ -48,8 +48,14 @@ export const DownloadCatalystAppScreen = () => {
   )
 
   React.useEffect(() => {
-    if (stakingInfo?.status === 'not-registered') openModal(strings.attention, <WarningModal />, 300)
-  }, [openModal, stakingInfo?.status, strings.attention])
+    if (stakingInfo?.status === 'not-registered')
+      openModal({
+        title: strings.attention,
+        content: <WarningModal />,
+        footer: <Button title={strings.iUnderstandButton} onPress={closeModal} />,
+        height: 300,
+      })
+  }, [closeModal, openModal, stakingInfo?.status, strings.attention, strings.iUnderstandButton])
 
   const fundName = fund.info.fundName
   const registrationStart = `${formatDate(fund.info.snapshotStart)}: ${strings.snapshotStart}`
@@ -118,7 +124,6 @@ const FundText = ({children}: {children: React.ReactNode}) => {
 const WarningModal = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const {closeModal} = useModal()
 
   return (
     <View style={styles.modal}>
@@ -127,8 +132,6 @@ const WarningModal = () => {
       <Space height="md" />
 
       <Space fill />
-
-      <Button title={strings.iUnderstandButton} onPress={closeModal} />
 
       {Platform.OS === 'android' && <Space height="lg" />}
     </View>

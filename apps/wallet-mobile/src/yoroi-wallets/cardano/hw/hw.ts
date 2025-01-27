@@ -4,6 +4,8 @@ import type {
   GetExtendedPublicKeyResponse,
   GetSerialResponse,
   GetVersionResponse,
+  MessageData,
+  SignMessageResponse,
   SignTransactionRequest,
   SignTransactionResponse,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
@@ -277,6 +279,21 @@ export const signTxWithLedger = async (
   try {
     const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
     const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(signRequest)
+    await appAda.transport.close()
+    return ledgerSignature
+  } catch (e) {
+    throw mapLedgerError(e)
+  }
+}
+
+export const signMessageWithLedger = async (
+  signRequest: MessageData,
+  hwDeviceInfo: HW.DeviceInfo,
+  useUSB: boolean,
+): Promise<SignMessageResponse> => {
+  try {
+    const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
+    const ledgerSignature = await appAda.signMessage(signRequest)
     await appAda.transport.close()
     return ledgerSignature
   } catch (e) {

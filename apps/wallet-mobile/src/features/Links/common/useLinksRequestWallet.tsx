@@ -17,8 +17,7 @@ export const useLinksRequestWallet = () => {
   const {action} = useLinks()
 
   const askToOpenAWallet = React.useCallback(() => {
-    const content = <AskToOpenWalletScreen />
-    openModal(strings.askToOpenAWalletTitle, content, heightBreakpoint)
+    openModal({title: strings.askToOpenAWalletTitle, content: <AskToOpenWalletScreen />, height: heightBreakpoint})
   }, [openModal, strings.askToOpenAWalletTitle])
 
   React.useEffect(() => {

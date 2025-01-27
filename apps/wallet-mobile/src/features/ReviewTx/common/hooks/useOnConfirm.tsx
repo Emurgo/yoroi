@@ -46,42 +46,46 @@ export const useOnConfirm = ({
 
   const onConfirm = () => {
     if (meta.isHW && unsignedTx) {
-      openModal(
-        strings.signTransaction,
-        <ConfirmTxWithHwModal
-          onCancel={closeModal}
-          unsignedTx={unsignedTx}
-          onSuccess={handleOnSuccess}
-          onNotSupportedCIP1694={() => {
-            if (onNotSupportedCIP1694) {
-              closeModal()
-              onNotSupportedCIP1694()
-            }
-          }}
-          onCIP36SupportChange={onCIP36SupportChange ?? undefined}
-        />,
-        400,
-      )
+      openModal({
+        title: strings.signTransaction,
+        content: (
+          <ConfirmTxWithHwModal
+            onCancel={closeModal}
+            unsignedTx={unsignedTx}
+            onSuccess={handleOnSuccess}
+            onNotSupportedCIP1694={() => {
+              if (onNotSupportedCIP1694) {
+                closeModal()
+                onNotSupportedCIP1694()
+              }
+            }}
+            onCIP36SupportChange={onCIP36SupportChange ?? undefined}
+          />
+        ),
+        height: 400,
+      })
       return
     }
 
     if (!meta.isHW && !meta.isEasyConfirmationEnabled && unsignedTx) {
-      openModal(
-        strings.signTransaction,
-        <ConfirmTxWithSpendingPasswordModal
-          unsignedTx={unsignedTx}
-          onSuccess={handleOnSuccess}
-          onError={handleOnError}
-        />,
-      )
+      openModal({
+        title: strings.signTransaction,
+        content: (
+          <ConfirmTxWithSpendingPasswordModal
+            unsignedTx={unsignedTx}
+            onSuccess={handleOnSuccess}
+            onError={handleOnError}
+          />
+        ),
+      })
       return
     }
 
     if (!meta.isHW && meta.isEasyConfirmationEnabled && unsignedTx) {
-      openModal(
-        strings.signTransaction,
-        <ConfirmTxWithOsModal unsignedTx={unsignedTx} onSuccess={handleOnSuccess} onError={handleOnError} />,
-      )
+      openModal({
+        title: strings.signTransaction,
+        content: <ConfirmTxWithOsModal unsignedTx={unsignedTx} onSuccess={handleOnSuccess} onError={handleOnError} />,
+      })
       return
     }
   }

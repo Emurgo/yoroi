@@ -17,7 +17,6 @@ import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
 import {usePromptRootKey} from './common/hooks'
-import {useShowHWNotSupportedModal} from './common/HWNotSupportedModal'
 import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
 import {useNavigateTo} from './common/useNavigateTo'
 import {useStrings} from './common/useStrings'
@@ -155,23 +154,44 @@ const useSignData = () => {
 }
 
 const useSignDataWithHW = () => {
-  const {showHWNotSupportedModal, closeModal} = useShowHWNotSupportedModal()
+  const {confirmHWConnection, closeModal} = useConfirmHWConnectionModal()
+  const {wallet, meta} = useSelectedWallet()
 
-  return React.useCallback(() => {
-    return new Promise<{signature: string; key: string}>((_resolve, reject) => {
-      let shouldResolveOnClose = true
-      showHWNotSupportedModal({
-        onConfirm: () => {
-          closeModal()
-          shouldResolveOnClose = false
-          return reject(userRejectedError())
-        },
-        onClose: () => {
-          if (shouldResolveOnClose) reject(userRejectedError())
-        },
+  return React.useCallback(
+    (address: string, payload: string) => {
+      return new Promise<{signature: string; key: string}>((resolve, reject) => {
+        let isClosed = false
+        confirmHWConnection({
+          onConfirm: async ({transportType, deviceInfo}) => {
+            try {
+              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+              const result = await cip30.signData(address, payload, deviceInfo, transportType === 'USB')
+              resolve(result)
+              isClosed = true
+              closeModal()
+            } catch (error) {
+              if (error instanceof BaseLedgerError) {
+                throw error
+              }
+              reject(error)
+              isClosed = true
+              closeModal()
+            }
+          },
+          onCancel: () => {
+            reject(userRejectedError())
+            isClosed = true
+            closeModal()
+          },
+          onClose: () => {
+            if (isClosed) return
+            reject(userRejectedError())
+          },
+        })
       })
-    })
-  }, [showHWNotSupportedModal, closeModal])
+    },
+    [confirmHWConnection, wallet, meta, closeModal],
+  )
 }
 
 const useConfirmConnection = () => {

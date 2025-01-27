@@ -99,7 +99,7 @@ const RewardsUpdatedIcon = () => {
 }
 
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {atoms, color, isLight} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -108,7 +108,9 @@ const useStyles = () => {
       ...atoms.p_lg,
       ...atoms.gap_lg,
       ...atoms.flex_row,
-      backgroundColor: color.bg_color_max,
+      ...atoms.border,
+      backgroundColor: isLight ? color.bg_color_max : color.gray_100,
+      borderColor: color.gray_50,
     },
     icon: {
       width: 40,
