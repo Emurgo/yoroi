@@ -135,7 +135,7 @@ export const WalletSettingsScreen = () => {
 
         <Spacer height={24} />
 
-        {features.notifications && (
+        {features.localNotifications && (
           <>
             <SettingsSection title={strings.inAppNotifications}>
               <SettingsItem icon={<Icon.Bell {...iconProps} />} label={strings.allowNotifications}>
