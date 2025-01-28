@@ -32,7 +32,9 @@ export const transformersMaker = ({
 
             const isPrimary = id === primaryTokenInfo.id
             if (isPrimary) return primaryTokenInfo
+
             if (decimals === null) return null
+
             return {
               id,
               fingerprint: '',

@@ -1,7 +1,7 @@
 import {isLeft} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {Api, Portfolio, Swap} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {useIntl} from 'react-intl'
 import {FlatList, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'

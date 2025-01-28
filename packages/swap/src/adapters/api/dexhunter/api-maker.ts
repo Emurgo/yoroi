@@ -211,13 +211,14 @@ const baseUrls = {
 } as const
 
 const apiPaths = {
-  tokens: '/swap/tokens', // GET
-  cancel: '/swap/cancel', // POST
-  estimate: '/swap/estimate', // POST
-  limitBuild: '/swap/limit/build', // POST
-  limitEstimate: '/swap/limit/estimate', // POST
-  orders: ({address}: {address: string}) => `/swap/orders/${address}`, // GET
-  reverseEstimate: '/swap/reverseEstimate', // POST
-  build: '/swap/build', // POST
-  sign: '/swap/sign', // POST
+  tokens: '/swap/tokens',
+  orders: ({address}: {address: string}) => `/swap/orders/${address}`,
+
+  cancel: '/swap/cancel',
+  estimate: '/swap/estimate',
+  limitBuild: '/swap/limit/build',
+  limitEstimate: '/swap/limit/estimate',
+  reverseEstimate: '/swap/reverseEstimate',
+  build: '/swap/build',
+  sign: '/swap/sign',
 } as const

@@ -2,7 +2,7 @@ import {primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
 import {Api, Portfolio, Swap} from '@yoroi/types'
 import {produce} from 'immer'
-import React from 'react'
+import * as React from 'react'
 import {TextInput} from 'react-native'
 import {useQuery} from 'react-query'
 
@@ -476,7 +476,7 @@ type SwapState = {
 
 export type SwapContext = SwapState & {
   providers: Swap.ProvidersResponse
-  tokenInfos: Map<`${string}.${string}`, Portfolio.Token.Info>
+  tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info>
   tokenInInputRef: React.RefObject<TextInput> | undefined
   tokenOutInputRef: React.RefObject<TextInput> | undefined
   wantedPriceInputRef: React.RefObject<TextInput> | undefined
@@ -492,7 +492,7 @@ export type SwapContext = SwapState & {
 const SwapContext = React.createContext<SwapContext>({
   ...defaultState,
   providers: [],
-  tokenInfos: new Map<`${string}.${string}`, Portfolio.Token.Info>(),
+  tokenInfos: new Map<Portfolio.Token.Id, Portfolio.Token.Info>(),
   tokenInInputRef: undefined,
   tokenOutInputRef: undefined,
   wantedPriceInputRef: undefined,

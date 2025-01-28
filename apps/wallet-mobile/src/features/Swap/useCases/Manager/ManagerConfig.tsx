@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'

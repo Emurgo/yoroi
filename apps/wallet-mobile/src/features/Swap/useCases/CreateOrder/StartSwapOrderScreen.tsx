@@ -33,6 +33,11 @@ export const StartSwapOrderScreen = () => {
   const navigate = useNavigateTo()
   const {openModal} = useModal()
 
+  const amount = balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.') ?? {
+    info: swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? 'unknown.'),
+    quantity: balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.')?.quantity,
+  }
+
   return (
     <View style={[styles.root, styles.flex]}>
       <ScrollView style={styles.padding}>
@@ -76,12 +81,7 @@ export const StartSwapOrderScreen = () => {
               label={strings.swapFrom}
               onChange={(value) => swapForm.dispatch({type: 'TokenInAmountChanged', value})}
               value={swapForm.tokenInInput.value}
-              amount={
-                balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.') ?? {
-                  info: swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? 'unknown.'),
-                  quantity: balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.')?.quantity,
-                }
-              }
+              amount={amount}
               wallet={wallet}
               navigateTo={navigate.selectSellToken}
               touched={swapForm.tokenInInput.isTouched}

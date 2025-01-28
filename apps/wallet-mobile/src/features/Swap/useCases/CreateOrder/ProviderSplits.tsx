@@ -31,7 +31,7 @@ export const ProviderSplits = () => {
             <Provider
               provider={dex}
               append={`${swapForm.selectedDex.isTouched ? '' : ` ${strings.autoPool}`}`}
-              noLink
+              preventOpenLink
             />
           )}
         </View>

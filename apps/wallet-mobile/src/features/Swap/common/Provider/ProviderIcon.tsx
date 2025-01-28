@@ -1,5 +1,5 @@
 import {Swap} from '@yoroi/types'
-import React, {FunctionComponent} from 'react'
+import * as React from 'react'
 
 import {Icon} from '../../../../components/Icon'
 
@@ -13,7 +13,7 @@ export const ProviderIcon = ({provider, size}: Props) => {
   return <IconVariant size={size} />
 }
 
-const icons: Record<Swap.Provider, FunctionComponent<{size?: number}>> = {
+const icons: Record<Swap.Provider, React.FunctionComponent<{size?: number}>> = {
   [Swap.Provider.Muesliswap_v2]: Icon.MuesliSwap,
   [Swap.Provider.Muesliswap_clp]: Icon.MuesliSwap,
   [Swap.Provider.Minswap_v1]: Icon.MinSwap,

@@ -1,7 +1,7 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {EventArg} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 

@@ -54,6 +54,7 @@ const transformSplit = ({
   priceDistortion: price_distortion,
   priceImpact: price_impact,
 })
+
 export const transformersMaker = ({
   primaryTokenInfo,
   address,
