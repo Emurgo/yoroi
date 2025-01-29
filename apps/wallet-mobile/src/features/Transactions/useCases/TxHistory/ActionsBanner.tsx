@@ -14,6 +14,7 @@ import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {useReceive} from '../../../Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../../../Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '../../../Receive/common/useReceiveAddressesStatus'
+import {useSwap} from '../../../Swap/common/SwapProvider'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -22,6 +23,7 @@ import {useStrings} from '../../common/strings'
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const swapForm = useSwap()
   const navigateTo = useNavigateTo()
 
   const {isSingle, addressMode} = useAddressMode()
@@ -38,7 +40,10 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     selected: {network},
   } = useWalletManager()
 
-  const {meta} = useSelectedWallet()
+  const {
+    meta,
+    wallet: {portfolioPrimaryTokenInfo},
+  } = useSelectedWallet()
 
   const handleOnSend = () => {
     navigateTo.send()
@@ -50,18 +55,18 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
       navigateTo.swapPreprodNotice()
       return
     }
-    /* 
-    resetSwapForm()
+
+    swapForm.action({type: 'ResetForm'})
 
     track.swapInitiated({
       from_asset: [
         {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
       ],
       to_asset: [{asset_name: '', asset_ticker: '', policy_id: ''}],
-      order_type: orderData.type,
-      slippage_tolerance: orderData.slippage,
+      order_type: 'market',
+      slippage_tolerance: 1,
     })
- */
+
     navigateTo.swap()
   }
 

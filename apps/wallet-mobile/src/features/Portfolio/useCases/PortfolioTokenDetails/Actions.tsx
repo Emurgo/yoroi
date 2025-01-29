@@ -32,11 +32,11 @@ export const Actions = ({tokenInfo}: Props) => {
   const handleOnSwap = () => {
     if (network === Chain.Network.Preprod) return navigateTo.swapPreprodNotice()
 
-    swapForm.dispatch({type: 'ResetForm'})
+    swapForm.action({type: 'ResetForm'})
 
     if (!isPrimaryToken(tokenInfo)) {
-      swapForm.dispatch({type: 'TokenOutInputTouched'})
-      swapForm.dispatch({type: 'TokenOutIdChanged', value: tokenInfo.id})
+      swapForm.action({type: 'TokenOutInputTouched'})
+      swapForm.action({type: 'TokenOutIdChanged', value: tokenInfo.id})
     }
 
     track.swapInitiated({
