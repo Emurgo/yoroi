@@ -248,21 +248,16 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.TokenInAmountChanged:
-        try {
-          draft.tokenInInput.value = String(Number(action.value))
-        } catch {
-          break
-        }
+        draft.tokenInInput.value = !Number.isNaN(Number(action.value.replace(',', '.')))
+          ? action.value.replace(',', '.')
+          : '0'
         if (action.value === '' || action.value === '0') draft.tokenOutInput.value = '0'
 
         break
       case SwapAction.TokenOutAmountChanged:
-        try {
-          draft.lastInputTouched = 'out'
-          draft.tokenOutInput.value = String(Number(action.value))
-        } catch {
-          break
-        }
+        draft.tokenOutInput.value = !Number.isNaN(Number(action.value.replace(',', '.')))
+          ? action.value.replace(',', '.')
+          : '0'
         if (action.value === '' || action.value === '0') draft.tokenInInput.value = '0'
 
         break
@@ -339,16 +334,19 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         break
       case SwapAction.EstimateError:
+        draft.reqres = 'response'
         draft.estimate = undefined
         draft.tokenOutInput.error = action.value.message
         draft.canSwap = false
 
         break
       case SwapAction.CreateResponse:
+        draft.reqres = 'response'
         draft.createTx = action.value
 
         break
       case SwapAction.CreateError:
+        draft.reqres = 'response'
         draft.createTx = undefined
         draft.tokenOutInput.error = action.value.message
 

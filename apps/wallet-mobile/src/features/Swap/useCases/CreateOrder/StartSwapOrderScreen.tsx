@@ -18,8 +18,9 @@ import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 import {EditPrice} from './EditPrice'
 import {ListSplitsByProvider} from './ListSplitsByProvider'
+import {WarnLimitPrice} from './WarnLimitPrice'
 
-// const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
+const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
 
 export const StartSwapOrderScreen = () => {
@@ -32,11 +33,34 @@ export const StartSwapOrderScreen = () => {
   const balances = usePortfolioBalances({wallet})
   const swapForm = useSwap()
   const navigate = useNavigateTo()
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
 
   const amount = balances.records.get(swapForm.tokenInInput.tokenId ?? undefinedToken) ?? {
     info: swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken),
     quantity: balances.records.get(swapForm.tokenInInput.tokenId ?? undefinedToken)?.quantity,
+  }
+
+  const onSwapPress = () => {
+    const wantedPrice = Number(swapForm.wantedPrice)
+    const marketPrice = swapForm.estimate?.netPrice ?? 0
+    const difference = Math.abs(wantedPrice - marketPrice)
+    const threshold = marketPrice * LIMIT_PRICE_WARNING_THRESHOLD
+
+    if (swapForm.orderType === 'limit' && difference > threshold) {
+      openModal({
+        title: strings.limitPriceWarningTitle,
+        content: <WarnLimitPrice />,
+        footer: (
+          <View style={styles.buttonsWrapper}>
+            <Button size="S" type={ButtonType.Secondary} title={strings.limitPriceWarningBack} onPress={closeModal} />
+
+            <Button size="S" title={strings.limitPriceWarningConfirm} onPress={swapForm.create} />
+          </View>
+        ),
+      })
+    } else {
+      swapForm.create()
+    }
   }
 
   return (
@@ -162,7 +186,7 @@ export const StartSwapOrderScreen = () => {
       </ScrollView>
 
       <View style={[styles.actions, (deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
-        <Button testID="swapButton" title={strings.swapTitle} disabled={!swapForm.canSwap} onPress={swapForm.create} />
+        <Button testID="swapButton" title={strings.swapTitle} disabled={!swapForm.canSwap} onPress={onSwapPress} />
       </View>
     </View>
   )
@@ -217,6 +241,13 @@ const useStyles = () => {
     slippageLabel: {
       color: color.text_gray_low,
       ...atoms.body_1_lg_regular,
+    },
+    buttonsWrapper: {
+      ...atoms.align_center,
+      ...atoms.justify_between,
+      ...atoms.flex_row,
+      ...atoms.gap_lg,
+      ...atoms.pt_lg,
     },
   })
 
