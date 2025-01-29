@@ -22,6 +22,9 @@ import {
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {DexhunterApiConfig} from './api-maker'
 
+const ptIdDh =
+  '000000000000000000000000000000000000000000000000000000006c6f76656c616365'
+
 const tokenIdToDexhunter = (tokenId: Portfolio.Token.Id) =>
   isPrimaryToken(tokenId) ? 'ADA' : tokenId.replace('.', '')
 
@@ -60,8 +63,7 @@ export const transformersMaker = ({
   address,
 }: DexhunterApiConfig) => {
   const tokenIdFromDexhunter = (tokenId: string): Portfolio.Token.Id =>
-    tokenId ===
-    '000000000000000000000000000000000000000000000000000000006c6f76656c616365'
+    tokenId === ptIdDh
       ? primaryTokenInfo.id
       : `${tokenId.slice(0, 56)}.${tokenId.slice(56)}`
 
@@ -79,11 +81,7 @@ export const transformersMaker = ({
             creation_date,
             price,
           }) => {
-            if (
-              token_id ===
-              '000000000000000000000000000000000000000000000000000000006c6f76656c616365'
-            )
-              return primaryTokenInfo
+            if (token_id === ptIdDh) return primaryTokenInfo
             return {
               id: tokenIdFromDexhunter(token_id),
               type: Portfolio.Token.Type.FT,

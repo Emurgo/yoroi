@@ -125,7 +125,7 @@ export const useStakingKey = (wallet: YoroiWallet) => {
 }
 
 export const useAddressHex = (wallet: YoroiWallet) => {
-  const result = useQuery([wallet.id, 'addressHex'], () => convertBech32ToHex(wallet.externalAddresses[0]), {
+  const result = useQuery([wallet.id, 'addressHex'], () => convertBech32ToHex(wallet.internalAddresses[0]), {
     suspense: true,
   })
   if (!result.data) throw new Error('invalid state')
