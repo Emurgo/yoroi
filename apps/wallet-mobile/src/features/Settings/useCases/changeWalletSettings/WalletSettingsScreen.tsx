@@ -226,7 +226,8 @@ const NotificationDisplaySwitcher = () => {
     const newValue = !localValue
     setLocalValue(newValue)
     mutate(newValue)
-    track.settingsInAppNotificationsStatusUpdated({status: newValue ? 'enabled' : 'disabled'})
+    const status = newValue ? 'enabled' : 'disabled'
+    track.settingsInAppNotificationsStatusUpdated({status})
   }
 
   return <SettingsSwitch value={localValue} onValueChange={handleOnToggle} />
