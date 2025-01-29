@@ -12,6 +12,7 @@ import {useIsKeyboardOpen} from '../../../../kernel/keyboard/useIsKeyboardOpen'
 import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {AmountCard} from '../../common/AmountCard/AmountCard'
+import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
@@ -33,9 +34,9 @@ export const StartSwapOrderScreen = () => {
   const navigate = useNavigateTo()
   const {openModal} = useModal()
 
-  const amount = balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.') ?? {
-    info: swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? 'unknown.'),
-    quantity: balances.records.get(swapForm.tokenInInput.tokenId ?? 'unknown.')?.quantity,
+  const amount = balances.records.get(swapForm.tokenInInput.tokenId ?? undefinedToken) ?? {
+    info: swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken),
+    quantity: balances.records.get(swapForm.tokenInInput.tokenId ?? undefinedToken)?.quantity,
   }
 
   return (
@@ -113,8 +114,8 @@ export const StartSwapOrderScreen = () => {
               onChange={(value) => swapForm.dispatch({type: 'TokenOutAmountChanged', value})}
               value={swapForm.tokenOutInput.value}
               amount={{
-                info: swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? 'unknown.'),
-                quantity: balances.records.get(swapForm.tokenOutInput.tokenId ?? 'unknown.')?.quantity,
+                info: swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken),
+                quantity: balances.records.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)?.quantity,
               }}
               wallet={wallet}
               navigateTo={navigate.selectBuyToken}

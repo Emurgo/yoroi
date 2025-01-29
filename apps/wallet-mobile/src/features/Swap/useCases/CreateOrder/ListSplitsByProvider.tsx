@@ -6,6 +6,7 @@ import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
 import {Provider} from '../../common/Provider/Provider'
 import {useStrings} from '../../common/strings'
@@ -48,7 +49,7 @@ export const ListSplitsByProvider = () => {
           <TouchableOpacity onPress={() => setExpanded(!expanded)}>
             <View style={styles.between}>
               <Text style={styles.heading}>{`${strings.total}: ${swapForm.estimate?.totalInput} ${
-                swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? '.unknown')?.ticker
+                swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)?.ticker
               }`}</Text>
 
               <Icon.Chevron direction={expanded ? 'up' : 'down'} color={color.el_gray_max} size={24} />
@@ -73,7 +74,7 @@ export const ListSplitsByProvider = () => {
                 label={strings.swapMinReceivedTitle}
                 description={strings.swapMinReceived}
                 value={`${swapForm.estimate?.totalOutput} ${
-                  swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? '.unknown')?.ticker
+                  swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)?.ticker
                 }`}
               />
             </View>

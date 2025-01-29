@@ -9,7 +9,7 @@ import {Space} from '../../../../components/Space/Space'
 import {isDev} from '../../../../kernel/env'
 import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from '../../common/constants'
+import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, undefinedToken} from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {Provider} from '../../common/Provider/Provider'
 import {useStrings} from '../../common/strings'
@@ -21,8 +21,8 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const {wallet} = useSelectedWallet()
   const {orderType} = swapForm
 
-  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? '.unknown')
-  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? '.unknown')
+  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
+  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
 
   if (tokenInInfo === undefined || tokenOutInfo === undefined) throw new Error('Missing tokenInfos')
   const amountIn = {

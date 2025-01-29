@@ -11,6 +11,7 @@ import {useAddressHex, useStakingKey} from '../../../yoroi-wallets/hooks'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenInfos} from '../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
 
@@ -78,7 +79,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   )
 
   React.useEffect(() => {
-    const tokenAmount = balances.records.get(state.tokenInInput.tokenId ?? '.unknown')
+    const tokenAmount = balances.records.get(state.tokenInInput.tokenId ?? undefinedToken)
     const tokenBalance = Number(tokenAmount?.quantity ?? 0n) / 10 ** (tokenAmount?.info?.decimals ?? 0)
     const hasEnoughBalance = tokenBalance >= Number(state.tokenInInput.value)
     if (!hasEnoughBalance) {

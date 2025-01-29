@@ -8,6 +8,7 @@ import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
+import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
 import {Provider} from '../../common/Provider/Provider'
 import {useStrings} from '../../common/strings'
@@ -28,8 +29,8 @@ export const ReviewSwap = () => {
   const swapForm = useSwap()
 
   if (swapForm.createTx === undefined) return null
-  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? '.unknown')
-  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? '.unknown')
+  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
+  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
 
   const trackSwapOrderSubmitted = () => {
     track.swapOrderSubmitted({
