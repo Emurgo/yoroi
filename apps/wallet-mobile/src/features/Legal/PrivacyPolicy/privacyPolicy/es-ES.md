@@ -1,103 +1,103 @@
-# Privacy Policy
+# Política de privacidad
 
-## 1. Introduction
+## 1. Introducción
 
-This Privacy Policy ("Policy") governs the collection, use, and disclosure of personal data on Yoroi Wallet ("Software") in accordance with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA). By using or accessing the Software, you agree to the practices outlined in this Policy.
+Esta política de privacidad ("Política") gobierna la colección, el uso, y la divulgación de datos personales en el monedero de Yoroi ("Software") de acuerdo con el Reglamento General de Protección de Datos (GDPR) y la Ley de Privacidad del Consumidor de California (CCPA). Al utilizar o acceder al Software, usted acepta las prácticas descritas en esta Política.
 
-## 2. Definitions
+## 2. Definiciones
 
-"Personal Data" refers to any information that identifies or can be used to identify an individual, directly or indirectly.
+"Datos Personales" se refiere a cualquier información que identifique o pueda ser utilizada para identificar a un individuo, directa o indirectamente.
 
-## 3. Collection of Personal Data
+## Colección de los Datos Personales
 
-3.1 We collect Personal Data from you when you voluntarily provide it to us through forms, registration, surveys, or other interactions on the Software.
+3.1 Recopilamos Datos Personales de usted cuando usted nos los proporciona voluntariamente a través de formularios, registros, encuestas u otras interacciones en el Software.
 
-3.2 The types of Personal Data we may collect include, but are not limited to:
+3.2 Los tipos de Datos Personales que podemos recopilar, incluyen, pero no se limitan a:
 
-  *   Device Information
+  *   Información del Dispositivo
 
-  *   Name
+  *   Nombre
 
-  *   IP address
+  *   Dirección IP
 
-  *   Email
+  *   Correo electrónico
 
-  *   Cookies and usage data
+  *   Cookies y datos sobre el uso
 
-  *   Any other information you provide to us voluntarily
-
-
-- 3.3 We may also collect Personal Data automatically when you interact with the Software. This includes usage data, such as pages visited, links clicked, and other interactions with the Software.
-
-- 3.4 We will only collect and process Personal Data that is relevant, necessary, and proportionate to fulfill the specified purposes outlined in Section 3 of this Policy.
-
-## 4. Use of Personal Data
-
-We use the Personal Data collected for the following purposes:
-
-1.  To provide and maintain the Software;
-
-2.  To personalize your experience on the Software;
-
-3.  To communicate with you, respond to your inquiries, and provide customer support;
-
-4.  To send you marketing and promotional materials, with your consent;
-
-5.  To analyze and improve the Software's performance and functionality;
-
-6.  To detect, prevent, and address technical issues or security breaches;
+  *   Cualquier otra información que nos proporcione voluntariamente
 
 
-## 5. Disclosure of Personal Data
+- 3.3 También podemos recopilar Datos Personales automáticamente cuando usted interactúa con el Software. Esto incluye datos de uso, como páginas visitadas, enlaces pulsados y otras interacciones con el Software.
 
-We may disclose Personal Data to third parties in the following circumstances:
+- 3.4 Sólo recopilaremos y procesaremos Datos Personales que sean relevantes, necesarios, y proporcional para cumplir los propósitos especificados en la Sección 3 de esta Política.
 
-1.  With your explicit consent;
+## 4. Uso de Datos Personales
 
-2.  To comply with legal obligations or enforceable governmental requests;
+Trataremos sus datos personales recabados, para las siguientes finalidades:
 
-3.  To protect our rights, privacy, safety, or property, as well as that of our users or the public; 
+1.  Para proporcionar y mantener el Software;
 
-4.  In the event of a merger, acquisition, or sale of all or a portion of our assets, with appropriate notice and safeguards to protect your rights.
+2.  Personalizar su experiencia en el Software.
 
+3.  Comunicarse con usted, responder a sus consultas y proporcionar asistencia al cliente;
 
-## 6. Your Rights
+4.  Enviarle materiales de mercadeo y promoción, con su consentimiento;
 
-You have the following rights regarding your Personal Data:
+5.  Analizar y mejorar el rendimiento y la funcionalidad del Software;
 
-1.  Right to access: You can request access to the Personal Data we hold about you.
-
-2.  Right to rectification: You can request that we correct any inaccuracies or incomplete information in your Personal Data.
-
-3.  Right to erasure: You can request the deletion of your Personal Data, subject to legal obligations and legitimate interests.
-
-4.  Right to restrict processing: You can request that we limit the processing of your Personal Data under certain circumstances.
-
-5.  Right to data portability: You can request a copy of your Personal Data in a structured, commonly used, and machine-readable format.
-
-6.  Right to object: You can object to the processing of your Personal Data for certain purposes, such as direct marketing.
-
-7.  Right to withdraw consent: If we rely on your consent to process your Personal Data, you can withdraw your consent at any time.
+6.  Detectar, prevenir y abordar problemas técnicos o violaciones de seguridad;
 
 
-## 7. Data Security
+## Divulgación de Datos Personales
 
-We take appropriate technical and organizational measures to protect Personal Data against unauthorized access, disclosure, alteration, or destruction.
+Podremos revelar Datos Personales a terceros en las siguientes circunstancias:
 
-## 8. Cookies
+1.  Con su consentimiento explícito;
 
-We use cookies and similar technologies on the Software to enhance your experience and analyze usage. You can manage your cookie preferences through your browser settings.
+2.  Cumplir con las obligaciones legales o las solicitudes gubernamentales exigibles;
 
-## 9. Children's Privacy
+3.  Proteger nuestros derechos, privacidad, seguridad o propiedad, así como el de nuestros usuarios o el público; 
 
-The Software is not intended for children under the age of 16. We do not knowingly collect or process Personal Data from children without appropriate parental consent. If you believe we have collected Personal Data from a child, please contact us immediately, and we will take appropriate steps to remove the information.
+4.  En caso de fusión, adquisición o venta de todos o una porción de nuestros activos, con la debida notificación y salvaguardias para proteger sus derechos.
 
-## 10. Changes to this Policy
 
-We may update this Policy from time to time to reflect changes in legal or regulatory requirements, our privacy practices, or the features and functionality of the Software. The updated Policy will be posted on the Software, and the effective date will be revised accordingly.
+## 6. Sus Derechos
 
-## 11. Contact Us
+Usted tiene los siguientes derechos con respecto a sus Datos Personales:
 
-If you have any questions, concerns, or requests regarding this Policy or our privacy practices, please contact us on https://yoroi-wallet.com/#/support
+1.  Derecho de acceso: Usted puede solicitar acceso a los Datos Personales que tenemos sobre usted.
 
-By using or accessing the Software, you acknowledge that you have read and understood this Privacy Policy and consent to the collection, use, and disclosure of your Personal Data as described herein.
+2.  Derecho de rectificación: Usted puede solicitar que corrijamos cualquier inexactitud o información incompleta en sus Datos Personales.
+
+3.  Derecho a borrar: Usted puede solicitar la eliminación de sus Datos Personales, sujeto a obligaciones legales e intereses legítimos.
+
+4.  Derecho a restringir el tratamiento: Usted puede solicitar que limitemos el procesamiento de sus Datos Personales bajo ciertas circunstancias.
+
+5.  Derecho a la portabilidad de datos: Usted puede solicitar una copia de sus Datos Personales en un formato estructurado, comúnmente utilizado y legible por la máquina.
+
+6.  Derecho a objeto: Usted puede oponerse al procesamiento de sus Datos Personales para ciertos fines, como el mercadeo directo.
+
+7.  Derecho a retirar el consentimiento: Si confiamos en su consentimiento para procesar sus Datos Personales, usted puede retirar su consentimiento en cualquier momento.
+
+
+## Seguridad de los Datos
+
+Tomamos las medidas técnicas y organizativas apropiadas para proteger los Datos Personales contra accesos no autorizados, divulgación, alteración o destrucción.
+
+##
+
+Utilizamos cookies y tecnologías similares en el Software para mejorar su experiencia y analizar su uso. Puede administrar sus preferencias de cookies a través de la configuración de su navegador.
+
+## 9. Privacidad de Menores
+
+El Software no está destinado a niños menores de 16 años. No recopilamos ni procesamos conscientemente Datos Personales de menores sin el consentimiento apropiado de los padres. Si cree que hemos recopilado datos personales de un menor, póngase en contacto con nosotros inmediatamente, y tomaremos las medidas apropiadas para eliminar la información.
+
+## Cambios de Esta Política
+
+Podemos actualizar esta Política de vez en cuando para reflejar cambios en los requisitos legales o reglamentarios. nuestras prácticas de privacidad, o las características y funcionalidad del Software. La Política actualizada se publicará en el Software, y la fecha de entrada en vigor se revisará en consecuencia.
+
+## Contáctenos
+
+Si usted tiene alguna pregunta, inquietud o solicitud con respecto a esta Política o nuestras prácticas de privacidad, por favor contáctanos en https://yoroi-wallet.com/#/support
+
+Al usar o acceder al Software, usted reconoce que ha leído y entendido esta Política de Privacidad y da su consentimiento a la colección, el uso y la divulgación de sus Datos Personales como se describe aquí.
