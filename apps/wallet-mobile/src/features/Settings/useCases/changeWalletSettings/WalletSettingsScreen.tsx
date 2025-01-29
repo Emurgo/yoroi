@@ -12,6 +12,7 @@ import {Spacer} from '../../../../components/Spacer/Spacer'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../../kernel/dialogs'
 import {features} from '../../../../kernel/features'
 import {confirmationMessages} from '../../../../kernel/i18n/global-messages'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../../kernel/navigation'
 import {useResync} from '../../../../yoroi-wallets/hooks'
 import {useAuth} from '../../../Auth/AuthProvider'
@@ -219,11 +220,13 @@ const NotificationDisplaySwitcher = () => {
   const displayNotifications = useNotificationDisplaySettings()
   const {mutate} = useChangeNotificationDisplaySettings()
   const [localValue, setLocalValue] = React.useState(displayNotifications)
+  const {track} = useMetrics()
 
   const handleOnToggle = () => {
     const newValue = !localValue
     setLocalValue(newValue)
     mutate(newValue)
+    track.settingsInAppNotificationsStatusUpdated({status: newValue ? 'enabled' : 'disabled'})
   }
 
   return <SettingsSwitch value={localValue} onValueChange={handleOnToggle} />

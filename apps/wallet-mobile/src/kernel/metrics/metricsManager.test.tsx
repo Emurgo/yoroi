@@ -139,6 +139,11 @@ const mockAmpli = {
   discoverWebViewViewed: jest.fn(),
 
   networkSelected: jest.fn(),
+
+  inAppNotificationOpened: jest.fn(),
+  inAppNotificationClosed: jest.fn(),
+  inAppNotificationViewed: jest.fn(),
+  settingsInAppNotificationsStatusUpdated: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
