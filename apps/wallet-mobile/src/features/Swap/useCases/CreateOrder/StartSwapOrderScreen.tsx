@@ -78,7 +78,7 @@ export const StartSwapOrderScreen = () => {
             <View style={styles.between}>
               <View style={styles.group}>
                 <Button
-                  onPress={() => swapForm.dispatch({type: 'ChangeOrderType', value: 'market'})}
+                  onPress={() => swapForm.action({type: 'ChangeOrderType', value: 'market'})}
                   type={ButtonType.SecondaryText}
                   title={strings.marketButton}
                   size="S"
@@ -86,7 +86,7 @@ export const StartSwapOrderScreen = () => {
                 />
 
                 <Button
-                  onPress={() => swapForm.dispatch({type: 'ChangeOrderType', value: 'limit'})}
+                  onPress={() => swapForm.action({type: 'ChangeOrderType', value: 'limit'})}
                   type={ButtonType.SecondaryText}
                   title={strings.limitButton}
                   size="S"
@@ -96,7 +96,7 @@ export const StartSwapOrderScreen = () => {
 
               <View>
                 <RefreshButton
-                  onPress={() => swapForm.dispatch({type: 'Refresh'})}
+                  onPress={() => swapForm.action({type: 'Refresh'})}
                   disabled={!swapForm.tokenInInput.isTouched || !swapForm.tokenOutInput.isTouched}
                 />
               </View>
@@ -104,7 +104,7 @@ export const StartSwapOrderScreen = () => {
 
             <AmountCard
               label={strings.swapFrom}
-              onChange={(value) => swapForm.dispatch({type: 'TokenInAmountChanged', value})}
+              onChange={(value) => swapForm.action({type: 'TokenInAmountChanged', value})}
               value={swapForm.tokenInInput.value}
               amount={amount}
               wallet={wallet}
@@ -120,14 +120,14 @@ export const StartSwapOrderScreen = () => {
                 <Button
                   type={ButtonType.Text}
                   icon={Icon.Switch}
-                  onPress={() => swapForm.dispatch({type: 'SwitchTouched'})}
+                  onPress={() => swapForm.action({type: 'SwitchTouched'})}
                 />
               </View>
 
               <View>
                 <Button
                   type={ButtonType.Text}
-                  onPress={() => swapForm.dispatch({type: 'ResetAmounts'})}
+                  onPress={() => swapForm.action({type: 'ResetAmounts'})}
                   title={strings.clear}
                 />
               </View>
@@ -135,7 +135,7 @@ export const StartSwapOrderScreen = () => {
 
             <AmountCard
               label={strings.swapTo}
-              onChange={(value) => swapForm.dispatch({type: 'TokenOutAmountChanged', value})}
+              onChange={(value) => swapForm.action({type: 'TokenOutAmountChanged', value})}
               value={swapForm.tokenOutInput.value}
               amount={{
                 info: swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken),

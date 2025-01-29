@@ -27,7 +27,7 @@ export const SelectProviderScreen = () => {
           <TouchableOpacity
             style={styles.card}
             onPress={() => {
-              swapForm.dispatch({type: 'DexSelectorTouched', value: item.provider})
+              swapForm.action({type: 'DexSelectorTouched', value: item.provider})
               navigation.goBack()
             }}
           >

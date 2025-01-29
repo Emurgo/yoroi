@@ -18,7 +18,7 @@ export const SubmittedTxScreen = () => {
   const swapForm = useSwap()
 
   const handleOnPress = () => {
-    swapForm.dispatch({type: 'ResetForm'})
+    swapForm.action({type: 'ResetForm'})
     navigateTo.resetToStartSwap()
   }
 

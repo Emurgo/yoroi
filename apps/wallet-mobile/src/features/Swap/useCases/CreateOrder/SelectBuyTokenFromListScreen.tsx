@@ -166,13 +166,13 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
 
     // useCase - switch tokens when selecting the same already selected token on the other side
     if (shouldSwitchTokens) {
-      swapForm.dispatch({type: 'ResetAmounts'})
-      swapForm.dispatch({type: 'SwitchTouched'})
+      swapForm.action({type: 'ResetAmounts'})
+      swapForm.action({type: 'SwitchTouched'})
     }
 
     if (shouldUpdateToken) {
-      swapForm.dispatch({type: 'TokenOutIdChanged', value: id})
-      swapForm.dispatch({type: 'TokenOutInputTouched'})
+      swapForm.action({type: 'TokenOutIdChanged', value: id})
+      swapForm.action({type: 'TokenOutInputTouched'})
     }
     navigateTo.startSwap()
     closeSearch()

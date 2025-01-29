@@ -61,7 +61,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const wantedPriceInputRef = React.useRef<TextInput | null>(null)
   const slippageInputRef = React.useRef<TextInput | null>(null)
 
-  const [state, dispatch] = React.useReducer(swapReducer, defaultState)
+  const [state, action] = React.useReducer(swapReducer, defaultState)
 
   const {data: providers = []} = useQuery(
     ['swapProviders', network, swapManager.config.adapter, state.tokenInInput.tokenId, state.tokenOutInput.tokenId],
@@ -83,9 +83,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     const tokenBalance = Number(tokenAmount?.quantity ?? 0n) / 10 ** (tokenAmount?.info?.decimals ?? 0)
     const hasEnoughBalance = tokenBalance >= Number(state.tokenInInput.value)
     if (!hasEnoughBalance) {
-      dispatch({type: 'TokenInErrorChanged', value: strings.notEnoughBalance})
+      action({type: 'TokenInErrorChanged', value: strings.notEnoughBalance})
     } else {
-      dispatch({type: 'TokenInErrorChanged', value: null})
+      action({type: 'TokenInErrorChanged', value: null})
     }
   }, [balances.records, state.tokenInInput.tokenId, state.tokenInInput.value, strings.notEnoughBalance])
 
@@ -117,9 +117,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       })
       .then((response) => {
         if (response.tag === 'left') {
-          dispatch({type: SwapAction.EstimateError, value: response.error})
+          action({type: SwapAction.EstimateError, value: response.error})
         } else {
-          dispatch({type: SwapAction.EstimateResponse, value: response.value.data})
+          action({type: SwapAction.EstimateResponse, value: response.value.data})
         }
       })
   }, [state, swapManager.api])
@@ -162,9 +162,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       })
       .then((response) => {
         if (response.tag === 'left') {
-          dispatch({type: SwapAction.CreateError, value: response.error})
+          action({type: SwapAction.CreateError, value: response.error})
         } else {
-          dispatch({type: SwapAction.CreateResponse, value: response.value.data})
+          action({type: SwapAction.CreateResponse, value: response.value.data})
           navigate.reviewSwap()
         }
       })
@@ -195,7 +195,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       wantedPriceInputRef,
       slippageInputRef,
       orders,
-      dispatch,
+      action,
       create,
       cancel: swapManager.api.cancel,
       managerConfig: swapManager.config,
@@ -481,7 +481,7 @@ export type SwapContext = SwapState & {
   wantedPriceInputRef: React.RefObject<TextInput> | undefined
   slippageInputRef: React.RefObject<TextInput> | undefined
   orders?: Array<Swap.Order>
-  dispatch: React.Dispatch<SwapAction>
+  action: React.Dispatch<SwapAction>
   create: () => void
   cancel: Swap.Api['cancel']
   managerConfig: Swap.ManagerConfig
@@ -497,7 +497,7 @@ const SwapContext = React.createContext<SwapContext>({
   wantedPriceInputRef: undefined,
   slippageInputRef: undefined,
   orders: undefined,
-  dispatch: () => null,
+  action: () => null,
   create: () => null,
   cancel: () => new Promise((res) => res),
   managerConfig: {adapter: 'auto'},

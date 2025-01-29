@@ -39,7 +39,7 @@ export const EditPrice = () => {
             value={disabled ? String(swapForm.estimate?.netPrice ?? 0) : swapForm.wantedPrice}
             placeholder="0"
             placeholderTextColor={color.gray_600}
-            onChangeText={(value) => swapForm.dispatch({type: 'WantedPriceInputChanged', value})}
+            onChangeText={(value) => swapForm.action({type: 'WantedPriceInputChanged', value})}
             allowFontScaling
             selectionColor={color.input_selected}
             style={styles.amountInput}
