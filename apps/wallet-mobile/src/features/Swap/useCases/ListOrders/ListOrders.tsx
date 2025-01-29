@@ -20,6 +20,7 @@ import {primaryTokenInfoMainnet} from '../../../WalletManager/network-manager/ne
 import {Counter} from '../../common/Counter/Counter'
 import {EmptyCompletedOrdersIllustration} from '../../common/Illustrations/EmptyCompletedOrdersIllustration'
 import {EmptyOpenOrdersIllustration} from '../../common/Illustrations/EmptyOpenOrdersIllustration'
+import {useNavigateTo} from '../../common/navigation'
 import {ServiceUnavailable} from '../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
@@ -243,6 +244,7 @@ const OrderCancellation = ({order, tokenInInfo, price, amount}: CancellationProp
   const swapForm = useSwap()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const {navigateToTxReview} = useWalletNavigation()
+  const navigateTo = useNavigateTo()
 
   const onPress = async () => {
     setIsLoading(true)
@@ -250,21 +252,23 @@ const OrderCancellation = ({order, tokenInInfo, price, amount}: CancellationProp
     setIsLoading(false)
 
     const onOrderCancelConfirm = () => {
-      if (isLeft(response)) return
+      if (isLeft(response)) {
+        navigateTo.failedTx()
+      } else {
+        navigateToTxReview({
+          cbor: response.value.data.cbor,
+          details: {
+            title: strings.listOrdersSheetTitle,
+            component: (
+              <View>
+                <Text style={styles.rowLabel}>{strings.listOrdersTxId}</Text>
 
-      navigateToTxReview({
-        cbor: response.value.data.cbor,
-        details: {
-          title: strings.listOrdersSheetTitle,
-          component: (
-            <View>
-              <Text style={styles.rowLabel}>{strings.listOrdersTxId}</Text>
-
-              <Text style={styles.rowValue}>{order.txHash}</Text>
-            </View>
-          ),
-        },
-      })
+                <Text style={styles.rowValue}>{order.txHash}</Text>
+              </View>
+            ),
+          },
+        })
+      }
     }
 
     openModal({
