@@ -338,7 +338,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       if (implementationConfig.features.staking) {
         const derivation = implementationConfig.features.staking.derivation
 
-        const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
+        const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(
+          new Uint8Array(Buffer.from(this.publicKeyHex, 'hex')),
+        )
         const stakingKey = await accountPubKey
           .derive(derivation.role)
           .then((key) => key.derive(derivation.index))
@@ -435,7 +437,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         try {
           const absSlotNumber = await this.getAbsoluteSlotNumber()
           const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
-            .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
+            .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(new Uint8Array(bytes)))
             .then((key) => key.toPublic())
           const stakingPublicKey = await this.getStakingKey()
           const changeAddr = this.getAddressedChangeAddress(addressMode)
@@ -813,7 +815,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     }
 
     async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
-      const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
+      const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(
+        new Uint8Array(Buffer.from(decryptedMasterKey, 'hex')),
+      )
       const accountPrivateKey = await masterKey
         .derive(implementationConfig.derivations.base.harden.purpose)
         .then((key) => key.derive(implementationConfig.derivations.base.harden.coinType))

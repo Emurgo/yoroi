@@ -3,12 +3,13 @@ import {useAsyncStorage} from '@yoroi/common'
 import {DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
-import {useMutation} from 'react-query'
 
 import {logger} from '../../kernel/logger/logger'
 import {useWalletNavigation} from '../../kernel/navigation'
+import {isEmptyString} from '../../kernel/utils'
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
 import {BaseLedgerError} from '../../yoroi-wallets/hw/hw'
+import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useBrowser} from './common/BrowserProvider'
@@ -16,7 +17,6 @@ import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
-import {usePromptRootKey} from './common/hooks'
 import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
 import {useNavigateTo} from './common/useNavigateTo'
 import {useStrings} from './common/useStrings'
@@ -36,9 +36,6 @@ export const useDappConnectorManager = () => {
   const signData = useSignData()
   const signDataWithHW = useSignDataWithHW()
 
-  const promptRootKey = useConnectorPromptRootKey()
-  const {sign: signTxWithHW} = useSignTxWithHW()
-
   const handleSignTx = React.useCallback(
     ({cbor, manager}: {cbor: string; manager: DappConnector}) => {
       return new Promise<string>((resolve, reject) => {
@@ -49,11 +46,14 @@ export const useDappConnectorManager = () => {
           navigateToTxReview({
             cbor,
             createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
-            onConfirm: async () => {
-              if (!shouldResolve) return
+            onSuccess: (args) => {
               shouldResolve = false
-              const rootKey = await promptRootKey()
-              resolve(rootKey)
+              if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
+                reject(new Error('useDappConnectorManager::handleSignTx: invalid state'))
+                return
+              }
+
+              resolve(args?.rootKey)
               navigateTo.browseDapp()
             },
             onCancel: () => {
@@ -61,11 +61,22 @@ export const useDappConnectorManager = () => {
               shouldResolve = false
               reject(userRejectedError())
             },
+            onClose: () => {
+              if (shouldResolve) {
+                shouldResolve = false
+                reject(userRejectedError())
+              }
+            },
+            onError: (error) => {
+              shouldResolve = false
+              logger.error('useDappConnectorManager::handleSignTx', {error})
+              reject(error)
+            },
           })
         })
       })
     },
-    [activeTabOrigin, navigateToTxReview, promptRootKey, navigateTo],
+    [activeTabOrigin, navigateToTxReview, navigateTo],
   )
 
   const handleSignTxWithHW = React.useCallback(
@@ -77,23 +88,28 @@ export const useDappConnectorManager = () => {
             activeTabOrigin != null ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin)) : null
           navigateToTxReview({
             cbor,
+            partial,
             createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
-            onConfirm: () => {
-              if (!shouldResolve) return
+            onSuccess: (args) => {
               shouldResolve = false
-              signTxWithHW(
-                {cbor, partial},
-                {
-                  onSuccess: (signature) => resolve(signature),
-                  onError: (error) => {
-                    logger.error('ReviewTransaction::handleOnConfirm', {error})
-                    reject(error)
-                  },
-                },
-              )
+              if (!args?.tx) {
+                reject(new Error('useDappConnectorManager::handleSignTxWithHW: invalid state'))
+                return
+              }
+              resolve(args?.tx)
               navigateTo.browseDapp()
             },
+            onError: (error) => {
+              shouldResolve = false
+              logger.error('useDappConnectorManager::handleSignTxWithHW', {error})
+              reject(error)
+            },
             onCancel: () => {
+              if (!shouldResolve) return
+              shouldResolve = false
+              reject(userRejectedError())
+            },
+            onClose: () => {
               if (!shouldResolve) return
               shouldResolve = false
               reject(userRejectedError())
@@ -102,7 +118,7 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [activeTabOrigin, navigateToTxReview, navigateTo, signTxWithHW],
+    [activeTabOrigin, navigateToTxReview, navigateTo],
   )
 
   return React.useMemo(
@@ -122,7 +138,7 @@ export const useDappConnectorManager = () => {
 }
 
 const useSignData = () => {
-  const promptRootKey = usePromptRootKey()
+  const {promptRootKey} = usePromptRootKey()
   const strings = useStrings()
 
   return React.useCallback(
@@ -135,7 +151,7 @@ const useSignData = () => {
           promptRootKey({
             title,
             summary,
-            onConfirm: (rootKey) => {
+            onSuccess: (rootKey) => {
               resolve(rootKey)
               shouldResolveOnClose = false
               return Promise.resolve()
@@ -240,78 +256,4 @@ const useConfirmConnection = () => {
     },
     [openConfirmConnectionModal, openUnverifiedDappModal, closeModal],
   )
-}
-
-const useConnectorPromptRootKey = () => {
-  const promptRootKey = usePromptRootKey()
-
-  return React.useCallback(() => {
-    return new Promise<string>((resolve, reject) => {
-      let shouldResolveOnClose = true
-
-      try {
-        promptRootKey({
-          onConfirm: (rootKey) => {
-            resolve(rootKey)
-            shouldResolveOnClose = false
-            return Promise.resolve()
-          },
-          onClose: () => {
-            if (shouldResolveOnClose) reject(userRejectedError())
-          },
-        })
-      } catch (error) {
-        reject(error)
-      }
-    })
-  }, [promptRootKey])
-}
-
-export const useSignTxWithHW = () => {
-  const {confirmHWConnection, closeModal} = useConfirmHWConnectionModal()
-  const {wallet, meta} = useSelectedWallet()
-
-  const mutationFn = React.useCallback(
-    (options: {cbor: string; partial?: boolean}) => {
-      return new Promise<Transaction>((resolve, reject) => {
-        let isClosed = false
-        confirmHWConnection({
-          onConfirm: async ({transportType, deviceInfo}) => {
-            try {
-              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
-              const tx = await cip30.signTx(options.cbor, options.partial ?? false, deviceInfo, transportType === 'USB')
-              resolve(tx)
-              isClosed = true
-              closeModal()
-            } catch (error) {
-              if (error instanceof BaseLedgerError) {
-                throw error
-              }
-              reject(error)
-              isClosed = true
-              closeModal()
-            }
-          },
-          onCancel: () => {
-            reject(userRejectedError())
-            isClosed = true
-            closeModal()
-          },
-          onClose: () => {
-            if (isClosed) return
-            reject(userRejectedError())
-          },
-        })
-      })
-    },
-    [confirmHWConnection, wallet, meta, closeModal],
-  )
-
-  const mutation = useMutation<Transaction, Error, {cbor: string; partial?: boolean}>({
-    mutationFn,
-    useErrorBoundary: false,
-    mutationKey: ['useSignTxWithHW'],
-  })
-
-  return {...mutation, sign: mutation.mutate}
 }

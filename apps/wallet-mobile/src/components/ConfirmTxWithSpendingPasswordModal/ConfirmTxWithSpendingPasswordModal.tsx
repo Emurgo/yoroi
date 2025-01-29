@@ -16,7 +16,7 @@ import {useStrings} from './strings'
 type Props = {
   onSuccess?: (signedTx: YoroiSignedTx) => void
   unsignedTx: YoroiUnsignedTx
-  onError?: () => void
+  onError?: (error: unknown) => void
 }
 
 export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onError}: Props) => {

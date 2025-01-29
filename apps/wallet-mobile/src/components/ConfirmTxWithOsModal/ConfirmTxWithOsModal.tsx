@@ -10,7 +10,7 @@ import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
 type Props = {
   onSuccess?: (signedTx: YoroiSignedTx) => void
   unsignedTx: YoroiUnsignedTx
-  onError?: () => void
+  onError?: (error: unknown) => void
 }
 
 export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) => {

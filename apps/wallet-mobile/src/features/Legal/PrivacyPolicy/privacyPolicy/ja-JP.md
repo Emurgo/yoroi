@@ -1,103 +1,103 @@
-# Privacy Policy
+# プライバシー ポリシー
 
-## 1. Introduction
+## 1. はじめに
 
-This Privacy Policy ("Policy") governs the collection, use, and disclosure of personal data on Yoroi Wallet ("Software") in accordance with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA). By using or accessing the Software, you agree to the practices outlined in this Policy.
+本プライバシー ポリシー（以下「本ポリシー」といいます）は、一般データ保護規則（GDPR）およびカリフォルニア州消費者プライバシー法（CCPA）に基づき、Yoroi Wallet（以下「本ソフトウェア」といいます）における個人情報の収集、利用および開示について規定するものです。 本ソフトウェアを使用またはアクセスすることにより、お客様は本ポリシーに記載されている慣行に同意したものとみなされます。
 
-## 2. Definitions
+## 2. 定義
 
-"Personal Data" refers to any information that identifies or can be used to identify an individual, directly or indirectly.
+「個人情報」とは、個人を特定するために直接的または間接的に使用される情報を指します。
 
-## 3. Collection of Personal Data
+## 3. 個人情報の収集
 
-3.1 We collect Personal Data from you when you voluntarily provide it to us through forms, registration, surveys, or other interactions on the Software.
+3.1 当社は、お客様がフォーム、登録、調査、または本ソフトウェア上のその他のやり取りを通じて当社に任意で提供する場合、お客様から個人情報を収集します。
 
-3.2 The types of Personal Data we may collect include, but are not limited to:
+3.2 当社が収集する個人データの種類には、以下が含まれますが、これらに限定されません。
 
-  *   Device Information
+  *   デバイス情報
 
-  *   Name
+  *   名前
 
-  *   IP address
+  *   IPアドレス
 
-  *   Email
+  *   メールアドレス
 
-  *   Cookies and usage data
+  *   Cookieおよび使用データ
 
-  *   Any other information you provide to us voluntarily
-
-
-- 3.3 We may also collect Personal Data automatically when you interact with the Software. This includes usage data, such as pages visited, links clicked, and other interactions with the Software.
-
-- 3.4 We will only collect and process Personal Data that is relevant, necessary, and proportionate to fulfill the specified purposes outlined in Section 3 of this Policy.
-
-## 4. Use of Personal Data
-
-We use the Personal Data collected for the following purposes:
-
-1.  To provide and maintain the Software;
-
-2.  To personalize your experience on the Software;
-
-3.  To communicate with you, respond to your inquiries, and provide customer support;
-
-4.  To send you marketing and promotional materials, with your consent;
-
-5.  To analyze and improve the Software's performance and functionality;
-
-6.  To detect, prevent, and address technical issues or security breaches;
+  *   その他、お客様が自発的に当社に提供した情報
 
 
-## 5. Disclosure of Personal Data
+- 3.3 当社は、お客様が本ソフトウェアとやり取りする際に、自動的に個人データを収集する場合もあります。 これには、訪問されたページ、クリックされたリンク、および本ソフトウェアとのその他のやり取りなどの使用データが含まれます。
 
-We may disclose Personal Data to third parties in the following circumstances:
+- 3.4 当社は、本ポリシーの第3項に記載されている特定の目的を達成するために、関連性があり、必要であり、かつ適切な個人データのみを収集し、処理します。
 
-1.  With your explicit consent;
+## 4. 個人情報の使用
 
-2.  To comply with legal obligations or enforceable governmental requests;
+収集された個人情報は以下の目的で使用されます。
 
-3.  To protect our rights, privacy, safety, or property, as well as that of our users or the public; 
+1.  本ソフトウェアを提供し、メンテナンスするため；
 
-4.  In the event of a merger, acquisition, or sale of all or a portion of our assets, with appropriate notice and safeguards to protect your rights.
+2.  本ソフトウェア上でのお客様の体験をパーソナライズするため；
 
+3.  お客様と連絡を取り合い、お問い合わせに応じ、カスタマーサポートを提供するため；
 
-## 6. Your Rights
+4.  マーケティングおよびプロモーション資料をお客様の同意を得て送信するため；
 
-You have the following rights regarding your Personal Data:
+5.  本ソフトウェアの性能および機能性を分析および改善するため；
 
-1.  Right to access: You can request access to the Personal Data we hold about you.
-
-2.  Right to rectification: You can request that we correct any inaccuracies or incomplete information in your Personal Data.
-
-3.  Right to erasure: You can request the deletion of your Personal Data, subject to legal obligations and legitimate interests.
-
-4.  Right to restrict processing: You can request that we limit the processing of your Personal Data under certain circumstances.
-
-5.  Right to data portability: You can request a copy of your Personal Data in a structured, commonly used, and machine-readable format.
-
-6.  Right to object: You can object to the processing of your Personal Data for certain purposes, such as direct marketing.
-
-7.  Right to withdraw consent: If we rely on your consent to process your Personal Data, you can withdraw your consent at any time.
+6.  技術的な問題やセキュリティ侵害を検出、防止、対処するため；
 
 
-## 7. Data Security
+## 5. 個人情報の開示
 
-We take appropriate technical and organizational measures to protect Personal Data against unauthorized access, disclosure, alteration, or destruction.
+以下の場合、個人情報を第三者に開示することがあります：
 
-## 8. Cookies
+1.  お客様の明確な同意がある場合；
 
-We use cookies and similar technologies on the Software to enhance your experience and analyze usage. You can manage your cookie preferences through your browser settings.
+2.  法的義務または強制力のある政府の要請に従うため；
 
-## 9. Children's Privacy
+3.  当社の権利、プライバシー、安全性、財産、およびユーザーまたは一般の権利を保護するため； 
 
-The Software is not intended for children under the age of 16. We do not knowingly collect or process Personal Data from children without appropriate parental consent. If you believe we have collected Personal Data from a child, please contact us immediately, and we will take appropriate steps to remove the information.
+4.  合併、買収、当社資産の全部または一部の売却の場合、適切な通知と保護措置によりお客様の権利を保護します。
 
-## 10. Changes to this Policy
 
-We may update this Policy from time to time to reflect changes in legal or regulatory requirements, our privacy practices, or the features and functionality of the Software. The updated Policy will be posted on the Software, and the effective date will be revised accordingly.
+## 6. お客様の権利
 
-## 11. Contact Us
+お客様は、お客様の個人情報に関する以下の権利を有します：
 
-If you have any questions, concerns, or requests regarding this Policy or our privacy practices, please contact us on https://yoroi-wallet.com/#/support
+1.  アクセス権：お客様は、当社が保有するお客様の個人情報へのアクセスを要求することができます。
 
-By using or accessing the Software, you acknowledge that you have read and understood this Privacy Policy and consent to the collection, use, and disclosure of your Personal Data as described herein.
+2.  修正権：お客様は、お客様の個人データの不正確または不完全な情報を修正するよう要求することができます。
+
+3.  削除権：お客様は、法的義務および正当な利益に従って、お客様の個人データの削除を要求することができます。
+
+4.  処理を制限する権利：お客様は、特定の状況下において、お客様の個人情報の処理を制限するよう要求することができます。
+
+5.  データ ポータビリティの権利：お客様は、構造化され、一般的に使用され、機械で読み取り可能な形式で、お客様の個人データのコピーを要求することができます。
+
+6.  反対する権利：お客様は、ダイレクト マーケティングなど特定の目的での個人情報の処理に異議を申し立てることができます。
+
+7.  同意を撤回する権利：当社がお客様の同意に依拠して個人情報を処理する場合、お客様はいつでも同意を撤回することができます。
+
+
+## 7. データ セキュリティ
+
+当社は、不正アクセス、開示、改ざん、破壊から個人データを保護するために、適切な技術的および組織的措置を講じます。
+
+## 8. Cookie
+
+当社は、お客様の体験を向上させ、使用状況を分析するために、Cookie および同様の技術を本ソフトウェア上で使用します。 ブラウザの設定から Cookie の設定を管理できます。
+
+## 9. お子様のプライバシー
+
+本ソフトウェアは、16歳未満の子供を対象としたものではありません。 当社は、適切な親の同意なしに子供から個人データを故意に収集または処理しません。 当社が子供から個人情報を収集したと思われる場合は、直ちに当社に連絡し、情報を削除するために適切な措置を講じます。
+
+## 10. 本ポリシーの変更
+
+当社は、法律または規制上の要件、当社のプライバシー慣行、または本ソフトウェアの特徴および機能の変更を反映するために、本ポリシーを随時更新することがあります。 更新されたポリシーは本ソフトウェアに掲載され、それに応じて発効日が変更されます。
+
+## 11. お問い合わせ
+
+このポリシーまたはプライバシー ポリシーに関するご質問やご要望がある場合は、https://yoroi-wallet.com/#/support からお問い合わせください。
+
+本ソフトウェアを使用またはアクセスすることにより、お客様は本プライバシー ポリシーを読み、理解し、収集への同意を得たことに同意するものとします。 ここに記載されているお客様の個人情報の使用および開示。

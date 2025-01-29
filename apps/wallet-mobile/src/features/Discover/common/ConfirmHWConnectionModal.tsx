@@ -21,8 +21,8 @@ type OnConfirmOptions = {transportType: TransportType; deviceInfo: HW.DeviceInfo
 
 type Props = {
   onConfirm: (options: OnConfirmOptions) => Promise<void>
-  onClose: () => void
-  onCancel: () => void
+  onClose?: () => void
+  onCancel?: () => void
 }
 
 export const useConfirmHWConnectionModal = () => {
@@ -104,7 +104,7 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
 
   const colors = {
     spinner: color.gray_max,
@@ -112,15 +112,15 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.flex_1,
+      ...atoms.align_center,
+      ...atoms.justify_center,
       gap: 35,
     },
     text: {
       fontSize: 18,
       color: color.gray_max,
-      textAlign: 'center',
+      ...atoms.text_center,
     },
   })
 

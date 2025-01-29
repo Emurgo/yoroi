@@ -3,6 +3,7 @@ import * as React from 'react'
 import {ReviewTxRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {useFormattedMetadata} from '../../common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '../../common/hooks/useFormattedTx'
+import {useLegacyOnConfirm} from '../../common/hooks/useLegacyOnConfirm'
 import {useOnConfirm} from '../../common/hooks/useOnConfirm'
 import {useTxBody} from '../../common/hooks/useTxBody'
 import {useReviewTx} from '../../common/ReviewTxProvider'
@@ -12,14 +13,21 @@ export const ReviewTxScreen = () => {
   const {unsignedTx} = useReviewTx()
   const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
 
-  if (unsignedTx == null && params?.cbor == null) throw new Error('ReviewTxScreen: missing cbor and unsignedTx')
-
-  const {onConfirm} = useOnConfirm({
+  const {legacyOnConfirm} = useLegacyOnConfirm({
     unsignedTx,
     onSuccess: params?.onSuccess,
     onError: params?.onError,
     onNotSupportedCIP1694: params?.onNotSupportedCIP1694,
     onCIP36SupportChange: params?.onCIP36SupportChange,
+  })
+
+  const {onConfirm} = useOnConfirm({
+    cbor: params?.cbor,
+    partial: params?.partial,
+    onSuccess: params?.onSuccess,
+    onError: params?.onError,
+    onCancel: params?.onCancel,
+    onClose: params?.onClose,
   })
 
   const txBody = useTxBody({cbor: params?.cbor, unsignedTx})
@@ -38,8 +46,16 @@ export const ReviewTxScreen = () => {
       params?.onConfirm()
       return
     }
+    if (unsignedTx != null) {
+      legacyOnConfirm()
+      return
+    }
+    if (params?.cbor != null) {
+      onConfirm()
+      return
+    }
 
-    onConfirm()
+    throw new Error('ReviewTxScreen: invalid state')
   }
 
   return (

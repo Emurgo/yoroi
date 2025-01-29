@@ -276,7 +276,7 @@ const useGenerateVotingKeys = (
 
     const catalystKeyHex = Buffer.from(catalystKey).toString('hex')
 
-    const password = Buffer.from(pin.split('').map(Number))
+    const password = new Uint8Array(Buffer.from(pin.split('').map(Number)))
     const votingKeyEncrypted = await encryptWithPassword(password, catalystKey)
 
     return {
