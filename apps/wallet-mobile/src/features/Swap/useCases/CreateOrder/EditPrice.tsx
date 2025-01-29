@@ -22,11 +22,7 @@ export const EditPrice = () => {
   const tokenToSellName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
   const tokenToBuyName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
   const pair = `${tokenToBuyName}/${tokenToSellName}`
-  console.log({
-    id: swapForm.tokenOutInput.tokenId,
-    info: buyTokenInfo,
-    name: tokenToBuyName,
-  })
+
   return (
     <>
       <View style={[styles.container, disabled && styles.disabled, isFocused && styles.active]}>
