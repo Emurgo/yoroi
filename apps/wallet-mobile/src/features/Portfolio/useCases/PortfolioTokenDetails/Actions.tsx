@@ -1,3 +1,4 @@
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -5,35 +6,37 @@ import {StyleSheet, View} from 'react-native'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useSwap} from '../../../Swap/common/SwapProvider'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/hooks/useNavigateTo'
 import {useStrings} from '../../common/hooks/useStrings'
 
 type Props = {
   tokenInfo: Portfolio.Token.Info
 }
-export const Actions = ({tokenInfo: _}: Props) => {
+export const Actions = ({tokenInfo}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  /*   const swap = useSwap()
-  const swapForm = useSwapForm()
+  const swapForm = useSwap()
   const {track} = useMetrics()
-  */
+
   const {network} = useSelectedNetwork()
 
-  /*   const {
+  const {
     wallet: {portfolioPrimaryTokenInfo},
-  } = useSelectedWallet() */
+  } = useSelectedWallet()
 
   const handleOnSwap = () => {
     if (network === Chain.Network.Preprod) return navigateTo.swapPreprodNotice()
-    /* 
-    swapForm.resetSwapForm()
+
+    swapForm.dispatch({type: 'ResetForm'})
 
     if (!isPrimaryToken(tokenInfo)) {
-      swap.buyTokenInfoChanged(tokenInfo)
-      swapForm.buyTouched()
+      swapForm.dispatch({type: 'TokenOutInputTouched'})
+      swapForm.dispatch({type: 'TokenOutIdChanged', value: tokenInfo.id})
     }
 
     track.swapInitiated({
@@ -41,9 +44,9 @@ export const Actions = ({tokenInfo: _}: Props) => {
         {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
       ],
       to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.id}],
-      order_type: swap.orderData.type,
-      slippage_tolerance: swap.orderData.slippage,
-    }) */
+      order_type: 'market',
+      slippage_tolerance: 1,
+    })
 
     navigateTo.resetTabAndSwap()
   }
