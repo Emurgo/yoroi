@@ -16,7 +16,7 @@ import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 import {EditPrice} from './EditPrice'
-import {ProviderSplits} from './ProviderSplits'
+import {ListSplitsByProvider} from './ListSplitsByProvider'
 
 // const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
@@ -155,7 +155,7 @@ export const StartSwapOrderScreen = () => {
               </View>
             )}
 
-            <ProviderSplits />
+            <ListSplitsByProvider />
           </View>
         </View>
       </ScrollView>

@@ -11,7 +11,7 @@ import {Provider} from '../../common/Provider/Provider'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 
-export const ProviderSplits = () => {
+export const ListSplitsByProvider = () => {
   const strings = useStrings()
   const {styles, color} = useStyles()
   const [expanded, setExpanded] = React.useState(true)
