@@ -81,7 +81,7 @@ const Toggle = () => {
 
   const handleOnValueChange = () => {
     selectThemeName(isLight ? 'default-dark' : 'default-light')
-    track.themeSelected({theme: isLight ? 'light' : 'dark'})
+    track.themeSelected({theme: isLight ? 'dark' : 'light'})
   }
 
   return (
