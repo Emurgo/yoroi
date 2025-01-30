@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {parseNumber} from '@yoroi/common'
 import {Swap, BaseStorage} from '@yoroi/types'
+import {freeze} from 'immer'
 
 const initialDeps = {storage: AsyncStorage} as const
 
@@ -20,31 +22,16 @@ export function swapStorageMaker(
   } as const
 
   const clear = async () => {
-    await Promise.all([storage.removeItem(swapStorageSlippageKey)])
+    await Promise.all([slippage.remove()])
   }
 
-  return {
-    slippage,
-    clear,
-  } as const
+  return freeze(
+    {
+      slippage,
+      clear,
+    } as const,
+    true,
+  )
 }
 
 export const swapStorageSlippageKey = 'swap-slippage'
-
-// * === UTILS ===
-// * NOTE copied from utils it should be imported from utils package later
-const parseNumber = (data: unknown) => {
-  const parsed = parseSafe(data)
-  return isNumber(parsed) ? parsed : undefined
-}
-
-const parseSafe = (text: any) => {
-  try {
-    return JSON.parse(text) as unknown
-  } catch (_) {
-    return undefined
-  }
-}
-
-const isNumber = (data: unknown): data is number =>
-  typeof data === 'number' && !Number.isNaN(data) && Number.isFinite(data)
