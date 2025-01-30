@@ -5,6 +5,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {SwipeOutWrapper} from './SwipeOutWrapper'
 import {useStrings} from './useStrings'
@@ -20,14 +21,43 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
   const navigation = useWalletNavigation()
   const strings = useStrings()
 
+  const {track} = useMetrics()
+
+  React.useEffect(() => {
+    track.inAppNotificationViewed()
+  }, [track])
+
+  const handleOnSwipeOut = () => {
+    onCancel()
+
+    if (event.trigger === Notifications.Trigger.TransactionReceived) {
+      track.inAppNotificationClosed({type: 'tx_received'})
+    }
+
+    if (event.trigger === Notifications.Trigger.RewardsUpdated) {
+      track.inAppNotificationClosed({type: 'staking_rewards'})
+    }
+  }
+
+  const handleOnPress = () => {
+    onPress()
+
+    if (event.trigger === Notifications.Trigger.TransactionReceived) {
+      track.inAppNotificationOpened({type: 'tx_received'})
+      navigation.navigateToTxHistory()
+    }
+
+    if (event.trigger === Notifications.Trigger.RewardsUpdated) {
+      track.inAppNotificationOpened({type: 'staking_rewards'})
+      navigation.navigateToStakingDashboard()
+    }
+  }
+
   if (event.trigger === Notifications.Trigger.TransactionReceived) {
     return (
-      <SwipeOutWrapper onSwipeOut={onCancel} onExpired={onExpired}>
+      <SwipeOutWrapper onSwipeOut={handleOnSwipeOut} onExpired={onExpired}>
         <NotificationItem
-          onPress={() => {
-            onPress()
-            navigation.navigateToTxHistory()
-          }}
+          onPress={handleOnPress}
           icon={<TransactionReceivedIcon />}
           title={strings.assetsReceived}
           description={strings.tapToView}
@@ -38,12 +68,9 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
 
   if (event.trigger === Notifications.Trigger.RewardsUpdated) {
     return (
-      <SwipeOutWrapper onSwipeOut={onCancel} onExpired={onExpired}>
+      <SwipeOutWrapper onSwipeOut={handleOnSwipeOut} onExpired={onExpired}>
         <NotificationItem
-          onPress={() => {
-            onPress()
-            navigation.navigateToStakingDashboard()
-          }}
+          onPress={handleOnPress}
           icon={<RewardsUpdatedIcon />}
           title={strings.stakingRewardsReceived}
           description={strings.tapToView}

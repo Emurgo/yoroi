@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import React from 'react'
@@ -12,6 +13,7 @@ import {Spacer} from '../../../../components/Spacer/Spacer'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../../kernel/dialogs'
 import {features} from '../../../../kernel/features'
 import {confirmationMessages} from '../../../../kernel/i18n/global-messages'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../../kernel/navigation'
 import {useResync} from '../../../../yoroi-wallets/hooks'
 import {useAuth} from '../../../Auth/AuthProvider'
@@ -168,15 +170,19 @@ const ResyncButton = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {colors} = useStyles()
-  const {navigateToTxHistory} = useWalletNavigation()
   const intl = useIntl()
+  const {walletIdChanged} = useSetupWallet()
+  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {resync, isLoading} = useResync(wallet, {
-    onMutate: () => navigateToTxHistory(),
+    onMutate: () => {
+      settingsNavigation.navigate('settings-preparing-wallet')
+    },
   })
 
   const onResync = async () => {
     const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
     if (selection === DIALOG_BUTTONS.YES) {
+      walletIdChanged(wallet.id)
       resync()
     }
   }
@@ -219,11 +225,14 @@ const NotificationDisplaySwitcher = () => {
   const displayNotifications = useNotificationDisplaySettings()
   const {mutate} = useChangeNotificationDisplaySettings()
   const [localValue, setLocalValue] = React.useState(displayNotifications)
+  const {track} = useMetrics()
 
   const handleOnToggle = () => {
     const newValue = !localValue
     setLocalValue(newValue)
     mutate(newValue)
+    const status = newValue ? 'enabled' : 'disabled'
+    track.settingsInAppNotificationsStatusUpdated({status})
   }
 
   return <SettingsSwitch value={localValue} onValueChange={handleOnToggle} />

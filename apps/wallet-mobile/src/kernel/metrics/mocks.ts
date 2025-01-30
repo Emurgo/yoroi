@@ -105,6 +105,11 @@ export const mockMetricsManager = (): MetricsManager => {
 
     networkSelected: e,
 
+    inAppNotificationOpened: e,
+    inAppNotificationClosed: e,
+    inAppNotificationViewed: e,
+    settingsInAppNotificationsStatusUpdated: e,
+
     onboardingPinCodePageViewed: e,
     onboardingBiometricsPageViewed: e,
     onboardingThemePageViewed: e,

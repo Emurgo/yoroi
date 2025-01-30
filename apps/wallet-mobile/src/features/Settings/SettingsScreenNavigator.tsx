@@ -18,6 +18,7 @@ import {
 } from '../../kernel/navigation'
 import {ChangePinScreen} from '../Auth/ChangePinScreen'
 import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
+import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
 import {About} from './useCases/changeAppSettings/About'
 import {ApplicationSettingsScreen} from './useCases/changeAppSettings/ApplicationSettingsScreen'
 import {ChangeLanguageScreen} from './useCases/changeAppSettings/ChangeLanguage'
@@ -194,6 +195,12 @@ export const SettingsScreenNavigator = () => {
         name="enable-login-with-pin"
         options={{title: strings.customPinTitle}}
         component={EnableLoginWithPinWrapper}
+      />
+
+      <Stack.Screen //
+        name="settings-preparing-wallet"
+        component={PreparingWalletScreen}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   )

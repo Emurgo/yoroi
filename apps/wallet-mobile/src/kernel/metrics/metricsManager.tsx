@@ -196,6 +196,11 @@ export const makeMetricsManager = (
 
     networkSelected: metricsModule.networkSelected.bind(metricsModule),
 
+    inAppNotificationOpened: metricsModule.inAppNotificationOpened.bind(metricsModule),
+    inAppNotificationViewed: metricsModule.inAppNotificationViewed.bind(metricsModule),
+    inAppNotificationClosed: metricsModule.inAppNotificationClosed.bind(metricsModule),
+    settingsInAppNotificationsStatusUpdated: metricsModule.settingsInAppNotificationsStatusUpdated.bind(metricsModule),
+
     onboardingPinCodePageViewed: metricsModule.onboardingPinCodePageViewed.bind(metricsModule),
     onboardingBiometricsPageViewed: metricsModule.onboardingBiometricsPageViewed.bind(metricsModule),
     onboardingThemePageViewed: metricsModule.onboardingThemePageViewed.bind(metricsModule),
