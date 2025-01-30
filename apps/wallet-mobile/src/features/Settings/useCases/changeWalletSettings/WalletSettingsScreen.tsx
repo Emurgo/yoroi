@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import React from 'react'
@@ -169,15 +170,19 @@ const ResyncButton = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {colors} = useStyles()
-  const {navigateToTxHistory} = useWalletNavigation()
   const intl = useIntl()
+  const {walletIdChanged} = useSetupWallet()
+  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {resync, isLoading} = useResync(wallet, {
-    onMutate: () => navigateToTxHistory(),
+    onMutate: () => {
+      settingsNavigation.navigate('settings-preparing-wallet')
+    },
   })
 
   const onResync = async () => {
     const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
     if (selection === DIALOG_BUTTONS.YES) {
+      walletIdChanged(wallet.id)
       resync()
     }
   }

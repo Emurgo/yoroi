@@ -692,6 +692,16 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     // end of portfolio
 
     async clear() {
+      // TODO: the correct way would be following these steps:
+      // 1st) pausing all fetches (all background syncing) utxo/used addresses/token infos
+      // 2nd) clearing all data
+      // 3rd) marking all caches as stale (queries etc)
+      // 4th) resuming all syncs
+      // NOTE: there is room for data inconsistency here
+
+      // NOTE: this will invalidate all tokens for that network which means other wallets will be affected too
+      this.networkManager.tokenManager.clear({sourceId: `resync-wallet-${this.id}`})
+
       // TODO: missing accounts clear (it wasnt reseting it before, so 🤷‍♂️)
       this.balanceManager.clear()
       await this.transactionManager.clear()

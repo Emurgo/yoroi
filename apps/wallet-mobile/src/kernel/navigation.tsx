@@ -244,6 +244,7 @@ export type SettingsStackRoutes = {
       onPress: () => void
     }
   }
+  'settings-preparing-wallet': undefined
 }
 
 export type ToggleAnalyticsSettingsRoutes = {
