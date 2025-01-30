@@ -1,7 +1,9 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 
+import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, InititalizationRoutes} from '../../kernel/navigation'
 import {useAuth} from '../Auth/AuthProvider'
 import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
@@ -60,6 +62,14 @@ export const InitializationNavigator = () => {
 
 const CreatePinScreenWrapper = () => {
   const {login} = useAuth()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.onboardingPinCodePageViewed()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  )
 
   return <EnableLoginWithPin onDone={login} />
 }

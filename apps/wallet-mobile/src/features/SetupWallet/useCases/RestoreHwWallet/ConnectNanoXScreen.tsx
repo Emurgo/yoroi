@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
@@ -12,6 +12,7 @@ import {StepperProgress} from '../../../../components/StepperProgress/StepperPro
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {LocalizableError} from '../../../../kernel/i18n/LocalizableError'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerConnect} from '../../../../legacy/HW'
 import {getHWDeviceInfo} from '../../../../yoroi-wallets/cardano/hw/hw'
@@ -33,10 +34,18 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const {styles} = useStyles()
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
+  const {track} = useMetrics()
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const {hwDeviceInfoChanged, walletImplementation, useUSB} = useSetupWallet()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.connectWalletConnectPageViewed()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  )
 
   const onSuccess = (hwDeviceInfo: HW.DeviceInfo) => {
     hwDeviceInfoChanged(hwDeviceInfo)

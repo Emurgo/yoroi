@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
@@ -11,6 +11,7 @@ import {Button} from '../../../../components/Button/Button'
 import {Space} from '../../../../components/Space/Space'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {Text} from '../../../../components/Text'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {useStrings} from '../../common/useStrings'
 import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustration'
@@ -18,10 +19,18 @@ import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustrati
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
+  const {track} = useMetrics()
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const onContinue = () => navigation.navigate('setup-wallet-connect-nano-x')
   const {useUSB} = useSetupWallet()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.connectWalletCheckPageViewed()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  )
 
   const commonRequirements = [strings.appInstalled, strings.appOpened]
   const usbRequirements = [strings.haveOTGAdapter, strings.usbAlwaysConnected, ...commonRequirements]

@@ -139,6 +139,25 @@ const mockAmpli = {
   discoverWebViewViewed: jest.fn(),
 
   networkSelected: jest.fn(),
+
+  onboardingPinCodePageViewed: jest.fn(),
+  onboardingBiometricsPageViewed: jest.fn(),
+  onboardingThemePageViewed: jest.fn(),
+
+  connectWalletCheckPageViewed: jest.fn(),
+  connectWalletConnectPageViewed: jest.fn(),
+  connectWalletDetailsPageViewed: jest.fn(),
+  connectWalletDetailsSubmitted: jest.fn(),
+
+  stakingCenterDelegationInitiated: jest.fn(),
+  stakingCenterDelegationSubmitted: jest.fn(),
+
+  claimAdaTransactionInitiated: jest.fn(),
+  claimAdaTransactionSubmitted: jest.fn(),
+
+  themeSelected: jest.fn(),
+
+  dappPopupSignTransactionPageViewed: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
@@ -300,6 +319,25 @@ describe('makeMetricsManager', () => {
 
     metricsManager.track.networkSelected({to_network: 'preprod', from_network: 'preview'})
 
+    metricsManager.track.onboardingPinCodePageViewed()
+    metricsManager.track.onboardingBiometricsPageViewed()
+    metricsManager.track.onboardingThemePageViewed()
+
+    metricsManager.track.connectWalletCheckPageViewed()
+    metricsManager.track.connectWalletConnectPageViewed()
+    metricsManager.track.connectWalletDetailsPageViewed()
+    metricsManager.track.connectWalletDetailsSubmitted()
+
+    metricsManager.track.stakingCenterDelegationInitiated()
+    metricsManager.track.stakingCenterDelegationSubmitted()
+
+    metricsManager.track.claimAdaTransactionInitiated()
+    metricsManager.track.claimAdaTransactionSubmitted()
+
+    metricsManager.track.themeSelected({theme: 'auto'})
+
+    metricsManager.track.dappPopupSignTransactionPageViewed()
+
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
@@ -420,6 +458,25 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.discoverWebViewViewed).toHaveBeenCalled()
 
     expect(mockAmpli.networkSelected).toHaveBeenCalledWith({to_network: 'preprod', from_network: 'preview'})
+
+    expect(mockAmpli.onboardingPinCodePageViewed).toHaveBeenCalled()
+    expect(mockAmpli.onboardingBiometricsPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.onboardingThemePageViewed).toHaveBeenCalled()
+
+    expect(mockAmpli.connectWalletCheckPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.connectWalletConnectPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.connectWalletDetailsPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.connectWalletDetailsSubmitted).toHaveBeenCalled()
+
+    expect(mockAmpli.stakingCenterDelegationInitiated).toHaveBeenCalled()
+    expect(mockAmpli.stakingCenterDelegationSubmitted).toHaveBeenCalled()
+
+    expect(mockAmpli.claimAdaTransactionInitiated).toHaveBeenCalled()
+    expect(mockAmpli.claimAdaTransactionSubmitted).toHaveBeenCalled()
+
+    expect(mockAmpli.themeSelected).toHaveBeenCalledWith({theme: 'auto'})
+
+    expect(mockAmpli.dappPopupSignTransactionPageViewed).toHaveBeenCalled()
   })
 
   test('enable should set metrics enabled to true', async () => {

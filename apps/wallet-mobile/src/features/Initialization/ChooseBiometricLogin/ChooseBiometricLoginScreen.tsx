@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
@@ -8,6 +9,7 @@ import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, ButtonType} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useEnableAuthWithOs} from '../../Auth/common/hooks'
 import {useStrings} from '../common'
 import {Biometric} from '../illustrations/Biometric'
@@ -15,6 +17,14 @@ import {Biometric} from '../illustrations/Biometric'
 export const ChooseBiometricLoginScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.onboardingBiometricsPageViewed()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  )
 
   const {setScreenShown, isLoading: isScreenShownLoading} = useSetScreenShown()
 

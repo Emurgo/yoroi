@@ -29,6 +29,7 @@ import {WithdrawWarningModal} from '../../features/Staking/Governance/useCases/W
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {DashboardRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {isEmptyString} from '../../kernel/utils'
 import {useBalances, useIsOnline, useSync} from '../../yoroi-wallets/hooks'
@@ -48,6 +49,7 @@ export const Dashboard = () => {
   const navigateTo = useNavigateTo()
   const governanceStrings = useStrings()
   const {isPoolRetiring} = usePoolTransition()
+  const {track} = useMetrics()
 
   const {wallet, meta} = useSelectedWallet()
   const {isLoading: isSyncing, sync} = useSync(wallet)
@@ -68,6 +70,8 @@ export const Dashboard = () => {
   }
 
   const onWithdraw = () => {
+    track.claimAdaTransactionInitiated()
+
     if (isGovernanceFeatureEnabled && !isParticipatingInGovernance) {
       openModal({
         title: governanceStrings.withdrawWarningTitle,

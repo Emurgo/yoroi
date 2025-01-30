@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {ClaimAdaTransactionSubmitted} from './ampli'
 import {MetricsManager} from './metricsManager'
 
 export const mockMetricsManager = (): MetricsManager => {
@@ -103,6 +104,24 @@ export const mockMetricsManager = (): MetricsManager => {
     discoverWebViewViewed: e,
 
     networkSelected: e,
+
+    onboardingPinCodePageViewed: e,
+    onboardingBiometricsPageViewed: e,
+    onboardingThemePageViewed: e,
+
+    connectWalletCheckPageViewed: e,
+    connectWalletConnectPageViewed: e,
+    connectWalletDetailsPageViewed: e,
+    connectWalletDetailsSubmitted: e,
+
+    stakingCenterDelegationInitiated: e,
+    stakingCenterDelegationSubmitted: e,
+
+    claimAdaTransactionInitiated: e,
+    claimAdaTransactionSubmitted: e,
+
+    themeSelected: e,
+    dappPopupSignTransactionPageViewed: e,
   } as const
 
   return {
