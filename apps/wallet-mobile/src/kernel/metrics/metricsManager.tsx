@@ -195,6 +195,11 @@ export const makeMetricsManager = (
     discoverWebViewViewed: metricsModule.discoverWebViewViewed.bind(metricsModule),
 
     networkSelected: metricsModule.networkSelected.bind(metricsModule),
+
+    inAppNotificationOpened: metricsModule.inAppNotificationOpened.bind(metricsModule),
+    inAppNotificationViewed: metricsModule.inAppNotificationViewed.bind(metricsModule),
+    inAppNotificationClosed: metricsModule.inAppNotificationClosed.bind(metricsModule),
+    settingsInAppNotificationsStatusUpdated: metricsModule.settingsInAppNotificationsStatusUpdated.bind(metricsModule),
   } as const
 
   return {

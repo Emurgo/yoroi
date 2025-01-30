@@ -103,6 +103,11 @@ export const mockMetricsManager = (): MetricsManager => {
     discoverWebViewViewed: e,
 
     networkSelected: e,
+
+    inAppNotificationOpened: e,
+    inAppNotificationClosed: e,
+    inAppNotificationViewed: e,
+    settingsInAppNotificationsStatusUpdated: e,
   } as const
 
   return {

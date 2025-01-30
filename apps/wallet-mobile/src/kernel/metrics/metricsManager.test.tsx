@@ -139,6 +139,11 @@ const mockAmpli = {
   discoverWebViewViewed: jest.fn(),
 
   networkSelected: jest.fn(),
+
+  inAppNotificationOpened: jest.fn(),
+  inAppNotificationClosed: jest.fn(),
+  inAppNotificationViewed: jest.fn(),
+  settingsInAppNotificationsStatusUpdated: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
@@ -300,6 +305,11 @@ describe('makeMetricsManager', () => {
 
     metricsManager.track.networkSelected({to_network: 'preprod', from_network: 'preview'})
 
+    metricsManager.track.inAppNotificationOpened({type: 'tx_received'})
+    metricsManager.track.inAppNotificationClosed({type: 'tx_received'})
+    metricsManager.track.inAppNotificationViewed()
+    metricsManager.track.settingsInAppNotificationsStatusUpdated({status: 'disabled'})
+
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
@@ -420,6 +430,11 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.discoverWebViewViewed).toHaveBeenCalled()
 
     expect(mockAmpli.networkSelected).toHaveBeenCalledWith({to_network: 'preprod', from_network: 'preview'})
+
+    expect(mockAmpli.inAppNotificationOpened).toHaveBeenCalledWith({type: 'tx_received'})
+    expect(mockAmpli.inAppNotificationClosed).toHaveBeenCalledWith({type: 'tx_received'})
+    expect(mockAmpli.inAppNotificationViewed).toHaveBeenCalled()
+    expect(mockAmpli.settingsInAppNotificationsStatusUpdated).toHaveBeenCalledWith({status: 'disabled'})
   })
 
   test('enable should set metrics enabled to true', async () => {
