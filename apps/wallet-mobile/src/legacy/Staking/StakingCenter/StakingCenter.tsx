@@ -48,6 +48,7 @@ export const StakingCenter = () => {
 
   const onSuccess = () => {
     queryClient.resetQueries([wallet.id, 'stakingInfo'])
+    track.stakingCenterDelegationSubmitted()
     navigateTo.submittedTx()
   }
 
@@ -64,6 +65,7 @@ export const StakingCenter = () => {
       onSuccess: (yoroiUnsignedTx) => {
         if (selectedPoolId == null) return
 
+        track.stakingCenterDelegationInitiated()
         unsignedTxChanged(yoroiUnsignedTx)
         navigateToTxReview({onSuccess, onError})
       },

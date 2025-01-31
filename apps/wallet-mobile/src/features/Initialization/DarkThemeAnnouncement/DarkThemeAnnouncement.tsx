@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
@@ -10,6 +11,7 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {Button} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'
 import {Text} from '../../../components/Text'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {DarkThemeIlustration} from '../illustrations/DarkThemeIlustration'
 import {LightThemeIlustration} from '../illustrations/LightThemeIlustration'
@@ -18,9 +20,17 @@ export const DarkThemeAnnouncement = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {isDark} = useTheme()
+  const {track} = useMetrics()
   const {setScreenShown, isLoading: isSetScreenShownLoading} = useSetScreenShown()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.onboardingThemePageViewed()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  )
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
@@ -67,8 +77,12 @@ export const DarkThemeAnnouncement = () => {
 const Toggle = () => {
   const {styles, color} = useStyles()
   const {isLight, isDark, selectThemeName} = useTheme()
+  const {track} = useMetrics()
 
-  const handleOnValueChange = () => selectThemeName(isLight ? 'default-dark' : 'default-light')
+  const handleOnValueChange = () => {
+    selectThemeName(isLight ? 'default-dark' : 'default-light')
+    track.themeSelected({theme: isLight ? 'dark' : 'light'})
+  }
 
   return (
     <View style={styles.toggle}>

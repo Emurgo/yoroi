@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
@@ -73,6 +73,13 @@ export const SaveNanoXScreen = () => {
 
   const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged} = useSetupWallet()
 
+  useFocusEffect(
+    React.useCallback(() => {
+      track.connectWalletDetailsPageViewed()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  )
+
   if (!hwDeviceInfo) throw new Error('no hwDeviceInfo')
   const {plate, seed} = walletManager.checksum(hwDeviceInfo.bip44AccountPublic)
 
@@ -89,6 +96,7 @@ export const SaveNanoXScreen = () => {
       }
 
       track.restoreWalletDetailsSettled()
+      track.connectWalletDetailsSubmitted()
 
       navigation.navigate('setup-wallet-preparing-wallet')
     },

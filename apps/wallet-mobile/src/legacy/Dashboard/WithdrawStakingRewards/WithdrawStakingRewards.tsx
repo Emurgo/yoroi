@@ -14,11 +14,13 @@ import {StakeRewardsWithdrawalOperation} from '../../../features/ReviewTx/common
 import {useReviewTx} from '../../../features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {confirmationMessages, ledgerMessages, txLabels} from '../../../kernel/i18n/global-messages'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useWithdrawalTx} from '../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types/yoroi'
 import {Quantities} from '../../../yoroi-wallets/utils/utils'
+import {useNavigateTo} from '../Dashboard'
 import {useStakingInfo} from '../StakePoolInfos'
 type Props = {
   wallet: YoroiWallet
@@ -29,12 +31,23 @@ export const WithdrawStakingRewards = ({wallet}: Props) => {
   const {closeModal} = useModal()
   const {navigateToTxReview} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
+  const {track} = useMetrics()
+  const navigateTo = useNavigateTo()
+
+  const onSuccess = () => {
+    track.claimAdaTransactionSubmitted()
+    navigateTo.submittedTx()
+  }
+
+  const onError = () => {
+    navigateTo.failedTx()
+  }
 
   const handleOnConfirm = (withdrawalTx: YoroiUnsignedTx) => {
     closeModal()
 
     unsignedTxChanged(withdrawalTx)
-    navigateToTxReview({operations: [<StakeRewardsWithdrawalOperation key="0" />]})
+    navigateToTxReview({onSuccess, onError, operations: [<StakeRewardsWithdrawalOperation key="0" />]})
   }
 
   return (

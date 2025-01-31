@@ -5,6 +5,7 @@ import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
 import {logger} from '../../kernel/logger/logger'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../kernel/navigation'
 import {isEmptyString} from '../../kernel/utils'
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
@@ -27,6 +28,8 @@ export const useDappConnectorManager = () => {
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
+  const {track} = useMetrics()
+
   const activeTab = tabs[tabActiveIndex]
   const activeTabUrl = activeTab?.url
   const activeTabOrigin = activeTabUrl === undefined ? null : new URL(activeTabUrl).origin
@@ -38,6 +41,7 @@ export const useDappConnectorManager = () => {
 
   const handleSignTx = React.useCallback(
     ({cbor, manager}: {cbor: string; manager: DappConnector}) => {
+      track.dappPopupSignTransactionPageViewed()
       return new Promise<string>((resolve, reject) => {
         let shouldResolve = true
         return manager.getDAppList().then(({dapps}) => {
@@ -76,11 +80,12 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [activeTabOrigin, navigateToTxReview, navigateTo],
+    [track, activeTabOrigin, navigateToTxReview, navigateTo],
   )
 
   const handleSignTxWithHW = React.useCallback(
     ({cbor, partial, manager}: {cbor: string; partial?: boolean; manager: DappConnector}) => {
+      track.dappPopupSignTransactionPageViewed()
       return new Promise<Transaction>((resolve, reject) => {
         let shouldResolve = true
         return manager.getDAppList().then(({dapps}) => {
@@ -118,7 +123,7 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [activeTabOrigin, navigateToTxReview, navigateTo],
+    [track, activeTabOrigin, navigateToTxReview, navigateTo],
   )
 
   return React.useMemo(

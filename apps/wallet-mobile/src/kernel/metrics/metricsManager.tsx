@@ -200,6 +200,24 @@ export const makeMetricsManager = (
     inAppNotificationViewed: metricsModule.inAppNotificationViewed.bind(metricsModule),
     inAppNotificationClosed: metricsModule.inAppNotificationClosed.bind(metricsModule),
     settingsInAppNotificationsStatusUpdated: metricsModule.settingsInAppNotificationsStatusUpdated.bind(metricsModule),
+
+    onboardingPinCodePageViewed: metricsModule.onboardingPinCodePageViewed.bind(metricsModule),
+    onboardingBiometricsPageViewed: metricsModule.onboardingBiometricsPageViewed.bind(metricsModule),
+    onboardingThemePageViewed: metricsModule.onboardingThemePageViewed.bind(metricsModule),
+
+    connectWalletCheckPageViewed: metricsModule.connectWalletCheckPageViewed.bind(metricsModule),
+    connectWalletConnectPageViewed: metricsModule.connectWalletConnectPageViewed.bind(metricsModule),
+    connectWalletDetailsPageViewed: metricsModule.connectWalletDetailsPageViewed.bind(metricsModule),
+    connectWalletDetailsSubmitted: metricsModule.connectWalletDetailsSubmitted.bind(metricsModule),
+
+    stakingCenterDelegationInitiated: metricsModule.stakingCenterDelegationInitiated.bind(metricsModule),
+    stakingCenterDelegationSubmitted: metricsModule.stakingCenterDelegationSubmitted.bind(metricsModule),
+
+    claimAdaTransactionInitiated: metricsModule.claimAdaTransactionInitiated.bind(metricsModule),
+    claimAdaTransactionSubmitted: metricsModule.claimAdaTransactionSubmitted.bind(metricsModule),
+
+    themeSelected: metricsModule.themeSelected.bind(metricsModule),
+    dappPopupSignTransactionPageViewed: metricsModule.dappPopupSignTransactionPageViewed.bind(metricsModule),
   } as const
 
   return {

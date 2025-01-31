@@ -6,6 +6,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Icon} from '../../../../../components/Icon'
 import {Text} from '../../../../../components/Text'
 import {themeNames} from '../../../../../kernel/i18n/global-messages'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useThemeStorageMaker} from '../../../../../yoroi-wallets/hooks'
 
 type Props = {
@@ -18,8 +19,10 @@ export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
   const {colors} = useStyles()
   const strings = useStrings()
   const themeStorage = useThemeStorageMaker()
+  const {track} = useMetrics()
 
   const handleSelectTheme = (theme: SupportedThemes) => {
+    track.themeSelected({theme: theme === 'default-light' ? 'light' : theme === 'default-dark' ? 'dark' : 'auto'})
     setLocalTheme(theme)
     selectTheme(theme)
   }

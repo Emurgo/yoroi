@@ -498,6 +498,18 @@ export interface SettingsInAppNotificationsStatusUpdatedProperties {
   status?: 'enabled' | 'disabled'
 }
 
+export interface StakingCenterDelegationSubmittedProperties {
+  /**
+   * The amount of ADA that the user will be exchanging.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  ada_amount?: number
+  staking_pool?: string
+}
+
 export interface SwapAssetFromChangedProperties {
   /**
    * Displaying the asset that the user chose to trade with.
@@ -898,6 +910,10 @@ export class AssetsPageViewed implements BaseEvent {
 
 export class BuyAdaSuccessRedirect implements BaseEvent {
   event_type = 'Buy Ada Success Redirect'
+}
+
+export class ClaimAdaTransactionInitiated implements BaseEvent {
+  event_type = 'Claim Ada Transaction Initiated'
 }
 
 export class ClaimAdaTransactionSettled implements BaseEvent {
@@ -1340,6 +1356,14 @@ export class StakingCenterDelegationInitiated implements BaseEvent {
   event_type = 'Staking Center Delegation Initiated'
 }
 
+export class StakingCenterDelegationSubmitted implements BaseEvent {
+  event_type = 'Staking Center Delegation Submitted'
+
+  constructor(public event_properties?: StakingCenterDelegationSubmittedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
 export class StakingCenterPageViewed implements BaseEvent {
   event_type = 'Staking Center Page Viewed'
 }
@@ -1571,7 +1595,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Assets%20Page%20Viewed)
    *
-   * This event tracks when a user views the Assets page. 
+   * This event tracks when a user views the Assets page.
    *  On mobile  is available on the wallet page (First item from main menu) in the assets tab.
    *
    * @param options Amplitude event options.
@@ -1595,6 +1619,21 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new BuyAdaSuccessRedirect(), options);
+  }
+
+  /**
+   * Claim Ada Transaction Initiated
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Claim%20Ada%20Transaction%20Initiated)
+   *
+   * This event tracks when a user starts the funne to claim staking rewards in the delegation center.
+   *
+   * @param options Amplitude event options.
+   */
+  claimAdaTransactionInitiated(
+    options?: EventOptions,
+  ) {
+    return this.track(new ClaimAdaTransactionInitiated(), options);
   }
 
   /**
@@ -1788,11 +1827,11 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Select%20Method%20Page%20Viewed)
    *
-   * This event tracks when a user views the page where they can select the method to create a wallet: 
+   * This event tracks when a user views the page where they can select the method to create a wallet:
    *
-   * \* Create new wallet 
+   * \* Create new wallet
    *
-   * \* Restore existing wallet 
+   * \* Restore existing wallet
    *
    * This event tracks when a user views the page where they can select the method to create a wallet\* Connect hardware wallet
    *
@@ -2289,7 +2328,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Menu%20Page%20Viewed)
    *
-   * This event is triggered when a user views the menu page within the application. Only available on Mobile. 
+   * This event is triggered when a user views the menu page within the application. Only available on Mobile.
    *  The menu page is accesible via the bottom navigation page (last item on the right)
    *
    * @param options Amplitude event options.
@@ -2800,9 +2839,9 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Select%20Asset%20Updated)
    *
-   * When an user update the tokens selection on "amount" step: 
-   *  \- Add 
-   *  \- Remove 
+   * When an user update the tokens selection on "amount" step:
+   *  \- Add
+   *  \- Remove
    *  \- Updated
    *
    * @param properties The event's properties (e.g. asset_count)
@@ -2894,6 +2933,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new StakingCenterDelegationInitiated(), options);
+  }
+
+  /**
+   * Staking Center Delegation Submitted
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Staking%20Center%20Delegation%20Submitted)
+   *
+   * Event indicating that a user has submitted a delegation in the staking center.
+   *
+   * @param properties The event's properties (e.g. ada_amount)
+   * @param options Amplitude event options.
+   */
+  stakingCenterDelegationSubmitted(
+    properties?: StakingCenterDelegationSubmittedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new StakingCenterDelegationSubmitted(properties), options);
   }
 
   /**
