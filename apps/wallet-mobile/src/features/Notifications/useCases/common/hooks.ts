@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging'
 import React from 'react'
-import {PermissionsAndroid} from 'react-native'
+import {PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
 import {logger} from '../../../../kernel/logger/logger'
@@ -15,7 +15,9 @@ let initialized = false
 const initPushNotifications = () => {
   if (initialized) return
   initialized = true
-  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
+  if (Platform.OS === 'android') {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
+  }
 
   const unsubscribeFromForegroundMessage = messaging().onMessage((remoteMessage) => {
     const {notification} = remoteMessage
