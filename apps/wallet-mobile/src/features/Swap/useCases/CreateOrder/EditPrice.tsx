@@ -2,6 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
+import {undefinedToken} from '../../common/constants'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 import {ShowPriceImpact} from './ShowPriceImpact'
@@ -15,8 +16,8 @@ export const EditPrice = () => {
   const {isDark} = useTheme()
 
   const swapForm = useSwap()
-  const sellTokenInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? 'unkown.')
-  const buyTokenInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? 'unkown.')
+  const sellTokenInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
+  const buyTokenInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
   const disabled = swapForm.orderType === 'market'
 
   const tokenToSellName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'

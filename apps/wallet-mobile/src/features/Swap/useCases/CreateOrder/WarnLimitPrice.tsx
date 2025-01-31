@@ -3,6 +3,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../components/Spacer/Spacer'
+import {undefinedToken} from '../../common/constants'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 
@@ -14,8 +15,8 @@ export const WarnLimitPrice = () => {
   const limitPrice = swapForm.wantedPrice
   const marketPrice = swapForm.estimate?.netPrice ?? 0
 
-  const sellTokenInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? 'unkown.')
-  const buyTokenInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? 'unkown.')
+  const sellTokenInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
+  const buyTokenInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
   const tokenToSellName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
   const tokenToBuyName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
   const name = `${tokenToBuyName}/${tokenToSellName}`
