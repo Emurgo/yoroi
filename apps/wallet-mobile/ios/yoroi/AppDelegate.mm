@@ -3,7 +3,6 @@
 #import "RNBootSplash.h"
 #import "RNNotifications.h"
 #import <Firebase.h>
-#import <FirebaseMessaging.h>
 
 #import <React/RCTBundleURLProvider.h>
 
