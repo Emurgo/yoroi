@@ -1,6 +1,7 @@
-import {FetchData, fetchData, isLeft, isRight} from '@yoroi/common'
+import {FetchData, fetchData, isLeft} from '@yoroi/common'
 import {Api, Chain, Left, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
+
 import {
   CancelRequest,
   CancelResponse,
@@ -9,11 +10,10 @@ import {
   CreateOrderResponse,
   QuoteResponse,
   LimitOrderResponse,
-  ProvidersResponse,
-  PoolsResponse,
   LimitQuoteResponse,
 } from './types'
 import {transformersMaker} from './transformers'
+import {ApiHttpStatusCode} from '@yoroi/types/lib/typescript/api/status-code'
 
 export type MuesliswapApiConfig = {
   addressHex: string
@@ -56,15 +56,6 @@ export const muesliswapApiMaker = (
   const baseUrl = baseUrls[network]
 
   const transformers = transformersMaker(config)
-
-  let providersInfo: ProvidersResponse = {} as ProvidersResponse
-  request<ProvidersResponse>({
-    method: 'get',
-    url: `${baseUrl}${apiPaths.providers}`,
-    headers,
-  }).then((res) => {
-    if (isRight(res)) providersInfo = res.value.data
-  })
 
   return freeze(
     {
@@ -132,31 +123,13 @@ export const muesliswapApiMaker = (
         }
       },
 
-      async providers(body: Swap.ProvidersRequest) {
-        const params = transformers.providers.request(body)
-
-        const response = await request<PoolsResponse>(
-          {
-            method: 'get',
-            url: `${baseUrl}${apiPaths.pools}`,
-            headers,
-          },
-          {
-            params,
-          },
-        )
-
-        if (isLeft(response)) return parseMuesliError(response)
-
+      async protocols() {
         return freeze(
           {
             tag: 'right',
             value: {
-              status: response.value.status,
-              data: transformers.providers.response(
-                response.value.data,
-                providersInfo,
-              ),
+              status: ApiHttpStatusCode.Ok,
+              data: transformers.providers.response(),
             },
           },
           true,
@@ -275,19 +248,23 @@ export const muesliswapApiMaker = (
 const parseMuesliError = ({
   tag,
   error,
-}: Left<Api.ResponseError>): Left<Api.ResponseError> => ({
-  tag,
-  error: {
-    ...error,
-    message: JSON.stringify((error.responseData as any)?.detail, null, 2),
-  },
-})
+}: Left<Api.ResponseError>): Left<Api.ResponseError> =>
+  freeze(
+    {
+      tag,
+      error: {
+        ...error,
+        message: JSON.stringify((error.responseData as any)?.detail, null, 2),
+      },
+    },
+    true,
+  )
 
-const baseUrls = {
+const baseUrls = freeze({
   [Chain.Network.Mainnet]: 'https://aggregator-v2.muesliswap.com',
-} as const
+} as const)
 
-const apiPaths = {
+const apiPaths = freeze({
   tokens: '/tokens',
   orderHistory: '/order_history',
   openOrders: '/open_orders',
@@ -298,4 +275,4 @@ const apiPaths = {
   cancel: '/cancel',
   pools: '/pools',
   providers: '/providers',
-} as const
+} as const)

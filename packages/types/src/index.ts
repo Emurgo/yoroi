@@ -6,7 +6,6 @@ import {
   BalanceToken,
 } from './balance/token'
 import {
-  SwapAggregator,
   SwapApi,
   SwapCancelRequest,
   SwapCancelResponse,
@@ -14,10 +13,6 @@ import {
   SwapCreateResponse,
   SwapEstimateRequest,
   SwapEstimateResponse,
-  SwapOrder,
-  SwapProvider,
-  SwapProvidersRequest,
-  SwapProvidersResponse,
   SwapSplit,
 } from './swap/api'
 import {AppStorage, AppStorageFolderName} from './app/storage'
@@ -277,6 +272,14 @@ import {
 import {NumbersRatio} from './numbers/ratio'
 import {SwapStorage} from './swap/storage'
 import {SwapManager, SwapManagerConfig, SwapManagerMaker} from './swap/manager'
+import {SwapDex} from './swap/dex'
+import {SwapOrder} from './swap/order'
+import {
+  SwapAggregator,
+  SwapAggregatorProtocol,
+  SwapAggregatorSelected,
+} from './swap/aggregator'
+import {SwapProtocol} from './swap/protocol'
 
 export namespace App {
   export namespace Errors {
@@ -346,10 +349,12 @@ export namespace Swap {
   export type Order = SwapOrder
   export type Aggregator = SwapAggregator
   export const Aggregator = SwapAggregator
-  export type Provider = SwapProvider
-  export const Provider = SwapProvider
-  export type ProvidersRequest = SwapProvidersRequest
-  export type ProvidersResponse = SwapProvidersResponse
+  export type AggregatorProtocol = SwapAggregatorProtocol
+  export type AggregatorSelected = SwapAggregatorSelected
+  export type Protocol = SwapProtocol
+  export const Protocol = SwapProtocol
+  export type Dex = SwapDex
+  export const Dex = SwapDex
   export type CancelRequest = SwapCancelRequest
   export type CancelResponse = SwapCancelResponse
   export type EstimateRequest = SwapEstimateRequest

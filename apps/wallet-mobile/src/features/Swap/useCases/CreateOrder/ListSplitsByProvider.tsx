@@ -8,33 +8,27 @@ import {useModal} from '../../../../components/Modal/ModalContext'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
-import {Provider} from '../../common/Provider/Provider'
+import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 
 export const ListSplitsByProvider = () => {
   const strings = useStrings()
   const {styles, color} = useStyles()
-  const [expanded, setExpanded] = React.useState(true)
   const {wallet} = useSelectedWallet()
-
   const navigateTo = useNavigateTo()
-
   const swapForm = useSwap()
 
-  const dex = swapForm.estimate?.splits[0]?.dex
+  const [expanded, setExpanded] = React.useState(true)
+
+  const protocol = swapForm.estimate?.splits[0]?.protocol
+  const originSelection = `${swapForm.selectedProtocol.isTouched ? '' : ` ${strings.autoPool}`}`
 
   return (
     <View>
       <View style={styles.between}>
         <View style={styles.composedText}>
-          {dex !== undefined && (
-            <Provider
-              provider={dex}
-              append={`${swapForm.selectedDex.isTouched ? '' : ` ${strings.autoPool}`}`}
-              preventOpenLink
-            />
-          )}
+          {protocol !== undefined && <ProtocolAvatar protocol={protocol} append={originSelection} preventOpenLink />}
         </View>
 
         {swapForm.orderType === 'limit' && (

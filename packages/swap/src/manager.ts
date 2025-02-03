@@ -1,9 +1,10 @@
 import {Portfolio, Swap} from '@yoroi/types'
 import {isLeft} from '@yoroi/common'
-
 import {freeze} from 'immer'
+
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
 import {muesliswapApiMaker} from './adapters/api/muesliswap/api-maker'
+import {getBestSwap} from './helpers/getBestSwap'
 
 export const swapManagerMaker: Swap.ManagerMaker = ({
   address,
@@ -22,7 +23,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     stakingKey,
   })
 
-  const config: Swap.ManagerConfig = {adapter: 'auto'}
+  const config: Swap.ManagerConfig = {aggregatorSelected: 'auto'}
 
   return {
     api: apiManagerMaker(
@@ -50,8 +51,10 @@ const apiManagerMaker = (
     {
       get({}, prop: keyof Swap.Api) {
         return (...args: any[]) => {
-          if (config.adapter !== 'auto')
-            return (adapters[config.adapter][prop] as Function)(...args)
+          if (config.aggregatorSelected !== 'auto')
+            return (adapters[config.aggregatorSelected][prop] as Function)(
+              ...args,
+            )
           return (autoApi[prop] as Function)(...args)
         }
       },
@@ -121,10 +124,10 @@ const autoApiMaker = (
         }
       },
 
-      async providers(body: Swap.ProvidersRequest) {
+      async protocols() {
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          adapters.dexhunter.providers(body),
-          adapters.muesliswap.providers(body),
+          adapters.dexhunter.protocols(),
+          adapters.muesliswap.protocols(),
         ])
 
         if (isLeft(dexhunterResponse)) return muesliswapResponse
@@ -196,13 +199,4 @@ const autoApiMaker = (
     },
     true,
   )
-}
-
-const getBestSwap = <T extends Swap.EstimateResponse | Swap.CreateResponse>(
-  best: T,
-  candidate: T,
-): T => {
-  // TODO: Could use more logic to account for fees
-  if (candidate.totalOutput > best.totalOutput) return candidate
-  return best
 }

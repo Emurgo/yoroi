@@ -1,6 +1,6 @@
 import {Portfolio} from '@yoroi/types'
 
-export const Provider = {
+export const Dex = {
   Muesliswap_v2: 'muesliswap-v2',
   Muesliswap_clp: 'muesliswap-clp',
   Minswap_v1: 'minswap-v1',
@@ -14,10 +14,10 @@ export const Provider = {
   Sundaeswap_v3: 'sundaeswap-v3',
 } as const
 
-export type Provider = (typeof Provider)[keyof typeof Provider]
+export type Dex = (typeof Dex)[keyof typeof Dex]
 
 export type ProvidersResponse = Record<
-  Provider,
+  Dex,
   {
     batcher_fee: number
     deposit: number
@@ -27,13 +27,13 @@ export type ProvidersResponse = Record<
 >
 
 export type PoolsRequest = {
-  dex?: Provider[]
+  dex?: Dex[]
   token_a: Portfolio.Token.Id
   token_b: Portfolio.Token.Id
 }
 
 export type PoolsResponse = Array<{
-  provider: Provider
+  provider: Dex
   token_a: Portfolio.Token.Id
   token_b: Portfolio.Token.Id
   token_a_liquidity: number
@@ -62,7 +62,7 @@ export type OpenOrdersResponse = {
     from_amount: string
     to_amount: string
     user_address: string
-    dex: Provider
+    dex: Dex
     utxo: string // tx_hash#output_idx
   }>
   numbers_have_decimals: boolean
@@ -70,7 +70,7 @@ export type OpenOrdersResponse = {
 
 export type HistoryOrdersResponse = {
   orders: Array<{
-    dex: Provider
+    dex: Dex
     aggregator: null
     fromToken: Portfolio.Token.Id
     toToken: Portfolio.Token.Id
@@ -117,7 +117,7 @@ export type LimitOrderRequest = {
   buy_amount: number
   sell_amount: number
   user_address: string
-  dex: Provider
+  dex: Dex
   partner?: string
   numbers_have_decimals?: boolean
 }
@@ -129,7 +129,7 @@ export type CreateOrderRequest = {
   sell_amount?: number
   user_address: string
   slippage?: number
-  dex?: Array<Provider>
+  dex?: Array<Dex>
   partner?: string
   numbers_have_decimals?: boolean
 }
@@ -140,7 +140,7 @@ export type QuoteRequest = {
   buy_amount?: number
   sell_amount?: number
   slippage?: number
-  dex?: Array<Provider>
+  dex?: Array<Dex>
   partner?: string
   numbers_have_decimals?: boolean
 }
@@ -150,7 +150,7 @@ export type LimitQuoteRequest = {
   sell_token: string
   buy_amount: number
   sell_amount: number
-  dex?: Provider
+  dex?: Dex
   partner?: string
   numbers_have_decimals?: boolean
 }
@@ -165,10 +165,11 @@ export type Split = {
   initial_price: number
   final_price: number
   price_impact: number
-  dex: Provider
+  dex: Dex
   pool_fee: number
   expected_output_without_slippage: number | string
 }
+
 export type QuoteResponse = {
   total_lvl_attached: number | string
   total_deposit: number | string

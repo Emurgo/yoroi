@@ -9,11 +9,11 @@ import {useSwap} from '../../common/SwapProvider'
 export const ManagerConfig = () => {
   const {styles} = useStyles()
   const swapForm = useSwap()
-  const [adapter, setAdapter] = React.useState(swapForm.managerConfig.adapter)
+  const [aggregator, setAggregator] = React.useState(swapForm.managerConfig.aggregatorSelected)
 
-  const assign = (a: Swap.ManagerConfig['adapter']) => {
-    setAdapter(a)
-    swapForm.assignManagerConfig({...swapForm.managerConfig, adapter: a})
+  const assign = (a: Swap.ManagerConfig['aggregatorSelected']) => {
+    setAggregator(a)
+    swapForm.assignManagerConfig({...swapForm.managerConfig, aggregatorSelected: a})
   }
 
   return (
@@ -27,7 +27,7 @@ export const ManagerConfig = () => {
             type={ButtonType.SecondaryText}
             title="Auto"
             size="S"
-            {...(adapter === 'auto' && {style: styles.activeButton})}
+            {...(aggregator === 'auto' && {style: styles.activeButton})}
           />
         </View>
 
@@ -37,7 +37,7 @@ export const ManagerConfig = () => {
             type={ButtonType.SecondaryText}
             title="Dexhunter"
             size="S"
-            {...(adapter === 'dexhunter' && {style: styles.activeButton})}
+            {...(aggregator === 'dexhunter' && {style: styles.activeButton})}
           />
         </View>
 
@@ -47,7 +47,7 @@ export const ManagerConfig = () => {
             type={ButtonType.SecondaryText}
             title="Muesliswap"
             size="S"
-            {...(adapter === 'muesliswap' && {style: styles.activeButton})}
+            {...(aggregator === 'muesliswap' && {style: styles.activeButton})}
           />
         </View>
       </View>

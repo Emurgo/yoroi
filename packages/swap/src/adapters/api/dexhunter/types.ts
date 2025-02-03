@@ -1,4 +1,4 @@
-export const Provider = {
+export const Dex = {
   Minswap_v1: 'MINSWAP',
   Minswap_v2: 'MINSWAPV2',
   Wingriders_v1: 'WINGRIDER',
@@ -9,7 +9,7 @@ export const Provider = {
   Splash_v1: 'SPLASH',
 } as const
 
-export type Provider = (typeof Provider)[keyof typeof Provider]
+export type Dex = (typeof Dex)[keyof typeof Dex]
 
 export type TokensResponse = Array<{
   token_id: string
@@ -29,7 +29,7 @@ export type OrdersResponse = Array<{
   amount_in?: number
   batcher_fee?: number
   deposit?: number
-  dex: Provider
+  dex: Dex
   expected_out_amount?: number
   is_dexhunter?: boolean
   is_oor?: boolean
@@ -60,7 +60,7 @@ export type Split = {
   amount_in?: number
   batcher_fee?: number
   deposits?: number
-  dex: Provider
+  dex: Dex
   expected_output?: number
   expected_output_without_slippage?: number
   fee?: number
@@ -74,7 +74,7 @@ export type Split = {
 
 export type EstimateRequest = {
   amount_in?: number
-  blacklisted_dexes?: Provider[]
+  blacklisted_dexes?: Dex[]
   slippage?: number
   token_in?: string
   token_out?: string
@@ -101,7 +101,7 @@ export type EstimateResponse = {
 
 export type ReverseEstimateRequest = {
   amount_out?: number
-  blacklisted_dexes?: Provider[]
+  blacklisted_dexes?: Dex[]
   slippage: number
   token_in: string
   token_out: string
@@ -128,8 +128,8 @@ export type ReverseEstimateResponse = {
 
 export type LimitEstimateRequest = {
   amount_in?: number
-  blacklisted_dexes?: Provider[]
-  dex: Provider
+  blacklisted_dexes?: Dex[]
+  dex: Dex
   multiples?: number
   token_in?: string
   token_out?: string
@@ -138,7 +138,7 @@ export type LimitEstimateRequest = {
 
 export type LimitEstimateResponse = {
   batcher_fee?: number
-  blacklisted_dexes?: Provider[]
+  blacklisted_dexes?: Dex[]
   deposits?: number
   dexhunter_fee?: number
   net_price?: number
@@ -155,9 +155,9 @@ export type LimitEstimateResponse = {
 
 export type LimitBuildRequest = {
   amount_in?: number
-  blacklisted_dexes?: Provider[]
+  blacklisted_dexes?: Dex[]
   buyer_address?: string
-  dex: Provider
+  dex: Dex
   multiples?: number
   token_in?: string
   token_out?: string
@@ -182,7 +182,7 @@ export type LimitBuildResponse = {
 
 export type BuildRequest = {
   amount_in: number
-  blacklisted_dexes?: Provider[]
+  blacklisted_dexes?: Dex[]
   buyer_address: string
   tx_optimization?: boolean
   slippage: number

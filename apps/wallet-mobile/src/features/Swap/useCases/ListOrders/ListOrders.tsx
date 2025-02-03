@@ -204,7 +204,7 @@ const Order = ({order}: {order: Swap.Order}) => {
           <React.Fragment>
             <Row label={strings.listOrdersTotal} value={`${order.amountIn} ${tokenName(tokenInInfo)}`} />
 
-            <Row label={strings.dex.toUpperCase()} value={order.dex} />
+            <Row label={strings.dex.toUpperCase()} value={order.protocol} />
 
             {lastTxHash !== '' && (
               <Row

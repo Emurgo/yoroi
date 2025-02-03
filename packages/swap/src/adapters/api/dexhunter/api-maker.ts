@@ -12,6 +12,7 @@ import {
   TokensResponse,
 } from './types'
 import {transformersMaker} from './transformers'
+import {ApiHttpStatusCode} from '@yoroi/types/lib/typescript/api/status-code'
 
 export type DexhunterApiConfig = {
   address: string
@@ -21,6 +22,7 @@ export type DexhunterApiConfig = {
   network: Chain.SupportedNetworks
   request?: FetchData
 }
+
 export const dexhunterApiMaker = (
   config: DexhunterApiConfig,
 ): Readonly<Swap.Api> => {
@@ -100,12 +102,12 @@ export const dexhunterApiMaker = (
         )
       },
 
-      async providers(_body: Swap.ProvidersRequest) {
+      async protocols() {
         return freeze(
           {
             tag: 'right',
             value: {
-              status: 200,
+              status: ApiHttpStatusCode.Ok,
               data: transformers.providers.response(),
             },
           },
@@ -198,27 +200,34 @@ export const dexhunterApiMaker = (
 const parseDhError = ({
   tag,
   error,
-}: Left<Api.ResponseError>): Left<Api.ResponseError> => ({
-  tag,
-  error: {
-    ...error,
-    message: JSON.stringify(error.responseData as any, null, 2),
-  },
-})
+}: Left<Api.ResponseError>): Left<Api.ResponseError> =>
+  freeze(
+    {
+      tag,
+      error: {
+        ...error,
+        message: JSON.stringify(error.responseData as any, null, 2),
+      },
+    },
+    true,
+  )
 
-const baseUrls = {
+const baseUrls = freeze({
   [Chain.Network.Mainnet]: 'https://api-us.dexhunterv3.app',
-} as const
+} as const)
 
-const apiPaths = {
-  tokens: '/swap/tokens',
-  orders: ({address}: {address: string}) => `/swap/orders/${address}`,
+const apiPaths = freeze(
+  {
+    tokens: '/swap/tokens',
+    orders: ({address}: {address: string}) => `/swap/orders/${address}`,
 
-  cancel: '/swap/cancel',
-  estimate: '/swap/estimate',
-  limitBuild: '/swap/limit/build',
-  limitEstimate: '/swap/limit/estimate',
-  reverseEstimate: '/swap/reverseEstimate',
-  build: '/swap/build',
-  sign: '/swap/sign',
-} as const
+    cancel: '/swap/cancel',
+    estimate: '/swap/estimate',
+    limitBuild: '/swap/limit/build',
+    limitEstimate: '/swap/limit/estimate',
+    reverseEstimate: '/swap/reverseEstimate',
+    build: '/swap/build',
+    sign: '/swap/sign',
+  } as const,
+  true,
+)

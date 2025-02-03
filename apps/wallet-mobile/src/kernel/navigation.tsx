@@ -181,7 +181,7 @@ type SwapTokenRoutes = {
   'swap-select-sell-token': undefined
   'swap-select-buy-token': undefined
   'swap-edit-slippage': undefined
-  'swap-select-provider': undefined
+  'swap-select-protocol': undefined
   'swap-preprod-notice': undefined
   'swap-submitted-tx': undefined
   'swap-failed-tx': undefined

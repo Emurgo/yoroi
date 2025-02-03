@@ -10,7 +10,7 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
-import {Provider} from '../../common/Provider/Provider'
+import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 import {TransactionSummary} from './TransactionSummary'
@@ -63,13 +63,13 @@ export const ReviewSwap = () => {
   }
 
   const onNext = () => {
-    const provider = swapForm.createTx?.splits[0]?.dex
+    const protocol = swapForm.createTx?.splits[0]?.protocol
 
     navigateToTxReview({
       onSuccess: onSwapTxSuccess,
       onError: onSwapTxError,
       cbor: swapForm.createTx?.cbor,
-      receiverCustomTitle: provider !== undefined ? <Provider provider={provider} /> : undefined,
+      receiverCustomTitle: protocol !== undefined ? <ProtocolAvatar protocol={protocol} /> : undefined,
       details: {component: <TransactionSummary swapForm={swapForm} />, title: strings.swapDetailsTitle},
     })
   }

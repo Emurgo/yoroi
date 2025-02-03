@@ -11,7 +11,7 @@ import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAm
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, undefinedToken} from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
-import {Provider} from '../../common/Provider/Provider'
+import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {SwapContext} from '../../common/SwapProvider'
 
@@ -46,19 +46,21 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const totalFee = `${swapForm.createTx?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const minReceivedInfoValue = `${swapForm.createTx?.totalOutput} ${tokenToBuyName}`
 
-  const provider = swapForm.createTx?.splits[0]?.dex
+  const protocol = swapForm.createTx?.splits[0]?.protocol
 
   const feesInfo = [
     {
+      // TODO: fix i18n
       label: 'Agreggator',
       value: <Text style={styles.text}>{swapForm.createTx?.aggregator ?? ''}</Text>,
       hidden: !isDev,
     },
     {
       label: strings.dex.toUpperCase(),
-      value: provider !== undefined ? <Provider provider={provider} /> : '',
+      value: protocol !== undefined ? <ProtocolAvatar protocol={protocol} /> : '',
     },
     {
+      // TODO: fix i18n
       label: `${capitalize(orderType)} ${strings.price}`,
       value: <Text style={[styles.text, styles.alignRight]}>{priceInfoValue}</Text>,
     },

@@ -1,4 +1,6 @@
 import {Portfolio, Swap} from '@yoroi/types'
+import {isPrimaryToken} from '@yoroi/portfolio'
+
 import {
   BuildRequest,
   BuildResponse,
@@ -11,7 +13,7 @@ import {
   LimitEstimateRequest,
   LimitEstimateResponse,
   OrdersResponse,
-  Provider,
+  Dex,
   ReverseEstimateRequest,
   ReverseEstimateResponse,
   SignRequest,
@@ -19,7 +21,6 @@ import {
   Split,
   TokensResponse,
 } from './types'
-import {isPrimaryToken} from '@yoroi/portfolio'
 import {DexhunterApiConfig} from './api-maker'
 
 const ptIdDh =
@@ -46,7 +47,7 @@ const transformSplit = ({
   amountIn: amount_in,
   batcherFee: batcher_fee,
   deposits,
-  dex: toSwapProvider(dex),
+  protocol: toSwapProtocol(dex),
   expectedOutput: expected_output,
   expectedOutputWithoutSlippage: expected_output_without_slippage,
   fee,
@@ -126,7 +127,7 @@ export const transformersMaker = ({
             aggregator: is_dexhunter
               ? Swap.Aggregator.Dexhunter
               : Swap.Aggregator.Muesliswap,
-            dex: toSwapProvider(dex),
+            protocol: toSwapProtocol(dex),
             placedAt: new Date(submission_time).getTime(),
             lastUpdate: new Date(last_update).getTime(),
             status,
@@ -143,12 +144,12 @@ export const transformersMaker = ({
         ),
     },
     providers: {
-      response: (): Swap.ProvidersResponse =>
-        Object.values(Provider)
-          .map(toSwapProvider)
-          .map((provider) => ({
+      response: (): Array<Swap.AggregatorProtocol> =>
+        Object.values(Dex)
+          .map(toSwapProtocol)
+          .map((protocol) => ({
             aggregator: Swap.Aggregator.Dexhunter,
-            provider,
+            protocol,
           })),
     },
     cancel: {
@@ -167,15 +168,15 @@ export const transformersMaker = ({
     estimate: {
       request: ({
         amountIn,
-        blacklistedDexes,
+        blockedProtocols,
         slippage,
         tokenIn,
         tokenOut,
       }: Swap.EstimateRequest): EstimateRequest => ({
         amount_in: amountIn,
-        blacklisted_dexes: blacklistedDexes
-          ?.map(fromSwapProvider)
-          .filter((v): v is Provider => !!v),
+        blacklisted_dexes: blockedProtocols
+          ?.map(fromSwapProtocol)
+          .filter((dex): dex is Dex => !!dex),
         slippage,
         token_in: tokenIdToDexhunter(tokenIn),
         token_out: tokenIdToDexhunter(tokenOut),
@@ -208,15 +209,15 @@ export const transformersMaker = ({
     reverseEstimate: {
       request: ({
         amountOut,
-        blacklistedDexes,
+        blockedProtocols,
         slippage,
         tokenIn,
         tokenOut,
       }: Swap.EstimateRequest): ReverseEstimateRequest => ({
         amount_out: amountOut,
-        blacklisted_dexes: blacklistedDexes
-          ?.map(fromSwapProvider)
-          .filter((v): v is Provider => !!v),
+        blacklisted_dexes: blockedProtocols
+          ?.map(fromSwapProtocol)
+          .filter((dex): dex is Dex => !!dex),
         slippage,
         token_in: tokenIdToDexhunter(tokenIn),
         token_out: tokenIdToDexhunter(tokenOut),
@@ -250,18 +251,18 @@ export const transformersMaker = ({
     limitEstimate: {
       request: ({
         amountIn,
-        blacklistedDexes,
-        dex = Swap.Provider.Splash_v1,
+        blockedProtocols,
+        protocol = Swap.Protocol.Splash_v1,
         multiples = 1,
         tokenIn,
         tokenOut,
         wantedPrice,
       }: Swap.EstimateRequest): LimitEstimateRequest => ({
         amount_in: amountIn,
-        blacklisted_dexes: blacklistedDexes
-          ?.map(fromSwapProvider)
-          .filter((v): v is Provider => !!v),
-        dex: fromSwapProvider(dex) ?? Provider.Splash_v1,
+        blacklisted_dexes: blockedProtocols
+          ?.map(fromSwapProtocol)
+          .filter((v): v is Dex => !!v),
+        dex: fromSwapProtocol(protocol) ?? Dex.Splash_v1,
         multiples,
         token_in: tokenIdToDexhunter(tokenIn),
         token_out: tokenIdToDexhunter(tokenOut),
@@ -296,19 +297,19 @@ export const transformersMaker = ({
     limitBuild: {
       request: ({
         amountIn,
-        blacklistedDexes,
-        dex = Swap.Provider.Splash_v1,
+        blockedProtocols,
+        protocol = Swap.Protocol.Splash_v1,
         multiples,
         tokenIn,
         tokenOut,
         wantedPrice,
       }: Swap.CreateRequest): LimitBuildRequest => ({
         amount_in: amountIn,
-        blacklisted_dexes: blacklistedDexes
-          ?.map(fromSwapProvider)
-          .filter((v): v is Provider => !!v),
+        blacklisted_dexes: blockedProtocols
+          ?.map(fromSwapProtocol)
+          .filter((v): v is Dex => !!v),
         buyer_address: address,
-        dex: fromSwapProvider(dex) ?? Provider.Splash_v1,
+        dex: fromSwapProtocol(protocol) ?? Dex.Splash_v1,
         multiples,
         token_in: tokenIdToDexhunter(tokenIn),
         token_out: tokenIdToDexhunter(tokenOut),
@@ -343,15 +344,15 @@ export const transformersMaker = ({
     build: {
       request: ({
         amountIn,
-        blacklistedDexes,
+        blockedProtocols,
         slippage = 0,
         tokenIn,
         tokenOut,
       }: Swap.CreateRequest): BuildRequest => ({
         amount_in: amountIn,
-        blacklisted_dexes: blacklistedDexes
-          ?.map(fromSwapProvider)
-          .filter((v): v is Provider => v !== undefined),
+        blacklisted_dexes: blockedProtocols
+          ?.map(fromSwapProtocol)
+          .filter((v): v is Dex => v !== undefined),
         buyer_address: address,
         slippage,
         token_in: tokenIdToDexhunter(tokenIn),
@@ -397,31 +398,31 @@ export const transformersMaker = ({
   } as const
 }
 
-const toSwapProvider = (dex: Provider): Swap.Provider =>
+const toSwapProtocol = (dex: Dex): Swap.Protocol =>
   ({
-    [Provider.Minswap_v1]: Swap.Provider.Minswap_v1,
-    [Provider.Minswap_v2]: Swap.Provider.Minswap_v2,
-    [Provider.Wingriders_v1]: Swap.Provider.Wingriders_v1,
-    [Provider.Wingriders_v2]: Swap.Provider.Wingriders_v2,
-    [Provider.Vyfi_v1]: Swap.Provider.Vyfi_v1,
-    [Provider.Sundaeswap_v1]: Swap.Provider.Sundaeswap_v1,
-    [Provider.Sundaeswap_v3]: Swap.Provider.Sundaeswap_v3,
-    [Provider.Splash_v1]: Swap.Provider.Splash_v1,
+    [Dex.Minswap_v1]: Swap.Protocol.Minswap_v1,
+    [Dex.Minswap_v2]: Swap.Protocol.Minswap_v2,
+    [Dex.Wingriders_v1]: Swap.Protocol.Wingriders_v1,
+    [Dex.Wingriders_v2]: Swap.Protocol.Wingriders_v2,
+    [Dex.Vyfi_v1]: Swap.Protocol.Vyfi_v1,
+    [Dex.Sundaeswap_v1]: Swap.Protocol.Sundaeswap_v1,
+    [Dex.Sundaeswap_v3]: Swap.Protocol.Sundaeswap_v3,
+    [Dex.Splash_v1]: Swap.Protocol.Splash_v1,
   }[dex])
 
-const fromSwapProvider = (dex: Swap.Provider): Provider | undefined =>
+const fromSwapProtocol = (dex: Swap.Protocol): Dex | undefined =>
   ({
-    [Swap.Provider.Minswap_v1]: Provider.Minswap_v1,
-    [Swap.Provider.Minswap_v2]: Provider.Minswap_v2,
-    [Swap.Provider.Minswap_stable]: undefined,
-    [Swap.Provider.Wingriders_v1]: Provider.Wingriders_v1,
-    [Swap.Provider.Wingriders_v2]: Provider.Wingriders_v2,
-    [Swap.Provider.Vyfi_v1]: Provider.Vyfi_v1,
-    [Swap.Provider.Sundaeswap_v1]: Provider.Sundaeswap_v1,
-    [Swap.Provider.Sundaeswap_v3]: Provider.Sundaeswap_v3,
-    [Swap.Provider.Splash_v1]: Provider.Splash_v1,
-    [Swap.Provider.Teddy_v1]: undefined,
-    [Swap.Provider.Muesliswap_v2]: undefined,
-    [Swap.Provider.Muesliswap_clp]: undefined,
-    [Swap.Provider.Spectrum_v1]: undefined,
+    [Swap.Protocol.Minswap_v1]: Dex.Minswap_v1,
+    [Swap.Protocol.Minswap_v2]: Dex.Minswap_v2,
+    [Swap.Protocol.Minswap_stable]: undefined,
+    [Swap.Protocol.Wingriders_v1]: Dex.Wingriders_v1,
+    [Swap.Protocol.Wingriders_v2]: Dex.Wingriders_v2,
+    [Swap.Protocol.Vyfi_v1]: Dex.Vyfi_v1,
+    [Swap.Protocol.Sundaeswap_v1]: Dex.Sundaeswap_v1,
+    [Swap.Protocol.Sundaeswap_v3]: Dex.Sundaeswap_v3,
+    [Swap.Protocol.Splash_v1]: Dex.Splash_v1,
+    [Swap.Protocol.Teddy_v1]: undefined,
+    [Swap.Protocol.Muesliswap_v2]: undefined,
+    [Swap.Protocol.Muesliswap_clp]: undefined,
+    [Swap.Protocol.Spectrum_v1]: undefined,
   }[dex])
