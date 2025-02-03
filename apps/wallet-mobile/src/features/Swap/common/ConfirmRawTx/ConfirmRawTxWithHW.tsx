@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import {HW, Swap} from '@yoroi/types'
+import {HW} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
@@ -18,19 +18,17 @@ type Step = 'select-transport' | 'connect-transport' | 'loading'
 
 type Props = {
   onConfirm?: () => void
-  utxo: string
-  bech32Address: string
-  cancelOrder: Swap.Api['cancelOrder']
+  cbor: string
 }
 
-export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}: Props) => {
+export const ConfirmRawTxWithHW = ({onConfirm, cbor}: Props) => {
   const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
   const {meta} = useSelectedWallet()
   const strings = useStrings()
   const styles = useStyles()
-  const {cancelOrder: cancelOrderWithHw} = useCancelOrderWithHw({cancelOrder}, {onSuccess: onConfirm})
+  const {cancelOrder: cancelOrderWithHw} = useCancelOrderWithHw({onSuccess: onConfirm})
 
   const onSelectTransport = (transportType: TransportType) => {
     setTransportType(transportType)
@@ -41,14 +39,14 @@ export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}
     setStep('loading')
     const hwDeviceInfo = withBLE(meta, deviceId)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
-    cancelOrderWithHw({useUSB: false, utxo, bech32Address, hwDeviceInfo})
+    cancelOrderWithHw({useUSB: false, cbor, hwDeviceInfo})
   }
 
   const onConnectUSB = (deviceObj: HW.DeviceObj) => {
     setStep('loading')
     const hwDeviceInfo = withUSB(meta, deviceObj)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
-    cancelOrderWithHw({useUSB: true, utxo, bech32Address, hwDeviceInfo})
+    cancelOrderWithHw({useUSB: true, cbor, hwDeviceInfo})
   }
 
   if (step === 'select-transport') {

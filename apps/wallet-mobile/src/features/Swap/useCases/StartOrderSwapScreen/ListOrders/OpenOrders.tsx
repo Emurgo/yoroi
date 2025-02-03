@@ -194,9 +194,7 @@ export const OpenOrders = () => {
           title: strings.signTransaction,
           content: (
             <ConfirmRawTx
-              cancelOrder={swapApiOrder.cancel}
-              utxo={order.utxo}
-              bech32Address={order.owner}
+              cbor={cbor}
               onCancel={closeModal}
               onConfirm={(rootKey) => onRawTxConfirm(rootKey, order, cbor)}
               onHWConfirm={() => onRawTxHwConfirm(order)}
