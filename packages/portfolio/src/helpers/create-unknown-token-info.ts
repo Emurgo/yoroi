@@ -1,11 +1,19 @@
+import {hexToAscii} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
-export function createUnknownTokenInfo(
-  additionalProperties: Pick<Portfolio.Token.Info, 'id' | 'name'>,
-): Readonly<Portfolio.Token.Info> {
+export function createUnknownTokenInfo({
+  id,
+  name,
+}: Pick<Portfolio.Token.Info, 'id'> &
+  Partial<Pick<Portfolio.Token.Info, 'name'>>): Readonly<Portfolio.Token.Info> {
+  const [, assetNameHex] = id.split('.')
+  const assetNameAscii = hexToAscii(assetNameHex ?? '')
+
   return freeze(
     {
+      id,
+      name: name ?? `${assetNameAscii} (unknown)`,
       reference: '',
       tag: '',
       ticker: '',
@@ -19,7 +27,6 @@ export function createUnknownTokenInfo(
       type: Portfolio.Token.Type.FT,
       application: Portfolio.Token.Application.General,
       status: Portfolio.Token.Status.Unknown,
-      ...additionalProperties,
     },
     true,
   )

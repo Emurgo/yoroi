@@ -93,7 +93,7 @@ export const AmountCard = ({
           <View>
             <TouchableOpacity onPress={navigateTo}>
               <View style={styles.sectionContainer}>
-                {!info || (info.nature !== Portfolio.Token.Nature.Primary && info.originalImage === '') ? (
+                {!info ? (
                   <View style={styles.notSelected}>
                     <Icon.Coins size={20} color={colors.noSelected} />
                   </View>

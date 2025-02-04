@@ -59,7 +59,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   )
 
   const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} = usePortfolioTokenInfos(
-    {wallet, tokenIds},
+    {wallet, tokenIds, sourceId: 'SwapProvider'},
     {suspense: true},
   )
 
