@@ -19,22 +19,17 @@
   UIView *rootView = self.window.rootViewController.view;
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
 
-  #ifdef BUILD_VARIANT
-      NSString *env = @BUILD_VARIANT;
-  #else
-      NSString *env = @"PRODUCTION"; // Default
-  #endif
-  
-  NSString *filePath;
+  NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
+  NSString *googleServiceFilePath;
 
-  if ([env isEqualToString:@"NIGHTLY"]) {
-      filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-Nightly" ofType:@"plist"];
+  if ([bundleID isEqualToString:@"com.emurgo.yoroi-nightly"]) {
+      googleServiceFilePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-Nightly" ofType:@"plist"];
   } else {
-      filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-Production" ofType:@"plist"];
+      googleServiceFilePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-Production" ofType:@"plist"];
   }
 
-  if (filePath) {
-      FIROptions *options = [[FIROptions alloc] initWithContentsOfFile:filePath];
+  if (googleServiceFilePath) {
+      FIROptions *options = [[FIROptions alloc] initWithContentsOfFile:googleServiceFilePath];
       [FIRApp configureWithOptions:options];
   }
 

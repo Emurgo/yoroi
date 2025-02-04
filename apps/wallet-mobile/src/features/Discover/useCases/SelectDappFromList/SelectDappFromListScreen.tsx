@@ -77,7 +77,7 @@ export const SelectDappFromListScreen = () => {
 
   return (
     <>
-      <WelcomeDAppModal />
+      <WelcomeDAppModal disabled={isShowedWelcomeDApp} />
 
       <ShowDisclaimer type="dapps" disabled={!isShowedWelcomeDApp} />
 

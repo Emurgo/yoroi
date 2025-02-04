@@ -9,15 +9,15 @@ import {useModal} from '../../../../components/Modal/ModalContext'
 import {useShowWelcomeDApp} from '../../common/useShowWelcomeDApp'
 import {useStrings} from '../../common/useStrings'
 
-export const WelcomeDAppModal = () => {
+export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const insets = useSafeAreaInsets()
   const {openModal, closeModal} = useModal()
-  const {isShowedWelcomeDApp, setShowedWelcomeDApp, loadingGetShowedWelcomeDApp} = useShowWelcomeDApp()
+  const {setShowedWelcomeDApp, loadingGetShowedWelcomeDApp} = useShowWelcomeDApp()
 
   React.useEffect(() => {
-    if (loadingGetShowedWelcomeDApp || isShowedWelcomeDApp) return
+    if (disabled || loadingGetShowedWelcomeDApp) return
 
     openModal({
       title: strings.welcomeToYoroiDAppExplorer,
@@ -34,8 +34,8 @@ export const WelcomeDAppModal = () => {
     setShowedWelcomeDApp()
   }, [
     closeModal,
+    disabled,
     insets.bottom,
-    isShowedWelcomeDApp,
     loadingGetShowedWelcomeDApp,
     openModal,
     setShowedWelcomeDApp,

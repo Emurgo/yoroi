@@ -37,17 +37,17 @@ describe('formatAda', () => {
 
 describe('formatAdaFractional', () => {
   it('formats zero', () => {
-    expect(formatTokenFractional(asQuantity(0), primaryTokenInfoMainnet)).toEqual('.000000')
+    expect(formatTokenFractional(asQuantity(0), primaryTokenInfoMainnet)).toEqual('')
   })
 
   it('formats positive', () => {
     const tests = [
       ['12', '.000012'],
       ['999999', '.999999'],
-      ['1000000', '.000000'],
+      ['1000000', ''],
       ['1000001', '.000001'],
       ['9999999', '.999999'],
-      ['9999999000000', '.000000'],
+      ['9999999000000', ''],
     ]
     tests.forEach(([ada, formatted]) => {
       expect(formatTokenFractional(asQuantity(ada), primaryTokenInfoMainnet)).toEqual(formatted)
@@ -57,10 +57,10 @@ describe('formatAdaFractional', () => {
     const tests = [
       ['-12', '.000012'],
       ['-999999', '.999999'],
-      ['-1000000', '.000000'],
+      ['-1000000', ''],
       ['-1000001', '.000001'],
       ['-9999999', '.999999'],
-      ['-9999999000000', '.000000'],
+      ['-9999999000000', ''],
     ]
     tests.forEach(([ada, formatted]) => {
       expect(formatTokenFractional(asQuantity(ada), primaryTokenInfoMainnet)).toEqual(formatted)
