@@ -4,7 +4,7 @@ import {FlashList} from '@shopify/flash-list'
 import {isString} from '@yoroi/common'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {Buffer} from 'buffer'
+// import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
@@ -27,16 +27,18 @@ import {useLanguage} from '../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {SubmitTxInsufficientCollateralError} from '../../../../../yoroi-wallets/cardano/api/errors'
-import {convertBech32ToHex, getTransactionSigners} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
+import {
+  convertBech32ToHex /* getTransactionSigners */,
+} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
+import {/* createRawTxSigningKey, */ generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {usePortfolioTokenInfos} from '../../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {TokenInfoIcon} from '../../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch} from '../../../../Search/SearchContext'
 import {getCollateralAmountInLovelace} from '../../../../Settings/useCases/changeWalletSettings/ManageCollateral/helpers'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
+// import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
 import {EmptyOpenOrdersIllustration} from '../../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
@@ -51,7 +53,7 @@ export const OpenOrders = () => {
   const strings = useStrings()
   const {styles} = useStyles()
   const intl = useIntl()
-  const {wallet, meta} = useSelectedWallet()
+  const {wallet /* , meta */} = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
   const {navigateToTxReview} = useWalletNavigation()
   const [isLoading, setIsLoading] = React.useState(false)
@@ -126,7 +128,7 @@ export const OpenOrders = () => {
     })
   }
 
-  const onRawTxConfirm = async (rootKey: string, order: MappedOpenOrder, cbor: string) => {
+  /*  const onRawTxConfirm = async (rootKey: string, order: MappedOpenOrder, cbor: string) => {
     try {
       const tx = await createCancellationTxAndSign(order.id, rootKey, cbor)
       if (!tx) return
@@ -142,7 +144,7 @@ export const OpenOrders = () => {
       navigateTo.failedTx()
     }
   }
-
+ */
   const onRawTxHwConfirm = (order: MappedOpenOrder) => {
     try {
       trackCancellationSubmitted(order)
@@ -185,24 +187,11 @@ export const OpenOrders = () => {
 
     const cbor = await generateSwapCancellationCbor(order.owner, order.utxo)
 
+    console.log('cbor-1', cbor)
+
     navigateToTxReview({
       cbor,
-      onConfirm: () => {
-        if (!isString(order.utxo) || !isString(order.owner)) return
-
-        openModal({
-          title: strings.signTransaction,
-          content: (
-            <ConfirmRawTx
-              cbor={cbor}
-              onCancel={closeModal}
-              onConfirm={(rootKey) => onRawTxConfirm(rootKey, order, cbor)}
-              onHWConfirm={() => onRawTxHwConfirm(order)}
-            />
-          ),
-          height: 400,
-        })
-      },
+      onSuccess: () => onRawTxHwConfirm(order),
     })
   }
 
@@ -225,7 +214,7 @@ export const OpenOrders = () => {
     return generateCIP30UtxoCbor(utxo)
   }
 
-  const createCancellationTxAndSign = async (
+  /* const createCancellationTxAndSign = async (
     orderId: string,
     rootKey: string,
     cbor: string,
@@ -247,7 +236,7 @@ export const OpenOrders = () => {
       }
       throw error
     }
-  }
+  } */
 
   const {
     order: {cancel: cancelOrder},

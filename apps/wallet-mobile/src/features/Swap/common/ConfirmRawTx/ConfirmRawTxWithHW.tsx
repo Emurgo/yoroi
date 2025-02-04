@@ -2,6 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
+import {useMutation, UseMutationOptions} from 'react-query'
 
 import {LedgerTransportSwitch} from '../../../../components/LedgerTransportSwitch/LedgerTransportSwitch'
 import {Text} from '../../../../components/Text'
@@ -9,7 +10,6 @@ import {LedgerConnect} from '../../../../legacy/HW'
 import {withBLE, withUSB} from '../../../../yoroi-wallets/hw/hwWallet'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {useCancelOrderWithHw} from '../helpers'
 import {useStrings} from '../strings'
 import {ActivityIndicator} from './ActivityIndicator'
 
@@ -17,18 +17,18 @@ type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
 
 type Props = {
-  onConfirm?: () => void
+  onSuccess?: () => void
   cbor: string
 }
 
-export const ConfirmRawTxWithHW = ({onConfirm, cbor}: Props) => {
+export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
   const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
   const {meta} = useSelectedWallet()
   const strings = useStrings()
-  const styles = useStyles()
-  const {cancelOrder: cancelOrderWithHw} = useCancelOrderWithHw({onSuccess: onConfirm})
+  const {styles} = useStyles()
+  const {signRawWithHw} = useSignRawTxWithHw({onSuccess})
 
   const onSelectTransport = (transportType: TransportType) => {
     setTransportType(transportType)
@@ -39,14 +39,14 @@ export const ConfirmRawTxWithHW = ({onConfirm, cbor}: Props) => {
     setStep('loading')
     const hwDeviceInfo = withBLE(meta, deviceId)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
-    cancelOrderWithHw({useUSB: false, cbor, hwDeviceInfo})
+    signRawWithHw({useUSB: false, cbor, hwDeviceInfo})
   }
 
   const onConnectUSB = (deviceObj: HW.DeviceObj) => {
     setStep('loading')
     const hwDeviceInfo = withUSB(meta, deviceObj)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
-    cancelOrderWithHw({useUSB: true, cbor, hwDeviceInfo})
+    signRawWithHw({useUSB: true, cbor, hwDeviceInfo})
   }
 
   if (step === 'select-transport') {
@@ -95,5 +95,22 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  return {styles} as const
+}
+
+export const useSignRawTxWithHw = (
+  options?: UseMutationOptions<void, Error, {cbor: string; useUSB: boolean; hwDeviceInfo: HW.DeviceInfo}>,
+) => {
+  const {wallet} = useSelectedWallet()
+  const mutation = useMutation({
+    ...options,
+    useErrorBoundary: true,
+    mutationFn: async ({cbor, useUSB, hwDeviceInfo}) => {
+      await wallet.signRawTxWithLedger(cbor, useUSB, hwDeviceInfo)
+    },
+  })
+  return {
+    ...mutation,
+    signRawWithHw: mutation.mutate,
+  }
 }

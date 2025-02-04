@@ -1,30 +1,10 @@
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import {HW} from '@yoroi/types'
-import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
 import {normalisePtId} from '../../../kernel/helpers/normalisePtId'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
 import {SwapPriceImpactRisk} from './types'
-
-export const useCancelOrderWithHw = (
-  options?: UseMutationOptions<void, Error, {cbor: string; useUSB: boolean; hwDeviceInfo: HW.DeviceInfo}>,
-) => {
-  const {wallet} = useSelectedWallet()
-  const mutation = useMutation({
-    ...options,
-    useErrorBoundary: true,
-    mutationFn: async ({cbor, useUSB, hwDeviceInfo}) => {
-      await wallet.signSwapCancellationWithLedger(cbor, useUSB, hwDeviceInfo)
-    },
-  })
-  return {
-    ...mutation,
-    cancelOrder: mutation.mutate,
-  }
-}
 
 type OrderTxMetadata = {
   sellTokenId: string

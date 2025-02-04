@@ -46,7 +46,9 @@ export const useLegacyOnConfirm = ({
     if (!unsignedTx) {
       throw new Error('useLegacyOnConfirm:: unsignedTx is required')
     }
+
     const {isHW, isEasyConfirmationEnabled} = meta
+
     if (isHW) {
       openModal({
         title: strings.signTransaction,

@@ -111,7 +111,7 @@ export interface YoroiWallet {
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<YoroiSignedTx>
   ledgerSupportsCIP36(useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<boolean>
   ledgerSupportsCIP1694(useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<boolean>
-  signSwapCancellationWithLedger(cbor: string, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<void>
+  signRawTxWithLedger(cbor: string, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<void>
 
   // Voting
   createVotingRegTx(params: {

@@ -24,7 +24,7 @@ export const ConfirmRawTx = ({onConfirm, onHWConfirm, onCancel, cbor}: Props) =>
           <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />
         )}
       >
-        <ConfirmRawTxWithHW onConfirm={onHWConfirm} cbor={cbor} />
+        <ConfirmRawTxWithHW onSuccess={onHWConfirm} cbor={cbor} />
       </ErrorBoundary>
     )
   }
