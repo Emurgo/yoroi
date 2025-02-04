@@ -154,8 +154,11 @@ export const formatTokenFractional = (
   const decimals = 'metadata' in token ? token.metadata.numberOfDecimals : token.decimals
   const normalizationFactor = Math.pow(10, decimals)
   const fractional = new BigNumber(quantity).abs().modulo(normalizationFactor).dividedBy(normalizationFactor)
-  // remove leading '0'
-  return fractional.toFormat(decimals).substring(1)
+  // remove leading '0', and trailing '0's
+  return fractional
+    .toFormat(decimals)
+    .substring(1)
+    .replace(/\.?0+$/, '')
 }
 
 const truncateWithEllipsis = (s: string, n: number) => {
