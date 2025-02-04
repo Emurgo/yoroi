@@ -13,7 +13,6 @@ import {
   LimitQuoteResponse,
 } from './types'
 import {transformersMaker} from './transformers'
-import {ApiHttpStatusCode} from '@yoroi/types/lib/typescript/api/status-code'
 
 export type MuesliswapApiConfig = {
   addressHex: string
@@ -128,7 +127,7 @@ export const muesliswapApiMaker = (
           {
             tag: 'right',
             value: {
-              status: ApiHttpStatusCode.Ok,
+              status: Api.HttpStatusCode.Ok,
               data: transformers.providers.response(),
             },
           },

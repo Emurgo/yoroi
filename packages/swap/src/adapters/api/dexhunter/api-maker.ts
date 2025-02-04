@@ -12,7 +12,6 @@ import {
   TokensResponse,
 } from './types'
 import {transformersMaker} from './transformers'
-import {ApiHttpStatusCode} from '@yoroi/types/lib/typescript/api/status-code'
 
 export type DexhunterApiConfig = {
   address: string
@@ -107,7 +106,7 @@ export const dexhunterApiMaker = (
           {
             tag: 'right',
             value: {
-              status: ApiHttpStatusCode.Ok,
+              status: Api.HttpStatusCode.Ok,
               data: transformers.providers.response(),
             },
           },
