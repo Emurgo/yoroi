@@ -24,6 +24,7 @@ export const ReviewTxScreen = () => {
   const {onConfirm} = useOnConfirm({
     cbor: params?.cbor,
     partial: params?.partial,
+    preventSubmit: params?.preventSubmit,
     onSuccess: params?.onSuccess,
     onError: params?.onError,
     onCancel: params?.onCancel,
@@ -46,7 +47,7 @@ export const ReviewTxScreen = () => {
       params?.onConfirm()
       return
     }
-    if (unsignedTx != null) {
+    if (unsignedTx != null && params?.cbor == null) {
       legacyOnConfirm()
       return
     }

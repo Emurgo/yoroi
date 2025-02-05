@@ -130,8 +130,8 @@ const wallet: YoroiWallet = {
       isConfirmed: true,
     }
   },
-  signSwapCancellationWithLedger: async () => {
-    throw new Error('not implemented: signSwapCancellationWithLedger')
+  signRawTxWithLedger: async () => {
+    throw new Error('not implemented: signRawTxWithLedger')
   },
   setCollateralId: () => {
     throw new Error('not implemented: createUnsignedTx')

@@ -895,7 +895,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       return doesCardanoAppVersionSupportCIP1694(await getCardanoAppMajorVersion(hwDeviceInfo, useUSB))
     }
 
-    async signSwapCancellationWithLedger(cbor: string, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<void> {
+    async signRawTxWithLedger(cbor: string, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<void> {
       const payload = await toLedgerSignRequest(
         CardanoMobile,
         cbor,

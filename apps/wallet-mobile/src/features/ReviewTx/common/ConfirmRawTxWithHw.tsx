@@ -4,14 +4,13 @@ import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
 
-import {LedgerTransportSwitch} from '../../../../components/LedgerTransportSwitch/LedgerTransportSwitch'
-import {Text} from '../../../../components/Text'
-import {LedgerConnect} from '../../../../legacy/HW'
-import {withBLE, withUSB} from '../../../../yoroi-wallets/hw/hwWallet'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {useStrings} from '../strings'
-import {ActivityIndicator} from './ActivityIndicator'
+import {Text} from '../../../components/Text'
+import {LedgerConnect, LedgerTransportSwitch} from '../../../legacy/HW'
+import {withBLE, withUSB} from '../../../yoroi-wallets/hw/hwWallet'
+import {ActivityIndicator} from '../../Swap/common/ConfirmRawTx/ActivityIndicator'
+import {useStrings} from '../../Swap/common/strings'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
@@ -36,7 +35,6 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
   }
 
   const onConnectBLE = (deviceId: string) => {
-    console.log('ConfirmRawTxWithHW')
     setStep('loading')
     const hwDeviceInfo = withBLE(meta, deviceId)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)

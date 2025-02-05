@@ -285,6 +285,7 @@ export type ReviewTxRoutes = {
   'review-tx'?: {
     cbor?: string
     partial?: boolean
+    preventSubmit?: boolean
     operations?: Array<React.ReactNode>
     receiverCustomTitle?: React.ReactNode
     details?: {title: string; component: React.ReactNode}

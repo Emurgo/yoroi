@@ -49,6 +49,7 @@ export const useDappConnectorManager = () => {
             activeTabOrigin != null ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin)) : null
           navigateToTxReview({
             cbor,
+            preventSubmit: true,
             createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
             onSuccess: (args) => {
               shouldResolve = false
@@ -94,6 +95,7 @@ export const useDappConnectorManager = () => {
           navigateToTxReview({
             cbor,
             partial,
+            preventSubmit: true,
             createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
             onSuccess: (args) => {
               shouldResolve = false
