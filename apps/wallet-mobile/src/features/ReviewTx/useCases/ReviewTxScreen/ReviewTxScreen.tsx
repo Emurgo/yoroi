@@ -24,7 +24,7 @@ export const ReviewTxScreen = () => {
   const {onConfirm} = useOnConfirm({
     cbor: params?.cbor,
     partial: params?.partial,
-    noSubmit: params?.noSubmit,
+    preventSubmit: params?.preventSubmit,
     onSuccess: params?.onSuccess,
     onError: params?.onError,
     onCancel: params?.onCancel,

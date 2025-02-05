@@ -18,7 +18,7 @@ import {useStrings} from './useStrings'
 
 export type OnConfirm = {
   cbor?: string | null
-  noSubmit?: boolean
+  preventSubmit?: boolean
   partial?: boolean
   onSuccess?: (args?: {tx?: Transaction; rootKey?: string; signedTx?: YoroiSignedTx}) => void
   onError?: ((error: unknown) => void) | null
@@ -26,7 +26,15 @@ export type OnConfirm = {
   onClose?: () => void
 }
 
-export const useOnConfirm = ({cbor, partial, noSubmit = false, onSuccess, onError, onCancel, onClose}: OnConfirm) => {
+export const useOnConfirm = ({
+  cbor,
+  partial,
+  preventSubmit = false,
+  onSuccess,
+  onError,
+  onCancel,
+  onClose,
+}: OnConfirm) => {
   const {wallet, meta} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const {sign} = useSignTxWithHW()
@@ -57,7 +65,7 @@ export const useOnConfirm = ({cbor, partial, noSubmit = false, onSuccess, onErro
     if (cbor == null) throw new Error('useOnConfirm:: invalid state')
 
     if (meta.isHW) {
-      if (noSubmit) {
+      if (preventSubmit) {
         sign({
           cbor,
           partial,
@@ -88,7 +96,7 @@ export const useOnConfirm = ({cbor, partial, noSubmit = false, onSuccess, onErro
 
     promptRootKey({
       onSuccess: async (rootKey: string) => {
-        if (!noSubmit) {
+        if (!preventSubmit) {
           try {
             await submitTx(cbor, rootKey, wallet, meta)
           } catch (e) {
