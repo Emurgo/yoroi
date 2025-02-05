@@ -24,7 +24,6 @@ import {
 } from '../types'
 
 export const useFormattedTx = (data: TransactionBody): FormattedTx => {
-  console.log('ajjaaja-1')
   const {wallet} = useSelectedWallet()
 
   const inputs = data?.inputs ?? []
@@ -71,8 +70,6 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   const formattedFee = formatFee(wallet, data)
   const formattedCertificates = formatCertificates(data.certs)
   const formattedMintData = formatMintData(data.mint, portfolioTokenInfos)
-
-  console.log('ajjaaja-2')
 
   return {
     inputs: formattedInputs,
