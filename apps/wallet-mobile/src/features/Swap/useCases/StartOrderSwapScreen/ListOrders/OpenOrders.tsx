@@ -49,7 +49,7 @@ export const OpenOrders = () => {
   const strings = useStrings()
   const {styles} = useStyles()
   const intl = useIntl()
-  const {wallet /* , meta */} = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
   const {navigateToTxReview} = useWalletNavigation()
   const [isLoading, setIsLoading] = React.useState(false)
