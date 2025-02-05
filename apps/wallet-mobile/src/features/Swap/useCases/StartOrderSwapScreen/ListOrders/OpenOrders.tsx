@@ -4,7 +4,6 @@ import {FlashList} from '@shopify/flash-list'
 import {isString} from '@yoroi/common'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-// import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
@@ -27,18 +26,15 @@ import {useLanguage} from '../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {SubmitTxInsufficientCollateralError} from '../../../../../yoroi-wallets/cardano/api/errors'
-import {
-  convertBech32ToHex /* getTransactionSigners */,
-} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
+import {convertBech32ToHex} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {/* createRawTxSigningKey, */ generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
+import {generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {usePortfolioTokenInfos} from '../../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {TokenInfoIcon} from '../../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch} from '../../../../Search/SearchContext'
 import {getCollateralAmountInLovelace} from '../../../../Settings/useCases/changeWalletSettings/ManageCollateral/helpers'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-// import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
 import {EmptyOpenOrdersIllustration} from '../../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
@@ -128,24 +124,7 @@ export const OpenOrders = () => {
     })
   }
 
-  /*  const onRawTxConfirm = async (rootKey: string, order: MappedOpenOrder, cbor: string) => {
-    try {
-      const tx = await createCancellationTxAndSign(order.id, rootKey, cbor)
-      if (!tx) return
-      await wallet.submitTransaction(tx.txBase64)
-      trackCancellationSubmitted(order)
-      navigateTo.submittedTx()
-      closeModal()
-    } catch (error) {
-      if (error instanceof SubmitTxInsufficientCollateralError) {
-        handleCollateralError()
-        return
-      }
-      navigateTo.failedTx()
-    }
-  }
- */
-  const onRawTxHwConfirm = (order: MappedOpenOrder) => {
+  const onSuccess = (order: MappedOpenOrder) => {
     try {
       trackCancellationSubmitted(order)
       navigateTo.submittedTx()
@@ -187,11 +166,9 @@ export const OpenOrders = () => {
 
     const cbor = await generateSwapCancellationCbor(order.owner, order.utxo)
 
-    console.log('cbor-1', cbor)
-
     navigateToTxReview({
       cbor,
-      onSuccess: () => onRawTxHwConfirm(order),
+      onSuccess: () => onSuccess(order),
     })
   }
 
@@ -213,30 +190,6 @@ export const OpenOrders = () => {
 
     return generateCIP30UtxoCbor(utxo)
   }
-
-  /* const createCancellationTxAndSign = async (
-    orderId: string,
-    rootKey: string,
-    cbor: string,
-  ): Promise<{txBase64: string} | undefined> => {
-    const order = normalizedOrders.find((o) => o.id === orderId)
-    if (!order || order.owner === undefined || order.utxo === undefined) return
-
-    try {
-      const signers = await getTransactionSigners(cbor, wallet, meta)
-      const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
-      const response = await wallet.signRawTx(cbor, keys)
-      if (!response) return
-      const hexBase64 = Buffer.from(response).toString('base64')
-      return {txBase64: hexBase64}
-    } catch (error) {
-      if (error instanceof SubmitTxInsufficientCollateralError) {
-        handleCollateralError()
-        return
-      }
-      throw error
-    }
-  } */
 
   const {
     order: {cancel: cancelOrder},

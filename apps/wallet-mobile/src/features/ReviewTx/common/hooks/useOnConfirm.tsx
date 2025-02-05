@@ -1,15 +1,20 @@
 import {Transaction} from '@emurgo/cross-csl-core'
+import {Wallet} from '@yoroi/types'
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {ModalError} from '../../../../components/ModalError/ModalError'
+import {getTransactionSigners} from '../../../../yoroi-wallets/cardano/common/signatureUtils'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {createRawTxSigningKey} from '../../../../yoroi-wallets/cardano/utils'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {ConfirmRawTxWithHW} from '../../../Swap/common/ConfirmRawTx/ConfirmRawTxWithHW'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from './useNavigateTo'
 import {usePromptRootKey} from './usePromptRootKey'
 import {useSignTxWithHW} from './useSignTxWithHW'
+import {useStrings} from './useStrings'
 
 export type OnConfirm = {
   cbor?: string | null
@@ -22,11 +27,12 @@ export type OnConfirm = {
 }
 
 export const useOnConfirm = ({cbor, partial, noSubmit = false, onSuccess, onError, onCancel, onClose}: OnConfirm) => {
-  const {meta} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const {sign} = useSignTxWithHW()
   const {promptRootKey} = usePromptRootKey()
   const {openModal} = useModal()
+  const strings = useStrings()
 
   const handleOnSuccess = (args?: {tx?: Transaction; rootKey?: string; signedTx?: YoroiSignedTx}) => {
     if (onSuccess) {
@@ -46,23 +52,25 @@ export const useOnConfirm = ({cbor, partial, noSubmit = false, onSuccess, onErro
     navigateTo.showFailedTxScreen()
   }
 
+  // TODO: Make it homogenic
   const onConfirm = () => {
-    if (meta.isHW && cbor != null && noSubmit) {
-      sign({
-        cbor,
-        partial,
-        onCancel,
-        onClose,
-        onSuccess: (tx: Transaction) => handleOnSuccess({tx}),
-        onError: handleOnError,
-      })
-      return
-    }
+    if (cbor == null) throw new Error('useOnConfirm:: invalid state')
 
-    console.log('meta.isHW', meta.isHW, cbor)
-    if (meta.isHW && cbor != null) {
+    if (meta.isHW) {
+      if (noSubmit) {
+        sign({
+          cbor,
+          partial,
+          onCancel,
+          onClose,
+          onSuccess: (tx: Transaction) => handleOnSuccess({tx}),
+          onError: handleOnError,
+        })
+        return
+      }
+
       openModal({
-        title: 'Sign TX',
+        title: strings.signTransaction,
         content: (
           <ErrorBoundary
             fallbackRender={({error, resetErrorBoundary}) => (
@@ -78,17 +86,31 @@ export const useOnConfirm = ({cbor, partial, noSubmit = false, onSuccess, onErro
       return
     }
 
-    if (!meta.isHW && noSubmit) {
-      promptRootKey({
-        onSuccess: (rootKey: string) => handleOnSuccess({rootKey}),
-        onError: handleOnError,
-        onClose,
-      })
-      return
-    }
+    promptRootKey({
+      onSuccess: async (rootKey: string) => {
+        if (!noSubmit) {
+          try {
+            await submitTx(cbor, rootKey, wallet, meta)
+          } catch (e) {
+            handleOnError(e)
+          }
+        }
 
-    throw new Error('useOnConfirm:: invalid state')
+        handleOnSuccess({rootKey})
+      },
+      onError: handleOnError,
+      onClose,
+    })
   }
 
   return {onConfirm} as const
+}
+
+const submitTx = async (cbor: string, rootKey: string, wallet: YoroiWallet, meta: Wallet.Meta) => {
+  const signers = await getTransactionSigners(cbor, wallet, meta)
+  const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
+  const response = await wallet.signRawTx(cbor, keys)
+  if (!response) throw new Error('useOnConfirm:: not possible to sign tx')
+  const hexBase64 = Buffer.from(response).toString('base64')
+  await wallet.submitTransaction(hexBase64)
 }

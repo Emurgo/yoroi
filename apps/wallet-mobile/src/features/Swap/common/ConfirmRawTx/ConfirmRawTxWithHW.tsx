@@ -36,6 +36,7 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
   }
 
   const onConnectBLE = (deviceId: string) => {
+    console.log('ConfirmRawTxWithHW')
     setStep('loading')
     const hwDeviceInfo = withBLE(meta, deviceId)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
