@@ -64,6 +64,7 @@ export const ModalScreen = () => {
             <Header onResponderMove={onResponderMove} onStartShouldSetResponder={() => true} />
 
             <ScrollView
+              keyboardShouldPersistTaps="handled"
               contentContainerStyle={styles.scroll}
               ref={scrollViewRef}
               onScrollBarChange={setIsScrollBarShown}
