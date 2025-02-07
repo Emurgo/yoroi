@@ -25,7 +25,7 @@ export const transformersMaker = ({
     tokens: {
       response: (res: TokensResponse): Array<Portfolio.Token.Info> =>
         res
-          .map(({ticker, name, policyId, hexName, decimals}) => {
+          .map(({ticker, name, policyId, hexName, decimals, verified}) => {
             const id = `${policyId}.${hexName}`
 
             const isPrimary = id === primaryTokenInfo.id
@@ -34,18 +34,22 @@ export const transformersMaker = ({
             if (decimals === null) return null
 
             return {
+              status: verified
+                ? Portfolio.Token.Status.Valid
+                : Portfolio.Token.Status.Invalid,
               id,
-              fingerprint: '',
+              ticker,
               name,
+
+              type: Portfolio.Token.Type.FT,
+              nature: Portfolio.Token.Nature.Secondary,
+              application: Portfolio.Token.Application.General,
+
+              fingerprint: '',
               decimals,
               description: '',
               originalImage: '',
-              type: Portfolio.Token.Type.FT,
-              nature: Portfolio.Token.Nature.Secondary,
-              ticker,
               symbol: '',
-              status: Portfolio.Token.Status.Valid,
-              application: Portfolio.Token.Application.General,
               reference: '',
               tag: '',
               website: '',

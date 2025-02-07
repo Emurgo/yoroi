@@ -72,33 +72,26 @@ export const transformersMaker = ({
     tokens: {
       response: (res: TokensResponse): Array<Portfolio.Token.Info> =>
         res.map(
-          ({
-            token_id,
-            token_decimals,
-            token_ascii,
-            ticker,
-            is_verified,
-            supply,
-            creation_date,
-            price,
-          }) => {
+          ({token_id, token_decimals, token_ascii, ticker, is_verified}) => {
             if (token_id === ptIdDh) return primaryTokenInfo
             return {
               id: tokenIdFromDexhunter(token_id),
               type: Portfolio.Token.Type.FT,
               nature: Portfolio.Token.Nature.Secondary,
+              application: Portfolio.Token.Application.General,
+
               decimals: token_decimals ?? 0,
               ticker: ticker ?? '',
               name: token_ascii ?? '',
-              symbol: ticker ?? '',
               status: is_verified
                 ? Portfolio.Token.Status.Valid
-                : Portfolio.Token.Status.Unknown,
-              application: Portfolio.Token.Application.General,
+                : Portfolio.Token.Status.Invalid,
+
+              symbol: '',
               tag: '',
               reference: '',
               fingerprint: '',
-              description: `${price}, ${supply}, ${creation_date}`,
+              description: '',
               website: '',
               originalImage: '',
             }

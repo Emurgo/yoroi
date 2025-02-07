@@ -48,7 +48,7 @@ export type PoolsResponse = Array<{
 
 export type TokensResponse = Array<{
   ticker: string
-  name: string
+  name: string | null
   policyId: string
   hexName: string
   decimals: number | null
