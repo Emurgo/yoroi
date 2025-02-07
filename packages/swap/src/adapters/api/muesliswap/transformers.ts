@@ -72,7 +72,7 @@ export const transformersMaker = ({
             finalizedTxHash,
             status,
             dex = Dex.Muesliswap_v2,
-            outputIdx,
+            outputIdx = 0,
           }) => ({
             aggregator: Swap.Aggregator.Muesliswap,
             protocol: toSwapProtocol(dex),
@@ -86,7 +86,7 @@ export const transformersMaker = ({
             expectedAmountOut: Number(toAmount),
             txHash,
             updateTxHash: finalizedTxHash ?? txHash,
-            outputIndex: outputIdx ?? 0,
+            outputIndex: outputIdx,
           }),
         ),
     },
@@ -177,7 +177,7 @@ export const transformersMaker = ({
         tokenIn,
         tokenOut,
         amountIn,
-        slippage,
+        slippage = 0,
       }: Swap.CreateRequest): CreateOrderRequest => ({
         dex: protocol
           ? [fromSwapProtocol(protocol)]
@@ -187,7 +187,7 @@ export const transformersMaker = ({
         sell_token: tokenIn,
         buy_token: tokenOut,
         sell_amount: amountIn,
-        slippage: (slippage ?? 0) / 100,
+        slippage: slippage / 100,
         user_address: address,
         numbers_have_decimals: true,
       }),

@@ -22,6 +22,7 @@ export type SwapManagerMaker = (
     addressHex: string
     stakingKey: string
     primaryTokenInfo: PortfolioTokenInfo
+    isPrimaryToken(token: string | null | undefined): boolean
     network: ChainSupportedNetworks
     storage: SwapStorage
   }>,

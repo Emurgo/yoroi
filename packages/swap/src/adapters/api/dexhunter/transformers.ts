@@ -1,5 +1,4 @@
 import {Portfolio, Swap} from '@yoroi/types'
-import {isPrimaryToken} from '@yoroi/portfolio'
 
 import {
   BuildRequest,
@@ -23,11 +22,8 @@ import {
 } from './types'
 import {DexhunterApiConfig} from './api-maker'
 
-const ptIdDh =
+export const ptIdDh =
   '000000000000000000000000000000000000000000000000000000006c6f76656c616365'
-
-const tokenIdToDexhunter = (tokenId: Portfolio.Token.Id) =>
-  isPrimaryToken(tokenId) ? 'ADA' : tokenId.replace('.', '')
 
 const transformSplit = ({
   amount_in = 0,
@@ -62,20 +58,26 @@ const transformSplit = ({
 export const transformersMaker = ({
   primaryTokenInfo,
   address,
+  isPrimaryToken,
 }: DexhunterApiConfig) => {
-  const tokenIdFromDexhunter = (tokenId: string): Portfolio.Token.Id =>
+  const fromTokenId = (tokenId: string): Portfolio.Token.Id =>
     tokenId === ptIdDh
       ? primaryTokenInfo.id
       : `${tokenId.slice(0, 56)}.${tokenId.slice(56)}`
 
+  const toTokenId = (tokenId: Portfolio.Token.Id) =>
+    isPrimaryToken(tokenId) ? 'ADA' : tokenId.replace('.', '')
+
   return {
     tokens: {
+      fromId: fromTokenId,
+      toId: toTokenId,
       response: (res: TokensResponse): Array<Portfolio.Token.Info> =>
         res.map(
           ({token_id, token_decimals, token_ascii, ticker, is_verified}) => {
             if (token_id === ptIdDh) return primaryTokenInfo
             return {
-              id: tokenIdFromDexhunter(token_id),
+              id: fromTokenId(token_id),
               type: Portfolio.Token.Type.FT,
               nature: Portfolio.Token.Nature.Secondary,
               application: Portfolio.Token.Application.General,
@@ -124,8 +126,8 @@ export const transformersMaker = ({
             placedAt: new Date(submission_time).getTime(),
             lastUpdate: new Date(last_update).getTime(),
             status,
-            tokenIn: tokenIdFromDexhunter(token_id_in),
-            tokenOut: tokenIdFromDexhunter(token_id_out),
+            tokenIn: fromTokenId(token_id_in),
+            tokenOut: fromTokenId(token_id_out),
             amountIn: amount_in,
             actualAmountOut: actual_out_amount,
             expectedAmountOut: expected_out_amount,
@@ -171,8 +173,8 @@ export const transformersMaker = ({
           ?.map(fromSwapProtocol)
           .filter((dex): dex is Dex => !!dex),
         slippage,
-        token_in: tokenIdToDexhunter(tokenIn),
-        token_out: tokenIdToDexhunter(tokenOut),
+        token_in: toTokenId(tokenIn),
+        token_out: toTokenId(tokenOut),
       }),
       response: ({
         batcher_fee = 0,
@@ -212,8 +214,8 @@ export const transformersMaker = ({
           ?.map(fromSwapProtocol)
           .filter((dex): dex is Dex => !!dex),
         slippage,
-        token_in: tokenIdToDexhunter(tokenIn),
-        token_out: tokenIdToDexhunter(tokenOut),
+        token_in: toTokenId(tokenIn),
+        token_out: toTokenId(tokenOut),
       }),
       response: ({
         batcher_fee = 0,
@@ -257,8 +259,8 @@ export const transformersMaker = ({
           .filter((v): v is Dex => !!v),
         dex: fromSwapProtocol(protocol) ?? Dex.Splash_v1,
         multiples,
-        token_in: tokenIdToDexhunter(tokenIn),
-        token_out: tokenIdToDexhunter(tokenOut),
+        token_in: toTokenId(tokenIn),
+        token_out: toTokenId(tokenOut),
         wanted_price: wantedPrice,
       }),
       response: ({
@@ -304,8 +306,8 @@ export const transformersMaker = ({
         buyer_address: address,
         dex: fromSwapProtocol(protocol) ?? Dex.Splash_v1,
         multiples,
-        token_in: tokenIdToDexhunter(tokenIn),
-        token_out: tokenIdToDexhunter(tokenOut),
+        token_in: toTokenId(tokenIn),
+        token_out: toTokenId(tokenOut),
         wanted_price: wantedPrice,
       }),
       response: ({
@@ -348,8 +350,8 @@ export const transformersMaker = ({
           .filter((v): v is Dex => v !== undefined),
         buyer_address: address,
         slippage,
-        token_in: tokenIdToDexhunter(tokenIn),
-        token_out: tokenIdToDexhunter(tokenOut),
+        token_in: toTokenId(tokenIn),
+        token_out: toTokenId(tokenOut),
       }),
       response: ({
         cbor = '',

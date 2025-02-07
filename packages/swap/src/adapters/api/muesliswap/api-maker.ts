@@ -18,6 +18,7 @@ export type MuesliswapApiConfig = {
   addressHex: string
   address: string
   primaryTokenInfo: Portfolio.Token.Info
+  isPrimaryToken: (token: string | null | undefined) => boolean
   stakingKey: string
   network: Chain.SupportedNetworks
   request?: FetchData

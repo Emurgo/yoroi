@@ -1,4 +1,5 @@
 import {Chain} from '@yoroi/types'
+import {isPrimaryToken} from '@yoroi/portfolio'
 
 import {transformersMaker} from './transformers'
 import {api, primaryTokenInfo} from './api.mocks'
@@ -13,9 +14,10 @@ const transformers = transformersMaker({
   addressHex,
   network,
   stakingKey,
+  isPrimaryToken,
 })
 
-describe('transformer', () => {
+describe('transformers', () => {
   describe('tokens', () => {
     test('should correctly transform the tokens response', () => {
       expect(transformers.tokens.response(api.responses.tokens)).toEqual(

@@ -16,6 +16,7 @@ import {transformersMaker} from './transformers'
 export type DexhunterApiConfig = {
   address: string
   primaryTokenInfo: Portfolio.Token.Info
+  isPrimaryToken: (token: string | null | undefined) => boolean
   partnerId?: string
   partnerCode?: string
   network: Chain.SupportedNetworks

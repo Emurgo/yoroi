@@ -11,16 +11,23 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
   addressHex,
   network,
   primaryTokenInfo,
+  isPrimaryToken,
   stakingKey,
   storage,
 }) => {
-  const dexhunterApi = dexhunterApiMaker({address, network, primaryTokenInfo})
+  const dexhunterApi = dexhunterApiMaker({
+    address,
+    network,
+    primaryTokenInfo,
+    isPrimaryToken,
+  })
   const muesliswapApi = muesliswapApiMaker({
     address,
     addressHex,
     network,
     primaryTokenInfo,
     stakingKey,
+    isPrimaryToken,
   })
 
   const config: Swap.ManagerConfig = {aggregatorSelected: 'auto'}
