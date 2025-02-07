@@ -1,5 +1,5 @@
 import {isRight} from '@yoroi/common'
-import {primaryTokenId} from '@yoroi/portfolio'
+import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
 import {Api, Portfolio, Swap} from '@yoroi/types'
 import {produce} from 'immer'
@@ -37,6 +37,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       address,
       addressHex,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+      isPrimaryToken,
     })
   }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
 
