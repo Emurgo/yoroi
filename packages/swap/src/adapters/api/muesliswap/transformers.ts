@@ -44,7 +44,6 @@ export const transformersMaker = ({
               type: Portfolio.Token.Type.FT,
               nature: Portfolio.Token.Nature.Secondary,
               application: Portfolio.Token.Application.General,
-
               fingerprint: '',
               decimals,
               description: '',
@@ -90,12 +89,12 @@ export const transformersMaker = ({
           }),
         ),
     },
-    providers: {
+    aggregatorProtocols: {
       response: (): Array<Swap.AggregatorProtocol> =>
         Object.values(Dex)
           .map(toSwapProtocol)
           .map((protocol) => ({
-            aggregator: Swap.Aggregator.Dexhunter,
+            aggregator: Swap.Aggregator.Muesliswap,
             protocol,
           })),
     },

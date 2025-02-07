@@ -74,21 +74,28 @@ export const transformersMaker = ({
       toId: toTokenId,
       response: (res: TokensResponse): Array<Portfolio.Token.Info> =>
         res.map(
-          ({token_id, token_decimals, token_ascii, ticker, is_verified}) => {
+          ({
+            token_id,
+            is_verified,
+
+            token_decimals = 0,
+            token_ascii = '',
+            ticker = '',
+          }) => {
             if (token_id === ptIdDh) return primaryTokenInfo
             return {
               id: fromTokenId(token_id),
-              type: Portfolio.Token.Type.FT,
-              nature: Portfolio.Token.Nature.Secondary,
-              application: Portfolio.Token.Application.General,
 
-              decimals: token_decimals ?? 0,
-              ticker: ticker ?? '',
-              name: token_ascii ?? '',
+              decimals: token_decimals,
+              ticker: ticker,
+              name: token_ascii,
               status: is_verified
                 ? Portfolio.Token.Status.Valid
                 : Portfolio.Token.Status.Invalid,
 
+              type: Portfolio.Token.Type.FT,
+              nature: Portfolio.Token.Nature.Secondary,
+              application: Portfolio.Token.Application.General,
               symbol: '',
               tag: '',
               reference: '',
@@ -105,29 +112,22 @@ export const transformersMaker = ({
         res.map(
           ({
             _id,
-            actual_out_amount = 0,
-            amount_in = 0,
             dex,
-            expected_out_amount = 0,
-            is_dexhunter = false,
             last_update,
-            status = '',
             submission_time,
+            output_index,
+
+            actual_out_amount = 0,
+            expected_out_amount = 0,
+            amount_in = 0,
+            is_dexhunter = false,
+            status = '',
             token_id_in = '',
             token_id_out = '',
             tx_hash = '',
             update_tx_hash = '',
-            output_index,
           }) => ({
-            aggregator: is_dexhunter
-              ? Swap.Aggregator.Dexhunter
-              : Swap.Aggregator.Muesliswap,
-            protocol: toSwapProtocol(dex),
-            placedAt: new Date(submission_time).getTime(),
-            lastUpdate: new Date(last_update).getTime(),
             status,
-            tokenIn: fromTokenId(token_id_in),
-            tokenOut: fromTokenId(token_id_out),
             amountIn: amount_in,
             actualAmountOut: actual_out_amount,
             expectedAmountOut: expected_out_amount,
@@ -135,10 +135,19 @@ export const transformersMaker = ({
             outputIndex: output_index,
             updateTxHash: update_tx_hash,
             customId: _id,
+
+            aggregator: is_dexhunter
+              ? Swap.Aggregator.Dexhunter
+              : Swap.Aggregator.Muesliswap,
+            protocol: toSwapProtocol(dex),
+            placedAt: new Date(submission_time).getTime(),
+            lastUpdate: new Date(last_update).getTime(),
+            tokenIn: fromTokenId(token_id_in),
+            tokenOut: fromTokenId(token_id_out),
           }),
         ),
     },
-    providers: {
+    aggregatorProtocols: {
       response: (): Array<Swap.AggregatorProtocol> =>
         Object.values(Dex)
           .map(toSwapProtocol)
@@ -177,12 +186,13 @@ export const transformersMaker = ({
         token_out: toTokenId(tokenOut),
       }),
       response: ({
+        splits,
+
         batcher_fee = 0,
         deposits = 0,
         dexhunter_fee = 0,
         net_price = 0,
         partner_fee = 0,
-        splits,
         total_fee = 0,
         total_output = 0,
         total_output_without_slippage = 0,
