@@ -7,7 +7,7 @@ type Props = {
   onExpired: () => void
 }
 
-const notificationDisplayTime = 20 * 1000 // 20 seconds
+const notificationDisplayTime = 4 * 1000 // 4 seconds
 const fadeInTime = 200
 const fadeOutPaddingTime = 100
 

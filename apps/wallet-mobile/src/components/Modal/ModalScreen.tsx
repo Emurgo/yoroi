@@ -63,7 +63,12 @@ export const ModalScreen = () => {
 
             <Header onResponderMove={onResponderMove} onStartShouldSetResponder={() => true} />
 
-            <ScrollView ref={scrollViewRef} onScrollBarChange={setIsScrollBarShown}>
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={styles.scroll}
+              ref={scrollViewRef}
+              onScrollBarChange={setIsScrollBarShown}
+            >
               {content}
             </ScrollView>
 
@@ -161,6 +166,9 @@ const useStyles = () => {
     actionsScroll: {
       ...atoms.border_t,
       borderTopColor: color.gray_200,
+    },
+    scroll: {
+      ...atoms.flex_grow,
     },
   })
   return styles
