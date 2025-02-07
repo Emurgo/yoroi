@@ -284,7 +284,7 @@ const transformSplit = ({
   priceImpact: price_impact,
 })
 
-const toSwapProtocol = (dex: Dex): Swap.Protocol =>
+export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
   ({
     [Dex.Minswap_v1]: Swap.Protocol.Minswap_v1,
     [Dex.Minswap_v2]: Swap.Protocol.Minswap_v2,
@@ -299,7 +299,7 @@ const toSwapProtocol = (dex: Dex): Swap.Protocol =>
     [Dex.Teddy_v1]: Swap.Protocol.Teddy_v1,
   }[dex])
 
-const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
+export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
     [Swap.Protocol.Minswap_v1]: Dex.Minswap_v1,
     [Swap.Protocol.Minswap_v2]: Dex.Minswap_v2,

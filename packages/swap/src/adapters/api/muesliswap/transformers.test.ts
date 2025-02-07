@@ -1,8 +1,13 @@
-import {Chain} from '@yoroi/types'
+import {Chain, Swap} from '@yoroi/types'
 import {isPrimaryToken} from '@yoroi/portfolio'
 
-import {transformersMaker} from './transformers'
+import {
+  fromSwapProtocol,
+  toSwapProtocol,
+  transformersMaker,
+} from './transformers'
 import {api, primaryTokenInfo} from './api.mocks'
+import {Dex} from './types'
 
 const address = 'addr1q9g8vz5'
 const addressHex = 'DEADBEEF'
@@ -23,6 +28,44 @@ describe('transformers', () => {
       expect(transformers.tokens.response(api.responses.tokens)).toEqual(
         api.results.tokens,
       )
+    })
+  })
+  describe('toSwapProtocol', () => {
+    it.each`
+      dex                   | protocol
+      ${Dex.Minswap_v1}     | ${Swap.Protocol.Minswap_v1}
+      ${Dex.Minswap_v2}     | ${Swap.Protocol.Minswap_v2}
+      ${Dex.Minswap_stable} | ${Swap.Protocol.Minswap_stable}
+      ${Dex.Wingriders_v1}  | ${Swap.Protocol.Wingriders_v1}
+      ${Dex.Vyfi_v1}        | ${Swap.Protocol.Vyfi_v1}
+      ${Dex.Sundaeswap_v1}  | ${Swap.Protocol.Sundaeswap_v1}
+      ${Dex.Sundaeswap_v3}  | ${Swap.Protocol.Sundaeswap_v3}
+      ${Dex.Muesliswap_v2}  | ${Swap.Protocol.Muesliswap_v2}
+      ${Dex.Muesliswap_clp} | ${Swap.Protocol.Muesliswap_clp}
+      ${Dex.Spectrum_v1}    | ${Swap.Protocol.Spectrum_v1}
+      ${Dex.Teddy_v1}       | ${Swap.Protocol.Teddy_v1}
+    `('should map $dex to $protocol', ({dex, protocol}) => {
+      expect(toSwapProtocol(dex)).toBe(protocol)
+    })
+  })
+
+  describe('fromSwapProtocol', () => {
+    it.each`
+      protocol                        | dex
+      ${Swap.Protocol.Minswap_v1}     | ${Dex.Minswap_v1}
+      ${Swap.Protocol.Minswap_v2}     | ${Dex.Minswap_v2}
+      ${Swap.Protocol.Minswap_stable} | ${Dex.Minswap_stable}
+      ${Swap.Protocol.Wingriders_v1}  | ${Dex.Wingriders_v1}
+      ${Swap.Protocol.Vyfi_v1}        | ${Dex.Vyfi_v1}
+      ${Swap.Protocol.Sundaeswap_v1}  | ${Dex.Sundaeswap_v1}
+      ${Swap.Protocol.Sundaeswap_v3}  | ${Dex.Sundaeswap_v3}
+      ${Swap.Protocol.Muesliswap_v2}  | ${Dex.Muesliswap_v2}
+      ${Swap.Protocol.Muesliswap_clp} | ${Dex.Muesliswap_clp}
+      ${Swap.Protocol.Spectrum_v1}    | ${Dex.Spectrum_v1}
+      ${Swap.Protocol.Teddy_v1}       | ${Dex.Teddy_v1}
+      ${'whatever'}                   | ${Dex.Muesliswap_v2}
+    `('should map $protocol to $dex', ({protocol, dex}) => {
+      expect(fromSwapProtocol(protocol)).toBe(dex)
     })
   })
 })
