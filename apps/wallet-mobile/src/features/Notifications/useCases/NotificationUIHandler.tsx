@@ -13,16 +13,15 @@ const displayLimit = 3
 export const NotificationUIHandler = () => {
   const enabled = useNotificationDisplaySettings()
   const {events, removeEvent} = useCollectNewNotifications({enabled})
-  const reversed = useMemo(() => [...events].reverse(), [events])
-  const displayed = reversed.slice(0, displayLimit)
+  const last3Events = useMemo(() => events.slice(-displayLimit), [events])
 
-  if (displayed.length === 0) {
+  if (last3Events.length === 0) {
     return null
   }
 
   return (
     <NotificationStack>
-      {displayed.map((event) => (
+      {last3Events.map((event) => (
         <NotificationPopup
           key={event.id}
           event={event}

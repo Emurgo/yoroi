@@ -138,6 +138,10 @@ const useStyles = () => {
       ...atoms.border,
       backgroundColor: isLight ? color.bg_color_max : color.gray_100,
       borderColor: color.gray_50,
+      shadowColor: isLight ? '#8A92A31A' : '#24283833',
+      shadowOffset: {width: -1, height: 8},
+      shadowOpacity: 1,
+      shadowRadius: 20,
     },
     icon: {
       width: 40,
