@@ -6,6 +6,7 @@ export const getPoolUrlByProvider = (provider: Swap.PoolProvider): string => {
 
 const poolUrls: Record<Swap.PoolProvider, string> = {
   minswap: 'https://minswap.org',
+  minswapv2: 'https://minswap.org',
   sundaeswap: 'https://sundae.fi',
   wingriders: 'https://www.wingriders.com',
   muesliswap: 'https://muesliswap.com',
