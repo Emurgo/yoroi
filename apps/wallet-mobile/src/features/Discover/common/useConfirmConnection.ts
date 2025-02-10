@@ -1,5 +1,5 @@
 import {DappConnector} from '@yoroi/dapp-connector'
-import React from 'react'
+import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
 import {useOpenConfirmConnectionModal} from './ConfirmConnectionModal'
