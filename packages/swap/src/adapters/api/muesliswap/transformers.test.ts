@@ -31,7 +31,7 @@ describe('transformers', () => {
     })
   })
 
-  describe('aggregatorProtocols', () => {
+  describe('protocols', () => {
     it.each`
       dex
       ${Dex.Minswap_v1}
@@ -47,7 +47,7 @@ describe('transformers', () => {
       ${Dex.Teddy_v1}
     `('should correctly transform aggregator protocols for $dex', ({dex}) => {
       const expectedProtocol = toSwapProtocol(dex)
-      const result = transformers.aggregatorProtocols.response()
+      const result = transformers.protocols.response()
       expect(result).toContainEqual({
         aggregator: Swap.Aggregator.Muesliswap,
         protocol: expectedProtocol,

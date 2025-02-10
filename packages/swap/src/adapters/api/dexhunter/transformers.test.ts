@@ -69,7 +69,7 @@ describe('fromSwapProtocol', () => {
     expect(fromSwapProtocol(protocol)).toBe(dex)
   })
 
-  describe('aggregatorProtocols', () => {
+  describe('protocols', () => {
     it.each`
       dex
       ${Dex.Minswap_v1}
@@ -82,7 +82,7 @@ describe('fromSwapProtocol', () => {
       ${Dex.Splash_v1}
     `('should correctly transform aggregator protocols for $dex', ({dex}) => {
       const expectedProtocol = toSwapProtocol(dex)
-      const result = transformers.aggregatorProtocols.response()
+      const result = transformers.protocols.response()
       expect(result).toContainEqual({
         aggregator: Swap.Aggregator.Dexhunter,
         protocol: expectedProtocol,

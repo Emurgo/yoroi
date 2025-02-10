@@ -147,7 +147,7 @@ export const transformersMaker = ({
           }),
         ),
     },
-    aggregatorProtocols: {
+    protocols: {
       response: (): Array<Swap.AggregatorProtocol> =>
         Object.values(Dex)
           .map(toSwapProtocol)

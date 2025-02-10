@@ -108,7 +108,7 @@ export const dexhunterApiMaker = (
             tag: 'right',
             value: {
               status: Api.HttpStatusCode.Ok,
-              data: transformers.aggregatorProtocols.response(),
+              data: transformers.protocols.response(),
             },
           },
           true,
