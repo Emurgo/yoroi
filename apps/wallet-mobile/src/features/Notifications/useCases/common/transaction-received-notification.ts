@@ -12,7 +12,12 @@ import {buildProcessedNotificationsStorage} from './storage'
 
 const storageKey = 'transaction-received-notification-history'
 
-const buildNotifications = async (appStorage: App.Storage) => {
+type BuildNotificationsParams = {
+  appStorage: App.Storage
+  sinceDate: Date
+}
+
+const buildNotifications = async ({appStorage, sinceDate}: BuildNotificationsParams) => {
   const walletIds = [...walletManager.walletMetas.keys()]
   const notifications: NotificationTypes.TransactionReceivedEvent[] = []
 
@@ -39,6 +44,9 @@ const buildNotifications = async (appStorage: App.Storage) => {
     await storage.addValues(newTxIds)
 
     newTxIds.forEach((id) => {
+      const txDate = wallet.transactions[id].submittedAt ?? new Date().toISOString()
+      console.log('new transaction received', id, txDate)
+      console.log('direction', wallet.transactions[id].direction)
       const metadata: NotificationTypes.TransactionReceivedEvent['metadata'] = {
         txId: id,
         isSentByUser: wallet.transactions[id]?.direction === TRANSACTION_DIRECTION.SENT,
@@ -46,7 +54,7 @@ const buildNotifications = async (appStorage: App.Storage) => {
         previousTxsCounter: processed.length,
         walletId,
       }
-      notifications.push(createTransactionReceivedNotification(metadata))
+      notifications.push(createTransactionReceivedNotification(metadata, new Date(txDate)))
     })
   }
 
@@ -60,10 +68,11 @@ const getTxIds = (wallet: YoroiWallet) => {
 
 export const createTransactionReceivedNotification = (
   metadata: NotificationTypes.TransactionReceivedEvent['metadata'],
+  date: Date,
 ): NotificationTypes.TransactionReceivedEvent => {
   return {
     id: generateNotificationId(),
-    date: new Date().toISOString(),
+    date: date.toISOString(),
     isRead: false,
     trigger: NotificationTypes.Trigger.TransactionReceived,
     metadata,
@@ -78,13 +87,15 @@ export const useTransactionReceivedNotifications = ({enabled}: {enabled: boolean
 
   React.useEffect(() => {
     if (!enabled) return
+    const subscriptionBeginDate = new Date()
+    console.log('subscriptionBeginDate', subscriptionBeginDate)
     const subscription = walletManager.syncWalletInfos$.subscribe(async (status) => {
       const walletInfos = Array.from(status.values())
       const walletsDoneSyncing = walletInfos.filter((info) => info.status === 'done')
       const areAllDone = walletsDoneSyncing.length === walletInfos.length
       if (!areAllDone) return
 
-      const notifications = await buildNotifications(asyncStorage)
+      const notifications = await buildNotifications({appStorage: asyncStorage, sinceDate: subscriptionBeginDate})
       notifications.forEach((notification) => transactionReceivedSubject.next(notification))
     })
 
