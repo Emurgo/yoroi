@@ -26,30 +26,42 @@ describe('transformers', () => {
         api.results.tokens,
       )
     })
+
+    test('should correctly transform the token id', () => {
+      expect(transformers.tokens.fromId(ptIdDh)).toBe(primaryTokenInfo.id)
+      expect(transformers.tokens.toId(primaryTokenInfo.id)).toBe('ADA')
+    })
   })
 
-  test('should correctly transform the token id', () => {
-    expect(transformers.tokens.fromId(ptIdDh)).toBe(primaryTokenInfo.id)
-    expect(transformers.tokens.toId(primaryTokenInfo.id)).toBe('ADA')
+  describe('orders', () => {
+    test('should correctly transform the orders response', () => {
+      expect(transformers.orders.response(api.responses.orders)).toEqual(
+        api.results.orders,
+      )
+    })
   })
 })
+
 describe('toSwapProtocol', () => {
   it.each`
-    dex                  | protocol
-    ${Dex.Minswap_v1}    | ${Swap.Protocol.Minswap_v1}
-    ${Dex.Minswap_v2}    | ${Swap.Protocol.Minswap_v2}
-    ${Dex.Wingriders_v1} | ${Swap.Protocol.Wingriders_v1}
-    ${Dex.Wingriders_v2} | ${Swap.Protocol.Wingriders_v2}
-    ${Dex.Vyfi_v1}       | ${Swap.Protocol.Vyfi_v1}
-    ${Dex.Sundaeswap_v1} | ${Swap.Protocol.Sundaeswap_v1}
-    ${Dex.Sundaeswap_v3} | ${Swap.Protocol.Sundaeswap_v3}
-    ${Dex.Splash_v1}     | ${Swap.Protocol.Splash_v1}
+    dex                   | protocol
+    ${Dex.Minswap_v1}     | ${Swap.Protocol.Minswap_v1}
+    ${Dex.Minswap_v2}     | ${Swap.Protocol.Minswap_v2}
+    ${Dex.Wingriders_v1}  | ${Swap.Protocol.Wingriders_v1}
+    ${Dex.Wingriders_v2}  | ${Swap.Protocol.Wingriders_v2}
+    ${Dex.Vyfi_v1}        | ${Swap.Protocol.Vyfi_v1}
+    ${Dex.Sundaeswap_v1}  | ${Swap.Protocol.Sundaeswap_v1}
+    ${Dex.Sundaeswap_v3}  | ${Swap.Protocol.Sundaeswap_v3}
+    ${Dex.Splash_v1}      | ${Swap.Protocol.Splash_v1}
+    ${Dex.Muesliswap_v2}  | ${Swap.Protocol.Muesliswap_v2}
+    ${Dex.Muesliswap_clp} | ${Swap.Protocol.Muesliswap_clp}
   `('should map $dex to $protocol', ({dex, protocol}) => {
     expect(toSwapProtocol(dex)).toBe(protocol)
   })
 })
 
 describe('fromSwapProtocol', () => {
+  // TODO: @jorbuedo check if the undefineds are correct, cuz the API returns when is not from dexhunter
   it.each`
     protocol                        | dex
     ${Swap.Protocol.Minswap_v1}     | ${Dex.Minswap_v1}
@@ -60,10 +72,10 @@ describe('fromSwapProtocol', () => {
     ${Swap.Protocol.Sundaeswap_v1}  | ${Dex.Sundaeswap_v1}
     ${Swap.Protocol.Sundaeswap_v3}  | ${Dex.Sundaeswap_v3}
     ${Swap.Protocol.Splash_v1}      | ${Dex.Splash_v1}
-    ${Swap.Protocol.Minswap_stable} | ${undefined}
+    ${Swap.Protocol.Muesliswap_v2}  | ${Dex.Muesliswap_v2}
+    ${Swap.Protocol.Muesliswap_clp} | ${Dex.Muesliswap_clp}
     ${Swap.Protocol.Teddy_v1}       | ${undefined}
-    ${Swap.Protocol.Muesliswap_v2}  | ${undefined}
-    ${Swap.Protocol.Muesliswap_clp} | ${undefined}
+    ${Swap.Protocol.Minswap_stable} | ${undefined}
     ${Swap.Protocol.Spectrum_v1}    | ${undefined}
   `('should map $protocol to $dex', ({protocol, dex}) => {
     expect(fromSwapProtocol(protocol)).toBe(dex)

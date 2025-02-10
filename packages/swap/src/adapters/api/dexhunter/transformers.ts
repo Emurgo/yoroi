@@ -136,12 +136,13 @@ export const transformersMaker = ({
             updateTxHash: update_tx_hash,
             customId: _id,
 
+            placedAt: new Date(submission_time).getTime(),
+            lastUpdate: new Date(last_update).getTime(),
+
             aggregator: is_dexhunter
               ? Swap.Aggregator.Dexhunter
               : Swap.Aggregator.Muesliswap,
             protocol: toSwapProtocol(dex),
-            placedAt: new Date(submission_time).getTime(),
-            lastUpdate: new Date(last_update).getTime(),
             tokenIn: fromTokenId(token_id_in),
             tokenOut: fromTokenId(token_id_out),
           }),
@@ -413,6 +414,8 @@ export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
     [Dex.Sundaeswap_v1]: Swap.Protocol.Sundaeswap_v1,
     [Dex.Sundaeswap_v3]: Swap.Protocol.Sundaeswap_v3,
     [Dex.Splash_v1]: Swap.Protocol.Splash_v1,
+    [Dex.Muesliswap_clp]: Swap.Protocol.Muesliswap_clp,
+    [Dex.Muesliswap_v2]: Swap.Protocol.Muesliswap_v2,
   }[dex])
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex | undefined =>
@@ -427,7 +430,7 @@ export const fromSwapProtocol = (dex: Swap.Protocol): Dex | undefined =>
     [Swap.Protocol.Sundaeswap_v3]: Dex.Sundaeswap_v3,
     [Swap.Protocol.Splash_v1]: Dex.Splash_v1,
     [Swap.Protocol.Teddy_v1]: undefined,
-    [Swap.Protocol.Muesliswap_v2]: undefined,
-    [Swap.Protocol.Muesliswap_clp]: undefined,
+    [Swap.Protocol.Muesliswap_v2]: Dex.Muesliswap_v2,
+    [Swap.Protocol.Muesliswap_clp]: Dex.Muesliswap_clp,
     [Swap.Protocol.Spectrum_v1]: undefined,
   }[dex])

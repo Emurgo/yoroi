@@ -7,6 +7,9 @@ export const Dex = {
   Sundaeswap_v1: 'SUNDAESWAP',
   Sundaeswap_v3: 'SUNDAESWAPV3',
   Splash_v1: 'SPLASH',
+  // TODO: @jorbuedo check if these are correct, is returning MUESLISWAP for sure
+  Muesliswap_clp: 'MUESLISWAP',
+  Muesliswap_v2: 'MUESLISWAPV2',
 } as const
 
 export type Dex = (typeof Dex)[keyof typeof Dex]
