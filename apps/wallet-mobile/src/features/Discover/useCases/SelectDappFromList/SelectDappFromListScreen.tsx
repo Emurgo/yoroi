@@ -33,7 +33,7 @@ export const SelectDappFromListScreen = () => {
   const [currentTab, setCurrentTab] = React.useState<TDAppTabs>('connected')
   const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>([])
   const {track} = useMetrics()
-  const {isShowedWelcomeDApp} = useShowWelcomeDApp()
+  const [isShowedWelcomeDApp] = useShowWelcomeDApp()
 
   React.useEffect(() => {
     if (currentTab === 'recommended') {
