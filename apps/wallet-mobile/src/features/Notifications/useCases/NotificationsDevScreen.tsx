@@ -33,15 +33,15 @@ const Screen = () => {
   const selectedWalletId = walletManager.selected.wallet?.id ?? ''
 
   const handleOnTriggerTransactionReceived = () => {
-    manager.events.push(
-      createTransactionReceivedNotification({
-        previousTxsCounter: 0,
-        nextTxsCounter: 1,
-        txId: '123',
-        isSentByUser: false,
-        walletId: selectedWalletId,
-      }),
-    )
+    const date = new Date()
+    const metadata = {
+      previousTxsCounter: 0,
+      nextTxsCounter: 1,
+      txId: '123',
+      isSentByUser: false,
+      walletId: selectedWalletId,
+    }
+    manager.events.push(createTransactionReceivedNotification(metadata, date))
   }
 
   return (
