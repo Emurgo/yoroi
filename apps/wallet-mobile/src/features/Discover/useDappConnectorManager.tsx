@@ -2,7 +2,6 @@ import {Transaction} from '@emurgo/cross-csl-core'
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
-import {InteractionManager} from 'react-native'
 
 import {logger} from '../../kernel/logger/logger'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
@@ -14,11 +13,10 @@ import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useBrowser} from './common/BrowserProvider'
-import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
-import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
+import {useConfirmConnection} from './common/useConfirmConnection'
 import {useNavigateTo} from './common/useNavigateTo'
 import {useStrings} from './common/useStrings'
 
@@ -214,53 +212,5 @@ const useSignDataWithHW = () => {
       })
     },
     [confirmHWConnection, wallet, meta, closeModal],
-  )
-}
-
-const useConfirmConnection = () => {
-  const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
-  const {openUnverifiedDappModal, closeModal} = useOpenUnverifiedDappModal()
-  return React.useCallback(
-    async (origin: string, manager: DappConnector) => {
-      const recommendedDApps = await manager.getDAppList()
-      const selectedDapp = recommendedDApps.dapps.find((dapp) => dapp.origins.includes(origin))
-      const name = selectedDapp?.name ?? origin
-      const website = origin
-      const logo = selectedDapp?.logo ?? ''
-      const showSingleAddressWarning = selectedDapp?.isSingleAddress ?? false
-
-      return new Promise<boolean>((resolve) => {
-        const openMainModal = () => {
-          openConfirmConnectionModal({
-            name,
-            website,
-            logo,
-            onConfirm: () => resolve(true),
-            onClose: () => resolve(false),
-            showSingleAddressWarning,
-          })
-        }
-
-        if (!selectedDapp) {
-          let shouldResolveOnClose = true
-          openUnverifiedDappModal({
-            onClose: () => {
-              if (shouldResolveOnClose) resolve(false)
-            },
-            onConfirm: () => {
-              shouldResolveOnClose = false
-              closeModal()
-              InteractionManager.runAfterInteractions(() => {
-                openMainModal()
-              })
-            },
-          })
-          return
-        }
-
-        openMainModal()
-      })
-    },
-    [openConfirmConnectionModal, openUnverifiedDappModal, closeModal],
   )
 }
