@@ -1054,6 +1054,7 @@
   "swap.swapScreen.swapMinReceivedTitle": "Mín. a ser recebido",
   "swap.swapScreen.swapTitle": "Swap",
   "swap.swapScreen.swapDetailsTitle": "Swap details",
+  "swap.swapScreen.swapCancellationDetailsTitle": "Cancel swap order details",
   "swap.swapScreen.swapTo": "Swap to",
   "swap.review.title": "Swap review",
   "swap.swapScreen.tokenSwapTab": "Asset swap",
