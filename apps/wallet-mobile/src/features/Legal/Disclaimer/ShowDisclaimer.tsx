@@ -31,7 +31,6 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const [accepted, setAccepted] = useDisclaimerState(type)
 
   React.useEffect(() => {
-    console.log('effect', {disabled, accepted, showed})
     if (!disabled && !accepted && showed === false) {
       openModal({
         title: strings.disclaimer,
