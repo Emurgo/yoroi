@@ -91,7 +91,6 @@ export const useTransactionReceivedNotifications = ({enabled}: {enabled: boolean
   React.useEffect(() => {
     if (!enabled) return
     const subscriptionBeginDate = new Date()
-    console.log('subscriptionBeginDate', subscriptionBeginDate)
     const subscription = walletManager.syncWalletInfos$.subscribe(async (status) => {
       const walletInfos = Array.from(status.values())
       const walletsDoneSyncing = walletInfos.filter((info) => info.status === 'done')
