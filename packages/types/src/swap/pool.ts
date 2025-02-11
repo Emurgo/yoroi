@@ -2,6 +2,7 @@ import {PortfolioTokenId} from '../portfolio/token'
 
 export type SwapPoolProvider =
   | 'minswap'
+  | 'minswapv2'
   | 'sundaeswap'
   | 'wingriders'
   | 'muesliswap'
@@ -15,6 +16,7 @@ export type SwapPoolProvider =
 export type SwapSupportedProvider = Extract<
   SwapPoolProvider,
   | 'minswap'
+  | 'minswapv2'
   | 'wingriders'
   | 'sundaeswap'
   | 'muesliswap'

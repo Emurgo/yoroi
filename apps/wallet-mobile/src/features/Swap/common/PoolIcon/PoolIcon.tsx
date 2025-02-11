@@ -20,6 +20,7 @@ const icons: Record<Swap.PoolProvider, FunctionComponent<{size?: number}>> = {
   muesliswap_v3: Icon.MuesliSwap,
   muesliswap_v4: Icon.MuesliSwap,
   minswap: Icon.MinSwap,
+  minswapv2: Icon.MinSwap,
   sundaeswap: Icon.SundaeSwap,
   wingriders: Icon.WingRiders,
   vyfi: Icon.VyfiSwap,

@@ -75,6 +75,7 @@ export type CompletedOrderResponse = CompletedOrder[]
 
 export type Provider =
   | 'minswap'
+  | 'minswapv2'
   | 'sundaeswap'
   | 'wingriders'
   | 'muesliswap'
