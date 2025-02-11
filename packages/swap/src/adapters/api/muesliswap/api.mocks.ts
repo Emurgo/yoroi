@@ -1,6 +1,6 @@
 import {Portfolio, Swap} from '@yoroi/types'
 
-import {OrdersHistoryResponse, TokensResponse} from './types'
+import {CancelRequest, OrdersHistoryResponse, TokensResponse} from './types'
 
 const ordersResponse: OrdersHistoryResponse = {
   orders: [
@@ -195,7 +195,39 @@ const tokensResult: Array<Portfolio.Token.Info> = [
   },
 ]
 
+const cancelInput: Swap.CancelRequest = {
+  order: {
+    actualAmountOut: 0.00037900000000012923,
+    aggregator: 'muesliswap',
+    amountIn: 1,
+    customId: '66cf043794579f05fc204f72',
+    expectedAmountOut: 0.000368,
+    lastUpdate: 1719137534000,
+    outputIndex: 0,
+    placedAt: 1719137466000,
+    protocol: 'sundaeswap-v1',
+    status: 'COMPLETE',
+    tokenIn:
+      'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+    tokenOut: '.',
+    txHash: '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf',
+    updateTxHash:
+      '92bd050ec1da6d25abf6265a6f8318a79a3068459254a79427088407c4241b37',
+  },
+}
+
+const cancelRequest: CancelRequest = {
+  output_idx: cancelInput.order.outputIndex ?? 0,
+  tx_hash: cancelInput.order.txHash,
+}
+
 export const api = {
+  inputs: {
+    cancel: cancelInput,
+  },
+  requests: {
+    cancel: cancelRequest,
+  },
   responses: {
     tokens: tokensResponse,
     orders: ordersResponse,

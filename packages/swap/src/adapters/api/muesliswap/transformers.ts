@@ -103,10 +103,10 @@ export const transformersMaker = ({
     },
     cancel: {
       request: ({order}: Swap.CancelRequest): CancelRequest => ({
-        tx_hash: order.txHash ?? '',
+        tx_hash: order.txHash,
         output_idx: order.outputIndex ?? 0,
       }),
-      response: ({tx_cbor = ''}: CancelResponse): Swap.CancelResponse => ({
+      response: ({tx_cbor}: CancelResponse): Swap.CancelResponse => ({
         cbor: tx_cbor,
       }),
     },

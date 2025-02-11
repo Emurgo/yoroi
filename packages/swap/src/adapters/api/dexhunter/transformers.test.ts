@@ -10,7 +10,8 @@ import {
 import {api, primaryTokenInfo} from './api.mocks'
 import {Dex} from './types'
 
-const address = 'addr1q9g8vz5'
+const address =
+  'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl'
 const network = Chain.Network.Mainnet
 const transformers = transformersMaker({
   primaryTokenInfo,
@@ -37,6 +38,14 @@ describe('transformers', () => {
     test('should correctly transform the orders response', () => {
       expect(transformers.orders.response(api.responses.orders)).toEqual(
         api.results.orders,
+      )
+    })
+  })
+
+  describe('cancel', () => {
+    test('should correctly transform the cancel request', () => {
+      expect(transformers.cancel.request(api.inputs.cancel)).toEqual(
+        api.requests.cancel(address),
       )
     })
   })

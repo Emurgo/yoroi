@@ -21,6 +21,7 @@ import {
   TokensResponse,
 } from './types'
 import {DexhunterApiConfig} from './api-maker'
+import {isDex} from './validators'
 
 export const ptIdDh =
   '000000000000000000000000000000000000000000000000000000006c6f76656c616365'
@@ -267,7 +268,8 @@ export const transformersMaker = ({
         amount_in: amountIn,
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
-          .filter((v): v is Dex => !!v),
+          .filter(isDex),
+        // TODO: check with @jorbuedo on muesli it fallbacks to muesli, here it can return undefined and fallbacks to Splash_v1
         dex: fromSwapProtocol(protocol) ?? Dex.Splash_v1,
         multiples,
         token_in: toTokenId(tokenIn),
@@ -313,7 +315,7 @@ export const transformersMaker = ({
         amount_in: amountIn,
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
-          .filter((v): v is Dex => !!v),
+          .filter(isDex),
         buyer_address: address,
         dex: fromSwapProtocol(protocol) ?? Dex.Splash_v1,
         multiples,
