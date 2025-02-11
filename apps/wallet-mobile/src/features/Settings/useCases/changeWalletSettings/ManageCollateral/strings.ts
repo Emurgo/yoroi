@@ -1,5 +1,7 @@
 import {defineMessages, useIntl} from 'react-intl'
 
+import globalMessages from '../../../../../kernel/i18n/global-messages'
+
 export const useStrings = () => {
   const intl = useIntl()
   return {
@@ -16,6 +18,8 @@ export const useStrings = () => {
     initialCollateralInfoModalTitle: intl.formatMessage(messages.initialCollateralInfoModalTitle),
     initialCollateralInfoModalText: intl.formatMessage(messages.initialCollateralInfoModalText),
     initialCollateralInfoModalButton: intl.formatMessage(messages.initialCollateralInfoModalButton),
+    learnMore: intl.formatMessage(globalMessages.learnMore),
+    cancel: intl.formatMessage(globalMessages.cancel),
   }
 }
 
@@ -68,7 +72,7 @@ const messages = defineMessages({
   initialCollateralInfoModalText: {
     id: 'components.settings.collateral.initialCollateralInfoModalText',
     defaultMessage:
-      '!!!The collateral mechanism is designed to ensure smart contracts on Cardano execute successfully. It guarantees that nodes are compensated for their work if a contract fails during validation.',
+      '!!!Collateral is mandatory when interacting with certain smart contracts on Cardano, which requires to make a 0 ADA transaction. ADA will only be deduced from your collateral if transaction validation fails.',
   },
   initialCollateralInfoModalButton: {
     id: 'components.settings.collateral.initialCollateralInfoModalButton',

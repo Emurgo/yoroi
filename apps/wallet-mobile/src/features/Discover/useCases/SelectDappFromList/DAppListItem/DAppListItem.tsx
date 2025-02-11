@@ -1,4 +1,3 @@
-import {useDappConnector} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
@@ -19,6 +18,7 @@ import {type DAppItem, getDappFallbackLogo, isGoogleSearchItem} from '../../../c
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {LabelSingleAddress} from '../../../common/LabelSingleAddress'
+import {useDisconnectDapp} from '../../../common/useDisconnectDapp'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 
@@ -36,7 +36,6 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const {openModal, closeModal} = useModal()
   const insets = useSafeAreaInsets()
   const strings = useStrings()
-  const {manager} = useDappConnector()
   const {track} = useMetrics()
 
   const heightDialogByHeightScreen = dApp.isSingleAddress ? 612 : 492
@@ -45,6 +44,8 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const dialogHeight = heightDialogByInit < heightDialogByHeightScreen ? heightDialogByHeightScreen : heightDialogByInit
 
   const [isPressed, setIsPressed] = React.useState(false)
+
+  const disconnectDApp = useDisconnectDapp()
 
   const logo = dApp.logo.length === 0 ? getDappFallbackLogo(dApp.uri) : dApp.logo
 
@@ -64,10 +65,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     navigateTo.browseDapp()
   }
   const handleDisconnectDApp = async (dApp: DAppItem) => {
-    track.discoverConnectedBottomSheetDisconnectClicked()
-
-    const connections = dApp.origins.map((origin) => ({dappOrigin: origin}))
-    await manager.removeConnections(connections)
+    await disconnectDApp(dApp)
     closeModal()
   }
 

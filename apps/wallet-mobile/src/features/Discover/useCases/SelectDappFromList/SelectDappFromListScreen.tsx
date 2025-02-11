@@ -49,7 +49,7 @@ export const SelectDappFromListScreen = () => {
       headerTitle: ({children}) => <NetworkTag style={styles.networkTag}>{children}</NetworkTag>,
     },
   })
-  const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true, refetchInterval: 500})
+  const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true})
 
   const isDappConnected = (dappOrigins: string[]) => {
     return dappOrigins.some((dappOrigin) => connectedOrigins.includes(dappOrigin))
@@ -147,7 +147,7 @@ const HeaderControl = ({
   const {visible} = useSearch()
   const styles = useStyles()
   const strings = useStrings()
-  const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true, refetchInterval: 500})
+  const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true})
   const hasConnectedDapps = connectedOrigins.length > 0
   const {data: list} = useDappList({suspense: true})
   const filters = Object.keys(list?.filters ?? {})
@@ -197,7 +197,7 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   const {search, visible} = useSearch()
   const {track} = useMetrics()
   const {data: list} = useDappList({suspense: true})
-  const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true, refetchInterval: 500})
+  const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true})
   const hasConnectedDapps = connectedOrigins.length > 0
   const isSearching = visible
 
