@@ -46,6 +46,12 @@ describe('transformers', () => {
         api.requests.cancel,
       )
     })
+
+    test('should correctly transform the cancel response', () => {
+      expect(transformers.cancel.response(api.responses.cancel)).toEqual(
+        api.results.cancel,
+      )
+    })
   })
 
   describe('protocols', () => {

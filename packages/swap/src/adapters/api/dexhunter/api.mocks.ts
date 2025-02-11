@@ -1,6 +1,11 @@
 import {Portfolio, Swap} from '@yoroi/types'
 
-import {CancelRequest, OrdersResponse, TokensResponse} from './types'
+import {
+  CancelRequest,
+  CancelResponse,
+  OrdersResponse,
+  TokensResponse,
+} from './types'
 
 const ordersResponse: OrdersResponse = [
   {
@@ -277,6 +282,16 @@ const cancelRequest = (address: string): CancelRequest => ({
   order_id: cancelInput.order.customId,
 })
 
+const cancelResponse: CancelResponse = {
+  additional_cancellation_fee: 2_000_000,
+  cbor: 'DEADBEEF',
+}
+
+const cancelResult: Swap.CancelResponse = {
+  cbor: cancelResponse.cbor!,
+  additionalCancellationFee: cancelResponse.additional_cancellation_fee,
+}
+
 export const api = {
   inputs: {
     cancel: cancelInput,
@@ -287,9 +302,11 @@ export const api = {
   responses: {
     tokens: tokensResponse,
     orders: ordersResponse,
+    cancel: cancelResponse,
   },
   results: {
     tokens: tokensResult,
     orders: ordersResult,
+    cancel: cancelResult,
   },
 }
