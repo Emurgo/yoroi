@@ -5,7 +5,7 @@ import {freeze} from 'immer'
 import {
   CancelRequest,
   CancelResponse,
-  HistoryOrdersResponse,
+  OrdersHistoryResponse,
   TokensResponse,
   CreateOrderResponse,
   QuoteResponse,
@@ -81,7 +81,7 @@ export const muesliswapApiMaker = (
       },
 
       async orders() {
-        const response = await request<HistoryOrdersResponse>(
+        const response = await request<OrdersHistoryResponse>(
           {
             method: 'get',
             url: `${baseUrl}${apiPaths.orderHistory}`,
@@ -103,7 +103,7 @@ export const muesliswapApiMaker = (
               tag: 'right',
               value: {
                 status: 200,
-                data: transformers.orderHistory.response(response.value.data),
+                data: transformers.ordersHistory.response(response.value.data),
               },
             },
             true,

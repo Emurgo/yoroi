@@ -68,7 +68,7 @@ export type OpenOrdersResponse = {
   numbers_have_decimals: boolean
 }
 
-export type HistoryOrdersResponse = {
+export type OrdersHistoryResponse = {
   orders: Array<{
     dex: Dex
     aggregator: null

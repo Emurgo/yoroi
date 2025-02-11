@@ -5,7 +5,7 @@ import {
   CancelResponse,
   CreateOrderRequest,
   CreateOrderResponse,
-  HistoryOrdersResponse,
+  OrdersHistoryResponse,
   LimitOrderRequest,
   LimitOrderResponse,
   LimitQuoteRequest,
@@ -56,8 +56,8 @@ export const transformersMaker = ({
           })
           .filter((v): v is Portfolio.Token.Info => !!v),
     },
-    orderHistory: {
-      response: ({orders}: HistoryOrdersResponse): Array<Swap.Order> =>
+    ordersHistory: {
+      response: ({orders}: OrdersHistoryResponse): Array<Swap.Order> =>
         orders.map(
           ({
             fromToken,

@@ -31,6 +31,14 @@ describe('transformers', () => {
     })
   })
 
+  describe('orders', () => {
+    test('should correctly transform the orders response', () => {
+      expect(transformers.ordersHistory.response(api.responses.orders)).toEqual(
+        api.results.orders,
+      )
+    })
+  })
+
   describe('protocols', () => {
     it.each`
       dex
