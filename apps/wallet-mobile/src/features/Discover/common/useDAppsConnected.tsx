@@ -1,6 +1,7 @@
 import {DappConnection, useDappConnector} from '@yoroi/dapp-connector'
 import {Chain} from '@yoroi/types'
-import {useQuery, UseQueryOptions} from 'react-query'
+import * as React from 'react'
+import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
@@ -17,6 +18,17 @@ export const useDAppsConnected = (
     queryFn: () => manager.listAllConnections(),
     select: (connections) => selectWalletConnectedOrigins(connections, wallet.id, wallet.networkManager.network),
   })
+}
+
+export const useInvalidateConnectedDapps = () => {
+  const queryClient = useQueryClient()
+  const selectedWallet = useSelectedWallet()
+  const walletId = selectedWallet.wallet.id
+  const network = selectedWallet.wallet.networkManager.network
+
+  return React.useCallback(async () => {
+    await queryClient.invalidateQueries([walletId, 'useDappsConnected', network])
+  }, [walletId, network, queryClient])
 }
 
 const selectWalletConnectedOrigins = (connections: DappConnection[], walletId: string, network: Chain.Network) => {
