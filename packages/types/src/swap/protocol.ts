@@ -12,6 +12,7 @@ export const SwapProtocol = Object.freeze({
   Wingriders_v1: 'wingriders-v1',
   Wingriders_v2: 'wingriders-v2',
   Splash_v1: 'splash-v1',
+  Unsupported: 'unsupported',
 } as const)
 
 export type SwapProtocol = (typeof SwapProtocol)[keyof typeof SwapProtocol]

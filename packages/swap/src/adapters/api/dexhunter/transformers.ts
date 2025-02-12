@@ -269,8 +269,7 @@ export const transformersMaker = ({
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
           .filter(isDex),
-        // TODO: check with @jorbuedo on muesli it fallbacks to muesli, here it can return undefined and fallbacks to Splash_v1
-        dex: fromSwapProtocol(protocol) ?? Dex.Splash_v1,
+        dex: fromSwapProtocol(protocol),
         multiples,
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
@@ -306,7 +305,7 @@ export const transformersMaker = ({
       request: ({
         amountIn,
         blockedProtocols,
-        protocol = Swap.Protocol.Splash_v1,
+        protocol,
         multiples,
         tokenIn,
         tokenOut,
@@ -317,7 +316,7 @@ export const transformersMaker = ({
           ?.map(fromSwapProtocol)
           .filter(isDex),
         buyer_address: address,
-        dex: fromSwapProtocol(protocol) ?? Dex.Splash_v1,
+        dex: protocol ? fromSwapProtocol(protocol) : undefined,
         multiples,
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
@@ -360,7 +359,7 @@ export const transformersMaker = ({
         amount_in: amountIn,
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
-          .filter((v): v is Dex => v !== undefined),
+          .filter(isDex),
         buyer_address: address,
         slippage,
         token_in: toTokenId(tokenIn),
@@ -418,21 +417,23 @@ export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
     [Dex.Splash_v1]: Swap.Protocol.Splash_v1,
     [Dex.Muesliswap_clp]: Swap.Protocol.Muesliswap_clp,
     [Dex.Muesliswap_v2]: Swap.Protocol.Muesliswap_v2,
-  }[dex])
+    [Dex.Unsupported]: Swap.Protocol.Unsupported,
+  }[dex] ?? Swap.Protocol.Unsupported)
 
-export const fromSwapProtocol = (dex: Swap.Protocol): Dex | undefined =>
+export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
     [Swap.Protocol.Minswap_v1]: Dex.Minswap_v1,
     [Swap.Protocol.Minswap_v2]: Dex.Minswap_v2,
-    [Swap.Protocol.Minswap_stable]: undefined,
+    [Swap.Protocol.Minswap_stable]: Dex.Unsupported,
     [Swap.Protocol.Wingriders_v1]: Dex.Wingriders_v1,
     [Swap.Protocol.Wingriders_v2]: Dex.Wingriders_v2,
     [Swap.Protocol.Vyfi_v1]: Dex.Vyfi_v1,
     [Swap.Protocol.Sundaeswap_v1]: Dex.Sundaeswap_v1,
     [Swap.Protocol.Sundaeswap_v3]: Dex.Sundaeswap_v3,
     [Swap.Protocol.Splash_v1]: Dex.Splash_v1,
-    [Swap.Protocol.Teddy_v1]: undefined,
+    [Swap.Protocol.Teddy_v1]: Dex.Unsupported,
     [Swap.Protocol.Muesliswap_v2]: Dex.Muesliswap_v2,
     [Swap.Protocol.Muesliswap_clp]: Dex.Muesliswap_clp,
-    [Swap.Protocol.Spectrum_v1]: undefined,
-  }[dex])
+    [Swap.Protocol.Spectrum_v1]: Dex.Unsupported,
+    [Swap.Protocol.Unsupported]: Dex.Unsupported,
+  }[dex] ?? Dex.Unsupported)

@@ -7,9 +7,10 @@ export const Dex = {
   Sundaeswap_v1: 'SUNDAESWAP',
   Sundaeswap_v3: 'SUNDAESWAPV3',
   Splash_v1: 'SPLASH',
-  // TODO: @jorbuedo check if these are correct, is returning MUESLISWAP for sure
   Muesliswap_clp: 'MUESLISWAP',
   Muesliswap_v2: 'MUESLISWAPV2',
+  // fallback to avoid breaking changes order will always fail
+  Unsupported: 'UNSUPPORTED',
 } as const
 
 export type Dex = (typeof Dex)[keyof typeof Dex]
@@ -163,7 +164,7 @@ export type LimitBuildRequest = {
   amount_in?: number
   blacklisted_dexes?: Dex[]
   buyer_address?: string
-  dex: Dex
+  dex?: Dex
   multiples?: number
   token_in?: string
   token_out?: string

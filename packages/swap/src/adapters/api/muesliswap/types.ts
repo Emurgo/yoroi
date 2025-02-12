@@ -12,6 +12,8 @@ export const Dex = {
   Vyfi_v1: 'vyfi-v1',
   Sundaeswap_v1: 'sundaeswap-v1',
   Sundaeswap_v3: 'sundaeswap-v3',
+  // fallback to avoid breaking changes order will always fail
+  Unsupported: 'unsupported',
 } as const
 
 export type Dex = (typeof Dex)[keyof typeof Dex]

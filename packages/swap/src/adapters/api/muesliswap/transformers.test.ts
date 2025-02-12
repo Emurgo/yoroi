@@ -106,6 +106,8 @@ describe('transformers', () => {
       ${Dex.Muesliswap_clp} | ${Swap.Protocol.Muesliswap_clp}
       ${Dex.Spectrum_v1}    | ${Swap.Protocol.Spectrum_v1}
       ${Dex.Teddy_v1}       | ${Swap.Protocol.Teddy_v1}
+      ${Dex.Unsupported}    | ${Swap.Protocol.Unsupported}
+      ${'new-protocol'}     | ${Swap.Protocol.Unsupported}
     `('should map $dex to $protocol', ({dex, protocol}) => {
       expect(toSwapProtocol(dex)).toBe(protocol)
     })
@@ -125,7 +127,8 @@ describe('transformers', () => {
       ${Swap.Protocol.Muesliswap_clp} | ${Dex.Muesliswap_clp}
       ${Swap.Protocol.Spectrum_v1}    | ${Dex.Spectrum_v1}
       ${Swap.Protocol.Teddy_v1}       | ${Dex.Teddy_v1}
-      ${'whatever'}                   | ${Dex.Muesliswap_v2}
+      ${Swap.Protocol.Unsupported}    | ${Dex.Unsupported}
+      ${'new-protocol'}               | ${Dex.Unsupported}
     `('should map $protocol to $dex', ({protocol, dex}) => {
       expect(fromSwapProtocol(protocol)).toBe(dex)
     })

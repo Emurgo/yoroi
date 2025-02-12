@@ -118,7 +118,7 @@ export const transformersMaker = ({
         amountIn = 0,
         wantedPrice = 0,
       }: Swap.EstimateRequest): LimitQuoteRequest => ({
-        dex: fromSwapProtocol(protocol ?? Swap.Protocol.Muesliswap_v2),
+        dex: protocol ? fromSwapProtocol(protocol) : undefined,
         sell_token: tokenIn,
         buy_token: tokenOut,
         sell_amount: amountIn,
@@ -145,7 +145,7 @@ export const transformersMaker = ({
         buy_token: tokenOut,
         buy_amount: amountOut,
         sell_amount: amountIn,
-        // TODO: @jorbuedo I think we input as percentage, can you confirm if /100 is needed
+        // muesli expects slippage as a percentage
         slippage: slippage / 100,
         numbers_have_decimals: true,
       }),
@@ -300,7 +300,8 @@ export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
     [Dex.Muesliswap_clp]: Swap.Protocol.Muesliswap_clp,
     [Dex.Spectrum_v1]: Swap.Protocol.Spectrum_v1,
     [Dex.Teddy_v1]: Swap.Protocol.Teddy_v1,
-  }[dex])
+    [Dex.Unsupported]: Swap.Protocol.Unsupported,
+  }[dex] ?? Swap.Protocol.Unsupported)
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
@@ -317,4 +318,5 @@ export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
     [Swap.Protocol.Muesliswap_v2]: Dex.Muesliswap_v2,
     [Swap.Protocol.Muesliswap_clp]: Dex.Muesliswap_clp,
     [Swap.Protocol.Spectrum_v1]: Dex.Spectrum_v1,
-  }[dex] ?? Dex.Muesliswap_v2)
+    [Swap.Protocol.Unsupported]: Dex.Unsupported,
+  }[dex] ?? Dex.Unsupported)

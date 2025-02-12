@@ -84,13 +84,14 @@ describe('toSwapProtocol', () => {
     ${Dex.Splash_v1}      | ${Swap.Protocol.Splash_v1}
     ${Dex.Muesliswap_v2}  | ${Swap.Protocol.Muesliswap_v2}
     ${Dex.Muesliswap_clp} | ${Swap.Protocol.Muesliswap_clp}
+    ${Dex.Unsupported}    | ${Swap.Protocol.Unsupported}
+    ${'new-protocol'}     | ${Swap.Protocol.Unsupported}
   `('should map $dex to $protocol', ({dex, protocol}) => {
     expect(toSwapProtocol(dex)).toBe(protocol)
   })
 })
 
 describe('fromSwapProtocol', () => {
-  // TODO: @jorbuedo check if the undefineds are correct, cuz the API returns when is not from dexhunter
   it.each`
     protocol                        | dex
     ${Swap.Protocol.Minswap_v1}     | ${Dex.Minswap_v1}
@@ -103,9 +104,11 @@ describe('fromSwapProtocol', () => {
     ${Swap.Protocol.Splash_v1}      | ${Dex.Splash_v1}
     ${Swap.Protocol.Muesliswap_v2}  | ${Dex.Muesliswap_v2}
     ${Swap.Protocol.Muesliswap_clp} | ${Dex.Muesliswap_clp}
-    ${Swap.Protocol.Teddy_v1}       | ${undefined}
-    ${Swap.Protocol.Minswap_stable} | ${undefined}
-    ${Swap.Protocol.Spectrum_v1}    | ${undefined}
+    ${Swap.Protocol.Teddy_v1}       | ${Dex.Unsupported}
+    ${Swap.Protocol.Minswap_stable} | ${Dex.Unsupported}
+    ${Swap.Protocol.Spectrum_v1}    | ${Dex.Unsupported}
+    ${Swap.Protocol.Unsupported}    | ${Dex.Unsupported}
+    ${'new-protocol'}               | ${Dex.Unsupported}
   `('should map $protocol to $dex', ({protocol, dex}) => {
     expect(fromSwapProtocol(protocol)).toBe(dex)
   })
@@ -121,6 +124,9 @@ describe('fromSwapProtocol', () => {
       ${Dex.Sundaeswap_v1}
       ${Dex.Sundaeswap_v3}
       ${Dex.Splash_v1}
+      ${Dex.Muesliswap_v2}
+      ${Dex.Muesliswap_clp}
+      ${Dex.Unsupported}
     `('should correctly transform aggregator protocols for $dex', ({dex}) => {
       const expectedProtocol = toSwapProtocol(dex)
       const result = transformers.protocols.response()
