@@ -1,11 +1,16 @@
 import {isLeft} from '@yoroi/common'
+import {infoExtractName} from '@yoroi/portfolio'
+import {getDexUrlByProtocol} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Api, Portfolio, Swap} from '@yoroi/types'
+import _ from 'lodash'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {useIntl} from 'react-intl'
 import {FlatList, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Divider} from 'react-native-paper'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
+import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
 import {Boundary} from '../../../../components/Boundary/Boundary'
 import {Button, ButtonType} from '../../../../components/Button/Button'
@@ -13,14 +18,18 @@ import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {Space} from '../../../../components/Space/Space'
 import {useWalletNavigation} from '../../../../kernel/navigation'
+import {isEmptyString} from '../../../../kernel/utils'
+import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {primaryTokenInfoMainnet} from '../../../WalletManager/network-manager/network-manager'
 import {Counter} from '../../common/Counter/Counter'
 import {EmptyCompletedOrdersIllustration} from '../../common/Illustrations/EmptyCompletedOrdersIllustration'
 import {EmptyOpenOrdersIllustration} from '../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {useNavigateTo} from '../../common/navigation'
+import {ProtocolIcon} from '../../common/Protocol/ProtocolIcon'
 import {ServiceUnavailable} from '../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
@@ -258,13 +267,9 @@ const OrderCancellation = ({order, tokenInInfo, price, amount}: CancellationProp
         navigateToTxReview({
           cbor: response.value.data.cbor,
           details: {
-            title: strings.listOrdersSheetTitle,
+            title: strings.swapCancellationDetailsTitle,
             component: (
-              <View>
-                <Text style={styles.rowLabel}>{strings.listOrdersTxId}</Text>
-
-                <Text style={styles.rowValue}>{order.txHash}</Text>
-              </View>
+              <Details order={order} tokenInInfo={tokenInInfo} price={price} amount={amount} response={response} />
             ),
           },
         })
@@ -318,6 +323,15 @@ const OrderCancellationConfirmation = ({
   const strings = useStrings()
   const {styles} = useStyles()
 
+  const poolIcon = !isEmptyString(order.protocol) ? <ProtocolIcon protocol={order.protocol} size={18} /> : null
+  const poolProviderFormatted = !isEmptyString(order.protocol) ? _.capitalize(order.protocol) : null
+  const poolUrl = !isEmptyString(order.protocol) ? getDexUrlByProtocol(order.protocol) : null
+
+  const liquidityPool =
+    poolIcon && poolProviderFormatted != null && poolUrl != null ? (
+      <LiquidityPool liquidityPoolIcon={poolIcon} liquidityPoolName={poolProviderFormatted} poolUrl={poolUrl} />
+    ) : null
+
   if (isLeft(response))
     return (
       <View style={styles.root}>
@@ -330,6 +344,12 @@ const OrderCancellationConfirmation = ({
   return (
     <View style={styles.root}>
       <React.Fragment>
+        <View style={styles.row}>
+          <Text style={styles.rowLabel}>{_.capitalize(strings.dex)}</Text>
+
+          {liquidityPool}
+        </View>
+
         <Row label={strings.listOrdersSheetAssetPrice} value={price} />
 
         <Row label={strings.listOrdersSheetAssetAmount} value={amount} />
@@ -354,6 +374,30 @@ const Row = ({label, value}: {label: string; value: string | React.ReactNode}) =
       <Text style={styles.rowLabel}>{label}</Text>
 
       {typeof value === 'string' ? <Text style={styles.rowValue}>{value}</Text> : value}
+    </View>
+  )
+}
+
+const LiquidityPool = ({
+  liquidityPoolIcon,
+  liquidityPoolName,
+  poolUrl,
+}: {
+  liquidityPoolIcon: React.ReactNode
+  liquidityPoolName: string
+  poolUrl: string
+}) => {
+  const {styles} = useStyles()
+
+  return (
+    <View style={styles.liquidityPool}>
+      {liquidityPoolIcon}
+
+      <Space width="xs" />
+
+      <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
+        <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -387,6 +431,114 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
     </View>
   )
 }
+
+const Details = ({
+  order,
+  price,
+  amount,
+  response,
+}: CancellationProps & {response: Api.Response<Swap.CancelResponse>}) => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+  const {wallet} = useSelectedWallet()
+
+  const portfolioTokenInfos = usePortfolioTokenInfos(
+    {wallet, tokenIds: [order.tokenIn, order.tokenOut]},
+    {suspense: true},
+  )
+  const tokenInInfo = portfolioTokenInfos.tokenInfos?.get(order.tokenIn)
+  const tokenOutInfo = portfolioTokenInfos.tokenInfos?.get(order.tokenOut)
+
+  if (tokenInInfo == null) throw new Error('Swap Cancellation:: invalid state: tokenInInfo')
+  if (tokenOutInfo == null) throw new Error('Swap Cancellation:: invalid state: tokenOutInfo')
+
+  const amountOut = order.actualAmountOut === 0 ? order.expectedAmountOut : order.actualAmountOut
+
+  const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
+
+  const isFromPrimary = tokenOutInfo?.nature === Portfolio.Token.Nature.Primary
+  const fromDetail = isFromPrimary ? tokenOutInfo?.description : tokenOutInfo?.fingerprint
+  const fromName = infoExtractName(tokenOutInfo)
+
+  const isToPrimary = tokenOutInfo?.nature === Portfolio.Token.Nature.Primary
+  const toDetail = isToPrimary ? tokenOutInfo?.description : tokenOutInfo?.fingerprint
+  const toName = infoExtractName(tokenOutInfo)
+  const amountInStr = `${Number(order.amountIn.toFixed(tokenInInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
+
+  return (
+    <View>
+      <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
+
+      <View style={styles.token}>
+        <Left>
+          <TokenInfoIcon info={tokenOutInfo} size="md" />
+        </Left>
+
+        <Middle>
+          <View style={styles.row}>
+            <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+              {fromName}
+            </Text>
+          </View>
+
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
+            {fromDetail}
+          </Text>
+        </Middle>
+
+        <Right style={styles.end}>
+          <Text style={styles.quantity}>{amountOutStr}</Text>
+        </Right>
+      </View>
+
+      <Space height="lg" />
+
+      <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
+
+      <View style={styles.token}>
+        <Left>
+          <TokenInfoIcon info={tokenInInfo} size="md" />
+        </Left>
+
+        <Middle>
+          <View style={styles.row}>
+            <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+              {toName}
+            </Text>
+          </View>
+
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
+            {toDetail}
+          </Text>
+        </Middle>
+
+        <Right style={styles.end}>
+          <Text style={styles.quantity}>{amountInStr}</Text>
+        </Right>
+      </View>
+
+      <Space height="lg" />
+
+      <Divider />
+
+      <Space height="lg" />
+
+      <OrderCancellationConfirmation
+        order={order}
+        tokenInInfo={tokenInInfo}
+        price={price}
+        amount={amount}
+        response={response}
+      />
+    </View>
+  )
+}
+
+const Left = ({style, ...props}: ViewProps) => <View style={style} {...props} />
+const Middle = ({style, ...props}: ViewProps) => (
+  <View style={[style, {flex: 1, justifyContent: 'center', paddingHorizontal: 8}]} {...props} />
+)
+const Right = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
@@ -471,7 +623,7 @@ const useStyles = () => {
     },
     inlineLink: {
       padding: 0,
-      justifyContent: 'flex-end',
+      ...atoms.justify_end,
     },
     cancelButton: {
       ...atoms.self_start,
@@ -480,6 +632,43 @@ const useStyles = () => {
     errorMessage: {
       ...atoms.body_3_sm_regular,
       color: color.text_warning,
+    },
+    liquidityPoolLink: {
+      ...atoms.align_center,
+      ...atoms.justify_center,
+    },
+    liquidityPoolText: {
+      color: color.text_primary_medium,
+      ...atoms.body_1_lg_medium,
+    },
+    liquidityPool: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+    },
+    end: {
+      ...atoms.align_end,
+    },
+    name: {
+      color: color.gray_900,
+      ...atoms.body_1_lg_medium,
+    },
+    detail: {
+      color: color.gray_600,
+      maxWidth: 140,
+      ...atoms.body_3_sm_regular,
+    },
+    token: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+    },
+    amountItemLabel: {
+      fontSize: 12,
+      color: color.text_gray_medium,
+      ...atoms.pb_sm,
+    },
+    quantity: {
+      color: color.gray_900,
+      ...atoms.body_1_lg_regular,
     },
   })
   return {styles, color}
