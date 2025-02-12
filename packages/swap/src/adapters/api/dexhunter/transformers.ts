@@ -182,7 +182,7 @@ export const transformersMaker = ({
         amount_in: amountIn,
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
-          .filter((dex): dex is Dex => !!dex),
+          .filter(isDex),
         slippage,
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
@@ -224,7 +224,7 @@ export const transformersMaker = ({
         amount_out: amountOut,
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
-          .filter((dex): dex is Dex => !!dex),
+          .filter(isDex),
         slippage,
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),

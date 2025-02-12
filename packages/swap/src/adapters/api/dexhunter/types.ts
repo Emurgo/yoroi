@@ -98,8 +98,11 @@ export type EstimateResponse = {
   }
   splits?: Split[]
   total_fee?: number
+  total_input?: number
   total_output?: number
   total_output_without_slippage?: number
+  blacklisted_dexes?: Array<string> | null
+  partner?: string
 }
 
 export type ReverseEstimateRequest = {

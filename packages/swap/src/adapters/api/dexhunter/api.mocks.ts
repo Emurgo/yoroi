@@ -3,6 +3,8 @@ import {Portfolio, Swap} from '@yoroi/types'
 import {
   CancelRequest,
   CancelResponse,
+  EstimateRequest,
+  EstimateResponse,
   OrdersResponse,
   TokensResponse,
 } from './types'
@@ -292,21 +294,108 @@ const cancelResult: Swap.CancelResponse = {
   additionalCancellationFee: cancelResponse.additional_cancellation_fee,
 }
 
+const estimateInput: Swap.EstimateRequest = {
+  slippage: 0.01,
+  tokenIn: '.',
+  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  amountIn: 10,
+  amountOut: undefined,
+  protocol: 'minswap-v1',
+  blockedProtocols: ['wingriders-v1'],
+  multiples: 1,
+  wantedPrice: undefined,
+}
+
+const estimateRequest: EstimateRequest = {
+  amount_in: estimateInput.amountIn,
+  slippage: estimateInput.slippage,
+  // TODO: @jorbuedo ADA x ptIdDh
+  token_in: 'ADA',
+  token_out: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950',
+  blacklisted_dexes: ['WINGRIDER'],
+}
+
+const estimateResponse: EstimateResponse = {
+  splits: [
+    {
+      amount_in: 9223372036854.775,
+      expected_output: 9223372036854.775,
+      expected_output_without_slippage: 9223372036854.775,
+      fee: 4,
+      dex: 'VYFI',
+      price_impact: 843546.4933049141,
+      initial_price: 0.00011853462095991185,
+      final_price: 1.0000131730805681,
+      pool_id:
+        '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950VYFIaddr1wx6vzxyapfw4f4ragkvqtk3y473wj4sul3fr98xhguvazlse88lan',
+      batcher_fee: 2,
+      deposits: 2,
+      price_distortion: 841015.5508249996,
+      pool_fee: 0.003,
+    },
+  ],
+  total_fee: 4,
+  total_output: 0,
+  deposits: 2,
+  batcher_fee: 2,
+  total_input: 1000000000000000,
+  possible_routes: {},
+  net_price: 0,
+  dexhunter_fee: 1,
+  blacklisted_dexes: null,
+  partner: '',
+  partner_fee: 0,
+}
+
+const estimateResult = {
+  aggregatorFee: 1,
+  batcherFee: 2,
+  deposits: 2,
+  frontendFee: 0,
+  netPrice: 0,
+  splits: [
+    {
+      amountIn: 9223372036854.775,
+      batcherFee: 2,
+      deposits: 2,
+      expectedOutput: 9223372036854.775,
+      expectedOutputWithoutSlippage: 9223372036854.775,
+      fee: 4,
+      finalPrice: 1.0000131730805681,
+      initialPrice: 0.00011853462095991185,
+      poolFee: 0.003,
+      poolId:
+        '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950VYFIaddr1wx6vzxyapfw4f4ragkvqtk3y473wj4sul3fr98xhguvazlse88lan',
+      priceDistortion: 841015.5508249996,
+      priceImpact: 843546.4933049141,
+      protocol: 'vyfi-v1',
+    },
+  ],
+  totalFee: 4,
+  totalInput: 9223372036854.775,
+  totalOutput: 0,
+  totalOutputWithoutSlippage: 0,
+}
+
 export const api = {
   inputs: {
     cancel: cancelInput,
+    estimate: estimateInput,
   },
   requests: {
     cancel: cancelRequest,
+    estimate: estimateRequest,
   },
   responses: {
     tokens: tokensResponse,
     orders: ordersResponse,
     cancel: cancelResponse,
+    estimate: estimateResponse,
   },
   results: {
     tokens: tokensResult,
     orders: ordersResult,
     cancel: cancelResult,
+    estimate: estimateResult,
   },
 }

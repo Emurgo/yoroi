@@ -55,6 +55,20 @@ describe('transformers', () => {
       )
     })
   })
+
+  describe('estimate', () => {
+    test('should correctly transform the estimate request', () => {
+      expect(transformers.estimate.request(api.inputs.estimate)).toEqual(
+        api.requests.estimate,
+      )
+    })
+
+    test('should correctly transform the estimate response', () => {
+      expect(transformers.estimate.response(api.responses.estimate)).toEqual(
+        api.results.estimate,
+      )
+    })
+  })
 })
 
 describe('toSwapProtocol', () => {
