@@ -184,13 +184,13 @@ const messages = defineMessages({
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
-  swapCancellationDetailsTitle: {
-    id: 'swap.swapScreen.swapCancellationDetailsTitle',
-    defaultMessage: '!!!Cancel swap order details',
-  },
   swapDetailsTitle: {
     id: 'swap.swapScreen.swapDetailsTitle',
     defaultMessage: '!!!Swap details',
+  },
+  swapCancellationDetailsTitle: {
+    id: 'swap.swapScreen.swapCancellationDetailsTitle',
+    defaultMessage: '!!!Cancel swap order details',
   },
   tokenSwap: {
     id: 'swap.swapScreen.tokenSwapTab',

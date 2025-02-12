@@ -1,54 +1,31 @@
-import {isBoolean, useAsyncStorage} from '@yoroi/common'
-import * as React from 'react'
-import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
+import {isBoolean, parseSafe, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {useQuery} from 'react-query'
 
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 const storageRootDAppExplorer = 'dapp-explorer'
 const storageDAppWelcome = 'dapp-explorer-welcome-dialog'
-const isShowWelcomeDAppKey = 'isShowWelcomeDApp'
 
-const useSetShowWelcomeDApp = (options?: UseMutationOptions<void, Error, boolean>) => {
+export const useShowWelcomeDApp = () => {
   const {wallet} = useSelectedWallet()
   const storage = useAsyncStorage()
-  const dAppExplorerStorage = storage.join(`wallet/${wallet.id}/${storageRootDAppExplorer}/`)
+  const walletStorage = storage.join(`wallet/${wallet.id}/${storageRootDAppExplorer}/`)
+  const queryKey = [wallet.id, storageDAppWelcome]
 
-  const mutation = useMutation({
-    mutationFn: (show) => dAppExplorerStorage.setItem(storageDAppWelcome, show),
-    ...options,
+  const mutation = useMutationWithInvalidations({
+    mutationFn: (value: boolean) => walletStorage.setItem(storageDAppWelcome, value),
+    invalidateQueries: [queryKey],
   })
 
-  return mutation.mutate
-}
-
-const useShowedWelcomeDApp = (options?: UseQueryOptions<boolean, Error, boolean>) => {
-  const {wallet} = useSelectedWallet()
-  const storage = useAsyncStorage()
-  const dAppExplorerStorage = storage.join(`wallet/${wallet.id}/${storageRootDAppExplorer}/`)
-
   const query = useQuery({
-    queryKey: [wallet.id, isShowWelcomeDAppKey],
-    ...options,
+    suspense: true,
+    queryKey,
     queryFn: async () => {
-      const isShowed = await dAppExplorerStorage.getItem(storageDAppWelcome)
-
-      return isBoolean(isShowed)
+      const storedStorage = await walletStorage.getItem(storageDAppWelcome)
+      const parsed = parseSafe(storedStorage)
+      return isBoolean(parsed) ? parsed : false
     },
   })
 
-  return query
-}
-
-export const useShowWelcomeDApp = () => {
-  const {data: isShowedWelcomeDApp, isLoading: loadingGetShowedWelcomeDApp} = useShowedWelcomeDApp()
-  const setShowingWelcomeDApp = useSetShowWelcomeDApp()
-
-  return {
-    loadingGetShowedWelcomeDApp,
-    isShowedWelcomeDApp,
-    setShowedWelcomeDApp: React.useCallback(
-      (options?: UseMutationOptions<void, Error, boolean>) => setShowingWelcomeDApp(true, options),
-      [setShowingWelcomeDApp],
-    ),
-  }
+  return [query.data, mutation.mutate] as const
 }

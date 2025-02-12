@@ -16,7 +16,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation} from 'react-query'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button, ButtonType} from '../../../../../components/Button/Button'
 import {CopyButton} from '../../../../../components/CopyButton'
 import {ErrorPanel} from '../../../../../components/ErrorPanel/ErrorPanel'
 import {Icon} from '../../../../../components/Icon'
@@ -127,7 +127,7 @@ export const ManageCollateralScreen = () => {
     openModal({
       title: strings.initialCollateralInfoModalTitle,
       content: <InitialCollateralInfoModal />,
-      footer: <Button title={strings.initialCollateralInfoModalButton} onPress={handleGenerateCollateral} />,
+      footer: <ModalsButtons onConfirm={handleGenerateCollateral} onCancel={closeModal} />,
       height: Math.min(screenHeight * 0.9, 650),
     })
   }
@@ -184,6 +184,18 @@ export const ManageCollateralScreen = () => {
 
       <Space height="lg" />
     </SafeAreaView>
+  )
+}
+
+const ModalsButtons = ({onConfirm, onCancel}: {onConfirm: () => void; onCancel: () => void}) => {
+  const strings = useStrings()
+
+  return (
+    <View>
+      <Button type={ButtonType.SecondaryText} title={strings.cancel} onPress={onCancel} />
+
+      <Button title={strings.initialCollateralInfoModalButton} onPress={onConfirm} />
+    </View>
   )
 }
 
