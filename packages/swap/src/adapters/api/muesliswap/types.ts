@@ -140,6 +140,7 @@ export type QuoteRequest = {
   buy_amount?: number
   sell_amount?: number
   slippage?: number
+  // TODO: @jorbuedo it looks to accept string/array of strings
   dex?: Array<Dex>
   partner?: string
   numbers_have_decimals?: boolean
@@ -168,6 +169,7 @@ export type Split = {
   dex: Dex
   pool_fee: number
   expected_output_without_slippage: number | string
+  price_distortion: number
 }
 
 export type QuoteResponse = {
@@ -179,10 +181,11 @@ export type QuoteResponse = {
   buy_token_decimals: number
   sell_token_decimals: number
   net_price: number
-  net_price_imact: number
+  net_price_impact: number
   frontend_fee: number | string
   total_output_without_slippage: number | string
   splits: Array<Split>
+  numbers_have_decimals: boolean
 }
 
 export type CreateOrderResponse = {

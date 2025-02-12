@@ -4,6 +4,8 @@ import {
   CancelRequest,
   CancelResponse,
   OrdersHistoryResponse,
+  QuoteRequest,
+  QuoteResponse,
   TokensResponse,
 } from './types'
 
@@ -234,21 +236,110 @@ const cancelResult: Swap.CancelResponse = {
   cbor: cancelResponse.tx_cbor,
 }
 
+const quoteInput: Swap.EstimateRequest = {
+  slippage: 0.01,
+  tokenIn: '.',
+  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  amountIn: 10,
+  amountOut: undefined,
+  protocol: 'minswap-v1',
+  blockedProtocols: ['wingriders-v1'],
+  multiples: 1,
+  wantedPrice: undefined,
+}
+
+const quoteRequest: QuoteRequest = {
+  buy_token: quoteInput.tokenOut,
+  sell_token: quoteInput.tokenIn,
+  sell_amount: quoteInput.amountIn,
+  slippage: quoteInput.slippage / 100,
+  buy_amount: quoteInput.amountOut,
+  numbers_have_decimals: true,
+  dex: ['minswap-v1'],
+}
+
+const quoteResponse: QuoteResponse = {
+  total_lvl_attached: '4.000000',
+  total_deposit: '2.000000',
+  total_batcher_fee: '2.000000',
+  total_output: '1130',
+  total_input: '1.000000',
+  buy_token_decimals: 0,
+  sell_token_decimals: 6,
+  net_price: 0.00113,
+  net_price_impact: 1.258404559451805,
+  frontend_fee: '0.000000',
+  numbers_have_decimals: true,
+  total_output_without_slippage: '1130',
+  splits: [
+    {
+      amount_in: '1.000000',
+      total_lvl_attached: '4.000000',
+      deposit: '2.000000',
+      batcher_fee: '2.000000',
+      expected_output: '1130',
+      source_id:
+        '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+      initial_price: 0.04252918925670425,
+      final_price: 0.041994,
+      price_impact: 1.258404559451805,
+      price_distortion: -4.631246793465151,
+      dex: 'minswap-v1',
+      pool_fee: 0.3,
+      expected_output_without_slippage: '1130',
+    },
+  ],
+}
+
+const quoteResult: Swap.EstimateResponse = {
+  aggregatorFee: 0,
+  batcherFee: 2,
+  deposits: 2,
+  frontendFee: 0,
+  netPrice: 1130,
+  splits: [
+    {
+      amountIn: 1,
+      batcherFee: 2,
+      deposits: 2,
+      expectedOutput: 1130,
+      expectedOutputWithoutSlippage: 1130,
+      fee: 0.3,
+      finalPrice: 0.041994,
+      initialPrice: 0.04252918925670425,
+      poolFee: 0.3,
+      poolId:
+        '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+      priceDistortion: 1.258404559451805,
+      priceImpact: 1.258404559451805,
+      protocol: 'minswap-v1',
+    },
+  ],
+  totalFee: 4,
+  totalInput: 1,
+  totalOutput: 1130,
+  totalOutputWithoutSlippage: 1130,
+}
+
 export const api = {
   inputs: {
     cancel: cancelInput,
+    quote: quoteInput,
   },
   requests: {
     cancel: cancelRequest,
+    quote: quoteRequest,
   },
   responses: {
     tokens: tokensResponse,
     orders: ordersResponse,
     cancel: cancelResponse,
+    quote: quoteResponse,
   },
   results: {
     tokens: tokensResult,
     orders: ordersResult,
     cancel: cancelResult,
+    quote: quoteResult,
   },
 }

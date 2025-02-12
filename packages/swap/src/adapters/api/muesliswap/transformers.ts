@@ -145,6 +145,7 @@ export const transformersMaker = ({
         buy_token: tokenOut,
         buy_amount: amountOut,
         sell_amount: amountIn,
+        // TODO: @jorbuedo I think we input as percentage, can you confirm if /100 is needed
         slippage: slippage / 100,
         numbers_have_decimals: true,
       }),

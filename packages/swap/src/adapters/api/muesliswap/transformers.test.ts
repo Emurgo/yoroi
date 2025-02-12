@@ -54,6 +54,20 @@ describe('transformers', () => {
     })
   })
 
+  describe('quote', () => {
+    test('should correctly transform the quote request', () => {
+      expect(transformers.quote.request(api.inputs.quote)).toEqual(
+        api.requests.quote,
+      )
+    })
+
+    test('should correctly transform the quote response', () => {
+      expect(transformers.quote.response(api.responses.quote)).toEqual(
+        api.results.quote,
+      )
+    })
+  })
+
   describe('protocols', () => {
     it.each`
       dex
