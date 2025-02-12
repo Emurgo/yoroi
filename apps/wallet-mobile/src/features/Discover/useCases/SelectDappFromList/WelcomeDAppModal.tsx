@@ -14,10 +14,11 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
   const {styles} = useStyles()
   const insets = useSafeAreaInsets()
   const {openModal, closeModal} = useModal()
-  const {setShowedWelcomeDApp, loadingGetShowedWelcomeDApp} = useShowWelcomeDApp()
+  const [seen, setSeen] = useShowWelcomeDApp()
+  const [showing, setShowing] = React.useState(false)
 
   React.useEffect(() => {
-    if (disabled || loadingGetShowedWelcomeDApp) return
+    if (disabled || seen || showing) return
 
     openModal({
       title: strings.welcomeToYoroiDAppExplorer,
@@ -28,17 +29,27 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
           <Text style={styles.welcomeText}>{strings.welcomeToYoroiDAppExplorerDescription}</Text>
         </View>
       ),
-      footer: <Button onPress={closeModal} title={strings.next} />,
-      height: 494 + insets.bottom,
+      footer: (
+        <Button
+          onPress={() => {
+            setSeen(true)
+            closeModal()
+          }}
+          title={strings.next}
+        />
+      ),
+      height: 530 + insets.bottom,
+      canDiscard: false,
     })
-    setShowedWelcomeDApp()
+    setShowing(true)
   }, [
     closeModal,
     disabled,
     insets.bottom,
-    loadingGetShowedWelcomeDApp,
     openModal,
-    setShowedWelcomeDApp,
+    seen,
+    setSeen,
+    showing,
     strings.next,
     strings.welcomeToYoroiDAppExplorer,
     strings.welcomeToYoroiDAppExplorerDescription,
