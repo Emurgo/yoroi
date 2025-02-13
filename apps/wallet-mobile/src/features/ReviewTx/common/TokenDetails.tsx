@@ -2,7 +2,7 @@ import {usePortfolioTokenDiscovery} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../components/Icon'
@@ -222,10 +222,8 @@ const Name = ({info}: {info: Portfolio.Token.Info}) => {
 }
 
 const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const strings = useStrings()
-
-  if (!discovery || isEmptyString(discovery.supply)) return null
 
   return (
     <View>
@@ -234,7 +232,11 @@ const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
       <Row>
         <Text style={styles.label}>{strings.tokenSupply}</Text>
 
-        <Text style={styles.value}>{discovery.supply}</Text>
+        {discovery === undefined ? (
+          <ActivityIndicator size={22} color={colors.indicatorColor} />
+        ) : (
+          <Text style={styles.value}>{isEmptyString(discovery.supply) ? '-' : discovery.supply}</Text>
+        )}
       </Row>
     </View>
   )
@@ -352,6 +354,7 @@ const useStyles = () => {
 
   const colors = {
     copy: color.gray_900,
+    indicatorColor: color.gray_300,
   }
 
   return {styles, colors} as const
