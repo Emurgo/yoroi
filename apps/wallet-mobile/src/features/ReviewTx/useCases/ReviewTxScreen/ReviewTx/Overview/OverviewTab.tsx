@@ -417,11 +417,11 @@ const OperationsSection = ({
           if (index === 0) return operation
 
           return (
-            <>
+            <React.Fragment key={index}>
               <Space height="sm" />
 
               {operation}
-            </>
+            </React.Fragment>
           )
         })}
 
