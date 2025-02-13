@@ -21,21 +21,25 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
   const {wallet} = useSelectedWallet()
   const {invalidate} = usePortfolioImageInvalidate()
 
-  const [error, setError] = React.useState(false)
+  const [cdnError, setCdnError] = React.useState(false)
+  const [oiError, setOIError] = React.useState(false)
 
-  if (error || !info) return <TokenIconPlaceholder size={size} />
+  if (!info || (cdnError && oiError)) return <TokenIconPlaceholder size={size} />
 
   if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
 
-  if (info.originalImage.startsWith('data:image/png;base64'))
+  if (cdnError) {
+    const originalImage = info.originalImage.startsWith('data:image/png;base64') ? info?.originalImage : ''
+
     return (
       <Image
-        source={{uri: info.originalImage}}
+        source={{uri: originalImage}}
         style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
         placeholder={blurhash}
-        onError={() => setError(true)}
+        onError={() => setOIError(true)}
       />
     )
+  }
 
   const [policy, name] = info.id.split('.')
   const uri = `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
@@ -48,7 +52,7 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
       placeholder={blurhash}
       cachePolicy="memory-disk"
       onError={() => {
-        setError(true)
+        setCdnError(true)
         if (isDev) {
           logger.debug(`invalidating token image ${info.id}`)
           invalidate([info.id])

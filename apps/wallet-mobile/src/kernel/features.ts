@@ -14,6 +14,7 @@ export const features = {
   walletListFeedback: false,
   walletListAggregatedBalance: isDev,
   walletListSwipeableActions: false,
+  swapTokenLinks: isDev,
 }
 
 export const debugWalletInfo = {

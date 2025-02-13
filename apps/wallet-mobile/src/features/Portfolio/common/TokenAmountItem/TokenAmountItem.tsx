@@ -2,15 +2,18 @@ import {amountFormatter, infoExtractName, isNft, isPrimaryToken} from '@yoroi/po
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {Linking, StyleSheet, View, ViewProps} from 'react-native'
 
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
+import {features} from '../../../../kernel/features'
 import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {usePriceImpactRiskTheme} from '../../../Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../../Swap/common/types'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {TokenInfoIcon} from './TokenInfoIcon'
 
 type TokenAmountItemProps = {
@@ -33,6 +36,9 @@ export const TokenAmountItem = ({
   priceImpactRisk,
   orderType,
 }: TokenAmountItemProps) => {
+  const {
+    wallet: {networkManager},
+  } = useSelectedWallet()
   const {styles, colors} = useStyles()
   const {privacyPlaceholder, isPrivacyActive} = usePrivacyMode()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
@@ -89,6 +95,14 @@ export const TokenAmountItem = ({
 
         {isPrimary && variant !== 'swap' && (
           <PairedBalance textStyle={styles.pairedBalance} amount={amount} ignorePrivacy={ignorePrivacy} />
+        )}
+
+        {!isPrimary && variant === 'swap' && features.swapTokenLinks && (
+          <Button
+            type={ButtonType.SecondaryText}
+            icon={Icon.InfoCircle}
+            onPress={() => Linking.openURL(networkManager.explorers.cexplorer.token(info.fingerprint))}
+          />
         )}
       </Right>
     </View>
