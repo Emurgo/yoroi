@@ -254,7 +254,9 @@ const parseMuesliError = ({
       tag,
       error: {
         ...error,
-        message: JSON.stringify((error.responseData as any)?.detail, null, 2),
+        message: JSON.stringify((error.responseData as any)?.detail, null, 2)
+          .replace(/^"/, '')
+          .replace(/"$/, ''),
       },
     },
     true,

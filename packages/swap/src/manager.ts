@@ -1,4 +1,4 @@
-import {Portfolio, Swap} from '@yoroi/types'
+import {Api, Portfolio, Swap} from '@yoroi/types'
 import {isLeft} from '@yoroi/common'
 import {freeze} from 'immer'
 
@@ -80,6 +80,8 @@ const autoApiMaker = (
           adapters.muesliswap.tokens(),
         ])
 
+        warnAllLeft(dexhunterResponse, muesliswapResponse)
+
         if (isLeft(dexhunterResponse)) return muesliswapResponse
         if (isLeft(muesliswapResponse)) return dexhunterResponse
 
@@ -106,6 +108,8 @@ const autoApiMaker = (
           adapters.dexhunter.orders(),
           adapters.muesliswap.orders(),
         ])
+
+        warnAllLeft(dexhunterResponse, muesliswapResponse)
 
         if (isLeft(dexhunterResponse)) return muesliswapResponse
         if (isLeft(muesliswapResponse)) return dexhunterResponse
@@ -137,6 +141,8 @@ const autoApiMaker = (
           adapters.muesliswap.protocols(),
         ])
 
+        warnAllLeft(dexhunterResponse, muesliswapResponse)
+
         if (isLeft(dexhunterResponse)) return muesliswapResponse
         if (isLeft(muesliswapResponse)) return dexhunterResponse
 
@@ -157,6 +163,8 @@ const autoApiMaker = (
           adapters.dexhunter.estimate(body),
           adapters.muesliswap.estimate(body),
         ])
+
+        warnAllLeft(dexhunterResponse, muesliswapResponse)
 
         if (isLeft(dexhunterResponse)) return muesliswapResponse
         if (isLeft(muesliswapResponse)) return dexhunterResponse
@@ -180,6 +188,8 @@ const autoApiMaker = (
           adapters.dexhunter.create(body),
           adapters.muesliswap.create(body),
         ])
+
+        warnAllLeft(dexhunterResponse, muesliswapResponse)
 
         if (isLeft(dexhunterResponse)) return muesliswapResponse
         if (isLeft(muesliswapResponse)) return dexhunterResponse
@@ -206,4 +216,12 @@ const autoApiMaker = (
     },
     true,
   )
+}
+
+const warnAllLeft = (...responses: Array<Api.Response<any>>) => {
+  if (responses.every(isLeft))
+    console.warn(
+      'Swap Manager all left >> ',
+      responses.map((response) => response.error.message),
+    )
 }

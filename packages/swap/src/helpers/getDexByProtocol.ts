@@ -30,5 +30,8 @@ export function getDexByProtocol(protocol: Swap.Protocol): Swap.Dex {
 
     case Swap.Protocol.Splash_v1:
       return Swap.Dex.Splash
+
+    case Swap.Protocol.Unsupported:
+      return Swap.Dex.Unsupported
   }
 }

@@ -26,7 +26,7 @@ export const toSecondaryTokenInfos = (
         tokenInfoWithCache as Api.ResponseWithCache<Portfolio.Token.Info>
 
       if (!parseSecondaryTokenInfoWithCacheRecord(castedTokenInfoWithCache)) {
-        console.error('Failed to transform token info ', id)
+        console.warn('Failed to transform token info ', id)
         return acc
       }
 
