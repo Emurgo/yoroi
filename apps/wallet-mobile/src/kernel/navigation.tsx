@@ -654,3 +654,14 @@ const getFocusedRouteName = (state: Partial<NavigationState> | NavigationState['
 
   return [name]
 }
+
+export const isWalletSelectionRoute = (state: Partial<NavigationState> | NavigationState['routes'][0]['state']) => {
+  const routes = getFocusedRouteName(state)
+  const manageWalletsRoute: keyof AppRoutes = 'manage-wallets'
+  const walletSelectionRoute: keyof WalletStackRoutes = 'wallet-selection'
+
+  return (
+    (routes.length === 1 && routes[0] === manageWalletsRoute) ||
+    (routes.length === 2 && routes[1] === walletSelectionRoute)
+  )
+}
