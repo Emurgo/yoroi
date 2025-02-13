@@ -69,6 +69,20 @@ describe('transformers', () => {
       )
     })
   })
+
+  describe('reverseEstimate', () => {
+    test('should correctly transform the reverse estimate request', () => {
+      expect(
+        transformers.reverseEstimate.request(api.inputs.reverseEstimate),
+      ).toEqual(api.requests.reverseEstimate)
+    })
+
+    test('should correctly transform the reverse estimate response', () => {
+      expect(
+        transformers.reverseEstimate.response(api.responses.reverseEstimate),
+      ).toEqual(api.results.reverseEstimate)
+    })
+  })
 })
 
 describe('toSwapProtocol', () => {

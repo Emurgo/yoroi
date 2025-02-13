@@ -6,6 +6,8 @@ import {
   EstimateRequest,
   EstimateResponse,
   OrdersResponse,
+  ReverseEstimateRequest,
+  ReverseEstimateResponse,
   TokensResponse,
 } from './types'
 
@@ -294,6 +296,85 @@ const cancelResult: Swap.CancelResponse = {
   additionalCancellationFee: cancelResponse.additional_cancellation_fee,
 }
 
+const reverseEstimateInput: Swap.EstimateRequest = {
+  slippage: 5,
+  tokenIn: '.',
+  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  amountOut: 38,
+  protocol: 'minswap-v1',
+  blockedProtocols: ['wingriders-v1'],
+}
+
+const reverseEstimateRequest: ReverseEstimateRequest = {
+  slippage: reverseEstimateInput.slippage,
+  amount_out: reverseEstimateInput.amountOut,
+  // TODO: @jorbuedo ADA x ptIdDh
+  token_in: 'ADA',
+  token_out: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950',
+  blacklisted_dexes: ['WINGRIDER'],
+}
+
+const reverseEstimateResponse: ReverseEstimateResponse = {
+  splits: [
+    {
+      amount_in: 0.004559,
+      expected_output: 35.288684,
+      expected_output_without_slippage: 37.145984,
+      fee: 4,
+      dex: 'MINSWAP',
+      price_impact: 0.0013874760358920197,
+      initial_price: 0.00012238115855095046,
+      final_price: 0.0001223828565601978,
+      pool_id:
+        '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950MINSWAPc1245066d133f864ff9220aabb1388bb801986e6da6754b8234ce8fc3c6029f6',
+      batcher_fee: 2,
+      deposits: 2,
+      price_distortion: 0.30161668639221895,
+      pool_fee: 0.003,
+    },
+  ],
+  total_fee: 4,
+  total_output: 35.288684,
+  deposits: 2,
+  possible_routes: {},
+  dexhunter_fee: 1.000004,
+  batcher_fee: 2,
+  total_input: 0.0045599187141238265,
+  total_input_without_slippage: 0.0045599187141238265,
+  net_price: 0.008146194335645627,
+  net_price_reverse: 122.75670807707843,
+}
+
+const reverseEstimateResult: Swap.EstimateResponse = {
+  aggregatorFee: 1.000004,
+  batcherFee: 2,
+  deposits: 2,
+  frontendFee: 0,
+  netPrice: 0.008146194335645627,
+  splits: [
+    {
+      amountIn: 0.004559,
+      batcherFee: 2,
+      deposits: 2,
+      expectedOutput: 35.288684,
+      expectedOutputWithoutSlippage: 37.145984,
+      fee: 4,
+      finalPrice: 0.0001223828565601978,
+      initialPrice: 0.00012238115855095046,
+      poolFee: 0.003,
+      poolId:
+        '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950MINSWAPc1245066d133f864ff9220aabb1388bb801986e6da6754b8234ce8fc3c6029f6',
+      priceDistortion: 0.30161668639221895,
+      priceImpact: 0.0013874760358920197,
+      protocol: 'minswap-v1',
+    },
+  ],
+  totalFee: 4,
+  totalInput: 0.0045599187141238265,
+  totalOutput: 35.288684,
+  totalOutputWithoutSlippage: 35.288684,
+}
+
 const estimateInput: Swap.EstimateRequest = {
   slippage: 0.01,
   tokenIn: '.',
@@ -347,7 +428,7 @@ const estimateResponse: EstimateResponse = {
   partner_fee: 0,
 }
 
-const estimateResult = {
+const estimateResult: Swap.EstimateResponse = {
   aggregatorFee: 1,
   batcherFee: 2,
   deposits: 2,
@@ -381,21 +462,25 @@ export const api = {
   inputs: {
     cancel: cancelInput,
     estimate: estimateInput,
+    reverseEstimate: reverseEstimateInput,
   },
   requests: {
     cancel: cancelRequest,
     estimate: estimateRequest,
+    reverseEstimate: reverseEstimateRequest,
   },
   responses: {
     tokens: tokensResponse,
     orders: ordersResponse,
     cancel: cancelResponse,
     estimate: estimateResponse,
+    reverseEstimate: reverseEstimateResponse,
   },
   results: {
     tokens: tokensResult,
     orders: ordersResult,
     cancel: cancelResult,
     estimate: estimateResult,
+    reverseEstimate: reverseEstimateResult,
   },
 }
