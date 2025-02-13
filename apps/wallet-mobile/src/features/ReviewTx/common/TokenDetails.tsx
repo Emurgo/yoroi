@@ -60,12 +60,12 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
 }
 
 const Info = ({info}: {info: Portfolio.Token.Info}) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const [activeTab, setActiveTab] = React.useState<'overview' | 'json'>('overview')
 
-  const {tokenDiscovery} = usePortfolioTokenDiscovery(
+  const {tokenDiscovery, isLoading: isDiscoveryLoading} = usePortfolioTokenDiscovery(
     {
       id: info.id,
       network: wallet.networkManager.network,
@@ -92,9 +92,15 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
 
       {/* ↓↓↓ TABS CONTENT ↓↓↓ */}
 
-      <Overview info={info} discovery={tokenDiscovery} isActive={activeTab === 'overview'} />
+      {isDiscoveryLoading ? (
+        <ActivityIndicator size={22} color={colors.indicatorColor} />
+      ) : (
+        <>
+          <Overview info={info} discovery={tokenDiscovery} isActive={activeTab === 'overview'} />
 
-      <Json discovery={tokenDiscovery} isActive={activeTab === 'json'} />
+          <Json discovery={tokenDiscovery} isActive={activeTab === 'json'} />
+        </>
+      )}
     </View>
   )
 }
@@ -222,7 +228,7 @@ const Name = ({info}: {info: Portfolio.Token.Info}) => {
 }
 
 const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -232,11 +238,7 @@ const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
       <Row>
         <Text style={styles.label}>{strings.tokenSupply}</Text>
 
-        {discovery === undefined ? (
-          <ActivityIndicator size={22} color={colors.indicatorColor} />
-        ) : (
-          <Text style={styles.value}>{isEmptyString(discovery.supply) ? '-' : discovery.supply}</Text>
-        )}
+        <Text style={styles.value}>{isEmptyString(discovery?.supply) ? '-' : discovery?.supply}</Text>
       </Row>
     </View>
   )
