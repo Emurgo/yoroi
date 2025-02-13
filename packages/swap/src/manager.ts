@@ -72,6 +72,9 @@ const apiManagerMaker = (
 const autoApiMaker = (
   adapters: Record<Swap.Aggregator, Swap.Api>,
 ): Swap.Api => {
+  const dhTokenList = new Set<Portfolio.Token.Id>(['.'])
+  const msTokenList = new Set<Portfolio.Token.Id>(['.'])
+
   return freeze(
     {
       async tokens() {
@@ -86,13 +89,16 @@ const autoApiMaker = (
         if (isLeft(muesliswapResponse)) return dexhunterResponse
 
         const merged: Record<Portfolio.Token.Id, Portfolio.Token.Info> = {}
-        const append = (tokenInfo: Portfolio.Token.Info) => {
-          if (merged[tokenInfo.id] === undefined)
-            merged[tokenInfo.id] = tokenInfo
-        }
+        const append =
+          (tokenList: Set<Portfolio.Token.Id>) =>
+          (tokenInfo: Portfolio.Token.Info) => {
+            tokenList.add(tokenInfo.id)
+            if (merged[tokenInfo.id] === undefined)
+              merged[tokenInfo.id] = tokenInfo
+          }
 
-        dexhunterResponse.value.data.forEach(append)
-        muesliswapResponse.value.data.forEach(append)
+        dexhunterResponse.value.data.forEach(append(dhTokenList))
+        muesliswapResponse.value.data.forEach(append(msTokenList))
 
         return {
           tag: 'right',
@@ -159,6 +165,22 @@ const autoApiMaker = (
       },
 
       async estimate(body: Swap.EstimateRequest) {
+        const isDHValid = hasTokens(dhTokenList, body)
+        const isMSValid = hasTokens(msTokenList, body)
+
+        if (!isDHValid || !isMSValid) {
+          if (isDHValid) return adapters.dexhunter.estimate(body)
+          if (isMSValid) return adapters.muesliswap.estimate(body)
+          return {
+            tag: 'left',
+            error: {
+              status: -3,
+              message: 'Tokens not found in aggregators',
+              responseData: {},
+            },
+          }
+        }
+
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
           adapters.dexhunter.estimate(body),
           adapters.muesliswap.estimate(body),
@@ -184,6 +206,22 @@ const autoApiMaker = (
       },
 
       async create(body: Swap.CreateRequest) {
+        const isDHValid = hasTokens(dhTokenList, body)
+        const isMSValid = hasTokens(msTokenList, body)
+
+        if (!isDHValid || !isMSValid) {
+          if (isDHValid) return adapters.dexhunter.create(body)
+          if (isMSValid) return adapters.muesliswap.create(body)
+          return {
+            tag: 'left',
+            error: {
+              status: -3,
+              message: 'Tokens not found in aggregators',
+              responseData: {},
+            },
+          }
+        }
+
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
           adapters.dexhunter.create(body),
           adapters.muesliswap.create(body),
@@ -224,4 +262,16 @@ const warnAllLeft = (...responses: Array<Api.Response<any>>) => {
       'Swap Manager all left >> ',
       responses.map((response) => response.error.message),
     )
+}
+
+const hasTokens = (
+  tokenList: Set<Portfolio.Token.Id>,
+  body: Swap.CreateRequest | Swap.EstimateRequest,
+): boolean => {
+  const {tokenIn, tokenOut} = body
+
+  if (!tokenList.has(tokenIn)) return false
+  if (!tokenList.has(tokenOut)) return false
+
+  return true
 }
