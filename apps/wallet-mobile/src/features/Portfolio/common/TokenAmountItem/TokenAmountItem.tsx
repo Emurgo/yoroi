@@ -2,18 +2,20 @@ import {amountFormatter, infoExtractName, isNft, isPrimaryToken} from '@yoroi/po
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, StyleSheet, View, ViewProps} from 'react-native'
+import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
 import {features} from '../../../../kernel/features'
+import {useStrings} from '../../../ReviewTx/common/hooks/useStrings'
+import {TokenDetails} from '../../../ReviewTx/common/TokenDetails'
 import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {usePriceImpactRiskTheme} from '../../../Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../../Swap/common/types'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {TokenInfoIcon} from './TokenInfoIcon'
 
 type TokenAmountItemProps = {
@@ -36,9 +38,9 @@ export const TokenAmountItem = ({
   priceImpactRisk,
   orderType,
 }: TokenAmountItemProps) => {
-  const {
-    wallet: {networkManager},
-  } = useSelectedWallet()
+  const strings = useStrings()
+  const {openModal} = useModal()
+  const {height: windowHeight} = useWindowDimensions()
   const {styles, colors} = useStyles()
   const {privacyPlaceholder, isPrivacyActive} = usePrivacyMode()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
@@ -55,6 +57,14 @@ export const TokenAmountItem = ({
 
   const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : colors.text
+
+  const handleShowTokenDetails = () => {
+    openModal({
+      title: strings.tokenDetailsTitle,
+      content: <TokenDetails tokenInfo={info} />,
+      height: windowHeight * 0.8,
+    })
+  }
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
@@ -98,11 +108,7 @@ export const TokenAmountItem = ({
         )}
 
         {!isPrimary && variant === 'swap' && features.swapTokenLinks && (
-          <Button
-            type={ButtonType.SecondaryText}
-            icon={Icon.InfoCircle}
-            onPress={() => Linking.openURL(networkManager.explorers.cexplorer.token(info.fingerprint))}
-          />
+          <Button type={ButtonType.SecondaryText} icon={Icon.InfoCircle} onPress={handleShowTokenDetails} />
         )}
       </Right>
     </View>
