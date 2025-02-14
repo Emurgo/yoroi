@@ -6,6 +6,7 @@ import {PixelRatio, Platform} from 'react-native'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 
 import {isDev} from '../../../../kernel/env'
+import {logger} from '../../../../kernel/logger/logger'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 
 export const usePortfolioImageInvalidate = () => {
@@ -14,6 +15,7 @@ export const usePortfolioImageInvalidate = () => {
   } = useSelectedNetwork()
   const mutation = useMutation({
     mutationFn: async (ids: Array<Portfolio.Token.Id>) => {
+      logger.log(`Invalidating images ${ids}`)
       await tokenManager.api.tokenImageInvalidate(ids)
       await Image.clearDiskCache()
       await Image.clearMemoryCache()
@@ -108,6 +110,7 @@ export const usePortfolioImage = ({
     } else {
       if (isDev) {
         invalidate([`${policy}.${name}`])
+        queryClient.invalidateQueries(queryKey)
       }
       setError(true)
     }
