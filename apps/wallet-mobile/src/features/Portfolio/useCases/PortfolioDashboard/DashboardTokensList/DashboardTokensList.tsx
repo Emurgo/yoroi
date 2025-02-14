@@ -45,7 +45,7 @@ export const DashboardTokensList = () => {
   }
 
   const renderTokensList = () => {
-    if (isZeroADABalance) {
+    if (tokensList.length === 0 || isZeroADABalance) {
       return <View style={styles.container}>{isPreprod ? <PreprodFaucetBanner /> : <BuyADABanner />}</View>
     }
 

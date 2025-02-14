@@ -158,7 +158,7 @@ export const formatTokenFractional = (
   return fractional
     .toFormat(decimals)
     .substring(1)
-    .replace(/\.?0+$/, '')
+    .replace(/[.|,]?0+$/, '')
 }
 
 const truncateWithEllipsis = (s: string, n: number) => {
