@@ -6,10 +6,7 @@ import React from 'react'
 import {ImageStyle, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
-import {isDev} from '../../../../kernel/env'
-import {logger} from '../../../../kernel/logger/logger'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {usePortfolioImageInvalidate} from '../hooks/usePortfolioImage'
+import {usePortfolioImage} from '../hooks/usePortfolioImage'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info | undefined | null
@@ -18,31 +15,14 @@ type TokenInfoIconProps = {
 }
 export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProps) => {
   const {styles} = useStyles()
-  const {wallet} = useSelectedWallet()
-  const {invalidate} = usePortfolioImageInvalidate()
+  const [policy, name] = !info ? '.' : info.id.split('.')
+  const {uri, headers, onError, onLoad, isError} = usePortfolioImage({policy, name, width: 64, height: 64})
 
-  const [cdnError, setCdnError] = React.useState(false)
-  const [oiError, setOIError] = React.useState(false)
-
-  if (!info || (cdnError && oiError)) return <TokenIconPlaceholder size={size} />
-
-  if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
-
-  if (cdnError) {
-    const originalImage = info.originalImage.startsWith('data:image/png;base64') ? info?.originalImage : ''
-
-    return (
-      <Image
-        source={{uri: originalImage}}
-        style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
-        placeholder={blurhash}
-        onError={() => setOIError(true)}
-      />
-    )
+  if (!info || isError) {
+    return <TokenIconPlaceholder size={size} />
   }
 
-  const [policy, name] = info.id.split('.')
-  const uri = `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
+  if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
 
   return (
     <Image
@@ -51,13 +31,8 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
       style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
       placeholder={blurhash}
       cachePolicy="memory-disk"
-      onError={() => {
-        setCdnError(true)
-        if (isDev) {
-          logger.debug(`invalidating token image ${info.id}`)
-          invalidate([info.id])
-        }
-      }}
+      onError={onError}
+      onLoad={onLoad}
     />
   )
 }
@@ -79,10 +54,6 @@ export const TokenIconPlaceholder = ({size = 'md'}: {size?: 'sm' | 'md'}) => {
     </View>
   )
 }
-
-const headers = {
-  Accept: 'image/webp',
-} as const
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['

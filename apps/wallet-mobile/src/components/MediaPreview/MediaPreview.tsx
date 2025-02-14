@@ -9,7 +9,7 @@ import ftPlaceholderLight from '../../assets/img/ft-placeholder.png'
 import ftPlaceholderDark from '../../assets/img/ft-placeholder-dark.png'
 import nftPlaceholderLight from '../../assets/img/nft-placeholder.png'
 import nftPlaceholderDark from '../../assets/img/nft-placeholder-dark.png'
-import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioImage} from '../../features/Portfolio/common/hooks/usePortfolioImage'
 
 type MediaPreviewProps = {
   info: Portfolio.Token.Info
@@ -32,40 +32,33 @@ export const MediaPreview = ({
 }: MediaPreviewProps) => {
   const {isDark, colorScheme} = useTheme()
   const {styles, colors} = useStyles()
-  const {wallet} = useSelectedWallet()
-  const [loading, setLoading] = React.useState(false)
-  const [error, setError] = React.useState(false)
 
   const [policy, name] = info.id.split('.')
+  const {uri, headers, onError, onLoad, isError, isLoading} = usePortfolioImage({
+    policy,
+    name,
+    width: 512,
+    height: 512,
+    contentFit,
+  })
   const placeholder = getPlaceholder(info.type, isDark)
-  const uri = showPlaceholder
-    ? placeholder
-    : `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=512&height=512&kind=metadata&fit=${contentFit}`
 
   return (
     <View style={[{width, height}, styles.wrapper]}>
       <Image
         key={colorScheme}
-        source={{uri, headers}}
+        source={{uri: showPlaceholder ? placeholder : uri, headers}}
         contentFit={contentFit}
         placeholderContentFit={contentFit}
         style={{width, height, ...style}}
         blurRadius={blurRadius}
         cachePolicy="memory-disk"
-        placeholder={error && placeholder}
-        onLoadStart={() => {
-          setLoading(true)
-        }}
-        onLoad={() => {
-          setLoading(false)
-        }}
-        onError={() => {
-          setError(true)
-          setLoading(false)
-        }}
+        placeholder={isError && placeholder}
+        onLoad={onLoad}
+        onError={onError}
       />
 
-      {loading && (
+      {isLoading && (
         <View style={[styles.skeletonWrapper, {width, height}]}>
           <SkeletonPlaceholder
             enabled
@@ -114,7 +107,3 @@ const useStyles = () => {
 
   return {styles, colors} as const
 }
-
-const headers = {
-  Accept: 'image/webp',
-} as const
