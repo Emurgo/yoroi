@@ -245,11 +245,8 @@ export const muesliswapApiMaker = (
   )
 }
 
-const parseMuesliError = ({
-  tag,
-  error,
-}: Left<Api.ResponseError>): Left<Api.ResponseError> =>
-  freeze(
+const parseMuesliError = ({tag, error}: Left<Api.ResponseError>) =>
+  freeze<Left<Api.ResponseError>>(
     {
       tag,
       error: {
