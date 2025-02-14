@@ -16,6 +16,7 @@ import {
   TokensResponse,
 } from './types'
 import {MuesliswapApiConfig} from './api-maker'
+import {resolveDexes} from './helpers'
 
 export const transformersMaker = ({
   primaryTokenInfo,
@@ -150,11 +151,10 @@ export const transformersMaker = ({
 
         // muesli expects slippage as a percentage
         slippage: slippage / 100,
-        dex: protocol
-          ? [fromSwapProtocol(protocol)]
-          : Object.values(Dex).filter(
-              (dex) => !blockedProtocols?.includes(dex),
-            ),
+        dex: resolveDexes({
+          protocol: protocol ? fromSwapProtocol(protocol) : undefined,
+          blockedProtocols: blockedProtocols?.map(fromSwapProtocol),
+        }),
       }),
       response: ({
         buy_token_decimals,
@@ -199,11 +199,10 @@ export const transformersMaker = ({
         user_address: address,
 
         slippage: slippage / 100,
-        dex: protocol
-          ? [fromSwapProtocol(protocol)]
-          : Object.values(Dex).filter(
-              (dex) => !blockedProtocols?.includes(dex),
-            ),
+        dex: resolveDexes({
+          protocol: protocol ? fromSwapProtocol(protocol) : undefined,
+          blockedProtocols: blockedProtocols?.map(fromSwapProtocol),
+        }),
       }),
       response: ({
         quote: {

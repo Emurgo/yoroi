@@ -68,6 +68,20 @@ describe('transformers', () => {
     })
   })
 
+  describe('create', () => {
+    test('should correctly transform the create request', () => {
+      expect(transformers.create.request(api.inputs.create)).toEqual(
+        api.requests.create(address),
+      )
+    })
+
+    test('should correctly transform the create response', () => {
+      expect(transformers.create.response(api.responses.create)).toEqual(
+        api.results.create,
+      )
+    })
+  })
+
   describe('protocols', () => {
     it.each`
       dex

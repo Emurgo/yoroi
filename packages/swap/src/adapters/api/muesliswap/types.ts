@@ -131,7 +131,7 @@ export type CreateOrderRequest = {
   sell_amount?: number
   user_address: string
   slippage?: number
-  dex?: Array<Dex>
+  dex?: ReadonlyArray<Dex>
   partner?: string
   numbers_have_decimals?: boolean
 }
@@ -143,7 +143,7 @@ export type QuoteRequest = {
   sell_amount?: number
   slippage?: number
   // TODO: @jorbuedo it looks to accept string/array of strings
-  dex?: Array<Dex>
+  dex?: ReadonlyArray<Dex>
   partner?: string
   numbers_have_decimals?: boolean
 }
