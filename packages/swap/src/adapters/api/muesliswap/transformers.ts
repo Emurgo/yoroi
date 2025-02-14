@@ -60,6 +60,9 @@ export const transformersMaker = ({
       response: ({orders}: OrdersHistoryResponse): Array<Swap.Order> =>
         orders.map(
           ({
+            dex = Dex.Muesliswap_v2,
+            outputIdx = 0,
+
             fromToken,
             toToken,
             placedAt,
@@ -70,28 +73,26 @@ export const transformersMaker = ({
             txHash,
             finalizedTxHash,
             status,
-
-            dex = Dex.Muesliswap_v2,
-            outputIdx = 0,
           }) => ({
             status,
             txHash,
+
             aggregator: Swap.Aggregator.Muesliswap,
             outputIndex: outputIdx,
             tokenIn: fromToken,
             tokenOut: toToken,
 
-            amountIn: Number(fromAmount),
-            actualAmountOut: Number(receivedAmount),
-            expectedAmountOut: Number(toAmount),
-
             updateTxHash: finalizedTxHash ?? txHash,
             placedAt: placedAt ? placedAt * 1000 : undefined,
             lastUpdate: finalizedAt ? finalizedAt * 1000 : undefined,
+            amountIn: Number(fromAmount),
+            actualAmountOut: Number(receivedAmount),
+            expectedAmountOut: Number(toAmount),
             protocol: toSwapProtocol(dex),
           }),
         ),
     },
+
     protocols: {
       response: (): Array<Swap.AggregatorProtocol> =>
         Object.values(Dex)
@@ -101,6 +102,7 @@ export const transformersMaker = ({
             protocol,
           })),
     },
+
     cancel: {
       request: ({order}: Swap.CancelRequest): CancelRequest => ({
         tx_hash: order.txHash,
@@ -110,22 +112,26 @@ export const transformersMaker = ({
         cbor: tx_cbor,
       }),
     },
+
     limitQuote: {
       request: ({
+        amountIn = 0,
+        wantedPrice = 0,
+
         protocol,
         tokenIn,
         tokenOut,
-        amountIn = 0,
-        wantedPrice = 0,
       }: Swap.EstimateRequest): LimitQuoteRequest => ({
-        dex: protocol ? fromSwapProtocol(protocol) : undefined,
+        numbers_have_decimals: true,
         sell_token: tokenIn,
         buy_token: tokenOut,
         sell_amount: amountIn,
+
         buy_amount: amountIn * wantedPrice,
-        numbers_have_decimals: true,
+        dex: protocol ? fromSwapProtocol(protocol) : undefined,
       }),
     },
+
     quote: {
       request: ({
         protocol,
@@ -136,18 +142,19 @@ export const transformersMaker = ({
         amountOut,
         slippage,
       }: Swap.EstimateRequest): QuoteRequest => ({
+        numbers_have_decimals: true,
+        sell_token: tokenIn,
+        buy_token: tokenOut,
+        buy_amount: amountOut,
+        sell_amount: amountIn,
+
+        // muesli expects slippage as a percentage
+        slippage: slippage / 100,
         dex: protocol
           ? [fromSwapProtocol(protocol)]
           : Object.values(Dex).filter(
               (dex) => !blockedProtocols?.includes(dex),
             ),
-        sell_token: tokenIn,
-        buy_token: tokenOut,
-        buy_amount: amountOut,
-        sell_amount: amountIn,
-        // muesli expects slippage as a percentage
-        slippage: slippage / 100,
-        numbers_have_decimals: true,
       }),
       response: ({
         buy_token_decimals,
@@ -163,36 +170,40 @@ export const transformersMaker = ({
       }: QuoteResponse): Swap.EstimateResponse => ({
         aggregatorFee: 0,
         frontendFee: 0,
+
+        netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
         batcherFee: Number(total_batcher_fee),
         deposits: Number(total_deposit),
         totalFee: Number(total_lvl_attached),
         totalInput: Number(total_input),
         totalOutput: Number(total_output),
-        netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
         totalOutputWithoutSlippage: Number(total_output_without_slippage),
-        splits: splits.map(transformSplit),
+        splits: splits.map(toSwapSplit),
       }),
     },
+
     create: {
       request: ({
+        slippage = 0,
+
         protocol,
         blockedProtocols,
         tokenIn,
         tokenOut,
         amountIn,
-        slippage = 0,
       }: Swap.CreateRequest): CreateOrderRequest => ({
+        numbers_have_decimals: true,
+        sell_token: tokenIn,
+        buy_token: tokenOut,
+        sell_amount: amountIn,
+        user_address: address,
+
+        slippage: slippage / 100,
         dex: protocol
           ? [fromSwapProtocol(protocol)]
           : Object.values(Dex).filter(
               (dex) => !blockedProtocols?.includes(dex),
             ),
-        sell_token: tokenIn,
-        buy_token: tokenOut,
-        sell_amount: amountIn,
-        slippage: slippage / 100,
-        user_address: address,
-        numbers_have_decimals: true,
       }),
       response: ({
         quote: {
@@ -209,35 +220,39 @@ export const transformersMaker = ({
         },
         tx_cbor,
       }: CreateOrderResponse): Swap.CreateResponse => ({
-        cbor: tx_cbor,
         aggregator: Swap.Aggregator.Muesliswap,
         aggregatorFee: 0,
         frontendFee: 0,
+        cbor: tx_cbor,
+
+        netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
         batcherFee: Number(total_batcher_fee),
         deposits: Number(total_deposit),
         totalFee: Number(total_lvl_attached),
         totalInput: Number(total_input),
         totalOutput: Number(total_output),
-        netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
         totalOutputWithoutSlippage: Number(total_output_without_slippage),
-        splits: splits.map(transformSplit),
+        splits: splits.map(toSwapSplit),
       }),
     },
+
     createLimit: {
       request: ({
-        protocol = Swap.Protocol.Muesliswap_v2,
+        protocol = Swap.Protocol.Unsupported,
+        wantedPrice = 0,
+
         tokenIn,
         tokenOut,
         amountIn,
-        wantedPrice = 0,
       }: Swap.CreateRequest): LimitOrderRequest => ({
         dex: fromSwapProtocol(protocol),
+        buy_amount: amountIn * wantedPrice,
+
+        numbers_have_decimals: true,
         sell_token: tokenIn,
         buy_token: tokenOut,
         sell_amount: amountIn,
-        buy_amount: amountIn * wantedPrice,
         user_address: address,
-        numbers_have_decimals: true,
       }),
       response: ({tx_cbor}: LimitOrderResponse): Swap.CreateResponse => ({
         cbor: tx_cbor,
@@ -259,7 +274,7 @@ export const transformersMaker = ({
   } as const
 }
 
-const transformSplit = ({
+const toSwapSplit = ({
   amount_in,
   batcher_fee,
   deposit,
@@ -272,12 +287,6 @@ const transformSplit = ({
   price_impact,
   source_id,
 }: Split): Swap.Split => ({
-  amountIn: Number(amount_in),
-  batcherFee: Number(batcher_fee),
-  deposits: Number(deposit),
-  protocol: toSwapProtocol(dex),
-  expectedOutput: Number(expected_output),
-  expectedOutputWithoutSlippage: Number(expected_output_without_slippage),
   fee: pool_fee,
   finalPrice: final_price,
   initialPrice: initial_price,
@@ -285,6 +294,14 @@ const transformSplit = ({
   poolId: source_id,
   priceDistortion: price_impact,
   priceImpact: price_impact,
+
+  amountIn: Number(amount_in),
+  batcherFee: Number(batcher_fee),
+  deposits: Number(deposit),
+  expectedOutput: Number(expected_output),
+  expectedOutputWithoutSlippage: Number(expected_output_without_slippage),
+
+  protocol: toSwapProtocol(dex),
 })
 
 export const toSwapProtocol = (dex: Dex): Swap.Protocol =>

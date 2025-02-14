@@ -26,7 +26,7 @@ import {isDex} from './validators'
 export const ptIdDh =
   '000000000000000000000000000000000000000000000000000000006c6f76656c616365'
 
-const transformSplit = ({
+const toSwapSplit = ({
   amount_in = 0,
   batcher_fee = 0,
   deposits = 0,
@@ -108,6 +108,7 @@ export const transformersMaker = ({
           },
         ),
     },
+
     orders: {
       response: (res: OrdersResponse): Array<Swap.Order> =>
         res.map(
@@ -139,7 +140,6 @@ export const transformersMaker = ({
 
             placedAt: new Date(submission_time).getTime(),
             lastUpdate: new Date(last_update).getTime(),
-
             aggregator: is_dexhunter
               ? Swap.Aggregator.Dexhunter
               : Swap.Aggregator.Muesliswap,
@@ -149,6 +149,7 @@ export const transformersMaker = ({
           }),
         ),
     },
+
     protocols: {
       response: (): Array<Swap.AggregatorProtocol> =>
         Object.values(Dex)
@@ -158,6 +159,7 @@ export const transformersMaker = ({
             protocol,
           })),
     },
+
     cancel: {
       request: ({order}: Swap.CancelRequest): CancelRequest => ({
         address,
@@ -171,6 +173,7 @@ export const transformersMaker = ({
         additionalCancellationFee: additional_cancellation_fee,
       }),
     },
+
     estimate: {
       request: ({
         amountIn,
@@ -179,11 +182,12 @@ export const transformersMaker = ({
         tokenIn,
         tokenOut,
       }: Swap.EstimateRequest): EstimateRequest => ({
+        slippage,
         amount_in: amountIn,
+
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
           .filter(isDex),
-        slippage,
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
       }),
@@ -199,20 +203,23 @@ export const transformersMaker = ({
         total_output = 0,
         total_output_without_slippage = 0,
       }: EstimateResponse): Swap.EstimateResponse => ({
-        splits: splits?.map(transformSplit) ?? [],
-        batcherFee: batcher_fee,
         deposits,
+
+        splits: splits?.map(toSwapSplit) ?? [],
+        totalOutputWithoutSlippage: total_output_without_slippage,
+        totalInput:
+          splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0) ??
+          undefined,
+
+        batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: net_price,
         totalFee: total_fee,
         totalOutput: total_output,
-        totalOutputWithoutSlippage: total_output_without_slippage,
-        totalInput:
-          splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0) ??
-          undefined,
       }),
     },
+
     reverseEstimate: {
       request: ({
         amountOut,
@@ -221,11 +228,13 @@ export const transformersMaker = ({
         tokenIn,
         tokenOut,
       }: Swap.EstimateRequest): ReverseEstimateRequest => ({
+        slippage,
+
         amount_out: amountOut,
+
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
           .filter(isDex),
-        slippage,
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
       }),
@@ -240,67 +249,77 @@ export const transformersMaker = ({
         total_input = 0,
         total_output = 0,
       }: ReverseEstimateResponse): Swap.EstimateResponse => ({
-        splits: splits?.map(transformSplit) ?? [],
-        batcherFee: batcher_fee,
         deposits,
+
+        batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: net_price,
         totalFee: total_fee,
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
+
+        splits: splits?.map(toSwapSplit) ?? [],
         totalInput:
           (total_input ||
             splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0)) ??
           undefined,
       }),
     },
+
     limitEstimate: {
       request: ({
+        protocol = Swap.Protocol.Unsupported,
+        multiples = 1,
+
         amountIn,
         blockedProtocols,
-        protocol = Swap.Protocol.Splash_v1,
-        multiples = 1,
         tokenIn,
         tokenOut,
         wantedPrice,
       }: Swap.EstimateRequest): LimitEstimateRequest => ({
+        multiples,
+
         amount_in: amountIn,
+        wanted_price: wantedPrice,
+
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
           .filter(isDex),
         dex: fromSwapProtocol(protocol),
-        multiples,
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
-        wanted_price: wantedPrice,
       }),
       response: ({
+        splits,
+
         batcher_fee = 0,
         deposits = 0,
         dexhunter_fee = 0,
         net_price = 0,
         partner_fee = 0,
-        splits,
         total_fee = 0,
         total_input = 0,
         total_output = 0,
       }: LimitEstimateResponse): Swap.EstimateResponse => ({
-        splits: splits?.map(transformSplit) ?? [],
-        batcherFee: batcher_fee,
         deposits,
+
+        batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: net_price,
         totalFee: total_fee,
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
+
+        splits: splits?.map(toSwapSplit) ?? [],
         totalInput:
           (total_input ||
             splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0)) ??
           undefined,
       }),
     },
+
     limitBuild: {
       request: ({
         amountIn,
@@ -311,16 +330,18 @@ export const transformersMaker = ({
         tokenOut,
         wantedPrice,
       }: Swap.CreateRequest): LimitBuildRequest => ({
+        multiples,
+
+        buyer_address: address,
         amount_in: amountIn,
+        wanted_price: wantedPrice,
+
+        token_in: toTokenId(tokenIn),
+        token_out: toTokenId(tokenOut),
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
           .filter(isDex),
-        buyer_address: address,
         dex: protocol ? fromSwapProtocol(protocol) : undefined,
-        multiples,
-        token_in: toTokenId(tokenIn),
-        token_out: toTokenId(tokenOut),
-        wanted_price: wantedPrice,
       }),
       response: ({
         cbor = '',
@@ -333,46 +354,53 @@ export const transformersMaker = ({
         total_input = 0,
         total_output = 0,
       }: LimitBuildResponse): Swap.CreateResponse => ({
-        aggregator: Swap.Aggregator.Dexhunter,
         cbor,
-        splits: splits?.map(transformSplit) ?? [],
-        batcherFee: batcher_fee,
         deposits,
+
+        aggregator: Swap.Aggregator.Dexhunter,
+        batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
+        totalOutput: total_output,
         totalFee: totalFee,
+
+        splits: splits?.map(toSwapSplit) ?? [],
         totalInput:
           (total_input ||
             splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0)) ??
           0,
-        totalOutput: total_output,
       }),
     },
+
     build: {
       request: ({
+        slippage = 0,
+
         amountIn,
         blockedProtocols,
-        slippage = 0,
         tokenIn,
         tokenOut,
       }: Swap.CreateRequest): BuildRequest => ({
+        slippage,
+
         amount_in: amountIn,
+        buyer_address: address,
+
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
           .filter(isDex),
-        buyer_address: address,
-        slippage,
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
       }),
       response: ({
+        splits,
+
         cbor = '',
         batcher_fee = 0,
         deposits = 0,
         dexhunter_fee = 0,
         net_price = 0,
         partner_fee = 0,
-        splits,
         total_fee = 0,
         total_input = 0,
         total_output = 0,
@@ -380,25 +408,28 @@ export const transformersMaker = ({
       }: BuildResponse): Swap.CreateResponse => ({
         aggregator: Swap.Aggregator.Dexhunter,
         cbor,
-        batcherFee: batcher_fee,
         deposits,
+
+        batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: net_price,
+        totalOutput: total_output,
         totalFee: total_fee,
+        totalOutputWithoutSlippage: total_output_without_slippage,
+
         totalInput:
           (total_input ||
             splits?.reduce((acc, cur) => acc + (cur.amount_in ?? 0), 0)) ??
           0,
-        totalOutput: total_output,
-        totalOutputWithoutSlippage: total_output_without_slippage,
-        splits: splits?.map(transformSplit) ?? [],
+        splits: splits?.map(toSwapSplit) ?? [],
       }),
     },
+
     sign: {
       request: ({signatures, txCbor}: any): SignRequest => ({
-        Signatures: signatures,
         txCbor,
+        Signatures: signatures,
       }),
       response: ({cbor, strat_id}: SignResponse) => ({cbor, stratId: strat_id}),
     },
