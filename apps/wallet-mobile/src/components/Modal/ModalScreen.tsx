@@ -21,7 +21,7 @@ export const ModalScreen = () => {
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
 
   const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
-    if (swipeLocationY < nativeEvent.locationY && isOpen) {
+    if (swipeLocationY < nativeEvent.locationY && isOpen && canDiscard) {
       setSwipeLocationY(height)
       closeModal()
       return
