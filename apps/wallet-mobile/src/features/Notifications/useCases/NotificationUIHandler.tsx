@@ -3,9 +3,8 @@ import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
-import {useMemo} from 'react'
 
-import {isWalletSelectionRoute} from '../../../kernel/navigation'
+import {isTxHistoryRoute, isWalletSelectionRoute} from '../../../kernel/navigation'
 import {useNotificationDisplaySettings} from '../../Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {NotificationPopup} from './common/NotificationPopup'
@@ -16,7 +15,7 @@ const displayLimit = 3
 export const NotificationUIHandler = () => {
   const enabled = useNotificationDisplaySettings()
   const {events, removeEvent} = useCollectNewNotifications({enabled})
-  const last3Events = useMemo(() => events.slice(-displayLimit), [events])
+  const last3Events = React.useMemo(() => events.slice(-displayLimit), [events])
 
   if (last3Events.length === 0) {
     return null
@@ -45,6 +44,7 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
   const navigator = useNavigation()
   const navigatorState = navigator.getState()
   const isWalletSelectionScreen = React.useMemo(() => isWalletSelectionRoute(navigatorState), [navigatorState])
+  const isTxHistoryScreen = React.useMemo(() => isTxHistoryRoute(navigatorState), [navigatorState])
 
   React.useEffect(() => {
     if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen) return
@@ -57,14 +57,18 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
         pushEvent(event)
       }
 
-      if (event.trigger === Notifications.Trigger.TransactionReceived && event.metadata.walletId === selectedWalletId) {
+      if (
+        event.trigger === Notifications.Trigger.TransactionReceived &&
+        event.metadata.walletId === selectedWalletId &&
+        !isTxHistoryScreen
+      ) {
         pushEvent(event)
       }
     })
     return () => {
       subscription.unsubscribe()
     }
-  }, [manager, setEvents, selectedWalletId, enabled, isWalletSelectionScreen, walletManager.selected.network])
+  }, [manager, setEvents, selectedWalletId, enabled, isWalletSelectionScreen, isTxHistoryScreen, walletManager.selected.network])
 
   const removeEvent = (id: number) => {
     setEvents((e) => e.filter((ev) => ev.id !== id))
