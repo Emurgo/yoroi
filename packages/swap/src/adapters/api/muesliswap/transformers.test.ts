@@ -71,8 +71,11 @@ describe('transformers', () => {
 
   describe('create', () => {
     test('should correctly transform the create request', () => {
-      expect(transformers.create.request(api.inputs.create)).toEqual(
-        api.requests.create(address),
+      expect(transformers.create.request(api.inputs.create[0]!)).toEqual(
+        api.requests.create(address)[0],
+      )
+      expect(transformers.create.request(api.inputs.create[1]!)).toEqual(
+        api.requests.create(address)[1],
       )
     })
 
@@ -88,9 +91,6 @@ describe('transformers', () => {
       expect(
         transformers.createLimit.request(api.inputs.createLimit[0]!),
       ).toEqual(api.requests.createLimit(address))
-    })
-
-    test('should transform when missing wantedPrice/protocol, it will fail to fullfill', () => {
       expect(
         transformers.createLimit.request(api.inputs.createLimit[1]!),
       ).toEqual<CreateOrderRequest>({

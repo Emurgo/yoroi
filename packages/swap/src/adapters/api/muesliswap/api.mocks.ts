@@ -383,34 +383,57 @@ const createLimitRequest = (address: string): CreateOrderRequest => ({
   numbers_have_decimals: true,
 })
 
-const createInput: Swap.CreateRequest = {
-  tokenOut: 'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-  tokenIn: '.',
-  amountIn: 1,
-}
+const createInput: Array<Swap.CreateRequest> = [
+  {
+    tokenOut:
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
+    tokenIn: '.',
+    amountIn: 1,
+  },
+  {
+    tokenOut:
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
+    tokenIn: '.',
+    amountIn: 1,
+    protocol: 'minswap-v1',
+    slippage: 2,
+  },
+]
 
-const createRequest = (address: string): CreateOrderRequest => ({
-  sell_token: '.',
-  sell_amount: 1,
-  user_address: address,
-  buy_token:
-    'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-  dex: [
-    'muesliswap-v2',
-    'muesliswap-clp',
-    'minswap-v1',
-    'minswap-v2',
-    'minswap-stable',
-    'spectrum-v1',
-    'teddy-v1',
-    'wingriders-v1',
-    'vyfi-v1',
-    'sundaeswap-v1',
-    'sundaeswap-v3',
-  ],
-  numbers_have_decimals: true,
-  slippage: 0,
-})
+const createRequest = (address: string): Array<CreateOrderRequest> => [
+  {
+    sell_token: '.',
+    sell_amount: 1,
+    user_address: address,
+    buy_token:
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
+    dex: [
+      'muesliswap-v2',
+      'muesliswap-clp',
+      'minswap-v1',
+      'minswap-v2',
+      'minswap-stable',
+      'spectrum-v1',
+      'teddy-v1',
+      'wingriders-v1',
+      'vyfi-v1',
+      'sundaeswap-v1',
+      'sundaeswap-v3',
+    ],
+    numbers_have_decimals: true,
+    slippage: 0,
+  },
+  {
+    sell_token: '.',
+    sell_amount: 1,
+    user_address: address,
+    buy_token:
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
+    dex: ['minswap-v1'],
+    numbers_have_decimals: true,
+    slippage: 0.02,
+  },
+]
 
 const createResponse: CreateOrderResponse = {
   quote: {
