@@ -68,7 +68,15 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
     return () => {
       subscription.unsubscribe()
     }
-  }, [manager, setEvents, selectedWalletId, enabled, isWalletSelectionScreen, isTxHistoryScreen, walletManager.selected.network])
+  }, [
+    manager,
+    setEvents,
+    selectedWalletId,
+    enabled,
+    isWalletSelectionScreen,
+    isTxHistoryScreen,
+    walletManager.selected.network,
+  ])
 
   const removeEvent = (id: number) => {
     setEvents((e) => e.filter((ev) => ev.id !== id))
