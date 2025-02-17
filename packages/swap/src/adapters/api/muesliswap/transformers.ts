@@ -61,9 +61,8 @@ export const transformersMaker = ({
       response: ({orders}: OrdersHistoryResponse): Array<Swap.Order> =>
         orders.map(
           ({
-            dex = Dex.Muesliswap_v2,
-            outputIdx = 0,
-
+            dex,
+            outputIdx,
             fromToken,
             toToken,
             placedAt,
@@ -84,7 +83,7 @@ export const transformersMaker = ({
             tokenOut: toToken,
 
             updateTxHash: finalizedTxHash ?? txHash,
-            placedAt: placedAt ? placedAt * 1000 : undefined,
+            placedAt: placedAt * 1000,
             lastUpdate: finalizedAt ? finalizedAt * 1000 : undefined,
             amountIn: Number(fromAmount),
             actualAmountOut: Number(receivedAmount),
