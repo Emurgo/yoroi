@@ -3,7 +3,6 @@ import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
-import {useMemo} from 'react'
 
 import {isTxHistoryRoute, isWalletSelectionRoute} from '../../../kernel/navigation'
 import {useNotificationDisplaySettings} from '../../Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
@@ -16,7 +15,7 @@ const displayLimit = 3
 export const NotificationUIHandler = () => {
   const enabled = useNotificationDisplaySettings()
   const {events, removeEvent} = useCollectNewNotifications({enabled})
-  const last3Events = useMemo(() => events.slice(-displayLimit), [events])
+  const last3Events = React.useMemo(() => events.slice(-displayLimit), [events])
 
   if (last3Events.length === 0) {
     return null
