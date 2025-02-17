@@ -107,6 +107,12 @@ describe('transformers', () => {
         dex: Dex.Unsupported,
       })
     })
+
+    test('should correctly transform the createLimit response', () => {
+      expect(
+        transformers.createLimit.response(api.responses.createLimit),
+      ).toEqual(api.results.createLimit)
+    })
   })
 
   describe('protocols', () => {
