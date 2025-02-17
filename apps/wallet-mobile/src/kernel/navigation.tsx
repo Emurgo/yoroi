@@ -665,3 +665,14 @@ export const isWalletSelectionRoute = (state: Partial<NavigationState> | Navigat
     (routes.length === 2 && routes[1] === walletSelectionRoute)
   )
 }
+
+export const isTxHistoryRoute = (state: Partial<NavigationState> | NavigationState['routes'][0]['state']) => {
+  const routes = getFocusedRouteName(state)
+
+  const historyListRouteName: keyof TxHistoryRoutes = 'history-list'
+  const mainHistoryRouteName: keyof WalletTabRoutes = 'history'
+
+  const lastRouteName = routes[routes.length - 1]
+
+  return lastRouteName === historyListRouteName || lastRouteName === mainHistoryRouteName
+}

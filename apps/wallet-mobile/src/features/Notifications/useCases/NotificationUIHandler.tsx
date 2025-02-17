@@ -5,7 +5,7 @@ import {Notifications} from '@yoroi/types'
 import * as React from 'react'
 import {useMemo} from 'react'
 
-import {isWalletSelectionRoute} from '../../../kernel/navigation'
+import {isTxHistoryRoute, isWalletSelectionRoute} from '../../../kernel/navigation'
 import {useNotificationDisplaySettings} from '../../Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {NotificationPopup} from './common/NotificationPopup'
@@ -45,9 +45,10 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
   const navigator = useNavigation()
   const navigatorState = navigator.getState()
   const isWalletSelectionScreen = React.useMemo(() => isWalletSelectionRoute(navigatorState), [navigatorState])
+  const isTxHistoryScreen = React.useMemo(() => isTxHistoryRoute(navigatorState), [navigatorState])
 
   React.useEffect(() => {
-    if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen) return
+    if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen || isTxHistoryScreen) return
     const pushEvent = (event: Notifications.Event) => {
       setEvents((e) => [...e, event])
     }
@@ -64,7 +65,7 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
     return () => {
       subscription.unsubscribe()
     }
-  }, [manager, setEvents, selectedWalletId, enabled, isWalletSelectionScreen])
+  }, [manager, setEvents, selectedWalletId, enabled, isWalletSelectionScreen, isTxHistoryScreen])
 
   const removeEvent = (id: number) => {
     setEvents((e) => e.filter((ev) => ev.id !== id))
