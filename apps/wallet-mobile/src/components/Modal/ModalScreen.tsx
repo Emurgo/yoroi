@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useCardAnimation} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
-import React, {useCallback} from 'react'
+import React from 'react'
 import {Animated, BackHandler, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 
@@ -22,7 +22,7 @@ export const ModalScreen = () => {
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
 
   useFocusEffect(
-    useCallback(() => {
+    React.useCallback(() => {
       const onBackPress = () => {
         if (canDiscard) {
           closeModal()
