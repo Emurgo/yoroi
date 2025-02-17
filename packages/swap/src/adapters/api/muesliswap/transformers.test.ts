@@ -7,7 +7,7 @@ import {
   transformersMaker,
 } from './transformers'
 import {api, primaryTokenInfo} from './api.mocks'
-import {Dex} from './types'
+import {CreateOrderRequest, Dex} from './types'
 
 const address =
   'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl'
@@ -80,6 +80,24 @@ describe('transformers', () => {
       expect(transformers.create.response(api.responses.create)).toEqual(
         api.results.create,
       )
+    })
+  })
+
+  describe('createLimit', () => {
+    test('should correctly transform the createLimit request', () => {
+      expect(
+        transformers.createLimit.request(api.inputs.createLimit[0]!),
+      ).toEqual(api.requests.createLimit(address))
+    })
+
+    test('should transform when missing wantedPrice/protocol, it will fail to fullfill', () => {
+      expect(
+        transformers.createLimit.request(api.inputs.createLimit[1]!),
+      ).toEqual<CreateOrderRequest>({
+        ...api.requests.createLimit(address),
+        buy_amount: 0,
+        dex: Dex.Unsupported,
+      })
     })
   })
 

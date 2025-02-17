@@ -131,7 +131,7 @@ export type CreateOrderRequest = {
   sell_amount?: number
   user_address: string
   slippage?: number
-  dex?: ReadonlyArray<Dex>
+  dex?: ReadonlyArray<Dex> | Dex
   partner?: string
   numbers_have_decimals?: boolean
 }

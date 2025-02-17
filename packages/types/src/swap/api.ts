@@ -63,13 +63,13 @@ export type SwapCreateRequest = {
   blockedProtocols?: Array<SwapProtocol>
 } & (
   | {
-      multiples?: number
       wantedPrice?: number
       slippage?: undefined
+      multiples?: number
     }
   | {
-      slippage: number
       wantedPrice?: undefined
+      slippage: number
       multiples?: undefined
     }
 )

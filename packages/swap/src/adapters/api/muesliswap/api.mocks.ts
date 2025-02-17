@@ -354,6 +354,35 @@ const quoteResult: Swap.EstimateResponse = {
   totalOutputWithoutSlippage: 1130,
 }
 
+const createLimitInput: Array<Swap.CreateRequest> = [
+  {
+    tokenOut:
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
+    tokenIn: '.',
+    wantedPrice: 1,
+    amountIn: 1,
+    protocol: 'minswap-v1',
+  },
+  // NOTE: missing data
+  {
+    tokenOut:
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
+    tokenIn: '.',
+    amountIn: 1,
+  },
+]
+
+const createLimitRequest = (address: string): CreateOrderRequest => ({
+  sell_token: '.',
+  sell_amount: 1,
+  user_address: address,
+  buy_token:
+    'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
+  buy_amount: 1,
+  dex: 'minswap-v1',
+  numbers_have_decimals: true,
+})
+
 const createInput: Swap.CreateRequest = {
   tokenOut: 'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
   tokenIn: '.',
@@ -457,11 +486,13 @@ export const api = {
     cancel: cancelInput,
     quote: quoteInput,
     create: createInput,
+    createLimit: createLimitInput,
   },
   requests: {
     cancel: cancelRequest,
     quote: quoteRequest,
     create: createRequest,
+    createLimit: createLimitRequest,
   },
   responses: {
     tokens: tokensResponse,
