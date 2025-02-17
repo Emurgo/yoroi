@@ -60,6 +60,24 @@ describe('transformers', () => {
       expect(transformers.quote.request(api.inputs.quote)).toEqual(
         api.requests.quote,
       )
+
+      const input = {...api.inputs.quote, protocol: undefined}
+      const request = {
+        ...api.requests.quote,
+        dex: [
+          'muesliswap-v2',
+          'muesliswap-clp',
+          'minswap-v1',
+          'minswap-v2',
+          'minswap-stable',
+          'spectrum-v1',
+          'teddy-v1',
+          'vyfi-v1',
+          'sundaeswap-v1',
+          'sundaeswap-v3',
+        ],
+      }
+      expect(transformers.quote.request(input)).toEqual(request)
     })
 
     test('should correctly transform the quote response', () => {
@@ -74,6 +92,10 @@ describe('transformers', () => {
       expect(transformers.limitQuote.request(api.inputs.quoteLimit)).toEqual(
         api.requests.quoteLimit,
       )
+
+      const input = {...api.inputs.quoteLimit, protocol: undefined}
+      const request = {...api.requests.quoteLimit, dex: undefined}
+      expect(transformers.limitQuote.request(input)).toEqual(request)
     })
   })
 
