@@ -1,7 +1,8 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {useCardAnimation} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
+import {Animated, BackHandler, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
@@ -19,6 +20,19 @@ export const ModalScreen = () => {
   // NOTE: this is to fill the bottom of the screen with the same color as the modal
   const {bottom} = useSafeAreaInsets()
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        if (canDiscard) {
+          closeModal()
+        }
+        return true // disable normal behaviour
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [canDiscard, closeModal]),
+  )
 
   const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
     if (swipeLocationY < nativeEvent.locationY && isOpen && canDiscard) {
