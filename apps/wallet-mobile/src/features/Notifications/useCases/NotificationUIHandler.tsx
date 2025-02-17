@@ -54,15 +54,15 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
     }
 
     const subscription = manager.newEvents$.subscribe((event) => {
-      if (
-        event.trigger === Notifications.Trigger.RewardsUpdated &&
-        event.metadata.walletId === selectedWalletId &&
-        !isTxHistoryScreen
-      ) {
+      if (event.trigger === Notifications.Trigger.RewardsUpdated && event.metadata.walletId === selectedWalletId) {
         pushEvent(event)
       }
 
-      if (event.trigger === Notifications.Trigger.TransactionReceived && event.metadata.walletId === selectedWalletId) {
+      if (
+        event.trigger === Notifications.Trigger.TransactionReceived &&
+        event.metadata.walletId === selectedWalletId &&
+        !isTxHistoryScreen
+      ) {
         pushEvent(event)
       }
     })
