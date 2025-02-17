@@ -269,6 +269,23 @@ const cancelResult: Swap.CancelResponse = {
   cbor: cancelResponse.tx_cbor,
 }
 
+const quoteLimitInput: Swap.EstimateRequest = {
+  slippage: 0.01,
+  tokenIn: '.',
+  amountOut: 1,
+  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  protocol: 'minswap-v1',
+}
+
+const quoteLimitRequest: QuoteRequest = {
+  buy_amount: 0,
+  buy_token: quoteLimitInput.tokenOut,
+  dex: 'minswap-v1',
+  numbers_have_decimals: true,
+  sell_amount: 0,
+  sell_token: quoteLimitInput.tokenIn,
+}
+
 const quoteInput: Swap.EstimateRequest = {
   slippage: 0.01,
   tokenIn: '.',
@@ -508,12 +525,14 @@ export const api = {
   inputs: {
     cancel: cancelInput,
     quote: quoteInput,
+    quoteLimit: quoteLimitInput,
     create: createInput,
     createLimit: createLimitInput,
   },
   requests: {
     cancel: cancelRequest,
     quote: quoteRequest,
+    quoteLimit: quoteLimitRequest,
     create: createRequest,
     createLimit: createLimitRequest,
   },

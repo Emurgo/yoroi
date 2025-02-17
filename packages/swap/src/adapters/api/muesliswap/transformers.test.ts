@@ -69,6 +69,14 @@ describe('transformers', () => {
     })
   })
 
+  describe('quoteLimit', () => {
+    test('should correctly transform the quote request', () => {
+      expect(transformers.limitQuote.request(api.inputs.quoteLimit)).toEqual(
+        api.requests.quoteLimit,
+      )
+    })
+  })
+
   describe('create', () => {
     test('should correctly transform the create request', () => {
       expect(transformers.create.request(api.inputs.create[0]!)).toEqual(

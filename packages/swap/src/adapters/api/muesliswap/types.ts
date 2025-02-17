@@ -143,7 +143,7 @@ export type QuoteRequest = {
   sell_amount?: number
   slippage?: number
   // TODO: @jorbuedo it looks to accept string/array of strings
-  dex?: ReadonlyArray<Dex>
+  dex?: ReadonlyArray<Dex> | Dex
   partner?: string
   numbers_have_decimals?: boolean
 }
