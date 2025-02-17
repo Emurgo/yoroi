@@ -48,13 +48,17 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
   const isTxHistoryScreen = React.useMemo(() => isTxHistoryRoute(navigatorState), [navigatorState])
 
   React.useEffect(() => {
-    if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen || isTxHistoryScreen) return
+    if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen) return
     const pushEvent = (event: Notifications.Event) => {
       setEvents((e) => [...e, event])
     }
 
     const subscription = manager.newEvents$.subscribe((event) => {
-      if (event.trigger === Notifications.Trigger.RewardsUpdated && event.metadata.walletId === selectedWalletId) {
+      if (
+        event.trigger === Notifications.Trigger.RewardsUpdated &&
+        event.metadata.walletId === selectedWalletId &&
+        !isTxHistoryScreen
+      ) {
         pushEvent(event)
       }
 
