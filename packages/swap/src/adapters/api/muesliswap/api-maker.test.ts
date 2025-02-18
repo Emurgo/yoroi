@@ -1,5 +1,5 @@
 import {fetchData} from '@yoroi/common'
-import {Chain} from '@yoroi/types'
+import {Api, Chain} from '@yoroi/types'
 
 import {MuesliswapApiConfig, muesliswapApiMaker} from './api-maker'
 import {api} from './api.mocks'
@@ -7,6 +7,7 @@ import {api} from './api.mocks'
 jest.mock('@yoroi/common', () => ({
   fetchData: jest.fn(),
   isLeft: jest.requireActual('@yoroi/common').isLeft,
+  difference: jest.requireActual('@yoroi/common').difference,
 }))
 
 describe('muesliswapApiMaker', () => {
@@ -53,7 +54,7 @@ describe('muesliswapApiMaker', () => {
       mockFetchData.mockResolvedValueOnce({
         tag: 'right',
         value: {
-          status: 200,
+          status: Api.HttpStatusCode.Ok,
           data: api.responses.tokens,
         },
       })
@@ -95,7 +96,7 @@ describe('muesliswapApiMaker', () => {
       mockFetchData.mockResolvedValueOnce({
         tag: 'right',
         value: {
-          status: 200,
+          status: Api.HttpStatusCode.Ok,
           data: api.responses.orders,
         },
       })
@@ -140,7 +141,7 @@ describe('muesliswapApiMaker', () => {
       mockFetchData.mockResolvedValueOnce({
         tag: 'right',
         value: {
-          status: 200,
+          status: Api.HttpStatusCode.Ok,
           data: {},
         },
       })
@@ -159,7 +160,7 @@ describe('muesliswapApiMaker', () => {
       mockFetchData.mockResolvedValueOnce({
         tag: 'right',
         value: {
-          status: 200,
+          status: Api.HttpStatusCode.Ok,
           data: api.responses.quote,
         },
       })
@@ -184,7 +185,7 @@ describe('muesliswapApiMaker', () => {
       mockFetchData.mockResolvedValueOnce({
         tag: 'right',
         value: {
-          status: 200,
+          status: Api.HttpStatusCode.Ok,
           data: api.responses.quote,
         },
       })
@@ -207,6 +208,112 @@ describe('muesliswapApiMaker', () => {
         },
       )
       expect(result.tag).toBe('right')
+    })
+  })
+
+  describe('create()', () => {
+    it('calls /order if no wantedPrice', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: api.responses.create,
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.create(api.inputs.create[0]!)
+
+      expect(mockFetchData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          url: 'https://aggregator-v2.muesliswap.com/order',
+          method: 'post',
+        }),
+        {
+          params: expect.any(Object),
+        },
+      )
+      expect(result.tag).toBe('right')
+    })
+
+    it('calls /limit_order if wantedPrice is provided', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: api.responses.createLimit,
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.create(api.inputs.createLimit[0]!)
+
+      expect(mockFetchData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          url: 'https://aggregator-v2.muesliswap.com/limit_order',
+          method: 'post',
+        }),
+        {
+          params: expect.any(Object),
+        },
+      )
+      expect(result.tag).toBe('right')
+    })
+  })
+
+  describe('cancel()', () => {
+    it('calls /cancel endpoint successfully', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: api.responses.cancel,
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.cancel(api.inputs.cancel[0]!)
+
+      expect(mockFetchData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          url: 'https://aggregator-v2.muesliswap.com/cancel',
+          method: 'post',
+        }),
+        {
+          params: expect.any(Object),
+        },
+      )
+      expect(result.tag).toBe('right')
+    })
+
+    it('handles error response', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'left',
+        error: {
+          status: 500,
+          message: 'Cancel error',
+          responseData: {detail: 'could not cancel'},
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.cancel(api.inputs.cancel[1]!)
+
+      if (result.tag !== 'left') fail()
+      expect(result.tag).toBe('left')
+      expect(result.error.message).toContain('could not cancel')
+    })
+  })
+
+  describe('protocols()', () => {
+    it('returns a right result with transformed data', async () => {
+      const muesliApi = muesliswapApiMaker(config)
+
+      const result = await muesliApi.protocols()
+
+      if (result.tag !== 'right') fail()
+      expect(result.tag).toBe('right')
+      expect(result.value.status).toBe(Api.HttpStatusCode.Ok)
     })
   })
 })
