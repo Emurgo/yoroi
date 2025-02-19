@@ -39,6 +39,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
         [Swap.Aggregator.Muesliswap]: muesliswapApi,
       },
       config,
+      primaryTokenInfo.id,
     ),
     assignConfig: (v: Swap.ManagerConfig): Swap.ManagerConfig =>
       Object.assign(config, v),
@@ -51,8 +52,9 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
 const apiManagerMaker = (
   adapters: Record<Swap.Aggregator, Swap.Api>,
   config: Swap.ManagerConfig,
+  ptId: Portfolio.Token.Id,
 ): Swap.Api => {
-  const autoApi = autoApiMaker(adapters)
+  const autoApi = autoApiMaker(adapters, ptId)
   return new Proxy(
     {},
     {
@@ -71,9 +73,10 @@ const apiManagerMaker = (
 
 const autoApiMaker = (
   adapters: Record<Swap.Aggregator, Swap.Api>,
+  ptId: Portfolio.Token.Id,
 ): Swap.Api => {
-  const dhTokenList = new Set<Portfolio.Token.Id>(['.'])
-  const msTokenList = new Set<Portfolio.Token.Id>(['.'])
+  const dhTokenList = new Set<Portfolio.Token.Id>([ptId])
+  const msTokenList = new Set<Portfolio.Token.Id>([ptId])
 
   return freeze(
     {
@@ -103,7 +106,7 @@ const autoApiMaker = (
         return {
           tag: 'right',
           value: {
-            status: 200,
+            status: Api.HttpStatusCode.Ok,
             data: Object.values(merged),
           },
         }
@@ -135,7 +138,7 @@ const autoApiMaker = (
         return {
           tag: 'right',
           value: {
-            status: 200,
+            status: Api.HttpStatusCode.Ok,
             data: Object.values(merged),
           },
         }
@@ -155,7 +158,7 @@ const autoApiMaker = (
         return {
           tag: 'right',
           value: {
-            status: 200,
+            status: Api.HttpStatusCode.Ok,
             data: [
               ...dexhunterResponse.value.data,
               ...muesliswapResponse.value.data,
@@ -199,7 +202,7 @@ const autoApiMaker = (
         return {
           tag: 'right',
           value: {
-            status: 200,
+            status: Api.HttpStatusCode.Ok,
             data: bestEstimate,
           },
         }
@@ -240,7 +243,7 @@ const autoApiMaker = (
         return {
           tag: 'right',
           value: {
-            status: 200,
+            status: Api.HttpStatusCode.Ok,
             data: bestCreate,
           },
         }
