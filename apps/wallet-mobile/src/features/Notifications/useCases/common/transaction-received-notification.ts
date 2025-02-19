@@ -5,6 +5,7 @@ import {Subject} from 'rxjs'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {TRANSACTION_DIRECTION} from '../../../../yoroi-wallets/types/other'
+import {SyncWalletInfo} from '../../../WalletManager/common/types'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {walletManager} from '../../../WalletManager/wallet-manager'
 import {generateNotificationId} from './notifications'
@@ -15,10 +16,10 @@ const storageKey = 'transaction-received-notification-history'
 type BuildNotificationsParams = {
   appStorage: App.Storage
   sinceDate: Date
+  walletIds: string[]
 }
 
-const buildNotifications = async ({appStorage, sinceDate}: BuildNotificationsParams) => {
-  const walletIds = [...walletManager.walletMetas.keys()]
+const buildNotifications = async ({appStorage, sinceDate, walletIds}: BuildNotificationsParams) => {
   const notifications: NotificationTypes.TransactionReceivedEvent[] = []
 
   for (const walletId of walletIds) {
@@ -87,22 +88,29 @@ export const transactionReceivedSubject = new Subject<NotificationTypes.Transact
 export const useTransactionReceivedNotifications = ({enabled}: {enabled: boolean}) => {
   const {walletManager} = useWalletManager()
   const asyncStorage = useAsyncStorage()
+  const walletId = walletManager.selectedWalledId
 
   React.useEffect(() => {
-    if (!enabled) return
+    if (!enabled || !walletId) return
     const subscriptionBeginDate = new Date()
+    let latestStatuses: Map<string, SyncWalletInfo> = new Map()
     const subscription = walletManager.syncWalletInfos$.subscribe(async (status) => {
-      const walletInfos = Array.from(status.values())
-      const walletsDoneSyncing = walletInfos.filter((info) => info.status === 'done')
-      const areAllDone = walletsDoneSyncing.length === walletInfos.length
-      if (!areAllDone) return
+      const selectedWalletOldStatus = latestStatuses.get(walletId)
+      const selectedWalletCurrentStatus = status.get(walletId)
+      latestStatuses = status
 
-      const notifications = await buildNotifications({appStorage: asyncStorage, sinceDate: subscriptionBeginDate})
-      notifications.forEach((notification) => transactionReceivedSubject.next(notification))
+      if (selectedWalletOldStatus?.status !== 'done' && selectedWalletCurrentStatus?.status === 'done') {
+        const notifications = await buildNotifications({
+          appStorage: asyncStorage,
+          sinceDate: subscriptionBeginDate,
+          walletIds: [walletId],
+        })
+        notifications.forEach((notification) => transactionReceivedSubject.next(notification))
+      }
     })
 
     return () => {
       subscription.unsubscribe()
     }
-  }, [walletManager, asyncStorage, enabled])
+  }, [walletManager, asyncStorage, enabled, walletId, walletManager.selectedNetwork])
 }

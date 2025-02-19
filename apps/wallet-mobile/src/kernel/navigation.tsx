@@ -10,6 +10,7 @@ import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, View} fro
 import {Icon} from '../components/Icon'
 import {OnConfirm} from '../features/ReviewTx/common/hooks/useOnConfirm'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
+import {compareArrays} from '../yoroi-wallets/utils/utils'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -665,4 +666,12 @@ export const isWalletSelectionRoute = (state: Partial<NavigationState> | Navigat
     (routes.length === 1 && routes[0] === manageWalletsRoute) ||
     (routes.length === 2 && routes[1] === walletSelectionRoute)
   )
+}
+
+export const isTxHistoryRoute = (state: Partial<NavigationState> | NavigationState['routes'][0]['state']) => {
+  const routes = getFocusedRouteName(state)
+  type RoutePath = keyof AppRoutes | keyof WalletStackRoutes | keyof WalletTabRoutes | keyof TxHistoryRoutes
+  const fullRoutePath: RoutePath[] = ['manage-wallets', 'main-wallet-routes', 'history', 'history-list']
+  const pathToCompare = fullRoutePath.slice(0, routes.length)
+  return routes.length > 1 && compareArrays(pathToCompare, routes)
 }
