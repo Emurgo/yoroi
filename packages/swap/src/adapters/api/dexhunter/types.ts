@@ -145,7 +145,7 @@ export type LimitEstimateRequest = {
 
 export type LimitEstimateResponse = {
   batcher_fee?: number
-  blacklisted_dexes?: Dex[]
+  blacklisted_dexes?: Dex[] | null
   deposits?: number
   dexhunter_fee?: number
   net_price?: number

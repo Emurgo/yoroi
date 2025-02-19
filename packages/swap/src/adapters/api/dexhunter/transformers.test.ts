@@ -90,6 +90,12 @@ describe('transformers', () => {
         transformers.limitEstimate.request(api.inputs.limitEstimate),
       ).toEqual(api.requests.limitEstimate)
     })
+
+    test('should correctly transform the limit estimate response', () => {
+      expect(
+        transformers.limitEstimate.response(api.responses.limitEstimate),
+      ).toEqual(api.results.limitEstimate)
+    })
   })
 })
 

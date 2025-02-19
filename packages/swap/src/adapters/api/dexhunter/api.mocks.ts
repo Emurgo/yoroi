@@ -6,6 +6,7 @@ import {
   EstimateRequest,
   EstimateResponse,
   LimitEstimateRequest,
+  LimitEstimateResponse,
   OrdersResponse,
   ReverseEstimateRequest,
   ReverseEstimateResponse,
@@ -319,6 +320,68 @@ const limitEstimateRequest: LimitEstimateRequest = {
   wanted_price: 1,
 }
 
+const limitEstimateResponse: LimitEstimateResponse = {
+  splits: [
+    {
+      amount_in: 9223372036854.775,
+      expected_output: 9223372036854.775,
+      expected_output_without_slippage: 9223372036854.775,
+      fee: 4,
+      dex: 'VYFI',
+      price_impact: 874011.5392608035,
+      initial_price: 0.00011440337320702896,
+      final_price: 1.0000130865062424,
+      pool_id:
+        '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950VYFIaddr1wx6vzxyapfw4f4ragkvqtk3y473wj4sul3fr98xhguvazlse88lan',
+      batcher_fee: 2,
+      deposits: 2,
+      price_distortion: 871389.201643021,
+      pool_fee: 0.003,
+    },
+  ],
+  total_fee: 4,
+  total_output: 9223372036854.775,
+  deposits: 2,
+  batcher_fee: 2,
+  total_input: 1000000000000000,
+  possible_routes: {},
+  net_price: 1,
+  dexhunter_fee: 1,
+  blacklisted_dexes: null,
+  partner: '',
+  partner_fee: 0,
+}
+
+const limitEstimateResult: Swap.EstimateResponse = {
+  aggregatorFee: 1,
+  batcherFee: 2,
+  deposits: 2,
+  frontendFee: 0,
+  netPrice: 1,
+  splits: [
+    {
+      amountIn: 9223372036854.775,
+      batcherFee: 2,
+      deposits: 2,
+      expectedOutput: 9223372036854.775,
+      expectedOutputWithoutSlippage: 9223372036854.775,
+      fee: 4,
+      finalPrice: 1.0000130865062424,
+      initialPrice: 0.00011440337320702896,
+      poolFee: 0.003,
+      poolId:
+        '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950VYFIaddr1wx6vzxyapfw4f4ragkvqtk3y473wj4sul3fr98xhguvazlse88lan',
+      priceDistortion: 871389.201643021,
+      priceImpact: 874011.5392608035,
+      protocol: 'vyfi-v1',
+    },
+  ],
+  totalFee: 4,
+  totalInput: 1000000000000000,
+  totalOutput: 9223372036854.775,
+  totalOutputWithoutSlippage: 9223372036854.775,
+}
+
 const reverseEstimateInput: Swap.EstimateRequest = {
   slippage: 5,
   tokenIn: '.',
@@ -500,6 +563,7 @@ export const api = {
     cancel: cancelResponse,
     estimate: estimateResponse,
     reverseEstimate: reverseEstimateResponse,
+    limitEstimate: limitEstimateResponse,
   },
   results: {
     tokens: tokensResult,
@@ -507,5 +571,6 @@ export const api = {
     cancel: cancelResult,
     estimate: estimateResult,
     reverseEstimate: reverseEstimateResult,
+    limitEstimate: limitEstimateResult,
   },
 }
