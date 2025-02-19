@@ -55,7 +55,7 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
 
   if (event.trigger === Notifications.Trigger.TransactionReceived) {
     return (
-      <SwipeOutWrapper onSwipeOut={handleOnSwipeOut} onExpired={onExpired}>
+      <SwipeOutWrapper onSwipeOut={handleOnSwipeOut} onExpired={onExpired} onPress={handleOnPress}>
         <NotificationItem
           onPress={handleOnPress}
           icon={<TransactionReceivedIcon />}
@@ -68,7 +68,7 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
 
   if (event.trigger === Notifications.Trigger.RewardsUpdated) {
     return (
-      <SwipeOutWrapper onSwipeOut={handleOnSwipeOut} onExpired={onExpired}>
+      <SwipeOutWrapper onSwipeOut={handleOnSwipeOut} onExpired={onExpired} onPress={handleOnPress}>
         <NotificationItem
           onPress={handleOnPress}
           icon={<RewardsUpdatedIcon />}
