@@ -5,14 +5,15 @@ type Props = {
   children: React.ReactNode
   onSwipeOut: () => void
   onExpired: () => void
+  onPress: () => void
 }
 
 const notificationDisplayTime = 4 * 1000 // 4 seconds
 const fadeInTime = 200
 const fadeOutPaddingTime = 100
 
-export const SwipeOutWrapper = ({children, onSwipeOut, onExpired}: Props) => {
-  const {pan, panResponder, fadeIn, opacity, fadeOut, translateY} = usePanAnimation({onRelease: onSwipeOut})
+export const SwipeOutWrapper = ({children, onSwipeOut, onExpired, onPress}: Props) => {
+  const {pan, panResponder, fadeIn, opacity, fadeOut, translateY} = usePanAnimation({onRelease: onSwipeOut, onPress})
   const onExpiredRef = React.useRef(onExpired)
   onExpiredRef.current = onExpired
 
@@ -43,12 +44,13 @@ export const SwipeOutWrapper = ({children, onSwipeOut, onExpired}: Props) => {
   )
 }
 
-const usePanAnimation = ({onRelease}: {onRelease: () => void}) => {
+const usePanAnimation = ({onRelease, onPress}: {onRelease: () => void; onPress: () => void}) => {
   const pan = React.useRef(new Animated.ValueXY()).current
   const opacity = React.useRef(new Animated.Value(0)).current
   const translateY = React.useRef(new Animated.Value(-50)).current
   const screenWidth = Dimensions.get('window').width
   const screenLimitInPercentAfterWhichShouldRelease = 0.3
+  const slightMovementThreshold = 10
 
   const fadeIn = React.useCallback(() => {
     Animated.parallel([
@@ -93,17 +95,22 @@ const usePanAnimation = ({onRelease}: {onRelease: () => void}) => {
         }
       },
       onPanResponderRelease: (e, gestureState) => {
-        if (gestureState.dx > screenWidth * screenLimitInPercentAfterWhichShouldRelease) {
-          Animated.spring(pan, {
-            toValue: {x: screenWidth, y: 0},
-            useNativeDriver: false,
-          }).start(() => onRelease())
-        } else {
-          Animated.spring(pan, {
-            toValue: {x: 0, y: 0},
-            useNativeDriver: false,
-          }).start()
+        const shouldFinishSwipe = gestureState.dx > screenWidth * screenLimitInPercentAfterWhichShouldRelease
+
+        if (shouldFinishSwipe) {
+          Animated.spring(pan, {toValue: {x: screenWidth, y: 0}, useNativeDriver: false}).start(() => onRelease())
+          return
         }
+
+        const isSlightMovement =
+          Math.abs(gestureState.dx) < slightMovementThreshold && Math.abs(gestureState.dy) < slightMovementThreshold
+
+        if (isSlightMovement) {
+          onPress()
+          return
+        }
+
+        Animated.spring(pan, {toValue: {x: 0, y: 0}, useNativeDriver: false}).start()
       },
     }),
   ).current
