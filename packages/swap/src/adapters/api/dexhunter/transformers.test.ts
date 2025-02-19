@@ -83,6 +83,14 @@ describe('transformers', () => {
       ).toEqual(api.results.reverseEstimate)
     })
   })
+
+  describe('limitEstimate', () => {
+    test('should correctly transform the limit estimate request', () => {
+      expect(
+        transformers.limitEstimate.request(api.inputs.limitEstimate),
+      ).toEqual(api.requests.limitEstimate)
+    })
+  })
 })
 
 describe('toSwapProtocol', () => {

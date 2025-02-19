@@ -57,6 +57,7 @@ export const transformersMaker = ({
           })
           .filter((v): v is Portfolio.Token.Info => !!v),
     },
+
     ordersHistory: {
       response: ({orders}: OrdersHistoryResponse): Array<Swap.Order> =>
         orders.map(

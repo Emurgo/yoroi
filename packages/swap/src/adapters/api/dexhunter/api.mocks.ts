@@ -5,6 +5,7 @@ import {
   CancelResponse,
   EstimateRequest,
   EstimateResponse,
+  LimitEstimateRequest,
   OrdersResponse,
   ReverseEstimateRequest,
   ReverseEstimateResponse,
@@ -296,6 +297,28 @@ const cancelResult: Swap.CancelResponse = {
   additionalCancellationFee: cancelResponse.additional_cancellation_fee,
 }
 
+const limitEstimateInput: Swap.EstimateRequest = {
+  tokenIn: '.',
+  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  amountIn: 38,
+  protocol: 'minswap-v1',
+  blockedProtocols: ['wingriders-v1'],
+  amountOut: undefined,
+  multiples: 1,
+  wantedPrice: 1,
+  slippage: 0,
+}
+
+const limitEstimateRequest: LimitEstimateRequest = {
+  amount_in: 38,
+  blacklisted_dexes: ['WINGRIDER'],
+  dex: 'MINSWAP',
+  multiples: 1,
+  token_in: 'ADA',
+  token_out: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950',
+  wanted_price: 1,
+}
+
 const reverseEstimateInput: Swap.EstimateRequest = {
   slippage: 5,
   tokenIn: '.',
@@ -463,11 +486,13 @@ export const api = {
     cancel: cancelInput,
     estimate: estimateInput,
     reverseEstimate: reverseEstimateInput,
+    limitEstimate: limitEstimateInput,
   },
   requests: {
     cancel: cancelRequest,
     estimate: estimateRequest,
     reverseEstimate: reverseEstimateRequest,
+    limitEstimate: limitEstimateRequest,
   },
   responses: {
     tokens: tokensResponse,
