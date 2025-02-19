@@ -77,6 +77,10 @@
       "path": "./packages/claim"
     },
     {
+      "name": "@yoroi/blockchains",
+      "path": "./packages/blockchains"
+    },
+    {
       "name": "@yoroi/e2e-wallet-mobile",
       "path": "./e2e/wallet-mobile"
     },
