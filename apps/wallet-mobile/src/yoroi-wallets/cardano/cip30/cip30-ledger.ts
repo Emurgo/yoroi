@@ -6,6 +6,7 @@ import {HW, Wallet} from '@yoroi/types'
 
 import {toLedgerSignRequest} from '../../../features/Discover/common/ledger'
 import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
+import {buildCoseSign1FromSignature, makeCip8Key} from '../cip8/cip8'
 import {assertHasAllSigners} from '../common/signatureUtils'
 import {signMessageWithLedger, signTxWithLedger} from '../hw/hw'
 import {YoroiWallet} from '../types'
@@ -29,18 +30,33 @@ class CIP30LedgerExtension {
     try {
       const normalizedAddress = await normalizeToAddress(csl, address)
       if (!normalizedAddress) throw new Error('Invalid address')
+      const rewardAddress = await csl.RewardAddress.fromAddress(normalizedAddress)
+      const rewardAddressHex = await rewardAddress?.toAddress().then((a) => a.toHex())
+
+      const stakingSigningPath =
+        this.meta.implementation === 'cardano-cip1852'
+          ? cardanoConfig.implementations[this.meta.implementation].features.staking.addressing
+          : null
+
+      const signingPath =
+        rewardAddressHex === this.wallet.rewardAddressHex && Array.isArray(stakingSigningPath)
+          ? stakingSigningPath
+          : this.wallet.getAddressing(await normalizedAddress.toBech32(undefined)).path
+
       const ledgerPayload: MessageData = {
         messageHex: payload,
-        signingPath: this.wallet.getAddressing(await normalizedAddress.toBech32(undefined)).path,
+        signingPath,
         hashPayload: false,
         preferHexDisplay: false,
         addressFieldType: MessageAddressFieldType.KEY_HASH,
       }
       const response = await signMessageWithLedger(ledgerPayload, hwDeviceInfo, useUSB)
-      return {
-        signature: response.signatureHex,
-        key: response.signingPublicKeyHex,
-      }
+      return encodeHardwareWalletSignResult({
+        addressHex: response.addressFieldHex,
+        signatureHex: response.signatureHex,
+        payloadHex: payload,
+        signingPublicKeyHex: response.signingPublicKeyHex,
+      })
     } finally {
       release()
     }
@@ -75,5 +91,25 @@ class CIP30LedgerExtension {
     } finally {
       release()
     }
+  }
+}
+
+export async function encodeHardwareWalletSignResult(options: {
+  addressHex: string
+  signatureHex: string
+  payloadHex: string
+  signingPublicKeyHex: string
+}): Promise<{signature: string; key: string}> {
+  const coseSign1 = await buildCoseSign1FromSignature(
+    Buffer.from(options.addressHex, 'hex'),
+    Buffer.from(options.signatureHex, 'hex'),
+    Buffer.from(options.payloadHex, 'hex'),
+  )
+
+  const key = await makeCip8Key(Buffer.from(options.signingPublicKeyHex, 'hex'))
+
+  return {
+    signature: Buffer.from(await coseSign1.toBytes()).toString('hex'),
+    key: Buffer.from(await key.toBytes()).toString('hex'),
   }
 }

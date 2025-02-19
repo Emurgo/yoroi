@@ -1,6 +1,5 @@
 import * as CSL from '@emurgo/cross-csl-core'
 import {TransactionWitnessSet, WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {init} from '@emurgo/cross-msl-mobile'
 import {hashTransaction, RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
@@ -17,6 +16,7 @@ import {asQuantity, Utxos} from '../../utils/utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import {toAssetNameHex, toPolicyId} from '../api/utils'
 import * as cip8 from '../cip8/cip8'
+import {makeCip8Key} from '../cip8/cip8'
 import {getDerivationPathForAddress, getTransactionSigners} from '../common/signatureUtils'
 import {Pagination, YoroiWallet} from '../types'
 import {
@@ -28,8 +28,6 @@ import {
 } from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {wrappedCsl as getCSL} from '../wrappedCsl'
-
-const MSL = init('msl')
 
 export const cip30ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
   return new CIP30Extension(wallet, meta)
@@ -140,16 +138,7 @@ class CIP30Extension {
       const path = getDerivationPathForAddress(bech32Address, this.wallet, this.meta, true)
       const signingKey = await createRawTxSigningKey(rootKey, path)
       const coseSign1 = await cip8.sign(Buffer.from(await normalisedAddress.toHex(), 'hex'), signingKey, payloadInBytes)
-      const key = await MSL.COSEKey.new(await MSL.Label.fromKeyType(MSL.KeyType.OKP))
-      await key.setAlgorithmId(await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
-      await key.setHeader(
-        await MSL.Label.newInt(await MSL.Int.newNegative(await MSL.BigNum.fromStr('1'))),
-        await MSL.CBORValue.newInt(await MSL.Int.newI32(6)),
-      )
-      await key.setHeader(
-        await MSL.Label.newInt(await MSL.Int.newNegative(await MSL.BigNum.fromStr('2'))),
-        await MSL.CBORValue.newBytes(await (await signingKey.toPublic()).asBytes()),
-      )
+      const key = await makeCip8Key(await (await signingKey.toPublic()).asBytes())
 
       return {
         signature: Buffer.from(await coseSign1.toBytes()).toString('hex'),
