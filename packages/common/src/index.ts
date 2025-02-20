@@ -24,11 +24,15 @@ export * from './utils/predicates'
 export * from './utils/strings'
 export * from './utils/promises'
 
+export * from './logger/throw-logged-error'
+export * from './logger/to-logger-metadata'
+
 export * from './numbers/atomic-to-decimal'
 export * from './numbers/atomic-formatter'
 export * from './numbers/parse-decimal'
 export * from './numbers/atomic-breakdown'
 export * from './numbers/to-bigint'
+export * from './numbers/number-replacer'
 
 export * from './observer/observer'
 

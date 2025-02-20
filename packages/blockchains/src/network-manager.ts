@@ -1,12 +1,15 @@
 import {CardanoApi} from '@yoroi/api'
-import {mountAsyncStorage, mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
+import {
+  mountAsyncStorage,
+  mountMMKVStorage,
+  observableStorageMaker,
+} from '@yoroi/common'
 import {explorerManager} from '@yoroi/explorers'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
-import {Api, Chain, Network} from '@yoroi/types'
+import {Api, App, Chain, Network} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {logger} from '../../../kernel/logger/logger'
-import {NetworkTokenManagers} from '../common/types'
+import {NetworkTokenManagers} from './types'
 import {dateToEpochInfo} from './helpers/date-to-epoch-info'
 import {epochProgress} from './helpers/epoch-progress'
 
@@ -204,7 +207,9 @@ export const protocolParamsPlaceholder: Chain.Cardano.ProtocolParams = freeze({
   },
 })
 
-export const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<Network.Config>>> = freeze({
+export const networkConfigs: Readonly<
+  Record<Chain.SupportedNetworks, Readonly<Network.Config>>
+> = freeze({
   [Chain.Network.Mainnet]: {
     network: Chain.Network.Mainnet,
     primaryTokenInfo: primaryTokenInfoMainnet,
@@ -243,53 +248,64 @@ export const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<N
 
 export function buildNetworkManagers({
   tokenManagers,
+  logger,
   apiMaker = CardanoApi.cardanoApiMaker,
 }: {
   tokenManagers: NetworkTokenManagers
+  logger: App.Logger.Manager
   apiMaker?: ({network}: {network: Chain.SupportedNetworks}) => Api.Cardano.Api
 }): Readonly<Record<Chain.SupportedNetworks, Network.Manager>> {
-  const managers = Object.entries(networkConfigs).reduce<Record<Chain.SupportedNetworks, Network.Manager>>(
-    (networkManagers, [network, config]) => {
-      const tokenManager = tokenManagers[network as Chain.SupportedNetworks]
-      const networkRootStorage = mountMMKVStorage({path: `/`, id: `${network}.manager.v1`})
-      const rootStorage = observableStorageMaker(networkRootStorage)
-      const legacyRootStorage = observableStorageMaker(mountAsyncStorage({path: `/legacy/${network}/v1/`}))
-      const {getProtocolParams, getBestBlock, getUtxoData} = apiMaker({network: config.network})
-      const api = {
-        protocolParams: () =>
-          getProtocolParams().catch((error) => {
-            logger.error(`networkManager: ${network} protocolParams has failed, using hardcoded`, {error})
-            return Promise.resolve(protocolParamsPlaceholder)
-          }),
-        bestBlock: getBestBlock,
-        utxoData: getUtxoData,
-      }
+  const managers = Object.entries(networkConfigs).reduce<
+    Record<Chain.SupportedNetworks, Network.Manager>
+  >((networkManagers, [network, config]) => {
+    const tokenManager = tokenManagers[network as Chain.SupportedNetworks]
+    const networkRootStorage = mountMMKVStorage({
+      path: `/`,
+      id: `${network}.manager.v1`,
+    })
+    const rootStorage = observableStorageMaker(networkRootStorage)
+    const legacyRootStorage = observableStorageMaker(
+      mountAsyncStorage({path: `/legacy/${network}/v1/`}),
+    )
+    const {getProtocolParams, getBestBlock, getUtxoData} = apiMaker({
+      network: config.network,
+    })
+    const api = {
+      protocolParams: () =>
+        getProtocolParams().catch((error) => {
+          logger.error(
+            `networkManager: ${network} protocolParams has failed, using hardcoded`,
+            {error},
+          )
+          return Promise.resolve(protocolParamsPlaceholder)
+        }),
+      bestBlock: getBestBlock,
+      utxoData: getUtxoData,
+    }
 
-      const info = dateToEpochInfo(config.eras)
-      const epoch = {
-        info,
-        progress: (date: Date) => {
-          const currentInfo = info(date)
-          return epochProgress(currentInfo)(date)
-        },
-      }
+    const info = dateToEpochInfo(config.eras)
+    const epoch = {
+      info,
+      progress: (date: Date) => {
+        const currentInfo = info(date)
+        return epochProgress(currentInfo)(date)
+      },
+    }
 
-      const networkManager: Network.Manager = {
-        ...config,
-        tokenManager,
-        rootStorage,
-        // NOTE: it can't use the new rootStorage cuz all modules are async now 🥹
-        legacyRootStorage,
-        api,
-        explorers: explorerManager[network as Chain.SupportedNetworks],
-        epoch,
-      }
-      networkManagers[network as Chain.SupportedNetworks] = networkManager
+    const networkManager: Network.Manager = {
+      ...config,
+      tokenManager,
+      rootStorage,
+      // NOTE: it can't use the new rootStorage cuz all modules are async now 🥹
+      legacyRootStorage,
+      api,
+      explorers: explorerManager[network as Chain.SupportedNetworks],
+      epoch,
+    }
+    networkManagers[network as Chain.SupportedNetworks] = networkManager
 
-      return networkManagers
-    },
-    {} as Record<Chain.SupportedNetworks, Network.Manager>,
-  )
+    return networkManagers
+  }, {} as Record<Chain.SupportedNetworks, Network.Manager>)
 
   return freeze(managers, true)
 }
