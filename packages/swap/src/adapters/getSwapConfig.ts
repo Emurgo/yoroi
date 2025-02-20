@@ -11,7 +11,7 @@ export const getSwapConfig = async ({
   request?: FetchData
 } = {}): Promise<SwapConfig> => {
   const response = await request<SwapConfig>({
-    url: 'https://daehx1qv45z7c.cloudfront.net/data.json',
+    url: 'https://daehx1qv45z7c.cloudfront.net/swapConfig.json',
   })
 
   if (isLeft(response)) throw getApiError(response.error)
