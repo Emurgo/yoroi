@@ -56,3 +56,6 @@ export {
   makeStorageMaker,
   makeStorageMakerDefault,
 } from './adapters/async-storage/storage.mocks'
+
+// static
+export {getSwapConfig} from './adapters/getSwapConfig'

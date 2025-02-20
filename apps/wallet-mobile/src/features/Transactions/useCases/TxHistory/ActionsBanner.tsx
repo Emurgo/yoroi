@@ -16,6 +16,7 @@ import {useReceive} from '../../../Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../../../Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '../../../Receive/common/useReceiveAddressesStatus'
 import {useSwapForm} from '../../../Swap/common/SwapFormProvider'
+import {useSwapConfig} from '../../../Swap/common/useSwapConfig'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -33,8 +34,9 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
 
   const {reset: resetSendState} = useTransfer()
-  const {orderData} = useSwap()
-  const {resetSwapForm} = useSwapForm()
+  const {orderData, buyTokenInfoChanged} = useSwap()
+  const {buyTokenInfo} = useSwapConfig()
+  const {resetSwapForm, buyTouched} = useSwapForm()
 
   const {track} = useMetrics()
 
@@ -59,6 +61,11 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     }
 
     resetSwapForm()
+
+    if (buyTokenInfo) {
+      buyTokenInfoChanged(buyTokenInfo)
+      buyTouched()
+    }
 
     track.swapInitiated({
       from_asset: [
