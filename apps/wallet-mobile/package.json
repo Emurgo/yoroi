@@ -321,7 +321,6 @@
     }
   },
   "reactNativePermissionsIOS": [
-    "Notifications",
     "Bluetooth",
     "LocationAccuracy",
     "LocationWhenInUse",
