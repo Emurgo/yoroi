@@ -1,5 +1,3 @@
-version: 2
-
 coverage:
   status:
     project:
@@ -8,86 +6,108 @@ coverage:
         target: 100%
         if_not_found: success
 
-components:
-  "@yoroi/api":
-    paths:
-      - "packages/api"
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
 
-  "@yoroi/blockchains":
-    paths:
-      - "packages/blockchains"
+  individual_components:
+    - component_id: api
+      name: "@yoroi/api"
+      paths:
+        - "packages/api/**"
 
-  "@yoroi/claim":
-    paths:
-      - "packages/claim"
+    - component_id: blockchains
+      name: "@yoroi/blockchains"
+      paths:
+        - "packages/blockchains/**"
 
-  "@yoroi/common":
-    paths:
-      - "packages/common"
+    - component_id: claim
+      name: "@yoroi/claim"
+      paths:
+        - "packages/claim/**"
 
-  "@yoroi/dapp-connector":
-    paths:
-      - "packages/dapp-connector"
+    - component_id: common
+      name: "@yoroi/common"
+      paths:
+        - "packages/common/**"
 
-  "@yoroi/exchange":
-    paths:
-      - "packages/exchange"
+    - component_id: dapp_connector
+      name: "@yoroi/dapp-connector"
+      paths:
+        - "packages/dapp-connector/**"
 
-  "@yoroi/explorers":
-    paths:
-      - "packages/explorers"
+    - component_id: exchange
+      name: "@yoroi/exchange"
+      paths:
+        - "packages/exchange/**"
 
-  "@yoroi/identicon":
-    paths:
-      - "packages/identicon"
+    - component_id: explorers
+      name: "@yoroi/explorers"
+      paths:
+        - "packages/explorers/**"
 
-  "@yoroi/links":
-    paths:
-      - "packages/links"
+    - component_id: identicon
+      name: "@yoroi/identicon"
+      paths:
+        - "packages/identicon/**"
 
-  "@yoroi/notifications":
-    paths:
-      - "packages/notifications"
+    - component_id: links
+      name: "@yoroi/links"
+      paths:
+        - "packages/links/**"
 
-  "@yoroi/portfolio":
-    paths:
-      - "packages/portfolio"
+    - component_id: notifications
+      name: "@yoroi/notifications"
+      paths:
+        - "packages/notifications/**"
 
-  "@yoroi/resolver":
-    paths:
-      - "packages/resolver"
+    - component_id: portfolio
+      name: "@yoroi/portfolio"
+      paths:
+        - "packages/portfolio/**"
 
-  "@yoroi/setup-wallet":
-    paths:
-      - "packages/setup-wallet"
+    - component_id: resolver
+      name: "@yoroi/resolver"
+      paths:
+        - "packages/resolver/**"
 
-  "@yoroi/staking":
-    paths:
-      - "packages/staking"
+    - component_id: setup_wallet
+      name: "@yoroi/setup-wallet"
+      paths:
+        - "packages/setup-wallet/**"
 
-  "@yoroi/swap":
-    paths:
-      - "packages/swap"
+    - component_id: staking
+      name: "@yoroi/staking"
+      paths:
+        - "packages/staking/**"
 
-  "@yoroi/theme":
-    paths:
-      - "packages/theme"
+    - component_id: swap
+      name: "@yoroi/swap"
+      paths:
+        - "packages/swap/**"
 
-  "@yoroi/transfer":
-    paths:
-      - "packages/transfer"
+    - component_id: theme
+      name: "@yoroi/theme"
+      paths:
+        - "packages/theme/**"
 
-  "@yoroi/types":
-    paths:
-      - "packages/types"
+    - component_id: transfer
+      name: "@yoroi/transfer"
+      paths:
+        - "packages/transfer/**"
 
-  "@yoroi/wallet-mobile":
-    paths:
-      - "apps/wallet-mobile"
+    - component_id: types
+      name: "@yoroi/types"
+      paths:
+        - "packages/types/**"
 
-parsers:
-  javascript:
-    enable_gcov: no
+    - component_id: wallet-mobile
+      name: "@yoroi/wallet-mobile"
+      paths:
+        - "apps/wallet-mobile/**"
 
 ignore:
   - "node_modules"
