@@ -66,6 +66,7 @@
     ],
     "coverageReporters": [
       "text-summary",
+      "lcov",
       "html"
     ],
     "globals": {
