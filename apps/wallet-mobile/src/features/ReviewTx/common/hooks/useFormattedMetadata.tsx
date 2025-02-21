@@ -43,17 +43,13 @@ export const formatMetadata = async (
 }
 
 const parseMsg = (msg: Array<string> | string): string => {
-  if (Array.isArray(msg) && msg.length > 1) {
+  if (Array.isArray(msg)) {
     const message = msg.join('')
     try {
       return JSON.parse(message)
     } catch {
       return message
     }
-  }
-
-  if (Array.isArray(msg)) {
-    return msg[0] ?? ''
   }
 
   return msg
