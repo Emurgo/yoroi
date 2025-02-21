@@ -1,15 +1,18 @@
 import {FetchData, fetchData, getApiError, isLeft} from '@yoroi/common'
 import {TokenIdSchema} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
+import {freeze} from 'immer'
 import {z} from 'zod'
 
 type SwapConfig = z.infer<typeof SwapConfigResponseSchema>
 
+const initialDeps = freeze({request: fetchData}, true)
+
 export const getSwapConfig = async ({
-  request = fetchData,
+  request,
 }: {
-  request?: FetchData
-} = {}): Promise<SwapConfig> => {
+  request: FetchData
+} = initialDeps): Promise<SwapConfig> => {
   const response = await request<SwapConfig>({
     url: 'https://daehx1qv45z7c.cloudfront.net/swapConfig.json',
   })
