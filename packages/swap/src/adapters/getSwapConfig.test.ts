@@ -1,4 +1,4 @@
-import {getSwapConfig} from './getSwapConfig'
+import {getSwapConfigApiMaker} from './getSwapConfig'
 import {FetchData} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
@@ -25,9 +25,9 @@ const mockFetchData = (async ({url}: {url: string}) => {
   })
 }) as FetchData
 
-describe('getSwapConfig', () => {
+describe('getSwapConfigApiMaker', () => {
   it('should return swap config data when the response is valid', async () => {
-    const result = await getSwapConfig({request: mockFetchData})
+    const result = await getSwapConfigApiMaker({request: mockFetchData})()
     expect(result).toEqual({
       initialPair: {
         tokenIn: '.' as Portfolio.Token.Id,
@@ -52,7 +52,9 @@ describe('getSwapConfig', () => {
         },
       } as any)
 
-    await expect(getSwapConfig({request: invalidFetchData})).rejects.toThrow(
+    await expect(
+      getSwapConfigApiMaker({request: invalidFetchData})(),
+    ).rejects.toThrow(
       'Invalid swap config response: {"initialPair":{"tokenIn":123,"tokenOut":"tokenOutId"}}',
     )
   })
@@ -65,7 +67,11 @@ describe('getSwapConfig', () => {
       } as any)
 
     await expect(
-      getSwapConfig({request: networkErrorFetchData}),
+      getSwapConfigApiMaker({request: networkErrorFetchData})(),
     ).rejects.toThrow('Network error')
+  })
+
+  it('should not require passing a param', async () => {
+    expect(getSwapConfigApiMaker()).toBeDefined()
   })
 })

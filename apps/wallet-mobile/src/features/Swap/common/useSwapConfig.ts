@@ -1,10 +1,11 @@
-import {getSwapConfig, useSwapTokensOnlyVerified} from '@yoroi/swap'
+import {getSwapConfigApiMaker, useSwapTokensOnlyVerified} from '@yoroi/swap'
 import {useQuery} from 'react-query'
 
 import {usePortfolioTokenInfos} from '../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const useSwapConfig = () => {
+  const getSwapConfig = getSwapConfigApiMaker()
   const query = useQuery({
     suspense: true,
     queryKey: ['useSwapConfig'],

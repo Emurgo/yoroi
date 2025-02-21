@@ -1,32 +1,33 @@
 import {FetchData, fetchData, getApiError, isLeft} from '@yoroi/common'
 import {TokenIdSchema} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
-import {freeze} from 'immer'
 import {z} from 'zod'
 
 type SwapConfig = z.infer<typeof SwapConfigResponseSchema>
 
-const initialDeps = freeze({request: fetchData}, true)
+export const getSwapConfigApiMaker =
+  (
+    {
+      request,
+    }: {
+      request: FetchData
+    } = {request: fetchData},
+  ) =>
+  async (): Promise<SwapConfig> => {
+    const response = await request<SwapConfig>({
+      url: 'https://daehx1qv45z7c.cloudfront.net/swapConfig.json',
+    })
 
-export const getSwapConfig = async ({
-  request,
-}: {
-  request: FetchData
-} = initialDeps): Promise<SwapConfig> => {
-  const response = await request<SwapConfig>({
-    url: 'https://daehx1qv45z7c.cloudfront.net/swapConfig.json',
-  })
+    if (isLeft(response)) throw getApiError(response.error)
 
-  if (isLeft(response)) throw getApiError(response.error)
+    if (!SwapConfigResponseSchema.safeParse(response.value.data).success) {
+      throw new Error(
+        'Invalid swap config response: ' + JSON.stringify(response.value.data),
+      )
+    }
 
-  if (!SwapConfigResponseSchema.safeParse(response.value.data).success) {
-    throw new Error(
-      'Invalid swap config response: ' + JSON.stringify(response.value.data),
-    )
+    return response.value.data
   }
-
-  return response.value.data
-}
 
 const SwapConfigResponseSchema = z.object({
   initialPair: z.object({
