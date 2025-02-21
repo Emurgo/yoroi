@@ -42,12 +42,8 @@ export const formatMetadata = async (
   }
 }
 
-const parseMsg = (msg: Array<string> | string) => {
-  if (typeof msg === 'string') {
-    return msg
-  }
-
-  if (msg.length > 1) {
+const parseMsg = (msg: Array<string> | string): string => {
+  if (Array.isArray(msg) && msg.length > 1) {
     const message = msg.join('')
     try {
       return JSON.parse(message)
@@ -55,7 +51,12 @@ const parseMsg = (msg: Array<string> | string) => {
       return message
     }
   }
-  return msg[0]
+
+  if (Array.isArray(msg)) {
+    return msg[0] ?? ''
+  }
+
+  return msg
 }
 
 export const useFormattedMetadata = ({
