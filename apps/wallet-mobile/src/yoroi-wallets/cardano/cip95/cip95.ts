@@ -1,8 +1,7 @@
+import {cardanoConfig} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
-import {WalletImplementation} from '@yoroi/types/lib/typescript/wallet/wallet'
 import {Buffer} from 'buffer'
 
-import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {cip30ExtensionMaker} from '../cip30/cip30'
 import {YoroiWallet} from '../types'
 import {wrappedCsl} from '../wrappedCsl'
@@ -11,7 +10,7 @@ export const cip95ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
   return new CIP95Extension(wallet, meta)
 }
 
-export const supportsCIP95 = (implementation: WalletImplementation): implementation is 'cardano-cip1852' => {
+export const supportsCIP95 = (implementation: Wallet.Implementation): implementation is 'cardano-cip1852' => {
   return implementation === 'cardano-cip1852'
 }
 

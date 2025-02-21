@@ -1,15 +1,16 @@
 import {storiesOf} from '@storybook/react-native'
+import {buildNetworkManagers} from '@yoroi/blockchains'
 import {mockSwapManager, mockSwapStateDefault, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
+import {logger} from '../../../../kernel/logger/logger'
 import {rootStorage} from '../../../../kernel/storage/rootStorage'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {buildPortfolioTokenManagers} from '../../../Portfolio/common/helpers/build-token-managers'
 import {WalletManagerProvider} from '../../../WalletManager/context/WalletManagerProvider'
-import {buildNetworkManagers} from '../../../WalletManager/network-manager/network-manager'
 import {WalletManager} from '../../../WalletManager/wallet-manager'
 import {mocks} from '../mocks'
 import {SwapFormProvider} from '../SwapFormProvider'
@@ -20,7 +21,7 @@ const cbor =
 
 // TODO: should be mocked
 const {tokenManagers} = buildPortfolioTokenManagers()
-const networkManagers = buildNetworkManagers({tokenManagers})
+const networkManagers = buildNetworkManagers({tokenManagers, logger})
 const walletManager = new WalletManager({
   rootStorage,
   networkManagers,

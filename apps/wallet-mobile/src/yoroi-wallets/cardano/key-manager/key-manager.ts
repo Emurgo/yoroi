@@ -1,9 +1,8 @@
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
-import {derivationConfig} from '../../../features/WalletManager/common/derivation-config'
 import {generateWalletRootKey} from '../mnemonic/mnemonic'
 
 export const keyManager =

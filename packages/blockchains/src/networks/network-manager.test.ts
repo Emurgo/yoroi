@@ -2,7 +2,7 @@ import {App, Chain} from '@yoroi/types'
 import {createTokenManagerMock} from '@yoroi/portfolio'
 
 import {networkConfigs} from './network-configs'
-import {protocolParamsPlaceholder} from './cardano/constants'
+import {protocolParamsPlaceholder} from '../cardano/constants'
 import {buildNetworkManagers} from './network-manager'
 
 describe('buildNetworkManagers', () => {

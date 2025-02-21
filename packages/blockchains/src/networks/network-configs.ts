@@ -6,9 +6,9 @@ import {
   primaryTokenInfoMainnet,
   shelleyEraConfig,
   shelleyPreprodEraConfig,
-} from './cardano/constants'
-import {dateToEpochInfo} from './cardano/helpers/date-to-epoch-info'
-import {epochProgress} from './cardano/helpers/epoch-progress'
+} from '../cardano/constants'
+import {dateToEpochInfo} from '../cardano/helpers/date-to-epoch-info'
+import {epochProgress} from '../cardano/helpers/epoch-progress'
 
 const cardanoErasMainnet = [byronEraConfig, shelleyEraConfig]
 const cardanoErasPreprod = [shelleyPreprodEraConfig]

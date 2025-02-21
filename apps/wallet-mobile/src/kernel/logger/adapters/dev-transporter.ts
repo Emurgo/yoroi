@@ -1,8 +1,6 @@
+import {numberReplacer, toLoggerMetadata} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import {freeze} from 'immer'
-
-import {replacer} from '../helpers/replacer'
-import {toLoggerMetadata} from '../helpers/to-logger-metadata'
 
 /* eslint-disable no-console */
 const devLogger = freeze({
@@ -17,7 +15,7 @@ const devLogger = freeze({
 export const devAdapter = (transport = devLogger) => {
   const transporter: App.Logger.Transporter = ({level, message, metadata, timestamp}) => {
     const formattedMetadata = Object.keys(metadata).length
-      ? ' ' + JSON.stringify(toLoggerMetadata(metadata), replacer, 2)
+      ? ' ' + JSON.stringify(toLoggerMetadata(metadata), numberReplacer, 2)
       : ''
     const formattedMessage = metadata.origin?.length ? `${origin} ${message}` : message
 

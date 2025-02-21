@@ -8,9 +8,9 @@ import {explorerManager} from '@yoroi/explorers'
 import {Api, App, Chain, Network} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {TokenManagerByNetwork} from './types'
+import {TokenManagerByNetwork} from '../types'
 import {networkConfigs} from './network-configs'
-import {protocolParamsPlaceholder} from './cardano/constants'
+import {protocolParamsPlaceholder} from '../cardano/constants'
 
 export function buildNetworkManagers({
   tokenManagers,

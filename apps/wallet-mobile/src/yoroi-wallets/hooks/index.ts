@@ -3,6 +3,7 @@ import {walletChecksum} from '@emurgo/cip4-js'
 import {Certificate} from '@emurgo/cross-csl-core'
 import {FullPoolInfo, PoolInfoApi} from '@emurgo/yoroi-lib'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
+import {cardanoConfig} from '@yoroi/blockchains'
 import {mountMMKVStorage, observableStorageMaker, parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
 import {themeStorageMaker} from '@yoroi/theme'
 import {App, Balance, HW, Wallet} from '@yoroi/types'
@@ -20,7 +21,6 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'

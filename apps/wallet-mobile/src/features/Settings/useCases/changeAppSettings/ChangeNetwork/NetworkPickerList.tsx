@@ -1,3 +1,4 @@
+import {networkConfigs} from '@yoroi/blockchains'
 import {useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {freeze} from 'immer'
@@ -9,7 +10,6 @@ import {availableNetworks} from '../../../../WalletManager/common/constants'
 import {useSelectedNetwork} from '../../../../WalletManager/common/hooks/useSelectedNetwork'
 import {useAutomaticWalletOpener} from '../../../../WalletManager/context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {networkConfigs} from '../../../../WalletManager/network-manager/network-manager'
 import {useNavigateTo} from '../../../common/navigation'
 import {NetworkPickerItem} from './NetworkPickerItem'
 

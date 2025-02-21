@@ -47,8 +47,6 @@ describe('getWalletFactory', () => {
     const network = Chain.Network.Mainnet
     const implementation = 'unknown-implementation' as Wallet.Implementation
 
-    expect(() => getWalletFactory({network, implementation})).toThrow(
-      'getWalletFactory: Unable to find wallet factory',
-    )
+    expect(() => getWalletFactory({network, implementation})).toThrow('getWalletFactory: Unable to find wallet factory')
   })
 })

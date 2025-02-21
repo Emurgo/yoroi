@@ -1,8 +1,8 @@
 import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
+import {networkConfigs} from '@yoroi/blockchains'
 import * as React from 'react'
 
-import {networkConfigs} from '../../../WalletManager/network-manager/network-manager'
 import {ConnectNanoXScreen} from './ConnectNanoXScreen'
 
 const devices = [

@@ -1,5 +1,5 @@
 import {dateToEpochInfo} from './date-to-epoch-info'
-import {networkConfigs} from '../../network-configs'
+import {networkConfigs} from '../../networks/network-configs'
 import {
   byronEraConfig,
   shelleyEraConfig,

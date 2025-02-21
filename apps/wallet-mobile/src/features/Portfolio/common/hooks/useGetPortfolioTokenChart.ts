@@ -1,3 +1,4 @@
+import {networkConfigs} from '@yoroi/blockchains'
 import {isRight} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {Chain, Portfolio} from '@yoroi/types'
@@ -11,7 +12,6 @@ import {delay} from '../../../../yoroi-wallets/utils/timeUtils'
 import {useCurrencyPairing} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {networkConfigs} from '../../../WalletManager/network-manager/network-manager'
 import {priceChange} from '../helpers/priceChange'
 import {usePortfolioTokenDetailParams} from './useNavigateTo'
 
@@ -50,6 +50,7 @@ const getTimestamps = (timeInterval: TokenChartInterval) => {
   return spread
 }
 
+// TODO: needs fixing, it should be consumed by selected network
 const ptTicker = networkConfigs[Chain.Network.Mainnet].primaryTokenInfo.ticker
 
 export const ptPriceQueryFn = async ({queryKey}: {queryKey: ['ptPriceHistory', TokenChartInterval]}) => {
