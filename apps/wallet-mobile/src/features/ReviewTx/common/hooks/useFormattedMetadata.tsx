@@ -47,7 +47,7 @@ const parseMsg = (msg: Array<string> | string): string => {
   const messageToParse = Array.isArray(msg) ? msg.join('') : msg
 
   try {
-    const parsed = JSON.parse(messageToParse)
+    const parsed: unknown = JSON.parse(messageToParse)
     if (isString(parsed)) return parsed
     return JSON.stringify(parsed)
   } catch {
