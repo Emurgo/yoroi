@@ -32,7 +32,7 @@ export function dateToEpochInfo(eras: Network.Manager['eras']) {
         (era.slotsPerEpoch *
           era.slotInSeconds *
           Math.ceil(
-            (new Date(eras[eras.indexOf(era) + 1]?.start).getTime() -
+            (new Date(eras[eras.indexOf(era) + 1]?.start ?? 0).getTime() -
               era.start.getTime()) /
               1e3 /
               era.slotInSeconds /

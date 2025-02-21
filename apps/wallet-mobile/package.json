@@ -130,7 +130,6 @@
     "@yoroi/claim": "1.0.0",
     "@yoroi/common": "^1.5.4",
     "@yoroi/exchange": "^2.1.1",
-    "@yoroi/explorers": "^1.0.2",
     "@yoroi/identicon": "^1.0.1",
     "@yoroi/links": "^1.5.7",
     "@yoroi/notifications": "^1.0.0",

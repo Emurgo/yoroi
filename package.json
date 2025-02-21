@@ -9,10 +9,10 @@
       "packages/types",
       "packages/common",
       "packages/theme",
-      "packages/blockchains",
       "packages/api",
       "packages/links",
       "packages/portfolio",
+      "packages/blockchains",
       "packages/*",
       "apps/*",
       "e2e/*"

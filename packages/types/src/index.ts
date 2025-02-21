@@ -216,6 +216,7 @@ import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
 import {WalletMeta} from './wallet/meta'
 import {
   NetworkApi,
+  NetworkBlockchains,
   NetworkConfig,
   NetworkEpochInfo,
   NetworkEpochProgress,
@@ -671,6 +672,8 @@ export namespace Network {
   export type Api = NetworkApi
   export type Manager = NetworkManager
   export type Config = NetworkConfig
+  export type Blockchains = NetworkBlockchains
+  export const Blockchains = NetworkBlockchains
   export type EraConfig = NetworkEraConfig
   export type EpochInfo = NetworkEpochInfo
   export type EpochProgress = NetworkEpochProgress

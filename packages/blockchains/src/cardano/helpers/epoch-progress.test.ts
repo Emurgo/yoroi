@@ -1,17 +1,13 @@
-import {buildPortfolioTokenManagers} from '../../../Portfolio/common/helpers/build-token-managers'
-import {epochProgress} from '../helpers/epoch-progress'
-import {buildNetworkManagers, shelleyEraConfig} from '../network-manager'
+import {epochProgress} from './epoch-progress'
 import {dateToEpochInfo} from './date-to-epoch-info'
+import {networkConfigs} from '../../network-configs'
+import {shelleyEraConfig} from '../constants'
 
 describe('epochProgress', () => {
-  // TODO: should be mocked
-  const networkManagers = buildNetworkManagers({
-    tokenManagers: buildPortfolioTokenManagers().tokenManagers,
-  })
   it('should calculate epoch progress correctly last second', () => {
     const currentDate = new Date('2024-05-14T21:44:50.000Z')
     const result = epochProgress(
-      dateToEpochInfo(networkManagers['mainnet'].eras)(currentDate),
+      dateToEpochInfo(networkConfigs.mainnet.eras)(currentDate),
     )(currentDate)
 
     expect(result).toEqual({
@@ -25,7 +21,7 @@ describe('epochProgress', () => {
   it('should calculate epoch progress correctly first second', () => {
     const currentDate = new Date('2024-05-09T21:44:51.000Z')
     const result = epochProgress(
-      dateToEpochInfo(networkManagers['mainnet'].eras)(currentDate),
+      dateToEpochInfo(networkConfigs.mainnet.eras)(currentDate),
     )(currentDate)
 
     expect(result).toEqual({
@@ -39,7 +35,7 @@ describe('epochProgress', () => {
   it('should calculate epoch progress correctly half way', () => {
     const currentDate = new Date('2024-05-12T09:44:51.000Z')
     const result = epochProgress(
-      dateToEpochInfo(networkManagers['mainnet'].eras)(currentDate),
+      dateToEpochInfo(networkConfigs.mainnet.eras)(currentDate),
     )(currentDate)
 
     expect(result).toEqual({
@@ -56,7 +52,7 @@ describe('epochProgress', () => {
       start: new Date('2024-05-09T21:44:51.000Z'),
       end: new Date('2024-05-14T21:44:51.000Z'),
       era: shelleyEraConfig,
-      eras: networkManagers['mainnet'].eras,
+      eras: networkConfigs.mainnet.eras,
     }
 
     const currentDate = new Date('2022-01-02T00:00:01Z')
@@ -73,7 +69,7 @@ describe('epochProgress', () => {
 
   it('should handle date before the start of the current epoch', () => {
     const currentDate = new Date('2024-05-15T09:00:00.000Z')
-    const epochPreprodInfo = dateToEpochInfo(networkManagers['preprod'].eras)(
+    const epochPreprodInfo = dateToEpochInfo(networkConfigs.preprod.eras)(
       currentDate,
     )
 
