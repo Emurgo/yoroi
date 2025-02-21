@@ -1,4 +1,5 @@
 import {MetadataJsonSchema} from '@emurgo/cross-csl-core'
+import {isString} from '@yoroi/common'
 import _ from 'lodash'
 import {useQuery} from 'react-query'
 
@@ -46,7 +47,9 @@ const parseMsg = (msg: Array<string> | string): string => {
   const messageToParse = Array.isArray(msg) ? msg.join('') : msg
 
   try {
-    return JSON.parse(messageToParse)
+    const parsed = JSON.parse(messageToParse)
+    if (isString(parsed)) return parsed
+    return JSON.stringify(parsed)
   } catch {
     return messageToParse
   }
