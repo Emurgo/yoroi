@@ -1,9 +1,9 @@
+import {buildNetworkManagers} from '@yoroi/blockchains'
 import {Chain, Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {isDev} from '../../../kernel/env'
 import {buildPortfolioTokenManagers} from '../../Portfolio/common/helpers/build-token-managers'
-import {buildNetworkManagers} from '../network-manager/network-manager'
 
 export const addressModes: ReadonlyArray<Wallet.AddressMode> = freeze(['single', 'multiple'] as const)
 export const implementations: ReadonlyArray<Wallet.Implementation> = freeze([

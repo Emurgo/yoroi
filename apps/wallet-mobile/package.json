@@ -127,6 +127,7 @@
     "@types/bip39": "^3.0.0",
     "@types/pbkdf2": "^3.1.2",
     "@yoroi/api": "1.5.3",
+    "@yoroi/blockchains": "1.0.0",
     "@yoroi/claim": "1.0.0",
     "@yoroi/common": "^1.5.4",
     "@yoroi/exchange": "^2.1.1",
@@ -314,11 +315,6 @@
     "node": "~18.00.0",
     "npm": "~7.19.1"
   },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  },
   "reactNativePermissionsIOS": [
     "Notifications",
     "Bluetooth",
@@ -327,5 +323,10 @@
     "LocationAlways",
     "FaceID",
     "Camera"
-  ]
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }

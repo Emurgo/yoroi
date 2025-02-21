@@ -9,16 +9,14 @@ export function epochProgress(epochInfo: Network.EpochInfo) {
     let absoluteSlot = 0
 
     for (const era of epochInfo.eras) {
-      if (date >= era.start && (era.end === undefined || date < era.end)) {
+      if (date >= era.start && date < era.end) {
         absoluteSlot += Math.floor(
           (date.getTime() - era.start.getTime()) / 1e3 / era.slotInSeconds,
         )
         break
       }
       absoluteSlot += Math.floor(
-        ((era.end?.getTime() ?? date.getTime()) - era.start.getTime()) /
-          1e3 /
-          era.slotInSeconds,
+        (era.end.getTime() - era.start.getTime()) / 1e3 / era.slotInSeconds,
       )
     }
 

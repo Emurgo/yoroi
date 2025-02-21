@@ -9,8 +9,6 @@ import {Api, App, Chain, Network} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {TokenManagerByNetwork} from './types'
-import {dateToEpochInfo} from './cardano/helpers/date-to-epoch-info'
-import {epochProgress} from './cardano/helpers/epoch-progress'
 import {networkConfigs} from './network-configs'
 import {protocolParamsPlaceholder} from './cardano/constants'
 
@@ -51,19 +49,9 @@ export function buildNetworkManagers({
       utxoData: getUtxoData,
     }
 
-    const info = dateToEpochInfo(config.eras)
-    const epoch = {
-      info,
-      progress: (date: Date) => {
-        const currentInfo = info(date)
-        return epochProgress(currentInfo)(date)
-      },
-    }
-
     const networkManager: Network.Manager = {
       ...config,
       api,
-      epoch,
       rootStorage,
       tokenManager,
 
