@@ -9,6 +9,7 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {logger} from '../../../kernel/logger/logger'
 import {RawUtxo} from '../../types/other'
 import {YoroiUnsignedTx} from '../../types/yoroi'
@@ -16,7 +17,6 @@ import {asQuantity, Utxos} from '../../utils/utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import {toAssetNameHex, toPolicyId} from '../api/utils'
 import * as cip8 from '../cip8/cip8'
-import {makeCip8Key} from '../cip8/cip8'
 import {getDerivationPathForAddress, getTransactionSigners} from '../common/signatureUtils'
 import {Pagination, YoroiWallet} from '../types'
 import {
@@ -130,15 +130,26 @@ class CIP30Extension {
     const {csl, release} = getCSL()
     try {
       const payloadInBytes = Buffer.from(payload, 'hex')
-
       const normalisedAddress = await normalizeToAddress(csl, address)
       const bech32Address = await normalisedAddress?.toBech32(undefined)
       if (!bech32Address || !normalisedAddress) throw new Error('Invalid address')
 
-      const path = getDerivationPathForAddress(bech32Address, this.wallet, this.meta, true)
-      const signingKey = await createRawTxSigningKey(rootKey, path)
+      const rewardAddress = await csl.RewardAddress.fromAddress(normalisedAddress)
+      const rewardAddressHex = await rewardAddress?.toAddress().then((a) => a.toHex())
+
+      const stakingSigningPath =
+        this.meta.implementation === 'cardano-cip1852'
+          ? cardanoConfig.implementations[this.meta.implementation].features.staking.addressing
+          : null
+
+      const signingPath =
+        rewardAddressHex === this.wallet.rewardAddressHex && Array.isArray(stakingSigningPath)
+          ? stakingSigningPath
+          : getDerivationPathForAddress(bech32Address, this.wallet, this.meta, true)
+
+      const signingKey = await createRawTxSigningKey(rootKey, signingPath)
       const coseSign1 = await cip8.sign(Buffer.from(await normalisedAddress.toHex(), 'hex'), signingKey, payloadInBytes)
-      const key = await makeCip8Key(await (await signingKey.toPublic()).asBytes())
+      const key = await cip8.makeCip8Key(await (await signingKey.toPublic()).asBytes())
 
       return {
         signature: Buffer.from(await coseSign1.toBytes()).toString('hex'),

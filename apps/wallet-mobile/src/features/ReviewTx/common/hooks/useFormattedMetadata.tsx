@@ -42,7 +42,11 @@ export const formatMetadata = async (
   }
 }
 
-const parseMsg = (msg: Array<string>) => {
+const parseMsg = (msg: Array<string> | string) => {
+  if (typeof msg === 'string') {
+    return msg
+  }
+
   if (msg.length > 1) {
     const message = msg.join('')
     try {
