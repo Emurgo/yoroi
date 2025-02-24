@@ -1,15 +1,15 @@
 import {Chain, Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {throwLoggedError} from '../../../../kernel/logger/helpers/throw-logged-error'
-import {makeCardanoWallet} from '../../../../yoroi-wallets/cardano/cardano-wallet'
-import {networkManagers} from '../../common/constants'
-import {WalletFactory} from '../../common/types'
+import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'
+import {makeCardanoWallet} from '../../../yoroi-wallets/cardano/cardano-wallet'
+import {networkManagers} from '../common/constants'
+import {WalletFactory} from '../common/types'
 
 const ShelleyWalletMainnet = makeCardanoWallet(networkManagers[Chain.Network.Mainnet], 'cardano-cip1852')
 const ShelleyWalletTestnet = makeCardanoWallet(networkManagers[Chain.Network.Preprod], 'cardano-cip1852')
 const ShelleyPreviewWallet = makeCardanoWallet(networkManagers[Chain.Network.Preview], 'cardano-cip1852')
-const ByronWallet = makeCardanoWallet(networkManagers[Chain.Network.Mainnet], 'cardano-bip44')
+const ByronWalletMainnet = makeCardanoWallet(networkManagers[Chain.Network.Mainnet], 'cardano-bip44')
 const ByronWalletTestnet = makeCardanoWallet(networkManagers[Chain.Network.Preprod], 'cardano-bip44')
 const ByronPreviewWallet = makeCardanoWallet(networkManagers[Chain.Network.Preview], 'cardano-bip44')
 
@@ -32,9 +32,9 @@ export function getWalletFactory({
   const walletMap: Record<Chain.SupportedNetworks, Partial<Record<Wallet.Implementation, WalletFactory>>> = freeze({
     [Chain.Network.Mainnet]: /* cardano mainnet */ {
       'cardano-cip1852': ShelleyWalletMainnet,
-      'cardano-bip44': ByronWallet,
+      'cardano-bip44': ByronWalletMainnet,
     },
-    [Chain.Network.Preprod]: /* cardano testnet */ {
+    [Chain.Network.Preprod]: /* cardano preprod */ {
       'cardano-cip1852': ShelleyWalletTestnet,
       'cardano-bip44': ByronWalletTestnet,
     },

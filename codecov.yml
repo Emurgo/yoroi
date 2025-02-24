@@ -1,0 +1,124 @@
+coverage:
+  status:
+    project:
+      default:
+        threshold: 1%
+        target: 100%
+        if_not_found: success
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+
+  individual_components:
+    - component_id: api
+      name: "@yoroi/api"
+      paths:
+        - "packages/api/**"
+
+    - component_id: blockchains
+      name: "@yoroi/blockchains"
+      paths:
+        - "packages/blockchains/**"
+
+    - component_id: claim
+      name: "@yoroi/claim"
+      paths:
+        - "packages/claim/**"
+
+    - component_id: common
+      name: "@yoroi/common"
+      paths:
+        - "packages/common/**"
+
+    - component_id: dapp_connector
+      name: "@yoroi/dapp-connector"
+      paths:
+        - "packages/dapp-connector/**"
+
+    - component_id: exchange
+      name: "@yoroi/exchange"
+      paths:
+        - "packages/exchange/**"
+
+    - component_id: explorers
+      name: "@yoroi/explorers"
+      paths:
+        - "packages/explorers/**"
+
+    - component_id: identicon
+      name: "@yoroi/identicon"
+      paths:
+        - "packages/identicon/**"
+
+    - component_id: links
+      name: "@yoroi/links"
+      paths:
+        - "packages/links/**"
+
+    - component_id: notifications
+      name: "@yoroi/notifications"
+      paths:
+        - "packages/notifications/**"
+
+    - component_id: portfolio
+      name: "@yoroi/portfolio"
+      paths:
+        - "packages/portfolio/**"
+
+    - component_id: resolver
+      name: "@yoroi/resolver"
+      paths:
+        - "packages/resolver/**"
+
+    - component_id: setup_wallet
+      name: "@yoroi/setup-wallet"
+      paths:
+        - "packages/setup-wallet/**"
+
+    - component_id: staking
+      name: "@yoroi/staking"
+      paths:
+        - "packages/staking/**"
+
+    - component_id: swap
+      name: "@yoroi/swap"
+      paths:
+        - "packages/swap/**"
+
+    - component_id: theme
+      name: "@yoroi/theme"
+      paths:
+        - "packages/theme/**"
+
+    - component_id: transfer
+      name: "@yoroi/transfer"
+      paths:
+        - "packages/transfer/**"
+
+    - component_id: types
+      name: "@yoroi/types"
+      paths:
+        - "packages/types/**"
+
+    - component_id: wallet-mobile
+      name: "@yoroi/wallet-mobile"
+      paths:
+        - "apps/wallet-mobile/**"
+
+ignore:
+  - "node_modules"
+  - "dist"
+  - "build"
+  - "**/__tests__/**"
+  - "**/*.test.*"
+  - "scripts"
+  - "coverage"
+
+comment:
+  layout: "reach,diff,components"
+  require_changes: true
+  behavior: default

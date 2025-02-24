@@ -1,4 +1,5 @@
 import {MetadataJsonSchema} from '@emurgo/cross-csl-core'
+import {isString} from '@yoroi/common'
 import _ from 'lodash'
 import {useQuery} from 'react-query'
 
@@ -42,16 +43,16 @@ export const formatMetadata = async (
   }
 }
 
-const parseMsg = (msg: Array<string>) => {
-  if (msg.length > 1) {
-    const message = msg.join('')
-    try {
-      return JSON.parse(message)
-    } catch {
-      return message
-    }
+const parseMsg = (msg: Array<string> | string): string => {
+  const messageToParse = Array.isArray(msg) ? msg.join('') : msg
+
+  try {
+    const parsed: unknown = JSON.parse(messageToParse)
+    if (isString(parsed)) return parsed
+    return JSON.stringify(parsed)
+  } catch {
+    return messageToParse
   }
-  return msg[0]
 }
 
 export const useFormattedMetadata = ({

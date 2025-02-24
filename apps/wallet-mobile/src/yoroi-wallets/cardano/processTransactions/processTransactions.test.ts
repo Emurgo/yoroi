@@ -1,4 +1,5 @@
-import {primaryTokenInfoMainnet} from '../../../features/WalletManager/network-manager/network-manager'
+import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
+
 import {RawTransaction, TRANSACTION_DIRECTION} from '../../types/other'
 import {MultiToken} from '../MultiToken'
 import {toCachedTx} from '../transactionManager/transactionManager'

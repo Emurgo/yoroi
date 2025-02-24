@@ -1,7 +1,6 @@
+import {numberReplacer} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import {freeze} from 'immer'
-
-import {replacer} from './helpers/replacer'
 
 class Logger implements App.Logger.Manager {
   static readonly trailLimit = 500
@@ -75,7 +74,7 @@ class Logger implements App.Logger.Manager {
   private transport({level, message, metadata}: Pick<App.Logger.TransporterOptions, 'level' | 'message' | 'metadata'>) {
     if (!this.#enabled) return
     if (loggerHierarchy[level] > loggerHierarchy[this.level]) return
-    if (this.filter && !this.filter.test(JSON.stringify({message, metadata}, replacer))) return
+    if (this.filter && !this.filter.test(JSON.stringify({message, metadata}, numberReplacer))) return
 
     const timestamp = Date.now()
     const entry = {level, message, metadata, timestamp}

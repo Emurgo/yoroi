@@ -1,4 +1,5 @@
-import {primaryTokenInfoMainnet} from '../../features/WalletManager/network-manager/network-manager'
+import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
+
 import {formatTokenAmount, formatTokenFractional, formatTokenInteger} from './format'
 import {asQuantity} from './utils'
 

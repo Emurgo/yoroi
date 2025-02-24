@@ -114,6 +114,7 @@
     ],
     "coverageReporters": [
       "text-summary",
+      "lcov",
       "html"
     ],
     "coverageThreshold": {

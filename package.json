@@ -12,6 +12,8 @@
       "packages/api",
       "packages/links",
       "packages/portfolio",
+      "packages/explorers",
+      "packages/blockchains",
       "packages/*",
       "apps/*",
       "e2e/*"

@@ -1,17 +1,18 @@
 /* eslint-disable no-unused-labels */
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {buildNetworkManagers} from '@yoroi/blockchains'
 import {parseSafe} from '@yoroi/common'
 
 import {decryptData} from '../../kernel/encryption/encryption'
+import {logger} from '../../kernel/logger/logger'
 import {rootStorage} from '../../kernel/storage/rootStorage'
 import {buildPortfolioTokenManagers} from '../Portfolio/common/helpers/build-token-managers'
-import {buildNetworkManagers} from './network-manager/network-manager'
 import {WalletManager} from './wallet-manager'
 
 describe('walletManager', () => {
   // TODO: should be mocked
   const {tokenManagers} = buildPortfolioTokenManagers()
-  const networkManagers = buildNetworkManagers({tokenManagers})
+  const networkManagers = buildNetworkManagers({tokenManagers, logger})
 
   beforeEach(() => {
     AsyncStorage.clear()

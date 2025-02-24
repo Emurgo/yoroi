@@ -3,6 +3,7 @@
 
 import {action} from '@storybook/addon-actions'
 import {AppApi} from '@yoroi/api'
+import {buildNetworkManagers, cardanoConfig, protocolParamsPlaceholder} from '@yoroi/blockchains'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Balance, Portfolio, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
@@ -10,11 +11,7 @@ import {noop} from 'lodash'
 import {Observable} from 'rxjs'
 
 import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
-import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardano/cardano-config'
-import {
-  buildNetworkManagers,
-  protocolParamsPlaceholder,
-} from '../../features/WalletManager/network-manager/network-manager'
+import {logger} from '../../kernel/logger/logger'
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {TransactionInfo} from '../types/other'
@@ -55,7 +52,7 @@ const walletMeta: Wallet.Meta = {
 
 // TODO: should be mocked
 const {tokenManagers} = buildPortfolioTokenManagers()
-const networkManagers = buildNetworkManagers({tokenManagers})
+const networkManagers = buildNetworkManagers({tokenManagers, logger})
 
 const wallet: YoroiWallet = {
   getAddressing(_address: string): {path: number[]; startLevel: number} {

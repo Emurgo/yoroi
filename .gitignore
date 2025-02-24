@@ -87,5 +87,3 @@ apps/test/
 artifacts/
 html-report/
 
-# dependency cruiser
-dependency-graph.svg

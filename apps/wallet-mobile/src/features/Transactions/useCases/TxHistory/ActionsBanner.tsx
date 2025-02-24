@@ -15,6 +15,7 @@ import {useReceive} from '../../../Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../../../Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '../../../Receive/common/useReceiveAddressesStatus'
 import {useSwap} from '../../../Swap/common/SwapProvider'
+import {useSwapConfig} from '../../../Swap/common/useSwapConfig'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -24,6 +25,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const swapForm = useSwap()
+  const {buyTokenInfo} = useSwapConfig()
   const navigateTo = useNavigateTo()
 
   const {isSingle, addressMode} = useAddressMode()
@@ -57,6 +59,11 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     }
 
     swapForm.action({type: 'ResetForm'})
+
+    if (buyTokenInfo) {
+      swapForm.action({type: 'TokenOutIdChanged', value: buyTokenInfo.id})
+      swapForm.action({type: 'TokenOutInputTouched'})
+    }
 
     track.swapInitiated({
       from_asset: [

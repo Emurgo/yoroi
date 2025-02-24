@@ -16,6 +16,6 @@ export const useSelectedWallet = () => {
         new App.Errors.InvalidState('useSelectedWallet wallet/meta is not set when expected, invalid state reached'),
       )
 
-    return freeze({wallet, meta})
+    return freeze({wallet, meta} as const)
   }, [meta, wallet])
 }

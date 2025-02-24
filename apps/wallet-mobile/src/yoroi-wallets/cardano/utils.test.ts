@@ -1,7 +1,7 @@
 import {SendToken} from '@emurgo/yoroi-lib'
+import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
 import {Balance} from '@yoroi/types'
 
-import {primaryTokenInfoMainnet} from '../../features/WalletManager/network-manager/network-manager'
 import {Token} from '../types/tokens'
 import {toSendToken, toSendTokenList} from './utils'
 

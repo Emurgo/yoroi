@@ -1,4 +1,5 @@
-import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
+import {cardanoConfig} from '@yoroi/blockchains'
+
 import {CardanoMobile} from '../../wallets'
 
 const isString = (s: unknown) => typeof s === 'string' || s instanceof String

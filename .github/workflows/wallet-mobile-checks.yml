@@ -14,4 +14,30 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/wallet-mobile
-      - run: yarn workspaces run build 
+      - run: yarn workspaces run build
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: |
+            packages/api/coverage/lcov.info
+            packages/blockchains/coverage/lcov.info
+            packages/claim/coverage/lcov.info
+            packages/common/coverage/lcov.info
+            packages/dapp-connector/coverage/lcov.info
+            packages/exchange/coverage/lcov.info
+            packages/explorers/coverage/lcov.info
+            packages/identicon/coverage/lcov.info
+            packages/links/coverage/lcov.info
+            packages/notifications/coverage/lcov.info
+            packages/portfolio/coverage/lcov.info
+            packages/resolver/coverage/lcov.info
+            packages/setup-wallet/coverage/lcov.info
+            packages/staking/coverage/lcov.info
+            packages/swap/coverage/lcov.info
+            packages/theme/coverage/lcov.info
+            packages/transfer/coverage/lcov.info
+            packages/types/coverage/lcov.info
+            apps/wallet-mobile/coverage/lcov.info
+          fail_ci_if_error: false 
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}

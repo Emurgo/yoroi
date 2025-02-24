@@ -6,6 +6,7 @@ module.exports = {
     path.resolve(__dirname, "apps/wallet-mobile"),
     path.resolve(__dirname, "node_modules"),
     path.resolve(__dirname, "packages/api"),
+    path.resolve(__dirname, "packages/blockchains"),
     path.resolve(__dirname, "packages/claim"),
     path.resolve(__dirname, "packages/common"),
     path.resolve(__dirname, "packages/dapp-connector"),

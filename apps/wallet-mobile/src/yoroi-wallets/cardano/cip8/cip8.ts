@@ -16,3 +16,29 @@ export const sign = async (address: Buffer, signKey: PrivateKey, payload: Buffer
   const signedSigStruct = await (await signKey.sign(toSign)).toBytes()
   return builder.build(signedSigStruct)
 }
+
+export const makeCip8Key = async (publicSigningKey: Uint8Array) => {
+  const key = await MSL.COSEKey.new(await MSL.Label.fromKeyType(MSL.KeyType.OKP))
+  await key.setAlgorithmId(await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
+  await key.setHeader(
+    await MSL.Label.newInt(await MSL.Int.newNegative(await MSL.BigNum.fromStr('1'))),
+    await MSL.CBORValue.newInt(await MSL.Int.newI32(6)),
+  )
+  await key.setHeader(
+    await MSL.Label.newInt(await MSL.Int.newNegative(await MSL.BigNum.fromStr('2'))),
+    await MSL.CBORValue.newBytes(publicSigningKey),
+  )
+
+  return key
+}
+
+export const buildCoseSign1FromSignature = async (address: Buffer, signature: Buffer, payload: Buffer) => {
+  const protectedHeader = await MSL.HeaderMap.new()
+  await protectedHeader.setAlgorithmId(await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
+  await protectedHeader.setHeader(await MSL.Label.newText('address'), await MSL.CBORValue.newBytes(address))
+  const protectedSerialized = await MSL.ProtectedHeaderMap.new(protectedHeader)
+  const unprotected = await MSL.HeaderMap.new()
+  const headers = await MSL.Headers.new(protectedSerialized, unprotected)
+  const builder = await MSL.COSESign1Builder.new(headers, payload, false)
+  return builder.build(signature)
+}

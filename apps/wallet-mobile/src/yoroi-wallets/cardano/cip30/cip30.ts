@@ -1,6 +1,5 @@
 import * as CSL from '@emurgo/cross-csl-core'
 import {TransactionWitnessSet, WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {init} from '@emurgo/cross-msl-mobile'
 import {hashTransaction, RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
@@ -10,6 +9,7 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {logger} from '../../../kernel/logger/logger'
 import {RawUtxo} from '../../types/other'
 import {YoroiUnsignedTx} from '../../types/yoroi'
@@ -28,8 +28,6 @@ import {
 } from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {wrappedCsl as getCSL} from '../wrappedCsl'
-
-const MSL = init('msl')
 
 export const cip30ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
   return new CIP30Extension(wallet, meta)
@@ -132,24 +130,26 @@ class CIP30Extension {
     const {csl, release} = getCSL()
     try {
       const payloadInBytes = Buffer.from(payload, 'hex')
-
       const normalisedAddress = await normalizeToAddress(csl, address)
       const bech32Address = await normalisedAddress?.toBech32(undefined)
       if (!bech32Address || !normalisedAddress) throw new Error('Invalid address')
 
-      const path = getDerivationPathForAddress(bech32Address, this.wallet, this.meta, true)
-      const signingKey = await createRawTxSigningKey(rootKey, path)
+      const rewardAddress = await csl.RewardAddress.fromAddress(normalisedAddress)
+      const rewardAddressHex = await rewardAddress?.toAddress().then((a) => a.toHex())
+
+      const stakingSigningPath =
+        this.meta.implementation === 'cardano-cip1852'
+          ? cardanoConfig.implementations[this.meta.implementation].features.staking.addressing
+          : null
+
+      const signingPath =
+        rewardAddressHex === this.wallet.rewardAddressHex && Array.isArray(stakingSigningPath)
+          ? stakingSigningPath
+          : getDerivationPathForAddress(bech32Address, this.wallet, this.meta, true)
+
+      const signingKey = await createRawTxSigningKey(rootKey, signingPath)
       const coseSign1 = await cip8.sign(Buffer.from(await normalisedAddress.toHex(), 'hex'), signingKey, payloadInBytes)
-      const key = await MSL.COSEKey.new(await MSL.Label.fromKeyType(MSL.KeyType.OKP))
-      await key.setAlgorithmId(await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
-      await key.setHeader(
-        await MSL.Label.newInt(await MSL.Int.newNegative(await MSL.BigNum.fromStr('1'))),
-        await MSL.CBORValue.newInt(await MSL.Int.newI32(6)),
-      )
-      await key.setHeader(
-        await MSL.Label.newInt(await MSL.Int.newNegative(await MSL.BigNum.fromStr('2'))),
-        await MSL.CBORValue.newBytes(await (await signingKey.toPublic()).asBytes()),
-      )
+      const key = await cip8.makeCip8Key(await (await signingKey.toPublic()).asBytes())
 
       return {
         signature: Buffer.from(await coseSign1.toBytes()).toString('hex'),

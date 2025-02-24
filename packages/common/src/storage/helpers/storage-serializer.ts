@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import {numberReplacer} from '../../numbers/number-replacer'
 
 /**
  * Serializes the given object into a JSON string, with support for BigInt and BigNumber values.
@@ -6,14 +6,8 @@ import BigNumber from 'bignumber.js'
  *
  * @param toStringify - The object to be serialized.
  * @returns A stringfied JSON object with BigInt and BigNumber values serialized as strings.
+ * @summary This is not a replacer function, it will retun a stringified JSON object direclty.
  */
 export const storageSerializer = (toStringify: unknown) => {
-  const replacer = (_: unknown, value: unknown) => {
-    if (typeof value === 'bigint' || BigNumber.isBigNumber(value)) {
-      return value.toString()
-    }
-    return value
-  }
-
-  return JSON.stringify(toStringify, replacer)
+  return JSON.stringify(toStringify, numberReplacer)
 }

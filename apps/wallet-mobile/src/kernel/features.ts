@@ -1,4 +1,4 @@
-import {isDev, isNightly} from './env'
+import {isDev} from './env'
 
 export const features = {
   useTestnet: false,
@@ -6,7 +6,7 @@ export const features = {
   showProdPoolsInDev: isDev,
   moderatingNftsEnabled: false,
   localNotifications: true,
-  pushNotifications: isDev || isNightly,
+  pushNotifications: isDev,
   poolTransition: true,
   portfolioPerformance: false,
   portfolioNews: false,

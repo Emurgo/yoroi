@@ -1,3 +1,4 @@
+import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {useTheme} from '@yoroi/theme'
 import {fromPairs} from 'lodash'
 import React from 'react'
@@ -6,7 +7,6 @@ import QRCode from 'react-native-qrcode-svg'
 
 import {CopyButton} from '../../../../../components/CopyButton'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {derivationPathManagerMaker} from '../../../../../yoroi-wallets/cardano/derivation-path-manager/derivation-path-manager'
 import {useKeyHashes} from '../../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../../common/strings'
@@ -30,7 +30,7 @@ export const AddressModal = ({address, path}: Props) => {
     meta: {implementation},
   } = useSelectedWallet()
 
-  const derivationPath = path ? derivationPathManagerMaker(implementation)(path) : null
+  const derivationPath = path ? addressVisualDerivationPathMaker(implementation)(path) : null
 
   return (
     <View style={styles.scroll}>

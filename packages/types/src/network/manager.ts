@@ -10,24 +10,37 @@ import {ExplorersManager} from '../explorers/manager'
 import {PortfolioTokenInfo} from '../portfolio/info'
 import {PortfolioManagerToken} from '../portfolio/manager'
 
-export type NetworkConfig = {
-  network: ChainSupportedNetworks
-  primaryTokenInfo: PortfolioTokenInfo
-  chainId: number
-  eras: ReadonlyArray<NetworkEraConfig>
-  name: string
-  isMainnet: boolean
-  protocolMagic: number
-
-  legacyApiBaseUrl: string
+export enum NetworkBlockchains {
+  Cardano = 'cardano',
 }
 
-// NOTE: NetworkConfig will be a generic type in the future
+type NetworkConfigCardano = {
+  blockchain: NetworkBlockchains
+  eras: ReadonlyArray<NetworkEraConfig>
+  protocolMagic: number
+
+  epoch: Readonly<{
+    info: (date: Date) => Readonly<NetworkEpochInfo>
+    progress: (date: Date) => Readonly<NetworkEpochProgress>
+  }>
+}
+
+export type NetworkConfig = {
+  network: ChainSupportedNetworks
+  isMainnet: boolean
+  primaryTokenInfo: PortfolioTokenInfo
+  name: string
+  chainId: number
+
+  legacyApiBaseUrl: string
+} & NetworkConfigCardano
+
 export type NetworkApi = {
   protocolParams: () => Promise<Readonly<ChainCardanoProtocolParams>>
   bestBlock: () => Promise<ChainCardanoBestBlock>
   utxoData: (request: ApiUtxoDataRequest) => Promise<ApiUtxoData>
 }
+
 export type NetworkManager = Readonly<
   {
     tokenManager: PortfolioManagerToken
@@ -35,17 +48,13 @@ export type NetworkManager = Readonly<
     legacyRootStorage: AppObservableStorage
     api: Readonly<NetworkApi>
     explorers: Readonly<Record<ExplorersExplorer, ExplorersManager>>
-    epoch: Readonly<{
-      info: (date: Date) => Readonly<NetworkEpochInfo>
-      progress: (date: Date) => Readonly<NetworkEpochProgress>
-    }>
   } & Readonly<NetworkConfig>
 >
 
 export type NetworkEraConfig = {
   name: 'byron' | 'shelley'
   start: Date
-  end: Date | undefined
+  end: Date
   slotInSeconds: number
   slotsPerEpoch: number
 }

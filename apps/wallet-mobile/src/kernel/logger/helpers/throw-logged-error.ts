@@ -1,7 +1,5 @@
+import {throwLoggedError as tle} from '@yoroi/common'
+
 import {logger} from '../logger'
 
-export function throwLoggedError(error: Error | string): never {
-  const errorToThrow = error instanceof Error ? error : new Error(error)
-  logger.error(errorToThrow)
-  throw errorToThrow
-}
+export const throwLoggedError: (error: string | Error) => never = tle(logger)

@@ -36,7 +36,7 @@ import {
   WalletManagerSubscription,
 } from './common/types'
 import {isWalletMeta, parseWalletMeta} from './common/validators/wallet-meta'
-import {getWalletFactory} from './network-manager/helpers/get-wallet-factory'
+import {getWalletFactory} from './network-manager/get-wallet-factory'
 
 export class WalletManager {
   // keep it in sync with storage version

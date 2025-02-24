@@ -9,12 +9,14 @@ export function epochProgress(epochInfo: Network.EpochInfo) {
     let absoluteSlot = 0
 
     for (const era of epochInfo.eras) {
-      if (date >= era.start && (era.end === undefined || date < era.end)) {
-        absoluteSlot += Math.floor((date.getTime() - era.start.getTime()) / 1e3 / era.slotInSeconds)
+      if (date >= era.start && date < era.end) {
+        absoluteSlot += Math.floor(
+          (date.getTime() - era.start.getTime()) / 1e3 / era.slotInSeconds,
+        )
         break
       }
       absoluteSlot += Math.floor(
-        ((era.end?.getTime() ?? date.getTime()) - era.start.getTime()) / 1e3 / era.slotInSeconds,
+        (era.end.getTime() - era.start.getTime()) / 1e3 / era.slotInSeconds,
       )
     }
 
@@ -37,10 +39,18 @@ export function epochProgress(epochInfo: Network.EpochInfo) {
 
     const progress =
       Math.round(
-        Math.min(((date.getTime() - epochStart.getTime()) / (epochEnd.getTime() - epochStart.getTime())) * 100, 100) *
+        Math.min(
+          ((date.getTime() - epochStart.getTime()) /
+            (epochEnd.getTime() - epochStart.getTime())) *
+            100,
           100,
+        ) * 100,
       ) / 100
-    const currentSlot = Math.floor((date.getTime() - epochStart.getTime()) / 1e3 / epochInfo.era.slotInSeconds)
+    const currentSlot = Math.floor(
+      (date.getTime() - epochStart.getTime()) /
+        1e3 /
+        epochInfo.era.slotInSeconds,
+    )
     const timeRemainingSeconds = (epochEnd.getTime() - date.getTime()) / 1e3
 
     const days = Math.floor(timeRemainingSeconds / (24 * 3_600))

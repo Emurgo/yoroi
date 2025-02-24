@@ -1,6 +1,6 @@
+import {protocolParamsPlaceholder} from '@yoroi/blockchains'
 import {Balance} from '@yoroi/types'
 
-import {protocolParamsPlaceholder} from '../../features/WalletManager/network-manager/network-manager'
 import {mocks as walletMocks} from '../mocks/wallet'
 import {getMinAmounts, withMinAmounts, withPrimaryToken} from './getMinAmounts'
 

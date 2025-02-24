@@ -66,6 +66,7 @@
     ],
     "coverageReporters": [
       "text-summary",
+      "lcov",
       "html"
     ],
     "globals": {
@@ -127,10 +128,10 @@
     "@types/bip39": "^3.0.0",
     "@types/pbkdf2": "^3.1.2",
     "@yoroi/api": "1.5.3",
+    "@yoroi/blockchains": "1.0.0",
     "@yoroi/claim": "1.0.0",
     "@yoroi/common": "^1.5.4",
     "@yoroi/exchange": "^2.1.1",
-    "@yoroi/explorers": "^1.0.2",
     "@yoroi/identicon": "^1.0.1",
     "@yoroi/links": "^1.5.7",
     "@yoroi/notifications": "^1.0.0",
@@ -315,18 +316,17 @@
     "node": "~18.00.0",
     "npm": "~7.19.1"
   },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  },
   "reactNativePermissionsIOS": [
-    "Notifications",
     "Bluetooth",
     "LocationAccuracy",
     "LocationWhenInUse",
     "LocationAlways",
     "FaceID",
     "Camera"
-  ]
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }

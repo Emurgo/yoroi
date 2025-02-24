@@ -1,7 +1,7 @@
+import {toLoggerMetadata} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {toLoggerMetadata} from '../helpers/to-logger-metadata'
 import {Sentry} from './sentry'
 
 export const sentryAdapter = (sentryRuntime = Sentry) => {

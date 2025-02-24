@@ -1,12 +1,11 @@
 import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import * as CSL_TYPES from '@emurgo/cross-csl-core'
 import {Addressing, createLedgerPlutusPayload, getAllSigners} from '@emurgo/yoroi-lib'
+import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
-import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
-import {derivationConfig} from '../../../features/WalletManager/common/derivation-config'
 import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'
 import {CardanoMobile} from '../../wallets'
 import {YoroiWallet} from '../types'
