@@ -1,3 +1,4 @@
+import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
 import {isLeft} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
 import {getDexUrlByProtocol} from '@yoroi/swap'
@@ -24,7 +25,6 @@ import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfo
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {primaryTokenInfoMainnet} from '../../../WalletManager/network-manager/network-manager'
 import {Counter} from '../../common/Counter/Counter'
 import {EmptyCompletedOrdersIllustration} from '../../common/Illustrations/EmptyCompletedOrdersIllustration'
 import {EmptyOpenOrdersIllustration} from '../../common/Illustrations/EmptyOpenOrdersIllustration'

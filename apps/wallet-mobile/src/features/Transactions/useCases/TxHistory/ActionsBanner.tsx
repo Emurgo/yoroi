@@ -25,7 +25,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const swapForm = useSwap()
-  const {buyTokenInfo} = useSwapConfig()
+  const {tokenOutId} = useSwapConfig()
   const navigateTo = useNavigateTo()
 
   const {isSingle, addressMode} = useAddressMode()
@@ -60,8 +60,8 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
     swapForm.action({type: 'ResetForm'})
 
-    if (buyTokenInfo) {
-      swapForm.action({type: 'TokenOutIdChanged', value: buyTokenInfo.id})
+    if (tokenOutId !== undefined) {
+      swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
       swapForm.action({type: 'TokenOutInputTouched'})
     }
 
