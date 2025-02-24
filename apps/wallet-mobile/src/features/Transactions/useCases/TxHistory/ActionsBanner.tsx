@@ -125,34 +125,19 @@ export const ActionsBanner = () => {
       {!meta.isReadOnly && (
         <>
           <View style={styles.centralized}>
-            <Button
-              type={ButtonType.Circle}
-              icon={Icon.Send}
-              onPress={handleOnSend}
-              testID="sendButton"
-            />
+            <Button type={ButtonType.Circle} icon={Icon.Send} onPress={handleOnSend} testID="sendButton" />
 
             <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
           </View>
 
           <View style={styles.centralized}>
-            <Button
-              type={ButtonType.Circle}
-              icon={Icon.Swap}
-              onPress={handleOnSwap}
-              testID="swapButton"
-            />
+            <Button type={ButtonType.Circle} icon={Icon.Swap} onPress={handleOnSwap} testID="swapButton" />
 
             <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
           </View>
 
           <View style={styles.centralized}>
-            <Button
-              type={ButtonType.Circle}
-              icon={Icon.Exchange}
-              onPress={handleOnExchange}
-              testID="buyButton"
-            />
+            <Button type={ButtonType.Circle} icon={Icon.Exchange} onPress={handleOnExchange} testID="buyButton" />
 
             <Text style={styles.actionLabel}>{strings.exchange}</Text>
           </View>
