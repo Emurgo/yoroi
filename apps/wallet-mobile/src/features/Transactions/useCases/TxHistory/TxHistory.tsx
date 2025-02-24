@@ -62,7 +62,7 @@ export const TxHistory = () => {
       <CollapsibleHeader expanded={expanded}>
         <BalanceBanner />
 
-        <ActionsBanner disabled={isLoading} />
+        <ActionsBanner />
       </CollapsibleHeader>
 
       <View style={styles.panel}>

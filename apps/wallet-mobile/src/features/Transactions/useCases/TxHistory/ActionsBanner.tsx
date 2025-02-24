@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Chain} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {GestureResponderEvent, StyleSheet, View} from 'react-native'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
@@ -21,7 +21,7 @@ import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelected
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/strings'
 
-export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
+export const ActionsBanner = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const swapForm = useSwap()
@@ -114,49 +114,30 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
           icon={Icon.Received}
           onPress={handleOnPressReceive}
           testID="receiveButton"
-          disabled={disabled}
           onLongPress={handleOnLongPressReceive}
         />
 
-        <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.receiveLabel}</Text>
+        <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
       </View>
 
       {!meta.isReadOnly && (
         <>
           <View style={styles.centralized}>
-            <Button
-              type={ButtonType.Circle}
-              icon={Icon.Send}
-              onPress={handleOnSend}
-              testID="sendButton"
-              disabled={disabled}
-            />
+            <Button type={ButtonType.Circle} icon={Icon.Send} onPress={handleOnSend} testID="sendButton" />
 
-            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.sendLabel}</Text>
+            <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
           </View>
 
           <View style={styles.centralized}>
-            <Button
-              type={ButtonType.Circle}
-              icon={Icon.Swap}
-              onPress={handleOnSwap}
-              testID="swapButton"
-              disabled={disabled}
-            />
+            <Button type={ButtonType.Circle} icon={Icon.Swap} onPress={handleOnSwap} testID="swapButton" />
 
-            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.swapLabel}</Text>
+            <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
           </View>
 
           <View style={styles.centralized}>
-            <Button
-              type={ButtonType.Circle}
-              icon={Icon.Exchange}
-              onPress={handleOnExchange}
-              testID="buyButton"
-              disabled={disabled}
-            />
+            <Button type={ButtonType.Circle} icon={Icon.Exchange} onPress={handleOnExchange} testID="buyButton" />
 
-            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.exchange}</Text>
+            <Text style={styles.actionLabel}>{strings.exchange}</Text>
           </View>
         </>
       )}
@@ -181,9 +162,6 @@ const useStyles = () => {
       ...atoms.pt_sm,
       ...atoms.body_3_sm_medium,
       color: color.text_gray_medium,
-    },
-    disabledLabel: {
-      color: color.text_gray_low,
     },
   })
 
