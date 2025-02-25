@@ -1,18 +1,27 @@
+import messaging from '@react-native-firebase/messaging'
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, TextProps, View, ViewProps} from 'react-native'
+import {useQuery} from 'react-query'
 
 import {Text} from '../../../../../components/Text'
 import {appInfo} from '../../../../../kernel/appInfo'
 import {commit} from '../../../../../kernel/env'
 import {SettingsRouteNavigation} from '../../../../../kernel/navigation'
+import {CopyButton} from '../../../../../components/CopyButton'
+import {truncateString} from '@yoroi/common'
 
 export const About = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigation = useNavigation<SettingsRouteNavigation>()
+  const {data: FCMToken} = useQuery({
+    useErrorBoundary: false,
+    suspense: false,
+    queryFn: () => messaging().getToken(),
+  })
 
   return (
     <View style={styles.about}>
@@ -29,6 +38,18 @@ export const About = () => {
 
         <ValueText>{commit}</ValueText>
       </Row>
+
+      {FCMToken && (
+        <Row>
+          <LabelText>{`FCM Token`}</LabelText>
+
+          <CopyButton
+            fontOverride={styles.valueText}
+            value={FCMToken}
+            title={truncateString({value: FCMToken, maxLength: 20})}
+          />
+        </Row>
+      )}
     </View>
   )
 }
