@@ -485,6 +485,7 @@
   "components.settings.walletsettingscreen.tabTitle": "Peněženka",
   "components.settings.walletsettingscreen.title": "Nastavení",
   "components.settings.walletsettingscreen.unknownWalletType": "Neznámý typ peněženky",
+  "components.settings.walletsettingscreen.fcmToken": "FCM Token",
   "components.settings.walletsettingscreen.walletName": "Název peněženky",
   "components.settings.walletsettingscreen.walletType": "Typ peněženky:",
   "components.settings.walletsettingscreen.inAppNotifications": "In-app notifications",
