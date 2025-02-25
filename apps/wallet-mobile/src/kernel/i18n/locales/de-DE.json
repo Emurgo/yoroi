@@ -485,6 +485,7 @@
   "components.settings.walletsettingscreen.tabTitle": "Wallet",
   "components.settings.walletsettingscreen.title": "Einstellungen",
   "components.settings.walletsettingscreen.unknownWalletType": "Unbekannter Wallet Typ",
+  "components.settings.walletsettingscreen.fcmToken": "FCM Token",
   "components.settings.walletsettingscreen.walletName": "Wallet-Name",
   "components.settings.walletsettingscreen.walletType": "Wallet Typ:",
   "components.settings.walletsettingscreen.inAppNotifications": "In-app notifications",
