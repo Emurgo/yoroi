@@ -1,8 +1,8 @@
-By clicking "Proceed," you acknowledge that you will be dealing with the third-party decentralized applications (DApps) offering multiple services. You may be required to agree to the terms, conditions, and privacy policies of DApps to deal with them. Yoroi Wallet does not control, endorse, or assume responsibility for the content, security, policies, or services provided by DApps.
+En cliquant sur "Continuer", vous reconnaissez que vous traiterez avec les applications tierces décentralisées (DApps) offrant des services multiples. Il se peut que vous ayez à accepter les modalités, conditions et politiques de confidentialité de DApps pour accéder à leurs services. Yoroi Wallet ne contrôle pas, n'endosse ni assume la responsabilité du contenu, de la sécurité, des politiques ou des services fournis par ces DApps.
 
-**Please note:**
+Veuillez remarquer
 
-1. Yoroi Wallet is not liable for any losses, delays, or errors that may occur while using the third-party service.
-2. Transactions may be subject to restrictions based on your geographic location, applicable laws, financial institution policies, or the service provider's limitations.
-3. Ensure you review and understand the third party's terms, as your interactions are solely governed by their agreements.
-4. Yoroi Wallet does not collect or store any personal or financial data submitted through the third-party platform.
+1. Yoroi Wallet n’est pas responsable des pertes, retards ou erreurs pouvant survenir lors de l’utilisation d'un service tiers.
+2. Les transactions peuvent être soumises à des restrictions en fonction de votre situation géographique, des lois, des politiques des institutions financières ou des limites du fournisseur de services.
+3. Assurez-vous que vous examinez et comprenez les conditions du tiers, car vos interactions ne sont régies que par leurs accords.
+4. Yoroi Wallet ne recueille ni ne stocke aucune donnée personnelle ou financière soumise par via la plate-forme tierce.
