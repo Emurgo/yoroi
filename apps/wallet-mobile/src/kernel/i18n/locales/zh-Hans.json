@@ -485,6 +485,7 @@
   "components.settings.walletsettingscreen.tabTitle": "钱包",
   "components.settings.walletsettingscreen.title": "设置",
   "components.settings.walletsettingscreen.unknownWalletType": "未知的钱包类型",
+  "components.settings.walletsettingscreen.fcmToken": "FCM Token",
   "components.settings.walletsettingscreen.walletName": "钱包名称",
   "components.settings.walletsettingscreen.walletType": "钱包类型：",
   "components.settings.walletsettingscreen.inAppNotifications": "In-app notifications",
