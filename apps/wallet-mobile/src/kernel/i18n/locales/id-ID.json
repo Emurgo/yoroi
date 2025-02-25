@@ -485,6 +485,7 @@
   "components.settings.walletsettingscreen.tabTitle": "Wallet",
   "components.settings.walletsettingscreen.title": "Pengaturan",
   "components.settings.walletsettingscreen.unknownWalletType": "Unknown Wallet Type",
+  "components.settings.walletsettingscreen.fcmToken": "FCM Token",
   "components.settings.walletsettingscreen.walletName": "Nama wallet",
   "components.settings.walletsettingscreen.walletType": "Wallet type:",
   "components.settings.walletsettingscreen.inAppNotifications": "In-app notifications",
