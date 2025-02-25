@@ -485,6 +485,7 @@
   "components.settings.walletsettingscreen.tabTitle": "Ví",
   "components.settings.walletsettingscreen.title": "Thiết lập",
   "components.settings.walletsettingscreen.unknownWalletType": "Loại ví không xác định",
+  "components.settings.walletsettingscreen.fcmToken": "FCM Token",
   "components.settings.walletsettingscreen.walletName": "Tên Ví",
   "components.settings.walletsettingscreen.walletType": "Kiểu Ví",
   "components.settings.walletsettingscreen.inAppNotifications": "In-app notifications",
