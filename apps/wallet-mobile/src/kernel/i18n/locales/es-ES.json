@@ -258,7 +258,7 @@
   "components.receive.receivescreen.usedAddresses": "Usado",
   "components.receive.receivescreen.verifyAddress": "Verifica la dirección",
   "components.receive.addresscard.title": "Dirección de la billetera",
-  "components.receive.addresscard.shareLabel": "Share",
+  "components.receive.addresscard.shareLabel": "Compartir",
   "components.receive.addresscard.walletAddress": "Detalles de dirección del monedero",
   "components.receive.addresscard.spendingKeyHash": "Hash de la clave de gastos",
   "components.receive.addresscard.stakingKeyHash": "Hash de la clave de delegación",
