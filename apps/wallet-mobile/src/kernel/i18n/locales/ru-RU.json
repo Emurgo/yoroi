@@ -485,6 +485,7 @@
   "components.settings.walletsettingscreen.tabTitle": "Кошелек",
   "components.settings.walletsettingscreen.title": "Настройки",
   "components.settings.walletsettingscreen.unknownWalletType": "Неизвестный тип кошелька",
+  "components.settings.walletsettingscreen.fcmToken": "FCM Token",
   "components.settings.walletsettingscreen.walletName": "Имя кошелька",
   "components.settings.walletsettingscreen.walletType": "Тип кошелька:",
   "components.settings.walletsettingscreen.inAppNotifications": "In-app notifications",
