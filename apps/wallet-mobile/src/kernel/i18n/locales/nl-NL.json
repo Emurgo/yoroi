@@ -485,6 +485,7 @@
   "components.settings.walletsettingscreen.tabTitle": "Portemonnee",
   "components.settings.walletsettingscreen.title": "Instellingen",
   "components.settings.walletsettingscreen.unknownWalletType": "Onbekend type portemonnee",
+  "components.settings.walletsettingscreen.fcmToken": "FCM Token",
   "components.settings.walletsettingscreen.walletName": "Portemonnee naam",
   "components.settings.walletsettingscreen.walletType": "Type portemonnee:",
   "components.settings.walletsettingscreen.inAppNotifications": "In-app notifications",
