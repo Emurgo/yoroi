@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, TextStyle, View, ViewStyle} from 'react-native'
 
 import {Icon} from '../components/Icon'
 import {Button, ButtonType} from './Button/Button'
@@ -13,9 +13,10 @@ type CopyButtonProps = {
   children?: React.ReactNode
   style?: StyleProp<ViewStyle>
   message?: string
+  fontOverride?: TextStyle
 }
 
-export const CopyButton = ({title, value, onCopy, message, style}: CopyButtonProps) => {
+export const CopyButton = ({title, value, onCopy, message, style, fontOverride}: CopyButtonProps) => {
   const {isCopying, copy} = useCopy()
   const {atoms} = useTheme()
 
@@ -23,7 +24,7 @@ export const CopyButton = ({title, value, onCopy, message, style}: CopyButtonPro
     <View style={style}>
       <Button
         type={ButtonType.SecondaryText}
-        fontOverride={atoms.body_1_lg_regular}
+        fontOverride={fontOverride ?? atoms.body_1_lg_regular}
         style={{...atoms.p_0, ...atoms.justify_between, flexGrow: 0}}
         title={title}
         icon={isCopying ? Icon.CopySuccess : Icon.Copy}

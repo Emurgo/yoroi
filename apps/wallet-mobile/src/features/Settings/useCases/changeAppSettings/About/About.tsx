@@ -1,9 +1,13 @@
+import messaging from '@react-native-firebase/messaging'
 import {useNavigation} from '@react-navigation/native'
+import {truncateString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, TextProps, View, ViewProps} from 'react-native'
+import {useQuery} from 'react-query'
 
+import {CopyButton} from '../../../../../components/CopyButton'
 import {Text} from '../../../../../components/Text'
 import {appInfo} from '../../../../../kernel/appInfo'
 import {commit} from '../../../../../kernel/env'
@@ -13,6 +17,11 @@ export const About = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigation = useNavigation<SettingsRouteNavigation>()
+  const {data: FCMToken} = useQuery({
+    useErrorBoundary: false,
+    suspense: false,
+    queryFn: () => messaging().getToken(),
+  })
 
   return (
     <View style={styles.about}>
@@ -29,6 +38,18 @@ export const About = () => {
 
         <ValueText>{commit}</ValueText>
       </Row>
+
+      {FCMToken !== undefined && (
+        <Row>
+          <LabelText>{strings.fcmToken}</LabelText>
+
+          <CopyButton
+            fontOverride={styles.valueText}
+            value={FCMToken}
+            title={truncateString({value: FCMToken, maxLength: 20})}
+          />
+        </Row>
+      )}
     </View>
   )
 }
@@ -94,6 +115,7 @@ const useStrings = () => {
     byronWallet: intl.formatMessage(messages.byronWallet),
     shelleyWallet: intl.formatMessage(messages.shelleyWallet),
     unknownWalletType: intl.formatMessage(messages.unknownWalletType),
+    fcmToken: intl.formatMessage(messages.fcmToken),
   }
 }
 
@@ -125,5 +147,9 @@ const messages = defineMessages({
   unknownWalletType: {
     id: 'components.settings.walletsettingscreen.unknownWalletType',
     defaultMessage: '!!!Unknown Wallet Type',
+  },
+  fcmToken: {
+    id: 'components.settings.walletsettingscreen.fcmToken',
+    defaultMessage: '!!!FCM Token',
   },
 })

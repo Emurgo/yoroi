@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Add token",
     "file": "src/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen.tsx",
     "start": {
-      "line": 219,
+      "line": 224,
       "column": 12,
-      "index": 7349
+      "index": 7406
     },
     "end": {
-      "line": 222,
+      "line": 227,
       "column": 3,
-      "index": 7426
+      "index": 7483
     }
   }
 ]

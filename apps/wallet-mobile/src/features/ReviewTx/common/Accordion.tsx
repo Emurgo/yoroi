@@ -32,8 +32,8 @@ export const Accordion = ({label, children}: {label: string; children: React.Rea
           styles.childrenContainer,
           {
             maxHeight: animatedHeight.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, 1000],
+              inputRange: [0, 0.9, 1],
+              outputRange: [0, 1000, 9999999], // can't mix numbers and strings, and appending % to the result is crashing the app, so just use a BIG number
             }),
             opacity: animatedHeight,
           },

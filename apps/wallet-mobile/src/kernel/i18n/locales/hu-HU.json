@@ -485,6 +485,7 @@
   "components.settings.walletsettingscreen.tabTitle": "Tárca",
   "components.settings.walletsettingscreen.title": "Beállítások",
   "components.settings.walletsettingscreen.unknownWalletType": "Unknown Wallet Type",
+  "components.settings.walletsettingscreen.fcmToken": "FCM Token",
   "components.settings.walletsettingscreen.walletName": "Tárca neve",
   "components.settings.walletsettingscreen.walletType": "Tárca típusa:",
   "components.settings.walletsettingscreen.inAppNotifications": "In-app notifications",
