@@ -4,15 +4,19 @@ import {Linking, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Analytics} from '../../../components/Analytics/Analytics'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useAgreeWithLegal, useNavigateTo} from '../common'
 
 export const AnalyticsNoticeScreen = () => {
   const navigateTo = useNavigateTo()
   const styles = useStyles()
+  const {track} = useMetrics()
+
   const {agree} = useAgreeWithLegal()
 
   const onClose = () => {
     agree()
+    track.onboardingPinCodePageViewed()
     navigateTo.enableLogingWithPin()
   }
 
