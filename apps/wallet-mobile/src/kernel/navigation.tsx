@@ -244,6 +244,7 @@ export type SettingsStackRoutes = {
       onPress: () => void
     }
   }
+  'manage-notification-display-duration': undefined
   'settings-preparing-wallet': undefined
 }
 
@@ -585,6 +586,15 @@ export const useWalletNavigation = () => {
         params: {
           screen: 'manage-collateral',
           params,
+        },
+      })
+    },
+
+    navigateToNotificationDisplayDuration: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'manage-notification-display-duration',
         },
       })
     },

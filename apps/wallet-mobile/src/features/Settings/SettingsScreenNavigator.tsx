@@ -191,6 +191,14 @@ export const SettingsScreenNavigator = () => {
         component={ManageCollateralScreen}
       />
 
+      <Stack.Screen //
+        name="manage-notification-display-duration"
+        options={{
+          title: strings.displayDuration,
+        }}
+        component={ManageCollateralScreen}
+      />
+
       <Stack.Screen
         name="enable-login-with-pin"
         options={{title: strings.customPinTitle}}
@@ -327,6 +335,10 @@ const messages = defineMessages({
     id: 'global.log',
     defaultMessage: '!!!Log',
   },
+  displayDuration: {
+    id: 'components.settings.notificationDisplayDuration.title',
+    defaultMessage: '!!!Display duration',
+  },
 })
 
 const useStrings = () => {
@@ -354,5 +366,6 @@ const useStrings = () => {
     themeTitle: intl.formatMessage(messages.themeTitle),
     walletTabTitle: intl.formatMessage(messages.walletTabTitle),
     networkTitle: intl.formatMessage(messages.networkTitle),
+    displayDuration: intl.formatMessage(messages.displayDuration),
   }
 }

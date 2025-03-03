@@ -142,6 +142,7 @@ import {WingRiders} from './WingRiders'
 import {YoroiApp} from './YoroiApp'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
+import {Time} from './Time'
 
 export const Icon = {
   Ada,
@@ -288,4 +289,5 @@ export const Icon = {
   AngleUp,
   AngleDown,
   Bell,
+  Time,
 }
