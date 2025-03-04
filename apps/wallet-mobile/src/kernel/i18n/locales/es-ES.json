@@ -485,7 +485,7 @@
   "components.settings.walletsettingscreen.tabTitle": "Billetera",
   "components.settings.walletsettingscreen.title": "Configuración",
   "components.settings.walletsettingscreen.unknownWalletType": "Tipo de monedero desconocido",
-  "components.settings.walletsettingscreen.fcmToken": "FCM Token",
+  "components.settings.walletsettingscreen.fcmToken": "Token de Mensajería en la nube de Firebase (FCM)",
   "components.settings.walletsettingscreen.walletName": "Nombre de la billetera",
   "components.settings.walletsettingscreen.walletType": "Tipo de billetera:",
   "components.settings.walletsettingscreen.inAppNotifications": "In-app notifications",
