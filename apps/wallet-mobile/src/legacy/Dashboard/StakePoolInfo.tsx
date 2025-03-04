@@ -18,11 +18,12 @@ import {StakePoolInfoAndHistory} from '../../yoroi-wallets/types/staking'
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()
   const styles = useStyles()
+  const {isDark} = useTheme()
   const {wallet} = useSelectedWallet()
   const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory({wallet, stakePoolId})
   const homepage = stakePoolInfoAndHistory?.info?.homepage
 
-  if (isLoading) return <ActivityIndicator size="large" color="black" />
+  if (isLoading) return <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
   if (!stakePoolInfoAndHistory?.info) return null
 
   return (
