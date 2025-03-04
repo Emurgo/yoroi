@@ -11,7 +11,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../../kernel/dialogs'
-import {features} from '../../../../kernel/features'
 import {confirmationMessages} from '../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../../kernel/navigation'
@@ -137,17 +136,13 @@ export const WalletSettingsScreen = () => {
 
         <Spacer height={24} />
 
-        {features.localNotifications && (
-          <>
-            <SettingsSection title={strings.inAppNotifications}>
-              <SettingsItem icon={<Icon.Bell {...iconProps} />} label={strings.allowNotifications}>
-                <NotificationDisplaySwitcher />
-              </SettingsItem>
-            </SettingsSection>
+        <SettingsSection title={strings.inAppNotifications}>
+          <SettingsItem icon={<Icon.Bell {...iconProps} />} label={strings.allowNotifications}>
+            <NotificationDisplaySwitcher />
+          </SettingsItem>
+        </SettingsSection>
 
-            <Spacer height={24} />
-          </>
-        )}
+        <Spacer height={24} />
 
         <SettingsSection title={strings.about}>
           <SettingsBuildItem label={strings.walletType} value={intl.formatMessage(getWalletType(implementation))} />

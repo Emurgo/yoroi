@@ -56,7 +56,7 @@ const changeNavigationBarColor = (colorScheme: 'default-dark' | 'default-light',
 }
 
 export const AppNavigator = () => {
-  useInitNotifications({localEnabled: features.localNotifications, pushEnabled: features.pushNotifications})
+  useInitNotifications({localEnabled: true, pushEnabled: features.pushNotifications})
   useDeepLinkWatcher()
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
