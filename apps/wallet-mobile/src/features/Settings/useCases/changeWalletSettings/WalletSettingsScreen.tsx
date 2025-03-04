@@ -137,17 +137,13 @@ export const WalletSettingsScreen = () => {
 
         <Spacer height={24} />
 
-        {features.localNotifications && (
-          <>
-            <SettingsSection title={strings.inAppNotifications}>
-              <SettingsItem icon={<Icon.Bell {...iconProps} />} label={strings.allowNotifications}>
-                <NotificationDisplaySwitcher />
-              </SettingsItem>
-            </SettingsSection>
+        <SettingsSection title={strings.inAppNotifications}>
+          <SettingsItem icon={<Icon.Bell {...iconProps} />} label={strings.allowNotifications}>
+            <NotificationDisplaySwitcher />
+          </SettingsItem>
+        </SettingsSection>
 
-            <Spacer height={24} />
-          </>
-        )}
+        <Spacer height={24} />
 
         <SettingsSection title={strings.about}>
           <SettingsBuildItem label={strings.walletType} value={intl.formatMessage(getWalletType(implementation))} />
