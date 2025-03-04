@@ -78,12 +78,14 @@ export const useStakePoolInfoAndHistory = (
       const stakePoolInfosAndHistories = await wallet.fetchPoolInfo({poolIds: [stakePoolId]})
 
       if (stakePoolInfosAndHistories[stakePoolId]?.info?.name != null) return stakePoolInfosAndHistories[stakePoolId]
-      if (stakePoolInfosAndHistories[stakePoolId]?.history == null) return null
+
+      const history = stakePoolInfosAndHistories[stakePoolId]?.history
+      if (history == null) return null
 
       const explorerPoolInfo = await poolInfoApi.getSingleExplorerPoolInfo(stakePoolId)
 
       return {
-        history: stakePoolInfosAndHistories[stakePoolId].history,
+        history,
         info: {
           name: explorerPoolInfo?.name ?? '',
           ticker: explorerPoolInfo?.ticker ?? '',
