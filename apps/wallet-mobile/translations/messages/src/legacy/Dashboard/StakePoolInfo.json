@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Stake pool delegated",
     "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
     "start": {
-      "line": 105,
+      "line": 126,
       "column": 9,
-      "index": 3212
+      "index": 4022
     },
     "end": {
-      "line": 108,
+      "line": 129,
       "column": 3,
-      "index": 3333
+      "index": 4143
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!If you just delegated to a new stake pool it may  take a couple of minutes for the network to process your request.",
     "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
     "start": {
-      "line": 109,
+      "line": 130,
       "column": 11,
-      "index": 3346
+      "index": 4156
     },
     "end": {
-      "line": 114,
+      "line": 135,
       "column": 3,
-      "index": 3581
+      "index": 4391
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Go to website",
     "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
     "start": {
-      "line": 115,
+      "line": 136,
       "column": 26,
-      "index": 3609
+      "index": 4419
     },
     "end": {
-      "line": 118,
+      "line": 139,
       "column": 3,
-      "index": 3744
+      "index": 4554
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Copied!",
     "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
     "start": {
-      "line": 119,
+      "line": 140,
       "column": 10,
-      "index": 3756
+      "index": 4566
     },
     "end": {
-      "line": 122,
+      "line": 143,
       "column": 3,
-      "index": 3865
+      "index": 4675
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Unknown pool",
     "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
     "start": {
-      "line": 123,
+      "line": 144,
       "column": 15,
-      "index": 3882
+      "index": 4692
     },
     "end": {
-      "line": 126,
+      "line": 147,
       "column": 3,
-      "index": 4001
+      "index": 4811
     }
   }
 ]

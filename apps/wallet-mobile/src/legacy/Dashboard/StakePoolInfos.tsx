@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {Balance, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React from 'react'
@@ -14,6 +15,7 @@ import {StakePoolInfo} from './StakePoolInfo'
 export const StakePoolInfos = () => {
   const {wallet} = useSelectedWallet()
   const {stakePoolIds, isLoading} = useStakePoolIds(wallet)
+  const {isDark} = useTheme()
 
   return stakePoolIds != null ? (
     <View>
@@ -23,7 +25,7 @@ export const StakePoolInfos = () => {
     </View>
   ) : isLoading ? (
     <View style={styles.activityIndicator}>
-      <ActivityIndicator size="large" color="black" />
+      <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
     </View>
   ) : null
 }

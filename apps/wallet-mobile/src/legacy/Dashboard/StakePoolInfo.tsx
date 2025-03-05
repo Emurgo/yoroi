@@ -1,3 +1,4 @@
+import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -8,6 +9,7 @@ import {Button, ButtonType} from '../../components/Button/Button'
 import {CopyButton} from '../../components/CopyButton'
 import {Text} from '../../components/Text'
 import {TitledCard} from '../../components/TitledCard'
+import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isEmptyString} from '../../kernel/utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
@@ -16,11 +18,12 @@ import {StakePoolInfoAndHistory} from '../../yoroi-wallets/types/staking'
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()
   const styles = useStyles()
+  const {isDark} = useTheme()
   const {wallet} = useSelectedWallet()
   const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory({wallet, stakePoolId})
   const homepage = stakePoolInfoAndHistory?.info?.homepage
 
-  if (isLoading) return <ActivityIndicator size="large" color="black" />
+  if (isLoading) return <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
   if (!stakePoolInfoAndHistory?.info) return null
 
   return (
@@ -63,13 +66,31 @@ export const useStakePoolInfoAndHistory = (
     [string, string, string]
   >,
 ) => {
+  const {networkManager} = useSelectedNetwork()
+  const poolInfoApi = React.useMemo(
+    () => new PoolInfoApi(networkManager.legacyApiBaseUrl),
+    [networkManager.legacyApiBaseUrl],
+  )
   const query = useQuery({
     ...options,
     queryKey: [wallet.id, 'stakePoolInfo', stakePoolId],
     queryFn: async () => {
       const stakePoolInfosAndHistories = await wallet.fetchPoolInfo({poolIds: [stakePoolId]})
 
-      return stakePoolInfosAndHistories[stakePoolId]
+      if (stakePoolInfosAndHistories[stakePoolId]?.info?.name != null) return stakePoolInfosAndHistories[stakePoolId]
+
+      const history = stakePoolInfosAndHistories[stakePoolId]?.history
+      if (history == null) return null
+
+      const explorerPoolInfo = await poolInfoApi.getSingleExplorerPoolInfo(stakePoolId)
+
+      return {
+        history,
+        info: {
+          name: explorerPoolInfo?.name ?? '',
+          ticker: explorerPoolInfo?.ticker ?? '',
+        },
+      }
     },
   })
 
