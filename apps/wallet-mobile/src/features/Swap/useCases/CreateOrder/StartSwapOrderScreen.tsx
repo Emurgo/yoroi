@@ -16,6 +16,7 @@ import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
+import {ManagerConfig} from '../Manager/ManagerConfig'
 import {EditPrice} from './EditPrice'
 import {ListSplitsByProvider} from './ListSplitsByProvider'
 import {WarnLimitPrice} from './WarnLimitPrice'
@@ -68,6 +69,13 @@ export const StartSwapOrderScreen = () => {
     }
   }
 
+  const openSettings = () => {
+    openModal({
+      title: strings.settings,
+      content: <ManagerConfig />,
+    })
+  }
+
   return (
     <View style={[styles.root, styles.flex]}>
       <ScrollView style={styles.padding}>
@@ -99,11 +107,13 @@ export const StartSwapOrderScreen = () => {
                 />
               </View>
 
-              <View>
+              <View style={styles.group}>
                 <RefreshButton
                   onPress={() => swapForm.action({type: 'Refresh'})}
                   disabled={!swapForm.tokenInInput.isTouched || !swapForm.tokenOutInput.isTouched}
                 />
+
+                <Button type={ButtonType.SecondaryText} icon={Icon.Gear} style={styles.gear} onPress={openSettings} />
               </View>
             </View>
 
@@ -232,7 +242,6 @@ const useStyles = () => {
     },
     group: {
       ...atoms.flex_row,
-      ...atoms.gap_md,
       ...atoms.align_center,
     },
     textContent: {
@@ -250,6 +259,10 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.gap_lg,
       ...atoms.pt_lg,
+    },
+    gear: {
+      ...atoms.px_sm,
+      ...atoms.rounded_full,
     },
   })
 

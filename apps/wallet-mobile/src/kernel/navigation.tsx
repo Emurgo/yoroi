@@ -177,7 +177,8 @@ type ClaimRoutes = {
 }
 
 type SwapTokenRoutes = {
-  'swap-start-swap': NavigatorScreenParams<SwapTabRoutes>
+  'token-swap': undefined
+  orders: undefined
   'swap-review': undefined
   'swap-select-sell-token': undefined
   'swap-select-buy-token': undefined
@@ -191,12 +192,6 @@ export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
 export type StakingCenterRoutes = {
   'staking-center-main': undefined
-}
-
-export type SwapTabRoutes = {
-  'token-swap': undefined
-  orders: undefined
-  'manager-config': undefined
 }
 
 type ExchangeRoutes = {

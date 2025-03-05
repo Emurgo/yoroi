@@ -37,11 +37,12 @@ import {FailedTxScreen as SendFailedTxScreen} from '../Send/useCases/ShowFailedT
 import {SubmittedTxScreen as SendSubmittedTxScreen} from '../Send/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {SwapTabNavigator} from '../Swap/SwapNavigator'
 import {EditSlippageScreen} from '../Swap/useCases/CreateOrder/EditSlippageScreen'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectBuyTokenFromListScreen'
 import {SelectProtocolScreen} from '../Swap/useCases/CreateOrder/SelectProtocolScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectSellTokenFromListScreen'
+import {StartSwapOrderScreen} from '../Swap/useCases/CreateOrder/StartSwapOrderScreen'
+import {ListOrders} from '../Swap/useCases/ListOrders/ListOrders'
 import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {FailedTxScreen as SwapFailedTxScreen} from '../Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
@@ -212,11 +213,21 @@ export const TxHistoryNavigator = () => {
               />
 
               <Stack.Screen
-                name="swap-start-swap"
-                component={SwapTabNavigator}
+                name="token-swap"
+                component={StartSwapOrderScreen}
                 options={{
                   ...sendOptions(navigationOptions, color),
                   title: strings.swapTitle,
+                  headerRight: () => <HeaderRightSwap />,
+                }}
+              />
+
+              <Stack.Screen
+                name="orders"
+                getComponent={() => ListOrders}
+                options={{
+                  ...sendOptions(navigationOptions, color),
+                  title: strings.orderSwap,
                 }}
               />
 
@@ -411,6 +422,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
+  orderSwap: {
+    id: 'swap.swapScreen.ordersSwapTab',
+    defaultMessage: '!!!Orders',
+  },
   swapFromTitle: {
     id: 'swap.swapScreen.swapFrom',
     defaultMessage: '!!!Swap from',
@@ -521,6 +536,7 @@ const useStrings = () => {
     specificAmount: intl.formatMessage(messages.specificAmount),
     swapFromTitle: intl.formatMessage(messages.swapFromTitle),
     swapTitle: intl.formatMessage(messages.swapTitle),
+    orderSwap: intl.formatMessage(messages.orderSwap),
     swapToTitle: intl.formatMessage(messages.swapToTitle),
     txDetailsTitle: intl.formatMessage(messages.txDetailsTitle),
   }
@@ -536,6 +552,17 @@ const HeaderRightHistory = React.memo(() => {
       style={{paddingRight: 8}}
     >
       <Icon.Qr color={color.gray_max} />
+    </TouchableOpacity>
+  )
+})
+
+const HeaderRightSwap = React.memo(() => {
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {color} = useTheme()
+
+  return (
+    <TouchableOpacity onPress={() => navigation.navigate('orders')} style={{paddingRight: 8}}>
+      <Icon.TermsOfUse color={color.gray_max} size={24} />
     </TouchableOpacity>
   )
 })

@@ -22,14 +22,12 @@ export const useNavigateTo = () => {
     resetTabAndSwap: () => {
       navigation.reset({index: 0, routes: [{name: 'dashboard-portfolio'}]})
       navigation.navigate('history', {
-        screen: 'swap-start-swap',
-        params: {screen: 'token-swap'},
+        screen: 'token-swap',
       })
     },
     swap: () =>
       navigation.navigate('history', {
-        screen: 'swap-start-swap',
-        params: {screen: 'token-swap'},
+        screen: 'token-swap',
       }),
     swapPreprodNotice: () =>
       navigation.navigate('history', {

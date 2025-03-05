@@ -12,7 +12,8 @@ export const useNavigateTo = () => {
     editSlippage: () => swapNavigation.navigate('swap-edit-slippage'),
     selectBuyToken: () => swapNavigation.navigate('swap-select-buy-token'),
     selectSellToken: () => swapNavigation.navigate('swap-select-sell-token'),
-    startSwap: () => swapNavigation.navigate('swap-start-swap', {screen: 'token-swap'}),
+    startSwap: () => swapNavigation.navigate('token-swap'),
+    orders: () => swapNavigation.navigate('orders'),
     reviewSwap: () => swapNavigation.navigate('swap-review'),
     submittedTx: () => swapNavigation.navigate('swap-submitted-tx'),
     failedTx: () => swapNavigation.navigate('swap-failed-tx'),
@@ -22,10 +23,7 @@ export const useNavigateTo = () => {
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-start-swap',
-            params: {
-              screen: 'orders',
-            },
+            screen: 'orders',
           },
         },
       }),
@@ -35,10 +33,7 @@ export const useNavigateTo = () => {
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-start-swap',
-            params: {
-              screen: 'token-swap',
-            },
+            screen: 'token-swap',
           },
         },
       }),
