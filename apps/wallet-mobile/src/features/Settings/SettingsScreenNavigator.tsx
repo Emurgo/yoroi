@@ -43,6 +43,7 @@ import {ManageCollateralScreen} from './useCases/changeWalletSettings/ManageColl
 import {RemoveWalletScreen} from './useCases/changeWalletSettings/RemoveWallet'
 import {RenameWalletScreen} from './useCases/changeWalletSettings/RenameWalletScreen/RenameWalletScreen'
 import {WalletSettingsScreen} from './useCases/changeWalletSettings/WalletSettingsScreen'
+import {ManageNotificationDisplayDurationScreen} from './useCases/changeWalletSettings/ManageNotificationDisplayDuration/ManageNotificationDisplayDurationScreen'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
@@ -196,7 +197,7 @@ export const SettingsScreenNavigator = () => {
         options={{
           title: strings.displayDuration,
         }}
-        component={ManageCollateralScreen}
+        component={ManageNotificationDisplayDurationScreen}
       />
 
       <Stack.Screen

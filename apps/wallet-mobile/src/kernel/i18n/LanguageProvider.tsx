@@ -20,6 +20,7 @@ import {
 import {numberLocale, systemLocale} from './initialization'
 import {LanguageCode, NumberLocale, supportedLanguages} from './languages'
 import translations from './translations'
+import BigNumber from 'bignumber.js'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
 export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
@@ -84,6 +85,11 @@ export const useLanguage = ({onChange}: {onChange?: (languageCode: LanguageCode)
     }
   }, [onChange, value.observer])
   return value
+}
+
+export const useFormatNumber = () => {
+  const {numberLocale} = useLanguage()
+  return React.useCallback((value: number) => new BigNumber(value, 10).toFormat(numberLocale), [numberLocale])
 }
 
 const missingProvider = () => {
