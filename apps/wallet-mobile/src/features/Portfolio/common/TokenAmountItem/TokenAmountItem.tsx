@@ -69,7 +69,7 @@ export const TokenAmountItem = ({
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
-        <TokenInfoIcon info={amount.info} size={variant === 'swap' ? 'sm' : 'md'} />
+        <TokenInfoIcon info={amount.info} size={variant === 'swap' ? 'md' : 'lg'} />
       </Left>
 
       <Middle>

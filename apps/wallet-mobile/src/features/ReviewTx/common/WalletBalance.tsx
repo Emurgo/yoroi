@@ -110,7 +110,7 @@ const TokenList = ({assetList}: {assetList: PortfolioTokenBalances['fts'] | Port
       ItemSeparatorComponent={() => <Space width="sm" />}
       showsHorizontalScrollIndicator={false}
       keyExtractor={(item) => item.info.id}
-      renderItem={({item}) => <TokenInfoIcon info={item.info} size="md" />}
+      renderItem={({item}) => <TokenInfoIcon info={item.info} size="lg" />}
     />
   )
 }

@@ -26,12 +26,35 @@ export type ButtonProps = {
   rightIcon?: boolean
   style?: ViewStyle
   fontOverride?: TextStyle
+  bgColorsOverride?: Colors
+  fgColorsOverride?: Colors
 } & Omit<PressableProps, 'style' | 'children'>
 
 export const Button = (props: ButtonProps) => {
-  const {type, size, title, icon: Icon, isLoading, rightIcon, disabled, style, fontOverride, ...rest} = props
+  const {
+    type,
+    size,
+    title,
+    icon: Icon,
+    isLoading,
+    rightIcon,
+    disabled,
+    style,
+    fontOverride,
+    bgColorsOverride,
+    fgColorsOverride,
+    ...rest
+  } = props
 
-  const {styles, iconProps, iconPropsPressed} = useStyles({type, size, rightIcon, disabled, fontOverride})
+  const {styles, iconProps, iconPropsPressed} = useStyles({
+    type,
+    size,
+    rightIcon,
+    disabled,
+    fontOverride,
+    bgColorsOverride,
+    fgColorsOverride,
+  })
 
   return (
     <Pressable
@@ -72,48 +95,57 @@ const useStyles = ({
   rightIcon,
   disabled,
   fontOverride,
-}: Pick<ButtonProps, 'type' | 'size' | 'rightIcon' | 'disabled' | 'fontOverride'>) => {
+  bgColorsOverride,
+  fgColorsOverride,
+}: Pick<
+  ButtonProps,
+  'type' | 'size' | 'rightIcon' | 'disabled' | 'fontOverride' | 'bgColorsOverride' | 'fgColorsOverride'
+>) => {
   const {color, atoms} = useTheme()
 
-  const backgroundColors: Colors = {
-    [ButtonType.Primary]: {idle: color.primary_500, pressed: color.primary_600, disabled: color.primary_200},
-    [ButtonType.Secondary]: {idle: 'transparent', pressed: color.primary_100, disabled: 'transparent'},
-    [ButtonType.Critical]: {
-      idle: color.sys_magenta_500,
-      pressed: color.sys_magenta_600,
-      disabled: color.sys_magenta_300,
-    },
-    [ButtonType.Text]: {idle: 'transparent', pressed: color.gray_100, disabled: 'transparent'},
-    [ButtonType.SecondaryText]: {idle: 'transparent', pressed: color.gray_100, disabled: 'transparent'},
-    [ButtonType.Circle]: {idle: color.primary_500, pressed: color.primary_600, disabled: color.primary_200},
-    [ButtonType.Link]: {idle: 'transparent', pressed: 'transparent', disabled: 'transparent'},
-  }[type]
+  const backgroundColors: Colors =
+    bgColorsOverride ??
+    {
+      [ButtonType.Primary]: {idle: color.primary_500, pressed: color.primary_600, disabled: color.primary_200},
+      [ButtonType.Secondary]: {idle: 'transparent', pressed: color.primary_100, disabled: 'transparent'},
+      [ButtonType.Critical]: {
+        idle: color.sys_magenta_500,
+        pressed: color.sys_magenta_600,
+        disabled: color.sys_magenta_300,
+      },
+      [ButtonType.Text]: {idle: 'transparent', pressed: color.gray_100, disabled: 'transparent'},
+      [ButtonType.SecondaryText]: {idle: 'transparent', pressed: color.gray_100, disabled: 'transparent'},
+      [ButtonType.Circle]: {idle: color.primary_500, pressed: color.primary_600, disabled: color.primary_200},
+      [ButtonType.Link]: {idle: 'transparent', pressed: 'transparent', disabled: 'transparent'},
+    }[type]
 
-  const foregroundColors: Colors = {
-    [ButtonType.Primary]: {idle: color.white_static, pressed: color.white_static, disabled: color.gray_min},
-    [ButtonType.Secondary]: {
-      idle: color.text_primary_medium,
-      pressed: color.text_primary_max,
-      disabled: color.text_primary_min,
-    },
-    [ButtonType.Critical]: {idle: color.gray_min, pressed: color.gray_min, disabled: color.gray_min},
-    [ButtonType.Text]: {
-      idle: color.text_primary_medium,
-      pressed: color.text_primary_max,
-      disabled: color.text_primary_min,
-    },
-    [ButtonType.SecondaryText]: {
-      idle: color.text_gray_medium,
-      pressed: color.text_gray_max,
-      disabled: color.text_gray_min,
-    },
-    [ButtonType.Circle]: {idle: color.white_static, pressed: color.white_static, disabled: color.gray_min},
-    [ButtonType.Link]: {
-      idle: color.text_primary_medium,
-      pressed: color.text_primary_max,
-      disabled: color.text_primary_min,
-    },
-  }[type]
+  const foregroundColors: Colors =
+    fgColorsOverride ??
+    {
+      [ButtonType.Primary]: {idle: color.white_static, pressed: color.white_static, disabled: color.gray_min},
+      [ButtonType.Secondary]: {
+        idle: color.text_primary_medium,
+        pressed: color.text_primary_max,
+        disabled: color.text_primary_min,
+      },
+      [ButtonType.Critical]: {idle: color.gray_min, pressed: color.gray_min, disabled: color.gray_min},
+      [ButtonType.Text]: {
+        idle: color.text_primary_medium,
+        pressed: color.text_primary_max,
+        disabled: color.text_primary_min,
+      },
+      [ButtonType.SecondaryText]: {
+        idle: color.text_gray_medium,
+        pressed: color.text_gray_max,
+        disabled: color.text_gray_min,
+      },
+      [ButtonType.Circle]: {idle: color.white_static, pressed: color.white_static, disabled: color.gray_min},
+      [ButtonType.Link]: {
+        idle: color.text_primary_medium,
+        pressed: color.text_primary_max,
+        disabled: color.text_primary_min,
+      },
+    }[type]
 
   const backgroundColor = disabled ? backgroundColors.disabled : backgroundColors.idle
   const foregroundColor = disabled ? foregroundColors.disabled : foregroundColors.idle

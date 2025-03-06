@@ -10,25 +10,34 @@ import {usePortfolioImage} from '../hooks/usePortfolioImage'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info | undefined | null
-  size?: 'sm' | 'md'
+  size?: 'sm' | 'md' | 'lg'
   imageStyle?: ImageStyle
 }
-export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProps) => {
-  const {styles} = useStyles()
+export const TokenInfoIcon = ({info, size = 'lg', imageStyle}: TokenInfoIconProps) => {
+  const {styles, colors} = useStyles()
   const [policy, name] = !info ? '.' : info.id.split('.')
   const {uri, headers, onError, onLoad, isError} = usePortfolioImage({policy, name, width: 64, height: 64})
 
   if (!info || isError) {
-    return <TokenIconPlaceholder size={size} />
+    return (
+      <View style={[styles.icon, styles[size], styles.placeholder]}>
+        <Icon.Coins2 color={colors.icon} size={{sm: 18, md: 20, lg: 24}[size]} />
+      </View>
+    )
   }
 
-  if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
+  if (isPrimaryToken(info))
+    return (
+      <View style={[styles.icon, styles[size], styles.primary, imageStyle]}>
+        <Icon.Cardano color="white" size={{sm: 20, md: 28, lg: 35}[size]} />
+      </View>
+    )
 
   return (
     <Image
       source={{uri, headers}}
       contentFit="cover"
-      style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
+      style={[styles.icon, styles[size], imageStyle]}
       placeholder={blurhash}
       cachePolicy="memory-disk"
       onError={onError}
@@ -37,59 +46,38 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
   )
 }
 
-const PrimaryIcon = ({size = 'md', imageStyle}: {size?: 'sm' | 'md'; imageStyle?: ImageStyle}) => {
-  const {styles} = useStyles()
-  return (
-    <View style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, styles.primary, imageStyle]}>
-      <Icon.Cardano color="white" size={size === 'sm' ? 20 : 35} />
-    </View>
-  )
-}
-
-export const TokenIconPlaceholder = ({size = 'md'}: {size?: 'sm' | 'md'}) => {
-  const {styles, colors} = useStyles()
-  return (
-    <View style={[styles.iconMedium, styles.placeholder, size === 'sm' && styles.placeholderSmall]}>
-      <Icon.Coins2 color={colors.icon} size={size === 'sm' ? 18 : 24} />
-    </View>
-  )
-}
-
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    placeholder: {
+      backgroundColor: color.gray_200,
+    },
     primary: {
       backgroundColor: color.primary_500,
     },
-    iconMedium: {
+    icon: {
       backgroundColor: 'transparent',
+      borderRadius: 8,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.overflow_hidden,
+    },
+    lg: {
       width: 40,
       height: 40,
-      borderRadius: 8,
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden',
     },
-    iconSmall: {
-      backgroundColor: 'transparent',
+    md: {
+      width: 32,
+      height: 32,
+    },
+    sm: {
       width: 24,
       height: 24,
-      borderRadius: 8,
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden',
     },
-    placeholder: {
-      backgroundColor: color.gray_100,
-    },
-    placeholderSmall: {
-      width: 26,
-      height: 26,
-    },
-  })
+  } as const)
 
   const colors = {
     icon: color.gray_600,

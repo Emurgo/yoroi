@@ -9,10 +9,7 @@ import {useModal} from '../../../../components/Modal/ModalContext'
 import {RefreshButton} from '../../../../components/RefreshButton/RefreshButton'
 import {Space} from '../../../../components/Space/Space'
 import {useIsKeyboardOpen} from '../../../../kernel/keyboard/useIsKeyboardOpen'
-import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {AmountCard} from '../../common/AmountCard/AmountCard'
-import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
@@ -27,24 +24,12 @@ const BOTTOM_ACTION_SECTION = 180
 export const StartSwapOrderScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {styles, color} = useStyles()
   const {height: deviceHeight} = useWindowDimensions()
   const isKeyboardOpen = useIsKeyboardOpen()
-  const {wallet} = useSelectedWallet()
-  const balances = usePortfolioBalances({wallet})
   const swapForm = useSwap()
   const navigate = useNavigateTo()
   const {openModal, closeModal} = useModal()
-
-  const amountIn = balances.records.get(swapForm.tokenInInput.tokenId ?? undefinedToken) ?? {
-    info: swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken),
-    quantity: balances.records.get(swapForm.tokenInInput.tokenId ?? undefinedToken)?.quantity,
-  }
-
-  const amountOut = {
-    info: swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken),
-    quantity: balances.records.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)?.quantity,
-  }
 
   const onSwapPress = () => {
     const wantedPrice = Number(swapForm.wantedPrice)
@@ -117,49 +102,30 @@ export const StartSwapOrderScreen = () => {
               </View>
             </View>
 
-            <AmountCard
-              label={strings.swapFrom}
-              onChange={(value) => swapForm.action({type: 'TokenInAmountChanged', value})}
-              value={swapForm.tokenInInput.value}
-              amount={amountIn}
-              wallet={wallet}
-              navigateTo={navigate.selectSellToken}
-              touched={swapForm.tokenInInput.isTouched}
-              inputRef={swapForm.tokenInInputRef}
-              error={swapForm.tokenInInput.error}
-              testID="swap:sell-edit"
-            />
+            <View style={styles.cards}>
+              <AmountCard direction="in" />
 
-            <View style={styles.between}>
-              <View>
+              <View style={styles.relative}>
                 <Button
-                  type={ButtonType.Text}
+                  style={styles.switch}
+                  fgColorsOverride={{
+                    idle: color.text_primary_medium,
+                    pressed: color.text_primary_max,
+                    disabled: color.text_primary_min,
+                  }}
+                  bgColorsOverride={{
+                    idle: color.bg_color_min,
+                    pressed: color.bg_color_min,
+                    disabled: color.bg_color_max,
+                  }}
+                  type={ButtonType.Circle}
                   icon={Icon.Switch}
                   onPress={() => swapForm.action({type: 'SwitchTouched'})}
                 />
-              </View>
 
-              <View>
-                <Button
-                  type={ButtonType.Text}
-                  onPress={() => swapForm.action({type: 'ResetAmounts'})}
-                  title={strings.clear}
-                />
+                <AmountCard direction="out" />
               </View>
             </View>
-
-            <AmountCard
-              label={strings.swapTo}
-              onChange={(value) => swapForm.action({type: 'TokenOutAmountChanged', value})}
-              value={swapForm.tokenOutInput.value}
-              amount={amountOut}
-              wallet={wallet}
-              navigateTo={navigate.selectBuyToken}
-              touched={swapForm.tokenOutInput.isTouched}
-              inputRef={swapForm.tokenOutInputRef}
-              error={swapForm.tokenOutInput.error}
-              testID="swap:buy-edit"
-            />
 
             <EditPrice />
 
@@ -207,6 +173,23 @@ export const StartSwapOrderScreen = () => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
+    cards: {
+      ...atoms.gap_sm,
+    },
+    relative: {
+      ...atoms.relative,
+    },
+    switch: {
+      top: -28,
+      borderWidth: 2,
+      borderColor: color.bg_color_max,
+      width: 48,
+      height: 48,
+      ...atoms.rounded_full,
+      ...atoms.absolute,
+      ...atoms.z_10,
+      ...atoms.self_center,
+    },
     slippage: {
       ...atoms.flex_row,
       ...atoms.align_center,
@@ -266,5 +249,5 @@ const useStyles = () => {
     },
   })
 
-  return {styles, atoms}
+  return {styles, atoms, color}
 }
