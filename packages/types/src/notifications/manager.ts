@@ -62,6 +62,7 @@ interface NotificationEventBase {
 }
 
 export type NotificationConfig = {
+  displayDuration: number
   [NotificationTrigger.PrimaryTokenPriceChanged]: {
     notify: boolean
     thresholdInPercent: number

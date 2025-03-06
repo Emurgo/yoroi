@@ -140,16 +140,14 @@ const eventsManagerMaker = ({
   return {events, unreadCounterByGroup$, newEvents$}
 }
 
+type ConfigManagerMakerOptions = {storage: App.Storage<true, string>}
 const configManagerMaker = ({
   storage,
-}: {
-  storage: App.Storage<true, string>
-}): Notifications.Manager['config'] => {
+}: ConfigManagerMakerOptions): Notifications.Manager['config'] => {
   return {
     read: async (): Promise<Notifications.Config> => {
-      return (
-        (await storage.getItem<ConfigStorageData>('config')) ?? defaultConfig
-      )
+      const value = await storage.getItem<Partial<ConfigStorageData>>('config')
+      return {...defaultConfig, value}
     },
     save: async (config: Notifications.Config): Promise<void> => {
       await storage.setItem('config', config)
@@ -174,6 +172,7 @@ const buildUnreadCounterDefaultValue = (): Map<Notifications.Group, number> => {
 }
 
 const defaultConfig: Notifications.Config = {
+  displayDuration: 4,
   [Notifications.Trigger.PrimaryTokenPriceChanged]: {
     notify: true,
     thresholdInPercent: 10,

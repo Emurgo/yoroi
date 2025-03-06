@@ -8,6 +8,8 @@ import {Button} from '../../../../../components/Button/Button'
 import {useFormatNumber} from '../../../../../kernel/i18n'
 import {parseNumber} from '@yoroi/common'
 import {useStrings} from './strings'
+import {useNotificationDisplaySettings} from '../Notifications/NotificationsDisplaySettings'
+import {useNotificationsConfig} from '@yoroi/notifications'
 
 type ManualChoice = {
   id: 'Manual'
@@ -32,21 +34,24 @@ const CHOICES: Readonly<Choice[]> = [
   {id: 'Manual'},
 ] as const
 
-const defaultChoice = CHOICES[1]
-
 export const ManageNotificationDisplayDurationScreen = ({}) => {
   const {styles, colors} = useStyles()
   const formatNumber = useFormatNumber()
+  const {data: config} = useNotificationsConfig()
 
   const strings = useStrings()
-  const [selectedChoiceId, setSelectedChoiceId] = React.useState<ChoiceKind>(defaultChoice.id)
+  const savedChoice = getChoiceByValue(config.displayDuration)
+  const [selectedChoiceId, setSelectedChoiceId] = React.useState<ChoiceKind>(savedChoice.id)
   const selectedChoice = getChoiceById(selectedChoiceId)
-  const [inputValue, setInputValue] = React.useState('')
+  const defaultInputValue = savedChoice.id === 'Manual' ? formatNumber(config.displayDuration) : ''
+  const [inputValue, setInputValue] = React.useState(defaultInputValue)
 
   const isSelectedChoiceManual = selectedChoiceId === 'Manual'
   const isInputEnabled = isSelectedChoiceManual
+  const isInputEmpty = inputValue === ''
   const hasError = isSelectedChoiceManual && !isInputValid(inputValue)
-  const isButtonDisabled = hasError || (isSelectedChoiceManual && inputValue === '')
+  const isButtonDisabled = hasError || (isSelectedChoiceManual && isInputEmpty)
+  const shouldDisplayError = !isInputEmpty && hasError
 
   const handleChoicePress = (id: ChoiceKind) => {
     setSelectedChoiceId(id)
@@ -94,7 +99,8 @@ export const ManageNotificationDisplayDurationScreen = ({}) => {
               keyboardType="numeric"
               selectionColor={colors.cursor}
               right={<Text style={styles.percentLabel}>{strings.seconds}</Text>}
-              error={hasError}
+              error={shouldDisplayError}
+              errorText={shouldDisplayError ? 'Hello' : undefined}
             />
           </View>
         </ScrollView>
@@ -203,6 +209,10 @@ const useStyles = () => {
 
 const getChoiceById = (id: ChoiceKind): Choice => {
   return CHOICES.find((choice) => choice.id === id) ?? {id: 'Manual'}
+}
+
+const getChoiceByValue = (value: number): Choice => {
+  return CHOICES.find((choice) => choice.id !== 'Manual' && choice.value === value) ?? {id: 'Manual'}
 }
 
 const isInputValid = (text: string) => {
