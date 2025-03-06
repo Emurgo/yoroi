@@ -95,7 +95,14 @@ export const dexhunterApiMaker = (
             tag: 'right',
             value: {
               status: response.value.status,
-              data: transformers.orders.response(response.value.data),
+              data: transformers.orders
+                .response(response.value.data)
+                .sort(
+                  (
+                    {lastUpdate: A, placedAt: A2},
+                    {lastUpdate: B, placedAt: B2},
+                  ) => (B ?? B2 ?? 0) - (A ?? A2 ?? 0),
+                ),
             },
           },
           true,

@@ -103,7 +103,14 @@ export const muesliswapApiMaker = (
               tag: 'right',
               value: {
                 status: 200,
-                data: transformers.ordersHistory.response(response.value.data),
+                data: transformers.ordersHistory
+                  .response(response.value.data)
+                  .sort(
+                    (
+                      {lastUpdate: A, placedAt: A2},
+                      {lastUpdate: B, placedAt: B2},
+                    ) => (B ?? B2 ?? 0) - (A ?? A2 ?? 0),
+                  ),
               },
             },
             true,

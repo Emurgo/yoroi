@@ -54,27 +54,6 @@ const apiManagerMaker = (
   config: Swap.ManagerConfig,
   ptId: Portfolio.Token.Id,
 ): Swap.Api => {
-  const autoApi = autoApiMaker(adapters, ptId)
-  return new Proxy(
-    {},
-    {
-      get({}, prop: keyof Swap.Api) {
-        return (...args: any[]) => {
-          if (config.aggregatorSelected !== 'auto')
-            return (adapters[config.aggregatorSelected][prop] as Function)(
-              ...args,
-            )
-          return (autoApi[prop] as Function)(...args)
-        }
-      },
-    },
-  ) as Swap.Api
-}
-
-const autoApiMaker = (
-  adapters: Record<Swap.Aggregator, Swap.Api>,
-  ptId: Portfolio.Token.Id,
-): Swap.Api => {
   const dhTokenList = new Set<Portfolio.Token.Id>([ptId])
   const msTokenList = new Set<Portfolio.Token.Id>([ptId])
 
@@ -82,8 +61,12 @@ const autoApiMaker = (
     {
       async tokens() {
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          adapters.dexhunter.tokens(),
-          adapters.muesliswap.tokens(),
+          configIncludes(config, 'dexhunter')
+            ? adapters.dexhunter.tokens()
+            : excluded,
+          configIncludes(config, 'muesliswap')
+            ? adapters.muesliswap.tokens()
+            : excluded,
         ])
 
         warnAllLeft(dexhunterResponse, muesliswapResponse)
@@ -139,15 +122,22 @@ const autoApiMaker = (
           tag: 'right',
           value: {
             status: Api.HttpStatusCode.Ok,
-            data: Object.values(merged),
+            data: Object.values(merged).sort(
+              ({lastUpdate: A, placedAt: A2}, {lastUpdate: B, placedAt: B2}) =>
+                (B ?? B2 ?? 0) - (A ?? A2 ?? 0),
+            ),
           },
         }
       },
 
       async protocols() {
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          adapters.dexhunter.protocols(),
-          adapters.muesliswap.protocols(),
+          configIncludes(config, 'dexhunter')
+            ? adapters.dexhunter.protocols()
+            : excluded,
+          configIncludes(config, 'muesliswap')
+            ? adapters.muesliswap.protocols()
+            : excluded,
         ])
 
         warnAllLeft(dexhunterResponse, muesliswapResponse)
@@ -185,8 +175,12 @@ const autoApiMaker = (
         }
 
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          adapters.dexhunter.estimate(body),
-          adapters.muesliswap.estimate(body),
+          configIncludes(config, 'dexhunter')
+            ? adapters.dexhunter.estimate(body)
+            : excluded,
+          configIncludes(config, 'muesliswap')
+            ? adapters.muesliswap.estimate(body)
+            : excluded,
         ])
 
         warnAllLeft(dexhunterResponse, muesliswapResponse)
@@ -226,8 +220,12 @@ const autoApiMaker = (
         }
 
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          adapters.dexhunter.create(body),
-          adapters.muesliswap.create(body),
+          configIncludes(config, 'dexhunter')
+            ? adapters.dexhunter.create(body)
+            : excluded,
+          configIncludes(config, 'muesliswap')
+            ? adapters.muesliswap.create(body)
+            : excluded,
         ])
 
         warnAllLeft(dexhunterResponse, muesliswapResponse)
@@ -257,6 +255,27 @@ const autoApiMaker = (
     },
     true,
   )
+}
+
+const excluded: Api.Response<any> = freeze(
+  {
+    tag: 'left',
+    error: {
+      status: -3,
+      message: 'Aggregator excluded from call',
+      responseData: {},
+    },
+  },
+  true,
+)
+
+const configIncludes = (
+  config: Swap.ManagerConfig,
+  aggregator: Swap.Aggregator,
+): boolean => {
+  if (config.aggregatorSelected === 'auto') return true
+  if (config.aggregatorSelected === aggregator) return true
+  return false
 }
 
 const warnAllLeft = (...responses: Array<Api.Response<any>>) => {

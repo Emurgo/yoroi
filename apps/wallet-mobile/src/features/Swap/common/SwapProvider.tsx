@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {isRight} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
@@ -41,23 +42,30 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     })
   }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
 
-  const {data: orders = []} = useQuery(
-    ['useSwapOrders', network, stakingKey, swapManager.config.aggregatorSelected],
-    async () => {
+  const {data: orders = [], refetch: refetchOrders} = useQuery({
+    enabled: false,
+    queryKey: ['useSwapOrders', network, stakingKey, swapManager.config.aggregatorSelected],
+    queryFn: async () => {
       const res = await swapManager.api.orders()
       if (isRight(res)) return res.value.data
       return []
     },
-  )
+  })
 
-  const {data: tokenIds = []} = useQuery(
-    ['useSwapTokenIds', network, swapManager.config.aggregatorSelected],
-    async () => {
+  const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
+    enabled: false,
+    queryKey: ['useSwapTokenIds', network, swapManager.config.aggregatorSelected],
+    queryFn: async () => {
       const res = await swapManager.api.tokens()
       if (isRight(res)) return res.value.data.map(({id}) => id)
       return []
     },
-  )
+  })
+
+  useFocusEffect(() => {
+    refetchOrders()
+    refetchTokens()
+  })
 
   const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} = usePortfolioTokenInfos(
     {wallet, tokenIds, sourceId: 'SwapProvider'},
@@ -263,14 +271,22 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.tokenInInput.value = !Number.isNaN(Number(action.value.replace(',', '.')))
           ? action.value.replace(',', '.')
           : '0'
-        if (action.value === '' || action.value === '0') draft.tokenOutInput.value = '0'
+        if (action.value === '' || action.value === '0') {
+          draft.tokenOutInput.value = '0'
+          draft.estimate = undefined
+          draft.reqres = 'response'
+        }
         break
 
       case SwapAction.TokenOutAmountChanged:
         draft.tokenOutInput.value = !Number.isNaN(Number(action.value.replace(',', '.')))
           ? action.value.replace(',', '.')
           : '0'
-        if (action.value === '' || action.value === '0') draft.tokenInInput.value = '0'
+        if (action.value === '' || action.value === '0') {
+          draft.tokenInInput.value = '0'
+          draft.estimate = undefined
+          draft.reqres = 'response'
+        }
         break
 
       case SwapAction.TokenInErrorChanged:
