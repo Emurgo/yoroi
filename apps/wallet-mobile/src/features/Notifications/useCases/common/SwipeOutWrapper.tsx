@@ -60,7 +60,6 @@ const usePanAnimation = ({onRelease, onPress}: {onRelease: () => void; onPress: 
   const slightMovementThreshold = 10
 
   const fadeIn = React.useCallback(() => {
-    console.log('fadeIn')
     Animated.parallel([
       Animated.timing(opacity, {
         toValue: 1,
