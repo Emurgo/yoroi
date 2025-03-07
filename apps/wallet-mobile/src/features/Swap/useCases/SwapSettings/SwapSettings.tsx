@@ -6,14 +6,14 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {useSwap} from '../../common/SwapProvider'
 
-export const ManagerConfig = () => {
+export const SwapSettings = () => {
   const {styles} = useStyles()
   const swapForm = useSwap()
-  const [aggregator, setAggregator] = React.useState(swapForm.managerConfig.aggregatorSelected)
+  const [aggregator, setAggregator] = React.useState(swapForm.managerConfig.aggregatorsSelected)
 
-  const assign = (a: Swap.ManagerConfig['aggregatorSelected']) => {
+  const assign = (a: Swap.ManagerConfig['aggregatorsSelected']) => {
     setAggregator(a)
-    swapForm.assignManagerConfig({...swapForm.managerConfig, aggregatorSelected: a})
+    swapForm.assignManagerConfig({...swapForm.managerConfig, aggregatorsSelected: a})
   }
 
   return (
@@ -23,31 +23,21 @@ export const ManagerConfig = () => {
       <View style={styles.group}>
         <View>
           <Button
-            onPress={() => assign('auto')}
-            type={ButtonType.SecondaryText}
-            title="Auto"
-            size="S"
-            {...(aggregator === 'auto' && {style: styles.activeButton})}
-          />
-        </View>
-
-        <View>
-          <Button
-            onPress={() => assign('dexhunter')}
+            onPress={() => assign(['dexhunter'])}
             type={ButtonType.SecondaryText}
             title="Dexhunter"
             size="S"
-            {...(aggregator === 'dexhunter' && {style: styles.activeButton})}
+            {...(aggregator.includes('dexhunter') && {style: styles.activeButton})}
           />
         </View>
 
         <View>
           <Button
-            onPress={() => assign('muesliswap')}
+            onPress={() => assign(['muesliswap'])}
             type={ButtonType.SecondaryText}
             title="Muesliswap"
             size="S"
-            {...(aggregator === 'muesliswap' && {style: styles.activeButton})}
+            {...(aggregator.includes('muesliswap') && {style: styles.activeButton})}
           />
         </View>
       </View>

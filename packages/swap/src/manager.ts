@@ -30,7 +30,9 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     isPrimaryToken,
   })
 
-  const config: Swap.ManagerConfig = {aggregatorSelected: 'auto'}
+  const config: Swap.ManagerConfig = {
+    aggregatorsSelected: ['dexhunter', 'muesliswap'],
+  }
 
   return {
     api: apiManagerMaker(
@@ -61,10 +63,10 @@ const apiManagerMaker = (
     {
       async tokens() {
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          configIncludes(config, 'dexhunter')
+          config.aggregatorsSelected.includes('dexhunter')
             ? adapters.dexhunter.tokens()
             : excluded,
-          configIncludes(config, 'muesliswap')
+          config.aggregatorsSelected.includes('muesliswap')
             ? adapters.muesliswap.tokens()
             : excluded,
         ])
@@ -132,10 +134,10 @@ const apiManagerMaker = (
 
       async protocols() {
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          configIncludes(config, 'dexhunter')
+          config.aggregatorsSelected.includes('dexhunter')
             ? adapters.dexhunter.protocols()
             : excluded,
-          configIncludes(config, 'muesliswap')
+          config.aggregatorsSelected.includes('muesliswap')
             ? adapters.muesliswap.protocols()
             : excluded,
         ])
@@ -175,10 +177,10 @@ const apiManagerMaker = (
         }
 
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          configIncludes(config, 'dexhunter')
+          config.aggregatorsSelected.includes('dexhunter')
             ? adapters.dexhunter.estimate(body)
             : excluded,
-          configIncludes(config, 'muesliswap')
+          config.aggregatorsSelected.includes('muesliswap')
             ? adapters.muesliswap.estimate(body)
             : excluded,
         ])
@@ -220,10 +222,10 @@ const apiManagerMaker = (
         }
 
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          configIncludes(config, 'dexhunter')
+          config.aggregatorsSelected.includes('dexhunter')
             ? adapters.dexhunter.create(body)
             : excluded,
-          configIncludes(config, 'muesliswap')
+          config.aggregatorsSelected.includes('muesliswap')
             ? adapters.muesliswap.create(body)
             : excluded,
         ])
@@ -268,15 +270,6 @@ const excluded: Api.Response<any> = freeze(
   },
   true,
 )
-
-const configIncludes = (
-  config: Swap.ManagerConfig,
-  aggregator: Swap.Aggregator,
-): boolean => {
-  if (config.aggregatorSelected === 'auto') return true
-  if (config.aggregatorSelected === aggregator) return true
-  return false
-}
 
 const warnAllLeft = (...responses: Array<Api.Response<any>>) => {
   if (responses.every(isLeft))

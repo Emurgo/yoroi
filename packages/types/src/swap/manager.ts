@@ -1,11 +1,11 @@
 import {ChainSupportedNetworks} from '../chain/network'
 import {PortfolioTokenInfo} from '../portfolio/info'
-import {SwapAggregatorSelected} from './aggregator'
+import {SwapAggregator} from './aggregator'
 import {SwapApi} from './api'
 import {SwapStorage} from './storage'
 
 export type SwapManagerConfig = {
-  aggregatorSelected: SwapAggregatorSelected
+  aggregatorsSelected: Array<SwapAggregator>
 }
 
 export type SwapManager = Readonly<{

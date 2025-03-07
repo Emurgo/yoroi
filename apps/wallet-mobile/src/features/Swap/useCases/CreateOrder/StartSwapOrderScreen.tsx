@@ -13,7 +13,6 @@ import {AmountCard} from '../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
-import {ManagerConfig} from '../Manager/ManagerConfig'
 import {EditPrice} from './EditPrice'
 import {ListSplitsByProvider} from './ListSplitsByProvider'
 import {WarnLimitPrice} from './WarnLimitPrice'
@@ -28,8 +27,8 @@ export const StartSwapOrderScreen = () => {
   const {height: deviceHeight} = useWindowDimensions()
   const isKeyboardOpen = useIsKeyboardOpen()
   const swapForm = useSwap()
-  const navigate = useNavigateTo()
   const {openModal, closeModal} = useModal()
+  const navigateTo = useNavigateTo()
 
   const onSwapPress = () => {
     const wantedPrice = Number(swapForm.wantedPrice)
@@ -52,13 +51,6 @@ export const StartSwapOrderScreen = () => {
     } else {
       swapForm.create()
     }
-  }
-
-  const openSettings = () => {
-    openModal({
-      title: strings.settings,
-      content: <ManagerConfig />,
-    })
   }
 
   return (
@@ -98,7 +90,12 @@ export const StartSwapOrderScreen = () => {
                   disabled={!swapForm.tokenInInput.isTouched || !swapForm.tokenOutInput.isTouched}
                 />
 
-                <Button type={ButtonType.SecondaryText} icon={Icon.Gear} style={styles.gear} onPress={openSettings} />
+                <Button
+                  type={ButtonType.SecondaryText}
+                  icon={Icon.Gear}
+                  style={styles.gear}
+                  onPress={navigateTo.swapSettings}
+                />
               </View>
             </View>
 
@@ -148,7 +145,7 @@ export const StartSwapOrderScreen = () => {
 
                 <View>
                   <Button
-                    onPress={navigate.editSlippage}
+                    onPress={navigateTo.editSlippage}
                     type={ButtonType.SecondaryText}
                     title={`${swapForm.slippageInput.value}%`}
                     rightIcon
@@ -190,11 +187,6 @@ const useStyles = () => {
       ...atoms.z_10,
       ...atoms.self_center,
     },
-    slippage: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_xs,
-    },
     root: {
       backgroundColor: color.bg_color_max,
       ...atoms.pb_lg,
@@ -226,6 +218,11 @@ const useStyles = () => {
     group: {
       ...atoms.flex_row,
       ...atoms.align_center,
+    },
+    slippage: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.gap_xs,
     },
     textContent: {
       color: color.gray_900,

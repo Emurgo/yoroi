@@ -47,6 +47,7 @@ import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {FailedTxScreen as SwapFailedTxScreen} from '../Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
 import {SubmittedTxScreen as SwapSubmittedTxScreen} from '../Swap/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
+import {SwapSettings} from '../Swap/useCases/SwapSettings/SwapSettings'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
@@ -213,7 +214,7 @@ export const TxHistoryNavigator = () => {
               />
 
               <Stack.Screen
-                name="token-swap"
+                name="swap-main"
                 component={StartSwapOrderScreen}
                 options={{
                   ...sendOptions(navigationOptions, color),
@@ -223,11 +224,20 @@ export const TxHistoryNavigator = () => {
               />
 
               <Stack.Screen
-                name="orders"
+                name="swap-orders"
                 getComponent={() => ListOrders}
                 options={{
                   ...sendOptions(navigationOptions, color),
                   title: strings.orderSwap,
+                }}
+              />
+
+              <Stack.Screen
+                name="swap-settings"
+                getComponent={() => SwapSettings}
+                options={{
+                  ...sendOptions(navigationOptions, color),
+                  title: strings.settings,
                 }}
               />
 
@@ -509,6 +519,10 @@ const messages = defineMessages({
     id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Tx Details',
   },
+  settings: {
+    id: 'menu.settings',
+    defaultMessage: '!!!Settings',
+  },
 })
 
 const useStrings = () => {
@@ -539,6 +553,7 @@ const useStrings = () => {
     orderSwap: intl.formatMessage(messages.orderSwap),
     swapToTitle: intl.formatMessage(messages.swapToTitle),
     txDetailsTitle: intl.formatMessage(messages.txDetailsTitle),
+    settings: intl.formatMessage(messages.settings),
   }
 }
 
@@ -561,7 +576,7 @@ const HeaderRightSwap = React.memo(() => {
   const {color} = useTheme()
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('orders')} style={{paddingRight: 8}}>
+    <TouchableOpacity onPress={() => navigation.navigate('swap-orders')} style={{paddingRight: 8}}>
       <Icon.TermsOfUse color={color.gray_max} size={24} />
     </TouchableOpacity>
   )

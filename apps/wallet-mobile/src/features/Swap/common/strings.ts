@@ -168,7 +168,6 @@ export const useStrings = () => {
     submittedTxScreenTitle: intl.formatMessage(messages.submittedTxScreenTitle),
     submittedTxScreenText: intl.formatMessage(messages.submittedTxScreenText),
     submittedTxScreenButton: intl.formatMessage(messages.submittedTxScreenButton),
-    settings: intl.formatMessage(messages.settings),
   }
 }
 
@@ -730,9 +729,5 @@ const messages = defineMessages({
   submittedTxScreenButton: {
     id: 'swap.submittedTxScreen.button',
     defaultMessage: '!!!Close',
-  },
-  settings: {
-    id: 'menu.settings',
-    defaultMessage: '!!!Settings',
   },
 })

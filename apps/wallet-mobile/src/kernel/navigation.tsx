@@ -177,8 +177,9 @@ type ClaimRoutes = {
 }
 
 type SwapTokenRoutes = {
-  'token-swap': undefined
-  orders: undefined
+  'swap-main': undefined
+  'swap-orders': undefined
+  'swap-settings': undefined
   'swap-review': undefined
   'swap-select-sell-token': undefined
   'swap-select-buy-token': undefined

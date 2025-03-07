@@ -8,8 +8,6 @@ export const SwapAggregator = Object.freeze({
 export type SwapAggregator =
   (typeof SwapAggregator)[keyof typeof SwapAggregator]
 
-export type SwapAggregatorSelected = 'auto' | SwapAggregator
-
 export type SwapAggregatorProtocol = {
   aggregator: SwapAggregator
   protocol: SwapProtocol

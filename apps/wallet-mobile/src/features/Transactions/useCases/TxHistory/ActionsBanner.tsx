@@ -175,7 +175,7 @@ const useNavigateTo = () => {
     send: () => navigation.navigate('send-start-tx'),
     receiveSingleAddress: () => navigation.navigate('receive-single'),
     receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
-    swap: () => navigation.navigate('token-swap'),
+    swap: () => navigation.navigate('swap-main'),
     swapPreprodNotice: () => navigation.navigate('swap-preprod-notice'),
     exchange: () => navigation.navigate('exchange-create-order'),
   }

@@ -275,11 +275,7 @@ import {SwapStorage} from './swap/storage'
 import {SwapManager, SwapManagerConfig, SwapManagerMaker} from './swap/manager'
 import {SwapDex} from './swap/dex'
 import {SwapOrder} from './swap/order'
-import {
-  SwapAggregator,
-  SwapAggregatorProtocol,
-  SwapAggregatorSelected,
-} from './swap/aggregator'
+import {SwapAggregator, SwapAggregatorProtocol} from './swap/aggregator'
 import {SwapProtocol} from './swap/protocol'
 
 export namespace App {
@@ -351,7 +347,6 @@ export namespace Swap {
   export type Aggregator = SwapAggregator
   export const Aggregator = SwapAggregator
   export type AggregatorProtocol = SwapAggregatorProtocol
-  export type AggregatorSelected = SwapAggregatorSelected
   export type Protocol = SwapProtocol
   export const Protocol = SwapProtocol
   export type Dex = SwapDex

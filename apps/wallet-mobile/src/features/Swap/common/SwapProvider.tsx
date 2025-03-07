@@ -43,8 +43,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
-    enabled: false,
-    queryKey: ['useSwapOrders', network, stakingKey, swapManager.config.aggregatorSelected],
+    queryKey: ['useSwapOrders', network, stakingKey, swapManager.config.aggregatorsSelected],
     queryFn: async () => {
       const res = await swapManager.api.orders()
       if (isRight(res)) return res.value.data
@@ -53,8 +52,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   })
 
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
-    enabled: false,
-    queryKey: ['useSwapTokenIds', network, swapManager.config.aggregatorSelected],
+    queryKey: ['useSwapTokenIds', network, swapManager.config.aggregatorsSelected],
     queryFn: async () => {
       const res = await swapManager.api.tokens()
       if (isRight(res)) return res.value.data.map(({id}) => id)
@@ -62,10 +60,12 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     },
   })
 
-  useFocusEffect(() => {
+  const refetches = React.useCallback(() => {
     refetchOrders()
     refetchTokens()
-  })
+  }, [refetchOrders, refetchTokens])
+
+  useFocusEffect(refetches)
 
   const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} = usePortfolioTokenInfos(
     {wallet, tokenIds, sourceId: 'SwapProvider'},
@@ -83,7 +83,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     [
       'useSwapAggregatorProtocols',
       network,
-      swapManager.config.aggregatorSelected,
+      swapManager.config.aggregatorsSelected,
       state.tokenInInput.tokenId,
       state.tokenOutInput.tokenId,
     ],
@@ -529,6 +529,6 @@ const SwapContext = React.createContext<SwapContext>({
   action: () => null,
   create: () => null,
   cancel: () => new Promise((res) => res),
-  managerConfig: {aggregatorSelected: 'auto'},
-  assignManagerConfig: () => ({aggregatorSelected: 'auto'}),
+  managerConfig: {aggregatorsSelected: ['dexhunter', 'muesliswap']},
+  assignManagerConfig: () => ({aggregatorsSelected: ['dexhunter', 'muesliswap']}),
 })
