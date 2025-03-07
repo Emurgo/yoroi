@@ -31,7 +31,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
   })
 
   const config: Swap.ManagerConfig = {
-    aggregatorsSelected: ['dexhunter', 'muesliswap'],
+    routingPreference: 'auto',
   }
 
   return {
@@ -63,10 +63,12 @@ const apiManagerMaker = (
     {
       async tokens() {
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          config.aggregatorsSelected.includes('dexhunter')
+          config.routingPreference === 'auto' ||
+          config.routingPreference.includes('dexhunter')
             ? adapters.dexhunter.tokens()
             : excluded,
-          config.aggregatorsSelected.includes('muesliswap')
+          config.routingPreference === 'auto' ||
+          config.routingPreference.includes('muesliswap')
             ? adapters.muesliswap.tokens()
             : excluded,
         ])
@@ -134,10 +136,12 @@ const apiManagerMaker = (
 
       async protocols() {
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          config.aggregatorsSelected.includes('dexhunter')
+          config.routingPreference === 'auto' ||
+          config.routingPreference.includes('dexhunter')
             ? adapters.dexhunter.protocols()
             : excluded,
-          config.aggregatorsSelected.includes('muesliswap')
+          config.routingPreference === 'auto' ||
+          config.routingPreference.includes('muesliswap')
             ? adapters.muesliswap.protocols()
             : excluded,
         ])
@@ -177,10 +181,12 @@ const apiManagerMaker = (
         }
 
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          config.aggregatorsSelected.includes('dexhunter')
+          config.routingPreference === 'auto' ||
+          config.routingPreference.includes('dexhunter')
             ? adapters.dexhunter.estimate(body)
             : excluded,
-          config.aggregatorsSelected.includes('muesliswap')
+          config.routingPreference === 'auto' ||
+          config.routingPreference.includes('muesliswap')
             ? adapters.muesliswap.estimate(body)
             : excluded,
         ])
@@ -222,10 +228,12 @@ const apiManagerMaker = (
         }
 
         const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          config.aggregatorsSelected.includes('dexhunter')
+          config.routingPreference === 'auto' ||
+          config.routingPreference.includes('dexhunter')
             ? adapters.dexhunter.create(body)
             : excluded,
-          config.aggregatorsSelected.includes('muesliswap')
+          config.routingPreference === 'auto' ||
+          config.routingPreference.includes('muesliswap')
             ? adapters.muesliswap.create(body)
             : excluded,
         ])

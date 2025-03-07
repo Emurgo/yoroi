@@ -5,7 +5,7 @@ import {SwapApi} from './api'
 import {SwapStorage} from './storage'
 
 export type SwapManagerConfig = {
-  aggregatorsSelected: Array<SwapAggregator>
+  routingPreference: 'auto' | Array<SwapAggregator>
 }
 
 export type SwapManager = Readonly<{

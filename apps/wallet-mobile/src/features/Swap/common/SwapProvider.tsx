@@ -43,7 +43,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
-    queryKey: ['useSwapOrders', network, stakingKey, swapManager.config.aggregatorsSelected],
+    queryKey: ['useSwapOrders', network, stakingKey, swapManager.config.routingPreference],
     queryFn: async () => {
       const res = await swapManager.api.orders()
       if (isRight(res)) return res.value.data
@@ -52,7 +52,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   })
 
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
-    queryKey: ['useSwapTokenIds', network, swapManager.config.aggregatorsSelected],
+    queryKey: ['useSwapTokenIds', network, swapManager.config.routingPreference],
     queryFn: async () => {
       const res = await swapManager.api.tokens()
       if (isRight(res)) return res.value.data.map(({id}) => id)
@@ -83,7 +83,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     [
       'useSwapAggregatorProtocols',
       network,
-      swapManager.config.aggregatorsSelected,
+      swapManager.config.routingPreference,
       state.tokenInInput.tokenId,
       state.tokenOutInput.tokenId,
     ],
@@ -529,6 +529,6 @@ const SwapContext = React.createContext<SwapContext>({
   action: () => null,
   create: () => null,
   cancel: () => new Promise((res) => res),
-  managerConfig: {aggregatorsSelected: ['dexhunter', 'muesliswap']},
-  assignManagerConfig: () => ({aggregatorsSelected: ['dexhunter', 'muesliswap']}),
+  managerConfig: {routingPreference: 'auto'},
+  assignManagerConfig: () => ({routingPreference: 'auto'}),
 })

@@ -82,9 +82,9 @@ describe('swapManagerMaker', () => {
     expect(manager).toHaveProperty('slippage')
   })
 
-  it('defaults to aggregatorsSelected: ["dexhunter", "muesliswap"]', () => {
+  it('defaults to routingPreference: ["dexhunter", "muesliswap"]', () => {
     const manager = swapManagerMaker(baseConfig)
-    expect(manager.config.aggregatorsSelected).toBe(['dexhunter', 'muesliswap'])
+    expect(manager.config.routingPreference).toBe(['dexhunter', 'muesliswap'])
   })
 
   describe('tokens()', () => {
@@ -183,7 +183,7 @@ describe('swapManagerMaker', () => {
     it('if aggregatorSelected is not auto, calls only that aggregator', async () => {
       const manager = swapManagerMaker(baseConfig)
       // set aggregatorSelected to 'muesliswap'
-      manager.assignConfig({aggregatorsSelected: ['muesliswap']})
+      manager.assignConfig({routingPreference: ['muesliswap']})
 
       await manager.api.estimate(msApiMocks.inputs.quote)
       expect(mockMuesliswapApi.estimate).toHaveBeenCalledWith(
