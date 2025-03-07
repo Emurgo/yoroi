@@ -55,7 +55,7 @@ export const OpenOrders = () => {
   const intl = useIntl()
   const {wallet} = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
-  const {navigateToTxReview} = useWalletNavigation()
+  const {navigateToTxReview, navigateToCollateralSettings} = useWalletNavigation()
   const [isLoading, setIsLoading] = React.useState(false)
   const navigateTo = useNavigateTo()
 
@@ -142,7 +142,11 @@ export const OpenOrders = () => {
     }
   }
 
-  const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert(wallet)
+  const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert(wallet, () => {
+    navigateToCollateralSettings({
+      backButton: {onPress: () => navigateTo.swapOpenOrders(), content: strings.backToSwapOrders},
+    })
+  })
 
   const hasCollateral = () => {
     const collateral = wallet.getCollateralInfo()
@@ -728,17 +732,19 @@ const NoOrdersYet = () => {
   )
 }
 
-const useShowCollateralNotFoundAlert = (wallet: YoroiWallet) => {
+export const useShowCollateralNotFoundAlert = (
+  wallet: YoroiWallet,
+  onCollateralNotFoundPress?: () => void,
+  onCollateralPendingPress?: () => void,
+) => {
   const strings = useStrings()
-  const {navigateToCollateralSettings} = useWalletNavigation()
-  const swapNavigateTo = useNavigateTo()
 
   return () => {
     const collateral = wallet.getCollateralInfo()
     const isCollateralUtxoPending = !collateral.isConfirmed && collateral.collateralId.length > 0
 
     if (isCollateralUtxoPending) {
-      Alert.alert(strings.collateralTxPendingTitle, strings.collateralTxPending)
+      Alert.alert(strings.collateralTxPendingTitle, strings.collateralTxPending, [{onPress: onCollateralPendingPress}])
       return
     }
 
@@ -748,11 +754,7 @@ const useShowCollateralNotFoundAlert = (wallet: YoroiWallet) => {
       [
         {
           text: strings.assignCollateral,
-          onPress: () => {
-            navigateToCollateralSettings({
-              backButton: {onPress: () => swapNavigateTo.swapOpenOrders(), content: strings.backToSwapOrders},
-            })
-          },
+          onPress: onCollateralNotFoundPress,
         },
       ],
       {cancelable: true, onDismiss: () => true},
