@@ -125,7 +125,6 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     },
     // NOTE: amount (value argument) is a CIP-30 requirement for getCollateral method
     // but in Yoroi collateral is generated with minimum amount at the moment
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     sendReorganisationTx: async (value?: string) => {
       if (value && new BigNumber(value).gt(new BigNumber(collateralConfig.maxLovelace))) {
         return Promise.reject(new Error('Collateral value is too high'))
