@@ -249,7 +249,7 @@ const useStyles = () => {
     background: color.bg_color_max,
     gray: color.gray_400,
     textInput: color.gray_600,
-    actionGray: color.gray_500,
+    actionGray: color.el_gray_medium,
     black: color.gray_max,
     text: color.gray_900,
     textError: color.sys_magenta_500,

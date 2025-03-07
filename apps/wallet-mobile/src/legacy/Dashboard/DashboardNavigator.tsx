@@ -33,7 +33,7 @@ export const DashboardNavigator = () => {
       >
         <Stack.Screen
           name="staking-dashboard-main"
-          component={Dashboard}
+          getComponent={() => Dashboard}
           options={{
             title: meta.name,
           }}

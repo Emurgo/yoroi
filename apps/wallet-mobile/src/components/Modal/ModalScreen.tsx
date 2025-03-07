@@ -160,6 +160,7 @@ const useStyles = () => {
       ...atoms.self_stretch,
     },
     title: {
+      ...atoms.text_center,
       ...atoms.heading_3_medium,
       ...atoms.p_lg,
       color: color.text_gray_max,
