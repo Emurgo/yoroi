@@ -151,11 +151,7 @@ export const SwapSettings = () => {
                   <SettingsSwitch
                     value={aggregator.includes('muesliswap')}
                     onValueChange={() =>
-                      assign(
-                        aggregator.includes('muesliswap')
-                          ? aggregator.filter((v) => v !== 'muesliswap')
-                          : [...aggregator, 'muesliswap'],
-                      )
+                      assign(aggregator.includes('muesliswap') ? ['dexhunter'] : [...aggregator, 'muesliswap'])
                     }
                   />
                 </View>
@@ -166,11 +162,7 @@ export const SwapSettings = () => {
                   <SettingsSwitch
                     value={aggregator.includes('dexhunter')}
                     onValueChange={() =>
-                      assign(
-                        aggregator.includes('dexhunter')
-                          ? aggregator.filter((v) => v !== 'dexhunter')
-                          : [...aggregator, 'dexhunter'],
-                      )
+                      assign(aggregator.includes('dexhunter') ? ['muesliswap'] : [...aggregator, 'dexhunter'])
                     }
                   />
                 </View>
