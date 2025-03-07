@@ -1,9 +1,10 @@
-import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
-import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
-import {usePrivacyMode} from './useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import React from 'react'
 import {amountFormatter} from '@yoroi/portfolio'
+import React from 'react'
+
+import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
+import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {NavigatedSettingsItem, NavigatedSettingsItemProps} from './SettingsItems'
+import {usePrivacyMode} from './useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: NavigatedSettingsItemProps) => {
   const {wallet} = useSelectedWallet()

@@ -40,10 +40,10 @@ import {
   EnableEasyConfirmationScreen,
 } from './useCases/changeWalletSettings/EasyConfirmation'
 import {ManageCollateralScreen} from './useCases/changeWalletSettings/ManageCollateral'
+import {ManageNotificationDisplayDurationScreen} from './useCases/changeWalletSettings/ManageNotificationDisplayDuration/ManageNotificationDisplayDurationScreen'
 import {RemoveWalletScreen} from './useCases/changeWalletSettings/RemoveWallet'
 import {RenameWalletScreen} from './useCases/changeWalletSettings/RenameWalletScreen/RenameWalletScreen'
 import {WalletSettingsScreen} from './useCases/changeWalletSettings/WalletSettingsScreen'
-import {ManageNotificationDisplayDurationScreen} from './useCases/changeWalletSettings/ManageNotificationDisplayDuration/ManageNotificationDisplayDurationScreen'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {

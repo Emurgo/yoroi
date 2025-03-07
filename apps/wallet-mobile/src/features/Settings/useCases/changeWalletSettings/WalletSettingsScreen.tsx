@@ -22,13 +22,13 @@ import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
 import {SettingsSwitch} from '../../common/SettingsSwitch'
+import {SettingsCollateralItem} from '../../SettingsCollateralItem'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../../SettingsItems'
+import {SettingsNotificationDurationItem} from '../../SettingsNotificationDurationItem'
 import {
   useChangeNotificationDisplaySettings,
   useNotificationDisplaySettings,
 } from './Notifications/NotificationsDisplaySettings'
-import {SettingsNotificationDurationItem} from '../../SettingsNotificationDurationItem'
-import {SettingsCollateralItem} from '../../SettingsCollateralItem'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()

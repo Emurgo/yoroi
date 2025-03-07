@@ -14,6 +14,7 @@ export const useStrings = () => {
     eightSeconds: intl.formatMessage(messages.eightSeconds),
     tenSeconds: intl.formatMessage(messages.tenSeconds),
     twelveSeconds: intl.formatMessage(messages.twelveSeconds),
+    inputError: intl.formatMessage(messages.inputError),
   }
 }
 
@@ -61,5 +62,9 @@ const messages = defineMessages({
   twelveSeconds: {
     id: 'components.settings.manageNotificationDisplayDuration.twelveSeconds',
     defaultMessage: '!!!12s',
+  },
+  inputError: {
+    id: 'components.settings.manageNotificationDisplayDuration.inputError',
+    defaultMessage: '!!!Enter a value from 1 to 60.',
   },
 })

@@ -2,7 +2,7 @@ import {BehaviorSubject, Subject, Subscription} from 'rxjs'
 import {App, Notifications} from '@yoroi/types'
 
 type EventsStorageData = ReadonlyArray<Notifications.Event>
-type ConfigStorageData = Notifications.Config
+type ConfigStorageData = Partial<Notifications.Config>
 
 const getAllTriggers = (): Array<Notifications.Trigger> =>
   Object.values(Notifications.Trigger)
@@ -146,11 +146,12 @@ const configManagerMaker = ({
 }: ConfigManagerMakerOptions): Notifications.Manager['config'] => {
   return {
     read: async (): Promise<Notifications.Config> => {
-      const value = await storage.getItem<Partial<ConfigStorageData>>('config')
-      return {...defaultConfig, value}
+      const value = await storage.getItem<ConfigStorageData>('config')
+      return {...defaultConfig, ...value}
     },
-    save: async (config: Notifications.Config): Promise<void> => {
-      await storage.setItem('config', config)
+    save: async (newConfig: Partial<Notifications.Config>): Promise<void> => {
+      const oldConfig = await storage.getItem<ConfigStorageData>('config')
+      await storage.setItem('config', {...oldConfig, ...newConfig})
     },
     reset: async (): Promise<void> => {
       return storage.removeItem('config')

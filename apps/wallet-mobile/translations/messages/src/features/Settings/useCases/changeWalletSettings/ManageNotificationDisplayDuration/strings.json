@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Adjust the display duration of in-app notifications to suit your preferences.",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 21,
+      "line": 22,
       "column": 15,
-      "index": 805
+      "index": 862
     },
     "end": {
-      "line": 24,
+      "line": 25,
       "column": 3,
-      "index": 991
+      "index": 1048
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Apply",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 25,
+      "line": 26,
       "column": 9,
-      "index": 1002
+      "index": 1059
     },
     "end": {
-      "line": 28,
+      "line": 29,
       "column": 3,
-      "index": 1110
+      "index": 1167
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Display duration",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 29,
+      "line": 30,
       "column": 19,
-      "index": 1131
+      "index": 1188
     },
     "end": {
-      "line": 32,
+      "line": 33,
       "column": 3,
-      "index": 1260
+      "index": 1317
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Manual",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 33,
+      "line": 34,
       "column": 10,
-      "index": 1272
+      "index": 1329
     },
     "end": {
-      "line": 36,
+      "line": 37,
       "column": 3,
-      "index": 1382
+      "index": 1439
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!seconds",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 37,
+      "line": 38,
       "column": 11,
-      "index": 1395
+      "index": 1452
     },
     "end": {
-      "line": 40,
+      "line": 41,
       "column": 3,
-      "index": 1507
+      "index": 1564
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!2s",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 41,
+      "line": 42,
       "column": 14,
-      "index": 1523
+      "index": 1580
     },
     "end": {
-      "line": 44,
+      "line": 45,
       "column": 3,
-      "index": 1633
+      "index": 1690
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!4s",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 45,
+      "line": 46,
       "column": 15,
-      "index": 1650
+      "index": 1707
     },
     "end": {
-      "line": 48,
+      "line": 49,
       "column": 3,
-      "index": 1761
+      "index": 1818
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!6s",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 49,
+      "line": 50,
       "column": 14,
-      "index": 1777
+      "index": 1834
     },
     "end": {
-      "line": 52,
+      "line": 53,
       "column": 3,
-      "index": 1887
+      "index": 1944
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!8s",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 53,
+      "line": 54,
       "column": 16,
-      "index": 1905
+      "index": 1962
     },
     "end": {
-      "line": 56,
+      "line": 57,
       "column": 3,
-      "index": 2017
+      "index": 2074
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!10s",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 57,
+      "line": 58,
       "column": 14,
-      "index": 2033
+      "index": 2090
     },
     "end": {
-      "line": 60,
+      "line": 61,
       "column": 3,
-      "index": 2144
+      "index": 2201
     }
   },
   {
@@ -154,14 +154,29 @@
     "defaultMessage": "!!!12s",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
     "start": {
-      "line": 61,
+      "line": 62,
       "column": 17,
-      "index": 2163
+      "index": 2220
     },
     "end": {
-      "line": 64,
+      "line": 65,
       "column": 3,
-      "index": 2277
+      "index": 2334
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.inputError",
+    "defaultMessage": "!!!Enter a value from 1 to 60.",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 66,
+      "column": 14,
+      "index": 2350
+    },
+    "end": {
+      "line": 69,
+      "column": 3,
+      "index": 2485
     }
   }
 ]

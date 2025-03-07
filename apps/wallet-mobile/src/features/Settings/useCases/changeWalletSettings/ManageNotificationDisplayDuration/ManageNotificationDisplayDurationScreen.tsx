@@ -1,15 +1,16 @@
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import * as React from 'react'
-import {useTheme} from '@yoroi/theme'
-import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {TextInput} from '../../../../../components/TextInput/TextInput'
-import {Button} from '../../../../../components/Button/Button'
-import {useFormatNumber} from '../../../../../kernel/i18n'
+import {useNavigation} from '@react-navigation/native'
 import {parseNumber} from '@yoroi/common'
+import {useNotificationsConfig, useUpdateNotificationsConfig} from '@yoroi/notifications'
+import {useTheme} from '@yoroi/theme'
+import * as React from 'react'
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+
+import {Button} from '../../../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {TextInput} from '../../../../../components/TextInput/TextInput'
+import {useFormatNumber} from '../../../../../kernel/i18n'
 import {useStrings} from './strings'
-import {useNotificationDisplaySettings} from '../Notifications/NotificationsDisplaySettings'
-import {useNotificationsConfig} from '@yoroi/notifications'
 
 type ManualChoice = {
   id: 'Manual'
@@ -34,10 +35,12 @@ const CHOICES: Readonly<Choice[]> = [
   {id: 'Manual'},
 ] as const
 
-export const ManageNotificationDisplayDurationScreen = ({}) => {
+export const ManageNotificationDisplayDurationScreen = () => {
   const {styles, colors} = useStyles()
   const formatNumber = useFormatNumber()
-  const {data: config} = useNotificationsConfig()
+  const config = useConfig()
+  const {mutate: updateConfig} = useUpdateNotificationsConfig()
+  const navigation = useNavigation()
 
   const strings = useStrings()
   const savedChoice = getChoiceByValue(config.displayDuration)
@@ -61,13 +64,18 @@ export const ManageNotificationDisplayDurationScreen = ({}) => {
     setInputValue(text)
   }
 
-  const handleSubmit = async () => {}
+  const handleSubmit = () => {
+    const displayDuration = selectedChoice.id === 'Manual' ? parseNumber(inputValue) : selectedChoice.value
+    updateConfig({displayDuration})
+    navigation.goBack()
+  }
 
   return (
     <KeyboardAvoidingView style={[styles.flex, styles.root]}>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.flex, styles.safeAreaView]}>
         <ScrollView bounces={false} style={styles.flex}>
           <Text style={styles.description}>{strings.description}</Text>
+
           <View style={styles.choicesContainer}>
             {CHOICES.map((choice, index) => {
               const isSelected = selectedChoiceId === choice.id
@@ -100,10 +108,11 @@ export const ManageNotificationDisplayDurationScreen = ({}) => {
               selectionColor={colors.cursor}
               right={<Text style={styles.percentLabel}>{strings.seconds}</Text>}
               error={shouldDisplayError}
-              errorText={shouldDisplayError ? 'Hello' : undefined}
+              errorText={shouldDisplayError ? strings.inputError : undefined}
             />
           </View>
         </ScrollView>
+
         <Button testID="applyButton" title={strings.apply} disabled={isButtonDisabled} onPress={handleSubmit} />
       </SafeAreaView>
     </KeyboardAvoidingView>
@@ -141,10 +150,6 @@ const useStyles = () => {
     safeAreaView: {
       ...atoms.p_lg,
     },
-    textInfo: {
-      ...atoms.body_3_sm_regular,
-      color: color.text_gray_medium,
-    },
     description: {
       ...atoms.py_lg,
       ...atoms.body_1_lg_regular,
@@ -168,10 +173,6 @@ const useStyles = () => {
     },
     selectedChoiceLabel: {
       color: color.text_gray_max,
-    },
-    errorText: {
-      color: color.sys_magenta_500,
-      ...atoms.body_3_sm_regular,
     },
     input: {
       color: color.text_gray_medium,
@@ -219,4 +220,12 @@ const isInputValid = (text: string) => {
   const isNumeric = /^[0-9]*$/.test(text)
   const parsed = parseNumber(text)
   return isNumeric && typeof parsed === 'number' && parsed >= 1 && parsed <= 60
+}
+
+const useConfig = () => {
+  const {data: config} = useNotificationsConfig({suspense: true})
+  if (!config) {
+    throw new Error('Config not found')
+  }
+  return config
 }

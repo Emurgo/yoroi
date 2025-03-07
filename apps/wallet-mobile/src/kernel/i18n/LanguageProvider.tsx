@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {parseSafe, useAsyncStorage} from '@yoroi/common'
+import BigNumber from 'bignumber.js'
 import React, {useMemo} from 'react'
 import {IntlProvider} from 'react-intl'
 import {Text} from 'react-native'
@@ -20,7 +21,6 @@ import {
 import {numberLocale, systemLocale} from './initialization'
 import {LanguageCode, NumberLocale, supportedLanguages} from './languages'
 import translations from './translations'
-import BigNumber from 'bignumber.js'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
 export const LanguageProvider = ({children}: {children: React.ReactNode}) => {

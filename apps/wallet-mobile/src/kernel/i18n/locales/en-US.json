@@ -503,6 +503,7 @@
   "components.settings.manageNotificationDisplayDuration.eightSeconds": "8s",
   "components.settings.manageNotificationDisplayDuration.tenSeconds": "10s",
   "components.settings.manageNotificationDisplayDuration.twelveSeconds": "12s",
+  "components.settings.manageNotificationDisplayDuration.inputError": "Enter a value from 1 to 60.",
   "components.somethingWentWrong.title": "Oops!",
   "components.somethingWentWrong.description": "Something went wrong.\nTry to reload this page or restart the app.",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Delegate",

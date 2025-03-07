@@ -124,6 +124,7 @@ import {Telegram} from './Telegram'
 import {TermsOfUse} from './TermsOfUse'
 import {Theme} from './Theme'
 import {ThumbsUp} from './ThumbsUp'
+import {Time} from './Time'
 import {Tokens} from './Tokens'
 import {TotalAda} from './TotalAda'
 import {TotalDelegated} from './TotalDelegated'
@@ -142,7 +143,6 @@ import {WingRiders} from './WingRiders'
 import {YoroiApp} from './YoroiApp'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
-import {Time} from './Time'
 
 export const Icon = {
   Ada,
