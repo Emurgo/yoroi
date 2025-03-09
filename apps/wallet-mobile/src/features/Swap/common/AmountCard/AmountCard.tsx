@@ -124,7 +124,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
           <PairedBalance
             amount={{
               info,
-              quantity: BigInt(Number(tokenInput.value ?? 0) * 10 ** (info.decimals ?? 0)),
+              quantity: BigInt(Math.floor(Number(tokenInput.value ?? 0) * 10 ** (info.decimals ?? 0))),
             }}
           />
         )}
