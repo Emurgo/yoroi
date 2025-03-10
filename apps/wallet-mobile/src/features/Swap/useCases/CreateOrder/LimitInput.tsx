@@ -9,7 +9,7 @@ import {ShowPriceImpact} from './ShowPriceImpact'
 
 const BORDER_SIZE = 1
 
-export const EditPrice = () => {
+export const LimitInput = () => {
   const strings = useStrings()
   const [isFocused, setIsFocused] = React.useState(false)
   const {styles, color} = useStyles()

@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
@@ -13,8 +13,8 @@ import {AmountCard} from '../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
-import {EditPrice} from './EditPrice'
-import {ListSplitsByProvider} from './ListSplitsByProvider'
+import {EstimateSummary} from './EstimateSummary'
+import {LimitInput} from './LimitInput'
 import {WarnLimitPrice} from './WarnLimitPrice'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
@@ -124,38 +124,9 @@ export const StartSwapOrderScreen = () => {
               </View>
             </View>
 
-            <EditPrice />
+            {swapForm.orderType === 'limit' && <LimitInput />}
 
-            {swapForm.orderType === 'market' && (
-              <View style={styles.between}>
-                <View style={styles.slippage}>
-                  <Text style={styles.slippageLabel}>{strings.slippageTolerance}</Text>
-
-                  <Button
-                    onPress={() =>
-                      openModal({
-                        title: strings.slippageTolerance,
-                        content: <Text style={styles.textContent}>{strings.slippageToleranceInfo}</Text>,
-                      })
-                    }
-                    type={ButtonType.SecondaryText}
-                    icon={Icon.Info}
-                  />
-                </View>
-
-                <View>
-                  <Button
-                    onPress={navigateTo.editSlippage}
-                    type={ButtonType.SecondaryText}
-                    title={`${swapForm.slippageInput.value}%`}
-                    rightIcon
-                    icon={Icon.Edit}
-                  />
-                </View>
-              </View>
-            )}
-
-            <ListSplitsByProvider />
+            <EstimateSummary />
           </View>
         </View>
       </ScrollView>
@@ -218,20 +189,6 @@ const useStyles = () => {
     group: {
       ...atoms.flex_row,
       ...atoms.align_center,
-    },
-    slippage: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_xs,
-    },
-    textContent: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_regular,
-      ...atoms.px_lg,
-    },
-    slippageLabel: {
-      color: color.text_gray_low,
-      ...atoms.body_1_lg_regular,
     },
     buttonsWrapper: {
       ...atoms.align_center,

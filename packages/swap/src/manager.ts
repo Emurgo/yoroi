@@ -193,6 +193,19 @@ const apiManagerMaker = (
 
         warnAllLeft(dexhunterResponse, muesliswapResponse)
 
+        if (
+          isLeft(dexhunterResponse) &&
+          isLeft(muesliswapResponse) &&
+          dexhunterResponse.error.status === -3
+        )
+          return muesliswapResponse
+        if (
+          isLeft(dexhunterResponse) &&
+          isLeft(muesliswapResponse) &&
+          muesliswapResponse.error.status === -3
+        )
+          return dexhunterResponse
+
         if (isLeft(dexhunterResponse)) return muesliswapResponse
         if (isLeft(muesliswapResponse)) return dexhunterResponse
 
@@ -239,6 +252,19 @@ const apiManagerMaker = (
         ])
 
         warnAllLeft(dexhunterResponse, muesliswapResponse)
+
+        if (
+          isLeft(dexhunterResponse) &&
+          isLeft(muesliswapResponse) &&
+          dexhunterResponse.error.status === -3
+        )
+          return muesliswapResponse
+        if (
+          isLeft(dexhunterResponse) &&
+          isLeft(muesliswapResponse) &&
+          muesliswapResponse.error.status === -3
+        )
+          return dexhunterResponse
 
         if (isLeft(dexhunterResponse)) return muesliswapResponse
         if (isLeft(muesliswapResponse)) return dexhunterResponse

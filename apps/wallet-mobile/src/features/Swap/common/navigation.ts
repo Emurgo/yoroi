@@ -9,7 +9,6 @@ export const useNavigateTo = () => {
 
   return useRef({
     selectProvider: () => swapNavigation.navigate('swap-select-protocol'),
-    editSlippage: () => swapNavigation.navigate('swap-edit-slippage'),
     selectBuyToken: () => swapNavigation.navigate('swap-select-buy-token'),
     selectSellToken: () => swapNavigation.navigate('swap-select-sell-token'),
     startSwap: () => swapNavigation.navigate('swap-main'),

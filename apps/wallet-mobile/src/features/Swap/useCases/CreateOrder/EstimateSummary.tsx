@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
@@ -12,14 +12,12 @@ import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 
-export const ListSplitsByProvider = () => {
+export const EstimateSummary = () => {
   const strings = useStrings()
-  const {styles, color} = useStyles()
+  const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const swapForm = useSwap()
-
-  const [expanded, setExpanded] = React.useState(true)
 
   const protocol = swapForm.estimate?.splits[0]?.protocol
   const originSelection = `${swapForm.selectedProtocol.isTouched ? '' : ` ${strings.autoPool}`}`
@@ -27,10 +25,6 @@ export const ListSplitsByProvider = () => {
   return (
     <View>
       <View style={styles.between}>
-        <View style={styles.composedText}>
-          {protocol !== undefined && <ProtocolAvatar protocol={protocol} append={originSelection} preventOpenLink />}
-        </View>
-
         {swapForm.orderType === 'limit' && (
           <View style={styles.changeDex}>
             <Button type={ButtonType.Text} onPress={navigateTo.selectProvider} title={strings.changePool} />
@@ -39,40 +33,30 @@ export const ListSplitsByProvider = () => {
       </View>
 
       {swapForm.estimate !== undefined && (
-        <View style={styles.card}>
-          <TouchableOpacity onPress={() => setExpanded(!expanded)}>
-            <View style={styles.between}>
-              <Text style={styles.heading}>{`${strings.total}: ${swapForm.estimate?.totalInput} ${
-                swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)?.ticker
-              }`}</Text>
+        <View style={styles.list}>
+          <View style={styles.composedText}>
+            {protocol !== undefined && <ProtocolAvatar protocol={protocol} append={originSelection} preventOpenLink />}
+          </View>
 
-              <Icon.Chevron direction={expanded ? 'up' : 'down'} color={color.el_gray_max} size={24} />
-            </View>
-          </TouchableOpacity>
+          <Row
+            label={strings.swapMinAdaTitle}
+            description={strings.swapMinAda}
+            value={`${swapForm.estimate?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
+          />
 
-          {expanded && (
-            <View style={styles.list}>
-              <Row
-                label={strings.swapMinAdaTitle}
-                description={strings.swapMinAda}
-                value={`${swapForm.estimate?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
-              />
+          <Row
+            label={strings.swapFeesTitle}
+            description={strings.swapFees}
+            value={`${swapForm.estimate?.batcherFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
+          />
 
-              <Row
-                label={strings.swapFeesTitle}
-                description={strings.swapFees}
-                value={`${swapForm.estimate?.batcherFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
-              />
-
-              <Row
-                label={strings.swapMinReceivedTitle}
-                description={strings.swapMinReceived}
-                value={`${swapForm.estimate?.totalOutput} ${
-                  swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)?.ticker
-                }`}
-              />
-            </View>
-          )}
+          <Row
+            label={strings.swapMinReceivedTitle}
+            description={strings.swapMinReceived}
+            value={`${swapForm.estimate?.totalOutput} ${
+              swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)?.ticker
+            }`}
+          />
         </View>
       )}
     </View>
@@ -114,13 +98,6 @@ const Row = ({
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    card: {
-      ...atoms.p_lg,
-      ...atoms.border,
-      borderRadius: 8,
-      borderColor: color.gray_200,
-      backgroundColor: color.bg_color_max,
-    },
     between: {
       ...atoms.flex_row,
       ...atoms.justify_between,
@@ -130,11 +107,7 @@ const useStyles = () => {
     },
     list: {
       ...atoms.pt_md,
-      ...atoms.gap_xs,
-    },
-    heading: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
+      ...atoms.gap_2xs,
     },
     row: {
       ...atoms.flex_row,

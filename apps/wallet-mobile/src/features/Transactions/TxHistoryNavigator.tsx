@@ -37,7 +37,6 @@ import {FailedTxScreen as SendFailedTxScreen} from '../Send/useCases/ShowFailedT
 import {SubmittedTxScreen as SendSubmittedTxScreen} from '../Send/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {EditSlippageScreen} from '../Swap/useCases/CreateOrder/EditSlippageScreen'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectBuyTokenFromListScreen'
 import {SelectProtocolScreen} from '../Swap/useCases/CreateOrder/SelectProtocolScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectSellTokenFromListScreen'
@@ -273,14 +272,6 @@ export const TxHistoryNavigator = () => {
                 options={{
                   ...sendOptions(navigationOptions, color),
                   title: strings.swapToTitle,
-                }}
-              />
-
-              <Stack.Screen
-                name="swap-edit-slippage"
-                component={EditSlippageScreen}
-                options={{
-                  title: strings.slippageTolerance,
                 }}
               />
 
