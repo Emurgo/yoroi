@@ -279,6 +279,7 @@ import {
   SwapOrderCalculation,
 } from './swap/calculations'
 import {NumbersRatio} from './numbers/ratio'
+import {BannersConfig, BannersManager} from './banners/banners'
 
 export namespace App {
   export namespace Errors {
@@ -524,6 +525,11 @@ export namespace Resolver {
     export class Expired extends ResolverErrorUnsupportedTld {}
     export class WrongBlockchain extends ResolverErrorWrongBlockchain {}
   }
+}
+
+export namespace Banners {
+  export type Manager<K extends string = string> = BannersManager<K>
+  export type Config<K extends string = string> = BannersConfig<K>
 }
 
 export namespace Transfer {
