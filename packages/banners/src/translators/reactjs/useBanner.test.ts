@@ -20,43 +20,27 @@ describe('useBanner', () => {
   it('should return the correct initial state', () => {
     const id = 'test-banner'
     const dismissedAt = 0
-    const shouldShowCb = jest.fn().mockReturnValue(true)
 
     ;(manager.dismissedAt as jest.Mock).mockReturnValueOnce(dismissedAt)
 
-    const {result} = renderHook(() => useBanner({id, manager, shouldShowCb}))
+    const {result} = renderHook(() => useBanner({id, manager}))
 
     expect(result.current.dismissedAt).toBe(dismissedAt)
-    expect(result.current.shouldShow).toBe(true)
-    expect(shouldShowCb).toHaveBeenCalledWith({dismissedAt})
+    expect(result.current.dismissedAt).toBe(dismissedAt)
   })
 
   it('should call dismiss method on manager', () => {
     const id = 'test-banner'
     const dismissedAt = 0
-    const shouldShowCb = jest.fn().mockReturnValue(true)
 
     ;(manager.dismissedAt as jest.Mock).mockReturnValueOnce(dismissedAt)
 
-    const {result} = renderHook(() => useBanner({id, manager, shouldShowCb}))
+    const {result} = renderHook(() => useBanner({id, manager}))
 
     act(() => {
       result.current.dismiss()
     })
 
     expect(manager.dismiss).toHaveBeenCalledWith(id)
-  })
-
-  it('should update shouldShow based on shouldShowCb', () => {
-    const id = 'test-banner'
-    const dismissedAt = 0
-    const shouldShowCb = jest.fn().mockReturnValue(false)
-
-    ;(manager.dismissedAt as jest.Mock).mockReturnValueOnce(dismissedAt)
-
-    const {result} = renderHook(() => useBanner({id, manager, shouldShowCb}))
-
-    expect(result.current.shouldShow).toBe(false)
-    expect(shouldShowCb).toHaveBeenCalledWith({dismissedAt})
   })
 })
