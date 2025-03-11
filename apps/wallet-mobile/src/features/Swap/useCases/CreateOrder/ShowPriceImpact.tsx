@@ -2,17 +2,25 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
+import {undefinedToken} from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {useStrings} from '../../common/strings'
+import {useSwap} from '../../common/SwapProvider'
 
-type PriceImpactProps = {
-  priceImpact: number
-  formattedPrice: string
-  pair: string
-}
-
-export const ShowPriceImpact = ({priceImpact, formattedPrice, pair}: PriceImpactProps) => {
+export const ShowPriceImpact = () => {
   const strings = useStrings()
+  const swapForm = useSwap()
+
+  const priceImpact = Number(swapForm.estimate?.splits[0].priceImpact)
+  const formattedPrice = String(swapForm.estimate?.splits[0].priceImpact ?? 0)
+
+  const sellTokenInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
+  const buyTokenInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
+
+  const tokenToSellName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
+  const tokenToBuyName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
+  const pair = `${tokenToBuyName}/${tokenToSellName}`
+
   const priceImpactRisk = getPriceImpactRisk(priceImpact)
 
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)

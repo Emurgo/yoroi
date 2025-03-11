@@ -5,7 +5,6 @@ import {StyleSheet, Text, TextInput, View} from 'react-native'
 import {undefinedToken} from '../../common/constants'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
-import {ShowPriceImpact} from './ShowPriceImpact'
 
 const BORDER_SIZE = 1
 
@@ -53,14 +52,6 @@ export const LimitInput = () => {
           </View>
         </View>
       </View>
-
-      {swapForm.orderType === 'market' && (
-        <ShowPriceImpact
-          priceImpact={Number(swapForm.estimate?.splits[0].priceImpact)}
-          formattedPrice={String(swapForm.estimate?.splits[0].priceImpact ?? 0)}
-          pair={pair}
-        />
-      )}
     </>
   )
 }

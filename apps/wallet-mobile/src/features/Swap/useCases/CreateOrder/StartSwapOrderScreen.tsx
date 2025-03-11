@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
@@ -9,12 +9,14 @@ import {useModal} from '../../../../components/Modal/ModalContext'
 import {RefreshButton} from '../../../../components/RefreshButton/RefreshButton'
 import {Space} from '../../../../components/Space/Space'
 import {useIsKeyboardOpen} from '../../../../kernel/keyboard/useIsKeyboardOpen'
+import {isEmptyString} from '../../../../kernel/utils'
 import {AmountCard} from '../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 import {EstimateSummary} from './EstimateSummary'
 import {LimitInput} from './LimitInput'
+import {ShowPriceImpact} from './ShowPriceImpact'
 import {WarnLimitPrice} from './WarnLimitPrice'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
@@ -124,7 +126,17 @@ export const StartSwapOrderScreen = () => {
               </View>
             </View>
 
+            {!isEmptyString(swapForm.tokenOutInput.error) && (
+              <View style={styles.group}>
+                <Icon.Warning size={15} color={color.sys_magenta_500} />
+
+                <Text style={styles.errorText}>{swapForm.tokenOutInput.error}</Text>
+              </View>
+            )}
+
             {swapForm.orderType === 'limit' && <LimitInput />}
+
+            {swapForm.orderType === 'market' && <ShowPriceImpact />}
 
             <EstimateSummary />
           </View>
@@ -189,6 +201,7 @@ const useStyles = () => {
     group: {
       ...atoms.flex_row,
       ...atoms.align_center,
+      ...atoms.gap_2xs,
     },
     buttonsWrapper: {
       ...atoms.align_center,
@@ -200,6 +213,10 @@ const useStyles = () => {
     gear: {
       ...atoms.px_sm,
       ...atoms.rounded_full,
+    },
+    errorText: {
+      ...atoms.body_3_sm_regular,
+      color: color.sys_magenta_500,
     },
   })
 

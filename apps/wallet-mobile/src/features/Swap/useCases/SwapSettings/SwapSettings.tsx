@@ -131,11 +131,11 @@ export const SwapSettings = () => {
             />
           )}
 
-          <Text style={styles.heading}>{strings.chooseConnectionMethod}</Text>
+          <Text style={styles.heading}>{strings.routingPreferences}</Text>
 
           <View style={styles.routing}>
             <View style={styles.between}>
-              <Text style={styles.label}>Auto</Text>
+              <Text style={styles.label}>{strings.auto}</Text>
 
               <SettingsSwitch
                 value={aggregator === 'auto'}

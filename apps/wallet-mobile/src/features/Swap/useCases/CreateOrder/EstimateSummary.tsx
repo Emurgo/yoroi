@@ -1,4 +1,5 @@
 import {useTheme} from '@yoroi/theme'
+import {Swap} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -18,9 +19,16 @@ export const EstimateSummary = () => {
   const {wallet} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const swapForm = useSwap()
+  const {openModal} = useModal()
 
   const protocol = swapForm.estimate?.splits[0]?.protocol
-  const originSelection = `${swapForm.selectedProtocol.isTouched ? '' : ` ${strings.autoPool}`}`
+
+  const expand = () =>
+    openModal({
+      title: strings.route,
+      height: 400,
+      content: <Splits data={swapForm.estimate?.splits ?? []} />,
+    })
 
   return (
     <View>
@@ -34,14 +42,33 @@ export const EstimateSummary = () => {
 
       {swapForm.estimate !== undefined && (
         <View style={styles.list}>
-          <View style={styles.composedText}>
-            {protocol !== undefined && <ProtocolAvatar protocol={protocol} append={originSelection} preventOpenLink />}
-          </View>
+          <Row
+            label={strings.route}
+            description={strings.routeDescription}
+            value={
+              protocol !== undefined && (
+                <View style={styles.composedText}>
+                  <ProtocolAvatar protocol={protocol} preventOpenLink />
+
+                  {swapForm.estimate?.splits.length > 1 && (
+                    <Button
+                      type={ButtonType.SecondaryText}
+                      title="…"
+                      rightIcon
+                      icon={Icon.Chevron}
+                      style={styles.reducedPadding}
+                      onPress={expand}
+                    />
+                  )}
+                </View>
+              )
+            }
+          />
 
           <Row
-            label={strings.swapMinAdaTitle}
-            description={strings.swapMinAda}
-            value={`${swapForm.estimate?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
+            label={strings.price}
+            description={swapForm.orderType === 'limit' ? strings.limitPriceInfo : strings.marketPriceInfo}
+            value={`${swapForm.estimate?.netPrice} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
           />
 
           <Row
@@ -56,6 +83,12 @@ export const EstimateSummary = () => {
             value={`${swapForm.estimate?.totalOutput} ${
               swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)?.ticker
             }`}
+          />
+
+          <Row
+            label={strings.slippageTolerance}
+            description={strings.slippageToleranceInfo}
+            value={`${swapForm.slippageInput.value} %`}
           />
         </View>
       )}
@@ -82,15 +115,36 @@ const Row = ({
 
         {description !== undefined && (
           <Button
-            style={styles.info}
+            style={styles.reducedPadding}
             onPress={() => openModal({title: label, content: <Text style={styles.textContent}>{description}</Text>})}
             type={ButtonType.SecondaryText}
             icon={Icon.Info}
+            size="S"
           />
         )}
       </View>
 
       {typeof value === 'string' || typeof value === 'number' ? <Text style={styles.rowValue}>{value}</Text> : value}
+    </View>
+  )
+}
+
+export const Splits = ({data}: {data: Swap.Split[]}) => {
+  const {styles} = useStyles()
+
+  const total = data.reduce((acc, curr) => (acc += curr.expectedOutputWithoutSlippage), 0)
+
+  return (
+    <View style={styles.splitList}>
+      {data.map((split, index) => (
+        <View key={index} style={[styles.composedText, styles.between]}>
+          <ProtocolAvatar protocol={split.protocol} preventOpenLink />
+
+          <Text style={styles.textContent}>
+            {((100 * (split.expectedOutputWithoutSlippage ?? 0)) / total).toFixed(2)} %
+          </Text>
+        </View>
+      ))}
     </View>
   )
 }
@@ -107,7 +161,11 @@ const useStyles = () => {
     },
     list: {
       ...atoms.pt_md,
-      ...atoms.gap_2xs,
+      ...atoms.gap_md,
+    },
+    splitList: {
+      ...atoms.gap_sm,
+      ...atoms.p_lg,
     },
     row: {
       ...atoms.flex_row,
@@ -132,8 +190,11 @@ const useStyles = () => {
       ...atoms.body_1_lg_regular,
       ...atoms.px_lg,
     },
-    info: {
-      ...atoms.p_0,
+    reducedPadding: {
+      ...atoms.pl_2xs,
+      ...atoms.pr_2xs,
+      ...atoms.pt_2xs,
+      ...atoms.pb_2xs,
     },
   })
 

@@ -31,6 +31,7 @@ export const useStrings = () => {
     assetsIn: intl.formatMessage(messages.assetsIn),
     slippageInfo: intl.formatMessage(messages.slippageInfo),
     autoPool: intl.formatMessage(messages.autoPool),
+    auto: intl.formatMessage(messages.auto),
     changePool: intl.formatMessage(messages.changePool),
     swapMinAda: intl.formatMessage(messages.swapMinAda),
     swapMinAdaTitle: intl.formatMessage(messages.swapMinAdaTitle),
@@ -109,6 +110,9 @@ export const useStrings = () => {
     limitPriceWarningConfirm: intl.formatMessage(messages.limitPriceWarningConfirm),
     error: intl.formatMessage(globalMessages.error),
     rejectedByUser: intl.formatMessage(ledgerMessages.rejectedByUserError),
+    routingPreferences: intl.formatMessage(messages.routingPreferences),
+    route: intl.formatMessage(messages.route),
+    routeDescription: intl.formatMessage(messages.routeDescription),
     usbExplanation: intl.formatMessage(messages.usbExplanation),
     usbButton: intl.formatMessage(messages.usbButton),
     usbConnectionIsBlocked: intl.formatMessage(messages.usbConnectionIsBlocked),
@@ -273,6 +277,22 @@ const messages = defineMessages({
   autoPool: {
     id: 'swap.swapScreen.autoPool',
     defaultMessage: '!!!(auto)',
+  },
+  auto: {
+    id: 'global.auto',
+    defaultMessage: '!!!Auto',
+  },
+  routingPreferences: {
+    id: 'swap.swapScreen.routingPreferences',
+    defaultMessage: '!!!Routing preferences',
+  },
+  route: {
+    id: 'swap.swapScreen.route',
+    defaultMessage: '!!!Route',
+  },
+  routeDescription: {
+    id: 'swap.swapScreen.routeDescription',
+    defaultMessage: '!!!The route shows the path your swap takes to find the best price',
   },
   changePool: {
     id: 'swap.swapScreen.changePool',

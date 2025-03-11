@@ -37,7 +37,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const value = tokenInput.value
   const touched = tokenInput.isTouched
   const inputRef = direction === 'in' ? swapForm.tokenInInputRef : swapForm.tokenOutInputRef
-  const error = tokenInput.error
+  const error = direction === 'in' ? tokenInput.error : null
   const testID = direction === 'in' ? 'swap:sell-edit' : 'swap:buy-edit'
 
   const noTokenSelected = !touched
@@ -106,7 +106,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
       <View style={styles.between}>
         {!isEmptyString(error) ? (
           <View style={styles.balance}>
-            <Icon.InfoCircle size={15} color={colors.error} />
+            <Icon.Warning size={15} color={colors.error} />
 
             <Text style={[styles.text, styles.errorText]}>{error}</Text>
           </View>
