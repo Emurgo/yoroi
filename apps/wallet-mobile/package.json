@@ -128,6 +128,7 @@
     "@types/bip39": "^3.0.0",
     "@types/pbkdf2": "^3.1.2",
     "@yoroi/api": "1.5.3",
+    "@yoroi/banners": "1.0.0",
     "@yoroi/blockchains": "1.0.0",
     "@yoroi/claim": "1.0.0",
     "@yoroi/common": "^1.5.4",
