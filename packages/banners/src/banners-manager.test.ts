@@ -53,7 +53,7 @@ describe('bannersManagerMaker', () => {
     const result = manager.dismissedAt(bannerId)
 
     expect(result).toBe(mockDate)
-    expect(storage.getItem).toHaveBeenCalledWith(bannerId, expect.any(Function))
+    expect(storage.getItem).toHaveBeenCalledWith(bannerId)
   })
 
   it('should return 0 if banner is not dismissed', () => {
@@ -65,6 +65,6 @@ describe('bannersManagerMaker', () => {
     const result = manager.dismissedAt(bannerId)
 
     expect(result).toBe(0)
-    expect(storage.getItem).toHaveBeenCalledWith(bannerId, expect.any(Function))
+    expect(storage.getItem).toHaveBeenCalledWith(bannerId)
   })
 })

@@ -8,7 +8,9 @@ export const bannersManagerMaker = <K extends string = string>({
   const dismiss = (id: K) =>
     storage.setItem(id, new Date().getTime().toString())
 
-  const dismissedAt = (id: K) => storage.getItem(id, toNumber) ?? 0
+  const dismissedAt = (id: K) => {
+    return toNumber(storage.getItem(id))
+  }
 
   return freeze({dismiss, dismissedAt})
 }
