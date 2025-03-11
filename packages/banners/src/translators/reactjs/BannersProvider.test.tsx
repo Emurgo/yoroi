@@ -10,18 +10,18 @@ import {renderHook, act} from '@testing-library/react-hooks'
 
 import {BannersProvider, useBanners} from './BannersProvider'
 
-const bannersManagerMock: Banners.Manager = {
+const bannersManagerMock: Banners.Manager<'t'> = {
   dismiss: jest.fn(),
   dismissedAt: jest.fn(),
 }
 
-type Props = {
+type Props<K extends string = string> = {
   queryClient: QueryClient
-  bannersManager?: Banners.Manager
+  bannersManager?: Banners.Manager<K>
 }
 
 export const wrapperManagerFixture =
-  ({queryClient, bannersManager}: Props) =>
+  <K extends string = string>({queryClient, bannersManager}: Props<K>) =>
   ({children}: {children: React.ReactNode}) =>
     (
       <QueryClientProvider client={queryClient}>
@@ -36,7 +36,7 @@ export const wrapperManagerFixture =
     )
 
 export const wrapperManagerFixtureMissing =
-  ({queryClient}: Props) =>
+  ({queryClient}: {queryClient: QueryClient}) =>
   ({children}: {children: React.ReactNode}) =>
     (
       <QueryClientProvider client={queryClient}>
@@ -46,7 +46,7 @@ export const wrapperManagerFixtureMissing =
       </QueryClientProvider>
     )
 
-describe('ResolverProvider', () => {
+describe('BannersProvider', () => {
   let queryClient: QueryClient
 
   beforeEach(() => {
@@ -58,14 +58,13 @@ describe('ResolverProvider', () => {
     queryClient.clear()
   })
 
-  it('works', () => {
+  it('works when provider is set', () => {
     const wrapper = wrapperManagerFixture({
       queryClient,
       bannersManager: bannersManagerMock,
     })
-    const {result} = renderHook(() => useBanners(), {
-      wrapper,
-    })
+
+    const {result} = renderHook(() => useBanners(), {wrapper})
 
     act(() => {
       result.current.manager.dismiss('test-banner')
@@ -76,15 +75,11 @@ describe('ResolverProvider', () => {
     expect(bannersManagerMock.dismissedAt).toHaveBeenCalledWith('test-banner')
   })
 
-  it('fails', () => {
-    const wrapper = wrapperManagerFixtureMissing({
-      queryClient,
-    })
-    const {result} = renderHook(() => useBanners(), {
-      wrapper,
-    })
+  it('fails when provider is missing', () => {
+    const wrapper = wrapperManagerFixtureMissing({queryClient})
 
-    expect(() => result.current.manager.dismiss('test-banner')).toThrow()
-    expect(() => result.current.manager.dismissedAt('test-banner')).toThrow()
+    const {result} = renderHook(() => useBanners(), {wrapper})
+
+    expect(result.current).toBeUndefined()
   })
 })

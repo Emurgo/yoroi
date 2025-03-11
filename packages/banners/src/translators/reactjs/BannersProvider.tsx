@@ -1,27 +1,22 @@
-import {invalid} from '@yoroi/common'
 import {Banners} from '@yoroi/types'
 import * as React from 'react'
 
-interface BannersContextProps {
-  manager: Readonly<Banners.Manager>
+interface BannersContextProps<K extends string = string> {
+  manager: Readonly<Banners.Manager<K>>
 }
 
-const bannersManagerInitial: Banners.Manager = {
-  dismiss: (_id: string) => invalid('Banners Manager not provided'),
-  dismissedAt: (_id: string) => invalid('Banners Manager not provided'),
-}
-const BannersContext = React.createContext<BannersContextProps>({
-  manager: bannersManagerInitial,
-})
+const BannersContext = React.createContext<
+  BannersContextProps<any> | undefined
+>(undefined)
 
-export const BannersProvider = ({
+export const BannersProvider = <K extends string>({
   children,
   manager,
-}: {
-  children: React.ReactNode
-  manager: Readonly<Banners.Manager>
-}) => {
+}: React.PropsWithChildren<{
+  manager: Readonly<Banners.Manager<K>>
+}>) => {
   const context = React.useMemo(() => ({manager}), [manager])
+
   return (
     <BannersContext.Provider value={context}>
       {children}
@@ -29,5 +24,14 @@ export const BannersProvider = ({
   )
 }
 
-export const useBanners = (): BannersContextProps =>
-  React.useContext(BannersContext)
+export const useBanners = <
+  K extends string = string,
+>(): BannersContextProps<K> => {
+  const context = React.useContext(BannersContext)
+
+  if (!context) {
+    throw new Error('useBanners must be used within a BannersProvider')
+  }
+
+  return context as BannersContextProps<K>
+}
