@@ -34,7 +34,7 @@ export const ConsiderDRepToUsTxHistoryBanner = () => {
 
   const isVisible = shouldShowDRep2UsOnTxHistory({
     yoroiDRepIdHex: GOVERNANCE_YOROI_DREP_ID_HEX,
-    currentDRepIdHex: action?.kind === 'delegate' ? action.hash : '',
+    currentDRepIdHex: action?.kind === 'delegate' && action.type === 'key' ? action.hash : '',
     isStaking: hasStakingKeyRegistered,
     dismissedAt,
     ptBalance: balance.quantity,
