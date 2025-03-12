@@ -1,7 +1,8 @@
-import {time} from '../../../kernel/constants'
-import {shouldShowDRepConsiderDelegating} from './should-show-drep-consider-delegating'
+import {time} from '@yoroi/common'
 
-describe('shouldShowDRepConsiderDelegating', () => {
+import {shouldShowDRep2UsOnStakingCenter} from './should-show-drep2us-on-staking-center'
+
+describe('shouldShowDRep2UsOnStakingCenter', () => {
   const moreThanOneMonthAgo = Date.now() - time.oneMonth - time.oneSecond
   const lessThanOneSecondAgo = Date.now() - time.oneSecond
 
@@ -14,7 +15,7 @@ describe('shouldShowDRepConsiderDelegating', () => {
   `(
     'returns $expected when isStaking is $isStaking, currentDRepId is $currentDRepId, yoroiDRep is $yoroiDRepId, and dismissedAt is $dismissedAt',
     ({isStaking, currentDRepIdHex, yoroiDRepIdHex, dismissedAt, expected}) => {
-      const result = shouldShowDRepConsiderDelegating({
+      const result = shouldShowDRep2UsOnStakingCenter({
         isStaking,
         currentDRepIdHex,
         yoroiDRepIdHex,

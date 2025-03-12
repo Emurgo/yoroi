@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Delegate to our DRep and help Cardano evolve in a way that benefits your wallet experience.",
     "file": "src/features/Banners/common/strings.ts",
     "start": {
-      "line": 13,
+      "line": 15,
       "column": 15,
-      "index": 327
+      "index": 390
     },
     "end": {
-      "line": 16,
+      "line": 18,
       "column": 3,
-      "index": 516
+      "index": 579
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Consider delegating to Yoroi",
     "file": "src/features/Banners/common/strings.ts",
     "start": {
-      "line": 17,
+      "line": 19,
       "column": 9,
-      "index": 527
+      "index": 590
     },
     "end": {
-      "line": 20,
+      "line": 22,
       "column": 3,
-      "index": 647
+      "index": 710
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Delegate Now",
     "file": "src/features/Banners/common/strings.ts",
     "start": {
-      "line": 21,
+      "line": 23,
       "column": 7,
-      "index": 656
+      "index": 719
     },
     "end": {
-      "line": 24,
+      "line": 26,
       "column": 3,
-      "index": 758
+      "index": 821
     }
   }
 ]

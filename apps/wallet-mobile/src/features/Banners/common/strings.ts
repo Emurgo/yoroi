@@ -1,12 +1,14 @@
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 export const useStrings = () => {
   const intl = useIntl()
-  return {
+
+  return React.useRef({
     description: intl.formatMessage(messages.description),
     title: intl.formatMessage(messages.title),
     cta: intl.formatMessage(messages.cta),
-  }
+  } as const).current
 }
 
 const messages = defineMessages({

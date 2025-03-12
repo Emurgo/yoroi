@@ -1,4 +1,4 @@
-import {invalid, isNonNullable} from '@yoroi/common'
+import {invalid, isNonNullable, time} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
 import {freeze, produce} from 'immer'
@@ -6,7 +6,6 @@ import React from 'react'
 import {useQuery, useQueryClient} from 'react-query'
 import {merge, switchMap} from 'rxjs'
 
-import {time} from '../../../kernel/constants'
 import {logger} from '../../../kernel/logger/logger'
 import {queryInfo} from '../../../kernel/query-client'
 import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'

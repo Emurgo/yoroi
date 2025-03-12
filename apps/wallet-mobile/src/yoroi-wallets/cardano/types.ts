@@ -10,7 +10,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+import {Api, App, Banners, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
@@ -271,3 +271,7 @@ export namespace CardanoTypes {
 
 export {RegistrationStatus} from '@emurgo/yoroi-lib'
 export {NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
+
+export interface WithBanners {
+  bannersManager: Banners.Manager<Banners.StorageKey>
+}

@@ -1,9 +1,8 @@
 import {networkConfigs} from '@yoroi/blockchains'
-import {fetchData, isRight} from '@yoroi/common'
+import {fetchData, isRight, time} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {time} from '../../kernel/constants'
 import {queryInfo} from '../../kernel/query-client'
 import {CurrencySymbol, PriceMultipleResponse} from '../types/other'
 

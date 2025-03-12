@@ -1,28 +1,27 @@
-import {useBanner, useBanners} from '@yoroi/banners'
+import {shouldShowDRep2UsOnStakingCenter, useBanner, useBanners} from '@yoroi/banners'
 import {useTheme} from '@yoroi/theme'
+import {Banners} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Button} from '../../../../components/Button/Button'
+import {DismissibleView} from '../../../../components/DismissableView'
 import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'
 import {yoroiDRepIdHex} from '../../../../kernel/constants'
-import {DismissibleBanner} from '../../common/DismissableBanner'
-import {shouldShowDRepConsiderDelegating} from '../../common/should-show-drep-consider-delegating'
 import {useStrings} from '../../common/strings'
-import {BannerId, BannerStorageKey} from '../../common/types'
 
 export const ConsiderDelegatingToYoroiBanner = () => {
   const {styles, colors} = useStyles()
   const {title, description, cta} = useStrings()
-  const {manager} = useBanners<BannerStorageKey>()
-  const {dismiss, dismissedAt} = useBanner({id: BannerId.DRepConsiderDelegating, manager})
+  const {manager} = useBanners<Banners.StorageKey>()
+  const {dismiss, dismissedAt} = useBanner({id: Banners.Id.DRep2UsStakingCenter, manager})
 
   const handleOnClose = React.useCallback(() => dismiss(), [dismiss])
   const handleOnCta = React.useCallback(() => console.log('cta'), [])
 
-  const shouldShow = shouldShowDRepConsiderDelegating({
+  const shouldShow = shouldShowDRep2UsOnStakingCenter({
     yoroiDRepIdHex,
     currentDRepIdHex: 'hi',
     isStaking: true,
@@ -30,7 +29,7 @@ export const ConsiderDelegatingToYoroiBanner = () => {
   })
 
   return (
-    <DismissibleBanner isVisible={shouldShow}>
+    <DismissibleView isVisible={shouldShow}>
       <LinearGradient start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradient} style={styles.gradient}>
         <View style={styles.root}>
           <TouchableOpacity onPress={handleOnClose} style={styles.closeButton}>
@@ -44,7 +43,7 @@ export const ConsiderDelegatingToYoroiBanner = () => {
           <Button style={styles.cta} type="Secondary" size="S" onPress={handleOnCta} title={cta} />
         </View>
       </LinearGradient>
-    </DismissibleBanner>
+    </DismissibleView>
   )
 }
 

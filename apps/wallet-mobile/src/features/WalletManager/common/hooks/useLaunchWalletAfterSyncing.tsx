@@ -1,6 +1,6 @@
+import {time} from '@yoroi/common'
 import * as React from 'react'
 
-import {time} from '../../../../kernel/constants'
 import {logger} from '../../../../kernel/logger/logger'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
