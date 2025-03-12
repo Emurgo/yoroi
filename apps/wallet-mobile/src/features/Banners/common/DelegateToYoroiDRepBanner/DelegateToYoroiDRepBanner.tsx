@@ -7,6 +7,7 @@ import {Button} from '../../../../components/Button/Button'
 import {DismissibleView} from '../../../../components/DismissableView'
 import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'
+import {GovernanceBackground} from '../../illustrations/GovernanceBackground'
 import {useStrings} from '../strings'
 
 type Props = {
@@ -25,6 +26,7 @@ export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible}: Props) => {
     <DismissibleView isVisible={isVisible}>
       <LinearGradient start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradient} style={styles.gradient}>
         <View style={styles.root}>
+          <GovernanceBackground style={styles.backgroundImage} />
           <TouchableOpacity onPress={handleOnDismiss} style={styles.dismiss}>
             <Icon.Close color={colors.icon} size={20} />
           </TouchableOpacity>
@@ -43,6 +45,11 @@ export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible}: Props) => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
+    backgroundImage: {
+      ...atoms.absolute,
+      right: 0,
+      bottom: 0,
+    },
     dismiss: {
       width: 20,
       height: 20,
