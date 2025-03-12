@@ -1,6 +1,6 @@
 import * as React from 'react'
-import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
 import {SVGProps} from 'react'
+import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
 
 export const GovernanceBackground = (props: SVGProps<SVGSVGElement>): JSX.Element => {
   return (

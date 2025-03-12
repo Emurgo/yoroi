@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Button} from '../../../../components/Button/Button'
@@ -13,9 +13,10 @@ import {useStrings} from '../strings'
 type Props = {
   isVisible: boolean
   onDismiss: () => void
+  style?: ViewStyle
 }
 
-export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible}: Props) => {
+export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style}: Props) => {
   const {styles, colors} = useStyles()
   const {title, description, cta} = useStrings()
 
@@ -23,10 +24,11 @@ export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible}: Props) => {
   const handleOnCta = React.useCallback(() => console.log('cta'), [])
 
   return (
-    <DismissibleView isVisible={isVisible}>
+    <DismissibleView isVisible={isVisible} style={style}>
       <LinearGradient start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradient} style={styles.gradient}>
         <View style={styles.root}>
           <GovernanceBackground style={styles.backgroundImage} />
+
           <TouchableOpacity onPress={handleOnDismiss} style={styles.dismiss}>
             <Icon.Close color={colors.icon} size={20} />
           </TouchableOpacity>

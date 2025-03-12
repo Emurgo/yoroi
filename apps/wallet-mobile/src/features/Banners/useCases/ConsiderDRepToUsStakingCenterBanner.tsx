@@ -1,10 +1,10 @@
 import {shouldShowDRep2UsOnStakingCenter, useBanner} from '@yoroi/banners'
+import {GOVERNANCE_YOROI_DREP_ID_HEX} from '@yoroi/staking'
 import {Banners} from '@yoroi/types'
 import * as React from 'react'
 
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {DelegateToYoroiDRepBanner} from '../common/DelegateToYoroiDRepBanner/DelegateToYoroiDRepBanner'
-import {GOVERNANCE_YOROI_DREP_ID_HEX} from '@yoroi/staking'
 
 export const ConsiderDRepToUsStakingCenterBanner = () => {
   const {
