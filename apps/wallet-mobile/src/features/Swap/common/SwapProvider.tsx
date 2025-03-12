@@ -55,7 +55,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     queryKey: ['useSwapTokenIds', network, swapManager.config.routingPreference],
     queryFn: async () => {
       const res = await swapManager.api.tokens()
-      if (isRight(res)) return res.value.data.map(({id}) => id)
+      if (isRight(res)) {
+        const tokenIds = res.value.data.map(({id}) => id)
+        if (!tokenIds.includes(state.tokenOutInput.tokenId ?? undefinedToken)) action({type: 'ResetForm'})
+        return tokenIds
+      }
       return []
     },
   })
