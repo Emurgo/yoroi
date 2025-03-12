@@ -1,5 +1,5 @@
 import {Api, Portfolio, Swap} from '@yoroi/types'
-import {isLeft} from '@yoroi/common'
+import {isLeft, isRight} from '@yoroi/common'
 import {freeze} from 'immer'
 
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
@@ -41,7 +41,6 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
         [Swap.Aggregator.Muesliswap]: muesliswapApi,
       },
       config,
-      primaryTokenInfo.id,
     ),
     assignConfig: (v: Swap.ManagerConfig): Swap.ManagerConfig =>
       Object.assign(config, v),
@@ -54,41 +53,42 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
 const apiManagerMaker = (
   adapters: Record<Swap.Aggregator, Swap.Api>,
   config: Swap.ManagerConfig,
-  ptId: Portfolio.Token.Id,
 ): Swap.Api => {
-  const dhTokenList = new Set<Portfolio.Token.Id>([ptId])
-  const msTokenList = new Set<Portfolio.Token.Id>([ptId])
-
   return freeze(
     {
       async tokens() {
-        const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          config.routingPreference === 'auto' ||
-          config.routingPreference.includes('dexhunter')
-            ? adapters.dexhunter.tokens()
-            : excluded,
-          config.routingPreference === 'auto' ||
-          config.routingPreference.includes('muesliswap')
-            ? adapters.muesliswap.tokens()
-            : excluded,
-        ])
+        const aggregatorPromises: Record<
+          Swap.Aggregator,
+          Promise<Api.Response<Portfolio.Token.Info[]>>
+        > = {
+          dexhunter: adapters.dexhunter.tokens(),
+          muesliswap: adapters.muesliswap.tokens(),
+        }
 
-        warnAllLeft(dexhunterResponse, muesliswapResponse)
+        const responses: Array<Api.Response<Portfolio.Token.Info[]>> =
+          await Promise.all(
+            Object.entries(aggregatorPromises).map(([key, promise]) =>
+              config.routingPreference === 'auto' ||
+              config.routingPreference.includes(key as Swap.Aggregator)
+                ? promise
+                : excluded,
+            ),
+          )
 
-        if (isLeft(dexhunterResponse)) return muesliswapResponse
-        if (isLeft(muesliswapResponse)) return dexhunterResponse
+        warnAllLeft(...responses)
+
+        if (responses.every(isLeft)) return invalid
 
         const merged: Record<Portfolio.Token.Id, Portfolio.Token.Info> = {}
-        const append =
-          (tokenList: Set<Portfolio.Token.Id>) =>
-          (tokenInfo: Portfolio.Token.Info) => {
-            tokenList.add(tokenInfo.id)
-            if (merged[tokenInfo.id] === undefined)
-              merged[tokenInfo.id] = tokenInfo
-          }
+        const append = (tokenInfo: Portfolio.Token.Info) => {
+          if (merged[tokenInfo.id] === undefined)
+            merged[tokenInfo.id] = tokenInfo
+        }
 
-        dexhunterResponse.value.data.forEach(append(dhTokenList))
-        muesliswapResponse.value.data.forEach(append(msTokenList))
+        responses
+          .filter(isRight)
+          .flatMap(({value}) => value.data)
+          .forEach(append)
 
         return {
           tag: 'right',
@@ -100,15 +100,14 @@ const apiManagerMaker = (
       },
 
       async orders() {
-        const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          adapters.dexhunter.orders(),
+        const responses = await Promise.all([
           adapters.muesliswap.orders(),
+          adapters.dexhunter.orders(),
         ])
 
-        warnAllLeft(dexhunterResponse, muesliswapResponse)
+        warnAllLeft(...responses)
 
-        if (isLeft(dexhunterResponse)) return muesliswapResponse
-        if (isLeft(muesliswapResponse)) return dexhunterResponse
+        if (responses.every(isLeft)) return invalid
 
         const merged: Record<Swap.Order['txHash'], Swap.Order> = {}
         const append = (order: Swap.Order) => {
@@ -119,8 +118,10 @@ const apiManagerMaker = (
             merged[order.txHash] = order
         }
 
-        muesliswapResponse.value.data.forEach(append)
-        dexhunterResponse.value.data.forEach(append)
+        responses
+          .filter(isRight)
+          .flatMap(({value}) => value.data)
+          .forEach(append)
 
         return {
           tag: 'right',
@@ -135,84 +136,67 @@ const apiManagerMaker = (
       },
 
       async protocols() {
-        const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          config.routingPreference === 'auto' ||
-          config.routingPreference.includes('dexhunter')
-            ? adapters.dexhunter.protocols()
-            : excluded,
-          config.routingPreference === 'auto' ||
-          config.routingPreference.includes('muesliswap')
-            ? adapters.muesliswap.protocols()
-            : excluded,
-        ])
+        const aggregatorPromises: Record<
+          Swap.Aggregator,
+          Promise<Api.Response<Swap.AggregatorProtocol[]>>
+        > = {
+          dexhunter: adapters.dexhunter.protocols(),
+          muesliswap: adapters.muesliswap.protocols(),
+        }
 
-        warnAllLeft(dexhunterResponse, muesliswapResponse)
+        const responses: Array<Api.Response<Swap.AggregatorProtocol[]>> =
+          await Promise.all(
+            Object.entries(aggregatorPromises).map(([key, promise]) =>
+              config.routingPreference === 'auto' ||
+              config.routingPreference.includes(key as Swap.Aggregator)
+                ? promise
+                : excluded,
+            ),
+          )
 
-        if (isLeft(dexhunterResponse)) return muesliswapResponse
-        if (isLeft(muesliswapResponse)) return dexhunterResponse
+        warnAllLeft(...responses)
+
+        if (responses.every(isLeft))
+          return responses.find((res) => res.error.status !== 3) ?? invalid
 
         return {
           tag: 'right',
           value: {
             status: Api.HttpStatusCode.Ok,
-            data: [
-              ...dexhunterResponse.value.data,
-              ...muesliswapResponse.value.data,
-            ],
+            data: responses.filter(isRight).flatMap(({value}) => value.data),
           },
         }
       },
 
       async estimate(body: Swap.EstimateRequest) {
-        const isDHValid = hasTokens(dhTokenList, body)
-        const isMSValid = hasTokens(msTokenList, body)
-
-        if (!isDHValid || !isMSValid) {
-          if (isDHValid) return adapters.dexhunter.estimate(body)
-          if (isMSValid) return adapters.muesliswap.estimate(body)
-          return {
-            tag: 'left',
-            error: {
-              status: -3,
-              message: 'Tokens not found in aggregators',
-              responseData: {},
-            },
-          }
+        const aggregatorPromises: Record<
+          Swap.Aggregator,
+          Promise<Api.Response<Swap.EstimateResponse>>
+        > = {
+          dexhunter: adapters.dexhunter.estimate(body),
+          muesliswap: adapters.muesliswap.estimate(body),
         }
 
-        const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          config.routingPreference === 'auto' ||
-          config.routingPreference.includes('dexhunter')
-            ? adapters.dexhunter.estimate(body)
-            : excluded,
-          config.routingPreference === 'auto' ||
-          config.routingPreference.includes('muesliswap')
-            ? adapters.muesliswap.estimate(body)
-            : excluded,
-        ])
+        const responses: Array<Api.Response<Swap.EstimateResponse>> =
+          await Promise.all(
+            Object.entries(aggregatorPromises).map(([key, promise]) =>
+              config.routingPreference === 'auto' ||
+              config.routingPreference.includes(key as Swap.Aggregator)
+                ? promise
+                : excluded,
+            ),
+          )
 
-        warnAllLeft(dexhunterResponse, muesliswapResponse)
+        warnAllLeft(...responses)
 
-        if (
-          isLeft(dexhunterResponse) &&
-          isLeft(muesliswapResponse) &&
-          dexhunterResponse.error.status === -3
-        )
-          return muesliswapResponse
-        if (
-          isLeft(dexhunterResponse) &&
-          isLeft(muesliswapResponse) &&
-          muesliswapResponse.error.status === -3
-        )
-          return dexhunterResponse
+        if (responses.every(isLeft))
+          return responses.find((res) => res.error.status !== 3) ?? invalid
 
-        if (isLeft(dexhunterResponse)) return muesliswapResponse
-        if (isLeft(muesliswapResponse)) return dexhunterResponse
+        const estimates = responses
+          .filter(isRight)
+          .flatMap(({value}) => value.data)
 
-        const bestEstimate = [
-          dexhunterResponse.value.data,
-          muesliswapResponse.value.data,
-        ].reduce(getBestSwap, dexhunterResponse.value.data)
+        const bestEstimate = estimates.reduce(getBestSwap, estimates[0]!)
 
         return {
           tag: 'right',
@@ -224,55 +208,32 @@ const apiManagerMaker = (
       },
 
       async create(body: Swap.CreateRequest) {
-        const isDHValid = hasTokens(dhTokenList, body)
-        const isMSValid = hasTokens(msTokenList, body)
-
-        if (!isDHValid || !isMSValid) {
-          if (isDHValid) return adapters.dexhunter.create(body)
-          if (isMSValid) return adapters.muesliswap.create(body)
-          return {
-            tag: 'left',
-            error: {
-              status: -3,
-              message: 'Tokens not found in aggregators',
-              responseData: {},
-            },
-          }
+        const aggregatorPromises: Record<
+          Swap.Aggregator,
+          Promise<Api.Response<Swap.CreateResponse>>
+        > = {
+          dexhunter: adapters.dexhunter.create(body),
+          muesliswap: adapters.muesliswap.create(body),
         }
 
-        const [dexhunterResponse, muesliswapResponse] = await Promise.all([
-          config.routingPreference === 'auto' ||
-          config.routingPreference.includes('dexhunter')
-            ? adapters.dexhunter.create(body)
-            : excluded,
-          config.routingPreference === 'auto' ||
-          config.routingPreference.includes('muesliswap')
-            ? adapters.muesliswap.create(body)
-            : excluded,
-        ])
+        const responses: Array<Api.Response<Swap.CreateResponse>> =
+          await Promise.all(
+            Object.entries(aggregatorPromises).map(([key, promise]) =>
+              config.routingPreference === 'auto' ||
+              config.routingPreference.includes(key as Swap.Aggregator)
+                ? promise
+                : excluded,
+            ),
+          )
 
-        warnAllLeft(dexhunterResponse, muesliswapResponse)
+        warnAllLeft(...responses)
 
-        if (
-          isLeft(dexhunterResponse) &&
-          isLeft(muesliswapResponse) &&
-          dexhunterResponse.error.status === -3
-        )
-          return muesliswapResponse
-        if (
-          isLeft(dexhunterResponse) &&
-          isLeft(muesliswapResponse) &&
-          muesliswapResponse.error.status === -3
-        )
-          return dexhunterResponse
+        if (responses.every(isLeft))
+          return responses.find((res) => res.error.status !== 3) ?? invalid
 
-        if (isLeft(dexhunterResponse)) return muesliswapResponse
-        if (isLeft(muesliswapResponse)) return dexhunterResponse
+        const creates = responses.filter(isRight).map(({value}) => value.data)
 
-        const bestCreate = [
-          dexhunterResponse.value.data,
-          muesliswapResponse.value.data,
-        ].reduce(getBestSwap, dexhunterResponse.value.data)
+        const bestCreate = creates.reduce(getBestSwap, creates[0]!)
 
         return {
           tag: 'right',
@@ -305,22 +266,22 @@ const excluded: Api.Response<any> = freeze(
   true,
 )
 
+const invalid: Api.Response<any> = freeze(
+  {
+    tag: 'left',
+    error: {
+      status: -3,
+      message: 'Unknown error',
+      responseData: {},
+    },
+  },
+  true,
+)
+
 const warnAllLeft = (...responses: Array<Api.Response<any>>) => {
   if (responses.every(isLeft))
     console.warn(
       'Swap Manager all left >> ',
       responses.map((response) => response.error.message),
     )
-}
-
-const hasTokens = (
-  tokenList: Set<Portfolio.Token.Id>,
-  body: Swap.CreateRequest | Swap.EstimateRequest,
-): boolean => {
-  const {tokenIn, tokenOut} = body
-
-  if (!tokenList.has(tokenIn)) return false
-  if (!tokenList.has(tokenOut)) return false
-
-  return true
 }
