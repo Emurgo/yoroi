@@ -79,6 +79,9 @@ export interface YoroiWallet {
   // account
   readonly accountVisual: number
 
+  // banners
+  readonly bannersManager: Readonly<Banners.Manager<Banners.StorageKey>>
+
   // sync
   resync(): Promise<void>
   clear(): Promise<void>
@@ -271,7 +274,3 @@ export namespace CardanoTypes {
 
 export {RegistrationStatus} from '@emurgo/yoroi-lib'
 export {NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
-
-export interface WithBanners {
-  bannersManager: Banners.Manager<Banners.StorageKey>
-}

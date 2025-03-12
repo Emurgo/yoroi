@@ -8,7 +8,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '../../components/Button/Button'
 import {Spacer} from '../../components/Spacer/Spacer'
 import {logger} from '../../kernel/logger/logger'
-import {ConsiderDelegatingToYoroiBanner} from '../Banners/useCases/ConsiderDelegatingToYoroiBanner/ConsiderDelegatingToYoroiBanner'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 
 // --------------------------------------------------------------------------------------------------
@@ -44,9 +43,7 @@ export const Playground = () => {
 
       <Spacer height={20} />
 
-      <BannersProvider manager={bannersManager} key={refresh}>
-        <ConsiderDelegatingToYoroiBanner />
-      </BannersProvider>
+      <BannersProvider manager={bannersManager} key={refresh}></BannersProvider>
     </SafeAreaView>
   )
 }

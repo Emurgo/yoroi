@@ -1,6 +1,4 @@
-import {shouldShowDRep2UsOnStakingCenter, useBanner, useBanners} from '@yoroi/banners'
 import {useTheme} from '@yoroi/theme'
-import {Banners} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -9,30 +7,25 @@ import {Button} from '../../../../components/Button/Button'
 import {DismissibleView} from '../../../../components/DismissableView'
 import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'
-import {yoroiDRepIdHex} from '../../../../kernel/constants'
-import {useStrings} from '../../common/strings'
+import {useStrings} from '../strings'
 
-export const ConsiderDelegatingToYoroiBanner = () => {
+type Props = {
+  isVisible: boolean
+  onDismiss: () => void
+}
+
+export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible}: Props) => {
   const {styles, colors} = useStyles()
   const {title, description, cta} = useStrings()
-  const {manager} = useBanners<Banners.StorageKey>()
-  const {dismiss, dismissedAt} = useBanner({id: Banners.Id.DRep2UsStakingCenter, manager})
 
-  const handleOnClose = React.useCallback(() => dismiss(), [dismiss])
+  const handleOnDismiss = React.useCallback(() => onDismiss(), [onDismiss])
   const handleOnCta = React.useCallback(() => console.log('cta'), [])
 
-  const shouldShow = shouldShowDRep2UsOnStakingCenter({
-    yoroiDRepIdHex,
-    currentDRepIdHex: 'hi',
-    isStaking: true,
-    dismissedAt,
-  })
-
   return (
-    <DismissibleView isVisible={shouldShow}>
+    <DismissibleView isVisible={isVisible}>
       <LinearGradient start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradient} style={styles.gradient}>
         <View style={styles.root}>
-          <TouchableOpacity onPress={handleOnClose} style={styles.closeButton}>
+          <TouchableOpacity onPress={handleOnDismiss} style={styles.dismiss}>
             <Icon.Close color={colors.icon} size={20} />
           </TouchableOpacity>
 
@@ -50,7 +43,7 @@ export const ConsiderDelegatingToYoroiBanner = () => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    closeButton: {
+    dismiss: {
       width: 20,
       height: 20,
       right: atoms.px_lg.paddingRight,
