@@ -27,3 +27,7 @@ export const GOVERNANCE_ENDPOINTS: Readonly<
       'https://yoroi-backend-zero-preview.emurgornd.com/dreps/{{DREP_ID}}/state',
   },
 } as const
+
+// NOTE: bech32 'drep1ygr9tuapcanc3kpeyy4dc3vmrz9cfe5q7v9wj3x9j0ap3tswtre9j'
+export const GOVERNANCE_YOROI_DREP_ID_HEX =
+  '220655f3a1c76788d839212adc459b188b84e680f30ae944c593fa18ae'
