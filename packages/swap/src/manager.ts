@@ -157,7 +157,7 @@ const apiManagerMaker = (
         warnAllLeft(...responses)
 
         if (responses.every(isLeft))
-          return responses.find((res) => res.error.status !== 3) ?? invalid
+          return responses.find((res) => res.error.status !== -3) ?? invalid
 
         return {
           tag: 'right',
