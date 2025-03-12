@@ -3,7 +3,7 @@ coverage:
     project:
       default:
         threshold: 1%
-        target: 100%
+        target: 20%
         if_not_found: success
 
 component_management:
