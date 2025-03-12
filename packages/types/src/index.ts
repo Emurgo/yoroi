@@ -279,7 +279,12 @@ import {
   SwapOrderCalculation,
 } from './swap/calculations'
 import {NumbersRatio} from './numbers/ratio'
-import {BannersConfig, BannersManager} from './banners/banners'
+import {
+  BannersConfig,
+  BannersId,
+  BannersManager,
+  BannersStorageKey,
+} from './banners/banners'
 
 export namespace App {
   export namespace Errors {
@@ -530,6 +535,9 @@ export namespace Resolver {
 export namespace Banners {
   export type Manager<K extends string = string> = BannersManager<K>
   export type Config<K extends string = string> = BannersConfig<K>
+  export type Id = BannersId
+  export const Id = BannersId
+  export type StorageKey = BannersStorageKey
 }
 
 export namespace Transfer {
