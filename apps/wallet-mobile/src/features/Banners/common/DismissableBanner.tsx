@@ -5,7 +5,7 @@ type Props = {
   isVisible: boolean
   children: React.ReactNode
   duration?: number
-  style?: ViewStyle
+  style?: Exclude<ViewStyle, 'opacity'>
 }
 
 export const DismissibleBanner = ({isVisible, children, style, duration = 300}: Props) => {

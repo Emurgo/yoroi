@@ -8,7 +8,7 @@ import {Button} from '../../components/Button/Button'
 import {Spacer} from '../../components/Spacer/Spacer'
 import {logger} from '../../kernel/logger/logger'
 import {BannerId, BannerStorageKey} from '../Banners/common/types'
-import {ShowBannerDRepConsiderDelegating} from '../Banners/useCases/ShowBannerDRepConsiderDelegating'
+import {ConsiderDelegatingToYoroiBanner} from '../Banners/useCases/ConsiderDelegatingToYoroiBanner/ConsiderDelegatingToYoroiBanner'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 
 // --------------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ export const Playground = () => {
       <Spacer height={20} />
 
       <BannersProvider manager={bannersManager} key={refresh}>
-        <ShowBannerDRepConsiderDelegating isStaking={true} currentDRepIdHex="123" />
+        <ConsiderDelegatingToYoroiBanner />
       </BannersProvider>
     </SafeAreaView>
   )
