@@ -15,13 +15,13 @@ export const LimitInput = () => {
   const {isDark} = useTheme()
 
   const swapForm = useSwap()
-  const sellTokenInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
-  const buyTokenInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
+  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
+  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
   const disabled = swapForm.orderType === 'market'
 
-  const tokenToSellName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
-  const tokenToBuyName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
-  const pair = `${tokenToBuyName}/${tokenToSellName}`
+  const tokenInTicker = tokenInInfo?.ticker ?? tokenInInfo?.name ?? '-'
+  const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
+  const pair = `${tokenOutTicker}/${tokenInTicker}`
 
   return (
     <>

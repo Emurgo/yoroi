@@ -21,6 +21,12 @@ export const EstimateSummary = () => {
   const swapForm = useSwap()
   const {openModal} = useModal()
 
+  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
+  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
+
+  const tokenInTicker = tokenInInfo?.ticker ?? tokenInInfo?.name ?? '-'
+  const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
+
   const protocol = swapForm.estimate?.splits[0]?.protocol
 
   const expand = () =>
@@ -68,7 +74,7 @@ export const EstimateSummary = () => {
           <Row
             label={strings.price}
             description={swapForm.orderType === 'limit' ? strings.limitPriceInfo : strings.marketPriceInfo}
-            value={`${swapForm.estimate?.netPrice} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
+            value={`1 ${tokenInTicker} = ${swapForm.estimate?.netPrice} ${tokenOutTicker}`}
           />
 
           <Row
@@ -80,9 +86,7 @@ export const EstimateSummary = () => {
           <Row
             label={strings.swapMinReceivedTitle}
             description={strings.swapMinReceived}
-            value={`${swapForm.estimate?.totalOutput} ${
-              swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)?.ticker
-            }`}
+            value={`${swapForm.estimate?.totalOutput} ${tokenOutTicker}`}
           />
 
           <Row
