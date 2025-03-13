@@ -9,6 +9,7 @@ import {
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -20,8 +21,6 @@ import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useStrings} from '../../common/strings'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
-import {ConsiderDRepToUsGovernanceBanner} from '../../../../Banners/useCases/ConsiderDRepToUsGovernanceBanner'
-import {ScrollView} from 'react-native-gesture-handler'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()
@@ -129,7 +128,7 @@ export const ChangeVoteScreen = () => {
     )
   }
 
-  const voteKind = action.kind
+  const voteKind = action?.kind
   const isCreatingTx =
     createGovernanceTxMutation.isLoading || isCreatingVotingCertificate || isCreatingDelegationCertificate
 
@@ -178,11 +177,11 @@ export const ChangeVoteScreen = () => {
           />
         )}
       </View>
+
       <Spacer fill />
-      <View>
-        <ConsiderDRepToUsGovernanceBanner />
-        <LearnMoreLink />
-      </View>
+
+      <LearnMoreLink />
+
       <Spacer height={24} />
     </ScrollView>
   )

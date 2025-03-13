@@ -14,14 +14,12 @@ type Props = {
   isVisible: boolean
   onDismiss?: () => void
   style?: ViewStyle
+  onPress?: () => void
 }
 
-export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style}: Props) => {
+export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style, onPress}: Props) => {
   const {styles, colors} = useStyles()
   const {title, description, cta} = useStrings()
-
-  const handleOnDismiss = React.useCallback(() => onDismiss?.(), [onDismiss])
-  const handleOnCta = React.useCallback(() => console.log('cta'), [])
 
   return (
     <DismissibleView isVisible={isVisible} style={style}>
@@ -30,7 +28,7 @@ export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style}: Props) 
           <GovernanceBackground style={styles.backgroundImage} />
 
           {onDismiss && (
-            <TouchableOpacity onPress={handleOnDismiss} style={styles.dismiss}>
+            <TouchableOpacity onPress={onDismiss} style={styles.dismiss}>
               <Icon.Close color={colors.icon} size={20} />
             </TouchableOpacity>
           )}
@@ -39,7 +37,7 @@ export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style}: Props) 
 
           <Text style={styles.description}>{description}</Text>
 
-          <Button style={styles.cta} type="Secondary" size="S" onPress={handleOnCta} title={cta} />
+          <Button style={styles.cta} type="Secondary" size="S" onPress={onPress} title={cta} />
         </View>
       </LinearGradient>
     </DismissibleView>

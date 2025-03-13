@@ -1,17 +1,19 @@
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {shouldShowDRep2UsOnStakingCenter, useBanner} from '@yoroi/banners'
-import {Banners} from '@yoroi/types'
-import {useStakingInfo} from '../../../legacy/Dashboard/StakePoolInfos'
-import {useStakingKey} from '../../../yoroi-wallets/hooks'
+import {shouldShowDrep2usOnGovernance} from '@yoroi/banners'
 import {GOVERNANCE_YOROI_DREP_ID_HEX, useStakingKeyState} from '@yoroi/staking'
-import {mapStakingKeyStateToGovernanceAction} from '../../Staking/Governance/common/helpers'
-import {DelegateToYoroiDRepBanner} from '../common/DelegateToYoroiDRepBanner/DelegateToYoroiDRepBanner'
 import {useTheme} from '@yoroi/theme'
-import {StyleSheet} from 'react-native'
 import * as React from 'react'
-import {shouldShowDrep2usOnGovernance} from '@yoroi/banners/src'
+import {StyleSheet} from 'react-native'
 
-export const ConsiderDRepToUsGovernanceBanner = () => {
+import {useStakingKey} from '../../../yoroi-wallets/hooks'
+import {mapStakingKeyStateToGovernanceAction} from '../../Staking/Governance/common/helpers'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {DelegateToYoroiDRepBanner} from '../common/DelegateToYoroiDRepBanner/DelegateToYoroiDRepBanner'
+
+type Props = {
+  onDelegateToYoroi: () => void
+}
+
+export const ConsiderDRepToUsGovernanceBanner = ({onDelegateToYoroi}: Props) => {
   const {wallet} = useSelectedWallet()
   const stakingKeyHash = useStakingKey(wallet)
 
@@ -20,23 +22,26 @@ export const ConsiderDRepToUsGovernanceBanner = () => {
     suspense: true,
   })
 
-  const styles = useStyles()
+  const {styles} = useStyles()
 
   const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
+
+  console.log('action', action)
 
   const isVisible = shouldShowDrep2usOnGovernance({
     yoroiDRepIdHex: GOVERNANCE_YOROI_DREP_ID_HEX,
     currentDRepIdHex: action?.kind === 'delegate' && action.type === 'key' ? action.hash : '',
   })
 
-  return <DelegateToYoroiDRepBanner style={styles.root} isVisible={isVisible} />
+  return <DelegateToYoroiDRepBanner onPress={onDelegateToYoroi} style={styles.root} isVisible={isVisible} />
 }
 
 const useStyles = () => {
   const {atoms} = useTheme()
-  return StyleSheet.create({
+  const styles = StyleSheet.create({
     root: {
       ...atoms.pb_xl,
     },
   })
+  return {styles}
 }

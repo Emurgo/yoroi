@@ -1,15 +1,15 @@
 import {shouldShowDRep2UsOnStakingCenter, useBanner} from '@yoroi/banners'
 import {GOVERNANCE_YOROI_DREP_ID_HEX, useStakingKeyState} from '@yoroi/staking'
+import {useTheme} from '@yoroi/theme'
 import {Banners} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
 
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {DelegateToYoroiDRepBanner} from '../common/DelegateToYoroiDRepBanner/DelegateToYoroiDRepBanner'
 import {useStakingInfo} from '../../../legacy/Dashboard/StakePoolInfos'
 import {useStakingKey} from '../../../yoroi-wallets/hooks'
 import {mapStakingKeyStateToGovernanceAction} from '../../Staking/Governance/common/helpers'
-import {useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {DelegateToYoroiDRepBanner} from '../common/DelegateToYoroiDRepBanner/DelegateToYoroiDRepBanner'
 
 export const ConsiderDRepToUsStakingCenterBanner = () => {
   const {
@@ -26,7 +26,7 @@ export const ConsiderDRepToUsStakingCenterBanner = () => {
     suspense: true,
   })
 
-  const styles = useStyles()
+  const {styles} = useStyles()
 
   const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
 
@@ -42,9 +42,10 @@ export const ConsiderDRepToUsStakingCenterBanner = () => {
 
 const useStyles = () => {
   const {atoms} = useTheme()
-  return StyleSheet.create({
+  const styles = StyleSheet.create({
     root: {
       ...atoms.pb_xl,
     },
   })
+  return {styles}
 }

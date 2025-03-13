@@ -2,6 +2,7 @@ import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
 import {useFocusEffect} from '@react-navigation/native'
 import {isNonNullable, isString} from '@yoroi/common'
 import {
+  GOVERNANCE_YOROI_DREP_ID_HEX,
   GovernanceProvider,
   useDelegationCertificate,
   useGovernance,
@@ -24,6 +25,7 @@ import {
   useWalletEvent,
 } from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types/other'
+import {ConsiderDRepToUsGovernanceBanner} from '../../../../Banners/useCases/ConsiderDRepToUsGovernanceBanner'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
 import {formatDrepHash} from '../../common/drep'
@@ -95,6 +97,17 @@ const ParticipatingInGovernanceVariant = ({
   const strings = useStrings()
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
+  const {wallet, meta} = useSelectedWallet()
+
+  const {createCertificate: createDelegationCertificate} = useDelegationCertificate({
+    useErrorBoundary: true,
+  })
+
+  const createGovernanceTxMutation = useCreateGovernanceTx(wallet, {
+    useErrorBoundary: true,
+  })
+
+  const governanceActions = useGovernanceActions()
 
   const displayedHash = action.kind === 'delegate' ? formatDrepHash(action.hash, action.type) : null
 
@@ -111,6 +124,24 @@ const ParticipatingInGovernanceVariant = ({
 
   const navigateToChangeVote = () => {
     navigateTo.changeVote()
+  }
+
+  const handleDelegateToYoroi = async () => {
+    const stakingKey = await wallet.getStakingKey()
+
+    createDelegationCertificate(
+      {hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+            certificates: [certificate],
+            addressMode: meta.addressMode,
+          })
+
+          governanceActions.handleDelegateAction({unsignedTx, hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key'})
+        },
+      },
+    )
   }
 
   return (
@@ -159,7 +190,11 @@ const ParticipatingInGovernanceVariant = ({
 
       <Spacer fill />
 
-      <LearnMoreLink />
+      <View>
+        <ConsiderDRepToUsGovernanceBanner onDelegateToYoroi={handleDelegateToYoroi} />
+
+        <LearnMoreLink />
+      </View>
 
       <Spacer height={24} />
     </View>
