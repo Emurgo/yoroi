@@ -1,8 +1,8 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {
+  type StakingKeyState,
   governanceApiMaker,
   governanceManagerMaker,
-  type StakingKeyState,
   useStakingKeyState,
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
