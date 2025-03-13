@@ -1,16 +1,16 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {
-  type StakingKeyState,
   governanceApiMaker,
   governanceManagerMaker,
+  type StakingKeyState,
   useStakingKeyState,
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
 import * as React from 'react'
+import {UseQueryOptions} from 'react-query'
 
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useStakingKey} from '../../../../yoroi-wallets/hooks'
+import {useStakingKey, useWalletEvent} from '../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
@@ -18,14 +18,21 @@ import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelected
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
 
-export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
+export const useIsParticipatingInGovernance = () => {
+  const status = useGovernanceStatus({suspense: true, useErrorBoundary: false, retry: false})
+  return status !== null
+}
+
+export const useGovernanceStatus = (options: UseQueryOptions<StakingKeyState, Error> = {}) => {
+  const {wallet} = useSelectedWallet()
   const stakingKeyHash = useStakingKey(wallet)
-  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {
-    suspense: true,
-    useErrorBoundary: false,
-    retry: false,
-  })
-  return stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) !== null : false
+  const {data: stakingStatus, refetch} = useStakingKeyState(stakingKeyHash, options)
+
+  useWalletEvent(wallet, 'utxos', refetch)
+
+  return React.useMemo(() => {
+    return stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
+  }, [stakingStatus])
 }
 
 export const mapStakingKeyStateToGovernanceAction = (state: StakingKeyState): GovernanceVote | null => {

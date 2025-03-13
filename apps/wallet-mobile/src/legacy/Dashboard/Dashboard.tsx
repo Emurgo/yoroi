@@ -59,7 +59,7 @@ export const Dashboard = () => {
   const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
   const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
 
-  const isParticipatingInGovernance = useIsParticipatingInGovernance(wallet)
+  const isParticipatingInGovernance = useIsParticipatingInGovernance()
   const walletNavigateTo = useWalletNavigation()
 
   const handleOnParticipatePress = () => {

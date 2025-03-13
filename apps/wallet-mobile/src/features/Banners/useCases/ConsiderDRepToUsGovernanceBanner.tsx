@@ -1,26 +1,16 @@
 import {shouldShowDrep2usOnGovernance} from '@yoroi/banners'
-import {GOVERNANCE_YOROI_DREP_ID_HEX, useStakingKeyState} from '@yoroi/staking'
+import {GOVERNANCE_YOROI_DREP_ID_HEX} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
 
-import {useStakingKey} from '../../../yoroi-wallets/hooks'
-import {mapStakingKeyStateToGovernanceAction} from '../../Staking/Governance/common/helpers'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useGovernanceStatus} from '../../Staking/Governance/common/helpers'
 import {DelegateToYoroiDRepBanner} from '../common/DelegateToYoroiDRepBanner/DelegateToYoroiDRepBanner'
 
 export const ConsiderDRepToUsGovernanceBanner = () => {
-  const {wallet} = useSelectedWallet()
-  const stakingKeyHash = useStakingKey(wallet)
-
-  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {
-    refetchOnMount: true,
-    suspense: true,
-  })
-
   const {styles} = useStyles()
 
-  const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
+  const action = useGovernanceStatus({suspense: true, refetchOnMount: true})
 
   const isVisible = shouldShowDrep2usOnGovernance({
     yoroiDRepIdHex: GOVERNANCE_YOROI_DREP_ID_HEX,
