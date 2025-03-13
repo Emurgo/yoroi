@@ -40,7 +40,7 @@ export const ConsiderDRepToUsTxHistoryBanner = () => {
     isStaking: hasStakingKeyRegistered,
     dismissedAt,
     ptBalance: balance.quantity,
-    ptMinBalance: BigInt(minBalanceToDisplayBanner) * BigInt(ptDecimals),
+    ptMinBalance: BigInt(minBalanceToDisplayBanner) * BigInt(10n ** ptDecimals),
   })
 
   return <DelegateToYoroiDRepBanner style={styles.root} onDismiss={dismiss} isVisible={isVisible} />
