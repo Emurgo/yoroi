@@ -1,3 +1,4 @@
+import {GOVERNANCE_YOROI_DREP_ID_HEX, useDelegationCertificate} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
@@ -7,7 +8,9 @@ import {Button} from '../../../../components/Button/Button'
 import {DismissibleView} from '../../../../components/DismissableView'
 import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'
-import {useWalletNavigation} from '../../../../kernel/navigation'
+import {useCreateGovernanceTx} from '../../../../yoroi-wallets/hooks'
+import {useGovernanceActions} from '../../../Staking/Governance/common/helpers'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {GovernanceBackground} from '../../illustrations/GovernanceBackground'
 import {useStrings} from '../strings'
 
@@ -15,20 +18,40 @@ type Props = {
   isVisible: boolean
   onDismiss?: () => void
   style?: ViewStyle
-  onPress?: () => void
 }
 
-export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style, onPress}: Props) => {
+export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style}: Props) => {
   const {styles, colors} = useStyles()
   const {title, description, cta} = useStrings()
-  const navigation = useWalletNavigation()
+  const {wallet, meta} = useSelectedWallet()
 
-  const handleOnPress = React.useCallback(() => {
-    if (onPress) {
-      return onPress()
-    }
-    navigation.navigateToGovernanceCentre()
-  }, [onPress])
+  const {createCertificate: createDelegationCertificate} = useDelegationCertificate({
+    useErrorBoundary: true,
+  })
+
+  const createGovernanceTxMutation = useCreateGovernanceTx(wallet, {
+    useErrorBoundary: true,
+  })
+
+  const governanceActions = useGovernanceActions()
+
+  const handleDelegateToYoroi = React.useCallback(async () => {
+    const stakingKey = await wallet.getStakingKey()
+
+    createDelegationCertificate(
+      {hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+            certificates: [certificate],
+            addressMode: meta.addressMode,
+          })
+
+          governanceActions.handleDelegateAction({unsignedTx, hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key'})
+        },
+      },
+    )
+  }, [createDelegationCertificate, createGovernanceTxMutation, governanceActions, meta.addressMode, wallet])
 
   return (
     <DismissibleView isVisible={isVisible} style={style}>
@@ -46,7 +69,7 @@ export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style, onPress}
 
           <Text style={styles.description}>{description}</Text>
 
-          <Button style={styles.cta} type="Secondary" size="S" onPress={handleOnPress} title={cta} />
+          <Button style={styles.cta} type="Secondary" size="S" onPress={handleDelegateToYoroi} title={cta} />
         </View>
       </LinearGradient>
     </DismissibleView>

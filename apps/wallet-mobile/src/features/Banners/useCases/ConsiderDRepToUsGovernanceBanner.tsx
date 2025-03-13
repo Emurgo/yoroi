@@ -9,11 +9,7 @@ import {mapStakingKeyStateToGovernanceAction} from '../../Staking/Governance/com
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {DelegateToYoroiDRepBanner} from '../common/DelegateToYoroiDRepBanner/DelegateToYoroiDRepBanner'
 
-type Props = {
-  onDelegateToYoroi: () => void
-}
-
-export const ConsiderDRepToUsGovernanceBanner = ({onDelegateToYoroi}: Props) => {
+export const ConsiderDRepToUsGovernanceBanner = () => {
   const {wallet} = useSelectedWallet()
   const stakingKeyHash = useStakingKey(wallet)
 
@@ -26,14 +22,12 @@ export const ConsiderDRepToUsGovernanceBanner = ({onDelegateToYoroi}: Props) => 
 
   const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
 
-  console.log('action', action)
-
   const isVisible = shouldShowDrep2usOnGovernance({
     yoroiDRepIdHex: GOVERNANCE_YOROI_DREP_ID_HEX,
     currentDRepIdHex: action?.kind === 'delegate' && action.type === 'key' ? action.hash : '',
   })
 
-  return <DelegateToYoroiDRepBanner onPress={onDelegateToYoroi} style={styles.root} isVisible={isVisible} />
+  return <DelegateToYoroiDRepBanner style={styles.root} isVisible={isVisible} />
 }
 
 const useStyles = () => {

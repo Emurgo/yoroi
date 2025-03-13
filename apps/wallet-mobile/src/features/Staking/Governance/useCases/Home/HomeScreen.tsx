@@ -191,7 +191,7 @@ const ParticipatingInGovernanceVariant = ({
       <Spacer fill />
 
       <View>
-        <ConsiderDRepToUsGovernanceBanner onDelegateToYoroi={handleDelegateToYoroi} />
+        {!isTxPending && <ConsiderDRepToUsGovernanceBanner onDelegateToYoroi={handleDelegateToYoroi} />}
 
         <LearnMoreLink />
       </View>
