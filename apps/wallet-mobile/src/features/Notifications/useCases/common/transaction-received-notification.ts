@@ -47,9 +47,8 @@ const buildNotifications = async ({appStorage, sinceDate, walletIds}: BuildNotif
     newTxIds.forEach((id) => {
       const txDate = wallet.transactions[id].submittedAt ?? new Date().toISOString()
       const isReceived = wallet.transactions[id].direction === TRANSACTION_DIRECTION.RECEIVED
-      const isIntraWallet = wallet.transactions[id].direction === TRANSACTION_DIRECTION.SELF
       const isConfirmedAfterDeadline = new Date(txDate).getTime() > sinceDate.getTime()
-      const shouldBeDisplayed = (isReceived || isIntraWallet) && isConfirmedAfterDeadline
+      const shouldBeDisplayed = isReceived && isConfirmedAfterDeadline
       if (!shouldBeDisplayed) return
       const metadata: NotificationTypes.TransactionReceivedEvent['metadata'] = {
         txId: id,
