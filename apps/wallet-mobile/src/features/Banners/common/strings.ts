@@ -22,6 +22,6 @@ const messages = defineMessages({
   },
   cta: {
     id: 'components.considerDelegatingToYoroiBanner.cta',
-    defaultMessage: '!!!Delegate Now',
+    defaultMessage: '!!!Delegate Vote',
   },
 })
