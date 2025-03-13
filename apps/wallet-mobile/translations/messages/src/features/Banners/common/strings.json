@@ -31,7 +31,7 @@
   },
   {
     "id": "components.considerDelegatingToYoroiBanner.cta",
-    "defaultMessage": "!!!Delegate Now",
+    "defaultMessage": "!!!Delegate Vote",
     "file": "src/features/Banners/common/strings.ts",
     "start": {
       "line": 23,
@@ -41,7 +41,7 @@
     "end": {
       "line": 26,
       "column": 3,
-      "index": 826
+      "index": 827
     }
   }
 ]
