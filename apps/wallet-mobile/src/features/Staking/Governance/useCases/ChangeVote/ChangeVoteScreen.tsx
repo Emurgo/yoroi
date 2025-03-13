@@ -20,6 +20,8 @@ import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useStrings} from '../../common/strings'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
+import {ConsiderDRepToUsGovernanceBanner} from '../../../../Banners/useCases/ConsiderDRepToUsGovernanceBanner'
+import {ScrollView} from 'react-native-gesture-handler'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()
@@ -132,7 +134,7 @@ export const ChangeVoteScreen = () => {
     createGovernanceTxMutation.isLoading || isCreatingVotingCertificate || isCreatingDelegationCertificate
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root}>
       <View>
         <Text style={styles.description}>{strings.reviewActions}</Text>
       </View>
@@ -176,13 +178,13 @@ export const ChangeVoteScreen = () => {
           />
         )}
       </View>
-
       <Spacer fill />
-
-      <LearnMoreLink />
-
+      <View>
+        <ConsiderDRepToUsGovernanceBanner />
+        <LearnMoreLink />
+      </View>
       <Spacer height={24} />
-    </View>
+    </ScrollView>
   )
 }
 
@@ -191,7 +193,6 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
-      ...atoms.justify_between,
       ...atoms.px_lg,
       backgroundColor: color.bg_color_max,
     },

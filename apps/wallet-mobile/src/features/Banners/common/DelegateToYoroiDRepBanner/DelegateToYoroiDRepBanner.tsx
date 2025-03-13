@@ -12,7 +12,7 @@ import {useStrings} from '../strings'
 
 type Props = {
   isVisible: boolean
-  onDismiss: () => void
+  onDismiss?: () => void
   style?: ViewStyle
 }
 
@@ -20,7 +20,7 @@ export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style}: Props) 
   const {styles, colors} = useStyles()
   const {title, description, cta} = useStrings()
 
-  const handleOnDismiss = React.useCallback(() => onDismiss(), [onDismiss])
+  const handleOnDismiss = React.useCallback(() => onDismiss?.(), [onDismiss])
   const handleOnCta = React.useCallback(() => console.log('cta'), [])
 
   return (
@@ -29,9 +29,11 @@ export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style}: Props) 
         <View style={styles.root}>
           <GovernanceBackground style={styles.backgroundImage} />
 
-          <TouchableOpacity onPress={handleOnDismiss} style={styles.dismiss}>
-            <Icon.Close color={colors.icon} size={20} />
-          </TouchableOpacity>
+          {onDismiss && (
+            <TouchableOpacity onPress={handleOnDismiss} style={styles.dismiss}>
+              <Icon.Close color={colors.icon} size={20} />
+            </TouchableOpacity>
+          )}
 
           <Text style={styles.title}>{title}</Text>
 
