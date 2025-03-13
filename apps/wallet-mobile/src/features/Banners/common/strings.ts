@@ -18,7 +18,7 @@ const messages = defineMessages({
   },
   title: {
     id: 'components.considerDelegatingToYoroiBanner.title',
-    defaultMessage: '!!!Consider delegating to Yoroi',
+    defaultMessage: '!!!Consider delegating to Yoroi DRep',
   },
   cta: {
     id: 'components.considerDelegatingToYoroiBanner.cta',
