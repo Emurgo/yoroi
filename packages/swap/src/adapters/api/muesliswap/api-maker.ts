@@ -258,7 +258,11 @@ const parseMuesliError = ({tag, error}: Left<Api.ResponseError>) =>
       tag,
       error: {
         ...error,
-        message: JSON.stringify((error.responseData as any)?.detail, null, 2)
+        message: JSON.stringify(
+          (error.responseData as any)?.detail ?? 'Muesliswap API error',
+          null,
+          2,
+        )
           .replace(/^"/, '')
           .replace(/"$/, ''),
       },
