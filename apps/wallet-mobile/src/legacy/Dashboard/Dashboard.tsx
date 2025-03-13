@@ -38,6 +38,7 @@ import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
 import {useWithdrawStakingRewardsStrings, WithdrawStakingRewards} from './WithdrawStakingRewards/WithdrawStakingRewards'
+import {ConsiderDRepToUsStakingCenterBanner} from '../../features/Banners/useCases/ConsiderDRepToUsStakingCenterBanner'
 
 export const Dashboard = () => {
   const strings = useWithdrawStakingRewardsStrings()
@@ -101,6 +102,7 @@ export const Dashboard = () => {
             />
           }
         >
+          <ConsiderDRepToUsStakingCenterBanner />
           {stakingInfo?.status !== 'staked' && (
             <>
               <NotDelegatedInfo />

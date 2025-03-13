@@ -12,6 +12,8 @@ import {mapStakingKeyStateToGovernanceAction} from '../../Staking/Governance/com
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {DelegateToYoroiDRepBanner} from '../common/DelegateToYoroiDRepBanner/DelegateToYoroiDRepBanner'
 
+const minBalanceToDisplayBanner = 5 // 5 ADA
+
 export const ConsiderDRepToUsTxHistoryBanner = () => {
   const {
     wallet: {bannersManager: manager},
@@ -38,7 +40,7 @@ export const ConsiderDRepToUsTxHistoryBanner = () => {
     isStaking: hasStakingKeyRegistered,
     dismissedAt,
     ptBalance: balance.quantity,
-    ptMinBalance: 5n * BigInt(ptDecimals),
+    ptMinBalance: BigInt(minBalanceToDisplayBanner) * BigInt(ptDecimals),
   })
 
   return <DelegateToYoroiDRepBanner style={styles.root} onDismiss={dismiss} isVisible={isVisible} />
