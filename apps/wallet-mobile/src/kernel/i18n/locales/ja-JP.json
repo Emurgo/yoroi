@@ -506,7 +506,7 @@
   "components.settings.manageNotificationDisplayDuration.inputError": "Enter a value from 1 to 60.",
   "components.considerDelegatingToYoroiBanner.description": "Delegate to our DRep and help Cardano evolve in a way that benefits your wallet experience.",
   "components.considerDelegatingToYoroiBanner.title": "Consider delegating to Yoroi DRep",
-  "components.considerDelegatingToYoroiBanner.cta": "Delegate Now",
+  "components.considerDelegatingToYoroiBanner.cta": "Delegate Vote",
   "components.somethingWentWrong.title": "おっと!",
   "components.somethingWentWrong.description": "問題が発生しました。\nこのページを再読み込みするか、アプリを再起動してください。",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "委任",
