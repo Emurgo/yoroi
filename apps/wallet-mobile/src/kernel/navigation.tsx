@@ -9,6 +9,7 @@ import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, View} fro
 
 import {Icon} from '../components/Icon'
 import {OnConfirm} from '../features/ReviewTx/common/hooks/useOnConfirm'
+import {ReviewDetailsProps} from '../features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
 
@@ -284,7 +285,7 @@ export type ReviewTxRoutes = {
     preventSubmit?: boolean
     operations?: Array<React.ReactNode>
     receiverCustomTitle?: React.ReactNode
-    details?: {title: string; component: React.ReactNode}
+    details?: ReviewDetailsProps
     createdBy?: React.ReactNode
     onConfirm?: () => void
     onCancel?: OnConfirm['onCancel']

@@ -70,7 +70,7 @@ export const ReviewSwap = () => {
       onError: onSwapTxError,
       cbor: swapForm.createTx?.cbor,
       receiverCustomTitle: protocol !== undefined ? <ProtocolAvatar protocol={protocol} /> : undefined,
-      details: {component: <TransactionSummary swapForm={swapForm} />, title: strings.swapDetailsTitle},
+      details: {component: <TransactionSummary swapForm={swapForm} />, title: strings.swapDetailsTitle, height: 600},
     })
   }
 

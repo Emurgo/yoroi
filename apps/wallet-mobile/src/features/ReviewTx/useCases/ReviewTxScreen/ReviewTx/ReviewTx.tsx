@@ -19,7 +19,7 @@ import {isEmptyString} from '../../../../../kernel/utils'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {FormattedMetadata, FormattedTx} from '../../../common/types'
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
-import {OverviewTab} from '../ReviewTx/Overview/OverviewTab'
+import {OverviewTab, ReviewDetailsProps} from '../ReviewTx/Overview/OverviewTab'
 import {UTxOsTab} from '../ReviewTx/UTxOs/UTxOsTab'
 import {MintTab} from './Mint/MintTab'
 import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
@@ -39,7 +39,7 @@ export const ReviewTx = ({
   formattedTx: FormattedTx
   formattedMetadata?: FormattedMetadata
   operations?: Array<React.ReactNode>
-  details?: {title: string; component: React.ReactNode}
+  details?: ReviewDetailsProps
   receiverCustomTitle?: React.ReactNode
   createdBy?: React.ReactNode
   onConfirm: () => void
