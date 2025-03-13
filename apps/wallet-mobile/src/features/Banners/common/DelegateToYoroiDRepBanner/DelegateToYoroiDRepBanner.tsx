@@ -7,6 +7,7 @@ import {Button} from '../../../../components/Button/Button'
 import {DismissibleView} from '../../../../components/DismissableView'
 import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import {GovernanceBackground} from '../../illustrations/GovernanceBackground'
 import {useStrings} from '../strings'
 
@@ -20,6 +21,14 @@ type Props = {
 export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style, onPress}: Props) => {
   const {styles, colors} = useStyles()
   const {title, description, cta} = useStrings()
+  const navigation = useWalletNavigation()
+
+  const handleOnPress = React.useCallback(() => {
+    if (onPress) {
+      return onPress()
+    }
+    navigation.navigateToGovernanceCentre()
+  }, [onPress])
 
   return (
     <DismissibleView isVisible={isVisible} style={style}>
@@ -37,7 +46,7 @@ export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style, onPress}
 
           <Text style={styles.description}>{description}</Text>
 
-          <Button style={styles.cta} type="Secondary" size="S" onPress={onPress} title={cta} />
+          <Button style={styles.cta} type="Secondary" size="S" onPress={handleOnPress} title={cta} />
         </View>
       </LinearGradient>
     </DismissibleView>
