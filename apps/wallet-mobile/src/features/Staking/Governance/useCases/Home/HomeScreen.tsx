@@ -2,6 +2,7 @@ import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
 import {useFocusEffect} from '@react-navigation/native'
 import {isNonNullable, isString} from '@yoroi/common'
 import {
+  GOVERNANCE_YOROI_DREP_ID_HEX,
   GovernanceProvider,
   useDelegationCertificate,
   useGovernance,
@@ -12,6 +13,7 @@ import {
 import {useTheme} from '@yoroi/theme'
 import React, {type ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -185,10 +187,7 @@ const NeverParticipatedInGovernanceVariant = () => {
   const strings = useStrings()
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
-  const {
-    wallet,
-    meta: {addressMode},
-  } = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {manager} = useGovernance()
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
@@ -252,7 +251,10 @@ const NeverParticipatedInGovernanceVariant = () => {
               ? await manager.createStakeRegistrationCertificate(stakingKey)
               : null
             const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-            const unsignedTx = await createGovernanceTxMutation.mutateAsync({certificates: certs, addressMode})
+            const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+              certificates: certs,
+              addressMode: meta.addressMode,
+            })
 
             governanceActions.handleDelegateAction({
               unsignedTx,
@@ -263,6 +265,28 @@ const NeverParticipatedInGovernanceVariant = () => {
         },
       )
     })
+  }
+
+  const handleDelegateToYoroi = async () => {
+    const stakingKey = await wallet.getStakingKey()
+
+    createDelegationCertificate(
+      {hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const stakeCert = needsToRegisterStakingKey
+            ? await manager.createStakeRegistrationCertificate(stakingKey)
+            : null
+          const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+            certificates: certs,
+            addressMode: meta.addressMode,
+          })
+
+          governanceActions.handleDelegateAction({unsignedTx, hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key'})
+        },
+      },
+    )
   }
 
   const handleAbstain = async () => {
@@ -277,7 +301,10 @@ const NeverParticipatedInGovernanceVariant = () => {
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-          const unsignedTx = await createGovernanceTxMutation.mutateAsync({certificates: certs, addressMode})
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+            certificates: certs,
+            addressMode: meta.addressMode,
+          })
 
           governanceActions.handleAbstainAction({
             unsignedTx,
@@ -299,7 +326,10 @@ const NeverParticipatedInGovernanceVariant = () => {
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-          const unsignedTx = await createGovernanceTxMutation.mutateAsync({certificates: certs, addressMode})
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+            certificates: certs,
+            addressMode: meta.addressMode,
+          })
 
           governanceActions.handleNoConfidenceAction({
             unsignedTx,
@@ -313,7 +343,7 @@ const NeverParticipatedInGovernanceVariant = () => {
     createGovernanceTxMutation.isLoading || isCreatingDelegationCertificate || isCreatingVotingCertificate
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root}>
       <View>
         <Text style={styles.description}>{strings.reviewActions}</Text>
       </View>
@@ -321,6 +351,14 @@ const NeverParticipatedInGovernanceVariant = () => {
       <Spacer height={24} />
 
       <View style={styles.actions}>
+        <Action
+          title={strings.delegateToAYoroiDrep}
+          description={strings.delegateToAYoroiDRepDescription}
+          onPress={handleDelegateToYoroi}
+          pending={isCreatingTx && pendingVote === 'delegate'}
+          showGradient
+        />
+
         <Action
           title={strings.actionDelegateToADRepTitle}
           description={strings.actionDelegateToADRepDescription}
@@ -348,7 +386,7 @@ const NeverParticipatedInGovernanceVariant = () => {
       <LearnMoreLink />
 
       <Spacer height={24} />
-    </View>
+    </ScrollView>
   )
 }
 
@@ -363,7 +401,6 @@ const useStyles = () => {
     root: {
       ...atoms.px_lg,
       ...atoms.flex_1,
-      ...atoms.justify_between,
       backgroundColor: color.bg_color_max,
     },
     description: {
