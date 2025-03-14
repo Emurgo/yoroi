@@ -34,6 +34,7 @@ export const ConsiderDRepToUsTxHistoryBanner = () => {
     dismissedAt,
     ptBalance: balance.quantity,
     ptMinBalance: BigInt(minBalanceToDisplayBanner) * BigInt(10 ** ptDecimals),
+    isMainnet: wallet.isMainnet,
   })
 
   return <DelegateToYoroiDRepBanner style={styles.root} onDismiss={dismiss} isVisible={isVisible} />

@@ -28,6 +28,7 @@ export const ConsiderDRepToUsStakingCenterBanner = () => {
     currentDRepIdHex: action?.kind === 'delegate' && action.type === 'key' ? action.hash : '',
     isStaking: hasStakingKeyRegistered,
     dismissedAt,
+    isMainnet: wallet.isMainnet,
   })
 
   return <DelegateToYoroiDRepBanner style={styles.root} onDismiss={dismiss} isVisible={isVisible} />
