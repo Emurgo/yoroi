@@ -9,17 +9,25 @@ describe('shouldShowDRep2UsOnTxHistory', () => {
   const notEnoughBalance = 4_999_999n
 
   it.each`
-    isStaking | currentDRepIdHex | yoroiDRepIdHex | dismissedAt             | ptBalance           | expected
-    ${true}   | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${enoughBalance}    | ${true}
-    ${false}  | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${enoughBalance}    | ${false}
-    ${true}   | ${'DE'}          | ${'AD'}        | ${lessThanOneSecondAgo} | ${enoughBalance}    | ${false}
-    ${true}   | ${'AD'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${enoughBalance}    | ${false}
-    ${true}   | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${notEnoughBalance} | ${false}
-    ${false}  | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${notEnoughBalance} | ${false}
-    ${true}   | ${'DE'}          | ${'AD'}        | ${lessThanOneSecondAgo} | ${notEnoughBalance} | ${false}
-    ${true}   | ${'AD'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${notEnoughBalance} | ${false}
+    isStaking | currentDRepIdHex | yoroiDRepIdHex | dismissedAt             | ptBalance           | isMainnet | expected
+    ${true}   | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${enoughBalance}    | ${true}   | ${true}
+    ${false}  | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${enoughBalance}    | ${true}   | ${false}
+    ${true}   | ${'DE'}          | ${'AD'}        | ${lessThanOneSecondAgo} | ${enoughBalance}    | ${true}   | ${false}
+    ${true}   | ${'AD'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${enoughBalance}    | ${true}   | ${false}
+    ${true}   | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${notEnoughBalance} | ${true}   | ${false}
+    ${false}  | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${notEnoughBalance} | ${true}   | ${false}
+    ${true}   | ${'DE'}          | ${'AD'}        | ${lessThanOneSecondAgo} | ${notEnoughBalance} | ${true}   | ${false}
+    ${true}   | ${'AD'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${notEnoughBalance} | ${true}   | ${false}
+    ${true}   | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${enoughBalance}    | ${false}  | ${false}
+    ${false}  | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${enoughBalance}    | ${false}  | ${false}
+    ${true}   | ${'DE'}          | ${'AD'}        | ${lessThanOneSecondAgo} | ${enoughBalance}    | ${false}  | ${false}
+    ${true}   | ${'AD'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${enoughBalance}    | ${false}  | ${false}
+    ${true}   | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${notEnoughBalance} | ${false}  | ${false}
+    ${false}  | ${'DE'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${notEnoughBalance} | ${false}  | ${false}
+    ${true}   | ${'DE'}          | ${'AD'}        | ${lessThanOneSecondAgo} | ${notEnoughBalance} | ${false}  | ${false}
+    ${true}   | ${'AD'}          | ${'AD'}        | ${moreThanOneMonthAgo}  | ${notEnoughBalance} | ${false}  | ${false}
   `(
-    'returns $expected when isStaking is $isStaking, currentDRepId is $currentDRepId, yoroiDRep is $yoroiDRepId, ptBalance is $ptBalance, and dismissedAt is $dismissedAt',
+    'returns $expected when isStaking is $isStaking, currentDRepId is $currentDRepId, yoroiDRep is $yoroiDRepId, ptBalance is $ptBalance, isMainnet is $isMainnet and dismissedAt is $dismissedAt',
     ({
       isStaking,
       currentDRepIdHex,
@@ -27,6 +35,7 @@ describe('shouldShowDRep2UsOnTxHistory', () => {
       dismissedAt,
       ptBalance,
       expected,
+      isMainnet,
     }) => {
       const result = shouldShowDRep2UsOnTxHistory({
         isStaking,
@@ -35,6 +44,7 @@ describe('shouldShowDRep2UsOnTxHistory', () => {
         dismissedAt,
         ptBalance,
         ptMinBalance: enoughBalance,
+        isMainnet,
       })
       expect(result).toBe(expected)
     },
