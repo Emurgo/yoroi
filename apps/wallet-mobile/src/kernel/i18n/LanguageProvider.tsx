@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {parseSafe, useAsyncStorage} from '@yoroi/common'
+import BigNumber from 'bignumber.js'
 import React, {useMemo} from 'react'
 import {IntlProvider} from 'react-intl'
 import {Text} from 'react-native'
@@ -84,6 +85,11 @@ export const useLanguage = ({onChange}: {onChange?: (languageCode: LanguageCode)
     }
   }, [onChange, value.observer])
   return value
+}
+
+export const useFormatNumber = () => {
+  const {numberLocale} = useLanguage()
+  return React.useCallback((value: number) => new BigNumber(value, 10).toFormat(numberLocale), [numberLocale])
 }
 
 const missingProvider = () => {

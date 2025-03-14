@@ -277,6 +277,12 @@ import {SwapDex} from './swap/dex'
 import {SwapOrder} from './swap/order'
 import {SwapAggregator, SwapAggregatorProtocol} from './swap/aggregator'
 import {SwapProtocol} from './swap/protocol'
+import {
+  BannersConfig,
+  BannersId,
+  BannersManager,
+  BannersStorageKey,
+} from './banners/banners'
 
 export namespace App {
   export namespace Errors {
@@ -515,6 +521,14 @@ export namespace Resolver {
     export class Expired extends ResolverErrorUnsupportedTld {}
     export class WrongBlockchain extends ResolverErrorWrongBlockchain {}
   }
+}
+
+export namespace Banners {
+  export type Manager<K extends string = string> = BannersManager<K>
+  export type Config<K extends string = string> = BannersConfig<K>
+  export type Id = BannersId
+  export const Id = BannersId
+  export type StorageKey = BannersStorageKey
 }
 
 export namespace Transfer {

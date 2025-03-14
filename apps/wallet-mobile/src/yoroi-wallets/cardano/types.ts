@@ -10,7 +10,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+import {Api, App, Banners, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
@@ -78,6 +78,9 @@ export interface YoroiWallet {
 
   // account
   readonly accountVisual: number
+
+  // banners
+  readonly bannersManager: Readonly<Banners.Manager<Banners.StorageKey>>
 
   // sync
   resync(): Promise<void>

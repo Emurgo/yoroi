@@ -26,6 +26,10 @@ yarn workspace @yoroi/explorers add @yoroi/types@"$1"
 yarn workspace @yoroi/portfolio add @yoroi/types@"$1"
 yarn workspace @yoroi/portfolio add @yoroi/common@"$1"
 
+# banners
+yarn workspace @yoroi/blockchains add @yoroi/types@"$1"
+yarn workspace @yoroi/blockchains add @yoroi/common@"$1"
+
 # blockchains
 yarn workspace @yoroi/blockchains add @yoroi/types@"$1"
 yarn workspace @yoroi/blockchains add @yoroi/common@"$1"

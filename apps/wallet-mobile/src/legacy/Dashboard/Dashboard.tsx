@@ -20,10 +20,8 @@ import {Banner} from '../../components/Banner/Banner'
 import {Button} from '../../components/Button/Button'
 import {useModal} from '../../components/Modal/ModalContext'
 import {Space} from '../../components/Space/Space'
-import {
-  useIsGovernanceFeatureEnabled,
-  useIsParticipatingInGovernance,
-} from '../../features/Staking/Governance/common/helpers'
+import {ConsiderDRepToUsStakingCenterBanner} from '../../features/Banners/useCases/ConsiderDRepToUsStakingCenterBanner'
+import {useIsParticipatingInGovernance} from '../../features/Staking/Governance/common/helpers'
 import {useStrings} from '../../features/Staking/Governance/common/strings'
 import {WithdrawWarningModal} from '../../features/Staking/Governance/useCases/WithdrawWarningModal/WithdrawWarningModal'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
@@ -60,9 +58,8 @@ export const Dashboard = () => {
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
   const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
-  const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
 
-  const isParticipatingInGovernance = useIsParticipatingInGovernance(wallet)
+  const isParticipatingInGovernance = useIsParticipatingInGovernance()
   const walletNavigateTo = useWalletNavigation()
 
   const handleOnParticipatePress = () => {
@@ -72,7 +69,7 @@ export const Dashboard = () => {
   const onWithdraw = () => {
     track.claimAdaTransactionInitiated()
 
-    if (isGovernanceFeatureEnabled && !isParticipatingInGovernance) {
+    if (!isParticipatingInGovernance) {
       openModal({
         title: governanceStrings.withdrawWarningTitle,
         content: <WithdrawWarningModal onParticipatePress={handleOnParticipatePress} />,
@@ -105,6 +102,8 @@ export const Dashboard = () => {
             />
           }
         >
+          <ConsiderDRepToUsStakingCenterBanner />
+
           {stakingInfo?.status !== 'staked' && (
             <>
               <NotDelegatedInfo />

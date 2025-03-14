@@ -2,7 +2,7 @@ import {BehaviorSubject, Subject, Subscription} from 'rxjs'
 import {App, Notifications} from '@yoroi/types'
 
 type EventsStorageData = ReadonlyArray<Notifications.Event>
-type ConfigStorageData = Notifications.Config
+type ConfigStorageData = Partial<Notifications.Config>
 
 const getAllTriggers = (): Array<Notifications.Trigger> =>
   Object.values(Notifications.Trigger)
@@ -140,19 +140,18 @@ const eventsManagerMaker = ({
   return {events, unreadCounterByGroup$, newEvents$}
 }
 
+type ConfigManagerMakerOptions = {storage: App.Storage<true, string>}
 const configManagerMaker = ({
   storage,
-}: {
-  storage: App.Storage<true, string>
-}): Notifications.Manager['config'] => {
+}: ConfigManagerMakerOptions): Notifications.Manager['config'] => {
   return {
     read: async (): Promise<Notifications.Config> => {
-      return (
-        (await storage.getItem<ConfigStorageData>('config')) ?? defaultConfig
-      )
+      const value = await storage.getItem<ConfigStorageData>('config')
+      return {...defaultConfig, ...value}
     },
-    save: async (config: Notifications.Config): Promise<void> => {
-      await storage.setItem('config', config)
+    save: async (newConfig: Partial<Notifications.Config>): Promise<void> => {
+      const oldConfig = await storage.getItem<ConfigStorageData>('config')
+      await storage.setItem('config', {...oldConfig, ...newConfig})
     },
     reset: async (): Promise<void> => {
       return storage.removeItem('config')
@@ -174,6 +173,7 @@ const buildUnreadCounterDefaultValue = (): Map<Notifications.Group, number> => {
 }
 
 const defaultConfig: Notifications.Config = {
+  displayDuration: 4,
   [Notifications.Trigger.PrimaryTokenPriceChanged]: {
     notify: true,
     thresholdInPercent: 10,

@@ -9,6 +9,7 @@ import {
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -127,12 +128,12 @@ export const ChangeVoteScreen = () => {
     )
   }
 
-  const voteKind = action.kind
+  const voteKind = action?.kind
   const isCreatingTx =
     createGovernanceTxMutation.isLoading || isCreatingVotingCertificate || isCreatingDelegationCertificate
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root}>
       <View>
         <Text style={styles.description}>{strings.reviewActions}</Text>
       </View>
@@ -182,7 +183,7 @@ export const ChangeVoteScreen = () => {
       <LearnMoreLink />
 
       <Spacer height={24} />
-    </View>
+    </ScrollView>
   )
 }
 
@@ -191,7 +192,6 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
-      ...atoms.justify_between,
       ...atoms.px_lg,
       backgroundColor: color.bg_color_max,
     },

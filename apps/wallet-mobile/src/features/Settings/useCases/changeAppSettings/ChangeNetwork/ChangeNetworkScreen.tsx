@@ -1,4 +1,4 @@
-import {isBoolean, parseSafe, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {isBoolean, parseSafe, time, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'
@@ -10,7 +10,6 @@ import {Button} from '../../../../../components/Button/Button'
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {time} from '../../../../../kernel/constants'
 import {NetworkPickerList} from './NetworkPickerList'
 import {useStrings} from './strings'
 

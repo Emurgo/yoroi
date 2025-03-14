@@ -28,7 +28,6 @@ import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTran
 import {useCanVote} from '../RegisterCatalyst/common/hooks'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {useIsGovernanceFeatureEnabled} from '../Staking/Governance/common/helpers'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 
 const MenuStack = createStackNavigator()
@@ -55,7 +54,6 @@ export const Menu = () => {
   const strings = useStrings()
   const {styles, color} = useStyles()
   const navigateTo = useNavigateTo()
-  const {wallet} = useSelectedWallet()
   const {isPoolRetiring} = usePoolTransition()
   const {track} = useMetrics()
 
@@ -64,7 +62,6 @@ export const Menu = () => {
       track.menuPageViewed()
     }, [track]),
   )
-  const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -82,13 +79,11 @@ export const Menu = () => {
           right={isPoolRetiring ? <Icon.Warning size={24} color={color.sys_magenta_500} /> : null}
         />
 
-        {isGovernanceFeatureEnabled && (
-          <Governance
-            label={strings.governanceCentre}
-            onPress={navigateTo.governanceCentre}
-            left={<Icon.Governance size={24} color={color.gray_600} />}
-          />
-        )}
+        <Governance
+          label={strings.governanceCentre}
+          onPress={navigateTo.governanceCentre}
+          left={<Icon.Governance size={24} color={color.gray_600} />}
+        />
 
         <React.Suspense
           fallback={

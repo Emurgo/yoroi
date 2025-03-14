@@ -1,5 +1,5 @@
 import {walletChecksum} from '@emurgo/cip4-js'
-import {difference, parseSafe} from '@yoroi/common'
+import {difference, parseSafe, time} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {App, Chain, HW, Network, Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
@@ -17,7 +17,6 @@ import {
 } from 'rxjs'
 import uuid from 'uuid'
 
-import {time} from '../../kernel/constants'
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'

@@ -1,9 +1,8 @@
-import {isRight, useAsyncStorage} from '@yoroi/common'
+import {isRight, time, useAsyncStorage} from '@yoroi/common'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
-import {time} from '../../../../kernel/constants'
 import {fetchPtPriceActivity} from '../../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
 import {getCurrencySymbol} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
