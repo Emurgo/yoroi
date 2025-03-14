@@ -30,7 +30,13 @@ describe('swapManagerMaker', () => {
     stakingKey: 'someStakingKey',
     storage: {
       clear: jest.fn(),
-      slippage: jest.fn(() => 0.5),
+      slippage: {save: jest.fn(), read: jest.fn(() => 0.5)},
+      config: {
+        save: jest.fn(),
+        read: jest.fn(
+          () => new Promise((resolve) => resolve({routingPreferences: 'auto'})),
+        ),
+      },
     },
   } as any
 
