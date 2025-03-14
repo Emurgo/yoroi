@@ -17,6 +17,7 @@ import {Boundary} from '../../../../components/Boundary/Boundary'
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
+import {RefreshButton} from '../../../../components/RefreshButton/RefreshButton'
 import {Space} from '../../../../components/Space/Space'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
@@ -39,6 +40,7 @@ type Filter = 'open' | 'completed'
 export const ListOrders = () => {
   const {navigateToTxHistory} = useWalletNavigation()
   const [filter, setFilter] = React.useState<Filter>('open')
+  const swapForm = useSwap()
 
   const strings = useStrings()
   const {styles, color} = useStyles()
@@ -72,6 +74,8 @@ export const ListOrders = () => {
             {...(filter === 'completed' && {style: styles.activeButton})}
           />
         </View>
+
+        <RefreshButton onPress={swapForm.refetchOrders} />
       </View>
 
       <Boundary

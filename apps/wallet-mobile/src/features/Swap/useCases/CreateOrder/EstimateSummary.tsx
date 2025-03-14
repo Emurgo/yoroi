@@ -74,7 +74,9 @@ export const EstimateSummary = () => {
           <Row
             label={strings.price}
             description={swapForm.orderType === 'limit' ? strings.limitPriceInfo : strings.marketPriceInfo}
-            value={`1 ${tokenInTicker} = ${swapForm.estimate?.netPrice} ${tokenOutTicker}`}
+            value={`1 ${tokenInTicker} = ${swapForm.estimate?.netPrice.toFixed(
+              tokenOutInfo?.decimals ?? 0,
+            )} ${tokenOutTicker}`}
           />
 
           <Row

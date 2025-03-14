@@ -1,8 +1,7 @@
 import {getSwapConfigApiMaker} from '@yoroi/swap'
 import {useQuery} from 'react-query'
 
-import {usePortfolioTokenInfos} from '../../Portfolio/common/hooks/usePortfolioTokenInfos'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {undefinedToken} from './constants'
 import {useSwap} from './SwapProvider'
 
 export const useSwapConfig = () => {
@@ -15,15 +14,11 @@ export const useSwapConfig = () => {
 
   const swapConfig = query.data
 
-  const {wallet} = useSelectedWallet()
-
-  const {data} = usePortfolioTokenInfos({wallet, tokenIds: [swapConfig?.initialPair.tokenOut ?? '.']}, {suspense: true})
-
-  const candidateTokenInfo = swapConfig?.initialPair.tokenOut ? data?.get(swapConfig?.initialPair.tokenOut) : undefined
+  const candidateTokenId = swapConfig?.initialPair?.tokenOut
 
   const {tokenInfos} = useSwap()
 
-  const tokenOutId = candidateTokenInfo && tokenInfos.has(candidateTokenInfo.id) ? candidateTokenInfo.id : undefined
+  const tokenOutId = tokenInfos.has(candidateTokenId ?? undefinedToken) ? candidateTokenId : undefined
 
   return {
     ...query,

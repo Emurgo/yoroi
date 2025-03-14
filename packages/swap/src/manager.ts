@@ -34,6 +34,14 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     routingPreference: 'auto',
   }
 
+  const assignConfig = (v: Swap.ManagerConfig): Swap.ManagerConfig => {
+    const newConfig = Object.assign(config, v)
+    storage.config.save(newConfig)
+    return newConfig
+  }
+
+  storage.config.read().then(assignConfig)
+
   return {
     api: apiManagerMaker(
       {
@@ -42,11 +50,10 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
       },
       config,
     ),
-    assignConfig: (v: Swap.ManagerConfig): Swap.ManagerConfig =>
-      Object.assign(config, v),
+    assignConfig,
     config,
-    clearStorage: storage.clear,
     slippage: storage.slippage,
+    clearStorage: storage.clear,
   }
 }
 

@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {isRight} from '@yoroi/common'
+import {isLeft, isRight} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
 import {Api, Portfolio, Swap} from '@yoroi/types'
@@ -83,6 +83,10 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   const [state, action] = React.useReducer(swapReducer, defaultState)
 
+  useQuery('swapSlippage', async () => {
+    action({type: 'SlippageInputChanged', value: await swapManager.slippage.read()})
+  })
+
   const {data: swapAggregatorProtocols = []} = useQuery(
     [
       'useSwapAggregatorProtocols',
@@ -113,6 +117,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   }, [balances.records, state.tokenInInput.tokenId, state.tokenInInput.value, strings.notEnoughBalance])
 
   React.useEffect(() => {
+    swapManager.slippage.save(state.slippageInput.value)
+
     if (state.reqres === 'response') return
 
     if (
@@ -145,7 +151,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
           action({type: SwapAction.EstimateResponse, value: response.value.data})
         }
       })
-  }, [state, swapManager.api])
+  }, [state, swapManager.api, swapManager.slippage])
 
   const create = React.useCallback(() => {
     if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) return
@@ -184,7 +190,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         protocol: state.selectedProtocol.value,
       })
       .then((response) => {
-        if (response.tag === 'left') {
+        if (isLeft(response)) {
           action({type: SwapAction.CreateError, value: response.error})
         } else {
           action({type: SwapAction.CreateResponse, value: response.value.data})
@@ -223,6 +229,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       cancel: swapManager.api.cancel,
       managerConfig: swapManager.config,
       assignManagerConfig: swapManager.assignConfig,
+      refetchOrders,
     }),
     [
       state,
@@ -233,6 +240,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       swapManager.api.cancel,
       swapManager.config,
       swapManager.assignConfig,
+      refetchOrders,
     ],
   )
 
@@ -519,6 +527,7 @@ export type SwapContext = SwapState & {
   cancel: Swap.Api['cancel']
   managerConfig: Swap.ManagerConfig
   assignManagerConfig: Swap.Manager['assignConfig']
+  refetchOrders: () => void
 }
 
 const SwapContext = React.createContext<SwapContext>({
@@ -535,4 +544,5 @@ const SwapContext = React.createContext<SwapContext>({
   cancel: () => new Promise((res) => res),
   managerConfig: {routingPreference: 'auto'},
   assignManagerConfig: () => ({routingPreference: 'auto'}),
+  refetchOrders: () => null,
 })

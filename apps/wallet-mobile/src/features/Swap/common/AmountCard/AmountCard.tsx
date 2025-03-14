@@ -1,12 +1,14 @@
+import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
-import {actionMessages} from '../../../../kernel/i18n/global-messages'
+import globalMessages, {actionMessages} from '../../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../../kernel/utils'
 import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
 import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
@@ -28,11 +30,13 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const navigateTo = direction === 'in' ? navigate.selectSellToken : navigate.selectBuyToken
   const tokenInput = swapForm[direction === 'in' ? 'tokenInInput' : 'tokenOutInput']
 
-  const amount = balances.records.get(tokenInput.tokenId ?? undefinedToken) ?? {
+  const amount = {
     info: swapForm.tokenInfos.get(tokenInput.tokenId ?? undefinedToken),
     quantity: balances.records.get(tokenInput.tokenId ?? undefinedToken)?.quantity,
   }
   const info = amount.info
+
+  const decimals = info?.decimals ?? 0
 
   const value = tokenInput.value
   const touched = tokenInput.isTouched
@@ -60,7 +64,25 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
         !isEmptyString(error) && styles.borderError,
       ]}
     >
-      <Text style={styles.label}>{direction === 'in' ? strings.sell : strings.buy}</Text>
+      <View style={styles.between}>
+        <Text style={styles.label}>{direction === 'in' ? strings.sell : strings.buy}</Text>
+
+        {direction === 'in' && info && !isPrimaryTokenInfo(info) && (
+          <View>
+            <Button
+              title={strings.max}
+              type={ButtonType.Text}
+              size="S"
+              onPress={() =>
+                swapForm.action({
+                  type: 'TokenInAmountChanged',
+                  value: (Number(amount.quantity) / 10 ** decimals).toFixed(decimals),
+                })
+              }
+            />
+          </View>
+        )}
+      </View>
 
       <View style={styles.between}>
         <TouchableOpacity onPress={navigateTo}>
@@ -151,6 +173,7 @@ const useStrings = () => {
     currentBalance: intl.formatMessage(messages.currentBalance),
     sell: intl.formatMessage(actionMessages.sell),
     buy: intl.formatMessage(actionMessages.buy),
+    max: intl.formatMessage(globalMessages.max),
   }
 }
 
@@ -179,6 +202,7 @@ const useStyles = () => {
     },
     label: {
       ...atoms.body_2_md_medium,
+      ...atoms.py_xs,
       color: color.gray_900,
     },
     amountInput: {
