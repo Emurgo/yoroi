@@ -1,8 +1,13 @@
 import {fetchData} from '@yoroi/common'
-import {Api, Chain} from '@yoroi/types'
+import {Api, Chain, Left} from '@yoroi/types'
 
-import {MuesliswapApiConfig, muesliswapApiMaker} from './api-maker'
+import {
+  MuesliswapApiConfig,
+  muesliswapApiMaker,
+  parseMuesliError,
+} from './api-maker'
 import {api} from './api.mocks'
+import {ApiResponseError} from '@yoroi/types/lib/typescript/api/response'
 
 jest.mock('@yoroi/common', () => ({
   fetchData: jest.fn(),
@@ -97,7 +102,78 @@ describe('muesliswapApiMaker', () => {
         tag: 'right',
         value: {
           status: Api.HttpStatusCode.Ok,
-          data: api.responses.orders,
+          data: {
+            ...api.responses.orders,
+            orders: [
+              ...api.responses.orders.orders,
+              {
+                dex: 'sundaeswap-v1',
+                aggregator: null,
+                fromToken: '.',
+                toToken:
+                  '4cb48d60d1f7823d1307c61b9ecf472ff78cf22d1ccc5786d59461f8.4144414d4f4f4e',
+                fromAmount: '0.000036',
+                toAmount: '10',
+                paidAmount: '0.000036',
+                receivedAmount: '11',
+                batcherFee: '2.500000',
+                attachedValues: [
+                  {
+                    amount: 4500036,
+                    token: '.',
+                  },
+                ],
+                sender:
+                  'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
+                beneficiary:
+                  'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
+                txHash:
+                  '29f51a2a9e46ced05f03abc9b419ae57164dc056534121f041d69e307b9722f8',
+                outputIdx: 0,
+                deposit: '2.000000',
+                status: 'matched',
+                placedAt: undefined,
+                finalizedAt: undefined,
+                finalizedTxHash:
+                  '8d3b20bafb8378366f819f506da327a43e94d6948c002bac00a9b1de401bc571',
+                providerSpecifics: {
+                  poolId: '1701',
+                  swapDirection: 0,
+                },
+              },
+              {
+                dex: 'minswap-v2',
+                aggregator: null,
+                fromToken: '.',
+                toToken:
+                  '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b',
+                fromAmount: '0.008137',
+                toAmount: '1',
+                paidAmount: '0.000000',
+                receivedAmount: '0',
+                batcherFee: '2.000000',
+                attachedValues: [
+                  {
+                    amount: 4008137,
+                    token: '.',
+                  },
+                ],
+                sender:
+                  'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
+                beneficiary:
+                  'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
+                txHash:
+                  '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+                outputIdx: 0,
+                deposit: '2.000000',
+                status: 'canceled',
+                placedAt: undefined,
+                finalizedAt: undefined,
+                finalizedTxHash: null,
+                providerSpecifics: null,
+              },
+            ],
+          },
         },
       })
 
@@ -192,7 +268,17 @@ describe('muesliswapApiMaker', () => {
 
       const muesliApi = muesliswapApiMaker(config)
       // has wantedPrice
-      const result = await muesliApi.estimate(api.inputs.quoteLimit)
+      const result = await muesliApi.estimate({
+        slippage: 0.01,
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+        protocol: 'minswap-v1',
+        wantedPrice: 1,
+        amountOut: undefined,
+        amountIn: 1,
+        multiples: 1,
+      })
 
       expect(mockFetchData).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -200,7 +286,7 @@ describe('muesliswapApiMaker', () => {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
           },
-          url: 'https://aggregator-v2.muesliswap.com/quote',
+          url: 'https://aggregator-v2.muesliswap.com/limit_order_quote',
           method: 'post',
         }),
         {
@@ -208,6 +294,24 @@ describe('muesliswapApiMaker', () => {
         },
       )
       expect(result.tag).toBe('right')
+    })
+
+    it('should return error (isLeft) when the response is left', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'left',
+        error: {
+          status: 500,
+          message: 'Some error',
+          responseData: {detail: 'random error'},
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.estimate(api.inputs.quote)
+
+      if (result.tag !== 'left') fail()
+      expect(result.tag).toBe('left')
+      expect(result.error.message).toContain('random error')
     })
   })
 
@@ -258,6 +362,24 @@ describe('muesliswapApiMaker', () => {
         },
       )
       expect(result.tag).toBe('right')
+    })
+
+    it('should return error (isLeft) when the response is left', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'left',
+        error: {
+          status: 500,
+          message: 'Some error',
+          responseData: {detail: 'random error'},
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.create(api.inputs.createLimit[0]!)
+
+      if (result.tag !== 'left') fail()
+      expect(result.tag).toBe('left')
+      expect(result.error.message).toContain('random error')
     })
   })
 
@@ -315,5 +437,56 @@ describe('muesliswapApiMaker', () => {
       expect(result.tag).toBe('right')
       expect(result.value.status).toBe(Api.HttpStatusCode.Ok)
     })
+  })
+})
+
+describe('parseMuesliError', () => {
+  it('parses error when responseData.detail is present', () => {
+    const input: Left<ApiResponseError> = {
+      tag: 'left',
+      error: {
+        status: 500,
+        message: 'Cancel error',
+        responseData: {detail: 'could not cancel'},
+      },
+    }
+    const result = parseMuesliError(input)
+
+    expect(result.tag).toBe('left')
+    expect(result.error.message).toBe('could not cancel')
+    expect(Object.isFrozen(result)).toBe(true)
+  })
+
+  it('falls back to default message when responseData.detail is absent', () => {
+    const input = {
+      tag: 'left',
+      error: {
+        status: 500,
+        message: 'Cancel error',
+      },
+    } as Left<ApiResponseError>
+
+    const result = parseMuesliError(input)
+
+    expect(result.tag).toBe('left')
+    expect(result.error.message).toBe('Muesliswap API error')
+
+    expect(Object.isFrozen(result)).toBe(true)
+  })
+
+  it('strips leading and trailing quotes if detail is a JSON string', () => {
+    const input: Left<ApiResponseError> = {
+      tag: 'left',
+      error: {
+        status: 500,
+        message: 'Cancel error',
+        responseData: {detail: 'could not "cancel"'},
+      },
+    }
+
+    const result = parseMuesliError(input)
+
+    expect(result.error.message).toBe('could not \\"cancel\\"')
+    expect(Object.isFrozen(result)).toBe(true)
   })
 })

@@ -84,7 +84,7 @@ export const transformersMaker = ({
             tokenOut: toToken,
 
             updateTxHash: finalizedTxHash ?? txHash,
-            placedAt: placedAt * 1000,
+            placedAt: placedAt ? placedAt * 1000 : undefined,
             lastUpdate: finalizedAt ? finalizedAt * 1000 : undefined,
             amountIn: Number(fromAmount),
             actualAmountOut: Number(receivedAmount),

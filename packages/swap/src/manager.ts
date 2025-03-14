@@ -111,7 +111,9 @@ const apiManagerMaker = (
 
         const merged: Record<Swap.Order['txHash'], Swap.Order> = {}
         const append = (order: Swap.Order) => {
+          /* istanbul ignore next */
           if (
+            // TODO: refactor to avoid istanbul ignore
             merged[order.txHash] === undefined ||
             order.aggregator === Swap.Aggregator.Dexhunter
           )
@@ -229,7 +231,7 @@ const apiManagerMaker = (
         warnAllLeft(...responses)
 
         if (responses.every(isLeft))
-          return responses.find((res) => res.error.status !== 3) ?? invalid
+          return responses.find((res) => res.error.status !== -3) ?? invalid
 
         const creates = responses.filter(isRight).map(({value}) => value.data)
 

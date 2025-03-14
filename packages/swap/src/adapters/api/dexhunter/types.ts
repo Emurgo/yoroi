@@ -17,10 +17,10 @@ export type Dex = (typeof Dex)[keyof typeof Dex]
 
 export type TokensResponse = Array<{
   token_id: string
-  token_decimals: number
+  token_decimals?: number
   token_policy: string
-  token_ascii: string
-  ticker: string
+  token_ascii?: string
+  ticker?: string
   is_verified: boolean
   supply: number
   creation_date: string
@@ -38,10 +38,10 @@ export type OrdersResponse = Array<{
   is_dexhunter?: boolean
   is_oor?: boolean
   is_stop_loss?: boolean
-  last_update: string
+  last_update?: string
   output_index?: number
   status?: string
-  submission_time: string
+  submission_time?: string
   token_id_in?: string
   token_id_out?: string
   tx_hash?: string

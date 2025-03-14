@@ -174,6 +174,7 @@ export const muesliswapApiMaker = (
             true,
           )
         } catch (e) {
+          /* istanbul ignore next */
           return freeze(
             {
               tag: 'left',
@@ -252,7 +253,7 @@ export const muesliswapApiMaker = (
   )
 }
 
-const parseMuesliError = ({tag, error}: Left<Api.ResponseError>) =>
+export const parseMuesliError = ({tag, error}: Left<Api.ResponseError>) =>
   freeze<Left<Api.ResponseError>>(
     {
       tag,

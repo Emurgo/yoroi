@@ -3,6 +3,7 @@ import {Api, Chain} from '@yoroi/types'
 
 import {dexhunterApiMaker, DexhunterApiConfig} from './api-maker'
 import {api} from './api.mocks'
+import {BuildResponse, LimitBuildResponse} from './types'
 
 jest.mock('@yoroi/common', () => ({
   fetchData: jest.fn(),
@@ -101,7 +102,65 @@ describe('dexhunterApiMaker', () => {
         tag: 'right',
         value: {
           status: Api.HttpStatusCode.Ok,
-          data: api.responses.orders,
+          data: [
+            ...api.responses.orders,
+            {
+              _id: '000000000000000000000000',
+              token_id_in:
+                '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e776f726c646d6f62696c65746f6b656e',
+              token_id_out:
+                '000000000000000000000000000000000000000000000000000000006c6f76656c616365',
+              dex: 'MUESLISWAP',
+              status: 'COMPLETE',
+              user_address:
+                'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl',
+              user_stake:
+                'stake1u8u75eck203489f4v3j7f0v02ca464yqun45vmdgj63z4lqm9pu9k',
+              amount_in: 15.330409,
+              expected_out_amount: 3.756354,
+              actual_out_amount: 5.801912,
+              is_dexhunter: false,
+              submission_time: undefined,
+              last_update: undefined,
+              tx_hash:
+                'ldlldpldlpelpflepflepflpelfpelfpleplfpelfpelfplepflpelfpelfpelfp',
+              output_index: 0,
+              update_tx_hash:
+                'a8b77336d8600f1c8dac0ed90d0ab9c4f1e815bb25f4e168aaaadd130f81457d',
+              is_stop_loss: false,
+              is_oor: false,
+              batcher_fee: 1.15,
+              deposit: 1,
+            },
+            {
+              _id: '111111111111111111111111',
+              token_id_in:
+                '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e776f726c646d6f62696c65746f6b656e',
+              token_id_out:
+                '000000000000000000000000000000000000000000000000000000006c6f76656c616365',
+              dex: 'MUESLISWAP',
+              status: 'COMPLETE',
+              user_address:
+                'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl',
+              user_stake:
+                'stake1u8u75eck203489f4v3j7f0v02ca464yqun45vmdgj63z4lqm9pu9k',
+              amount_in: 15.330409,
+              expected_out_amount: 3.756354,
+              actual_out_amount: 5.801912,
+              is_dexhunter: false,
+              submission_time: undefined,
+              last_update: undefined,
+              tx_hash:
+                'kskskkskskskskkskskskkskskkskskskkskskskkskskkskskskkskskskskksk',
+              output_index: 0,
+              update_tx_hash:
+                'a8b77336d8600f1c8dac0ed90d0ab9c4f1e815bb25f4e168aaaadd130f81457d',
+              is_stop_loss: false,
+              is_oor: false,
+              batcher_fee: 1.15,
+              deposit: 1,
+            },
+          ],
         },
       })
 
@@ -195,167 +254,167 @@ describe('dexhunterApiMaker', () => {
       expect(result.tag).toBe('right')
     })
 
-    // it('calls /swap/limit/estimate if wantedPrice is provided', async () => {
-    //   mockFetchData.mockResolvedValueOnce({
-    //     tag: 'right',
-    //     value: {
-    //       status: 200,
-    //       data: api.responses.estimate,
-    //     },
-    //   })
+    it('calls /swap/limit/estimate if wantedPrice is provided', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: {...api.responses.estimate, wantedPrice: 1},
+        },
+      })
 
-    //   const dhApi = dexhunterApiMaker(config)
-    //   const result = await dhApi.estimate(api.inputs.estimate)
+      const dhApi = dexhunterApiMaker(config)
+      const result = await dhApi.estimate({
+        ...api.inputs.estimate,
+        wantedPrice: 1,
+      })
 
-    //   expect(mockFetchData).toHaveBeenCalledWith(
-    //     expect.objectContaining({
-    //       url: 'https://api-us.dexhunterv3.app/swap/limit/estimate',
-    //     }),
-    //     undefined,
-    //   )
-    //   expect(result.tag).toBe('right')
-    // })
+      expect(mockFetchData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: {
+            amount_in: 10,
+            blacklisted_dexes: ['WINGRIDER'],
+            dex: 'MINSWAP',
+            multiples: 1,
+            token_in: '',
+            token_out:
+              'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950',
+            wanted_price: 1,
+          },
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-Partner-Id': 'somePartnerId',
+          },
+          method: 'post',
+          url: 'https://api-us.dexhunterv3.app/swap/limit/estimate',
+        }),
+      )
+      expect(result.tag).toBe('right')
+    })
 
-    // it('should return a left if Dexhunter fails (server error)', async () => {
-    //   mockFetchData.mockResolvedValueOnce({
-    //     tag: 'left',
-    //     error: {
-    //       status: 400,
-    //       message: 'Bad request',
-    //       responseData: {detail: 'estimate error'},
-    //     },
-    //   })
+    it('should return a left if Dexhunter fails (server error)', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'left',
+        error: {
+          status: 400,
+          message: 'Bad request',
+          responseData: {detail: 'estimate error'},
+        },
+      })
 
-    //   const dhApi = dexhunterApiMaker(config)
-    //   const result = await dhApi.estimate({
-    //     from: {tokenId: 'abc', amount: '100'},
-    //     to: {tokenId: 'xyz'},
-    //   })
+      const dhApi = dexhunterApiMaker(config)
+      const result = await dhApi.estimate(api.inputs.estimate)
 
-    //   expect(result.tag).toBe('left')
-    //   expect(result.error.message).toContain('estimate error')
-    // })
+      if (result.tag !== 'left') fail()
+      expect(result.tag).toBe('left')
+      expect(result.error.message).toContain('estimate error')
+    })
   })
 
-  // describe('create()', () => {
-  //   it('calls /swap/build if wantedPrice is not provided', async () => {
-  //     mockFetchData.mockResolvedValueOnce({
-  //       tag: 'right',
-  //       value: {
-  //         status: 200,
-  //         data: api.responses.build,
-  //       },
-  //     })
+  describe('create()', () => {
+    it('calls /swap/build if wantedPrice is not provided', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: {} as BuildResponse,
+        },
+      })
 
-  //     const dhApi = dexhunterApiMaker(config)
-  //     const result = await dhApi.create({
-  //       from: {tokenId: 'abc', amount: '100'},
-  //       to: {tokenId: 'xyz'},
-  //       // no wantedPrice => 'build'
-  //     })
+      const dhApi = dexhunterApiMaker(config)
+      const result = await dhApi.create(api.inputs.create[0]!)
 
-  //     expect(mockFetchData).toHaveBeenCalledWith(
-  //       {
-  //         method: 'post',
-  //         url: 'https://api-us.dexhunterv3.app/swap/build',
-  //         headers: expect.objectContaining({
-  //           'X-Partner-Id': 'somePartnerId',
-  //         }),
-  //         data: expect.any(Object),
-  //       },
-  //       undefined,
-  //     )
-  //     expect(result.tag).toBe('right')
-  //   })
+      expect(mockFetchData).toHaveBeenCalledWith({
+        method: 'post',
+        url: 'https://api-us.dexhunterv3.app/swap/build',
+        headers: expect.objectContaining({
+          'X-Partner-Id': 'somePartnerId',
+        }),
+        data: expect.any(Object),
+      })
+      expect(result.tag).toBe('right')
+    })
 
-  //   it('calls /swap/limit/build if wantedPrice is provided', async () => {
-  //     mockFetchData.mockResolvedValueOnce({
-  //       tag: 'right',
-  //       value: {
-  //         status: 200,
-  //         data: api.responses.limitBuild,
-  //       },
-  //     })
+    it('calls /swap/limit/build if wantedPrice is provided', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: {} as LimitBuildResponse,
+        },
+      })
 
-  //     const dhApi = dexhunterApiMaker(config)
-  //     const result = await dhApi.create({
-  //       from: {tokenId: 'abc', amount: '100'},
-  //       to: {tokenId: 'xyz'},
-  //       wantedPrice: '9.99',
-  //     })
+      const dhApi = dexhunterApiMaker(config)
+      const result = await dhApi.create(api.inputs.create[2]!)
 
-  //     expect(mockFetchData).toHaveBeenCalledWith(
-  //       expect.objectContaining({
-  //         url: 'https://api-us.dexhunterv3.app/swap/limit/build',
-  //       }),
-  //       undefined,
-  //     )
-  //     expect(result.tag).toBe('right')
-  //   })
+      expect(mockFetchData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          url: 'https://api-us.dexhunterv3.app/swap/limit/build',
+        }),
+      )
+      expect(result.tag).toBe('right')
+    })
 
-  //   it('should return a left if Dexhunter fails', async () => {
-  //     mockFetchData.mockResolvedValueOnce({
-  //       tag: 'left',
-  //       error: {
-  //         status: 500,
-  //         message: 'Create error',
-  //         responseData: {detail: 'could not build swap'},
-  //       },
-  //     })
+    it('should return a left if Dexhunter fails', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'left',
+        error: {
+          status: 500,
+          message: 'Create error',
+          responseData: {detail: 'could not build swap'},
+        },
+      })
 
-  //     const dhApi = dexhunterApiMaker(config)
-  //     const result = await dhApi.create({
-  //       from: {tokenId: 'abc', amount: '100'},
-  //       to: {tokenId: 'xyz'},
-  //     })
+      const dhApi = dexhunterApiMaker(config)
+      const result = await dhApi.create(api.inputs.create[0]!)
 
-  //     expect(result.tag).toBe('left')
-  //     expect(result.error.message).toContain('could not build swap')
-  //   })
-  // })
+      if (result.tag !== 'left') fail()
+      expect(result.tag).toBe('left')
+      expect(result.error.message).toContain('could not build swap')
+    })
+  })
 
-  // describe('cancel()', () => {
-  //   it('calls /swap/cancel successfully', async () => {
-  //     mockFetchData.mockResolvedValueOnce({
-  //       tag: 'right',
-  //       value: {
-  //         status: 200,
-  //         data: api.responses.cancel,
-  //       },
-  //     })
+  describe('cancel()', () => {
+    it('calls /swap/cancel successfully', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: api.responses.cancel,
+        },
+      })
 
-  //     const dhApi = dexhunterApiMaker(config)
-  //     const result = await dhApi.cancel({orderId: '1234'})
+      const dhApi = dexhunterApiMaker(config)
+      const result = await dhApi.cancel(api.inputs.cancel)
 
-  //     expect(mockFetchData).toHaveBeenCalledWith(
-  //       {
-  //         method: 'post',
-  //         url: 'https://api-us.dexhunterv3.app/swap/cancel',
-  //         headers: expect.objectContaining({
-  //           'X-Partner-Id': 'somePartnerId',
-  //         }),
-  //         data: expect.any(Object),
-  //       },
-  //       undefined,
-  //     )
-  //     expect(result.tag).toBe('right')
-  //   })
+      expect(mockFetchData).toHaveBeenCalledWith({
+        method: 'post',
+        url: 'https://api-us.dexhunterv3.app/swap/cancel',
+        headers: expect.objectContaining({
+          'X-Partner-Id': 'somePartnerId',
+        }),
+        data: expect.any(Object),
+      })
+      expect(result.tag).toBe('right')
+    })
 
-  //   it('should return a left if Dexhunter fails', async () => {
-  //     mockFetchData.mockResolvedValueOnce({
-  //       tag: 'left',
-  //       error: {
-  //         status: 500,
-  //         message: 'Cancel error',
-  //         responseData: {detail: 'could not cancel'},
-  //       },
-  //     })
+    it('should return a left if Dexhunter fails', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'left',
+        error: {
+          status: 500,
+          message: 'Cancel error',
+          responseData: {detail: 'could not cancel'},
+        },
+      })
 
-  //     const dhApi = dexhunterApiMaker(config)
-  //     const result = await dhApi.cancel({orderId: '1234'})
+      const dhApi = dexhunterApiMaker(config)
+      const result = await dhApi.cancel(api.inputs.cancel)
 
-  //     expect(result.tag).toBe('left')
-  //     expect(result.error.message).toContain('could not cancel')
-  //   })
-  // })
+      if (result.tag !== 'left') fail()
+      expect(result.tag).toBe('left')
+      expect(result.error.message).toContain('could not cancel')
+    })
+  })
 })

@@ -26,7 +26,7 @@ import {isDex} from './validators'
 export const ptIdDh =
   '000000000000000000000000000000000000000000000000000000006c6f76656c616365'
 
-const toSwapSplit = ({
+export const toSwapSplit = ({
   amount_in = 0,
   batcher_fee = 0,
   deposits = 0,
@@ -138,8 +138,12 @@ export const transformersMaker = ({
             updateTxHash: update_tx_hash,
             customId: _id,
 
-            placedAt: new Date(submission_time).getTime(),
-            lastUpdate: new Date(last_update).getTime(),
+            placedAt: submission_time
+              ? new Date(submission_time).getTime()
+              : undefined,
+            lastUpdate: last_update
+              ? new Date(last_update).getTime()
+              : undefined,
             aggregator: is_dexhunter
               ? Swap.Aggregator.Dexhunter
               : Swap.Aggregator.Muesliswap,

@@ -53,4 +53,10 @@ describe('getDexByProtocol', () => {
   it('should return Splash for Splash protocol', () => {
     expect(getDexByProtocol(Swap.Protocol.Splash_v1)).toBe(Swap.Dex.Splash)
   })
+
+  it('should return Unsupported for Unsupported protocol', () => {
+    expect(getDexByProtocol(Swap.Protocol.Unsupported)).toBe(
+      Swap.Dex.Unsupported,
+    )
+  })
 })
