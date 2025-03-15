@@ -1,4 +1,5 @@
 import {FlashList} from '@shopify/flash-list'
+import {isString} from '@yoroi/common'
 import {sortTokenInfos} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
@@ -8,11 +9,11 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary} from '../../../../components/Boundary/Boundary'
-import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {SwapTokenRoutes, useUnsafeParams} from '../../../../kernel/navigation'
+import {getTokenIdParts} from '../../../Portfolio/common/helpers/get-token-id-parts'
 import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
 import {AmountItemPlaceholder, TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
@@ -24,10 +25,14 @@ import {useNavigateTo} from '../../common/navigation'
 import {ServiceUnavailable} from '../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
+import {useSwapConfig} from '../../common/useSwapConfig'
 
-export const SelectBuyTokenFromListScreen = () => {
+type Direction = SwapTokenRoutes['swap-select-token']
+
+export const SelectTokenScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
+  const {direction} = useUnsafeParams<Direction>()
 
   const loading = React.useMemo(
     () => ({
@@ -49,7 +54,7 @@ export const SelectBuyTokenFromListScreen = () => {
 
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
-    title: strings.swapTo,
+    title: direction === 'in' ? strings.swapFrom : strings.swapTo,
   })
 
   return (
@@ -58,75 +63,95 @@ export const SelectBuyTokenFromListScreen = () => {
         <ErrorBoundary
           fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
         >
-          <TokenList />
+          <TokenList direction={direction} />
         </ErrorBoundary>
       </Boundary>
     </SafeAreaView>
   )
 }
 
-const TokenList = () => {
+const TokenList = ({direction}: Direction) => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
   const {tokenInfos} = useSwap()
   const {search: assetSearchTerm} = useSearch()
   const balances = usePortfolioBalances({wallet})
+  const {swapConfig} = useSwapConfig()
 
-  const walletTokenIds = React.useMemo(() => balances.all.map(({info: {id}}) => id), [balances.all])
+  const ownedTokens = React.useMemo(
+    () => balances.all.map(({info: {id}}) => id).filter((ti) => tokenInfos.has(ti)),
+    [balances.all, tokenInfos],
+  )
+  const verifiedTokens = React.useMemo(
+    () => swapConfig?.verifiedTokens?.filter((ti) => tokenInfos.has(ti)) ?? [],
+    [swapConfig?.verifiedTokens, tokenInfos],
+  )
 
-  const [filteredTokenList, someInWallet] = React.useMemo(() => {
-    const list = sortTokenInfos({
-      secondaryTokenInfos: Array.from(tokenInfos.values()).filter(filterBySearch(assetSearchTerm)),
-      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
-    })
-    const set = new Set(list.map(({id}) => id))
-    set.delete(wallet.portfolioPrimaryTokenInfo.id)
-    const someInWallet = walletTokenIds.some((id) => set.has(id))
-    return [list, someInWallet]
-  }, [tokenInfos, assetSearchTerm, wallet.portfolioPrimaryTokenInfo, walletTokenIds])
+  const filteredTokenList = React.useMemo(() => {
+    const ownedList = ownedTokens.map((ti) => tokenInfos.get(ti)).filter((v) => v !== undefined)
+
+    if (direction === 'in')
+      return [
+        'Your assets',
+        ...sortTokenInfos({
+          secondaryTokenInfos: ownedList,
+          primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+        }),
+      ].filter(filterBySearch(assetSearchTerm))
+
+    const verifiedList = verifiedTokens.map((ti) => tokenInfos.get(ti)).filter((v) => v !== undefined)
+
+    return [
+      'Your assets',
+      ...sortTokenInfos({
+        secondaryTokenInfos: ownedList,
+        primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+      }),
+      ...(verifiedList.length > 0
+        ? [
+            'Verified',
+            ...sortTokenInfos({
+              secondaryTokenInfos: verifiedList,
+              primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+            }),
+          ]
+        : []),
+      'Unverified',
+      ...sortTokenInfos({
+        secondaryTokenInfos: Array.from(tokenInfos.values()).filter(
+          ({id}) => !(ownedTokens.includes(id) || verifiedTokens.includes(id)),
+        ),
+        primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+      }),
+    ].filter(filterBySearch(assetSearchTerm))
+  }, [ownedTokens, tokenInfos, direction, assetSearchTerm, wallet.portfolioPrimaryTokenInfo, verifiedTokens])
 
   return (
     <View style={styles.list}>
-      {filteredTokenList?.length > 0 && (
-        <View style={styles.ph}>
-          <Spacer height={16} />
-
-          <View style={styles.labels}>
-            <Text style={styles.label}>{strings.asset}</Text>
-          </View>
-
-          <Spacer height={16} />
-
-          <View style={styles.line} />
-        </View>
-      )}
-
       <FlashList
         data={filteredTokenList}
-        renderItem={({item: tokenInfo}: {item: Portfolio.Token.Info}) => (
-          <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
-            <SelectableToken tokenInfo={tokenInfo} wallet={wallet} walletTokenIds={walletTokenIds} />
-          </Boundary>
-        )}
+        renderItem={({item}: {item: Portfolio.Token.Info | string}) =>
+          isString(item) ? (
+            <Text style={styles.sectionHeading}>{item}</Text>
+          ) : (
+            <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
+              <SelectableToken
+                tokenInfo={item}
+                quantity={wallet.balances.records.get(item.id)?.quantity ?? 0n}
+                direction={direction}
+              />
+            </Boundary>
+          )
+        }
         bounces={false}
-        keyExtractor={({id, name}) => `${name}-${id}`}
+        keyExtractor={(item) => (isString(item) ? item : `${item.name}-${item.id}`)}
         testID="assetsList"
         estimatedItemSize={72}
-        ListEmptyComponent={<EmptyList filteredTokensForList={filteredTokenList} />}
+        ListEmptyComponent={<EmptyList />}
       />
 
       <Spacer height={16} />
-
-      {someInWallet && (
-        <View style={[styles.row, styles.ph]}>
-          <Icon.Portfolio size={20} color={colors.lightGreen} />
-
-          <Spacer width={8} />
-
-          <Text style={styles.legend}>{strings.assetsIn}</Text>
-        </View>
-      )}
 
       <Counter
         counter={filteredTokenList.length}
@@ -138,31 +163,41 @@ const TokenList = () => {
   )
 }
 
-type SelectableTokenProps = {
-  wallet: YoroiWallet
-  walletTokenIds: Array<string>
+type SelectableTokenProps = Direction & {
   tokenInfo: Portfolio.Token.Info
+  quantity: bigint
 }
-const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenProps) => {
+const SelectableToken = ({direction, tokenInfo, quantity}: SelectableTokenProps) => {
   const {styles} = useStyles()
   const {id, name, ticker} = tokenInfo
   // NOTE: no need to subscribe to the balance
-  const balanceAvailable = wallet.balances.records.get(id)?.quantity ?? 0n
   const {closeSearch} = useSearch()
   const swapForm = useSwap()
 
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
 
-  const inUserWallet = walletTokenIds.includes(tokenInfo.id)
-  const shouldUpdateToken = id !== swapForm.tokenOutInput.tokenId || !swapForm.tokenOutInput.isTouched
-  const shouldSwitchTokens = id === swapForm.tokenInInput.tokenId && swapForm.tokenInInput.isTouched
+  const shouldUpdateToken =
+    direction === 'in'
+      ? id !== swapForm.tokenInInput.tokenId || !swapForm.tokenInInput.isTouched
+      : id !== swapForm.tokenOutInput.tokenId || !swapForm.tokenOutInput.isTouched
+  const shouldSwitchTokens =
+    direction === 'in'
+      ? id === swapForm.tokenOutInput.tokenId && swapForm.tokenOutInput.isTouched
+      : id === swapForm.tokenInInput.tokenId && swapForm.tokenInInput.isTouched
 
   const handleOnTokenSelection = () => {
-    const [policyId] = id.split('.')
-    track.swapAssetToChanged({
-      to_asset: [{asset_name: name, asset_ticker: ticker, policy_id: policyId}],
-    })
+    const {policyId} = getTokenIdParts(id)
+
+    if (direction === 'in') {
+      track.swapAssetFromChanged({
+        from_asset: [{asset_name: name, asset_ticker: ticker, policy_id: policyId}],
+      })
+    } else {
+      track.swapAssetToChanged({
+        to_asset: [{asset_name: name, asset_ticker: ticker, policy_id: policyId}],
+      })
+    }
 
     // useCase - switch tokens when selecting the same already selected token on the other side
     if (shouldSwitchTokens) {
@@ -171,8 +206,8 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
     }
 
     if (shouldUpdateToken) {
-      swapForm.action({type: 'TokenOutIdChanged', value: id})
-      swapForm.action({type: 'TokenOutInputTouched'})
+      swapForm.action({type: direction === 'in' ? 'TokenInIdChanged' : 'TokenOutIdChanged', value: id})
+      swapForm.action({type: direction === 'in' ? 'TokenInInputTouched' : 'TokenOutInputTouched'})
     }
     navigateTo.startSwap()
     closeSearch()
@@ -180,16 +215,15 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
 
   return (
     <TouchableOpacity style={styles.item} onPress={handleOnTokenSelection} testID="selectTokenButton">
-      <TokenAmountItem amount={{info: tokenInfo, quantity: balanceAvailable}} inWallet={inUserWallet} variant="swap" />
+      <TokenAmountItem amount={{info: tokenInfo, quantity}} ignorePrivacy variant="swap" />
     </TouchableOpacity>
   )
 }
 
-const EmptyList = ({filteredTokensForList}: {filteredTokensForList: ReadonlyArray<Portfolio.Token.Info>}) => {
+const EmptyList = () => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
-  if (isSearching && assetSearchTerm.length > 0 && filteredTokensForList.length === 0)
-    return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
+  if (isSearching && assetSearchTerm.length > 0) return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
 
   return null
 }
@@ -219,34 +253,17 @@ const useStyles = () => {
       flex: 1,
       backgroundColor: color.bg_color_max,
     },
-    ph: {
-      paddingHorizontal: 16,
-    },
     item: {
       paddingVertical: 8,
       paddingHorizontal: 16,
     },
-    label: {
-      ...atoms.body_3_sm_regular,
-    },
-    labels: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
     list: {
       flex: 1,
     },
-    line: {
-      height: 1,
-      backgroundColor: color.gray_200,
-    },
-    row: {
-      flexDirection: 'row',
-      alignSelf: 'center',
-    },
-    legend: {
-      color: color.gray_900,
+    sectionHeading: {
       ...atoms.body_2_md_regular,
+      color: color.text_gray_low,
+      ...atoms.p_lg,
     },
     image: {
       flex: 1,
@@ -271,9 +288,5 @@ const useStyles = () => {
     },
   })
 
-  const colors = {
-    lightGreen: color.secondary_600,
-  }
-
-  return {styles, colors}
+  return {styles}
 }

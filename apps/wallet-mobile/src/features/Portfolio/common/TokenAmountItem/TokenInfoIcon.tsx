@@ -35,6 +35,7 @@ export const TokenInfoIcon = ({info, size = 'lg', imageStyle}: TokenInfoIconProp
 
   return (
     <Image
+      recyclingKey={info.id}
       source={{uri, headers}}
       contentFit="cover"
       style={[styles.icon, styles[size], imageStyle]}

@@ -39,10 +39,9 @@ import {SubmittedTxScreen as SendSubmittedTxScreen} from '../Send/useCases/ShowS
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '../Staking/Governance/common/helpers'
-import {SelectBuyTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectBuyTokenFromListScreen'
 import {SelectProtocolScreen} from '../Swap/useCases/CreateOrder/SelectProtocolScreen'
-import {SelectSellTokenFromListScreen} from '../Swap/useCases/CreateOrder/SelectSellTokenFromListScreen'
-import {StartSwapOrderScreen} from '../Swap/useCases/CreateOrder/StartSwapOrderScreen'
+import {SelectTokenScreen} from '../Swap/useCases/CreateOrder/SelectTokenScreen'
+import {SwapMainScreen} from '../Swap/useCases/CreateOrder/SwapMainScreen'
 import {ListOrders} from '../Swap/useCases/ListOrders/ListOrders'
 import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {FailedTxScreen as SwapFailedTxScreen} from '../Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
@@ -209,12 +208,30 @@ export const TxHistoryNavigator = () => {
                 </Stack.Screen>
 
                 <Stack.Screen
+                  options={{
+                    headerShown: false,
+                  }}
+                  name="exchange-result"
+                  component={ShowExchangeResultOrderScreen}
+                />
+
+                <Stack.Screen
                   name="swap-main"
-                  component={StartSwapOrderScreen}
+                  component={SwapMainScreen}
                   options={{
                     ...sendOptions(navigationOptions, color),
                     title: strings.swapTitle,
                     headerRight: () => <HeaderRightSwap />,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="swap-select-token"
+                  getComponent={() => SelectTokenScreen}
+                  initialParams={{direction: 'in'}}
+                  options={{
+                    ...sendOptions(navigationOptions, color),
+                    title: strings.swapFromTitle,
                   }}
                 />
 
@@ -237,14 +254,6 @@ export const TxHistoryNavigator = () => {
                 />
 
                 <Stack.Screen
-                  options={{
-                    headerShown: false,
-                  }}
-                  name="exchange-result"
-                  component={ShowExchangeResultOrderScreen}
-                />
-
-                <Stack.Screen
                   name="swap-preprod-notice"
                   component={ShowPreprodNoticeScreen}
                   options={{
@@ -262,28 +271,10 @@ export const TxHistoryNavigator = () => {
                 />
 
                 <Stack.Screen
-                  name="swap-select-sell-token"
-                  component={SelectSellTokenFromListScreen}
-                  options={{
-                    ...sendOptions(navigationOptions, color),
-                    title: strings.swapFromTitle,
-                  }}
-                />
-
-                <Stack.Screen
                   name="swap-select-protocol"
                   component={SelectProtocolScreen}
                   options={{
                     title: strings.selectPool,
-                  }}
-                />
-
-                <Stack.Screen
-                  name="swap-select-buy-token"
-                  component={SelectBuyTokenFromListScreen}
-                  options={{
-                    ...sendOptions(navigationOptions, color),
-                    title: strings.swapToTitle,
                   }}
                 />
 

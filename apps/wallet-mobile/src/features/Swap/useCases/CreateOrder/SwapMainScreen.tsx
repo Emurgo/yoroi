@@ -22,7 +22,7 @@ import {WarnLimitPrice} from './WarnLimitPrice'
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
 
-export const StartSwapOrderScreen = () => {
+export const SwapMainScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const {styles, color} = useStyles()

@@ -27,7 +27,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const balances = usePortfolioBalances({wallet})
   const swapForm = useSwap()
   const navigate = useNavigateTo()
-  const navigateTo = direction === 'in' ? navigate.selectSellToken : navigate.selectBuyToken
+  const navigateTo = direction === 'in' ? navigate.selectTokenIn : navigate.selectTokenOut
   const tokenInput = swapForm[direction === 'in' ? 'tokenInInput' : 'tokenOutInput']
 
   const amount = {

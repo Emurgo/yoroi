@@ -177,13 +177,12 @@ type ClaimRoutes = {
   'claim-show-success': undefined
 }
 
-type SwapTokenRoutes = {
+export type SwapTokenRoutes = {
   'swap-main': undefined
   'swap-orders': undefined
   'swap-settings': undefined
   'swap-review': undefined
-  'swap-select-sell-token': undefined
-  'swap-select-buy-token': undefined
+  'swap-select-token': {direction: 'in' | 'out'}
   'swap-select-protocol': undefined
   'swap-preprod-notice': undefined
   'swap-submitted-tx': undefined

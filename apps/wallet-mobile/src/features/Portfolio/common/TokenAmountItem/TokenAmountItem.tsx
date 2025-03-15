@@ -8,7 +8,6 @@ import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
-import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
 import {features} from '../../../../kernel/features'
 import {useStrings} from '../../../ReviewTx/common/hooks/useStrings'
@@ -23,7 +22,6 @@ type TokenAmountItemProps = {
   ignorePrivacy?: boolean
 
   style?: ViewProps['style']
-  inWallet?: boolean
   variant?: 'swap'
   priceImpactRisk?: SwapPriceImpactRisk
   orderType?: 'limit' | 'market'
@@ -33,7 +31,6 @@ export const TokenAmountItem = ({
   ignorePrivacy = false,
   style,
   amount,
-  inWallet,
   variant,
   priceImpactRisk,
   orderType,
@@ -55,7 +52,6 @@ export const TokenAmountItem = ({
       ? amountFormatter({dropTraillingZeros: true})(amount)
       : privacyPlaceholder
 
-  const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : colors.text
 
   const handleShowTokenDetails = () => {
@@ -73,19 +69,9 @@ export const TokenAmountItem = ({
       </Left>
 
       <Middle>
-        <View style={styles.row}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
-            {name}
-          </Text>
-
-          {showSwapDetails && (
-            <>
-              <Spacer width={4} />
-
-              {inWallet && <Icon.Portfolio size={22} color={colors.icon} />}
-            </>
-          )}
-        </View>
+        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+          {name}
+        </Text>
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
           {detail}
@@ -107,8 +93,25 @@ export const TokenAmountItem = ({
           <PairedBalance textStyle={styles.pairedBalance} amount={amount} ignorePrivacy={ignorePrivacy} />
         )}
 
-        {!isPrimary && variant === 'swap' && features.swapTokenLinks && (
-          <Button type={ButtonType.SecondaryText} icon={Icon.InfoCircle} onPress={handleShowTokenDetails} />
+        {variant === 'swap' && (
+          <View style={styles.row}>
+            {amount.quantity > 0n && (
+              <View>
+                <Text style={[styles.quantity, {textAlign: 'right'}]}>{formattedQuantity}</Text>
+
+                <PairedBalance textStyle={styles.pairedBalance} amount={amount} ignorePrivacy={ignorePrivacy} />
+              </View>
+            )}
+
+            {features.swapTokenLinks && (
+              <Button
+                type={ButtonType.SecondaryText}
+                icon={Icon.InfoCircle}
+                onPress={handleShowTokenDetails}
+                disabled={isPrimary}
+              />
+            )}
+          </View>
         )}
       </Right>
     </View>
@@ -178,6 +181,7 @@ const useStyles = () => {
       ...atoms.flex,
       ...atoms.flex_row,
       ...atoms.align_center,
+      ...atoms.gap_lg,
     },
   })
 
