@@ -1,5 +1,5 @@
 import {FlashList} from '@shopify/flash-list'
-import {isString} from '@yoroi/common'
+import {isNonNullable, isString} from '@yoroi/common'
 import {sortTokenInfos} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
@@ -89,7 +89,7 @@ const TokenList = ({direction}: Direction) => {
   )
 
   const filteredTokenList = React.useMemo(() => {
-    const ownedList = ownedTokens.map((ti) => tokenInfos.get(ti)).filter((v) => v !== undefined)
+    const ownedList = ownedTokens.map((ti) => tokenInfos.get(ti)).filter(isNonNullable)
 
     if (direction === 'in')
       return [
@@ -100,7 +100,7 @@ const TokenList = ({direction}: Direction) => {
         }),
       ].filter(filterBySearch(assetSearchTerm))
 
-    const verifiedList = verifiedTokens.map((ti) => tokenInfos.get(ti)).filter((v) => v !== undefined)
+    const verifiedList = verifiedTokens.map((ti) => tokenInfos.get(ti)).filter(isNonNullable)
 
     return [
       'Your assets',
