@@ -27,6 +27,11 @@ describe('getAllowedDexes', () => {
     expect(result).toEqual(allDexes)
   })
 
+  it('should return all DEXes if no arg is passed', () => {
+    const result = getAllowedDexes()
+    expect(result).toEqual(allDexes)
+  })
+
   it('should return an empty array if all DEXes are blocked', () => {
     const result = getAllowedDexes({blocked: allDexes})
     expect(result).toEqual([])

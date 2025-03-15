@@ -30,11 +30,13 @@ describe('swapManagerMaker', () => {
     stakingKey: 'someStakingKey',
     storage: {
       clear: jest.fn(),
-      slippage: {save: jest.fn(), read: jest.fn(() => 0.5)},
       config: {
         save: jest.fn(),
         read: jest.fn(
-          () => new Promise((resolve) => resolve({routingPreferences: 'auto'})),
+          () =>
+            new Promise((resolve) =>
+              resolve({routingPreferences: 'auto', slippage: 1}),
+            ),
         ),
       },
     },
@@ -134,7 +136,6 @@ describe('swapManagerMaker', () => {
     expect(manager).toHaveProperty('assignConfig')
     expect(manager).toHaveProperty('config')
     expect(manager).toHaveProperty('clearStorage')
-    expect(manager).toHaveProperty('slippage')
   })
 
   it('defaults to routingPreference: "auto"', () => {

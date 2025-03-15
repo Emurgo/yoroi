@@ -15,6 +15,10 @@ const mockFetchData = (async ({url}: {url: string}) => {
             tokenOut:
               'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as Portfolio.Token.Id,
           },
+          verifiedTokens: [
+            '.' as Portfolio.Token.Id,
+            'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as Portfolio.Token.Id,
+          ],
         },
       },
     })
@@ -34,6 +38,10 @@ describe('getSwapConfigApiMaker', () => {
         tokenOut:
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as Portfolio.Token.Id,
       },
+      verifiedTokens: [
+        '.' as Portfolio.Token.Id,
+        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as Portfolio.Token.Id,
+      ],
     })
   })
 
@@ -48,6 +56,10 @@ describe('getSwapConfigApiMaker', () => {
               tokenIn: 123, // Invalid type
               tokenOut: 'tokenOutId',
             },
+            verifiedTokens: [
+              123, // Invalid type
+              'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441',
+            ],
           },
         },
       } as any)
@@ -55,7 +67,7 @@ describe('getSwapConfigApiMaker', () => {
     await expect(
       getSwapConfigApiMaker({request: invalidFetchData})(),
     ).rejects.toThrow(
-      'Invalid swap config response: {"initialPair":{"tokenIn":123,"tokenOut":"tokenOutId"}}',
+      'Invalid swap config response: {"initialPair":{"tokenIn":123,"tokenOut":"tokenOutId"},"verifiedTokens":[123,"fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441"]}',
     )
   })
 

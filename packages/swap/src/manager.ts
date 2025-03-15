@@ -32,9 +32,10 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
 
   const config: Swap.ManagerConfig = {
     routingPreference: 'auto',
+    slippage: 1,
   }
 
-  const assignConfig = (v: Swap.ManagerConfig): Swap.ManagerConfig => {
+  const assignConfig = (v: Partial<Swap.ManagerConfig>): Swap.ManagerConfig => {
     const newConfig = Object.assign(config, v)
     storage.config.save(newConfig)
     return newConfig
@@ -52,7 +53,6 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     ),
     assignConfig,
     config,
-    slippage: storage.slippage,
     clearStorage: storage.clear,
   }
 }

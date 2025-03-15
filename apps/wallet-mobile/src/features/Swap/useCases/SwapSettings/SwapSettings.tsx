@@ -48,14 +48,16 @@ export const SwapSettings = () => {
   const swapForm = useSwap()
   const [aggregator, setAggregator] = React.useState(swapForm.managerConfig.routingPreference)
 
-  const assign = (a: Swap.ManagerConfig['routingPreference']) => {
+  const assignAggregator = (a: Swap.ManagerConfig['routingPreference']) => {
     setAggregator(a)
     swapForm.assignManagerConfig({...swapForm.managerConfig, routingPreference: a})
   }
 
-  const defaultSelectedChoice = getChoiceBySlippage(Number(swapForm.slippageInput.value), numberLocale)
+  const defaultSelectedChoice = getChoiceBySlippage(Number(swapForm.managerConfig.slippage), numberLocale)
   const defaultInputValue =
-    defaultSelectedChoice.label === 'Custom' ? new BigNumber(swapForm.slippageInput.value).toFormat(numberLocale) : ''
+    defaultSelectedChoice.label === 'Custom'
+      ? new BigNumber(swapForm.managerConfig.slippage).toFormat(numberLocale)
+      : ''
 
   const [selectedChoiceLabel, setSelectedChoiceLabel] = React.useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = React.useState(defaultInputValue)
@@ -71,6 +73,7 @@ export const SwapSettings = () => {
     const slippage = typeof value === 'string' ? parseNumber(value, numberLocale) : value
     track.swapSlippageChanged({slippage_tolerance: slippage})
     swapForm.action({type: 'SlippageInputChanged', value: slippage})
+    swapForm.assignManagerConfig({...swapForm.managerConfig, slippage})
   }
 
   const handleChoicePress = (kind: ChoiceKind) => {
@@ -139,7 +142,7 @@ export const SwapSettings = () => {
 
               <SettingsSwitch
                 value={aggregator === 'auto'}
-                onValueChange={() => assign(aggregator === 'auto' ? ['muesliswap', 'dexhunter'] : 'auto')}
+                onValueChange={() => assignAggregator(aggregator === 'auto' ? ['muesliswap', 'dexhunter'] : 'auto')}
               />
             </View>
 
@@ -151,7 +154,9 @@ export const SwapSettings = () => {
                   <SettingsSwitch
                     value={aggregator.includes('muesliswap')}
                     onValueChange={() =>
-                      assign(aggregator.includes('muesliswap') ? ['dexhunter'] : [...aggregator, 'muesliswap'])
+                      assignAggregator(
+                        aggregator.includes('muesliswap') ? ['dexhunter'] : [...aggregator, 'muesliswap'],
+                      )
                     }
                   />
                 </View>
@@ -162,7 +167,7 @@ export const SwapSettings = () => {
                   <SettingsSwitch
                     value={aggregator.includes('dexhunter')}
                     onValueChange={() =>
-                      assign(aggregator.includes('dexhunter') ? ['muesliswap'] : [...aggregator, 'dexhunter'])
+                      assignAggregator(aggregator.includes('dexhunter') ? ['muesliswap'] : [...aggregator, 'dexhunter'])
                     }
                   />
                 </View>

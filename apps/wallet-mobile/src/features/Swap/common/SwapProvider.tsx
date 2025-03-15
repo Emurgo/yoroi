@@ -83,10 +83,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   const [state, action] = React.useReducer(swapReducer, defaultState)
 
-  useQuery('swapSlippage', async () => {
-    action({type: 'SlippageInputChanged', value: await swapManager.slippage.read()})
-  })
-
   const {data: swapAggregatorProtocols = []} = useQuery(
     [
       'useSwapAggregatorProtocols',
@@ -117,8 +113,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   }, [balances.records, state.tokenInInput.tokenId, state.tokenInInput.value, strings.notEnoughBalance])
 
   React.useEffect(() => {
-    swapManager.slippage.save(state.slippageInput.value)
-
     if (state.reqres === 'response') return
 
     if (
@@ -151,7 +145,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
           action({type: SwapAction.EstimateResponse, value: response.value.data})
         }
       })
-  }, [state, swapManager.api, swapManager.slippage])
+  }, [state, swapManager.api])
 
   const create = React.useCallback(() => {
     if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) return
@@ -542,7 +536,7 @@ const SwapContext = React.createContext<SwapContext>({
   action: () => null,
   create: () => null,
   cancel: () => new Promise((res) => res),
-  managerConfig: {routingPreference: 'auto'},
-  assignManagerConfig: () => ({routingPreference: 'auto'}),
+  managerConfig: {routingPreference: 'auto', slippage: 1},
+  assignManagerConfig: () => ({routingPreference: 'auto', slippage: 1}),
   refetchOrders: () => null,
 })

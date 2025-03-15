@@ -6,10 +6,7 @@ export {swapManagerMaker} from './manager'
 
 export {dexUrls} from './constants'
 
-export {
-  swapStorageMaker,
-  swapStorageSlippageKey,
-} from './adapters/async-storage/storage'
+export {swapStorageMaker} from './adapters/async-storage/storage'
 
 export {
   swapStorageMakerError,

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {parseNumber, parseSafe} from '@yoroi/common'
+import {parseSafe} from '@yoroi/common'
 import {Swap, BaseStorage} from '@yoroi/types'
 import {freeze} from 'immer'
 
@@ -10,17 +10,6 @@ export function swapStorageMaker(
 ): Readonly<Swap.Storage> {
   const {storage} = deps
 
-  const slippage: Readonly<Swap.Storage['slippage']> = {
-    save: (newSlippage) =>
-      storage.setItem(swapStorageSlippageKey, JSON.stringify(newSlippage)),
-    read: () =>
-      storage
-        .getItem(swapStorageSlippageKey)
-        .then((value) => parseNumber(value) ?? 0),
-    remove: () => storage.removeItem(swapStorageSlippageKey),
-    key: swapStorageSlippageKey,
-  } as const
-
   const config: Readonly<Swap.Storage['config']> = {
     save: (newConfig) =>
       storage.setItem(swapStorageConfigKey, JSON.stringify(newConfig)),
@@ -28,6 +17,7 @@ export function swapStorageMaker(
       storage.getItem(swapStorageConfigKey).then(
         (value) =>
           (parseSafe(value) as Swap.ManagerConfig) ?? {
+            slippage: 1,
             routingPreference: 'auto',
           },
       ),
@@ -41,7 +31,6 @@ export function swapStorageMaker(
 
   return freeze(
     {
-      slippage,
       config,
       clear,
     } as const,
@@ -49,5 +38,4 @@ export function swapStorageMaker(
   )
 }
 
-export const swapStorageSlippageKey = 'swap-slippage'
 export const swapStorageConfigKey = 'swap-config'

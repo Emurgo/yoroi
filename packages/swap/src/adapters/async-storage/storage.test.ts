@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {Swap} from '@yoroi/types'
 
-import {swapStorageMaker, swapStorageSlippageKey} from './storage'
+import {swapStorageMaker, swapStorageConfigKey} from './storage'
 
 jest.mock('@react-native-async-storage/async-storage')
 
@@ -15,44 +15,48 @@ describe('swapStorageMaker', () => {
     swapStorage = swapStorageMaker()
   })
 
-  it('slippage.save', async () => {
-    const slippage = 0.1
-    await swapStorage.slippage.save(slippage)
+  it('config.save', async () => {
+    const config = {
+      slippage: 0.1,
+      routingPreference: 'auto',
+    } as const
+    await swapStorage.config.save(config)
     expect(mockedAsyncStorage.setItem).toHaveBeenCalledWith(
-      swapStorageSlippageKey,
-      JSON.stringify(slippage),
+      swapStorageConfigKey,
+      JSON.stringify(config),
     )
   })
 
-  it('slippage.read', async () => {
-    const slippage = 0.1
-    mockedAsyncStorage.getItem.mockResolvedValue(JSON.stringify(slippage))
-    const result = await swapStorage.slippage.read()
-    expect(result).toEqual(slippage)
+  it('config.read', async () => {
+    const config = {
+      slippage: 0.1,
+      routingPreference: 'auto',
+    }
+    mockedAsyncStorage.getItem.mockResolvedValue(JSON.stringify(config))
+    const result = await swapStorage.config.read()
+    expect(result).toEqual(config)
     expect(mockedAsyncStorage.getItem).toHaveBeenCalledWith(
-      swapStorageSlippageKey,
+      swapStorageConfigKey,
     )
   })
 
-  it('slippage.read should fallback to 0 when wrong data', async () => {
-    mockedAsyncStorage.getItem.mockResolvedValue(JSON.stringify('not a number'))
-    const result = await swapStorage.slippage.read()
-    expect(result).toEqual(0)
-    expect(mockedAsyncStorage.getItem).toHaveBeenCalledWith(
-      swapStorageSlippageKey,
-    )
+  it('config.read should fallback to default when wrong data', async () => {
+    const defaultConfig = {
+      slippage: 1,
+      routingPreference: 'auto',
+    }
     mockedAsyncStorage.getItem.mockResolvedValue('[1, 2, ]')
-    const result2 = await swapStorage.slippage.read()
-    expect(result2).toEqual(0)
+    const result2 = await swapStorage.config.read()
+    expect(result2).toEqual(defaultConfig)
     expect(mockedAsyncStorage.getItem).toHaveBeenCalledWith(
-      swapStorageSlippageKey,
+      swapStorageConfigKey,
     )
   })
 
-  it('slippage.remove', async () => {
-    await swapStorage.slippage.remove()
+  it('config.remove', async () => {
+    await swapStorage.config.remove()
     expect(mockedAsyncStorage.removeItem).toHaveBeenCalledWith(
-      swapStorageSlippageKey,
+      swapStorageConfigKey,
     )
   })
 

@@ -94,6 +94,24 @@ describe('dexhunterApiMaker', () => {
       expect(result.tag).toBe('left')
       expect(result.error.message).toContain('Tokens error')
     })
+
+    it('should return a left (error) if response is not JSON', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'left',
+        error: {
+          status: 500,
+          message: '',
+          responseData: null,
+        },
+      })
+
+      const dhApi = dexhunterApiMaker(config)
+      const result = await dhApi.tokens()
+
+      if (result.tag !== 'left') fail()
+      expect(result.tag).toBe('left')
+      expect(result.error.message).toContain('Dexhunter API error')
+    })
   })
 
   describe('orders()', () => {
