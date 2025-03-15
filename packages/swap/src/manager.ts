@@ -30,18 +30,20 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     isPrimaryToken,
   })
 
-  const config: Swap.ManagerConfig = {
+  const settings: Swap.ManagerSettings = {
     routingPreference: 'auto',
     slippage: 1,
   }
 
-  const assignConfig = (v: Partial<Swap.ManagerConfig>): Swap.ManagerConfig => {
-    const newConfig = Object.assign(config, v)
-    storage.config.save(newConfig)
-    return newConfig
+  const assignSettings = (
+    v: Partial<Swap.ManagerSettings>,
+  ): Swap.ManagerSettings => {
+    const newSettings = Object.assign(settings, v)
+    storage.settings.save(newSettings)
+    return newSettings
   }
 
-  storage.config.read().then(assignConfig)
+  storage.settings.read().then(assignSettings)
 
   return {
     api: apiManagerMaker(
@@ -49,17 +51,17 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
         [Swap.Aggregator.Dexhunter]: dexhunterApi,
         [Swap.Aggregator.Muesliswap]: muesliswapApi,
       },
-      config,
+      settings,
     ),
-    assignConfig,
-    config,
+    assignSettings,
+    settings,
     clearStorage: storage.clear,
   }
 }
 
 const apiManagerMaker = (
   adapters: Record<Swap.Aggregator, Swap.Api>,
-  config: Swap.ManagerConfig,
+  settings: Swap.ManagerSettings,
 ): Swap.Api => {
   return freeze(
     {
@@ -75,8 +77,8 @@ const apiManagerMaker = (
         const responses: Array<Api.Response<Portfolio.Token.Info[]>> =
           await Promise.all(
             Object.entries(aggregatorPromises).map(([key, promise]) =>
-              config.routingPreference === 'auto' ||
-              config.routingPreference.includes(key as Swap.Aggregator)
+              settings.routingPreference === 'auto' ||
+              settings.routingPreference.includes(key as Swap.Aggregator)
                 ? promise
                 : excluded,
             ),
@@ -156,8 +158,8 @@ const apiManagerMaker = (
         const responses: Array<Api.Response<Swap.AggregatorProtocol[]>> =
           await Promise.all(
             Object.entries(aggregatorPromises).map(([key, promise]) =>
-              config.routingPreference === 'auto' ||
-              config.routingPreference.includes(key as Swap.Aggregator)
+              settings.routingPreference === 'auto' ||
+              settings.routingPreference.includes(key as Swap.Aggregator)
                 ? promise
                 : excluded,
             ),
@@ -189,8 +191,8 @@ const apiManagerMaker = (
         const responses: Array<Api.Response<Swap.EstimateResponse>> =
           await Promise.all(
             Object.entries(aggregatorPromises).map(([key, promise]) =>
-              config.routingPreference === 'auto' ||
-              config.routingPreference.includes(key as Swap.Aggregator)
+              settings.routingPreference === 'auto' ||
+              settings.routingPreference.includes(key as Swap.Aggregator)
                 ? promise
                 : excluded,
             ),
@@ -228,8 +230,8 @@ const apiManagerMaker = (
         const responses: Array<Api.Response<Swap.CreateResponse>> =
           await Promise.all(
             Object.entries(aggregatorPromises).map(([key, promise]) =>
-              config.routingPreference === 'auto' ||
-              config.routingPreference.includes(key as Swap.Aggregator)
+              settings.routingPreference === 'auto' ||
+              settings.routingPreference.includes(key as Swap.Aggregator)
                 ? promise
                 : excluded,
             ),

@@ -46,17 +46,17 @@ export const SwapSettings = () => {
   const {styles, colors} = useStyles()
 
   const swapForm = useSwap()
-  const [aggregator, setAggregator] = React.useState(swapForm.managerConfig.routingPreference)
+  const [aggregator, setAggregator] = React.useState(swapForm.managerSettings.routingPreference)
 
-  const assignAggregator = (a: Swap.ManagerConfig['routingPreference']) => {
+  const assignAggregator = (a: Swap.ManagerSettings['routingPreference']) => {
     setAggregator(a)
-    swapForm.assignManagerConfig({...swapForm.managerConfig, routingPreference: a})
+    swapForm.assignManagerSettings({...swapForm.managerSettings, routingPreference: a})
   }
 
-  const defaultSelectedChoice = getChoiceBySlippage(Number(swapForm.managerConfig.slippage), numberLocale)
+  const defaultSelectedChoice = getChoiceBySlippage(Number(swapForm.managerSettings.slippage), numberLocale)
   const defaultInputValue =
     defaultSelectedChoice.label === 'Custom'
-      ? new BigNumber(swapForm.managerConfig.slippage).toFormat(numberLocale)
+      ? new BigNumber(swapForm.managerSettings.slippage).toFormat(numberLocale)
       : ''
 
   const [selectedChoiceLabel, setSelectedChoiceLabel] = React.useState<ChoiceKind>(defaultSelectedChoice.label)
@@ -73,7 +73,7 @@ export const SwapSettings = () => {
     const slippage = typeof value === 'string' ? parseNumber(value, numberLocale) : value
     track.swapSlippageChanged({slippage_tolerance: slippage})
     swapForm.action({type: 'SlippageInputChanged', value: slippage})
-    swapForm.assignManagerConfig({...swapForm.managerConfig, slippage})
+    swapForm.assignManagerSettings({...swapForm.managerSettings, slippage})
   }
 
   const handleChoicePress = (kind: ChoiceKind) => {

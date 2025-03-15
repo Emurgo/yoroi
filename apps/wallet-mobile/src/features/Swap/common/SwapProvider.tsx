@@ -43,7 +43,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
-    queryKey: ['useSwapOrders', network, stakingKey, swapManager.config.routingPreference],
+    queryKey: ['useSwapOrders', network, stakingKey, swapManager.settings.routingPreference],
     queryFn: async () => {
       const res = await swapManager.api.orders()
       if (isRight(res)) return res.value.data
@@ -52,7 +52,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   })
 
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
-    queryKey: ['useSwapTokenIds', network, swapManager.config.routingPreference],
+    queryKey: ['useSwapTokenIds', network, swapManager.settings.routingPreference],
     queryFn: async () => {
       const res = await swapManager.api.tokens()
       if (isRight(res)) {
@@ -87,7 +87,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     [
       'useSwapAggregatorProtocols',
       network,
-      swapManager.config.routingPreference,
+      swapManager.settings.routingPreference,
       state.tokenInInput.tokenId,
       state.tokenOutInput.tokenId,
     ],
@@ -221,8 +221,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       action,
       create,
       cancel: swapManager.api.cancel,
-      managerConfig: swapManager.config,
-      assignManagerConfig: swapManager.assignConfig,
+      managerSettings: swapManager.settings,
+      assignManagerSettings: swapManager.assignSettings,
       refetchOrders,
     }),
     [
@@ -232,8 +232,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       orders,
       create,
       swapManager.api.cancel,
-      swapManager.config,
-      swapManager.assignConfig,
+      swapManager.settings,
+      swapManager.assignSettings,
       refetchOrders,
     ],
   )
@@ -519,8 +519,8 @@ export type SwapContext = SwapState & {
   action: React.Dispatch<SwapAction>
   create: () => void
   cancel: Swap.Api['cancel']
-  managerConfig: Swap.ManagerConfig
-  assignManagerConfig: Swap.Manager['assignConfig']
+  managerSettings: Swap.ManagerSettings
+  assignManagerSettings: Swap.Manager['assignSettings']
   refetchOrders: () => void
 }
 
@@ -536,7 +536,7 @@ const SwapContext = React.createContext<SwapContext>({
   action: () => null,
   create: () => null,
   cancel: () => new Promise((res) => res),
-  managerConfig: {routingPreference: 'auto', slippage: 1},
-  assignManagerConfig: () => ({routingPreference: 'auto', slippage: 1}),
+  managerSettings: {routingPreference: 'auto', slippage: 1},
+  assignManagerSettings: () => ({routingPreference: 'auto', slippage: 1}),
   refetchOrders: () => null,
 })

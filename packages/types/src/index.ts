@@ -272,7 +272,11 @@ import {
 } from './notifications/manager'
 import {NumbersRatio} from './numbers/ratio'
 import {SwapStorage} from './swap/storage'
-import {SwapManager, SwapManagerConfig, SwapManagerMaker} from './swap/manager'
+import {
+  SwapManager,
+  SwapManagerSettings,
+  SwapManagerMaker,
+} from './swap/manager'
 import {SwapDex} from './swap/dex'
 import {SwapOrder} from './swap/order'
 import {SwapAggregator, SwapAggregatorProtocol} from './swap/aggregator'
@@ -367,7 +371,7 @@ export namespace Swap {
   export type Storage = SwapStorage
   export type Manager = SwapManager
   export type ManagerMaker = SwapManagerMaker
-  export type ManagerConfig = SwapManagerConfig
+  export type ManagerSettings = SwapManagerSettings
 }
 
 export namespace Balance {

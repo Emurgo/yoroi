@@ -30,7 +30,7 @@ describe('swapManagerMaker', () => {
     stakingKey: 'someStakingKey',
     storage: {
       clear: jest.fn(),
-      config: {
+      settings: {
         save: jest.fn(),
         read: jest.fn(
           () =>
@@ -133,14 +133,14 @@ describe('swapManagerMaker', () => {
   it('creates a manager with an API proxy', () => {
     const manager = swapManagerMaker(baseConfig)
     expect(manager).toHaveProperty('api')
-    expect(manager).toHaveProperty('assignConfig')
-    expect(manager).toHaveProperty('config')
+    expect(manager).toHaveProperty('assignSettings')
+    expect(manager).toHaveProperty('settings')
     expect(manager).toHaveProperty('clearStorage')
   })
 
   it('defaults to routingPreference: "auto"', () => {
     const manager = swapManagerMaker(baseConfig)
-    expect(manager.config.routingPreference).toBe('auto')
+    expect(manager.settings.routingPreference).toBe('auto')
   })
 
   describe('tokens()', () => {
@@ -161,7 +161,7 @@ describe('swapManagerMaker', () => {
 
     it('calls muesliswap api if routing preference is muesliswap', async () => {
       const manager = swapManagerMaker(baseConfig)
-      manager.assignConfig({routingPreference: ['muesliswap']})
+      manager.assignSettings({routingPreference: ['muesliswap']})
 
       const result = await manager.api.tokens()
       expect(result.tag).toBe('right')
@@ -170,7 +170,7 @@ describe('swapManagerMaker', () => {
 
     it('calls dexhunter api if routing preference is dexhunter', async () => {
       const manager = swapManagerMaker(baseConfig)
-      manager.assignConfig({routingPreference: ['dexhunter']})
+      manager.assignSettings({routingPreference: ['dexhunter']})
 
       const result = await manager.api.tokens()
       expect(result.tag).toBe('right')
@@ -225,7 +225,7 @@ describe('swapManagerMaker', () => {
 
     it('calls muesliswap api if routing preference is muesliswap', async () => {
       const manager = swapManagerMaker(baseConfig)
-      manager.assignConfig({routingPreference: ['muesliswap']})
+      manager.assignSettings({routingPreference: ['muesliswap']})
 
       const result = await manager.api.protocols()
 
@@ -237,7 +237,7 @@ describe('swapManagerMaker', () => {
 
     it('calls dexhunter api if routing preference is dexhunter', async () => {
       const manager = swapManagerMaker(baseConfig)
-      manager.assignConfig({routingPreference: ['dexhunter']})
+      manager.assignSettings({routingPreference: ['dexhunter']})
 
       const result = await manager.api.protocols()
 
@@ -313,7 +313,7 @@ describe('swapManagerMaker', () => {
 
     it('gets the selected swap when routing is not "auto"', async () => {
       const manager = swapManagerMaker(baseConfig)
-      manager.assignConfig({routingPreference: ['dexhunter']})
+      manager.assignSettings({routingPreference: ['dexhunter']})
 
       const result = await manager.api.create(msApiMocks.inputs.create[0]!)
       expect(result.tag).toBe('right')
@@ -645,7 +645,7 @@ describe('swapManagerMaker', () => {
   describe('estimate()', () => {
     it('if aggregatorSelected muesliswap, calls only that aggregator', async () => {
       const manager = swapManagerMaker(baseConfig)
-      manager.assignConfig({routingPreference: ['muesliswap']})
+      manager.assignSettings({routingPreference: ['muesliswap']})
       await manager.api.tokens()
 
       const result = await manager.api.estimate(msApiMocks.inputs.quote)
@@ -658,7 +658,7 @@ describe('swapManagerMaker', () => {
 
     it('if aggregatorSelected dexhunter, calls only that aggregator', async () => {
       const manager = swapManagerMaker(baseConfig)
-      manager.assignConfig({routingPreference: ['dexhunter']})
+      manager.assignSettings({routingPreference: ['dexhunter']})
       await manager.api.tokens()
 
       const result = await manager.api.estimate(dhApiMocks.inputs.quote)

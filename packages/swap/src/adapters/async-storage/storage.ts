@@ -10,32 +10,32 @@ export function swapStorageMaker(
 ): Readonly<Swap.Storage> {
   const {storage} = deps
 
-  const config: Readonly<Swap.Storage['config']> = {
-    save: (newConfig) =>
-      storage.setItem(swapStorageConfigKey, JSON.stringify(newConfig)),
+  const settings: Readonly<Swap.Storage['settings']> = {
+    save: (newSettings) =>
+      storage.setItem(swapStorageSettingsKey, JSON.stringify(newSettings)),
     read: () =>
-      storage.getItem(swapStorageConfigKey).then(
+      storage.getItem(swapStorageSettingsKey).then(
         (value) =>
-          (parseSafe(value) as Swap.ManagerConfig) ?? {
+          (parseSafe(value) as Swap.ManagerSettings) ?? {
             slippage: 1,
             routingPreference: 'auto',
           },
       ),
-    remove: () => storage.removeItem(swapStorageConfigKey),
-    key: swapStorageConfigKey,
+    remove: () => storage.removeItem(swapStorageSettingsKey),
+    key: swapStorageSettingsKey,
   } as const
 
   const clear = async () => {
-    await Promise.all([config.remove()])
+    await Promise.all([settings.remove()])
   }
 
   return freeze(
     {
-      config,
+      settings,
       clear,
     } as const,
     true,
   )
 }
 
-export const swapStorageConfigKey = 'swap-config'
+export const swapStorageSettingsKey = 'swap-settings'

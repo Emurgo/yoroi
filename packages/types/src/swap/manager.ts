@@ -4,15 +4,15 @@ import {SwapAggregator} from './aggregator'
 import {SwapApi} from './api'
 import {SwapStorage} from './storage'
 
-export type SwapManagerConfig = {
+export type SwapManagerSettings = {
   slippage: number
   routingPreference: 'auto' | Array<SwapAggregator>
 }
 
 export type SwapManager = Readonly<{
   clearStorage: SwapStorage['clear']
-  assignConfig(v: Partial<SwapManagerConfig>): SwapManagerConfig
-  config: SwapManagerConfig
+  assignSettings(v: Partial<SwapManagerSettings>): SwapManagerSettings
+  settings: SwapManagerSettings
   api: SwapApi
 }>
 

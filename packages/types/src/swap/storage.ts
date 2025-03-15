@@ -1,10 +1,10 @@
-import {SwapManagerConfig} from './manager'
+import {SwapManagerSettings} from './manager'
 
 export type SwapStorage = {
-  config: {
-    read(): Promise<SwapManagerConfig>
+  settings: {
+    read(): Promise<SwapManagerSettings>
     remove(): Promise<void>
-    save(routing: SwapManagerConfig): Promise<void>
+    save(routing: SwapManagerSettings): Promise<void>
     key: string
   }
 
