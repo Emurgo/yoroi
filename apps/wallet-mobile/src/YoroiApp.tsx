@@ -1,6 +1,5 @@
 import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
-import {NotificationProvider} from '@yoroi/notifications'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {catalystApiMaker, catalystManagerMaker, CatalystProvider} from '@yoroi/staking'
 import {ThemeProvider} from '@yoroi/theme'
@@ -17,7 +16,7 @@ import {ClipboardProvider} from './components/Clipboard/ClipboardProvider'
 import {ErrorBoundary} from './components/ErrorBoundary/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {BrowserProvider} from './features/Discover/common/BrowserProvider'
-import {notificationManager} from './features/Notifications/useCases/common/notification-manager'
+import {YoroiNotificationManager} from './features/Notifications/useCases/common/YoroiNotificationManager'
 import {PortfolioTokenActivityProvider} from './features/Portfolio/common/PortfolioTokenActivityProvider'
 import {ReviewTxProvider} from './features/ReviewTx/common/ReviewTxProvider'
 import {CurrencyProvider} from './features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
@@ -76,9 +75,9 @@ const Yoroi = () => {
                                       <AutomaticWalletOpenerProvider>
                                         <CatalystProvider manager={catalystManager}>
                                           <ReviewTxProvider>
-                                            <NotificationProvider manager={notificationManager}>
+                                            <YoroiNotificationManager>
                                               <InitApp />
-                                            </NotificationProvider>
+                                            </YoroiNotificationManager>
                                           </ReviewTxProvider>
                                         </CatalystProvider>
                                       </AutomaticWalletOpenerProvider>
