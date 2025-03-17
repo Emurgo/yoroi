@@ -82,7 +82,7 @@ export const EstimateSummary = () => {
           <Row
             label={strings.swapFeesTitle}
             description={strings.swapFees}
-            value={`${swapForm.estimate?.batcherFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
+            value={`${swapForm.estimate?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
           />
 
           <Row

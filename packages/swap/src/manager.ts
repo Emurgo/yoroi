@@ -5,6 +5,7 @@ import {freeze} from 'immer'
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
 import {muesliswapApiMaker} from './adapters/api/muesliswap/api-maker'
 import {getBestSwap} from './helpers/getBestSwap'
+import {getPtPrice} from './helpers/getPtPrice'
 
 export const swapManagerMaker: Swap.ManagerMaker = ({
   address,
@@ -51,6 +52,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
       [Swap.Aggregator.Muesliswap]: muesliswapApi,
     },
     settings,
+    getPtPrice(primaryTokenInfo, dexhunterApi),
   )
 
   return {
@@ -64,6 +66,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
 const apiManagerMaker = (
   adapters: Record<Swap.Aggregator, Swap.Api>,
   settings: Swap.ManagerSettings,
+  getPrice: (id: Portfolio.Token.Id) => Promise<number>,
 ): Swap.Api => {
   return freeze(
     {
@@ -209,7 +212,10 @@ const apiManagerMaker = (
           .filter(isRight)
           .flatMap(({value}) => value.data)
 
-        const bestEstimate = estimates.reduce(getBestSwap, estimates[0]!)
+        const bestEstimate = estimates.reduce(
+          getBestSwap(await getPrice(body.tokenOut)),
+          estimates[0]!,
+        )
 
         return {
           tag: 'right',
@@ -246,7 +252,10 @@ const apiManagerMaker = (
 
         const creates = responses.filter(isRight).map(({value}) => value.data)
 
-        const bestCreate = creates.reduce(getBestSwap, creates[0]!)
+        const bestCreate = creates.reduce(
+          getBestSwap(await getPrice(body.tokenOut)),
+          creates[0]!,
+        )
 
         return {
           tag: 'right',

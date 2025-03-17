@@ -1,12 +1,16 @@
 import {Swap} from '@yoroi/types'
 
-export const getBestSwap = <
-  T extends Swap.EstimateResponse | Swap.CreateResponse,
->(
-  best: T,
-  candidate: T,
-): T => {
-  // TODO: Could use more logic to account for fees
-  if (candidate.totalOutput > best.totalOutput) return candidate
-  return best
-}
+export const getBestSwap =
+  (tokenOutPrice: number) =>
+  <T extends Swap.EstimateResponse | Swap.CreateResponse>(
+    best: T,
+    candidate: T,
+  ): T => {
+    if (
+      candidate.totalOutput -
+        (tokenOutPrice > 0 ? candidate.totalFee / tokenOutPrice : 0) >
+      best.totalOutput - (tokenOutPrice > 0 ? best.totalFee / tokenOutPrice : 0)
+    )
+      return candidate
+    return best
+  }
