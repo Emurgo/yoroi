@@ -48,6 +48,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
   const selectedChoice = getChoiceById(selectedChoiceId)
   const defaultInputValue = savedChoice.id === 'Manual' ? formatNumber(config.displayDuration) : ''
   const [inputValue, setInputValue] = React.useState(defaultInputValue)
+  const {isDark} = useTheme()
 
   const isSelectedChoiceManual = selectedChoiceId === 'Manual'
   const isInputEnabled = isSelectedChoiceManual
@@ -109,6 +110,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
               right={<Text style={styles.percentLabel}>{strings.seconds}</Text>}
               error={shouldDisplayError}
               errorText={shouldDisplayError ? strings.inputError : undefined}
+              keyboardAppearance={isDark ? 'dark' : 'light'}
             />
           </View>
         </ScrollView>
