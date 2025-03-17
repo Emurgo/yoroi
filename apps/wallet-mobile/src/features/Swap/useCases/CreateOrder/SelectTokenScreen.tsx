@@ -127,7 +127,16 @@ const TokenList = ({direction}: Direction) => {
         primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       }),
     ].filter(filterBySearch(assetSearchTerm))
-  }, [ownedTokens, tokenInfos, direction, assetSearchTerm, wallet.portfolioPrimaryTokenInfo, verifiedTokens])
+  }, [
+    ownedTokens,
+    direction,
+    strings.yourAssets,
+    strings.allAssets,
+    wallet.portfolioPrimaryTokenInfo,
+    assetSearchTerm,
+    verifiedTokens,
+    tokenInfos,
+  ])
 
   return (
     <View style={styles.list}>
