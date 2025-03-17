@@ -45,14 +45,16 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
 
   storage.settings.read().then(assignSettings)
 
+  const api = apiManagerMaker(
+    {
+      [Swap.Aggregator.Dexhunter]: dexhunterApi,
+      [Swap.Aggregator.Muesliswap]: muesliswapApi,
+    },
+    settings,
+  )
+
   return {
-    api: apiManagerMaker(
-      {
-        [Swap.Aggregator.Dexhunter]: dexhunterApi,
-        [Swap.Aggregator.Muesliswap]: muesliswapApi,
-      },
-      settings,
-    ),
+    api,
     assignSettings,
     settings,
     clearStorage: storage.clear,

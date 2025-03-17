@@ -210,7 +210,7 @@ describe('transformers', () => {
             protocol: 'vyfi-v1',
           },
         ],
-        totalFee: 4,
+        totalFee: 3,
         totalInput: 0,
         totalOutput: 0,
         totalOutputWithoutSlippage: 0,
@@ -513,7 +513,7 @@ describe('transformers', () => {
             protocol: 'minswap-v1',
           },
         ],
-        totalFee: 4,
+        totalFee: 0,
         totalInput: 1,
         totalOutput: 0,
       })
@@ -568,7 +568,7 @@ describe('transformers', () => {
             protocol: 'minswap-v1',
           },
         ],
-        totalFee: 4,
+        totalFee: 0,
         totalInput: 0,
         totalOutput: 0,
       })
@@ -616,7 +616,7 @@ describe('transformers', () => {
             protocol: 'minswap-v1',
           },
         ],
-        totalFee: 0.005,
+        totalFee: 0.003,
         totalInput: 500,
         totalOutput: 495,
         totalOutputWithoutSlippage: 500,
@@ -662,7 +662,7 @@ describe('transformers', () => {
         cbor: '',
         deposits: 0,
         frontendFee: 0,
-        netPrice: 0,
+        netPrice: 0.04252918925670425,
         splits: [
           {
             amountIn: 1,
@@ -726,7 +726,7 @@ describe('transformers', () => {
         cbor: '',
         deposits: 0,
         frontendFee: 0,
-        netPrice: 0,
+        netPrice: 0.04252918925670425,
         splits: [
           {
             amountIn: 0,

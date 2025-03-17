@@ -164,7 +164,7 @@ export const transformersMaker = ({
         total_batcher_fee,
         total_deposit,
         total_input,
-        total_lvl_attached,
+        frontend_fee,
         total_output,
         total_output_without_slippage,
       }: QuoteResponse): Swap.EstimateResponse => ({
@@ -174,7 +174,11 @@ export const transformersMaker = ({
         netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
         batcherFee: Number(total_batcher_fee),
         deposits: Number(total_deposit),
-        totalFee: Number(total_lvl_attached),
+        totalFee: Number(
+          (Number(total_batcher_fee) + Number(frontend_fee)).toFixed(
+            primaryTokenInfo.decimals,
+          ),
+        ),
         totalInput: Number(total_input),
         totalOutput: Number(total_output),
         totalOutputWithoutSlippage: Number(total_output_without_slippage),
@@ -210,10 +214,10 @@ export const transformersMaker = ({
           sell_token_decimals,
           net_price,
           splits,
+          frontend_fee,
           total_batcher_fee,
           total_deposit,
           total_input,
-          total_lvl_attached,
           total_output,
           total_output_without_slippage,
         },
@@ -227,7 +231,11 @@ export const transformersMaker = ({
         netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
         batcherFee: Number(total_batcher_fee),
         deposits: Number(total_deposit),
-        totalFee: Number(total_lvl_attached),
+        totalFee: Number(
+          (Number(total_batcher_fee) + Number(frontend_fee)).toFixed(
+            primaryTokenInfo.decimals,
+          ),
+        ),
         totalInput: Number(total_input),
         totalOutput: Number(total_output),
         totalOutputWithoutSlippage: Number(total_output_without_slippage),

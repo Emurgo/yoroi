@@ -203,7 +203,6 @@ export const transformersMaker = ({
         dexhunter_fee = 0,
         net_price = 0,
         partner_fee = 0,
-        total_fee = 0,
         total_output = 0,
         total_output_without_slippage = 0,
       }: EstimateResponse): Swap.EstimateResponse => ({
@@ -219,7 +218,9 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: net_price,
-        totalFee: total_fee,
+        totalFee: Number(
+          (batcher_fee + dexhunter_fee).toFixed(primaryTokenInfo.decimals),
+        ),
         totalOutput: total_output,
       }),
     },
@@ -249,7 +250,6 @@ export const transformersMaker = ({
         net_price = 0,
         partner_fee = 0,
         splits,
-        total_fee = 0,
         total_input = 0,
         total_output = 0,
       }: ReverseEstimateResponse): Swap.EstimateResponse => ({
@@ -259,7 +259,9 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: net_price,
-        totalFee: total_fee,
+        totalFee: Number(
+          (batcher_fee + dexhunter_fee).toFixed(primaryTokenInfo.decimals),
+        ),
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
 
@@ -302,7 +304,6 @@ export const transformersMaker = ({
         dexhunter_fee = 0,
         net_price = 0,
         partner_fee = 0,
-        total_fee = 0,
         total_input = 0,
         total_output = 0,
       }: LimitEstimateResponse): Swap.EstimateResponse => ({
@@ -312,7 +313,9 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: net_price,
-        totalFee: total_fee,
+        totalFee: Number(
+          (batcher_fee + dexhunter_fee).toFixed(primaryTokenInfo.decimals),
+        ),
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
 
@@ -354,7 +357,6 @@ export const transformersMaker = ({
         dexhunter_fee = 0,
         partner_fee = 0,
         splits,
-        totalFee = 0,
         total_input = 0,
         total_output = 0,
       }: LimitBuildResponse): Swap.CreateResponse => ({
@@ -366,7 +368,9 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         totalOutput: total_output,
-        totalFee: totalFee,
+        totalFee: Number(
+          (batcher_fee + dexhunter_fee).toFixed(primaryTokenInfo.decimals),
+        ),
 
         splits: splits?.map(toSwapSplit) ?? [],
         totalInput:
@@ -405,7 +409,6 @@ export const transformersMaker = ({
         dexhunter_fee = 0,
         net_price = 0,
         partner_fee = 0,
-        total_fee = 0,
         total_input = 0,
         total_output = 0,
         total_output_without_slippage = 0,
@@ -417,9 +420,11 @@ export const transformersMaker = ({
         batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
-        netPrice: net_price,
+        netPrice: (net_price || splits?.[0]?.initial_price) ?? 0, // main net_price is coming as 0 :(
         totalOutput: total_output,
-        totalFee: total_fee,
+        totalFee: Number(
+          (batcher_fee + dexhunter_fee).toFixed(primaryTokenInfo.decimals),
+        ),
         totalOutputWithoutSlippage: total_output_without_slippage,
 
         totalInput:
