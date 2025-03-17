@@ -1,4 +1,5 @@
 import {isRight, time, useAsyncStorage} from '@yoroi/common'
+import {useNotificationManager} from '@yoroi/notifications'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
 import {Subject} from 'rxjs'
@@ -6,7 +7,6 @@ import {Subject} from 'rxjs'
 import {fetchPtPriceActivity} from '../../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
 import {getCurrencySymbol} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {notificationManager} from './notification-manager'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './storage'
 
@@ -16,6 +16,7 @@ const storageKey = 'notifications/primary-token-price-changed/'
 
 const buildNotifications = async (
   appStorage: App.Storage,
+  manager: NotificationTypes.Manager,
 ): Promise<NotificationTypes.PrimaryTokenPriceChangedEvent[]> => {
   const notifications: NotificationTypes.PrimaryTokenPriceChangedEvent[] = []
   const storage = buildProcessedNotificationsStorage(appStorage.join(storageKey))
@@ -28,7 +29,7 @@ const buildNotifications = async (
 
   const response = await fetchPtPriceActivity([Date.now(), Date.now() - time.oneDay])
   const currency = await getCurrencySymbol(appStorage)
-  const notificationsConfig = await notificationManager.config.read()
+  const notificationsConfig = await manager.config.read()
   const primaryTokenChangeNotificationConfig = notificationsConfig[NotificationTypes.Trigger.PrimaryTokenPriceChanged]
 
   if (isRight(response)) {
@@ -52,17 +53,18 @@ export const primaryTokenPriceChangedSubject = new Subject<NotificationTypes.Pri
 export const usePrimaryTokenPriceChangedNotification = ({enabled}: {enabled: boolean}) => {
   const {walletManager} = useWalletManager()
   const asyncStorage = useAsyncStorage()
+  const manager = useNotificationManager()
 
   React.useEffect(() => {
     if (!enabled) return
 
     const interval = setInterval(async () => {
-      const notifications = await buildNotifications(asyncStorage)
+      const notifications = await buildNotifications(asyncStorage, manager)
       notifications.forEach((notification) => primaryTokenPriceChangedSubject.next(notification))
     }, refetchIntervalInMilliseconds)
 
     return () => clearInterval(interval)
-  }, [walletManager, asyncStorage, enabled])
+  }, [walletManager, asyncStorage, enabled, manager])
 }
 
 const createPrimaryTokenPriceChangedNotification = (
