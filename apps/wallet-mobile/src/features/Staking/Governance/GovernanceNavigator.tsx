@@ -38,7 +38,7 @@ export const GovernanceNavigator = () => {
             component={HomeScreen}
             options={{
               title: strings.governanceCentreTitle,
-              headerLeft: (props) => <BackButton {...props} onPress={() => walletNavigation.navigateToMenu()} />,
+              headerLeft: (props) => <BackButton {...props} onPress={() => walletNavigation.navigateToTxHistory()} />,
             }}
           />
 
