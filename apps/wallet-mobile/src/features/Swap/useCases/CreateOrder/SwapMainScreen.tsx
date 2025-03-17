@@ -144,7 +144,7 @@ export const SwapMainScreen = () => {
       </ScrollView>
 
       <View style={[styles.actions, (deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
-        <Button testID="swapButton" title={strings.swapTitle} disabled={!swapForm.canSwap} onPress={onSwapPress} />
+        <Button testID="swapButton" title={strings.placeOrder} disabled={!swapForm.canSwap} onPress={onSwapPress} />
       </View>
     </View>
   )

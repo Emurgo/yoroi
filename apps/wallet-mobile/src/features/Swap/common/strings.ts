@@ -6,6 +6,7 @@ export const useStrings = () => {
   const intl = useIntl()
 
   return {
+    placeOrder: intl.formatMessage(messages.placeOrder),
     yourAssets: intl.formatMessage(messages.yourAssets),
     allAssets: intl.formatMessage(messages.allAssets),
     swapTitle: intl.formatMessage(messages.swapTitle),
@@ -178,6 +179,10 @@ export const useStrings = () => {
 }
 
 const messages = defineMessages({
+  placeOrder: {
+    id: 'swap.swapScreen.placeOrder',
+    defaultMessage: `!!!Place order`,
+  },
   yourAssets: {
     id: 'swap.swapScreen.yourAssets',
     defaultMessage: `!!!Your assets`,

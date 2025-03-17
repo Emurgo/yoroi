@@ -1,17 +1,32 @@
 [
   {
+    "id": "swap.swapScreen.placeOrder",
+    "defaultMessage": "!!!Your assets",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 182,
+      "column": 14,
+      "index": 11913
+    },
+    "end": {
+      "line": 185,
+      "column": 3,
+      "index": 11994
+    }
+  },
+  {
     "id": "swap.swapScreen.yourAssets",
     "defaultMessage": "!!!Your assets",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 181,
+      "line": 186,
       "column": 14,
-      "index": 11856
+      "index": 12010
     },
     "end": {
-      "line": 184,
+      "line": 189,
       "column": 3,
-      "index": 11937
+      "index": 12091
     }
   },
   {
@@ -19,14 +34,14 @@
     "defaultMessage": "!!!All assets",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 185,
+      "line": 190,
       "column": 13,
-      "index": 11952
+      "index": 12106
     },
     "end": {
-      "line": 188,
+      "line": 193,
       "column": 3,
-      "index": 12031
+      "index": 12185
     }
   },
   {
@@ -34,14 +49,14 @@
     "defaultMessage": "!!!Swap fees include the following:\n • Matchmaker Fee\n • Frontend Fee\n • Liquidity Provider Fee",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 189,
+      "line": 194,
       "column": 12,
-      "index": 12045
+      "index": 12199
     },
     "end": {
-      "line": 192,
+      "line": 197,
       "column": 3,
-      "index": 12208
+      "index": 12362
     }
   },
   {
@@ -49,14 +64,14 @@
     "defaultMessage": "!!!Incorrect password.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 193,
+      "line": 198,
       "column": 24,
-      "index": 12234
+      "index": 12388
     },
     "end": {
-      "line": 196,
+      "line": 201,
       "column": 3,
-      "index": 12343
+      "index": 12497
     }
   },
   {
@@ -64,14 +79,14 @@
     "defaultMessage": "!!!Swap",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 197,
+      "line": 202,
       "column": 13,
-      "index": 12358
+      "index": 12512
     },
     "end": {
-      "line": 200,
+      "line": 205,
       "column": 3,
-      "index": 12431
+      "index": 12585
     }
   },
   {
@@ -79,14 +94,14 @@
     "defaultMessage": "!!!Swap details",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 201,
+      "line": 206,
       "column": 20,
-      "index": 12453
+      "index": 12607
     },
     "end": {
-      "line": 204,
+      "line": 209,
       "column": 3,
-      "index": 12541
+      "index": 12695
     }
   },
   {
@@ -94,14 +109,14 @@
     "defaultMessage": "!!!Cancel swap order details",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 205,
+      "line": 210,
       "column": 32,
-      "index": 12575
+      "index": 12729
     },
     "end": {
-      "line": 208,
+      "line": 213,
       "column": 3,
-      "index": 12688
+      "index": 12842
     }
   },
   {
@@ -109,14 +124,14 @@
     "defaultMessage": "!!!Token swap",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 209,
+      "line": 214,
       "column": 13,
-      "index": 12703
+      "index": 12857
     },
     "end": {
-      "line": 212,
+      "line": 217,
       "column": 3,
-      "index": 12785
+      "index": 12939
     }
   },
   {
@@ -124,14 +139,14 @@
     "defaultMessage": "!!!Orders",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 213,
+      "line": 218,
       "column": 13,
-      "index": 12800
+      "index": 12954
     },
     "end": {
-      "line": 216,
+      "line": 221,
       "column": 3,
-      "index": 12879
+      "index": 13033
     }
   },
   {
@@ -139,14 +154,14 @@
     "defaultMessage": "!!!Market Button",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 217,
+      "line": 222,
       "column": 16,
-      "index": 12897
+      "index": 13051
     },
     "end": {
-      "line": 220,
+      "line": 225,
       "column": 3,
-      "index": 12982
+      "index": 13136
     }
   },
   {
@@ -154,14 +169,14 @@
     "defaultMessage": "!!!Limit",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 221,
+      "line": 226,
       "column": 15,
-      "index": 12999
+      "index": 13153
     },
     "end": {
-      "line": 224,
+      "line": 229,
       "column": 3,
-      "index": 13075
+      "index": 13229
     }
   },
   {
@@ -169,14 +184,14 @@
     "defaultMessage": "!!!Swap from",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 225,
+      "line": 230,
       "column": 12,
-      "index": 13089
+      "index": 13243
     },
     "end": {
-      "line": 228,
+      "line": 233,
       "column": 3,
-      "index": 13166
+      "index": 13320
     }
   },
   {
@@ -184,14 +199,14 @@
     "defaultMessage": "!!!Swap to",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 229,
+      "line": 234,
       "column": 10,
-      "index": 13178
+      "index": 13332
     },
     "end": {
-      "line": 232,
+      "line": 237,
       "column": 3,
-      "index": 13251
+      "index": 13405
     }
   },
   {
@@ -199,14 +214,14 @@
     "defaultMessage": "!!!Current Balance",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 233,
+      "line": 238,
       "column": 18,
-      "index": 13271
+      "index": 13425
     },
     "end": {
-      "line": 236,
+      "line": 241,
       "column": 3,
-      "index": 13360
+      "index": 13514
     }
   },
   {
@@ -214,14 +229,14 @@
     "defaultMessage": "!!!Balance",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 237,
+      "line": 242,
       "column": 11,
-      "index": 13373
+      "index": 13527
     },
     "end": {
-      "line": 240,
+      "line": 245,
       "column": 3,
-      "index": 13447
+      "index": 13601
     }
   },
   {
@@ -229,14 +244,14 @@
     "defaultMessage": "!!!Select Token",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 241,
+      "line": 246,
       "column": 15,
-      "index": 13464
+      "index": 13618
     },
     "end": {
-      "line": 244,
+      "line": 249,
       "column": 3,
-      "index": 13547
+      "index": 13701
     }
   },
   {
@@ -244,14 +259,14 @@
     "defaultMessage": "!!!Market Price",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 245,
+      "line": 250,
       "column": 15,
-      "index": 13564
+      "index": 13718
     },
     "end": {
-      "line": 248,
+      "line": 253,
       "column": 3,
-      "index": 13647
+      "index": 13801
     }
   },
   {
@@ -259,14 +274,14 @@
     "defaultMessage": "!!!Market price is the best price available on the market among several DEXes that lets you buy or sell an asset instantly.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 249,
+      "line": 254,
       "column": 19,
-      "index": 13668
+      "index": 13822
     },
     "end": {
-      "line": 253,
+      "line": 258,
       "column": 3,
-      "index": 13869
+      "index": 14023
     }
   },
   {
@@ -274,14 +289,14 @@
     "defaultMessage": "!!!Limit price in a DEX is a specific pre-set price at which you can trade an asset. Unlike market orders, which execute immediately at the current market price, limit orders are set to execute only when the market reaches the trader's specified price.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 254,
+      "line": 259,
       "column": 18,
-      "index": 13889
+      "index": 14043
     },
     "end": {
-      "line": 258,
+      "line": 263,
       "column": 3,
-      "index": 14218
+      "index": 14372
     }
   },
   {
@@ -289,14 +304,14 @@
     "defaultMessage": "!!!Limit Price",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 259,
+      "line": 264,
       "column": 14,
-      "index": 14234
+      "index": 14388
     },
     "end": {
-      "line": 262,
+      "line": 267,
       "column": 3,
-      "index": 14315
+      "index": 14469
     }
   },
   {
@@ -304,14 +319,14 @@
     "defaultMessage": "!!!Slippage Tolerance",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 263,
+      "line": 268,
       "column": 21,
-      "index": 14338
+      "index": 14492
     },
     "end": {
-      "line": 266,
+      "line": 271,
       "column": 3,
-      "index": 14433
+      "index": 14587
     }
   },
   {
@@ -319,14 +334,14 @@
     "defaultMessage": "!!!Slippage must be a number between 0 and 75 and have up to 1 decimal",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 267,
+      "line": 272,
       "column": 26,
-      "index": 14461
+      "index": 14615
     },
     "end": {
-      "line": 270,
+      "line": 275,
       "column": 3,
-      "index": 14610
+      "index": 14764
     }
   },
   {
@@ -334,14 +349,14 @@
     "defaultMessage": "!!!Slippage Tolerance Info",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 271,
+      "line": 276,
       "column": 25,
-      "index": 14637
+      "index": 14791
     },
     "end": {
-      "line": 274,
+      "line": 279,
       "column": 3,
-      "index": 14741
+      "index": 14895
     }
   },
   {
@@ -349,14 +364,14 @@
     "defaultMessage": "!!!Verified by {pool}",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 275,
+      "line": 280,
       "column": 14,
-      "index": 14757
+      "index": 14911
     },
     "end": {
-      "line": 278,
+      "line": 283,
       "column": 3,
-      "index": 14845
+      "index": 14999
     }
   },
   {
@@ -364,14 +379,14 @@
     "defaultMessage": "!!!This asset is in my portfolio",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 279,
+      "line": 284,
       "column": 12,
-      "index": 14859
+      "index": 15013
     },
     "end": {
-      "line": 282,
+      "line": 287,
       "column": 3,
-      "index": 14956
+      "index": 15110
     }
   },
   {
@@ -379,14 +394,14 @@
     "defaultMessage": "!!!Slippage tolerance is set as a percentage of the total swap value.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 283,
+      "line": 288,
       "column": 16,
-      "index": 14974
+      "index": 15128
     },
     "end": {
-      "line": 286,
+      "line": 291,
       "column": 3,
-      "index": 15112
+      "index": 15266
     }
   },
   {
@@ -394,14 +409,14 @@
     "defaultMessage": "!!!(auto)",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 287,
+      "line": 292,
       "column": 12,
-      "index": 15126
+      "index": 15280
     },
     "end": {
-      "line": 290,
+      "line": 295,
       "column": 3,
-      "index": 15200
+      "index": 15354
     }
   },
   {
@@ -409,14 +424,14 @@
     "defaultMessage": "!!!Auto",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 291,
+      "line": 296,
       "column": 8,
-      "index": 15210
+      "index": 15364
     },
     "end": {
-      "line": 294,
+      "line": 299,
       "column": 3,
-      "index": 15269
+      "index": 15423
     }
   },
   {
@@ -424,14 +439,14 @@
     "defaultMessage": "!!!Routing preferences",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 295,
+      "line": 300,
       "column": 22,
-      "index": 15293
+      "index": 15447
     },
     "end": {
-      "line": 298,
+      "line": 303,
       "column": 3,
-      "index": 15390
+      "index": 15544
     }
   },
   {
@@ -439,14 +454,14 @@
     "defaultMessage": "!!!Route",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 299,
+      "line": 304,
       "column": 9,
-      "index": 15401
+      "index": 15555
     },
     "end": {
-      "line": 302,
+      "line": 307,
       "column": 3,
-      "index": 15471
+      "index": 15625
     }
   },
   {
@@ -454,14 +469,14 @@
     "defaultMessage": "!!!The route shows the path your swap takes to find the best price",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 303,
+      "line": 308,
       "column": 20,
-      "index": 15493
+      "index": 15647
     },
     "end": {
-      "line": 306,
+      "line": 311,
       "column": 3,
-      "index": 15632
+      "index": 15786
     }
   },
   {
@@ -469,14 +484,14 @@
     "defaultMessage": "!!!change dex",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 307,
+      "line": 312,
       "column": 14,
-      "index": 15648
+      "index": 15802
     },
     "end": {
-      "line": 310,
+      "line": 315,
       "column": 3,
-      "index": 15728
+      "index": 15882
     }
   },
   {
@@ -484,14 +499,14 @@
     "defaultMessage": "!!!Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native assets.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 311,
+      "line": 316,
       "column": 14,
-      "index": 15744
+      "index": 15898
     },
     "end": {
-      "line": 315,
+      "line": 320,
       "column": 3,
-      "index": 15925
+      "index": 16079
     }
   },
   {
@@ -499,14 +514,14 @@
     "defaultMessage": "!!!Min ADA",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 316,
+      "line": 321,
       "column": 19,
-      "index": 15946
+      "index": 16100
     },
     "end": {
-      "line": 319,
+      "line": 324,
       "column": 3,
-      "index": 16028
+      "index": 16182
     }
   },
   {
@@ -514,14 +529,14 @@
     "defaultMessage": "!!!Swap is not available on testnet",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 320,
+      "line": 325,
       "column": 22,
-      "index": 16052
+      "index": 16206
     },
     "end": {
-      "line": 323,
+      "line": 328,
       "column": 3,
-      "index": 16162
+      "index": 16316
     }
   },
   {
@@ -529,14 +544,14 @@
     "defaultMessage": "!!!Switch to mainnet if you want to use the feature and swap real tokens",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 324,
+      "line": 329,
       "column": 21,
-      "index": 16185
+      "index": 16339
     },
     "end": {
-      "line": 327,
+      "line": 332,
       "column": 3,
-      "index": 16331
+      "index": 16485
     }
   },
   {
@@ -544,14 +559,14 @@
     "defaultMessage": "!!!Fees",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 328,
+      "line": 333,
       "column": 17,
-      "index": 16350
+      "index": 16504
     },
     "end": {
-      "line": 331,
+      "line": 336,
       "column": 3,
-      "index": 16427
+      "index": 16581
     }
   },
   {
@@ -559,14 +574,14 @@
     "defaultMessage": "!!!Liquidity provider fee",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 332,
+      "line": 337,
       "column": 20,
-      "index": 16449
+      "index": 16603
     },
     "end": {
-      "line": 335,
+      "line": 340,
       "column": 3,
-      "index": 16547
+      "index": 16701
     }
   },
   {
@@ -574,14 +589,14 @@
     "defaultMessage": "!!!Liquidity provider fee",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 336,
+      "line": 341,
       "column": 18,
-      "index": 16567
+      "index": 16721
     },
     "end": {
-      "line": 339,
+      "line": 344,
       "column": 3,
-      "index": 16663
+      "index": 16817
     }
   },
   {
@@ -589,14 +604,14 @@
     "defaultMessage": "!!!Liquidity provider fee is a fixed <b>{fee}%</b> operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 340,
+      "line": 345,
       "column": 24,
-      "index": 16689
+      "index": 16843
     },
     "end": {
-      "line": 344,
+      "line": 349,
       "column": 3,
-      "index": 16992
+      "index": 17146
     }
   },
   {
@@ -604,14 +619,14 @@
     "defaultMessage": "!!!Minimum amount of assets you can get because of the slippage tolerance.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 345,
+      "line": 350,
       "column": 19,
-      "index": 17013
+      "index": 17167
     },
     "end": {
-      "line": 348,
+      "line": 353,
       "column": 3,
-      "index": 17159
+      "index": 17313
     }
   },
   {
@@ -619,14 +634,14 @@
     "defaultMessage": "!!!Min Received",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 349,
+      "line": 354,
       "column": 24,
-      "index": 17185
+      "index": 17339
     },
     "end": {
-      "line": 352,
+      "line": 357,
       "column": 3,
-      "index": 17277
+      "index": 17431
     }
   },
   {
@@ -634,14 +649,14 @@
     "defaultMessage": "!!!Enter a value from 0% to 75%. You can also enter up to 1 decimal",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 353,
+      "line": 358,
       "column": 17,
-      "index": 17296
+      "index": 17450
     },
     "end": {
-      "line": 356,
+      "line": 361,
       "column": 3,
-      "index": 17433
+      "index": 17587
     }
   },
   {
@@ -649,14 +664,14 @@
     "defaultMessage": "!!!{pool} verification",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 357,
+      "line": 362,
       "column": 20,
-      "index": 17455
+      "index": 17609
     },
     "end": {
-      "line": 360,
+      "line": 365,
       "column": 3,
-      "index": 17550
+      "index": 17704
     }
   },
   {
@@ -664,14 +679,14 @@
     "defaultMessage": "!!!Volume, 24h",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 361,
+      "line": 366,
       "column": 10,
-      "index": 17562
+      "index": 17716
     },
     "end": {
-      "line": 364,
+      "line": 369,
       "column": 3,
-      "index": 17639
+      "index": 17793
     }
   },
   {
@@ -679,14 +694,14 @@
     "defaultMessage": "!!!Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 365,
+      "line": 370,
       "column": 24,
-      "index": 17665
+      "index": 17819
     },
     "end": {
-      "line": 369,
+      "line": 374,
       "column": 3,
-      "index": 17947
+      "index": 18101
     }
   },
   {
@@ -694,14 +709,14 @@
     "defaultMessage": "!!! Price",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 370,
+      "line": 375,
       "column": 9,
-      "index": 17958
+      "index": 18112
     },
     "end": {
-      "line": 373,
+      "line": 378,
       "column": 3,
-      "index": 18020
+      "index": 18174
     }
   },
   {
@@ -709,14 +724,14 @@
     "defaultMessage": "!!!No assets found for this pair",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 374,
+      "line": 379,
       "column": 17,
-      "index": 18039
+      "index": 18193
     },
     "end": {
-      "line": 377,
+      "line": 382,
       "column": 3,
-      "index": 18141
+      "index": 18295
     }
   },
   {
@@ -724,14 +739,14 @@
     "defaultMessage": "!!!No assets found for \"{search}\"",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 378,
+      "line": 383,
       "column": 20,
-      "index": 18163
+      "index": 18317
     },
     "end": {
-      "line": 381,
+      "line": 386,
       "column": 3,
-      "index": 18269
+      "index": 18423
     }
   },
   {
@@ -739,14 +754,14 @@
     "defaultMessage": "!!!Each verified tokens gets",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 382,
+      "line": 387,
       "column": 21,
-      "index": 18292
+      "index": 18446
     },
     "end": {
-      "line": 385,
+      "line": 390,
       "column": 3,
-      "index": 18394
+      "index": 18548
     }
   },
   {
@@ -754,14 +769,14 @@
     "defaultMessage": "!!!verified badge",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 386,
+      "line": 391,
       "column": 17,
-      "index": 18413
+      "index": 18567
     },
     "end": {
-      "line": 389,
+      "line": 394,
       "column": 3,
-      "index": 18500
+      "index": 18654
     }
   },
   {
@@ -769,14 +784,14 @@
     "defaultMessage": "!!!Open orders",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 390,
+      "line": 395,
       "column": 14,
-      "index": 18516
+      "index": 18670
     },
     "end": {
-      "line": 393,
+      "line": 398,
       "column": 3,
-      "index": 18597
+      "index": 18751
     }
   },
   {
@@ -784,14 +799,14 @@
     "defaultMessage": "!!!Completed orders",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 394,
+      "line": 399,
       "column": 19,
-      "index": 18618
+      "index": 18772
     },
     "end": {
-      "line": 397,
+      "line": 402,
       "column": 3,
-      "index": 18709
+      "index": 18863
     }
   },
   {
@@ -799,14 +814,14 @@
     "defaultMessage": "!!!TVL",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 398,
+      "line": 403,
       "column": 7,
-      "index": 18718
+      "index": 18872
     },
     "end": {
-      "line": 401,
+      "line": 406,
       "column": 3,
-      "index": 18784
+      "index": 18938
     }
   },
   {
@@ -814,14 +829,14 @@
     "defaultMessage": "!!! Dex Fee",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 402,
+      "line": 407,
       "column": 11,
-      "index": 18797
+      "index": 18951
     },
     "end": {
-      "line": 405,
+      "line": 410,
       "column": 3,
-      "index": 18872
+      "index": 19026
     }
   },
   {
@@ -829,14 +844,14 @@
     "defaultMessage": "!!! Batcher Fee",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 406,
+      "line": 411,
       "column": 14,
-      "index": 18888
+      "index": 19042
     },
     "end": {
-      "line": 409,
+      "line": 414,
       "column": 3,
-      "index": 18970
+      "index": 19124
     }
   },
   {
@@ -844,14 +859,14 @@
     "defaultMessage": "!!!Limit price",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 410,
+      "line": 415,
       "column": 26,
-      "index": 18998
+      "index": 19152
     },
     "end": {
-      "line": 413,
+      "line": 418,
       "column": 3,
-      "index": 19091
+      "index": 19245
     }
   },
   {
@@ -859,14 +874,14 @@
     "defaultMessage": "!!!Are you sure you want to proceed this order with the limit price that is 10% or more higher than the\nmarket price?",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 414,
+      "line": 419,
       "column": 32,
-      "index": 19125
+      "index": 19279
     },
     "end": {
-      "line": 419,
+      "line": 424,
       "column": 3,
-      "index": 19345
+      "index": 19499
     }
   },
   {
@@ -874,14 +889,14 @@
     "defaultMessage": "!!!Your limit price",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 420,
+      "line": 425,
       "column": 30,
-      "index": 19377
+      "index": 19531
     },
     "end": {
-      "line": 423,
+      "line": 428,
       "column": 3,
-      "index": 19479
+      "index": 19633
     }
   },
   {
@@ -889,14 +904,14 @@
     "defaultMessage": "!!!Market price",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 424,
+      "line": 429,
       "column": 32,
-      "index": 19513
+      "index": 19667
     },
     "end": {
-      "line": 427,
+      "line": 432,
       "column": 3,
-      "index": 19613
+      "index": 19767
     }
   },
   {
@@ -904,14 +919,14 @@
     "defaultMessage": "!!!Back",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 428,
+      "line": 433,
       "column": 25,
-      "index": 19640
+      "index": 19794
     },
     "end": {
-      "line": 431,
+      "line": 436,
       "column": 3,
-      "index": 19725
+      "index": 19879
     }
   },
   {
@@ -919,14 +934,14 @@
     "defaultMessage": "!!!Swap",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 432,
+      "line": 437,
       "column": 28,
-      "index": 19755
+      "index": 19909
     },
     "end": {
-      "line": 435,
+      "line": 440,
       "column": 3,
-      "index": 19843
+      "index": 19997
     }
   },
   {
@@ -934,14 +949,14 @@
     "defaultMessage": "!!!Transaction submitted",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 436,
+      "line": 441,
       "column": 21,
-      "index": 19866
+      "index": 20020
     },
     "end": {
-      "line": 439,
+      "line": 444,
       "column": 3,
-      "index": 19964
+      "index": 20118
     }
   },
   {
@@ -949,14 +964,14 @@
     "defaultMessage": "!!!Your transactions will be displayed both in the list of transaction and Open swap orders",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 440,
+      "line": 445,
       "column": 22,
-      "index": 19988
+      "index": 20142
     },
     "end": {
-      "line": 443,
+      "line": 448,
       "column": 3,
-      "index": 20154
+      "index": 20308
     }
   },
   {
@@ -964,14 +979,14 @@
     "defaultMessage": "!!! dex",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 444,
+      "line": 449,
       "column": 7,
-      "index": 20163
+      "index": 20317
     },
     "end": {
-      "line": 447,
+      "line": 452,
       "column": 3,
-      "index": 20230
+      "index": 20384
     }
   },
   {
@@ -979,14 +994,14 @@
     "defaultMessage": "!!!see on explorer",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 448,
+      "line": 453,
       "column": 17,
-      "index": 20249
+      "index": 20403
     },
     "end": {
-      "line": 451,
+      "line": 456,
       "column": 3,
-      "index": 20337
+      "index": 20491
     }
   },
   {
@@ -994,14 +1009,14 @@
     "defaultMessage": "!!!Asset",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 452,
+      "line": 457,
       "column": 9,
-      "index": 20348
+      "index": 20502
     },
     "end": {
-      "line": 455,
+      "line": 460,
       "column": 3,
-      "index": 20421
+      "index": 20575
     }
   },
   {
@@ -1009,14 +1024,14 @@
     "defaultMessage": "!!!Clear",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 456,
+      "line": 461,
       "column": 9,
-      "index": 20432
+      "index": 20586
     },
     "end": {
-      "line": 459,
+      "line": 464,
       "column": 3,
-      "index": 20493
+      "index": 20647
     }
   },
   {
@@ -1024,14 +1039,14 @@
     "defaultMessage": "!!!Sign transaction",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 460,
+      "line": 465,
       "column": 19,
-      "index": 20514
+      "index": 20668
     },
     "end": {
-      "line": 463,
+      "line": 468,
       "column": 3,
-      "index": 20596
+      "index": 20750
     }
   },
   {
@@ -1039,14 +1054,14 @@
     "defaultMessage": "!!!Spending Password",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 464,
+      "line": 469,
       "column": 20,
-      "index": 20618
+      "index": 20772
     },
     "end": {
-      "line": 467,
+      "line": 472,
       "column": 3,
-      "index": 20702
+      "index": 20856
     }
   },
   {
@@ -1054,14 +1069,14 @@
     "defaultMessage": "!!!Enter spending password to sign this transaction",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 468,
+      "line": 473,
       "column": 25,
-      "index": 20729
+      "index": 20883
     },
     "end": {
-      "line": 471,
+      "line": 476,
       "column": 3,
-      "index": 20849
+      "index": 21003
     }
   },
   {
@@ -1069,14 +1084,14 @@
     "defaultMessage": "!!!Sign",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 472,
+      "line": 477,
       "column": 8,
-      "index": 20859
+      "index": 21013
     },
     "end": {
-      "line": 475,
+      "line": 480,
       "column": 3,
-      "index": 20918
+      "index": 21072
     }
   },
   {
@@ -1084,14 +1099,14 @@
     "defaultMessage": "!!!Swap",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 476,
+      "line": 481,
       "column": 14,
-      "index": 20934
+      "index": 21088
     },
     "end": {
-      "line": 479,
+      "line": 484,
       "column": 3,
-      "index": 20993
+      "index": 21147
     }
   },
   {
@@ -1099,14 +1114,14 @@
     "defaultMessage": "!!!completed orders",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 480,
+      "line": 485,
       "column": 23,
-      "index": 21018
+      "index": 21172
     },
     "end": {
-      "line": 483,
+      "line": 488,
       "column": 3,
-      "index": 21103
+      "index": 21257
     }
   },
   {
@@ -1114,14 +1129,14 @@
     "defaultMessage": "!!!open orders",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 484,
+      "line": 489,
       "column": 18,
-      "index": 21123
+      "index": 21277
     },
     "end": {
-      "line": 487,
+      "line": 492,
       "column": 3,
-      "index": 21198
+      "index": 21352
     }
   },
   {
@@ -1129,14 +1144,14 @@
     "defaultMessage": "!!!Confirm order cancellation",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 488,
+      "line": 493,
       "column": 24,
-      "index": 21224
+      "index": 21378
     },
     "end": {
-      "line": 491,
+      "line": 496,
       "column": 3,
-      "index": 21321
+      "index": 21475
     }
   },
   {
@@ -1144,14 +1159,14 @@
     "defaultMessage": "!!!Cancel order",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 492,
+      "line": 497,
       "column": 29,
-      "index": 21352
+      "index": 21506
     },
     "end": {
-      "line": 495,
+      "line": 500,
       "column": 3,
-      "index": 21439
+      "index": 21593
     }
   },
   {
@@ -1159,14 +1174,14 @@
     "defaultMessage": "!!!Are you sure you want to cancel this order?",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 496,
+      "line": 501,
       "column": 31,
-      "index": 21472
+      "index": 21626
     },
     "end": {
-      "line": 499,
+      "line": 504,
       "column": 3,
-      "index": 21593
+      "index": 21747
     }
   },
   {
@@ -1174,14 +1189,14 @@
     "defaultMessage": "!!!Learn more about swap orders in Yoroi",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 500,
+      "line": 505,
       "column": 23,
-      "index": 21618
+      "index": 21772
     },
     "end": {
-      "line": 503,
+      "line": 508,
       "column": 3,
-      "index": 21725
+      "index": 21879
     }
   },
   {
@@ -1189,14 +1204,14 @@
     "defaultMessage": "!!!Asset price",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 504,
+      "line": 509,
       "column": 29,
-      "index": 21756
+      "index": 21910
     },
     "end": {
-      "line": 507,
+      "line": 512,
       "column": 3,
-      "index": 21843
+      "index": 21997
     }
   },
   {
@@ -1204,14 +1219,14 @@
     "defaultMessage": "!!!Asset amount",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 508,
+      "line": 513,
       "column": 30,
-      "index": 21875
+      "index": 22029
     },
     "end": {
-      "line": 511,
+      "line": 516,
       "column": 3,
-      "index": 21964
+      "index": 22118
     }
   },
   {
@@ -1219,14 +1234,14 @@
     "defaultMessage": "!!!Total returned",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 512,
+      "line": 517,
       "column": 32,
-      "index": 21998
+      "index": 22152
     },
     "end": {
-      "line": 515,
+      "line": 520,
       "column": 3,
-      "index": 22091
+      "index": 22245
     }
   },
   {
@@ -1234,14 +1249,14 @@
     "defaultMessage": "!!!Cancellation Fee",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 516,
+      "line": 521,
       "column": 34,
-      "index": 22127
+      "index": 22281
     },
     "end": {
-      "line": 519,
+      "line": 524,
       "column": 3,
-      "index": 22224
+      "index": 22378
     }
   },
   {
@@ -1249,14 +1264,14 @@
     "defaultMessage": "!!!Confirm",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 520,
+      "line": 525,
       "column": 26,
-      "index": 22252
+      "index": 22406
     },
     "end": {
-      "line": 523,
+      "line": 528,
       "column": 3,
-      "index": 22332
+      "index": 22486
     }
   },
   {
@@ -1264,14 +1279,14 @@
     "defaultMessage": "!!!Back",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 524,
+      "line": 529,
       "column": 23,
-      "index": 22357
+      "index": 22511
     },
     "end": {
-      "line": 527,
+      "line": 532,
       "column": 3,
-      "index": 22431
+      "index": 22585
     }
   },
   {
@@ -1279,14 +1294,14 @@
     "defaultMessage": "!!!Total",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 528,
+      "line": 533,
       "column": 19,
-      "index": 22452
+      "index": 22606
     },
     "end": {
-      "line": 531,
+      "line": 536,
       "column": 3,
-      "index": 22522
+      "index": 22676
     }
   },
   {
@@ -1294,14 +1309,14 @@
     "defaultMessage": "!!!Liquidity Pool",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 532,
+      "line": 537,
       "column": 27,
-      "index": 22551
+      "index": 22705
     },
     "end": {
-      "line": 535,
+      "line": 540,
       "column": 3,
-      "index": 22638
+      "index": 22792
     }
   },
   {
@@ -1309,14 +1324,14 @@
     "defaultMessage": "!!!Time Created",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 536,
+      "line": 541,
       "column": 25,
-      "index": 22665
+      "index": 22819
     },
     "end": {
-      "line": 539,
+      "line": 544,
       "column": 3,
-      "index": 22748
+      "index": 22902
     }
   },
   {
@@ -1324,14 +1339,14 @@
     "defaultMessage": "!!!Time Completed",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 540,
+      "line": 545,
       "column": 27,
-      "index": 22777
+      "index": 22931
     },
     "end": {
-      "line": 543,
+      "line": 548,
       "column": 3,
-      "index": 22864
+      "index": 23018
     }
   },
   {
@@ -1339,14 +1354,14 @@
     "defaultMessage": "!!!Transaction ID",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 544,
+      "line": 549,
       "column": 18,
-      "index": 22884
+      "index": 23038
     },
     "end": {
-      "line": 547,
+      "line": 552,
       "column": 3,
-      "index": 22962
+      "index": 23116
     }
   },
   {
@@ -1354,14 +1369,14 @@
     "defaultMessage": "!!!Choose Connection Method",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 548,
+      "line": 553,
       "column": 26,
-      "index": 22990
+      "index": 23144
     },
     "end": {
-      "line": 551,
+      "line": 556,
       "column": 3,
-      "index": 23108
+      "index": 23262
     }
   },
   {
@@ -1369,14 +1384,14 @@
     "defaultMessage": "!!!Choose this option if you want to connect to a Ledger Nano model X or S using an on-the-go USB cable adaptor:",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 552,
+      "line": 557,
       "column": 18,
-      "index": 23128
+      "index": 23282
     },
     "end": {
-      "line": 557,
+      "line": 562,
       "column": 3,
-      "index": 23357
+      "index": 23511
     }
   },
   {
@@ -1384,14 +1399,14 @@
     "defaultMessage": "!!!Connect with USB",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 558,
+      "line": 563,
       "column": 13,
-      "index": 23372
+      "index": 23526
     },
     "end": {
-      "line": 561,
+      "line": 566,
       "column": 3,
-      "index": 23486
+      "index": 23640
     }
   },
   {
@@ -1399,14 +1414,14 @@
     "defaultMessage": "!!! USB connection is blocked by iOS devices",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 562,
+      "line": 567,
       "column": 26,
-      "index": 23514
+      "index": 23668
     },
     "end": {
-      "line": 565,
+      "line": 570,
       "column": 3,
-      "index": 23666
+      "index": 23820
     }
   },
   {
@@ -1414,14 +1429,14 @@
     "defaultMessage": "!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 566,
+      "line": 571,
       "column": 24,
-      "index": 23692
+      "index": 23846
     },
     "end": {
-      "line": 569,
+      "line": 574,
       "column": 3,
-      "index": 23886
+      "index": 24040
     }
   },
   {
@@ -1429,14 +1444,14 @@
     "defaultMessage": "!!!Connect with Bluetooth",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 570,
+      "line": 575,
       "column": 19,
-      "index": 23907
+      "index": 24061
     },
     "end": {
-      "line": 573,
+      "line": 578,
       "column": 3,
-      "index": 24033
+      "index": 24187
     }
   },
   {
@@ -1444,14 +1459,14 @@
     "defaultMessage": "!!!Connect with Bluetooth",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 574,
+      "line": 579,
       "column": 18,
-      "index": 24053
+      "index": 24207
     },
     "end": {
-      "line": 577,
+      "line": 582,
       "column": 3,
-      "index": 24163
+      "index": 24317
     }
   },
   {
@@ -1459,14 +1474,14 @@
     "defaultMessage": "!!!Service unavailable",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 578,
+      "line": 583,
       "column": 22,
-      "index": 24187
+      "index": 24341
     },
     "end": {
-      "line": 581,
+      "line": 586,
       "column": 3,
-      "index": 24281
+      "index": 24435
     }
   },
   {
@@ -1474,14 +1489,14 @@
     "defaultMessage": "!!!The server is temporarily busy due to maintenance downtime or capacity problems",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 582,
+      "line": 587,
       "column": 26,
-      "index": 24309
+      "index": 24463
     },
     "end": {
-      "line": 585,
+      "line": 590,
       "column": 3,
-      "index": 24467
+      "index": 24621
     }
   },
   {
@@ -1489,14 +1504,14 @@
     "defaultMessage": "!!!GO TO transactions",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 586,
+      "line": 591,
       "column": 20,
-      "index": 24489
+      "index": 24643
     },
     "end": {
-      "line": 589,
+      "line": 594,
       "column": 3,
-      "index": 24595
+      "index": 24749
     }
   },
   {
@@ -1504,14 +1519,14 @@
     "defaultMessage": "!!!You have",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 592,
+      "line": 597,
       "column": 11,
-      "index": 24654
+      "index": 24808
     },
     "end": {
-      "line": 595,
+      "line": 600,
       "column": 3,
-      "index": 24749
+      "index": 24903
     }
   },
   {
@@ -1519,14 +1534,14 @@
     "defaultMessage": "!!!No assets found",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 596,
+      "line": 601,
       "column": 12,
-      "index": 24763
+      "index": 24917
     },
     "end": {
-      "line": 599,
+      "line": 604,
       "column": 3,
-      "index": 24866
+      "index": 25020
     }
   },
   {
@@ -1534,14 +1549,14 @@
     "defaultMessage": "!!!found",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 600,
+      "line": 605,
       "column": 9,
-      "index": 24877
+      "index": 25031
     },
     "end": {
-      "line": 603,
+      "line": 608,
       "column": 3,
-      "index": 24967
+      "index": 25121
     }
   },
   {
@@ -1549,14 +1564,14 @@
     "defaultMessage": "!!!Search tokens",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 604,
+      "line": 609,
       "column": 16,
-      "index": 24985
+      "index": 25139
     },
     "end": {
-      "line": 607,
+      "line": 612,
       "column": 3,
-      "index": 25081
+      "index": 25235
     }
   },
   {
@@ -1564,14 +1579,14 @@
     "defaultMessage": "!!!Select asset",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 608,
+      "line": 613,
       "column": 20,
-      "index": 25103
+      "index": 25257
     },
     "end": {
-      "line": 611,
+      "line": 616,
       "column": 3,
-      "index": 25192
+      "index": 25346
     }
   },
   {
@@ -1579,14 +1594,14 @@
     "defaultMessage": "!!!Next",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 612,
+      "line": 617,
       "column": 8,
-      "index": 25202
+      "index": 25356
     },
     "end": {
-      "line": 615,
+      "line": 620,
       "column": 3,
-      "index": 25261
+      "index": 25415
     }
   },
   {
@@ -1594,14 +1609,14 @@
     "defaultMessage": "!!!Generate",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 616,
+      "line": 621,
       "column": 20,
-      "index": 25283
+      "index": 25437
     },
     "end": {
-      "line": 619,
+      "line": 624,
       "column": 3,
-      "index": 25381
+      "index": 25535
     }
   },
   {
@@ -1609,14 +1624,14 @@
     "defaultMessage": "!!!Collateral not found",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 620,
+      "line": 625,
       "column": 22,
-      "index": 25405
+      "index": 25559
     },
     "end": {
-      "line": 623,
+      "line": 628,
       "column": 3,
-      "index": 25517
+      "index": 25671
     }
   },
   {
@@ -1624,14 +1639,14 @@
     "defaultMessage": "!!!To continue with this action, you need to generate a collateral",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 624,
+      "line": 629,
       "column": 22,
-      "index": 25541
+      "index": 25695
     },
     "end": {
-      "line": 627,
+      "line": 632,
       "column": 3,
-      "index": 25696
+      "index": 25850
     }
   },
   {
@@ -1639,14 +1654,14 @@
     "defaultMessage": "!!!Pending Collateral UTxO",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 628,
+      "line": 633,
       "column": 28,
-      "index": 25726
+      "index": 25880
     },
     "end": {
-      "line": 631,
+      "line": 636,
       "column": 3,
-      "index": 25847
+      "index": 26001
     }
   },
   {
@@ -1654,14 +1669,14 @@
     "defaultMessage": "!!!The collateral UTxO transaction you've submitted is currently in the processing stage, and it may require a few minutes to complete. Please refresh your interface and attempt the action again shortly",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 632,
+      "line": 637,
       "column": 23,
-      "index": 25872
+      "index": 26026
     },
     "end": {
-      "line": 636,
+      "line": 641,
       "column": 3,
-      "index": 26170
+      "index": 26324
     }
   },
   {
@@ -1669,14 +1684,14 @@
     "defaultMessage": "!!!Transaction failed",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 637,
+      "line": 642,
       "column": 17,
-      "index": 26189
+      "index": 26343
     },
     "end": {
-      "line": 640,
+      "line": 645,
       "column": 3,
-      "index": 26291
+      "index": 26445
     }
   },
   {
@@ -1684,14 +1699,14 @@
     "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 641,
+      "line": 646,
       "column": 16,
-      "index": 26309
+      "index": 26463
     },
     "end": {
-      "line": 644,
+      "line": 649,
       "column": 3,
-      "index": 26465
+      "index": 26619
     }
   },
   {
@@ -1699,14 +1714,14 @@
     "defaultMessage": "!!!Try again",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 645,
+      "line": 650,
       "column": 18,
-      "index": 26485
+      "index": 26639
     },
     "end": {
-      "line": 648,
+      "line": 653,
       "column": 3,
-      "index": 26579
+      "index": 26733
     }
   },
   {
@@ -1714,14 +1729,14 @@
     "defaultMessage": "!!!Not enough balance",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 649,
+      "line": 654,
       "column": 20,
-      "index": 26601
+      "index": 26755
     },
     "end": {
-      "line": 652,
+      "line": 657,
       "column": 3,
-      "index": 26695
+      "index": 26849
     }
   },
   {
@@ -1729,14 +1744,14 @@
     "defaultMessage": "!!!Not enough supply in the pool",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 653,
+      "line": 658,
       "column": 19,
-      "index": 26716
+      "index": 26870
     },
     "end": {
-      "line": 656,
+      "line": 661,
       "column": 3,
-      "index": 26820
+      "index": 26974
     }
   },
   {
@@ -1744,14 +1759,14 @@
     "defaultMessage": "!!!Not enough balance, please consider the fees",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 657,
+      "line": 662,
       "column": 23,
-      "index": 26845
+      "index": 26999
     },
     "end": {
-      "line": 660,
+      "line": 665,
       "column": 3,
-      "index": 26968
+      "index": 27122
     }
   },
   {
@@ -1759,14 +1774,14 @@
     "defaultMessage": "!!! This pair is not available in any liquidity pool",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 661,
+      "line": 666,
       "column": 10,
-      "index": 26980
+      "index": 27134
     },
     "end": {
-      "line": 664,
+      "line": 669,
       "column": 3,
-      "index": 27095
+      "index": 27249
     }
   },
   {
@@ -1774,14 +1789,14 @@
     "defaultMessage": "!!!Continue on Ledger",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 665,
+      "line": 670,
       "column": 20,
-      "index": 27117
+      "index": 27271
     },
     "end": {
-      "line": 668,
+      "line": 673,
       "column": 3,
-      "index": 27217
+      "index": 27371
     }
   },
   {
@@ -1789,14 +1804,14 @@
     "defaultMessage": "!!!Continue",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 669,
+      "line": 674,
       "column": 12,
-      "index": 27231
+      "index": 27385
     },
     "end": {
-      "line": 672,
+      "line": 677,
       "column": 3,
-      "index": 27334
+      "index": 27488
     }
   },
   {
@@ -1804,14 +1819,14 @@
     "defaultMessage": "!!!Slippage Warning",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 673,
+      "line": 678,
       "column": 24,
-      "index": 27360
+      "index": 27514
     },
     "end": {
-      "line": 676,
+      "line": 681,
       "column": 3,
-      "index": 27454
+      "index": 27608
     }
   },
   {
@@ -1819,14 +1834,14 @@
     "defaultMessage": "!!!Are you sure you want to proceed this order with the current slippage tolerance? It could result in receiving no assets.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 677,
+      "line": 682,
       "column": 23,
-      "index": 27479
+      "index": 27633
     },
     "end": {
-      "line": 681,
+      "line": 686,
       "column": 3,
-      "index": 27682
+      "index": 27836
     }
   },
   {
@@ -1834,14 +1849,14 @@
     "defaultMessage": "!!!Your slippage tolerance",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 682,
+      "line": 687,
       "column": 31,
-      "index": 27715
+      "index": 27869
     },
     "end": {
-      "line": 685,
+      "line": 690,
       "column": 3,
-      "index": 27808
+      "index": 27962
     }
   },
   {
@@ -1849,14 +1864,14 @@
     "defaultMessage": "!!!Increase the amount to proceed or change slippage tolerance to 0%",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 686,
+      "line": 691,
       "column": 31,
-      "index": 27841
+      "index": 27995
     },
     "end": {
-      "line": 689,
+      "line": 694,
       "column": 3,
-      "index": 27976
+      "index": 28130
     }
   },
   {
@@ -1864,14 +1879,14 @@
     "defaultMessage": "!!!No orders available yet",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 690,
+      "line": 695,
       "column": 19,
-      "index": 27997
+      "index": 28151
     },
     "end": {
-      "line": 693,
+      "line": 698,
       "column": 3,
-      "index": 28095
+      "index": 28249
     }
   },
   {
@@ -1879,14 +1894,14 @@
     "defaultMessage": "!!!Start doing SWAP to see your open orders here",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 694,
+      "line": 699,
       "column": 22,
-      "index": 28119
+      "index": 28273
     },
     "end": {
-      "line": 697,
+      "line": 702,
       "column": 3,
-      "index": 28242
+      "index": 28396
     }
   },
   {
@@ -1894,14 +1909,14 @@
     "defaultMessage": "!!!No orders completed yet",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 698,
+      "line": 703,
       "column": 24,
-      "index": 28268
+      "index": 28422
     },
     "end": {
-      "line": 701,
+      "line": 706,
       "column": 3,
-      "index": 28371
+      "index": 28525
     }
   },
   {
@@ -1909,14 +1924,14 @@
     "defaultMessage": "!!!No orders found for",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 702,
+      "line": 707,
       "column": 30,
-      "index": 28403
+      "index": 28557
     },
     "end": {
-      "line": 705,
+      "line": 710,
       "column": 3,
-      "index": 28508
+      "index": 28662
     }
   },
   {
@@ -1924,14 +1939,14 @@
     "defaultMessage": "!!!No orders found for",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 706,
+      "line": 711,
       "column": 25,
-      "index": 28535
+      "index": 28689
     },
     "end": {
-      "line": 709,
+      "line": 714,
       "column": 3,
-      "index": 28635
+      "index": 28789
     }
   },
   {
@@ -1939,14 +1954,14 @@
     "defaultMessage": "!!!Price Impact",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 710,
+      "line": 715,
       "column": 15,
-      "index": 28652
+      "index": 28806
     },
     "end": {
-      "line": 713,
+      "line": 718,
       "column": 3,
-      "index": 28735
+      "index": 28889
     }
   },
   {
@@ -1954,14 +1969,14 @@
     "defaultMessage": "!!!Price impact over {riskValue}%",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 714,
+      "line": 719,
       "column": 23,
-      "index": 28760
+      "index": 28914
     },
     "end": {
-      "line": 717,
+      "line": 722,
       "column": 3,
-      "index": 28869
+      "index": 29023
     }
   },
   {
@@ -1969,14 +1984,14 @@
     "defaultMessage": "!!!may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 718,
+      "line": 723,
       "column": 30,
-      "index": 28901
+      "index": 29055
     },
     "end": {
-      "line": 722,
+      "line": 727,
       "column": 3,
-      "index": 29091
+      "index": 29245
     }
   },
   {
@@ -1984,14 +1999,14 @@
     "defaultMessage": "!!!may cause a difference in the amount you actually receive. Consider this at your own risk.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 723,
+      "line": 728,
       "column": 34,
-      "index": 29127
+      "index": 29281
     },
     "end": {
-      "line": 726,
+      "line": 731,
       "column": 3,
-      "index": 29307
+      "index": 29461
     }
   },
   {
@@ -1999,14 +2014,14 @@
     "defaultMessage": "!!!Price impact is a difference between the actual market price and your price due to trade size.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 727,
+      "line": 732,
       "column": 19,
-      "index": 29328
+      "index": 29482
     },
     "end": {
-      "line": 730,
+      "line": 735,
       "column": 3,
-      "index": 29497
+      "index": 29651
     }
   },
   {
@@ -2014,14 +2029,14 @@
     "defaultMessage": "!!Warning",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 731,
+      "line": 736,
       "column": 11,
-      "index": 29510
+      "index": 29664
     },
     "end": {
-      "line": 734,
+      "line": 739,
       "column": 3,
-      "index": 29604
+      "index": 29758
     }
   },
   {
@@ -2029,14 +2044,14 @@
     "defaultMessage": "!!!Back to swap orders",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 735,
+      "line": 740,
       "column": 20,
-      "index": 29626
+      "index": 29780
     },
     "end": {
-      "line": 738,
+      "line": 743,
       "column": 3,
-      "index": 29721
+      "index": 29875
     }
   },
   {
@@ -2044,14 +2059,14 @@
     "defaultMessage": "!!!Transaction failed",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 739,
+      "line": 744,
       "column": 23,
-      "index": 29746
+      "index": 29900
     },
     "end": {
-      "line": 742,
+      "line": 747,
       "column": 3,
-      "index": 29833
+      "index": 29987
     }
   },
   {
@@ -2059,14 +2074,14 @@
     "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 743,
+      "line": 748,
       "column": 22,
-      "index": 29857
+      "index": 30011
     },
     "end": {
-      "line": 746,
+      "line": 751,
       "column": 3,
-      "index": 29998
+      "index": 30152
     }
   },
   {
@@ -2074,14 +2089,14 @@
     "defaultMessage": "!!!Try again",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 747,
+      "line": 752,
       "column": 24,
-      "index": 30024
+      "index": 30178
     },
     "end": {
-      "line": 750,
+      "line": 755,
       "column": 3,
-      "index": 30103
+      "index": 30257
     }
   },
   {
@@ -2089,14 +2104,14 @@
     "defaultMessage": "!!!Transaction signed",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 751,
+      "line": 756,
       "column": 26,
-      "index": 30131
+      "index": 30285
     },
     "end": {
-      "line": 754,
+      "line": 759,
       "column": 3,
-      "index": 30221
+      "index": 30375
     }
   },
   {
@@ -2104,14 +2119,14 @@
     "defaultMessage": "!!!It will show up in the transaction list once it's confirmed by the network.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 755,
+      "line": 760,
       "column": 25,
-      "index": 30248
+      "index": 30402
     },
     "end": {
-      "line": 758,
+      "line": 763,
       "column": 3,
-      "index": 30394
+      "index": 30548
     }
   },
   {
@@ -2119,14 +2134,14 @@
     "defaultMessage": "!!!Close",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 759,
+      "line": 764,
       "column": 27,
-      "index": 30423
+      "index": 30577
     },
     "end": {
-      "line": 762,
+      "line": 767,
       "column": 3,
-      "index": 30501
+      "index": 30655
     }
   }
 ]
