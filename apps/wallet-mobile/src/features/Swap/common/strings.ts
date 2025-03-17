@@ -6,6 +6,8 @@ export const useStrings = () => {
   const intl = useIntl()
 
   return {
+    yourAssets: intl.formatMessage(messages.yourAssets),
+    allAssets: intl.formatMessage(messages.allAssets),
     swapTitle: intl.formatMessage(messages.swapTitle),
     swapDetailsTitle: intl.formatMessage(messages.swapDetailsTitle),
     swapCancellationDetailsTitle: intl.formatMessage(messages.swapCancellationDetailsTitle),
@@ -176,6 +178,14 @@ export const useStrings = () => {
 }
 
 const messages = defineMessages({
+  yourAssets: {
+    id: 'swap.swapScreen.yourAssets',
+    defaultMessage: `!!!Your assets`,
+  },
+  allAssets: {
+    id: 'swap.swapScreen.allAssets',
+    defaultMessage: `!!!All assets`,
+  },
   swapFees: {
     id: 'swap.swapScreen.swapFees',
     defaultMessage: `!!!Swap fees include the following:\n • Matchmaker Fee\n • Frontend Fee\n • Liquidity Provider Fee`,

@@ -93,31 +93,33 @@ const TokenList = ({direction}: Direction) => {
 
     if (direction === 'in')
       return [
-        'Your assets',
+        strings.yourAssets,
         ...sortTokenInfos({
           secondaryTokenInfos: ownedList,
           primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
         }),
       ].filter(filterBySearch(assetSearchTerm))
 
-    const verifiedList = verifiedTokens.map((ti) => tokenInfos.get(ti)).filter(isNonNullable)
+    const verifiedList = verifiedTokens
+      .map((ti) => tokenInfos.get(ti))
+      .filter(isNonNullable)
+      .filter(({id}) => !ownedTokens.includes(id))
 
     return [
-      'Your assets',
+      strings.yourAssets,
       ...sortTokenInfos({
         secondaryTokenInfos: ownedList,
         primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       }),
+      strings.allAssets,
       ...(verifiedList.length > 0
         ? [
-            'Verified',
             ...sortTokenInfos({
               secondaryTokenInfos: verifiedList,
               primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
             }),
           ]
         : []),
-      'Unverified',
       ...sortTokenInfos({
         secondaryTokenInfos: Array.from(tokenInfos.values()).filter(
           ({id}) => !(ownedTokens.includes(id) || verifiedTokens.includes(id)),
