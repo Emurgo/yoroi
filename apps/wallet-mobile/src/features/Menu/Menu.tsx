@@ -22,7 +22,7 @@ import {Spacer} from '../../components/Spacer/Spacer'
 import {Text} from '../../components/Text'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
-import {defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
+import {defaultStackNavigationOptions, MenuRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {usePrefetchStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
 import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTransition'
 import {useCanVote} from '../RegisterCatalyst/common/hooks'
@@ -30,7 +30,7 @@ import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFun
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 
-const MenuStack = createStackNavigator()
+const MenuStack = createStackNavigator<MenuRoutes>()
 
 export const MenuNavigator = () => {
   const strings = useStrings()

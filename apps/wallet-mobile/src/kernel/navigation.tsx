@@ -344,8 +344,8 @@ export type NftRoutes = {
 }
 export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 
-type MenuRoutes = {
-  menu: undefined
+export type MenuRoutes = {
+  _menu: undefined
   'voting-registration': undefined
 }
 
@@ -537,6 +537,18 @@ export const useWalletNavigation = () => {
         screen: 'staking-dashboard',
         params: {
           screen: 'staking-dashboard-main',
+        },
+      })
+    },
+
+    navigateToMenu: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'menu',
+          params: {
+            screen: '_menu',
+          },
         },
       })
     },
