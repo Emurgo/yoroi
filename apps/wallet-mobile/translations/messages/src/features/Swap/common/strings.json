@@ -1,7 +1,7 @@
 [
   {
     "id": "swap.swapScreen.placeOrder",
-    "defaultMessage": "!!!Your assets",
+    "defaultMessage": "!!!Place order",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
       "line": 182,

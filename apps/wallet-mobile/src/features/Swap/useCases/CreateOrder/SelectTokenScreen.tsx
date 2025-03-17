@@ -112,14 +112,7 @@ const TokenList = ({direction}: Direction) => {
         primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       }),
       strings.allAssets,
-      ...(verifiedList.length > 0
-        ? [
-            ...sortTokenInfos({
-              secondaryTokenInfos: verifiedList,
-              primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
-            }),
-          ]
-        : []),
+      ...verifiedList,
       ...sortTokenInfos({
         secondaryTokenInfos: Array.from(tokenInfos.values()).filter(
           ({id}) => !(ownedTokens.includes(id) || verifiedTokens.includes(id)),
