@@ -97,6 +97,7 @@ export const transformersMaker = ({
     protocols: {
       response: (): Array<Swap.AggregatorProtocol> =>
         Object.values(Dex)
+          .filter((p) => p !== Dex.Unsupported)
           .map(toSwapProtocol)
           .map((protocol) => ({
             aggregator: Swap.Aggregator.Muesliswap,
