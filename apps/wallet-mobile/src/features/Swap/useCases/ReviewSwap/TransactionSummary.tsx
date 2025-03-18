@@ -1,5 +1,4 @@
 import {useTheme} from '@yoroi/theme'
-import {capitalize} from 'lodash'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -50,8 +49,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
   const feesInfo = [
     {
-      // TODO: fix i18n
-      label: 'Agreggator',
+      label: strings.aggregator,
       value: <Text style={styles.text}>{swapForm.createTx?.aggregator ?? ''}</Text>,
       hidden: !isDev,
     },
@@ -60,8 +58,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
       value: protocol !== undefined ? <ProtocolAvatar protocol={protocol} /> : '',
     },
     {
-      // TODO: fix i18n
-      label: `${capitalize(orderType)} ${strings.price}`,
+      label: orderType === 'market' ? strings.marketPrice : strings.limitPrice,
       value: <Text style={[styles.text, styles.alignRight]}>{priceInfoValue}</Text>,
     },
     {

@@ -91,11 +91,13 @@ export const EstimateSummary = () => {
             value={`${swapForm.estimate?.totalOutput} ${tokenOutTicker}`}
           />
 
-          <Row
-            label={strings.slippageTolerance}
-            description={strings.slippageToleranceInfo}
-            value={`${swapForm.slippageInput.value} %`}
-          />
+          {swapForm.orderType === 'market' && (
+            <Row
+              label={strings.slippageTolerance}
+              description={strings.slippageToleranceInfo}
+              value={`${swapForm.slippageInput.value} %`}
+            />
+          )}
         </View>
       )}
     </View>
