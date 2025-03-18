@@ -154,7 +154,7 @@
   "components.governance.changeDRep": "DRepを変更",
   "components.governance.confirm": "確認",
   "components.governance.confirmTxTitle": "取引を確認",
-  "components.governance.delegateVotingToDRep": "Delegate voting to",
+  "components.governance.delegateVotingToDRep": " への投票を委任する",
   "components.governance.delegatingToADRep": "DRepに委任中",
   "components.governance.drepID": "Drep ID (フィンガープリント)",
   "components.governance.drepKey": "DRepキー",
