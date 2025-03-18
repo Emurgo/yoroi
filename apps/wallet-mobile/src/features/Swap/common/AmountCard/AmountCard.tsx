@@ -208,7 +208,7 @@ const useStyles = () => {
     amountInput: {
       textAlign: 'right',
       ...atoms.py_0,
-      ...atoms.heading_1_medium,
+      ...atoms.heading_3_medium,
       color: color.gray_900,
     },
     amountWrapper: {

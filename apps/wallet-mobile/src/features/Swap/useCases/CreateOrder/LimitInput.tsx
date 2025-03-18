@@ -16,17 +16,14 @@ export const LimitInput = () => {
 
   const swapForm = useSwap()
   const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
-  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
   const disabled = swapForm.orderType === 'market'
 
   const tokenInTicker = tokenInInfo?.ticker ?? tokenInInfo?.name ?? '-'
-  const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
-  const pair = `${tokenOutTicker}/${tokenInTicker}`
 
   return (
     <>
       <View style={[styles.container, disabled && styles.disabled, isFocused && styles.active]}>
-        <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
+        <Text style={styles.label}>{strings.limitPrice}</Text>
 
         <View style={styles.content}>
           <TextInput
@@ -48,7 +45,7 @@ export const LimitInput = () => {
           />
 
           <View style={[styles.textWrapper, disabled && styles.disabled]}>
-            <Text style={styles.text}>{pair}</Text>
+            <Text style={styles.text}>{tokenInTicker}</Text>
           </View>
         </View>
       </View>

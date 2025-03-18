@@ -10,7 +10,7 @@ import {usePortfolioImage} from '../hooks/usePortfolioImage'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info | undefined | null
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
   imageStyle?: ImageStyle
 }
 export const TokenInfoIcon = ({info, size = 'lg', imageStyle}: TokenInfoIconProps) => {
@@ -21,7 +21,7 @@ export const TokenInfoIcon = ({info, size = 'lg', imageStyle}: TokenInfoIconProp
   if (!info || isError) {
     return (
       <View style={[styles.icon, styles[size], styles.placeholder]}>
-        <Icon.Coins2 color={colors.icon} size={{sm: 18, md: 20, lg: 24}[size]} />
+        <Icon.Coins2 color={colors.icon} size={{sm: 18, md: 20, lg: 24, xl: 42}[size]} />
       </View>
     )
   }
@@ -29,7 +29,7 @@ export const TokenInfoIcon = ({info, size = 'lg', imageStyle}: TokenInfoIconProp
   if (isPrimaryToken(info))
     return (
       <View style={[styles.icon, styles[size], styles.primary, imageStyle]}>
-        <Icon.Cardano color="white" size={{sm: 20, md: 28, lg: 35}[size]} />
+        <Icon.Cardano color="white" size={{sm: 20, md: 28, lg: 35, xl: 70}[size]} />
       </View>
     )
 
@@ -65,6 +65,10 @@ const useStyles = () => {
       ...atoms.align_center,
       ...atoms.justify_center,
       ...atoms.overflow_hidden,
+    },
+    xl: {
+      width: 80,
+      height: 80,
     },
     lg: {
       width: 40,

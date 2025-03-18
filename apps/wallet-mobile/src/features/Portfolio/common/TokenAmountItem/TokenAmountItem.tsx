@@ -58,7 +58,7 @@ export const TokenAmountItem = ({
     openModal({
       title: strings.tokenDetailsTitle,
       content: <TokenDetails tokenInfo={info} />,
-      height: windowHeight * 0.8,
+      height: isPrimary ? 450 : windowHeight * 0.8,
     })
   }
 
@@ -104,12 +104,7 @@ export const TokenAmountItem = ({
             )}
 
             {features.swapTokenLinks && (
-              <Button
-                type={ButtonType.SecondaryText}
-                icon={Icon.InfoCircle}
-                onPress={handleShowTokenDetails}
-                disabled={isPrimary}
-              />
+              <Button type={ButtonType.SecondaryText} icon={Icon.InfoCircle} onPress={handleShowTokenDetails} />
             )}
           </View>
         )}

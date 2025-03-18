@@ -60,7 +60,8 @@ export const ListOrders = () => {
             onPress={() => setFilter('open')}
             type={ButtonType.SecondaryText}
             title={strings.openOrders}
-            size="S"
+            size="M"
+            fontOverride={styles.groupFont}
             {...(filter === 'open' && {style: styles.activeButton})}
           />
         </View>
@@ -70,7 +71,8 @@ export const ListOrders = () => {
             onPress={() => setFilter('completed')}
             type={ButtonType.SecondaryText}
             title={strings.completedOrders}
-            size="S"
+            size="M"
+            fontOverride={styles.groupFont}
             {...(filter === 'completed' && {style: styles.activeButton})}
           />
         </View>
@@ -555,6 +557,9 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.gap_md,
       ...atoms.justify_center,
+    },
+    groupFont: {
+      ...atoms.body_1_lg_medium,
     },
     root: {
       ...atoms.flex_1,

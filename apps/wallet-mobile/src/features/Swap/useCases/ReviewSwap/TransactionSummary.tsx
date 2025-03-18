@@ -33,7 +33,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     quantity: BigInt(Number(swapForm.createTx?.totalOutputWithoutSlippage ?? 0) * 10 ** tokenOutInfo.decimals),
   }
 
-  const priceImpactRisk = getPriceImpactRisk(Number(swapForm.createTx?.splits[0].priceImpact))
+  const priceImpactRisk = getPriceImpactRisk(Number(swapForm.createTx?.splits[0]?.priceImpact))
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : styles.text.color
 
@@ -58,7 +58,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
       value: protocol !== undefined ? <ProtocolAvatar protocol={protocol} /> : '',
     },
     {
-      label: orderType === 'market' ? strings.marketPrice : strings.limitPrice,
+      label: orderType === 'market' ? strings.marketPrice : strings.limitPriceWarningTitle,
       value: <Text style={[styles.text, styles.alignRight]}>{priceInfoValue}</Text>,
     },
     {

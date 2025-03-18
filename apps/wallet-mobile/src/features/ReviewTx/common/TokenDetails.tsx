@@ -1,5 +1,5 @@
 import {time} from '@yoroi/common'
-import {usePortfolioTokenDiscovery} from '@yoroi/portfolio'
+import {isPrimaryTokenInfo, usePortfolioTokenDiscovery} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -7,10 +7,10 @@ import {ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View}
 
 import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../components/Icon'
-import {MediaPreview} from '../../../components/MediaPreview/MediaPreview'
 import {SimpleTab} from '../../../components/SimpleTab/SimpleTab'
 import {Space} from '../../../components/Space/Space'
 import {isEmptyString} from '../../../kernel/utils'
+import {TokenInfoIcon} from '../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {CopiableText} from './CopiableText'
 import {ExplorerInfoLinks} from './ExplorerInfoLinks'
@@ -40,13 +40,13 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
 
   return (
     <View style={styles.header}>
-      <MediaPreview info={info} width={81} height={81} />
+      <TokenInfoIcon info={info} size="xl" />
 
       <Space height="sm" />
 
       {!isEmptyString(title) && <Text style={styles.headerText}>{title}</Text>}
 
-      <Text style={styles.headerText}>{`(${assetName})`}</Text>
+      {!isPrimaryTokenInfo(info) && <Text style={styles.headerText}>{`(${assetName})`}</Text>}
 
       <Space height="xl" />
 
@@ -73,8 +73,11 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
     },
     {
       staleTime: time.session,
+      enabled: !isPrimaryTokenInfo(info),
     },
   )
+
+  if (isPrimaryTokenInfo(info)) return <Text style={styles.description}>{strings.adaDescription}</Text>
 
   return (
     <View style={styles.info}>

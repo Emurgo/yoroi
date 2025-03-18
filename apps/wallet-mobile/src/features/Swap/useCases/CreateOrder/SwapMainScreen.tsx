@@ -73,7 +73,8 @@ export const SwapMainScreen = () => {
                   onPress={() => swapForm.action({type: 'ChangeOrderType', value: 'market'})}
                   type={ButtonType.SecondaryText}
                   title={strings.marketButton}
-                  size="S"
+                  size="M"
+                  fontOverride={styles.groupFont}
                   {...(swapForm.orderType === 'market' && {style: styles.activeButton})}
                 />
 
@@ -81,7 +82,8 @@ export const SwapMainScreen = () => {
                   onPress={() => swapForm.action({type: 'ChangeOrderType', value: 'limit'})}
                   type={ButtonType.SecondaryText}
                   title={strings.limitButton}
-                  size="S"
+                  size="M"
+                  fontOverride={styles.groupFont}
                   {...(swapForm.orderType === 'limit' && {style: styles.activeButton})}
                 />
               </View>
@@ -144,7 +146,12 @@ export const SwapMainScreen = () => {
       </ScrollView>
 
       <View style={[styles.actions, (deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
-        <Button testID="swapButton" title={strings.placeOrder} disabled={!swapForm.canSwap} onPress={onSwapPress} />
+        <Button
+          testID="swapButton"
+          title={swapForm.orderType === 'market' ? strings.swapButton : strings.placeOrder}
+          disabled={!swapForm.canSwap}
+          onPress={onSwapPress}
+        />
       </View>
     </View>
   )
@@ -202,6 +209,9 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.align_center,
       ...atoms.gap_2xs,
+    },
+    groupFont: {
+      ...atoms.body_1_lg_medium,
     },
     buttonsWrapper: {
       ...atoms.align_center,
