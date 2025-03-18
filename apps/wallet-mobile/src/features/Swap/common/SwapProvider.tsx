@@ -285,6 +285,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
 
       case SwapAction.TokenOutAmountChanged:
+        draft.lastInputTouched = 'out'
         draft.tokenOutInput.value = !Number.isNaN(Number(action.value.replace(',', '.')))
           ? action.value.replace(',', '.')
           : '0'
