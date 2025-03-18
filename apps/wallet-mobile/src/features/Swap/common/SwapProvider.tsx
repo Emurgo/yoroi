@@ -113,7 +113,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   }, [balances.records, state.tokenInInput.tokenId, state.tokenInInput.value, strings.notEnoughBalance])
 
   React.useEffect(() => {
-    if (state.reqres === 'response') return
+    if (!state.needsNewEstimate) return
 
     if (
       state.tokenInInput.tokenId === undefined ||
@@ -243,7 +243,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
 const swapReducer = (state: SwapState, action: SwapAction) => {
   return produce(state, (draft) => {
-    draft.reqres = 'request'
+    draft.needsNewEstimate = true
     draft.lastInputTouched = 'in'
 
     switch (action.type) {
@@ -280,7 +280,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         if (action.value === '' || action.value === '0') {
           draft.tokenOutInput.value = '0'
           draft.estimate = undefined
-          draft.reqres = 'response'
+          draft.needsNewEstimate = false
         }
         break
 
@@ -291,20 +291,20 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         if (action.value === '' || action.value === '0') {
           draft.tokenInInput.value = '0'
           draft.estimate = undefined
-          draft.reqres = 'response'
+          draft.needsNewEstimate = false
         }
         break
 
       case SwapAction.TokenInErrorChanged:
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenInInput.error = action.value
-        draft.reqres = 'response'
+        draft.needsNewEstimate = false
         break
 
       case SwapAction.TokenOutErrorChanged:
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenOutInput.error = action.value
-        draft.reqres = 'response'
+        draft.needsNewEstimate = false
         break
 
       case SwapAction.SlippageInputChanged:
@@ -356,7 +356,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
       case SwapAction.EstimateResponse:
         draft.lastInputTouched = state.lastInputTouched
-        draft.reqres = 'response'
+        draft.needsNewEstimate = false
         draft.estimate = action.value
         draft.tokenOutInput.error = null
         draft.canSwap = true
@@ -369,19 +369,19 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
 
       case SwapAction.EstimateError:
-        draft.reqres = 'response'
+        draft.needsNewEstimate = false
         draft.estimate = undefined
         draft.tokenOutInput.error = action.value.message
         draft.canSwap = false
         break
 
       case SwapAction.CreateResponse:
-        draft.reqres = 'response'
+        draft.needsNewEstimate = false
         draft.createTx = action.value
         break
 
       case SwapAction.CreateError:
-        draft.reqres = 'response'
+        draft.needsNewEstimate = false
         draft.createTx = undefined
         draft.tokenOutInput.error = action.value.message
         break
@@ -445,7 +445,7 @@ export type SwapAction = {
 }[keyof SwapActionValueMap]
 
 const defaultState: SwapState = Object.freeze({
-  reqres: 'response',
+  needsNewEstimate: false,
   orderType: 'market',
   lastInputTouched: 'in',
   tokenInInput: {
@@ -478,7 +478,7 @@ const defaultState: SwapState = Object.freeze({
 } as const)
 
 type SwapState = {
-  reqres: 'request' | 'response'
+  needsNewEstimate: boolean
   orderType: 'market' | 'limit'
   lastInputTouched: 'in' | 'out'
   tokenInInput: {

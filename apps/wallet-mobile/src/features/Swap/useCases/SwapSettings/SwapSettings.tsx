@@ -51,6 +51,7 @@ export const SwapSettings = () => {
   const assignAggregator = (a: Swap.ManagerSettings['routingPreference']) => {
     setAggregator(a)
     swapForm.assignManagerSettings({...swapForm.managerSettings, routingPreference: a})
+    swapForm.action({type: 'Refresh'})
   }
 
   const defaultSelectedChoice = getChoiceBySlippage(Number(swapForm.managerSettings.slippage), numberLocale)
