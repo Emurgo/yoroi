@@ -173,7 +173,7 @@ const buildUnreadCounterDefaultValue = (): Map<Notifications.Group, number> => {
 }
 
 const defaultConfig: Notifications.Config = {
-  displayDuration: 4,
+  displayDuration: 8,
   [Notifications.Trigger.PrimaryTokenPriceChanged]: {
     notify: true,
     thresholdInPercent: 10,
