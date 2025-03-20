@@ -21,6 +21,7 @@ import {resolveDexes} from './helpers'
 export const transformersMaker = ({
   primaryTokenInfo,
   address,
+  partner,
 }: MuesliswapApiConfig) => {
   return {
     tokens: {
@@ -149,7 +150,7 @@ export const transformersMaker = ({
         buy_token: tokenOut,
         buy_amount: amountOut,
         sell_amount: amountIn,
-
+        partner,
         // muesli expects slippage as a percentage
         slippage: slippage / 100,
         dex: resolveDexes({
@@ -202,7 +203,7 @@ export const transformersMaker = ({
         buy_token: tokenOut,
         sell_amount: amountIn,
         user_address: address,
-
+        partner,
         slippage: slippage / 100,
         dex: resolveDexes({
           protocol: protocol ? fromSwapProtocol(protocol) : undefined,

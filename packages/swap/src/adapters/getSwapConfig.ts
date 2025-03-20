@@ -1,6 +1,6 @@
 import {FetchData, fetchData, getApiError, isLeft} from '@yoroi/common'
 import {TokenIdSchema} from '@yoroi/portfolio'
-import {Api, Portfolio} from '@yoroi/types'
+import {Api, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
 import {z} from 'zod'
 
@@ -40,5 +40,11 @@ const SwapConfigResponseSchema = z.object({
     .optional(),
   verifiedTokens: z
     .array(TokenIdSchema.refine((_): _ is Portfolio.Token.Id => true))
+    .optional(),
+  partners: z
+    .object({
+      [Swap.Aggregator.Dexhunter]: z.string().optional(),
+      [Swap.Aggregator.Muesliswap]: z.string().optional(),
+    })
     .optional(),
 })

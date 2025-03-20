@@ -25,5 +25,6 @@ export type SwapManagerMaker = (
     isPrimaryToken(token: string | null | undefined): boolean
     network: ChainSupportedNetworks
     storage: SwapStorage
+    partners?: Partial<Record<SwapAggregator, string>>
   }>,
 ) => SwapManager

@@ -25,6 +25,7 @@ describe('muesliswapApiMaker', () => {
     isPrimaryToken: () => false,
     stakingKey: 'someStakingKey',
     network: Chain.Network.Mainnet,
+    partner: 'somePartnerId',
   }
 
   afterEach(() => {

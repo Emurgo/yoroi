@@ -21,6 +21,7 @@ const transformers = transformersMaker({
   network,
   stakingKey,
   isPrimaryToken,
+  partner: 'somePartnerId',
 })
 
 describe('transformers', () => {

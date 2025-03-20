@@ -220,7 +220,9 @@ export const transformersMaker = ({
         frontendFee: partner_fee,
         netPrice: net_price,
         totalFee: Number(
-          (batcher_fee + dexhunter_fee).toFixed(primaryTokenInfo.decimals),
+          (batcher_fee + dexhunter_fee + partner_fee).toFixed(
+            primaryTokenInfo.decimals,
+          ),
         ),
         totalOutput: total_output,
       }),
@@ -261,7 +263,9 @@ export const transformersMaker = ({
         frontendFee: partner_fee,
         netPrice: net_price,
         totalFee: Number(
-          (batcher_fee + dexhunter_fee).toFixed(primaryTokenInfo.decimals),
+          (batcher_fee + dexhunter_fee + partner_fee).toFixed(
+            primaryTokenInfo.decimals,
+          ),
         ),
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
@@ -315,7 +319,9 @@ export const transformersMaker = ({
         frontendFee: partner_fee,
         netPrice: net_price,
         totalFee: Number(
-          (batcher_fee + dexhunter_fee).toFixed(primaryTokenInfo.decimals),
+          (batcher_fee + dexhunter_fee + partner_fee).toFixed(
+            primaryTokenInfo.decimals,
+          ),
         ),
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
@@ -370,7 +376,9 @@ export const transformersMaker = ({
         frontendFee: partner_fee,
         totalOutput: total_output,
         totalFee: Number(
-          (batcher_fee + dexhunter_fee).toFixed(primaryTokenInfo.decimals),
+          (batcher_fee + dexhunter_fee + partner_fee).toFixed(
+            primaryTokenInfo.decimals,
+          ),
         ),
 
         splits: splits?.map(toSwapSplit) ?? [],
@@ -424,7 +432,9 @@ export const transformersMaker = ({
         netPrice: (net_price || splits?.[0]?.initial_price) ?? 0, // main net_price is coming as 0 :(
         totalOutput: total_output,
         totalFee: Number(
-          (batcher_fee + dexhunter_fee).toFixed(primaryTokenInfo.decimals),
+          (batcher_fee + dexhunter_fee + partner_fee).toFixed(
+            primaryTokenInfo.decimals,
+          ),
         ),
         totalOutputWithoutSlippage: total_output_without_slippage,
 

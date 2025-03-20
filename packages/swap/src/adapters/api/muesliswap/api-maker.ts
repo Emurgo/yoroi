@@ -15,6 +15,7 @@ import {
 import {transformersMaker} from './transformers'
 
 export type MuesliswapApiConfig = {
+  partner?: string
   addressHex: string
   address: string
   primaryTokenInfo: Portfolio.Token.Info

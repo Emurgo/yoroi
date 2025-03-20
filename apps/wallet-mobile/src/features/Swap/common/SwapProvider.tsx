@@ -16,6 +16,7 @@ import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWal
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
+import {useSwapConfig} from './useSwapConfig'
 
 export const useSwap = () => React.useContext(SwapContext)
 
@@ -29,6 +30,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = useAddressHex(wallet)
+  const {swapConfig} = useSwapConfig()
   const swapManager = React.useMemo(() => {
     const storage = swapStorageMaker()
     return swapManagerMaker({
@@ -39,8 +41,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       addressHex,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       isPrimaryToken,
+      partners: swapConfig?.partners,
     })
-  }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo])
+  }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo, swapConfig?.partners])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
     queryKey: ['useSwapOrders', network, stakingKey, swapManager.settings.routingPreference],
@@ -83,6 +86,10 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const slippageInputRef = React.useRef<TextInput | null>(null)
 
   const [state, action] = React.useReducer(swapReducer, defaultState)
+
+  React.useEffect(() => {
+    action({type: 'SlippageInputChanged', value: swapManager.settings.slippage})
+  }, [swapManager.settings.slippage])
 
   const {data: swapAggregatorProtocols = []} = useQuery(
     [

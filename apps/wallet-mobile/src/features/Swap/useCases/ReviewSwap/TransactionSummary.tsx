@@ -5,7 +5,6 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Divider} from '../../../../components/Divider/Divider'
 import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
-import {isDev} from '../../../../kernel/env'
 import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, undefinedToken} from '../../common/constants'
@@ -37,13 +36,17 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : styles.text.color
 
-  const tokenToSellName = tokenInInfo.ticker ?? tokenInInfo.name
-  const tokenToBuyName = tokenOutInfo.ticker ?? tokenOutInfo.name
+  const tokenInTicker = tokenInInfo.ticker ?? tokenInInfo.name
+  const tokenOutTicker = tokenOutInfo.ticker ?? tokenOutInfo.name
 
-  const priceInfoValue = `${swapForm.createTx?.netPrice} ${tokenToBuyName}/${tokenToSellName}`
+  const priceInfoValue = `1 ${tokenInTicker} = ${(
+    swapForm.createTx?.netPrice ??
+    swapForm.createTx?.splits[0].initialPrice ??
+    0
+  ).toFixed(tokenOutInfo?.decimals ?? 0)} ${tokenOutTicker}`
   const minAdaInfoValue = `${swapForm.createTx?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const totalFee = `${swapForm.createTx?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`
-  const minReceivedInfoValue = `${swapForm.createTx?.totalOutput} ${tokenToBuyName}`
+  const minReceivedInfoValue = `${swapForm.createTx?.totalOutput} ${tokenOutTicker}`
 
   const protocol = swapForm.createTx?.splits[0]?.protocol
 
@@ -51,7 +54,6 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     {
       label: strings.aggregator,
       value: <Text style={styles.text}>{swapForm.createTx?.aggregator ?? ''}</Text>,
-      hidden: !isDev,
     },
     {
       label: strings.dex.toUpperCase(),
@@ -80,7 +82,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
             <View style={{flexDirection: 'row'}}>
               <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
-                {`(${swapForm.createTx?.netPrice} ${tokenToBuyName}/${tokenToSellName})`}
+                {`(${swapForm.createTx?.netPrice} ${tokenOutTicker}/${tokenInTicker})`}
               </Text>
             </View>
           </View>

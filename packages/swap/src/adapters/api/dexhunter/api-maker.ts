@@ -17,8 +17,7 @@ export type DexhunterApiConfig = {
   address: string
   primaryTokenInfo: Portfolio.Token.Info
   isPrimaryToken: (token: string | null | undefined) => boolean
-  partnerId?: string
-  partnerCode?: string
+  partner?: string
   network: Chain.SupportedNetworks
   request?: FetchData
 }
@@ -26,7 +25,7 @@ export type DexhunterApiConfig = {
 export const dexhunterApiMaker = (
   config: DexhunterApiConfig,
 ): Readonly<Swap.Api> => {
-  const {address, partnerId, network, request = fetchData} = config
+  const {address, partner, network, request = fetchData} = config
 
   if (network !== Chain.Network.Mainnet)
     return new Proxy(
@@ -53,7 +52,7 @@ export const dexhunterApiMaker = (
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    ...(partnerId && {'X-Partner-Id': partnerId}),
+    ...(partner && {'X-Partner-Id': partner}),
   }
 
   const transformers = transformersMaker(config)

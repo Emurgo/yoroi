@@ -40,6 +40,10 @@ describe('swapManagerMaker', () => {
         ),
       },
     },
+    partners: {
+      [Swap.Aggregator.Dexhunter]: 'somePartnerId',
+      [Swap.Aggregator.Muesliswap]: 'somePartnerId',
+    },
   } as any
 
   beforeEach(() => {

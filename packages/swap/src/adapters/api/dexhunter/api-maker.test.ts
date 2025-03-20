@@ -18,8 +18,7 @@ describe('dexhunterApiMaker', () => {
     address: 'someAddress',
     primaryTokenInfo: {} as any,
     isPrimaryToken: () => false,
-    partnerId: 'somePartnerId',
-    partnerCode: 'somePartnerCode',
+    partner: 'somePartnerId',
     network: Chain.Network.Mainnet,
     // request defaults to fetchData, so we don't need to provide it explicitly
   }
