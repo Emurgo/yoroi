@@ -206,7 +206,9 @@ const apiManagerMaker = (
         warnAllLeft(...responses)
 
         if (responses.every(isLeft))
-          return responses.find((res) => res.error.status !== -3) ?? invalid
+          return standarizeError(
+            responses.find((res) => res.error.status !== -3) ?? invalid,
+          )
 
         const estimates = responses
           .filter(isRight)
@@ -248,7 +250,9 @@ const apiManagerMaker = (
         warnAllLeft(...responses)
 
         if (responses.every(isLeft))
-          return responses.find((res) => res.error.status !== -3) ?? invalid
+          return standarizeError(
+            responses.find((res) => res.error.status !== -3) ?? invalid,
+          )
 
         const creates = responses.filter(isRight).map(({value}) => value.data)
 
@@ -306,4 +310,39 @@ const warnAllLeft = (...responses: Array<Api.Response<any>>) => {
       'Swap Manager all left >> ',
       responses.map((response) => response.error.message),
     )
+}
+
+const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
+  if (isRight(input)) return input
+
+  const response = {...input, error: {...input.error}}
+
+  switch (true) {
+    case response.error.message.includes(
+      'Unable to build transaction due to insufficient user balance',
+    ):
+    case response.error.message.includes(
+      'Transaction Building Errornot enough funds',
+    ):
+      response.error.message =
+        'Insufficient balance: consider fees, assets blocked by staking or multiaddress holdings'
+
+      break
+    case response.error.message.includes('amount_in_invalid'):
+    case response.error.message.includes(
+      'Buy and sell amounts must be positive',
+    ):
+      response.error.message = 'Buy and sell amounts must be positive'
+      break
+    case response.error.message.includes(
+      'No liquidity available for this token pair',
+    ):
+      response.error.message = 'No liquidity available for this token pair'
+      break
+    case response.error.message.includes('DOCTYPE html'):
+      response.error.message = 'Unknown error'
+      break
+  }
+
+  return freeze(response, true)
 }

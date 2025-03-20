@@ -10,7 +10,7 @@ export const usePortfolioTokenInfos = (
     tokenIds,
     sourceId = 'useTokenInfos',
   }: {wallet: YoroiWallet; tokenIds: ReadonlyArray<Portfolio.Token.Id>; sourceId?: string},
-  options: UseQueryOptions<Map<`${string}.${string}`, Portfolio.Token.Info>, Error>,
+  options: UseQueryOptions<Map<`${string}.${string}`, Portfolio.Token.Info>, Error> = {},
 ) => {
   const query = useQuery({
     queryKey: [wallet.networkManager.network, sourceId, tokenIds],

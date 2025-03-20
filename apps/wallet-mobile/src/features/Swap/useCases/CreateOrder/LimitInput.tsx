@@ -59,7 +59,7 @@ const useStyles = () => {
     container: {
       borderRadius: 8,
       borderWidth: BORDER_SIZE,
-      borderColor: color.gray_400,
+      borderColor: color.bg_color_min,
       width: '100%',
       height: 56,
       paddingLeft: 16,
@@ -69,7 +69,6 @@ const useStyles = () => {
       backgroundColor: color.gray_50,
     },
     active: {
-      borderWidth: 2,
       borderColor: color.gray_900,
       zIndex: 2222,
     },

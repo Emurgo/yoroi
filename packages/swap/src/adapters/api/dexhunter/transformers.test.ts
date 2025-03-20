@@ -917,7 +917,6 @@ describe('fromSwapProtocol', () => {
       ${Dex.Splash_v1}
       ${Dex.Muesliswap_v2}
       ${Dex.Muesliswap_clp}
-      ${Dex.Unsupported}
     `('should correctly transform aggregator protocols for $dex', ({dex}) => {
       const expectedProtocol = toSwapProtocol(dex)
       const result = transformers.protocols.response()

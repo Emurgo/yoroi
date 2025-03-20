@@ -71,10 +71,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   useFocusEffect(refetches)
 
-  const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} = usePortfolioTokenInfos(
-    {wallet, tokenIds, sourceId: 'SwapProvider'},
-    {suspense: true},
-  )
+  const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} = usePortfolioTokenInfos({
+    wallet,
+    tokenIds,
+    sourceId: 'SwapProvider',
+  })
 
   const tokenOutInputRef = React.useRef<TextInput | null>(null)
   const tokenInInputRef = React.useRef<TextInput | null>(null)
@@ -100,6 +101,18 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     },
     {enabled: state.tokenInInput.tokenId !== undefined && state.tokenOutInput.tokenId !== undefined},
   )
+
+  React.useEffect(() => {
+    const value = swapAggregatorProtocols[0]?.protocol
+    if (value !== undefined && state.selectedProtocol.isTouched === false && state.selectedProtocol.value !== value) {
+      action({type: 'ProtocolChanged', value})
+    } else {
+      const current = swapAggregatorProtocols.find((p) => p.protocol === state.selectedProtocol.value)
+      if (state.selectedProtocol.isTouched === true && current === undefined) {
+        action({type: 'ProtocolChanged', value})
+      }
+    }
+  }, [state.selectedProtocol.isTouched, state.selectedProtocol.value, swapAggregatorProtocols])
 
   React.useEffect(() => {
     const tokenAmount = balances.records.get(state.tokenInInput.tokenId ?? undefinedToken)
@@ -332,8 +345,13 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.tokenInInput.error = null
         break
 
-      case SwapAction.ProtocolSelectorTouched:
+      case SwapAction.ProtocolSelected:
         draft.selectedProtocol.isTouched = true
+        draft.selectedProtocol.value = action.value
+        break
+
+      case SwapAction.ProtocolChanged:
+        draft.selectedProtocol.isTouched = false
         draft.selectedProtocol.value = action.value
         break
 
@@ -406,7 +424,8 @@ export const SwapAction = {
   WantedPriceInputChanged: 'WantedPriceInputChanged',
   SlippageInputChanged: 'SlippageInputChanged',
   SwitchTouched: 'SwitchTouched',
-  ProtocolSelectorTouched: 'ProtocolSelectorTouched',
+  ProtocolSelected: 'ProtocolSelected',
+  ProtocolChanged: 'ProtocolChanged',
   Refresh: 'Refresh',
   ResetAmounts: 'ResetAmounts',
   ResetForm: 'ResetForm',
@@ -429,7 +448,8 @@ type SwapActionValueMap = {
   WantedPriceInputChanged: string
   SlippageInputChanged: number
   SwitchTouched: undefined
-  ProtocolSelectorTouched: Swap.Protocol
+  ProtocolSelected: Swap.Protocol
+  ProtocolChanged: Swap.Protocol
   Refresh: undefined
   ResetAmounts: undefined
   ResetForm: undefined

@@ -8,7 +8,6 @@ import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {undefinedToken} from '../../common/constants'
-import {useNavigateTo} from '../../common/navigation'
 import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
@@ -17,7 +16,6 @@ export const EstimateSummary = () => {
   const strings = useStrings()
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
-  const navigateTo = useNavigateTo()
   const swapForm = useSwap()
   const {openModal} = useModal()
 
@@ -29,6 +27,8 @@ export const EstimateSummary = () => {
 
   const protocol = swapForm.estimate?.splits[0]?.protocol
 
+  if (swapForm.estimate === undefined) return null
+
   const expand = () =>
     openModal({
       title: strings.route,
@@ -37,68 +37,56 @@ export const EstimateSummary = () => {
     })
 
   return (
-    <View>
-      <View style={styles.between}>
-        {swapForm.orderType === 'limit' && (
-          <View style={styles.changeDex}>
-            <Button type={ButtonType.Text} onPress={navigateTo.selectProvider} title={strings.changePool} />
-          </View>
-        )}
-      </View>
+    <View style={styles.list}>
+      <Row
+        label={strings.route}
+        description={strings.routeDescription}
+        value={
+          protocol !== undefined && (
+            <View style={styles.composedText}>
+              <ProtocolAvatar protocol={protocol} preventOpenLink />
 
-      {swapForm.estimate !== undefined && (
-        <View style={styles.list}>
-          <Row
-            label={strings.route}
-            description={strings.routeDescription}
-            value={
-              protocol !== undefined && (
-                <View style={styles.composedText}>
-                  <ProtocolAvatar protocol={protocol} preventOpenLink />
+              {swapForm.estimate?.splits.length > 1 && (
+                <Button
+                  type={ButtonType.SecondaryText}
+                  title="…"
+                  rightIcon
+                  icon={Icon.Chevron}
+                  style={styles.reducedPadding}
+                  onPress={expand}
+                />
+              )}
+            </View>
+          )
+        }
+      />
 
-                  {swapForm.estimate?.splits.length > 1 && (
-                    <Button
-                      type={ButtonType.SecondaryText}
-                      title="…"
-                      rightIcon
-                      icon={Icon.Chevron}
-                      style={styles.reducedPadding}
-                      onPress={expand}
-                    />
-                  )}
-                </View>
-              )
-            }
-          />
+      <Row
+        label={strings.price}
+        description={swapForm.orderType === 'limit' ? strings.limitPriceInfo : strings.marketPriceInfo}
+        value={`1 ${tokenInTicker} = ${swapForm.estimate?.netPrice.toFixed(
+          tokenOutInfo?.decimals ?? 0,
+        )} ${tokenOutTicker}`}
+      />
 
-          <Row
-            label={strings.price}
-            description={swapForm.orderType === 'limit' ? strings.limitPriceInfo : strings.marketPriceInfo}
-            value={`1 ${tokenInTicker} = ${swapForm.estimate?.netPrice.toFixed(
-              tokenOutInfo?.decimals ?? 0,
-            )} ${tokenOutTicker}`}
-          />
+      <Row
+        label={strings.swapFeesTitle}
+        description={strings.swapFees}
+        value={`${swapForm.estimate?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
+      />
 
-          <Row
-            label={strings.swapFeesTitle}
-            description={strings.swapFees}
-            value={`${swapForm.estimate?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
-          />
+      <Row
+        label={strings.swapMinReceivedTitle}
+        description={strings.swapMinReceived}
+        value={`${swapForm.estimate?.totalOutput} ${tokenOutTicker}`}
+      />
 
-          <Row
-            label={strings.swapMinReceivedTitle}
-            description={strings.swapMinReceived}
-            value={`${swapForm.estimate?.totalOutput} ${tokenOutTicker}`}
-          />
-
-          {swapForm.orderType === 'market' && (
-            <Row
-              label={strings.slippageTolerance}
-              description={strings.slippageToleranceInfo}
-              value={`${swapForm.slippageInput.value} %`}
-            />
-          )}
-        </View>
+      {swapForm.orderType === 'market' && (
+        <Row
+          label={strings.slippageTolerance}
+          description={strings.slippageToleranceInfo}
+          value={`${swapForm.slippageInput.value} %`}
+        />
       )}
     </View>
   )
@@ -164,11 +152,7 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.justify_between,
     },
-    changeDex: {
-      ...atoms.self_center,
-    },
     list: {
-      ...atoms.pt_md,
       ...atoms.gap_md,
     },
     splitList: {

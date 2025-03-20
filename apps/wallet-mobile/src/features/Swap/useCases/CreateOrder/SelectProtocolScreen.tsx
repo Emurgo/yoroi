@@ -26,7 +26,7 @@ export const SelectProtocolScreen = () => {
           <TouchableOpacity
             style={styles.card}
             onPress={() => {
-              swapForm.action({type: 'ProtocolSelectorTouched', value: item.protocol})
+              swapForm.action({type: 'ProtocolSelected', value: item.protocol})
               navigation.goBack()
             }}
           >

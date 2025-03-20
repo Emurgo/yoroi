@@ -140,6 +140,17 @@ export const SwapMainScreen = () => {
 
             {swapForm.orderType === 'market' && <ShowPriceImpact />}
 
+            {swapForm.orderType === 'limit' && (
+              <View style={styles.changeDex}>
+                <Button
+                  type={ButtonType.Text}
+                  onPress={navigateTo.selectProtocol}
+                  title={strings.changePool}
+                  size="S"
+                />
+              </View>
+            )}
+
             <EstimateSummary />
           </View>
         </View>
@@ -227,6 +238,9 @@ const useStyles = () => {
     errorText: {
       ...atoms.body_3_sm_regular,
       color: color.sys_magenta_500,
+    },
+    changeDex: {
+      ...atoms.align_end,
     },
   })
 
