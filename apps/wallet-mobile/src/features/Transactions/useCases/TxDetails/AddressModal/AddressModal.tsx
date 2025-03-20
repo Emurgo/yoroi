@@ -43,7 +43,7 @@ export const AddressModal = ({address, path}: Props) => {
       <View>
         <Text style={styles.subtitle}>{strings.walletAddress}</Text>
 
-        <CopyButton style={{flex: 1}} title={address} value={address} />
+        <CopyButton title={address} value={address} />
 
         <Spacer width={8} />
 
