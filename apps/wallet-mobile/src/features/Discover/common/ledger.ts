@@ -24,7 +24,6 @@ import {
   TxRequiredSignerType,
   Withdrawal,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-
 import {
   Certificates,
   DRepKind,
