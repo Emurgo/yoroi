@@ -210,6 +210,7 @@ const apiManagerMaker = (
             responses.find(
               (res) =>
                 res.error.status !== -3 &&
+                res.error.message !== '' &&
                 !res.error.message.includes('DOCTYPE html'),
             ) ?? invalid,
           )
@@ -258,6 +259,7 @@ const apiManagerMaker = (
             responses.find(
               (res) =>
                 res.error.status !== -3 &&
+                res.error.message !== '' &&
                 !res.error.message.includes('DOCTYPE html'),
             ) ?? invalid,
           )

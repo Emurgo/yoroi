@@ -103,7 +103,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   )
 
   React.useEffect(() => {
-    const value = swapAggregatorProtocols[0]?.protocol
+    const value =
+      swapAggregatorProtocols.find((p) => p.protocol === state.estimate?.splits[0]?.protocol)?.protocol ??
+      swapAggregatorProtocols[0]?.protocol
     if (value !== undefined && state.selectedProtocol.isTouched === false && state.selectedProtocol.value !== value) {
       action({type: 'ProtocolChanged', value})
     } else {
@@ -112,7 +114,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         action({type: 'ProtocolChanged', value})
       }
     }
-  }, [state.selectedProtocol.isTouched, state.selectedProtocol.value, swapAggregatorProtocols])
+  }, [state.estimate?.splits, state.selectedProtocol.isTouched, state.selectedProtocol.value, swapAggregatorProtocols])
 
   React.useEffect(() => {
     const tokenAmount = balances.records.get(state.tokenInInput.tokenId ?? undefinedToken)
