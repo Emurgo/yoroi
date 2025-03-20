@@ -67,6 +67,11 @@ class CIP30LedgerExtension {
     try {
       if (!partial) await assertHasAllSigners(cbor, this.wallet, this.meta)
 
+      const stakingSigningPath =
+        this.meta.implementation === 'cardano-cip1852'
+          ? Array.from(cardanoConfig.implementations[this.meta.implementation].features.staking.addressing)
+          : undefined
+
       const payload = await toLedgerSignRequest(
         csl,
         cbor,
@@ -76,6 +81,7 @@ class CIP30LedgerExtension {
         await getHexAddressingMap(csl, this.wallet),
         getAddressedUtxos(this.wallet),
         [],
+        stakingSigningPath,
       )
 
       const signedLedgerTx = await signTxWithLedger(payload, hwDeviceInfo, useUSB)

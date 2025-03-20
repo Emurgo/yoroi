@@ -907,6 +907,11 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     }
 
     async signRawTxWithLedger(cbor: string, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<void> {
+      let stakingAddressing
+      if (implementationConfig.features.staking) {
+        stakingAddressing = Array.from(implementationConfig.features.staking.addressing)
+      }
+
       const payload = await toLedgerSignRequest(
         CardanoMobile,
         cbor,
@@ -916,6 +921,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         await getHexAddressingMap(CardanoMobile, this),
         getAddressedUtxos(this),
         [],
+        stakingAddressing,
       )
 
       const signedLedgerTx = await signTxWithLedger(payload, hwDeviceInfo, useUSB)
