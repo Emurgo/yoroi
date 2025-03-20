@@ -18,7 +18,7 @@ export const SelectProtocolScreen = () => {
 
   const data = Object.keys(
     swapAggregatorProtocols.reduce((acc, curr) => ({...acc, [curr.protocol]: true}), {}),
-  ) as Swap.Protocol[]
+  ).sort() as Swap.Protocol[]
   const counter = data.length
 
   return (
