@@ -152,7 +152,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         protocol: state.selectedProtocol.value,
       })
       .then((response) => {
-        if (response.tag === 'left') {
+        if (isLeft(response)) {
           action({type: SwapAction.EstimateError, value: response.error})
         } else {
           action({type: SwapAction.EstimateResponse, value: response.value.data})
@@ -279,11 +279,17 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
       case SwapAction.TokenInIdChanged:
         draft.tokenInInput.tokenId = action.value
         draft.selectedProtocol.isTouched = false
+        draft.wantedPrice = ''
+        draft.marketPrice = undefined
+
         break
 
       case SwapAction.TokenOutIdChanged:
         draft.tokenOutInput.tokenId = action.value
         draft.selectedProtocol.isTouched = false
+        draft.wantedPrice = ''
+        draft.marketPrice = undefined
+
         break
 
       case SwapAction.TokenInAmountChanged:
@@ -343,6 +349,9 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.tokenInInput.tokenId = state.tokenOutInput.tokenId
         draft.tokenInInput.value = ''
         draft.tokenInInput.error = null
+
+        draft.wantedPrice = ''
+        draft.marketPrice = undefined
         break
 
       case SwapAction.ProtocolSelected:
@@ -379,7 +388,15 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.estimate = action.value
         draft.tokenOutInput.error = null
         draft.canSwap = true
-        draft.wantedPrice = state.wantedPrice === '' ? String(action.value.netPrice) : state.wantedPrice
+        draft.wantedPrice =
+          state.wantedPrice === '' || state.wantedPrice === '0' ? String(action.value.netPrice) : state.wantedPrice
+        draft.marketPrice = action.value.netPrice
+
+        if (draft.wantedPrice === '0') {
+          draft.wantedPrice = String(action.value.splits[0]?.initialPrice)
+          draft.needsNewEstimate = true
+        }
+
         if (state.lastInputTouched === 'in') {
           draft.tokenOutInput.value = String(action.value.totalOutputWithoutSlippage ?? 0)
         } else {
@@ -491,6 +508,7 @@ const defaultState: SwapState = Object.freeze({
     value: undefined,
   },
   wantedPrice: '',
+  marketPrice: undefined,
   canSwap: false,
   estimate: undefined,
   createTx: undefined,
@@ -524,6 +542,7 @@ type SwapState = {
     value?: Swap.Protocol
   }
   wantedPrice: string
+  marketPrice?: number
   canSwap: boolean
   estimate?: Swap.EstimateResponse
   createTx?: Swap.CreateResponse

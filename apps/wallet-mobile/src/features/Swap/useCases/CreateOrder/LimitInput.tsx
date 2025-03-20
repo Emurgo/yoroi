@@ -29,7 +29,7 @@ export const LimitInput = () => {
           <TextInput
             keyboardType="numeric"
             autoComplete="off"
-            value={disabled ? String(swapForm.estimate?.netPrice ?? 0) : swapForm.wantedPrice}
+            value={swapForm.wantedPrice}
             placeholder="0"
             placeholderTextColor={color.gray_600}
             onChangeText={(value) => swapForm.action({type: 'WantedPriceInputChanged', value})}

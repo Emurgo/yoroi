@@ -207,7 +207,11 @@ const apiManagerMaker = (
 
         if (responses.every(isLeft))
           return standarizeError(
-            responses.find((res) => res.error.status !== -3) ?? invalid,
+            responses.find(
+              (res) =>
+                res.error.status !== -3 &&
+                !res.error.message.includes('DOCTYPE html'),
+            ) ?? invalid,
           )
 
         const estimates = responses
@@ -251,7 +255,11 @@ const apiManagerMaker = (
 
         if (responses.every(isLeft))
           return standarizeError(
-            responses.find((res) => res.error.status !== -3) ?? invalid,
+            responses.find(
+              (res) =>
+                res.error.status !== -3 &&
+                !res.error.message.includes('DOCTYPE html'),
+            ) ?? invalid,
           )
 
         const creates = responses.filter(isRight).map(({value}) => value.data)
@@ -337,7 +345,8 @@ const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
     case response.error.message.includes(
       'No liquidity available for this token pair',
     ):
-      response.error.message = 'No liquidity available for this token pair'
+      response.error.message =
+        'No liquidity available for this token pair, try using a different dex'
       break
     case response.error.message.includes('DOCTYPE html'):
       response.error.message = 'Unknown error'
