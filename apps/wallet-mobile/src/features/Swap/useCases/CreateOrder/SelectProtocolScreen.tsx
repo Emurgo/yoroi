@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {Swap} from '@yoroi/types'
 import * as React from 'react'
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Counter} from '../../common/Counter/Counter'
@@ -15,31 +16,30 @@ export const SelectProtocolScreen = () => {
   const {swapAggregatorProtocols, ...swapForm} = useSwap()
   const styles = useStyles()
 
-  const counter = swapAggregatorProtocols.length
+  const data = Object.keys(
+    swapAggregatorProtocols.reduce((acc, curr) => ({...acc, [curr.protocol]: true}), {}),
+  ) as Swap.Protocol[]
+  const counter = data.length
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <FlatList
         contentContainerStyle={styles.list}
-        data={swapAggregatorProtocols}
+        data={data}
         renderItem={({item}) => (
           <TouchableOpacity
             style={styles.card}
             onPress={() => {
-              swapForm.action({type: 'ProtocolSelected', value: item.protocol})
+              swapForm.action({type: 'ProtocolSelected', value: item})
               navigation.goBack()
             }}
           >
             <View style={styles.row}>
-              <Text style={styles.rowLabel}>{item.aggregator}</Text>
-
-              <ProtocolAvatar protocol={item.protocol} preventOpenLink />
-
-              <Text style={styles.aggregator}>{item.aggregator}</Text>
+              <ProtocolAvatar protocol={item} preventOpenLink />
             </View>
           </TouchableOpacity>
         )}
-        keyExtractor={(item) => `${item.aggregator}${item.protocol}`}
+        keyExtractor={(item) => item}
       />
 
       <Counter counter={counter} unitsText={strings.pools(counter)} closingText={strings.available} />
@@ -66,19 +66,10 @@ const useStyles = () => {
       borderColor: color.gray_200,
       backgroundColor: color.bg_color_max,
     },
-    aggregator: {
-      ...atoms.body_3_sm_medium,
-      color: color.text_gray_min,
-      alignSelf: 'flex-start',
-    },
     row: {
       ...atoms.flex_row,
       ...atoms.justify_between,
       ...atoms.gap_md,
-    },
-    rowLabel: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_low,
     },
   })
 
