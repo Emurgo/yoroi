@@ -40,7 +40,7 @@ export const AddressModal = ({address, path}: Props) => {
 
       <Spacer width={4} />
 
-      <View style={styles.info}>
+      <View>
         <Text style={styles.subtitle}>{strings.walletAddress}</Text>
 
         <CopyButton title={address} value={address} />
@@ -59,20 +59,22 @@ export const AddressModal = ({address, path}: Props) => {
           </>
         )}
 
-        <Text style={styles.subtitle}>{strings.staking}</Text>
-
         {keyHashes?.staking != null && keyHashes.staking !== '' && (
           <>
+            <Text style={styles.subtitle}>{strings.staking}</Text>
+
             <CopyButton title={keyHashes.staking} value={keyHashes.staking} />
 
             <Spacer width={8} />
           </>
         )}
 
-        <Text style={styles.subtitle}>{strings.spending}</Text>
-
         {keyHashes?.spending != null && keyHashes.spending !== '' && (
-          <CopyButton title={keyHashes.spending} value={keyHashes.spending} />
+          <>
+            <Text style={styles.subtitle}>{strings.spending}</Text>
+
+            <CopyButton title={keyHashes.spending} value={keyHashes.spending} />
+          </>
         )}
       </View>
     </View>
@@ -106,23 +108,18 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     qrCode: {
-      alignItems: 'center',
-      alignSelf: 'center',
-      backgroundColor: color.white_static,
-      borderRadius: 8,
+      ...atoms.align_center,
+      ...atoms.rounded_sm,
       ...atoms.p_lg,
-    },
-    info: {
-      alignItems: 'flex-start',
-      ...atoms.body_1_lg_regular,
+      backgroundColor: color.white_static,
+      alignSelf: 'center',
     },
     subtitle: {
-      textAlign: 'center',
       ...atoms.body_2_md_regular,
       color: color.gray_600,
     },
     row: {
-      flexDirection: 'row',
+      ...atoms.flex_row,
     },
     address: {
       flex: 1,

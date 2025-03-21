@@ -37,7 +37,7 @@ describe('NotificationManager', () => {
       [Notifications.Trigger.RewardsUpdated]: {
         notify: true,
       },
-      displayDuration: 4,
+      displayDuration: 8,
     })
   })
 

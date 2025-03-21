@@ -6,7 +6,10 @@ import {
   Certificate as LedgerCertificate,
   CertificateType,
   CredentialParamsType,
+  Datum,
   DatumType,
+  DRepParams,
+  DRepParamsType,
   RequiredSigner,
   SignTransactionRequest,
   Token,
@@ -15,18 +18,19 @@ import {
   TxAuxiliaryDataType,
   TxInput,
   TxOutput,
+  TxOutputDestination,
   TxOutputDestinationType,
   TxOutputFormat,
   TxRequiredSignerType,
   Withdrawal,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import {Datum, TxOutputDestination} from '@cardano-foundation/ledgerjs-hw-app-cardano/dist/types/public'
 import {
   Certificates,
-  Credential,
+  DRepKind,
   MultiAsset,
   TransactionInputs,
   TransactionOutput,
+  VoteDelegation,
   WasmModuleProxy,
   Withdrawals,
 } from '@emurgo/cross-csl-core'
@@ -140,69 +144,121 @@ async function formatLedgerWithdrawals(
 
   return result
 }
-async function formatLedgerCertificates(
-  csl: WasmModuleProxy,
-  networkId: number,
-  certificates: Certificates,
-  addressingMap: AddressingMap,
-): Promise<Array<LedgerCertificate>> {
-  const getPath = async (stakeCredential: Credential): Promise<Array<number>> => {
-    const rewardAddr = await csl.RewardAddress.new(networkId, stakeCredential)
-    const addressPayload = Buffer.from(await rewardAddr.toAddress().then((a) => a.toBytes())).toString('hex')
-    const addressing = addressingMap(addressPayload)
-    if (addressing == null) {
-      throw new Error(`getPath Ledger only supports certificates from own address ${addressPayload}`)
-    }
-    return addressing.path
-  }
 
+export const formatLedgerCertificates = async (
+  certificates: Certificates,
+  stakingDerivationPath: number[],
+): Promise<Array<LedgerCertificate>> => {
   const result: Array<LedgerCertificate> = []
   for (let i = 0; i < (await certificates.len()); i++) {
     const cert = await certificates.get(i)
 
     const registrationCert = await cert.asStakeRegistration()
-    if (registrationCert != null) {
+    if (registrationCert != null && registrationCert.hasValue()) {
       result.push({
         type: CertificateType.STAKE_REGISTRATION,
         params: {
           stakeCredential: {
             type: CredentialParamsType.KEY_PATH,
-            keyPath: await getPath(await registrationCert.stakeCredential()),
+            keyPath: stakingDerivationPath,
           },
         },
       })
       continue
     }
     const deregistrationCert = await cert.asStakeDeregistration()
-    if (deregistrationCert != null) {
+    if (deregistrationCert != null && deregistrationCert.hasValue()) {
       result.push({
         type: CertificateType.STAKE_DEREGISTRATION,
         params: {
           stakeCredential: {
             type: CredentialParamsType.KEY_PATH,
-            keyPath: await getPath(await deregistrationCert.stakeCredential()),
+            keyPath: stakingDerivationPath,
           },
         },
       })
       continue
     }
     const delegationCert = await cert.asStakeDelegation()
-    if (delegationCert != null) {
+    if (delegationCert != null && delegationCert.hasValue()) {
       result.push({
         type: CertificateType.STAKE_DELEGATION,
         params: {
           stakeCredential: {
             type: CredentialParamsType.KEY_PATH,
-            keyPath: await getPath(await delegationCert.stakeCredential()),
+            keyPath: stakingDerivationPath,
           },
-          poolKeyHashHex: Buffer.from(await delegationCert.poolKeyhash().then((k) => k.toBytes())).toString('hex'),
+          poolKeyHashHex: Buffer.from(await delegationCert.poolKeyhash().then((x) => x.toBytes())).toString('hex'),
         },
       })
       continue
     }
+    const voteDelegationCert = await cert.asVoteDelegation()
+    if (voteDelegationCert != null && voteDelegationCert.hasValue()) {
+      const drepParams = await mapDrepParams(voteDelegationCert)
+      if (drepParams) {
+        result.push({
+          type: CertificateType.VOTE_DELEGATION,
+          params: {
+            stakeCredential: {
+              type: CredentialParamsType.KEY_PATH,
+              keyPath: stakingDerivationPath,
+            },
+            dRep: drepParams,
+          },
+        })
+        continue
+      }
+    }
+
     throw new Error(`formatLedgerCertificates Ledger doesn't support this certificate type`)
   }
   return result
+}
+
+const mapDrepParams = async (certificate: VoteDelegation): Promise<DRepParams | undefined> => {
+  const drep = await certificate.drep()
+  const drepKind = await drep.kind()
+
+  if (drepKind === DRepKind.KeyHash) {
+    const keyHash = await drep.toKeyHash()
+    const keyHashBytes = await keyHash?.toBytes()
+
+    if (keyHashBytes)
+      return {
+        type: DRepParamsType.KEY_HASH,
+        keyHashHex: Buffer.from(keyHashBytes).toString('hex'),
+      }
+
+    throw new Error('mapDrepParams invalid keyHashBytes')
+  }
+
+  if (drepKind === DRepKind.ScriptHash) {
+    const scriptHash = await drep.toScriptHash()
+    const scriptHashBytes = await scriptHash?.toBytes()
+
+    if (scriptHashBytes)
+      return {
+        type: DRepParamsType.SCRIPT_HASH,
+        scriptHashHex: Buffer.from(scriptHashBytes).toString('hex'),
+      }
+
+    throw new Error('mapDrepParams invalid scriptHashBytes')
+  }
+
+  if (drepKind === DRepKind.AlwaysAbstain) {
+    return {
+      type: DRepParamsType.ABSTAIN,
+    }
+  }
+
+  if (drepKind === DRepKind.AlwaysNoConfidence) {
+    return {
+      type: DRepParamsType.NO_CONFIDENCE,
+    }
+  }
+
+  throw new Error('mapDrepParams invalid DRep Kind')
 }
 
 type AddressMap = {[addressHex: string]: Array<number>}
@@ -216,6 +272,7 @@ export async function toLedgerSignRequest(
   ownStakeAddressMap: AddressMap,
   addressedUtxos: Array<CardanoAddressedUtxo>,
   additionalRequiredSigners: Array<string> = [],
+  stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
   const hex = new Uint8Array(Buffer.from(cbor, 'hex'))
   const tagsState = await csl.hasTransactionSetTag(hex)
@@ -464,8 +521,8 @@ export async function toLedgerSignRequest(
 
   let formattedCertificates: LedgerCertificate[] | null = null
   const certificates = await txBody.certs()
-  if (certificates) {
-    formattedCertificates = await formatLedgerCertificates(csl, networkId, certificates, addressingMap)
+  if (certificates && stakingDerivationPath) {
+    formattedCertificates = await formatLedgerCertificates(certificates, stakingDerivationPath)
   }
 
   let formattedWithdrawals: Withdrawal[] | null = null
