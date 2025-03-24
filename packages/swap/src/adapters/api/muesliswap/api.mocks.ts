@@ -306,6 +306,7 @@ const quoteRequest: QuoteRequest = {
   buy_amount: quoteInput.amountOut,
   numbers_have_decimals: true,
   dex: ['minswap-v1'],
+  partner: 'somePartnerId',
 }
 
 const quoteResponse: QuoteResponse = {
@@ -491,6 +492,7 @@ const createRequest = (address: string): Array<CreateOrderRequest> => [
     ],
     numbers_have_decimals: true,
     slippage: 0,
+    partner: 'somePartnerId',
   },
   {
     sell_token: '.',
@@ -501,6 +503,7 @@ const createRequest = (address: string): Array<CreateOrderRequest> => [
     dex: ['minswap-v1'],
     numbers_have_decimals: true,
     slippage: 0.02,
+    partner: 'somePartnerId',
   },
 ]
 

@@ -616,7 +616,7 @@ describe('transformers', () => {
             protocol: 'minswap-v1',
           },
         ],
-        totalFee: 0.003,
+        totalFee: 0.006,
         totalInput: 500,
         totalOutput: 495,
         totalOutputWithoutSlippage: 500,

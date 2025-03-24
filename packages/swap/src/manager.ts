@@ -325,7 +325,7 @@ const warnAllLeft = (...responses: Array<Api.Response<any>>) => {
     )
 }
 
-const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
+export const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
   if (isRight(input)) return input
 
   const response = {...input, error: {...input.error}}

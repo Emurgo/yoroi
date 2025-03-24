@@ -1,6 +1,6 @@
 import {Chain, Swap, Api} from '@yoroi/types'
 
-import {swapManagerMaker} from './manager'
+import {standarizeError, swapManagerMaker} from './manager'
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
 import {muesliswapApiMaker} from './adapters/api/muesliswap/api-maker'
 
@@ -16,6 +16,7 @@ import {
   primaryTokenInfo,
 } from './adapters/api/dexhunter/api.mocks'
 import {api as msApiMocks} from './adapters/api/muesliswap/api.mocks'
+import {isLeft} from '@yoroi/common'
 
 describe('swapManagerMaker', () => {
   let mockDexhunterApi: jest.Mocked<Swap.Api>
@@ -767,5 +768,133 @@ describe('swapManagerMaker', () => {
       expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
     })
+  })
+})
+
+describe('standarizeError', () => {
+  it('should return the same response if it is a Right response', () => {
+    const rightResponse: Api.Response<string> = {
+      tag: 'right',
+      value: {
+        status: 200,
+        data: 'Success',
+      },
+    }
+
+    const result = standarizeError(rightResponse)
+    expect(result).toBe(rightResponse)
+  })
+
+  it('should standardize insufficient balance errors', () => {
+    const leftResponse: Api.Response<any> = {
+      tag: 'left',
+      error: {
+        status: 400,
+        message: 'Unable to build transaction due to insufficient user balance',
+        responseData: {},
+      },
+    }
+
+    const result = standarizeError(leftResponse)
+
+    if (isLeft(result)) {
+      expect(result.error.message).toBe(
+        'Insufficient balance: consider fees, assets blocked by staking or multiaddress holdings',
+      )
+    } else {
+      fail('Expected result to be a Left type')
+    }
+  })
+
+  it('should standardize positive amounts errors', () => {
+    const leftResponse: Api.Response<any> = {
+      tag: 'left',
+      error: {
+        status: 400,
+        message: 'Buy and sell amounts must be positive',
+        responseData: {},
+      },
+    }
+
+    const result = standarizeError(leftResponse)
+    if (isLeft(result)) {
+      expect(result.error.message).toBe('Buy and sell amounts must be positive')
+    } else {
+      fail('Expected result to be a Left type')
+    }
+  })
+
+  it('should standardize no liquidity errors', () => {
+    const leftResponse: Api.Response<any> = {
+      tag: 'left',
+      error: {
+        status: 400,
+        message: 'No liquidity available for this token pair',
+        responseData: {},
+      },
+    }
+
+    const result = standarizeError(leftResponse)
+    if (isLeft(result)) {
+      expect(result.error.message).toBe(
+        'No liquidity available for this token pair, try using a different dex',
+      )
+    } else {
+      fail('Expected result to be a Left type')
+    }
+  })
+
+  it('should standardize amount_in_invalid errors', () => {
+    const leftResponse: Api.Response<any> = {
+      tag: 'left',
+      error: {
+        status: 400,
+        message: 'amount_in_invalid',
+        responseData: {},
+      },
+    }
+
+    const result = standarizeError(leftResponse)
+    if (isLeft(result)) {
+      expect(result.error.message).toBe('Buy and sell amounts must be positive')
+    } else {
+      fail('Expected result to be a Left type')
+    }
+  })
+
+  it('should standardize unknown errors with DOCTYPE html', () => {
+    const leftResponse: Api.Response<any> = {
+      tag: 'left',
+      error: {
+        status: 500,
+        message: '<!DOCTYPE html> Some server error',
+        responseData: {},
+      },
+    }
+
+    const result = standarizeError(leftResponse)
+    if (isLeft(result)) {
+      expect(result.error.message).toBe('Unknown error')
+    } else {
+      fail('Expected result to be a Left type')
+    }
+  })
+
+  it('should return the same error message if no standardization applies', () => {
+    const leftResponse: Api.Response<any> = {
+      tag: 'left',
+      error: {
+        status: 400,
+        message: 'Some other error',
+        responseData: {},
+      },
+    }
+
+    const result = standarizeError(leftResponse)
+    if (isLeft(result)) {
+      expect(result.error.message).toBe('Some other error')
+    } else {
+      fail('Expected result to be a Left type')
+    }
   })
 })
