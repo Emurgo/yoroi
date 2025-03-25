@@ -1344,5 +1344,10 @@
   "txReview.overview.operationsNoticeTitle": "What are operations?",
   "notifications.tapToView": "Tap to view",
   "notifications.stakingRewardsReceived": "Staking rewards received",
-  "notifications.assetsReceived": "Assets received"
+  "notifications.assetsReceived": "Assets received",
+  "notifications.intraWalletTransactionSent": "Intrawallet transaction sent",
+  "notifications.multipleAssetsReceived": "Multiple assets received",
+  "notifications.received": "received",
+  "notifications.multipleAssetsSent": "Multiple assets sent",
+  "notifications.sent": "sent"
 }
