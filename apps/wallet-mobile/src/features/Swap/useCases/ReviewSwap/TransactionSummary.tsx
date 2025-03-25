@@ -32,7 +32,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     quantity: BigInt(Number(swapForm.createTx?.totalOutputWithoutSlippage ?? 0) * 10 ** tokenOutInfo.decimals),
   }
 
-  const priceImpactRisk = getPriceImpactRisk(Number(swapForm.createTx?.splits[0]?.priceImpact))
+  const priceImpactRisk = getPriceImpactRisk(Number(swapForm.createTx?.priceImpact))
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : styles.text.color
 
@@ -76,7 +76,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
               {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
               <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
-                {swapForm.createTx?.splits[0]?.priceImpact}%
+                {swapForm.createTx?.priceImpact}%
               </Text>
             </View>
 

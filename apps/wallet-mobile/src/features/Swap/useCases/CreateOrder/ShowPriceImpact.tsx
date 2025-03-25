@@ -2,7 +2,6 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
-import {undefinedToken} from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
@@ -11,16 +10,7 @@ export const ShowPriceImpact = () => {
   const strings = useStrings()
   const swapForm = useSwap()
 
-  const priceImpact = Number(swapForm.estimate?.splits[0].priceImpact)
-  const formattedPrice = String(swapForm.estimate?.splits[0].priceImpact ?? 0)
-
-  const sellTokenInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
-  const buyTokenInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
-
-  const tokenToSellName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
-  const tokenToBuyName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
-  const pair = `${tokenToBuyName}/${tokenToSellName}`
-
+  const priceImpact = Number(swapForm.estimate?.priceImpact)
   const priceImpactRisk = getPriceImpactRisk(priceImpact)
 
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
@@ -29,7 +19,6 @@ export const ShowPriceImpact = () => {
   if (priceImpactRisk === 'none') return null
 
   const formattedPriceImpact = `${Math.ceil(priceImpact * 100) / 100}%`
-  const formattedPricePair = `(${formattedPrice} ${pair})`
 
   return (
     <View style={styles.row}>
@@ -43,8 +32,6 @@ export const ShowPriceImpact = () => {
         <Text> = </Text>
 
         <Text style={{paddingRight: 10}}>{formattedPriceImpact}</Text>
-
-        <Text> {formattedPricePair}</Text>
       </Text>
     </View>
   )

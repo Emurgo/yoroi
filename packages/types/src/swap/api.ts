@@ -49,6 +49,7 @@ export type SwapEstimateResponse = {
   aggregatorFee: number
   frontendFee: number
   netPrice: number
+  priceImpact: number
   totalFee: number
   totalOutput: number
   totalOutputWithoutSlippage?: number
@@ -81,6 +82,7 @@ export type SwapCreateResponse = {
   aggregatorFee: number
   frontendFee: number
   netPrice?: number
+  priceImpact: number
   totalFee: number
   totalInput: number
   totalOutput: number

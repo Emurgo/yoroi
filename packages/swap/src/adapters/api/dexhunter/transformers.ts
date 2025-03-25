@@ -56,6 +56,22 @@ export const toSwapSplit = ({
   priceImpact: price_impact,
 })
 
+export const toPriceImpact = (splits: Array<Partial<Split>>): number => {
+  const totalAmountIn = splits.reduce(
+    (sum, split) => sum + (split.amount_in ?? 0),
+    0,
+  )
+
+  if (totalAmountIn === 0) return 0 // Avoid division by zero
+
+  const weightedPriceImpact = splits.reduce(
+    (sum, split) => sum + (split.price_impact ?? 0) * (split.amount_in ?? 0),
+    0,
+  )
+
+  return weightedPriceImpact / totalAmountIn
+}
+
 export const transformersMaker = ({
   primaryTokenInfo,
   address,
@@ -219,6 +235,7 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: net_price,
+        priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
           (batcher_fee + dexhunter_fee + partner_fee).toFixed(
             primaryTokenInfo.decimals,
@@ -262,6 +279,7 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: net_price,
+        priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
           (batcher_fee + dexhunter_fee + partner_fee).toFixed(
             primaryTokenInfo.decimals,
@@ -318,6 +336,7 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: net_price,
+        priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
           (batcher_fee + dexhunter_fee + partner_fee).toFixed(
             primaryTokenInfo.decimals,
@@ -375,6 +394,7 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         totalOutput: total_output,
+        priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
           (batcher_fee + dexhunter_fee + partner_fee).toFixed(
             primaryTokenInfo.decimals,
@@ -430,6 +450,8 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         netPrice: (net_price || splits?.[0]?.initial_price) ?? 0, // main net_price is coming as 0 :(
+        priceImpact: toPriceImpact(splits ?? []),
+
         totalOutput: total_output,
         totalFee: Number(
           (batcher_fee + dexhunter_fee + partner_fee).toFixed(

@@ -348,6 +348,7 @@ const quoteResult: Swap.EstimateResponse = {
   deposits: 2,
   frontendFee: 0,
   netPrice: 1130,
+  priceImpact: 1.258404559451805,
   splits: [
     {
       amountIn: 1,
@@ -361,7 +362,7 @@ const quoteResult: Swap.EstimateResponse = {
       poolFee: 0.3,
       poolId:
         '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
-      priceDistortion: 1.258404559451805,
+      priceDistortion: -4.631246793465151,
       priceImpact: 1.258404559451805,
       protocol: 'minswap-v1',
     },
@@ -463,6 +464,7 @@ const createLimitResult: Swap.CreateResponse = {
   deposits: 0,
   frontendFee: 0,
   netPrice: 0,
+  priceImpact: 0,
   splits: [],
   totalFee: 0,
   totalInput: 0,
@@ -563,6 +565,7 @@ const createResult: Swap.CreateResponse = {
   deposits: 2,
   frontendFee: 0,
   netPrice: 1130,
+  priceImpact: 1.258404559451805,
   splits: [
     {
       amountIn: 1,
@@ -576,7 +579,7 @@ const createResult: Swap.CreateResponse = {
       poolFee: 0.3,
       poolId:
         '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
-      priceDistortion: 1.258404559451805,
+      priceDistortion: -4.631246793465151,
       priceImpact: 1.258404559451805,
       protocol: 'minswap-v1',
     },
@@ -593,6 +596,7 @@ const estimateResult: Swap.EstimateResponse = {
   deposits: 2,
   frontendFee: 0,
   netPrice: 0,
+  priceImpact: 843546.4933049141,
   splits: [
     {
       amountIn: 9223372036854.775,

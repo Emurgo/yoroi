@@ -162,6 +162,7 @@ export const transformersMaker = ({
         buy_token_decimals,
         sell_token_decimals,
         net_price,
+        net_price_impact,
         splits,
         total_batcher_fee,
         total_deposit,
@@ -172,8 +173,8 @@ export const transformersMaker = ({
       }: QuoteResponse): Swap.EstimateResponse => ({
         aggregatorFee: 0,
         frontendFee: 0,
-
         netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
+        priceImpact: net_price_impact,
         batcherFee: Number(total_batcher_fee),
         deposits: Number(total_deposit),
         totalFee: Number(
@@ -215,6 +216,7 @@ export const transformersMaker = ({
           buy_token_decimals,
           sell_token_decimals,
           net_price,
+          net_price_impact,
           splits,
           frontend_fee,
           total_batcher_fee,
@@ -229,8 +231,8 @@ export const transformersMaker = ({
         aggregatorFee: 0,
         frontendFee: 0,
         cbor: tx_cbor,
-
         netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
+        priceImpact: net_price_impact,
         batcherFee: Number(total_batcher_fee),
         deposits: Number(total_deposit),
         totalFee: Number(
@@ -276,6 +278,7 @@ export const transformersMaker = ({
         totalInput: 0,
         totalOutput: 0,
         netPrice: 0,
+        priceImpact: 0,
         totalOutputWithoutSlippage: 0,
         splits: [],
       }),
@@ -294,6 +297,7 @@ const toSwapSplit = ({
   initial_price,
   pool_fee,
   price_impact,
+  price_distortion,
   source_id,
 }: Split): Swap.Split => ({
   fee: pool_fee,
@@ -301,7 +305,7 @@ const toSwapSplit = ({
   initialPrice: initial_price,
   poolFee: pool_fee,
   poolId: source_id,
-  priceDistortion: price_impact,
+  priceDistortion: price_distortion,
   priceImpact: price_impact,
 
   amountIn: Number(amount_in),

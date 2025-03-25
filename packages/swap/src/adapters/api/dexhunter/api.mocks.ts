@@ -364,6 +364,7 @@ const limitEstimateResult: Swap.EstimateResponse = {
   deposits: 2,
   frontendFee: 0,
   netPrice: 1,
+  priceImpact: 874011.5392608035,
   splits: [
     {
       amountIn: 9223372036854.775,
@@ -443,6 +444,7 @@ const reverseEstimateResult: Swap.EstimateResponse = {
   deposits: 2,
   frontendFee: 0,
   netPrice: 0.008146194335645627,
+  priceImpact: 0.0013874760358920197,
   splits: [
     {
       amountIn: 0.004559,
@@ -537,6 +539,7 @@ const estimateResult: Swap.EstimateResponse = {
   deposits: 2,
   frontendFee: 0,
   netPrice: 0,
+  priceImpact: 843546.4933049141,
   splits: [
     {
       amountIn: 9223372036854.775,
@@ -581,6 +584,7 @@ const createResult: Swap.CreateResponse = {
   deposits: 2,
   frontendFee: 0,
   netPrice: 1130,
+  priceImpact: 1.258404559451805,
   splits: [
     {
       amountIn: 1,
