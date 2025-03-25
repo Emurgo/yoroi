@@ -20,9 +20,12 @@ export const useSwapConfig = () => {
 
   const tokenOutId = tokenInfos.has(candidateTokenId ?? undefinedToken) ? candidateTokenId : undefined
 
+  const partners = swapConfig?.partners
+
   return {
     ...query,
     swapConfig,
     tokenOutId,
+    partners,
   }
 }

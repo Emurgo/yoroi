@@ -30,7 +30,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = useAddressHex(wallet)
-  const {swapConfig} = useSwapConfig()
+  const {partners} = useSwapConfig()
   const swapManager = React.useMemo(() => {
     const storage = swapStorageMaker()
     return swapManagerMaker({
@@ -41,9 +41,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       addressHex,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       isPrimaryToken,
-      partners: swapConfig?.partners,
+      partners,
     })
-  }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo, swapConfig?.partners])
+  }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo, partners])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
     queryKey: ['useSwapOrders', network, stakingKey, swapManager.settings.routingPreference],
@@ -83,7 +83,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const tokenOutInputRef = React.useRef<TextInput | null>(null)
   const tokenInInputRef = React.useRef<TextInput | null>(null)
   const wantedPriceInputRef = React.useRef<TextInput | null>(null)
-  const slippageInputRef = React.useRef<TextInput | null>(null)
 
   const [state, action] = React.useReducer(swapReducer, defaultState)
 
@@ -238,7 +237,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       tokenOutInputRef,
       tokenInInputRef,
       wantedPriceInputRef,
-      slippageInputRef,
       orders,
       action,
       create,
@@ -563,7 +561,6 @@ export type SwapContext = SwapState & {
   tokenInInputRef: React.RefObject<TextInput> | undefined
   tokenOutInputRef: React.RefObject<TextInput> | undefined
   wantedPriceInputRef: React.RefObject<TextInput> | undefined
-  slippageInputRef: React.RefObject<TextInput> | undefined
   orders?: Array<Swap.Order>
   action: React.Dispatch<SwapAction>
   create: () => void
@@ -580,7 +577,6 @@ const SwapContext = React.createContext<SwapContext>({
   tokenInInputRef: undefined,
   tokenOutInputRef: undefined,
   wantedPriceInputRef: undefined,
-  slippageInputRef: undefined,
   orders: undefined,
   action: () => null,
   create: () => null,
