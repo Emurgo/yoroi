@@ -6,10 +6,10 @@ import {StyleSheet, View} from 'react-native'
 import {Icon} from '../../../../components/Icon'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {SwipeOutWrapper} from './SwipeOutWrapper'
-import {useStrings} from './useStrings'
-import {TransactionReceivedNotificationPopup} from './TransactionReceivedNotificationPopup'
 import {NotificationItem} from './NotificationPopupItem'
+import {SwipeOutWrapper} from './SwipeOutWrapper'
+import {TransactionReceivedNotificationPopup} from './TransactionReceivedNotificationPopup'
+import {useStrings} from './useStrings'
 
 type Props = {
   event: Notifications.Event

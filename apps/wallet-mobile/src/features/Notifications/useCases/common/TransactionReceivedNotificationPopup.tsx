@@ -1,15 +1,16 @@
-import {Balance, Notifications, Portfolio} from '@yoroi/types'
-import {SwipeOutWrapper} from './SwipeOutWrapper'
-import * as React from 'react'
-import {NotificationItem} from './NotificationPopupItem'
-import {StyleSheet, View} from 'react-native'
-import {Icon} from '../../../../components/Icon'
-import {useStrings} from './useStrings'
 import {useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
+import {Balance, Notifications, Portfolio} from '@yoroi/types'
+import * as React from 'react'
+import {StyleSheet, View} from 'react-native'
+
+import {Icon} from '../../../../components/Icon'
 import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
 import {Token} from '../../../../yoroi-wallets/types/tokens'
+import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {NotificationItem} from './NotificationPopupItem'
+import {SwipeOutWrapper} from './SwipeOutWrapper'
+import {useStrings} from './useStrings'
 import Quantity = Balance.Quantity
 
 type Props = {
@@ -26,14 +27,19 @@ export const TransactionReceivedNotificationPopup = ({event, onPress, onSwipeOut
 
   const isIntraWallet = wallet.transactions[event.metadata.txId]?.direction === 'SELF'
   const isReceived = wallet.transactions[event.metadata.txId]?.direction === 'RECEIVED'
+  const isSent = wallet.transactions[event.metadata.txId]?.direction === 'SENT'
 
   if (isIntraWallet) {
     return (
       <SwipeOutWrapper onSwipeOut={onSwipeOut} onExpired={onExpired} onPress={onPress}>
         <NotificationItem
           onPress={onPress}
-          icon={<TransactionReceivedIcon />}
-          title={'Intrawallet transaction sent'}
+          icon={
+            <IconWrapper>
+              <Icon.Direction transactionDirection="SELF" />
+            </IconWrapper>
+          }
+          title={strings.intraWalletTransactionSent}
           description={strings.tapToView}
         />
       </SwipeOutWrapper>
@@ -41,21 +47,26 @@ export const TransactionReceivedNotificationPopup = ({event, onPress, onSwipeOut
   }
 
   if (isReceived) {
-    const tx = wallet.transactions[event.metadata.txId]
-    const details = tx ? getTransactionInfoDetails(tx, wallet.portfolioPrimaryTokenInfo) : null
+    const tx: TransactionInfo | null = wallet.transactions[event.metadata.txId] ?? null
+    if (tx === null) return null
+    const details = getTransactionInfoDetails(tx, wallet.portfolioPrimaryTokenInfo)
 
-    const label = details?.hasReceivedMultipleAssets
-      ? 'Multiple assets received'
-      : `${Quantities.format(
-          details?.firstAssetAmountReceived ?? Quantities.zero,
-          details?.firstReceivedAsset.denomination ?? 0,
-        )} ${details?.firstReceivedAsset.name} received`
+    const label = details.hasReceivedMultipleAssets
+      ? strings.multipleAssetsReceived
+      : `${formatAssets(
+          Quantities.format(details.firstAssetAmountReceived, details.firstReceivedAsset.denomination),
+          details.firstReceivedAsset.name,
+        )} ${strings.received}`
 
     return (
       <SwipeOutWrapper onSwipeOut={onSwipeOut} onExpired={onExpired} onPress={onPress}>
         <NotificationItem
           onPress={onPress}
-          icon={<TransactionReceivedIcon />}
+          icon={
+            <IconWrapper>
+              <Icon.Direction transactionDirection="RECEIVED" />
+            </IconWrapper>
+          }
           title={label}
           description={strings.tapToView}
         />
@@ -63,25 +74,45 @@ export const TransactionReceivedNotificationPopup = ({event, onPress, onSwipeOut
     )
   }
 
-  return (
-    <SwipeOutWrapper onSwipeOut={onSwipeOut} onExpired={onExpired} onPress={onPress}>
-      <NotificationItem
-        onPress={onPress}
-        icon={<TransactionReceivedIcon />}
-        title={strings.assetsReceived}
-        description={strings.tapToView}
-      />
-    </SwipeOutWrapper>
-  )
+  if (isSent) {
+    const tx: TransactionInfo | null = wallet.transactions[event.metadata.txId] ?? null
+    if (tx === null) return null
+    const details = getTransactionInfoDetails(tx, wallet.portfolioPrimaryTokenInfo)
+
+    const label = details.hasSentMultipleAssets
+      ? strings.multipleAssetsSent
+      : `${formatAssets(
+          Quantities.format(details.firstAssetAmountSent, details.firstSentAsset.denomination),
+          details?.firstSentAsset.name,
+        )} ${strings.sent}`
+
+    return (
+      <SwipeOutWrapper onSwipeOut={onSwipeOut} onExpired={onExpired} onPress={onPress}>
+        <NotificationItem
+          onPress={onPress}
+          icon={
+            <IconWrapper>
+              <Icon.Direction transactionDirection="SENT" />
+            </IconWrapper>
+          }
+          title={label}
+          description={strings.tapToView}
+        />
+      </SwipeOutWrapper>
+    )
+  }
+
+  return null
 }
 
-const TransactionReceivedIcon = () => {
+const formatAssets = (quantity: string, name: string) => {
+  const text = `${quantity} ${name}`
+  return text.length > 15 ? `${text.slice(0, 15)}...` : text
+}
+
+const IconWrapper = ({children}: {children: React.ReactNode}) => {
   const {styles, colors} = useStyles()
-  return (
-    <View style={[styles.icon, {backgroundColor: colors.iconBackground}]}>
-      <Icon.Received color={colors.iconColor} />
-    </View>
-  )
+  return <View style={[styles.icon, {backgroundColor: colors.iconBackground}]}>{children}</View>
 }
 
 const useStyles = () => {
@@ -141,13 +172,13 @@ const getTransactionInfoDetails = (info: TransactionInfo, primaryTokenInfo: Port
   const hasReceivedMultipleAssets = assetsReceived.length > 1 || (assetsReceived.length === 1 && hasReceivedPt)
   const hasSentMultipleAssets = assetsSent.length > 1 || (assetsSent.length === 1 && hasSentPt)
 
-  const firstAssetIdReceived = assetsReceived[0].identifier ?? primaryTokenInfo.id
+  const firstAssetIdReceived = assetsReceived[0]?.identifier ?? primaryTokenInfo.id
   const firstAssetAmountReceived = hasReceivedPt ? ptReceived : sumTokenFromTxData(info.outputs, firstAssetIdReceived)
   const firstReceivedAsset = hasReceivedPt
     ? {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
     : findToken(Object.values(info.tokens), firstAssetIdReceived, primaryTokenInfo)
 
-  const firstAssetIdSent = assetsSent[0].identifier ?? primaryTokenInfo.id
+  const firstAssetIdSent = assetsSent[0]?.identifier ?? primaryTokenInfo.id
   const firstAssetAmountSent = hasSentPt ? ptSent : sumTokenFromTxData(info.inputs, firstAssetIdSent)
   const firstSentAsset = hasSentPt
     ? {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
