@@ -1,14 +1,14 @@
 # Privacy Policy
 
-## 1. Introduction
+## 1. 1. Introduction
 
-This Privacy Policy ("Policy") governs the collection, use, and disclosure of personal data on Yoroi Wallet ("Software") in accordance with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA). By using or accessing the Software, you agree to the practices outlined in this Policy.
+This Privacy Policy ("Policy") governs the collection, use, and disclosure of personal data on Yoroi Wallet ("Software") in accordance with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA). By using or accessing the Software, you agree to the practices outlined in this Policy. By using or accessing the Software, you agree to the practices outlined in this Policy.
 
-## 2. Definitions
+## 2. 2. Definitions
 
 "Personal Data" refers to any information that identifies or can be used to identify an individual, directly or indirectly.
 
-## 3. Collection of Personal Data
+## 3. 3. Collection of Personal Data
 
 3.1 We collect Personal Data from you when you voluntarily provide it to us through forms, registration, surveys, or other interactions on the Software.
 
@@ -27,11 +27,11 @@ This Privacy Policy ("Policy") governs the collection, use, and disclosure of pe
   *   Any other information you provide to us voluntarily
 
 
-- 3.3 We may also collect Personal Data automatically when you interact with the Software. This includes usage data, such as pages visited, links clicked, and other interactions with the Software.
+- 3.3 We may also collect Personal Data automatically when you interact with the Software. This includes usage data, such as pages visited, links clicked, and other interactions with the Software. This includes usage data, such as pages visited, links clicked, and other interactions with the Software.
 
 - 3.4 We will only collect and process Personal Data that is relevant, necessary, and proportionate to fulfill the specified purposes outlined in Section 3 of this Policy.
 
-## 4. Use of Personal Data
+## 4. 4. Use of Personal Data
 
 We use the Personal Data collected for the following purposes:
 
@@ -48,7 +48,7 @@ We use the Personal Data collected for the following purposes:
 6.  To detect, prevent, and address technical issues or security breaches;
 
 
-## 5. Disclosure of Personal Data
+## 5. 5. Disclosure of Personal Data
 
 We may disclose Personal Data to third parties in the following circumstances:
 
@@ -61,7 +61,7 @@ We may disclose Personal Data to third parties in the following circumstances:
 4.  In the event of a merger, acquisition, or sale of all or a portion of our assets, with appropriate notice and safeguards to protect your rights.
 
 
-## 6. Your Rights
+## 6. 6. Your Rights
 
 You have the following rights regarding your Personal Data:
 
@@ -80,23 +80,23 @@ You have the following rights regarding your Personal Data:
 7.  Right to withdraw consent: If we rely on your consent to process your Personal Data, you can withdraw your consent at any time.
 
 
-## 7. Data Security
+## 7. 7. Data Security
 
 We take appropriate technical and organizational measures to protect Personal Data against unauthorized access, disclosure, alteration, or destruction.
 
-## 8. Cookies
+## 8. 8. Cookies
 
-We use cookies and similar technologies on the Software to enhance your experience and analyze usage. You can manage your cookie preferences through your browser settings.
+We use cookies and similar technologies on the Software to enhance your experience and analyze usage. You can manage your cookie preferences through your browser settings. You can manage your cookie preferences through your browser settings.
 
-## 9. Children's Privacy
+## 9. 9. Children's Privacy
 
-The Software is not intended for children under the age of 16. We do not knowingly collect or process Personal Data from children without appropriate parental consent. If you believe we have collected Personal Data from a child, please contact us immediately, and we will take appropriate steps to remove the information.
+The Software is not intended for children under the age of 16. We do not knowingly collect or process Personal Data from children without appropriate parental consent. The Software is not intended for children under the age of 16. We do not knowingly collect or process Personal Data from children without appropriate parental consent. If you believe we have collected Personal Data from a child, please contact us immediately, and we will take appropriate steps to remove the information.
 
-## 10. Changes to this Policy
+## 10. 10. Changes to this Policy
 
-We may update this Policy from time to time to reflect changes in legal or regulatory requirements, our privacy practices, or the features and functionality of the Software. The updated Policy will be posted on the Software, and the effective date will be revised accordingly.
+We may update this Policy from time to time to reflect changes in legal or regulatory requirements, our privacy practices, or the features and functionality of the Software. The updated Policy will be posted on the Software, and the effective date will be revised accordingly. The updated Policy will be posted on the Software, and the effective date will be revised accordingly.
 
-## 11. Contact Us
+## 11. 11. Contact Us
 
 If you have any questions, concerns, or requests regarding this Policy or our privacy practices, please contact us on https://yoroi-wallet.com/#/support
 
