@@ -6,7 +6,7 @@ CLICANDO NO BOTÃO DE ACEITE OR ACESSANDO, USANDO OU INSTALANDO QUALQUER PARTE D
 
 ## 1. Direitos e Obrigações
 
-**a. Descrição.** O Software funciona como uma carteira de criptomoeda digital gratuita e de código aberto. O Software não constitui uma conta pela qual a "Company" ou quaisquer outros terceiros atuam como intermediários financeiros ou custodiantes das ADAs do Usuário ou qualquer outra criptomoeda.
+**a. **a. Descrição.** O Software funciona como uma carteira de criptomoeda digital gratuita e de código aberto. O Software não constitui uma conta pela qual a "Company" ou quaisquer outros terceiros atuam como intermediários financeiros ou custodiantes das ADAs do Usuário ou qualquer outra criptomoeda.</p>
 
 Embora o Software tenha sido submetido a testes beta e continue sendo aprimorado pelos comentários da comunidade de desenvolvedores, colaboradores de código aberto e testadores beta, a Empresa não pode garantir que não haverá bugs no Software. O Usuário reconhece que o uso do Software pelo usuário corre risco, discrição e conformidade com todas as leis aplicáveis. O Usuário é responsável por proteger as senhas, PINs, chaves privadas, chaves de resgate, chaves de venda protegidas, senhas mnemônicas de recuperação de backup, códigos de acesso ADA e quaisquer outros códigos que o usuário usa para acessar o Software ou qualquer informação, ADA, voucher ou outra unidade de criptomoeda.
 
@@ -15,9 +15,9 @@ SE O USUÁRIO PERDER ACESSO À CARTEIRA DE CRIPTOMOEDAS OU ÀS CHAVES PRIVADAS E
 Todas as transações são irreversíveis. A Empresa e seus acionistas, diretores, executivos, funcionários, afiliados e agentes não podem garantir a confirmação da transação ou recuperar as chaves privadas ou senhas do Usuário se o Usuário as perder ou esquecer.
 
 
-**b. ** b. Acessibilidade. ** O usuário concorda que, de tempos em tempos, o Software poderá ficar inacessível ou inoperável por qualquer motivo, incluindo, sem limitação: (i) mau funcionamento do equipamento; (ii) procedimentos ou reparos periódicos de manutenção que a Companhia possa realizar periodicamente; ou (iii) causas fora do controle da Companhia ou que não sejam razoavelmente previsíveis pela Companhia.</p>
+**b. ** O usuário concorda que, de tempos em tempos, o Software poderá ficar inacessível ou inoperável por qualquer motivo, incluindo, sem limitação: (i) mau funcionamento do equipamento; (ii) procedimentos ou reparos periódicos de manutenção que a Companhia possa realizar periodicamente; ou (iii) causas fora do controle da Companhia ou que não sejam razoavelmente previsíveis pela Companhia.</p>
 
-**c. ** c. Equipamento. ** O Usuário será o único responsável por fornecer, manter e garantir a compatibilidade com o Software, todos os requisitos de hardware, software, elétrica e outros requisitos físicos para o uso do Software pelo Usuário, incluindo, sem limitação, conexões de telecomunicações e acesso à Internet e links, navegadores da web ou outros equipamentos, programas e serviços necessários para acessar e usar o Software.</p>
+**c. ** O Usuário será o único responsável por fornecer, manter e garantir a compatibilidade com o Software, todos os requisitos de hardware, software, elétrica e outros requisitos físicos para o uso do Software pelo Usuário, incluindo, sem limitação, conexões de telecomunicações e acesso à Internet e links, navegadores da web ou outros equipamentos, programas e serviços necessários para acessar e usar o Software.</p>
 
 **d. Segurança. ** O Usuário será o único responsável pela segurança, confidencialidade e integridade de todas as informações e conteúdos que o Usuário recebe, transmite ou armazena no Software. O Usuário será o único responsável por qualquer acesso autorizado ou não autorizado a qualquer conta do Usuário por qualquer pessoa. O Usuário concorda em assumir toda a responsabilidade pela confidencialidade dos dispositivos, informações, chaves e senhas de segurança do Usuário.</p>
 
@@ -85,7 +85,7 @@ Ao usar o Software, o Usuário reconhece e concorda: (i) que a Empresa não é r
 
 **e. IDIOMA. ** Qualquer tradução deste Contrato é feita apenas para fins de referência local e, no caso de qualquer inconsistência entre as versões em inglês e outras que não sejam em inglês, a versão em inglês deste Contrato prevalecerá e prevalecerá em todos os aspectos.</p>
 
-**f. TRADUÇÕES.** A Empresa e sua equipe se esforçam para fornecer traduções precisas e confiáveis, podendo haver limitações e discrepâncias inerentes ao processo de tradução. No entanto, as traduções são fornecidas por um sistema automatizado ou por tradutores humanos, e pode haver casos em que o significado e as nuances do texto original não sejam totalmente capturados ou possam ser interpretados de forma diferente na versão traduzida.
+**f. **f. TRADUÇÕES.** A Empresa e sua equipe se esforçam para fornecer traduções precisas e confiáveis, podendo haver limitações e discrepâncias inerentes ao processo de tradução. No entanto, as traduções são fornecidas por um sistema automatizado ou por tradutores humanos, e pode haver casos em que o significado e as nuances do texto original não sejam totalmente capturados ou possam ser interpretados de forma diferente na versão traduzida.</p>
 
 O conteúdo traduzido no Software é fornecido apenas para fins informativos e de conveniência. No caso de quaisquer discrepâncias ou conflitos entre a versão traduzida e o conteúdo original, a versão original no idioma de origem (inglês) prevalecerá e será considerada oficial.
 

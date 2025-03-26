@@ -10,15 +10,14 @@ import {MultiParty} from './MultiParty'
 import {IconProps} from './type'
 
 export const Direction = ({
-  transaction,
+  transactionDirection,
   size = defaultSize,
   containerStyle,
-}: IconProps & {transaction: TransactionInfo; containerStyle?: ViewStyle}) => {
+}: IconProps & {transactionDirection: TransactionInfo['direction']; containerStyle?: ViewStyle}) => {
   const {color} = useTheme()
-  const {direction} = transaction
 
-  const iconStyles = styleMap(color)[direction]
-  const IconComponent = iconMap[direction]
+  const iconStyles = styleMap(color)[transactionDirection]
+  const IconComponent = iconMap[transactionDirection]
 
   return (
     <View style={[styles.icon, {backgroundColor: iconStyles?.background}, containerStyle]}>

@@ -1344,5 +1344,10 @@
   "txReview.overview.operationsNoticeTitle": "オペレーションとは何ですか?",
   "notifications.tapToView": "タップして表示",
   "notifications.stakingRewardsReceived": "ステーキング報酬を受け取りました",
-  "notifications.assetsReceived": "資産を受け取りました"
+  "notifications.assetsReceived": "資産を受け取りました",
+  "notifications.intraWalletTransactionSent": "Intrawallet transaction sent",
+  "notifications.multipleAssetsReceived": "Multiple assets received",
+  "notifications.received": "received",
+  "notifications.multipleAssetsSent": "Multiple assets sent",
+  "notifications.sent": "sent"
 }

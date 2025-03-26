@@ -7,6 +7,11 @@ export const useStrings = () => {
     tapToView: intl.formatMessage(messages.tapToView),
     stakingRewardsReceived: intl.formatMessage(messages.stakingRewardsReceived),
     assetsReceived: intl.formatMessage(messages.assetsReceived),
+    intraWalletTransactionSent: intl.formatMessage(messages.intraWalletTransactionSent),
+    multipleAssetsReceived: intl.formatMessage(messages.multipleAssetsReceived),
+    received: intl.formatMessage(messages.received),
+    multipleAssetsSent: intl.formatMessage(messages.multipleAssetsSent),
+    sent: intl.formatMessage(messages.sent),
   }
 }
 
@@ -22,5 +27,25 @@ const messages = defineMessages({
   assetsReceived: {
     id: 'notifications.assetsReceived',
     defaultMessage: '!!!Assets received',
+  },
+  intraWalletTransactionSent: {
+    id: 'notifications.intraWalletTransactionSent',
+    defaultMessage: '!!!Intrawallet transaction sent',
+  },
+  multipleAssetsReceived: {
+    id: 'notifications.multipleAssetsReceived',
+    defaultMessage: '!!!Multiple assets received',
+  },
+  received: {
+    id: 'notifications.received',
+    defaultMessage: '!!!received',
+  },
+  multipleAssetsSent: {
+    id: 'notifications.multipleAssetsSent',
+    defaultMessage: '!!!Multiple assets sent',
+  },
+  sent: {
+    id: 'notifications.sent',
+    defaultMessage: '!!!sent',
   },
 })

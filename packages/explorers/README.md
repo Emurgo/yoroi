@@ -31,15 +31,15 @@ import {explorerManager} from '@yoroi/explorers'
 // Build the manager
 const mainnetExplorer = explorerManager[Chain.Network.Mainnet]
 
-// Generate URLs using CardanoScan explorer
+// Generate URLs using Cardanoscan explorer
 const tokenUrl =
-  mainnetExplorer[Explorers.Explorer.CardanoScan].token('fingerprint')
+  mainnetExplorer[Explorers.Explorer.Cardanoscan].token('fingerprint')
 const addressUrl =
-  mainnetExplorer[Explorers.Explorer.CardanoScan].address('address')
-const txUrl = mainnetExplorer[Explorers.Explorer.CardanoScan].tx('txHash')
-const poolUrl = mainnetExplorer[Explorers.Explorer.CardanoScan].pool('poolId')
+  mainnetExplorer[Explorers.Explorer.Cardanoscan].address('address')
+const txUrl = mainnetExplorer[Explorers.Explorer.Cardanoscan].tx('txHash')
+const poolUrl = mainnetExplorer[Explorers.Explorer.Cardanoscan].pool('poolId')
 const stakeUrl =
-  mainnetExplorer[Explorers.Explorer.CardanoScan].stake('stakeAddress')
+  mainnetExplorer[Explorers.Explorer.Cardanoscan].stake('stakeAddress')
 
 console.log(tokenUrl) // Output: https://cardanoscan.io/token/fingerprint
 console.log(addressUrl) // Output: https://cardanoscan.io/address/address
@@ -48,7 +48,7 @@ console.log(poolUrl) // Output: https://cardanoscan.io/pool/poolId
 console.log(stakeUrl) // Output: https://cardanoscan.io/stakeKey/stakeAddress
 ```
 
-This example shows how to use the explorerManager object to generate URLs for different entities on the Mainnet using the CardanoScan explorer.
+This example shows how to use the explorerManager object to generate URLs for different entities on the Mainnet using the Cardanoscan explorer.
 
 ## About Supported Networks and Explorers
 
@@ -62,13 +62,13 @@ Networks:
 
 Explorers:
 
-1. CardanoScan: A popular Cardano blockchain explorer.
+1. Cardanoscan: A popular Cardano blockchain explorer.
 
    1. [Twitter ![X](https://img.icons8.com/ios-filled/12/000000/x.png)](https://twitter.com/cardanoscan.io)
    2. [Discord ![Discord](https://img.icons8.com/ios-filled/12/000000/discord-logo.png)](https://discord.gg/WQFPHNXcz8)
    3. [Explorer](https://cardanoscan.io)
 
-2. CExplorer: Another Cardano blockchain explorer.
+2. Cexplorer: Another Cardano blockchain explorer.
    1. [Explorer](https://cexplorer.io)
 
 ## URL Generation
