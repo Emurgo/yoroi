@@ -102,6 +102,7 @@ const getStories = () => {
     "./src/features/Auth/OsLoginScreen/OsLoginScreen.stories.tsx": require("../src/features/Auth/OsLoginScreen/OsLoginScreen.stories.tsx"),
     "./src/features/Auth/PinInput/PinInput.stories.tsx": require("../src/features/Auth/PinInput/PinInput.stories.tsx"),
     "./src/features/Auth/PinLoginScreen/PinLoginScreen.stories.tsx": require("../src/features/Auth/PinLoginScreen/PinLoginScreen.stories.tsx"),
+    "./src/features/Banners/common/DelegateToYoroiDRepBanner/DelegateToYoroiDRepBanner.stories.tsx": require("../src/features/Banners/common/DelegateToYoroiDRepBanner/DelegateToYoroiDRepBanner.stories.tsx"),
     "./src/features/Claim/illustrations/Ilustrations.stories.tsx": require("../src/features/Claim/illustrations/Ilustrations.stories.tsx"),
     "./src/features/Claim/useCases/AskConfirmation.stories.tsx": require("../src/features/Claim/useCases/AskConfirmation.stories.tsx"),
     "./src/features/Claim/useCases/ShowSuccessScreen.stories.tsx": require("../src/features/Claim/useCases/ShowSuccessScreen.stories.tsx"),

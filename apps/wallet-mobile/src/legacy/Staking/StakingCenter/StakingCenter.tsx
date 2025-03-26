@@ -37,14 +37,25 @@ export const StakingCenter = () => {
   const {unsignedTxChanged} = useReviewTx()
   const navigateTo = useNavigateTo()
 
+  const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(null)
+  const [isContentLoaded, setIsContentLoaded] = React.useState(false)
+  const [url, setUrl] = React.useState<null | string>(null)
+
   useFocusEffect(
     React.useCallback(() => {
       track.stakingCenterPageViewed()
     }, [track]),
   )
 
-  const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(null)
-  const [isContentLoaded, setIsContentLoaded] = React.useState(false)
+  useFocusEffect(
+    React.useCallback(() => {
+      setUrl(prepareStakingURL(languageCode, plate))
+      return () => {
+        setUrl(null) // force rerender, so the list's CTAs are reset
+        setSelectedPoolId(null) // any pool can be reselected once go back from signing
+      }
+    }, [languageCode, plate]),
+  )
 
   const onSuccess = () => {
     queryClient.resetQueries([wallet.id, 'stakingInfo'])
@@ -82,7 +93,7 @@ export const StakingCenter = () => {
   }
 
   const shouldDisplayPoolIDInput = !wallet.isMainnet
-  const shouldDisplayPoolList = wallet.isMainnet
+  const shouldDisplayPoolList = wallet.isMainnet && url != null
 
   return (
     <SafeAreaView edges={['right', 'bottom', 'left']} style={styles.root}>
@@ -96,7 +107,7 @@ export const StakingCenter = () => {
             style={{opacity: isContentLoaded ? 1 : 0}}
             originWhitelist={['*']}
             androidLayerType="software"
-            source={{uri: prepareStakingURL(languageCode, plate)}}
+            source={{uri: url}}
             onMessage={(event) => handleOnMessage(event)}
             onLoadEnd={() => setTimeout(() => setIsContentLoaded(true), 250)}
             {...(isDark && {

@@ -87,6 +87,10 @@ const wallet: YoroiWallet = {
     lockedAsStorageCost: 0n,
     totalFromTxs: 0n,
   },
+  bannersManager: {
+    dismiss: noop,
+    dismissedAt: () => 0,
+  },
 
   isMainnet: true,
   portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,

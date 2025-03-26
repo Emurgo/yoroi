@@ -1,10 +1,11 @@
 import messaging from '@react-native-firebase/messaging'
+import {useNotificationManager} from '@yoroi/notifications'
+import {Notifications as YoroiNotifications} from '@yoroi/types'
 import React from 'react'
 import {PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
 import {logger} from '../../../../kernel/logger/logger'
-import {notificationManager} from './notification-manager'
 import {generateNotificationId, parseNotificationId, sendNotification} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
@@ -12,10 +13,9 @@ import {useTransactionReceivedNotifications} from './transaction-received-notifi
 
 let initialized = false
 
-const initPushNotifications = () => {
-  if (initialized) return
+const initPushNotifications = (manager: YoroiNotifications.Manager) => {
   initialized = true
-  if (Platform.OS === 'android') {
+  if (Platform.OS === 'android' && !initialized) {
     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
   }
 
@@ -36,7 +36,7 @@ const initPushNotifications = () => {
     (notification, completion) => {
       const payloadId = notification.identifier || notification.payload.id
       const id = parseNotificationId(payloadId)
-      notificationManager.events.markAsRead(id)
+      manager.events.markAsRead(id)
       completion()
     },
   )
@@ -47,16 +47,22 @@ const initPushNotifications = () => {
   }
 }
 
-const initLocalNotifications = () => {
-  notificationManager.hydrate()
+const initLocalNotifications = (manager: YoroiNotifications.Manager) => {
+  manager.hydrate()
   return () => {
-    notificationManager.destroy()
+    manager.destroy()
   }
 }
 
-export const useInitNotifications = ({localEnabled, pushEnabled}: {localEnabled: boolean; pushEnabled: boolean}) => {
-  React.useEffect(() => (localEnabled ? initLocalNotifications() : undefined), [localEnabled])
-  React.useEffect(() => (pushEnabled ? initPushNotifications() : undefined), [pushEnabled])
+type UseInitNotificationsProps = {
+  localEnabled: boolean
+  pushEnabled: boolean
+}
+
+export const useInitNotifications = ({localEnabled, pushEnabled}: UseInitNotificationsProps) => {
+  const manager = useNotificationManager()
+  React.useEffect(() => (localEnabled ? initLocalNotifications(manager) : undefined), [localEnabled, manager])
+  React.useEffect(() => (pushEnabled ? initPushNotifications(manager) : undefined), [pushEnabled, manager])
   useTransactionReceivedNotifications({enabled: localEnabled})
   usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
   useRewardsUpdatedNotifications({enabled: localEnabled})

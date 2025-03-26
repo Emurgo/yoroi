@@ -31,6 +31,7 @@ export * from './numbers/atomic-to-decimal'
 export * from './numbers/atomic-formatter'
 export * from './numbers/parse-decimal'
 export * from './numbers/atomic-breakdown'
+export * from './numbers/to-number'
 export * from './numbers/to-bigint'
 export * from './numbers/number-replacer'
 
@@ -45,6 +46,8 @@ export * from './storage/translators/async-storage-reactjs'
 export * from './storage/translators/sync-storage-reactjs'
 export * from './storage/helpers/storage-serializer'
 export * from './storage/helpers/storage-deserializer-maker'
+
+export * from './time/time'
 
 export * from './translators/reactjs/hooks/useMutationWithInvalidations'
 export * from './translators/reactjs/hooks/useObservableValue'

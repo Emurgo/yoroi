@@ -124,6 +124,7 @@ import {Telegram} from './Telegram'
 import {TermsOfUse} from './TermsOfUse'
 import {Theme} from './Theme'
 import {ThumbsUp} from './ThumbsUp'
+import {Time} from './Time'
 import {Tokens} from './Tokens'
 import {TotalAda} from './TotalAda'
 import {TotalDelegated} from './TotalDelegated'
@@ -288,4 +289,5 @@ export const Icon = {
   AngleUp,
   AngleDown,
   Bell,
+  Time,
 }

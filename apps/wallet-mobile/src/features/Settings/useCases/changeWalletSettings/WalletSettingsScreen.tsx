@@ -21,13 +21,9 @@ import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
 import {SettingsSwitch} from '../../common/SettingsSwitch'
-import {
-  NavigatedSettingsItem,
-  SettingsBuildItem,
-  SettingsCollateralItem,
-  SettingsItem,
-  SettingsSection,
-} from '../../SettingsItems'
+import {SettingsCollateralItem} from '../../SettingsCollateralItem'
+import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../../SettingsItems'
+import {SettingsNotificationDurationItem} from '../../SettingsNotificationDurationItem'
 import {
   useChangeNotificationDisplaySettings,
   useNotificationDisplaySettings,
@@ -37,7 +33,7 @@ export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const {resetToWalletSelection} = useWalletNavigation()
+  const {resetToWalletSelection, navigateToNotificationDisplayDuration} = useWalletNavigation()
   const authSetting = useAuthSetting()
   const addressMode = useAddressMode()
 
@@ -140,6 +136,12 @@ export const WalletSettingsScreen = () => {
           <SettingsItem icon={<Icon.Bell {...iconProps} />} label={strings.allowNotifications}>
             <NotificationDisplaySwitcher />
           </SettingsItem>
+
+          <SettingsNotificationDurationItem
+            icon={<Icon.Time {...iconProps} />}
+            onNavigate={() => navigateToNotificationDisplayDuration()}
+            label={strings.displayDuration}
+          />
         </SettingsSection>
 
         <Spacer height={24} />
@@ -339,6 +341,10 @@ const messages = defineMessages({
     id: 'components.settings.walletsettingscreen.allowNotifications',
     defaultMessage: '!!!Allow notifications',
   },
+  displayDuration: {
+    id: 'components.settings.walletsettingscreen.displayDuration',
+    defaultMessage: '!!!Display duration',
+  },
 })
 
 const useStrings = () => {
@@ -368,6 +374,7 @@ const useStrings = () => {
     multipleAddressesInfo: intl.formatMessage(messages.multipleAddressesInfo),
     inAppNotifications: intl.formatMessage(messages.inAppNotifications),
     allowNotifications: intl.formatMessage(messages.allowNotifications),
+    displayDuration: intl.formatMessage(messages.displayDuration),
   }
 }
 

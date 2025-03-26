@@ -5,7 +5,7 @@ import {useNotificationManager} from './NotificationProvider'
 export const useUpdateNotificationsConfig = () => {
   const manager = useNotificationManager()
 
-  const mutationFn = async (newConfig: NotificationTypes.Config) => {
+  const mutationFn = async (newConfig: Partial<NotificationTypes.Config>) => {
     await manager.config.save(newConfig)
   }
 

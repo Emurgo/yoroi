@@ -1,3 +1,4 @@
+import {useNotificationsConfig} from '@yoroi/notifications'
 import * as React from 'react'
 import {Animated, Dimensions, Easing, PanResponder} from 'react-native'
 
@@ -8,7 +9,7 @@ type Props = {
   onPress: () => void
 }
 
-const notificationDisplayTime = 4 * 1000 // 4 seconds
+const defaultNotificationDisplayDurationInSeconds = 4 // 4 seconds
 const fadeInTime = 200
 const fadeOutPaddingTime = 100
 
@@ -17,19 +18,25 @@ export const SwipeOutWrapper = ({children, onSwipeOut, onExpired, onPress}: Prop
   const onExpiredRef = React.useRef(onExpired)
   onExpiredRef.current = onExpired
 
-  React.useEffect(() => {
-    const expiredTimeout = setTimeout(() => onExpiredRef.current(), notificationDisplayTime)
-    const fadeOutTimeout = setTimeout(() => fadeOut(), notificationDisplayTime - fadeInTime - fadeOutPaddingTime)
+  const fadeOutRef = React.useRef(fadeOut)
+  fadeOutRef.current = fadeOut
 
-    return () => {
-      clearTimeout(expiredTimeout)
-      clearTimeout(fadeOutTimeout)
-    }
-  }, [fadeIn, fadeOut])
+  const {data: notificationConfig} = useNotificationsConfig()
+  const displayDuration = (notificationConfig?.displayDuration ?? defaultNotificationDisplayDurationInSeconds) * 1000
 
   React.useLayoutEffect(() => {
-    requestAnimationFrame(() => fadeIn())
-  }, [fadeIn])
+    requestAnimationFrame(() => {
+      fadeIn()
+
+      const expiredTimeout = setTimeout(() => onExpiredRef.current(), displayDuration)
+      const fadeOutTimeout = setTimeout(() => fadeOutRef.current(), displayDuration - fadeInTime - fadeOutPaddingTime)
+
+      return () => {
+        clearTimeout(expiredTimeout)
+        clearTimeout(fadeOutTimeout)
+      }
+    })
+  }, [fadeIn, displayDuration])
 
   return (
     <Animated.View

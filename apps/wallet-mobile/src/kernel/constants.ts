@@ -57,23 +57,3 @@ export const configCurrencies = freeze({
     nativeName: 'US Dollar',
   },
 })
-
-export const time = freeze({
-  oneSecond: 1e3,
-  oneMinute: 60 * 1e3,
-  fiveMinutes: 5 * 60 * 1e3,
-  halfHour: 30 * 60 * 1e3,
-  oneHour: 60 * 60 * 1e3,
-  oneDay: 24 * 60 * 60 * 1e3,
-  oneWeek: 7 * 24 * 60 * 60 * 1e3,
-  oneMonth: 30 * 24 * 60 * 60 * 1e3,
-  sixMonths: 182.5 * 24 * 60 * 60 * 1e3,
-  oneYear: 365 * 24 * 60 * 60 * 1e3,
-
-  // helpers
-  seconds: (seconds: number) => seconds * 1e3,
-  minutes: (minutes: number) => minutes * 60 * 1e3,
-
-  // session here means while the wallet is open
-  session: Infinity,
-})

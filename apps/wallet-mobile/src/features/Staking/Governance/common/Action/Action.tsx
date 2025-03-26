@@ -15,13 +15,22 @@ type Props = {
   pending?: boolean
   children?: ReactNode
   showRightArrow?: boolean
+  showGradient?: boolean
 }
 
-export const Action = ({title, description, onPress, pending, children, showRightArrow}: Props) => {
+export const Action = ({title, description, onPress, pending, children, showRightArrow, showGradient}: Props) => {
   const {styles, colors} = useStyles()
+
+  const gradientColors = showGradient ? colors.gradient : [colors.baseGradient, colors.baseGradient]
+
   return (
     <TouchableOpacity onPress={onPress} disabled={pending}>
-      <LinearGradient start={{x: 0, y: 0}} end={{x: 0, y: 1}} colors={colors.gradient} style={styles.gradient}>
+      <LinearGradient
+        start={{x: 1, y: 1}}
+        end={{x: 0, y: 0}}
+        colors={gradientColors}
+        style={[styles.gradient, !showGradient && styles.border]}
+      >
         {pending && (
           <View style={styles.icon}>
             <ActivityIndicator color={colors.icon} size="small" />
@@ -79,11 +88,16 @@ const useStyles = () => {
       ...atoms.font_normal,
       ...atoms.body_1_lg_medium,
     },
+    border: {
+      ...atoms.border,
+      borderColor: color.gray_200,
+    },
   })
 
   const colors = {
     gradient: color.bg_gradient_1,
     icon: color.gray_max,
+    baseGradient: 'transparent',
   }
 
   return {styles, colors}

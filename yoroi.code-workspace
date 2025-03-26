@@ -81,6 +81,10 @@
       "path": "./packages/blockchains"
     },
     {
+      "name": "@yoroi/banners",
+      "path": "./packages/banners"
+    },
+    {
       "name": "@yoroi/e2e-wallet-mobile",
       "path": "./e2e/wallet-mobile"
     },

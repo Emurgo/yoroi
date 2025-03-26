@@ -62,6 +62,7 @@ interface NotificationEventBase {
 }
 
 export type NotificationConfig = {
+  displayDuration: number
   [NotificationTrigger.PrimaryTokenPriceChanged]: {
     notify: boolean
     thresholdInPercent: number
@@ -95,7 +96,7 @@ export type NotificationManager = {
   // Config sets the ground to what, when, and if should notify user
   config: {
     read: () => Promise<Readonly<NotificationConfig>> // return initial if empty
-    save: (config: Readonly<NotificationConfig>) => Promise<void>
+    save: (config: Readonly<Partial<NotificationConfig>>) => Promise<void>
     reset: () => Promise<void>
   }
 

@@ -22,16 +22,15 @@ import {Spacer} from '../../components/Spacer/Spacer'
 import {Text} from '../../components/Text'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
-import {defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
+import {defaultStackNavigationOptions, MenuRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {usePrefetchStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
 import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTransition'
 import {useCanVote} from '../RegisterCatalyst/common/hooks'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {useIsGovernanceFeatureEnabled} from '../Staking/Governance/common/helpers'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 
-const MenuStack = createStackNavigator()
+const MenuStack = createStackNavigator<MenuRoutes>()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
@@ -55,7 +54,6 @@ export const Menu = () => {
   const strings = useStrings()
   const {styles, color} = useStyles()
   const navigateTo = useNavigateTo()
-  const {wallet} = useSelectedWallet()
   const {isPoolRetiring} = usePoolTransition()
   const {track} = useMetrics()
 
@@ -64,7 +62,6 @@ export const Menu = () => {
       track.menuPageViewed()
     }, [track]),
   )
-  const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -82,13 +79,11 @@ export const Menu = () => {
           right={isPoolRetiring ? <Icon.Warning size={24} color={color.sys_magenta_500} /> : null}
         />
 
-        {isGovernanceFeatureEnabled && (
-          <Governance
-            label={strings.governanceCentre}
-            onPress={navigateTo.governanceCentre}
-            left={<Icon.Governance size={24} color={color.gray_600} />}
-          />
-        )}
+        <Governance
+          label={strings.governanceCentre}
+          onPress={navigateTo.governanceCentre}
+          left={<Icon.Governance size={24} color={color.gray_600} />}
+        />
 
         <React.Suspense
           fallback={

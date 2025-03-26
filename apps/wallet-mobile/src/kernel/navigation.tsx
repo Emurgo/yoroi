@@ -244,6 +244,7 @@ export type SettingsStackRoutes = {
       onPress: () => void
     }
   }
+  'manage-notification-display-duration': undefined
   'settings-preparing-wallet': undefined
 }
 
@@ -343,8 +344,8 @@ export type NftRoutes = {
 }
 export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 
-type MenuRoutes = {
-  menu: undefined
+export type MenuRoutes = {
+  _menu: undefined
   'voting-registration': undefined
 }
 
@@ -540,6 +541,18 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToMenu: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'menu',
+          params: {
+            screen: '_menu',
+          },
+        },
+      })
+    },
+
     navigateToSettings: () => {
       navigation.navigate('manage-wallets', {
         screen: 'settings',
@@ -585,6 +598,15 @@ export const useWalletNavigation = () => {
         params: {
           screen: 'manage-collateral',
           params,
+        },
+      })
+    },
+
+    navigateToNotificationDisplayDuration: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'manage-notification-display-duration',
         },
       })
     },
