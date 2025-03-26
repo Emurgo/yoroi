@@ -1,5 +1,3 @@
-// TODO: Add when chinese traditional is available
-// import zhHant from './locales/zh-Hant'
 import {LANGUAGES} from './languages'
 import deDE from './locales/de-DE.json'
 import enUS from './locales/en-US.json'
@@ -30,8 +28,6 @@ const translations = {
   [LANGUAGES.GERMAN]: {...defaultLocale, ...deDE},
   [LANGUAGES.FRENCH]: {...defaultLocale, ...frFR},
   [LANGUAGES.VIETNAMESE]: {...defaultLocale, ...viVN},
-  // TODO: Add when chinese traditional is available
-  // [LANGUAGES.CHINESE_TRADITIONAL]: {...defaultLocale, ...zhHans},
 }
 
 export default translations
