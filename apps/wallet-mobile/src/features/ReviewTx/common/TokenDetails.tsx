@@ -158,7 +158,7 @@ const Overview = ({
 
         <Description info={info} />
 
-        <ExplorerInfoLinks id={info.id} type="token" />
+        <ExplorerInfoLinks value={info.id} type="token" />
       </View>
     )
   }
@@ -168,7 +168,7 @@ const Overview = ({
 
       <Description info={info} />
 
-      <ExplorerInfoLinks id={info.id} type="token" />
+      <ExplorerInfoLinks value={info.id} type="token" />
     </View>
   )
 }

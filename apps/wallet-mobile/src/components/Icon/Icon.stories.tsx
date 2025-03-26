@@ -2,7 +2,6 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ColorSchemeName, ScrollView, Text, TextInput, View} from 'react-native'
 
-import {mockTransactionInfo} from '../../yoroi-wallets/mocks/transaction'
 import {Icon} from '../Icon'
 
 storiesOf('Icon', module).add('Gallery', () => {
@@ -61,35 +60,13 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.TabMenuActive size={40} />} title="Tab Menu Active" />
 
-        <Item
-          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SENT', status: 'SUCCESSFUL'})} />}
-          title="Success-Sent"
-        />
+        <Item icon={<Icon.Direction transactionDirection="SENT" />} title="Sent" />
 
-        <Item
-          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'RECEIVED', status: 'SUCCESSFUL'})} />}
-          title="Success-Received"
-        />
+        <Item icon={<Icon.Direction transactionDirection="RECEIVED" />} title="Received" />
 
-        <Item
-          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SELF', status: 'SUCCESSFUL'})} />}
-          title="Success-Intrawallet"
-        />
+        <Item icon={<Icon.Direction transactionDirection="SELF" />} title="Intrawallet" />
 
-        <Item
-          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SENT', status: 'PENDING'})} />}
-          title="Pending-Sent"
-        />
-
-        <Item
-          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'RECEIVED', status: 'PENDING'})} />}
-          title="Pending-Received"
-        />
-
-        <Item
-          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SELF', status: 'PENDING'})} />}
-          title="Pending-Intrawallet"
-        />
+        <Item icon={<Icon.Direction transactionDirection="MULTI" />} title="Multi" />
 
         <Item icon={<Icon.Settings size={40} />} title="Settings" />
 

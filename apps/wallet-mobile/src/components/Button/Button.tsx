@@ -162,11 +162,13 @@ const useStyles = ({
       break
     case ButtonType.Text:
     case ButtonType.SecondaryText:
-    case ButtonType.Link:
       shape =
         size === 'M'
           ? {maxHeight: 40, ...atoms.py_sm, ...atoms.px_md, ...atoms.gap_xs, ...atoms.rounded_sm}
           : {maxHeight: 32, ...atoms.p_xs, ...atoms.px_sm, ...atoms.gap_2xs, ...atoms.rounded_sm}
+      break
+    case ButtonType.Link:
+      shape = size === 'M' ? {...atoms.gap_xs} : {...atoms.gap_2xs}
       break
     case ButtonType.Circle:
       shape = {width: 56, height: 56, ...atoms.align_center, ...atoms.rounded_full}

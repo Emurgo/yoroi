@@ -8,6 +8,7 @@ import {CopyButton} from '../../../../../../components/CopyButton'
 import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {features} from '../../../../../../kernel/features'
 import {isEmptyString} from '../../../../../../kernel/utils'
+import {ExplorerInfoLinks} from '../../../../../ReviewTx/common/ExplorerInfoLinks'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioTokenDetailParams} from '../../../../common/hooks/useNavigateTo'
 import {useStrings} from '../../../../common/hooks/useStrings'
@@ -17,27 +18,17 @@ import {TokenNews} from './TokenNews'
 export const Overview = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const [expanded, setExpanded] = useState(true)
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const {
-    wallet: {balances, networkManager},
+    wallet: {balances},
   } = useSelectedWallet()
-  const explorers = networkManager.explorers
-  const tokenInfo = balances.records.get(tokenId)
-  const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : ''
-  const [policyId] = tokenInfo?.info.id.split('.') ?? []
-
-  const [expanded, setExpanded] = useState(true)
-
-  const handleOpenLink = async (direction: 'cardanoscan' | 'adaex') => {
-    if (tokenInfo == null) return
-    if (direction === 'cardanoscan') {
-      await Linking.openURL(explorers.cardanoscan.token(tokenInfo.info.id))
-    } else {
-      await Linking.openURL(explorers.cexplorer.token(tokenInfo.info.id))
-    }
-  }
-
+  const tokenAmount = balances.records.get(tokenId)
+  const tokenInfo = tokenAmount?.info
   if (!tokenInfo) return null
+
+  const tokenSymbol = infoExtractName(tokenInfo, {mode: 'currency'})
+  const [policyId] = tokenInfo.id.split('.')[0]
 
   return (
     <View style={styles.scrollView}>
@@ -45,12 +36,12 @@ export const Overview = () => {
 
       <Accordion label={strings.info} expanded={expanded} onChange={setExpanded} wrapperStyle={styles.container}>
         <View style={styles.tokenInfoContainer}>
-          <TokenInfoIcon size="sm" info={tokenInfo.info} imageStyle={styles.tokenLogo} />
+          <TokenInfoIcon size="sm" info={tokenInfo} imageStyle={styles.tokenLogo} />
 
           <Text style={styles.tokenName}>{tokenSymbol}</Text>
         </View>
 
-        <Text style={styles.textBody}>{tokenInfo.info?.description}</Text>
+        <Text style={styles.textBody}>{tokenInfo.description}</Text>
 
         <Spacer height={24} />
 
@@ -59,9 +50,9 @@ export const Overview = () => {
 
           <Spacer height={4} />
 
-          {!isEmptyString(tokenInfo.info?.website) ? (
-            <TouchableOpacity onPress={() => Linking.openURL(tokenInfo.info.website)}>
-              <Text style={styles.linkText}>{tokenInfo.info.website}</Text>
+          {!isEmptyString(tokenInfo.website) ? (
+            <TouchableOpacity onPress={() => Linking.openURL(tokenInfo.website)}>
+              <Text style={styles.linkText}>{tokenInfo.website}</Text>
             </TouchableOpacity>
           ) : (
             <Text style={styles.textBody}>-</Text>
@@ -70,7 +61,7 @@ export const Overview = () => {
 
         <Spacer height={24} />
 
-        {!isPrimaryToken(tokenInfo.info) && (
+        {!isPrimaryToken(tokenInfo) && (
           <>
             <View>
               <Text style={styles.title}>{strings.policyID}</Text>
@@ -88,8 +79,8 @@ export const Overview = () => {
               <Spacer height={4} />
 
               <CopyButton
-                title={tokenInfo.info?.fingerprint ?? '--'}
-                value={tokenInfo.info?.fingerprint ?? ''}
+                title={tokenInfo.fingerprint ?? '--'}
+                value={tokenInfo.fingerprint ?? ''}
                 style={styles.copyButton}
               />
             </View>
@@ -98,23 +89,7 @@ export const Overview = () => {
           </>
         )}
 
-        <View>
-          <Text style={styles.title}>{strings.detailsOn}</Text>
-
-          <Spacer height={4} />
-
-          <View style={styles.linkGroup}>
-            <TouchableOpacity onPress={() => handleOpenLink('cardanoscan')}>
-              <Text style={styles.link}>Cardanoscan</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => handleOpenLink('adaex')}>
-              <Text style={styles.link}>Adaex</Text>
-            </TouchableOpacity>
-          </View>
-
-          <Spacer height={16} />
-        </View>
+        <ExplorerInfoLinks type="token" value={tokenInfo.id} />
       </Accordion>
 
       <Spacer height={16} />
@@ -158,15 +133,6 @@ const useStyles = () => {
     textBody: {
       ...atoms.body_2_md_regular,
       color: color.gray_600,
-    },
-    link: {
-      ...atoms.link_1_lg,
-      color: color.text_primary_medium,
-    },
-    linkGroup: {
-      ...atoms.flex_1,
-      ...atoms.flex_row,
-      ...atoms.gap_lg,
     },
     linkText: {
       color: color.primary_500,
