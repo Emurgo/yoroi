@@ -8,7 +8,7 @@ Esta política de privacidad ("Política") gobierna la colección, el uso, y la 
 
 "Datos Personales" se refiere a cualquier información que identifique o pueda ser utilizada para identificar a un individuo, directa o indirectamente.
 
-## Colección de los Datos Personales
+## 4. Uso de Datos Personales
 
 3.1 Recopilamos Datos Personales de usted cuando usted nos los proporciona voluntariamente a través de formularios, registros, encuestas u otras interacciones en el Software.
 
@@ -31,7 +31,7 @@ Esta política de privacidad ("Política") gobierna la colección, el uso, y la 
 
 - 3.4 Sólo recopilaremos y procesaremos Datos Personales que sean relevantes, necesarios, y proporcional para cumplir los propósitos especificados en la Sección 3 de esta Política.
 
-## 4. Uso de Datos Personales
+## 9. Privacidad de Menores
 
 Trataremos sus datos personales recabados, para las siguientes finalidades:
 
@@ -48,7 +48,7 @@ Trataremos sus datos personales recabados, para las siguientes finalidades:
 6.  Detectar, prevenir y abordar problemas técnicos o violaciones de seguridad;
 
 
-## Divulgación de Datos Personales
+## 6. Sus Derechos
 
 Podremos revelar Datos Personales a terceros en las siguientes circunstancias:
 
