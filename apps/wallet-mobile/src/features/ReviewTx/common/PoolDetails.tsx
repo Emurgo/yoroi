@@ -88,7 +88,7 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
       <Space height="lg" />
 
       {poolInfo.explorer && !isEmptyString(poolInfo.explorer.id) && (
-        <ExplorerInfoLinks id={poolInfo.explorer.id} type="pool" />
+        <ExplorerInfoLinks value={poolInfo.explorer.id} type="pool" />
       )}
     </View>
   )
