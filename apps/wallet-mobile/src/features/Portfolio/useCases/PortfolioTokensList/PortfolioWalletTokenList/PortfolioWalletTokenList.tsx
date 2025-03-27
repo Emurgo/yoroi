@@ -1,8 +1,9 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
-import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
+import {amountBreakdown, infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
+import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -51,12 +52,24 @@ export const PortfolioWalletTokenList = () => {
     [balances.records, portfolioPrimaryTokenInfo, tokenActivity],
   )
 
-  const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
+  const tokensList = React.useMemo(
+    () =>
+      [...balances.fts].sort((a, b) => {
+        if (isPrimaryToken(a.info)) return -1 // `a` is the PrimaryToken, so it should come first
+        if (isPrimaryToken(b.info)) return 1 // `b` is the PrimaryToken, so it should come first
+
+        // Compare based on weighted value (price * amount)
+        return (tokenActivity[b.info.id]?.price.close ?? new BigNumber(0))
+          .multipliedBy(amountBreakdown(b).bn)
+          .comparedTo((tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)).multipliedBy(amountBreakdown(a).bn))
+      }) ?? [],
+    [balances.fts, tokenActivity],
+  )
   const isJustPt = tokensList.length === 1 && isPrimaryToken(tokensList[0].info)
 
   const isFirstUser = isJustPt && isZeroADABalance
 
-  const getListTokens = React.useMemo(() => {
+  const filteredTokens = React.useMemo(() => {
     if (isSearching) {
       return tokensList.filter((token) => {
         const name = infoExtractName(token.info)
@@ -90,22 +103,6 @@ export const PortfolioWalletTokenList = () => {
   }, [isSearching, search, track])
 
   const isPreprod = network === Chain.Network.Preprod
-
-  const [loadedTokens, setLoadedTokens] = React.useState(getListTokens.slice(0, batchSize))
-  const [currentIndex, setCurrentIndex] = React.useState(batchSize)
-
-  React.useEffect(() => {
-    setLoadedTokens(getListTokens.slice(0, currentIndex + batchSize))
-    setCurrentIndex(currentIndex + batchSize)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokensList]) // must be tokensList
-
-  const handleOnEndReached = React.useCallback(() => {
-    if (currentIndex >= getListTokens.length) return
-    const nextBatch = getListTokens.slice(currentIndex, currentIndex + batchSize)
-    setLoadedTokens([...loadedTokens, ...nextBatch])
-    setCurrentIndex(currentIndex + batchSize)
-  }, [currentIndex, getListTokens, loadedTokens])
 
   const renderFooterList = () => {
     if (isSearching) return null
@@ -144,11 +141,11 @@ export const PortfolioWalletTokenList = () => {
   return (
     <View style={styles.root}>
       <FlashList
-        data={loadedTokens}
+        data={filteredTokens}
         ListHeaderComponent={
           <HeadingList
             isShowBalanceCard={!isSearching}
-            countTokensList={getListTokens.length}
+            countTokensList={filteredTokens.length}
             amount={amount}
             isFirstUser={isFirstUser}
           />
@@ -158,8 +155,6 @@ export const PortfolioWalletTokenList = () => {
         renderItem={({item}) => <TokenBalanceItem amount={item} />}
         contentContainerStyle={styles.container}
         ListEmptyComponent={() => <TokenEmptyList />}
-        onEndReached={handleOnEndReached}
-        onEndReachedThreshold={0.5}
         estimatedItemSize={72}
       />
     </View>
@@ -204,8 +199,6 @@ const SkeletonItem = () => {
     </View>
   )
 }
-
-const batchSize = 50
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
