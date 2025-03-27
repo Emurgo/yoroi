@@ -141,7 +141,7 @@
     "@yoroi/api": "1.5.3",
     "@yoroi/common": "1.5.4",
     "@yoroi/explorers": "1.0.2",
-    "@yoroi/portfolio": "1.0.3",
+    "@yoroi/portfolio": "1.0.4",
     "@yoroi/types": "1.5.10"
   },
   "devDependencies": {

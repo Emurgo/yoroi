@@ -154,7 +154,7 @@
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
     "@yoroi/common": "^1.5.4",
-    "@yoroi/portfolio": "1.0.3",
+    "@yoroi/portfolio": "1.0.4",
     "@yoroi/types": "1.5.10",
     "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",
@@ -180,7 +180,7 @@
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
     "@yoroi/common": "1.5.4",
-    "@yoroi/portfolio": "1.0.3",
+    "@yoroi/portfolio": "1.0.4",
     "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-query": "^3.39.3"
