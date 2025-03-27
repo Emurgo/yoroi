@@ -5,7 +5,6 @@ files:
     languages_mapping:
       locale:
         zh-CN: zh-Hans
-        zh-TW: zh-Hant
         ja: ja-JP
         ko: ko-KR
         ru: ru-RU
@@ -14,15 +13,12 @@ files:
         id: id-ID
         es: es-ES
         pt: pt-BR
-        it: it-IT
-        nl: nl-NL
-        cz: cs-CZ
+        vi: vi-VN
   - source: /apps/wallet-mobile/src/features/Legal/**/en-US.md
     translation: /apps/wallet-mobile/src/features/Legal/**/%locale%.md
     languages_mapping:
       locale:
         zh-CN: zh-Hans
-        zh-TW: zh-Hant
         ja: ja-JP
         ko: ko-KR
         ru: ru-RU
@@ -31,7 +27,5 @@ files:
         id: id-ID
         es: es-ES
         pt: pt-BR
-        it: it-IT
-        nl: nl-NL
-        cz: cs-CZ
+        vi: vi-VN
     content_segmentation: 0

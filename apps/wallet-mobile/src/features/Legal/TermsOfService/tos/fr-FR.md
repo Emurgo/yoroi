@@ -83,7 +83,7 @@ c. Intégralité de l'entente - Avis de non-responsabilité.</strong>. La prése
 
 d. LE PRÉSENT CONTRAT EST ASSUJETTI À L'ARBITRAGE EXÉCUTOIRE.</strong> L'Utilisateur accepte que tout litige ou réclamation contre toute personne découlant du présent Contrat, de quelque manière, que ce soit en relation avec celui-ci ou avec l'accès, l'utilisation ou l'installation du Logiciel par l'Utilisateur ou toute autre personne sera soumis à l'arbitrage obligatoire en vertu du Règlement d'arbitrage de la Chambre de commerce internationale par un ou plusieurs arbitres nommés conformément aux dites règles. Le lieu de l'arbitrage sera le Japon. La langue de l'arbitrage sera l'anglais.
 
-e. LANGUE.</strong> Toute traduction du présent Contrat est faite à des fins de référence locale uniquement, et en cas d'incohérence entre les versions anglaise et non anglaise, la version anglaise du présent Contrat prévaudra à tous égards.
+**c. Equipment.** User shall be solely responsible for providing, maintaining and ensuring compatibility with the Software, all hardware, software, electrical and other physical requirements for User's use of the Software, including, without limitation, telecommunications and internet access connections and links, web browsers or other equipment, programs and services required to access and use the Software.
 
 **f. TRANSLATIONS.** The Company and its team strives to provide accurate and reliable translations, there may be limitations and discrepancies inherent to the translation process. However, translations are provided by an automated system or human translators, and there may be instances where the meaning and nuance of the original text are not fully captured or may be interpreted differently in the translated version.
 

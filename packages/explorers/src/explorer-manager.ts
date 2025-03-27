@@ -8,7 +8,7 @@ export const explorerManager: Readonly<
   >
 > = freeze({
   [Chain.Network.Mainnet]: {
-    [Explorers.Explorer.CardanoScan]: {
+    [Explorers.Explorer.Cardanoscan]: {
       token: (fingerprint) => `https://cardanoscan.io/token/${fingerprint}`,
       address: (address) => `https://cardanoscan.io/address/${address}`,
       tx: (txHash) => `https://cardanoscan.io/transaction/${txHash}`,
@@ -16,7 +16,7 @@ export const explorerManager: Readonly<
       stake: (stakeAddress) =>
         `https://cardanoscan.io/stakeKey/${stakeAddress}`,
     },
-    [Explorers.Explorer.CExplorer]: {
+    [Explorers.Explorer.Cexplorer]: {
       token: (fingerprint) => `https://cexplorer.io/asset/${fingerprint}`,
       address: (address) => `https://cexplorer.io/address/${address}`,
       tx: (txHash) => `https://cexplorer.io/tx/${txHash}`,
@@ -25,7 +25,7 @@ export const explorerManager: Readonly<
     },
   },
   [Chain.Network.Preprod]: {
-    [Explorers.Explorer.CardanoScan]: {
+    [Explorers.Explorer.Cardanoscan]: {
       token: (fingerprint) =>
         `https://preprod.cardanoscan.io/token/${fingerprint}`,
       address: (address) => `https://preprod.cardanoscan.io/address/${address}`,
@@ -34,7 +34,7 @@ export const explorerManager: Readonly<
       stake: (stakeAddress) =>
         `https://preprod.cardanoscan.io/stakeKey/${stakeAddress}`,
     },
-    [Explorers.Explorer.CExplorer]: {
+    [Explorers.Explorer.Cexplorer]: {
       token: (fingerprint) =>
         `https://preprod.cexplorer.io/asset/${fingerprint}`,
       address: (address) => `https://preprod.cexplorer.io/address/${address}`,
@@ -45,7 +45,7 @@ export const explorerManager: Readonly<
     },
   },
   [Chain.Network.Preview]: {
-    [Explorers.Explorer.CardanoScan]: {
+    [Explorers.Explorer.Cardanoscan]: {
       token: (fingerprint) =>
         `https://preview.cardanoscan.io/token/${fingerprint}`,
       address: (address) => `https://preview.cardanoscan.io/address/${address}`,
@@ -54,7 +54,7 @@ export const explorerManager: Readonly<
       stake: (stakeAddress) =>
         `https://preview.cardanoscan.io/stakeKey/${stakeAddress}`,
     },
-    [Explorers.Explorer.CExplorer]: {
+    [Explorers.Explorer.Cexplorer]: {
       token: (fingerprint) =>
         `https://preview.cexplorer.io/asset/${fingerprint}`,
       address: (address) => `https://preview.cexplorer.io/address/${address}`,
