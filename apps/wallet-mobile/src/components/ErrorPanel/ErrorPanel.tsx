@@ -10,7 +10,7 @@ export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
 
   return (
     <View {...props} style={[style, styles.container]}>
-      <Icon.Info color={colors.icon} />
+      <Icon.Info color={colors.icon} size={28} />
 
       <Spacer height={10} />
 
@@ -23,7 +23,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: 'rgba(255, 16, 81, 0.06)',
+      backgroundColor: color.sys_magenta_100,
       borderRadius: 8,
       flexDirection: 'column',
       ...atoms.pt_md,
