@@ -189,8 +189,6 @@ const WarningPanelMaxAmountsReached = () => {
   return (
     <View style={styles.panel}>
       <MaxAmountsPerTx />
-
-      <Spacer height={16} />
     </View>
   )
 }
@@ -393,7 +391,7 @@ const useStyles = () => {
       borderBottomWidth: StyleSheet.hairlineWidth,
     },
     panel: {
-      ...atoms.px_lg,
+      ...atoms.py_lg,
     },
     tabs: {
       flexDirection: 'row',
