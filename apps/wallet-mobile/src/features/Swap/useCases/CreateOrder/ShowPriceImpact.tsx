@@ -1,16 +1,15 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapProvider'
 
-export const ShowPriceImpact = () => {
+export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
   const strings = useStrings()
-  const swapForm = useSwap()
+  const styles = useStyles()
 
-  const priceImpact = Number(swapForm.estimate?.priceImpact)
   const priceImpactRisk = getPriceImpactRisk(priceImpact)
 
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
@@ -26,7 +25,7 @@ export const ShowPriceImpact = () => {
 
       {priceImpactRisk === 'high' && <Icon.Warning size={20} color={textColor} />}
 
-      <Text style={[{color: textColor}, styles.textContent]}>
+      <Text style={[{color: textColor}, styles.text]}>
         <Text>{strings.priceImpact}</Text>
 
         <Text> = </Text>
@@ -37,18 +36,17 @@ export const ShowPriceImpact = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  row: {
-    paddingTop: 4,
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 2,
-    alignItems: 'flex-start',
-  },
-  textContent: {
-    flexWrap: 'wrap',
-    flex: 1,
-    textAlign: 'left',
-    lineHeight: 20,
-  },
-})
+const useStyles = () => {
+  const {atoms} = useTheme()
+  const styles = StyleSheet.create({
+    row: {
+      ...atoms.flex,
+      ...atoms.flex_row,
+      ...atoms.gap_2xs,
+    },
+    text: {
+      ...atoms.body_2_md_regular,
+    },
+  })
+  return styles
+}

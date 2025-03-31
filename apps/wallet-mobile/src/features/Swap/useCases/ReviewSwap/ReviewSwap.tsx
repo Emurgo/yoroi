@@ -55,6 +55,7 @@ export const ReviewSwap = () => {
 
   const onSwapTxSuccess = () => {
     trackSwapOrderSubmitted()
+    swapForm.action({type: 'TokenInAmountChanged', value: '0'})
     navigateTo.submittedTx()
   }
 

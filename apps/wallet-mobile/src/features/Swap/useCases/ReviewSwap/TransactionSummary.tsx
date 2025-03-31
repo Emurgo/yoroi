@@ -12,6 +12,7 @@ import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {SwapContext} from '../../common/SwapProvider'
+import {ShowPriceImpact} from '../CreateOrder/ShowPriceImpact'
 
 export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const strings = useStrings()
@@ -65,29 +66,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     },
     {
       label: strings.priceImpact,
-      value:
-        priceImpactRisk === 'none' ? (
-          <Text style={[styles.priceImpactRiskText, styles.priceImpactLowRiskText]}>&lt;1%</Text>
-        ) : (
-          <View style={styles.priceImpactRiskContainer}>
-            <View style={styles.flex}>
-              {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
-
-              {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
-
-              <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
-                {swapForm.createTx?.priceImpact}%
-              </Text>
-            </View>
-
-            <View style={{flexDirection: 'row'}}>
-              <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
-                {`(${swapForm.createTx?.netPrice} ${tokenOutTicker}/${tokenInTicker})`}
-              </Text>
-            </View>
-          </View>
-        ),
-      warning: priceImpactRisk === 'high',
+      value: <ShowPriceImpact priceImpact={swapForm.createTx?.priceImpact} />,
       hidden: orderType === 'limit',
     },
     {
@@ -170,17 +149,6 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    priceImpactRiskContainer: {
-      ...atoms.flex_1,
-      ...atoms.justify_end,
-      ...atoms.align_end,
-    },
-    priceImpactRiskText: {
-      ...atoms.body_2_md_regular,
-    },
-    priceImpactLowRiskText: {
-      color: color.secondary_600,
-    },
     alignRight: {
       ...atoms.text_right,
     },

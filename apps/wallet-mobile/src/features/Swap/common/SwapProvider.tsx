@@ -74,11 +74,14 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   useFocusEffect(refetches)
 
-  const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} = usePortfolioTokenInfos({
-    wallet,
-    tokenIds,
-    sourceId: 'SwapProvider',
-  })
+  const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} = usePortfolioTokenInfos(
+    {
+      wallet,
+      tokenIds,
+      sourceId: 'SwapProvider',
+    },
+    {suspense: true},
+  )
 
   const tokenOutInputRef = React.useRef<TextInput | null>(null)
   const tokenInInputRef = React.useRef<TextInput | null>(null)

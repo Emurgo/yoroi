@@ -139,7 +139,7 @@ export const SwapMainScreen = () => {
 
             {swapForm.orderType === 'limit' && <LimitInput />}
 
-            {swapForm.orderType === 'market' && <ShowPriceImpact />}
+            {swapForm.orderType === 'market' && <ShowPriceImpact priceImpact={swapForm.estimate?.priceImpact} />}
 
             {swapForm.orderType === 'limit' && (
               <View style={styles.between}>
