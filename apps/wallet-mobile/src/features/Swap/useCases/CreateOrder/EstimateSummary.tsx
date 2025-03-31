@@ -48,18 +48,10 @@ export const EstimateSummary = () => {
         value={
           protocol !== undefined && (
             <View style={styles.composedText}>
-              <ProtocolAvatar protocol={protocol} preventOpenLink />
-
-              {swapForm.estimate?.splits.length > 1 && (
-                <Button
-                  type={ButtonType.SecondaryText}
-                  title="…"
-                  rightIcon
-                  icon={Icon.Chevron}
-                  style={styles.reducedPadding}
-                  onPress={expand}
-                />
-              )}
+              <ProtocolAvatar
+                protocol={protocol}
+                {...(swapForm.estimate?.splits.length > 1 ? {onPress: expand, append: '...'} : {preventOpenLink: true})}
+              />
             </View>
           )
         }
