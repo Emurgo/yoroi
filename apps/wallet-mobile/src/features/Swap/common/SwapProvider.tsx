@@ -339,6 +339,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
       case SwapAction.WantedPriceInputChanged:
         draft.wantedPrice = parseNumber(action.value)
+        if (Number(draft.wantedPrice) === 0) draft.needsNewEstimate = false
         break
 
       case SwapAction.SwitchTouched:
