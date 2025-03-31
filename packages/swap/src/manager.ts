@@ -128,13 +128,14 @@ const apiManagerMaker = (
 
         const merged: Record<Swap.Order['txHash'], Swap.Order> = {}
         const append = (order: Swap.Order) => {
+          const key = `${order.txHash}#${order.outputIndex ?? 0}`
           /* istanbul ignore next */
           if (
             // TODO: refactor to avoid istanbul ignore
-            merged[order.txHash] === undefined ||
+            merged[key] === undefined ||
             order.aggregator === Swap.Aggregator.Dexhunter
           )
-            merged[order.txHash] = order
+            merged[key] = order
         }
 
         responses

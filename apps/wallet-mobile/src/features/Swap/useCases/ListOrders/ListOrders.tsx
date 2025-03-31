@@ -126,7 +126,7 @@ const Content = ({filter}: {filter: Filter}) => {
           contentContainerStyle={styles.list}
           data={orders}
           renderItem={({item}) => <Order order={item} />}
-          keyExtractor={(item) => item.txHash ?? item.customId ?? ''}
+          keyExtractor={(item) => `${item.txHash}#${item.outputIndex ?? 0}`}
           ListEmptyComponent={<ListEmptyComponent filter={filter} />}
         />
       </View>
