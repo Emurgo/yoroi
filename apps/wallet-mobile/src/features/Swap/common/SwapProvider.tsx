@@ -304,7 +304,10 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
       case SwapAction.TokenInAmountChanged:
         draft.tokenInInput.value = !Number.isNaN(Number(action.value.replace(',', '.')))
-          ? action.value.replace(',', '.').replace(/^0+(.+)/, '$1')
+          ? action.value
+              .replace(',', '.')
+              .replace(/^0+(.+)/, '$1')
+              .replace(/^\.$/, '0.')
           : '0'
         if (action.value === '' || action.value === '0') {
           draft.tokenOutInput.value = '0'
@@ -316,7 +319,10 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
       case SwapAction.TokenOutAmountChanged:
         draft.lastInputTouched = 'out'
         draft.tokenOutInput.value = !Number.isNaN(Number(action.value.replace(',', '.')))
-          ? action.value.replace(',', '.').replace(/^0+(.+)/, '$1')
+          ? action.value
+              .replace(',', '.')
+              .replace(/^0+(.+)/, '$1')
+              .replace(/^\.$/, '0.')
           : '0'
         if (action.value === '' || action.value === '0') {
           draft.tokenInInput.value = '0'
