@@ -37,8 +37,8 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const info = amount.info
 
   const decimals = info?.decimals ?? 0
-
   const value = tokenInput.value
+  const quantity = BigInt(Math.floor(Number(value ?? 0) * 10 ** (info?.decimals ?? 0)))
   const touched = tokenInput.isTouched
   const inputRef = direction === 'in' ? swapForm.tokenInInputRef : swapForm.tokenOutInputRef
   const error = direction === 'in' ? tokenInput.error : null
@@ -146,7 +146,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
           <PairedBalance
             amount={{
               info,
-              quantity: BigInt(Math.floor(Number(tokenInput.value ?? 0) * 10 ** (info.decimals ?? 0))),
+              quantity,
             }}
           />
         )}

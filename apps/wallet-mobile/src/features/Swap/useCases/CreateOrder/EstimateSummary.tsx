@@ -29,6 +29,10 @@ export const EstimateSummary = () => {
 
   if (swapForm.estimate === undefined) return null
 
+  const netPrice = swapForm.estimate.netPrice
+  const roundedPrice = netPrice.toFixed(tokenOutInfo?.decimals ?? 0)
+  const price = roundedPrice !== '0' ? roundedPrice : netPrice.toFixed(6)
+
   const expand = () =>
     openModal({
       title: strings.route,
@@ -64,9 +68,7 @@ export const EstimateSummary = () => {
       <Row
         label={strings.price}
         description={swapForm.orderType === 'limit' ? strings.limitPriceInfo : strings.marketPriceInfo}
-        value={`1 ${tokenInTicker} = ${swapForm.estimate?.netPrice.toFixed(
-          tokenOutInfo?.decimals ?? 0,
-        )} ${tokenOutTicker}`}
+        value={`1 ${tokenInTicker} = ${price} ${tokenOutTicker}`}
       />
 
       <Row
