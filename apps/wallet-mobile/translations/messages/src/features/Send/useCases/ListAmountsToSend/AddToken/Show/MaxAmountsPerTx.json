@@ -4,14 +4,14 @@
     "defaultMessage": "!!!is the maximum number allowed to send in one transaction",
     "file": "src/features/Send/useCases/ListAmountsToSend/AddToken/Show/MaxAmountsPerTx.tsx",
     "start": {
-      "line": 26,
+      "line": 28,
       "column": 19,
-      "index": 755
+      "index": 872
     },
     "end": {
-      "line": 29,
+      "line": 31,
       "column": 3,
-      "index": 906
+      "index": 1023
     }
   }
 ]
