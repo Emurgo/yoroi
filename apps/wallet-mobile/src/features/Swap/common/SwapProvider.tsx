@@ -303,12 +303,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
 
       case SwapAction.TokenInAmountChanged:
-        draft.tokenInInput.value = !Number.isNaN(Number(action.value.replace(',', '.')))
-          ? action.value
-              .replace(',', '.')
-              .replace(/^0+(.+)/, '$1')
-              .replace(/^\.$/, '0.')
-          : '0'
+        draft.tokenInInput.value = parseNumber(action.value)
         if (action.value === '' || action.value === '0') {
           draft.tokenOutInput.value = '0'
           draft.estimate = undefined
@@ -318,12 +313,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
       case SwapAction.TokenOutAmountChanged:
         draft.lastInputTouched = 'out'
-        draft.tokenOutInput.value = !Number.isNaN(Number(action.value.replace(',', '.')))
-          ? action.value
-              .replace(',', '.')
-              .replace(/^0+(.+)/, '$1')
-              .replace(/^\.$/, '0.')
-          : '0'
+        draft.tokenOutInput.value = parseNumber(action.value)
         if (action.value === '' || action.value === '0') {
           draft.tokenInInput.value = '0'
           draft.estimate = undefined
@@ -348,11 +338,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
 
       case SwapAction.WantedPriceInputChanged:
-        try {
-          draft.wantedPrice = String(Number(action.value))
-        } catch {
-          break
-        }
+        draft.wantedPrice = parseNumber(action.value)
         break
 
       case SwapAction.SwitchTouched:
@@ -594,3 +580,11 @@ const SwapContext = React.createContext<SwapContext>({
   assignManagerSettings: () => ({routingPreference: 'auto', slippage: 1}),
   refetchOrders: () => null,
 })
+
+const parseNumber = (text: string) =>
+  !Number.isNaN(Number(text.replace(',', '.')))
+    ? text
+        .replace(',', '.')
+        .replace(/^0+(.+)/, '$1')
+        .replace(/^\.$/, '0.')
+    : '0'
