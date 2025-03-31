@@ -1,5 +1,5 @@
 import * as CSL from '@emurgo/cross-csl-core'
-import {TransactionWitnessSet, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
@@ -185,21 +185,6 @@ class CIP30Extension {
       const emptyWitnessSet = await csl.TransactionWitnessSet.new()
       const tx = await csl.Transaction.new(txBody, emptyWitnessSet, undefined)
       return tx.toHex()
-    } finally {
-      release()
-    }
-  }
-
-  async sendReorganisationTx(cbor: string, witnesses: TransactionWitnessSet): Promise<void> {
-    const {csl, release} = getCSL()
-
-    try {
-      const tx = await csl.Transaction.fromHex(cbor)
-      const txBody = await tx.body()
-      const signedTx = await csl.Transaction.new(txBody, witnesses, undefined)
-      const signedTxBytes = await signedTx.toBytes()
-
-      await this.wallet.submitTransaction(Buffer.from(signedTxBytes).toString('base64'))
     } finally {
       release()
     }

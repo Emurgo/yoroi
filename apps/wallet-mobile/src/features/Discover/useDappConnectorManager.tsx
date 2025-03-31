@@ -1,6 +1,6 @@
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useAsyncStorage} from '@yoroi/common'
-import {DappConnector} from '@yoroi/dapp-connector'
+import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 
 import {logger} from '../../kernel/logger/logger'
@@ -104,7 +104,7 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [track, activeTabOrigin, navigateToTxReview, dappCollateralRequestUtils, navigateTo],
+    [activeTabOrigin, track, navigateToTxReview, dappCollateralRequestUtils, navigateTo],
   )
 
   const handleSignTxWithHW = React.useCallback(
@@ -163,7 +163,7 @@ export const useDappConnectorManager = () => {
           return
         }
 
-        dappCollateralRequestUtils.addCollateralRequestedDappsId(matchingDappConnection?.dappOrigin)
+        dappCollateralRequestUtils.addCollateralRequestedDappsId(matchingDappConnection.dappOrigin)
         dappCollateralRequestUtils.showCollateralNotFoundAlert()
 
         resolve()
@@ -276,24 +276,35 @@ export const useDappCollateralRequestUtils = (wallet: YoroiWallet) => {
   const [dappIds, setDappsIds] = React.useState<Array<string>>([])
   const {navigateToCollateralSettings} = useWalletNavigation()
   const [isWarningActive, setIsWarningActive] = React.useState(false)
-  const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert(
+  const {tabActiveIndex} = useBrowser()
+  const strings = useStrings()
+  const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert({
     wallet,
-    () => {
+    collateralTxPendingTitle: strings.collateralTxPendingTitle,
+    collateralNotFoundTitle: strings.collateralNotFoundTitle,
+    collateralTxPendingText: strings.collateralTxPendingText,
+    collateralNotFoundText: strings.collateralNotFoundText,
+    collateralNotFoundActionText: strings.collateralNotFoundActionText,
+    onCollateralNotFoundPress: () => {
       navigateToCollateralSettings()
       setIsWarningActive(false)
     },
-    () => {
+    onCollateralPendingPress: () => {
       setIsWarningActive(false)
     },
-  )
+  })
 
-  const addCollateralRequestedDappsId = (dappId: string) => setDappsIds([...dappIds, dappId])
-  const removeCollateralRequestedDappsId = (dappId: string) => setDappsIds([...dappIds.filter((id) => id !== dappId)])
-  const getIsDappRequestingCollateral = (dappId: string) => dappIds.includes(dappId)
+  const addCollateralRequestedDappsId = (dappOrigin: DappConnection['dappOrigin']) =>
+    setDappsIds([...dappIds, prepareDappId(dappOrigin)])
+  const removeCollateralRequestedDappsId = (dappOrigin: DappConnection['dappOrigin']) =>
+    setDappsIds([...dappIds.filter((id) => id !== prepareDappId(dappOrigin))])
+  const getIsDappRequestingCollateral = (dappOrigin: DappConnection['dappOrigin']) =>
+    dappIds.includes(prepareDappId(dappOrigin))
   const hasCollateral = () => {
     const collateral = wallet.getCollateralInfo()
     return !!collateral.utxo && collateral.amount.quantity >= BigInt(getCollateralAmountInLovelace())
   }
+  const prepareDappId = (dappOrigin: DappConnection['dappOrigin']) => `${dappOrigin}-${tabActiveIndex}`
 
   return {
     collateralRequestedDappsIds: dappIds,

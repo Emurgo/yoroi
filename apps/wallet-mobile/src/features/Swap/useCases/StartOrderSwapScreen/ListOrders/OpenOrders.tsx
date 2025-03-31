@@ -142,10 +142,18 @@ export const OpenOrders = () => {
     }
   }
 
-  const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert(wallet, () => {
-    navigateToCollateralSettings({
-      backButton: {onPress: () => navigateTo.swapOpenOrders(), content: strings.backToSwapOrders},
-    })
+  const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert({
+    wallet,
+    collateralTxPendingTitle: strings.collateralTxPendingTitle,
+    collateralNotFoundTitle: strings.collateralNotFound,
+    collateralTxPendingText: strings.collateralTxPending,
+    collateralNotFoundText: strings.noActiveCollateral,
+    collateralNotFoundActionText: strings.assignCollateral,
+    onCollateralNotFoundPress: () => {
+      navigateToCollateralSettings({
+        backButton: {onPress: () => navigateTo.swapOpenOrders(), content: strings.backToSwapOrders},
+      })
+    },
   })
 
   const hasCollateral = () => {
@@ -732,28 +740,40 @@ const NoOrdersYet = () => {
   )
 }
 
-export const useShowCollateralNotFoundAlert = (
-  wallet: YoroiWallet,
-  onCollateralNotFoundPress?: () => void,
-  onCollateralPendingPress?: () => void,
-) => {
-  const strings = useStrings()
-
+export const useShowCollateralNotFoundAlert = ({
+  wallet,
+  collateralTxPendingTitle,
+  collateralNotFoundTitle,
+  collateralTxPendingText,
+  collateralNotFoundText,
+  collateralNotFoundActionText,
+  onCollateralNotFoundPress,
+  onCollateralPendingPress,
+}: {
+  wallet: YoroiWallet
+  collateralTxPendingTitle: string
+  collateralNotFoundTitle: string
+  collateralTxPendingText: string
+  collateralNotFoundText: string
+  collateralNotFoundActionText: string
+  onCollateralNotFoundPress?: () => void
+  onCollateralPendingPress?: () => void
+}) => {
   return () => {
     const collateral = wallet.getCollateralInfo()
     const isCollateralUtxoPending = !collateral.isConfirmed && collateral.collateralId.length > 0
 
     if (isCollateralUtxoPending) {
-      Alert.alert(strings.collateralTxPendingTitle, strings.collateralTxPending, [{onPress: onCollateralPendingPress}])
+      Alert.alert(collateralTxPendingTitle, collateralTxPendingText, [{onPress: onCollateralPendingPress}])
       return
     }
 
     Alert.alert(
-      strings.collateralNotFound,
-      strings.noActiveCollateral,
+      collateralNotFoundTitle,
+      collateralNotFoundText,
       [
         {
-          text: strings.assignCollateral,
+          text: collateralNotFoundActionText,
           onPress: onCollateralNotFoundPress,
         },
       ],
