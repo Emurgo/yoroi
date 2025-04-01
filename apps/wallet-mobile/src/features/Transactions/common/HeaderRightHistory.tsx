@@ -1,0 +1,52 @@
+import React from 'react'
+import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {TxHistoryRouteNavigation} from '../../../kernel/navigation'
+import {Icon} from '../../../components/Icon'
+import {useReceivedNotificationEvents} from '@yoroi/notifications'
+
+export const HeaderRightHistory = React.memo(() => {
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {color} = useTheme()
+  const {styles} = useStyles()
+  const {data: receivedNotifications = []} = useReceivedNotificationEvents()
+
+  const isBellActive = receivedNotifications.some((n) => !n.isRead)
+
+  return (
+    <View style={styles.root}>
+      <TouchableOpacity style={styles.bellIcon} onPress={() => navigation.navigate('notification-center-history')}>
+        <Icon.Bell color={color.gray_max} size={24} />
+        {isBellActive && <View style={styles.bellDot} />}
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}>
+        <Icon.Qr color={color.gray_max} size={24} />
+      </TouchableOpacity>
+    </View>
+  )
+})
+
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      ...atoms.pr_sm,
+      ...atoms.gap_md,
+      ...atoms.flex_row,
+    },
+    bellIcon: {
+      ...atoms.relative,
+    },
+    bellDot: {
+      ...atoms.absolute,
+      backgroundColor: color.red_static,
+      ...atoms.rounded_full,
+      top: 2,
+      right: 4,
+      width: 6,
+      height: 6,
+    },
+  })
+  return {styles}
+}
