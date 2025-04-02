@@ -356,6 +356,9 @@ export const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
         'This pair is not available in any liquidity pool.'
       break
     case response.error.message.includes('DOCTYPE html'):
+    case response.error.message.includes(
+      'Could not find the number of decimals',
+    ):
       response.error.message = 'Unknown error'
       break
   }
