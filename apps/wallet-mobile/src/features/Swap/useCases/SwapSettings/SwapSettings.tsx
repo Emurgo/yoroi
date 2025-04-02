@@ -5,7 +5,6 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {TextInput} from '../../../../components/TextInput/TextInput'
 import {useLanguage} from '../../../../kernel/i18n'
@@ -13,7 +12,6 @@ import {NumberLocale} from '../../../../kernel/i18n/languages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {Quantities} from '../../../../yoroi-wallets/utils/utils'
 import {SettingsSwitch} from '../../../Settings/common/SettingsSwitch'
-import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 
@@ -63,7 +61,6 @@ export const SwapSettings = () => {
   const [selectedChoiceLabel, setSelectedChoiceLabel] = React.useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = React.useState(defaultInputValue)
 
-  const navigateTo = useNavigateTo()
   const strings = useStrings()
   const {track} = useMetrics()
 
@@ -150,6 +147,17 @@ export const SwapSettings = () => {
             {aggregator !== 'auto' && (
               <>
                 <View style={styles.between}>
+                  <Text style={styles.label}>DexHunter</Text>
+
+                  <SettingsSwitch
+                    value={aggregator.includes('dexhunter')}
+                    onValueChange={() =>
+                      assignAggregator(aggregator.includes('dexhunter') ? ['muesliswap'] : [...aggregator, 'dexhunter'])
+                    }
+                  />
+                </View>
+
+                <View style={styles.between}>
                   <Text style={styles.label}>MuesliSwap</Text>
 
                   <SettingsSwitch
@@ -161,23 +169,10 @@ export const SwapSettings = () => {
                     }
                   />
                 </View>
-
-                <View style={styles.between}>
-                  <Text style={styles.label}>Dexhunter</Text>
-
-                  <SettingsSwitch
-                    value={aggregator.includes('dexhunter')}
-                    onValueChange={() =>
-                      assignAggregator(aggregator.includes('dexhunter') ? ['muesliswap'] : [...aggregator, 'dexhunter'])
-                    }
-                  />
-                </View>
               </>
             )}
           </View>
         </ScrollView>
-
-        <Button title={strings.listOrdersSheetBack} onPress={navigateTo.startSwap} />
       </SafeAreaView>
     </KeyboardAvoidingView>
   )

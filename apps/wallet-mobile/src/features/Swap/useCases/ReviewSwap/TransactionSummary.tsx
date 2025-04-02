@@ -26,11 +26,13 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   if (tokenInInfo === undefined || tokenOutInfo === undefined) throw new Error('Missing tokenInfos')
   const amountIn = {
     info: tokenInInfo,
-    quantity: BigInt(Number(swapForm.createTx?.totalInput ?? 0) * 10 ** tokenInInfo.decimals),
+    quantity: BigInt(Math.floor(Number(swapForm.createTx?.totalInput ?? 0) * 10 ** tokenInInfo.decimals)),
   }
   const amountOut = {
     info: tokenOutInfo,
-    quantity: BigInt(Number(swapForm.createTx?.totalOutputWithoutSlippage ?? 0) * 10 ** tokenOutInfo.decimals),
+    quantity: BigInt(
+      Math.floor(Number(swapForm.createTx?.totalOutputWithoutSlippage ?? 0) * 10 ** tokenOutInfo.decimals),
+    ),
   }
 
   const priceImpactRisk = getPriceImpactRisk(Number(swapForm.createTx?.priceImpact))
