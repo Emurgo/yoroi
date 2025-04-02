@@ -1135,17 +1135,16 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
     get transactions() {
       const memos = this.memosManager.getMemos()
-      return _.mapValues(this.transactionManager.transactions, (tx: Transaction) => {
-        return processTxHistoryData(
-          tx,
-          this.rewardAddressHex != ''
-            ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
-            : [...this.internalAddresses, ...this.externalAddresses],
-          this.confirmationCounts[tx.id] || 0,
-          memos[tx.id] ?? null,
-          this.portfolioPrimaryTokenInfo,
-        )
-      })
+
+      return parseTransactionsMemoized(
+        memos,
+        this.internalAddresses,
+        this.externalAddresses,
+        this.rewardAddressHex,
+        this.confirmationCounts,
+        this.transactionManager.transactions,
+        this.portfolioPrimaryTokenInfo,
+      )
     }
 
     get confirmationCounts() {
@@ -1203,3 +1202,24 @@ const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
 const isNonEmpty = (arr: unknown[] | undefined) => {
   return arr && arr.length > 0
 }
+
+const parseTransactions = (
+  memos: Record<string, string>,
+  internalAddresses: string[],
+  externalAddresses: string[],
+  rewardAddressHex: string,
+  confirmationCounts: Record<string, number | null>,
+  transactions: TransactionManager['transactions'],
+  primaryTokenInfo: Portfolio.Token.Info,
+) => {
+  const addresses =
+    rewardAddressHex != ''
+      ? [...internalAddresses, ...externalAddresses, ...[rewardAddressHex]]
+      : [...internalAddresses, ...externalAddresses]
+
+  return _.mapValues(transactions, (tx: Transaction) => {
+    return processTxHistoryData(tx, addresses, confirmationCounts[tx.id] || 0, memos[tx.id] ?? null, primaryTokenInfo)
+  })
+}
+
+const parseTransactionsMemoized = defaultMemoize(parseTransactions)
