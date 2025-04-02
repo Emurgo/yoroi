@@ -568,7 +568,7 @@ const useStyles = () => {
       backgroundColor: color.bg_color_max,
     },
     activeButton: {
-      backgroundColor: color.el_gray_min,
+      backgroundColor: color.gray_100,
     },
     list: {
       ...atoms.gap_md,

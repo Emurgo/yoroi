@@ -226,7 +226,7 @@ const useStyles = () => {
       ...atoms.gap_md,
     },
     selectedChoiceButton: {
-      backgroundColor: color.el_gray_min,
+      backgroundColor: color.gray_200,
       borderRadius: 8,
     },
     label: {

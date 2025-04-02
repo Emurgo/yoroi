@@ -219,7 +219,7 @@ const useStyles = () => {
       borderTopColor: color.gray_200,
     },
     activeButton: {
-      backgroundColor: color.el_gray_min,
+      backgroundColor: color.gray_100,
     },
     between: {
       ...atoms.flex_row,
