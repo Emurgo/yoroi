@@ -1,8 +1,9 @@
 import {FlashList} from '@shopify/flash-list'
 import {isNonNullable, isString} from '@yoroi/common'
-import {sortTokenInfos} from '@yoroi/portfolio'
+import {amountBreakdown, isPrimaryToken, sortTokenInfos} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+import BigNumber from 'bignumber.js'
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -15,6 +16,7 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SwapTokenRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {getTokenIdParts} from '../../../Portfolio/common/helpers/get-token-id-parts'
 import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioTokenActivity} from '../../../Portfolio/common/PortfolioTokenActivityProvider'
 import {AmountItemPlaceholder, TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
 import {NoAssetFoundImage} from '../../../Send/common/NoAssetFoundImage'
@@ -78,10 +80,23 @@ const TokenList = ({direction}: Direction) => {
   const {search: assetSearchTerm} = useSearch()
   const balances = usePortfolioBalances({wallet})
   const {swapConfig} = useSwapConfig()
+  const {tokenActivity} = usePortfolioTokenActivity()
 
   const ownedTokens = React.useMemo(
-    () => balances.all.map(({info: {id}}) => id).filter((ti) => tokenInfos.has(ti)),
-    [balances.all, tokenInfos],
+    () =>
+      [...balances.all]
+        .sort((a, b) => {
+          if (isPrimaryToken(a.info)) return -1 // `a` is the PrimaryToken, so it should come first
+          if (isPrimaryToken(b.info)) return 1 // `b` is the PrimaryToken, so it should come first
+
+          // Compare based on weighted value (price * amount)
+          return (tokenActivity[b.info.id]?.price.close ?? new BigNumber(0))
+            .multipliedBy(amountBreakdown(b).bn)
+            .comparedTo((tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)).multipliedBy(amountBreakdown(a).bn))
+        })
+        .map(({info: {id}}) => id)
+        .filter((ti) => tokenInfos.has(ti)),
+    [balances.all, tokenActivity, tokenInfos],
   )
   const verifiedTokens = React.useMemo(
     () => swapConfig?.verifiedTokens?.filter((ti) => tokenInfos.has(ti)) ?? [],
@@ -91,14 +106,7 @@ const TokenList = ({direction}: Direction) => {
   const filteredTokenList = React.useMemo(() => {
     const ownedList = ownedTokens.map((ti) => tokenInfos.get(ti)).filter(isNonNullable)
 
-    if (direction === 'in')
-      return [
-        strings.yourAssets,
-        ...sortTokenInfos({
-          secondaryTokenInfos: ownedList,
-          primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
-        }),
-      ].filter(filterBySearch(assetSearchTerm))
+    if (direction === 'in') return [strings.yourAssets, ...ownedList].filter(filterBySearch(assetSearchTerm))
 
     const verifiedList = verifiedTokens
       .map((ti) => tokenInfos.get(ti))
@@ -107,10 +115,7 @@ const TokenList = ({direction}: Direction) => {
 
     return [
       strings.yourAssets,
-      ...sortTokenInfos({
-        secondaryTokenInfos: ownedList,
-        primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
-      }),
+      ...ownedList,
       strings.allAssets,
       ...verifiedList,
       ...sortTokenInfos({
