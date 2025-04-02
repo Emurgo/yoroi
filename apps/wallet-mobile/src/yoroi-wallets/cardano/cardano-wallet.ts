@@ -1039,8 +1039,12 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       return false
     }
 
+    private _getUtxos = defaultMemoize((utxos: RawUtxo[], collateralId: string) => {
+      return collateralId ? utxos.filter((utxo) => utxo.utxo_id !== collateralId) : utxos
+    })
+
     get utxos() {
-      return this._utxos.filter((utxo) => utxo.utxo_id !== this._collateralId)
+      return this._getUtxos(this._utxos, this._collateralId)
     }
 
     get allUtxos() {
