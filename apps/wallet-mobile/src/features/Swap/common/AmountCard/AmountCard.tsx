@@ -87,7 +87,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
       <View style={styles.between}>
         <TouchableOpacity onPress={navigateTo}>
           <View style={styles.token}>
-            <TokenInfoIcon info={info} size="md" placeholderStyle={styles.tokenIconPlaceholder} />
+            <TokenInfoIcon info={info} size="md" />
 
             <Text style={styles.coinName}>{noTokenSelected || !info ? strings.selectToken : name}</Text>
 
@@ -221,9 +221,6 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.align_center,
       ...atoms.gap_md,
-    },
-    tokenIconPlaceholder: {
-      backgroundColor: undefined,
     },
     coinName: {
       ...atoms.body_1_lg_medium,

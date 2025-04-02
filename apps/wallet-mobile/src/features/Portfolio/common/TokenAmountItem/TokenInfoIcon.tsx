@@ -12,16 +12,15 @@ type TokenInfoIconProps = {
   info: Portfolio.Token.Info | undefined | null
   size?: 'sm' | 'md' | 'lg' | 'xl'
   imageStyle?: ImageStyle
-  placeholderStyle?: ImageStyle
 }
-export const TokenInfoIcon = ({info, size = 'lg', imageStyle, placeholderStyle}: TokenInfoIconProps) => {
+export const TokenInfoIcon = ({info, size = 'lg', imageStyle}: TokenInfoIconProps) => {
   const {styles, colors} = useStyles()
   const [policy, name] = !info ? '.' : info.id.split('.')
   const {uri, headers, onError, onLoad, isError} = usePortfolioImage({policy, name, width: 64, height: 64})
 
   if (!info || isError) {
     return (
-      <View style={[styles.icon, styles[size], styles.placeholder, placeholderStyle]}>
+      <View style={[styles.icon, styles[size], styles.placeholder]}>
         <Icon.Coins2 color={colors.icon} size={{sm: 18, md: 20, lg: 24, xl: 42}[size]} />
       </View>
     )
