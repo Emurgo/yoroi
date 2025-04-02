@@ -144,24 +144,11 @@ export const SwapMainScreen = () => {
 
             {swapForm.orderType === 'market' && <ShowPriceImpact priceImpact={swapForm.estimate?.priceImpact} />}
 
-            {swapForm.orderType === 'limit' && (
-              <View style={styles.between}>
-                {swapForm.selectedProtocol.value !== undefined && swapForm.estimate === undefined ? (
-                  <ProtocolAvatar protocol={swapForm.selectedProtocol.value} preventOpenLink />
-                ) : (
-                  <View />
-                )}
-
-                <View>
-                  <Button
-                    type={ButtonType.Text}
-                    onPress={navigateTo.selectProtocol}
-                    title={strings.changePool}
-                    size="S"
-                  />
-                </View>
-              </View>
-            )}
+            {swapForm.orderType === 'limit' &&
+              swapForm.selectedProtocol.value !== undefined &&
+              swapForm.estimate === undefined && (
+                <ProtocolAvatar protocol={swapForm.selectedProtocol.value} onPress={navigateTo.selectProtocol} />
+              )}
 
             <EstimateSummary />
           </View>

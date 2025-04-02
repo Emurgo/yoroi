@@ -8,6 +8,7 @@ import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {undefinedToken} from '../../common/constants'
+import {useNavigateTo} from '../../common/navigation'
 import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
@@ -18,6 +19,7 @@ export const EstimateSummary = () => {
   const {wallet} = useSelectedWallet()
   const swapForm = useSwap()
   const {openModal} = useModal()
+  const navigateTo = useNavigateTo()
 
   const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
   const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
@@ -50,7 +52,7 @@ export const EstimateSummary = () => {
             <View style={styles.composedText}>
               <ProtocolAvatar
                 protocol={protocol}
-                {...(swapForm.estimate?.splits.length > 1 ? {onPress: expand, append: '...'} : {preventOpenLink: true})}
+                onPress={swapForm.orderType === 'limit' ? navigateTo.selectProtocol : expand}
               />
             </View>
           )
