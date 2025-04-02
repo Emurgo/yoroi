@@ -5,11 +5,11 @@ import React from 'react'
 import {PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
-import {logger} from '../../../../kernel/logger/logger'
 import {generateNotificationId, parseNotificationId, sendNotification} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
+import {logger} from '../../../kernel/logger/logger'
 
 let initialized = false
 

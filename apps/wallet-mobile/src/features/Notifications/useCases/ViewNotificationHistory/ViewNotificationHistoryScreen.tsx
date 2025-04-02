@@ -1,38 +1,23 @@
 import {StyleSheet, View} from 'react-native'
 import * as React from 'react'
 import {useTheme} from '@yoroi/theme'
-import {useReceivedNotificationEvents} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
 import {Text} from '../../../../components/Text'
 import {ScrollView} from '../../../../components/ScrollView/ScrollView'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 import {useLanguage} from '../../../../kernel/i18n'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
+import {useWalletNotifications} from '../../common/useWalletNotifications'
+import {useStrings} from '../../common/useStrings'
 import {
   getTransactionReceivedNotificationIcon,
   getTransactionReceivedNotificationTitle,
-} from '../common/TransactionReceivedNotification'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useStrings} from '../common/useStrings'
-import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
+} from '../../common/TransactionReceivedNotification'
 
 export const ViewNotificationHistoryScreen = () => {
   const {styles} = useStyles()
-  const {data: receivedNotifications = []} = useReceivedNotificationEvents()
-  const {wallet} = useSelectedWallet()
-  const transactionInfos = useTransactionInfos({wallet})
-
-  console.log('render ViewNotificationHistoryScreen')
-
-  const walletNotifications = React.useMemo(
-    () =>
-      receivedNotifications.filter(
-        (notification) =>
-          notification.trigger === Notifications.Trigger.TransactionReceived &&
-          notification.metadata.walletId === wallet.id &&
-          notification.metadata.txId in transactionInfos,
-      ),
-    [receivedNotifications, wallet.id, transactionInfos],
-  )
+  const walletNotifications = useWalletNotifications()
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -52,42 +37,28 @@ const NotificationItem = React.memo(({event}: {event: Notifications.Event}) => {
   const strings = useStrings()
   const transactionInfos = useTransactionInfos({wallet})
 
-  console.log('render NotificationItem', event.id)
-
   const isUnread = !event.isRead
 
-  const description = new Date(event.date).toLocaleString(languageCode, {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+  const description = React.useMemo(() => formatDate(event.date, languageCode), [event.date, languageCode])
 
-  if (event.trigger === Notifications.Trigger.TransactionReceived)
-    return (
-      <View style={styles.item}>
-        <View style={[styles.item, {flexGrow: 1}]}>
-          <View style={styles.icon}>{getTransactionReceivedNotificationIcon(event, transactionInfos)}</View>
-          <View style={styles.textArea}>
-            <Text style={styles.title}>
-              {getTransactionReceivedNotificationTitle(event, strings, transactionInfos, wallet)}
-            </Text>
-            <Text style={styles.description}>{description}</Text>
-          </View>
-        </View>
-        <View style={styles.unreadIndicator}>{isUnread && <View style={styles.redDot} />}</View>
-      </View>
+  const title =
+    event.trigger === Notifications.Trigger.TransactionReceived
+      ? getTransactionReceivedNotificationTitle(event, strings, transactionInfos, wallet)
+      : event.id
+
+  const icon =
+    event.trigger === Notifications.Trigger.TransactionReceived ? (
+      getTransactionReceivedNotificationIcon(event, transactionInfos)
+    ) : (
+      <IconPlaceholder />
     )
 
   return (
     <View style={styles.item}>
       <View style={[styles.item, {flexGrow: 1}]}>
-        <View style={styles.icon}>
-          <IconPlaceholder />
-        </View>
+        <View style={styles.icon}>{icon}</View>
         <View style={styles.textArea}>
-          <Text style={styles.title}>{event.id}</Text>
+          <Text style={styles.title}>{title}</Text>
           <Text style={styles.description}>{description}</Text>
         </View>
       </View>
@@ -95,6 +66,16 @@ const NotificationItem = React.memo(({event}: {event: Notifications.Event}) => {
     </View>
   )
 })
+
+const formatDate = (date: string, languageCode: string) => {
+  return new Date(date).toLocaleString(languageCode, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
 
 const useStyles = () => {
   const {atoms, color} = useTheme()

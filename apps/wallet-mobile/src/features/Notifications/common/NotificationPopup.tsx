@@ -3,13 +3,13 @@ import {Notifications} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Icon} from '../../../../components/Icon'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../../kernel/navigation'
 import {NotificationItem} from './NotificationPopupItem'
 import {SwipeOutWrapper} from './SwipeOutWrapper'
 import {TransactionReceivedNotificationPopup} from './TransactionReceivedNotificationPopup'
 import {useStrings} from './useStrings'
+import {useWalletNavigation} from '../../../kernel/navigation'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {Icon} from '../../../components/Icon'
 
 type Props = {
   event: Notifications.Event

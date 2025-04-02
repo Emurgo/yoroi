@@ -16,7 +16,6 @@ import {ClipboardProvider} from './components/Clipboard/ClipboardProvider'
 import {ErrorBoundary} from './components/ErrorBoundary/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {BrowserProvider} from './features/Discover/common/BrowserProvider'
-import {YoroiNotificationManager} from './features/Notifications/useCases/common/YoroiNotificationManager'
 import {PortfolioTokenActivityProvider} from './features/Portfolio/common/PortfolioTokenActivityProvider'
 import {ReviewTxProvider} from './features/ReviewTx/common/ReviewTxProvider'
 import {CurrencyProvider} from './features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
@@ -33,6 +32,7 @@ import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
 import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
+import {YoroiNotificationManager} from './features/Notifications/common/YoroiNotificationManager'
 
 enableScreens(true)
 

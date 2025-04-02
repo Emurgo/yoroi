@@ -5,14 +5,15 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {TxHistoryRouteNavigation} from '../../../kernel/navigation'
 import {Icon} from '../../../components/Icon'
 import {useReceivedNotificationEvents} from '@yoroi/notifications'
+import {useWalletNotifications} from '../../Notifications/common/useWalletNotifications'
 
 export const HeaderRightHistory = React.memo(() => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {color} = useTheme()
   const {styles} = useStyles()
-  const {data: receivedNotifications = []} = useReceivedNotificationEvents()
+  const walletNotifications = useWalletNotifications()
 
-  const isBellActive = receivedNotifications.some((n) => !n.isRead)
+  const isBellActive = React.useMemo(() => walletNotifications.some((n) => !n.isRead), [walletNotifications])
 
   return (
     <View style={styles.root}>

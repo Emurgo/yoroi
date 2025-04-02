@@ -3,10 +3,10 @@ import {notificationManagerMaker} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
 
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {primaryTokenPriceChangedSubject} from './primary-token-price-changed-notification'
 import {rewardsUpdatedSubject} from './rewards-updated-notification'
 import {transactionReceivedSubject} from './transaction-received-notification'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 const appStorage = mountAsyncStorage({path: '/'})
 const notificationStorage = appStorage.join('notifications/')
