@@ -350,7 +350,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         draft.tokenInInput.isTouched = state.tokenOutInput.isTouched
         draft.tokenInInput.tokenId = state.tokenOutInput.tokenId
-        draft.tokenInInput.value = ''
+        draft.tokenInInput.value = state.tokenOutInput.value
         draft.tokenInInput.error = null
 
         draft.wantedPrice = ''
