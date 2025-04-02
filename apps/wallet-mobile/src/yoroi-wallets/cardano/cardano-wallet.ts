@@ -1214,7 +1214,7 @@ const parseTransactions = (
 ) => {
   const addresses =
     rewardAddressHex != ''
-      ? [...internalAddresses, ...externalAddresses, ...[rewardAddressHex]]
+      ? [...internalAddresses, ...externalAddresses, rewardAddressHex]
       : [...internalAddresses, ...externalAddresses]
 
   return _.mapValues(transactions, (tx: Transaction) => {
