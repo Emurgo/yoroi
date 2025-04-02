@@ -18,17 +18,22 @@ export const getTransactionReceivedNotificationTitle = (
 ): string => {
   if (event.trigger !== Notifications.Trigger.TransactionReceived) return ''
 
-  const isIntraWallet = wallet.transactions[event.metadata.txId]?.direction === 'SELF'
-  const isReceived = wallet.transactions[event.metadata.txId]?.direction === 'RECEIVED'
-  const isSent = wallet.transactions[event.metadata.txId]?.direction === 'SENT'
+  const tx = wallet.transactions[event.metadata.txId]
+
+  if (tx == null) {
+    console.warn('Transaction not found in wallet', event.metadata.txId)
+    return ''
+  }
+
+  const isIntraWallet = tx.direction === 'SELF'
+  const isReceived = tx.direction === 'RECEIVED'
+  const isSent = tx.direction === 'SENT'
 
   if (isIntraWallet) {
     return strings.intraWalletTransactionSent
   }
 
   if (isReceived) {
-    const tx = wallet.transactions[event.metadata.txId]
-    if (tx === null) return ''
     const details = getTransactionInfoDetails(tx, wallet.portfolioPrimaryTokenInfo)
 
     return details.hasReceivedMultipleAssets
@@ -40,8 +45,6 @@ export const getTransactionReceivedNotificationTitle = (
   }
 
   if (isSent) {
-    const tx = wallet.transactions[event.metadata.txId]
-    if (tx === null) return ''
     const details = getTransactionInfoDetails(tx, wallet.portfolioPrimaryTokenInfo)
 
     return details.hasSentMultipleAssets

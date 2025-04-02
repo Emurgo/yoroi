@@ -10,7 +10,6 @@ import {useLanguage} from '../../../../kernel/i18n'
 import {
   getTransactionReceivedNotificationIcon,
   getTransactionReceivedNotificationTitle,
-  TransactionReceivedNotification,
 } from '../common/TransactionReceivedNotification'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../common/useStrings'
@@ -18,11 +17,19 @@ import {useStrings} from '../common/useStrings'
 export const ViewNotificationHistoryScreen = () => {
   const {styles} = useStyles()
   const {data: receivedNotifications = []} = useReceivedNotificationEvents()
+  const {wallet} = useSelectedWallet()
+
+  const walletNotifications = receivedNotifications.filter(
+    (notification) =>
+      notification.trigger === Notifications.Trigger.TransactionReceived &&
+      notification.metadata.walletId === wallet.id &&
+      notification.metadata.txId in wallet.transactions,
+  )
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.root}>
-        {receivedNotifications.map((notification) => (
+        {walletNotifications.map((notification) => (
           <NotificationItem key={notification.id} event={notification} />
         ))}
       </View>
