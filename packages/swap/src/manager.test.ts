@@ -837,7 +837,7 @@ describe('standarizeError', () => {
     const result = standarizeError(leftResponse)
     if (isLeft(result)) {
       expect(result.error.message).toBe(
-        'No liquidity available for this token pair, try using a different dex',
+        'This pair is not available in any liquidity pool.',
       )
     } else {
       fail('Expected result to be a Left type')

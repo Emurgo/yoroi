@@ -128,7 +128,7 @@ const apiManagerMaker = (
 
         const merged: Record<Swap.Order['txHash'], Swap.Order> = {}
         const append = (order: Swap.Order) => {
-          const key = `${order.txHash}#${order.outputIndex ?? 0}`
+          const key = `${order.txHash}#${order.outputIndex}`
           /* istanbul ignore next */
           if (
             // TODO: refactor to avoid istanbul ignore
@@ -351,8 +351,9 @@ export const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
     case response.error.message.includes(
       'No liquidity available for this token pair',
     ):
+    case response.error.message.includes('pool_not_found'):
       response.error.message =
-        'No liquidity available for this token pair, try using a different dex'
+        'This pair is not available in any liquidity pool.'
       break
     case response.error.message.includes('DOCTYPE html'):
       response.error.message = 'Unknown error'
