@@ -87,7 +87,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
       <View style={styles.between}>
         <TouchableOpacity onPress={navigateTo}>
           <View style={styles.token}>
-            <TokenInfoIcon info={info} size="md" />
+            <TokenInfoIcon info={info} size="md" placeholderStyle={styles.tokenIconPlaceholder} />
 
             <Text style={styles.coinName}>{noTokenSelected || !info ? strings.selectToken : name}</Text>
 
@@ -134,7 +134,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
           </View>
         ) : (
           <View style={styles.balance}>
-            <Icon.Portfolio size={15} color={colors.placeholder} />
+            <Icon.Portfolio2 size={15} color={colors.placeholder} />
 
             <Text ellipsizeMode="middle" style={[styles.text, styles.grayText]}>
               {formattedAmount}
@@ -222,9 +222,12 @@ const useStyles = () => {
       ...atoms.align_center,
       ...atoms.gap_md,
     },
+    tokenIconPlaceholder: {
+      backgroundColor: undefined,
+    },
     coinName: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_max,
+      ...atoms.body_1_lg_medium,
+      color: color.text_gray_medium,
     },
     balance: {
       ...atoms.flex_row,
@@ -243,7 +246,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    placeholder: color.gray_600,
+    placeholder: color.text_gray_medium,
     focused: color.input_selected,
     blur: color.black_static,
     noSelected: color.gray_400,

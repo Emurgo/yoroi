@@ -41,7 +41,7 @@ export const RefreshButton = (props: RefreshButtonProps) => {
       {({pressed}) => (
         <View style={styles.iconWrapper}>
           <Animated.View style={getRotationStyle()}>
-            <Icon.Refresh {...(pressed ? iconPropsPressed : iconProps)} />
+            <Icon.Reload {...(pressed ? iconPropsPressed : iconProps)} />
           </Animated.View>
         </View>
       )}
@@ -69,7 +69,7 @@ const useStyles = ({disabled}: Pick<RefreshButtonProps, 'disabled'>) => {
   const backgroundColor = disabled ? backgroundColors.disabled : backgroundColors.idle
   const foregroundColor = disabled ? foregroundColors.disabled : foregroundColors.idle
 
-  const shape: ViewStyle = {width: 36, height: 36, ...atoms.align_center, ...atoms.rounded_full}
+  const shape: ViewStyle = {width: 26, height: 26, ...atoms.align_center, ...atoms.rounded_full}
 
   const styles = StyleSheet.create({
     container: {
@@ -92,7 +92,7 @@ const useStyles = ({disabled}: Pick<RefreshButtonProps, 'disabled'>) => {
   })
 
   const iconProps: IconProps = {
-    size: 28,
+    size: 20,
     color: foregroundColor,
   }
 

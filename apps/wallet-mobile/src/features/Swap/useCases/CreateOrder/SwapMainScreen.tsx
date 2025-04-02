@@ -203,8 +203,7 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     actions: {
-      ...atoms.pt_lg,
-      ...atoms.px_lg,
+      ...atoms.p_lg,
     },
     actionBorder: {
       ...atoms.border_t,
