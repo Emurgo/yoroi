@@ -28,5 +28,35 @@
       "column": 3,
       "index": 6087
     }
+  },
+  {
+    "id": "swap.swapScreen.from",
+    "defaultMessage": "!!!From",
+    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
+    "start": {
+      "line": 167,
+      "column": 8,
+      "index": 6097
+    },
+    "end": {
+      "line": 170,
+      "column": 3,
+      "index": 6165
+    }
+  },
+  {
+    "id": "swap.swapScreen.to",
+    "defaultMessage": "!!!To",
+    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
+    "start": {
+      "line": 171,
+      "column": 6,
+      "index": 6173
+    },
+    "end": {
+      "line": 174,
+      "column": 3,
+      "index": 6237
+    }
   }
 ]

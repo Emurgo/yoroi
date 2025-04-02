@@ -1,6 +1,6 @@
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {errorMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
+import globalMessages, {actionMessages, errorMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -176,6 +176,11 @@ export const useStrings = () => {
     submittedTxScreenTitle: intl.formatMessage(messages.submittedTxScreenTitle),
     submittedTxScreenText: intl.formatMessage(messages.submittedTxScreenText),
     submittedTxScreenButton: intl.formatMessage(messages.submittedTxScreenButton),
+    from: intl.formatMessage(messages.from),
+    to: intl.formatMessage(messages.to),
+    sell: intl.formatMessage(actionMessages.sell),
+    buy: intl.formatMessage(actionMessages.buy),
+    max: intl.formatMessage(globalMessages.max),
   }
 }
 
@@ -769,5 +774,13 @@ const messages = defineMessages({
   submittedTxScreenButton: {
     id: 'swap.submittedTxScreen.button',
     defaultMessage: '!!!Close',
+  },
+  from: {
+    id: 'swap.swapScreen.from',
+    defaultMessage: '!!!From',
+  },
+  to: {
+    id: 'swap.swapScreen.to',
+    defaultMessage: '!!!To',
   },
 })

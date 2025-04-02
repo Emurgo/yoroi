@@ -1073,6 +1073,8 @@
   "swap.swapScreen.swapFees": "Swap fees include the following:\n • DEX Fee\n • Frontend Fee",
   "swap.swapScreen.swapFeesTitle": "Fees",
   "swap.swapScreen.swapFrom": "Swap from",
+  "swap.swapScreen.from": "From",
+  "swap.swapScreen.to": "To",
   "swap.swapScreen.swapLiqProvFee": "Liq. prov. fee",
   "swap.swapScreen.swapLiquidityFee": "Liquidity provider fee",
   "swap.swapScreen.swapLiquidityFeeInfo": "Liquidity provider fee is a fixed <b>{fee}%</b> operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.",

@@ -1,14 +1,12 @@
 import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
-import globalMessages, {actionMessages} from '../../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../../kernel/utils'
 import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
 import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
@@ -16,6 +14,7 @@ import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfo
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {undefinedToken} from '../constants'
 import {useNavigateTo} from '../navigation'
+import {useStrings} from '../strings'
 import {useSwap} from '../SwapProvider'
 
 export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
@@ -65,7 +64,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
       ]}
     >
       <View style={styles.between}>
-        <Text style={styles.label}>{direction === 'in' ? strings.sell : strings.buy}</Text>
+        <Text style={styles.label}>{direction === 'in' ? strings.from : strings.to}</Text>
 
         {direction === 'in' && info && !isPrimaryTokenInfo(info) && (
           <View>
@@ -153,28 +152,6 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
       </View>
     </View>
   )
-}
-
-const messages = defineMessages({
-  selectToken: {
-    id: 'swap.swapScreen.selectToken',
-    defaultMessage: '!!!Select token',
-  },
-  currentBalance: {
-    id: 'swap.swapScreen.currentBalance',
-    defaultMessage: '!!!Current Balance',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-  return {
-    selectToken: intl.formatMessage(messages.selectToken),
-    currentBalance: intl.formatMessage(messages.currentBalance),
-    sell: intl.formatMessage(actionMessages.sell),
-    buy: intl.formatMessage(actionMessages.buy),
-    max: intl.formatMessage(globalMessages.max),
-  }
 }
 
 const useStyles = () => {
