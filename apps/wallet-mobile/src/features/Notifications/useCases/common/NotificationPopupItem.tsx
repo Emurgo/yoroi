@@ -5,7 +5,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Text} from '../../../../components/Text'
 
 type Props = {
-  onPress: () => void
+  onPress?: () => void
   icon: React.ReactNode
   title: string
   description: string
