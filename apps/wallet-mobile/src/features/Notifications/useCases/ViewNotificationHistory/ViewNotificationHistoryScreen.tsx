@@ -13,17 +13,25 @@ import {
 } from '../common/TransactionReceivedNotification'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../common/useStrings'
+import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
 
 export const ViewNotificationHistoryScreen = () => {
   const {styles} = useStyles()
   const {data: receivedNotifications = []} = useReceivedNotificationEvents()
   const {wallet} = useSelectedWallet()
+  const transactionInfos = useTransactionInfos({wallet})
 
-  const walletNotifications = receivedNotifications.filter(
-    (notification) =>
-      notification.trigger === Notifications.Trigger.TransactionReceived &&
-      notification.metadata.walletId === wallet.id &&
-      notification.metadata.txId in wallet.transactions,
+  console.log('render ViewNotificationHistoryScreen')
+
+  const walletNotifications = React.useMemo(
+    () =>
+      receivedNotifications.filter(
+        (notification) =>
+          notification.trigger === Notifications.Trigger.TransactionReceived &&
+          notification.metadata.walletId === wallet.id &&
+          notification.metadata.txId in transactionInfos,
+      ),
+    [receivedNotifications, wallet.id, transactionInfos],
   )
 
   return (
@@ -37,11 +45,14 @@ export const ViewNotificationHistoryScreen = () => {
   )
 }
 
-const NotificationItem = ({event}: {event: Notifications.Event}) => {
+const NotificationItem = React.memo(({event}: {event: Notifications.Event}) => {
   const {styles} = useStyles()
   const {languageCode} = useLanguage()
   const {wallet} = useSelectedWallet()
   const strings = useStrings()
+  const transactionInfos = useTransactionInfos({wallet})
+
+  console.log('render NotificationItem', event.id)
 
   const isUnread = !event.isRead
 
@@ -57,9 +68,11 @@ const NotificationItem = ({event}: {event: Notifications.Event}) => {
     return (
       <View style={styles.item}>
         <View style={[styles.item, {flexGrow: 1}]}>
-          <View style={styles.icon}>{getTransactionReceivedNotificationIcon(event, wallet)}</View>
+          <View style={styles.icon}>{getTransactionReceivedNotificationIcon(event, transactionInfos)}</View>
           <View style={styles.textArea}>
-            <Text style={styles.title}>{getTransactionReceivedNotificationTitle(event, strings, wallet)}</Text>
+            <Text style={styles.title}>
+              {getTransactionReceivedNotificationTitle(event, strings, transactionInfos, wallet)}
+            </Text>
             <Text style={styles.description}>{description}</Text>
           </View>
         </View>
@@ -81,7 +94,7 @@ const NotificationItem = ({event}: {event: Notifications.Event}) => {
       <View style={styles.unreadIndicator}>{isUnread && <View style={styles.redDot} />}</View>
     </View>
   )
-}
+})
 
 const useStyles = () => {
   const {atoms, color} = useTheme()

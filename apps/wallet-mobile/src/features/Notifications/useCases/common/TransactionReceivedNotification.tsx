@@ -10,19 +10,20 @@ import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
 import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
 import {Token} from '../../../../yoroi-wallets/types/tokens'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
 
 export const getTransactionReceivedNotificationTitle = (
   event: Notifications.Event,
   strings: ReturnType<typeof useStrings>,
+  transactions: Record<string, TransactionInfo>,
   wallet: YoroiWallet,
 ): string => {
   if (event.trigger !== Notifications.Trigger.TransactionReceived) return ''
 
-  const tx = wallet.transactions[event.metadata.txId]
+  const tx = transactions[event.metadata.txId]
 
   if (tx == null) {
-    console.warn('Transaction not found in wallet', event.metadata.txId)
-    return ''
+    return `Unknown transaction ${event.metadata.txId}`
   }
 
   const isIntraWallet = tx.direction === 'SELF'
@@ -58,12 +59,18 @@ export const getTransactionReceivedNotificationTitle = (
   return ''
 }
 
-export const getTransactionReceivedNotificationIcon = (event: Notifications.Event, wallet: YoroiWallet) => {
+export const getTransactionReceivedNotificationIcon = (
+  event: Notifications.Event,
+  transactions: Record<string, TransactionInfo>,
+) => {
   if (event.trigger !== Notifications.Trigger.TransactionReceived) return null
 
-  const isIntraWallet = wallet.transactions[event.metadata.txId]?.direction === 'SELF'
-  const isReceived = wallet.transactions[event.metadata.txId]?.direction === 'RECEIVED'
-  const isSent = wallet.transactions[event.metadata.txId]?.direction === 'SENT'
+  const tx = transactions[event.metadata.txId]
+
+  const isIntraWallet = tx?.direction === 'SELF'
+  const isReceived = tx?.direction === 'RECEIVED'
+  const isSent = tx?.direction === 'SENT'
+  const isMultiSig = tx?.direction === 'MULTI'
 
   if (isIntraWallet) {
     return <Icon.Direction transactionDirection="SELF" />
@@ -77,19 +84,24 @@ export const getTransactionReceivedNotificationIcon = (event: Notifications.Even
     return <Icon.Direction transactionDirection="SENT" />
   }
 
+  if (isMultiSig) {
+    return <Icon.Direction transactionDirection="MULTI" />
+  }
+
   return null
 }
 
 export const TransactionReceivedNotification = ({event}: {event: Notifications.Event}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
+  const transactionInfos = useTransactionInfos({wallet})
 
   if (event.trigger !== Notifications.Trigger.TransactionReceived) return null
 
   return (
     <NotificationItem
-      icon={<IconWrapper>{getTransactionReceivedNotificationIcon(event, wallet)}</IconWrapper>}
-      title={getTransactionReceivedNotificationTitle(event, strings, wallet)}
+      icon={<IconWrapper>{getTransactionReceivedNotificationIcon(event, transactionInfos)}</IconWrapper>}
+      title={getTransactionReceivedNotificationTitle(event, strings, transactionInfos, wallet)}
       description={strings.tapToView}
     />
   )

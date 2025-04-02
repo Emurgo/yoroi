@@ -1135,13 +1135,19 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
     get transactions() {
       const memos = this.memosManager.getMemos()
+
+      const addresses =
+        this.rewardAddressHex != ''
+          ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
+          : [...this.internalAddresses, ...this.externalAddresses]
+
+      const confirmationCounts = this.confirmationCounts
+
       return _.mapValues(this.transactionManager.transactions, (tx: Transaction) => {
         return processTxHistoryData(
           tx,
-          this.rewardAddressHex != ''
-            ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
-            : [...this.internalAddresses, ...this.externalAddresses],
-          this.confirmationCounts[tx.id] || 0,
+          addresses,
+          confirmationCounts[tx.id] || 0,
           memos[tx.id] ?? null,
           this.portfolioPrimaryTokenInfo,
         )
