@@ -1,6 +1,6 @@
 import * as CSL from '@emurgo/cross-csl-core'
-import {TransactionWitnessSet, WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {hashTransaction, RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {cardanoConfig} from '@yoroi/blockchains'
@@ -19,13 +19,7 @@ import {toAssetNameHex, toPolicyId} from '../api/utils'
 import * as cip8 from '../cip8/cip8'
 import {getDerivationPathForAddress, getTransactionSigners} from '../common/signatureUtils'
 import {Pagination, YoroiWallet} from '../types'
-import {
-  copyFromCSL,
-  copyMultipleFromCSL,
-  createRawTxSigningKey,
-  getTransactionUnspentOutput,
-  identifierToCardanoAsset,
-} from '../utils'
+import {copyFromCSL, copyMultipleFromCSL, createRawTxSigningKey, identifierToCardanoAsset} from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {wrappedCsl as getCSL} from '../wrappedCsl'
 
@@ -191,28 +185,6 @@ class CIP30Extension {
       const emptyWitnessSet = await csl.TransactionWitnessSet.new()
       const tx = await csl.Transaction.new(txBody, emptyWitnessSet, undefined)
       return tx.toHex()
-    } finally {
-      release()
-    }
-  }
-
-  async sendReorganisationTx(cbor: string, witnesses: TransactionWitnessSet): Promise<CSL.TransactionUnspentOutput> {
-    const {csl, release} = getCSL()
-
-    try {
-      const tx = await csl.Transaction.fromHex(cbor)
-      const txBody = await tx.body()
-      const signedTx = await csl.Transaction.new(txBody, witnesses, undefined)
-      const signedTxBytes = await signedTx.toBytes()
-
-      const txId = await (await hashTransaction(csl, signedTxBytes)).toHex()
-
-      await this.wallet.submitTransaction(Buffer.from(signedTxBytes).toString('base64'))
-      return getTransactionUnspentOutput({
-        txId,
-        bytes: signedTxBytes,
-        index: 0,
-      })
     } finally {
       release()
     }

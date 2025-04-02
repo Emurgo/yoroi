@@ -459,10 +459,10 @@ describe('DappConnector', () => {
       const sendMessage = jest.fn()
       await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getCollateral', {args: ['10000000']}), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
+      expect(sendMessage).toHaveBeenCalledWith('1', null)
 
       await dappConnector.handleEvent(createEvent('api.getCollateral', {args: []}), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
+      expect(sendMessage).toHaveBeenCalledWith('1', null)
     })
 
     it('should resolve getCollateral with null if reorganisation fails', async () => {
@@ -475,7 +475,7 @@ describe('DappConnector', () => {
       const sendMessage = jest.fn()
       await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getCollateral', {args: ['10000000']}), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Reorganisation failed'))
     })
 
     it('should resolve getUnusedAddresses with mocked data', async () => {

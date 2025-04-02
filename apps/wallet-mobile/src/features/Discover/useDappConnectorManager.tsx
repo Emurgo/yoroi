@@ -1,6 +1,6 @@
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useAsyncStorage} from '@yoroi/common'
-import {DappConnector} from '@yoroi/dapp-connector'
+import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 
 import {logger} from '../../kernel/logger/logger'
@@ -8,9 +8,12 @@ import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../kernel/navigation'
 import {isEmptyString} from '../../kernel/utils'
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
+import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {BaseLedgerError} from '../../yoroi-wallets/hw/hw'
 import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
+import {getCollateralAmountInLovelace} from '../Settings/useCases/changeWalletSettings/ManageCollateral/helpers'
+import {useShowCollateralNotFoundAlert} from '../Swap/useCases/StartOrderSwapScreen/ListOrders/OpenOrders'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useBrowser} from './common/BrowserProvider'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
@@ -27,6 +30,7 @@ export const useDappConnectorManager = () => {
   const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
   const {track} = useMetrics()
+  const dappCollateralRequestUtils = useDappCollateralRequestUtils(wallet)
 
   const activeTab = tabs[tabActiveIndex]
   const activeTabUrl = activeTab?.url
@@ -39,12 +43,33 @@ export const useDappConnectorManager = () => {
 
   const handleSignTx = React.useCallback(
     ({cbor, manager}: {cbor: string; manager: DappConnector}) => {
-      track.dappPopupSignTransactionPageViewed()
       return new Promise<string>((resolve, reject) => {
         let shouldResolve = true
-        return manager.getDAppList().then(({dapps}) => {
+        return manager.getDAppList().then(async ({dapps}) => {
+          const dappsConnected = await manager.listAllConnections()
+          const matchingDappConnection =
+            activeTabOrigin != null ? dappsConnected.find((dapp) => dapp.dappOrigin.includes(activeTabOrigin)) : null
+
+          if (matchingDappConnection?.dappOrigin != null) {
+            const isDappRequestingCollateral = dappCollateralRequestUtils.getIsDappRequestingCollateral(
+              matchingDappConnection.dappOrigin,
+            )
+
+            if (isDappRequestingCollateral) {
+              if (!dappCollateralRequestUtils.hasCollateral()) {
+                dappCollateralRequestUtils.showCollateralNotFoundAlert()
+                reject(new Error('handleSignTx:: collateral needed'))
+                return
+              }
+
+              dappCollateralRequestUtils.removeCollateralRequestedDappsId(matchingDappConnection.dappOrigin)
+            }
+          }
+
           const matchingDapp =
             activeTabOrigin != null ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin)) : null
+
+          track.dappPopupSignTransactionPageViewed()
           navigateToTxReview({
             cbor,
             preventSubmit: true,
@@ -79,7 +104,7 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [track, activeTabOrigin, navigateToTxReview, navigateTo],
+    [activeTabOrigin, track, navigateToTxReview, dappCollateralRequestUtils, navigateTo],
   )
 
   const handleSignTxWithHW = React.useCallback(
@@ -126,19 +151,51 @@ export const useDappConnectorManager = () => {
     [track, activeTabOrigin, navigateToTxReview, navigateTo],
   )
 
+  const handleSendReorganisationTx = React.useCallback(
+    async ({manager}: {manager: DappConnector}) => {
+      const dappsConnected = await manager.listAllConnections()
+      const matchingDappConnection =
+        activeTabOrigin != null ? dappsConnected.find((dapp) => dapp.dappOrigin.includes(activeTabOrigin)) : null
+
+      return new Promise<void>((resolve, reject) => {
+        if (matchingDappConnection?.dappOrigin == null) {
+          reject(new Error('handleSendReorganisationTx:: not matching dapp'))
+          return
+        }
+
+        dappCollateralRequestUtils.addCollateralRequestedDappsId(matchingDappConnection.dappOrigin)
+        dappCollateralRequestUtils.showCollateralNotFoundAlert()
+
+        resolve()
+      })
+    },
+    [activeTabOrigin, dappCollateralRequestUtils],
+  )
+
   return React.useMemo(
     () =>
       createDappConnector({
         appStorage,
         wallet,
+        meta,
         confirmConnection,
         signTx: handleSignTx,
         signData,
-        meta,
         signTxWithHW: handleSignTxWithHW,
         signDataWithHW,
+        sendReorganisationTx: handleSendReorganisationTx,
       }),
-    [appStorage, wallet, confirmConnection, handleSignTx, signData, meta, handleSignTxWithHW, signDataWithHW],
+    [
+      appStorage,
+      wallet,
+      meta,
+      confirmConnection,
+      handleSignTx,
+      signData,
+      handleSignTxWithHW,
+      signDataWithHW,
+      handleSendReorganisationTx,
+    ],
   )
 }
 
@@ -213,4 +270,54 @@ const useSignDataWithHW = () => {
     },
     [confirmHWConnection, wallet, meta, closeModal],
   )
+}
+
+export const useDappCollateralRequestUtils = (wallet: YoroiWallet) => {
+  const [dappIds, setDappsIds] = React.useState<Array<string>>([])
+  const {navigateToCollateralSettings} = useWalletNavigation()
+  const [isWarningActive, setIsWarningActive] = React.useState(false)
+  const {tabActiveIndex} = useBrowser()
+  const strings = useStrings()
+  const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert({
+    wallet,
+    collateralTxPendingTitle: strings.collateralTxPendingTitle,
+    collateralNotFoundTitle: strings.collateralNotFoundTitle,
+    collateralTxPendingText: strings.collateralTxPendingText,
+    collateralNotFoundText: strings.collateralNotFoundText,
+    collateralNotFoundActionText: strings.collateralNotFoundActionText,
+    onCollateralNotFoundPress: () => {
+      navigateToCollateralSettings()
+      setIsWarningActive(false)
+    },
+    onCollateralPendingPress: () => {
+      setIsWarningActive(false)
+    },
+  })
+
+  const addCollateralRequestedDappsId = (dappOrigin: DappConnection['dappOrigin']) =>
+    setDappsIds([...dappIds, prepareDappId(dappOrigin)])
+  const removeCollateralRequestedDappsId = (dappOrigin: DappConnection['dappOrigin']) =>
+    setDappsIds([...dappIds.filter((id) => id !== prepareDappId(dappOrigin))])
+  const getIsDappRequestingCollateral = (dappOrigin: DappConnection['dappOrigin']) =>
+    dappIds.includes(prepareDappId(dappOrigin))
+  const hasCollateral = () => {
+    const collateral = wallet.getCollateralInfo()
+    return !!collateral.utxo && collateral.amount.quantity >= BigInt(getCollateralAmountInLovelace())
+  }
+  const prepareDappId = (dappOrigin: DappConnection['dappOrigin']) => `${dappOrigin}-${tabActiveIndex}`
+
+  return {
+    collateralRequestedDappsIds: dappIds,
+    addCollateralRequestedDappsId,
+    removeCollateralRequestedDappsId,
+    getIsDappRequestingCollateral,
+    getCollateralId: () => wallet.getCollateralInfo().collateralId,
+    showCollateralNotFoundAlert: () => {
+      if (!isWarningActive) {
+        setIsWarningActive(true)
+        showCollateralNotFoundAlert()
+      }
+    },
+    hasCollateral,
+  }
 }

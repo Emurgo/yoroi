@@ -67,6 +67,11 @@ export const useStrings = () => {
     filterParentOptionsTrading: intl.formatMessage(messages.filterParentOptionsTrading),
     learnMore: intl.formatMessage(globalMessages.learnMore),
     disconnectWarning: intl.formatMessage(messages.disconnectWarning),
+    collateralTxPendingTitle: intl.formatMessage(messages.collateralTxPendingTitle),
+    collateralNotFoundTitle: intl.formatMessage(messages.collateralNotFoundTitle),
+    collateralTxPendingText: intl.formatMessage(messages.collateralTxPendingText),
+    collateralNotFoundText: intl.formatMessage(messages.collateralNotFoundText),
+    collateralNotFoundActionText: intl.formatMessage(messages.collateralNotFoundActionText),
   }).current
 }
 
@@ -304,6 +309,27 @@ const messages = Object.freeze(
       id: 'discover.modal.disconnectWarning',
       defaultMessage:
         '!!!Even if you disconnected Yoroi from the DApp, Yoroi is still authorized. If you want to remove such authorization, please click Disconnect DApp.',
+    },
+    collateralNotFoundText: {
+      id: 'discover.modal.collateralNotFoundText',
+      defaultMessage: '!!!To continue with this action, you need to generate a collateral',
+    },
+    collateralNotFoundTitle: {
+      id: 'discover.modal.collateralNotFoundTitle',
+      defaultMessage: '!!!Collateral not found',
+    },
+    collateralNotFoundActionText: {
+      id: 'discover.modal.collateralNotFoundActionText',
+      defaultMessage: '!!!Generate',
+    },
+    collateralTxPendingTitle: {
+      id: 'discover.modal.collateralTxPendingTitle',
+      defaultMessage: '!!!Pending Collateral Transaction',
+    },
+    collateralTxPendingText: {
+      id: 'discover.modal.collateralTxPendingText',
+      defaultMessage:
+        "!!!The collateral transaction you've submitted is being processed and may take a few minutes to confirm.  Please wait for it to show in your transaction history and try again.",
     },
   }),
 )
