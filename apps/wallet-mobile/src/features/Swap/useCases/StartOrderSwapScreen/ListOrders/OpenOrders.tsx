@@ -55,7 +55,7 @@ export const OpenOrders = () => {
   const intl = useIntl()
   const {wallet} = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
-  const {navigateToTxReview} = useWalletNavigation()
+  const {navigateToTxReview, navigateToCollateralSettings} = useWalletNavigation()
   const [isLoading, setIsLoading] = React.useState(false)
   const navigateTo = useNavigateTo()
 
@@ -142,7 +142,19 @@ export const OpenOrders = () => {
     }
   }
 
-  const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert(wallet)
+  const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert({
+    wallet,
+    collateralTxPendingTitle: strings.collateralTxPendingTitle,
+    collateralNotFoundTitle: strings.collateralNotFound,
+    collateralTxPendingText: strings.collateralTxPending,
+    collateralNotFoundText: strings.noActiveCollateral,
+    collateralNotFoundActionText: strings.assignCollateral,
+    onCollateralNotFoundPress: () => {
+      navigateToCollateralSettings({
+        backButton: {onPress: () => navigateTo.swapOpenOrders(), content: strings.backToSwapOrders},
+      })
+    },
+  })
 
   const hasCollateral = () => {
     const collateral = wallet.getCollateralInfo()
@@ -728,31 +740,41 @@ const NoOrdersYet = () => {
   )
 }
 
-const useShowCollateralNotFoundAlert = (wallet: YoroiWallet) => {
-  const strings = useStrings()
-  const {navigateToCollateralSettings} = useWalletNavigation()
-  const swapNavigateTo = useNavigateTo()
-
+export const useShowCollateralNotFoundAlert = ({
+  wallet,
+  collateralTxPendingTitle,
+  collateralNotFoundTitle,
+  collateralTxPendingText,
+  collateralNotFoundText,
+  collateralNotFoundActionText,
+  onCollateralNotFoundPress,
+  onCollateralPendingPress,
+}: {
+  wallet: YoroiWallet
+  collateralTxPendingTitle: string
+  collateralNotFoundTitle: string
+  collateralTxPendingText: string
+  collateralNotFoundText: string
+  collateralNotFoundActionText: string
+  onCollateralNotFoundPress?: () => void
+  onCollateralPendingPress?: () => void
+}) => {
   return () => {
     const collateral = wallet.getCollateralInfo()
     const isCollateralUtxoPending = !collateral.isConfirmed && collateral.collateralId.length > 0
 
     if (isCollateralUtxoPending) {
-      Alert.alert(strings.collateralTxPendingTitle, strings.collateralTxPending)
+      Alert.alert(collateralTxPendingTitle, collateralTxPendingText, [{onPress: onCollateralPendingPress}])
       return
     }
 
     Alert.alert(
-      strings.collateralNotFound,
-      strings.noActiveCollateral,
+      collateralNotFoundTitle,
+      collateralNotFoundText,
       [
         {
-          text: strings.assignCollateral,
-          onPress: () => {
-            navigateToCollateralSettings({
-              backButton: {onPress: () => swapNavigateTo.swapOpenOrders(), content: strings.backToSwapOrders},
-            })
-          },
+          text: collateralNotFoundActionText,
+          onPress: onCollateralNotFoundPress,
         },
       ],
       {cancelable: true, onDismiss: () => true},
