@@ -104,7 +104,14 @@ export const TokenAmountItem = ({
             )}
 
             {features.swapTokenLinks && (
-              <Button type={ButtonType.SecondaryText} icon={Icon.InfoCircle} onPress={handleShowTokenDetails} />
+              <Button
+                type={ButtonType.SecondaryText}
+                fgColorsOverride={{disabled: colors.info, idle: colors.info, pressed: colors.info}}
+                style={styles.info}
+                size="S"
+                icon={Icon.InfoCircle}
+                onPress={handleShowTokenDetails}
+              />
             )}
           </View>
         )}
@@ -176,13 +183,18 @@ const useStyles = () => {
       ...atoms.flex,
       ...atoms.flex_row,
       ...atoms.align_center,
-      ...atoms.gap_lg,
+      ...atoms.gap_sm,
+    },
+    info: {
+      ...atoms.pr_2xs,
+      ...atoms.pl_2xs,
     },
   })
 
   const colors = {
     text: color.gray_900,
     icon: color.secondary_600,
+    info: color.text_gray_low,
   }
 
   return {styles, colors}
