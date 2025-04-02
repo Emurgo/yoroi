@@ -10,6 +10,7 @@ import {RefreshButton} from '../../../../components/RefreshButton/RefreshButton'
 import {Space} from '../../../../components/Space/Space'
 import {useIsKeyboardOpen} from '../../../../kernel/keyboard/useIsKeyboardOpen'
 import {isEmptyString} from '../../../../kernel/utils'
+import {ShowDisclaimer} from '../../../Legal/Disclaimer/ShowDisclaimer'
 import {AmountCard} from '../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../common/navigation'
 import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
@@ -59,6 +60,8 @@ export const SwapMainScreen = () => {
   return (
     <View style={[styles.root, styles.flex]}>
       <ScrollView style={styles.padding}>
+        <ShowDisclaimer type="swap" />
+
         <Space height="lg" />
 
         <View
