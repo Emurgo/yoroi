@@ -11,7 +11,7 @@ export const HeaderRightHistory = React.memo(() => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {color} = useTheme()
   const {styles} = useStyles()
-  const walletNotifications = useWalletNotifications()
+  const {data: walletNotifications} = useWalletNotifications()
 
   const isBellActive = React.useMemo(() => walletNotifications.some((n) => !n.isRead), [walletNotifications])
 

@@ -14,23 +14,65 @@ import {
   getTransactionReceivedNotificationIcon,
   getTransactionReceivedNotificationTitle,
 } from '../../common/TransactionReceivedNotification'
+import {EmptyNotificationsIllustration} from '../../illustrations/EmptyNotifications'
+import {Button, ButtonType} from '../../../../components/Button/Button'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useNotificationManager} from '@yoroi/notifications'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 
 export const ViewNotificationHistoryScreen = () => {
   const {styles} = useStyles()
-  const walletNotifications = useWalletNotifications()
+  const strings = useStrings()
+  const {data: walletNotifications, refetch} = useWalletNotifications()
+  const manager = useNotificationManager()
+
+  const handleMarkAllAsRead = async () => {
+    await manager.events.markAllAsRead()
+    refetch()
+  }
+
+  const handleMarkNotificationAsRead = async (id: number) => {
+    await manager.events.markAsRead(id)
+    refetch()
+  }
+
+  if (walletNotifications.length === 0) {
+    return (
+      <View style={styles.center}>
+        <EmptyNotificationsIllustration />
+        <Text style={styles.noNotificationsTitle}>{strings.noNotifications}</Text>
+      </View>
+    )
+  }
 
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.root}>
-        {walletNotifications.map((notification) => (
-          <NotificationItem key={notification.id} event={notification} />
-        ))}
+    <SafeAreaView style={styles.root} edges={['right', 'left', 'bottom']}>
+      <View style={{position: 'relative'}}>
+        <ScrollView contentContainerStyle={{paddingBottom: 60}}>
+          <View style={styles.scrollContainer}>
+            {walletNotifications.map((notification) => (
+              <NotificationItem
+                key={notification.id}
+                event={notification}
+                onPress={() => handleMarkNotificationAsRead(notification.id)}
+              />
+            ))}
+          </View>
+        </ScrollView>
+        <View style={styles.bottomBar}>
+          <Button
+            style={styles.button}
+            title={strings.markAllAsRead}
+            onPress={handleMarkAllAsRead}
+            type={ButtonType.Text}
+          />
+        </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   )
 }
 
-const NotificationItem = React.memo(({event}: {event: Notifications.Event}) => {
+const NotificationItem = React.memo(({event, onPress}: {event: Notifications.Event; onPress?: () => void}) => {
   const {styles} = useStyles()
   const {languageCode} = useLanguage()
   const {wallet} = useSelectedWallet()
@@ -54,7 +96,7 @@ const NotificationItem = React.memo(({event}: {event: Notifications.Event}) => {
     )
 
   return (
-    <View style={styles.item}>
+    <TouchableOpacity style={styles.item} onPress={onPress}>
       <View style={[styles.item, {flexGrow: 1}]}>
         <View style={styles.icon}>{icon}</View>
         <View style={styles.textArea}>
@@ -63,7 +105,7 @@ const NotificationItem = React.memo(({event}: {event: Notifications.Event}) => {
         </View>
       </View>
       <View style={styles.unreadIndicator}>{isUnread && <View style={styles.redDot} />}</View>
-    </View>
+    </TouchableOpacity>
   )
 })
 
@@ -80,15 +122,28 @@ const formatDate = (date: string, languageCode: string) => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    scrollView: {
-      ...atoms.px_lg,
+    bottomBar: {
+      ...atoms.absolute,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 60,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      zIndex: 10,
+      backgroundColor: color.bg_color_max,
     },
+    root: {
+      ...atoms.px_lg,
+      ...atoms.flex,
+    },
+    scrollView: {},
     icon: {
       width: 40,
       height: 40,
       ...atoms.rounded_full,
     },
-    root: {
+    scrollContainer: {
       ...atoms.gap_lg,
       ...atoms.flex,
     },
@@ -120,6 +175,25 @@ const useStyles = () => {
       ...atoms.rounded_full,
       width: 8,
       height: 8,
+    },
+    center: {
+      ...atoms.flex,
+      ...atoms.justify_center,
+      ...atoms.align_center,
+      ...atoms.gap_sm,
+      ...atoms.flex_grow,
+    },
+    noNotificationsTitle: {
+      ...atoms.heading_3_medium,
+    },
+    markAllAsRead: {
+      ...atoms.body_2_md_medium,
+      color: color.primary_500,
+    },
+    button: {
+      ...atoms.flex,
+      ...atoms.justify_center,
+      ...atoms.align_center,
     },
   })
   return {styles}

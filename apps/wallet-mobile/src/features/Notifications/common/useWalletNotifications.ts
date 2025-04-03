@@ -6,11 +6,11 @@ import {useTransactionInfos} from '../../../yoroi-wallets/hooks'
 
 export const useWalletNotifications = () => {
   const {wallet} = useSelectedWallet()
-  const {data: receivedNotifications = []} = useReceivedNotificationEvents()
+  const {data: receivedNotifications = [], refetch} = useReceivedNotificationEvents()
   const transactionInfos = useTransactionInfos({wallet})
   const walletId = wallet.id
 
-  return React.useMemo(() => {
+  const data = React.useMemo(() => {
     return receivedNotifications.filter(
       (e) =>
         e.trigger === Notifications.Trigger.TransactionReceived &&
@@ -18,4 +18,5 @@ export const useWalletNotifications = () => {
         e.metadata.walletId === walletId,
     )
   }, [receivedNotifications, wallet, transactionInfos])
+  return {data, refetch}
 }

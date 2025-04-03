@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Tap to view",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 19,
+      "line": 21,
       "column": 13,
-      "index": 719
+      "index": 849
     },
     "end": {
-      "line": 22,
+      "line": 24,
       "column": 3,
-      "index": 797
+      "index": 927
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Staking rewards received",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 23,
+      "line": 25,
       "column": 26,
-      "index": 825
+      "index": 955
     },
     "end": {
-      "line": 26,
+      "line": 28,
       "column": 3,
-      "index": 929
+      "index": 1059
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Assets received",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 27,
+      "line": 29,
       "column": 18,
-      "index": 949
+      "index": 1079
     },
     "end": {
-      "line": 30,
+      "line": 32,
       "column": 3,
-      "index": 1036
+      "index": 1166
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Intrawallet transaction sent",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 31,
+      "line": 33,
       "column": 30,
-      "index": 1068
+      "index": 1198
     },
     "end": {
-      "line": 34,
+      "line": 36,
       "column": 3,
-      "index": 1180
+      "index": 1310
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Multiple assets received",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 35,
+      "line": 37,
       "column": 26,
-      "index": 1208
+      "index": 1338
     },
     "end": {
-      "line": 38,
+      "line": 40,
       "column": 3,
-      "index": 1312
+      "index": 1442
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!received",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 39,
+      "line": 41,
       "column": 12,
-      "index": 1326
+      "index": 1456
     },
     "end": {
-      "line": 42,
+      "line": 44,
       "column": 3,
-      "index": 1400
+      "index": 1530
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Multiple assets sent",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 43,
+      "line": 45,
       "column": 22,
-      "index": 1424
+      "index": 1554
     },
     "end": {
-      "line": 46,
+      "line": 48,
       "column": 3,
-      "index": 1520
+      "index": 1650
     }
   },
   {
@@ -109,14 +109,44 @@
     "defaultMessage": "!!!sent",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 47,
+      "line": 49,
       "column": 8,
-      "index": 1530
+      "index": 1660
     },
     "end": {
-      "line": 50,
+      "line": 52,
       "column": 3,
-      "index": 1596
+      "index": 1726
+    }
+  },
+  {
+    "id": "notifications.noNotifications",
+    "defaultMessage": "!!!No notifications yet",
+    "file": "src/features/Notifications/common/useStrings.tsx",
+    "start": {
+      "line": 53,
+      "column": 19,
+      "index": 1747
+    },
+    "end": {
+      "line": 56,
+      "column": 3,
+      "index": 1840
+    }
+  },
+  {
+    "id": "notifications.markAllAsRead",
+    "defaultMessage": "!!!Mark all as read",
+    "file": "src/features/Notifications/common/useStrings.tsx",
+    "start": {
+      "line": 57,
+      "column": 17,
+      "index": 1859
+    },
+    "end": {
+      "line": 60,
+      "column": 3,
+      "index": 1946
     }
   }
 ]
