@@ -156,36 +156,40 @@ describe('transformers', () => {
 
     test('should correctly transform the estimate response 2', () => {
       expect(
-        transformers.estimate.response({
-          splits: [
-            {
-              expected_output: 9223372036854.775,
-              expected_output_without_slippage: 9223372036854.775,
-              fee: 4,
-              dex: 'VYFI',
-              price_impact: 843546.4933049141,
-              initial_price: 0.00011853462095991185,
-              final_price: 1.0000131730805681,
-              pool_id:
-                '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950VYFIaddr1wx6vzxyapfw4f4ragkvqtk3y473wj4sul3fr98xhguvazlse88lan',
-              batcher_fee: 2,
-              deposits: 2,
-              price_distortion: 841015.5508249996,
-              pool_fee: 0.003,
-            },
-          ],
-          total_fee: 4,
-          total_output: 0,
-          deposits: 2,
-          batcher_fee: 2,
-          total_input: 1000000000000000,
-          possible_routes: {},
-          net_price: 0,
-          dexhunter_fee: 1,
-          blacklisted_dexes: null,
-          partner: '',
-          partner_fee: 0,
-        }),
+        transformers.estimate.response(
+          {
+            splits: [
+              {
+                expected_output: 9223372036854.775,
+                expected_output_without_slippage: 9223372036854.775,
+                fee: 4,
+                dex: 'VYFI',
+                price_impact: 843546.4933049141,
+                initial_price: 0.00011853462095991185,
+                final_price: 1.0000131730805681,
+                pool_id:
+                  '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950VYFIaddr1wx6vzxyapfw4f4ragkvqtk3y473wj4sul3fr98xhguvazlse88lan',
+                batcher_fee: 2,
+                deposits: 2,
+                price_distortion: 841015.5508249996,
+                pool_fee: 0.003,
+              },
+            ],
+            total_fee: 4,
+            total_output: 0,
+            deposits: 2,
+            batcher_fee: 2,
+            total_input: 1000000000000000,
+            possible_routes: {},
+            net_price: 0,
+            net_price_reverse: 0,
+            dexhunter_fee: 1,
+            blacklisted_dexes: null,
+            partner: '',
+            partner_fee: 0,
+          },
+          true,
+        ),
       ).toEqual({
         aggregatorFee: 1,
         batcherFee: 2,
@@ -257,11 +261,13 @@ describe('transformers', () => {
 
     test('should correctly transform the reverse estimate response to default', () => {
       expect(
-        transformers.reverseEstimate.response({
-          possible_routes: {},
-          total_input_without_slippage: 0.0045599187141238265,
-          net_price_reverse: 122.75670807707843,
-        }),
+        transformers.reverseEstimate.response(
+          {
+            possible_routes: {},
+            total_input_without_slippage: 0.0045599187141238265,
+          },
+          true,
+        ),
       ).toEqual({
         aggregatorFee: 0,
         batcherFee: 0,
@@ -700,35 +706,38 @@ describe('transformers', () => {
 
     test('should correctly transform the build response to defaults (special case)', async () => {
       expect(
-        transformers.build.response({
-          average_price: 1.234,
-          communications: ['Success', 'Transaction confirmed'],
-          net_price_reverse: 0.812,
-          partner_code: 'PartnerX',
-          possible_routes: {
-            route1: 0.5,
-            route2: 0.3,
-            route3: 0.2,
-          },
-          splits: [
-            {
-              batcher_fee: 2,
-              deposits: 2,
-              expected_output: 1130,
-              expected_output_without_slippage: 1130,
-              fee: 0.3,
-              final_price: 0.041994,
-              initial_price: 0.04252918925670425,
-              pool_fee: 0.3,
-              pool_id:
-                '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
-              price_distortion: 1.258404559451805,
-              price_impact: 1.258404559451805,
-              dex: 'MINSWAP',
+        transformers.build.response(
+          {
+            average_price: 1.234,
+            communications: ['Success', 'Transaction confirmed'],
+            net_price_reverse: 0.812,
+            partner_code: 'PartnerX',
+            possible_routes: {
+              route1: 0.5,
+              route2: 0.3,
+              route3: 0.2,
             },
-          ],
-          total_input_without_slippage: 505,
-        }),
+            splits: [
+              {
+                batcher_fee: 2,
+                deposits: 2,
+                expected_output: 1130,
+                expected_output_without_slippage: 1130,
+                fee: 0.3,
+                final_price: 0.041994,
+                initial_price: 0.04252918925670425,
+                pool_fee: 0.3,
+                pool_id:
+                  '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+                price_distortion: 1.258404559451805,
+                price_impact: 1.258404559451805,
+                dex: 'MINSWAP',
+              },
+            ],
+            total_input_without_slippage: 505,
+          },
+          true,
+        ),
       ).toEqual({
         aggregator: 'dexhunter',
         aggregatorFee: 0,
@@ -736,7 +745,7 @@ describe('transformers', () => {
         cbor: '',
         deposits: 0,
         frontendFee: 0,
-        netPrice: 0.04252918925670425,
+        netPrice: 0.812,
         priceImpact: 0,
         splits: [
           {
@@ -792,24 +801,6 @@ describe('transformers', () => {
         totalInput: 0,
         totalOutput: 0,
         totalOutputWithoutSlippage: 0,
-      })
-    })
-  })
-
-  describe('sign', () => {
-    test('should correctly transform the sign request', async () => {
-      expect(
-        transformers.sign.request({
-          signatures: '3045022100a3b1c2d3e4f5',
-          txCbor: 'a1b2c3d4e5f6',
-        }),
-      ).toEqual(api.requests.sign)
-    })
-
-    test('should correctly transform the sign response', async () => {
-      expect(transformers.sign.response(api.responses.sign)).toEqual({
-        cbor: '3045022100a3b1c2d3e4f5',
-        stratId: 'a1b2c3d4e5f6',
       })
     })
   })

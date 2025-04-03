@@ -25,7 +25,13 @@ export type DexhunterApiConfig = {
 export const dexhunterApiMaker = (
   config: DexhunterApiConfig,
 ): Readonly<Swap.Api> => {
-  const {address, partner, network, request = fetchData} = config
+  const {
+    address,
+    partner,
+    network,
+    isPrimaryToken,
+    request = fetchData,
+  } = config
 
   if (network !== Chain.Network.Mainnet)
     return new Proxy(
@@ -145,7 +151,10 @@ export const dexhunterApiMaker = (
             tag: 'right',
             value: {
               status: response.value.status,
-              data: transformers[kind].response(response.value.data as any),
+              data: transformers[kind].response(
+                response.value.data as any,
+                isPrimaryToken(body.tokenIn),
+              ),
             },
           },
           true,
@@ -170,7 +179,10 @@ export const dexhunterApiMaker = (
             tag: 'right',
             value: {
               status: response.value.status,
-              data: transformers[kind].response(response.value.data as any),
+              data: transformers[kind].response(
+                response.value.data as any,
+                isPrimaryToken(body.tokenIn),
+              ),
             },
           },
           true,
@@ -236,7 +248,6 @@ const apiPaths = freeze(
     limitEstimate: '/swap/limit/estimate',
     reverseEstimate: '/swap/reverseEstimate',
     build: '/swap/build',
-    sign: '/swap/sign',
   } as const,
   true,
 )

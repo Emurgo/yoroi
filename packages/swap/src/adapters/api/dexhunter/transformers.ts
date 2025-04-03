@@ -15,8 +15,6 @@ import {
   Dex,
   ReverseEstimateRequest,
   ReverseEstimateResponse,
-  SignRequest,
-  SignResponse,
   Split,
   TokensResponse,
 } from './types'
@@ -212,17 +210,20 @@ export const transformersMaker = ({
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
       }),
-      response: ({
-        splits,
-
-        batcher_fee = 0,
-        deposits = 0,
-        dexhunter_fee = 0,
-        net_price = 0,
-        partner_fee = 0,
-        total_output = 0,
-        total_output_without_slippage = 0,
-      }: EstimateResponse): Swap.EstimateResponse => ({
+      response: (
+        {
+          splits,
+          batcher_fee = 0,
+          deposits = 0,
+          dexhunter_fee = 0,
+          net_price = 0,
+          net_price_reverse = 0,
+          partner_fee = 0,
+          total_output = 0,
+          total_output_without_slippage = 0,
+        }: EstimateResponse,
+        reversed?: boolean,
+      ): Swap.EstimateResponse => ({
         deposits,
 
         splits: splits?.map(toSwapSplit) ?? [],
@@ -234,7 +235,7 @@ export const transformersMaker = ({
         batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
-        netPrice: net_price,
+        netPrice: reversed ? net_price_reverse : net_price,
         priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
           (batcher_fee + dexhunter_fee + partner_fee).toFixed(
@@ -263,22 +264,26 @@ export const transformersMaker = ({
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
       }),
-      response: ({
-        batcher_fee = 0,
-        deposits = 0,
-        dexhunter_fee = 0,
-        net_price = 0,
-        partner_fee = 0,
-        splits,
-        total_input = 0,
-        total_output = 0,
-      }: ReverseEstimateResponse): Swap.EstimateResponse => ({
+      response: (
+        {
+          batcher_fee = 0,
+          deposits = 0,
+          dexhunter_fee = 0,
+          net_price = 0,
+          net_price_reverse = 0,
+          partner_fee = 0,
+          splits,
+          total_input = 0,
+          total_output = 0,
+        }: ReverseEstimateResponse,
+        reversed?: boolean,
+      ): Swap.EstimateResponse => ({
         deposits,
 
         batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
-        netPrice: net_price,
+        netPrice: reversed ? net_price_reverse : net_price,
         priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
           (batcher_fee + dexhunter_fee + partner_fee).toFixed(
@@ -319,17 +324,21 @@ export const transformersMaker = ({
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
       }),
-      response: ({
-        splits,
+      response: (
+        {
+          splits,
 
-        batcher_fee = 0,
-        deposits = 0,
-        dexhunter_fee = 0,
-        net_price = 0,
-        partner_fee = 0,
-        total_input = 0,
-        total_output = 0,
-      }: LimitEstimateResponse): Swap.EstimateResponse => ({
+          batcher_fee = 0,
+          deposits = 0,
+          dexhunter_fee = 0,
+          net_price = 0,
+
+          partner_fee = 0,
+          total_input = 0,
+          total_output = 0,
+        }: LimitEstimateResponse,
+        _reversed?: boolean,
+      ): Swap.EstimateResponse => ({
         deposits,
 
         batcherFee: batcher_fee,
@@ -429,19 +438,23 @@ export const transformersMaker = ({
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
       }),
-      response: ({
-        splits,
+      response: (
+        {
+          splits,
 
-        cbor = '',
-        batcher_fee = 0,
-        deposits = 0,
-        dexhunter_fee = 0,
-        net_price = 0,
-        partner_fee = 0,
-        total_input = 0,
-        total_output = 0,
-        total_output_without_slippage = 0,
-      }: BuildResponse): Swap.CreateResponse => ({
+          cbor = '',
+          batcher_fee = 0,
+          deposits = 0,
+          dexhunter_fee = 0,
+          net_price = 0,
+          net_price_reverse = 0,
+          partner_fee = 0,
+          total_input = 0,
+          total_output = 0,
+          total_output_without_slippage = 0,
+        }: BuildResponse,
+        reversed?: boolean,
+      ): Swap.CreateResponse => ({
         aggregator: Swap.Aggregator.Dexhunter,
         cbor,
         deposits,
@@ -449,7 +462,10 @@ export const transformersMaker = ({
         batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
-        netPrice: (net_price || splits?.[0]?.initial_price) ?? 0, // main net_price is coming as 0 :(
+        netPrice:
+          (reversed
+            ? net_price_reverse
+            : net_price || splits?.[0]?.initial_price) ?? 0, // main net_price is coming as 0 :(
         priceImpact: toPriceImpact(splits ?? []),
 
         totalOutput: total_output,
@@ -466,14 +482,6 @@ export const transformersMaker = ({
           0,
         splits: splits?.map(toSwapSplit) ?? [],
       }),
-    },
-
-    sign: {
-      request: ({signatures, txCbor}: any): SignRequest => ({
-        txCbor,
-        Signatures: signatures,
-      }),
-      response: ({cbor, strat_id}: SignResponse) => ({cbor, stratId: strat_id}),
     },
   } as const
 }
