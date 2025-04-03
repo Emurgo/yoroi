@@ -11,14 +11,9 @@ import {transactionReceivedSubject} from './transaction-received-notification'
 const appStorage = mountAsyncStorage({path: '/'})
 const notificationStorage = appStorage.join('notifications/')
 
-export const notificationManager = notificationManagerMaker({
+export const pushNotificationsManager = notificationManagerMaker({
   eventsStorage: notificationStorage.join('events/'),
   configStorage: notificationStorage.join('settings/'),
-  subscriptions: {
-    [Notifications.Trigger.TransactionReceived]: transactionReceivedSubject,
-    [Notifications.Trigger.PrimaryTokenPriceChanged]: primaryTokenPriceChangedSubject,
-    [Notifications.Trigger.RewardsUpdated]: rewardsUpdatedSubject,
-  },
 })
 
 export const useNotificationManagerMaker = () => {
