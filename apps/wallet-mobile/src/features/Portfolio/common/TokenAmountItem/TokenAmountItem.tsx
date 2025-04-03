@@ -80,7 +80,7 @@ export const TokenAmountItem = ({
 
       <Right style={styles.end}>
         {!isNft(info) && variant !== 'swap' && (
-          <View testID="tokenAmountText">
+          <View testID="tokenAmountText" style={{maxWidth: 150}}>
             {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
             {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}

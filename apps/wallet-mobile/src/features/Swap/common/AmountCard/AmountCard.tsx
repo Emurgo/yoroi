@@ -46,7 +46,8 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const noTokenSelected = !touched
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const name = info?.ticker || info?.name || ''
-  const formattedAmount = !info ? '0' : formatTokenWithText(amount?.quantity ?? 0n, info, 18)
+  const formattedAmount =
+    !info || (amount?.quantity ?? 0n) === 0n ? '0' : formatTokenWithText(amount?.quantity ?? 0n, info, 18)
 
   const focusInput = () => {
     if (inputRef?.current) {

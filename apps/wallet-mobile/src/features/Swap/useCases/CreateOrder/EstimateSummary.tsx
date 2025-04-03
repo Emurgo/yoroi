@@ -32,7 +32,7 @@ export const EstimateSummary = () => {
   if (swapForm.estimate === undefined) return null
 
   const netPrice = swapForm.estimate.netPrice
-  const roundedPrice = netPrice.toFixed(tokenOutInfo?.decimals ?? 0)
+  const roundedPrice = netPrice.toFixed(tokenOutInfo?.decimals ?? 0).replace(/\.0+$/, '')
   const price = roundedPrice !== '0' ? roundedPrice : netPrice.toFixed(6)
 
   const expand = () =>

@@ -42,11 +42,10 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const tokenInTicker = tokenInInfo.ticker ?? tokenInInfo.name
   const tokenOutTicker = tokenOutInfo.ticker ?? tokenOutInfo.name
 
-  const priceInfoValue = `1 ${tokenInTicker} = ${(
-    swapForm.createTx?.netPrice ??
-    swapForm.createTx?.splits[0].initialPrice ??
-    0
-  ).toFixed(tokenOutInfo?.decimals ?? 0)} ${tokenOutTicker}`
+  const netPrice = swapForm.createTx?.netPrice ?? swapForm.createTx?.splits[0].initialPrice ?? 0
+  const roundedPrice = netPrice.toFixed(tokenOutInfo?.decimals ?? 0).replace(/\.0+$/, '')
+  const price = roundedPrice !== '0' ? roundedPrice : netPrice.toFixed(6)
+  const priceInfoValue = `1 ${tokenInTicker} = ${price} ${tokenOutTicker}`
   const minAdaInfoValue = `${swapForm.createTx?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const totalFee = `${swapForm.createTx?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const minReceivedInfoValue = `${swapForm.createTx?.totalOutput} ${tokenOutTicker}`
