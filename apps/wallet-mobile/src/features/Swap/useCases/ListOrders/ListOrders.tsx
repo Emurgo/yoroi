@@ -1,5 +1,5 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
-import {isLeft} from '@yoroi/common'
+import {isLeft, truncateString} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
 import {getDexUrlByProtocol} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
@@ -168,10 +168,7 @@ const Order = ({order}: {order: Swap.Order}) => {
   const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
 
   const lastTxHash = order.updateTxHash ?? order.txHash ?? ''
-  const shortenedTxHash = `${lastTxHash.substring(0, 9)}...${lastTxHash.substring(
-    lastTxHash.length - 4,
-    lastTxHash.length,
-  )}`
+  const shortenedTxHash = truncateString({value: lastTxHash, maxLength: 22})
 
   return (
     <View style={styles.card}>
