@@ -159,10 +159,13 @@ const Order = ({order}: {order: Swap.Order}) => {
   const tokenOutInfo = swapForm.tokenInfos.get(order.tokenOut)
 
   const amountOut = order.actualAmountOut === 0 ? order.expectedAmountOut : order.actualAmountOut
-  const price = amountOut === 0 ? 0 : order.amountIn / amountOut
+  const priceCalc = amountOut === 0 ? 0 : order.amountIn / amountOut
+  const roundedPrice = priceCalc.toFixed(tokenOutInfo?.decimals ?? 0).replace(/\.0+$/, '')
+  const price = roundedPrice !== '0' ? roundedPrice : priceCalc.toFixed(6)
+
+  const priceStr = `1 ${tokenName(tokenInInfo)} = ${price} ${tokenName(tokenOutInfo)}`
 
   const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
-  const priceStr = `${Number(price.toFixed(6))} ${tokenName(tokenInInfo)}/${tokenName(tokenOutInfo)}`
 
   const lastTxHash = order.updateTxHash ?? order.txHash ?? ''
   const shortenedTxHash = `${lastTxHash.substring(0, 9)}...${lastTxHash.substring(
