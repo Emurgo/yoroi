@@ -114,7 +114,7 @@
   "components.delegation.withdrawaldialog.warningModalTitle": "并且取消注册抵委托密钥？",
   "components.delegation.submittedTx.title": "Transaction signed",
   "components.delegation.submittedTx.text": "It will show up in the transaction list once it's confirmed by the network.",
-  "components.delegation.submittedTx.button": "Close",
+  "components.delegation.submittedTx.button": "关闭",
   "components.delegation.failedTx.title": "Transaction error",
   "components.delegation.failedTx.text": "Your transaction has not been processed properly due to technical issues.",
   "components.delegation.failedTx.button": "Try again",
