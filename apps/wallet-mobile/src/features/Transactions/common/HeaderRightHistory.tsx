@@ -4,6 +4,7 @@ import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../components/Icon'
+import {features} from '../../../kernel/features'
 import {TxHistoryRouteNavigation} from '../../../kernel/navigation'
 import {useWalletNotifications} from '../../Notifications/common/useWalletNotifications'
 
@@ -17,11 +18,13 @@ export const HeaderRightHistory = React.memo(() => {
 
   return (
     <View style={styles.root}>
-      <TouchableOpacity style={styles.bellIcon} onPress={() => navigation.navigate('notification-center-history')}>
-        <Icon.Bell color={color.gray_max} size={24} />
+      {features.pushNotifications && (
+        <TouchableOpacity style={styles.bellIcon} onPress={() => navigation.navigate('notification-center-history')}>
+          <Icon.Bell color={color.gray_max} size={24} />
 
-        {isBellActive && <View style={styles.bellDot} />}
-      </TouchableOpacity>
+          {isBellActive && <View style={styles.bellDot} />}
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}>
         <Icon.Qr color={color.gray_max} size={24} />
