@@ -48,28 +48,26 @@ export const ViewNotificationHistoryScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.root} edges={['right', 'left', 'bottom']}>
-      <View style={{position: 'relative'}}>
-        <ScrollView contentContainerStyle={{paddingBottom: 60}}>
-          <View style={styles.scrollContainer}>
-            {walletNotifications.map((notification) => (
-              <NotificationItem
-                key={notification.id}
-                event={notification}
-                onPress={() => handleMarkNotificationAsRead(notification.id)}
-              />
-            ))}
-          </View>
-        </ScrollView>
-
-        <View style={styles.bottomBar}>
-          <Button
-            style={styles.button}
-            title={strings.markAllAsRead}
-            onPress={handleMarkAllAsRead}
-            type={ButtonType.Text}
-          />
+    <SafeAreaView style={[styles.root, {flex: 1, position: 'relative'}]} edges={['right', 'left', 'bottom']}>
+      <ScrollView contentContainerStyle={{paddingBottom: 60}}>
+        <View style={styles.scrollContainer}>
+          {walletNotifications.map((notification) => (
+            <NotificationItem
+              key={notification.id}
+              event={notification}
+              onPress={() => handleMarkNotificationAsRead(notification.id)}
+            />
+          ))}
         </View>
+      </ScrollView>
+
+      <View style={styles.bottomBar}>
+        <Button
+          style={styles.button}
+          title={strings.markAllAsRead}
+          onPress={handleMarkAllAsRead}
+          type={ButtonType.Text}
+        />
       </View>
     </SafeAreaView>
   )
@@ -89,6 +87,8 @@ const NotificationItem = React.memo(({event, onPress}: {event: Notifications.Eve
   const title =
     event.trigger === Notifications.Trigger.TransactionReceived
       ? getTransactionReceivedNotificationTitle(event, strings, transactionInfos, wallet)
+      : event.trigger === Notifications.Trigger.Push
+      ? event.metadata.title
       : event.id
 
   const icon =

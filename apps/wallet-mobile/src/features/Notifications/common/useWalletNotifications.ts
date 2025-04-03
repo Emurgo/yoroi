@@ -12,12 +12,7 @@ export const useWalletNotifications = () => {
   const walletId = wallet.id
 
   const data = React.useMemo(() => {
-    return receivedNotifications.filter(
-      (e) =>
-        e.trigger === Notifications.Trigger.TransactionReceived &&
-        e.metadata.txId in transactionInfos &&
-        e.metadata.walletId === walletId,
-    )
+    return receivedNotifications.filter((e) => e.trigger === Notifications.Trigger.Push)
   }, [receivedNotifications, walletId, transactionInfos])
   return {data, refetch}
 }
