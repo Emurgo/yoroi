@@ -168,7 +168,7 @@ const Order = ({order}: {order: Swap.Order}) => {
   const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
 
   const lastTxHash = order.updateTxHash ?? order.txHash ?? ''
-  const shortenedTxHash = truncateString({value: lastTxHash, maxLength: 22})
+  const shortenedTxHash = `${truncateString({value: lastTxHash, maxLength: 22})}#${order.outputIndex ?? 0}`
 
   return (
     <View style={styles.card}>
