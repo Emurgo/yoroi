@@ -3,13 +3,13 @@ import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {TRANSACTION_DIRECTION} from '../../../yoroi-wallets/types/other'
+import {SyncWalletInfo} from '../../WalletManager/common/types'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {walletManager} from '../../WalletManager/wallet-manager'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './storage'
-import {walletManager} from '../../WalletManager/wallet-manager'
-import {TRANSACTION_DIRECTION} from '../../../yoroi-wallets/types/other'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
-import {SyncWalletInfo} from '../../WalletManager/common/types'
 
 const storageKey = 'transaction-received-notification-history'
 

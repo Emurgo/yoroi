@@ -1,16 +1,17 @@
-import {useStrings} from './useStrings'
+import {useTheme} from '@yoroi/theme'
 import {Balance, Notifications, Portfolio} from '@yoroi/types'
-import {NotificationItem} from './NotificationPopupItem'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {useTheme} from '@yoroi/theme'
+
 import {Icon} from '../../../components/Icon'
-import {TransactionInfo} from '../../../yoroi-wallets/types/other'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
-import {Token} from '../../../yoroi-wallets/types/tokens'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useTransactionInfos} from '../../../yoroi-wallets/hooks'
+import {TransactionInfo} from '../../../yoroi-wallets/types/other'
+import {Token} from '../../../yoroi-wallets/types/tokens'
+import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {NotificationItem} from './NotificationPopupItem'
+import {useStrings} from './useStrings'
 
 export const getTransactionReceivedNotificationTitle = (
   event: Notifications.Event,

@@ -3,10 +3,10 @@ import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {walletManager} from '../../WalletManager/wallet-manager'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './storage'
-import {walletManager} from '../../WalletManager/wallet-manager'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 const storageKey = 'rewards-updated-notification-history'
 

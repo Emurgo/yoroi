@@ -1,6 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+
 import {Text} from '../../../components/Text'
 
 type Props = {

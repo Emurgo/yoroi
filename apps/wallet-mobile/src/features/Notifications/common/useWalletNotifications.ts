@@ -1,8 +1,9 @@
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceivedNotificationEvents} from '@yoroi/notifications'
-import * as React from 'react'
 import {Notifications} from '@yoroi/types'
+import * as React from 'react'
+
 import {useTransactionInfos} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const useWalletNotifications = () => {
   const {wallet} = useSelectedWallet()
@@ -17,6 +18,6 @@ export const useWalletNotifications = () => {
         e.metadata.txId in transactionInfos &&
         e.metadata.walletId === walletId,
     )
-  }, [receivedNotifications, wallet, transactionInfos])
+  }, [receivedNotifications, walletId, transactionInfos])
   return {data, refetch}
 }

@@ -1,5 +1,6 @@
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
+
 import {SwipeOutWrapper} from './SwipeOutWrapper'
 import {TransactionReceivedNotification} from './TransactionReceivedNotification'
 
