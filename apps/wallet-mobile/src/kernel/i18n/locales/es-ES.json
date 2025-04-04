@@ -545,6 +545,7 @@
   "components.txhistory.txdetails.addressPrefixReceive": "/{idx}",
   "components.txhistory.txdetails.confirmations": "{cnt} {cnt, plural, one {CONFIRMACIÓN} other {CONFIRMACIONES}}",
   "components.txhistory.txdetails.txDetails": "Tx Details",
+  "components.txhistory.notifications.title": "Notifications",
   "components.txhistory.txdetails.fee": "Comisión:",
   "components.txhistory.txdetails.fromAddresses": "Desde Dirección",
   "components.txhistory.txdetails.memo": "Memo",
@@ -1354,5 +1355,7 @@
   "notifications.multipleAssetsReceived": "Varios activos recibidos",
   "notifications.received": "recibido",
   "notifications.multipleAssetsSent": "Múltiples activos enviados",
-  "notifications.sent": "enviado"
+  "notifications.sent": "enviado",
+  "notifications.noNotifications": "No notifications yet",
+  "notifications.markAllAsRead": "Mark all as read"
 }
