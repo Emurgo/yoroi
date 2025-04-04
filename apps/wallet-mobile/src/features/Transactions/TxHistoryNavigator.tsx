@@ -1,5 +1,4 @@
 import {init} from '@emurgo/cross-csl-mobile'
-import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack'
 import {claimManagerMaker, ClaimProvider} from '@yoroi/claim'
 import {useAsyncStorage} from '@yoroi/common'
@@ -10,21 +9,15 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {TouchableOpacity} from 'react-native'
 
 import {Boundary} from '../../components/Boundary/Boundary'
-import {Icon} from '../../components/Icon'
 import {unstoppableApiKey} from '../../kernel/env'
-import {
-  BackButton,
-  defaultStackNavigationOptions,
-  TxHistoryRouteNavigation,
-  TxHistoryRoutes,
-} from '../../kernel/navigation'
+import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes} from '../../kernel/navigation'
 import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '../Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '../Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
 import {ShowExchangeResultOrderScreen} from '../Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
+import {ViewNotificationHistoryScreen} from '../Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {ReceiveProvider} from '../Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '../Receive/useCases/ListMultipleAddressesScreen'
@@ -48,6 +41,7 @@ import {SubmittedTxScreen as SwapSubmittedTxScreen} from '../Swap/useCases/ShowS
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
+import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
 
@@ -380,6 +374,12 @@ export const TxHistoryNavigator = () => {
                 />
 
                 <Stack.Screen //
+                  name="notification-center-history"
+                  component={ViewNotificationHistoryScreen}
+                  options={{title: strings.notificationsTitle}}
+                />
+
+                <Stack.Screen //
                   name="scan-show-camera-permission-denied"
                   component={ShowCameraPermissionDeniedScreen}
                   options={{
@@ -498,6 +498,10 @@ const messages = defineMessages({
     id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Tx Details',
   },
+  notificationsTitle: {
+    id: 'components.txhistory.notifications.title',
+    defaultMessage: '!!!Notifications',
+  },
 })
 
 const useStrings = () => {
@@ -527,22 +531,9 @@ const useStrings = () => {
     swapTitle: intl.formatMessage(messages.swapTitle),
     swapToTitle: intl.formatMessage(messages.swapToTitle),
     txDetailsTitle: intl.formatMessage(messages.txDetailsTitle),
+    notificationsTitle: intl.formatMessage(messages.notificationsTitle),
   }
 }
-
-const HeaderRightHistory = React.memo(() => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {color} = useTheme()
-
-  return (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
-      style={{paddingRight: 8}}
-    >
-      <Icon.Qr color={color.gray_max} />
-    </TouchableOpacity>
-  )
-})
 
 const sendOptions = (navigationOptions: StackNavigationOptions, color: ThemedPalette) => ({
   ...navigationOptions,

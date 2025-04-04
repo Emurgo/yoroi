@@ -26,6 +26,9 @@ describe('NotificationManager', () => {
 
     const config = await manager.config.read()
     expect(config).toEqual({
+      [Notifications.Trigger.Push]: {
+        notify: true,
+      },
       [Notifications.Trigger.PrimaryTokenPriceChanged]: {
         interval: '24h',
         notify: true,
@@ -81,6 +84,7 @@ describe('NotificationManager', () => {
       new Map([
         ['transaction-history', 0],
         ['portfolio', 0],
+        ['push', 0],
       ]),
     )
   })

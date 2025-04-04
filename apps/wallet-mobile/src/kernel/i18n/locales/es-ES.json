@@ -545,6 +545,7 @@
   "components.txhistory.txdetails.addressPrefixReceive": "/{idx}",
   "components.txhistory.txdetails.confirmations": "{cnt} {cnt, plural, one {CONFIRMACIÓN} other {CONFIRMACIONES}}",
   "components.txhistory.txdetails.txDetails": "Tx Details",
+  "components.txhistory.notifications.title": "Notifications",
   "components.txhistory.txdetails.fee": "Comisión:",
   "components.txhistory.txdetails.fromAddresses": "Desde Dirección",
   "components.txhistory.txdetails.memo": "Memo",
@@ -1164,11 +1165,11 @@
   "discover.filterOptions.parent.trading": "Trading",
   "discover.filterOptions.parent.community": "Community",
   "discover.modal.disconnectWarning": "Even if you disconnected Yoroi from the DApp, Yoroi is still authorized. If you want to remove such authorization, please click Disconnect DApp.",
-  "discover.modal.collateralNotFoundText": "To continue with this action, you need to generate a collateral",
-  "discover.modal.collateralNotFoundTitle": "Collateral not found",
-  "discover.modal.collateralNotFoundActionText": "Generate",
-  "discover.modal.collateralTxPendingTitle": "Pending Collateral Transaction",
-  "discover.modal.collateralTxPendingText": "The collateral transaction you've submitted is being processed and may take a few minutes to confirm.  Please wait for it to show in your transaction history and try again.",
+  "discover.modal.collateralNotFoundText": "Para continuar con esta acción, necesita generar un colateral",
+  "discover.modal.collateralNotFoundTitle": "Colateral no encontrado",
+  "discover.modal.collateralNotFoundActionText": "Generar",
+  "discover.modal.collateralTxPendingTitle": "Transacción colateral pendiente",
+  "discover.modal.collateralTxPendingText": "La transacción colateral que ha enviado está siendo procesada y puede tardar unos minutos en confirmar. Por favor, espere a que se muestre en su historial de transacciones y vuelva a intentarlo.",
   "walletinit.theme.tryDarkTheme": "Prueba el tema oscuro de Yoroi",
   "walletinit.theme.description": "Presione el interruptor del tema y sumergirse en el nuevo tema de estilo elaborado para mejorar su experiencia en cartera de Cardano",
   "walletinit.theme.chanageTheme": "Siempre puede cambiar esto más tarde en los ajustes de la app.",
@@ -1354,5 +1355,7 @@
   "notifications.multipleAssetsReceived": "Varios activos recibidos",
   "notifications.received": "recibido",
   "notifications.multipleAssetsSent": "Múltiples activos enviados",
-  "notifications.sent": "enviado"
+  "notifications.sent": "enviado",
+  "notifications.noNotifications": "No notifications yet",
+  "notifications.markAllAsRead": "Mark all as read"
 }

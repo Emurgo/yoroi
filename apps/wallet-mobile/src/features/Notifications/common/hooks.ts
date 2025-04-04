@@ -1,11 +1,13 @@
 import messaging from '@react-native-firebase/messaging'
+import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
-import {Notifications as YoroiNotifications} from '@yoroi/types'
+import {Notifications as NotificationTypes, Notifications as YoroiNotifications} from '@yoroi/types'
 import React from 'react'
 import {PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
-import {logger} from '../../../../kernel/logger/logger'
+import {logger} from '../../../kernel/logger/logger'
+import {pushNotificationsManager} from './notification-manager'
 import {generateNotificationId, parseNotificationId, sendNotification} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
@@ -77,9 +79,36 @@ const usePushNotifications = ({enabled}: {enabled: boolean}) => {
 }
 
 messaging().setBackgroundMessageHandler((remoteMessage) => {
-  if (remoteMessage.notification) {
+  const remoteNotification = remoteMessage.notification
+  if (remoteNotification && isString(remoteNotification.title) && isString(remoteNotification.body)) {
     // Automatically shown by the OS
+    pushNotificationsManager.events.push(
+      createPushNotification({
+        title: remoteNotification.title,
+        description: remoteNotification.body,
+        data: remoteMessage.data,
+      }),
+    )
     logger.info(`FCM Message Notification in background`, {notification: remoteMessage.notification})
   }
   return Promise.resolve()
 })
+
+const createPushNotification = (options: {
+  title: string
+  description: string
+  data?: Record<string, unknown>
+}): NotificationTypes.PushEvent => {
+  const {title, description, data} = options
+  return {
+    id: generateNotificationId(),
+    date: new Date().toISOString(),
+    isRead: false,
+    trigger: NotificationTypes.Trigger.Push,
+    metadata: {
+      title,
+      body: description,
+      data,
+    },
+  } as const
+}

@@ -4,9 +4,9 @@ import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
-import {fetchPtPriceActivity} from '../../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
-import {getCurrencySymbol} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
+import {fetchPtPriceActivity} from '../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
+import {getCurrencySymbol} from '../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './storage'
 

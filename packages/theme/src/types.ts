@@ -60,6 +60,7 @@ export type BasePalette = {
   black_static: HexColor
   white_static: HexColor
   green_static: HexColor
+  red_static: HexColor
 
   sys_magenta_700: HexColor
   sys_magenta_600: HexColor

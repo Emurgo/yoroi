@@ -273,6 +273,7 @@ import {
   NotificationRewardsUpdatedEvent,
   NotificationTransactionReceivedEvent,
   NotificationTrigger,
+  PushNotificationEvent,
 } from './notifications/manager'
 import {
   SwapMakeOrderCalculation,
@@ -701,6 +702,7 @@ export namespace Notifications {
   export type ManagerMakerProps = NotificationManagerMakerProps
   export type TransactionReceivedEvent = NotificationTransactionReceivedEvent
   export type RewardsUpdatedEvent = NotificationRewardsUpdatedEvent
+  export type PushEvent = PushNotificationEvent
   export type PrimaryTokenPriceChangedEvent =
     NotificationPrimaryTokenPriceChangedEvent
   export const Trigger = NotificationTrigger
