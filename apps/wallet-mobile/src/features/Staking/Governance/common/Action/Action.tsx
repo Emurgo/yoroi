@@ -29,7 +29,7 @@ export const Action = ({title, description, onPress, pending, children, showRigh
         start={{x: 1, y: 1}}
         end={{x: 0, y: 0}}
         colors={gradientColors}
-        style={[styles.gradient, !showGradient && styles.border]}
+        style={[styles.gradient, pending && styles.pending, !showGradient && styles.border]}
       >
         {pending && (
           <View style={styles.icon}>
@@ -91,6 +91,9 @@ const useStyles = () => {
     border: {
       ...atoms.border,
       borderColor: color.gray_200,
+    },
+    pending: {
+      backgroundColor: color.bg_color_min,
     },
   })
 

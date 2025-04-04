@@ -75,7 +75,9 @@ export const useStrings = () => {
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     invalidDRepId: intl.formatMessage(messages.invalidDRepId),
     delegateToAYoroiDrep: intl.formatMessage(messages.delegateToAYoroiDrep),
+    delegatingToAYoroiDRep: intl.formatMessage(messages.delegatingToAYoroiDRep),
     delegateToAYoroiDRepDescription: intl.formatMessage(messages.delegateToAYoroiDRepDescription),
+    delegateToAYoroiDRepDescriptionPending: intl.formatMessage(messages.delegateToAYoroiDRepDescriptionPending),
   }
 }
 
@@ -326,8 +328,17 @@ const messages = defineMessages({
     id: 'components.governance.delegateToAYoroiDrep',
     defaultMessage: '!!!Delegate to a Yoroi DRep',
   },
+  delegatingToAYoroiDRep: {
+    id: 'components.governance.delegatingToAYoroiDRep',
+    defaultMessage: '!!!Delegating to a Yoroi DRep',
+  },
   delegateToAYoroiDRepDescription: {
     id: 'components.governance.delegateToAYoroiDRepDescription',
-    defaultMessage: '!!!You are designating Yoroi to cast a vote on your behalf for future proposals.',
+    defaultMessage: '!!!You have selected Delegate to Yoroi Drep as your governance status.',
+  },
+  delegateToAYoroiDRepDescriptionPending: {
+    id: 'components.governance.delegateToAYoroiDRepDescriptionPending',
+    defaultMessage:
+      '!!!You have selected Delegate to Yoroi Drep as your governance status. It may take some time to process your delegation request.',
   },
 })
