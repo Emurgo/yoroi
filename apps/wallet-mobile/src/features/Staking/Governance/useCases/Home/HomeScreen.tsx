@@ -360,7 +360,6 @@ const NeverParticipatedInGovernanceVariant = () => {
     )
   }
 
-
   const isCreatingTx =
     createGovernanceTxMutation.isLoading || isCreatingDelegationCertificate || isCreatingVotingCertificate
 
