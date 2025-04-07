@@ -20,6 +20,7 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
 
   React.useEffect(() => {
     if (!enabled) return
+
     const timeout = setTimeout(async () => {
       const hasShownModal = (await uiStorage.getItem(modalStorageKey)) === true
       if (hasShownModal) return
@@ -31,6 +32,7 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
       })
       await uiStorage.setItem(modalStorageKey, true)
     }, timeToShowModalInMs)
+
     return () => clearTimeout(timeout)
   }, [openModal, strings, windowHeight, enabled])
 }
@@ -46,17 +48,13 @@ export const GetImportantAlertsModal = () => {
     InteractionManager.runAfterInteractions(() => closeModal())
   }
 
-  const handleCancelPress = () => {
-    closeModal()
-  }
-
   return (
     <View style={styles.root}>
       <PhoneBell />
 
       <Text style={styles.text}>{strings.turnOnAlerts}</Text>
 
-      <Button size="M" title={strings.skip} onPress={handleCancelPress} type={ButtonType.Text} />
+      <Button size="M" title={strings.skip} onPress={closeModal} type={ButtonType.Text} />
 
       <Button size="M" title={strings.turnOnNotifications} onPress={handleTurnOnPress} style={styles.button} />
     </View>
