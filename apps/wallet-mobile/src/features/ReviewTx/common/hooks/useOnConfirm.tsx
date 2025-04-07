@@ -101,6 +101,7 @@ export const useOnConfirm = ({
             await submitTx(cbor, rootKey, wallet, meta)
           } catch (e) {
             handleOnError(e)
+            return
           }
         }
 
