@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {InteractionManager, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {InteractionManager, PermissionsAndroid, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
 import {Button, ButtonType} from '../../../components/Button/Button'
@@ -13,12 +13,13 @@ import {useStrings} from './useStrings'
 const timeToShowModalInMs = 1000
 const modalStorageKey = 'hasShownGetImportantAlertsModal'
 
-export const useGetImportantAlertsModal = () => {
+export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
   const strings = useStrings()
 
   React.useEffect(() => {
+    if (!enabled) return
     const timeout = setTimeout(async () => {
       const hasShownModal = (await uiStorage.getItem(modalStorageKey)) === true
       if (hasShownModal) return
@@ -31,7 +32,7 @@ export const useGetImportantAlertsModal = () => {
       await uiStorage.setItem(modalStorageKey, true)
     }, timeToShowModalInMs)
     return () => clearTimeout(timeout)
-  }, [openModal, strings, windowHeight])
+  }, [openModal, strings, windowHeight, enabled])
 }
 
 export const GetImportantAlertsModal = () => {
@@ -39,8 +40,9 @@ export const GetImportantAlertsModal = () => {
   const strings = useStrings()
   const {closeModal} = useModal()
 
-  const handleTurnOnPress = () => {
-    Notifications.registerRemoteNotifications({})
+  const handleTurnOnPress = async () => {
+    await triggerNotificationsPermissionModal()
+
     InteractionManager.runAfterInteractions(() => closeModal())
   }
 
@@ -59,6 +61,16 @@ export const GetImportantAlertsModal = () => {
       <Button size="M" title={strings.turnOnNotifications} onPress={handleTurnOnPress} style={styles.button} />
     </View>
   )
+}
+
+const triggerNotificationsPermissionModal = async () => {
+  // Triggers iOS permission request
+  Notifications.registerRemoteNotifications({})
+
+  // Android requires manual permission request
+  if (Platform.OS === 'android') {
+    await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
+  }
 }
 
 const useStyles = () => {
