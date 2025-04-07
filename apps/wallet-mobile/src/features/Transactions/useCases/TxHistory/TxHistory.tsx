@@ -12,6 +12,7 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {usePoolTransitionModal} from '../../../../legacy/Staking/PoolTransition/usePoolTransitionModal'
 import {useSync} from '../../../../yoroi-wallets/hooks'
 import {ConsiderDRepToUsTxHistoryBanner} from '../../../Banners/useCases/ConsiderDRepToUsTxHistoryBanner'
+import {useGetImportantAlertsModal} from '../../../Notifications/common/GetImportantAlertsModal'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
 import {TxList} from '../TxList/TxList'
@@ -21,7 +22,6 @@ import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
 import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
-import {useGetImportantAlertsModal} from '../../../Notifications/common/GetImportantAlertsModal'
 
 export const TxHistory = () => {
   const strings = useStrings()

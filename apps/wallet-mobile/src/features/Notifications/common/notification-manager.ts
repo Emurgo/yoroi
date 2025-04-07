@@ -1,4 +1,3 @@
-import {mountAsyncStorage} from '@yoroi/common'
 import {notificationManagerMaker} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
@@ -6,14 +5,12 @@ import * as React from 'react'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {primaryTokenPriceChangedSubject} from './primary-token-price-changed-notification'
 import {rewardsUpdatedSubject} from './rewards-updated-notification'
+import {configStorage, eventsStorage} from './storage'
 import {transactionReceivedSubject} from './transaction-received-notification'
 
-const appStorage = mountAsyncStorage({path: '/'})
-const notificationStorage = appStorage.join('notifications/')
-
 export const pushNotificationsManager = notificationManagerMaker({
-  eventsStorage: notificationStorage.join('events/'),
-  configStorage: notificationStorage.join('settings/'),
+  eventsStorage,
+  configStorage,
 })
 
 export const useNotificationManagerMaker = () => {
@@ -22,8 +19,8 @@ export const useNotificationManagerMaker = () => {
   return React.useMemo(
     () =>
       notificationManagerMaker({
-        eventsStorage: notificationStorage.join('events/'),
-        configStorage: notificationStorage.join(`settings/${walletId}/`),
+        eventsStorage,
+        configStorage: configStorage.join(`${walletId}/`),
         subscriptions: {
           [Notifications.Trigger.TransactionReceived]: transactionReceivedSubject,
           [Notifications.Trigger.PrimaryTokenPriceChanged]: primaryTokenPriceChangedSubject,

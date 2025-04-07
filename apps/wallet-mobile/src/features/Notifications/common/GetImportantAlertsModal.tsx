@@ -1,12 +1,14 @@
-import {useModal} from '../../../components/Modal/ModalContext'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {InteractionManager, StyleSheet, useWindowDimensions, View} from 'react-native'
-import {PhoneBell} from '../illustrations/PhoneBell'
-import {useTheme} from '@yoroi/theme'
-import {Button, ButtonType} from '../../../components/Button/Button'
-import {Text} from '../../../components/Text'
-import {useStrings} from './useStrings'
 import {Notifications} from 'react-native-notifications'
+
+import {Button, ButtonType} from '../../../components/Button/Button'
+import {useModal} from '../../../components/Modal/ModalContext'
+import {Text} from '../../../components/Text'
+import {PhoneBell} from '../illustrations/PhoneBell'
+import {uiStorage} from './storage'
+import {useStrings} from './useStrings'
 
 export const useGetImportantAlertsModal = () => {
   const {openModal} = useModal()
@@ -14,12 +16,21 @@ export const useGetImportantAlertsModal = () => {
   const strings = useStrings()
 
   React.useEffect(() => {
-    openModal({
-      title: strings.getImportantAlerts,
-      content: <GetImportantAlertsModal />,
-      height: windowHeight * 0.6,
-    })
-  }, [])
+    const timeout = setTimeout(async () => {
+      const hasShownModal = (await uiStorage.getItem('hasShownGetImportantAlertsModal')) === true
+      if (hasShownModal) return
+
+      openModal({
+        title: strings.getImportantAlerts,
+        content: <GetImportantAlertsModal />,
+        height: windowHeight * 0.6,
+      })
+      await uiStorage.setItem('hasShownGetImportantAlertsModal', true)
+    }, 1000)
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [openModal, strings, windowHeight])
 }
 
 export const GetImportantAlertsModal = () => {
@@ -39,9 +50,12 @@ export const GetImportantAlertsModal = () => {
   return (
     <View style={styles.root}>
       <PhoneBell />
+
       <Text style={styles.text}>{strings.turnOnAlerts}</Text>
-      <Button size={'M'} title={strings.skip} onPress={handleCancelPress} type={ButtonType.Text} />
-      <Button size={'M'} title={strings.turnOnNotifications} onPress={handleTurnOnPress} style={styles.button} />
+
+      <Button size="M" title={strings.skip} onPress={handleCancelPress} type={ButtonType.Text} />
+
+      <Button size="M" title={strings.turnOnNotifications} onPress={handleTurnOnPress} style={styles.button} />
     </View>
   )
 }
