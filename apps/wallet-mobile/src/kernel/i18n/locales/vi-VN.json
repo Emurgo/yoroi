@@ -545,6 +545,7 @@
   "components.txhistory.txdetails.addressPrefixReceive": "/{idx}",
   "components.txhistory.txdetails.confirmations": "{cnt} {cnt, plural, other {CONFIRMATIONS}}",
   "components.txhistory.txdetails.txDetails": "Tx Details",
+  "components.txhistory.notifications.title": "Notifications",
   "components.txhistory.txdetails.fee": "Phí:",
   "components.txhistory.txdetails.fromAddresses": "Từ các địa chỉ",
   "components.txhistory.txdetails.memo": "Bản ghi nhớ",
@@ -1354,5 +1355,7 @@
   "notifications.multipleAssetsReceived": "Multiple assets received",
   "notifications.received": "received",
   "notifications.multipleAssetsSent": "Multiple assets sent",
-  "notifications.sent": "sent"
+  "notifications.sent": "sent",
+  "notifications.noNotifications": "No notifications yet",
+  "notifications.markAllAsRead": "Mark all as read"
 }

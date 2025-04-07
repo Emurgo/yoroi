@@ -162,7 +162,8 @@ export type TxHistoryRoutes = {
 } & SwapTokenRoutes &
   ScanRoutes &
   ClaimRoutes &
-  ExchangeRoutes
+  ExchangeRoutes &
+  NotificationCenterRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 type ScanStartParams = Readonly<{
@@ -175,6 +176,10 @@ export type ScanRoutes = {
 }
 type ClaimRoutes = {
   'claim-show-success': undefined
+}
+
+type NotificationCenterRoutes = {
+  'notification-center-history': undefined
 }
 
 export type SwapTokenRoutes = {

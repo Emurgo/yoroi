@@ -32,7 +32,7 @@ import {
   useShowDarkThemeAnnouncementScreen,
 } from './features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
-import {useInitNotifications} from './features/Notifications/useCases/common/hooks'
+import {useInitNotifications} from './features/Notifications/common/hooks'
 import {NotificationsDevScreen} from './features/Notifications/useCases/NotificationsDevScreen'
 import {NotificationUIHandler} from './features/Notifications/useCases/NotificationUIHandler'
 import {SearchProvider} from './features/Search/SearchContext'

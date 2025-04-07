@@ -12,6 +12,8 @@ export const useStrings = () => {
     received: intl.formatMessage(messages.received),
     multipleAssetsSent: intl.formatMessage(messages.multipleAssetsSent),
     sent: intl.formatMessage(messages.sent),
+    noNotifications: intl.formatMessage(messages.noNotifications),
+    markAllAsRead: intl.formatMessage(messages.markAllAsRead),
   }
 }
 
@@ -47,5 +49,13 @@ const messages = defineMessages({
   sent: {
     id: 'notifications.sent',
     defaultMessage: '!!!sent',
+  },
+  noNotifications: {
+    id: 'notifications.noNotifications',
+    defaultMessage: '!!!No notifications yet',
+  },
+  markAllAsRead: {
+    id: 'notifications.markAllAsRead',
+    defaultMessage: '!!!Mark all as read',
   },
 })

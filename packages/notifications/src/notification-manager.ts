@@ -71,6 +71,7 @@ const notificationTriggerGroups: Record<
   [Notifications.Trigger.TransactionReceived]: 'transaction-history',
   [Notifications.Trigger.RewardsUpdated]: 'portfolio',
   [Notifications.Trigger.PrimaryTokenPriceChanged]: 'portfolio',
+  [Notifications.Trigger.Push]: 'push',
 }
 
 const eventsManagerMaker = ({
@@ -174,6 +175,9 @@ const buildUnreadCounterDefaultValue = (): Map<Notifications.Group, number> => {
 
 const defaultConfig: Notifications.Config = {
   displayDuration: 8,
+  [Notifications.Trigger.Push]: {
+    notify: true,
+  },
   [Notifications.Trigger.PrimaryTokenPriceChanged]: {
     notify: true,
     thresholdInPercent: 10,

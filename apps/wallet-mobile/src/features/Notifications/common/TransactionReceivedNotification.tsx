@@ -3,113 +3,110 @@ import {Balance, Notifications, Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Icon} from '../../../../components/Icon'
-import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
-import {Token} from '../../../../yoroi-wallets/types/tokens'
-import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {Icon} from '../../../components/Icon'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {useTransactionInfos} from '../../../yoroi-wallets/hooks'
+import {TransactionInfo} from '../../../yoroi-wallets/types/other'
+import {Token} from '../../../yoroi-wallets/types/tokens'
+import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {NotificationItem} from './NotificationPopupItem'
-import {SwipeOutWrapper} from './SwipeOutWrapper'
 import {useStrings} from './useStrings'
-import Quantity = Balance.Quantity
 
-type Props = {
-  event: Notifications.Event
-  onPress: () => void
-  onSwipeOut: () => void
-  onExpired: () => void
-}
+export const getTransactionReceivedNotificationTitle = (
+  event: Notifications.Event,
+  strings: ReturnType<typeof useStrings>,
+  transactions: Record<string, TransactionInfo>,
+  wallet: YoroiWallet,
+): string => {
+  if (event.trigger !== Notifications.Trigger.TransactionReceived) return ''
 
-export const TransactionReceivedNotificationPopup = ({event, onPress, onSwipeOut, onExpired}: Props) => {
-  const strings = useStrings()
-  const {wallet} = useSelectedWallet()
-  if (event.trigger !== Notifications.Trigger.TransactionReceived) return null
+  const tx = transactions[event.metadata.txId]
 
-  const isIntraWallet = wallet.transactions[event.metadata.txId]?.direction === 'SELF'
-  const isReceived = wallet.transactions[event.metadata.txId]?.direction === 'RECEIVED'
-  const isSent = wallet.transactions[event.metadata.txId]?.direction === 'SENT'
+  if (tx == null) {
+    return `Unknown transaction ${event.metadata.txId}`
+  }
+
+  const isIntraWallet = tx.direction === 'SELF'
+  const isReceived = tx.direction === 'RECEIVED'
+  const isSent = tx.direction === 'SENT'
 
   if (isIntraWallet) {
-    return (
-      <SwipeOutWrapper onSwipeOut={onSwipeOut} onExpired={onExpired} onPress={onPress}>
-        <NotificationItem
-          onPress={onPress}
-          icon={
-            <IconWrapper>
-              <Icon.Direction transactionDirection="SELF" />
-            </IconWrapper>
-          }
-          title={strings.intraWalletTransactionSent}
-          description={strings.tapToView}
-        />
-      </SwipeOutWrapper>
-    )
+    return strings.intraWalletTransactionSent
   }
 
   if (isReceived) {
-    const tx: TransactionInfo | null = wallet.transactions[event.metadata.txId] ?? null
-    if (tx === null) return null
     const details = getTransactionInfoDetails(tx, wallet.portfolioPrimaryTokenInfo)
 
-    const label = details.hasReceivedMultipleAssets
+    return details.hasReceivedMultipleAssets
       ? strings.multipleAssetsReceived
       : `${formatAssets(
           Quantities.format(details.firstAssetAmountReceived, details.firstReceivedAsset.denomination),
           details.firstReceivedAsset.name,
         )} ${strings.received}`
-
-    return (
-      <SwipeOutWrapper onSwipeOut={onSwipeOut} onExpired={onExpired} onPress={onPress}>
-        <NotificationItem
-          onPress={onPress}
-          icon={
-            <IconWrapper>
-              <Icon.Direction transactionDirection="RECEIVED" />
-            </IconWrapper>
-          }
-          title={label}
-          description={strings.tapToView}
-        />
-      </SwipeOutWrapper>
-    )
   }
 
   if (isSent) {
-    const tx: TransactionInfo | null = wallet.transactions[event.metadata.txId] ?? null
-    if (tx === null) return null
     const details = getTransactionInfoDetails(tx, wallet.portfolioPrimaryTokenInfo)
 
-    const label = details.hasSentMultipleAssets
+    return details.hasSentMultipleAssets
       ? strings.multipleAssetsSent
       : `${formatAssets(
           Quantities.format(details.firstAssetAmountSent, details.firstSentAsset.denomination),
-          details?.firstSentAsset.name,
+          details.firstSentAsset.name,
         )} ${strings.sent}`
+  }
 
-    return (
-      <SwipeOutWrapper onSwipeOut={onSwipeOut} onExpired={onExpired} onPress={onPress}>
-        <NotificationItem
-          onPress={onPress}
-          icon={
-            <IconWrapper>
-              <Icon.Direction transactionDirection="SENT" />
-            </IconWrapper>
-          }
-          title={label}
-          description={strings.tapToView}
-        />
-      </SwipeOutWrapper>
-    )
+  return ''
+}
+
+export const getTransactionReceivedNotificationIcon = (
+  event: Notifications.Event,
+  transactions: Record<string, TransactionInfo>,
+) => {
+  if (event.trigger !== Notifications.Trigger.TransactionReceived) return null
+
+  const tx = transactions[event.metadata.txId]
+
+  const isIntraWallet = tx?.direction === 'SELF'
+  const isReceived = tx?.direction === 'RECEIVED'
+  const isSent = tx?.direction === 'SENT'
+  const isMultiSig = tx?.direction === 'MULTI'
+
+  if (isIntraWallet) {
+    return <Icon.Direction transactionDirection="SELF" />
+  }
+
+  if (isReceived) {
+    return <Icon.Direction transactionDirection="RECEIVED" />
+  }
+
+  if (isSent) {
+    return <Icon.Direction transactionDirection="SENT" />
+  }
+
+  if (isMultiSig) {
+    return <Icon.Direction transactionDirection="MULTI" />
   }
 
   return null
 }
 
-const formatAssets = (quantity: string, name: string) => {
-  const text = `${quantity} ${name}`
-  return text.length > 15 ? `${text.slice(0, 15)}...` : text
-}
+export const TransactionReceivedNotification = ({event}: {event: Notifications.Event}) => {
+  const strings = useStrings()
+  const {wallet} = useSelectedWallet()
+  const transactionInfos = useTransactionInfos({wallet})
 
+  if (event.trigger !== Notifications.Trigger.TransactionReceived) return null
+
+  return (
+    <NotificationItem
+      icon={<IconWrapper>{getTransactionReceivedNotificationIcon(event, transactionInfos)}</IconWrapper>}
+      title={getTransactionReceivedNotificationTitle(event, strings, transactionInfos, wallet)}
+      description={strings.tapToView}
+    />
+  )
+}
 const IconWrapper = ({children}: {children: React.ReactNode}) => {
   const {styles, colors} = useStyles()
   return <View style={[styles.icon, {backgroundColor: colors.iconBackground}]}>{children}</View>
@@ -134,7 +131,7 @@ const sumTokenFromTxData = (
   outputsOutputs: TransactionInfo['outputs'] | TransactionInfo['inputs'],
   identifier: string,
 ) => {
-  return outputsOutputs.reduce<Quantity>((acc, output) => {
+  return outputsOutputs.reduce<Balance.Quantity>((acc, output) => {
     const tokens = output.assets.filter((a) => a.identifier === identifier)
     const quantities = tokens.map((t) => asQuantity(t.amount))
     return Quantities.sum([acc, ...quantities])
@@ -153,7 +150,7 @@ const findToken = (tokens: Token[], identifier: string, primaryTokenInfo: Portfo
 }
 
 const sumPtFromOutputs = (outputs: TransactionInfo['outputs']) => {
-  return outputs.reduce<Quantity>((acc, output) => {
+  return outputs.reduce<Balance.Quantity>((acc, output) => {
     const amount = asQuantity(output.amount)
     return Quantities.sum([acc, amount])
   }, Quantities.zero)
@@ -192,4 +189,9 @@ const getTransactionInfoDetails = (info: TransactionInfo, primaryTokenInfo: Port
     firstAssetAmountReceived,
     firstAssetAmountSent,
   }
+}
+
+const formatAssets = (quantity: string, name: string) => {
+  const text = `${quantity} ${name}`
+  return text.length > 15 ? `${text.slice(0, 15)}...` : text
 }

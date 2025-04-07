@@ -82,7 +82,12 @@ export const fetchData: FetchData = <T, D = any>(
     ...fetcherConfig,
     url: config.url,
     method: method,
-    headers: config.headers ?? {'Content-Type': 'application/json'},
+    headers: config.headers ?? {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    },
     ...(isNotGet && 'data' in config && {data: config.data}),
 
     // updated by the interceptors

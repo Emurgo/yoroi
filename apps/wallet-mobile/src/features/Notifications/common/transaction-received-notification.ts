@@ -3,11 +3,11 @@ import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {TRANSACTION_DIRECTION} from '../../../../yoroi-wallets/types/other'
-import {SyncWalletInfo} from '../../../WalletManager/common/types'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {walletManager} from '../../../WalletManager/wallet-manager'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {TRANSACTION_DIRECTION} from '../../../yoroi-wallets/types/other'
+import {SyncWalletInfo} from '../../WalletManager/common/types'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {walletManager} from '../../WalletManager/wallet-manager'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './storage'
 
@@ -44,13 +44,15 @@ const buildNotifications = async ({appStorage, sinceDate, walletIds}: BuildNotif
 
     await storage.addValues(newTxIds)
 
+    const transactions = wallet.transactions
+
     newTxIds.forEach((id) => {
-      const txDate = wallet.transactions[id].submittedAt ?? new Date().toISOString()
+      const txDate = transactions[id].submittedAt ?? new Date().toISOString()
       const isConfirmedAfterDeadline = new Date(txDate).getTime() > sinceDate.getTime()
       if (!isConfirmedAfterDeadline) return
       const metadata: NotificationTypes.TransactionReceivedEvent['metadata'] = {
         txId: id,
-        isSentByUser: wallet.transactions[id]?.direction === TRANSACTION_DIRECTION.SENT,
+        isSentByUser: transactions[id]?.direction === TRANSACTION_DIRECTION.SENT,
         nextTxsCounter: newTxIds.length + processed.length,
         previousTxsCounter: processed.length,
         walletId,

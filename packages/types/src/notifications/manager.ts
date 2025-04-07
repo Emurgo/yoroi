@@ -5,6 +5,7 @@ export enum NotificationTrigger {
   'TransactionReceived' = 'TransactionReceived',
   'RewardsUpdated' = 'RewardsUpdated',
   'PrimaryTokenPriceChanged' = 'PrimaryTokenPriceChanged',
+  'Push' = 'Push',
 }
 
 export type NotificationManagerMakerProps = {
@@ -14,8 +15,18 @@ export type NotificationManagerMakerProps = {
     [NotificationTrigger.TransactionReceived]: Subject<NotificationTransactionReceivedEvent>
     [NotificationTrigger.RewardsUpdated]: Subject<NotificationRewardsUpdatedEvent>
     [NotificationTrigger.PrimaryTokenPriceChanged]: Subject<NotificationPrimaryTokenPriceChangedEvent>
+    [NotificationTrigger.Push]: Subject<PushNotificationEvent>
   }>
   eventsLimit?: number
+}
+
+export interface PushNotificationEvent extends NotificationEventBase {
+  trigger: NotificationTrigger.Push
+  metadata: {
+    title: string
+    body: string
+    data?: Record<string, unknown>
+  }
 }
 
 export interface NotificationTransactionReceivedEvent
@@ -46,12 +57,13 @@ export interface NotificationPrimaryTokenPriceChangedEvent
   }
 }
 
-export type NotificationGroup = 'transaction-history' | 'portfolio'
+export type NotificationGroup = 'transaction-history' | 'portfolio' | 'push'
 
 export type NotificationEvent =
   | NotificationTransactionReceivedEvent
   | NotificationPrimaryTokenPriceChangedEvent
   | NotificationRewardsUpdatedEvent
+  | PushNotificationEvent
 
 type NotificationEventId = number
 
@@ -63,6 +75,9 @@ interface NotificationEventBase {
 
 export type NotificationConfig = {
   displayDuration: number
+  [NotificationTrigger.Push]: {
+    notify: boolean
+  }
   [NotificationTrigger.PrimaryTokenPriceChanged]: {
     notify: boolean
     thresholdInPercent: number
