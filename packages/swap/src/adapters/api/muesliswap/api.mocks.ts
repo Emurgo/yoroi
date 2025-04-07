@@ -488,6 +488,7 @@ const createRequest = (address: string): Array<CreateOrderRequest> => [
       'spectrum-v1',
       'teddy-v1',
       'wingriders-v1',
+      'wingriders-v2',
       'vyfi-v1',
       'sundaeswap-v1',
       'sundaeswap-v3',

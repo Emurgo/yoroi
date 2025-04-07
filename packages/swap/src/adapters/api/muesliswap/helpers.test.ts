@@ -10,6 +10,7 @@ const allDexes: Array<Dex> = [
   Dex.Spectrum_v1,
   Dex.Teddy_v1,
   Dex.Wingriders_v1,
+  Dex.Wingriders_v2,
   Dex.Vyfi_v1,
   Dex.Sundaeswap_v1,
   Dex.Sundaeswap_v3,

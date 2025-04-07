@@ -73,6 +73,7 @@ describe('transformers', () => {
           'minswap-stable',
           'spectrum-v1',
           'teddy-v1',
+          'wingriders-v2',
           'vyfi-v1',
           'sundaeswap-v1',
           'sundaeswap-v3',

@@ -64,7 +64,9 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
             protocol={protocol}
             append={
               swapForm.createTx?.aggregator != null
-                ? ` ${strings.via} ${_.upperFirst(swapForm.createTx.aggregator)}`
+                ? ` ${strings.via} ${_.upperFirst(swapForm.createTx.aggregator)}${
+                    swapForm.createTx.splits.length > 1 ? '...' : ''
+                  }`
                 : ''
             }
             onPress={() => setShowSplits(!showSplits)}

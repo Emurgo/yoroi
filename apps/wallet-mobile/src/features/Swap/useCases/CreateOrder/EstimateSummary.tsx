@@ -57,6 +57,7 @@ export const EstimateSummary = () => {
               <ProtocolAvatar
                 protocol={protocol}
                 onPress={swapForm.orderType === 'limit' ? navigateTo.selectProtocol : expand}
+                {...((swapForm.estimate?.splits.length ?? 0) > 1 && {append: '...'})}
               />
             </View>
           )
@@ -132,15 +133,17 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
 
   return (
     <View style={styles.list}>
-      {data.map((split, index) => (
-        <View key={index} style={[styles.composedText, styles.between]}>
-          <ProtocolAvatar protocol={split.protocol} preventOpenLink />
+      {[...data]
+        .sort((a, b) => b.expectedOutputWithoutSlippage - a.expectedOutputWithoutSlippage)
+        .map((split, index) => (
+          <View key={index} style={[styles.composedText, styles.between]}>
+            <ProtocolAvatar protocol={split.protocol} preventOpenLink />
 
-          <Text style={styles.textContent}>
-            {((100 * (split.expectedOutputWithoutSlippage ?? 0)) / total).toFixed(2)} %
-          </Text>
-        </View>
-      ))}
+            <Text style={styles.textContent}>
+              {((100 * (split.expectedOutputWithoutSlippage ?? 0)) / total).toFixed(2)} %
+            </Text>
+          </View>
+        ))}
     </View>
   )
 }

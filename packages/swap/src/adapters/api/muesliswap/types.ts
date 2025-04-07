@@ -9,6 +9,7 @@ export const Dex = {
   Spectrum_v1: 'spectrum-v1',
   Teddy_v1: 'teddy-v1',
   Wingriders_v1: 'wingriders-v1',
+  Wingriders_v2: 'wingriders-v2',
   Vyfi_v1: 'vyfi-v1',
   Sundaeswap_v1: 'sundaeswap-v1',
   Sundaeswap_v3: 'sundaeswap-v3',
