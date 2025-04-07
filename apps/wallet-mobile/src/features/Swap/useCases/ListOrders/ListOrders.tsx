@@ -1,7 +1,6 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
 import {isLeft, truncateString} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
-import {getDexUrlByProtocol} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Api, Portfolio, Swap} from '@yoroi/types'
 import _ from 'lodash'
@@ -20,7 +19,6 @@ import {useModal} from '../../../../components/Modal/ModalContext'
 import {RefreshButton} from '../../../../components/RefreshButton/RefreshButton'
 import {Space} from '../../../../components/Space/Space'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {isEmptyString} from '../../../../kernel/utils'
 import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
@@ -30,7 +28,7 @@ import {Counter} from '../../common/Counter/Counter'
 import {EmptyCompletedOrdersIllustration} from '../../common/Illustrations/EmptyCompletedOrdersIllustration'
 import {EmptyOpenOrdersIllustration} from '../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {useNavigateTo} from '../../common/navigation'
-import {ProtocolIcon} from '../../common/Protocol/ProtocolIcon'
+import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {ServiceUnavailable} from '../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
@@ -219,7 +217,7 @@ const Order = ({order}: {order: Swap.Order}) => {
           <React.Fragment>
             <Row label={strings.listOrdersTotal} value={`${order.amountIn} ${tokenName(tokenInInfo)}`} />
 
-            <Row label={strings.dex.toUpperCase()} value={order.protocol} />
+            <Row label={strings.route} value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />} />
 
             {lastTxHash !== '' && (
               <Row
@@ -329,15 +327,6 @@ const OrderCancellationConfirmation = ({
   const strings = useStrings()
   const {styles} = useStyles()
 
-  const poolIcon = !isEmptyString(order.protocol) ? <ProtocolIcon protocol={order.protocol} size={18} /> : null
-  const poolProviderFormatted = !isEmptyString(order.protocol) ? _.capitalize(order.protocol) : null
-  const poolUrl = !isEmptyString(order.protocol) ? getDexUrlByProtocol(order.protocol) : null
-
-  const liquidityPool =
-    poolIcon && poolProviderFormatted != null && poolUrl != null ? (
-      <LiquidityPool liquidityPoolIcon={poolIcon} liquidityPoolName={poolProviderFormatted} poolUrl={poolUrl} />
-    ) : null
-
   if (isLeft(response))
     return (
       <View style={styles.root}>
@@ -350,11 +339,7 @@ const OrderCancellationConfirmation = ({
   return (
     <View style={styles.root}>
       <React.Fragment>
-        <View style={styles.row}>
-          <Text style={styles.rowLabel}>{_.capitalize(strings.dex)}</Text>
-
-          {liquidityPool}
-        </View>
+        <Row label={strings.route} value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />} />
 
         <Row label={strings.listOrdersSheetAssetPrice} value={price} />
 
@@ -380,30 +365,6 @@ const Row = ({label, value}: {label: string; value: string | React.ReactNode}) =
       <Text style={styles.rowLabel}>{label}</Text>
 
       {typeof value === 'string' ? <Text style={styles.rowValue}>{value}</Text> : value}
-    </View>
-  )
-}
-
-const LiquidityPool = ({
-  liquidityPoolIcon,
-  liquidityPoolName,
-  poolUrl,
-}: {
-  liquidityPoolIcon: React.ReactNode
-  liquidityPoolName: string
-  poolUrl: string
-}) => {
-  const {styles} = useStyles()
-
-  return (
-    <View style={styles.liquidityPool}>
-      {liquidityPoolIcon}
-
-      <Space width="xs" />
-
-      <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
-        <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>
-      </TouchableOpacity>
     </View>
   )
 }
@@ -557,6 +518,7 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.gap_md,
       ...atoms.justify_center,
+      ...atoms.align_center,
     },
     groupFont: {
       ...atoms.body_1_lg_medium,
@@ -641,18 +603,6 @@ const useStyles = () => {
     errorMessage: {
       ...atoms.body_3_sm_regular,
       color: color.text_warning,
-    },
-    liquidityPoolLink: {
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-    liquidityPoolText: {
-      color: color.text_primary_medium,
-      ...atoms.body_1_lg_medium,
-    },
-    liquidityPool: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
     },
     end: {
       ...atoms.align_end,
