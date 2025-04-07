@@ -11,6 +11,7 @@ import {uiStorage} from './storage'
 import {useStrings} from './useStrings'
 
 const timeToShowModalInMs = 1000
+const modalStorageKey = 'hasShownGetImportantAlertsModal'
 
 export const useGetImportantAlertsModal = () => {
   const {openModal} = useModal()
@@ -19,7 +20,7 @@ export const useGetImportantAlertsModal = () => {
 
   React.useEffect(() => {
     const timeout = setTimeout(async () => {
-      const hasShownModal = (await uiStorage.getItem('hasShownGetImportantAlertsModal')) === true
+      const hasShownModal = (await uiStorage.getItem(modalStorageKey)) === true
       if (hasShownModal) return
 
       openModal({
@@ -27,7 +28,7 @@ export const useGetImportantAlertsModal = () => {
         content: <GetImportantAlertsModal />,
         height: windowHeight * 0.6,
       })
-      await uiStorage.setItem('hasShownGetImportantAlertsModal', true)
+      await uiStorage.setItem(modalStorageKey, true)
     }, timeToShowModalInMs)
     return () => {
       clearTimeout(timeout)
