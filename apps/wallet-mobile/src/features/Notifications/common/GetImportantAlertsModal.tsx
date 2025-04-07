@@ -10,6 +10,8 @@ import {PhoneBell} from '../illustrations/PhoneBell'
 import {uiStorage} from './storage'
 import {useStrings} from './useStrings'
 
+const timeToShowModalInMs = 1000
+
 export const useGetImportantAlertsModal = () => {
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
@@ -26,7 +28,7 @@ export const useGetImportantAlertsModal = () => {
         height: windowHeight * 0.6,
       })
       await uiStorage.setItem('hasShownGetImportantAlertsModal', true)
-    }, 1000)
+    }, timeToShowModalInMs)
     return () => {
       clearTimeout(timeout)
     }
