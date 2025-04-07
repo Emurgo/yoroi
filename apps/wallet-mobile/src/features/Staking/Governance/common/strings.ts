@@ -74,7 +74,7 @@ export const useStrings = () => {
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     invalidDRepId: intl.formatMessage(messages.invalidDRepId),
-    delegateToYoroiDrep: intl.formatMessage(messages.delegateToYoroiDrep),
+    delegateToAYoroiDrep: intl.formatMessage(messages.delegateToAYoroiDrep),
     delegatingToYoroiDRep: intl.formatMessage(messages.delegatingToYoroiDRep),
     delegateToAYoroiDRepDescription: intl.formatMessage(messages.delegateToAYoroiDRepDescription),
   }
@@ -324,8 +324,8 @@ const messages = defineMessages({
     id: 'components.governance.invalidDRepId',
     defaultMessage: '!!!Invalid DRep ID.',
   },
-  delegateToYoroiDrep: {
-    id: 'components.governance.delegateToYoroiDrep',
+  delegateToAYoroiDrep: {
+    id: 'components.governance.delegateToAYoroiDrep',
     defaultMessage: '!!!Delegate to Yoroi DRep',
   },
   delegatingToYoroiDRep: {

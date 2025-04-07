@@ -202,7 +202,7 @@
   "components.governance.failedTxTitle": "取引が失敗しました",
   "components.governance.failedTxText": "技術的な問題が原因で取引が正しく処理されていません。",
   "components.governance.failedTxButton": "やり直す",
-  "components.governance.delegateToYoroiDrep": "ヨロイDRepに委任する",
+  "components.governance.delegateToAYoroiDrep": "ヨロイDRepに委任する",
   "components.governance.delegateToAYoroiDRepDescription": "あなたは、今後の提案について、ヨロイを代理人として投票するように指定しています。",
   "components.initialization.acepttermsofservicescreen.aggreeClause": "I agree with the Terms of Service",
   "components.initialization.acepttermsofservicescreen.continueButton": "同意",

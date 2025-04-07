@@ -371,7 +371,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
       <View style={styles.actions}>
         <Action
-          title={strings.delegateToYoroiDrep}
+          title={strings.delegateToAYoroiDrep}
           description={strings.delegateToAYoroiDRepDescription}
           onPress={handleDelegateToYoroi}
           pending={isCreatingTx && pendingVote === 'delegate'}
