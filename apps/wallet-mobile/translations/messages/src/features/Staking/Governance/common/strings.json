@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Governance dashboard",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 87,
+      "line": 86,
       "column": 25,
-      "index": 5620
+      "index": 5503
     },
     "end": {
-      "line": 90,
+      "line": 89,
       "column": 3,
-      "index": 5727
+      "index": 5610
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Confirm transaction",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 91,
+      "line": 90,
       "column": 18,
-      "index": 5747
+      "index": 5630
     },
     "end": {
-      "line": 94,
+      "line": 93,
       "column": 3,
-      "index": 5846
+      "index": 5729
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Learn more About Governance",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 95,
+      "line": 94,
       "column": 28,
-      "index": 5876
+      "index": 5759
     },
     "end": {
-      "line": 98,
+      "line": 97,
       "column": 3,
-      "index": 5993
+      "index": 5876
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Delegate to a DRep",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 99,
+      "line": 98,
       "column": 30,
-      "index": 6025
+      "index": 5908
     },
     "end": {
-      "line": 102,
+      "line": 101,
       "column": 3,
-      "index": 6135
+      "index": 6018
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!You are designating someone else to cast vote on your behalf for all proposals now and in the future.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 103,
+      "line": 102,
       "column": 36,
-      "index": 6173
+      "index": 6056
     },
     "end": {
-      "line": 107,
+      "line": 106,
       "column": 3,
-      "index": 6378
+      "index": 6261
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Abstain",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 108,
+      "line": 107,
       "column": 22,
-      "index": 6402
+      "index": 6285
     },
     "end": {
-      "line": 111,
+      "line": 110,
       "column": 3,
-      "index": 6493
+      "index": 6376
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!You are choosing not to cast a vote on all proposals now and in the future.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 112,
+      "line": 111,
       "column": 28,
-      "index": 6523
+      "index": 6406
     },
     "end": {
-      "line": 115,
+      "line": 114,
       "column": 3,
-      "index": 6688
+      "index": 6571
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!No confidence",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 116,
+      "line": 115,
       "column": 27,
-      "index": 6717
+      "index": 6600
     },
     "end": {
-      "line": 119,
+      "line": 118,
       "column": 3,
-      "index": 6819
+      "index": 6702
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!You are expressing a lack of trust for all proposals now and in the future.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 120,
+      "line": 119,
       "column": 33,
-      "index": 6854
+      "index": 6737
     },
     "end": {
-      "line": 123,
+      "line": 122,
       "column": 3,
-      "index": 7024
+      "index": 6907
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!DRep Key",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 124,
+      "line": 123,
       "column": 11,
-      "index": 7037
+      "index": 6920
     },
     "end": {
-      "line": 127,
+      "line": 126,
       "column": 3,
-      "index": 7118
+      "index": 7001
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Delegating to a DRep",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 128,
+      "line": 127,
       "column": 21,
-      "index": 7141
+      "index": 7024
     },
     "end": {
-      "line": 131,
+      "line": 130,
       "column": 3,
-      "index": 7244
+      "index": 7127
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Abstaining",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 132,
+      "line": 131,
       "column": 14,
-      "index": 7260
+      "index": 7143
     },
     "end": {
-      "line": 135,
+      "line": 134,
       "column": 3,
-      "index": 7346
+      "index": 7229
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Delegate voting to",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 136,
+      "line": 135,
       "column": 24,
-      "index": 7372
+      "index": 7255
     },
     "end": {
-      "line": 139,
+      "line": 138,
       "column": 3,
-      "index": 7476
+      "index": 7359
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!Select abstain",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 140,
+      "line": 139,
       "column": 17,
-      "index": 7495
+      "index": 7378
     },
     "end": {
-      "line": 143,
+      "line": 142,
       "column": 3,
-      "index": 7588
+      "index": 7471
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!Select no confidence",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 144,
+      "line": 143,
       "column": 22,
-      "index": 7612
+      "index": 7495
     },
     "end": {
-      "line": 147,
+      "line": 146,
       "column": 3,
-      "index": 7716
+      "index": 7599
     }
   },
   {
@@ -229,14 +229,14 @@
     "defaultMessage": "!!!Operations",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 148,
+      "line": 147,
       "column": 14,
-      "index": 7732
+      "index": 7615
     },
     "end": {
-      "line": 151,
+      "line": 150,
       "column": 3,
-      "index": 7818
+      "index": 7701
     }
   },
   {
@@ -244,14 +244,14 @@
     "defaultMessage": "!!!Enter password to sign this transaction",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 152,
+      "line": 151,
       "column": 17,
-      "index": 7837
+      "index": 7720
     },
     "end": {
-      "line": 155,
+      "line": 154,
       "column": 3,
-      "index": 7955
+      "index": 7838
     }
   },
   {
@@ -259,14 +259,14 @@
     "defaultMessage": "!!!Drep ID (fingerprint)",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 156,
+      "line": 155,
       "column": 10,
-      "index": 7967
+      "index": 7850
     },
     "end": {
-      "line": 159,
+      "line": 158,
       "column": 3,
-      "index": 8060
+      "index": 7943
     }
   },
   {
@@ -274,14 +274,14 @@
     "defaultMessage": "!!!Thank you for participating in Governance",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 160,
+      "line": 159,
       "column": 28,
-      "index": 8090
+      "index": 7973
     },
     "end": {
-      "line": 163,
+      "line": 162,
       "column": 3,
-      "index": 8221
+      "index": 8104
     }
   },
   {
@@ -289,14 +289,14 @@
     "defaultMessage": "!!!This transaction can take a while!",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 164,
+      "line": 163,
       "column": 32,
-      "index": 8255
+      "index": 8138
     },
     "end": {
-      "line": 167,
+      "line": 166,
       "column": 3,
-      "index": 8383
+      "index": 8266
     }
   },
   {
@@ -304,14 +304,14 @@
     "defaultMessage": "!!!Participating in the Cardano Governance gives you the opportunity to participate in the voting as well as withdraw your staking rewards",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 168,
+      "line": 167,
       "column": 25,
-      "index": 8410
+      "index": 8293
     },
     "end": {
-      "line": 172,
+      "line": 171,
       "column": 3,
-      "index": 8638
+      "index": 8521
     }
   },
   {
@@ -319,14 +319,14 @@
     "defaultMessage": "!!!Go to Governance",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 173,
+      "line": 172,
       "column": 18,
-      "index": 8658
+      "index": 8541
     },
     "end": {
-      "line": 176,
+      "line": 175,
       "column": 3,
-      "index": 8754
+      "index": 8637
     }
   },
   {
@@ -334,14 +334,14 @@
     "defaultMessage": "!!!Find a DRep here",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 177,
+      "line": 176,
       "column": 16,
-      "index": 8772
+      "index": 8655
     },
     "end": {
-      "line": 180,
+      "line": 179,
       "column": 3,
-      "index": 8866
+      "index": 8749
     }
   },
   {
@@ -349,29 +349,29 @@
     "defaultMessage": "!!!Review the selections carefully to assign yourself a Governance Status",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 181,
+      "line": 180,
       "column": 17,
-      "index": 8885
+      "index": 8768
     },
     "end": {
-      "line": 184,
+      "line": 183,
       "column": 3,
-      "index": 9034
+      "index": 8917
     }
   },
   {
     "id": "components.governance.actionYouHaveSelectedTxPending",
-    "defaultMessage": "!!!You have selected <b>{action}</b> as your governance status.",
+    "defaultMessage": "!!!You have selected <b>{action}</b> as your governance status. It may take some time to process your delegation request.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 185,
+      "line": 184,
       "column": 34,
-      "index": 9070
+      "index": 8953
     },
     "end": {
       "line": 188,
       "column": 3,
-      "index": 9226
+      "index": 9173
     }
   },
   {
@@ -381,12 +381,12 @@
     "start": {
       "line": 189,
       "column": 25,
-      "index": 9253
+      "index": 9200
     },
     "end": {
       "line": 193,
       "column": 3,
-      "index": 9467
+      "index": 9414
     }
   },
   {
@@ -396,12 +396,12 @@
     "start": {
       "line": 194,
       "column": 14,
-      "index": 9483
+      "index": 9430
     },
     "end": {
       "line": 197,
       "column": 3,
-      "index": 9570
+      "index": 9517
     }
   },
   {
@@ -411,12 +411,12 @@
     "start": {
       "line": 198,
       "column": 11,
-      "index": 9583
+      "index": 9530
     },
     "end": {
       "line": 201,
       "column": 3,
-      "index": 9663
+      "index": 9610
     }
   },
   {
@@ -426,12 +426,12 @@
     "start": {
       "line": 202,
       "column": 22,
-      "index": 9687
+      "index": 9634
     },
     "end": {
       "line": 205,
       "column": 3,
-      "index": 9790
+      "index": 9737
     }
   },
   {
@@ -441,12 +441,12 @@
     "start": {
       "line": 206,
       "column": 9,
-      "index": 9801
+      "index": 9748
     },
     "end": {
       "line": 209,
       "column": 3,
-      "index": 9877
+      "index": 9824
     }
   },
   {
@@ -456,12 +456,12 @@
     "start": {
       "line": 210,
       "column": 21,
-      "index": 9900
+      "index": 9847
     },
     "end": {
       "line": 213,
       "column": 3,
-      "index": 10001
+      "index": 9948
     }
   },
   {
@@ -471,12 +471,12 @@
     "start": {
       "line": 214,
       "column": 11,
-      "index": 10014
+      "index": 9961
     },
     "end": {
       "line": 217,
       "column": 3,
-      "index": 10151
+      "index": 10098
     }
   },
   {
@@ -486,12 +486,12 @@
     "start": {
       "line": 218,
       "column": 32,
-      "index": 10185
+      "index": 10132
     },
     "end": {
       "line": 221,
       "column": 3,
-      "index": 10352
+      "index": 10299
     }
   },
   {
@@ -501,12 +501,12 @@
     "start": {
       "line": 222,
       "column": 12,
-      "index": 10366
+      "index": 10313
     },
     "end": {
       "line": 225,
       "column": 3,
-      "index": 10449
+      "index": 10396
     }
   },
   {
@@ -516,12 +516,12 @@
     "start": {
       "line": 226,
       "column": 10,
-      "index": 10461
+      "index": 10408
     },
     "end": {
       "line": 229,
       "column": 3,
-      "index": 10540
+      "index": 10487
     }
   },
   {
@@ -531,12 +531,12 @@
     "start": {
       "line": 230,
       "column": 14,
-      "index": 10556
+      "index": 10503
     },
     "end": {
       "line": 233,
       "column": 3,
-      "index": 10649
+      "index": 10596
     }
   },
   {
@@ -546,12 +546,12 @@
     "start": {
       "line": 234,
       "column": 24,
-      "index": 10675
+      "index": 10622
     },
     "end": {
       "line": 237,
       "column": 3,
-      "index": 10777
+      "index": 10724
     }
   },
   {
@@ -561,12 +561,12 @@
     "start": {
       "line": 238,
       "column": 30,
-      "index": 10809
+      "index": 10756
     },
     "end": {
       "line": 242,
       "column": 3,
-      "index": 11100
+      "index": 11047
     }
   },
   {
@@ -576,12 +576,12 @@
     "start": {
       "line": 243,
       "column": 25,
-      "index": 11127
+      "index": 11074
     },
     "end": {
       "line": 246,
       "column": 3,
-      "index": 11239
+      "index": 11186
     }
   },
   {
@@ -591,12 +591,12 @@
     "start": {
       "line": 247,
       "column": 15,
-      "index": 11256
+      "index": 11203
     },
     "end": {
       "line": 250,
       "column": 3,
-      "index": 11349
+      "index": 11296
     }
   },
   {
@@ -606,12 +606,12 @@
     "start": {
       "line": 251,
       "column": 35,
-      "index": 11386
+      "index": 11333
     },
     "end": {
       "line": 254,
       "column": 3,
-      "index": 11518
+      "index": 11465
     }
   },
   {
@@ -621,12 +621,12 @@
     "start": {
       "line": 255,
       "column": 34,
-      "index": 11554
+      "index": 11501
     },
     "end": {
       "line": 258,
       "column": 3,
-      "index": 11728
+      "index": 11675
     }
   },
   {
@@ -636,12 +636,12 @@
     "start": {
       "line": 259,
       "column": 14,
-      "index": 11744
+      "index": 11691
     },
     "end": {
       "line": 262,
       "column": 3,
-      "index": 11832
+      "index": 11779
     }
   },
   {
@@ -651,12 +651,12 @@
     "start": {
       "line": 263,
       "column": 10,
-      "index": 11844
+      "index": 11791
     },
     "end": {
       "line": 266,
       "column": 3,
-      "index": 11931
+      "index": 11878
     }
   },
   {
@@ -666,12 +666,12 @@
     "start": {
       "line": 267,
       "column": 22,
-      "index": 11955
+      "index": 11902
     },
     "end": {
       "line": 270,
       "column": 3,
-      "index": 12067
+      "index": 12014
     }
   },
   {
@@ -681,12 +681,12 @@
     "start": {
       "line": 271,
       "column": 19,
-      "index": 12088
+      "index": 12035
     },
     "end": {
       "line": 274,
       "column": 3,
-      "index": 12244
+      "index": 12191
     }
   },
   {
@@ -696,12 +696,12 @@
     "start": {
       "line": 275,
       "column": 15,
-      "index": 12261
+      "index": 12208
     },
     "end": {
       "line": 278,
       "column": 3,
-      "index": 12351
+      "index": 12298
     }
   },
   {
@@ -711,12 +711,12 @@
     "start": {
       "line": 279,
       "column": 25,
-      "index": 12378
+      "index": 12325
     },
     "end": {
       "line": 282,
       "column": 3,
-      "index": 12507
+      "index": 12454
     }
   },
   {
@@ -726,12 +726,12 @@
     "start": {
       "line": 283,
       "column": 28,
-      "index": 12537
+      "index": 12484
     },
     "end": {
       "line": 286,
       "column": 3,
-      "index": 12632
+      "index": 12579
     }
   },
   {
@@ -741,12 +741,12 @@
     "start": {
       "line": 287,
       "column": 34,
-      "index": 12668
+      "index": 12615
     },
     "end": {
       "line": 290,
       "column": 3,
-      "index": 12828
+      "index": 12775
     }
   },
   {
@@ -756,12 +756,12 @@
     "start": {
       "line": 291,
       "column": 29,
-      "index": 12859
+      "index": 12806
     },
     "end": {
       "line": 294,
       "column": 3,
-      "index": 12972
+      "index": 12919
     }
   },
   {
@@ -771,12 +771,12 @@
     "start": {
       "line": 295,
       "column": 22,
-      "index": 12996
+      "index": 12943
     },
     "end": {
       "line": 298,
       "column": 3,
-      "index": 13120
+      "index": 13067
     }
   },
   {
@@ -786,12 +786,12 @@
     "start": {
       "line": 299,
       "column": 20,
-      "index": 13142
+      "index": 13089
     },
     "end": {
       "line": 302,
       "column": 3,
-      "index": 13242
+      "index": 13189
     }
   },
   {
@@ -801,12 +801,12 @@
     "start": {
       "line": 303,
       "column": 19,
-      "index": 13263
+      "index": 13210
     },
     "end": {
       "line": 306,
       "column": 3,
-      "index": 13419
+      "index": 13366
     }
   },
   {
@@ -816,12 +816,12 @@
     "start": {
       "line": 307,
       "column": 21,
-      "index": 13442
+      "index": 13389
     },
     "end": {
       "line": 310,
       "column": 3,
-      "index": 13530
+      "index": 13477
     }
   },
   {
@@ -831,12 +831,12 @@
     "start": {
       "line": 311,
       "column": 17,
-      "index": 13549
+      "index": 13496
     },
     "end": {
       "line": 314,
       "column": 3,
-      "index": 13646
+      "index": 13593
     }
   },
   {
@@ -846,12 +846,12 @@
     "start": {
       "line": 315,
       "column": 16,
-      "index": 13664
+      "index": 13611
     },
     "end": {
       "line": 318,
       "column": 3,
-      "index": 13815
+      "index": 13762
     }
   },
   {
@@ -861,12 +861,12 @@
     "start": {
       "line": 319,
       "column": 18,
-      "index": 13835
+      "index": 13782
     },
     "end": {
       "line": 322,
       "column": 3,
-      "index": 13924
+      "index": 13871
     }
   },
   {
@@ -876,72 +876,57 @@
     "start": {
       "line": 323,
       "column": 17,
-      "index": 13943
+      "index": 13890
     },
     "end": {
       "line": 326,
       "column": 3,
-      "index": 14038
+      "index": 13985
     }
   },
   {
-    "id": "components.governance.delegateToAYoroiDrep",
-    "defaultMessage": "!!!Delegate to a Yoroi DRep",
+    "id": "components.governance.delegateToYoroiDrep",
+    "defaultMessage": "!!!Delegate to Yoroi DRep",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 327,
-      "column": 24,
-      "index": 14064
+      "column": 23,
+      "index": 14010
     },
     "end": {
       "line": 330,
       "column": 3,
-      "index": 14174
+      "index": 14117
     }
   },
   {
-    "id": "components.governance.delegatingToAYoroiDRep",
-    "defaultMessage": "!!!Delegating to a Yoroi DRep",
+    "id": "components.governance.delegatingToYoroiDRep",
+    "defaultMessage": "!!!Delegating to Yoroi DRep",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 331,
-      "column": 26,
-      "index": 14202
+      "column": 25,
+      "index": 14144
     },
     "end": {
       "line": 334,
       "column": 3,
-      "index": 14316
+      "index": 14255
     }
   },
   {
     "id": "components.governance.delegateToAYoroiDRepDescription",
-    "defaultMessage": "!!!You have selected Delegate to Yoroi Drep as your governance status.",
+    "defaultMessage": "!!!You are designating Yoroi to cast your vote on your behalf for all proposals now and in the future.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 335,
       "column": 35,
-      "index": 14353
+      "index": 14292
     },
     "end": {
-      "line": 338,
-      "column": 3,
-      "index": 14517
-    }
-  },
-  {
-    "id": "components.governance.delegateToAYoroiDRepDescriptionPending",
-    "defaultMessage": "!!!You have selected Delegate to Yoroi Drep as your governance status. It may take some time to process your delegation request.",
-    "file": "src/features/Staking/Governance/common/strings.ts",
-    "start": {
       "line": 339,
-      "column": 42,
-      "index": 14561
-    },
-    "end": {
-      "line": 343,
       "column": 3,
-      "index": 14796
+      "index": 14494
     }
   }
 ]

@@ -105,7 +105,7 @@ const ParticipatingInGovernanceVariant = ({
 
   const actionsTitles = (action: GovernanceVote) =>
     isDelegatingToYoroiDrep
-      ? strings.delegatingToAYoroiDRep
+      ? strings.delegatingToYoroiDRep
       : isDelegatingToDrep
       ? strings.delegatingToADRep
       : action.kind === 'abstain'
@@ -132,10 +132,8 @@ const ParticipatingInGovernanceVariant = ({
       <View style={styles.actions}>
         {isDelegatingToYoroiDrep && (
           <Action
-            title={strings.delegatingToAYoroiDRep}
-            description={
-              isTxPending ? strings.delegateToAYoroiDRepDescriptionPending : strings.delegateToAYoroiDRepDescription
-            }
+            title={strings.delegatingToYoroiDRep}
+            description={strings.delegateToAYoroiDRepDescription}
             pending={isTxPending}
             showRightArrow={!isTxPending}
             onPress={navigateToChangeVote}
@@ -373,7 +371,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
       <View style={styles.actions}>
         <Action
-          title={strings.delegateToAYoroiDrep}
+          title={strings.delegateToYoroiDrep}
           description={strings.delegateToAYoroiDRepDescription}
           onPress={handleDelegateToYoroi}
           pending={isCreatingTx && pendingVote === 'delegate'}

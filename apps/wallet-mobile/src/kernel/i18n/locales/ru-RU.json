@@ -202,7 +202,7 @@
   "components.governance.failedTxTitle": "Transaction failed",
   "components.governance.failedTxText": "Your transaction has not been processed properly due to technical issues.",
   "components.governance.failedTxButton": "Try again",
-  "components.governance.delegateToAYoroiDrep": "Delegate to a Yoroi DRep",
+  "components.governance.delegateToYoroiDrep": "Delegate to a Yoroi DRep",
   "components.governance.delegateToAYoroiDRepDescription": "You are designating Yoroi to cast a vote on your behalf for future proposals.",
   "components.initialization.acepttermsofservicescreen.aggreeClause": "Я согласен с условиями использования",
   "components.initialization.acepttermsofservicescreen.continueButton": "Принять",

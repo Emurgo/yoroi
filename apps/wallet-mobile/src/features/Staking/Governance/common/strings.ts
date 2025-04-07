@@ -74,10 +74,9 @@ export const useStrings = () => {
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     invalidDRepId: intl.formatMessage(messages.invalidDRepId),
-    delegateToAYoroiDrep: intl.formatMessage(messages.delegateToAYoroiDrep),
-    delegatingToAYoroiDRep: intl.formatMessage(messages.delegatingToAYoroiDRep),
+    delegateToYoroiDrep: intl.formatMessage(messages.delegateToYoroiDrep),
+    delegatingToYoroiDRep: intl.formatMessage(messages.delegatingToYoroiDRep),
     delegateToAYoroiDRepDescription: intl.formatMessage(messages.delegateToAYoroiDRepDescription),
-    delegateToAYoroiDRepDescriptionPending: intl.formatMessage(messages.delegateToAYoroiDRepDescriptionPending),
   }
 }
 
@@ -184,7 +183,8 @@ const messages = defineMessages({
   },
   actionYouHaveSelectedTxPending: {
     id: 'components.governance.actionYouHaveSelectedTxPending',
-    defaultMessage: '!!!You have selected <b>{action}</b> as your governance status.',
+    defaultMessage:
+      '!!!You have selected <b>{action}</b> as your governance status. It may take some time to process your delegation request.',
   },
   actionYouHaveSelected: {
     id: 'components.governance.actionYouHaveSelected',
@@ -324,21 +324,17 @@ const messages = defineMessages({
     id: 'components.governance.invalidDRepId',
     defaultMessage: '!!!Invalid DRep ID.',
   },
-  delegateToAYoroiDrep: {
-    id: 'components.governance.delegateToAYoroiDrep',
-    defaultMessage: '!!!Delegate to a Yoroi DRep',
+  delegateToYoroiDrep: {
+    id: 'components.governance.delegateToYoroiDrep',
+    defaultMessage: '!!!Delegate to Yoroi DRep',
   },
-  delegatingToAYoroiDRep: {
-    id: 'components.governance.delegatingToAYoroiDRep',
-    defaultMessage: '!!!Delegating to a Yoroi DRep',
+  delegatingToYoroiDRep: {
+    id: 'components.governance.delegatingToYoroiDRep',
+    defaultMessage: '!!!Delegating to Yoroi DRep',
   },
   delegateToAYoroiDRepDescription: {
     id: 'components.governance.delegateToAYoroiDRepDescription',
-    defaultMessage: '!!!You have selected Delegate to Yoroi Drep as your governance status.',
-  },
-  delegateToAYoroiDRepDescriptionPending: {
-    id: 'components.governance.delegateToAYoroiDRepDescriptionPending',
     defaultMessage:
-      '!!!You have selected Delegate to Yoroi Drep as your governance status. It may take some time to process your delegation request.',
+      '!!!You are designating Yoroi to cast your vote on your behalf for all proposals now and in the future.',
   },
 })
