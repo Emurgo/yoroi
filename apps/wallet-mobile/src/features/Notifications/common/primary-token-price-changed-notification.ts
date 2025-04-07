@@ -8,7 +8,7 @@ import {fetchPtPriceActivity} from '../../../yoroi-wallets/cardano/usePrimaryTok
 import {getCurrencySymbol} from '../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {generateNotificationId} from './notifications'
-import {buildProcessedNotificationsStorage} from './storage'
+import {buildProcessedNotificationsStorage} from './processed-notifications-storage'
 
 const refetchIntervalInSeconds = 60 * 10
 const refetchIntervalInMilliseconds = refetchIntervalInSeconds * 1000

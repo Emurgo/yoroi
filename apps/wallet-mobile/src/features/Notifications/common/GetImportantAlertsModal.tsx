@@ -30,9 +30,7 @@ export const useGetImportantAlertsModal = () => {
       })
       await uiStorage.setItem(modalStorageKey, true)
     }, timeToShowModalInMs)
-    return () => {
-      clearTimeout(timeout)
-    }
+    return () => clearTimeout(timeout)
   }, [openModal, strings, windowHeight])
 }
 
