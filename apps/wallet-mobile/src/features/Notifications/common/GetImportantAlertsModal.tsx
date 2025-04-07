@@ -5,6 +5,7 @@ import {Notifications} from 'react-native-notifications'
 
 import {Button, ButtonType} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
+import {Spacer} from '../../../components/Spacer/Spacer'
 import {Text} from '../../../components/Text'
 import {PhoneBell} from '../illustrations/PhoneBell'
 import {uiStorage} from './storage'
@@ -28,7 +29,7 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
       openModal({
         title: strings.getImportantAlerts,
         content: <GetImportantAlertsModal />,
-        height: windowHeight * 0.6,
+        height: 520,
       })
       await uiStorage.setItem(modalStorageKey, true)
     }, timeToShowModalInMs)
@@ -50,11 +51,15 @@ export const GetImportantAlertsModal = () => {
 
   return (
     <View style={styles.root}>
-      <PhoneBell />
+      <View style={styles.illustration}>
+        <PhoneBell />
+      </View>
 
       <Text style={styles.text}>{strings.turnOnAlerts}</Text>
 
-      <Button size="M" title={strings.skip} onPress={closeModal} type={ButtonType.Text} />
+      <Spacer fill />
+
+      <Button size="M" title={strings.skip} onPress={closeModal} type={ButtonType.Text} style={styles.button} />
 
       <Button size="M" title={strings.turnOnNotifications} onPress={handleTurnOnPress} style={styles.button} />
     </View>
@@ -75,18 +80,24 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      ...atoms.align_center,
       ...atoms.px_lg,
+      ...atoms.flex_1,
+      ...atoms.align_center,
+    },
+    illustration: {
+      ...atoms.py_lg,
     },
     button: {
       ...atoms.flex_1,
       ...atoms.self_stretch,
+      flexGrow: 0,
     },
     text: {
       ...atoms.body_1_lg_regular,
       color: color.text_gray_medium,
       ...atoms.pt_lg,
       ...atoms.pb_sm,
+      ...atoms.text_center,
     },
   })
   return {styles}
