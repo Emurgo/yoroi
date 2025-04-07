@@ -1357,5 +1357,9 @@
   "notifications.multipleAssetsSent" : "Multiple assets sent",
   "notifications.sent": "sent",
   "notifications.noNotifications": "No notifications yet",
-  "notifications.markAllAsRead": "Mark all as read"
+  "notifications.markAllAsRead": "Mark all as read",
+  "notifications.getImportantAlerts": "Get important alerts",
+  "notifications.turnOnAlerts": "Turn on notifications to get alerts and updates about your wallet.",
+  "notifications.skip": "Skip",
+  "notifications.turnOnNotifications": "Turn on notifications"
 }

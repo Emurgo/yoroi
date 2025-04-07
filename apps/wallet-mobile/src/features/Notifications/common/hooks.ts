@@ -74,7 +74,7 @@ export const useInitNotifications = ({localEnabled, pushEnabled}: UseInitNotific
 const usePushNotifications = ({enabled}: {enabled: boolean}) => {
   React.useEffect(() => {
     if (!enabled) return
-    Notifications.registerRemoteNotifications({})
+    // Notifications.registerRemoteNotifications({})
   }, [enabled])
 }
 

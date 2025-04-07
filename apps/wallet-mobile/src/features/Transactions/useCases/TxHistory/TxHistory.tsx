@@ -21,6 +21,7 @@ import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
 import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
+import {useGetImportantAlertsModal} from '../../../Notifications/common/GetImportantAlertsModal'
 
 export const TxHistory = () => {
   const strings = useStrings()
@@ -28,6 +29,7 @@ export const TxHistory = () => {
   const {isDark} = useTheme()
 
   const {track} = useMetrics()
+  useGetImportantAlertsModal()
 
   useFocusEffect(
     React.useCallback(() => {
