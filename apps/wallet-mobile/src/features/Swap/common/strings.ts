@@ -6,7 +6,7 @@ export const useStrings = () => {
   const intl = useIntl()
 
   return {
-    aggregator: intl.formatMessage(messages.aggregator),
+    via: intl.formatMessage(messages.via),
     placeOrder: intl.formatMessage(messages.placeOrder),
     yourAssets: intl.formatMessage(messages.yourAssets),
     allAssets: intl.formatMessage(messages.allAssets),
@@ -185,9 +185,9 @@ export const useStrings = () => {
 }
 
 const messages = defineMessages({
-  aggregator: {
-    id: 'swap.swapScreen.aggregator',
-    defaultMessage: `!!!Aggregator`,
+  via: {
+    id: 'swap.swapScreen.via',
+    defaultMessage: `!!!via`,
   },
   placeOrder: {
     id: 'swap.swapScreen.placeOrder',

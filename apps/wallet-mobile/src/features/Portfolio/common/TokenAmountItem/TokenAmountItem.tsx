@@ -80,7 +80,7 @@ export const TokenAmountItem = ({
 
       <Right style={styles.end}>
         {!isNft(info) && variant !== 'swap' && (
-          <View testID="tokenAmountText" style={{maxWidth: 150}}>
+          <View testID="tokenAmountText" style={styles.quantityWrapper}>
             {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
             {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
@@ -89,7 +89,7 @@ export const TokenAmountItem = ({
           </View>
         )}
 
-        {isPrimary && variant !== 'swap' && (
+        {variant !== 'swap' && (
           <PairedBalance textStyle={styles.pairedBalance} amount={amount} ignorePrivacy={ignorePrivacy} />
         )}
 
@@ -156,6 +156,13 @@ const useStyles = () => {
     quantity: {
       color: color.gray_900,
       ...atoms.body_1_lg_regular,
+    },
+    quantityWrapper: {
+      width: 150,
+      ...atoms.flex_wrap,
+      ...atoms.flex_row,
+      ...atoms.gap_sm,
+      ...atoms.justify_end,
     },
     skeletonLogo: {
       display: 'flex',

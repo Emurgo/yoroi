@@ -39,7 +39,11 @@ export const EstimateSummary = () => {
     openModal({
       title: strings.route,
       height: 400,
-      content: <Splits data={swapForm.estimate?.splits ?? []} />,
+      content: (
+        <View style={styles.split}>
+          <Splits data={swapForm.estimate?.splits ?? []} />
+        </View>
+      ),
     })
 
   return (
@@ -127,7 +131,7 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
   const total = data.reduce((acc, curr) => (acc += curr.expectedOutputWithoutSlippage), 0)
 
   return (
-    <View style={styles.splitList}>
+    <View style={styles.list}>
       {data.map((split, index) => (
         <View key={index} style={[styles.composedText, styles.between]}>
           <ProtocolAvatar protocol={split.protocol} preventOpenLink />
@@ -151,8 +155,7 @@ const useStyles = () => {
     list: {
       ...atoms.gap_md,
     },
-    splitList: {
-      ...atoms.gap_sm,
+    split: {
       ...atoms.p_lg,
     },
     row: {

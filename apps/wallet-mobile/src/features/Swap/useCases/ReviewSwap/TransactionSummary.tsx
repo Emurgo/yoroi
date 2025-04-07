@@ -1,4 +1,5 @@
 import {useTheme} from '@yoroi/theme'
+import _ from 'lodash'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -12,6 +13,7 @@ import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {SwapContext} from '../../common/SwapProvider'
+import {Splits} from '../CreateOrder/EstimateSummary'
 import {ShowPriceImpact} from '../CreateOrder/ShowPriceImpact'
 
 export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
@@ -19,6 +21,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
   const {orderType} = swapForm
+  const [showSplits, setShowSplits] = React.useState(false)
 
   const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
   const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
@@ -54,12 +57,24 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
   const feesInfo = [
     {
-      label: strings.aggregator,
-      value: <Text style={styles.text}>{swapForm.createTx?.aggregator ?? ''}</Text>,
+      label: strings.route,
+      value:
+        protocol !== undefined ? (
+          <ProtocolAvatar
+            protocol={protocol}
+            append={
+              swapForm.createTx?.aggregator != null
+                ? ` ${strings.via} ${_.upperFirst(swapForm.createTx.aggregator)}`
+                : ''
+            }
+            onPress={() => setShowSplits(!showSplits)}
+          />
+        ) : null,
     },
     {
-      label: strings.dex.toUpperCase(),
-      value: protocol !== undefined ? <ProtocolAvatar protocol={protocol} /> : '',
+      label: '',
+      value: swapForm.createTx != null ? <Splits data={swapForm.createTx.splits} /> : null,
+      hidden: !showSplits,
     },
     {
       label: orderType === 'market' ? strings.marketPrice : strings.limitPriceWarningTitle,
