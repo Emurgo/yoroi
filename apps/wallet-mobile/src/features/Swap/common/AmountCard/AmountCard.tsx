@@ -37,6 +37,12 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
   const decimals = info?.decimals ?? 0
   const value = tokenInput.value
+  console.log({
+    value,
+    decimals: info?.decimals ?? 0,
+    total: Number(value ?? 0) * 10 ** (info?.decimals ?? 0),
+    floor: Math.floor(Number(value ?? 0) * 10 ** (info?.decimals ?? 0)),
+  })
   const quantity = BigInt(Math.floor(Number(value ?? 0) * 10 ** (info?.decimals ?? 0)))
   const touched = tokenInput.isTouched
   const inputRef = direction === 'in' ? swapForm.tokenInInputRef : swapForm.tokenOutInputRef

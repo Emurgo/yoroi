@@ -403,6 +403,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         if (state.lastInputTouched === 'in') {
           draft.tokenOutInput.value = String(action.value.totalOutputWithoutSlippage ?? 0)
         } else {
+          console.log('>> ', action.value.totalInput)
           draft.tokenInInput.value = String(action.value.totalInput ?? 0)
         }
         break

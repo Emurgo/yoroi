@@ -184,7 +184,10 @@ export const transformersMaker = ({
         ),
         totalInput: Number(total_input),
         totalOutput: Number(total_output),
-        totalOutputWithoutSlippage: Number(total_output_without_slippage),
+        totalOutputWithoutSlippage:
+          total_output_without_slippage === undefined
+            ? undefined
+            : Number(total_output_without_slippage),
         splits: splits.map(toSwapSplit),
       }),
     },
@@ -312,7 +315,9 @@ const toSwapSplit = ({
   batcherFee: Number(batcher_fee),
   deposits: Number(deposit),
   expectedOutput: Number(expected_output),
-  expectedOutputWithoutSlippage: Number(expected_output_without_slippage),
+  expectedOutputWithoutSlippage: Number(
+    expected_output_without_slippage ?? expected_output,
+  ),
 
   protocol: toSwapProtocol(dex),
 })

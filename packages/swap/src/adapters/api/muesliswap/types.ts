@@ -171,7 +171,7 @@ export type Split = {
   price_impact: number
   dex: Dex
   pool_fee: number
-  expected_output_without_slippage: number | string
+  expected_output_without_slippage?: number | string
   price_distortion: number
 }
 
@@ -186,7 +186,7 @@ export type QuoteResponse = {
   net_price: number
   net_price_impact: number
   frontend_fee: number | string
-  total_output_without_slippage: number | string
+  total_output_without_slippage?: number | string
   splits: Array<Split>
   numbers_have_decimals: boolean
 }

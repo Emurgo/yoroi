@@ -87,6 +87,12 @@ describe('transformers', () => {
         api.results.quote,
       )
     })
+
+    test('should correctly transform the quote response with missing output', () => {
+      expect(transformers.quote.response(api.responses.quoteNoOut)).toEqual(
+        api.results.quoteNoOut,
+      )
+    })
   })
 
   describe('quoteLimit', () => {
