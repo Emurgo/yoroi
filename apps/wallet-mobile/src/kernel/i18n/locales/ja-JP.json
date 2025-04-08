@@ -150,7 +150,7 @@
   "components.governance.actionNoConfidenceDescription": "あなたは、現在と将来のすべての提案に対して不信任を表明しています。",
   "components.governance.actionNoConfidenceTitle": "不信任",
   "components.governance.actionYouHaveSelected": "ガバナンスの状態として <b>{action}</b> を選択しました。いつでも変更できます。",
-  "components.governance.actionYouHaveSelectedTxPending": "ガバナンス ステータスとして <b>{action}</b> を選択しました。",
+  "components.governance.actionYouHaveSelectedTxPending": "You have selected <b>{action}</b> as your governance status. It may take some time to process your delegation request.",
   "components.governance.changeDRep": "DRepを変更",
   "components.governance.confirm": "確認",
   "components.governance.confirmTxTitle": "取引を確認",
@@ -202,8 +202,9 @@
   "components.governance.failedTxTitle": "取引が失敗しました",
   "components.governance.failedTxText": "技術的な問題が原因で取引が正しく処理されていません。",
   "components.governance.failedTxButton": "やり直す",
-  "components.governance.delegateToAYoroiDrep": "ヨロイDRepに委任する",
-  "components.governance.delegateToAYoroiDRepDescription": "あなたは、今後の提案について、ヨロイを代理人として投票するように指定しています。",
+  "components.governance.delegateToAYoroiDrep": "Delegate to Yoroi DRep",
+  "components.governance.delegatingToYoroiDRep": "Delegating to Yoroi DRep",
+  "components.governance.delegateToAYoroiDRepDescription": "You are designating Yoroi to cast your vote on your behalf for all proposals now and in the future.",
   "components.initialization.acepttermsofservicescreen.aggreeClause": "I agree with the Terms of Service",
   "components.initialization.acepttermsofservicescreen.continueButton": "同意",
   "components.initialization.acepttermsofservicescreen.savingConsentModalTitle": "初期化",
@@ -1357,5 +1358,9 @@
   "notifications.multipleAssetsSent": "Multiple assets sent",
   "notifications.sent": "sent",
   "notifications.noNotifications": "No notifications yet",
-  "notifications.markAllAsRead": "Mark all as read"
+  "notifications.markAllAsRead": "Mark all as read",
+  "notifications.getImportantAlerts": "Get important alerts",
+  "notifications.turnOnAlerts": "Turn on notifications to get alerts and updates about your wallet.",
+  "notifications.skip": "Skip",
+  "notifications.turnOnNotifications": "Turn on notifications"
 }
