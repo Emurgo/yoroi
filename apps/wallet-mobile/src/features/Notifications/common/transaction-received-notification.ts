@@ -9,7 +9,7 @@ import {SyncWalletInfo} from '../../WalletManager/common/types'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {walletManager} from '../../WalletManager/wallet-manager'
 import {generateNotificationId} from './notifications'
-import {buildProcessedNotificationsStorage} from './storage'
+import {buildProcessedNotificationsStorage} from './processed-notifications-storage'
 
 const storageKey = 'transaction-received-notification-history'
 

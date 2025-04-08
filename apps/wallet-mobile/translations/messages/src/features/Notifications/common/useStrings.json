@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Tap to view",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 21,
+      "line": 25,
       "column": 13,
-      "index": 849
+      "index": 1103
     },
     "end": {
-      "line": 24,
+      "line": 28,
       "column": 3,
-      "index": 927
+      "index": 1181
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Staking rewards received",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 25,
+      "line": 29,
       "column": 26,
-      "index": 955
+      "index": 1209
     },
     "end": {
-      "line": 28,
+      "line": 32,
       "column": 3,
-      "index": 1059
+      "index": 1313
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Assets received",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 29,
+      "line": 33,
       "column": 18,
-      "index": 1079
+      "index": 1333
     },
     "end": {
-      "line": 32,
+      "line": 36,
       "column": 3,
-      "index": 1166
+      "index": 1420
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Intrawallet transaction sent",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 33,
+      "line": 37,
       "column": 30,
-      "index": 1198
+      "index": 1452
     },
     "end": {
-      "line": 36,
+      "line": 40,
       "column": 3,
-      "index": 1310
+      "index": 1564
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Multiple assets received",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 37,
+      "line": 41,
       "column": 26,
-      "index": 1338
+      "index": 1592
     },
     "end": {
-      "line": 40,
+      "line": 44,
       "column": 3,
-      "index": 1442
+      "index": 1696
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!received",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 41,
+      "line": 45,
       "column": 12,
-      "index": 1456
+      "index": 1710
     },
     "end": {
-      "line": 44,
+      "line": 48,
       "column": 3,
-      "index": 1530
+      "index": 1784
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Multiple assets sent",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 45,
+      "line": 49,
       "column": 22,
-      "index": 1554
+      "index": 1808
     },
     "end": {
-      "line": 48,
+      "line": 52,
       "column": 3,
-      "index": 1650
+      "index": 1904
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!sent",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 49,
+      "line": 53,
       "column": 8,
-      "index": 1660
+      "index": 1914
     },
     "end": {
-      "line": 52,
+      "line": 56,
       "column": 3,
-      "index": 1726
+      "index": 1980
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!No notifications yet",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 53,
+      "line": 57,
       "column": 19,
-      "index": 1747
+      "index": 2001
     },
     "end": {
-      "line": 56,
+      "line": 60,
       "column": 3,
-      "index": 1840
+      "index": 2094
     }
   },
   {
@@ -139,14 +139,74 @@
     "defaultMessage": "!!!Mark all as read",
     "file": "src/features/Notifications/common/useStrings.tsx",
     "start": {
-      "line": 57,
+      "line": 61,
       "column": 17,
-      "index": 1859
+      "index": 2113
     },
     "end": {
-      "line": 60,
+      "line": 64,
       "column": 3,
-      "index": 1946
+      "index": 2200
+    }
+  },
+  {
+    "id": "notifications.getImportantAlerts",
+    "defaultMessage": "!!!Get important alerts",
+    "file": "src/features/Notifications/common/useStrings.tsx",
+    "start": {
+      "line": 65,
+      "column": 22,
+      "index": 2224
+    },
+    "end": {
+      "line": 68,
+      "column": 3,
+      "index": 2320
+    }
+  },
+  {
+    "id": "notifications.turnOnAlerts",
+    "defaultMessage": "!!!Turn on notifications to get alerts and updates about your wallet.",
+    "file": "src/features/Notifications/common/useStrings.tsx",
+    "start": {
+      "line": 69,
+      "column": 16,
+      "index": 2338
+    },
+    "end": {
+      "line": 72,
+      "column": 3,
+      "index": 2474
+    }
+  },
+  {
+    "id": "notifications.skip",
+    "defaultMessage": "!!!Skip",
+    "file": "src/features/Notifications/common/useStrings.tsx",
+    "start": {
+      "line": 73,
+      "column": 8,
+      "index": 2484
+    },
+    "end": {
+      "line": 76,
+      "column": 3,
+      "index": 2550
+    }
+  },
+  {
+    "id": "notifications.turnOnNotifications",
+    "defaultMessage": "!!!Turn on notifications",
+    "file": "src/features/Notifications/common/useStrings.tsx",
+    "start": {
+      "line": 77,
+      "column": 23,
+      "index": 2575
+    },
+    "end": {
+      "line": 80,
+      "column": 3,
+      "index": 2673
     }
   }
 ]

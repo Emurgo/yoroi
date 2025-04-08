@@ -3,7 +3,6 @@ import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Notifications as NotificationTypes, Notifications as YoroiNotifications} from '@yoroi/types'
 import React from 'react'
-import {PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
 import {logger} from '../../../kernel/logger/logger'
@@ -13,14 +12,7 @@ import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-cha
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
-let initialized = false
-
 const initPushNotifications = (manager: YoroiNotifications.Manager) => {
-  initialized = true
-  if (Platform.OS === 'android' && !initialized) {
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
-  }
-
   const unsubscribeFromForegroundMessage = messaging().onMessage((remoteMessage) => {
     const {notification} = remoteMessage
     if (notification && notification.title && notification.body) {
@@ -68,14 +60,6 @@ export const useInitNotifications = ({localEnabled, pushEnabled}: UseInitNotific
   useTransactionReceivedNotifications({enabled: localEnabled})
   usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
   useRewardsUpdatedNotifications({enabled: localEnabled})
-  usePushNotifications({enabled: pushEnabled})
-}
-
-const usePushNotifications = ({enabled}: {enabled: boolean}) => {
-  React.useEffect(() => {
-    if (!enabled) return
-    Notifications.registerRemoteNotifications({})
-  }, [enabled])
 }
 
 messaging().setBackgroundMessageHandler((remoteMessage) => {

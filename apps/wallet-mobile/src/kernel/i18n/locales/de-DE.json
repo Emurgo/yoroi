@@ -150,7 +150,7 @@
   "components.governance.actionNoConfidenceDescription": "You are expressing a lack of trust for all proposals now and in the future.",
   "components.governance.actionNoConfidenceTitle": "No confidence",
   "components.governance.actionYouHaveSelected": "You have selected <b>{action}</b> as your governance status. You can change it at any time.",
-  "components.governance.actionYouHaveSelectedTxPending": "You have selected <b>{action}</b> as your governance status.",
+  "components.governance.actionYouHaveSelectedTxPending": "You have selected <b>{action}</b> as your governance status. It may take some time to process your delegation request.",
   "components.governance.changeDRep": "Change DRep",
   "components.governance.confirm": "Confirm",
   "components.governance.confirmTxTitle": "Confirm transaction",
@@ -202,8 +202,9 @@
   "components.governance.failedTxTitle": "Transaction failed",
   "components.governance.failedTxText": "Your transaction has not been processed properly due to technical issues.",
   "components.governance.failedTxButton": "Try again",
-  "components.governance.delegateToAYoroiDrep": "Delegate to a Yoroi DRep",
-  "components.governance.delegateToAYoroiDRepDescription": "You are designating Yoroi to cast a vote on your behalf for future proposals.",
+  "components.governance.delegateToAYoroiDrep": "Delegate to Yoroi DRep",
+  "components.governance.delegatingToYoroiDRep": "Delegating to Yoroi DRep",
+  "components.governance.delegateToAYoroiDRepDescription": "You are designating Yoroi to cast your vote on your behalf for all proposals now and in the future.",
   "components.initialization.acepttermsofservicescreen.aggreeClause": "Ich stimme den Nutzungsbestimmungen zu",
   "components.initialization.acepttermsofservicescreen.continueButton": "Akzeptieren",
   "components.initialization.acepttermsofservicescreen.savingConsentModalTitle": "Initialisierung",
@@ -1357,5 +1358,9 @@
   "notifications.multipleAssetsSent": "Multiple assets sent",
   "notifications.sent": "sent",
   "notifications.noNotifications": "No notifications yet",
-  "notifications.markAllAsRead": "Mark all as read"
+  "notifications.markAllAsRead": "Mark all as read",
+  "notifications.getImportantAlerts": "Get important alerts",
+  "notifications.turnOnAlerts": "Turn on notifications to get alerts and updates about your wallet.",
+  "notifications.skip": "Skip",
+  "notifications.turnOnNotifications": "Turn on notifications"
 }

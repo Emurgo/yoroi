@@ -6,7 +6,7 @@ import {Subject} from 'rxjs'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {walletManager} from '../../WalletManager/wallet-manager'
 import {generateNotificationId} from './notifications'
-import {buildProcessedNotificationsStorage} from './storage'
+import {buildProcessedNotificationsStorage} from './processed-notifications-storage'
 
 const storageKey = 'rewards-updated-notification-history'
 
@@ -55,12 +55,18 @@ const createRewardsUpdatedNotification = (walletId: string): NotificationTypes.R
 }
 
 export const useRewardsUpdatedNotifications = ({enabled}: {enabled: boolean}) => {
-  const {walletManager} = useWalletManager()
+  const {walletManager, selected} = useWalletManager()
   const asyncStorage = useAsyncStorage()
+  const [subscriptionBeginTime] = React.useState(new Date())
+  const wallet = selected.wallet
 
   React.useEffect(() => {
-    if (!enabled) return
+    if (!enabled || !wallet) return
+
     const subscription = walletManager.syncWalletInfos$.subscribe(async (status) => {
+      const info = wallet.networkManager.epoch.info(new Date())
+      if (info.start.getTime() <= subscriptionBeginTime.getTime()) return
+
       const walletInfos = Array.from(status.values())
       const walletsDoneSyncing = walletInfos.filter((info) => info.status === 'done')
       const areAllDone = walletsDoneSyncing.length === walletInfos.length
@@ -73,5 +79,5 @@ export const useRewardsUpdatedNotifications = ({enabled}: {enabled: boolean}) =>
     return () => {
       subscription.unsubscribe()
     }
-  }, [walletManager, asyncStorage, enabled])
+  }, [walletManager, asyncStorage, enabled, wallet, subscriptionBeginTime])
 }

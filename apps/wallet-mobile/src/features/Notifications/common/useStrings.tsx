@@ -14,6 +14,10 @@ export const useStrings = () => {
     sent: intl.formatMessage(messages.sent),
     noNotifications: intl.formatMessage(messages.noNotifications),
     markAllAsRead: intl.formatMessage(messages.markAllAsRead),
+    getImportantAlerts: intl.formatMessage(messages.getImportantAlerts),
+    turnOnAlerts: intl.formatMessage(messages.turnOnAlerts),
+    skip: intl.formatMessage(messages.skip),
+    turnOnNotifications: intl.formatMessage(messages.turnOnNotifications),
   }
 }
 
@@ -57,5 +61,21 @@ const messages = defineMessages({
   markAllAsRead: {
     id: 'notifications.markAllAsRead',
     defaultMessage: '!!!Mark all as read',
+  },
+  getImportantAlerts: {
+    id: 'notifications.getImportantAlerts',
+    defaultMessage: '!!!Get important alerts',
+  },
+  turnOnAlerts: {
+    id: 'notifications.turnOnAlerts',
+    defaultMessage: '!!!Turn on notifications to get alerts and updates about your wallet.',
+  },
+  skip: {
+    id: 'notifications.skip',
+    defaultMessage: '!!!Skip',
+  },
+  turnOnNotifications: {
+    id: 'notifications.turnOnNotifications',
+    defaultMessage: '!!!Turn on notifications',
   },
 })
