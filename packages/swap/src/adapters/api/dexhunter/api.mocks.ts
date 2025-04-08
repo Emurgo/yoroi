@@ -168,7 +168,7 @@ const ordersResult: Array<Swap.Order> = [
     outputIndex: 0,
     placedAt: 1719137466000,
     protocol: 'sundaeswap-v1',
-    status: 'COMPLETE',
+    status: 'matched',
     tokenIn:
       'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
     tokenOut: '.',
@@ -186,7 +186,7 @@ const ordersResult: Array<Swap.Order> = [
     outputIndex: 0,
     placedAt: 1702736197000,
     protocol: 'muesliswap-clp',
-    status: 'COMPLETE',
+    status: 'matched',
     tokenIn:
       '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e',
     tokenOut: '.',
@@ -204,7 +204,7 @@ const ordersResult: Array<Swap.Order> = [
     outputIndex: 0,
     placedAt: 1697122968000,
     protocol: 'vyfi-v1',
-    status: 'CANCELLED',
+    status: 'canceled',
     tokenIn: '.',
     tokenOut:
       '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e',
@@ -279,7 +279,7 @@ const cancelInput: Swap.CancelRequest = {
     outputIndex: 0,
     placedAt: 1719137466000,
     protocol: 'sundaeswap-v1',
-    status: 'COMPLETE',
+    status: 'matched',
     tokenIn:
       'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
     tokenOut: '.',

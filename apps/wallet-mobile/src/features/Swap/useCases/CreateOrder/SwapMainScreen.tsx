@@ -147,7 +147,9 @@ export const SwapMainScreen = () => {
             {swapForm.orderType === 'limit' &&
               swapForm.selectedProtocol.value !== undefined &&
               swapForm.estimate === undefined && (
-                <View style={styles.end}>
+                <View style={styles.between}>
+                  <Text style={styles.label}>{strings.route}</Text>
+
                   <ProtocolAvatar protocol={swapForm.selectedProtocol.value} onPress={navigateTo.selectProtocol} />
                 </View>
               )}
@@ -239,8 +241,9 @@ const useStyles = () => {
       ...atoms.body_3_sm_regular,
       color: color.sys_magenta_500,
     },
-    end: {
-      ...atoms.align_end,
+    label: {
+      ...atoms.body_1_lg_regular,
+      color: color.text_gray_low,
     },
   })
 

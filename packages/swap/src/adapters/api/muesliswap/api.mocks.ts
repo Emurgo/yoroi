@@ -224,7 +224,7 @@ const cancelInput: Array<Swap.CancelRequest> = [
       outputIndex: 0,
       placedAt: 1719137466000,
       protocol: 'sundaeswap-v1',
-      status: 'COMPLETE',
+      status: 'matched',
       tokenIn:
         'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
       tokenOut: '.',
@@ -244,7 +244,7 @@ const cancelInput: Array<Swap.CancelRequest> = [
       lastUpdate: 1719137534000,
       placedAt: 1719137466000,
       protocol: 'sundaeswap-v1',
-      status: 'COMPLETE',
+      status: 'matched',
       tokenIn:
         'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
       tokenOut: '.',

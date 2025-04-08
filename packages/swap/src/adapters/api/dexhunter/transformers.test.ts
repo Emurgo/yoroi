@@ -86,6 +86,7 @@ describe('transformers', () => {
             is_oor: false,
             batcher_fee: 2.5,
             deposit: 2,
+            status: 'PENDING',
           },
         ]),
       ).toEqual([
@@ -100,7 +101,7 @@ describe('transformers', () => {
           placedAt: undefined,
           outputIndex: 0,
           protocol: 'sundaeswap-v1',
-          status: '',
+          status: 'open',
           tokenIn: '.',
           tokenOut: '.',
           txHash: '',

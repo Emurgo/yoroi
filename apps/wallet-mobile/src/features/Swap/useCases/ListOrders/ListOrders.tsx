@@ -114,7 +114,9 @@ const Content = ({filter}: {filter: Filter}) => {
   const {visible: isSearching} = useSearch()
   const swapForm = useSwap()
   const orders = swapForm.orders?.filter(
-    ({status}) => (status === 'open' && filter === 'open') || (status !== 'open' && filter === 'completed'),
+    ({status}) =>
+      (status === 'open' && filter === 'open') ||
+      (status !== 'open' && status !== 'canceled' && filter === 'completed'),
   )
 
   return (
@@ -590,6 +592,8 @@ const useStyles = () => {
     },
     rowValue: {
       ...atoms.body_1_lg_regular,
+      ...atoms.flex_shrink,
+      ...atoms.text_right,
       color: color.text_gray_medium,
     },
     inlineLink: {

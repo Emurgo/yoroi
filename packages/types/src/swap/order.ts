@@ -7,7 +7,7 @@ export type SwapOrder = {
   protocol: SwapProtocol
   placedAt?: number
   lastUpdate?: number
-  status: string
+  status: 'open' | 'matched' | 'canceled' | 'partially_matched'
   tokenIn: PortfolioTokenId
   tokenOut: PortfolioTokenId
   amountIn: number

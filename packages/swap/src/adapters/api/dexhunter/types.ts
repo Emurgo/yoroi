@@ -40,7 +40,7 @@ export type OrdersResponse = Array<{
   is_stop_loss?: boolean
   last_update?: string
   output_index?: number
-  status?: string
+  status: 'COMPLETE' | 'CANCELLED' | 'PENDING'
   submission_time?: string
   token_id_in?: string
   token_id_out?: string
