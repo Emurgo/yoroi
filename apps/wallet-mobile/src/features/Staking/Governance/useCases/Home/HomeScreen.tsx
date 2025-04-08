@@ -100,13 +100,18 @@ const ParticipatingInGovernanceVariant = ({
   const navigateTo = useNavigateTo()
 
   const displayedHash = action.kind === 'delegate' ? formatDrepHash(action.hash, action.type) : null
+  const isDelegatingToYoroiDrep = action.kind === 'delegate' && action.hash === GOVERNANCE_YOROI_DREP_ID_HEX
+  const isDelegatingToDrep = action.kind === 'delegate' && action.hash !== GOVERNANCE_YOROI_DREP_ID_HEX
 
-  const actionTitles = {
-    abstain: strings.actionAbstainTitle,
-    delegate: strings.actionDelegateToADRepTitle,
-    'no-confidence': strings.actionNoConfidenceTitle,
-  }
-  const selectedActionTitle = actionTitles[action.kind]
+  const actionsTitles = (action: GovernanceVote) =>
+    isDelegatingToYoroiDrep
+      ? strings.delegatingToYoroiDRep
+      : isDelegatingToDrep
+      ? strings.delegatingToADRep
+      : action.kind === 'abstain'
+      ? strings.actionAbstainTitle
+      : strings.actionNoConfidenceTitle
+  const selectedActionTitle = actionsTitles(action)
 
   const introduction = isTxPending
     ? strings.actionYouHaveSelectedTxPending(selectedActionTitle, formattingOptions(styles))
@@ -125,7 +130,21 @@ const ParticipatingInGovernanceVariant = ({
       <Spacer height={24} />
 
       <View style={styles.actions}>
-        {action.kind === 'delegate' && (
+        {isDelegatingToYoroiDrep && (
+          <Action
+            title={strings.delegatingToYoroiDRep}
+            description={strings.delegateToAYoroiDRepDescription}
+            pending={isTxPending}
+            showRightArrow={!isTxPending}
+            onPress={navigateToChangeVote}
+          >
+            <Text style={styles.drepInfoTitle}>{strings.drepID}</Text>
+
+            <Text style={styles.drepInfoDescription}>{displayedHash}</Text>
+          </Action>
+        )}
+
+        {isDelegatingToDrep && (
           <Action
             title={strings.delegatingToADRep}
             description={strings.actionDelegateToADRepDescription}
