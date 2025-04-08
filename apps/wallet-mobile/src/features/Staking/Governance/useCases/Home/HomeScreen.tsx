@@ -211,7 +211,9 @@ const NeverParticipatedInGovernanceVariant = () => {
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
   const {track} = useMetrics()
-  const [pendingVote, setPendingVote] = React.useState<GovernanceVote['kind'] | null>(null)
+  const [pendingVote, setPendingVote] = React.useState<
+    'abstain' | 'no-confidence' | 'delegate-to-yoroi' | 'delegate-not-yoroi' | null
+  >(null)
   const governanceActions = useGovernanceActions()
 
   useFocusEffect(
@@ -260,7 +262,7 @@ const NeverParticipatedInGovernanceVariant = () => {
     openDRepIdModal(async (options) => {
       const stakingKey = await wallet.getStakingKey()
 
-      setPendingVote('delegate')
+      setPendingVote('delegate-not-yoroi')
 
       createDelegationCertificate(
         {hash: options.hash, type: options.type, stakingKey},
@@ -288,6 +290,8 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleDelegateToYoroi = async () => {
     const stakingKey = await wallet.getStakingKey()
+
+    setPendingVote('delegate-to-yoroi')
 
     createDelegationCertificate(
       {hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key', stakingKey},
@@ -374,7 +378,7 @@ const NeverParticipatedInGovernanceVariant = () => {
           title={strings.delegateToAYoroiDrep}
           description={strings.delegateToAYoroiDRepDescription}
           onPress={handleDelegateToYoroi}
-          pending={isCreatingTx && pendingVote === 'delegate'}
+          pending={isCreatingTx && pendingVote === 'delegate-to-yoroi'}
           showGradient
         />
 
@@ -382,7 +386,7 @@ const NeverParticipatedInGovernanceVariant = () => {
           title={strings.actionDelegateToADRepTitle}
           description={strings.actionDelegateToADRepDescription}
           onPress={handleDelegate}
-          pending={isCreatingTx && pendingVote === 'delegate'}
+          pending={isCreatingTx && pendingVote === 'delegate-not-yoroi'}
         />
 
         <Action

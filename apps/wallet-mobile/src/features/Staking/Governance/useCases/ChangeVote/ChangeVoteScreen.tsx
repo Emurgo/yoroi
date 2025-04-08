@@ -1,5 +1,6 @@
 import {isNonNullable} from '@yoroi/common'
 import {
+  GOVERNANCE_YOROI_DREP_ID_HEX,
   GovernanceProvider,
   useDelegationCertificate,
   useGovernance,
@@ -19,7 +20,6 @@ import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../common/helpers'
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useStrings} from '../../common/strings'
-import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
@@ -30,7 +30,9 @@ export const ChangeVoteScreen = () => {
   const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
   const {openModal} = useModal()
   const {manager} = useGovernance()
-  const [pendingVote, setPendingVote] = React.useState<GovernanceVote['kind'] | null>(null)
+  const [pendingVote, setPendingVote] = React.useState<
+    'abstain' | 'no-confidence' | 'delegate-to-yoroi' | 'delegate-not-yoroi' | null
+  >(null)
   const {styles} = useStyles()
   const governanceActions = useGovernanceActions()
 
@@ -64,7 +66,8 @@ export const ChangeVoteScreen = () => {
   const handleDelegate = () => {
     openDRepIdModal(async (options) => {
       const stakingKey = await wallet.getStakingKey()
-      setPendingVote('delegate')
+
+      setPendingVote('delegate-not-yoroi')
 
       createDelegationCertificate(
         {hash: options.hash, type: options.type, stakingKey},
@@ -84,6 +87,30 @@ export const ChangeVoteScreen = () => {
         },
       )
     })
+  }
+
+  const handleDelegateToYoroi = async () => {
+    const stakingKey = await wallet.getStakingKey()
+
+    setPendingVote('delegate-to-yoroi')
+
+    createDelegationCertificate(
+      {hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+            certificates: [certificate],
+            addressMode: meta.addressMode,
+          })
+
+          governanceActions.handleDelegateAction({
+            unsignedTx,
+            hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+            type: 'key',
+          })
+        },
+      },
+    )
   }
 
   const handleAbstain = async () => {
@@ -129,8 +156,10 @@ export const ChangeVoteScreen = () => {
   }
 
   const voteKind = action?.kind
+  const voteHash = voteKind === 'delegate' && action != null ? action.hash : undefined
   const isCreatingTx =
     createGovernanceTxMutation.isLoading || isCreatingVotingCertificate || isCreatingDelegationCertificate
+  const isDelegatingToDrep = voteKind === 'delegate' && voteHash !== GOVERNANCE_YOROI_DREP_ID_HEX
 
   return (
     <ScrollView style={styles.root}>
@@ -141,12 +170,22 @@ export const ChangeVoteScreen = () => {
       <Spacer height={24} />
 
       <View style={styles.actions}>
+        {(voteKind !== 'delegate' || isDelegatingToDrep) && (
+          <Action
+            title={strings.delegateToAYoroiDrep}
+            description={strings.delegateToAYoroiDRepDescription}
+            onPress={handleDelegateToYoroi}
+            pending={isCreatingTx && pendingVote === 'delegate-to-yoroi'}
+            showGradient
+          />
+        )}
+
         {voteKind !== 'delegate' && (
           <Action
             title={strings.actionDelegateToADRepTitle}
             description={strings.actionDelegateToADRepDescription}
             onPress={handleDelegate}
-            pending={isCreatingTx && pendingVote === 'delegate'}
+            pending={isCreatingTx && pendingVote === 'delegate-not-yoroi'}
           />
         )}
 
@@ -155,7 +194,7 @@ export const ChangeVoteScreen = () => {
             title={strings.changeDRep}
             description={strings.actionDelegateToADRepDescription}
             onPress={handleDelegate}
-            pending={isCreatingTx && pendingVote === 'delegate'}
+            pending={isCreatingTx && pendingVote === 'delegate-not-yoroi'}
           />
         )}
 

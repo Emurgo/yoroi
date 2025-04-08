@@ -138,7 +138,7 @@ export const ReviewTx = ({
       </MaterialTab.Navigator>
 
       <Actions style={scrollbarActive && styles.actionsScroll}>
-        <Button size="S" title={strings.confirm} onPress={onConfirm} />
+        <Button title={strings.confirm} onPress={onConfirm} />
       </Actions>
     </SafeArea>
   )
