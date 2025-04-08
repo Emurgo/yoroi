@@ -38,10 +38,11 @@ const useStyles = () => {
       ...atoms.justify_center,
     },
     text: {
-      ...atoms.body_1_lg_medium,
+      ...atoms.body_1_lg_regular,
       color: color.text_gray_medium,
     },
     link: {
+      ...atoms.body_1_lg_medium,
       color: color.text_primary_medium,
     },
     container: {

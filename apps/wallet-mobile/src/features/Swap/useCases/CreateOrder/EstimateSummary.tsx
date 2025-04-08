@@ -40,7 +40,7 @@ export const EstimateSummary = () => {
       title: strings.route,
       height: 400,
       content: (
-        <View style={styles.split}>
+        <View style={styles.container}>
           <Splits data={swapForm.estimate?.splits ?? []} />
         </View>
       ),
@@ -113,7 +113,12 @@ const Row = ({
         {description !== undefined && (
           <Button
             style={styles.reducedPadding}
-            onPress={() => openModal({title: label, content: <Text style={styles.textContent}>{description}</Text>})}
+            onPress={() =>
+              openModal({
+                title: label,
+                content: <Text style={[styles.container, styles.description]}>{description}</Text>,
+              })
+            }
             type={ButtonType.SecondaryText}
             icon={Icon.Info}
             size="S"
@@ -139,7 +144,7 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
           <View key={index} style={[styles.composedText, styles.between]}>
             <ProtocolAvatar protocol={split.protocol} preventOpenLink />
 
-            <Text style={styles.textContent}>
+            <Text style={styles.textValue}>
               {((100 * (split.expectedOutputWithoutSlippage ?? 0)) / total).toFixed(2)} %
             </Text>
           </View>
@@ -154,11 +159,12 @@ const useStyles = () => {
     between: {
       ...atoms.flex_row,
       ...atoms.justify_between,
+      ...atoms.gap_xs,
     },
     list: {
       ...atoms.gap_md,
     },
-    split: {
+    container: {
       ...atoms.p_lg,
     },
     row: {
@@ -179,10 +185,13 @@ const useStyles = () => {
       ...atoms.align_center,
       ...atoms.gap_xs,
     },
-    textContent: {
+    description: {
       color: color.gray_900,
       ...atoms.body_1_lg_regular,
-      ...atoms.px_lg,
+    },
+    textValue: {
+      color: color.el_gray_min,
+      ...atoms.body_1_lg_regular,
     },
     reducedPadding: {
       ...atoms.pl_2xs,
