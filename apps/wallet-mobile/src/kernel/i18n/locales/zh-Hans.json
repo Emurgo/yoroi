@@ -150,7 +150,7 @@
   "components.governance.actionNoConfidenceDescription": "您将对今后的所有提案都选择不信任。",
   "components.governance.actionNoConfidenceTitle": "不信任",
   "components.governance.actionYouHaveSelected": "您已选择<b>{action}</b>作为您的治理状态。您可以随时进行更改。",
-  "components.governance.actionYouHaveSelectedTxPending": "您已选择<b>{action}</b>作为您的治理状态。",
+  "components.governance.actionYouHaveSelectedTxPending": "You have selected <b>{action}</b> as your governance status. It may take some time to process your delegation request.",
   "components.governance.changeDRep": "更改Drep",
   "components.governance.confirm": "确认",
   "components.governance.confirmTxTitle": "确认交易",
@@ -202,8 +202,9 @@
   "components.governance.failedTxTitle": "交易失败",
   "components.governance.failedTxText": "由于技术问题，您的交易没有被正确处理。",
   "components.governance.failedTxButton": "请重试",
-  "components.governance.delegateToAYoroiDrep": "委托给Yoroi DRep",
-  "components.governance.delegateToAYoroiDRepDescription": "您将指定Yoroi代表您对今后的提案进行投票。",
+  "components.governance.delegateToAYoroiDrep": "Delegate to Yoroi DRep",
+  "components.governance.delegatingToYoroiDRep": "Delegating to Yoroi DRep",
+  "components.governance.delegateToAYoroiDRepDescription": "You are designating Yoroi to cast your vote on your behalf for all proposals now and in the future.",
   "components.initialization.acepttermsofservicescreen.aggreeClause": "我同意服务条款",
   "components.initialization.acepttermsofservicescreen.continueButton": "接受",
   "components.initialization.acepttermsofservicescreen.savingConsentModalTitle": "初始化中",
@@ -1357,5 +1358,9 @@
   "notifications.multipleAssetsSent": "Multiple assets sent",
   "notifications.sent": "sent",
   "notifications.noNotifications": "No notifications yet",
-  "notifications.markAllAsRead": "Mark all as read"
+  "notifications.markAllAsRead": "Mark all as read",
+  "notifications.getImportantAlerts": "Get important alerts",
+  "notifications.turnOnAlerts": "Turn on notifications to get alerts and updates about your wallet.",
+  "notifications.skip": "Skip",
+  "notifications.turnOnNotifications": "Turn on notifications"
 }
