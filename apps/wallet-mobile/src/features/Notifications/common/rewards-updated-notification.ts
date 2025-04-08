@@ -79,5 +79,5 @@ export const useRewardsUpdatedNotifications = ({enabled}: {enabled: boolean}) =>
     return () => {
       subscription.unsubscribe()
     }
-  }, [walletManager, asyncStorage, enabled, wallet])
+  }, [walletManager, asyncStorage, enabled, wallet, subscriptionBeginTime])
 }
