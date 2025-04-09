@@ -15,6 +15,9 @@ const mockFetchData = (async ({url}: {url: string}) => {
             tokenOut:
               'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as Portfolio.Token.Id,
           },
+          excludedTokens: [
+            'ab3e31c490d248c592d5bb495823a45fd10f9c8e4f561f13551803fb.43617264616e6f20436f6d6d756e697479204368617269747920436f696e' as Portfolio.Token.Id,
+          ],
           verifiedTokens: [
             '.' as Portfolio.Token.Id,
             'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as Portfolio.Token.Id,
@@ -38,6 +41,9 @@ describe('getSwapConfigApiMaker', () => {
         tokenOut:
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as Portfolio.Token.Id,
       },
+      excludedTokens: [
+        'ab3e31c490d248c592d5bb495823a45fd10f9c8e4f561f13551803fb.43617264616e6f20436f6d6d756e697479204368617269747920436f696e' as Portfolio.Token.Id,
+      ],
       verifiedTokens: [
         '.' as Portfolio.Token.Id,
         'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as Portfolio.Token.Id,

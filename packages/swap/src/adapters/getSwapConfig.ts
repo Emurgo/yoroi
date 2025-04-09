@@ -41,6 +41,9 @@ const SwapConfigResponseSchema = z.object({
   verifiedTokens: z
     .array(TokenIdSchema.refine((_): _ is Portfolio.Token.Id => true))
     .optional(),
+  excludedTokens: z
+    .array(TokenIdSchema.refine((_): _ is Portfolio.Token.Id => true))
+    .optional(),
   partners: z
     .object({
       [Swap.Aggregator.Dexhunter]: z.string().optional(),

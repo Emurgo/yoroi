@@ -22,10 +22,13 @@ export const useSwapConfig = () => {
 
   const partners = swapConfig?.partners
 
+  const excludedTokens = swapConfig?.excludedTokens ?? []
+
   return {
     ...query,
     swapConfig,
     tokenOutId,
+    excludedTokens,
     partners,
   }
 }

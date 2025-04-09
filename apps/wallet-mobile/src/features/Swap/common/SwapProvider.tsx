@@ -30,7 +30,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = useAddressHex(wallet)
-  const {partners} = useSwapConfig()
+  const {partners, excludedTokens} = useSwapConfig()
   const swapManager = React.useMemo(() => {
     const storage = swapStorageMaker()
     return swapManagerMaker({
@@ -59,7 +59,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     queryFn: async () => {
       const res = await swapManager.api.tokens()
       if (isRight(res)) {
-        const tokenIds = res.value.data.map(({id}) => id)
+        const tokenIds = res.value.data.map(({id}) => id).filter((id) => excludedTokens.indexOf(id) === -1)
         if (!tokenIds.includes(state.tokenOutInput.tokenId ?? undefinedToken)) action({type: 'ResetForm'})
         return tokenIds
       }
