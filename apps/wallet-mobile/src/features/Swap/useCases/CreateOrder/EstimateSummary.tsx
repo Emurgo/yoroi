@@ -11,6 +11,7 @@ import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
 import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
+import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
 import {useSwap} from '../../common/SwapProvider'
 
 export const EstimateSummary = () => {
@@ -117,6 +118,7 @@ const Row = ({
               openModal({
                 title: label,
                 content: <Text style={[styles.container, styles.description]}>{description}</Text>,
+                footer: <SwapInfoLink />,
               })
             }
             type={ButtonType.SecondaryText}

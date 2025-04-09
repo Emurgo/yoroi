@@ -130,15 +130,15 @@ export const SwapMainScreen = () => {
 
                 <AmountCard direction="out" />
               </View>
+
+              {!isEmptyString(swapForm.tokenOutInput.error) && (
+                <View style={styles.group}>
+                  <Icon.Warning size={15} color={color.sys_magenta_500} />
+
+                  <Text style={styles.errorText}>{swapForm.tokenOutInput.error}</Text>
+                </View>
+              )}
             </View>
-
-            {!isEmptyString(swapForm.tokenOutInput.error) && (
-              <View style={styles.group}>
-                <Icon.Warning size={15} color={color.sys_magenta_500} />
-
-                <Text style={styles.errorText}>{swapForm.tokenOutInput.error}</Text>
-              </View>
-            )}
 
             {swapForm.orderType === 'limit' && <LimitInput />}
 
