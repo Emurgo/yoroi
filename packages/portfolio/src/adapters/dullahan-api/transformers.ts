@@ -63,7 +63,8 @@ export const toTokenActivity = (
       const [statusCode, tokenActivityData] = response
       if (statusCode !== Api.HttpStatusCode.Ok) return acc
 
-      TokenActivityResponseSchema.parse(tokenActivityData)
+      if (!TokenActivityResponseSchema.safeParse(tokenActivityData).success)
+        return acc
 
       const parsedTokenActivity: Portfolio.Token.Activity = {
         price: {

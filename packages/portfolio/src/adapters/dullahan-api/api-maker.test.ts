@@ -235,13 +235,10 @@ describe('portfolioApiMaker', () => {
     })
 
     expect(resultTokenActivity).toEqual({
-      tag: 'left',
-      error: {
-        status: -3,
-        message: 'Failed to transform token activity updates response',
-        responseData: {
-          ['wrong']: [200, 'data'],
-        },
+      tag: 'right',
+      value: {
+        status: 200,
+        data: {},
       },
     })
 
