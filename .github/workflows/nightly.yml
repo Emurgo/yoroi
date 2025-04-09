@@ -66,9 +66,9 @@ jobs:
           cd apps/wallet-mobile 
           asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
           asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-          asdf plugin-add java https://github.com/halcyon/asdf-java.git
-          asdf plugin-add rust https://github.com/code-lever/asdf-rust.git
-          asdf plugin-add python
+          asdf plugin add java https://github.com/halcyon/asdf-java.git
+          asdf plugin add rust https://github.com/code-lever/asdf-rust.git
+          asdf plugin add python
           asdf install
           asdf install python 2.7.13
           rustup default 1.69
