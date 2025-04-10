@@ -8,7 +8,6 @@ import LinearGradient from 'react-native-linear-gradient'
 import infoIcon from '../../../../assets/img/icon/info-light-green.png'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'
-import {features} from '../../../../kernel/features'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {usePoolTransitionModal} from '../../../../legacy/Staking/PoolTransition/usePoolTransitionModal'
 import {useSync} from '../../../../yoroi-wallets/hooks'
@@ -30,7 +29,7 @@ export const TxHistory = () => {
   const {isDark} = useTheme()
 
   const {track} = useMetrics()
-  useGetImportantAlertsModal({enabled: features.pushNotifications})
+  useGetImportantAlertsModal({enabled: true})
 
   useFocusEffect(
     React.useCallback(() => {
