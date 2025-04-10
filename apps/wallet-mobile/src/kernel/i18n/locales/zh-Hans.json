@@ -983,7 +983,7 @@
   "scan.linksErrorUnsupportedVersion.help": "应用程序尚不支持链接授权版本",
   "scan.linksErrorUnsupportedVersion.title": "不受支持的版本",
   "scan.title": "扫描二维码",
-  "send.helper.addressError.invalid": "Please enter a valid receiver address, ADA Handle or domain",
+  "send.helper.addressError.invalid": "请输入有效的接收者地址、ADA Handle或域名",
   "send.helper.addressError.wrongBlockchain": "You are trying to resolve a domain on a different blockchain. Please double-check and try again",
   "send.helper.addressError.wrongNetwork": "Please enter an address for the current wallet network",
   "send.helper.resolver.resolvedAddress": "Resolved address",
