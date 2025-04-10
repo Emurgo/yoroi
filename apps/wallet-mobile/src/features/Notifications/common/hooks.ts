@@ -7,7 +7,7 @@ import {Notifications} from 'react-native-notifications'
 
 import {logger} from '../../../kernel/logger/logger'
 import {pushNotificationsManager} from './notification-manager'
-import {generateNotificationId, parseNotificationId, sendNotification} from './notifications'
+import {generateNotificationId, parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
@@ -15,12 +15,14 @@ import {useTransactionReceivedNotifications} from './transaction-received-notifi
 const initPushNotifications = (manager: YoroiNotifications.Manager) => {
   const unsubscribeFromForegroundMessage = messaging().onMessage((remoteMessage) => {
     const {notification} = remoteMessage
-    if (notification && notification.title && notification.body) {
-      sendNotification({
+
+    if (notification && isString(notification.title) && isString(notification.body)) {
+      const pushNotification = createPushNotification({
         title: notification.title,
-        body: notification.body,
-        id: generateNotificationId(),
+        description: notification.body,
+        data: remoteMessage.data,
       })
+      pushNotificationsManager.events.push(pushNotification)
 
       logger.info('FCM Message Notification in foreground: ', {notification})
     }
