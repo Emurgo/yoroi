@@ -5,7 +5,6 @@ export const features = {
   prefillWalletInfo: false,
   showProdPoolsInDev: isDev,
   moderatingNftsEnabled: false,
-  pushNotifications: isDev,
   poolTransition: true,
   portfolioPerformance: false,
   portfolioNews: false,
