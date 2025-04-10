@@ -1,7 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {InteractionManager, PermissionsAndroid, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
-import {Notifications} from 'react-native-notifications'
+import {InteractionManager, StyleSheet, useWindowDimensions, View} from 'react-native'
 
 import {Button, ButtonType} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
@@ -9,6 +8,7 @@ import {Spacer} from '../../../components/Spacer/Spacer'
 import {Text} from '../../../components/Text'
 import {PhoneBell} from '../illustrations/PhoneBell'
 import {uiStorage} from './storage'
+import {triggerNotificationsPermissionModal} from './tools'
 import {useStrings} from './useStrings'
 
 const timeToShowModalInMs = 1000
@@ -64,16 +64,6 @@ export const GetImportantAlertsModal = () => {
       <Button size="M" title={strings.turnOnNotifications} onPress={handleTurnOnPress} style={styles.button} />
     </View>
   )
-}
-
-const triggerNotificationsPermissionModal = async () => {
-  // Triggers iOS permission request
-  Notifications.registerRemoteNotifications({})
-
-  // Android requires manual permission request
-  if (Platform.OS === 'android') {
-    await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
-  }
 }
 
 const useStyles = () => {

@@ -1,12 +1,15 @@
+import messaging from '@react-native-firebase/messaging'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet} from 'react-native'
+import {Linking, Platform, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon} from '../../../../../../components/Icon'
+import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../../kernel/navigation'
+import {triggerNotificationsPermissionModal} from '../../../../../Notifications/common/tools'
 import {SettingsSwitch} from '../../../../common/SettingsSwitch'
 import {SettingsItem, SettingsSection} from '../../../../SettingsItems'
 import {SettingsNotificationDurationItem} from '../../../../SettingsNotificationDurationItem'
@@ -17,25 +20,25 @@ import {
 
 export const ManageNotificationSettings = () => {
   const strings = useStrings()
-  const {color} = useTheme()
   const {navigateToNotificationDisplayDuration} = useWalletNavigation()
   const {styles} = useStyles()
-
-  const iconProps = {
-    color: color.gray_500,
-    size: 23,
-  }
 
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
       <ScrollView bounces={false} style={styles.settings}>
+        <SettingsSection title="Push notifications">
+          <PushNotificationSettingsItem />
+        </SettingsSection>
+
+        <Spacer height={24} />
+
         <SettingsSection title={strings.inAppNotifications}>
-          <SettingsItem icon={<Icon.Bell {...iconProps} />} label={strings.inAppNotifications}>
-            <NotificationDisplaySwitcher />
+          <SettingsItem icon={<Icon.Bell {...styles.icon} />} label={strings.inAppNotifications}>
+            <InAppNotificationDisplaySwitcher />
           </SettingsItem>
 
           <SettingsNotificationDurationItem
-            icon={<Icon.Time {...iconProps} />}
+            icon={<Icon.Time {...styles.icon} />}
             onNavigate={() => navigateToNotificationDisplayDuration()}
             label={strings.displayDuration}
           />
@@ -45,7 +48,62 @@ export const ManageNotificationSettings = () => {
   )
 }
 
-const NotificationDisplaySwitcher = () => {
+export function useNotificationPermission() {
+  const [hasPermission, setHasPermission] = React.useState<boolean | null>(null)
+
+  React.useEffect(() => {
+    const fetchPermission = async () => {
+      const status = await messaging().requestPermission()
+      setHasPermission(status === messaging.AuthorizationStatus.AUTHORIZED)
+    }
+
+    fetchPermission()
+  }, [])
+
+  const togglePermissions = async () => {
+    const oldStatus = await messaging().requestPermission()
+    if (oldStatus === messaging.AuthorizationStatus.NOT_DETERMINED) {
+      await triggerNotificationsPermissionModal()
+    } else {
+      navigateToAppSettings()
+    }
+
+    const status = await messaging().requestPermission()
+    setHasPermission(status === messaging.AuthorizationStatus.AUTHORIZED)
+  }
+
+  const navigateToAppSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:')
+    } else {
+      Linking.openSettings()
+    }
+  }
+
+  return {hasPermission, togglePermissions}
+}
+
+const PushNotificationSettingsItem = () => {
+  const {styles} = useStyles()
+
+  const {hasPermission, togglePermissions} = useNotificationPermission()
+
+  if (hasPermission) {
+    return (
+      <SettingsItem icon={<Icon.Bell {...styles.icon} />} label="Push notifications">
+        <SettingsSwitch value={true} onValueChange={togglePermissions} />
+      </SettingsItem>
+    )
+  }
+
+  return (
+    <SettingsItem icon={<Icon.Bell {...styles.icon} />} label="Push notifications">
+      <SettingsSwitch value={false} onValueChange={togglePermissions} />
+    </SettingsItem>
+  )
+}
+
+const InAppNotificationDisplaySwitcher = () => {
   const displayNotifications = useNotificationDisplaySettings()
   const {mutate} = useChangeNotificationDisplaySettings()
   const [localValue, setLocalValue] = React.useState(displayNotifications)
@@ -74,8 +132,12 @@ const useStyles = () => {
       ...atoms.py_lg,
       ...atoms.px_lg,
     },
+    icon: {
+      color: color.gray_500,
+      size: 23,
+    },
   })
-  return {styles, colors: {icon: color.gray_500}} as const
+  return {styles} as const
 }
 
 const useStrings = () => {
