@@ -245,8 +245,15 @@ export type SettingsStackRoutes = {
       onPress: () => void
     }
   }
-  'manage-notification-display-duration': undefined
+  'manage-notifications'?: {
+    screen: keyof ManageNotificationsRoutes
+  }
   'settings-preparing-wallet': undefined
+}
+
+export type ManageNotificationsRoutes = {
+  'manage-notification-display-duration': undefined
+  'manage-notification-settings': undefined
 }
 
 export type ToggleAnalyticsSettingsRoutes = {
@@ -607,7 +614,19 @@ export const useWalletNavigation = () => {
       navigation.navigate('manage-wallets', {
         screen: 'settings',
         params: {
-          screen: 'manage-notification-display-duration',
+          screen: 'manage-notifications',
+          params: {
+            screen: 'manage-notification-display-duration',
+          },
+        },
+      })
+    },
+
+    navigateToNotificationSettings: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'manage-notifications',
         },
       })
     },
