@@ -155,16 +155,17 @@ const apiManagerMaker = (
         }
       },
 
-      async protocols() {
+      /* istanbul ignore next */
+      async limitOptions(body: Swap.LimitOptionsRequest) {
         const aggregatorPromises: Record<
           Swap.Aggregator,
-          Promise<Api.Response<Swap.AggregatorProtocol[]>>
+          Promise<Api.Response<Swap.LimitOptionsResponse>>
         > = {
-          dexhunter: adapters.dexhunter.protocols(),
-          muesliswap: adapters.muesliswap.protocols(),
+          dexhunter: adapters.dexhunter.limitOptions(body),
+          muesliswap: adapters.muesliswap.limitOptions(body),
         }
 
-        const responses: Array<Api.Response<Swap.AggregatorProtocol[]>> =
+        const responses: Array<Api.Response<Swap.LimitOptionsResponse>> =
           await Promise.all(
             Object.entries(aggregatorPromises).map(([key, promise]) =>
               settings.routingPreference === 'auto' ||
@@ -179,11 +180,34 @@ const apiManagerMaker = (
         if (responses.every(isLeft))
           return responses.find((res) => res.error.status !== -3) ?? invalid
 
+        const validResponses = responses
+          .filter(isRight)
+          .map(({value}) => value.data)
+
+        if (validResponses.length === 0) return invalid
+
+        const mergedOptions: Partial<
+          Record<Swap.Protocol, Swap.LimitOptionsResponse['options'][number]>
+        > = {}
+
+        const append = (res: Swap.LimitOptionsResponse['options'][number]) => {
+          mergedOptions[res.protocol] = res
+        }
+        validResponses.forEach(({options}) => options.forEach(append))
+
+        const data: Swap.LimitOptionsResponse = {
+          defaultProtocol: validResponses[0]!.defaultProtocol,
+          wantedPrice: Math.min(
+            ...validResponses.map(({wantedPrice}) => wantedPrice),
+          ),
+          options: Object.values(mergedOptions),
+        }
+
         return {
           tag: 'right',
           value: {
             status: Api.HttpStatusCode.Ok,
-            data: responses.filter(isRight).flatMap(({value}) => value.data),
+            data,
           },
         }
       },

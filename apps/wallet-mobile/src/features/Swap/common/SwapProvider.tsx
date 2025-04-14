@@ -93,9 +93,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     action({type: 'SlippageInputChanged', value: swapManager.settings.slippage})
   }, [swapManager.settings.slippage])
 
-  const {data: swapAggregatorProtocols = []} = useQuery(
+  const {data: limitOptions} = useQuery(
     [
-      'useSwapAggregatorProtocols',
+      'useSwapLimitOptions',
       network,
       swapManager.settings.routingPreference,
       state.tokenInInput.tokenId,
@@ -104,26 +104,43 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     async () => {
       if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) throw Error()
 
-      const res = await swapManager.api.protocols()
+      const res = await swapManager.api.limitOptions({
+        tokenIn: state.tokenInInput.tokenId,
+        tokenOut: state.tokenOutInput.tokenId,
+      })
+
       if (isRight(res)) return res.value.data
-      return []
+      return undefined
     },
-    {enabled: state.tokenInInput.tokenId !== undefined && state.tokenOutInput.tokenId !== undefined},
+    {
+      enabled:
+        state.orderType === 'limit' &&
+        state.tokenInInput.tokenId !== undefined &&
+        state.tokenOutInput.tokenId !== undefined,
+    },
   )
 
   React.useEffect(() => {
-    const value =
-      swapAggregatorProtocols.find((p) => p.protocol === state.estimate?.splits[0]?.protocol)?.protocol ??
-      swapAggregatorProtocols[0]?.protocol
+    const value = limitOptions?.defaultProtocol
     if (value !== undefined && state.selectedProtocol.isTouched === false && state.selectedProtocol.value !== value) {
       action({type: 'ProtocolChanged', value})
     } else {
-      const current = swapAggregatorProtocols.find((p) => p.protocol === state.selectedProtocol.value)
+      const current = limitOptions?.options.find((p) => p.protocol === state.selectedProtocol.value)
       if (state.selectedProtocol.isTouched === true && current === undefined) {
         action({type: 'ProtocolChanged', value})
       }
     }
-  }, [state.estimate?.splits, state.selectedProtocol.isTouched, state.selectedProtocol.value, swapAggregatorProtocols])
+
+    const wantedPrice = limitOptions?.wantedPrice
+    if (wantedPrice !== undefined && wantedPrice > 0)
+      action({type: 'WantedPriceInputChanged', value: String(wantedPrice)})
+  }, [
+    limitOptions?.defaultProtocol,
+    limitOptions?.options,
+    limitOptions?.wantedPrice,
+    state.selectedProtocol.isTouched,
+    state.selectedProtocol.value,
+  ])
 
   React.useEffect(() => {
     const tokenAmount = balances.records.get(state.tokenInInput.tokenId ?? undefinedToken)
@@ -235,7 +252,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const context = React.useMemo(
     () => ({
       ...state,
-      swapAggregatorProtocols,
+      limitOptions,
       tokenInfos,
       tokenOutInputRef,
       tokenInInputRef,
@@ -250,7 +267,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     }),
     [
       state,
-      swapAggregatorProtocols,
+      limitOptions,
       tokenInfos,
       orders,
       create,
@@ -290,7 +307,6 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.tokenInInput.tokenId = action.value
         draft.selectedProtocol.isTouched = false
         draft.wantedPrice = ''
-        draft.marketPrice = undefined
 
         break
 
@@ -298,7 +314,6 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.tokenOutInput.tokenId = action.value
         draft.selectedProtocol.isTouched = false
         draft.wantedPrice = ''
-        draft.marketPrice = undefined
 
         break
 
@@ -354,7 +369,6 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.tokenInInput.error = null
 
         draft.wantedPrice = ''
-        draft.marketPrice = undefined
         break
 
       case SwapAction.ProtocolSelected:
@@ -391,19 +405,10 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.estimate = action.value
         draft.tokenOutInput.error = null
         draft.canSwap = true
-        draft.wantedPrice =
-          state.wantedPrice === '' || state.wantedPrice === '0' ? String(action.value.netPrice) : state.wantedPrice
-        draft.marketPrice = action.value.netPrice
-
-        if (draft.wantedPrice === '0') {
-          draft.wantedPrice = String(action.value.splits[0]?.initialPrice)
-          draft.needsNewEstimate = true
-        }
 
         if (state.lastInputTouched === 'in') {
           draft.tokenOutInput.value = String(action.value.totalOutputWithoutSlippage ?? 0)
         } else {
-          console.log('>> ', action.value.totalInput)
           draft.tokenInInput.value = String(action.value.totalInput ?? 0)
         }
         break
@@ -470,7 +475,7 @@ type SwapActionValueMap = {
   SlippageInputChanged: number
   SwitchTouched: undefined
   ProtocolSelected: Swap.Protocol
-  ProtocolChanged: Swap.Protocol
+  ProtocolChanged: Swap.Protocol | undefined
   Refresh: undefined
   ResetAmounts: undefined
   ResetForm: undefined
@@ -512,7 +517,6 @@ const defaultState: SwapState = Object.freeze({
     value: undefined,
   },
   wantedPrice: '',
-  marketPrice: undefined,
   canSwap: false,
   estimate: undefined,
   createTx: undefined,
@@ -546,14 +550,13 @@ type SwapState = {
     value?: Swap.Protocol
   }
   wantedPrice: string
-  marketPrice?: number
   canSwap: boolean
   estimate?: Swap.EstimateResponse
   createTx?: Swap.CreateResponse
 }
 
 export type SwapContext = SwapState & {
-  swapAggregatorProtocols: Array<Swap.AggregatorProtocol>
+  limitOptions?: Swap.LimitOptionsResponse
   tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info>
   tokenInInputRef: React.RefObject<TextInput> | undefined
   tokenOutInputRef: React.RefObject<TextInput> | undefined
@@ -569,7 +572,6 @@ export type SwapContext = SwapState & {
 
 const SwapContext = React.createContext<SwapContext>({
   ...defaultState,
-  swapAggregatorProtocols: [],
   tokenInfos: new Map<Portfolio.Token.Id, Portfolio.Token.Info>(),
   tokenInInputRef: undefined,
   tokenOutInputRef: undefined,

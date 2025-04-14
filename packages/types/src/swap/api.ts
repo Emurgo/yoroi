@@ -1,9 +1,24 @@
 import {ApiResponse} from '../api/response'
 import {PortfolioTokenInfo} from '../portfolio/info'
 import {PortfolioTokenId} from '../portfolio/token'
-import {SwapAggregator, SwapAggregatorProtocol} from './aggregator'
+import {SwapAggregator} from './aggregator'
 import {SwapOrder} from './order'
 import {SwapProtocol} from './protocol'
+
+export type SwapLimitOptionsRequest = {
+  tokenIn: PortfolioTokenId
+  tokenOut: PortfolioTokenId
+}
+
+export type SwapLimitOptionsResponse = {
+  defaultProtocol: SwapProtocol
+  wantedPrice: number
+  options: Array<{
+    protocol: SwapProtocol
+    initialPrice: number
+    batcherFee: number
+  }>
+}
 
 export type SwapEstimateRequest = {
   slippage: number // unused for limit, but can't figure out how to combine the type with the below amountOut spec. Harmless since client does have the value
@@ -103,7 +118,9 @@ export type SwapCancelResponse = {
 export type SwapApi = Readonly<{
   orders: () => Promise<ApiResponse<Array<SwapOrder>>>
   tokens: () => Promise<ApiResponse<Array<PortfolioTokenInfo>>>
-  protocols(): Promise<ApiResponse<Array<SwapAggregatorProtocol>>>
+  limitOptions(
+    args: Readonly<SwapLimitOptionsRequest>,
+  ): Promise<ApiResponse<SwapLimitOptionsResponse>>
   estimate(
     args: Readonly<SwapEstimateRequest>,
   ): Promise<ApiResponse<SwapEstimateResponse>>

@@ -1,4 +1,10 @@
-import {FetchData, fetchData, isLeft} from '@yoroi/common'
+import {
+  FetchData,
+  fetchData,
+  isLeft,
+  isNonNullable,
+  isRight,
+} from '@yoroi/common'
 import {Api, Chain, Left, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
 
@@ -12,7 +18,7 @@ import {
   LimitOrderResponse,
   LimitQuoteResponse,
 } from './types'
-import {transformersMaker} from './transformers'
+import {MuesliswapProtocols, transformersMaker} from './transformers'
 
 export type MuesliswapApiConfig = {
   partner?: string
@@ -131,13 +137,71 @@ export const muesliswapApiMaker = (
         }
       },
 
-      async protocols() {
+      /* istanbul ignore next */
+      async limitOptions({tokenIn, tokenOut}: Swap.LimitOptionsRequest) {
+        const estimateResponse = await this.estimate({
+          tokenIn,
+          tokenOut,
+          slippage: 0,
+          amountIn: 50,
+        })
+
+        if (isLeft(estimateResponse)) return parseMuesliError(estimateResponse)
+
+        const wantedPrice = estimateResponse.value.data.netPrice
+        const defaultProtocol = estimateResponse.value.data.splits[0]?.protocol
+
+        if (defaultProtocol === undefined)
+          return freeze<Left<Api.ResponseError>>(
+            {
+              tag: 'left',
+              error: {
+                status: -3,
+                message: 'Invalid state',
+                responseData: null,
+              },
+            },
+            true,
+          )
+
+        const options = (
+          await Promise.all(
+            MuesliswapProtocols.map((protocol) =>
+              this.estimate({
+                tokenIn,
+                tokenOut,
+                slippage: 0,
+                amountIn: 50,
+                wantedPrice,
+                protocol,
+              }),
+            ),
+          )
+        )
+          .filter(isRight)
+          .map((res) => {
+            const split = res.value.data.splits[0]
+            if (split === undefined) return null
+            const {protocol, initialPrice, batcherFee} = split
+
+            return {
+              protocol,
+              initialPrice,
+              batcherFee,
+            }
+          })
+          .filter(isNonNullable)
+
         return freeze(
           {
             tag: 'right',
             value: {
               status: Api.HttpStatusCode.Ok,
-              data: transformers.protocols.response(),
+              data: {
+                defaultProtocol,
+                wantedPrice,
+                options,
+              },
             },
           },
           true,

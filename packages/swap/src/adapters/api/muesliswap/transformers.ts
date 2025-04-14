@@ -95,17 +95,6 @@ export const transformersMaker = ({
         ),
     },
 
-    protocols: {
-      response: (): Array<Swap.AggregatorProtocol> =>
-        Object.values(Dex)
-          .filter((p) => p !== Dex.Unsupported)
-          .map(toSwapProtocol)
-          .map((protocol) => ({
-            aggregator: Swap.Aggregator.Muesliswap,
-            protocol,
-          })),
-    },
-
     cancel: {
       request: ({order}: Swap.CancelRequest): CancelRequest => ({
         tx_hash: order.txHash,
@@ -356,3 +345,7 @@ export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
     [Swap.Protocol.Spectrum_v1]: Dex.Spectrum_v1,
     [Swap.Protocol.Unsupported]: Dex.Unsupported,
   }[dex] ?? Dex.Unsupported)
+
+export const MuesliswapProtocols = Object.values(Dex)
+  .filter((p) => p !== Dex.Unsupported)
+  .map(toSwapProtocol)

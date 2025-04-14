@@ -174,17 +174,6 @@ export const transformersMaker = ({
         ),
     },
 
-    protocols: {
-      response: (): Array<Swap.AggregatorProtocol> =>
-        Object.values(Dex)
-          .filter((p) => p !== Dex.Unsupported)
-          .map(toSwapProtocol)
-          .map((protocol) => ({
-            aggregator: Swap.Aggregator.Dexhunter,
-            protocol,
-          })),
-    },
-
     cancel: {
       request: ({order}: Swap.CancelRequest): CancelRequest => ({
         address,
@@ -524,3 +513,7 @@ export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
     [Swap.Protocol.Spectrum_v1]: Dex.Unsupported,
     [Swap.Protocol.Unsupported]: Dex.Unsupported,
   }[dex] ?? Dex.Unsupported)
+
+export const DexhunterProtocols = Object.values(Dex)
+  .filter((p) => p !== Dex.Unsupported)
+  .map(toSwapProtocol)

@@ -522,17 +522,6 @@ const estimateResponse: EstimateResponse = {
   partner_fee: 0,
 }
 
-const protocolsResult: Array<Swap.AggregatorProtocol> = [
-  {
-    protocol: 'vyfi-v1',
-    aggregator: 'dexhunter',
-  },
-  {
-    protocol: 'minswap-v1',
-    aggregator: 'dexhunter',
-  },
-]
-
 const estimateResult: Swap.EstimateResponse = {
   aggregatorFee: 1,
   batcherFee: 2,
@@ -763,7 +752,6 @@ export const api = {
     orders: ordersResult,
     cancel: cancelResult,
     estimate: estimateResult,
-    protocols: protocolsResult,
     reverseEstimate: reverseEstimateResult,
     limitEstimate: limitEstimateResult,
     create: createResult,

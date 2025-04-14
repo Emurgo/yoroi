@@ -427,18 +427,6 @@ describe('muesliswapApiMaker', () => {
       expect(result.error.message).toContain('could not cancel')
     })
   })
-
-  describe('protocols()', () => {
-    it('returns a right result with transformed data', async () => {
-      const muesliApi = muesliswapApiMaker(config)
-
-      const result = await muesliApi.protocols()
-
-      if (result.tag !== 'right') fail()
-      expect(result.tag).toBe('right')
-      expect(result.value.status).toBe(Api.HttpStatusCode.Ok)
-    })
-  })
 })
 
 describe('parseMuesliError', () => {

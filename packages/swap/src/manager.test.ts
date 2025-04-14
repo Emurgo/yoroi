@@ -84,22 +84,6 @@ describe('swapManagerMaker', () => {
       },
     })
 
-    mockDexhunterApi.protocols.mockResolvedValue({
-      tag: 'right',
-      value: {
-        status: Api.HttpStatusCode.Ok,
-        data: dhApiMocks.results.protocols,
-      },
-    })
-
-    mockMuesliswapApi.protocols.mockResolvedValue({
-      tag: 'right',
-      value: {
-        status: Api.HttpStatusCode.Ok,
-        data: msApiMocks.results.protocols,
-      },
-    })
-
     mockDexhunterApi.estimate.mockResolvedValue({
       tag: 'right',
       value: {
@@ -209,99 +193,6 @@ describe('swapManagerMaker', () => {
       const result = await manager.api.tokens()
       expect(result.tag).toBe('right')
       expect(mockMuesliswapApi.tokens).toHaveBeenCalled()
-    })
-  })
-
-  describe('protocols()', () => {
-    it('merges both aggregator protocols if both are right', async () => {
-      const manager = swapManagerMaker(baseConfig)
-
-      const result = await manager.api.protocols()
-      expect(result.tag).toBe('right')
-      if (result.tag === 'right') {
-        expect(result.value.data).toEqual(
-          expect.arrayContaining([
-            ...dhApiMocks.results.protocols,
-            ...msApiMocks.results.protocols,
-          ]),
-        )
-      }
-    })
-
-    it('calls muesliswap api if routing preference is muesliswap', async () => {
-      const manager = swapManagerMaker(baseConfig)
-      manager.assignSettings({routingPreference: ['muesliswap']})
-
-      const result = await manager.api.protocols()
-
-      expect(result.tag).toBe('right')
-      if (result.tag === 'right') {
-        expect(result.value.data).toEqual(msApiMocks.results.protocols)
-      }
-    })
-
-    it('calls dexhunter api if routing preference is dexhunter', async () => {
-      const manager = swapManagerMaker(baseConfig)
-      manager.assignSettings({routingPreference: ['dexhunter']})
-
-      const result = await manager.api.protocols()
-
-      expect(result.tag).toBe('right')
-      if (result.tag === 'right') {
-        expect(result.value.data).toEqual(dhApiMocks.results.protocols)
-      }
-    })
-
-    it('should return api error', async () => {
-      mockMuesliswapApi.protocols.mockResolvedValue({
-        tag: 'left',
-        error: {status: 400, message: 'ms orders error', responseData: {}},
-      })
-
-      mockDexhunterApi.protocols.mockResolvedValue({
-        tag: 'left',
-        error: {
-          status: -3,
-          message: 'Aggregator excluded from call',
-          responseData: {},
-        },
-      })
-
-      const manager = swapManagerMaker(baseConfig)
-      const result = await manager.api.protocols()
-
-      if (result.tag !== 'left') fail()
-      expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('ms orders error')
-      expect(result.error.status).toBe(400)
-    })
-
-    it('should return "invalid" error', async () => {
-      mockMuesliswapApi.protocols.mockResolvedValue({
-        tag: 'left',
-        error: {
-          status: -3,
-          message: 'Aggregator excluded from call',
-          responseData: {},
-        },
-      })
-
-      mockDexhunterApi.protocols.mockResolvedValue({
-        tag: 'left',
-        error: {
-          status: -3,
-          message: 'Aggregator excluded from call',
-          responseData: {},
-        },
-      })
-
-      const manager = swapManagerMaker(baseConfig)
-      const result = await manager.api.protocols()
-
-      if (result.tag !== 'left') fail()
-      expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('Unknown error')
-      expect(result.error.status).toBe(-3)
     })
   })
 

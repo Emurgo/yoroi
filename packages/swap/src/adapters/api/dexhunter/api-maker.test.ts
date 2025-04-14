@@ -31,7 +31,7 @@ describe('dexhunterApiMaker', () => {
     const dhApi = dexhunterApiMaker(config)
     expect(dhApi).toHaveProperty('tokens')
     expect(dhApi).toHaveProperty('orders')
-    expect(dhApi).toHaveProperty('protocols')
+    expect(dhApi).toHaveProperty('limitOptions')
     expect(dhApi).toHaveProperty('estimate')
     expect(dhApi).toHaveProperty('create')
     expect(dhApi).toHaveProperty('cancel')
@@ -212,17 +212,6 @@ describe('dexhunterApiMaker', () => {
       if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
       expect(result.error.message).toContain('No orders for this address')
-    })
-  })
-
-  describe('protocols()', () => {
-    it('should return a right result with transformed data', async () => {
-      const dhApi = dexhunterApiMaker(config)
-      const result = await dhApi.protocols()
-
-      if (result.tag !== 'right') fail()
-      expect(result.tag).toBe('right')
-      expect(result.value.status).toBe(Api.HttpStatusCode.Ok)
     })
   })
 

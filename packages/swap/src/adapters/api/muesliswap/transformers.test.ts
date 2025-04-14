@@ -145,30 +145,6 @@ describe('transformers', () => {
     })
   })
 
-  describe('protocols', () => {
-    it.each`
-      dex
-      ${Dex.Minswap_v1}
-      ${Dex.Minswap_v2}
-      ${Dex.Minswap_stable}
-      ${Dex.Wingriders_v1}
-      ${Dex.Vyfi_v1}
-      ${Dex.Sundaeswap_v1}
-      ${Dex.Sundaeswap_v3}
-      ${Dex.Muesliswap_v2}
-      ${Dex.Muesliswap_clp}
-      ${Dex.Spectrum_v1}
-      ${Dex.Teddy_v1}
-    `('should correctly transform aggregator protocols for $dex', ({dex}) => {
-      const expectedProtocol = toSwapProtocol(dex)
-      const result = transformers.protocols.response()
-      expect(result).toContainEqual({
-        aggregator: Swap.Aggregator.Muesliswap,
-        protocol: expectedProtocol,
-      })
-    })
-  })
-
   describe('toSwapProtocol', () => {
     it.each`
       dex                   | protocol

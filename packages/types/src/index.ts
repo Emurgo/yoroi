@@ -13,6 +13,8 @@ import {
   SwapCreateResponse,
   SwapEstimateRequest,
   SwapEstimateResponse,
+  SwapLimitOptionsRequest,
+  SwapLimitOptionsResponse,
   SwapSplit,
 } from './swap/api'
 import {AppStorage, AppStorageFolderName} from './app/storage'
@@ -280,7 +282,7 @@ import {
 } from './swap/manager'
 import {SwapDex} from './swap/dex'
 import {SwapOrder} from './swap/order'
-import {SwapAggregator, SwapAggregatorProtocol} from './swap/aggregator'
+import {SwapAggregator} from './swap/aggregator'
 import {SwapProtocol} from './swap/protocol'
 import {
   BannersConfig,
@@ -357,11 +359,12 @@ export namespace Swap {
   export type Order = SwapOrder
   export type Aggregator = SwapAggregator
   export const Aggregator = SwapAggregator
-  export type AggregatorProtocol = SwapAggregatorProtocol
   export type Protocol = SwapProtocol
   export const Protocol = SwapProtocol
   export type Dex = SwapDex
   export const Dex = SwapDex
+  export type LimitOptionsRequest = SwapLimitOptionsRequest
+  export type LimitOptionsResponse = SwapLimitOptionsResponse
   export type CancelRequest = SwapCancelRequest
   export type CancelResponse = SwapCancelResponse
   export type EstimateRequest = SwapEstimateRequest
