@@ -9,7 +9,7 @@ alwaysApply: true
 - Once fully finished with the task create a pull request
 - Create pull request in a semantic compatible formatting like: 
 ```
-feat: [XDEFI-12345] ticket title
+feat(portfolio): [YOMO-12345] ticket title
 ```
 - Make sure to use either: commitlint rulese when creating a PR found in .cursor.json file
 - Make sure to add a very short description to a PR of what has been done
