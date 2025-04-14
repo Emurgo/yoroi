@@ -10,7 +10,10 @@ import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../../components/Text'
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../../kernel/navigation'
-import {triggerNotificationsPermissionModal} from '../../../../../Notifications/common/tools'
+import {
+  hasAuthorizedNotifications,
+  triggerNotificationsPermissionModal,
+} from '../../../../../Notifications/common/tools'
 import {SettingsSwitch} from '../../../../common/SettingsSwitch'
 import {SettingsItem, SettingsSection} from '../../../../SettingsItems'
 import {SettingsNotificationDurationItem} from '../../../../SettingsNotificationDurationItem'
@@ -88,11 +91,6 @@ export function useNotificationPermission() {
   }
 
   return {hasPermission, togglePermissions}
-}
-
-const hasAuthorizedNotifications = async () => {
-  const status = await messaging().requestPermission()
-  return status === messaging.AuthorizationStatus.AUTHORIZED
 }
 
 const PushNotificationSettingsItem = () => {
