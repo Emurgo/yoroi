@@ -1,6 +1,6 @@
 # `@yoroi/notifications`
 
-The `@yoroi/notifications` package is responsible for handling local and push in the Yoroi wallet. It enables applications to track important events—such as reward changes or new transactions.
+The `@yoroi/notifications` package is responsible for handling local and push notifications in the Yoroi wallet. It enables applications to track important events, such as reward changes, new transactions, or marketing notifications.
 
 This package is **platform-agnostic** and does **not depend on any environment-specific APIs**, making it usable in both **web** and **mobile** contexts.
 
