@@ -126,10 +126,10 @@ export const WalletSettingsScreen = () => {
 
         <Spacer height={24} />
 
-        <SettingsSection title="Notifications">
+        <SettingsSection title={strings.notifications}>
           <NavigatedSettingsItem
             icon={<Icon.Bell {...iconProps} />}
-            label="Notifications"
+            label={strings.notifications}
             onNavigate={() => navigateToNotificationSettings()}
           />
         </SettingsSection>
@@ -318,6 +318,10 @@ const messages = defineMessages({
     id: 'components.settings.walletsettingscreen.displayDuration',
     defaultMessage: '!!!Display duration',
   },
+  notifications: {
+    id: 'components.settings.walletsettingscreen.notifications',
+    defaultMessage: '!!!Notifications',
+  },
 })
 
 const useStrings = () => {
@@ -348,6 +352,7 @@ const useStrings = () => {
     inAppNotifications: intl.formatMessage(messages.inAppNotifications),
     allowNotifications: intl.formatMessage(messages.allowNotifications),
     displayDuration: intl.formatMessage(messages.displayDuration),
+    notifications: intl.formatMessage(messages.notifications),
   }
 }
 
