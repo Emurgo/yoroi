@@ -101,9 +101,9 @@
       "ticketPattern": "^[A-Z]+-\\d+",
       "template": "<type>(<scope>): [<ticket>] <description>",
       "examples": [
-        "feat(wallet): [YOR-123] Add new transaction history view",
-        "fix(api): [YOR-456] Fix stake pool delegation issue",
-        "docs: [YOR-789] Update README with new installation steps"
+        "feat(wallet): [YV-123] Add new transaction history view",
+        "fix(api): [YV-456] Fix stake pool delegation issue",
+        "docs: [YV-789] Update README with new installation steps"
       ]
     }
   },
