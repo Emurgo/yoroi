@@ -7,6 +7,7 @@ import * as React from 'react'
 import {isTxHistoryRoute, isWalletSelectionRoute} from '../../../kernel/navigation'
 import {useNotificationDisplaySettings} from '../../Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {pushNotificationsManager} from '../common/notification-manager'
 import {NotificationPopup} from '../common/NotificationPopup'
 import {NotificationStack} from '../common/NotificationStack'
 
@@ -52,7 +53,13 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
       setEvents((e) => [...e, event])
     }
 
-    const subscription = manager.newEvents$.subscribe((event) => {
+    const pushSubscription = pushNotificationsManager.newEvents$.subscribe((e) => {
+      if (e.trigger === Notifications.Trigger.Push) {
+        pushEvent(e)
+      }
+    })
+
+    const localSubscription = manager.newEvents$.subscribe((event) => {
       if (
         event.trigger === Notifications.Trigger.RewardsUpdated &&
         event.metadata.walletId === selectedWalletId &&
@@ -70,7 +77,8 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
       }
     })
     return () => {
-      subscription.unsubscribe()
+      localSubscription.unsubscribe()
+      pushSubscription.unsubscribe()
     }
   }, [
     manager,
