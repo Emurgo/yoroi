@@ -35,15 +35,20 @@ yarn add @yoroi/types --save-dev
 ```tsx
 import {useAsyncStorage} from '@yoroi/common'
 import {connectionStorageMaker, DappConnector, dappConnectorMaker} from '@yoroi/dapp-connector'
+import {useSelectedWallet} from "../../useSelectedWallet";
 
-const createDappConnector = (appStorage: App.Storage) => {
+const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
   const storage = connectionStorageMaker(appStorage.join('dapp-connections/'))
-  return dappConnectorMaker(storage)
+  const api: Api = {
+    getDApps: async () => fetchDapps(),
+  }
+  return dappConnectorMaker(storage, wallet, api)
 }
 
 const useDappConnector = () => {
   const appStorage = useAsyncStorage()
-  return useMemo(() => createDappConnector(appStorage), [appStorage])
+  const {wallet} = useSelectedWallet()
+  return useMemo(() => createDappConnector(appStorage, wallet), [appStorage])
 }
 
 export const useConnectWalletToWebView = (
