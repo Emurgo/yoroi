@@ -23,7 +23,7 @@ export const ManageNotificationsNavigator = () => {
       <Stack.Screen //
         name="manage-notification-settings"
         component={ManageNotificationSettings}
-        options={{title: 'Notifications'}}
+        options={{title: strings.notifications}}
       />
 
       <Stack.Screen //

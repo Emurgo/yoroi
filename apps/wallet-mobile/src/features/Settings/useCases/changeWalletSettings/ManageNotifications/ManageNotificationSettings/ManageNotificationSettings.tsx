@@ -1,12 +1,13 @@
 import messaging from '@react-native-firebase/messaging'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {Linking, Platform, ScrollView, StyleSheet} from 'react-native'
+import {AppState, Linking, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {Button, ButtonType} from '../../../../../../components/Button/Button'
 import {Icon} from '../../../../../../components/Icon'
 import {Spacer} from '../../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../../components/Text'
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../../kernel/navigation'
 import {triggerNotificationsPermissionModal} from '../../../../../Notifications/common/tools'
@@ -17,6 +18,7 @@ import {
   useChangeNotificationDisplaySettings,
   useNotificationDisplaySettings,
 } from '../../Notifications/NotificationsDisplaySettings'
+import {useStrings} from '../useStrings'
 
 export const ManageNotificationSettings = () => {
   const strings = useStrings()
@@ -26,7 +28,7 @@ export const ManageNotificationSettings = () => {
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
       <ScrollView bounces={false} style={styles.settings}>
-        <SettingsSection title="Push notifications">
+        <SettingsSection title={strings.pushNotifications}>
           <PushNotificationSettingsItem />
         </SettingsSection>
 
@@ -52,10 +54,16 @@ export function useNotificationPermission() {
   const [hasPermission, setHasPermission] = React.useState<boolean | null>(null)
 
   React.useEffect(() => {
-    const fetchPermission = async () => {
-      const status = await messaging().requestPermission()
-      setHasPermission(status === messaging.AuthorizationStatus.AUTHORIZED)
+    const handleAppStateChange = async () => setHasPermission(await hasAuthorizedNotifications())
+    const subscription = AppState.addEventListener('change', handleAppStateChange)
+
+    return () => {
+      subscription.remove()
     }
+  }, [])
+
+  React.useEffect(() => {
+    const fetchPermission = async () => setHasPermission(await hasAuthorizedNotifications())
 
     fetchPermission()
   }, [])
@@ -65,41 +73,53 @@ export function useNotificationPermission() {
     if (oldStatus === messaging.AuthorizationStatus.NOT_DETERMINED) {
       await triggerNotificationsPermissionModal()
     } else {
-      navigateToAppSettings()
+      await navigateToAppSettings()
     }
 
-    const status = await messaging().requestPermission()
-    setHasPermission(status === messaging.AuthorizationStatus.AUTHORIZED)
+    setHasPermission(await hasAuthorizedNotifications())
   }
 
-  const navigateToAppSettings = () => {
+  const navigateToAppSettings = async () => {
     if (Platform.OS === 'ios') {
-      Linking.openURL('app-settings:')
+      await Linking.openURL('app-settings:')
     } else {
-      Linking.openSettings()
+      await Linking.openSettings()
     }
   }
 
   return {hasPermission, togglePermissions}
 }
 
+const hasAuthorizedNotifications = async () => {
+  const status = await messaging().requestPermission()
+  return status === messaging.AuthorizationStatus.AUTHORIZED
+}
+
 const PushNotificationSettingsItem = () => {
   const {styles} = useStyles()
+  const strings = useStrings()
 
   const {hasPermission, togglePermissions} = useNotificationPermission()
 
   if (hasPermission) {
     return (
-      <SettingsItem icon={<Icon.Bell {...styles.icon} />} label="Push notifications">
+      <SettingsItem icon={<Icon.Bell {...styles.icon} />} label={strings.pushNotifications}>
         <SettingsSwitch value={true} onValueChange={togglePermissions} />
       </SettingsItem>
     )
   }
 
   return (
-    <SettingsItem icon={<Icon.Bell {...styles.icon} />} label="Push notifications">
-      <SettingsSwitch value={false} onValueChange={togglePermissions} />
-    </SettingsItem>
+    <View>
+      <Text style={styles.enableSetting}>{strings.enableNotificationsThroughSettings}</Text>
+
+      <Button
+        style={styles.enableSettingButton}
+        title={strings.goToSettings}
+        onPress={togglePermissions}
+        type={ButtonType.Text}
+      />
+    </View>
   )
 }
 
@@ -127,6 +147,14 @@ const useStyles = () => {
       ...atoms.flex_1,
       backgroundColor: color.bg_color_max,
     },
+    enableSetting: {
+      ...atoms.body_1_lg_medium,
+      ...atoms.py_sm,
+    },
+    enableSettingButton: {
+      ...atoms.justify_start,
+      ...atoms.p_0,
+    },
     settings: {
       ...atoms.flex_1,
       ...atoms.py_lg,
@@ -139,23 +167,3 @@ const useStyles = () => {
   })
   return {styles} as const
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    inAppNotifications: intl.formatMessage(messages.inAppNotifications),
-    displayDuration: intl.formatMessage(messages.displayDuration),
-  }
-}
-
-const messages = defineMessages({
-  inAppNotifications: {
-    id: 'components.settings.walletsettingscreen.inAppNotifications',
-    defaultMessage: '!!!In-app notifications',
-  },
-  displayDuration: {
-    id: 'components.settings.walletsettingscreen.displayDuration',
-    defaultMessage: '!!!Display duration',
-  },
-})

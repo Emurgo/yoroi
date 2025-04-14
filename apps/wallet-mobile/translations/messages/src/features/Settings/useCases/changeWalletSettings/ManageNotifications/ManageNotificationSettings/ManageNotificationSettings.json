@@ -4,14 +4,14 @@
     "defaultMessage": "!!!In-app notifications",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationSettings/ManageNotificationSettings.tsx",
     "start": {
-      "line": 153,
+      "line": 179,
       "column": 22,
-      "index": 4853
+      "index": 5600
     },
     "end": {
-      "line": 156,
+      "line": 182,
       "column": 3,
-      "index": 4975
+      "index": 5722
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Display duration",
     "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationSettings/ManageNotificationSettings.tsx",
     "start": {
-      "line": 157,
+      "line": 183,
       "column": 19,
-      "index": 4996
+      "index": 5743
     },
     "end": {
-      "line": 160,
+      "line": 186,
       "column": 3,
-      "index": 5111
+      "index": 5858
     }
   }
 ]
