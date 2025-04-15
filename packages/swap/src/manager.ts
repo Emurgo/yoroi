@@ -362,6 +362,9 @@ export const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
     case response.error.message.includes(
       'Transaction Building Errornot enough funds',
     ):
+    case response.error.message.includes(
+      'Transaction Building ErrorNo Remaining UTxOs',
+    ):
       response.error.message =
         'Insufficient balance: consider fees, assets blocked by staking or multiaddress holdings'
 
