@@ -343,15 +343,13 @@ export const transformersMaker = ({
 
         batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
-        frontendFee: partner_fee / 10 ** primaryTokenInfo.decimals,
+        frontendFee: partner_fee,
         netPrice: reverse(reversed, net_price),
         priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
-          (
-            batcher_fee +
-            dexhunter_fee +
-            partner_fee / 10 ** primaryTokenInfo.decimals
-          ).toFixed(primaryTokenInfo.decimals),
+          (batcher_fee + dexhunter_fee + partner_fee).toFixed(
+            primaryTokenInfo.decimals,
+          ),
         ),
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
@@ -411,7 +409,7 @@ export const transformersMaker = ({
         aggregator: Swap.Aggregator.Dexhunter,
         batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
-        frontendFee: partner_fee,
+        frontendFee: partner_fee / 10 ** primaryTokenInfo.decimals,
         netPrice: reverse(reversed, splits?.[0]?.initial_price ?? 0),
 
         totalOutput: total_output,
@@ -419,9 +417,11 @@ export const transformersMaker = ({
 
         priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
-          (batcher_fee + dexhunter_fee + partner_fee).toFixed(
-            primaryTokenInfo.decimals,
-          ),
+          (
+            batcher_fee +
+            dexhunter_fee +
+            partner_fee / 10 ** primaryTokenInfo.decimals
+          ).toFixed(primaryTokenInfo.decimals),
         ),
 
         splits: splits?.map(toSwapSplit) ?? [],
@@ -539,4 +539,4 @@ export const DexhunterProtocols = Object.values(Dex)
   .map(toSwapProtocol)
 
 export const reverse = (reversed: boolean, price: number) =>
-  reversed || price === 0 || price === undefined ? price : 1 / price
+  !reversed || price === 0 || price === undefined ? price : 1 / price
