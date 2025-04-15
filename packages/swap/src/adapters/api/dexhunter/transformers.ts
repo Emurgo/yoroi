@@ -337,14 +337,14 @@ export const transformersMaker = ({
           total_input = 0,
           total_output = 0,
         }: LimitEstimateResponse,
-        _reversed?: boolean,
+        reversed: boolean,
       ): Swap.EstimateResponse => ({
         deposits,
 
         batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee / 10 ** primaryTokenInfo.decimals,
-        netPrice: net_price,
+        netPrice: reverse(reversed, net_price),
         priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
           (
@@ -403,7 +403,7 @@ export const transformersMaker = ({
           total_input = 0,
           total_output = 0,
         }: LimitBuildResponse,
-        _reversed?: boolean,
+        reversed: boolean,
       ): Swap.CreateResponse => ({
         cbor,
         deposits,
@@ -412,6 +412,8 @@ export const transformersMaker = ({
         batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
+        netPrice: reverse(reversed, splits?.[0]?.initial_price ?? 0),
+
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
 
@@ -534,3 +536,6 @@ export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
 export const DexhunterProtocols = Object.values(Dex)
   .filter((p) => p !== Dex.Unsupported)
   .map(toSwapProtocol)
+
+export const reverse = (reversed: boolean, price: number) =>
+  reversed || price === 0 || price === undefined ? price : 1 / price
