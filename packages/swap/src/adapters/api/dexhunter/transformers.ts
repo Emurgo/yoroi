@@ -478,7 +478,8 @@ export const transformersMaker = ({
         frontendFee: partner_fee,
         netPrice:
           (reversed
-            ? net_price_reverse
+            ? net_price_reverse ||
+              reverse(true, splits?.[0]?.initial_price ?? 0)
             : net_price || splits?.[0]?.initial_price) ?? 0, // main net_price is coming as 0 :(
         priceImpact: toPriceImpact(splits ?? []),
 

@@ -741,7 +741,7 @@ describe('transformers', () => {
           {
             average_price: 1.234,
             communications: ['Success', 'Transaction confirmed'],
-            net_price_reverse: 0.812,
+            net_price_reverse: 0,
             partner_code: 'PartnerX',
             possible_routes: {
               route1: 0.5,
@@ -756,7 +756,7 @@ describe('transformers', () => {
                 expected_output_without_slippage: 1130,
                 fee: 0.3,
                 final_price: 0.041994,
-                initial_price: 0.04252918925670425,
+                initial_price: undefined,
                 pool_fee: 0.3,
                 pool_id:
                   '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
@@ -776,7 +776,7 @@ describe('transformers', () => {
         cbor: '',
         deposits: 0,
         frontendFee: 0,
-        netPrice: 0.812,
+        netPrice: 0,
         priceImpact: 0,
         splits: [
           {
@@ -787,7 +787,7 @@ describe('transformers', () => {
             expectedOutputWithoutSlippage: 1130,
             fee: 0.3,
             finalPrice: 0.041994,
-            initialPrice: 0.04252918925670425,
+            initialPrice: 0,
             poolFee: 0.3,
             poolId:
               '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
