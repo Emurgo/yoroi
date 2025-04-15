@@ -85,7 +85,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     {
       label: strings.priceImpact,
       value: <ShowPriceImpact priceImpact={swapForm.createTx?.priceImpact} />,
-      hidden: orderType === 'limit',
+      hidden: priceImpactRisk === 'none' || orderType === 'limit',
     },
     {
       label: strings.swapMinAdaTitle,
