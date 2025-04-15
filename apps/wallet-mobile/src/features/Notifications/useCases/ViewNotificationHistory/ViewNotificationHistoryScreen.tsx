@@ -1,3 +1,4 @@
+import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {useTheme} from '@yoroi/theme'
 import {Notifications} from '@yoroi/types'
@@ -82,7 +83,8 @@ const NotificationItem = React.memo(({event, onPress}: {event: Notifications.Eve
 
   const isUnread = !event.isRead
 
-  const description = React.useMemo(() => formatDate(event.date, languageCode), [event.date, languageCode])
+  const description = event.trigger === Notifications.Trigger.Push ? event.metadata.body : null
+  const time = React.useMemo(() => formatDate(event.date, languageCode), [event.date, languageCode])
 
   const title =
     event.trigger === Notifications.Trigger.TransactionReceived
@@ -104,13 +106,23 @@ const NotificationItem = React.memo(({event, onPress}: {event: Notifications.Eve
         <View style={styles.icon}>{icon}</View>
 
         <View style={styles.textArea}>
-          <Text style={styles.title}>{title}</Text>
+          <View style={[styles.line, styles.titleLine]}>
+            <Text style={styles.title}>{title}</Text>
 
-          <Text style={styles.description}>{description}</Text>
+            <View style={styles.unreadIndicator}>{isUnread && <View style={styles.redDot} />}</View>
+          </View>
+
+          {isString(description) && (
+            <View style={styles.line}>
+              <Text style={styles.description}>{description}</Text>
+            </View>
+          )}
+
+          <View style={styles.line}>
+            <Text style={styles.time}>{time}</Text>
+          </View>
         </View>
       </View>
-
-      <View style={styles.unreadIndicator}>{isUnread && <View style={styles.redDot} />}</View>
     </TouchableOpacity>
   )
 })
@@ -139,6 +151,15 @@ const useStyles = () => {
       zIndex: 10,
       backgroundColor: color.bg_color_max,
     },
+    line: {
+      ...atoms.flex_1,
+      ...atoms.flex_row,
+    },
+    titleLine: {
+      ...atoms.justify_between,
+      ...atoms.align_center,
+      ...atoms.gap_sm,
+    },
     root: {
       ...atoms.px_lg,
       ...atoms.flex,
@@ -158,10 +179,17 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_2_md_medium,
+      ...atoms.flex_1,
       color: color.text_gray_medium,
     },
     description: {
       ...atoms.body_3_sm_regular,
+      ...atoms.flex_1,
+      color: color.text_gray_medium,
+    },
+    time: {
+      ...atoms.body_3_sm_regular,
+      ...atoms.flex_1,
       color: color.text_gray_low,
     },
     textArea: {
@@ -169,8 +197,8 @@ const useStyles = () => {
       ...atoms.flex_grow,
     },
     unreadIndicator: {
-      width: 40,
-      height: 40,
+      width: 8,
+      height: 8,
       ...atoms.flex_row,
       ...atoms.justify_center,
       ...atoms.align_center,
