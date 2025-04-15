@@ -221,7 +221,7 @@ export const transformersMaker = ({
       }: CreateOrderResponse): Swap.CreateResponse => ({
         aggregator: Swap.Aggregator.Muesliswap,
         aggregatorFee: 0,
-        frontendFee: 0,
+        frontendFee: Number(frontend_fee),
         cbor: tx_cbor,
         netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
         priceImpact: net_price_impact,
@@ -257,22 +257,40 @@ export const transformersMaker = ({
         sell_amount: amountIn,
         user_address: address,
       }),
-      response: ({tx_cbor}: LimitOrderResponse): Swap.CreateResponse => ({
+      response: ({
+        quote: {
+          buy_token_decimals,
+          sell_token_decimals,
+          net_price,
+          net_price_impact,
+          splits,
+          frontend_fee,
+          total_batcher_fee,
+          total_deposit,
+          total_input,
+          total_output,
+          total_output_without_slippage,
+        },
+        tx_cbor,
+      }: LimitOrderResponse): Swap.CreateResponse => ({
         cbor: tx_cbor,
         aggregator: Swap.Aggregator.Muesliswap,
 
-        // LimitOrderResponse doesn't have quote data :(
         aggregatorFee: 0,
-        frontendFee: 0,
-        batcherFee: 0,
-        deposits: 0,
-        totalFee: 0,
-        totalInput: 0,
-        totalOutput: 0,
-        netPrice: 0,
-        priceImpact: 0,
-        totalOutputWithoutSlippage: 0,
-        splits: [],
+        frontendFee: Number(frontend_fee),
+        netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
+        priceImpact: net_price_impact,
+        batcherFee: Number(total_batcher_fee),
+        deposits: Number(total_deposit),
+        totalFee: Number(
+          (Number(total_batcher_fee) + Number(frontend_fee)).toFixed(
+            primaryTokenInfo.decimals,
+          ),
+        ),
+        totalInput: Number(total_input),
+        totalOutput: Number(total_output),
+        totalOutputWithoutSlippage: Number(total_output_without_slippage),
+        splits: splits.map(toSwapSplit),
       }),
     },
   } as const

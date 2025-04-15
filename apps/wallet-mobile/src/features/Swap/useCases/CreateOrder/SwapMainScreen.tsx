@@ -12,6 +12,7 @@ import {useIsKeyboardOpen} from '../../../../kernel/keyboard/useIsKeyboardOpen'
 import {isEmptyString} from '../../../../kernel/utils'
 import {ShowDisclaimer} from '../../../Legal/Disclaimer/ShowDisclaimer'
 import {AmountCard} from '../../common/AmountCard/AmountCard'
+import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
 import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
@@ -34,6 +35,12 @@ export const SwapMainScreen = () => {
   const {openModal, closeModal} = useModal()
   const navigateTo = useNavigateTo()
 
+  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
+  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
+
+  const tokenInTicker = tokenInInfo?.ticker ?? tokenInInfo?.name ?? '-'
+  const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
+
   const onSwapPress = () => {
     const wantedPrice = Number(swapForm.wantedPrice)
     const marketPrice = swapForm.estimate?.netPrice ?? 0
@@ -43,7 +50,14 @@ export const SwapMainScreen = () => {
     if (swapForm.orderType === 'limit' && difference > threshold) {
       openModal({
         title: strings.limitPriceWarningTitle,
-        content: <WarnLimitPrice />,
+        content: (
+          <WarnLimitPrice
+            wantedPrice={wantedPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
+            marketPrice={marketPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
+            tokenInTicker={tokenInTicker}
+            tokenOutTicker={tokenOutTicker}
+          />
+        ),
         footer: (
           <View style={styles.buttonsWrapper}>
             <Button size="S" type={ButtonType.Secondary} title={strings.limitPriceWarningBack} onPress={closeModal} />
@@ -231,7 +245,6 @@ const useStyles = () => {
       ...atoms.justify_between,
       ...atoms.flex_row,
       ...atoms.gap_lg,
-      ...atoms.pt_lg,
     },
     gear: {
       ...atoms.px_sm,

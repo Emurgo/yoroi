@@ -3,23 +3,21 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../components/Spacer/Spacer'
-import {undefinedToken} from '../../common/constants'
 import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapProvider'
 
-export const WarnLimitPrice = () => {
+export const WarnLimitPrice = ({
+  wantedPrice,
+  marketPrice,
+  tokenInTicker,
+  tokenOutTicker,
+}: {
+  wantedPrice: string
+  marketPrice: string
+  tokenInTicker: string
+  tokenOutTicker: string
+}) => {
   const strings = useStrings()
   const styles = useStyles()
-  const swapForm = useSwap()
-
-  const limitPrice = swapForm.wantedPrice
-  const marketPrice = swapForm.estimate?.netPrice ?? 0
-
-  const sellTokenInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
-  const buyTokenInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
-  const tokenToSellName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
-  const tokenToBuyName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
-  const name = `${tokenToBuyName}/${tokenToSellName}`
 
   return (
     <View style={styles.container}>
@@ -33,9 +31,7 @@ export const WarnLimitPrice = () => {
             <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
 
             <View style={styles.textWrapper}>
-              <Text style={styles.value}>{limitPrice}</Text>
-
-              <Text style={styles.value}>{name}</Text>
+              <Text style={styles.value}>{`1 ${tokenInTicker} = ${wantedPrice} ${tokenOutTicker}`}</Text>
             </View>
           </View>
 
@@ -43,9 +39,7 @@ export const WarnLimitPrice = () => {
             <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
 
             <View style={styles.textWrapper}>
-              <Text style={styles.value}>{marketPrice}</Text>
-
-              <Text style={styles.value}>{name}</Text>
+              <Text style={styles.value}>{`1 ${tokenInTicker} = ${marketPrice} ${tokenOutTicker}`}</Text>
             </View>
           </View>
         </View>

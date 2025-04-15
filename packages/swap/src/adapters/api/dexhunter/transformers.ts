@@ -310,7 +310,12 @@ export const transformersMaker = ({
         multiples,
 
         amount_in: amountIn,
-        wanted_price: wantedPrice,
+        wanted_price:
+          isPrimaryToken(tokenIn) &&
+          wantedPrice !== undefined &&
+          wantedPrice !== 0
+            ? 1 / wantedPrice
+            : wantedPrice,
 
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
@@ -338,13 +343,15 @@ export const transformersMaker = ({
 
         batcherFee: batcher_fee,
         aggregatorFee: dexhunter_fee,
-        frontendFee: partner_fee,
+        frontendFee: partner_fee / 10 ** primaryTokenInfo.decimals,
         netPrice: net_price,
         priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
-          (batcher_fee + dexhunter_fee + partner_fee).toFixed(
-            primaryTokenInfo.decimals,
-          ),
+          (
+            batcher_fee +
+            dexhunter_fee +
+            partner_fee / 10 ** primaryTokenInfo.decimals
+          ).toFixed(primaryTokenInfo.decimals),
         ),
         totalOutput: total_output,
         totalOutputWithoutSlippage: total_output,
@@ -371,7 +378,12 @@ export const transformersMaker = ({
 
         buyer_address: address,
         amount_in: amountIn,
-        wanted_price: wantedPrice,
+        wanted_price:
+          isPrimaryToken(tokenIn) &&
+          wantedPrice !== undefined &&
+          wantedPrice !== 0
+            ? 1 / wantedPrice
+            : wantedPrice,
 
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
@@ -380,16 +392,19 @@ export const transformersMaker = ({
           .filter(isDex),
         dex: protocol ? fromSwapProtocol(protocol) : undefined,
       }),
-      response: ({
-        cbor = '',
-        batcher_fee = 0,
-        deposits = 0,
-        dexhunter_fee = 0,
-        partner_fee = 0,
-        splits,
-        total_input = 0,
-        total_output = 0,
-      }: LimitBuildResponse): Swap.CreateResponse => ({
+      response: (
+        {
+          cbor = '',
+          batcher_fee = 0,
+          deposits = 0,
+          dexhunter_fee = 0,
+          partner_fee = 0,
+          splits,
+          total_input = 0,
+          total_output = 0,
+        }: LimitBuildResponse,
+        _reversed?: boolean,
+      ): Swap.CreateResponse => ({
         cbor,
         deposits,
 
@@ -398,6 +413,8 @@ export const transformersMaker = ({
         aggregatorFee: dexhunter_fee,
         frontendFee: partner_fee,
         totalOutput: total_output,
+        totalOutputWithoutSlippage: total_output,
+
         priceImpact: toPriceImpact(splits ?? []),
         totalFee: Number(
           (batcher_fee + dexhunter_fee + partner_fee).toFixed(
