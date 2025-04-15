@@ -498,6 +498,23 @@ describe('transformers', () => {
       })
     })
 
+    test('should correctly transform the limit build request alt', () => {
+      expect(
+        transformers.limitBuild.request({
+          ...api.inputs.create[2],
+          protocol: 'minswap-v1',
+          amountIn: 1,
+          tokenIn: '.',
+          tokenOut: 'abc.cbr',
+        }),
+      ).toEqual({
+        ...api.requests.limitBuild,
+        dex: 'MINSWAP',
+        token_out: 'abccbr',
+        wanted_price: 1,
+      })
+    })
+
     test('should correctly transform the limit build response', () => {
       expect(
         transformers.limitBuild.response(api.responses.limitBuild),
@@ -530,6 +547,7 @@ describe('transformers', () => {
         totalFee: 0,
         totalInput: 1,
         totalOutput: 0,
+        totalOutputWithoutSlippage: 0,
       })
     })
 
@@ -586,6 +604,7 @@ describe('transformers', () => {
         totalFee: 0,
         totalInput: 0,
         totalOutput: 0,
+        totalOutputWithoutSlippage: 0,
       })
     })
   })

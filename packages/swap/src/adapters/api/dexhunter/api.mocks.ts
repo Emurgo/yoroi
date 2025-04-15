@@ -616,7 +616,6 @@ const createInput: Array<Swap.CreateRequest> = [
   {
     wantedPrice: 1,
     amountIn: 0,
-    multiples: 12,
     tokenIn: `13244.10130193`,
     tokenOut: `.`,
   },
