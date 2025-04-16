@@ -29,7 +29,7 @@
     },
     "android": {
       "notification": {
-        "icon": "./assets/img/yoroi-notification-icon-256.png",
+        "icon": "./src/assets/img/notification-icon-96x96.png",
         "color": "#FFFFFF"
       }
     }
