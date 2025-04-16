@@ -4,7 +4,7 @@ import {Notifications} from 'react-native-notifications'
 
 import {uiStorage} from './storage'
 
-const permissionModalStorageKey = 'triggerredNotificationsPermissionModal'
+const permissionModalStorageKey = 'triggeredNotificationsPermissionModal'
 
 export const triggerNotificationsPermissionModal = async () => {
   // Triggers iOS permission request
