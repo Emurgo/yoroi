@@ -1,4 +1,3 @@
-import messaging from '@react-native-firebase/messaging'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {AppState, Linking, Platform, ScrollView, StyleSheet, View} from 'react-native'
@@ -11,7 +10,7 @@ import {Text} from '../../../../../../components/Text'
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../../kernel/navigation'
 import {
-  hasAuthorizedNotifications,
+  getNotificationsAuthorizationStatus,
   triggerNotificationsPermissionModal,
 } from '../../../../../Notifications/common/tools'
 import {SettingsSwitch} from '../../../../common/SettingsSwitch'
@@ -54,10 +53,10 @@ export const ManageNotificationSettings = () => {
 }
 
 export function useNotificationPermission() {
-  const [hasPermission, setHasPermission] = React.useState<boolean | null>(null)
+  const [permission, setPermission] = React.useState<'authorized' | 'not_determined' | 'denied'>('not_determined')
 
   React.useEffect(() => {
-    const handleAppStateChange = async () => setHasPermission(await hasAuthorizedNotifications())
+    const handleAppStateChange = async () => setPermission(await getNotificationsAuthorizationStatus())
     const subscription = AppState.addEventListener('change', handleAppStateChange)
 
     return () => {
@@ -66,20 +65,21 @@ export function useNotificationPermission() {
   }, [])
 
   React.useEffect(() => {
-    const fetchPermission = async () => setHasPermission(await hasAuthorizedNotifications())
+    const fetchPermission = async () => setPermission(await getNotificationsAuthorizationStatus())
 
     fetchPermission()
   }, [])
 
   const togglePermissions = async () => {
-    const oldStatus = await messaging().requestPermission()
-    if (oldStatus === messaging.AuthorizationStatus.NOT_DETERMINED) {
+    const oldStatus = await getNotificationsAuthorizationStatus()
+
+    if (oldStatus === 'not_determined') {
       await triggerNotificationsPermissionModal()
     } else {
       await navigateToAppSettings()
     }
 
-    setHasPermission(await hasAuthorizedNotifications())
+    setPermission(await getNotificationsAuthorizationStatus())
   }
 
   const navigateToAppSettings = async () => {
@@ -90,19 +90,19 @@ export function useNotificationPermission() {
     }
   }
 
-  return {hasPermission, togglePermissions}
+  return {permission, togglePermissions}
 }
 
 const PushNotificationSettingsItem = () => {
   const {styles} = useStyles()
   const strings = useStrings()
 
-  const {hasPermission, togglePermissions} = useNotificationPermission()
+  const {permission, togglePermissions} = useNotificationPermission()
 
-  if (hasPermission) {
+  if (permission === 'authorized' || permission === 'not_determined') {
     return (
       <SettingsItem icon={<Icon.Bell {...styles.icon} />} label={strings.pushNotifications}>
-        <SettingsSwitch value={true} onValueChange={togglePermissions} />
+        <SettingsSwitch value={permission === 'authorized'} onValueChange={togglePermissions} />
       </SettingsItem>
     )
   }
