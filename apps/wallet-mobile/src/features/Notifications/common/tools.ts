@@ -20,10 +20,10 @@ export const triggerNotificationsPermissionModal = async () => {
 
 export const getNotificationsAuthorizationStatus = async () => {
   const status = await messaging().hasPermission()
+  const modalNeverTriggered = (await uiStorage.getItem(permissionModalStorageKey)) !== true
+
   const isAuthorized = status === messaging.AuthorizationStatus.AUTHORIZED
-  const isUndetermined =
-    status === messaging.AuthorizationStatus.NOT_DETERMINED ||
-    (await uiStorage.getItem(permissionModalStorageKey)) !== true
+  const isUndetermined = status === messaging.AuthorizationStatus.NOT_DETERMINED || modalNeverTriggered
 
   return isAuthorized ? 'authorized' : isUndetermined ? 'not_determined' : 'denied'
 }
