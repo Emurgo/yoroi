@@ -26,12 +26,6 @@
           "deploymentTarget": "14.0"
         }
       }
-    },
-    "android": {
-      "notification": {
-        "icon": "./src/assets/img/notification-icon-96x96.png",
-        "color": "#FFFFFF"
-      }
     }
   }
 }
