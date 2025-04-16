@@ -26,6 +26,12 @@
           "deploymentTarget": "14.0"
         }
       }
+    },
+    "android": {
+      "notification": {
+        "icon": "./assets/img/yoroi-notification-icon-256.png",
+        "color": "#FFFFFF"
+      }
     }
   }
 }
