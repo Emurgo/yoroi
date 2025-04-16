@@ -2,6 +2,10 @@ import messaging from '@react-native-firebase/messaging'
 import {PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
+import {uiStorage} from './storage'
+
+const permissionModalStorageKey = 'triggerredNotificationsPermissionModal'
+
 export const triggerNotificationsPermissionModal = async () => {
   // Triggers iOS permission request
   Notifications.registerRemoteNotifications({})
@@ -10,9 +14,16 @@ export const triggerNotificationsPermissionModal = async () => {
   if (Platform.OS === 'android') {
     await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
   }
+
+  await uiStorage.setItem(permissionModalStorageKey, true)
 }
 
-export const hasAuthorizedNotifications = async () => {
-  const status = await messaging().requestPermission()
-  return status === messaging.AuthorizationStatus.AUTHORIZED
+export const getNotificationsAuthorizationStatus = async () => {
+  const status = await messaging().hasPermission()
+  const isAuthorized = status === messaging.AuthorizationStatus.AUTHORIZED
+  const isUndetermined =
+    status === messaging.AuthorizationStatus.NOT_DETERMINED ||
+    (await uiStorage.getItem(permissionModalStorageKey)) !== true
+
+  return isAuthorized ? 'authorized' : isUndetermined ? 'not_determined' : 'denied'
 }
