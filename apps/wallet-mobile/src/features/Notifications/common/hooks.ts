@@ -7,17 +7,19 @@ import {Notifications} from 'react-native-notifications'
 
 import {logger} from '../../../kernel/logger/logger'
 import {pushNotificationsManager} from './notification-manager'
-import {generateNotificationId, parseNotificationId} from './notifications'
+import {parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
+import {triggerNotificationAction} from './tools'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
-const initPushNotifications = (manager: YoroiNotifications.Manager) => {
+const initPushNotifications = () => {
   const unsubscribeFromForegroundMessage = messaging().onMessage((remoteMessage) => {
     const {notification} = remoteMessage
 
     if (notification && isString(notification.title) && isString(notification.body)) {
       const pushNotification = createPushNotification({
+        id: remoteMessage.sentTime ?? 0,
         title: notification.title,
         description: notification.body,
         data: remoteMessage.data,
@@ -30,9 +32,9 @@ const initPushNotifications = (manager: YoroiNotifications.Manager) => {
 
   const notificationOpenedSubscription = Notifications.events().registerNotificationOpened(
     (notification, completion) => {
-      const payloadId = notification.identifier || notification.payload.id
+      const payloadId = notification.payload['google.sent_time']
       const id = parseNotificationId(payloadId)
-      manager.events.markAsRead(id)
+      triggerNotificationAction(pushNotificationsManager, id)
       completion()
     },
   )
@@ -58,7 +60,7 @@ type UseInitNotificationsProps = {
 export const useInitNotifications = ({localEnabled, pushEnabled}: UseInitNotificationsProps) => {
   const manager = useNotificationManager()
   React.useEffect(() => (localEnabled ? initLocalNotifications(manager) : undefined), [localEnabled, manager])
-  React.useEffect(() => (pushEnabled ? initPushNotifications(manager) : undefined), [pushEnabled, manager])
+  React.useEffect(() => (pushEnabled ? initPushNotifications() : undefined), [pushEnabled, manager])
   useTransactionReceivedNotifications({enabled: localEnabled})
   usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
   useRewardsUpdatedNotifications({enabled: localEnabled})
@@ -70,6 +72,7 @@ messaging().setBackgroundMessageHandler((remoteMessage) => {
     // Automatically shown by the OS
     pushNotificationsManager.events.push(
       createPushNotification({
+        id: remoteMessage.sentTime ?? 0,
         title: remoteNotification.title,
         description: remoteNotification.body,
         data: remoteMessage.data,
@@ -83,11 +86,12 @@ messaging().setBackgroundMessageHandler((remoteMessage) => {
 const createPushNotification = (options: {
   title: string
   description: string
+  id: number
   data?: Record<string, unknown>
 }): NotificationTypes.PushEvent => {
-  const {title, description, data} = options
+  const {title, description, data, id} = options
   return {
-    id: generateNotificationId(),
+    id,
     date: new Date().toISOString(),
     isRead: false,
     trigger: NotificationTypes.Trigger.Push,
