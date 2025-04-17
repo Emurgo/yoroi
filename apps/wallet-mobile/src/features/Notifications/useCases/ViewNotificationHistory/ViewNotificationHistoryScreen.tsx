@@ -14,6 +14,7 @@ import {Text} from '../../../../components/Text'
 import {useLanguage} from '../../../../kernel/i18n'
 import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {triggerNotificationAction} from '../../common/tools'
 import {
   getTransactionReceivedNotificationIcon,
   getTransactionReceivedNotificationTitle,
@@ -33,8 +34,8 @@ export const ViewNotificationHistoryScreen = () => {
     refetch()
   }
 
-  const handleMarkNotificationAsRead = async (id: number) => {
-    await manager.events.markAsRead(id)
+  const handlePressNotification = async (id: number) => {
+    await triggerNotificationAction(manager, id)
     refetch()
   }
 
@@ -56,7 +57,7 @@ export const ViewNotificationHistoryScreen = () => {
             <NotificationItem
               key={notification.id}
               event={notification}
-              onPress={() => handleMarkNotificationAsRead(notification.id)}
+              onPress={() => handlePressNotification(notification.id)}
             />
           ))}
         </View>

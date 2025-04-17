@@ -1,5 +1,7 @@
 import messaging from '@react-native-firebase/messaging'
-import {PermissionsAndroid, Platform} from 'react-native'
+import {isRecord, isString} from '@yoroi/common'
+import {Notifications as YoroiNotifications} from '@yoroi/types'
+import {Linking, PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
 import {uiStorage} from './storage'
@@ -35,4 +37,19 @@ export const getNotificationsAuthorizationStatus = async () => {
   }
 
   return 'denied'
+}
+
+export const triggerNotificationAction = async (manager: YoroiNotifications.Manager, id: number) => {
+  const allEvents = await manager.events.read()
+  const event = allEvents.find((e) => e.id === id)
+  if (!event) return
+
+  await manager.events.markAsRead(id)
+
+  if (event.trigger === YoroiNotifications.Trigger.Push && isRecord(event.metadata.data)) {
+    const {data} = event.metadata
+    if (isString(data.action) && data.action === 'open_url' && isString(data.url)) {
+      await Linking.openURL(data.url)
+    }
+  }
 }
