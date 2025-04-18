@@ -1,5 +1,5 @@
 import messaging from '@react-native-firebase/messaging'
-import {isRecord, isString} from '@yoroi/common'
+import {isNumber, isRecord, isString} from '@yoroi/common'
 import {Notifications as YoroiNotifications} from '@yoroi/types'
 import {Linking, PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
@@ -40,29 +40,18 @@ export const getNotificationsAuthorizationStatus = async () => {
   return 'denied'
 }
 
-export const triggerNotificationAction = async (
-  manager: YoroiNotifications.Manager,
-  id: number,
-  walletNavigation: WalletNavigation,
-) => {
+export const triggerNotificationAction = async (options: {
+  manager: YoroiNotifications.Manager
+  id: number
+  walletNavigation: WalletNavigation
+  source: 'os' | 'app'
+}) => {
+  const {manager, id, walletNavigation, source} = options
   const allEvents = await manager.events.read()
   const event = allEvents.find((e) => e.id === id)
   if (!event) return
 
   await manager.events.markAsRead(id)
-
-  // TODO: REMOVE
-  Object.assign(event, {
-    trigger: YoroiNotifications.Trigger.Push,
-    metadata: {
-      data: {
-        action: 'open_screen',
-        screen: 'discover',
-      },
-    },
-  })
-
-  console.log('event', event)
 
   if (event.trigger === YoroiNotifications.Trigger.Push && isRecord(event.metadata.data)) {
     const {data} = event.metadata
@@ -70,12 +59,53 @@ export const triggerNotificationAction = async (
       await Linking.openURL(data.url)
     }
 
-    if (isString(data.action) && data.action === 'open_screen' && isString(data.screen)) {
-      const {screen} = data
-      if (screen === 'discover') {
-        console.log('navigate')
-        walletNavigation.navigateToDiscoverBrowserDapp()
+    if (isString(data.action) && data.action === 'open_screen') {
+      if (source === 'os') {
+        await uiStorage.setItem('triggerNotificationInternalNavigationAction', event.id)
+      } else {
+        handleInternalNavigation(event, walletNavigation, false)
       }
+    }
+  }
+}
+
+export const clearNotificationInternalNavigationAction = async () => {
+  await uiStorage.removeItem('triggerNotificationInternalNavigationAction')
+}
+
+export const shouldHandleNotificationInternalNavigationAction = async () => {
+  const id = await uiStorage.getItem('triggerNotificationInternalNavigationAction')
+  return isNumber(id)
+}
+
+export const handleNotificationInternalNavigationAction = async (
+  manager: YoroiNotifications.Manager,
+  walletNavigation: WalletNavigation,
+) => {
+  const id = await uiStorage.getItem('triggerNotificationInternalNavigationAction')
+  if (!isNumber(id)) return
+  await clearNotificationInternalNavigationAction()
+  const allEvents = await manager.events.read()
+  const event = allEvents.find((e) => e.id === id)
+  if (!event) return
+
+  if (event.trigger !== YoroiNotifications.Trigger.Push) return
+  handleInternalNavigation(event, walletNavigation, true)
+}
+
+const handleInternalNavigation = (
+  event: YoroiNotifications.PushEvent,
+  walletNavigation: WalletNavigation,
+  pushNotificationHistory: boolean,
+) => {
+  if (!isRecord(event.metadata.data)) return
+
+  const {data} = event.metadata
+  if (isString(data.action) && data.action === 'open_screen' && isString(data.screen)) {
+    const {screen} = data
+    if (screen === 'discover') {
+      if (pushNotificationHistory) walletNavigation.navigateToNotifications()
+      walletNavigation.navigateToDiscoverBrowserDapp()
     }
   }
 }

@@ -37,7 +37,7 @@ export const ViewNotificationHistoryScreen = () => {
   }
 
   const handlePressNotification = async (id: number) => {
-    await triggerNotificationAction(manager, id, walletNavigation)
+    await triggerNotificationAction({manager, id, walletNavigation, source: 'app'})
     refetch()
   }
 

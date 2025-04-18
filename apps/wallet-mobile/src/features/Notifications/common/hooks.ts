@@ -35,7 +35,7 @@ const initPushNotifications = (walletNavigation: WalletNavigation) => {
     (notification, completion) => {
       const payloadId = notification.payload['google.sent_time']
       const id = parseNotificationId(payloadId)
-      triggerNotificationAction(pushNotificationsManager, id, walletNavigation)
+      triggerNotificationAction({manager: pushNotificationsManager, id, walletNavigation, source: 'os'})
       completion()
     },
   )

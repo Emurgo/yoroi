@@ -14,6 +14,11 @@ import {features} from '../../../../kernel/features'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet'
+import {pushNotificationsManager} from '../../../Notifications/common/notification-manager'
+import {
+  handleNotificationInternalNavigationAction,
+  shouldHandleNotificationInternalNavigationAction,
+} from '../../../Notifications/common/tools'
 import {useWalletMetas} from '../../common/hooks/useWalletMetas'
 import {useStrings} from '../../common/useStrings'
 import {useWalletManager} from '../../context/WalletManagerProvider'
@@ -23,6 +28,7 @@ import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
   useLinksRequestWallet()
+  const walletNavigation = useWalletNavigation()
   const {styles, colors} = useStyles()
   const {walletManager} = useWalletManager()
   const {navigateToTxHistory} = useWalletNavigation()
@@ -38,11 +44,15 @@ export const SelectWalletFromList = () => {
   )
 
   const handleOnSelect = React.useCallback(
-    (walletMeta: Wallet.Meta) => {
+    async (walletMeta: Wallet.Meta) => {
       walletManager.setSelectedWalletId(walletMeta.id)
+      if (await shouldHandleNotificationInternalNavigationAction()) {
+        await handleNotificationInternalNavigationAction(pushNotificationsManager, walletNavigation)
+        return
+      }
       navigateToTxHistory()
     },
-    [walletManager, navigateToTxHistory],
+    [walletManager, navigateToTxHistory, walletNavigation],
   )
 
   const data = React.useMemo(
