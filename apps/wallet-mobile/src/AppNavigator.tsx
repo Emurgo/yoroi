@@ -55,7 +55,6 @@ const changeNavigationBarColor = (colorScheme: 'default-dark' | 'default-light',
 }
 
 export const AppNavigator = () => {
-  useInitNotifications({localEnabled: true, pushEnabled: true})
   useDeepLinkWatcher()
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
@@ -118,6 +117,8 @@ export const AppNavigator = () => {
       onReady={onReady}
       ref={navRef}
     >
+      <NotificationContainer />
+
       <ModalProvider>
         <Stack.Navigator
           screenOptions={{
@@ -237,6 +238,11 @@ export const AppNavigator = () => {
       <NotificationUIHandler />
     </NavigationContainer>
   )
+}
+
+const NotificationContainer = () => {
+  useInitNotifications({localEnabled: true, pushEnabled: true})
+  return null
 }
 
 const CreatePinScreenWrapper = () => {

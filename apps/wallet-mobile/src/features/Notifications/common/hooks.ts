@@ -6,6 +6,7 @@ import React from 'react'
 import {Notifications} from 'react-native-notifications'
 
 import {logger} from '../../../kernel/logger/logger'
+import {useWalletNavigation, WalletNavigation} from '../../../kernel/navigation'
 import {pushNotificationsManager} from './notification-manager'
 import {parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
@@ -13,7 +14,7 @@ import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 import {triggerNotificationAction} from './tools'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
-const initPushNotifications = () => {
+const initPushNotifications = (walletNavigation: WalletNavigation) => {
   const unsubscribeFromForegroundMessage = messaging().onMessage((remoteMessage) => {
     const {notification} = remoteMessage
 
@@ -34,7 +35,7 @@ const initPushNotifications = () => {
     (notification, completion) => {
       const payloadId = notification.payload['google.sent_time']
       const id = parseNotificationId(payloadId)
-      triggerNotificationAction(pushNotificationsManager, id)
+      triggerNotificationAction(pushNotificationsManager, id, walletNavigation)
       completion()
     },
   )
@@ -59,8 +60,12 @@ type UseInitNotificationsProps = {
 
 export const useInitNotifications = ({localEnabled, pushEnabled}: UseInitNotificationsProps) => {
   const manager = useNotificationManager()
+  const walletNavigation = useWalletNavigation()
   React.useEffect(() => (localEnabled ? initLocalNotifications(manager) : undefined), [localEnabled, manager])
-  React.useEffect(() => (pushEnabled ? initPushNotifications() : undefined), [pushEnabled, manager])
+  React.useEffect(
+    () => (pushEnabled ? initPushNotifications(walletNavigation) : undefined),
+    [walletNavigation, pushEnabled, manager],
+  )
   useTransactionReceivedNotifications({enabled: localEnabled})
   usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
   useRewardsUpdatedNotifications({enabled: localEnabled})

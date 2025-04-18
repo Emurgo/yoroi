@@ -12,6 +12,7 @@ import {Button, ButtonType} from '../../../../components/Button/Button'
 import {ScrollView} from '../../../../components/ScrollView/ScrollView'
 import {Text} from '../../../../components/Text'
 import {useLanguage} from '../../../../kernel/i18n'
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {triggerNotificationAction} from '../../common/tools'
@@ -28,6 +29,7 @@ export const ViewNotificationHistoryScreen = () => {
   const strings = useStrings()
   const {data: walletNotifications, refetch} = useWalletNotifications()
   const manager = useNotificationManager()
+  const walletNavigation = useWalletNavigation()
 
   const handleMarkAllAsRead = async () => {
     await manager.events.markAllAsRead()
@@ -35,7 +37,7 @@ export const ViewNotificationHistoryScreen = () => {
   }
 
   const handlePressNotification = async (id: number) => {
-    await triggerNotificationAction(manager, id)
+    await triggerNotificationAction(manager, id, walletNavigation)
     refetch()
   }
 

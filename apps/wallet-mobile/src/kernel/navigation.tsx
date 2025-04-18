@@ -670,6 +670,8 @@ export const useWalletNavigation = () => {
   } as const).current
 }
 
+export type WalletNavigation = ReturnType<typeof useWalletNavigation>
+
 export const shouldShowTabBarForRoutes = (state: NavigationState) => {
   const routes = getFocusedRouteName(state)
 
