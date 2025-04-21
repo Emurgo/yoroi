@@ -396,7 +396,8 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
 
       case SwapAction.ResetForm:
-        return defaultState
+        draft = defaultState
+        break
 
       case SwapAction.EstimateResponse:
         draft.lastInputTouched = state.lastInputTouched
