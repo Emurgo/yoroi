@@ -6,6 +6,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
+import {Outline} from '../../../../components/Outline'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {isEmptyString} from '../../../../kernel/utils'
 import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
@@ -56,14 +57,14 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   }
 
   return (
-    <View
-      style={[
-        styles.container,
-        direction === 'out' && styles.background,
-        isFocused && styles.active,
-        !isEmptyString(error) && styles.borderError,
-      ]}
-    >
+    <View style={[styles.container, direction === 'out' && styles.background]}>
+      <Outline
+        isFocused={isFocused}
+        color={!isEmptyString(error) ? colors.error : colors.border}
+        activeColor={!isEmptyString(error) ? colors.error : colors.gray}
+        style={styles.outline}
+      />
+
       <View style={styles.between}>
         <Text style={styles.label}>{direction === 'in' ? strings.from : strings.to}</Text>
 
@@ -158,10 +159,11 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    outline: {
+      borderRadius: 8,
+    },
     container: {
       borderRadius: 8,
-      borderColor: color.bg_color_min,
-      ...atoms.border,
       ...atoms.p_lg,
       ...atoms.gap_lg,
     },
@@ -171,12 +173,6 @@ const useStyles = () => {
     between: {
       ...atoms.flex_row,
       ...atoms.justify_between,
-    },
-    borderError: {
-      borderColor: color.sys_magenta_500,
-    },
-    active: {
-      borderColor: color.gray_900,
     },
     label: {
       ...atoms.body_2_md_medium,
@@ -226,6 +222,7 @@ const useStyles = () => {
     focused: color.input_selected,
     blur: color.black_static,
     noSelected: color.gray_400,
+    border: color.bg_color_min,
     gray: color.gray_max,
     error: color.sys_magenta_500,
   }
