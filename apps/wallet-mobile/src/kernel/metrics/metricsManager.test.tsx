@@ -163,6 +163,20 @@ const mockAmpli = {
   inAppNotificationClosed: jest.fn(),
   inAppNotificationViewed: jest.fn(),
   settingsInAppNotificationsStatusUpdated: jest.fn(),
+
+  buyAdaSuccessRedirect: jest.fn(),
+  claimAdaTransactionSettled: jest.fn(),
+  dappPopupSignTransactionSubmitted: jest.fn(),
+  onboardingAnalyticsPageViewed: jest.fn(),
+  sellAdaInputAmount: jest.fn(),
+  sellAdaSuccessRedirect: jest.fn(),
+  walletPageExchangeBottomSheetClicked: jest.fn(),
+
+  notificationCenterPageViewed: jest.fn(),
+  pushNotificationPressed: jest.fn(),
+  pushNotificationViewed: jest.fn(),
+  settingInAppNotificationTimerUpdated: jest.fn(),
+  settingsPushNotificationsStatusUpdated: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
@@ -208,6 +222,9 @@ describe('makeMetricsManager', () => {
   test('track should call the appropriate metricsModule methods', () => {
     const metricsManager = makeMetricsManager(mockMetricsStorage, mockAmpli)
     const mockSendPayload = {asset_count: 10, nfts: [], tokens: []}
+
+    metricsManager.track.allWalletsPageViewed()
+    metricsManager.track.assetsPageViewed()
 
     metricsManager.track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
     metricsManager.track.nftGalleryPageViewed({nft_count: 10})
@@ -347,6 +364,23 @@ describe('makeMetricsManager', () => {
     metricsManager.track.inAppNotificationClosed({type: 'tx_received'})
     metricsManager.track.inAppNotificationViewed()
     metricsManager.track.settingsInAppNotificationsStatusUpdated({status: 'disabled'})
+
+    metricsManager.track.buyAdaSuccessRedirect()
+    metricsManager.track.claimAdaTransactionSettled()
+    metricsManager.track.dappPopupSignTransactionSubmitted()
+    metricsManager.track.onboardingAnalyticsPageViewed()
+    metricsManager.track.sellAdaInputAmount()
+    metricsManager.track.sellAdaSuccessRedirect()
+    metricsManager.track.walletPageExchangeBottomSheetClicked()
+
+    metricsManager.track.notificationCenterPageViewed({tab: 'activity'})
+    metricsManager.track.pushNotificationPressed()
+    metricsManager.track.pushNotificationViewed()
+    metricsManager.track.settingInAppNotificationTimerUpdated({duration: 5})
+    metricsManager.track.settingsPushNotificationsStatusUpdated({is_enabled: 'enabled'})
+
+    expect(mockAmpli.allWalletsPageViewed).toHaveBeenCalledWith()
+    expect(mockAmpli.assetsPageViewed).toHaveBeenCalledWith()
 
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
@@ -492,6 +526,20 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.inAppNotificationClosed).toHaveBeenCalledWith({type: 'tx_received'})
     expect(mockAmpli.inAppNotificationViewed).toHaveBeenCalled()
     expect(mockAmpli.settingsInAppNotificationsStatusUpdated).toHaveBeenCalledWith({status: 'disabled'})
+
+    expect(mockAmpli.buyAdaSuccessRedirect).toHaveBeenCalled()
+    expect(mockAmpli.claimAdaTransactionSettled).toHaveBeenCalled()
+    expect(mockAmpli.dappPopupSignTransactionSubmitted).toHaveBeenCalled()
+    expect(mockAmpli.onboardingAnalyticsPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.sellAdaInputAmount).toHaveBeenCalled()
+    expect(mockAmpli.sellAdaSuccessRedirect).toHaveBeenCalled()
+    expect(mockAmpli.walletPageExchangeBottomSheetClicked).toHaveBeenCalled()
+
+    expect(mockAmpli.notificationCenterPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.pushNotificationPressed).toHaveBeenCalled()
+    expect(mockAmpli.pushNotificationViewed).toHaveBeenCalled()
+    expect(mockAmpli.settingInAppNotificationTimerUpdated).toHaveBeenCalled()
+    expect(mockAmpli.settingsPushNotificationsStatusUpdated).toHaveBeenCalled()
   })
 
   test('enable should set metrics enabled to true', async () => {

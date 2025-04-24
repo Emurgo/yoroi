@@ -12,6 +12,7 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {Boundary} from '../../components/Boundary/Boundary'
 import {unstoppableApiKey} from '../../kernel/env'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes} from '../../kernel/navigation'
 import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '../Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
@@ -47,11 +48,21 @@ import {TxHistory} from './useCases/TxHistory/TxHistory'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
+  const {track} = useMetrics()
+
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const storage = useAsyncStorage()
   const {atoms, color} = useTheme()
   const manager = useGovernanceManagerMaker()
+
+  const trackNotificationCenter = React.useCallback(() => {
+    return {
+      focus: () => {
+        track.notificationCenterPageViewed({tab: 'all'})
+      },
+    }
+  }, [track])
 
   // resolver
   const resolverManager = React.useMemo(() => {
@@ -377,6 +388,7 @@ export const TxHistoryNavigator = () => {
                   name="notification-center-history"
                   component={ViewNotificationHistoryScreen}
                   options={{title: strings.notificationsTitle}}
+                  listeners={trackNotificationCenter}
                 />
 
                 <Stack.Screen //
