@@ -53,6 +53,7 @@ export const ManageNotificationSettings = () => {
 }
 
 export function useNotificationPermission() {
+  const {track} = useMetrics()
   const [permission, setPermission] = React.useState<'authorized' | 'not_determined' | 'denied'>('not_determined')
 
   React.useEffect(() => {
@@ -79,15 +80,10 @@ export function useNotificationPermission() {
       await navigateToAppSettings()
     }
 
-    setPermission(await getNotificationsAuthorizationStatus())
-  }
-
-  const navigateToAppSettings = async () => {
-    if (Platform.OS === 'ios') {
-      await Linking.openURL('app-settings:')
-    } else {
-      await Linking.openSettings()
-    }
+    const currentStatus = await getNotificationsAuthorizationStatus()
+    const nextStatus = currentStatus === 'authorized' ? 'denied' : 'authorized'
+    track.settingsPushNotificationsStatusUpdated({is_enabled: nextStatus === 'authorized' ? 'enabled' : 'disabled'})
+    setPermission(nextStatus)
   }
 
   return {permission, togglePermissions}
@@ -114,7 +110,7 @@ const PushNotificationSettingsItem = () => {
       <Button
         style={styles.enableSettingButton}
         title={strings.goToSettings}
-        onPress={togglePermissions}
+        onPress={navigateToAppSettings}
         type={ButtonType.Text}
       />
     </View>
@@ -164,4 +160,12 @@ const useStyles = () => {
     },
   })
   return {styles} as const
+}
+
+const navigateToAppSettings = async () => {
+  if (Platform.OS === 'ios') {
+    await Linking.openURL('app-settings:')
+  } else {
+    await Linking.openSettings()
+  }
 }

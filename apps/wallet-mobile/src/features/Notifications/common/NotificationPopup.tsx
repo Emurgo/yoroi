@@ -26,8 +26,12 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
   const {track} = useMetrics()
 
   React.useEffect(() => {
-    track.inAppNotificationViewed()
-  }, [track])
+    if (event.trigger === Notifications.Trigger.Push) {
+      track.pushNotificationViewed()
+    } else {
+      track.inAppNotificationViewed()
+    }
+  }, [event.trigger, track])
 
   const handleOnSwipeOut = () => {
     onCancel()
@@ -43,6 +47,10 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
 
   const handleOnPress = () => {
     onPress()
+
+    if (event.trigger === Notifications.Trigger.Push) {
+      track.pushNotificationPressed()
+    }
 
     if (event.trigger === Notifications.Trigger.TransactionReceived) {
       track.inAppNotificationOpened({type: 'tx_received'})
