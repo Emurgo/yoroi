@@ -103,9 +103,23 @@ const handleInternalNavigation = (
   const {data} = event.metadata
   if (isString(data.action) && data.action === 'open_screen' && isString(data.screen)) {
     const {screen} = data
-    if (screen === 'discover') {
-      if (pushNotificationHistory) walletNavigation.navigateToNotifications()
-      walletNavigation.navigateToDiscoverBrowserDapp()
+    switch (screen) {
+      case 'wallet':
+        walletNavigation.resetToTxHistory()
+        break
+      case 'staking_center':
+        walletNavigation.navigateToStakingDashboard()
+        break
+      case 'swap':
+        // needs refactor branch
+        break
+      case 'governance':
+        walletNavigation.navigateToGovernanceCentre()
+        break
+      case 'discover':
+        if (pushNotificationHistory) walletNavigation.navigateToNotifications()
+        walletNavigation.navigateToDiscoverBrowserDapp()
+        break
     }
   }
 }
