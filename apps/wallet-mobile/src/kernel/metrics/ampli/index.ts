@@ -8,7 +8,7 @@
  * To update run 'ampli pull mobile'
  *
  * Required dependencies: @amplitude/analytics-react-native@^0.4.0, @react-native-async-storage/async-storage@^1.17.9
- * Tracking Plan Version: 8
+ * Tracking Plan Version: 9
  * Build: 1.0.0
  * Runtime: react-native:typescript-ampli-v2
  *
@@ -38,10 +38,10 @@ export const ApiKey: Record<Environment, string> = {
  */
 export const DefaultConfiguration: ReactNativeOptions = {
   plan: {
-    version: '8',
+    version: '9',
     branch: 'main',
     source: 'mobile',
-    versionId: 'cffa4fa2-03a3-4eda-9943-1feccac54d56',
+    versionId: 'da8f83fd-b750-436e-abd1-f46bc2ca4962',
   },
   ...{
     ingestionMetadata: {
@@ -235,6 +235,15 @@ export interface NftGallerySearchActivatedProperties {
    * What user is looking to search on NFT gallery page
    */
   nft_search_term: string
+}
+
+export interface NotificationCenterPageViewedProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | all, activity, news |
+   */
+  tab: 'all' | 'activity' | 'news'
 }
 
 export interface PortfolioTokenDetailsProperties {
@@ -489,6 +498,15 @@ export interface SendSummarySubmittedProperties {
   tokens?: any[]
 }
 
+export interface SettingInAppNotificationTimerUpdatedProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  duration: number
+}
+
 export interface SettingsInAppNotificationsStatusUpdatedProperties {
   /**
    * | Rule | Value |
@@ -496,6 +514,15 @@ export interface SettingsInAppNotificationsStatusUpdatedProperties {
    * | Enum Values | enabled, disabled |
    */
   status?: 'enabled' | 'disabled'
+}
+
+export interface SettingsPushNotificationsStatusUpdatedProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | enabled, disabled |
+   */
+  is_enabled: 'enabled' | 'disabled'
 }
 
 export interface StakingCenterDelegationSubmittedProperties {
@@ -1184,6 +1211,14 @@ export class NftGallerySearchActivated implements BaseEvent {
   }
 }
 
+export class NotificationCenterPageViewed implements BaseEvent {
+  event_type = 'Notification Center Page Viewed'
+
+  constructor(public event_properties: NotificationCenterPageViewedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
 export class OnboardingAnalyticsPageViewed implements BaseEvent {
   event_type = 'Onboarding Analytics Page Viewed'
 }
@@ -1226,6 +1261,14 @@ export class PortfolioTokensListSearchActivated implements BaseEvent {
   constructor(public event_properties: PortfolioTokensListSearchActivatedProperties) {
     this.event_properties = event_properties
   }
+}
+
+export class PushNotificationPressed implements BaseEvent {
+  event_type = 'Push Notification Pressed'
+}
+
+export class PushNotificationViewed implements BaseEvent {
+  event_type = 'Push Notification Viewed'
 }
 
 export class ReceiveAmountGeneratedPageViewed implements BaseEvent {
@@ -1340,6 +1383,14 @@ export class SendSummarySubmitted implements BaseEvent {
   }
 }
 
+export class SettingInAppNotificationTimerUpdated implements BaseEvent {
+  event_type = 'Setting In App Notification Timer Updated'
+
+  constructor(public event_properties: SettingInAppNotificationTimerUpdatedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
 export class SettingsInAppNotificationsStatusUpdated implements BaseEvent {
   event_type = 'Settings In App Notifications Status Updated'
 
@@ -1350,6 +1401,14 @@ export class SettingsInAppNotificationsStatusUpdated implements BaseEvent {
 
 export class SettingsPageViewed implements BaseEvent {
   event_type = 'Settings Page Viewed'
+}
+
+export class SettingsPushNotificationsStatusUpdated implements BaseEvent {
+  event_type = 'Settings Push Notifications Status Updated'
+
+  constructor(public event_properties: SettingsPushNotificationsStatusUpdatedProperties) {
+    this.event_properties = event_properties
+  }
 }
 
 export class StakingCenterDelegationInitiated implements BaseEvent {
@@ -1595,7 +1654,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Assets%20Page%20Viewed)
    *
-   * This event tracks when a user views the Assets page.
+   * This event tracks when a user views the Assets page. 
    *  On mobile  is available on the wallet page (First item from main menu) in the assets tab.
    *
    * @param options Amplitude event options.
@@ -1827,11 +1886,11 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Select%20Method%20Page%20Viewed)
    *
-   * This event tracks when a user views the page where they can select the method to create a wallet:
+   * This event tracks when a user views the page where they can select the method to create a wallet: 
    *
-   * \* Create new wallet
+   * \* Create new wallet 
    *
-   * \* Restore existing wallet
+   * \* Restore existing wallet 
    *
    * This event tracks when a user views the page where they can select the method to create a wallet\* Connect hardware wallet
    *
@@ -2328,7 +2387,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Menu%20Page%20Viewed)
    *
-   * This event is triggered when a user views the menu page within the application. Only available on Mobile.
+   * This event is triggered when a user views the menu page within the application. Only available on Mobile. 
    *  The menu page is accesible via the bottom navigation page (last item on the right)
    *
    * @param options Amplitude event options.
@@ -2435,6 +2494,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new NftGallerySearchActivated(properties), options);
+  }
+
+  /**
+   * Notification Center Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Notification%20Center%20Page%20Viewed)
+   *
+   * **This event tracks when the user access the notification center. The event is triggered again when user changes tabs.**
+   *
+   * @param properties The event's properties (e.g. tab)
+   * @param options Amplitude event options.
+   */
+  notificationCenterPageViewed(
+    properties: NotificationCenterPageViewedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new NotificationCenterPageViewed(properties), options);
   }
 
   /**
@@ -2563,6 +2639,40 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new PortfolioTokensListSearchActivated(properties), options);
+  }
+
+  /**
+   * Push Notification Pressed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Push%20Notification%20Pressed)
+   *
+   * **This event tracks when a user opens a push notification:**
+   *
+   * * **click on extension**
+   *
+   * * **tap on mobile**
+   *
+   * @param options Amplitude event options.
+   */
+  pushNotificationPressed(
+    options?: EventOptions,
+  ) {
+    return this.track(new PushNotificationPressed(), options);
+  }
+
+  /**
+   * Push Notification Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Push%20Notification%20Viewed)
+   *
+   * **This event tracks when a push notification is displayed to the user.**
+   *
+   * @param options Amplitude event options.
+   */
+  pushNotificationViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new PushNotificationViewed(), options);
   }
 
   /**
@@ -2839,9 +2949,9 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Select%20Asset%20Updated)
    *
-   * When an user update the tokens selection on "amount" step:
-   *  \- Add
-   *  \- Remove
+   * When an user update the tokens selection on "amount" step: 
+   *  \- Add 
+   *  \- Remove 
    *  \- Updated
    *
    * @param properties The event's properties (e.g. asset_count)
@@ -2889,6 +2999,23 @@ export class Ampli {
   }
 
   /**
+   * Setting In App Notification Timer Updated
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Setting%20In%20App%20Notification%20Timer%20Updated)
+   *
+   * **This event tracks when the user updates the notification timer setting in yoroi for in app notifications**
+   *
+   * @param properties The event's properties (e.g. duration)
+   * @param options Amplitude event options.
+   */
+  settingInAppNotificationTimerUpdated(
+    properties: SettingInAppNotificationTimerUpdatedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SettingInAppNotificationTimerUpdated(properties), options);
+  }
+
+  /**
    * Settings In App Notifications Status Updated
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Settings%20In%20App%20Notifications%20Status%20Updated)
@@ -2918,6 +3045,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SettingsPageViewed(), options);
+  }
+
+  /**
+   * Settings Push Notifications Status Updated
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Settings%20Push%20Notifications%20Status%20Updated)
+   *
+   * **This event tracks when a user edits the push notification setting by disabling or enabling push notifications by category.**
+   *
+   * @param properties The event's properties (e.g. is_enabled)
+   * @param options Amplitude event options.
+   */
+  settingsPushNotificationsStatusUpdated(
+    properties: SettingsPushNotificationsStatusUpdatedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SettingsPushNotificationsStatusUpdated(properties), options);
   }
 
   /**
