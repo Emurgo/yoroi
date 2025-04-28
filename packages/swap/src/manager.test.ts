@@ -1,4 +1,5 @@
 import {Chain, Swap, Api} from '@yoroi/types'
+import {isLeft} from '@yoroi/common'
 
 import {standarizeError, swapManagerMaker} from './manager'
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
@@ -16,7 +17,6 @@ import {
   primaryTokenInfo,
 } from './adapters/api/dexhunter/api.mocks'
 import {api as msApiMocks} from './adapters/api/muesliswap/api.mocks'
-import {isLeft} from '@yoroi/common'
 
 describe('swapManagerMaker', () => {
   let mockDexhunterApi: jest.Mocked<Swap.Api>
@@ -53,7 +53,7 @@ describe('swapManagerMaker', () => {
     mockDexhunterApi = {
       tokens: jest.fn(),
       orders: jest.fn(),
-      protocols: jest.fn(),
+      limitOptions: jest.fn(),
       estimate: jest.fn(),
       create: jest.fn(),
       cancel: jest.fn(),
@@ -62,7 +62,7 @@ describe('swapManagerMaker', () => {
     mockMuesliswapApi = {
       tokens: jest.fn(),
       orders: jest.fn(),
-      protocols: jest.fn(),
+      limitOptions: jest.fn(),
       estimate: jest.fn(),
       create: jest.fn(),
       cancel: jest.fn(),
@@ -534,6 +534,198 @@ describe('swapManagerMaker', () => {
         expect(result.value.data).toEqual(
           expect.arrayContaining(dhApiMocks.results.orders),
         )
+      }
+    })
+  })
+
+  describe('limitOptions()', () => {
+    it('merges both aggregator limit options when both are right', async () => {
+      const dhData = {
+        defaultProtocol: 'dexhunter',
+        wantedPrice: 1.5,
+        options: [
+          {
+            protocol: 'dexhunter',
+            limit: 50,
+            offset: 0,
+          },
+        ],
+      }
+
+      const msData = {
+        defaultProtocol: 'muesliswap',
+        wantedPrice: 1.2,
+        options: [
+          {
+            protocol: 'muesliswap',
+            limit: 30,
+            offset: 0,
+          },
+        ],
+      }
+
+      mockDexhunterApi.limitOptions.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: dhData,
+        },
+      })
+
+      mockMuesliswapApi.limitOptions.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: msData,
+        },
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      const result = await manager.api.limitOptions({})
+
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data.defaultProtocol).toBe('dexhunter')
+        expect(result.value.data.wantedPrice).toBe(1.2) // min of 1.5 and 1.2
+        expect(result.value.data.options).toEqual([
+          {protocol: 'dexhunter', limit: 50, offset: 0},
+          {protocol: 'muesliswap', limit: 30, offset: 0},
+        ])
+      }
+    })
+
+    it('returns left if both are left', async () => {
+      mockDexhunterApi.limitOptions.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: 400,
+          message: 'dh limit options error',
+          responseData: {},
+        },
+      })
+      mockMuesliswapApi.limitOptions.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: 400,
+          message: 'ms limit options error',
+          responseData: {},
+        },
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      const result = await manager.api.limitOptions({})
+
+      expect(result.tag).toBe('left')
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('dh limit options error')
+        expect(result.error.status).toBe(400)
+      }
+    })
+
+    it('returns muesliswap options if dexhunter api result is left', async () => {
+      const msData = {
+        defaultProtocol: 'muesliswap',
+        wantedPrice: 1.2,
+        options: [
+          {
+            protocol: 'muesliswap',
+            limit: 30,
+            offset: 0,
+          },
+        ],
+      }
+
+      mockDexhunterApi.limitOptions.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: 400,
+          message: 'dh limit options error',
+          responseData: {},
+        },
+      })
+
+      mockMuesliswapApi.limitOptions.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: msData,
+        },
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      const result = await manager.api.limitOptions({})
+
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data).toEqual(msData)
+      }
+    })
+
+    it('returns dexhunter options if muesliswap api result is left', async () => {
+      const dhData = {
+        defaultProtocol: 'dexhunter',
+        wantedPrice: 1.5,
+        options: [
+          {
+            protocol: 'dexhunter',
+            limit: 50,
+            offset: 0,
+          },
+        ],
+      }
+
+      mockDexhunterApi.limitOptions.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: dhData,
+        },
+      })
+
+      mockMuesliswapApi.limitOptions.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: 400,
+          message: 'ms limit options error',
+          responseData: {},
+        },
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      const result = await manager.api.limitOptions({})
+
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data).toEqual(dhData)
+      }
+    })
+
+    it('returns invalid if all responses are excluded', async () => {
+      mockDexhunterApi.limitOptions.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: -3,
+          message: 'Aggregator excluded from call',
+          responseData: {},
+        },
+      })
+
+      mockMuesliswapApi.limitOptions.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: -3,
+          message: 'Aggregator excluded from call',
+          responseData: {},
+        },
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      const result = await manager.api.limitOptions({})
+
+      expect(result.tag).toBe('left')
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('Unknown error')
+        expect(result.error.status).toBe(-3)
       }
     })
   })
