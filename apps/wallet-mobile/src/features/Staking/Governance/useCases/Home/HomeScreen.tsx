@@ -105,9 +105,9 @@ const ParticipatingInGovernanceVariant = ({
 
   const actionsTitles = (action: GovernanceVote) =>
     isDelegatingToYoroiDrep
-      ? strings.delegatingToYoroiDRep
+      ? strings.delegateToAYoroiDrep
       : isDelegatingToDrep
-      ? strings.delegatingToADRep
+      ? strings.delegateToADRep
       : action.kind === 'abstain'
       ? strings.actionAbstainTitle
       : strings.actionNoConfidenceTitle
