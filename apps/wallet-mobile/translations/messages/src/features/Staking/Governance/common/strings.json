@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Governance dashboard",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 86,
+      "line": 87,
       "column": 25,
-      "index": 5505
+      "index": 5572
     },
     "end": {
-      "line": 89,
+      "line": 90,
       "column": 3,
-      "index": 5612
+      "index": 5679
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Confirm transaction",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 90,
+      "line": 91,
       "column": 18,
-      "index": 5632
+      "index": 5699
     },
     "end": {
-      "line": 93,
+      "line": 94,
       "column": 3,
-      "index": 5731
+      "index": 5798
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Learn more About Governance",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 94,
+      "line": 95,
       "column": 28,
-      "index": 5761
+      "index": 5828
     },
     "end": {
-      "line": 97,
+      "line": 98,
       "column": 3,
-      "index": 5878
+      "index": 5945
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Delegate to a DRep",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 98,
+      "line": 99,
       "column": 30,
-      "index": 5910
+      "index": 5977
     },
     "end": {
-      "line": 101,
+      "line": 102,
       "column": 3,
-      "index": 6020
+      "index": 6087
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!You are designating someone else to cast vote on your behalf for all proposals now and in the future.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 102,
+      "line": 103,
       "column": 36,
-      "index": 6058
+      "index": 6125
     },
     "end": {
-      "line": 106,
+      "line": 107,
       "column": 3,
-      "index": 6263
+      "index": 6330
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Abstain",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 107,
+      "line": 108,
       "column": 22,
-      "index": 6287
+      "index": 6354
     },
     "end": {
-      "line": 110,
+      "line": 111,
       "column": 3,
-      "index": 6378
+      "index": 6445
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!You are choosing not to cast a vote on all proposals now and in the future.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 111,
+      "line": 112,
       "column": 28,
-      "index": 6408
+      "index": 6475
     },
     "end": {
-      "line": 114,
+      "line": 115,
       "column": 3,
-      "index": 6573
+      "index": 6640
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!No confidence",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 115,
+      "line": 116,
       "column": 27,
-      "index": 6602
+      "index": 6669
     },
     "end": {
-      "line": 118,
+      "line": 119,
       "column": 3,
-      "index": 6704
+      "index": 6771
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!You are expressing a lack of trust for all proposals now and in the future.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 119,
+      "line": 120,
       "column": 33,
-      "index": 6739
+      "index": 6806
     },
     "end": {
-      "line": 122,
+      "line": 123,
       "column": 3,
-      "index": 6909
+      "index": 6976
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!DRep Key",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 123,
+      "line": 124,
       "column": 11,
-      "index": 6922
+      "index": 6989
     },
     "end": {
-      "line": 126,
+      "line": 127,
       "column": 3,
-      "index": 7003
+      "index": 7070
     }
   },
   {
@@ -154,14 +154,29 @@
     "defaultMessage": "!!!Delegating to a DRep",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 127,
+      "line": 128,
       "column": 21,
-      "index": 7026
+      "index": 7093
     },
     "end": {
-      "line": 130,
+      "line": 131,
       "column": 3,
-      "index": 7129
+      "index": 7196
+    }
+  },
+  {
+    "id": "components.governance.delegateToADRep",
+    "defaultMessage": "!!!Delegate to a DRep",
+    "file": "src/features/Staking/Governance/common/strings.ts",
+    "start": {
+      "line": 132,
+      "column": 19,
+      "index": 7217
+    },
+    "end": {
+      "line": 135,
+      "column": 3,
+      "index": 7316
     }
   },
   {
@@ -169,14 +184,14 @@
     "defaultMessage": "!!!Abstaining",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 131,
+      "line": 136,
       "column": 14,
-      "index": 7145
+      "index": 7332
     },
     "end": {
-      "line": 134,
+      "line": 139,
       "column": 3,
-      "index": 7231
+      "index": 7418
     }
   },
   {
@@ -184,14 +199,14 @@
     "defaultMessage": "!!!Delegate voting to",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 135,
+      "line": 140,
       "column": 24,
-      "index": 7257
+      "index": 7444
     },
     "end": {
-      "line": 138,
+      "line": 143,
       "column": 3,
-      "index": 7361
+      "index": 7548
     }
   },
   {
@@ -199,14 +214,14 @@
     "defaultMessage": "!!!Select abstain",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 139,
+      "line": 144,
       "column": 17,
-      "index": 7380
+      "index": 7567
     },
     "end": {
-      "line": 142,
+      "line": 147,
       "column": 3,
-      "index": 7473
+      "index": 7660
     }
   },
   {
@@ -214,14 +229,14 @@
     "defaultMessage": "!!!Select no confidence",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 143,
+      "line": 148,
       "column": 22,
-      "index": 7497
+      "index": 7684
     },
     "end": {
-      "line": 146,
+      "line": 151,
       "column": 3,
-      "index": 7601
+      "index": 7788
     }
   },
   {
@@ -229,14 +244,14 @@
     "defaultMessage": "!!!Operations",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 147,
+      "line": 152,
       "column": 14,
-      "index": 7617
+      "index": 7804
     },
     "end": {
-      "line": 150,
+      "line": 155,
       "column": 3,
-      "index": 7703
+      "index": 7890
     }
   },
   {
@@ -244,14 +259,14 @@
     "defaultMessage": "!!!Enter password to sign this transaction",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 151,
+      "line": 156,
       "column": 17,
-      "index": 7722
+      "index": 7909
     },
     "end": {
-      "line": 154,
+      "line": 159,
       "column": 3,
-      "index": 7840
+      "index": 8027
     }
   },
   {
@@ -259,14 +274,14 @@
     "defaultMessage": "!!!Drep ID (fingerprint)",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 155,
+      "line": 160,
       "column": 10,
-      "index": 7852
+      "index": 8039
     },
     "end": {
-      "line": 158,
+      "line": 163,
       "column": 3,
-      "index": 7945
+      "index": 8132
     }
   },
   {
@@ -274,14 +289,14 @@
     "defaultMessage": "!!!Thank you for participating in Governance",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 159,
+      "line": 164,
       "column": 28,
-      "index": 7975
+      "index": 8162
     },
     "end": {
-      "line": 162,
+      "line": 167,
       "column": 3,
-      "index": 8106
+      "index": 8293
     }
   },
   {
@@ -289,14 +304,14 @@
     "defaultMessage": "!!!This transaction can take a while!",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 163,
+      "line": 168,
       "column": 32,
-      "index": 8140
+      "index": 8327
     },
     "end": {
-      "line": 166,
+      "line": 171,
       "column": 3,
-      "index": 8268
+      "index": 8455
     }
   },
   {
@@ -304,14 +319,14 @@
     "defaultMessage": "!!!Participating in the Cardano Governance gives you the opportunity to participate in the voting as well as withdraw your staking rewards",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 167,
+      "line": 172,
       "column": 25,
-      "index": 8295
+      "index": 8482
     },
     "end": {
-      "line": 171,
+      "line": 176,
       "column": 3,
-      "index": 8523
+      "index": 8710
     }
   },
   {
@@ -319,14 +334,14 @@
     "defaultMessage": "!!!Go to Governance",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 172,
+      "line": 177,
       "column": 18,
-      "index": 8543
+      "index": 8730
     },
     "end": {
-      "line": 175,
+      "line": 180,
       "column": 3,
-      "index": 8639
+      "index": 8826
     }
   },
   {
@@ -334,14 +349,14 @@
     "defaultMessage": "!!!Find a DRep here",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 176,
+      "line": 181,
       "column": 16,
-      "index": 8657
+      "index": 8844
     },
     "end": {
-      "line": 179,
+      "line": 184,
       "column": 3,
-      "index": 8751
+      "index": 8938
     }
   },
   {
@@ -349,14 +364,14 @@
     "defaultMessage": "!!!Review the selections carefully to assign yourself a Governance Status",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 180,
+      "line": 185,
       "column": 17,
-      "index": 8770
+      "index": 8957
     },
     "end": {
-      "line": 183,
+      "line": 188,
       "column": 3,
-      "index": 8919
+      "index": 9106
     }
   },
   {
@@ -364,14 +379,14 @@
     "defaultMessage": "!!!You have selected <b>{action}</b> as your governance status. It may take some time to process your delegation request.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 184,
+      "line": 189,
       "column": 34,
-      "index": 8955
+      "index": 9142
     },
     "end": {
-      "line": 188,
+      "line": 193,
       "column": 3,
-      "index": 9175
+      "index": 9362
     }
   },
   {
@@ -379,14 +394,14 @@
     "defaultMessage": "!!!You have selected <b>{action}</b> as your governance status. You can change it at any time by clicking in the card below.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 189,
+      "line": 194,
       "column": 25,
-      "index": 9202
+      "index": 9389
     },
     "end": {
-      "line": 193,
+      "line": 198,
       "column": 3,
-      "index": 9416
+      "index": 9603
     }
   },
   {
@@ -394,14 +409,14 @@
     "defaultMessage": "!!!Change DRep",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 194,
+      "line": 199,
       "column": 14,
-      "index": 9432
+      "index": 9619
     },
     "end": {
-      "line": 197,
+      "line": 202,
       "column": 3,
-      "index": 9519
+      "index": 9706
     }
   },
   {
@@ -409,14 +424,14 @@
     "defaultMessage": "!!!Confirm",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 198,
+      "line": 203,
       "column": 11,
-      "index": 9532
+      "index": 9719
     },
     "end": {
-      "line": 201,
+      "line": 206,
       "column": 3,
-      "index": 9612
+      "index": 9799
     }
   },
   {
@@ -424,14 +439,14 @@
     "defaultMessage": "!!!Transaction details",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 202,
+      "line": 207,
       "column": 22,
-      "index": 9636
+      "index": 9823
     },
     "end": {
-      "line": 205,
+      "line": 210,
       "column": 3,
-      "index": 9739
+      "index": 9926
     }
   },
   {
@@ -439,14 +454,14 @@
     "defaultMessage": "!!!Total",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 206,
+      "line": 211,
       "column": 9,
-      "index": 9750
+      "index": 9937
     },
     "end": {
-      "line": 209,
+      "line": 214,
       "column": 3,
-      "index": 9826
+      "index": 10013
     }
   },
   {
@@ -454,14 +469,14 @@
     "defaultMessage": "!!!Transaction failed",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 210,
+      "line": 215,
       "column": 21,
-      "index": 9849
+      "index": 10036
     },
     "end": {
-      "line": 213,
+      "line": 218,
       "column": 3,
-      "index": 9950
+      "index": 10137
     }
   },
   {
@@ -469,14 +484,14 @@
     "defaultMessage": "!!!To participate in governance you need to have ADA in your wallet",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 214,
+      "line": 219,
       "column": 11,
-      "index": 9963
+      "index": 10150
     },
     "end": {
-      "line": 217,
+      "line": 222,
       "column": 3,
-      "index": 10100
+      "index": 10287
     }
   },
   {
@@ -484,14 +499,14 @@
     "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 218,
+      "line": 223,
       "column": 32,
-      "index": 10134
+      "index": 10321
     },
     "end": {
-      "line": 221,
+      "line": 226,
       "column": 3,
-      "index": 10301
+      "index": 10488
     }
   },
   {
@@ -499,14 +514,14 @@
     "defaultMessage": "!!!Try again",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 222,
+      "line": 227,
       "column": 12,
-      "index": 10315
+      "index": 10502
     },
     "end": {
-      "line": 225,
+      "line": 230,
       "column": 3,
-      "index": 10398
+      "index": 10585
     }
   },
   {
@@ -514,14 +529,14 @@
     "defaultMessage": "!!!Buy ada",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 226,
+      "line": 231,
       "column": 10,
-      "index": 10410
+      "index": 10597
     },
     "end": {
-      "line": 229,
+      "line": 234,
       "column": 3,
-      "index": 10489
+      "index": 10676
     }
   },
   {
@@ -529,14 +544,14 @@
     "defaultMessage": "!!!Go to tada faucet",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 230,
+      "line": 235,
       "column": 14,
-      "index": 10505
+      "index": 10692
     },
     "end": {
-      "line": 233,
+      "line": 238,
       "column": 3,
-      "index": 10598
+      "index": 10785
     }
   },
   {
@@ -544,14 +559,14 @@
     "defaultMessage": "!!!Withdraw warning",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 234,
+      "line": 239,
       "column": 24,
-      "index": 10624
+      "index": 10811
     },
     "end": {
-      "line": 237,
+      "line": 242,
       "column": 3,
-      "index": 10726
+      "index": 10913
     }
   },
   {
@@ -559,14 +574,14 @@
     "defaultMessage": "!!!To withdraw your rewards, you need to participate in the Cardano Governance. Your rewards will continue to accumulate, but you are only able to withdraw it once you join the Governance process.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 238,
+      "line": 243,
       "column": 30,
-      "index": 10758
+      "index": 10945
     },
     "end": {
-      "line": 242,
+      "line": 247,
       "column": 3,
-      "index": 11049
+      "index": 11236
     }
   },
   {
@@ -574,14 +589,14 @@
     "defaultMessage": "!!!Participate on governance",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 243,
+      "line": 248,
       "column": 25,
-      "index": 11076
+      "index": 11263
     },
     "end": {
-      "line": 246,
+      "line": 251,
       "column": 3,
-      "index": 11188
+      "index": 11375
     }
   },
   {
@@ -589,14 +604,14 @@
     "defaultMessage": "!!!Choose your Drep",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 247,
+      "line": 252,
       "column": 15,
-      "index": 11205
+      "index": 11392
     },
     "end": {
-      "line": 250,
+      "line": 255,
       "column": 3,
-      "index": 11298
+      "index": 11485
     }
   },
   {
@@ -604,14 +619,14 @@
     "defaultMessage": "!!!Hardware wallet support coming soon",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 251,
+      "line": 256,
       "column": 35,
-      "index": 11335
+      "index": 11522
     },
     "end": {
-      "line": 254,
+      "line": 259,
       "column": 3,
-      "index": 11467
+      "index": 11654
     }
   },
   {
@@ -619,14 +634,14 @@
     "defaultMessage": "!!!We are currently working on integrating hardware wallet support for Governance",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 255,
+      "line": 260,
       "column": 34,
-      "index": 11503
+      "index": 11690
     },
     "end": {
-      "line": 258,
+      "line": 263,
       "column": 3,
-      "index": 11677
+      "index": 11864
     }
   },
   {
@@ -634,14 +649,14 @@
     "defaultMessage": "!!!Go to wallet",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 259,
+      "line": 264,
       "column": 14,
-      "index": 11693
+      "index": 11880
     },
     "end": {
-      "line": 262,
+      "line": 267,
       "column": 3,
-      "index": 11781
+      "index": 11968
     }
   },
   {
@@ -649,14 +664,14 @@
     "defaultMessage": "!!!Transaction fee",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 263,
+      "line": 268,
       "column": 10,
-      "index": 11793
+      "index": 11980
     },
     "end": {
-      "line": 266,
+      "line": 271,
       "column": 3,
-      "index": 11880
+      "index": 12067
     }
   },
   {
@@ -664,14 +679,14 @@
     "defaultMessage": "!!!Register staking key deposit",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 267,
+      "line": 272,
       "column": 22,
-      "index": 11904
+      "index": 12091
     },
     "end": {
-      "line": 270,
+      "line": 275,
       "column": 3,
-      "index": 12016
+      "index": 12203
     }
   },
   {
@@ -679,14 +694,14 @@
     "defaultMessage": "!!!Identify your preferred DRep and enter their ID below to delegate your vote",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 271,
+      "line": 276,
       "column": 19,
-      "index": 12037
+      "index": 12224
     },
     "end": {
-      "line": 274,
+      "line": 279,
       "column": 3,
-      "index": 12193
+      "index": 12380
     }
   },
   {
@@ -694,14 +709,14 @@
     "defaultMessage": "!!!Go to Staking",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 275,
+      "line": 280,
       "column": 15,
-      "index": 12210
+      "index": 12397
     },
     "end": {
-      "line": 278,
+      "line": 283,
       "column": 3,
-      "index": 12300
+      "index": 12487
     }
   },
   {
@@ -709,14 +724,14 @@
     "defaultMessage": "!!!You are now ready to collect your rewards.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 279,
+      "line": 284,
       "column": 25,
-      "index": 12327
+      "index": 12514
     },
     "end": {
-      "line": 282,
+      "line": 287,
       "column": 3,
-      "index": 12456
+      "index": 12643
     }
   },
   {
@@ -724,14 +739,14 @@
     "defaultMessage": "!!!Error",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 283,
+      "line": 288,
       "column": 28,
-      "index": 12486
+      "index": 12673
     },
     "end": {
-      "line": 286,
+      "line": 291,
       "column": 3,
-      "index": 12581
+      "index": 12768
     }
   },
   {
@@ -739,14 +754,14 @@
     "defaultMessage": "!!!To be able to vote you need to update your Cardano ADA app to 7.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 287,
+      "line": 292,
       "column": 34,
-      "index": 12617
+      "index": 12804
     },
     "end": {
-      "line": 290,
+      "line": 295,
       "column": 3,
-      "index": 12777
+      "index": 12964
     }
   },
   {
@@ -754,14 +769,14 @@
     "defaultMessage": "!!!Go to main wallet page",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 291,
+      "line": 296,
       "column": 29,
-      "index": 12808
+      "index": 12995
     },
     "end": {
-      "line": 294,
+      "line": 299,
       "column": 3,
-      "index": 12921
+      "index": 13108
     }
   },
   {
@@ -769,14 +784,14 @@
     "defaultMessage": "!!!Script DReps ids will be supported soon.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 295,
+      "line": 300,
       "column": 22,
-      "index": 12945
+      "index": 13132
     },
     "end": {
-      "line": 298,
+      "line": 303,
       "column": 3,
-      "index": 13069
+      "index": 13256
     }
   },
   {
@@ -784,14 +799,14 @@
     "defaultMessage": "!!!Transaction signed",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 299,
+      "line": 304,
       "column": 20,
-      "index": 13091
+      "index": 13278
     },
     "end": {
-      "line": 302,
+      "line": 307,
       "column": 3,
-      "index": 13191
+      "index": 13378
     }
   },
   {
@@ -799,14 +814,14 @@
     "defaultMessage": "!!!It will show up in the transaction list once it's confirmed by the network.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 303,
+      "line": 308,
       "column": 19,
-      "index": 13212
+      "index": 13399
     },
     "end": {
-      "line": 306,
+      "line": 311,
       "column": 3,
-      "index": 13368
+      "index": 13555
     }
   },
   {
@@ -814,14 +829,14 @@
     "defaultMessage": "!!!Close",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 307,
+      "line": 312,
       "column": 21,
-      "index": 13391
+      "index": 13578
     },
     "end": {
-      "line": 310,
+      "line": 315,
       "column": 3,
-      "index": 13479
+      "index": 13666
     }
   },
   {
@@ -829,14 +844,14 @@
     "defaultMessage": "!!!Transaction failed",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 311,
+      "line": 316,
       "column": 17,
-      "index": 13498
+      "index": 13685
     },
     "end": {
-      "line": 314,
+      "line": 319,
       "column": 3,
-      "index": 13595
+      "index": 13782
     }
   },
   {
@@ -844,14 +859,14 @@
     "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 315,
+      "line": 320,
       "column": 16,
-      "index": 13613
+      "index": 13800
     },
     "end": {
-      "line": 318,
+      "line": 323,
       "column": 3,
-      "index": 13764
+      "index": 13951
     }
   },
   {
@@ -859,14 +874,14 @@
     "defaultMessage": "!!!Try again",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 319,
+      "line": 324,
       "column": 18,
-      "index": 13784
+      "index": 13971
     },
     "end": {
-      "line": 322,
+      "line": 327,
       "column": 3,
-      "index": 13873
+      "index": 14060
     }
   },
   {
@@ -874,14 +889,14 @@
     "defaultMessage": "!!!Invalid DRep ID.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 323,
+      "line": 328,
       "column": 17,
-      "index": 13892
+      "index": 14079
     },
     "end": {
-      "line": 326,
+      "line": 331,
       "column": 3,
-      "index": 13987
+      "index": 14174
     }
   },
   {
@@ -889,14 +904,14 @@
     "defaultMessage": "!!!Delegate to Yoroi DRep",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 327,
+      "line": 332,
       "column": 24,
-      "index": 14013
+      "index": 14200
     },
     "end": {
-      "line": 330,
+      "line": 335,
       "column": 3,
-      "index": 14121
+      "index": 14308
     }
   },
   {
@@ -904,14 +919,14 @@
     "defaultMessage": "!!!Delegating to Yoroi DRep",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 331,
+      "line": 336,
       "column": 25,
-      "index": 14148
+      "index": 14335
     },
     "end": {
-      "line": 334,
+      "line": 339,
       "column": 3,
-      "index": 14259
+      "index": 14446
     }
   },
   {
@@ -919,14 +934,14 @@
     "defaultMessage": "!!!You are designating Yoroi to cast your vote on your behalf for all proposals now and in the future.",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
-      "line": 335,
+      "line": 340,
       "column": 35,
-      "index": 14296
+      "index": 14483
     },
     "end": {
-      "line": 339,
+      "line": 344,
       "column": 3,
-      "index": 14498
+      "index": 14685
     }
   }
 ]

@@ -16,6 +16,7 @@ export const useStrings = () => {
     actionNoConfidenceTitle: intl.formatMessage(messages.actionNoConfidenceTitle),
     actionNoConfidenceDescription: intl.formatMessage(messages.actionNoConfidenceDescription),
     drepKey: intl.formatMessage(messages.drepKey),
+    delegateToADRep: intl.formatMessage(messages.delegateToADRep),
     delegatingToADRep: intl.formatMessage(messages.delegatingToADRep),
     abstaining: intl.formatMessage(messages.abstaining),
     delegateVotingToDRep: intl.formatMessage(messages.delegateVotingToDRep),
@@ -127,6 +128,10 @@ const messages = defineMessages({
   delegatingToADRep: {
     id: 'components.governance.delegatingToADRep',
     defaultMessage: '!!!Delegating to a DRep',
+  },
+  delegateToADRep: {
+    id: 'components.governance.delegateToADRep',
+    defaultMessage: '!!!Delegate to a DRep',
   },
   abstaining: {
     id: 'components.governance.abstaining',
