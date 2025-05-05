@@ -63,6 +63,7 @@ export const useStrings = () => {
     selectAbstain: intl.formatMessage(messages.selectAbstain),
     selectNoConfidence: intl.formatMessage(messages.selectNoConfidence),
     delegateVotingToDRep: intl.formatMessage(messages.delegateVotingToDRep),
+    delegateVotingToDRepSpecified: intl.formatMessage(messages.delegateVotingToDRepSpecified),
     delegateStake: intl.formatMessage(messages.delegateStake),
     deregisterStakingKey: intl.formatMessage(messages.deregisterStakingKey),
     rewardsWithdrawalLabel: intl.formatMessage(messages.rewardsWithdrawalLabel),
@@ -340,6 +341,10 @@ const messages = defineMessages({
   delegateVotingToDRep: {
     id: 'txReview.operations.delegateVotingToDRep',
     defaultMessage: '!!!Delegate voting to',
+  },
+  delegateVotingToDRepSpecified: {
+    id: 'txReview.operations.delegateVotingToDRepSpecified',
+    defaultMessage: '!!!Specified as',
   },
   delegateStake: {
     id: 'txReview.operations.delegateStake',

@@ -16,6 +16,7 @@ export const useStrings = () => {
     actionNoConfidenceTitle: intl.formatMessage(messages.actionNoConfidenceTitle),
     actionNoConfidenceDescription: intl.formatMessage(messages.actionNoConfidenceDescription),
     drepKey: intl.formatMessage(messages.drepKey),
+    delegateToADRep: intl.formatMessage(messages.delegateToADRep),
     delegatingToADRep: intl.formatMessage(messages.delegatingToADRep),
     abstaining: intl.formatMessage(messages.abstaining),
     delegateVotingToDRep: intl.formatMessage(messages.delegateVotingToDRep),
@@ -77,6 +78,7 @@ export const useStrings = () => {
     delegateToAYoroiDrep: intl.formatMessage(messages.delegateToAYoroiDrep),
     delegatingToYoroiDRep: intl.formatMessage(messages.delegatingToYoroiDRep),
     delegateToAYoroiDRepDescription: intl.formatMessage(messages.delegateToAYoroiDRepDescription),
+    delegateVotingToDRepDeprecatedFormatNotice: intl.formatMessage(messages.delegateVotingToDRepDeprecatedFormatNotice),
   }
 }
 
@@ -128,6 +130,10 @@ const messages = defineMessages({
     id: 'components.governance.delegatingToADRep',
     defaultMessage: '!!!Delegating to a DRep',
   },
+  delegateToADRep: {
+    id: 'components.governance.delegateToADRep',
+    defaultMessage: '!!!Delegate to a DRep',
+  },
   abstaining: {
     id: 'components.governance.abstaining',
     defaultMessage: '!!!Abstaining',
@@ -135,6 +141,10 @@ const messages = defineMessages({
   delegateVotingToDRep: {
     id: 'components.governance.delegateVotingToDRep',
     defaultMessage: '!!!Delegate voting to',
+  },
+  delegateVotingToDRepDeprecatedFormatNotice: {
+    id: 'components.governance.delegateVotingToDRepDeprecatedFormatNotice',
+    defaultMessage: '!!!We automatically updated your DRep address to the latest format (CIP 129).',
   },
   selectAbstain: {
     id: 'components.governance.selectAbstain',

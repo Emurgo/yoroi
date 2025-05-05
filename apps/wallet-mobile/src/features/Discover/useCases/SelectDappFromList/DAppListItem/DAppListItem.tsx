@@ -11,7 +11,7 @@ import {InfoBanner} from '../../../../../components/InfoBanner/InfoBanner'
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Warning} from '../../../../../components/Warning/Warning'
+import {WarningBanner} from '../../../../../components/WarningBanner/WarningBanner'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useBrowser} from '../../../common/BrowserProvider'
 import {type DAppItem, getDappFallbackLogo, isGoogleSearchItem} from '../../../common/helpers'
@@ -189,7 +189,7 @@ const SingleAddressDAppWarning = () => {
   }
 
   return (
-    <Warning
+    <WarningBanner
       content={
         <>
           <Text style={styles.warningText}>{`${strings.singleAddressWarning} `}</Text>

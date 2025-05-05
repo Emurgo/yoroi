@@ -9,6 +9,7 @@ import {
 import * as React from 'react'
 import {UseQueryOptions} from 'react-query'
 
+import {InfoBanner} from '../../../../components/InfoBanner/InfoBanner'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useStakingKey, useWalletEvent} from '../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
@@ -17,6 +18,7 @@ import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
+import {useStrings} from './strings'
 
 export const useIsParticipatingInGovernance = () => {
   const status = useGovernanceStatus({suspense: true, useErrorBoundary: false, retry: false})
@@ -75,15 +77,18 @@ export const useGovernanceActions = () => {
   const {unsignedTxChanged} = useReviewTx()
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)
   const {navigateToTxReview} = useWalletNavigation()
+  const strings = useStrings()
 
   const handleDelegateAction = ({
     hash,
     unsignedTx,
     type,
+    CIP105 = false,
   }: {
     hash: string
     type: 'key' | 'script'
     unsignedTx: YoroiUnsignedTx
+    CIP105: boolean
   }) => {
     unsignedTxChanged(unsignedTx)
 
@@ -95,6 +100,9 @@ export const useGovernanceActions = () => {
       },
       onError: navigateTo.failedTx,
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
+      ...(CIP105
+        ? {operationsNotice: <InfoBanner content={strings.delegateVotingToDRepDeprecatedFormatNotice} />}
+        : {}),
     })
   }
 

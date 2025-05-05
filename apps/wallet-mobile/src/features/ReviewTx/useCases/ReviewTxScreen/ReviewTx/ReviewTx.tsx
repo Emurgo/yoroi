@@ -19,7 +19,7 @@ import {isEmptyString} from '../../../../../kernel/utils'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {FormattedMetadata, FormattedTx} from '../../../common/types'
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
-import {OverviewTab, ReviewDetailsProps} from '../ReviewTx/Overview/OverviewTab'
+import {OverviewTab} from '../ReviewTx/Overview/OverviewTab'
 import {UTxOsTab} from '../ReviewTx/UTxOs/UTxOsTab'
 import {MintTab} from './Mint/MintTab'
 import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
@@ -31,6 +31,7 @@ export const ReviewTx = ({
   formattedTx,
   formattedMetadata,
   operations,
+  operationsNotice,
   details,
   receiverCustomTitle,
   createdBy,
@@ -39,7 +40,8 @@ export const ReviewTx = ({
   formattedTx: FormattedTx
   formattedMetadata?: FormattedMetadata
   operations?: Array<React.ReactNode>
-  details?: ReviewDetailsProps
+  operationsNotice?: React.ReactNode
+  details?: {title: string; component: React.ReactNode}
   receiverCustomTitle?: React.ReactNode
   createdBy?: React.ReactNode
   onConfirm: () => void
@@ -90,6 +92,7 @@ export const ReviewTx = ({
               <OverviewTab
                 tx={formattedTx}
                 extraOperations={operations}
+                operationsNotice={operationsNotice}
                 details={details}
                 createdBy={createdBy}
                 receiverCustomTitle={receiverCustomTitle}

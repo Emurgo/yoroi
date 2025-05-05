@@ -8,14 +8,21 @@ import {Space} from '../Space/Space'
 type Props = {
   content: ReactNode
   iconSize?: number
+  title?: string
 }
 
-export const Info = ({content, iconSize = 30}: Props) => {
+export const WarningBanner = ({content, iconSize = 30, title = ''}: Props) => {
   const {styles, colors} = useStyles()
 
   return (
     <View style={styles.notice}>
-      <Icon.Info size={iconSize} color={colors.blue} />
+      <View style={styles.titleContainer}>
+        <Icon.Info size={iconSize} color={colors.yellow} />
+
+        <Space width="sm" />
+
+        <Text style={styles.title}>{title}</Text>
+      </View>
 
       <Space height="sm" />
 
@@ -28,19 +35,26 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     notice: {
-      backgroundColor: color.sys_cyan_100,
+      backgroundColor: color.sys_yellow_100,
       ...atoms.p_md,
       ...atoms.rounded_sm,
     },
     text: {
       ...atoms.body_2_md_regular,
+      color: color.gray_max,
+    },
+    titleContainer: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+    },
+    title: {
       color: color.text_gray_max,
+      ...atoms.body_2_md_medium,
     },
   })
 
   const colors = {
     yellow: color.sys_orange_500,
-    blue: color.el_primary_medium,
   }
 
   return {colors, styles} as const

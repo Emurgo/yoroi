@@ -5,14 +5,20 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Icon} from '../Icon'
 import {Space} from '../Space/Space'
 
-type Props = {content: React.ReactNode; iconSize?: number}
+type Props = {content: React.ReactNode; title?: string; iconSize?: number}
 
-export const InfoBanner = ({content, iconSize = 30}: Props) => {
+export const InfoBanner = ({content, title, iconSize = 30}: Props) => {
   const {styles, colors} = useStyles()
 
   return (
     <View style={styles.notice}>
-      <Icon.Info size={iconSize} color={colors.icon} />
+      <View style={styles.titleContainer}>
+        <Icon.Info size={iconSize} color={colors.icon} />
+
+        <Space width="sm" />
+
+        {title != null && <Text style={styles.title}>{title}</Text>}
+      </View>
 
       <Space height="sm" />
 
@@ -32,6 +38,14 @@ const useStyles = () => {
     text: {
       ...atoms.body_2_md_regular,
       color: color.gray_max,
+    },
+    titleContainer: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+    },
+    title: {
+      color: color.text_gray_max,
+      ...atoms.body_2_md_medium,
     },
   })
 

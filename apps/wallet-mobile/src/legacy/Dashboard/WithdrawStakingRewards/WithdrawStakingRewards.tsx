@@ -9,7 +9,7 @@ import {Checkbox} from '../../../components/Checkbox/Checkbox'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {PleaseWaitView} from '../../../components/PleaseWaitModal'
 import {Space} from '../../../components/Space/Space'
-import {Warning} from '../../../components/Warning/Warning'
+import {WarningBanner} from '../../../components/WarningBanner/WarningBanner'
 import {StakeRewardsWithdrawalOperation} from '../../../features/ReviewTx/common/operations'
 import {useReviewTx} from '../../../features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
@@ -79,7 +79,7 @@ const WithdrawalTxForm = ({wallet, onDone}: {wallet: YoroiWallet; onDone: (withd
   return (
     <View style={styles.root} testID="dangerousActionView">
       <View>
-        <Warning content={[strings.warning1, strings.warning2, strings.warning3].join('\r\n')} />
+        <WarningBanner content={[strings.warning1, strings.warning2, strings.warning3].join('\r\n')} />
 
         <Space height="lg" />
 

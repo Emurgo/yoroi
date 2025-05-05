@@ -51,7 +51,7 @@ export const ChangeVoteScreen = () => {
 
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
-  const openDRepIdModal = (onSubmit: (options: {hash: string; type: 'script' | 'key'}) => void) => {
+  const openDRepIdModal = (onSubmit: (options: {hash: string; type: 'script' | 'key'; CIP105: boolean}) => void) => {
     openModal({
       title: strings.enterDRepID,
       content: (
@@ -82,6 +82,7 @@ export const ChangeVoteScreen = () => {
               unsignedTx,
               hash: options.hash,
               type: options.type,
+              CIP105: options.CIP105,
             })
           },
         },
@@ -107,6 +108,7 @@ export const ChangeVoteScreen = () => {
             unsignedTx,
             hash: GOVERNANCE_YOROI_DREP_ID_HEX,
             type: 'key',
+            CIP105: false,
           })
         },
       },
