@@ -588,11 +588,10 @@ describe('swapManagerMaker', () => {
 
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data.defaultProtocol).toBe('dexhunter')
+        expect(result.value.data.defaultProtocol).toBe('minswap-v2')
         expect(result.value.data.wantedPrice).toBe(1.2) // min of 1.5 and 1.2
         expect(result.value.data.options).toEqual([
-          {protocol: 'dexhunter', initialPrice: 50, batcherFee: 0},
-          {protocol: 'muesliswap', initialPrice: 30, batcherFee: 0},
+          {protocol: 'minswap-v2', initialPrice: 30, batcherFee: 0},
         ])
       }
     })
