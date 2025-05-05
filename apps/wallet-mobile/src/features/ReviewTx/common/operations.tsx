@@ -157,7 +157,7 @@ export const VoteDelegationOperation = ({
 
         <Space width="lg" />
 
-        <Text style={[styles.operationValue, strike && styles.strike]}>{CIP105label}</Text>
+        <Text style={[styles.operationValue, strike && styles.strike]}>{CIP129label}</Text>
       </View>
 
       <Space height="sm" />
@@ -167,7 +167,7 @@ export const VoteDelegationOperation = ({
 
         <Space width="lg" />
 
-        <Text style={[styles.operationValue, strike && styles.strike]}>{CIP129label}</Text>
+        <Text style={[styles.operationValue, strike && styles.strike]}>{CIP105label}</Text>
       </View>
     </>
   )
