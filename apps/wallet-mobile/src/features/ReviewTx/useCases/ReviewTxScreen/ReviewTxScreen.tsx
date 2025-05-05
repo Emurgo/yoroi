@@ -64,6 +64,7 @@ export const ReviewTxScreen = () => {
       formattedTx={formattedTx}
       formattedMetadata={formattedMetadata}
       operations={params?.operations}
+      operationsNotice={params?.operationsNotice}
       details={params?.details}
       receiverCustomTitle={params?.receiverCustomTitle}
       createdBy={params?.createdBy}

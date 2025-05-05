@@ -300,6 +300,7 @@ export type ReviewTxRoutes = {
     partial?: boolean
     preventSubmit?: boolean
     operations?: Array<React.ReactNode>
+    operationsNotice?: React.ReactNode
     receiverCustomTitle?: React.ReactNode
     details?: {title: string; component: React.ReactNode}
     createdBy?: React.ReactNode

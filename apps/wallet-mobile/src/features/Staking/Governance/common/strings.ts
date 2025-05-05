@@ -78,6 +78,7 @@ export const useStrings = () => {
     delegateToAYoroiDrep: intl.formatMessage(messages.delegateToAYoroiDrep),
     delegatingToYoroiDRep: intl.formatMessage(messages.delegatingToYoroiDRep),
     delegateToAYoroiDRepDescription: intl.formatMessage(messages.delegateToAYoroiDRepDescription),
+    delegateVotingToDRepDeprecatedFormatNotice: intl.formatMessage(messages.delegateVotingToDRepDeprecatedFormatNotice),
   }
 }
 
@@ -140,6 +141,10 @@ const messages = defineMessages({
   delegateVotingToDRep: {
     id: 'components.governance.delegateVotingToDRep',
     defaultMessage: '!!!Delegate voting to',
+  },
+  delegateVotingToDRepDeprecatedFormatNotice: {
+    id: 'components.governance.delegateVotingToDRepDeprecatedFormatNotice',
+    defaultMessage: '!!!We automatically updated your DRep address to the latest format (CIP 129).',
   },
   selectAbstain: {
     id: 'components.governance.selectAbstain',
