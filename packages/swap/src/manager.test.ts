@@ -541,25 +541,25 @@ describe('swapManagerMaker', () => {
   describe('limitOptions()', () => {
     it('merges both aggregator limit options when both are right', async () => {
       const dhData = {
-        defaultProtocol: 'dexhunter',
+        defaultProtocol: 'minswap-v2' as Swap.Protocol,
         wantedPrice: 1.5,
         options: [
           {
-            protocol: 'dexhunter',
-            limit: 50,
-            offset: 0,
+            protocol: 'minswap-v2' as Swap.Protocol,
+            initialPrice: 50,
+            batcherFee: 0,
           },
         ],
       }
 
       const msData = {
-        defaultProtocol: 'muesliswap',
+        defaultProtocol: 'minswap-v2' as Swap.Protocol,
         wantedPrice: 1.2,
         options: [
           {
-            protocol: 'muesliswap',
-            limit: 30,
-            offset: 0,
+            protocol: 'minswap-v2' as Swap.Protocol,
+            initialPrice: 30,
+            batcherFee: 0,
           },
         ],
       }
@@ -581,15 +581,18 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
-      const result = await manager.api.limitOptions({})
+      const result = await manager.api.limitOptions({
+        tokenIn: '.',
+        tokenOut: '.',
+      })
 
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
         expect(result.value.data.defaultProtocol).toBe('dexhunter')
         expect(result.value.data.wantedPrice).toBe(1.2) // min of 1.5 and 1.2
         expect(result.value.data.options).toEqual([
-          {protocol: 'dexhunter', limit: 50, offset: 0},
-          {protocol: 'muesliswap', limit: 30, offset: 0},
+          {protocol: 'dexhunter', initialPrice: 50, batcherFee: 0},
+          {protocol: 'muesliswap', initialPrice: 30, batcherFee: 0},
         ])
       }
     })
@@ -613,7 +616,10 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
-      const result = await manager.api.limitOptions({})
+      const result = await manager.api.limitOptions({
+        tokenIn: '.',
+        tokenOut: '.',
+      })
 
       expect(result.tag).toBe('left')
       if (result.tag === 'left') {
@@ -624,13 +630,13 @@ describe('swapManagerMaker', () => {
 
     it('returns muesliswap options if dexhunter api result is left', async () => {
       const msData = {
-        defaultProtocol: 'muesliswap',
+        defaultProtocol: 'minswap-v2' as Swap.Protocol,
         wantedPrice: 1.2,
         options: [
           {
-            protocol: 'muesliswap',
-            limit: 30,
-            offset: 0,
+            protocol: 'minswap-v2' as Swap.Protocol,
+            initialPrice: 30,
+            batcherFee: 0,
           },
         ],
       }
@@ -653,7 +659,10 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
-      const result = await manager.api.limitOptions({})
+      const result = await manager.api.limitOptions({
+        tokenIn: '.',
+        tokenOut: '.',
+      })
 
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
@@ -663,13 +672,13 @@ describe('swapManagerMaker', () => {
 
     it('returns dexhunter options if muesliswap api result is left', async () => {
       const dhData = {
-        defaultProtocol: 'dexhunter',
+        defaultProtocol: 'minswap-v2' as Swap.Protocol,
         wantedPrice: 1.5,
         options: [
           {
-            protocol: 'dexhunter',
-            limit: 50,
-            offset: 0,
+            protocol: 'minswap-v2' as Swap.Protocol,
+            initialPrice: 50,
+            batcherFee: 0,
           },
         ],
       }
@@ -692,7 +701,10 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
-      const result = await manager.api.limitOptions({})
+      const result = await manager.api.limitOptions({
+        tokenIn: '.',
+        tokenOut: '.',
+      })
 
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
@@ -720,7 +732,10 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
-      const result = await manager.api.limitOptions({})
+      const result = await manager.api.limitOptions({
+        tokenIn: '.',
+        tokenOut: '.',
+      })
 
       expect(result.tag).toBe('left')
       if (result.tag === 'left') {
