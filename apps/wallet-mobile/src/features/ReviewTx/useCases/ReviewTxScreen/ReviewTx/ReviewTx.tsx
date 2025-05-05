@@ -31,6 +31,7 @@ export const ReviewTx = ({
   formattedTx,
   formattedMetadata,
   operations,
+  operationsNotice,
   details,
   receiverCustomTitle,
   createdBy,
@@ -39,6 +40,7 @@ export const ReviewTx = ({
   formattedTx: FormattedTx
   formattedMetadata?: FormattedMetadata
   operations?: Array<React.ReactNode>
+  operationsNotice?: React.ReactNode
   details?: {title: string; component: React.ReactNode}
   receiverCustomTitle?: React.ReactNode
   createdBy?: React.ReactNode
@@ -90,6 +92,7 @@ export const ReviewTx = ({
               <OverviewTab
                 tx={formattedTx}
                 extraOperations={operations}
+                operationsNotice={operationsNotice}
                 details={details}
                 createdBy={createdBy}
                 receiverCustomTitle={receiverCustomTitle}

@@ -11,10 +11,10 @@ import {useQuery} from 'react-query'
 import {Button} from '../../../../../../components/Button/Button'
 import {Divider} from '../../../../../../components/Divider/Divider'
 import {Icon} from '../../../../../../components/Icon'
-import {Info} from '../../../../../../components/Info/Info'
+import {InfoBanner} from '../../../../../../components/InfoBanner/InfoBanner'
 import {useModal} from '../../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../../components/Space/Space'
-import {Warning} from '../../../../../../components/Warning/Warning'
+import {WarningBanner} from '../../../../../../components/WarningBanner/WarningBanner'
 import {formatTokenWithText} from '../../../../../../yoroi-wallets/utils/format'
 import {Quantities} from '../../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
@@ -31,12 +31,14 @@ import {OperationsNoticeIcon} from '../../../../illustrations/OperationsNoticeIc
 export const OverviewTab = ({
   tx,
   extraOperations,
+  operationsNotice,
   receiverCustomTitle,
   details,
   createdBy,
 }: {
   tx: FormattedTx
   extraOperations?: Array<React.ReactNode>
+  operationsNotice?: React.ReactNode
   receiverCustomTitle?: React.ReactNode
   details?: {title: string; component: React.ReactNode}
   createdBy?: React.ReactNode
@@ -59,7 +61,7 @@ export const OverviewTab = ({
 
       {operationsComponentsDuplicated && (
         <>
-          <Warning title={strings.operationsLogWarningTitle} content={strings.operationsLogWarningText} />
+          <WarningBanner title={strings.operationsLogWarningTitle} content={strings.operationsLogWarningText} />
 
           <Space height="lg" />
         </>
@@ -83,7 +85,11 @@ export const OverviewTab = ({
 
       {notOwnedOutputs.length > 1 && <MultiExternalPartiesSection outputs={notOwnedOutputs} />}
 
-      <OperationsSection operations={operations} extraOperations={extraOperations} />
+      <OperationsSection
+        operations={operations}
+        extraOperations={extraOperations}
+        operationsNotice={operationsNotice}
+      />
 
       <Details details={details} />
     </View>
@@ -368,7 +374,7 @@ const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => 
       <Accordion label={strings.multiExternalPartiesSectionLabel}>
         <Space height="lg" />
 
-        <Info content={strings.multiExternalPartiesSectionNotice} />
+        <InfoBanner content={strings.multiExternalPartiesSectionNotice} />
 
         {receivers}
       </Accordion>
@@ -394,9 +400,11 @@ const ExternalPartiesSectionLabel = () => {
 const OperationsSection = ({
   operations,
   extraOperations,
+  operationsNotice,
 }: {
   operations: Operations
   extraOperations?: Array<React.ReactNode>
+  operationsNotice?: React.ReactNode
 }) => {
   const strings = useStrings()
   if (extraOperations == null && operations.components?.length === 0) return null
@@ -411,6 +419,16 @@ const OperationsSection = ({
       <Divider verticalSpace="lg" />
 
       <Accordion label={strings.operationsLabel}>
+        <Space height="lg" />
+
+        {operationsNotice != null && (
+          <>
+            <Space height="lg" />
+
+            {operationsNotice}
+          </>
+        )}
+
         <Space height="lg" />
 
         {[...componentsNotDuplicated, ...(extraOperations ?? [])].map((operation, index) => {
@@ -441,7 +459,7 @@ const OperationsModal = ({operations}: {operations: Operations}) => {
 
   return (
     <View>
-      <Warning title={strings.operationsLogWarningTitle} content={strings.operationsLogWarningText} />
+      <WarningBanner title={strings.operationsLogWarningTitle} content={strings.operationsLogWarningText} />
 
       <Accordion label={strings.operationsLabel}>
         <Space height="lg" />

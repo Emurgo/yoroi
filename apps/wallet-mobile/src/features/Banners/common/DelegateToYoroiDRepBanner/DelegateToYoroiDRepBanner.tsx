@@ -47,7 +47,12 @@ export const DelegateToYoroiDRepBanner = ({onDismiss, isVisible, style}: Props) 
             addressMode: meta.addressMode,
           })
 
-          governanceActions.handleDelegateAction({unsignedTx, hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key'})
+          governanceActions.handleDelegateAction({
+            unsignedTx,
+            hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+            type: 'key',
+            CIP105: false,
+          })
         },
       },
     )

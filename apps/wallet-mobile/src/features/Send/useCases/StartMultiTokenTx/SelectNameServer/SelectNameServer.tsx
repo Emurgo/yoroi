@@ -7,7 +7,7 @@ import {Animated, StyleSheet} from 'react-native'
 
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
-import {Warning} from '../../../../../components/Warning/Warning'
+import {WarningBanner} from '../../../../../components/WarningBanner/WarningBanner'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useStrings} from '../../../common/strings'
 
@@ -59,7 +59,7 @@ export const SelectNameServer = () => {
             <>
               <Spacer height={16} />
 
-              <Warning content={String(strings.manyNameServersWarning(bold))} />
+              <WarningBanner content={String(strings.manyNameServersWarning(bold))} />
             </>
           )}
         </>
