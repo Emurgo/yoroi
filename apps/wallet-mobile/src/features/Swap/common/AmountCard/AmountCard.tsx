@@ -1,7 +1,7 @@
 import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
+import {Platform, Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
@@ -180,10 +180,11 @@ const useStyles = () => {
       color: color.gray_900,
     },
     amountInput: {
-      textAlign: 'right',
       ...atoms.py_0,
       ...atoms.heading_3_medium,
+      textAlign: 'right',
       color: color.gray_900,
+      ...(Platform.OS === 'ios' ? {lineHeight: 22} : {}),
     },
     amountWrapper: {
       ...atoms.flex_1,
