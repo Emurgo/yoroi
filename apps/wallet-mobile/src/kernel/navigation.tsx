@@ -11,6 +11,8 @@ import {Icon} from '../components/Icon'
 import {OnConfirm} from '../features/ReviewTx/common/hooks/useOnConfirm'
 import {ReviewDetailsProps} from '../features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
+import {useSwap} from '../features/Swap/common/SwapProvider'
+import {useSelectedNetwork} from '../features/WalletManager/common/hooks/useSelectedNetwork'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
 
 // prettier-ignore
@@ -400,6 +402,8 @@ export const useBlockGoBack = () => {
 
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
+  const {network} = useSelectedNetwork()
+  const swapForm = useSwap()
 
   return React.useRef({
     navigation,
@@ -664,6 +668,38 @@ export const useWalletNavigation = () => {
             params: {
               screen: 'discover-browse-dapp',
             },
+          },
+        },
+      })
+    },
+
+    navigateToSwap: (tokenOutId?: Portfolio.Token.Id) => {
+      if (network === Chain.Network.Preprod) {
+        navigation.navigate('manage-wallets', {
+          screen: 'main-wallet-routes',
+          params: {
+            screen: 'history',
+            params: {
+              screen: 'swap-preprod-notice',
+            },
+          },
+        })
+        return
+      }
+
+      swapForm.action({type: 'ResetForm'})
+
+      if (tokenOutId !== undefined) {
+        swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
+        swapForm.action({type: 'TokenOutInputTouched'})
+      }
+
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap-main',
           },
         },
       })

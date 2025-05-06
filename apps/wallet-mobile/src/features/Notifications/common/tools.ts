@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging'
 import {isNumber, isRecord, isString} from '@yoroi/common'
-import {Notifications as YoroiNotifications} from '@yoroi/types'
+import {Notifications as YoroiNotifications, Portfolio} from '@yoroi/types'
 import {Linking, PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
@@ -111,7 +111,7 @@ const handleInternalNavigation = (
         walletNavigation.navigateToStakingDashboard()
         break
       case 'swap':
-        // needs refactor branch
+        walletNavigation.navigateToSwap((data.tokenOutId as Portfolio.Token.Id) || undefined)
         break
       case 'governance':
         walletNavigation.navigateToGovernanceCentre()
