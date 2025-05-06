@@ -70,7 +70,7 @@ const TokenInfo = ({info}: {info: Portfolio.Token.Info}) => {
 
   return (
     <View style={styles.tokenInfoContainer}>
-      <TokenInfoIcon info={info} size="md" />
+      <TokenInfoIcon info={info} size="lg" />
 
       <View style={styles.flexFull}>
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.symbol}>

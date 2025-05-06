@@ -1,5 +1,8 @@
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
+import {CopyButton} from '../../../../components/CopyButton'
+import {isDev} from '../../../../kernel/env'
 import {ReviewTxRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {useFormattedMetadata} from '../../common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '../../common/hooks/useFormattedTx'
@@ -10,8 +13,13 @@ import {useReviewTx} from '../../common/ReviewTxProvider'
 import {ReviewTx} from './ReviewTx/ReviewTx'
 
 export const ReviewTxScreen = () => {
+  const navigation = useNavigation()
+
   const {unsignedTx} = useReviewTx()
   const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
+  const cbor = params?.cbor
+
+  if (isDev) navigation.setOptions({headerRight: () => (cbor != null ? <CopyButton value={cbor} /> : null)})
 
   const {legacyOnConfirm} = useLegacyOnConfirm({
     unsignedTx,
@@ -22,7 +30,7 @@ export const ReviewTxScreen = () => {
   })
 
   const {onConfirm} = useOnConfirm({
-    cbor: params?.cbor,
+    cbor,
     partial: params?.partial,
     preventSubmit: params?.preventSubmit,
     onSuccess: params?.onSuccess,
@@ -31,9 +39,9 @@ export const ReviewTxScreen = () => {
     onClose: params?.onClose,
   })
 
-  const txBody = useTxBody({cbor: params?.cbor, unsignedTx})
+  const txBody = useTxBody({cbor, unsignedTx})
   const formattedTx = useFormattedTx(txBody)
-  const formattedMetadata = useFormattedMetadata({txBody, unsignedTx, cbor: params?.cbor ?? null})
+  const formattedMetadata = useFormattedMetadata({txBody, unsignedTx, cbor: cbor ?? null})
 
   React.useEffect(() => {
     return () => {
@@ -47,11 +55,11 @@ export const ReviewTxScreen = () => {
       params?.onConfirm()
       return
     }
-    if (unsignedTx != null && params?.cbor == null) {
+    if (unsignedTx != null && cbor == null) {
       legacyOnConfirm()
       return
     }
-    if (params?.cbor != null) {
+    if (cbor != null) {
       onConfirm()
       return
     }

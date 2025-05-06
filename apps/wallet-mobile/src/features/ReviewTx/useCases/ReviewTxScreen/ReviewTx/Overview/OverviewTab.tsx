@@ -480,7 +480,9 @@ const OperationsModal = ({operations}: {operations: Operations}) => {
   )
 }
 
-const Details = ({details}: {details?: {title: string; component: React.ReactNode}}) => {
+export type ReviewDetailsProps = {title: string; component: React.ReactNode; height?: number}
+
+const Details = ({details}: {details?: ReviewDetailsProps}) => {
   const {openModal} = useModal()
   const {styles} = useStyles()
 
@@ -490,7 +492,7 @@ const Details = ({details}: {details?: {title: string; component: React.ReactNod
     openModal({
       title: details.title ?? '',
       content: <View style={styles.details}>{details.component}</View>,
-      height: 400,
+      height: details.height ?? 400,
     })
   }
 

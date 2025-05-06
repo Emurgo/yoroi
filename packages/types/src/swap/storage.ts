@@ -1,8 +1,10 @@
+import {SwapManagerSettings} from './manager'
+
 export type SwapStorage = {
-  slippage: {
-    read(): Promise<number>
+  settings: {
+    read(): Promise<SwapManagerSettings>
     remove(): Promise<void>
-    save(slippage: number): Promise<void>
+    save(routing: SwapManagerSettings): Promise<void>
     key: string
   }
 

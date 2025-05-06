@@ -5,20 +5,24 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 
 export const usePortfolioTokenInfos = (
-  {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: ReadonlyArray<Portfolio.Token.Id>},
-  options: UseQueryOptions<Map<`${string}.${string}`, Portfolio.Token.Info>, Error>,
+  {
+    wallet,
+    tokenIds,
+    sourceId = 'useTokenInfos',
+  }: {wallet: YoroiWallet; tokenIds: ReadonlyArray<Portfolio.Token.Id>; sourceId?: string},
+  options: UseQueryOptions<Map<`${string}.${string}`, Portfolio.Token.Info>, Error> = {},
 ) => {
   const query = useQuery({
-    queryKey: [wallet.networkManager.network, 'useTokenInfos', tokenIds],
+    queryKey: [wallet.networkManager.network, sourceId, tokenIds],
     ...options,
     queryFn: async () => {
       const secondaryTokenIds = tokenIds.filter((id) => !isPrimaryToken(id))
-      const response = await wallet.networkManager.tokenManager.sync({secondaryTokenIds, sourceId: 'useTokenInfos'})
+      const response = await wallet.networkManager.tokenManager.sync({secondaryTokenIds, sourceId})
       const result = new Map<`${string}.${string}`, Portfolio.Token.Info>([
         [wallet.portfolioPrimaryTokenInfo.id, wallet.portfolioPrimaryTokenInfo],
       ])
       for (const [id, tokenInfo] of response) {
-        result.set(id, tokenInfo?.record ?? createUnknownTokenInfo({id, name: `Unknown ${id}`}))
+        result.set(id, tokenInfo?.record ?? createUnknownTokenInfo({id}))
       }
       return result
     },

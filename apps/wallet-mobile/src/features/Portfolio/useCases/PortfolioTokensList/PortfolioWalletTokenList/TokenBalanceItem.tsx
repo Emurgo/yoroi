@@ -43,7 +43,7 @@ export const TokenBalanceItem = ({amount}: Props) => {
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
       <View style={[styles.rowCenter, styles.tokenInfoContainer]}>
-        <TokenInfoIcon info={info} size="md" />
+        <TokenInfoIcon info={info} size="lg" />
 
         <Spacer width={12} />
 

@@ -118,35 +118,21 @@ export const portfolioApiMaker = ({
         const firstError = responses.find(isLeft)
         if (Object.keys(infos).length === 0 && firstError) return firstError
 
-        try {
-          const transformedResponseData = toSecondaryTokenInfos(infos)
+        const transformedResponseData = toSecondaryTokenInfos(infos)
 
-          const transformedResponse: Api.Response<Portfolio.Api.TokenInfosResponse> =
-            freeze(
-              {
-                tag: 'right',
-                value: {
-                  status: Api.HttpStatusCode.Ok,
-                  data: transformedResponseData,
-                },
-              },
-              true,
-            )
-
-          return transformedResponse
-        } catch (error) {
-          return freeze(
+        const transformedResponse: Api.Response<Portfolio.Api.TokenInfosResponse> =
+          freeze(
             {
-              tag: 'left',
-              error: {
-                status: -3,
-                message: 'Failed to transform token infos response',
-                responseData: infos,
+              tag: 'right',
+              value: {
+                status: Api.HttpStatusCode.Ok,
+                data: transformedResponseData,
               },
             },
             true,
           )
-        }
+
+        return transformedResponse
       },
 
       async tokenInfo(id: Portfolio.Token.Id) {
@@ -268,35 +254,21 @@ export const portfolioApiMaker = ({
         if (Object.keys(activities).length === 0 && firstError)
           return firstError
 
-        try {
-          const transformedResponseData = toTokenActivity(activities)
+        const transformedResponseData = toTokenActivity(activities)
 
-          const transformedResponse: Api.Response<Portfolio.Api.TokenActivityResponse> =
-            freeze(
-              {
-                tag: 'right',
-                value: {
-                  status: Api.HttpStatusCode.Ok,
-                  data: transformedResponseData,
-                },
-              },
-              true,
-            )
-
-          return transformedResponse
-        } catch (error) {
-          return freeze(
+        const transformedResponse: Api.Response<Portfolio.Api.TokenActivityResponse> =
+          freeze(
             {
-              tag: 'left',
-              error: {
-                status: -3,
-                message: 'Failed to transform token activity updates response',
-                responseData: activities,
+              tag: 'right',
+              value: {
+                status: Api.HttpStatusCode.Ok,
+                data: transformedResponseData,
               },
             },
             true,
           )
-        }
+
+        return transformedResponse
       },
 
       async tokenHistory(tokenId, period) {

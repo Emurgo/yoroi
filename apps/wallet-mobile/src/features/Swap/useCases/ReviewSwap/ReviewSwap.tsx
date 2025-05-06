@@ -1,7 +1,5 @@
-import {getPoolUrlByProvider, useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {capitalize} from 'lodash'
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -10,61 +8,54 @@ import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
-import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
-import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
+import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
-import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
+import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
+import {useSwap} from '../../common/SwapProvider'
 import {TransactionSummary} from './TransactionSummary'
 
 const BOTTOM_ACTION_SECTION = 220
 
 export const ReviewSwap = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
-  const strings = useStrings()
   const styles = useStyles()
-  const {track} = useMetrics()
   const {height: deviceHeight} = useWindowDimensions()
+  const strings = useStrings()
+  const {track} = useMetrics()
   const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged} = useReviewTx()
   const navigateTo = useNavigateTo()
 
-  const {unsignedTx, orderData} = useSwap()
-  const sellTokenInfo = orderData.amounts.sell?.info
-  const buyTokenInfo = orderData.amounts.buy?.info
+  const swapForm = useSwap()
 
-  const minReceived = Quantities.denominated(
-    asQuantity(orderData.selectedPoolCalculation?.buyAmountWithSlippage?.quantity.toString() ?? 0),
-    buyTokenInfo?.decimals ?? 0,
-  )
-
-  const couldReceiveNoAssets = Quantities.isZero(minReceived)
+  if (swapForm.createTx === undefined) return null
+  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
+  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
 
   const trackSwapOrderSubmitted = () => {
-    if (orderData.selectedPoolCalculation === undefined) return
     track.swapOrderSubmitted({
       from_asset: [
         {
-          asset_name: sellTokenInfo?.name,
-          asset_ticker: sellTokenInfo?.ticker,
-          policy_id: sellTokenInfo?.id.split('.')[0],
+          asset_name: tokenInInfo?.name,
+          asset_ticker: tokenInInfo?.ticker,
+          policy_id: tokenInInfo?.id.split('.')[0],
         },
       ],
       to_asset: [
-        {asset_name: buyTokenInfo?.name, asset_ticker: buyTokenInfo?.ticker, policy_id: buyTokenInfo?.id.split('.')[0]},
+        {asset_name: tokenOutInfo?.name, asset_ticker: tokenOutInfo?.ticker, policy_id: tokenOutInfo?.id.split('.')[0]},
       ],
-      order_type: orderData.type,
-      slippage_tolerance: orderData.slippage,
-      from_amount: orderData.amounts.sell?.quantity.toString() ?? '0',
-      to_amount: orderData.amounts.buy?.quantity.toString() ?? '0',
-      pool_source: orderData.selectedPoolCalculation.pool.provider,
-      swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
+      order_type: swapForm.orderType,
+      slippage_tolerance: swapForm.slippageInput.value,
+      from_amount: String(swapForm.createTx?.totalInput ?? 0),
+      to_amount: String(swapForm.createTx?.totalOutput ?? 0),
+      pool_source: swapForm.createTx?.splits[0]?.poolId ?? '',
+      swap_fees: Number(swapForm.createTx?.totalFee),
     })
   }
 
   const onSwapTxSuccess = () => {
     trackSwapOrderSubmitted()
+    swapForm.action({type: 'ResetAmounts'})
     navigateTo.submittedTx()
   }
 
@@ -73,27 +64,16 @@ export const ReviewSwap = () => {
   }
 
   const onNext = () => {
-    let liquidityPool: React.ReactNode = null
-    if (orderData.selectedPoolCalculation) {
-      const poolIcon = <PoolIcon providerId={orderData.selectedPoolCalculation.pool.provider} size={18} />
-      const poolProviderFormatted = capitalize(orderData.selectedPoolCalculation.pool.provider)
-      const poolUrl = getPoolUrlByProvider(orderData.selectedPoolCalculation.pool.provider)
+    const protocol = swapForm.createTx?.splits[0]?.protocol
 
-      liquidityPool = (
-        <LiquidityPool liquidityPoolIcon={poolIcon} liquidityPoolName={poolProviderFormatted} poolUrl={poolUrl} />
-      )
-    }
-
-    unsignedTxChanged(unsignedTx)
     navigateToTxReview({
       onSuccess: onSwapTxSuccess,
       onError: onSwapTxError,
-      receiverCustomTitle: liquidityPool ?? undefined,
-      details: {component: <TransactionSummary orderData={orderData} />, title: strings.swapDetailsTitle},
+      cbor: swapForm.createTx?.cbor,
+      receiverCustomTitle: protocol !== undefined ? <ProtocolAvatar protocol={protocol} /> : undefined,
+      details: {component: <TransactionSummary swapForm={swapForm} />, title: strings.swapDetailsTitle, height: 600},
     })
   }
-
-  const isButtonDisabled = couldReceiveNoAssets
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -106,7 +86,7 @@ export const ReviewSwap = () => {
                 setContentHeight(height + BOTTOM_ACTION_SECTION)
               }}
             >
-              <TransactionSummary orderData={orderData} />
+              <TransactionSummary swapForm={swapForm} />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -117,7 +97,7 @@ export const ReviewSwap = () => {
           ...(deviceHeight < contentHeight && styles.actionBorder),
         }}
       >
-        <Button disabled={isButtonDisabled} testID="swapButton" title={strings.next} onPress={onNext} />
+        <Button testID="swapButton" title={strings.next} onPress={onNext} />
       </Actions>
     </SafeAreaView>
   )

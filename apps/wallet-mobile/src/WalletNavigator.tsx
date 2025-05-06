@@ -1,16 +1,7 @@
 import {BottomTabBar, BottomTabBarProps, createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {
-  milkTokenId,
-  supportedProviders,
-  swapApiMaker,
-  swapManagerMaker,
-  SwapProvider,
-  swapStorageMaker,
-} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform, StyleSheet, View} from 'react-native'
@@ -30,10 +21,9 @@ import {SettingsScreenNavigator} from './features/Settings/SettingsScreenNavigat
 import {NetworkTag} from './features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from './features/Staking/Governance/GovernanceNavigator'
-import {SwapFormProvider} from './features/Swap/common/SwapFormProvider'
+import {SwapProvider} from './features/Swap/common/SwapProvider'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {TxHistoryNavigator} from './features/Transactions/TxHistoryNavigator'
-import {useSelectedWallet} from './features/WalletManager/common/hooks/useSelectedWallet'
 import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {useMetrics} from './kernel/metrics/metricsManager'
 import {
@@ -43,7 +33,6 @@ import {
   WalletTabRoutes,
 } from './kernel/navigation'
 import {DashboardNavigator} from './legacy/Dashboard/DashboardNavigator'
-import {useFrontendFees, useStakingKey} from './yoroi-wallets/hooks'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 
@@ -51,8 +40,6 @@ const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
   const shouldShow = shouldShowTabBarForRoutes(props.state)
   return shouldShow ? <BottomTabBar {...props} /> : null
 }
-
-const aggregator: Swap.Aggregator = 'muesliswap'
 
 const WalletTabNavigator = () => {
   const strings = useStrings()
@@ -83,127 +70,108 @@ const WalletTabNavigator = () => {
     }, [track]),
   )
 
-  // swap
-  const {wallet} = useSelectedWallet()
-  const {frontendFees} = useFrontendFees(wallet)
-  const stakingKey = useStakingKey(wallet)
-  const swapManager = React.useMemo(() => {
-    const aggregatorTokenId = wallet.isMainnet ? milkTokenId.mainnet : milkTokenId.preprod
-    const swapStorage = swapStorageMaker()
-    const swapApi = swapApiMaker({
-      isMainnet: wallet.isMainnet,
-      stakingKey,
-      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
-      supportedProviders,
-    })
-    const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
-    return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
-  }, [wallet.isMainnet, wallet.portfolioPrimaryTokenInfo, stakingKey, frontendFees])
-
   return (
-    <SwapProvider swapManager={swapManager}>
-      <SwapFormProvider>
-        <OfflineBanner />
+    <SwapProvider>
+      <OfflineBanner />
 
-        <Tab.Navigator
-          sceneContainerStyle={{backgroundColor: colors.background}}
-          screenOptions={{
-            headerShown: false,
-            tabBarLabelStyle: styles.labelStyle,
-            tabBarActiveTintColor: colors.active,
-            tabBarInactiveTintColor: colors.inactive,
-            tabBarBackground: () => (
-              <View style={{...StyleSheet.absoluteFillObject, backgroundColor: colors.background}} />
-            ),
-            tabBarStyle: {
-              borderTopColor: colors.divider,
-              borderTopWidth: 2 * StyleSheet.hairlineWidth,
+      <Tab.Navigator
+        sceneContainerStyle={{backgroundColor: colors.background}}
+        screenOptions={{
+          headerShown: false,
+          tabBarLabelStyle: styles.labelStyle,
+          tabBarActiveTintColor: colors.active,
+          tabBarInactiveTintColor: colors.inactive,
+          tabBarBackground: () => (
+            <View style={{...StyleSheet.absoluteFillObject, backgroundColor: colors.background}} />
+          ),
+          tabBarStyle: {
+            borderTopColor: colors.divider,
+            borderTopWidth: 2 * StyleSheet.hairlineWidth,
 
-              // keyboardWillShow keyboardWillHiden dont work on android
-              display: isKeyboardOpen ? 'none' : undefined,
-            },
-            tabBarHideOnKeyboard: true,
+            // keyboardWillShow keyboardWillHiden dont work on android
+            display: isKeyboardOpen ? 'none' : undefined,
+          },
+          tabBarHideOnKeyboard: true,
+        }}
+        tabBar={(props) => <TabBarWithHiddenContent {...props} />}
+        backBehavior="initialRoute"
+      >
+        <Tab.Screen
+          name="history"
+          options={{
+            tabBarIcon: ({focused}) =>
+              focused ? (
+                <Icon.TabWalletActive size={24} color={colors.active} />
+              ) : (
+                <Icon.TabWallet size={24} color={colors.inactive} />
+              ),
+            tabBarLabel: strings.walletTabBarLabel,
+            tabBarTestID: 'walletTabBarButton',
           }}
-          tabBar={(props) => <TabBarWithHiddenContent {...props} />}
-          backBehavior="initialRoute"
         >
-          <Tab.Screen
-            name="history"
-            options={{
-              tabBarIcon: ({focused}) =>
-                focused ? (
-                  <Icon.TabWalletActive size={24} color={colors.active} />
-                ) : (
-                  <Icon.TabWallet size={24} color={colors.inactive} />
-                ),
-              tabBarLabel: strings.walletTabBarLabel,
-              tabBarTestID: 'walletTabBarButton',
-            }}
-          >
-            {() => (
-              <SearchProvider>
-                <TxHistoryNavigator />
-              </SearchProvider>
-            )}
-          </Tab.Screen>
+          {() => (
+            <SearchProvider>
+              <TxHistoryNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
 
-          <Tab.Screen
-            name="portfolio"
-            initialParams={{screen: 'dashboard-portfolio'}}
-            options={{
-              tabBarIcon: ({focused}) =>
-                focused ? (
-                  <Icon.TabPortfolioActive size={24} color={colors.active} />
-                ) : (
-                  <Icon.TabPortfolio size={24} color={colors.inactive} />
-                ),
-              tabBarLabel: strings.portfolioButton,
-              tabBarTestID: 'portfolioTabBarButton',
-            }}
-          >
-            {() => (
-              <SearchProvider>
-                <PortfolioNavigator />
-              </SearchProvider>
-            )}
-          </Tab.Screen>
+        <Tab.Screen
+          name="portfolio"
+          initialParams={{screen: 'dashboard-portfolio'}}
+          options={{
+            tabBarIcon: ({focused}) =>
+              focused ? (
+                <Icon.TabPortfolioActive size={24} color={colors.active} />
+              ) : (
+                <Icon.TabPortfolio size={24} color={colors.inactive} />
+              ),
+            tabBarLabel: strings.portfolioButton,
+            tabBarTestID: 'portfolioTabBarButton',
+          }}
+        >
+          {() => (
+            <SearchProvider>
+              <PortfolioNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
 
-          <Tab.Screen
-            name="discover"
-            options={{
-              tabBarIcon: ({focused}) =>
-                focused ? (
-                  <Icon.TabDiscoverActive size={28} color={colors.active} />
-                ) : (
-                  <Icon.TabDiscover size={28} color={colors.inactive} />
-                ),
-              tabBarLabel: strings.discoverTabBarLabel,
-              tabBarTestID: 'discoverTabBarButton',
-            }}
-          >
-            {() => (
-              <SearchProvider>
-                <DiscoverNavigator />
-              </SearchProvider>
-            )}
-          </Tab.Screen>
+        <Tab.Screen
+          name="discover"
+          options={{
+            tabBarIcon: ({focused}) =>
+              focused ? (
+                <Icon.TabDiscoverActive size={28} color={colors.active} />
+              ) : (
+                <Icon.TabDiscover size={28} color={colors.inactive} />
+              ),
+            tabBarLabel: strings.discoverTabBarLabel,
+            tabBarTestID: 'discoverTabBarButton',
+          }}
+        >
+          {() => (
+            <SearchProvider>
+              <DiscoverNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
 
-          <Tab.Screen
-            name="menu"
-            component={MenuNavigator}
-            options={{
-              tabBarIcon: ({focused}) =>
-                focused ? (
-                  <Icon.TabMenuActive size={28} color={colors.active} />
-                ) : (
-                  <Icon.TabMenu size={28} color={colors.inactive} />
-                ),
-              tabBarLabel: strings.menuTabBarLabel,
-              tabBarTestID: 'menuTabBarButton',
-            }}
-          />
-        </Tab.Navigator>
-      </SwapFormProvider>
+        <Tab.Screen
+          name="menu"
+          component={MenuNavigator}
+          options={{
+            tabBarIcon: ({focused}) =>
+              focused ? (
+                <Icon.TabMenuActive size={28} color={colors.active} />
+              ) : (
+                <Icon.TabMenu size={28} color={colors.inactive} />
+              ),
+            tabBarLabel: strings.menuTabBarLabel,
+            tabBarTestID: 'menuTabBarButton',
+          }}
+        />
+      </Tab.Navigator>
     </SwapProvider>
   )
 }

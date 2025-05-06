@@ -26,21 +26,6 @@ describe('transformers', () => {
       expect(result).toEqual({})
     })
 
-    it('should throw an error if unable to parse the token-info response', () => {
-      const apiTokenInfosResponse: Portfolio.Api.TokenInfosResponse = {
-        [tokenMocks.primaryETH.info.id]: [
-          2000 as any,
-          tokenMocks.primaryETH.info,
-          'etag',
-          0,
-        ],
-      }
-
-      expect(() => {
-        toSecondaryTokenInfos(apiTokenInfosResponse)
-      }).toThrow(Api.Errors.ResponseMalformed)
-    })
-
     it('should return the updated token info if the status code is not HttpStatusCode.NotModified', () => {
       const apiTokenInfosResponse: Portfolio.Api.TokenInfosResponse = {
         [tokenMocks.primaryETH.info.id]: [
@@ -75,6 +60,34 @@ describe('transformers', () => {
           Api.HttpStatusCode.NotModified,
           123456,
         ],
+        [tokenMocks.nftCryptoKitty.info.id]: [
+          200,
+          tokenMocks.nftCryptoKitty.info,
+          'etag',
+          0,
+        ],
+      })
+    })
+
+    it('should return drop the record if unable to parse the token-info response', () => {
+      const apiTokenInfosResponse: Portfolio.Api.TokenInfosResponse = {
+        [tokenMocks.primaryETH.info.id]: [
+          2000 as any,
+          tokenMocks.primaryETH.info,
+          'etag',
+          0,
+        ],
+        [tokenMocks.nftCryptoKitty.info.id]: [
+          Api.HttpStatusCode.Ok,
+          tokenMocks.nftCryptoKitty.info,
+          'etag',
+          0,
+        ],
+      }
+
+      const result = toSecondaryTokenInfos(apiTokenInfosResponse)
+
+      expect(result).toEqual({
         [tokenMocks.nftCryptoKitty.info.id]: [
           200,
           tokenMocks.nftCryptoKitty.info,

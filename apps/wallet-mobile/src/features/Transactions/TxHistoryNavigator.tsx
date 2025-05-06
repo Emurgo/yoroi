@@ -33,16 +33,18 @@ import {SubmittedTxScreen as SendSubmittedTxScreen} from '../Send/useCases/ShowS
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '../Staking/Governance/common/helpers'
-import {SwapTabNavigator} from '../Swap/SwapNavigator'
-import {EditSlippageScreen, SelectPoolFromListScreen} from '../Swap/useCases'
+import {SelectProtocolScreen} from '../Swap/useCases/CreateOrder/SelectProtocolScreen'
+import {SelectTokenScreen} from '../Swap/useCases/CreateOrder/SelectTokenScreen'
+import {SwapMainScreen} from '../Swap/useCases/CreateOrder/SwapMainScreen'
+import {ListOrders} from '../Swap/useCases/ListOrders/ListOrders'
 import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {FailedTxScreen as SwapFailedTxScreen} from '../Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
 import {SubmittedTxScreen as SwapSubmittedTxScreen} from '../Swap/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
-import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
-import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+import {SwapSettings} from '../Swap/useCases/SwapSettings/SwapSettings'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
+import {HeaderRightSwap} from './common/HeaderRightSwap'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
 
@@ -220,11 +222,40 @@ export const TxHistoryNavigator = () => {
                 />
 
                 <Stack.Screen
-                  name="swap-start-swap"
-                  component={SwapTabNavigator}
+                  name="swap-main"
+                  component={SwapMainScreen}
                   options={{
                     ...sendOptions(navigationOptions, color),
                     title: strings.swapTitle,
+                    headerRight: () => <HeaderRightSwap />,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="swap-select-token"
+                  getComponent={() => SelectTokenScreen}
+                  initialParams={{direction: 'in'}}
+                  options={{
+                    ...sendOptions(navigationOptions, color),
+                    title: strings.swapFromTitle,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="swap-orders"
+                  getComponent={() => ListOrders}
+                  options={{
+                    ...sendOptions(navigationOptions, color),
+                    title: strings.orderSwap,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="swap-settings"
+                  getComponent={() => SwapSettings}
+                  options={{
+                    ...sendOptions(navigationOptions, color),
+                    title: strings.settings,
                   }}
                 />
 
@@ -246,34 +277,8 @@ export const TxHistoryNavigator = () => {
                 />
 
                 <Stack.Screen
-                  name="swap-select-sell-token"
-                  component={SelectSellTokenFromListScreen}
-                  options={{
-                    ...sendOptions(navigationOptions, color),
-                    title: strings.swapFromTitle,
-                  }}
-                />
-
-                <Stack.Screen
-                  name="swap-select-buy-token"
-                  component={SelectBuyTokenFromListScreen}
-                  options={{
-                    ...sendOptions(navigationOptions, color),
-                    title: strings.swapToTitle,
-                  }}
-                />
-
-                <Stack.Screen
-                  name="swap-edit-slippage"
-                  component={EditSlippageScreen}
-                  options={{
-                    title: strings.slippageTolerance,
-                  }}
-                />
-
-                <Stack.Screen
-                  name="swap-select-pool"
-                  component={SelectPoolFromListScreen}
+                  name="swap-select-protocol"
+                  component={SelectProtocolScreen}
                   options={{
                     title: strings.selectPool,
                   }}
@@ -427,6 +432,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
+  orderSwap: {
+    id: 'swap.swapScreen.ordersSwapTab',
+    defaultMessage: '!!!Orders',
+  },
   swapFromTitle: {
     id: 'swap.swapScreen.swapFrom',
     defaultMessage: '!!!Swap from',
@@ -510,6 +519,10 @@ const messages = defineMessages({
     id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Tx Details',
   },
+  settings: {
+    id: 'menu.settings',
+    defaultMessage: '!!!Settings',
+  },
   notificationsTitle: {
     id: 'components.txhistory.notifications.title',
     defaultMessage: '!!!Notifications',
@@ -541,8 +554,10 @@ const useStrings = () => {
     specificAmount: intl.formatMessage(messages.specificAmount),
     swapFromTitle: intl.formatMessage(messages.swapFromTitle),
     swapTitle: intl.formatMessage(messages.swapTitle),
+    orderSwap: intl.formatMessage(messages.orderSwap),
     swapToTitle: intl.formatMessage(messages.swapToTitle),
     txDetailsTitle: intl.formatMessage(messages.txDetailsTitle),
+    settings: intl.formatMessage(messages.settings),
     notificationsTitle: intl.formatMessage(messages.notificationsTitle),
   }
 }

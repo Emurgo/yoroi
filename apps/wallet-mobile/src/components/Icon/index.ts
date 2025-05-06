@@ -84,6 +84,7 @@ import {PlateNumber} from './PlateNumber'
 import {Plus} from './Plus'
 import {PlusCircle} from './PlusCircle'
 import {Portfolio} from './Portfolio'
+import {Portfolio2} from './Portfolio2'
 import {Qr} from './Qr'
 import {QuestionMark} from './QuestionMark'
 import {Received} from './Received'
@@ -256,6 +257,7 @@ export const Icon = {
   Switch,
   Edit,
   Portfolio,
+  Portfolio2,
   MinSwap,
   SundaeSwap,
   MuesliSwap,

@@ -8,11 +8,12 @@ export const useNavigateTo = () => {
   const navigation = useNavigation()
 
   return useRef({
-    selectPool: () => swapNavigation.navigate('swap-select-pool'),
-    editSlippage: () => swapNavigation.navigate('swap-edit-slippage'),
-    selectBuyToken: () => swapNavigation.navigate('swap-select-buy-token'),
-    selectSellToken: () => swapNavigation.navigate('swap-select-sell-token'),
-    startSwap: () => swapNavigation.navigate('swap-start-swap', {screen: 'token-swap'}),
+    selectProtocol: () => swapNavigation.navigate('swap-select-protocol'),
+    selectTokenIn: () => swapNavigation.navigate('swap-select-token', {direction: 'in'}),
+    selectTokenOut: () => swapNavigation.navigate('swap-select-token', {direction: 'out'}),
+    startSwap: () => swapNavigation.navigate('swap-main'),
+    orders: () => swapNavigation.navigate('swap-orders'),
+    swapSettings: () => swapNavigation.navigate('swap-settings'),
     reviewSwap: () => swapNavigation.navigate('swap-review'),
     submittedTx: () => swapNavigation.navigate('swap-submitted-tx'),
     failedTx: () => swapNavigation.navigate('swap-failed-tx'),
@@ -22,10 +23,7 @@ export const useNavigateTo = () => {
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-start-swap',
-            params: {
-              screen: 'orders',
-            },
+            screen: 'swap-orders',
           },
         },
       }),
@@ -35,10 +33,7 @@ export const useNavigateTo = () => {
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-start-swap',
-            params: {
-              screen: 'token-swap',
-            },
+            screen: 'swap-main',
           },
         },
       }),

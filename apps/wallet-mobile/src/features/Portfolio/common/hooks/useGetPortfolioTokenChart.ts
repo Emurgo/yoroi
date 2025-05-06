@@ -96,7 +96,7 @@ export const useGetPortfolioTokenChart = (
   })
 
   const ptQuery = useQuery({
-    enabled: tokenInfo && isPrimaryToken(tokenInfo.info),
+    enabled: tokenInfo && isPrimaryToken(tokenInfo.info) && Boolean(ptPriceQuery?.data),
     staleTime: time.oneMinute,
     ...options,
     queryKey: ['useGetPortfolioTokenChart', 'pt', timeInterval, currency],

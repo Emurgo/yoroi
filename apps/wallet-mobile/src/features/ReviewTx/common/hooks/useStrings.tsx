@@ -6,6 +6,7 @@ export const useStrings = () => {
   const intl = useIntl()
 
   return {
+    adaDescription: intl.formatMessage(messages.adaDescription),
     signTransaction: intl.formatMessage(txLabels.signingTx),
     confirm: intl.formatMessage(messages.confirm),
     title: intl.formatMessage(messages.title),
@@ -92,6 +93,11 @@ export const useStrings = () => {
 }
 
 const messages = defineMessages({
+  adaDescription: {
+    id: 'txReview.adaDescription',
+    defaultMessage:
+      '!!!ADA is Cardano’s native cryptocurrency that can be used on the Cardano network to pay for transaction fees and earn rewards for helping to secure the blockchain network via staking.',
+  },
   confirm: {
     id: 'txReview.confirm',
     defaultMessage: '!!!Confirm',

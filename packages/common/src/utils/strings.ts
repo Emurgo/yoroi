@@ -32,3 +32,20 @@ export function truncateString({
 
   return `${start}${separator}${end}`
 }
+
+export function hexToAscii(hex: string): string {
+  if (hex === '' || !/^[0-9a-fA-F]*$/.test(hex) || hex.length % 2 !== 0) {
+    return ''
+  }
+
+  return hex
+    .match(/.{1,2}/g)!
+    .map((byte) => String.fromCharCode(parseInt(byte, 16)))
+    .join('')
+}
+
+export function asciiToHex(str: string): string {
+  return Array.from(str)
+    .map((char) => char.charCodeAt(0).toString(16).padStart(2, '0'))
+    .join('')
+}

@@ -166,12 +166,6 @@ describe('portfolioApiMaker', () => {
       maxIdsPerRequest: 10,
       maxConcurrentRequests: 10,
     })
-    const mockTokenIdsWithCache: ReadonlyArray<
-      Api.RequestWithCache<Portfolio.Token.Id>
-    > = [['token.id', 'etag-hash']]
-    const mockTokenIdsWithCacheRequest: DullahanApiCachedIdsRequest = [
-      'token.id:etag-hash',
-    ]
 
     const resultDiscovery = await api.tokenDiscovery(
       tokenDiscoveryMocks.nftCryptoKitty.id,
@@ -199,57 +193,8 @@ describe('portfolioApiMaker', () => {
       },
     })
 
-    const resultTokenInfos = await api.tokenInfos(mockTokenIdsWithCache)
-    expect(mockRequest).toHaveBeenCalledTimes(2)
-    expect(mockRequest).toHaveBeenCalledWith({
-      method: 'post',
-      url: apiConfig[Chain.Network.Mainnet].tokenInfos,
-      data: mockTokenIdsWithCacheRequest,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-
-    expect(resultTokenInfos).toEqual({
-      tag: 'left',
-      error: {
-        status: -3,
-        message: 'Failed to transform token infos response',
-        responseData: {
-          ['wrong']: [200, 'data'],
-        },
-      },
-    })
-
-    const resultTraits = await api.tokenTraits(
-      tokenMocks.nftCryptoKitty.info.id,
-    )
-    expect(mockRequest).toHaveBeenCalledTimes(3)
-    expect(mockRequest).toHaveBeenCalledWith({
-      method: 'get',
-      url:
-        apiConfig[Chain.Network.Mainnet].tokenTraits +
-        '/' +
-        tokenMocks.nftCryptoKitty.info.id,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-    expect(resultTraits).toEqual({
-      tag: 'left',
-      error: {
-        status: -3,
-        message: 'Failed to transform token traits response',
-        responseData: {
-          ['wrong']: [200, 'data'],
-        },
-      },
-    })
-
     const resultInfo = await api.tokenInfo(tokenMocks.nftCryptoKitty.info.id)
-    expect(mockRequest).toHaveBeenCalledTimes(4)
+    expect(mockRequest).toHaveBeenCalledTimes(2)
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'get',
       url:
@@ -276,7 +221,7 @@ describe('portfolioApiMaker', () => {
       tokenActivityMocks.api.request,
       Portfolio.Token.ActivityWindow.OneDay,
     )
-    expect(mockRequest).toHaveBeenCalledTimes(5)
+    expect(mockRequest).toHaveBeenCalledTimes(3)
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'post',
       url: `${apiConfig[Chain.Network.Mainnet].tokenActivity}/${
@@ -290,13 +235,10 @@ describe('portfolioApiMaker', () => {
     })
 
     expect(resultTokenActivity).toEqual({
-      tag: 'left',
-      error: {
-        status: -3,
-        message: 'Failed to transform token activity updates response',
-        responseData: {
-          ['wrong']: [200, 'data'],
-        },
+      tag: 'right',
+      value: {
+        status: 200,
+        data: {},
       },
     })
 
@@ -304,7 +246,7 @@ describe('portfolioApiMaker', () => {
       tokenHistoryMocks.api.request.tokenId,
       tokenHistoryMocks.api.request.period,
     )
-    expect(mockRequest).toHaveBeenCalledTimes(6)
+    expect(mockRequest).toHaveBeenCalledTimes(4)
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'post',
       url: apiConfig[Chain.Network.Mainnet].tokenHistory,

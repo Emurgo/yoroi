@@ -1,6 +1,6 @@
 import {FetchData, fetchData, getApiError, isLeft} from '@yoroi/common'
 import {TokenIdSchema} from '@yoroi/portfolio'
-import {Api, Portfolio} from '@yoroi/types'
+import {Api, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
 import {z} from 'zod'
 
@@ -19,18 +19,35 @@ export const getSwapConfigApiMaker =
 
     if (isLeft(response)) throw getApiError(response.error)
 
-    if (!SwapConfigResponseSchema.safeParse(response.value.data).success) {
+    const parsedResponse = SwapConfigResponseSchema.safeParse(
+      response.value.data,
+    )
+    if (!parsedResponse.success) {
       throw new Api.Errors.ResponseMalformed(
         'Invalid swap config response: ' + JSON.stringify(response.value.data),
       )
     }
 
-    return response.value.data
+    return parsedResponse.data
   }
 
 const SwapConfigResponseSchema = z.object({
-  initialPair: z.object({
-    tokenIn: TokenIdSchema.refine((_): _ is Portfolio.Token.Id => true),
-    tokenOut: TokenIdSchema.refine((_): _ is Portfolio.Token.Id => true),
-  }),
+  initialPair: z
+    .object({
+      tokenIn: TokenIdSchema.refine((_): _ is Portfolio.Token.Id => true),
+      tokenOut: TokenIdSchema.refine((_): _ is Portfolio.Token.Id => true),
+    })
+    .optional(),
+  verifiedTokens: z
+    .array(TokenIdSchema.refine((_): _ is Portfolio.Token.Id => true))
+    .optional(),
+  excludedTokens: z
+    .array(TokenIdSchema.refine((_): _ is Portfolio.Token.Id => true))
+    .optional(),
+  partners: z
+    .object({
+      [Swap.Aggregator.Dexhunter]: z.string().optional(),
+      [Swap.Aggregator.Muesliswap]: z.string().optional(),
+    })
+    .optional(),
 })

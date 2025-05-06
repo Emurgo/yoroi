@@ -5,23 +5,21 @@ import {
   BalanceQuantity,
   BalanceToken,
 } from './balance/token'
-import {SwapApi} from './swap/api'
-import {SwapProtocol} from './swap/protocol'
 import {
-  SwapCancelOrderData,
-  SwapCompletedOrder,
-  SwapCreateOrderData,
-  SwapCreateOrderResponse,
-  SwapOpenOrder,
-  SwapOrderType,
-} from './swap/order'
-import {SwapPool, SwapPoolProvider, SwapSupportedProvider} from './swap/pool'
-import {SwapStorage} from './swap/storage'
-import {SwapManager} from './swap/manager'
+  SwapApi,
+  SwapCancelRequest,
+  SwapCancelResponse,
+  SwapCreateRequest,
+  SwapCreateResponse,
+  SwapEstimateRequest,
+  SwapEstimateResponse,
+  SwapLimitOptionsRequest,
+  SwapLimitOptionsResponse,
+  SwapSplit,
+} from './swap/api'
 import {AppStorage, AppStorageFolderName} from './app/storage'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 import {NumberLocale} from './intl/numbers'
-import {SwapAggregator} from './swap/aggregator'
 import {
   ResolverAddressesResponse,
   ResolverAddressResponse,
@@ -275,11 +273,17 @@ import {
   NotificationTrigger,
   PushNotificationEvent,
 } from './notifications/manager'
-import {
-  SwapMakeOrderCalculation,
-  SwapOrderCalculation,
-} from './swap/calculations'
 import {NumbersRatio} from './numbers/ratio'
+import {SwapStorage} from './swap/storage'
+import {
+  SwapManager,
+  SwapManagerSettings,
+  SwapManagerMaker,
+} from './swap/manager'
+import {SwapDex} from './swap/dex'
+import {SwapOrder} from './swap/order'
+import {SwapAggregator} from './swap/aggregator'
+import {SwapProtocol} from './swap/protocol'
 import {
   BannersConfig,
   BannersId,
@@ -351,33 +355,27 @@ export namespace App {
 }
 
 export namespace Swap {
-  export interface Api extends SwapApi {}
-  export type Manager = SwapManager
-
-  export type OpenOrder = SwapOpenOrder
-  export type CompletedOrder = SwapCompletedOrder
-  export type CreateOrderData = SwapCreateOrderData
-  export type CancelOrderData = SwapCancelOrderData
-  export type Order = SwapOpenOrder | SwapCompletedOrder
-  export type CreateOrderResponse = SwapCreateOrderResponse
-  export type OpenOrderResponse = SwapOpenOrder[]
-  export type CompletedOrderResponse = SwapCompletedOrder[]
-  export type OrderType = SwapOrderType
-
-  export type Protocol = SwapProtocol
-
+  export type Api = SwapApi
+  export type Order = SwapOrder
   export type Aggregator = SwapAggregator
-
-  export type Pool = SwapPool
-  export type PoolResponse = SwapPool[]
-  export type PoolProvider = SwapPoolProvider
-  export type SupportedProvider = SwapSupportedProvider
-
+  export const Aggregator = SwapAggregator
+  export type Protocol = SwapProtocol
+  export const Protocol = SwapProtocol
+  export type Dex = SwapDex
+  export const Dex = SwapDex
+  export type LimitOptionsRequest = SwapLimitOptionsRequest
+  export type LimitOptionsResponse = SwapLimitOptionsResponse
+  export type CancelRequest = SwapCancelRequest
+  export type CancelResponse = SwapCancelResponse
+  export type EstimateRequest = SwapEstimateRequest
+  export type EstimateResponse = SwapEstimateResponse
+  export type CreateRequest = SwapCreateRequest
+  export type CreateResponse = SwapCreateResponse
+  export type Split = SwapSplit
   export type Storage = SwapStorage
-
-  export type MakeOrderCalculation = SwapMakeOrderCalculation
-
-  export type OrderCalculation = SwapOrderCalculation
+  export type Manager = SwapManager
+  export type ManagerMaker = SwapManagerMaker
+  export type ManagerSettings = SwapManagerSettings
 }
 
 export namespace Balance {

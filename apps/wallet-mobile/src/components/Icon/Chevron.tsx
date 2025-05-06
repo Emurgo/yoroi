@@ -4,11 +4,11 @@ import Svg, {Path} from 'react-native-svg'
 import {IconProps} from './type'
 
 export const Chevron = ({
-  direction,
+  direction = 'down',
   color = 'black',
   size = 40,
 }: IconProps & {
-  direction: 'left' | 'right' | 'up' | 'down'
+  direction?: 'left' | 'right' | 'up' | 'down'
 }) => {
   const rotate = direction === 'down' ? 0 : direction === 'right' ? 270 : direction === 'left' ? 90 : 180
 

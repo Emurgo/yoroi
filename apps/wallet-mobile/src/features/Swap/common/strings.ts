@@ -1,11 +1,15 @@
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {errorMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
+import globalMessages, {actionMessages, errorMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
 
   return {
+    via: intl.formatMessage(messages.via),
+    placeOrder: intl.formatMessage(messages.placeOrder),
+    yourAssets: intl.formatMessage(messages.yourAssets),
+    allAssets: intl.formatMessage(messages.allAssets),
     swapTitle: intl.formatMessage(messages.swapTitle),
     swapDetailsTitle: intl.formatMessage(messages.swapDetailsTitle),
     swapCancellationDetailsTitle: intl.formatMessage(messages.swapCancellationDetailsTitle),
@@ -31,6 +35,7 @@ export const useStrings = () => {
     assetsIn: intl.formatMessage(messages.assetsIn),
     slippageInfo: intl.formatMessage(messages.slippageInfo),
     autoPool: intl.formatMessage(messages.autoPool),
+    auto: intl.formatMessage(messages.auto),
     changePool: intl.formatMessage(messages.changePool),
     swapMinAda: intl.formatMessage(messages.swapMinAda),
     swapMinAdaTitle: intl.formatMessage(messages.swapMinAdaTitle),
@@ -109,6 +114,9 @@ export const useStrings = () => {
     limitPriceWarningConfirm: intl.formatMessage(messages.limitPriceWarningConfirm),
     error: intl.formatMessage(globalMessages.error),
     rejectedByUser: intl.formatMessage(ledgerMessages.rejectedByUserError),
+    routingPreferences: intl.formatMessage(messages.routingPreferences),
+    route: intl.formatMessage(messages.route),
+    routeDescription: intl.formatMessage(messages.routeDescription),
     usbExplanation: intl.formatMessage(messages.usbExplanation),
     usbButton: intl.formatMessage(messages.usbButton),
     usbConnectionIsBlocked: intl.formatMessage(messages.usbConnectionIsBlocked),
@@ -168,10 +176,31 @@ export const useStrings = () => {
     submittedTxScreenTitle: intl.formatMessage(messages.submittedTxScreenTitle),
     submittedTxScreenText: intl.formatMessage(messages.submittedTxScreenText),
     submittedTxScreenButton: intl.formatMessage(messages.submittedTxScreenButton),
+    from: intl.formatMessage(messages.from),
+    to: intl.formatMessage(messages.to),
+    sell: intl.formatMessage(actionMessages.sell),
+    buy: intl.formatMessage(actionMessages.buy),
+    max: intl.formatMessage(globalMessages.max),
   }
 }
 
 const messages = defineMessages({
+  via: {
+    id: 'swap.swapScreen.via',
+    defaultMessage: `!!!via`,
+  },
+  placeOrder: {
+    id: 'swap.swapScreen.placeOrder',
+    defaultMessage: `!!!Place order`,
+  },
+  yourAssets: {
+    id: 'swap.swapScreen.yourAssets',
+    defaultMessage: `!!!Your assets`,
+  },
+  allAssets: {
+    id: 'swap.swapScreen.allAssets',
+    defaultMessage: `!!!All assets`,
+  },
   swapFees: {
     id: 'swap.swapScreen.swapFees',
     defaultMessage: `!!!Swap fees include the following:\n • Matchmaker Fee\n • Frontend Fee\n • Liquidity Provider Fee`,
@@ -273,6 +302,22 @@ const messages = defineMessages({
   autoPool: {
     id: 'swap.swapScreen.autoPool',
     defaultMessage: '!!!(auto)',
+  },
+  auto: {
+    id: 'global.auto',
+    defaultMessage: '!!!Auto',
+  },
+  routingPreferences: {
+    id: 'swap.swapScreen.routingPreferences',
+    defaultMessage: '!!!Routing preferences',
+  },
+  route: {
+    id: 'swap.swapScreen.route',
+    defaultMessage: '!!!Route',
+  },
+  routeDescription: {
+    id: 'swap.swapScreen.routeDescription',
+    defaultMessage: '!!!The route shows the path your swap takes to find the best price',
   },
   changePool: {
     id: 'swap.swapScreen.changePool',
@@ -729,5 +774,13 @@ const messages = defineMessages({
   submittedTxScreenButton: {
     id: 'swap.submittedTxScreen.button',
     defaultMessage: '!!!Close',
+  },
+  from: {
+    id: 'swap.swapScreen.from',
+    defaultMessage: '!!!From',
+  },
+  to: {
+    id: 'swap.swapScreen.to',
+    defaultMessage: '!!!To',
   },
 })

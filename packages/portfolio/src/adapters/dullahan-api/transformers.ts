@@ -25,10 +25,10 @@ export const toSecondaryTokenInfos = (
       const castedTokenInfoWithCache =
         tokenInfoWithCache as Api.ResponseWithCache<Portfolio.Token.Info>
 
-      if (!parseSecondaryTokenInfoWithCacheRecord(castedTokenInfoWithCache))
-        throw new Api.Errors.ResponseMalformed(
-          'Unable to parse the token-info response',
-        )
+      if (!parseSecondaryTokenInfoWithCacheRecord(castedTokenInfoWithCache)) {
+        console.warn('Failed to transform token info ', id)
+        return acc
+      }
 
       const [statusCode] = castedTokenInfoWithCache
 
@@ -63,7 +63,8 @@ export const toTokenActivity = (
       const [statusCode, tokenActivityData] = response
       if (statusCode !== Api.HttpStatusCode.Ok) return acc
 
-      TokenActivityResponseSchema.parse(tokenActivityData)
+      if (!TokenActivityResponseSchema.safeParse(tokenActivityData).success)
+        return acc
 
       const parsedTokenActivity: Portfolio.Token.Activity = {
         price: {
