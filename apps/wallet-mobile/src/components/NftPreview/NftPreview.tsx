@@ -7,8 +7,8 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import placeholderLight from '../../assets/img/nft-placeholder.png'
 import placeholderDark from '../../assets/img/nft-placeholder-dark.png'
+import {usePortfolioImage} from '../../features/Portfolio/common/hooks/usePortfolioImage'
 import {getNftMainImageMediaType} from '../../yoroi-wallets/cardano/nfts'
-import {useNativeAssetImage} from '../../yoroi-wallets/hooks'
 
 type NftPreviewProps = {
   nft: Balance.TokenInfo
@@ -34,7 +34,7 @@ export const NftPreview = ({
   const {isDark} = useTheme()
   const placeholder = isDark ? placeholderDark : placeholderLight
   const [policy, name] = nft.id.split('.')
-  const {uri, headers, isLoading, isError, onError, onLoad} = useNativeAssetImage({
+  const {uri, headers, isLoading, isError, onError, onLoad} = usePortfolioImage({
     policy,
     name,
     width: width * zoom,

@@ -1,5 +1,4 @@
 import {init} from '@emurgo/cross-csl-mobile'
-import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack'
 import {claimManagerMaker, ClaimProvider} from '@yoroi/claim'
 import {useAsyncStorage} from '@yoroi/common'
@@ -10,21 +9,16 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {TouchableOpacity} from 'react-native'
 
 import {Boundary} from '../../components/Boundary/Boundary'
-import {Icon} from '../../components/Icon'
 import {unstoppableApiKey} from '../../kernel/env'
-import {
-  BackButton,
-  defaultStackNavigationOptions,
-  TxHistoryRouteNavigation,
-  TxHistoryRoutes,
-} from '../../kernel/navigation'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
+import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes} from '../../kernel/navigation'
 import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '../Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '../Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
 import {ShowExchangeResultOrderScreen} from '../Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
+import {ViewNotificationHistoryScreen} from '../Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {ReceiveProvider} from '../Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '../Receive/useCases/ListMultipleAddressesScreen'
@@ -39,25 +33,38 @@ import {SubmittedTxScreen as SendSubmittedTxScreen} from '../Send/useCases/ShowS
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '../Staking/Governance/common/helpers'
-import {SwapTabNavigator} from '../Swap/SwapNavigator'
-import {EditSlippageScreen, SelectPoolFromListScreen} from '../Swap/useCases'
+import {SelectProtocolScreen} from '../Swap/useCases/CreateOrder/SelectProtocolScreen'
+import {SelectTokenScreen} from '../Swap/useCases/CreateOrder/SelectTokenScreen'
+import {SwapMainScreen} from '../Swap/useCases/CreateOrder/SwapMainScreen'
+import {ListOrders} from '../Swap/useCases/ListOrders/ListOrders'
 import {ReviewSwap} from '../Swap/useCases/ReviewSwap/ReviewSwap'
 import {FailedTxScreen as SwapFailedTxScreen} from '../Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
 import {SubmittedTxScreen as SwapSubmittedTxScreen} from '../Swap/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
-import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
-import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+import {SwapSettings} from '../Swap/useCases/SwapSettings/SwapSettings'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
+import {HeaderRightHistory} from './common/HeaderRightHistory'
+import {HeaderRightSwap} from './common/HeaderRightSwap'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
+  const {track} = useMetrics()
+
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const storage = useAsyncStorage()
   const {atoms, color} = useTheme()
   const manager = useGovernanceManagerMaker()
+
+  const trackNotificationCenter = React.useCallback(() => {
+    return {
+      focus: () => {
+        track.notificationCenterPageViewed({tab: 'all'})
+      },
+    }
+  }, [track])
 
   // resolver
   const resolverManager = React.useMemo(() => {
@@ -215,11 +222,40 @@ export const TxHistoryNavigator = () => {
                 />
 
                 <Stack.Screen
-                  name="swap-start-swap"
-                  component={SwapTabNavigator}
+                  name="swap-main"
+                  component={SwapMainScreen}
                   options={{
                     ...sendOptions(navigationOptions, color),
                     title: strings.swapTitle,
+                    headerRight: () => <HeaderRightSwap />,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="swap-select-token"
+                  getComponent={() => SelectTokenScreen}
+                  initialParams={{direction: 'in'}}
+                  options={{
+                    ...sendOptions(navigationOptions, color),
+                    title: strings.swapFromTitle,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="swap-orders"
+                  getComponent={() => ListOrders}
+                  options={{
+                    ...sendOptions(navigationOptions, color),
+                    title: strings.orderSwap,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="swap-settings"
+                  getComponent={() => SwapSettings}
+                  options={{
+                    ...sendOptions(navigationOptions, color),
+                    title: strings.settings,
                   }}
                 />
 
@@ -241,34 +277,8 @@ export const TxHistoryNavigator = () => {
                 />
 
                 <Stack.Screen
-                  name="swap-select-sell-token"
-                  component={SelectSellTokenFromListScreen}
-                  options={{
-                    ...sendOptions(navigationOptions, color),
-                    title: strings.swapFromTitle,
-                  }}
-                />
-
-                <Stack.Screen
-                  name="swap-select-buy-token"
-                  component={SelectBuyTokenFromListScreen}
-                  options={{
-                    ...sendOptions(navigationOptions, color),
-                    title: strings.swapToTitle,
-                  }}
-                />
-
-                <Stack.Screen
-                  name="swap-edit-slippage"
-                  component={EditSlippageScreen}
-                  options={{
-                    title: strings.slippageTolerance,
-                  }}
-                />
-
-                <Stack.Screen
-                  name="swap-select-pool"
-                  component={SelectPoolFromListScreen}
+                  name="swap-select-protocol"
+                  component={SelectProtocolScreen}
                   options={{
                     title: strings.selectPool,
                   }}
@@ -380,6 +390,13 @@ export const TxHistoryNavigator = () => {
                 />
 
                 <Stack.Screen //
+                  name="notification-center-history"
+                  component={ViewNotificationHistoryScreen}
+                  options={{title: strings.notificationsTitle}}
+                  listeners={trackNotificationCenter}
+                />
+
+                <Stack.Screen //
                   name="scan-show-camera-permission-denied"
                   component={ShowCameraPermissionDeniedScreen}
                   options={{
@@ -414,6 +431,10 @@ const messages = defineMessages({
   swapTitle: {
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
+  },
+  orderSwap: {
+    id: 'swap.swapScreen.ordersSwapTab',
+    defaultMessage: '!!!Orders',
   },
   swapFromTitle: {
     id: 'swap.swapScreen.swapFrom',
@@ -498,6 +519,14 @@ const messages = defineMessages({
     id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Tx Details',
   },
+  settings: {
+    id: 'menu.settings',
+    defaultMessage: '!!!Settings',
+  },
+  notificationsTitle: {
+    id: 'components.txhistory.notifications.title',
+    defaultMessage: '!!!Notifications',
+  },
 })
 
 const useStrings = () => {
@@ -525,24 +554,13 @@ const useStrings = () => {
     specificAmount: intl.formatMessage(messages.specificAmount),
     swapFromTitle: intl.formatMessage(messages.swapFromTitle),
     swapTitle: intl.formatMessage(messages.swapTitle),
+    orderSwap: intl.formatMessage(messages.orderSwap),
     swapToTitle: intl.formatMessage(messages.swapToTitle),
     txDetailsTitle: intl.formatMessage(messages.txDetailsTitle),
+    settings: intl.formatMessage(messages.settings),
+    notificationsTitle: intl.formatMessage(messages.notificationsTitle),
   }
 }
-
-const HeaderRightHistory = React.memo(() => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {color} = useTheme()
-
-  return (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
-      style={{paddingRight: 8}}
-    >
-      <Icon.Qr color={color.gray_max} />
-    </TouchableOpacity>
-  )
-})
 
 const sendOptions = (navigationOptions: StackNavigationOptions, color: ThemedPalette) => ({
   ...navigationOptions,

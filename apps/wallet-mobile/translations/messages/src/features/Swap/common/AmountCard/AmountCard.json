@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Select token",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 137,
+      "line": 159,
       "column": 15,
-      "index": 4378
+      "index": 5895
     },
     "end": {
-      "line": 140,
+      "line": 162,
       "column": 3,
-      "index": 4461
+      "index": 5978
     }
   },
   {
@@ -19,14 +19,44 @@
     "defaultMessage": "!!!Current Balance",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 141,
+      "line": 163,
       "column": 18,
-      "index": 4481
+      "index": 5998
     },
     "end": {
-      "line": 144,
+      "line": 166,
       "column": 3,
-      "index": 4570
+      "index": 6087
+    }
+  },
+  {
+    "id": "swap.swapScreen.from",
+    "defaultMessage": "!!!From",
+    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
+    "start": {
+      "line": 167,
+      "column": 8,
+      "index": 6097
+    },
+    "end": {
+      "line": 170,
+      "column": 3,
+      "index": 6165
+    }
+  },
+  {
+    "id": "swap.swapScreen.to",
+    "defaultMessage": "!!!To",
+    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
+    "start": {
+      "line": 171,
+      "column": 6,
+      "index": 6173
+    },
+    "end": {
+      "line": 174,
+      "column": 3,
+      "index": 6237
     }
   }
 ]

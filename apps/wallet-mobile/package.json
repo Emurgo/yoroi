@@ -220,7 +220,7 @@
     "zod": "^3.22.1"
   },
   "devDependencies": {
-    "@amplitude/ampli": "^1.34.0",
+    "@amplitude/ampli": "^1.36.2",
     "@babel/cli": "^7.15.7",
     "@babel/core": "^7.20.0",
     "@babel/node": "^7.15.8",

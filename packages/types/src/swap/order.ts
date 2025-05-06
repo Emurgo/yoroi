@@ -1,68 +1,20 @@
-import {BalanceQuantity} from '../balance/token'
 import {PortfolioTokenId} from '../portfolio/token'
-import {SwapPool, SwapPoolProvider} from './pool'
+import {SwapAggregator} from './aggregator'
+import {SwapProtocol} from './protocol'
 
-export type SwapOrderType = 'market' | 'limit'
-
-export type SwapCreateOrderData = {
-  amounts: {
-    sell: {
-      tokenId: PortfolioTokenId
-      quantity: bigint
-    }
-    buy: {
-      tokenId: PortfolioTokenId
-      quantity: bigint
-    }
-  }
-  limitPrice?: BalanceQuantity
-  address: string
-  slippage: number
-  selectedPool: SwapPool
-}
-
-export type SwapCancelOrderData = {
-  utxos: {
-    order: string
-    collateral: string
-  }
-  address: string
-}
-
-export type SwapCreateOrderResponse = {
-  datum: string
-  datumHash: string
-  contractAddress: string
-}
-
-export type SwapOpenOrder = {
-  provider: SwapPoolProvider
-  from: {
-    tokenId: PortfolioTokenId
-    quantity: bigint
-  }
-  to: {
-    tokenId: PortfolioTokenId
-    quantity: bigint
-  }
-  deposit: {
-    tokenId: PortfolioTokenId
-    quantity: bigint
-  }
-  utxo: string
-  owner: string
-}
-
-export type SwapCompletedOrder = {
-  from: {
-    tokenId: PortfolioTokenId
-    quantity: bigint
-  }
-  to: {
-    tokenId: PortfolioTokenId
-    quantity: bigint
-  }
+export type SwapOrder = {
+  aggregator: SwapAggregator
+  protocol: SwapProtocol
+  placedAt?: number
+  lastUpdate?: number
+  status: 'open' | 'matched' | 'canceled' | 'partially_matched'
+  tokenIn: PortfolioTokenId
+  tokenOut: PortfolioTokenId
+  amountIn: number
+  actualAmountOut: number
+  expectedAmountOut: number
   txHash: string
-  provider: SwapPoolProvider
-  placedAt: number
+  outputIndex?: number
+  updateTxHash?: string
+  customId?: string
 }

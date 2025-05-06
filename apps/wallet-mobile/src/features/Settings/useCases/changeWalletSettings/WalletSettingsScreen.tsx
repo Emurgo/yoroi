@@ -12,7 +12,6 @@ import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../../kernel/dialogs'
 import {confirmationMessages} from '../../../../kernel/i18n/global-messages'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../../kernel/navigation'
 import {useResync} from '../../../../yoroi-wallets/hooks'
 import {useAuth} from '../../../Auth/AuthProvider'
@@ -23,17 +22,12 @@ import {useNavigateTo} from '../../common/navigation'
 import {SettingsSwitch} from '../../common/SettingsSwitch'
 import {SettingsCollateralItem} from '../../SettingsCollateralItem'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../../SettingsItems'
-import {SettingsNotificationDurationItem} from '../../SettingsNotificationDurationItem'
-import {
-  useChangeNotificationDisplaySettings,
-  useNotificationDisplaySettings,
-} from './Notifications/NotificationsDisplaySettings'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const {resetToWalletSelection, navigateToNotificationDisplayDuration} = useWalletNavigation()
+  const {resetToWalletSelection, navigateToNotificationSettings} = useWalletNavigation()
   const authSetting = useAuthSetting()
   const addressMode = useAddressMode()
 
@@ -132,15 +126,11 @@ export const WalletSettingsScreen = () => {
 
         <Spacer height={24} />
 
-        <SettingsSection title={strings.inAppNotifications}>
-          <SettingsItem icon={<Icon.Bell {...iconProps} />} label={strings.allowNotifications}>
-            <NotificationDisplaySwitcher />
-          </SettingsItem>
-
-          <SettingsNotificationDurationItem
-            icon={<Icon.Time {...iconProps} />}
-            onNavigate={() => navigateToNotificationDisplayDuration()}
-            label={strings.displayDuration}
+        <SettingsSection title={strings.notifications}>
+          <NavigatedSettingsItem
+            icon={<Icon.Bell {...iconProps} />}
+            label={strings.notifications}
+            onNavigate={() => navigateToNotificationSettings()}
           />
         </SettingsSection>
 
@@ -216,23 +206,6 @@ const AddressModeSwitcher = (props: {isSingle: boolean}) => {
   }
 
   return <SettingsSwitch value={!isSingleLocal} onValueChange={handleOnSwitchAddressMode} />
-}
-
-const NotificationDisplaySwitcher = () => {
-  const displayNotifications = useNotificationDisplaySettings()
-  const {mutate} = useChangeNotificationDisplaySettings()
-  const [localValue, setLocalValue] = React.useState(displayNotifications)
-  const {track} = useMetrics()
-
-  const handleOnToggle = () => {
-    const newValue = !localValue
-    setLocalValue(newValue)
-    mutate(newValue)
-    const status = newValue ? 'enabled' : 'disabled'
-    track.settingsInAppNotificationsStatusUpdated({status})
-  }
-
-  return <SettingsSwitch value={localValue} onValueChange={handleOnToggle} />
 }
 
 const useLogout = () => {
@@ -345,6 +318,10 @@ const messages = defineMessages({
     id: 'components.settings.walletsettingscreen.displayDuration',
     defaultMessage: '!!!Display duration',
   },
+  notifications: {
+    id: 'components.settings.walletsettingscreen.notifications',
+    defaultMessage: '!!!Notifications',
+  },
 })
 
 const useStrings = () => {
@@ -375,6 +352,7 @@ const useStrings = () => {
     inAppNotifications: intl.formatMessage(messages.inAppNotifications),
     allowNotifications: intl.formatMessage(messages.allowNotifications),
     displayDuration: intl.formatMessage(messages.displayDuration),
+    notifications: intl.formatMessage(messages.notifications),
   }
 }
 

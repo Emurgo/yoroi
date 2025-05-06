@@ -44,11 +44,11 @@ const useStyles = () => {
       backgroundColor: color.bg_color_max,
     },
     counterText: {
-      ...atoms.body_2_md_medium,
+      ...atoms.body_2_md_regular,
       color: color.primary_600,
     },
     counterTextBold: {
-      ...atoms.body_2_md_regular,
+      ...atoms.body_2_md_medium,
       color: color.primary_600,
     },
   })

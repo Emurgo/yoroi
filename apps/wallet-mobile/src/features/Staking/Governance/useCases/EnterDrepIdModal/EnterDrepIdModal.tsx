@@ -11,8 +11,8 @@ import {TextInput} from '../../../../../components/TextInput/TextInput'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {useStrings} from '../../common/strings'
 
-type Props = {
-  onSubmit?: (options: {type: 'key' | 'script'; hash: string}) => void
+export type Props = {
+  onSubmit?: (options: {type: 'key' | 'script'; hash: string; CIP105: boolean}) => void
 }
 
 const FIND_DREPS_LINK = ''
@@ -26,7 +26,9 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
   const handleOnPress = () =>
     parseDrepId(drepId, CardanoMobile)
-      .then(({hash, type}) => onSubmit?.({hash, type}))
+      .then(({hash, type}) => {
+        onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
+      })
       .catch(() => Alert.alert(strings.error, strings.invalidDRepId))
 
   const handleOnLinkPress = () => {

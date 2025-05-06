@@ -1,16 +1,16 @@
 import {time} from '@yoroi/common'
-import {usePortfolioTokenDiscovery} from '@yoroi/portfolio'
+import {isPrimaryTokenInfo, usePortfolioTokenDiscovery} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../components/Icon'
-import {MediaPreview} from '../../../components/MediaPreview/MediaPreview'
 import {SimpleTab} from '../../../components/SimpleTab/SimpleTab'
 import {Space} from '../../../components/Space/Space'
 import {isEmptyString} from '../../../kernel/utils'
+import {TokenInfoIcon} from '../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {CopiableText} from './CopiableText'
 import {ExplorerInfoLinks} from './ExplorerInfoLinks'
@@ -40,13 +40,13 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
 
   return (
     <View style={styles.header}>
-      <MediaPreview info={info} width={81} height={81} />
+      <TokenInfoIcon info={info} size="xl" />
 
       <Space height="sm" />
 
       {!isEmptyString(title) && <Text style={styles.headerText}>{title}</Text>}
 
-      <Text style={styles.headerText}>{`(${assetName})`}</Text>
+      {!isPrimaryTokenInfo(info) && <Text style={styles.headerText}>{`(${assetName})`}</Text>}
 
       <Space height="xl" />
 
@@ -60,12 +60,12 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
 }
 
 const Info = ({info}: {info: Portfolio.Token.Info}) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const [activeTab, setActiveTab] = React.useState<'overview' | 'json'>('overview')
 
-  const {tokenDiscovery} = usePortfolioTokenDiscovery(
+  const {tokenDiscovery, isLoading: isDiscoveryLoading} = usePortfolioTokenDiscovery(
     {
       id: info.id,
       network: wallet.networkManager.network,
@@ -73,8 +73,11 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
     },
     {
       staleTime: time.session,
+      enabled: !isPrimaryTokenInfo(info),
     },
   )
+
+  if (isPrimaryTokenInfo(info)) return <Text style={styles.description}>{strings.adaDescription}</Text>
 
   return (
     <View style={styles.info}>
@@ -92,9 +95,15 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
 
       {/* ↓↓↓ TABS CONTENT ↓↓↓ */}
 
-      <Overview info={info} discovery={tokenDiscovery} isActive={activeTab === 'overview'} />
+      {isDiscoveryLoading ? (
+        <ActivityIndicator size={22} color={colors.indicatorColor} />
+      ) : (
+        <>
+          <Overview info={info} discovery={tokenDiscovery} isActive={activeTab === 'overview'} />
 
-      <Json discovery={tokenDiscovery} isActive={activeTab === 'json'} />
+          <Json discovery={tokenDiscovery} isActive={activeTab === 'json'} />
+        </>
+      )}
     </View>
   )
 }
@@ -225,8 +234,6 @@ const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
-  if (!discovery || isEmptyString(discovery.supply)) return null
-
   return (
     <View>
       <Space width="sm" />
@@ -234,7 +241,7 @@ const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
       <Row>
         <Text style={styles.label}>{strings.tokenSupply}</Text>
 
-        <Text style={styles.value}>{discovery.supply}</Text>
+        <Text style={styles.value}>{isEmptyString(discovery?.supply) ? '-' : discovery?.supply}</Text>
       </Row>
     </View>
   )
@@ -352,6 +359,7 @@ const useStyles = () => {
 
   const colors = {
     copy: color.gray_900,
+    indicatorColor: color.gray_300,
   }
 
   return {styles, colors} as const

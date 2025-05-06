@@ -32,7 +32,7 @@ import {
   useShowDarkThemeAnnouncementScreen,
 } from './features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
-import {useInitNotifications} from './features/Notifications/useCases/common/hooks'
+import {useInitNotifications} from './features/Notifications/common/hooks'
 import {NotificationsDevScreen} from './features/Notifications/useCases/NotificationsDevScreen'
 import {NotificationUIHandler} from './features/Notifications/useCases/NotificationUIHandler'
 import {SearchProvider} from './features/Search/SearchContext'
@@ -40,7 +40,6 @@ import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from './features/WalletManager/common/hooks/useHasWallets'
 import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
-import {features} from './kernel/features'
 import {AppRoutes, defaultStackNavigationOptions} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
 
@@ -56,7 +55,7 @@ const changeNavigationBarColor = (colorScheme: 'default-dark' | 'default-light',
 }
 
 export const AppNavigator = () => {
-  useInitNotifications({localEnabled: true, pushEnabled: features.pushNotifications})
+  useInitNotifications({localEnabled: true, pushEnabled: true})
   useDeepLinkWatcher()
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()

@@ -1,0 +1,182 @@
+[
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.description",
+    "defaultMessage": "!!!Adjust the display duration of in-app notifications to suit your preferences.",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 22,
+      "column": 15,
+      "index": 869
+    },
+    "end": {
+      "line": 25,
+      "column": 3,
+      "index": 1055
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.apply",
+    "defaultMessage": "!!!Apply",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 26,
+      "column": 9,
+      "index": 1066
+    },
+    "end": {
+      "line": 29,
+      "column": 3,
+      "index": 1174
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.displayDuration",
+    "defaultMessage": "!!!Display duration",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 30,
+      "column": 19,
+      "index": 1195
+    },
+    "end": {
+      "line": 33,
+      "column": 3,
+      "index": 1324
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.manual",
+    "defaultMessage": "!!!Manual",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 34,
+      "column": 10,
+      "index": 1336
+    },
+    "end": {
+      "line": 37,
+      "column": 3,
+      "index": 1446
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.seconds",
+    "defaultMessage": "!!!seconds",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 38,
+      "column": 11,
+      "index": 1459
+    },
+    "end": {
+      "line": 41,
+      "column": 3,
+      "index": 1571
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.twoSeconds",
+    "defaultMessage": "!!!2s",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 42,
+      "column": 14,
+      "index": 1587
+    },
+    "end": {
+      "line": 45,
+      "column": 3,
+      "index": 1697
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.fourSeconds",
+    "defaultMessage": "!!!4s",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 46,
+      "column": 15,
+      "index": 1714
+    },
+    "end": {
+      "line": 49,
+      "column": 3,
+      "index": 1825
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.sixSeconds",
+    "defaultMessage": "!!!6s",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 50,
+      "column": 14,
+      "index": 1841
+    },
+    "end": {
+      "line": 53,
+      "column": 3,
+      "index": 1951
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.eightSeconds",
+    "defaultMessage": "!!!8s",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 54,
+      "column": 16,
+      "index": 1969
+    },
+    "end": {
+      "line": 57,
+      "column": 3,
+      "index": 2081
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.tenSeconds",
+    "defaultMessage": "!!!10s",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 58,
+      "column": 14,
+      "index": 2097
+    },
+    "end": {
+      "line": 61,
+      "column": 3,
+      "index": 2208
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.twelveSeconds",
+    "defaultMessage": "!!!12s",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 62,
+      "column": 17,
+      "index": 2227
+    },
+    "end": {
+      "line": 65,
+      "column": 3,
+      "index": 2341
+    }
+  },
+  {
+    "id": "components.settings.manageNotificationDisplayDuration.inputError",
+    "defaultMessage": "!!!Enter a value from 1 to 60.",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationDisplayDuration/strings.ts",
+    "start": {
+      "line": 66,
+      "column": 14,
+      "index": 2357
+    },
+    "end": {
+      "line": 69,
+      "column": 3,
+      "index": 2492
+    }
+  }
+]

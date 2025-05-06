@@ -2,12 +2,12 @@ import {Transaction} from '@emurgo/cross-csl-core'
 import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, ResolverWallet} from '@yoroi/dapp-connector'
 import {DappConnector} from '@yoroi/dapp-connector'
 import {App, Wallet} from '@yoroi/types'
+import BigNumber from 'bignumber.js'
 
 import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
 import {cip95ExtensionMaker, supportsCIP95} from '../../../yoroi-wallets/cardano/cip95/cip95'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {getTransactionUnspentOutput} from '../../../yoroi-wallets/cardano/utils'
-import {Cardano} from '../../../yoroi-wallets/wallets'
+import {collateralConfig} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
 
 function hasProtocol(url: string) {
   return /^[a-z]*:\/\//i.test(url)
@@ -68,6 +68,7 @@ type CreateDappConnectorOptions = {
   signData: (address: string, payload: string) => Promise<string>
   signTxWithHW: (options: {cbor: string; partial?: boolean; manager: DappConnector}) => Promise<Transaction>
   signDataWithHW: (address: string, payload: string) => Promise<{signature: string; key: string}>
+  sendReorganisationTx: ({manager}: {manager: DappConnector}) => Promise<void>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
@@ -122,22 +123,14 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
       const rootKey = await signTx({cbor, manager})
       return cip30.signTx(rootKey, cbor, partial)
     },
+    // NOTE: amount (value argument) is a CIP-30 requirement for getCollateral method
+    // but in Yoroi collateral is generated with minimum amount at the moment
     sendReorganisationTx: async (value?: string) => {
-      const cbor = await cip30.buildReorganisationTx(value)
-      if (meta.isHW) {
-        const signedTx = await options.signTxWithHW({cbor, partial: false, manager})
-        const base64 = Buffer.from(await signedTx.toBytes()).toString('base64')
-        await wallet.submitTransaction(base64)
-        return getTransactionUnspentOutput({
-          txId: await Cardano.calculateTxId(base64, 'base64'),
-          bytes: await signedTx.toBytes(),
-          index: 0,
-        })
+      if (value && new BigNumber(value).gt(new BigNumber(collateralConfig.maxLovelace))) {
+        return Promise.reject(new Error('Collateral value is too high'))
       }
 
-      const rootKey = await signTx({cbor, manager})
-      const witnesses = await cip30.signTx(rootKey, cbor, false)
-      return cip30.sendReorganisationTx(cbor, witnesses)
+      return options.sendReorganisationTx({manager})
     },
     cip95: cip95handler,
   }

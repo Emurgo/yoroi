@@ -161,6 +161,10 @@ export const convertDrepHashToCIP129Format = (
   return hexToBase32(prefix + hash, 'drep')
 }
 
+export const convertDrepHashToCIP105Format = (hash: string) => {
+  return hexToBase32(hash, 'drep')
+}
+
 const hexToBase32 = (hex: string, prefix: string): string => {
   return bech32Module.encode(
     prefix,

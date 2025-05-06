@@ -1,8 +1,8 @@
-import {getSwapConfigApiMaker, useSwapTokensOnlyVerified} from '@yoroi/swap'
+import {getSwapConfigApiMaker} from '@yoroi/swap'
 import {useQuery} from 'react-query'
 
-import {usePortfolioTokenInfos} from '../../Portfolio/common/hooks/usePortfolioTokenInfos'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {undefinedToken} from './constants'
+import {useSwap} from './SwapProvider'
 
 export const useSwapConfig = () => {
   const getSwapConfig = getSwapConfigApiMaker()
@@ -14,20 +14,21 @@ export const useSwapConfig = () => {
 
   const swapConfig = query.data
 
-  const {wallet} = useSelectedWallet()
+  const candidateTokenId = swapConfig?.initialPair?.tokenOut
 
-  const {data} = usePortfolioTokenInfos({wallet, tokenIds: [swapConfig?.initialPair.tokenOut ?? '.']}, {suspense: true})
+  const {tokenInfos} = useSwap()
 
-  const candidateTokenInfo = swapConfig?.initialPair.tokenOut ? data?.get(swapConfig?.initialPair.tokenOut) : undefined
+  const tokenOutId = tokenInfos.has(candidateTokenId ?? undefinedToken) ? candidateTokenId : undefined
 
-  const validTokenInfos = useSwapTokensOnlyVerified()
+  const partners = swapConfig?.partners
 
-  const buyTokenInfo =
-    candidateTokenInfo && validTokenInfos.some(({id}) => id === candidateTokenInfo.id) ? candidateTokenInfo : undefined
+  const excludedTokens = swapConfig?.excludedTokens ?? []
 
   return {
     ...query,
     swapConfig,
-    buyTokenInfo,
+    tokenOutId,
+    excludedTokens,
+    partners,
   }
 }

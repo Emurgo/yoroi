@@ -29,7 +29,7 @@ import {TransactionInfo} from '../../../../../yoroi-wallets/types/other'
 import {ConsiderDRepToUsGovernanceBanner} from '../../../../Banners/useCases/ConsiderDRepToUsGovernanceBanner'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
-import {formatDrepHash} from '../../common/drep'
+import {formatDrepHashToCIP129Format} from '../../common/drep'
 import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../common/helpers'
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useNavigateTo} from '../../common/navigation'
@@ -99,14 +99,19 @@ const ParticipatingInGovernanceVariant = ({
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
 
-  const displayedHash = action.kind === 'delegate' ? formatDrepHash(action.hash, action.type) : null
+  const displayedHash = action.kind === 'delegate' ? formatDrepHashToCIP129Format(action.hash, action.type) : null
+  const isDelegatingToYoroiDrep = action.kind === 'delegate' && action.hash === GOVERNANCE_YOROI_DREP_ID_HEX
+  const isDelegatingToDrep = action.kind === 'delegate' && action.hash !== GOVERNANCE_YOROI_DREP_ID_HEX
 
-  const actionTitles = {
-    abstain: strings.actionAbstainTitle,
-    delegate: strings.actionDelegateToADRepTitle,
-    'no-confidence': strings.actionNoConfidenceTitle,
-  }
-  const selectedActionTitle = actionTitles[action.kind]
+  const actionsTitles = (action: GovernanceVote) =>
+    isDelegatingToYoroiDrep
+      ? strings.delegateToAYoroiDrep
+      : isDelegatingToDrep
+      ? strings.delegateToADRep
+      : action.kind === 'abstain'
+      ? strings.actionAbstainTitle
+      : strings.actionNoConfidenceTitle
+  const selectedActionTitle = actionsTitles(action)
 
   const introduction = isTxPending
     ? strings.actionYouHaveSelectedTxPending(selectedActionTitle, formattingOptions(styles))
@@ -125,7 +130,21 @@ const ParticipatingInGovernanceVariant = ({
       <Spacer height={24} />
 
       <View style={styles.actions}>
-        {action.kind === 'delegate' && (
+        {isDelegatingToYoroiDrep && (
+          <Action
+            title={strings.delegatingToYoroiDRep}
+            description={strings.delegateToAYoroiDRepDescription}
+            pending={isTxPending}
+            showRightArrow={!isTxPending}
+            onPress={navigateToChangeVote}
+          >
+            <Text style={styles.drepInfoTitle}>{strings.drepID}</Text>
+
+            <Text style={styles.drepInfoDescription}>{displayedHash}</Text>
+          </Action>
+        )}
+
+        {isDelegatingToDrep && (
           <Action
             title={strings.delegatingToADRep}
             description={strings.actionDelegateToADRepDescription}
@@ -192,7 +211,9 @@ const NeverParticipatedInGovernanceVariant = () => {
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
   const {track} = useMetrics()
-  const [pendingVote, setPendingVote] = React.useState<GovernanceVote['kind'] | null>(null)
+  const [pendingVote, setPendingVote] = React.useState<
+    'abstain' | 'no-confidence' | 'delegate-to-yoroi' | 'delegate-not-yoroi' | null
+  >(null)
   const governanceActions = useGovernanceActions()
 
   useFocusEffect(
@@ -223,7 +244,7 @@ const NeverParticipatedInGovernanceVariant = () => {
     },
   })
 
-  const openDRepIdModal = (onSubmit: (options: {hash: string; type: 'key' | 'script'}) => void) => {
+  const openDRepIdModal = (onSubmit: (options: {hash: string; type: 'key' | 'script'; CIP105: boolean}) => void) => {
     track.governanceChooseDrepPageViewed()
 
     openModal({
@@ -241,7 +262,7 @@ const NeverParticipatedInGovernanceVariant = () => {
     openDRepIdModal(async (options) => {
       const stakingKey = await wallet.getStakingKey()
 
-      setPendingVote('delegate')
+      setPendingVote('delegate-not-yoroi')
 
       createDelegationCertificate(
         {hash: options.hash, type: options.type, stakingKey},
@@ -260,6 +281,7 @@ const NeverParticipatedInGovernanceVariant = () => {
               unsignedTx,
               hash: options.hash,
               type: options.type,
+              CIP105: options.CIP105,
             })
           },
         },
@@ -269,6 +291,8 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleDelegateToYoroi = async () => {
     const stakingKey = await wallet.getStakingKey()
+
+    setPendingVote('delegate-to-yoroi')
 
     createDelegationCertificate(
       {hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key', stakingKey},
@@ -283,7 +307,12 @@ const NeverParticipatedInGovernanceVariant = () => {
             addressMode: meta.addressMode,
           })
 
-          governanceActions.handleDelegateAction({unsignedTx, hash: GOVERNANCE_YOROI_DREP_ID_HEX, type: 'key'})
+          governanceActions.handleDelegateAction({
+            unsignedTx,
+            hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+            type: 'key',
+            CIP105: false,
+          })
         },
       },
     )
@@ -355,7 +384,7 @@ const NeverParticipatedInGovernanceVariant = () => {
           title={strings.delegateToAYoroiDrep}
           description={strings.delegateToAYoroiDRepDescription}
           onPress={handleDelegateToYoroi}
-          pending={isCreatingTx && pendingVote === 'delegate'}
+          pending={isCreatingTx && pendingVote === 'delegate-to-yoroi'}
           showGradient
         />
 
@@ -363,7 +392,7 @@ const NeverParticipatedInGovernanceVariant = () => {
           title={strings.actionDelegateToADRepTitle}
           description={strings.actionDelegateToADRepDescription}
           onPress={handleDelegate}
-          pending={isCreatingTx && pendingVote === 'delegate'}
+          pending={isCreatingTx && pendingVote === 'delegate-not-yoroi'}
         />
 
         <Action

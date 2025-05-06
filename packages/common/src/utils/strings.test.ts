@@ -1,4 +1,9 @@
-import {asConcatenedString, truncateString} from './strings'
+import {
+  asciiToHex,
+  asConcatenedString,
+  hexToAscii,
+  truncateString,
+} from './strings'
 
 describe('asConcatenedString', () => {
   it('should return undefined for null input', () => {
@@ -46,5 +51,24 @@ describe('truncateString', () => {
     const separator = '...'
     const result = truncateString({value, maxLength, separator})
     expect(result).toBe('This i...string')
+  })
+})
+
+describe('hexToAscii', () => {
+  test('converts hex to ascii correctly', () => {
+    expect(hexToAscii('68656c6c6f')).toBe('hello')
+    expect(hexToAscii('776f726c64')).toBe('world')
+  })
+
+  test('returns empty string for invalid hex', () => {
+    expect(hexToAscii('123')).toBe('')
+    expect(hexToAscii('zzzz')).toBe('')
+  })
+})
+
+describe('asciiToHex', () => {
+  test('converts ascii to hex correctly', () => {
+    expect(asciiToHex('hello')).toBe('68656c6c6f')
+    expect(asciiToHex('world')).toBe('776f726c64')
   })
 })

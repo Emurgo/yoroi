@@ -5,8 +5,8 @@ import {createUnknownTokenInfo} from './create-unknown-token-info'
 describe('createPrimaryTokenInfo', () => {
   it('should create secondary token info with additional properties', () => {
     const cardanoUnknownToken: Pick<Portfolio.Token.Info, 'name' | 'id'> = {
-      id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.35',
-      name: '35 (unknown)',
+      id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.6964',
+      name: 'id (unknown)',
     }
 
     const expectedTokenInfo: Readonly<Portfolio.Token.Info> = {
@@ -30,5 +30,18 @@ describe('createPrimaryTokenInfo', () => {
 
     expect(result).toEqual(expectedTokenInfo)
     expect(Object.isFrozen(result)).toBe(true)
+
+    const badId =
+      '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139' as Portfolio.Token.Id
+    const badResult = createUnknownTokenInfo({
+      id: badId,
+    })
+
+    expect(badResult).toEqual({
+      ...expectedTokenInfo,
+      id: badId,
+      name: ' (unknown)',
+    })
+    expect(Object.isFrozen(badResult)).toBe(true)
   })
 })

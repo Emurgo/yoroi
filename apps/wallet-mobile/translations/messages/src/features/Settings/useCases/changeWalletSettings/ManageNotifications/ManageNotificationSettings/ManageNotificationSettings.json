@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.settings.walletsettingscreen.inAppNotifications",
+    "defaultMessage": "!!!In-app notifications",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationSettings/ManageNotificationSettings.tsx",
+    "start": {
+      "line": 179,
+      "column": 22,
+      "index": 5600
+    },
+    "end": {
+      "line": 182,
+      "column": 3,
+      "index": 5722
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.displayDuration",
+    "defaultMessage": "!!!Display duration",
+    "file": "src/features/Settings/useCases/changeWalletSettings/ManageNotifications/ManageNotificationSettings/ManageNotificationSettings.tsx",
+    "start": {
+      "line": 183,
+      "column": 19,
+      "index": 5743
+    },
+    "end": {
+      "line": 186,
+      "column": 3,
+      "index": 5858
+    }
+  }
+]

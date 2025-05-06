@@ -37,6 +37,7 @@ export const lightPalette: BasePalette = {
   black_static: '#000000',
   white_static: '#FFFFFF',
   green_static: '#08C29D',
+  red_static: '#FF1351',
 
   sys_magenta_700: '#CF053A',
   sys_magenta_600: '#E80742',

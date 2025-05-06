@@ -561,6 +561,10 @@ export const actionMessages = defineMessages({
     id: 'global.receive',
     defaultMessage: '!!!Receive',
   },
+  sell: {
+    id: 'global.sell',
+    defaultMessage: '!!!Sell',
+  },
   buy: {
     id: 'global.buy',
     defaultMessage: '!!!Buy',

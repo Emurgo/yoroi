@@ -1,54 +1,30 @@
-import {AppFrontendFeeTier} from '../api/app'
+import {ChainSupportedNetworks} from '../chain/network'
 import {PortfolioTokenInfo} from '../portfolio/info'
-import {PortfolioTokenId} from '../portfolio/token'
 import {SwapAggregator} from './aggregator'
 import {SwapApi} from './api'
-import {SwapMakeOrderCalculation, SwapOrderCalculation} from './calculations'
-import {SwapOrderType} from './order'
-import {SwapPoolProvider} from './pool'
 import {SwapStorage} from './storage'
+
+export type SwapManagerSettings = {
+  slippage: number
+  routingPreference: 'auto' | Array<SwapAggregator>
+}
 
 export type SwapManager = Readonly<{
   clearStorage: SwapStorage['clear']
-  slippage: SwapStorage['slippage']
-  order: {
-    cancel: SwapApi['cancelOrder']
-    create: SwapApi['createOrder']
-    list: {
-      byStatusOpen: SwapApi['getOpenOrders']
-      byStatusCompleted: SwapApi['getCompletedOrders']
-    }
-  }
-  tokens: {
-    list: {
-      onlyVerified: SwapApi['getTokens']
-      byPair: SwapApi['getTokenPairs']
-    }
-  }
-  price: {
-    byPair: SwapApi['getPrice']
-  }
-  pools: {
-    list: {
-      byPair: SwapApi['getPools']
-    }
-  }
-  stakingKey: string
-  primaryTokenInfo: PortfolioTokenInfo
-  supportedProviders: ReadonlyArray<SwapPoolProvider>
-  aggregator: SwapAggregator
-  aggregatorTokenId?: PortfolioTokenId
-  frontendFeeTiers: ReadonlyArray<AppFrontendFeeTier>
-  makeOrderCalculations(
-    args: SwapMakeOrderCalculation,
-  ): Array<SwapOrderCalculation>
-  getBestPoolCalculation(
-    calculations: Array<SwapOrderCalculation>,
-  ): SwapOrderCalculation | undefined
-  selectedPoolCalculationSelector(args: {
-    type: SwapOrderType
-    selectedPoolId?: string
-    calculations: Array<SwapOrderCalculation>
-    bestPoolCalculation?: SwapOrderCalculation
-  }): SwapOrderCalculation | undefined
+  assignSettings(v: Partial<SwapManagerSettings>): SwapManagerSettings
+  settings: SwapManagerSettings
+  api: SwapApi
 }>
+
+export type SwapManagerMaker = (
+  args: Readonly<{
+    address: string
+    addressHex: string
+    stakingKey: string
+    primaryTokenInfo: PortfolioTokenInfo
+    isPrimaryToken(token: string | null | undefined): boolean
+    network: ChainSupportedNetworks
+    storage: SwapStorage
+    partners?: Partial<Record<SwapAggregator, string>>
+  }>,
+) => SwapManager

@@ -3,8 +3,8 @@ import {createUnknownTokenInfo} from './create-unknown-token-info'
 
 describe('createCachedUnknownTokenInfo', () => {
   it('should create a cached unknown token info', () => {
-    const id = 'token.id'
-    const expectedName = 'Unknown (id)'
+    const id = 'token.6964'
+    const expectedName = 'id (unknown)'
     const expectedUnknownTokenInfo = {
       record: createUnknownTokenInfo({id, name: expectedName}),
       expires: 0,

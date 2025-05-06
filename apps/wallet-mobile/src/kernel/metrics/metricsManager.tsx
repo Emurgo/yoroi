@@ -218,6 +218,20 @@ export const makeMetricsManager = (
 
     themeSelected: metricsModule.themeSelected.bind(metricsModule),
     dappPopupSignTransactionPageViewed: metricsModule.dappPopupSignTransactionPageViewed.bind(metricsModule),
+
+    buyAdaSuccessRedirect: metricsModule.buyAdaSuccessRedirect.bind(metricsModule),
+    claimAdaTransactionSettled: metricsModule.claimAdaTransactionSettled.bind(metricsModule),
+    dappPopupSignTransactionSubmitted: metricsModule.dappPopupSignTransactionSubmitted.bind(metricsModule),
+    onboardingAnalyticsPageViewed: metricsModule.onboardingAnalyticsPageViewed.bind(metricsModule),
+    sellAdaInputAmount: metricsModule.sellAdaInputAmount.bind(metricsModule),
+    sellAdaSuccessRedirect: metricsModule.sellAdaSuccessRedirect.bind(metricsModule),
+    walletPageExchangeBottomSheetClicked: metricsModule.walletPageExchangeBottomSheetClicked.bind(metricsModule),
+
+    notificationCenterPageViewed: metricsModule.notificationCenterPageViewed.bind(metricsModule),
+    pushNotificationPressed: metricsModule.pushNotificationPressed.bind(metricsModule),
+    pushNotificationViewed: metricsModule.pushNotificationViewed.bind(metricsModule),
+    settingInAppNotificationTimerUpdated: metricsModule.settingInAppNotificationTimerUpdated.bind(metricsModule),
+    settingsPushNotificationsStatusUpdated: metricsModule.settingsPushNotificationsStatusUpdated.bind(metricsModule),
   } as const
 
   return {

@@ -1,34 +1,35 @@
 import {Swap} from '@yoroi/types'
 
-export const makeStorageMaker = (): Readonly<Swap.Storage> => {
-  const slippage: Swap.Storage['slippage'] = {
-    read: () => Promise.resolve(0.1),
+export const swapStorageMakerNormal = (): Readonly<Swap.Storage> => {
+  const settings: Swap.Storage['settings'] = {
+    read: () => Promise.resolve({routingPreference: 'auto', slippage: 1}),
     remove: () => Promise.resolve(),
     save: () => Promise.resolve(),
-    key: 'mock-swap-slippage',
+    key: 'mock-swap-settings',
   }
 
   const clear: Swap.Storage['clear'] = () => Promise.resolve()
 
   return {
-    slippage,
+    settings,
     clear,
   } as const
 }
 
 const unknownError = () => Promise.reject('Unknown error')
-export const makeStorageMakerDefault = (): Readonly<Swap.Storage> => {
-  const slippage: Swap.Storage['slippage'] = {
+
+export const swapStorageMakerError = (): Readonly<Swap.Storage> => {
+  const settings: Swap.Storage['settings'] = {
     read: unknownError,
     remove: unknownError,
     save: unknownError,
-    key: 'mock-swap-slippage',
+    key: 'mock-swap-settings',
   }
 
   const clear: Swap.Storage['clear'] = unknownError
 
   return {
-    slippage,
+    settings,
     clear,
   } as const
 }

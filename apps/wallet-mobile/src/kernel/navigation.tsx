@@ -9,6 +9,7 @@ import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, View} fro
 
 import {Icon} from '../components/Icon'
 import {OnConfirm} from '../features/ReviewTx/common/hooks/useOnConfirm'
+import {ReviewDetailsProps} from '../features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
 
@@ -161,7 +162,8 @@ export type TxHistoryRoutes = {
 } & SwapTokenRoutes &
   ScanRoutes &
   ClaimRoutes &
-  ExchangeRoutes
+  ExchangeRoutes &
+  NotificationCenterRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 type ScanStartParams = Readonly<{
@@ -176,13 +178,17 @@ type ClaimRoutes = {
   'claim-show-success': undefined
 }
 
-type SwapTokenRoutes = {
-  'swap-start-swap': NavigatorScreenParams<SwapTabRoutes>
+type NotificationCenterRoutes = {
+  'notification-center-history': undefined
+}
+
+export type SwapTokenRoutes = {
+  'swap-main': undefined
+  'swap-orders': undefined
+  'swap-settings': undefined
   'swap-review': undefined
-  'swap-select-sell-token': undefined
-  'swap-select-buy-token': undefined
-  'swap-edit-slippage': undefined
-  'swap-select-pool': undefined
+  'swap-select-token': {direction: 'in' | 'out'}
+  'swap-select-protocol': undefined
   'swap-preprod-notice': undefined
   'swap-submitted-tx': undefined
   'swap-failed-tx': undefined
@@ -191,11 +197,6 @@ export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
 export type StakingCenterRoutes = {
   'staking-center-main': undefined
-}
-
-export type SwapTabRoutes = {
-  'token-swap': undefined
-  orders: undefined
 }
 
 type ExchangeRoutes = {
@@ -244,8 +245,15 @@ export type SettingsStackRoutes = {
       onPress: () => void
     }
   }
-  'manage-notification-display-duration': undefined
+  'manage-notifications'?: {
+    screen: keyof ManageNotificationsRoutes
+  }
   'settings-preparing-wallet': undefined
+}
+
+export type ManageNotificationsRoutes = {
+  'manage-notification-display-duration': undefined
+  'manage-notification-settings': undefined
 }
 
 export type ToggleAnalyticsSettingsRoutes = {
@@ -288,8 +296,9 @@ export type ReviewTxRoutes = {
     partial?: boolean
     preventSubmit?: boolean
     operations?: Array<React.ReactNode>
+    operationsNotice?: React.ReactNode
     receiverCustomTitle?: React.ReactNode
-    details?: {title: string; component: React.ReactNode}
+    details?: ReviewDetailsProps
     createdBy?: React.ReactNode
     onConfirm?: () => void
     onCancel?: OnConfirm['onCancel']
@@ -606,7 +615,19 @@ export const useWalletNavigation = () => {
       navigation.navigate('manage-wallets', {
         screen: 'settings',
         params: {
-          screen: 'manage-notification-display-duration',
+          screen: 'manage-notifications',
+          params: {
+            screen: 'manage-notification-display-duration',
+          },
+        },
+      })
+    },
+
+    navigateToNotificationSettings: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'manage-notifications',
         },
       })
     },

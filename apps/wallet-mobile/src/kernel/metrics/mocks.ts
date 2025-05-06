@@ -127,6 +127,20 @@ export const mockMetricsManager = (): MetricsManager => {
 
     themeSelected: e,
     dappPopupSignTransactionPageViewed: e,
+
+    buyAdaSuccessRedirect: e,
+    claimAdaTransactionSettled: e,
+    dappPopupSignTransactionSubmitted: e,
+    onboardingAnalyticsPageViewed: e,
+    sellAdaInputAmount: e,
+    sellAdaSuccessRedirect: e,
+    walletPageExchangeBottomSheetClicked: e,
+
+    notificationCenterPageViewed: e,
+    pushNotificationPressed: e,
+    pushNotificationViewed: e,
+    settingInAppNotificationTimerUpdated: e,
+    settingsPushNotificationsStatusUpdated: e,
   } as const
 
   return {

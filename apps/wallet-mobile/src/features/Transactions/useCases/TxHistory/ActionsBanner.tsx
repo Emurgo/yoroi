@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native'
-import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Chain} from '@yoroi/types'
@@ -15,7 +14,7 @@ import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {useReceive} from '../../../Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../../../Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '../../../Receive/common/useReceiveAddressesStatus'
-import {useSwapForm} from '../../../Swap/common/SwapFormProvider'
+import {useSwap} from '../../../Swap/common/SwapProvider'
 import {useSwapConfig} from '../../../Swap/common/useSwapConfig'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
@@ -25,6 +24,8 @@ import {useStrings} from '../../common/strings'
 export const ActionsBanner = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const swapForm = useSwap()
+  const {tokenOutId} = useSwapConfig()
   const navigateTo = useNavigateTo()
 
   const {isSingle, addressMode} = useAddressMode()
@@ -34,9 +35,6 @@ export const ActionsBanner = () => {
   const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
 
   const {reset: resetSendState} = useTransfer()
-  const {orderData, buyTokenInfoChanged} = useSwap()
-  const {buyTokenInfo} = useSwapConfig()
-  const {resetSwapForm, buyTouched} = useSwapForm()
 
   const {track} = useMetrics()
 
@@ -60,11 +58,11 @@ export const ActionsBanner = () => {
       return
     }
 
-    resetSwapForm()
+    swapForm.action({type: 'ResetForm'})
 
-    if (buyTokenInfo) {
-      buyTokenInfoChanged(buyTokenInfo)
-      buyTouched()
+    if (tokenOutId !== undefined) {
+      swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
+      swapForm.action({type: 'TokenOutInputTouched'})
     }
 
     track.swapInitiated({
@@ -72,8 +70,8 @@ export const ActionsBanner = () => {
         {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
       ],
       to_asset: [{asset_name: '', asset_ticker: '', policy_id: ''}],
-      order_type: orderData.type,
-      slippage_tolerance: orderData.slippage,
+      order_type: 'market',
+      slippage_tolerance: 1,
     })
 
     navigateTo.swap()
@@ -177,7 +175,7 @@ const useNavigateTo = () => {
     send: () => navigation.navigate('send-start-tx'),
     receiveSingleAddress: () => navigation.navigate('receive-single'),
     receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
-    swap: () => navigation.navigate('swap-start-swap', {screen: 'token-swap'}),
+    swap: () => navigation.navigate('swap-main'),
     swapPreprodNotice: () => navigation.navigate('swap-preprod-notice'),
     exchange: () => navigation.navigate('exchange-create-order'),
   }

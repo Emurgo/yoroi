@@ -1,0 +1,148 @@
+{
+  "projectType": "typescript",
+  "defaultLang": "typescript",
+  "formatOnSave": true,
+  "mpc": {
+    "enabled": true,
+    "providers": {
+      "github": {
+        "enabled": true,
+        "contextType": "repository",
+        "contextDepth": 3,
+        "maxFileSize": 1000000
+      },
+      "atlassian": {
+        "enabled": true,
+        "contextType": "confluence",
+        "maxResults": 10,
+        "includeComments": true
+      }
+    }
+  },
+  "mcps": {
+    "mcp-atlassian": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "mcp/atlassian",
+        "--jira-url=${JIRA_URL}",
+        "--jira-username=${JIRA_USERNAME}",
+        "--jira-token=${JIRA_TOKEN}"
+      ],
+      "env": {
+        "JIRA_TOKEN": "${JIRA_TOKEN}",
+        "JIRA_URL": "${JIRA_URL}",
+        "JIRA_USERNAME": "${JIRA_USERNAME}"
+      },
+      "envFile": ".env"
+    },
+    "github": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "envFile": ".env"
+    }
+  },
+  "commitRules": {
+    "enabled": true,
+    "rules": {
+      "conventional": true,
+      "maxLength": 72,
+      "types": [
+        "feat",
+        "feature",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "build",
+        "ci",
+        "chore",
+        "merge",
+        "revert"
+      ],
+      "scopes": [
+        "wallet-mobile",
+        "root",
+        "api",
+        "types",
+        "swap",
+        "links",
+        "theme",
+        "exchange",
+        "transfer",
+        "setup-wallet",
+        "identicon",
+        "explorers",
+        "resolver",
+        "common",
+        "staking",
+        "portfolio",
+        "notifications",
+        "claim",
+        "blockchains",
+        "banners"
+      ],
+      "requireScope": true,
+      "requireTicketNumber": false,
+      "ticketPattern": "^[A-Z]+-\\d+",
+      "template": "<type>(<scope>): [<ticket>] <description>",
+      "examples": [
+        "feat(wallet): [YV-123] Add new transaction history view",
+        "fix(api): [YV-456] Fix stake pool delegation issue",
+        "docs: [YV-789] Update README with new installation steps"
+      ]
+    }
+  },
+  "codeRules": {
+    "typescript": {
+      "preferConstOverLet": true
+    },
+    "react": {
+      "preferFunctionComponents": true,
+      "requirePropTypes": true,
+      "requireMemo": true,
+      "requireStyledPrefix": true
+    }
+  },
+  "editor": {
+    "tabSize": 2,
+    "insertSpaces": true,
+    "detectIndentation": true,
+    "trimTrailingWhitespace": true,
+    "insertFinalNewline": true
+  },
+  "typescript": {
+    "format": {
+      "semicolons": true,
+      "singleQuote": true,
+      "trailingComma": "all"
+    },
+    "preferences": {
+      "importModuleSpecifier": "non-relative",
+      "quoteStyle": "single"
+    }
+  },
+  "search": {
+    "excludePatterns": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.git/**",
+      "**/coverage/**"
+    ]
+  }
+} 

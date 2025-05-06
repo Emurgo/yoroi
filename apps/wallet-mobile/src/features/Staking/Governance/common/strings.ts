@@ -16,6 +16,7 @@ export const useStrings = () => {
     actionNoConfidenceTitle: intl.formatMessage(messages.actionNoConfidenceTitle),
     actionNoConfidenceDescription: intl.formatMessage(messages.actionNoConfidenceDescription),
     drepKey: intl.formatMessage(messages.drepKey),
+    delegateToADRep: intl.formatMessage(messages.delegateToADRep),
     delegatingToADRep: intl.formatMessage(messages.delegatingToADRep),
     abstaining: intl.formatMessage(messages.abstaining),
     delegateVotingToDRep: intl.formatMessage(messages.delegateVotingToDRep),
@@ -75,7 +76,9 @@ export const useStrings = () => {
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     invalidDRepId: intl.formatMessage(messages.invalidDRepId),
     delegateToAYoroiDrep: intl.formatMessage(messages.delegateToAYoroiDrep),
+    delegatingToYoroiDRep: intl.formatMessage(messages.delegatingToYoroiDRep),
     delegateToAYoroiDRepDescription: intl.formatMessage(messages.delegateToAYoroiDRepDescription),
+    delegateVotingToDRepDeprecatedFormatNotice: intl.formatMessage(messages.delegateVotingToDRepDeprecatedFormatNotice),
   }
 }
 
@@ -127,6 +130,10 @@ const messages = defineMessages({
     id: 'components.governance.delegatingToADRep',
     defaultMessage: '!!!Delegating to a DRep',
   },
+  delegateToADRep: {
+    id: 'components.governance.delegateToADRep',
+    defaultMessage: '!!!Delegate to a DRep',
+  },
   abstaining: {
     id: 'components.governance.abstaining',
     defaultMessage: '!!!Abstaining',
@@ -134,6 +141,10 @@ const messages = defineMessages({
   delegateVotingToDRep: {
     id: 'components.governance.delegateVotingToDRep',
     defaultMessage: '!!!Delegate voting to',
+  },
+  delegateVotingToDRepDeprecatedFormatNotice: {
+    id: 'components.governance.delegateVotingToDRepDeprecatedFormatNotice',
+    defaultMessage: '!!!We automatically updated your DRep address to the latest format (CIP 129).',
   },
   selectAbstain: {
     id: 'components.governance.selectAbstain',
@@ -182,7 +193,8 @@ const messages = defineMessages({
   },
   actionYouHaveSelectedTxPending: {
     id: 'components.governance.actionYouHaveSelectedTxPending',
-    defaultMessage: '!!!You have selected <b>{action}</b> as your governance status.',
+    defaultMessage:
+      '!!!You have selected <b>{action}</b> as your governance status. It may take some time to process your delegation request.',
   },
   actionYouHaveSelected: {
     id: 'components.governance.actionYouHaveSelected',
@@ -324,10 +336,15 @@ const messages = defineMessages({
   },
   delegateToAYoroiDrep: {
     id: 'components.governance.delegateToAYoroiDrep',
-    defaultMessage: '!!!Delegate to a Yoroi DRep',
+    defaultMessage: '!!!Delegate to Yoroi DRep',
+  },
+  delegatingToYoroiDRep: {
+    id: 'components.governance.delegatingToYoroiDRep',
+    defaultMessage: '!!!Delegating to Yoroi DRep',
   },
   delegateToAYoroiDRepDescription: {
     id: 'components.governance.delegateToAYoroiDRepDescription',
-    defaultMessage: '!!!You are designating Yoroi to cast a vote on your behalf for future proposals.',
+    defaultMessage:
+      '!!!You are designating Yoroi to cast your vote on your behalf for all proposals now and in the future.',
   },
 })

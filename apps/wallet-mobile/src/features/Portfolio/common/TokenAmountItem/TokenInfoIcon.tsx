@@ -6,115 +6,83 @@ import React from 'react'
 import {ImageStyle, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
-import {isDev} from '../../../../kernel/env'
-import {logger} from '../../../../kernel/logger/logger'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {usePortfolioImageInvalidate} from '../hooks/usePortfolioImage'
+import {usePortfolioImage} from '../hooks/usePortfolioImage'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info | undefined | null
-  size?: 'sm' | 'md'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
   imageStyle?: ImageStyle
 }
-export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProps) => {
-  const {styles} = useStyles()
-  const {wallet} = useSelectedWallet()
-  const {invalidate} = usePortfolioImageInvalidate()
+export const TokenInfoIcon = ({info, size = 'lg', imageStyle}: TokenInfoIconProps) => {
+  const {styles, colors} = useStyles()
+  const [policy, name] = !info ? '.' : info.id.split('.')
+  const {uri, headers, onError, onLoad, isError} = usePortfolioImage({policy, name, width: 64, height: 64})
 
-  const [error, setError] = React.useState(false)
-
-  if (error || !info) return <TokenIconPlaceholder size={size} />
-
-  if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
-
-  if (info.originalImage.startsWith('data:image/png;base64'))
+  if (!info || isError) {
     return (
-      <Image
-        source={{uri: info.originalImage}}
-        style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
-        placeholder={blurhash}
-        onError={() => setError(true)}
-      />
+      <View style={[styles.icon, styles[size], styles.placeholder]}>
+        <Icon.Coins2 color={colors.icon} size={{sm: 18, md: 20, lg: 24, xl: 42}[size]} />
+      </View>
     )
+  }
 
-  const [policy, name] = info.id.split('.')
-  const uri = `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
+  if (isPrimaryToken(info))
+    return (
+      <View style={[styles.icon, styles[size], styles.primary, imageStyle]}>
+        <Icon.Cardano color="white" size={{sm: 20, md: 28, lg: 35, xl: 70}[size]} />
+      </View>
+    )
 
   return (
     <Image
+      recyclingKey={info.id}
       source={{uri, headers}}
       contentFit="cover"
-      style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
+      style={[styles.icon, styles[size], imageStyle]}
       placeholder={blurhash}
       cachePolicy="memory-disk"
-      onError={() => {
-        setError(true)
-        if (isDev) {
-          logger.debug(`invalidating token image ${info.id}`)
-          invalidate([info.id])
-        }
-      }}
+      onError={onError}
+      onLoad={onLoad}
     />
   )
 }
-
-const PrimaryIcon = ({size = 'md', imageStyle}: {size?: 'sm' | 'md'; imageStyle?: ImageStyle}) => {
-  const {styles} = useStyles()
-  return (
-    <View style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, styles.primary, imageStyle]}>
-      <Icon.Cardano color="white" size={size === 'sm' ? 20 : 35} />
-    </View>
-  )
-}
-
-export const TokenIconPlaceholder = ({size = 'md'}: {size?: 'sm' | 'md'}) => {
-  const {styles, colors} = useStyles()
-  return (
-    <View style={[styles.iconMedium, styles.placeholder, size === 'sm' && styles.placeholderSmall]}>
-      <Icon.Coins2 color={colors.icon} size={size === 'sm' ? 18 : 24} />
-    </View>
-  )
-}
-
-const headers = {
-  Accept: 'image/webp',
-} as const
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    placeholder: {
+      backgroundColor: color.gray_200,
+    },
     primary: {
       backgroundColor: color.primary_500,
     },
-    iconMedium: {
+    icon: {
       backgroundColor: 'transparent',
+      borderRadius: 8,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.overflow_hidden,
+    },
+    xl: {
+      width: 80,
+      height: 80,
+    },
+    lg: {
       width: 40,
       height: 40,
-      borderRadius: 8,
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden',
     },
-    iconSmall: {
-      backgroundColor: 'transparent',
+    md: {
+      width: 32,
+      height: 32,
+    },
+    sm: {
       width: 24,
       height: 24,
-      borderRadius: 8,
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden',
     },
-    placeholder: {
-      backgroundColor: color.gray_100,
-    },
-    placeholderSmall: {
-      width: 26,
-      height: 26,
-    },
-  })
+  } as const)
 
   const colors = {
     icon: color.gray_600,

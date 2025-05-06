@@ -9,16 +9,16 @@ import {Spacer} from '../../../../components/Spacer/Spacer'
 import {SuccessfulTxIcon} from '../../../ReviewTx/illustrations/SuccessfulTxIcon'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
-import {useSwapForm} from '../../common/SwapFormProvider'
+import {useSwap} from '../../common/SwapProvider'
 
 export const SubmittedTxScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
-  const {resetSwapForm} = useSwapForm()
+  const swapForm = useSwap()
 
   const handleOnPress = () => {
-    resetSwapForm()
+    swapForm.action({type: 'ResetForm'})
     navigateTo.resetToStartSwap()
   }
 

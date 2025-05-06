@@ -1,13 +1,17 @@
 import {amountFormatter, infoExtractName, isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Portfolio, Swap} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 
+import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
-import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
+import {features} from '../../../../kernel/features'
+import {useStrings} from '../../../ReviewTx/common/hooks/useStrings'
+import {TokenDetails} from '../../../ReviewTx/common/TokenDetails'
 import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {usePriceImpactRiskTheme} from '../../../Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../../Swap/common/types'
@@ -18,21 +22,22 @@ type TokenAmountItemProps = {
   ignorePrivacy?: boolean
 
   style?: ViewProps['style']
-  inWallet?: boolean
   variant?: 'swap'
   priceImpactRisk?: SwapPriceImpactRisk
-  orderType?: Swap.OrderType
+  orderType?: 'limit' | 'market'
 }
 
 export const TokenAmountItem = ({
   ignorePrivacy = false,
   style,
   amount,
-  inWallet,
   variant,
   priceImpactRisk,
   orderType,
 }: TokenAmountItemProps) => {
+  const strings = useStrings()
+  const {openModal} = useModal()
+  const {height: windowHeight} = useWindowDimensions()
   const {styles, colors} = useStyles()
   const {privacyPlaceholder, isPrivacyActive} = usePrivacyMode()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
@@ -47,29 +52,26 @@ export const TokenAmountItem = ({
       ? amountFormatter({dropTraillingZeros: true})(amount)
       : privacyPlaceholder
 
-  const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : colors.text
+
+  const handleShowTokenDetails = () => {
+    openModal({
+      title: strings.tokenDetailsTitle,
+      content: <TokenDetails tokenInfo={info} />,
+      height: isPrimary ? 450 : windowHeight * 0.8,
+    })
+  }
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
-        <TokenInfoIcon info={amount.info} size={variant === 'swap' ? 'sm' : 'md'} />
+        <TokenInfoIcon info={amount.info} size={variant === 'swap' ? 'md' : 'lg'} />
       </Left>
 
       <Middle>
-        <View style={styles.row}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
-            {name}
-          </Text>
-
-          {showSwapDetails && (
-            <>
-              <Spacer width={4} />
-
-              {inWallet && <Icon.Portfolio size={22} color={colors.icon} />}
-            </>
-          )}
-        </View>
+        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+          {name}
+        </Text>
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
           {detail}
@@ -78,7 +80,7 @@ export const TokenAmountItem = ({
 
       <Right style={styles.end}>
         {!isNft(info) && variant !== 'swap' && (
-          <View testID="tokenAmountText">
+          <View testID="tokenAmountText" style={styles.quantityWrapper}>
             {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
             {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
@@ -87,8 +89,31 @@ export const TokenAmountItem = ({
           </View>
         )}
 
-        {isPrimary && variant !== 'swap' && (
+        {variant !== 'swap' && (
           <PairedBalance textStyle={styles.pairedBalance} amount={amount} ignorePrivacy={ignorePrivacy} />
+        )}
+
+        {variant === 'swap' && (
+          <View style={styles.row}>
+            {amount.quantity > 0n && (
+              <View>
+                <Text style={[styles.quantity, {textAlign: 'right'}]}>{formattedQuantity}</Text>
+
+                <PairedBalance textStyle={styles.pairedBalance} amount={amount} ignorePrivacy={ignorePrivacy} />
+              </View>
+            )}
+
+            {features.swapTokenLinks && (
+              <Button
+                type={ButtonType.SecondaryText}
+                fgColorsOverride={{disabled: colors.info, idle: colors.info, pressed: colors.info}}
+                style={styles.info}
+                size="S"
+                icon={Icon.InfoCircle}
+                onPress={handleShowTokenDetails}
+              />
+            )}
+          </View>
         )}
       </Right>
     </View>
@@ -132,6 +157,13 @@ const useStyles = () => {
       color: color.gray_900,
       ...atoms.body_1_lg_regular,
     },
+    quantityWrapper: {
+      width: 150,
+      ...atoms.flex_wrap,
+      ...atoms.flex_row,
+      ...atoms.gap_sm,
+      ...atoms.justify_end,
+    },
     skeletonLogo: {
       display: 'flex',
       flexDirection: 'row',
@@ -158,12 +190,18 @@ const useStyles = () => {
       ...atoms.flex,
       ...atoms.flex_row,
       ...atoms.align_center,
+      ...atoms.gap_sm,
+    },
+    info: {
+      ...atoms.pr_2xs,
+      ...atoms.pl_2xs,
     },
   })
 
   const colors = {
     text: color.gray_900,
     icon: color.secondary_600,
+    info: color.text_gray_low,
   }
 
   return {styles, colors}

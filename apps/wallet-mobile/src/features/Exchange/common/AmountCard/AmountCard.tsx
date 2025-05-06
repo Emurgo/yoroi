@@ -4,10 +4,9 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {Boundary} from '../../../../components/Boundary/Boundary'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {isEmptyString} from '../../../../kernel/utils'
-import {TokenIconPlaceholder, TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
+import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useStrings} from '../useStrings'
 
 type AmountCardProps = {
@@ -42,8 +41,6 @@ export const AmountCard: React.FC<AmountCardProps> = ({
       inputRef.current.focus()
     }
   }
-
-  const fallback = React.useCallback(() => <TokenIconPlaceholder />, [])
 
   const {styles, colors} = useStyles()
 
@@ -83,9 +80,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
 
           <View style={styles.rightSection}>
             <View style={styles.sectionContainer}>
-              <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback}}>
-                <TokenInfoIcon info={amount.info} size="sm" />
-              </Boundary>
+              <TokenInfoIcon info={amount.info} size="sm" />
 
               <Spacer width={8} />
 

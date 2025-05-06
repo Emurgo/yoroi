@@ -6,9 +6,7 @@ import {createUnknownTokenInfo} from './create-unknown-token-info'
 export const createCachedUnknownTokenInfo = (
   id: Portfolio.Token.Id,
 ): Readonly<App.CacheRecord<Portfolio.Token.Info>> => {
-  const [, assetNameHex] = id.split('.')
-  const name = `Unknown (${assetNameHex})`
-  const unknownTokenInfo = createUnknownTokenInfo({id, name})
+  const unknownTokenInfo = createUnknownTokenInfo({id})
   const cachedUnknownTokenInfo: Readonly<
     App.CacheRecord<Portfolio.Token.Info>
   > = freeze({expires: 0, hash: '', record: unknownTokenInfo} as const, true)

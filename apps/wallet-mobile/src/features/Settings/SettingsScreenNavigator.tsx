@@ -40,7 +40,7 @@ import {
   EnableEasyConfirmationScreen,
 } from './useCases/changeWalletSettings/EasyConfirmation'
 import {ManageCollateralScreen} from './useCases/changeWalletSettings/ManageCollateral'
-import {ManageNotificationDisplayDurationScreen} from './useCases/changeWalletSettings/ManageNotificationDisplayDuration/ManageNotificationDisplayDurationScreen'
+import {ManageNotificationsNavigator} from './useCases/changeWalletSettings/ManageNotifications/ManageNotificationsNavigator'
 import {RemoveWalletScreen} from './useCases/changeWalletSettings/RemoveWallet'
 import {RenameWalletScreen} from './useCases/changeWalletSettings/RenameWalletScreen/RenameWalletScreen'
 import {WalletSettingsScreen} from './useCases/changeWalletSettings/WalletSettingsScreen'
@@ -193,11 +193,9 @@ export const SettingsScreenNavigator = () => {
       />
 
       <Stack.Screen //
-        name="manage-notification-display-duration"
-        options={{
-          title: strings.displayDuration,
-        }}
-        component={ManageNotificationDisplayDurationScreen}
+        name="manage-notifications"
+        options={{headerShown: false}}
+        component={ManageNotificationsNavigator}
       />
 
       <Stack.Screen
@@ -336,9 +334,9 @@ const messages = defineMessages({
     id: 'global.log',
     defaultMessage: '!!!Log',
   },
-  displayDuration: {
-    id: 'components.settings.notificationDisplayDuration.title',
-    defaultMessage: '!!!Display duration',
+  notifications: {
+    id: 'components.settings.notifications.title',
+    defaultMessage: '!!!Notifications',
   },
 })
 
@@ -367,6 +365,6 @@ const useStrings = () => {
     themeTitle: intl.formatMessage(messages.themeTitle),
     walletTabTitle: intl.formatMessage(messages.walletTabTitle),
     networkTitle: intl.formatMessage(messages.networkTitle),
-    displayDuration: intl.formatMessage(messages.displayDuration),
+    notifications: intl.formatMessage(messages.notifications),
   }
 }

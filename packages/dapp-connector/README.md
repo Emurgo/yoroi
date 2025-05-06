@@ -2,6 +2,19 @@
 
 The Yoroi Dapp Connector package is a utility for interacting with dApps on the Cardano Blockchain.
 
+## Development
+The package is 100% covered by unit tests which need to pass before merging any changes. To run the tests, use the following command:
+
+```bash
+yarn workspace @yoroi/dapp-connector test
+```
+To extend the Dapp Connector API by new methods, you will need to update the `connector.js` file, which is directly inserted into the WebView.
+In the same file you can already find implemented methods such as `getExtensions`, `getBalance`, or `getUtxos`.
+The same methods will later need to be implemented in the `resolver.ts` file as well and a mapping needs to be added to the `methods` variable.
+
+## DApp List
+DApps in the Yoroi application are fetched from the endpoints defined in the `src/adapters/api.ts` file. Adding, changing, or removing a dApp from the list needs to be done on the server side. No new app nor package release is needed to update the list of dApps.
+
 ## Installation
 
 Install the package using npm or yarn :
@@ -22,15 +35,20 @@ yarn add @yoroi/types --save-dev
 ```tsx
 import {useAsyncStorage} from '@yoroi/common'
 import {connectionStorageMaker, DappConnector, dappConnectorMaker} from '@yoroi/dapp-connector'
+import {useSelectedWallet} from "../../useSelectedWallet";
 
-const createDappConnector = (appStorage: App.Storage) => {
+const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
   const storage = connectionStorageMaker(appStorage.join('dapp-connections/'))
-  return dappConnectorMaker(storage)
+  const api: Api = {
+    getDApps: async () => fetchDapps(),
+  }
+  return dappConnectorMaker(storage, wallet, api)
 }
 
 const useDappConnector = () => {
   const appStorage = useAsyncStorage()
-  return useMemo(() => createDappConnector(appStorage), [appStorage])
+  const {wallet} = useSelectedWallet()
+  return useMemo(() => createDappConnector(appStorage, wallet), [appStorage])
 }
 
 export const useConnectWalletToWebView = (

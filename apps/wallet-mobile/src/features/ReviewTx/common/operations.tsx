@@ -13,7 +13,7 @@ import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
 import {usePoolInfo} from '../../../yoroi-wallets/hooks'
 import {formatTokenWithText} from '../../../yoroi-wallets/utils/format'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
-import {formatDrepHash} from '../../Staking/Governance/common/drep'
+import {formatDrepHashToCIP105Format, formatDrepHashToCIP129Format} from '../../Staking/Governance/common/drep'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 import {PoolDetails} from './PoolDetails'
@@ -147,16 +147,29 @@ export const VoteDelegationOperation = ({
   const {styles} = useStyles()
   const strings = useStrings()
 
-  const label = formatDrepHash(hash, type)
+  const CIP129label = formatDrepHashToCIP129Format(hash, type)
+  const CIP105label = formatDrepHashToCIP105Format(hash)
 
   return (
-    <View style={styles.operation}>
-      <Label label={strings.delegateVotingToDRep} showWarning={showWarning} strike={strike} />
+    <>
+      <View style={styles.operation}>
+        <Label label={strings.delegateVotingToDRep} showWarning={showWarning} strike={strike} />
 
-      <Space width="lg" />
+        <Space width="lg" />
 
-      <Text style={[styles.operationValue, strike && styles.strike]}>{label}</Text>
-    </View>
+        <Text style={[styles.operationValue, strike && styles.strike]}>{CIP129label}</Text>
+      </View>
+
+      <Space height="sm" />
+
+      <View style={styles.operation}>
+        <Label label={strings.delegateVotingToDRepSpecified} showWarning={showWarning} strike={strike} />
+
+        <Space width="lg" />
+
+        <Text style={[styles.operationValue, strike && styles.strike]}>{CIP105label}</Text>
+      </View>
+    </>
   )
 }
 

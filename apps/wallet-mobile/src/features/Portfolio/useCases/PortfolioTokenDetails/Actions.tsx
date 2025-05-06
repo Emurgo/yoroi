@@ -1,14 +1,13 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
-import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useSwapForm} from '../../../Swap/common/SwapFormProvider'
+import {useSwap} from '../../../Swap/common/SwapProvider'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/hooks/useNavigateTo'
@@ -21,9 +20,9 @@ export const Actions = ({tokenInfo}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const swap = useSwap()
-  const swapForm = useSwapForm()
+  const swapForm = useSwap()
   const {track} = useMetrics()
+
   const {network} = useSelectedNetwork()
 
   const {
@@ -33,11 +32,11 @@ export const Actions = ({tokenInfo}: Props) => {
   const handleOnSwap = () => {
     if (network === Chain.Network.Preprod) return navigateTo.swapPreprodNotice()
 
-    swapForm.resetSwapForm()
+    swapForm.action({type: 'ResetForm'})
 
     if (!isPrimaryToken(tokenInfo)) {
-      swap.buyTokenInfoChanged(tokenInfo)
-      swapForm.buyTouched()
+      swapForm.action({type: 'TokenOutInputTouched'})
+      swapForm.action({type: 'TokenOutIdChanged', value: tokenInfo.id})
     }
 
     track.swapInitiated({
@@ -45,8 +44,8 @@ export const Actions = ({tokenInfo}: Props) => {
         {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
       ],
       to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.id}],
-      order_type: swap.orderData.type,
-      slippage_tolerance: swap.orderData.slippage,
+      order_type: 'market',
+      slippage_tolerance: 1,
     })
 
     navigateTo.resetTabAndSwap()

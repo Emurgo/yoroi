@@ -5,7 +5,6 @@ export const features = {
   prefillWalletInfo: false,
   showProdPoolsInDev: isDev,
   moderatingNftsEnabled: false,
-  pushNotifications: isDev,
   poolTransition: true,
   portfolioPerformance: false,
   portfolioNews: false,
@@ -13,6 +12,7 @@ export const features = {
   walletListFeedback: false,
   walletListAggregatedBalance: isDev,
   walletListSwipeableActions: false,
+  swapTokenLinks: true,
 }
 
 export const debugWalletInfo = {
