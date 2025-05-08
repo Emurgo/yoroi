@@ -440,6 +440,7 @@ export const transformersMaker = ({
         blockedProtocols,
         tokenIn,
         tokenOut,
+        inputs,
       }: Swap.CreateRequest): BuildRequest => ({
         slippage,
 
@@ -451,6 +452,7 @@ export const transformersMaker = ({
           .filter(isDex),
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
+        inputs,
       }),
       response: (
         {

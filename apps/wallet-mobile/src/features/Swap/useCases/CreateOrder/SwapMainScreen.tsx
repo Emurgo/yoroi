@@ -178,6 +178,7 @@ export const SwapMainScreen = () => {
           testID="swapButton"
           title={swapForm.orderType === 'market' ? strings.swapButton : strings.placeOrder}
           disabled={!swapForm.canSwap}
+          isLoading={swapForm.isLoading}
           onPress={onSwapPress}
         />
       </View>

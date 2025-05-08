@@ -195,6 +195,7 @@ export type BuildRequest = {
   slippage: number
   token_in: string
   token_out: string
+  inputs?: string[]
 }
 
 export type BuildResponse = {

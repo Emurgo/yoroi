@@ -76,6 +76,7 @@ export type SwapCreateRequest = {
   tokenIn: PortfolioTokenId
   tokenOut: PortfolioTokenId
   protocol?: SwapProtocol
+  inputs?: Array<string>
   blockedProtocols?: Array<SwapProtocol>
 } & (
   | {

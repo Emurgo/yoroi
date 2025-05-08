@@ -301,7 +301,7 @@ const _getUtxos = async (
   return paginate(validUtxos, pagination)
 }
 
-const _getRequiredUtxos = async (
+export const _getRequiredUtxos = async (
   csl: WasmModuleProxy,
   wallet: YoroiWallet,
   amounts: Balance.Amounts,

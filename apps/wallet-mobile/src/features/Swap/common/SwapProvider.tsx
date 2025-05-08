@@ -2,7 +2,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {isLeft, isRight} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
-import {Api, Portfolio, Swap} from '@yoroi/types'
+import {Api, Balance, Portfolio, Swap} from '@yoroi/types'
 import {produce} from 'immer'
 import * as React from 'react'
 import {TextInput} from 'react-native'
@@ -16,6 +16,7 @@ import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWal
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
+import {useGetInputs} from './useGetInputs'
 import {useSwapConfig} from './useSwapConfig'
 
 export const useSwap = () => React.useContext(SwapContext)
@@ -25,12 +26,14 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const strings = useStrings()
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
+  const {getInputs} = useGetInputs()
   const network = wallet.networkManager.network
   const balances = usePortfolioBalances({wallet})
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = useAddressHex(wallet)
   const {partners, excludedTokens} = useSwapConfig()
+  const [isLoading, setIsLoading] = React.useState(false)
   const swapManager = React.useMemo(() => {
     const storage = swapStorageMaker()
     return swapManagerMaker({
@@ -188,11 +191,17 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       })
   }, [state, swapManager.api])
 
-  const create = React.useCallback(() => {
+  const create = React.useCallback(async () => {
     if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) return
+
+    setIsLoading(true)
 
     const tokenInInfo = tokenInfos.get(state.tokenInInput.tokenId)
     const tokenOutInfo = tokenInfos.get(state.tokenOutInput.tokenId)
+
+    const quantityIn = Number(state.tokenInInput.value) * 10 ** (tokenInInfo?.decimals ?? 0)
+    const amountsIn: Balance.Amounts = {[state.tokenInInput.tokenId]: `${quantityIn}`}
+    const inputs = await getInputs(amountsIn)
 
     track.swapOrderSelected({
       from_asset: [
@@ -223,8 +232,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
           : {slippage: state.slippageInput.value}),
         blockedProtocols: [],
         protocol: state.selectedProtocol.value,
+        inputs,
       })
       .then((response) => {
+        setIsLoading(false)
+
         if (isLeft(response)) {
           action({type: SwapAction.CreateError, value: response.error})
         } else {
@@ -233,6 +245,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         }
       })
   }, [
+    getInputs,
     navigate,
     state.estimate?.splits,
     state.estimate?.totalFee,
@@ -252,6 +265,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const context = React.useMemo(
     () => ({
       ...state,
+      isLoading,
       limitOptions,
       tokenInfos,
       tokenOutInputRef,
@@ -267,6 +281,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     }),
     [
       state,
+      isLoading,
       limitOptions,
       tokenInfos,
       orders,
@@ -556,6 +571,7 @@ type SwapState = {
 }
 
 export type SwapContext = SwapState & {
+  isLoading: boolean
   limitOptions?: Swap.LimitOptionsResponse
   tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info>
   tokenInInputRef: React.RefObject<TextInput> | undefined
@@ -572,6 +588,7 @@ export type SwapContext = SwapState & {
 
 const SwapContext = React.createContext<SwapContext>({
   ...defaultState,
+  isLoading: false,
   tokenInfos: new Map<Portfolio.Token.Id, Portfolio.Token.Info>(),
   tokenInInputRef: undefined,
   tokenOutInputRef: undefined,
