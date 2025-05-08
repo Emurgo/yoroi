@@ -6,14 +6,18 @@ import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWal
 
 export const useGetInputs = () => {
   const {wallet, meta} = useSelectedWallet()
-  const {csl} = getCSL()
 
   return {
-    getInputs: async (amounts: Balance.Amounts) =>
-      Promise.all(
+    getInputs: async (amounts: Balance.Amounts) => {
+      const {csl, release} = getCSL()
+
+      const result = await Promise.all(
         ((await _getRequiredUtxos(csl, wallet, amounts, wallet.allUtxos, meta)) || []).map(async (u) => {
           return Buffer.from(await u.toBytes()).toString('hex')
         }),
-      ),
+      )
+      release()
+      return result
+    },
   }
 }
