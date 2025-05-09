@@ -28,7 +28,7 @@ export const Overview = () => {
   if (!tokenInfo) return null
 
   const tokenSymbol = infoExtractName(tokenInfo, {mode: 'currency'})
-  const [policyId] = tokenInfo.id.split('.')[0]
+  const [policyId] = tokenInfo.id.split('.')
 
   return (
     <View style={styles.scrollView}>
@@ -68,7 +68,11 @@ export const Overview = () => {
 
               <Spacer height={4} />
 
-              <CopyButton title={policyId ?? '--'} value={policyId ?? ''} style={styles.copyButton} />
+              <View style={styles.row}>
+                <Text style={styles.value}>{policyId ?? '--'}</Text>
+
+                <CopyButton value={policyId ?? ''} />
+              </View>
             </View>
 
             <Spacer height={24} />
@@ -78,11 +82,11 @@ export const Overview = () => {
 
               <Spacer height={4} />
 
-              <CopyButton
-                title={tokenInfo.fingerprint ?? '--'}
-                value={tokenInfo.fingerprint ?? ''}
-                style={styles.copyButton}
-              />
+              <View style={styles.row}>
+                <Text style={styles.value}>{tokenInfo.fingerprint ?? '--'}</Text>
+
+                <CopyButton value={tokenInfo.fingerprint ?? ''} />
+              </View>
             </View>
 
             <Spacer height={24} />
@@ -144,11 +148,16 @@ const useStyles = () => {
       ...atoms.font_semibold,
       color: color.gray_900,
     },
-    copyButton: {
-      ...atoms.flex_1,
-      ...atoms.flex_row_reverse,
-      ...atoms.align_start,
+    value: {
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_max,
+      ...atoms.flex_shrink,
+    },
+    row: {
+      ...atoms.flex_row,
       ...atoms.gap_sm,
+      ...atoms.justify_between,
+      ...atoms.align_start,
     },
   })
 
