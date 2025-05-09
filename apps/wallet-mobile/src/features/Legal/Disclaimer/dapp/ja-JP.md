@@ -1,8 +1,8 @@
-By clicking "Proceed," you acknowledge that you will be dealing with the third-party decentralized applications (DApps) offering multiple services. You may be required to agree to the terms, conditions, and privacy policies of DApps to deal with them. Yoroi Wallet does not control, endorse, or assume responsibility for the content, security, policies, or services provided by DApps.
+「次へ」をクリックすると、複数のサービスを提供するサードパーティの分散型アプリケーション（DApps）を利用することに同意したことになります。DAppsを利用するには、DAppsの利用規約、条件、プライバシーポリシーに同意する必要がある場合があります。ヨロイ ウォレットは、DAppsが提供するコンテンツ、セキュリティ、ポリシー、サービスについて、一切の管理、保証、責任を負いません。
 
-**Please note:**
+**留意事項：**
 
-1. Yoroi Wallet is not liable for any losses, delays, or errors that may occur while using the third-party service.
-2. Transactions may be subject to restrictions based on your geographic location, applicable laws, financial institution policies, or the service provider's limitations.
-3. Ensure you review and understand the third party's terms, as your interactions are solely governed by their agreements.
-4. Yoroi Wallet does not collect or store any personal or financial data submitted through the third-party platform.
+1. ヨロイは、第三者のサービスを利用する際に発生する可能性のある損失、遅延、エラーについて、一切の責任を負いません。
+2. 取引は、お客様の地理的位置、適用される法律、金融機関のポリシー、またはサービスプロバイダーの制限事項に基づき、制限の対象となる場合があります。
+3. 第三者の規約を必ず確認し、理解してください。お客様とのやりとりは、第三者の規約によってのみ管理されます。
+4. ヨロイは、第三者のプラットフォームを通じて提出された個人情報や財務データを収集または保存することはありません。
