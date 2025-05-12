@@ -1,8 +1,8 @@
-By clicking "Proceed," you acknowledge that you will be dealing with the third-party decentralized applications (DApps) offering multiple services. You may be required to agree to the terms, conditions, and privacy policies of DApps to deal with them. Yoroi Wallet does not control, endorse, or assume responsibility for the content, security, policies, or services provided by DApps.
+Wenn Sie auf "Weiter" klicken, erkennen Sie an, dass Sie sich mit den dezentralen Anwendungen von Drittanbietern befassen werden, die mehrere Dienste anbieten. Möglicherweise müssen Sie den Geschäftsbedingungen, Datenschutzrichtlinien von DApps zustimmen, um mit ihnen umzugehen. Yoroi Wallet kontrolliert nicht, billigt oder übernimmt keine Verantwortung für den Inhalt, die Sicherheit, die Richtlinien oder die Dienste von DApps.
 
-**Please note:**
+**Bitte beachten:**
 
-1. Yoroi Wallet is not liable for any losses, delays, or errors that may occur while using the third-party service.
-2. Transactions may be subject to restrictions based on your geographic location, applicable laws, financial institution policies, or the service provider's limitations.
-3. Ensure you review and understand the third party's terms, as your interactions are solely governed by their agreements.
-4. Yoroi Wallet does not collect or store any personal or financial data submitted through the third-party platform.
+1. Yoroi Wallet haftet nicht für Verluste, Verzögerungen oder Fehler, die während der Nutzung des Services durch Dritte auftreten können.
+2. Transaktionen können Beschränkungen unterliegen, die auf Ihrem geografischen Standort, anwendbaren Gesetzen, Finanzinstitutionsrichtlinien oder Beschränkungen des Dienstleisters beruhen.
+3. Stellen Sie sicher, dass Sie die Bedingungen des Dritten überprüfen und verstehen, da Ihre Interaktionen ausschließlich durch deren Vereinbarungen geregelt sind.
+4. Yoroi Wallet sammelt oder speichert keine persönlichen oder finanziellen Daten, die über die Plattform von Drittanbietern übermittelt werden.
