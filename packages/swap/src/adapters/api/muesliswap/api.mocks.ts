@@ -278,11 +278,11 @@ const quoteLimitInput: Swap.EstimateRequest = {
 }
 
 const quoteLimitRequest: QuoteRequest = {
-  buy_amount: 0,
+  buy_amount: '0',
   buy_token: quoteLimitInput.tokenOut,
   dex: 'minswap-v1',
   numbers_have_decimals: true,
-  sell_amount: 0,
+  sell_amount: '0',
   sell_token: quoteLimitInput.tokenIn,
 }
 
@@ -291,19 +291,16 @@ const quoteInput: Swap.EstimateRequest = {
   tokenIn: '.',
   tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
   amountIn: 10,
-  amountOut: undefined,
   protocol: 'minswap-v1',
   blockedProtocols: ['wingriders-v1'],
   multiples: 1,
-  wantedPrice: undefined,
 }
 
 const quoteRequest: QuoteRequest = {
   buy_token: quoteInput.tokenOut,
   sell_token: quoteInput.tokenIn,
-  sell_amount: quoteInput.amountIn,
+  sell_amount: String(quoteInput.amountIn),
   slippage: quoteInput.slippage / 100,
-  buy_amount: quoteInput.amountOut,
   numbers_have_decimals: true,
   dex: ['minswap-v1'],
   partner: 'somePartnerId',
@@ -454,11 +451,11 @@ const createLimitInput: Array<Swap.CreateRequest> = [
 
 const createLimitRequest = (address: string): CreateOrderRequest => ({
   sell_token: '.',
-  sell_amount: 1,
+  sell_amount: '1',
   user_address: address,
   buy_token:
     'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-  buy_amount: 1,
+  buy_amount: '1',
   dex: 'minswap-v1',
   numbers_have_decimals: true,
 })
@@ -553,7 +550,7 @@ const createLimitResult: Swap.CreateResponse = {
 const createRequest = (address: string): Array<CreateOrderRequest> => [
   {
     sell_token: '.',
-    sell_amount: 1,
+    sell_amount: '1',
     user_address: address,
     buy_token:
       'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
@@ -577,7 +574,7 @@ const createRequest = (address: string): Array<CreateOrderRequest> => [
   },
   {
     sell_token: '.',
-    sell_amount: 1,
+    sell_amount: '1',
     user_address: address,
     buy_token:
       'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',

@@ -117,8 +117,8 @@ export type CancelResponse = {
 export type LimitOrderRequest = {
   buy_token: string
   sell_token: string
-  buy_amount: number
-  sell_amount: number
+  buy_amount: string
+  sell_amount: string
   user_address: string
   dex: Dex
   partner?: string
@@ -129,8 +129,8 @@ export type LimitOrderRequest = {
 export type CreateOrderRequest = {
   buy_token: string
   sell_token: string
-  buy_amount?: number
-  sell_amount?: number
+  buy_amount?: string
+  sell_amount?: string
   user_address: string
   slippage?: number
   dex?: ReadonlyArray<Dex> | Dex
@@ -142,8 +142,8 @@ export type CreateOrderRequest = {
 export type QuoteRequest = {
   buy_token: string
   sell_token: string
-  buy_amount?: number
-  sell_amount?: number
+  buy_amount?: string
+  sell_amount?: string
   slippage?: number
   // TODO: @jorbuedo it looks to accept string/array of strings
   dex?: ReadonlyArray<Dex> | Dex
@@ -154,8 +154,8 @@ export type QuoteRequest = {
 export type LimitQuoteRequest = {
   buy_token: string
   sell_token: string
-  buy_amount: number
-  sell_amount: number
+  buy_amount: string
+  sell_amount: string
   dex?: Dex
   partner?: string
   numbers_have_decimals?: boolean

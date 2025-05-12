@@ -62,6 +62,27 @@ describe('transformers', () => {
         api.requests.quote,
       )
 
+      expect(
+        transformers.quote.request({
+          slippage: 0.01,
+          tokenIn: '.',
+          tokenOut:
+            'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          amountOut: 10,
+          protocol: 'minswap-v1',
+          blockedProtocols: ['wingriders-v1'],
+        }),
+      ).toEqual({
+        buy_amount: '10',
+        buy_token:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+        dex: ['minswap-v1'],
+        numbers_have_decimals: true,
+        partner: 'somePartnerId',
+        sell_token: '.',
+        slippage: 0.0001,
+      })
+
       const input = {...api.inputs.quote, protocol: undefined}
       const request = {
         ...api.requests.quote,
@@ -133,7 +154,7 @@ describe('transformers', () => {
         transformers.createLimit.request(api.inputs.createLimit[1]!),
       ).toEqual<CreateOrderRequest>({
         ...api.requests.createLimit(address),
-        buy_amount: 0,
+        buy_amount: '0',
         dex: Dex.Unsupported,
       })
     })
