@@ -9,7 +9,6 @@ import {Api, Chain, Left, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {
-  CancelRequest,
   CancelResponse,
   OrdersHistoryResponse,
   TokensResponse,
@@ -212,18 +211,12 @@ export const muesliswapApiMaker = (
         const kind: 'quote' | 'limitQuote' =
           body.wantedPrice !== undefined ? 'limitQuote' : 'quote'
 
-        const params = transformers[kind].request(body)
-
-        const response = await request<QuoteResponse | LimitQuoteResponse>(
-          {
-            method: 'post',
-            url: `${baseUrl}${apiPaths[kind]}`,
-            headers,
-          },
-          {
-            params,
-          },
-        )
+        const response = await request<QuoteResponse | LimitQuoteResponse>({
+          method: 'post',
+          url: `${baseUrl}${apiPaths[kind]}`,
+          headers,
+          data: transformers[kind].request(body),
+        })
 
         if (isLeft(response)) return parseMuesliError(response)
 
@@ -258,19 +251,14 @@ export const muesliswapApiMaker = (
         const kind: 'create' | 'createLimit' =
           body.wantedPrice !== undefined ? 'createLimit' : 'create'
 
-        const params = transformers[kind].request(body)
         const response = await request<
           CreateOrderResponse | LimitOrderResponse
-        >(
-          {
-            method: 'post',
-            url: `${baseUrl}${apiPaths[kind]}`,
-            headers,
-          },
-          {
-            params,
-          },
-        )
+        >({
+          method: 'post',
+          url: `${baseUrl}${apiPaths[kind]}`,
+          headers,
+          data: transformers[kind].request(body),
+        })
 
         if (isLeft(response)) return parseMuesliError(response)
 
@@ -287,18 +275,12 @@ export const muesliswapApiMaker = (
       },
 
       async cancel(body: Swap.CancelRequest) {
-        const params: CancelRequest = transformers.cancel.request(body)
-
-        const response = await request<CancelResponse>(
-          {
-            method: 'post',
-            url: `${baseUrl}${apiPaths.cancel}`,
-            headers,
-          },
-          {
-            params,
-          },
-        )
+        const response = await request<CancelResponse>({
+          method: 'post',
+          url: `${baseUrl}${apiPaths.cancel}`,
+          headers,
+          data: transformers.cancel.request(body),
+        })
 
         if (isLeft(response)) return parseMuesliError(response)
 

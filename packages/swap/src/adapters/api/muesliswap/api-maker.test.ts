@@ -250,10 +250,8 @@ describe('muesliswapApiMaker', () => {
         expect.objectContaining({
           url: 'https://aggregator-v2.muesliswap.com/quote',
           method: 'post',
+          data: expect.any(Object),
         }),
-        {
-          params: expect.any(Object),
-        },
       )
       expect(result.tag).toBe('right')
     })
@@ -289,10 +287,8 @@ describe('muesliswapApiMaker', () => {
           },
           url: 'https://aggregator-v2.muesliswap.com/limit_order_quote',
           method: 'post',
+          data: expect.any(Object),
         }),
-        {
-          params: expect.any(Object),
-        },
       )
       expect(result.tag).toBe('right')
     })
@@ -333,10 +329,8 @@ describe('muesliswapApiMaker', () => {
         expect.objectContaining({
           url: 'https://aggregator-v2.muesliswap.com/order',
           method: 'post',
+          data: expect.any(Object),
         }),
-        {
-          params: expect.any(Object),
-        },
       )
       expect(result.tag).toBe('right')
     })
@@ -357,10 +351,8 @@ describe('muesliswapApiMaker', () => {
         expect.objectContaining({
           url: 'https://aggregator-v2.muesliswap.com/limit_order',
           method: 'post',
+          data: expect.any(Object),
         }),
-        {
-          params: expect.any(Object),
-        },
       )
       expect(result.tag).toBe('right')
     })
@@ -401,10 +393,8 @@ describe('muesliswapApiMaker', () => {
         expect.objectContaining({
           url: 'https://aggregator-v2.muesliswap.com/cancel',
           method: 'post',
+          data: expect.any(Object),
         }),
-        {
-          params: expect.any(Object),
-        },
       )
       expect(result.tag).toBe('right')
     })
