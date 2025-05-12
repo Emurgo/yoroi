@@ -139,7 +139,7 @@ export const transformersMaker = ({
         buy_token: tokenOut,
         ...(amountOut !== undefined && {buy_amount: String(amountOut)}),
         ...(amountIn !== undefined && {sell_amount: String(amountIn)}),
-        partner,
+        ...(partner !== undefined && {partner}),
         // muesli expects slippage as a percentage
         slippage: slippage / 100,
         dex: resolveDexes({
@@ -184,7 +184,6 @@ export const transformersMaker = ({
     create: {
       request: ({
         slippage = 0,
-
         protocol,
         blockedProtocols,
         tokenIn,
@@ -197,7 +196,7 @@ export const transformersMaker = ({
         buy_token: tokenOut,
         sell_amount: String(amountIn),
         user_address: address,
-        partner,
+        ...(partner !== undefined && {partner}),
         slippage: slippage / 100,
         dex: resolveDexes({
           protocol: protocol ? fromSwapProtocol(protocol) : undefined,
