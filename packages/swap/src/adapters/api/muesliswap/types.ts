@@ -123,6 +123,7 @@ export type LimitOrderRequest = {
   dex: Dex
   partner?: string
   numbers_have_decimals?: boolean
+  utxos?: string[]
 }
 
 export type CreateOrderRequest = {
@@ -135,6 +136,7 @@ export type CreateOrderRequest = {
   dex?: ReadonlyArray<Dex> | Dex
   partner?: string
   numbers_have_decimals?: boolean
+  utxos?: string[]
 }
 
 export type QuoteRequest = {

@@ -190,6 +190,7 @@ export const transformersMaker = ({
         tokenIn,
         tokenOut,
         amountIn,
+        inputs,
       }: Swap.CreateRequest): CreateOrderRequest => ({
         numbers_have_decimals: true,
         sell_token: tokenIn,
@@ -202,6 +203,7 @@ export const transformersMaker = ({
           protocol: protocol ? fromSwapProtocol(protocol) : undefined,
           blockedProtocols: blockedProtocols?.map(fromSwapProtocol),
         }),
+        utxos: inputs,
       }),
       response: ({
         quote: {
@@ -247,6 +249,7 @@ export const transformersMaker = ({
         tokenIn,
         tokenOut,
         amountIn,
+        inputs,
       }: Swap.CreateRequest): LimitOrderRequest => ({
         dex: fromSwapProtocol(protocol),
         buy_amount: amountIn * wantedPrice,
@@ -256,6 +259,7 @@ export const transformersMaker = ({
         buy_token: tokenOut,
         sell_amount: amountIn,
         user_address: address,
+        utxos: inputs,
       }),
       response: ({
         quote: {

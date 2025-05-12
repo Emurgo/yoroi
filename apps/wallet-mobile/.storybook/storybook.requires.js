@@ -63,8 +63,6 @@ const getStories = () => {
     "./src/components/CameraCodeScanner/CameraCodeScanner.stories.tsx": require("../src/components/CameraCodeScanner/CameraCodeScanner.stories.tsx"),
     "./src/components/ChainWarning/GradientWarning.stories.tsx": require("../src/components/ChainWarning/GradientWarning.stories.tsx"),
     "./src/components/Checkbox/Checkbox.stories.tsx": require("../src/components/Checkbox/Checkbox.stories.tsx"),
-    "./src/components/ConfirmTx/ConfirmTx.stories.tsx": require("../src/components/ConfirmTx/ConfirmTx.stories.tsx"),
-    "./src/components/ConfirmTx/Dialog.stories.tsx": require("../src/components/ConfirmTx/Dialog.stories.tsx"),
     "./src/components/ConfirmTxWithHwModal/ConfirmTxWithHwModal.stories.tsx": require("../src/components/ConfirmTxWithHwModal/ConfirmTxWithHwModal.stories.tsx"),
     "./src/components/ConfirmTxWithOsModal/ConfirmTxWithOsModal.stories.tsx": require("../src/components/ConfirmTxWithOsModal/ConfirmTxWithOsModal.stories.tsx"),
     "./src/components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal.stories.tsx": require("../src/components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal.stories.tsx"),
