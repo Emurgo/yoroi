@@ -1,8 +1,8 @@
-By clicking "Proceed," you acknowledge that you will be redirected to a third-party service provider offering ADA-Cardano native tokens exchanges. You may be required to agree to the terms, conditions, and privacy policies of the third-party provider to complete the transaction. Yoroi Wallet does not control, endorse, or assume responsibility for the content, security, policies, or services provided by the third party.
+Wenn Sie auf "Weiter" klicken, bestätigen Sie, dass Sie an einen Drittanbieter weitergeleitet werden, der einen ADA-Cardano nativen Tokenaustausch anbietet. Möglicherweise sind Sie verpflichtet, den Bedingungen, Datenschutzbestimmungen des Drittanbieters zuzustimmen, um die Transaktion abzuschließen. Yoroi Wallet übernimmt keine Verantwortung für den Inhalt, die Sicherheit, die Politik oder die von Dritten angebotenen Dienste.
 
-**Please note:**
+**Bitte beachten:**
 
-1. Yoroi Wallet is not liable for any losses, delays, or errors that may occur while using the third-party service.
-2. Transactions may be subject to restrictions based on your geographic location, applicable laws, financial institution policies, or the service provider's limitations.
-3. Ensure you review and understand the third party's terms, as your interactions are solely governed by their agreements.
-4. Yoroi Wallet does not collect or store any personal or financial data submitted through the third-party platform.
+1. Yoroi Wallet haftet nicht für Verluste, Verzögerungen oder Fehler, die während der Nutzung des Services durch Dritte auftreten können.
+2. Transaktionen können Beschränkungen unterliegen, die auf Ihrem geografischen Standort, anwendbaren Gesetzen, Finanzinstitutionsrichtlinien oder Beschränkungen des Dienstleisters beruhen.
+3. Stellen Sie sicher, dass Sie die Bedingungen des Dritten überprüfen und verstehen, da Ihre Interaktionen ausschließlich durch deren Vereinbarungen geregelt sind.
+4. Yoroi Wallet sammelt oder speichert keine persönlichen oder finanziellen Daten, die über die Plattform von Drittanbietern übermittelt werden.
