@@ -4,6 +4,7 @@ import {StyleSheet, TextInput, TouchableOpacity, TouchableOpacityProps, View} fr
 
 import {Icon} from '../../../../components/Icon'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useStrings} from '../../common/useStrings'
 
 type Props = {
   searchValue: string
@@ -12,7 +13,8 @@ type Props = {
   onSearchSubmit: () => void
 }
 export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, searchValue}: Props) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
+  const strings = useStrings()
   const {track} = useMetrics()
   const {isDark} = useTheme()
 
@@ -41,7 +43,8 @@ export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, se
           autoFocus
           selectTextOnFocus
           value={searchValue}
-          placeholder=""
+          placeholder={strings.searchDApps}
+          placeholderTextColor={colors.placeholder}
           onChangeText={(search) => onSearchChange(search)}
           autoCapitalize="none"
           style={styles.searchInputStyle}
@@ -85,5 +88,5 @@ const useStyles = () => {
     },
   })
 
-  return {styles} as const
+  return {styles, colors: {placeholder: color.text_gray_low}} as const
 }

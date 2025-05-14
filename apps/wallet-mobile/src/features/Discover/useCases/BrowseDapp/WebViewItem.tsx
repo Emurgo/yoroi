@@ -57,7 +57,7 @@ export const WebViewItem = ({tab, index}: Props) => {
 
   const handleEventLoadWebView = (event: WebViewNavigationEvent) => {
     const url = event.nativeEvent.url
-    updateTab(+index, {url})
+    if (url !== 'about:blank') updateTab(+index, {url})
   }
 
   const onSelectTabActive = () => {

@@ -33,8 +33,8 @@ export const useDappConnectorManager = () => {
   const dappCollateralRequestUtils = useDappCollateralRequestUtils(wallet)
 
   const activeTab = tabs[tabActiveIndex]
-  const activeTabUrl = activeTab?.url
-  const activeTabOrigin = activeTabUrl === undefined ? null : new URL(activeTabUrl).origin
+  const activeTabUrl = activeTab?.url ?? ''
+  const activeTabOrigin = activeTabUrl === '' ? null : new URL(activeTabUrl).origin
 
   const confirmConnection = useConfirmConnection()
 
