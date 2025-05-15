@@ -1,8 +1,8 @@
-By clicking "Proceed," you acknowledge that you will be redirected to a third-party service provider offering ADA-Cardano native tokens exchanges. You may be required to agree to the terms, conditions, and privacy policies of the third-party provider to complete the transaction. Yoroi Wallet does not control, endorse, or assume responsibility for the content, security, policies, or services provided by the third party.
+点击“继续”，即表示您同意将被重定向到提供 ADA-Cardano 本机代币兑换服务的第三方服务提供商。您可能需要同意第三方提供商的条款、条件和隐私政策才能完成交易。Yoroi Wallet 不对第三方提供的内容、安全性、政策或服务承担任何控制、推荐或责任。
 
-**Please note:**
+**请注意：**
 
-1. Yoroi Wallet is not liable for any losses, delays, or errors that may occur while using the third-party service.
-2. Transactions may be subject to restrictions based on your geographic location, applicable laws, financial institution policies, or the service provider's limitations.
-3. Ensure you review and understand the third party's terms, as your interactions are solely governed by their agreements.
-4. Yoroi Wallet does not collect or store any personal or financial data submitted through the third-party platform.
+1. Yoroi 钱包不对使用第三方服务过程中可能发生的任何损失、延迟或错误承担责任。
+2. 交易可能会基于您的地理位置、适用法律、金融机构政策或服务提供商的限制而受到限制。
+3. 请确保您已仔细阅读并理解第三方条款，因为您与第三方之间的所有互动均受其协议约束。
+4. Yoroi Wallet不会通过第三方平台收集或存储任何个人或财务数据。
