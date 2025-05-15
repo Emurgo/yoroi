@@ -1,4 +1,4 @@
-# @yoroi/blockchains
+# @yoroi/banners
 
 A dedicated package for banners within Yoroi.
 
