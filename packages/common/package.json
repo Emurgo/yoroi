@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/common",
-  "version": "1.5.4",
+  "version": "2.0.0",
   "description": "The Common package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -150,7 +150,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
-    "@yoroi/types": "1.5.10",
+    "@yoroi/types": "2.0.0",
     "axios-mock-adapter": "^1.21.5",
     "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",

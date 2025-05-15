@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/blockchains",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "The blockchains package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -137,13 +137,6 @@
       "<rootDir>/jest.setup.js"
     ]
   },
-  "dependencies": {
-    "@yoroi/api": "1.5.3",
-    "@yoroi/common": "1.5.4",
-    "@yoroi/explorers": "1.0.2",
-    "@yoroi/portfolio": "1.0.3",
-    "@yoroi/types": "1.5.10"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
@@ -155,6 +148,11 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
+    "@yoroi/api": "2.0.0",
+    "@yoroi/common": "2.0.0",
+    "@yoroi/explorers": "2.0.0",
+    "@yoroi/portfolio": "2.0.0",
+    "@yoroi/types": "2.0.0",
     "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
@@ -177,6 +175,10 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
+    "@yoroi/api": "^2.0.0",
+    "@yoroi/common": "^2.0.0",
+    "@yoroi/explorers": "2.0.0",
+    "@yoroi/portfolio": "^2.0.0",
     "immer": "^10.0.2"
   },
   "packageManager": "yarn@1.22.21",
