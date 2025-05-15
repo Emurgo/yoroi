@@ -135,7 +135,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     }
 
     const wantedPrice = limitOptions?.wantedPrice
-    if (wantedPrice !== undefined && wantedPrice > 0)
+    if (wantedPrice !== undefined && wantedPrice > 0 && state.selectedProtocol.value === limitOptions?.defaultProtocol)
       action({type: 'WantedPriceInputChanged', value: String(wantedPrice)})
   }, [
     limitOptions?.defaultProtocol,

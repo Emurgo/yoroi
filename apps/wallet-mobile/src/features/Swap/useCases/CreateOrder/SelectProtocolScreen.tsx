@@ -43,6 +43,7 @@ export const SelectProtocolScreen = () => {
         renderItem={({item}) => (
           <TouchableOpacity
             onPress={() => {
+              swapForm.action({type: 'WantedPriceInputChanged', value: String(item.initialPrice)})
               swapForm.action({type: 'ProtocolSelected', value: item.protocol})
               navigation.goBack()
             }}
