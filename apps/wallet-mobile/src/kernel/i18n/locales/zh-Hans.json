@@ -25,7 +25,7 @@
   "api.error.notFound": "找不到请求的资源",
   "api.error.responseMalformed": "服务器响应格式错误，无法解析",
   "api.error.serverSide": "服务器遇到意外状况",
-  "api.error.title": "API 错误",
+  "api.error.title": "糟糕！API 错误",
   "api.error.tooEarly": "请求的资源尚不可用，请稍后再试",
   "api.error.tooManyRequests": "请求过多，请稍候重试",
   "api.error.unauthorized": "您无权访问此资源",
