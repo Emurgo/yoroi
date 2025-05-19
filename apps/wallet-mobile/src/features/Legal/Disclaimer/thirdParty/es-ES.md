@@ -1,8 +1,8 @@
-By clicking "Proceed," you acknowledge that you will be redirected to a third-party service provider offering ADA-Cardano native tokens exchanges. You may be required to agree to the terms, conditions, and privacy policies of the third-party provider to complete the transaction. Yoroi Wallet does not control, endorse, or assume responsibility for the content, security, policies, or services provided by the third party.
+Al hacer clic en "Proceder", usted reconoce que será redirigido a un proveedor de servicios de terceros que ofrezca intercambios de tokens nativos de ADA-Cardano. Se le puede exigir que acepte los términos, condiciones y políticas de privacidad del proveedor de terceros para completar la transacción. El Monedero Oi no controla, respalda o asume la responsabilidad por el contenido, la seguridad, las políticas o los servicios prestados por terceros.
 
-**Please note:**
+**Tenga en cuenta:**
 
-1. Yoroi Wallet is not liable for any losses, delays, or errors that may occur while using the third-party service.
-2. Transactions may be subject to restrictions based on your geographic location, applicable laws, financial institution policies, or the service provider's limitations.
-3. Ensure you review and understand the third party's terms, as your interactions are solely governed by their agreements.
-4. Yoroi Wallet does not collect or store any personal or financial data submitted through the third-party platform.
+1. La cartera de Yoroi no es responsable de ninguna pérdida, demora o errores que pueda ocurrir durante el uso del servicio de terceros.
+2. Las transacciones pueden estar sujetas a restricciones basadas en su ubicación geográfica, leyes aplicables, políticas de instituciones financieras o las limitaciones del proveedor de servicios.
+3. Asegúrese de revisar y entender los términos de la tercera parte, ya que sus interacciones se rigen exclusivamente por sus acuerdos.
+4. El Monedero Yoroi, no recoge ni almacena ningún dato personal o financiero enviado a través de la plataforma de terceros.
