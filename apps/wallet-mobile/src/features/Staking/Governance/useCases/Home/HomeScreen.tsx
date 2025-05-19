@@ -50,7 +50,7 @@ export const HomeScreen = () => {
 
   useWalletEvent(wallet, 'utxos', refetchStakingKeyState)
 
-  const {data: lastSubmittedTx} = useLatestGovernanceAction(wallet.id)
+  const {data: lastSubmittedTx, isLoading} = useLatestGovernanceAction(wallet.id)
 
   const submittedTxId = lastSubmittedTx?.txID
 
@@ -64,6 +64,8 @@ export const HomeScreen = () => {
   }, [isTxPending, submittedTxId, refetchStakingKeyState, setIsPendingRefetchAfterTxConfirmation])
 
   const txPendingDisplayed = isTxPending || isPendingRefetchAfterTxConfirmation
+
+  if (isLoading) return null
 
   if (txPendingDisplayed && isNonNullable(lastSubmittedTx)) {
     if (lastSubmittedTx.kind === 'delegate-to-drep') {
