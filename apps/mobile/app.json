@@ -1,29 +1,50 @@
 {
   "expo": {
-    "name": "yoroi-v2",
-    "slug": "yoroi-v2",
+    "name": "yoroi",
+    "slug": "yoroi",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/yoroi/icon.png",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/yoroi/splash/light/bootsplash_logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "userInterfaceStyle": "automatic",
+      "splash": {
+        "image": "./assets/yoroi/splash/light/bootsplash_logo.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "image": "./assets/yoroi/splash/dark/bootsplash_logo.png",
+          "backgroundColor": "#000000"
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/yoroi/adaptive-icon/foreground/foreground.png",
+        "backgroundImage": "./assets/yoroi/adaptive-icon/background/background.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "userInterfaceStyle": "automatic",
+      "splash": {
+        "image": "./assets/yoroi/splash/light/bootsplash_logo.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "image": "./assets/yoroi/splash/dark/bootsplash_logo.png",
+          "backgroundColor": "#000000"
+        }
+      }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/yoroi/favicon.png"
     }
   }
 }
