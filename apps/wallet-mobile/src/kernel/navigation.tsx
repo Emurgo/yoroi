@@ -14,6 +14,7 @@ import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/
 import {useSwap} from '../features/Swap/common/SwapProvider'
 import {useSelectedNetwork} from '../features/WalletManager/common/hooks/useSelectedNetwork'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
+import {useRemoteConfig} from './RemoteConfigProvider'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -404,6 +405,7 @@ export const useWalletNavigation = () => {
   const navigation = useNavigation()
   const {network} = useSelectedNetwork()
   const swapForm = useSwap()
+  const remoteConfig = useRemoteConfig()
 
   return React.useRef({
     navigation,
@@ -674,6 +676,7 @@ export const useWalletNavigation = () => {
     },
 
     navigateToSwap: (tokenOutId?: Portfolio.Token.Id) => {
+      if (remoteConfig.isSwapEnabled === false) return
       if (network === Chain.Network.Preprod) {
         navigation.navigate('manage-wallets', {
           screen: 'main-wallet-routes',

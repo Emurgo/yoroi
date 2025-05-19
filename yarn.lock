@@ -4906,6 +4906,13 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.4.2.tgz#1fea0eb3ae31841fe87bd6c4fc67569066e9cf4b"
   integrity sha512-D9bv+3Vd2gairAhnRPAghwccgEmoM7g562pm8i4qB3Esrms5mggF81G3UvCyc0w3jjtFHh8dpQkfEoKiP0NW/Q==
 
+"@react-native-firebase/analytics@^22.2.0":
+  version "22.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-22.2.0.tgz#f416e7210877717edf1ea5e8b0ddbb6220041d67"
+  integrity sha512-f4MhwuSwJuvzAE0YXIgpsjy41g3ZmCZj3rZmWHoSOerYTTt1qXnx0+4uo7YzNS6Io6klN/BYYq+MoJceFGI8AQ==
+  dependencies:
+    superstruct "^2.0.2"
+
 "@react-native-firebase/app@^21.5.0":
   version "21.5.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-21.5.0.tgz#a639f0db3557d91bbf99298d504b4eaf46625b31"
@@ -4918,6 +4925,11 @@
   version "21.5.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-21.5.0.tgz#0d52727143e2da7ae1c7a1fb1dc59abb5a7f5617"
   integrity sha512-gc0g97nWVlFLk0rj5LdZcPHmvBuy90wfL/++iHW1X5nyMGqUrSknIsTHKmydRCuC70ogYr04BQDecTEzVSM/Yw==
+
+"@react-native-firebase/remote-config@^22.2.0":
+  version "22.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/remote-config/-/remote-config-22.2.0.tgz#946405809d76403612b165607fa735fb06200914"
+  integrity sha512-D5DEeHnO8+a1MsB6E4HZbSUr4hbmiGfI/P+rqy4gWTN1aPkiPEUmMnqAnCHBKYWp3btDf4fKE0/93/GKsaUb3w==
 
 "@react-native-masked-view/masked-view@^0.2.9":
   version "0.2.9"
@@ -22156,6 +22168,11 @@ superstruct@^0.6.2:
   dependencies:
     clone-deep "^2.0.1"
     kind-of "^6.0.1"
+
+superstruct@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/superstruct/-/superstruct-2.0.2.tgz#3f6d32fbdc11c357deff127d591a39b996300c54"
+  integrity sha512-uV+TFRZdXsqXTL2pRvujROjdZQ4RAlBUS5BTh9IGm+jTqQntYThciG/qu57Gs69yjnVUSqdxF9YLmSnpupBW9A==
 
 supports-color@8.1.1, supports-color@^8.0.0, supports-color@^8.1.0, supports-color@^8.1.1:
   version "8.1.1"

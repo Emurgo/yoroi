@@ -29,6 +29,7 @@ import {LanguageProvider} from './kernel/i18n'
 import {useSetupLogger} from './kernel/logger/hooks/useSetupLogger'
 import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
 import {queryInfo} from './kernel/query-client'
+import {RemoteConfigProvider} from './kernel/RemoteConfigProvider'
 import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
 import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
@@ -59,41 +60,43 @@ const Yoroi = () => {
       <ThemeProvider storage={themeStorage}>
         <ClipboardProvider>
           <ErrorBoundary>
-            <MetricsProvider metricsManager={metricsManager}>
-              <QueryClientProvider client={queryInfo.queryClient}>
-                <WalletManagerProvider walletManager={walletManager}>
-                  <CurrencyProvider>
-                    <PortfolioTokenActivityProvider>
-                      <LoadingBoundary style={StyleSheet.absoluteFill}>
-                        <LanguageProvider>
-                          <AuthProvider>
-                            <TransferProvider>
-                              <LinksProvider>
-                                <SetupWalletProvider>
-                                  <PoolTransitionProvider>
-                                    <BrowserProvider>
-                                      <AutomaticWalletOpenerProvider>
-                                        <CatalystProvider manager={catalystManager}>
-                                          <ReviewTxProvider>
-                                            <YoroiNotificationManager>
-                                              <InitApp />
-                                            </YoroiNotificationManager>
-                                          </ReviewTxProvider>
-                                        </CatalystProvider>
-                                      </AutomaticWalletOpenerProvider>
-                                    </BrowserProvider>
-                                  </PoolTransitionProvider>
-                                </SetupWalletProvider>
-                              </LinksProvider>
-                            </TransferProvider>
-                          </AuthProvider>
-                        </LanguageProvider>
-                      </LoadingBoundary>
-                    </PortfolioTokenActivityProvider>
-                  </CurrencyProvider>
-                </WalletManagerProvider>
-              </QueryClientProvider>
-            </MetricsProvider>
+            <RemoteConfigProvider>
+              <MetricsProvider metricsManager={metricsManager}>
+                <QueryClientProvider client={queryInfo.queryClient}>
+                  <WalletManagerProvider walletManager={walletManager}>
+                    <CurrencyProvider>
+                      <PortfolioTokenActivityProvider>
+                        <LoadingBoundary style={StyleSheet.absoluteFill}>
+                          <LanguageProvider>
+                            <AuthProvider>
+                              <TransferProvider>
+                                <LinksProvider>
+                                  <SetupWalletProvider>
+                                    <PoolTransitionProvider>
+                                      <BrowserProvider>
+                                        <AutomaticWalletOpenerProvider>
+                                          <CatalystProvider manager={catalystManager}>
+                                            <ReviewTxProvider>
+                                              <YoroiNotificationManager>
+                                                <InitApp />
+                                              </YoroiNotificationManager>
+                                            </ReviewTxProvider>
+                                          </CatalystProvider>
+                                        </AutomaticWalletOpenerProvider>
+                                      </BrowserProvider>
+                                    </PoolTransitionProvider>
+                                  </SetupWalletProvider>
+                                </LinksProvider>
+                              </TransferProvider>
+                            </AuthProvider>
+                          </LanguageProvider>
+                        </LoadingBoundary>
+                      </PortfolioTokenActivityProvider>
+                    </CurrencyProvider>
+                  </WalletManagerProvider>
+                </QueryClientProvider>
+              </MetricsProvider>
+            </RemoteConfigProvider>
           </ErrorBoundary>
         </ClipboardProvider>
       </ThemeProvider>

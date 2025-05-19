@@ -7,6 +7,7 @@ import {StyleSheet, View} from 'react-native'
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useRemoteConfig} from '../../../../kernel/RemoteConfigProvider'
 import {useSwap} from '../../../Swap/common/SwapProvider'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
@@ -22,6 +23,7 @@ export const Actions = ({tokenInfo}: Props) => {
   const navigateTo = useNavigateTo()
   const swapForm = useSwap()
   const {track} = useMetrics()
+  const remoteConfig = useRemoteConfig()
 
   const {network} = useSelectedNetwork()
 
@@ -30,6 +32,8 @@ export const Actions = ({tokenInfo}: Props) => {
   } = useSelectedWallet()
 
   const handleOnSwap = () => {
+    if (remoteConfig.isSwapEnabled === false) return
+
     if (network === Chain.Network.Preprod) return navigateTo.swapPreprodNotice()
 
     swapForm.action({type: 'ResetForm'})
@@ -61,7 +65,7 @@ export const Actions = ({tokenInfo}: Props) => {
           onPress={navigateTo.resetTabAndSend}
         />
 
-        <Button title={strings.swap} icon={Icon.Swap} onPress={handleOnSwap} />
+        {remoteConfig.isSwapEnabled && <Button title={strings.swap} icon={Icon.Swap} onPress={handleOnSwap} />}
       </View>
     </View>
   )

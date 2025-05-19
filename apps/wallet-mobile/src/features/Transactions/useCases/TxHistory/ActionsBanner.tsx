@@ -11,6 +11,7 @@ import {Icon} from '../../../../components/Icon'
 import {Text} from '../../../../components/Text'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
+import {useRemoteConfig} from '../../../../kernel/RemoteConfigProvider'
 import {useReceive} from '../../../Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../../../Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '../../../Receive/common/useReceiveAddressesStatus'
@@ -27,6 +28,7 @@ export const ActionsBanner = () => {
   const swapForm = useSwap()
   const {tokenOutId} = useSwapConfig()
   const navigateTo = useNavigateTo()
+  const remoteConfig = useRemoteConfig()
 
   const {isSingle, addressMode} = useAddressMode()
   const {next: nextReceiveAddress, used: usedAddresses} = useReceiveAddressesStatus(addressMode)
@@ -53,6 +55,8 @@ export const ActionsBanner = () => {
   }
 
   const handleOnSwap = () => {
+    if (remoteConfig.isSwapEnabled === false) return
+
     if (network === Chain.Network.Preprod) {
       navigateTo.swapPreprodNotice()
       return
@@ -128,11 +132,13 @@ export const ActionsBanner = () => {
             <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
           </View>
 
-          <View style={styles.centralized}>
-            <Button type={ButtonType.Circle} icon={Icon.Swap} onPress={handleOnSwap} testID="swapButton" />
+          {remoteConfig.isSwapEnabled && (
+            <View style={styles.centralized}>
+              <Button type={ButtonType.Circle} icon={Icon.Swap} onPress={handleOnSwap} testID="swapButton" />
 
-            <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
-          </View>
+              <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
+            </View>
+          )}
 
           <View style={styles.centralized}>
             <Button type={ButtonType.Circle} icon={Icon.Exchange} onPress={handleOnExchange} testID="buyButton" />
