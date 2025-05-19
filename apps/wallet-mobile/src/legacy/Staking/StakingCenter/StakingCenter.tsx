@@ -64,6 +64,7 @@ export const StakingCenter = () => {
   }
 
   const onError = () => {
+    setSelectedPoolId(null)
     queryClient.resetQueries([wallet.id, 'stakingInfo'])
     navigateTo.failedTx()
   }
@@ -80,6 +81,7 @@ export const StakingCenter = () => {
         unsignedTxChanged(yoroiUnsignedTx)
         navigateToTxReview({onSuccess, onError})
       },
+      onError,
     },
   )
 
