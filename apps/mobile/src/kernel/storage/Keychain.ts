@@ -1,4 +1,3 @@
-import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {AuthenticationPrompt, KeychainStorage} from './KeychainStorage'
 
 const authenticate = async (authenticationPrompt: AuthenticationPrompt) => {
@@ -6,14 +5,14 @@ const authenticate = async (authenticationPrompt: AuthenticationPrompt) => {
   await KeychainStorage.read('os-auth', authenticationPrompt)
 }
 
-const getWalletKey = (id: YoroiWallet['id'], authenticationPrompt: AuthenticationPrompt) =>
+const getWalletKey = (id: string, authenticationPrompt: AuthenticationPrompt) =>
   KeychainStorage.read(id, authenticationPrompt)
 
-const setWalletKey = async (id: YoroiWallet['id'], rootKey: string) => {
+const setWalletKey = async (id: string, rootKey: string) => {
   await KeychainStorage.write(id, rootKey)
 }
 
-const removeWalletKey = async (id: YoroiWallet['id']) => {
+const removeWalletKey = async (id: string) => {
   await KeychainStorage.remove(id)
 }
 
@@ -27,8 +26,8 @@ export const Keychain: KeychainManager = {
 
 export type KeychainManager = {
   authenticate: (authenticationPrompt: AuthenticationPrompt) => Promise<void>
-  getWalletKey: (id: YoroiWallet['id'], authenticationPrompt: AuthenticationPrompt) => Promise<string>
-  setWalletKey: (id: YoroiWallet['id'], rootKey: string) => Promise<void>
-  removeWalletKey: (id: YoroiWallet['id']) => Promise<void>
+  getWalletKey: (id: string, authenticationPrompt: AuthenticationPrompt) => Promise<string>
+  setWalletKey: (id: string, rootKey: string) => Promise<void>
+  removeWalletKey: (id: string) => Promise<void>
   Errors: typeof KeychainStorage.Errors
 }

@@ -1,20 +1,21 @@
 import {parseString} from '@yoroi/common'
+import {} from '@emurgo/dullahan'
 
-import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {decryptData, encryptData} from '../encryption/encryption'
 import {rootStorage} from './rootStorage'
 
 type StorageKey = `${string}-MASTER_PASSWORD` | string
 export const EncryptedStorageKeys = {
   // MASTER_PASSWORD is legacy this b.s abstraction means xpriv
   // key here means storage-key
-  xPrivKey: (id: YoroiWallet['id']): StorageKey => `${id}-MASTER_PASSWORD`,
+  xPrivKey: (id: string): StorageKey => `${id}-MASTER_PASSWORD`,
 }
+
+
 
 // private is stored encrypted at root level of keystore/
 const keyStorage = rootStorage.join('keystore/')
 // public per account is stored at keystore/${id}/${account} not encrypted for now
-const publicStorageMaker = (id: YoroiWallet['id']) => keyStorage.join(`${id}/`)
+const publicStorageMaker = (id: string) => keyStorage.join(`${id}/`)
 
 export const EncryptedStorage = {
   async read(key: StorageKey, password: string) {
@@ -38,7 +39,7 @@ export const EncryptedStorage = {
   },
 } as const
 
-export const makeWalletEncryptedStorage = (id: YoroiWallet['id']) => {
+export const makeWalletEncryptedStorage = (id: string) => {
   const xPrivKey = EncryptedStorageKeys.xPrivKey(id)
   const xPubStorage = publicStorageMaker(id)
 
