@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {ScrollView, Switch, Text as RNText, TextProps, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
 import {darkPalette} from '../base-palettes/dark-palette'
 import {lightPalette} from '../base-palettes/light-palette'
