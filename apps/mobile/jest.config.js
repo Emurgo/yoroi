@@ -20,6 +20,7 @@ module.exports = {
       statements: 100,
     },
   },
+  coverageReporters: ['lcov', 'html', 'text-summary'],
   globals: {
     'ts-jest': {
       tsconfig: 'tsconfig.test.json'
