@@ -42,7 +42,7 @@ export const handleApiGetCryptoAddress = ({
   }
 }
 
-// https://github.com/koralabs/handles-public-api/blob/fd9d9f2cf3143e317a780b81b22869a755ab6af8/src/models/view/handle.view.model.ts
+// https://github.com/koralabs/handles-public-api/blob/8837b6812d613368ec1f3dc201d301c75396ccd6/models/view/handle.view.model.ts
 export type HandleApiGetCryptoAddressResponse = {
   hex: string
   name: string
@@ -70,16 +70,39 @@ export type HandleApiGetCryptoAddressResponse = {
   bg_asset?: string
   resolved_addresses: {
     ada: string
-    eth?: string | undefined
-    btc?: string | undefined
+    [key: string]: string
   }
   created_slot_number: number
   updated_slot_number: number
   has_datum: boolean
-  svg_version: string
   image_hash: string
   standard_image_hash: string
+  svg_version: string
+  last_update_address?: string
   version: number
+  handle_type: string
+  payment_key_hash?: string
+  pz_enabled?: boolean
+
+  sub_rarity?: string
+  sub_length?: number
+  sub_characters?: string
+  sub_numeric_modifiers?: string
+  last_edited_time?: number
+
+  original_address?: string
+  virtual?: {
+    expires_time: number
+    public_mint: boolean
+  }
+  drep?: {
+    type: 'drep' | 'cc_hot' | 'cc_cold'
+    cred: 'key' | 'script'
+    hex: string
+    cip_105: string
+    cip_129: string
+  }
+  policy: string
 }
 
 const HandleApiResponseSchema = z.object({
