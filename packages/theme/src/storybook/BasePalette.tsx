@@ -4,6 +4,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 
 import {darkPalette} from '../base-palettes/dark-palette'
 import {lightPalette} from '../base-palettes/light-palette'
+import {Gradient} from '../types'
 
 const Palette = () => {
   const [colorScheme, setColorScheme] = useColorScheme()
@@ -125,11 +126,11 @@ const Palette = () => {
       </Section>
 
       <Section title="Gradients">
-        <Gradient title="blue-green" colors={palette.bg_gradient_1} />
+        <GradientColor title="blue-green" colors={palette.bg_gradient_1} />
 
-        <Gradient title="blue" colors={palette.bg_gradient_2} />
+        <GradientColor title="blue" colors={palette.bg_gradient_2} />
 
-        <Gradient title="green" colors={palette.bg_gradient_3} />
+        <GradientColor title="green" colors={palette.bg_gradient_3} />
       </Section>
     </ScrollView>
   )
@@ -181,7 +182,7 @@ const Item = ({title, color}: {title: string; color: string}) => {
   )
 }
 
-const Gradient = ({title, colors}: {title: string; colors: string[]}) => {
+const GradientColor = ({title, colors}: {title: string; colors: Gradient}) => {
   return (
     <View style={{alignItems: 'center'}}>
       <Text>{title}</Text>

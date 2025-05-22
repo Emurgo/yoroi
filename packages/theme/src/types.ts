@@ -20,7 +20,7 @@ export type ThemeStorage = Readonly<{
 
 export type HexColor = `#${string}`
 
-export type Gradient = HexColor[]
+export type Gradient = [HexColor, HexColor, ...HexColor[]]
 
 // master palette
 export type BasePalette = {
