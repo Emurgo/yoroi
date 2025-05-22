@@ -141,7 +141,7 @@
     "@yoroi/setup-wallet": "2.0.0",
     "@yoroi/staking": "2.0.0",
     "@yoroi/swap": "2.1.0",
-    "@yoroi/theme": "3.0.1",
+    "@yoroi/theme": "3.0.2",
     "@yoroi/transfer": "2.0.0",
     "add": "2.0.6",
     "axios": "^1.5.0",
