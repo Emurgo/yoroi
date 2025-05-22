@@ -88,7 +88,7 @@
       "<rootDir>/jestSetup.ts"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?(@react-native|react-native|react-native-iphone-x-helper|react-native-color-picker|react-native-reanimated|react-native-linear-gradient)/)"
+      "node_modules/(?!(jest-)?(@react-native|react-native|react-native-iphone-x-helper|react-native-color-picker|react-native-reanimated|react-native-linear-gradient|expo-linear-gradient|expo-modules-core)/)"
     ]
   },
   "dependencies": {
