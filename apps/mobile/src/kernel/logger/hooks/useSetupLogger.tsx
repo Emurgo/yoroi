@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-import {getCrashReportsEnabled} from '../../../yoroi-wallets/hooks'
 import {appInfo} from '../../appInfo'
 import {loggerLevel} from '../../config'
 import {isDev, isProduction, sentryDsn} from '../../env'
@@ -8,6 +7,7 @@ import {devAdapter} from '../adapters/dev-transporter'
 import {Sentry} from '../adapters/sentry'
 import {sentryAdapter} from '../adapters/sentry-transporter'
 import {logger} from '../logger'
+import { getCrashReportsEnabled } from '../../config/helpers'
 
 export const useSetupLogger = (filter: RegExp | null = null) => {
   const [done, setDone] = React.useState(false)

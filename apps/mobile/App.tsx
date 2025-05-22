@@ -1,11 +1,54 @@
+import * as React from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Alert } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
-import { useEffect, useState } from "react";
+import { AsyncStorageProvider } from "@yoroi/common";
+import { ThemeProvider } from "@yoroi/theme";
+
+import { rootStorage } from "./src/kernel/storage/rootStorage";
+import { useMigrations } from "./src/kernel/storage/migrations/useMigrations";
+import { themeStorage } from "./src/kernel/config/helpers";
+
+function Shell({ children }: { children: React.ReactNode }) {
+  const isMigrated = useMigrations(rootStorage);
+
+  if (!isMigrated) return null;
+
+  return (
+    <AsyncStorageProvider storage={rootStorage}>
+      <ThemeProvider storage={themeStorage}>
+        <View style={styles.container}>{children}</View>
+      </ThemeProvider>
+    </AsyncStorageProvider>
+  );
+}
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  return (
+    <Shell>
+      <StatusBar style="auto" />
+      <Text>Welcome! You are authenticated!</Text>
+    </Shell>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  button: {
+    marginTop: 20,
+    color: "#007AFF",
+    fontSize: 16,
+  },
+});
+
+export function _App() {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   const authenticate = async () => {
     try {
@@ -43,7 +86,7 @@ export default function App() {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     authenticate();
   }, []);
 
@@ -75,17 +118,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    marginTop: 20,
-    color: "#007AFF",
-    fontSize: 16,
-  },
-});

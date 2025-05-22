@@ -1,5 +1,4 @@
 import {parseString} from '@yoroi/common'
-import {} from '@emurgo/dullahan'
 
 import {rootStorage} from './rootStorage'
 
@@ -9,8 +8,6 @@ export const EncryptedStorageKeys = {
   // key here means storage-key
   xPrivKey: (id: string): StorageKey => `${id}-MASTER_PASSWORD`,
 }
-
-
 
 // private is stored encrypted at root level of keystore/
 const keyStorage = rootStorage.join('keystore/')
@@ -61,3 +58,11 @@ export const makeWalletEncryptedStorage = (id: string) => {
 
 export type WalletEncryptedStorage = ReturnType<typeof makeWalletEncryptedStorage>
 export type EncryptedStorage = typeof EncryptedStorage
+
+const encryptData = (data: string, password: string) => {
+  return data
+}
+
+const decryptData = (data: string, password: string) => {
+  return data
+}

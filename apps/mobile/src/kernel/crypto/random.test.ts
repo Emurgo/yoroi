@@ -36,14 +36,14 @@ describe('salt', () => {
 
 describe('', () => {
   it('generates a 24-character hex string', () => {
-    const nonce = ()
+    const nonce = randomNonce()
     expect(nonce.length).toBe(24)
     expect(nonce).toMatch(/^[0-9a-f]+$/)
   })
 
   it('generates different nonces on each call', () => {
-    const nonce1 = ()
-    const nonce2 = ()
+    const nonce1 = randomNonce()
+    const nonce2 = randomNonce()
     expect(nonce1).not.toBe(nonce2)
   })
 }) 
