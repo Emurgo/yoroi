@@ -1,4 +1,5 @@
 import {ColorSchemeName} from 'react-native'
+
 import {SupportedThemes} from '../types'
 
 export const detectTheme = (
