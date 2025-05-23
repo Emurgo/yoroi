@@ -15,6 +15,7 @@ export default {
     ios: {
       supportsTablet: true,
       userInterfaceStyle: "automatic",
+      bundleIdentifier: "com.emurgo.yoroi-v2",
       splash: {
         image: "./assets/yoroi/splash/light/bootsplash_logo.png",
         resizeMode: "contain",
