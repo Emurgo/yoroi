@@ -7,11 +7,20 @@ import {useMutationWithInvalidations} from './useMutationWithInvalidations'
 const mutationFn = () => Promise.resolve(true)
 
 describe('useMutationWithInvalidations', () => {
+  let queryClient: QueryClient
+
+  beforeEach(() => {
+    queryClient = getMockedQueryClient()
+  })
+
+  afterEach(() => {
+    queryClient.clear()
+  })
+
   it('should cancel and invalidate queries', async () => {
     const queries = [['query1'], ['query2']]
-    const client = getMockedQueryClient()
     const wrapper = (props: React.PropsWithChildren) => (
-      <QueryClientProvider {...props} client={client} />
+      <QueryClientProvider {...props} client={queryClient} />
     )
     const {result} = renderHook(
       () =>
@@ -23,21 +32,23 @@ describe('useMutationWithInvalidations', () => {
       result.current.mutate(undefined)
     })
 
-    await waitFor(() => result.current.isSuccess)
+    await act(async () => {
+      await waitFor(() => result.current.isSuccess)
+    })
 
-    expect(client.cancelQueries).toHaveBeenCalledTimes(2)
-    expect(client.cancelQueries).toHaveBeenNthCalledWith(1, {
+    expect(queryClient.cancelQueries).toHaveBeenCalledTimes(2)
+    expect(queryClient.cancelQueries).toHaveBeenNthCalledWith(1, {
       queryKey: queries[0],
     })
-    expect(client.cancelQueries).toHaveBeenNthCalledWith(2, {
+    expect(queryClient.cancelQueries).toHaveBeenNthCalledWith(2, {
       queryKey: queries[1],
     })
 
-    expect(client.invalidateQueries).toHaveBeenCalledTimes(2)
-    expect(client.invalidateQueries).toHaveBeenNthCalledWith(1, {
+    expect(queryClient.invalidateQueries).toHaveBeenCalledTimes(2)
+    expect(queryClient.invalidateQueries).toHaveBeenNthCalledWith(1, {
       queryKey: queries[0],
     })
-    expect(client.invalidateQueries).toHaveBeenNthCalledWith(2, {
+    expect(queryClient.invalidateQueries).toHaveBeenNthCalledWith(2, {
       queryKey: queries[1],
     })
   })
