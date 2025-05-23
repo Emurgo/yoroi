@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import {ColorSchemeName, useColorScheme as _useColorScheme} from 'react-native'
 
 import {ThemedPalette, SupportedThemes, Theme, ThemeStorage} from './types'

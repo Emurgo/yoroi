@@ -1,12 +1,12 @@
-import React from 'react'
-import {render, fireEvent} from '@testing-library/react-native'
+import * as React from 'react'
+import {render, screen, fireEvent} from '@testing-library/react-native'
+import {ErrorBoundary} from '@yoroi/common'
 import {Button, Text} from 'react-native'
 
 import {ThemeProvider, useTheme, useThemeColor} from './ThemeProvider'
 import {SupportedThemes, ThemeStorage} from './types'
-import {ErrorBoundary} from '@yoroi/common'
 
-describe('ThemeProvider', () => {
+describe('ThemeProvider and useTheme Tests', () => {
   let storedValue: SupportedThemes | undefined
   const mockStorage: ThemeStorage = {
     key: 'theme-name',
@@ -16,34 +16,56 @@ describe('ThemeProvider', () => {
 
   beforeEach(() => {
     storedValue = undefined
+    jest.clearAllMocks()
   })
 
-  it('should render children', () => {
-    const {getByText} = render(
+  test('ThemeProvider renders children', () => {
+    render(
       <ThemeProvider storage={mockStorage}>
         <Text>Test</Text>
       </ThemeProvider>,
     )
 
-    expect(getByText('Test')).toBeTruthy()
+    expect(screen.getByText('Test')).toBeTruthy()
   })
 
-  it('should provide the theme context', () => {
+  test('ThemeProvider provides default theme context', () => {
     const TestComponent = () => {
       const theme = useTheme()
       return <Text>{theme.name}</Text>
     }
 
-    const {getByText} = render(
+    render(
       <ThemeProvider storage={mockStorage}>
         <TestComponent />
       </ThemeProvider>,
     )
 
-    expect(getByText('system')).toBeTruthy()
+    expect(screen.getByText('system')).toBeTruthy()
   })
 
-  it('should update the theme when selectThemeName is called', () => {
+  test('ThemeProvider provides theme context with custom storage', () => {
+    const customStorage: ThemeStorage = {
+      key: 'custom-theme',
+      save: jest.fn(),
+      read: jest.fn().mockReturnValue('default-dark'),
+    }
+
+    const TestComponent = () => {
+      const theme = useTheme()
+      return <Text>{theme.name}</Text>
+    }
+
+    render(
+      <ThemeProvider storage={customStorage}>
+        <TestComponent />
+      </ThemeProvider>,
+    )
+
+    expect(screen.getByText('default-dark')).toBeTruthy()
+  })
+
+  test('ThemeProvider updates theme when selectThemeName is called', () => {
     const TestComponent = () => {
       const theme = useTheme()
       const color = useThemeColor()
@@ -67,41 +89,50 @@ describe('ThemeProvider', () => {
       )
     }
 
-    const {getByText} = render(
+    render(
       <ThemeProvider storage={mockStorage}>
         <TestComponent />
       </ThemeProvider>,
     )
 
-    expect(getByText('system')).toBeTruthy()
+    // Initial state
+    expect(screen.getByText('system')).toBeTruthy()
+    expect(screen.getByText('#000000')).toBeTruthy()
 
-    expect(getByText('#000000')).toBeTruthy()
+    // Change to light theme
+    fireEvent.press(screen.getByText('Change Theme light'))
+    expect(screen.getByText('default-light')).toBeTruthy()
+    expect(mockStorage.save).toHaveBeenCalledWith('default-light')
 
-    fireEvent.press(getByText('Change Theme light'))
+    // Change to dark theme
+    fireEvent.press(screen.getByText('Change Theme dark'))
+    expect(screen.getByText('default-dark')).toBeTruthy()
+    expect(mockStorage.save).toHaveBeenCalledWith('default-dark')
 
-    expect(getByText('default-light')).toBeTruthy()
-
-    fireEvent.press(getByText('Change Theme dark'))
-
-    expect(getByText('default-dark')).toBeTruthy()
-
-    fireEvent.press(getByText('Change Theme auto'))
-
-    expect(getByText('system')).toBeTruthy()
+    // Change back to system theme
+    fireEvent.press(screen.getByText('Change Theme auto'))
+    expect(screen.getByText('system')).toBeTruthy()
+    expect(mockStorage.save).toHaveBeenCalledWith('system')
   })
 
-  it('should throw an error when useTheme is called without a provider', () => {
+  test('useTheme throws error without ThemeProvider', () => {
     const TestComponent = () => {
       useTheme()
       return null
     }
 
-    const {getByTestId} = render(
-      <ErrorBoundary>
-        <TestComponent />
-      </ErrorBoundary>,
-    )
+    const consoleError = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
 
-    expect(getByTestId('hasError')).toBeTruthy()
+    expect(() => {
+      render(
+        <ErrorBoundary>
+          <TestComponent />
+        </ErrorBoundary>,
+      )
+    }).toThrow()
+
+    consoleError.mockRestore()
   })
 })
