@@ -34,7 +34,7 @@ The style definitions that "match" Tailwind CSS selectors.
 ```tsx
 import {atoms as a} from '@yoroi/theme'
 
-<View style={[a.flex_1]} />
+;<View style={[a.flex_1]} />
 ```
 
 ### Theme
@@ -53,7 +53,7 @@ const {gray_500} = useThemeColor()
 
 ## 📚 Documentation
 
-For detailed documentation, please visit our [documentation site](https://yoroi-wallet.com/docs).
+For detailed documentation, please visit our [documentation site](https://github.com/Emurgo/yoroi/wiki).
 
 ## 🧪 Testing
 

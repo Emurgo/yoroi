@@ -1,11 +1,11 @@
-import {BigNumber} from 'bignumber.js'
+import BigNumber from 'bignumber.js'
 
 export type PortfolioTokenActivityRecord = Readonly<{
   ts: number // timestamp
-  open: BigNumber // previous - BigNumber
-  close: BigNumber // lastest - BigNumber
-  high: BigNumber // highest - BigNumber
-  low: BigNumber // lowest - BigNumber
+  open: BigNumber
+  close: BigNumber
+  high: BigNumber
+  low: BigNumber
   change: number // perc e.g -5% +10%
 }>
 
