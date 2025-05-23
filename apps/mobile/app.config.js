@@ -15,7 +15,7 @@ export default {
     ios: {
       supportsTablet: true,
       userInterfaceStyle: "automatic",
-      bundleIdentifier: "com.emurgo.yoroi-v2",
+      bundleIdentifier: "com.emurgo.yoroi_v2",
       splash: {
         image: "./assets/yoroi/splash/light/bootsplash_logo.png",
         resizeMode: "contain",
@@ -32,6 +32,7 @@ export default {
         backgroundImage: "./assets/yoroi/adaptive-icon/background/background.png",
         backgroundColor: "#ffffff"
       },
+      package: "com.emurgo.yoroi_v2",
       edgeToEdgeEnabled: true,
       userInterfaceStyle: "automatic",
       splash: {
@@ -57,6 +58,9 @@ export default {
       BANXA_TEST_WALLET: process.env.BANXA_TEST_WALLET || '',
       DISABLE_LOGBOX: process.env.DISABLE_LOGBOX || false,
       LOGGER_FILTER: process.env.LOGGER_FILTER || '',
-    }
+    },
+    plugins: [
+      'expo-font',
+    ],
   }
 }; 

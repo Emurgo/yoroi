@@ -1,94 +1,132 @@
-import * as React from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Alert } from "react-native";
-import * as LocalAuthentication from "expo-local-authentication";
-import { AsyncStorageProvider } from "@yoroi/common";
-import { ThemeProvider } from "@yoroi/theme";
+import * as React from 'react'
+import {StatusBar} from 'expo-status-bar'
+import {Text, View, Alert} from 'react-native'
+import * as LocalAuthentication from 'expo-local-authentication'
+import * as Font from 'expo-font'
+import {AsyncStorageProvider} from '@yoroi/common'
+import {ThemeProvider, useTheme} from '@yoroi/theme'
 
-import { rootStorage } from "./src/kernel/storage/rootStorage";
-import { useMigrations } from "./src/kernel/storage/migrations/useMigrations";
-import { themeStorage } from "./src/kernel/config/helpers";
+import {rootStorage} from './src/kernel/storage/rootStorage'
+import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
+import {themeStorage} from './src/kernel/config/helpers'
 
-function Shell({ children }: { children: React.ReactNode }) {
-  const isMigrated = useMigrations(rootStorage);
+function Shell({children}: {children: React.ReactNode}) {
+  const isMigrated = useMigrations(rootStorage)
 
-  if (!isMigrated) return null;
+  if (!isMigrated) return null
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <ThemeProvider storage={themeStorage}>
-        <View style={styles.container}>{children}</View>
-      </ThemeProvider>
+      <ThemeProvider storage={themeStorage}>{children}</ThemeProvider>
     </AsyncStorageProvider>
-  );
+  )
+}
+
+function Yoroi() {
+  const {atoms, color, isDark, colorScheme, name} = useTheme()
+  const [fontsLoaded, setFontsLoaded] = React.useState(false)
+
+  React.useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        'Rubik': require('./assets/fonts/Rubik-Regular.ttf'),
+        'Rubik-Regular': require('./assets/fonts/Rubik-Regular.ttf'),
+        'Rubik-Medium': require('./assets/fonts/Rubik-Medium.ttf'),
+        'Rubik-Bold': require('./assets/fonts/Rubik-Bold.ttf'),
+        'Rubik-Light': require('./assets/fonts/Rubik-Light.ttf'),
+        'Rubik-SemiBold': require('./assets/fonts/Rubik-SemiBold.ttf'),
+        'Rubik-Black': require('./assets/fonts/Rubik-Black.ttf'),
+        'Rubik-ExtraBold': require('./assets/fonts/Rubik-ExtraBold.ttf'),
+        'Rubik-Italic': require('./assets/fonts/Rubik-Italic.ttf'),
+        'Rubik-MediumItalic': require('./assets/fonts/Rubik-MediumItalic.ttf'),
+        'Rubik-BoldItalic': require('./assets/fonts/Rubik-BoldItalic.ttf'),
+        'Rubik-LightItalic': require('./assets/fonts/Rubik-LightItalic.ttf'),
+        'Rubik-SemiBoldItalic': require('./assets/fonts/Rubik-SemiBoldItalic.ttf'),
+        'Rubik-BlackItalic': require('./assets/fonts/Rubik-BlackItalic.ttf'),
+        'Rubik-ExtraBoldItalic': require('./assets/fonts/Rubik-ExtraBoldItalic.ttf'),
+      })
+      setFontsLoaded(true)
+    }
+    loadFonts()
+  }, [])
+
+  if (!fontsLoaded) {
+    return null
+  }
+
+  return (
+    <View
+      style={[
+        atoms.flex_1,
+        atoms.align_center,
+        atoms.justify_center,
+        {backgroundColor: color.bg_color_max},
+      ]}
+    >
+      <StatusBar style={isDark ? 'dark' : 'light'} />
+      <Text
+        style={[
+          atoms.body_2_md_regular,
+          {color: color.text_gray_low, fontFamily: 'Rubik-Regular'},
+        ]}
+      >
+        Welcome! You are authenticated! {colorScheme} {name}
+      </Text>
+    </View>
+  )
 }
 
 export default function App() {
   return (
     <Shell>
-      <StatusBar style="auto" />
-      <Text>Welcome! You are authenticated!</Text>
+      <Yoroi />
     </Shell>
-  );
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    marginTop: 20,
-    color: "#007AFF",
-    fontSize: 16,
-  },
-});
-
 export function _App() {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(true)
 
   const authenticate = async () => {
     try {
       // Check if hardware supports biometrics
-      const compatible = await LocalAuthentication.hasHardwareAsync();
+      const compatible = await LocalAuthentication.hasHardwareAsync()
       if (!compatible) {
         Alert.alert(
-          "Error",
-          "Your device does not support biometric authentication"
-        );
-        setIsLoading(false);
-        return;
+          'Error',
+          'Your device does not support biometric authentication',
+        )
+        setIsLoading(false)
+        return
       }
 
       // Check if biometrics are enrolled
-      const enrolled = await LocalAuthentication.isEnrolledAsync();
+      const enrolled = await LocalAuthentication.isEnrolledAsync()
       if (!enrolled) {
-        Alert.alert("Error", "No biometrics enrolled on this device");
-        setIsLoading(false);
-        return;
+        Alert.alert('Error', 'No biometrics enrolled on this device')
+        setIsLoading(false)
+        return
       }
 
       // Authenticate user
       const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: "Authenticate to access the app",
-        fallbackLabel: "Use passcode",
-      });
+        promptMessage: 'Authenticate to access the app',
+        fallbackLabel: 'Use passcode',
+      })
 
-      setIsAuthenticated(result.success);
-      setIsLoading(false);
+      setIsAuthenticated(result.success)
+      setIsLoading(false)
     } catch (error) {
-      console.error("Authentication error:", error);
-      Alert.alert("Error", "Authentication failed");
-      setIsLoading(false);
+      console.error('Authentication error:', error)
+      Alert.alert('Error', 'Authentication failed')
+      setIsLoading(false)
     }
-  };
+  }
 
   React.useEffect(() => {
-    authenticate();
-  }, []);
+    authenticate()
+  }, [])
 
   if (isLoading) {
     return (
@@ -96,7 +134,7 @@ export function _App() {
         <Text>Loading...</Text>
         <StatusBar style="auto" />
       </View>
-    );
+    )
   }
 
   if (!isAuthenticated) {
@@ -108,7 +146,7 @@ export function _App() {
         </Text>
         <StatusBar style="auto" />
       </View>
-    );
+    )
   }
 
   return (
@@ -116,5 +154,5 @@ export function _App() {
       <Text>Welcome! You are authenticated!</Text>
       <StatusBar style="auto" />
     </View>
-  );
+  )
 }
