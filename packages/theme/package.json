@@ -83,10 +83,7 @@
     "@types/react": "^19.0.0",
     "@types/react-test-renderer": "^19.1.0",
     "@yoroi/types": "2.0.0",
-    "axios": "^1.9.0",
-    "axios-mock-adapter": "^1.22.0",
     "babel-jest": "^29.7.0",
-    "bignumber.js": "^9.3.0",
     "commitlint": "^17.0.2",
     "del-cli": "^6.0.0",
     "dependency-cruiser": "^16.10.2",
@@ -106,13 +103,13 @@
     "react-native-mmkv": "^3.2.0",
     "react-test-renderer": "^19.1.0",
     "release-it": "^19.0.2",
-    "rxjs": "^7.8.2",
     "typescript": "^5.3.3",
     "@yoroi/common": "file:../common",
     "expo-linear-gradient": "^14.1.4"
   },
   "peerDependencies": {
     "@yoroi/common": "6.0.0",
+    "immer": "^10.1.1",
     "react": ">= 16.8.0 < 20.0.0"
   },
   "packageManager": "npm@10.9.0",
