@@ -8,8 +8,8 @@ module.exports = {
       'typescript',
       {
         project: 'tsconfig.build.json',
-        tsc: './node_modules/.bin/tsc'
-      }
-    ]
-  ]
-}; 
+        tsc: './node_modules/.bin/tsc',
+      },
+    ],
+  ],
+}
