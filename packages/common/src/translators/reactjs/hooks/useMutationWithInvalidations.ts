@@ -3,7 +3,7 @@ import {
   useMutation,
   UseMutationOptions,
   useQueryClient,
-} from 'react-query'
+} from '@tanstack/react-query'
 
 export const useMutationWithInvalidations = <
   TData = unknown,
@@ -21,11 +21,15 @@ export const useMutationWithInvalidations = <
   return useMutation<TData, TError, TVariables, TContext>({
     ...options,
     onMutate: (variables) => {
-      invalidateQueries?.forEach((key) => queryClient.cancelQueries(key))
+      invalidateQueries?.forEach((key) =>
+        queryClient.cancelQueries({queryKey: key}),
+      )
       return options?.onMutate?.(variables)
     },
     onSuccess: (data, variables, context) => {
-      invalidateQueries?.forEach((key) => queryClient.invalidateQueries(key))
+      invalidateQueries?.forEach((key) =>
+        queryClient.invalidateQueries({queryKey: key}),
+      )
       return options?.onSuccess?.(data, variables, context)
     },
   })

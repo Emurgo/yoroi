@@ -7,13 +7,14 @@ describe('queryClientFixture', () => {
     expect(defaultOptions.queries).toEqual(
       expect.objectContaining({
         retry: false,
-        cacheTime: 0,
+        gcTime: 0,
       }),
     )
 
     expect(defaultOptions.mutations).toEqual(
       expect.objectContaining({
         retry: false,
+        gcTime: 0,
       }),
     )
   })
