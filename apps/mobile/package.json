@@ -41,7 +41,8 @@
     "react-native-web": "^0.20.0",
     "rxjs": "^7.8.2",
     "zod": "^3.25.17",
-    "expo-dev-client": "~5.1.8"
+    "expo-dev-client": "~5.1.8",
+    "expo-font": "~13.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
