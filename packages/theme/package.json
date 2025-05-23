@@ -167,7 +167,7 @@
   },
   "peerDependencies": {
     "@yoroi/common": "2.0.0",
-    "react": ">= 16.8.0 <= 20.0.0"
+    "react": ">= 16.8.0 < 20.0.0"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {

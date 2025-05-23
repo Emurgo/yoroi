@@ -1,7 +1,8 @@
-import React from 'react'
-import renderer from 'react-test-renderer'
+import * as React from 'react'
+import {render, screen} from '@testing-library/react-native'
+import {View, Text} from 'react-native'
 
-import {AsyncStorageProvider, useAsyncStorage} from './async-storage-reactjs' // Update with the actual module path
+import {AsyncStorageProvider, useAsyncStorage} from './async-storage-reactjs'
 import {mountAsyncStorage} from '../adapters/async-storage'
 
 const rootStorage = mountAsyncStorage({path: '/'})
@@ -10,51 +11,53 @@ describe('AsyncStorageProvider and useAsyncStorage Tests', () => {
   test('AsyncStorageProvider provides storage context', () => {
     const TestComponent = () => {
       const storage = useAsyncStorage()
-      return <div>{storage ? 'Storage Available' : 'Storage Unavailable'}</div>
+      return (
+        <View>
+          <Text>{storage ? 'Storage Available' : 'Storage Unavailable'}</Text>
+        </View>
+      )
     }
 
-    const tree = renderer.create(
+    render(
       <AsyncStorageProvider storage={rootStorage}>
         <TestComponent />
       </AsyncStorageProvider>,
     )
 
-    const treeInstance = tree.root
-    const textElement = treeInstance.findByType('div')
-    expect(textElement.props.children).toBe('Storage Available')
+    expect(screen.getByText('Storage Available')).toBeTruthy()
   })
 
   test('AsyncStorageProvider provides the default rootStorage context', () => {
     const TestComponent = () => {
       const storage = useAsyncStorage()
-      return <div>{storage ? 'Storage Available' : 'Storage Unavailable'}</div>
+      return (
+        <View>
+          <Text>{storage ? 'Storage Available' : 'Storage Unavailable'}</Text>
+        </View>
+      )
     }
 
-    const tree = renderer.create(
+    render(
       <AsyncStorageProvider>
         <TestComponent />
       </AsyncStorageProvider>,
     )
 
-    const treeInstance = tree.root
-    const textElement = treeInstance.findByType('div')
-    expect(textElement.props.children).toBe('Storage Available')
+    expect(screen.getByText('Storage Available')).toBeTruthy()
   })
 
   test('useAsyncStorage throws error without AsyncStorageProvider', () => {
     const InvalidComponent = () => {
       useAsyncStorage()
-      return <div>Invalid Component</div>
+      return (
+        <View>
+          <Text>Invalid Component</Text>
+        </View>
+      )
     }
 
-    // Suppress console error caused by the 'invalid' function
-    const originalError = console.error
-    console.error = jest.fn()
-
-    expect(() => renderer.create(<InvalidComponent />)).toThrow(
+    expect(() => render(<InvalidComponent />)).toThrow(
       'Missing AsyncStorageProvider',
     )
-
-    console.error = originalError
   })
 })
