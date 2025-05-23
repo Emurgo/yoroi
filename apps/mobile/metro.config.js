@@ -4,7 +4,9 @@ const {getDefaultConfig} = require('expo/metro-config')
 const projectRoot = __dirname
 const workspaceRoot = path.resolve(projectRoot, '../..')
 
-const config = getDefaultConfig(projectRoot)
+const config = getDefaultConfig(projectRoot, {
+  unstable_enableNewArchitecture: true,
+})
 
 config.watchFolders = [workspaceRoot]
 config.resolver.nodeModulesPaths = [
@@ -18,6 +20,8 @@ config.resolver.extraNodeModules = {
   '@yoroi/theme': path.resolve(workspaceRoot, 'packages/theme'),
   '@yoroi/identicon': path.resolve(workspaceRoot, 'packages/identicon'),
   '@yoroi/types': path.resolve(workspaceRoot, 'packages/types'),
+  'tinycolor2': path.resolve(workspaceRoot, 'packages/identicon/node_modules/tinycolor2'),
+  'mersenne-twister': path.resolve(workspaceRoot, 'packages/identicon/node_modules/mersenne-twister'),
 }
 
 module.exports = config
