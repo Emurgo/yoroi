@@ -43,20 +43,25 @@ export const makeWalletEncryptedStorage = (id: string) => {
   return {
     xpriv: {
       read: (password: string) => EncryptedStorage.read(xPrivKey, password),
-      write: (value: string, password: string) => EncryptedStorage.write(xPrivKey, value, password),
+      write: (value: string, password: string) =>
+        EncryptedStorage.write(xPrivKey, value, password),
       remove: () => EncryptedStorage.remove(xPrivKey),
     },
     xpub: {
-      read: (accountVisual: number) => xPubStorage.getItem(accountVisual.toString(), parseString),
+      read: (accountVisual: number) =>
+        xPubStorage.getItem(accountVisual.toString(), parseString),
       write: (accountVisual: number, accountPubKeyHex: string) =>
         xPubStorage.setItem(accountVisual.toString(), accountPubKeyHex),
-      remove: (accountVisual: number) => xPubStorage.removeItem(accountVisual.toString()),
+      remove: (accountVisual: number) =>
+        xPubStorage.removeItem(accountVisual.toString()),
       clear: () => keyStorage.removeFolder(`${id}/`),
     },
   } as const
 }
 
-export type WalletEncryptedStorage = ReturnType<typeof makeWalletEncryptedStorage>
+export type WalletEncryptedStorage = ReturnType<
+  typeof makeWalletEncryptedStorage
+>
 export type EncryptedStorage = typeof EncryptedStorage
 
 const encryptData = (data: string, password: string) => {

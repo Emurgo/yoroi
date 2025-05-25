@@ -16,7 +16,9 @@ describe('randomHexString', () => {
   })
 
   it('throws error for odd length', () => {
-    expect(() => randomHexString(31)).toThrow('Length must be even since each byte is 2 hex chars')
+    expect(() => randomHexString(31)).toThrow(
+      'Length must be even since each byte is 2 hex chars',
+    )
   })
 })
 
@@ -46,4 +48,4 @@ describe('', () => {
     const nonce2 = randomNonce()
     expect(nonce1).not.toBe(nonce2)
   })
-}) 
+})

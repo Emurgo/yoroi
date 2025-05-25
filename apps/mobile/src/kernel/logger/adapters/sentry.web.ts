@@ -1,3 +1,3 @@
-import * as Sentry from "@sentry/react";
+import * as Sentry from '@sentry/react'
 
-export { Sentry };
+export {Sentry}
