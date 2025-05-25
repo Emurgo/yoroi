@@ -1,10 +1,8 @@
-import {Theme} from '../types'
+import {ThemeConfig} from '../types'
 import {black} from '../themed-palettes/black'
-import {atoms} from '../atoms/atoms'
 
-export const defaultDarkTheme: Theme = {
+export const defaultDarkTheme: ThemeConfig = {
   base: 'dark',
   name: 'default-dark',
-  color: black,
-  atoms: atoms,
+  theme: black,
 }

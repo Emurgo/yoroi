@@ -17,5 +17,6 @@
       }
     ]
   },
+  "ignorePatterns": ["src/storybook/BasePalette.tsx"],
   "root": true
 } 

@@ -445,4 +445,4 @@ export const atoms = {
   },
 } as const
 
-export type Atoms = typeof atoms
+export type ThemeAtoms = typeof atoms

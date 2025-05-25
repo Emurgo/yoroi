@@ -67,7 +67,7 @@ function Yoroi() {
       <Text
         style={[
           atoms.body_2_md_regular,
-          {color: color.text_gray_low, fontFamily: 'Rubik-Regular'},
+          {color: color.text_gray_low},
         ]}
       >
         Welcome! You are authenticated! {colorScheme} {name}

@@ -1,62 +1,51 @@
 import * as React from 'react'
-import {ColorSchemeName, useColorScheme as _useColorScheme} from 'react-native'
+import {useColorScheme} from 'react-native'
+import {freeze} from 'immer'
 
-import {ThemedPalette, SupportedThemes, Theme, ThemeStorage} from './types'
+import {
+  ThemedPalette,
+  ThemeConfig,
+  ThemeName,
+  ThemeStorage,
+  ThemeBasePalette,
+} from './types'
 import {defaultLightTheme} from './themes/default-light'
 import {defaultDarkTheme} from './themes/default-dark'
 import {detectTheme} from './helpers/detect-theme'
-import {Atoms} from './atoms/atoms'
 
-type ThemeType = {
-  themeName: SupportedThemes
-}
-
-const themesData: ThemeType[] = [
-  {
-    themeName: 'system',
-  },
-  {
-    themeName: 'default-light',
-  },
-  {
-    themeName: 'default-dark',
-  },
-]
-
-const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
+export const ThemeContext = React.createContext<undefined | ThemeContext>(
+  undefined,
+)
 export const ThemeProvider = ({
   children,
   storage,
-}: {
-  children: React.ReactNode
+}: React.PropsWithChildren<{
   storage: ThemeStorage
-}) => {
-  const colorScheme = useColorScheme()
-  const [selectedName, setSelectedName] = React.useState<SupportedThemes>(
+}>) => {
+  const hostTheme = useColorScheme() ?? 'dark'
+  const [selectedThemeName, setSelectedThemeName] = React.useState<ThemeName>(
     storage.read() ?? 'system',
   )
-  const [themeName, setThemeName] = React.useState<
-    Exclude<SupportedThemes, 'system'>
-  >(detectTheme(colorScheme, selectedName))
+  const [paletteName, setPaletteName] = React.useState<
+    Exclude<ThemeName, 'system'>
+  >(detectTheme(hostTheme, selectedThemeName))
 
   const value = React.useMemo(
     () => ({
-      name: selectedName,
-      color: themes[themeName].color,
+      name: selectedThemeName,
+      paletteName,
+      basePalette: themes[paletteName].base,
+      palette: themes[paletteName].theme,
 
-      selectThemeName: (newTheme: SupportedThemes) => {
-        setSelectedName(newTheme)
-        setThemeName(detectTheme(colorScheme, newTheme))
-        storage.save(newTheme)
+      selectTheme: (newThemeName: ThemeName) => {
+        setSelectedThemeName(newThemeName)
+        setPaletteName(detectTheme(hostTheme, newThemeName))
+        storage.save(newThemeName)
       },
-
-      isLight: themes[themeName].base === 'light',
-      isDark: themes[themeName].base === 'dark',
-      atoms: themes[themeName].atoms,
-      data: themesData,
-      colorScheme: themeName,
+      isLight: themes[paletteName].base === 'light',
+      isDark: themes[paletteName].base === 'dark',
     }),
-    [colorScheme, storage, themeName, selectedName],
+    [hostTheme, storage, paletteName, selectedThemeName],
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
@@ -65,28 +54,24 @@ export const ThemeProvider = ({
 export const useTheme = () =>
   React.useContext(ThemeContext) ?? missingProvider()
 
-export const useThemeColor = () => useTheme().color
+export const usePalette = () => useTheme().palette
 
 type ThemeContext = {
-  name: SupportedThemes
-  color: ThemedPalette
-  selectThemeName: (name: SupportedThemes) => void
+  name: ThemeName
+  paletteName: Exclude<ThemeName, 'system'>
+  basePalette: ThemeBasePalette
+  palette: ThemedPalette
+  selectTheme: (name: ThemeName) => void
   isLight: boolean
   isDark: boolean
-  atoms: Atoms
-  data: ThemeType[]
-  colorScheme: Exclude<SupportedThemes, 'system'>
 }
 
-const themes: Record<Exclude<SupportedThemes, 'system'>, Theme> = {
-  ['default-light']: defaultLightTheme,
-  ['default-dark']: defaultDarkTheme,
-}
+const themes: Readonly<Record<Exclude<ThemeName, 'system'>, ThemeConfig>> =
+  freeze({
+    ['default-light']: defaultLightTheme,
+    ['default-dark']: defaultDarkTheme,
+  })
 
 const missingProvider = () => {
   throw new Error('ThemeProvider is missing')
-}
-
-const useColorScheme = (): NonNullable<ColorSchemeName> => {
-  return _useColorScheme() as NonNullable<ColorSchemeName>
 }

@@ -1,20 +1,18 @@
-import {Atoms} from './atoms/atoms'
 import {space} from './tokens/tokens'
 
-export type Theme = {
-  base: BaseThemePalette
-  name: SupportedThemes
-  color: ThemedPalette
-  atoms: Atoms
+export type ThemeConfig = {
+  base: ThemeBasePalette
+  name: ThemeName
+  theme: ThemedPalette
 }
 
-export type BaseThemePalette = 'light' | 'dark'
+export type ThemeBasePalette = 'light' | 'dark'
 
-export type SupportedThemes = 'default-light' | 'default-dark' | 'system'
+export type ThemeName = 'default-light' | 'default-dark' | 'system'
 
 export type ThemeStorage = Readonly<{
-  save: (name: SupportedThemes) => void
-  read: () => SupportedThemes | null
+  save: (name: ThemeName) => void
+  read: () => ThemeName | null
   key: string
 }>
 

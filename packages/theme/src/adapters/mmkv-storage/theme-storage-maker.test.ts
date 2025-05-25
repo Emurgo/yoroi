@@ -1,5 +1,5 @@
 import {themeStorageMaker} from './theme-storage-maker'
-import {SupportedThemes} from '../../types'
+import {ThemeName} from '../../types'
 
 describe('themeStorageMaker', () => {
   const mockStorage = {
@@ -13,7 +13,7 @@ describe('themeStorageMaker', () => {
 
   it('should save the theme name to storage', () => {
     const themeStorage = themeStorageMaker({storage: mockStorage})
-    const themeName: SupportedThemes = 'default-dark'
+    const themeName: ThemeName = 'default-dark'
 
     themeStorage.save(themeName)
 
@@ -22,7 +22,7 @@ describe('themeStorageMaker', () => {
 
   it('should read the theme name from storage', () => {
     const themeStorage = themeStorageMaker({storage: mockStorage})
-    const themeName: SupportedThemes = 'default-light'
+    const themeName: ThemeName = 'default-light'
     mockStorage.getItem.mockReturnValue(themeName)
 
     const result = themeStorage.read()

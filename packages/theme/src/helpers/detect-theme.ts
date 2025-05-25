@@ -1,11 +1,11 @@
 import {ColorSchemeName} from 'react-native'
 
-import {SupportedThemes} from '../types'
+import {ThemeName} from '../types'
 
 export const detectTheme = (
   colorScheme: ColorSchemeName,
-  nextTheme: SupportedThemes = 'system',
-): Exclude<SupportedThemes, 'system'> => {
+  nextTheme: ThemeName = 'system',
+): Exclude<ThemeName, 'system'> => {
   if (nextTheme === 'system') {
     return colorScheme === 'dark' ? 'default-dark' : 'default-light'
   }
