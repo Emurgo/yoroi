@@ -26,7 +26,10 @@ export const Keychain: KeychainManager = {
 
 export type KeychainManager = {
   authenticate: (authenticationPrompt: AuthenticationPrompt) => Promise<void>
-  getWalletKey: (id: string, authenticationPrompt: AuthenticationPrompt) => Promise<string>
+  getWalletKey: (
+    id: string,
+    authenticationPrompt: AuthenticationPrompt,
+  ) => Promise<string>
   setWalletKey: (id: string, rootKey: string) => Promise<void>
   removeWalletKey: (id: string) => Promise<void>
   Errors: typeof KeychainStorage.Errors

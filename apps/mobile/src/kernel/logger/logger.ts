@@ -55,7 +55,8 @@ class Logger implements App.Logger.Manager {
 
   addTransport(transport: App.Logger.Transporter) {
     this.#transporters.push(transport)
-    return () => this.#transporters.splice(this.#transporters.indexOf(transport), 1)
+    return () =>
+      this.#transporters.splice(this.#transporters.indexOf(transport), 1)
   }
 
   disable() {
@@ -71,10 +72,18 @@ class Logger implements App.Logger.Manager {
   }
 
   // NOTE: needs `@babel/plugin-transform-private-methods` to use as #transport
-  private transport({level, message, metadata}: Pick<App.Logger.TransporterOptions, 'level' | 'message' | 'metadata'>) {
+  private transport({
+    level,
+    message,
+    metadata,
+  }: Pick<App.Logger.TransporterOptions, 'level' | 'message' | 'metadata'>) {
     if (!this.#enabled) return
     if (loggerHierarchy[level] > loggerHierarchy[this.level]) return
-    if (this.filter && !this.filter.test(JSON.stringify({message, metadata}, numberReplacer))) return
+    if (
+      this.filter &&
+      !this.filter.test(JSON.stringify({message, metadata}, numberReplacer))
+    )
+      return
 
     const timestamp = Date.now()
     const entry = {level, message, metadata, timestamp}

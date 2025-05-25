@@ -8,17 +8,22 @@ async function write(key: string, value: string) {
     accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
   }).then((result) => {
-    if (result === false) return Promise.reject(new Error('Unable to store secret'))
+    if (result === false)
+      return Promise.reject(new Error('Unable to store secret'))
   })
 }
 
-async function read(key: string, authenticationPrompt: Keychain.Options['authenticationPrompt']) {
+async function read(
+  key: string,
+  authenticationPrompt: Keychain.Options['authenticationPrompt'],
+) {
   let credentials: false | Keychain.UserCredentials
   try {
     credentials = await Keychain.getGenericPassword({
       service: key,
       authenticationPrompt,
-      accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
+      accessControl:
+        Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
     })
   } catch (error) {
     throw errorDecoder(error)

@@ -4,13 +4,13 @@ import {Text, View, Alert} from 'react-native'
 import * as LocalAuthentication from 'expo-local-authentication'
 import * as Font from 'expo-font'
 import {AsyncStorageProvider} from '@yoroi/common'
-import {ThemeProvider, useTheme} from '@yoroi/theme'
+import {ThemeProvider, useTheme, atoms as a} from '@yoroi/theme'
 
 import {rootStorage} from './src/kernel/storage/rootStorage'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {themeStorage} from './src/kernel/config/helpers'
 
-function Shell({children}: {children: React.ReactNode}) {
+function Shell({children}: React.PropsWithChildren) {
   const isMigrated = useMigrations(rootStorage)
 
   if (!isMigrated) return null
@@ -23,7 +23,12 @@ function Shell({children}: {children: React.ReactNode}) {
 }
 
 function Yoroi() {
-  const {atoms, color, isDark, colorScheme, name} = useTheme()
+  const {
+    isDark,
+    name,
+    palette: {bg_color_max, text_gray_low},
+    basePalette,
+  } = useTheme()
   const [fontsLoaded, setFontsLoaded] = React.useState(false)
 
   React.useEffect(() => {
@@ -57,20 +62,15 @@ function Yoroi() {
   return (
     <View
       style={[
-        atoms.flex_1,
-        atoms.align_center,
-        atoms.justify_center,
-        {backgroundColor: color.bg_color_max},
+        a.flex_1,
+        a.align_center,
+        a.justify_center,
+        {backgroundColor: bg_color_max},
       ]}
     >
       <StatusBar style={isDark ? 'dark' : 'light'} />
-      <Text
-        style={[
-          atoms.body_2_md_regular,
-          {color: color.text_gray_low},
-        ]}
-      >
-        Welcome! You are authenticated! {colorScheme} {name}
+      <Text style={[a.body_2_md_regular, {color: text_gray_low}]}>
+        Welcome! base: {basePalette} selectedTheme: {name}
       </Text>
     </View>
   )

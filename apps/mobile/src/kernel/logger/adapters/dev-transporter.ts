@@ -13,13 +13,24 @@ const devLogger = freeze({
 /* eslint-enable no-console */
 
 export const devAdapter = (transport = devLogger) => {
-  const transporter: App.Logger.Transporter = ({level, message, metadata, timestamp}) => {
+  const transporter: App.Logger.Transporter = ({
+    level,
+    message,
+    metadata,
+    timestamp,
+  }) => {
     const formattedMetadata = Object.keys(metadata).length
       ? ' ' + JSON.stringify(toLoggerMetadata(metadata), numberReplacer, 2)
       : ''
-    const formattedMessage = metadata.origin?.length ? `${origin} ${message}` : message
+    const formattedMessage = metadata.origin?.length
+      ? `${origin} ${message}`
+      : message
 
-    transport[level](`${new Date(timestamp).toISOString()} ${formattedMessage}${formattedMetadata}`)
+    transport[level](
+      `${new Date(
+        timestamp,
+      ).toISOString()} ${formattedMessage}${formattedMetadata}`,
+    )
   }
 
   return freeze({transporter})
