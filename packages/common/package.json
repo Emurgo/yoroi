@@ -62,7 +62,9 @@
     "release": "release-it",
     "test": "jest --maxWorkers=1",
     "test:watch": "jest --watch --debug --maxWorkers=1",
-    "tsc": "tsc --noEmit -p tsconfig.json"
+    "tsc": "tsc --noEmit -p tsconfig.json",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -87,7 +89,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^19.0.0",
     "@types/react-test-renderer": "^19.1.0",
-    "@yoroi/types": "2.0.0",
+    "@yoroi/types": "file:../types",
     "axios": "^1.9.0",
     "axios-mock-adapter": "^1.22.0",
     "babel-jest": "^29.7.0",

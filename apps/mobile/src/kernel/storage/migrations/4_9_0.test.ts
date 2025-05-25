@@ -1,4 +1,4 @@
-import {rootStorage} from '../rootStorage'
+import {rootStorage} from '../storages'
 import {migrateAuthSetting, OLD_OS_AUTH_KEY} from './4_9_0'
 
 describe('migrateAuthSetting', () => {

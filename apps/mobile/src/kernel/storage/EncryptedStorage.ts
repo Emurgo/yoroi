@@ -1,6 +1,6 @@
 import {parseString} from '@yoroi/common'
 
-import {rootStorage} from './rootStorage'
+import {rootStorage} from './storages'
 
 type StorageKey = `${string}-MASTER_PASSWORD` | string
 export const EncryptedStorageKeys = {

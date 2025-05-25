@@ -1,10 +1,11 @@
 import AsyncStorage, {
   AsyncStorageStatic,
 } from '@react-native-async-storage/async-storage'
-import {parseBoolean, parseSafe} from '@yoroi/common'
+import {observableStorageMaker, parseBoolean, parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {themeStorageMaker} from '@yoroi/theme'
+
+import {rootSyncStorage} from '../storage/storages'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -28,9 +29,3 @@ const parseAuthSetting = (data: unknown) => {
 
 export const getAuthSetting = (storage: App.Storage) =>
   storage.join('appSettings/').getItem('auth', parseAuthSetting)
-
-const themeDiscovery = mountMMKVStorage<string>({path: `theme/`})
-const themeDiscoveryStorage = observableStorageMaker(themeDiscovery)
-export const themeStorage = themeStorageMaker({
-  storage: themeDiscoveryStorage,
-})
