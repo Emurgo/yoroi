@@ -1,14 +1,13 @@
 import * as React from 'react'
 import {StatusBar} from 'expo-status-bar'
-import {Text, View, Alert} from 'react-native'
+import {Text, View, Alert, TouchableOpacity} from 'react-native'
 import * as LocalAuthentication from 'expo-local-authentication'
 import * as Font from 'expo-font'
 import {AsyncStorageProvider} from '@yoroi/common'
 import {ThemeProvider, useTheme, atoms as a} from '@yoroi/theme'
 
-import {rootStorage} from './src/kernel/storage/rootStorage'
+import {rootStorage, themeStorage} from './src/kernel/storage/storages'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
-import {themeStorage} from './src/kernel/config/helpers'
 
 function Shell({children}: React.PropsWithChildren) {
   const isMigrated = useMigrations(rootStorage)
@@ -28,6 +27,7 @@ function Yoroi() {
     name,
     palette: {bg_color_max, text_gray_low},
     basePalette,
+    selectTheme,
   } = useTheme()
   const [fontsLoaded, setFontsLoaded] = React.useState(false)
 
@@ -68,10 +68,23 @@ function Yoroi() {
         {backgroundColor: bg_color_max},
       ]}
     >
-      <StatusBar style={isDark ? 'dark' : 'light'} />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <Text style={[a.body_2_md_regular, {color: text_gray_low}]}>
         Welcome! base: {basePalette} selectedTheme: {name}
       </Text>
+      <TouchableOpacity
+        onPress={() => selectTheme(isDark ? 'default-light' : 'default-dark')}
+        style={[
+          a.pt_md,
+          a.p_md,
+          a.rounded_md,
+          {backgroundColor: text_gray_low},
+        ]}
+      >
+        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+          Toggle {isDark ? 'Light' : 'Dark'} Theme
+        </Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -130,7 +143,7 @@ export function _App() {
 
   if (isLoading) {
     return (
-      <View style={styles.container}>
+      <View>
         <Text>Loading...</Text>
         <StatusBar style="auto" />
       </View>
@@ -139,18 +152,16 @@ export function _App() {
 
   if (!isAuthenticated) {
     return (
-      <View style={styles.container}>
+      <View>
         <Text>Authentication Required</Text>
-        <Text style={styles.button} onPress={authenticate}>
-          Try Again
-        </Text>
+        <Text onPress={authenticate}>Try Again</Text>
         <StatusBar style="auto" />
       </View>
     )
   }
 
   return (
-    <View style={styles.container}>
+    <View>
       <Text>Welcome! You are authenticated!</Text>
       <StatusBar style="auto" />
     </View>

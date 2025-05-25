@@ -10,7 +10,7 @@ export const observableStorageMaker = <
 >(
   storage: App.Storage<IsAsync, K>,
 ): App.ObservableStorage<IsAsync, K> => {
-  const triggers: Array<keyof App.Storage<IsAsync, K>> = [
+  const triggers: Array<keyof App.ObservableStorage<IsAsync, K>> = [
     'clear',
     // 'removeFolder', can be added later as long the key checks for "/" in the arg when string
     'multiSet',
@@ -18,7 +18,7 @@ export const observableStorageMaker = <
     'multiRemove',
     'removeItem',
   ]
-  const observable = observerMaker<K[] | null>()
+  const observer = observerMaker<K[] | null>()
 
   const onChange = (
     keysToObserve: ReadonlyArray<K>,
@@ -32,13 +32,13 @@ export const observableStorageMaker = <
         if (keysToAnnounce.length > 0) callback(keysToAnnounce)
       }
     }
-    return observable.subscribe(wrappedCallback)
+    return observer.subscribe(wrappedCallback)
   }
 
   const proxyHandler = {
     get(
-      target: App.Storage<IsAsync, K>,
-      property: keyof App.Storage<IsAsync, K>,
+      target: App.ObservableStorage<IsAsync, K>,
+      property: keyof App.ObservableStorage<IsAsync, K>,
       receiver: any,
     ) {
       const origProperty = target[property]
@@ -50,14 +50,14 @@ export const observableStorageMaker = <
             const isArray = Array.isArray(firstArg)
             if (isString(firstArg as K)) {
               // single operations
-              observable.notify([firstArg])
+              observer.notify([firstArg])
             } else if (isArray) {
               // multi operations
               const keys = firstArg as K[]
-              observable.notify(keys)
+              observer.notify(keys)
             } else {
               // clear
-              observable.notify(null)
+              observer.notify(null)
             }
           }
           const result: ReturnType<typeof origMethod> = origMethod.apply(
@@ -88,7 +88,8 @@ export const observableStorageMaker = <
   return {
     ...proxiedStorage,
     onChange,
-  } as const
+    observable: observer.observable,
+  } as App.ObservableStorage<IsAsync, K>
 }
 
 export const observableMultiStorageMaker = <
@@ -102,8 +103,8 @@ export const observableMultiStorageMaker = <
     'clear',
     'saveMany',
   ]
-  const observable = observerMaker<null>()
-  const onChange = (callback: () => void) => observable.subscribe(callback)
+  const observer = observerMaker<null>()
+  const onChange = (callback: () => void) => observer.subscribe(callback)
 
   const proxyHandler = {
     get(
@@ -122,11 +123,11 @@ export const observableMultiStorageMaker = <
 
           if (result instanceof Promise) {
             return result.then((resolvedValue) => {
-              observable.notify(null)
+              observer.notify(null)
               return resolvedValue
             })
           } else {
-            observable.notify(null)
+            observer.notify(null)
             return result
           }
         }
@@ -143,5 +144,6 @@ export const observableMultiStorageMaker = <
   return {
     ...proxiedStorage,
     onChange,
-  } as const
+    observable: observer.observable,
+  } as App.ObservableMultiStorage<T, IsAsync, K>
 }
