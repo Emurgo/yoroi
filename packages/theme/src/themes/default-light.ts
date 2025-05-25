@@ -1,10 +1,8 @@
-import {Theme} from '../types'
+import {ThemeConfig} from '../types'
 import {light} from '../themed-palettes/light'
-import {atoms} from '../atoms/atoms'
 
-export const defaultLightTheme: Theme = {
+export const defaultLightTheme: ThemeConfig = {
   base: 'light',
   name: 'default-light',
-  color: light,
-  atoms: atoms,
+  theme: light,
 }

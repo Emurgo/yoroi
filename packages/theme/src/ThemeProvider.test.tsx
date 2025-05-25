@@ -2,12 +2,13 @@ import * as React from 'react'
 import {render, screen, fireEvent} from '@testing-library/react-native'
 import {ErrorBoundary} from '@yoroi/common'
 import {Button, Text} from 'react-native'
+import * as ReactNative from 'react-native'
 
-import {ThemeProvider, useTheme, useThemeColor} from './ThemeProvider'
-import {SupportedThemes, ThemeStorage} from './types'
+import {ThemeProvider, useTheme, usePalette} from './ThemeProvider'
+import {ThemeName, ThemeStorage} from './types'
 
 describe('ThemeProvider and useTheme Tests', () => {
-  let storedValue: SupportedThemes | undefined
+  let storedValue: ThemeName | undefined
   const mockStorage: ThemeStorage = {
     key: 'theme-name',
     save: jest.fn().mockImplementation((v) => (storedValue = v)),
@@ -17,6 +18,8 @@ describe('ThemeProvider and useTheme Tests', () => {
   beforeEach(() => {
     storedValue = undefined
     jest.clearAllMocks()
+    // Reset useColorScheme mock to return undefined by default
+    ;(ReactNative.useColorScheme as jest.Mock).mockReturnValue(undefined)
   })
 
   test('ThemeProvider renders children', () => {
@@ -65,23 +68,23 @@ describe('ThemeProvider and useTheme Tests', () => {
     expect(screen.getByText('default-dark')).toBeTruthy()
   })
 
-  test('ThemeProvider updates theme when selectThemeName is called', () => {
+  test('ThemeProvider updates theme when selectTheme is called', () => {
     const TestComponent = () => {
       const theme = useTheme()
-      const color = useThemeColor()
+      const color = usePalette()
       return (
         <>
           <Text>{theme.name}</Text>
           <Button
-            onPress={() => theme.selectThemeName('default-dark')}
+            onPress={() => theme.selectTheme('default-dark')}
             title="Change Theme dark"
           />
           <Button
-            onPress={() => theme.selectThemeName('default-light')}
+            onPress={() => theme.selectTheme('default-light')}
             title="Change Theme light"
           />
           <Button
-            onPress={() => theme.selectThemeName('system')}
+            onPress={() => theme.selectTheme('system')}
             title="Change Theme auto"
           />
           <Text>{color.black_static}</Text>
@@ -134,5 +137,30 @@ describe('ThemeProvider and useTheme Tests', () => {
     }).toThrow()
 
     consoleError.mockRestore()
+  })
+
+  test('ThemeProvider falls back to dark theme when useColorScheme returns undefined', () => {
+    // Mock useColorScheme to return undefined
+    ;(ReactNative.useColorScheme as jest.Mock).mockReturnValue(undefined)
+
+    const TestComponent = () => {
+      const theme = useTheme()
+      return (
+        <>
+          <Text>{theme.name}</Text>
+          <Text>{theme.paletteName}</Text>
+        </>
+      )
+    }
+
+    render(
+      <ThemeProvider storage={mockStorage}>
+        <TestComponent />
+      </ThemeProvider>,
+    )
+
+    // Should use system theme name but default-dark palette
+    expect(screen.getByText('system')).toBeTruthy()
+    expect(screen.getByText('default-dark')).toBeTruthy()
   })
 })

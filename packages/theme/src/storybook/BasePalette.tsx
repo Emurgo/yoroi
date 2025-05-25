@@ -12,12 +12,10 @@ const Palette = () => {
 
   return (
     <ScrollView
-      style={[
-        {flex: 1},
-        colorScheme === 'dark'
-          ? {backgroundColor: 'black'}
-          : {backgroundColor: 'white'},
-      ]}
+      style={{
+        flex: 1,
+        backgroundColor: colorScheme === 'dark' ? 'black' : 'white',
+      }}
     >
       <View
         style={{
