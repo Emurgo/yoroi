@@ -16,7 +16,9 @@ export const useWalletNotifications = () => {
   }, [refetch])
 
   const data = React.useMemo(() => {
-    return receivedNotifications.filter((e) => e.trigger === Notifications.Trigger.Push)
+    return receivedNotifications.filter(
+      (e) => e.trigger === Notifications.Trigger.Push || e.trigger === Notifications.Trigger.Banner,
+    )
   }, [receivedNotifications])
   return {data, refetch}
 }

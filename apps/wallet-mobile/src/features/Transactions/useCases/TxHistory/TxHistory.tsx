@@ -12,6 +12,7 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {usePoolTransitionModal} from '../../../../legacy/Staking/PoolTransition/usePoolTransitionModal'
 import {useSync} from '../../../../yoroi-wallets/hooks'
 import {ConsiderDRepToUsTxHistoryBanner} from '../../../Banners/useCases/ConsiderDRepToUsTxHistoryBanner'
+import {useBuyBannerNotification} from '../../../Exchange/common/ShowBuyBanner/ShowBuyBanner'
 import {useGetImportantAlertsModal} from '../../../Notifications/common/GetImportantAlertsModal'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
@@ -27,6 +28,8 @@ export const TxHistory = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const {isDark} = useTheme()
+
+  useBuyBannerNotification()
 
   const {track} = useMetrics()
   useGetImportantAlertsModal({enabled: true})

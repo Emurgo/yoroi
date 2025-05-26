@@ -3,6 +3,7 @@ import {Notifications} from '@yoroi/types'
 import * as React from 'react'
 
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {bannerTriggersSubject} from './banner-triggers'
 import {primaryTokenPriceChangedSubject} from './primary-token-price-changed-notification'
 import {rewardsUpdatedSubject} from './rewards-updated-notification'
 import {configStorage, eventsStorage} from './storage'
@@ -25,6 +26,7 @@ export const useNotificationManagerMaker = () => {
           [Notifications.Trigger.TransactionReceived]: transactionReceivedSubject,
           [Notifications.Trigger.PrimaryTokenPriceChanged]: primaryTokenPriceChangedSubject,
           [Notifications.Trigger.RewardsUpdated]: rewardsUpdatedSubject,
+          [Notifications.Trigger.Banner]: bannerTriggersSubject,
         },
       }),
     [walletId],

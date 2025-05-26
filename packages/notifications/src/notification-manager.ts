@@ -72,6 +72,7 @@ const notificationTriggerGroups: Record<
   [Notifications.Trigger.RewardsUpdated]: 'portfolio',
   [Notifications.Trigger.PrimaryTokenPriceChanged]: 'portfolio',
   [Notifications.Trigger.Push]: 'push',
+  [Notifications.Trigger.Banner]: 'portfolio',
 }
 
 const eventsManagerMaker = ({
@@ -125,7 +126,8 @@ const eventsManagerMaker = ({
       if (!shouldNotify(event, await config.read())) {
         return
       }
-      const allEvents = await events.read()
+      const allEvents = (await events.read()).filter(({id}) => id !== event.id)
+
       const newEvents = [event, ...allEvents].slice(0, eventsLimit)
       await storage.setItem('events', newEvents)
       if (!event.isRead) {
@@ -187,6 +189,9 @@ const defaultConfig: Notifications.Config = {
     notify: true,
   },
   [Notifications.Trigger.RewardsUpdated]: {
+    notify: true,
+  },
+  [Notifications.Trigger.Banner]: {
     notify: true,
   },
 }

@@ -7,7 +7,6 @@ import {StyleSheet, View} from 'react-native'
 import {Space} from '../../../../components/Space/Space'
 import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
-import {ShowBuyBanner} from '../../../Exchange/common/ShowBuyBanner/ShowBuyBanner'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'
@@ -44,7 +43,6 @@ export const TxList = (props: Props) => {
     <View style={styles.container}>
       <FlashList
         data={loadedTxs}
-        ListHeaderComponent={<ShowBuyBanner />}
         contentContainerStyle={styles.content}
         renderItem={({item}) => <TxListItem transaction={item} />}
         ItemSeparatorComponent={() => <Space height="lg" />}

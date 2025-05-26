@@ -86,13 +86,16 @@ const NotificationItem = React.memo(({event, onPress}: {event: Notifications.Eve
 
   const isUnread = !event.isRead
 
-  const description = event.trigger === Notifications.Trigger.Push ? event.metadata.body : null
+  const description =
+    event.trigger === Notifications.Trigger.Push || event.trigger === Notifications.Trigger.Banner
+      ? event.metadata.body
+      : null
   const time = React.useMemo(() => formatDate(event.date, languageCode), [event.date, languageCode])
 
   const title =
     event.trigger === Notifications.Trigger.TransactionReceived
       ? getTransactionReceivedNotificationTitle(event, strings, transactionInfos, wallet)
-      : event.trigger === Notifications.Trigger.Push
+      : event.trigger === Notifications.Trigger.Push || event.trigger === Notifications.Trigger.Banner
       ? event.metadata.title
       : event.id
 

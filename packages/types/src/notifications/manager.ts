@@ -6,6 +6,7 @@ export enum NotificationTrigger {
   'RewardsUpdated' = 'RewardsUpdated',
   'PrimaryTokenPriceChanged' = 'PrimaryTokenPriceChanged',
   'Push' = 'Push',
+  'Banner' = 'Banner',
 }
 
 export type NotificationManagerMakerProps = {
@@ -16,8 +17,18 @@ export type NotificationManagerMakerProps = {
     [NotificationTrigger.RewardsUpdated]: Subject<NotificationRewardsUpdatedEvent>
     [NotificationTrigger.PrimaryTokenPriceChanged]: Subject<NotificationPrimaryTokenPriceChangedEvent>
     [NotificationTrigger.Push]: Subject<PushNotificationEvent>
+    [NotificationTrigger.Banner]: Subject<BannerNotificationEvent>
   }>
   eventsLimit?: number
+}
+
+export interface BannerNotificationEvent extends NotificationEventBase {
+  trigger: NotificationTrigger.Banner
+  metadata: {
+    title: string
+    body: string
+    data?: Record<string, unknown>
+  }
 }
 
 export interface PushNotificationEvent extends NotificationEventBase {
@@ -64,6 +75,7 @@ export type NotificationEvent =
   | NotificationPrimaryTokenPriceChangedEvent
   | NotificationRewardsUpdatedEvent
   | PushNotificationEvent
+  | BannerNotificationEvent
 
 type NotificationEventId = number
 
@@ -87,6 +99,9 @@ export type NotificationConfig = {
     notify: boolean
   }
   [NotificationTrigger.RewardsUpdated]: {
+    notify: boolean
+  }
+  [NotificationTrigger.Banner]: {
     notify: boolean
   }
 }

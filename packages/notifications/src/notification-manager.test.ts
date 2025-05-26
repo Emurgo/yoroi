@@ -40,6 +40,9 @@ describe('NotificationManager', () => {
       [Notifications.Trigger.RewardsUpdated]: {
         notify: true,
       },
+      [Notifications.Trigger.Banner]: {
+        notify: true,
+      },
       displayDuration: 8,
     })
   })

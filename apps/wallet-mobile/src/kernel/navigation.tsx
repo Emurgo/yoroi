@@ -5,7 +5,7 @@ import {isKeyOf} from '@yoroi/common'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Chain, Portfolio, Scan} from '@yoroi/types'
 import React from 'react'
-import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {Dimensions, Linking, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../components/Icon'
 import {OnConfirm} from '../features/ReviewTx/common/hooks/useOnConfirm'
@@ -700,6 +700,23 @@ export const useWalletNavigation = () => {
           screen: 'history',
           params: {
             screen: 'swap-main',
+          },
+        },
+      })
+    },
+
+    navigateToExchange: () => {
+      if (network === Chain.Network.Preprod) {
+        Linking.openURL('https://docs.cardano.org/cardano-testnets/tools/faucet/')
+        return
+      }
+
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'exchange-create-order',
           },
         },
       })
