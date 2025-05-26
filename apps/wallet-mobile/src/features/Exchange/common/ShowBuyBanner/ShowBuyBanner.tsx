@@ -1,3 +1,4 @@
+import {time} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 import _ from 'lodash'
 import * as React from 'react'
@@ -56,6 +57,7 @@ export const useBuyBannerNotification = () => {
 
   useQuery({
     queryKey: ['buyBanner', wallet?.id],
+    staleTime: time.hours(1),
     queryFn: () => {
       if (hasZeroPt) {
         triggerBanner({
@@ -63,7 +65,9 @@ export const useBuyBannerNotification = () => {
           title: strings.needMoreCrypto,
           body: strings.ourTrustedPartners,
         })
+        return true
       }
+      return false
     },
   })
 }
