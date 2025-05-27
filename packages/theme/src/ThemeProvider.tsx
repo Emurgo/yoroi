@@ -1,14 +1,9 @@
 import * as React from 'react'
 import {useColorScheme} from 'react-native'
 import {freeze} from 'immer'
+import {App} from '@yoroi/types'
 
-import {
-  ThemedPalette,
-  ThemeConfig,
-  ThemeName,
-  ThemeStorage,
-  ThemeBasePalette,
-} from './types'
+import {ThemedPalette, ThemeConfig, ThemeName, ThemeBasePalette} from './types'
 import {defaultLightTheme} from './themes/default-light'
 import {defaultDarkTheme} from './themes/default-dark'
 import {detectTheme} from './helpers/detect-theme'
@@ -20,7 +15,7 @@ export const ThemeProvider = ({
   children,
   storage,
 }: React.PropsWithChildren<{
-  storage: ThemeStorage
+  storage: App.StorageKeyManager<ThemeName>
 }>) => {
   const hostTheme = useColorScheme() ?? 'dark'
   const [selectedThemeName, setSelectedThemeName] = React.useState<ThemeName>(

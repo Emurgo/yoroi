@@ -1,3 +1,5 @@
+import {Subscription} from 'rxjs'
+
 import {MaybePromise} from '../helpers/types'
 
 export type AppStorageFolderName = `${string}/`
@@ -36,4 +38,12 @@ export interface AppStorage<
     IsAsync
   >
   clear: () => MaybePromise<void, IsAsync>
+}
+
+export type AppStorageKeyManager<T = unknown, Key extends string = string> = {
+  save: (value: T) => void
+  read: () => T
+  remove: () => void
+  subscribe: (callback: () => void) => Subscription
+  key: Key
 }

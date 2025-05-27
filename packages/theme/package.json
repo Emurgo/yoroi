@@ -82,7 +82,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^19.0.0",
     "@types/react-test-renderer": "^19.1.0",
-    "@yoroi/types": "2.0.0",
+    "@yoroi/types": "file:../types",
     "babel-jest": "^29.7.0",
     "commitlint": "^17.0.2",
     "del-cli": "^6.0.0",

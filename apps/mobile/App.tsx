@@ -3,10 +3,15 @@ import {StatusBar} from 'expo-status-bar'
 import {Text, View, Alert, TouchableOpacity} from 'react-native'
 import * as LocalAuthentication from 'expo-local-authentication'
 import * as Font from 'expo-font'
-import {AsyncStorageProvider} from '@yoroi/common'
+import {AsyncStorageProvider, useSyncStorageToState} from '@yoroi/common'
 import {ThemeProvider, useTheme, atoms as a} from '@yoroi/theme'
 
-import {rootStorage, themeStorage} from './src/kernel/storage/storages'
+import {
+  authStorageKeyManager,
+  crashReportsStorageKeyManager,
+  rootStorage,
+  themeStorageKeyManager,
+} from './src/kernel/storage/storages'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 
 function Shell({children}: React.PropsWithChildren) {
@@ -16,7 +21,7 @@ function Shell({children}: React.PropsWithChildren) {
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <ThemeProvider storage={themeStorage}>{children}</ThemeProvider>
+      <ThemeProvider storage={themeStorageKeyManager}>{children}</ThemeProvider>
     </AsyncStorageProvider>
   )
 }
@@ -30,6 +35,9 @@ function Yoroi() {
     selectTheme,
   } = useTheme()
   const [fontsLoaded, setFontsLoaded] = React.useState(false)
+  const [isCrashReportsEnabled, setIsCrashReportsEnabled] =
+    useSyncStorageToState(crashReportsStorageKeyManager)
+  const [authSetting, setAuthSetting] = useSyncStorageToState(authStorageKeyManager)
 
   React.useEffect(() => {
     async function loadFonts() {
@@ -69,9 +77,11 @@ function Yoroi() {
       ]}
     >
       <StatusBar style={isDark ? 'light' : 'dark'} />
+
       <Text style={[a.body_2_md_regular, {color: text_gray_low}]}>
         Welcome! base: {basePalette} selectedTheme: {name}
       </Text>
+
       <TouchableOpacity
         onPress={() => selectTheme(isDark ? 'default-light' : 'default-dark')}
         style={[
@@ -83,6 +93,33 @@ function Yoroi() {
       >
         <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
           Toggle {isDark ? 'Light' : 'Dark'} Theme
+        </Text>
+      </TouchableOpacity>
+
+      <View style={[a.p_lg]} />
+
+      <TouchableOpacity
+        onPress={() => setIsCrashReportsEnabled(!isCrashReportsEnabled)}
+        style={[
+          a.pt_md,
+          a.p_md,
+          a.rounded_md,
+          {backgroundColor: text_gray_low},
+        ]}
+      >
+        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+          Toggle Crash Reports {isCrashReportsEnabled ? 'Enabled' : 'Disabled'}
+        </Text>
+      </TouchableOpacity>
+
+      <View style={[a.p_lg]} />
+
+      <TouchableOpacity
+        onPress={() => setAuthSetting(authSetting === 'pin' ? 'os' : 'pin')}
+        style={[a.pt_md, a.p_md, a.rounded_md, {backgroundColor: text_gray_low}]}
+      >
+        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+          Toggle Auth Setting {authSetting === 'pin' ? 'Pin' : 'OS'}
         </Text>
       </TouchableOpacity>
     </View>

@@ -76,9 +76,9 @@ export const debugStorage = async <
       const newPrefix = `${prefix}${isLast ? '    ' : '│   '}`
       
       if (typeof value === 'string') {
-        console.log(`${prefix}${isLast ? '└── ' : '├── '}${key}: ${value}`)
+        console.log(`${prefix}${isLastEntry ? '└── ' : '├── '}${key}: ${value}`)
       } else {
-        console.log(`${prefix}${isLast ? '└── ' : '├── '}${key}/`)
+        console.log(`${prefix}${isLastEntry ? '└── ' : '├── '}${key}/`)
         printTree(value, newPrefix, isLastEntry)
       }
     })

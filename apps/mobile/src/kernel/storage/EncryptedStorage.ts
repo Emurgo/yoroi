@@ -4,14 +4,10 @@ import {rootStorage} from './storages'
 
 type StorageKey = `${string}-MASTER_PASSWORD` | string
 export const EncryptedStorageKeys = {
-  // MASTER_PASSWORD is legacy this b.s abstraction means xpriv
-  // key here means storage-key
   xPrivKey: (id: string): StorageKey => `${id}-MASTER_PASSWORD`,
 }
 
-// private is stored encrypted at root level of keystore/
 const keyStorage = rootStorage.join('keystore/')
-// public per account is stored at keystore/${id}/${account} not encrypted for now
 const publicStorageMaker = (id: string) => keyStorage.join(`${id}/`)
 
 export const EncryptedStorage = {
