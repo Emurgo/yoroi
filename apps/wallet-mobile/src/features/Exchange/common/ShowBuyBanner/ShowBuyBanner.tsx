@@ -1,4 +1,5 @@
 import {time} from '@yoroi/common'
+import {useNotificationManager} from '@yoroi/notifications'
 import {Chain} from '@yoroi/types'
 import _ from 'lodash'
 import * as React from 'react'
@@ -7,7 +8,7 @@ import {useQuery} from 'react-query'
 
 import {useBalances, useTransactionInfos} from '../../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../../yoroi-wallets/utils/utils'
-import {bannerIds, triggerBanner} from '../../../Notifications/common/banner-triggers'
+import {BannerIds, showBanner} from '../../../Notifications/common/show-banners'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useResetShowBuyBannerSmall} from '../useResetShowBuyBannerSmall'
@@ -49,6 +50,8 @@ export const ShowBuyBanner = () => {
 
 export const useBuyBannerNotification = () => {
   const {wallet} = useSelectedWallet()
+  const manager = useNotificationManager()
+
   const strings = useStrings()
 
   const balances = useBalances(wallet)
@@ -56,18 +59,20 @@ export const useBuyBannerNotification = () => {
   const hasZeroPt = Quantities.isZero(primaryAmount.quantity)
 
   useQuery({
-    queryKey: ['buyBanner', wallet?.id],
-    staleTime: time.hours(1),
+    queryKey: ['buyCryptoBanner', wallet?.id],
+    staleTime: time.oneHour,
     queryFn: () => {
       if (hasZeroPt) {
-        triggerBanner({
-          id: bannerIds.buyCryptoBanner,
+        showBanner({
+          id: BannerIds.BuyCrypto,
           title: strings.needMoreCrypto,
           body: strings.ourTrustedPartners,
         })
         return true
+      } else {
+        manager.events.remove(BannerIds.BuyCrypto)
+        return false
       }
-      return false
     },
   })
 }

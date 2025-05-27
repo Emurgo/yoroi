@@ -3,19 +3,25 @@ import {Subject} from 'rxjs'
 
 export const bannerTriggersSubject = new Subject<NotificationTypes.BannerEvent>()
 
-export const triggerBanner = (params: {id: number; title: string; body: string}) => {
+type BannerProps = {
+  id: number
+  title: string
+  body: string
+}
+
+export const showBanner = ({id, title, body}: BannerProps) => {
   bannerTriggersSubject.next({
     trigger: NotificationTypes.Trigger.Banner,
-    id: params.id,
+    id,
     date: new Date().toISOString(),
     isRead: false,
     metadata: {
-      title: params.title,
-      body: params.body,
+      title,
+      body,
     },
   })
 }
 
-export const bannerIds = {
-  buyCryptoBanner: 23478934728,
+export const BannerIds = {
+  BuyCrypto: 23478934728,
 } as const

@@ -139,6 +139,13 @@ const eventsManagerMaker = ({
       await storage.removeItem('events')
       unreadCounterByGroup$.next(buildUnreadCounterDefaultValue())
     },
+    remove: async (id: number) => {
+      const allEvents = await events.read()
+      const filteredEvents = allEvents.filter((event) => event.id !== id)
+      await storage.setItem<EventsStorageData>('events', filteredEvents)
+      await updateUnreadCounter()
+      return filteredEvents
+    },
   }
   return {events, unreadCounterByGroup$, newEvents$}
 }

@@ -119,6 +119,7 @@ export type NotificationManager = {
   events: {
     markAllAsRead: () => Promise<void>
     markAsRead(id: NotificationEventId): Promise<void>
+    remove(id: NotificationEventId): Promise<ReadonlyArray<NotificationEvent>>
     read: () => Promise<ReadonlyArray<NotificationEvent>>
     push: (event: Readonly<NotificationEvent>) => Promise<void>
     clear: () => Promise<void>
