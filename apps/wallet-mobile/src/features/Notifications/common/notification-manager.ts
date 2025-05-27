@@ -5,6 +5,7 @@ import * as React from 'react'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {primaryTokenPriceChangedSubject} from './primary-token-price-changed-notification'
 import {rewardsUpdatedSubject} from './rewards-updated-notification'
+import {bannerTriggersSubject} from './show-banners'
 import {configStorage, eventsStorage} from './storage'
 import {transactionReceivedSubject} from './transaction-received-notification'
 
@@ -25,6 +26,7 @@ export const useNotificationManagerMaker = () => {
           [Notifications.Trigger.TransactionReceived]: transactionReceivedSubject,
           [Notifications.Trigger.PrimaryTokenPriceChanged]: primaryTokenPriceChangedSubject,
           [Notifications.Trigger.RewardsUpdated]: rewardsUpdatedSubject,
+          [Notifications.Trigger.Banner]: bannerTriggersSubject,
         },
       }),
     [walletId],

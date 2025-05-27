@@ -31,7 +31,6 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      height: 76,
       borderRadius: 6,
       ...atoms.p_lg,
       ...atoms.gap_lg,
@@ -45,6 +44,7 @@ const useStyles = () => {
       shadowRadius: 20,
     },
     content: {
+      ...atoms.flex_1,
       ...atoms.flex_col,
       ...atoms.gap_xs,
     },
@@ -54,7 +54,6 @@ const useStyles = () => {
     },
     description: {
       ...atoms.link_2_md,
-      color: color.gray_600,
     },
   })
 

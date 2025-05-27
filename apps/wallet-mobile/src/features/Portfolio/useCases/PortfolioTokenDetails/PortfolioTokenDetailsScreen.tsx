@@ -16,7 +16,6 @@ import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelected
 import {usePortfolioTokenDetailParams} from '../../common/hooks/useNavigateTo'
 import {useStrings} from '../../common/hooks/useStrings'
 import {PortfolioDetailsTab, usePortfolio} from '../../common/PortfolioProvider'
-import {BuyADABanner} from '../PortfolioDashboard/DashboardTokensList/BuyADABanner/BuyADABanner'
 import {Actions} from './Actions'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
@@ -111,7 +110,6 @@ export const PortfolioTokenDetailsScreen = () => {
             </>
           }
           {...(detailsTab !== PortfolioDetailsTab.Transactions && {data: []})}
-          {...(detailsTab === PortfolioDetailsTab.Transactions && {ListEmptyComponent: <BuyADABanner />})}
         />
 
         <Actions tokenInfo={tokenInfo} />

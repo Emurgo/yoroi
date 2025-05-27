@@ -40,6 +40,9 @@ describe('NotificationManager', () => {
       [Notifications.Trigger.RewardsUpdated]: {
         notify: true,
       },
+      [Notifications.Trigger.Banner]: {
+        notify: true,
+      },
       displayDuration: 8,
     })
   })
@@ -299,6 +302,42 @@ describe('NotificationManager', () => {
     const expectedIds = Array.from({length: 100}, (_, i) => i + 10)
     const savedIds = savedEvents.map((event) => event.id)
     expect(savedIds.sort()).toEqual(expectedIds.sort())
+  })
+
+  it('should allow to remove an event by id', async () => {
+    const manager = createManager()
+
+    const event1 = createTransactionReceivedEvent({id: 1})
+    const event2 = createTransactionReceivedEvent({id: 2})
+    const event3 = createTransactionReceivedEvent({id: 3})
+    await manager.events.push(event1)
+    await manager.events.push(event2)
+    await manager.events.push(event3)
+
+    // Remove event2
+    await manager.events.remove(2)
+    const savedEvents = await manager.events.read()
+    expect(savedEvents.find((e) => e.id === 2)).toBeUndefined()
+    expect(savedEvents).toHaveLength(2)
+    expect(
+      manager.unreadCounterByGroup$.value.get('transaction-history'),
+    ).toEqual(2)
+  })
+
+  it('should not change events if removing a non-existent id', async () => {
+    const manager = createManager()
+
+    const event1 = createTransactionReceivedEvent({id: 1})
+    const event2 = createTransactionReceivedEvent({id: 2})
+    await manager.events.push(event1)
+    await manager.events.push(event2)
+
+    // Try to remove an event that doesn't exist
+    await manager.events.remove(999)
+    const savedEvents = await manager.events.read()
+    expect(savedEvents).toHaveLength(2)
+    expect(savedEvents.find((e) => e.id === 1)).toBeDefined()
+    expect(savedEvents.find((e) => e.id === 2)).toBeDefined()
   })
 })
 

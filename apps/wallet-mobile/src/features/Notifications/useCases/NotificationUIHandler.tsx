@@ -75,6 +75,10 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
       ) {
         pushEvent(event)
       }
+
+      if (event.trigger === Notifications.Trigger.Banner) {
+        pushEvent(event)
+      }
     })
     return () => {
       localSubscription.unsubscribe()

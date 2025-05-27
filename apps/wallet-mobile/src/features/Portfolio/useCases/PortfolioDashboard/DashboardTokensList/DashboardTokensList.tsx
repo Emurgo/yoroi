@@ -1,19 +1,15 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {FlatList, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {PreprodFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/PreprodFaucetBanner'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {useZeroBalance} from '../../../common/hooks/useZeroBalance'
-import {BuyADABanner} from './BuyADABanner/BuyADABanner'
 import {DashboardTokenItem} from './DashboardTokenItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 
@@ -23,11 +19,6 @@ export const DashboardTokensList = () => {
   const isZeroADABalance = useZeroBalance()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
-  const {
-    selected: {network},
-  } = useWalletManager()
-
-  const isPreprod = network === Chain.Network.Preprod
 
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
 
@@ -45,10 +36,6 @@ export const DashboardTokensList = () => {
   }
 
   const renderTokensList = () => {
-    if (tokensList.length === 0 || isZeroADABalance) {
-      return <View style={styles.container}>{isPreprod ? <PreprodFaucetBanner /> : <BuyADABanner />}</View>
-    }
-
     if (isJustADA) {
       return (
         <View style={styles.justAdaContainer}>

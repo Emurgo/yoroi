@@ -2,7 +2,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {amountBreakdown, infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Chain, Portfolio} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -10,10 +10,8 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {makeList} from '../../../../../kernel/utils'
-import {PreprodFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/PreprodFaucetBanner'
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {aggregatePrimaryAmount} from '../../../common/helpers/aggregatePrimaryAmount'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {useZeroBalance} from '../../../common/hooks/useZeroBalance'
@@ -21,7 +19,6 @@ import {Line} from '../../../common/Line'
 import {usePortfolio} from '../../../common/PortfolioProvider'
 import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
 import {TokenEmptyList} from '../../../common/TokenEmptyList/TokenEmptyList'
-import {BuyADABanner} from '../../PortfolioDashboard/DashboardTokensList/BuyADABanner/BuyADABanner'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {TokenBalanceItem} from './TokenBalanceItem'
 import {TokenBalanceSkeletonItem} from './TokenBalanceSkeletonItem'
@@ -33,9 +30,6 @@ export const PortfolioWalletTokenList = () => {
   const isZeroADABalance = useZeroBalance()
   const {resetTabs} = usePortfolio()
   const {track} = useMetrics()
-  const {
-    selected: {network},
-  } = useWalletManager()
 
   const {
     wallet: {balances, portfolioPrimaryTokenInfo},
@@ -102,8 +96,6 @@ export const PortfolioWalletTokenList = () => {
     return () => clearTimeout(timeout)
   }, [isSearching, search, track])
 
-  const isPreprod = network === Chain.Network.Preprod
-
   const renderFooterList = () => {
     if (isSearching) return null
     if (isLoading) {
@@ -117,15 +109,7 @@ export const PortfolioWalletTokenList = () => {
         </View>
       )
     }
-    if (isZeroADABalance) {
-      return (
-        <View>
-          <Spacer height={16} />
 
-          {isPreprod ? <PreprodFaucetBanner /> : <BuyADABanner />}
-        </View>
-      )
-    }
     if (isJustPt)
       return (
         <View>

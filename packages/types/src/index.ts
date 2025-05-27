@@ -262,6 +262,7 @@ import {
   PortfolioTokenHistoryPeriod,
 } from './portfolio/history'
 import {
+  BannerNotificationEvent,
   NotificationConfig,
   NotificationEvent,
   NotificationGroup,
@@ -701,6 +702,7 @@ export namespace Notifications {
   export type TransactionReceivedEvent = NotificationTransactionReceivedEvent
   export type RewardsUpdatedEvent = NotificationRewardsUpdatedEvent
   export type PushEvent = PushNotificationEvent
+  export type BannerEvent = BannerNotificationEvent
   export type PrimaryTokenPriceChangedEvent =
     NotificationPrimaryTokenPriceChangedEvent
   export const Trigger = NotificationTrigger

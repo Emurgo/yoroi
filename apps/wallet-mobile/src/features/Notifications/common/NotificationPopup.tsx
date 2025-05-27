@@ -5,9 +5,11 @@ import {StyleSheet, View} from 'react-native'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
 import {Icon} from '../../../components/Icon'
+import {IconProps} from '../../../components/Icon/type'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {NotificationItem} from './NotificationPopupItem'
+import {BannerIds} from './show-banners'
 import {SwipeOutWrapper} from './SwipeOutWrapper'
 import {TransactionReceivedNotificationPopup} from './TransactionReceivedNotificationPopup'
 import {useStrings} from './useStrings'
@@ -43,6 +45,10 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
     if (event.trigger === Notifications.Trigger.RewardsUpdated) {
       track.inAppNotificationClosed({type: 'staking_rewards'})
     }
+
+    if (event.trigger === Notifications.Trigger.Banner) {
+      track.inAppNotificationClosed({type: 'banner'})
+    }
   }
 
   const handleOnPress = () => {
@@ -60,6 +66,13 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
     if (event.trigger === Notifications.Trigger.RewardsUpdated) {
       track.inAppNotificationOpened({type: 'staking_rewards'})
       navigation.navigateToStakingDashboard()
+    }
+
+    if (event.trigger === Notifications.Trigger.Banner) {
+      track.inAppNotificationOpened()
+      if (event.id === BannerIds.BuyCrypto || event.id === BannerIds.TestAda) {
+        navigation.navigateToExchange()
+      }
     }
   }
 
@@ -79,9 +92,22 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
       <SwipeOutWrapper onSwipeOut={handleOnSwipeOut} onExpired={onExpired} onPress={handleOnPress}>
         <NotificationItem
           onPress={handleOnPress}
-          icon={<RewardsUpdatedIcon />}
+          icon={<ColoredIcon icon={Icon.Staking} />}
           title={strings.stakingRewardsReceived}
           description={strings.tapToView}
+        />
+      </SwipeOutWrapper>
+    )
+  }
+
+  if (event.trigger === Notifications.Trigger.Banner) {
+    return (
+      <SwipeOutWrapper onSwipeOut={handleOnSwipeOut} onExpired={onExpired} onPress={handleOnPress}>
+        <NotificationItem
+          onPress={handleOnPress}
+          icon={<ColoredIcon icon={Icon.Exchange} />}
+          title={event.metadata.title}
+          description={event.metadata.body}
         />
       </SwipeOutWrapper>
     )
@@ -124,11 +150,12 @@ const PushNotificationIcon = () => {
   )
 }
 
-const RewardsUpdatedIcon = () => {
+const ColoredIcon = (props: {icon: (p: IconProps) => React.JSX.Element}) => {
   const {styles, colors} = useStyles()
+  const Icon = props.icon
   return (
     <View style={[styles.icon, {backgroundColor: colors.iconBackground}]}>
-      <Icon.Staking color={colors.iconColor} />
+      <Icon color={colors.iconColor} />
     </View>
   )
 }
