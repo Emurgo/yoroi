@@ -10,12 +10,6 @@ export type ThemeBasePalette = 'light' | 'dark'
 
 export type ThemeName = 'default-light' | 'default-dark' | 'system'
 
-export type ThemeStorage = Readonly<{
-  save: (name: ThemeName) => void
-  read: () => ThemeName | null
-  key: string
-}>
-
 export type HexColor = `#${string}`
 
 export type Gradient = [HexColor, HexColor, ...HexColor[]]

@@ -3,16 +3,18 @@ import {render, screen, fireEvent} from '@testing-library/react-native'
 import {ErrorBoundary} from '@yoroi/common'
 import {Button, Text} from 'react-native'
 import * as ReactNative from 'react-native'
+import {App} from '@yoroi/types'
 
 import {ThemeProvider, useTheme, usePalette} from './ThemeProvider'
-import {ThemeName, ThemeStorage} from './types'
+import {ThemeName} from './types'
 
 describe('ThemeProvider and useTheme Tests', () => {
   let storedValue: ThemeName | undefined
-  const mockStorage: ThemeStorage = {
+  const mockStorage: App.StorageKeyManager<ThemeName> = {
     key: 'theme-name',
     save: jest.fn().mockImplementation((v) => (storedValue = v)),
     read: jest.fn().mockImplementation(() => storedValue),
+    remove: jest.fn(),
   }
 
   beforeEach(() => {
@@ -48,10 +50,11 @@ describe('ThemeProvider and useTheme Tests', () => {
   })
 
   test('ThemeProvider provides theme context with custom storage', () => {
-    const customStorage: ThemeStorage = {
+    const customStorage: App.StorageKeyManager<ThemeName> = {
       key: 'custom-theme',
       save: jest.fn(),
       read: jest.fn().mockReturnValue('default-dark'),
+      remove: jest.fn(),
     }
 
     const TestComponent = () => {

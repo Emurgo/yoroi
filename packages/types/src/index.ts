@@ -17,7 +17,11 @@ import {
   SwapLimitOptionsResponse,
   SwapSplit,
 } from './swap/api'
-import {AppStorage, AppStorageFolderName} from './app/storage'
+import {
+  AppStorage,
+  AppStorageFolderName,
+  AppStorageKeyManager,
+} from './app/storage'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 import {NumberLocale} from './intl/numbers'
 import {
@@ -297,6 +301,10 @@ export namespace App {
     IsAsync extends boolean = true,
     K extends string = string,
   > extends AppStorage<IsAsync, K> {}
+  export type StorageKeyManager<
+    T = unknown,
+    Key extends string = string,
+  > = AppStorageKeyManager<T, Key>
   export type StorageFolderName = AppStorageFolderName
   export interface MultiStorage<
     T,

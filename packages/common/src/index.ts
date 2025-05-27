@@ -46,8 +46,10 @@ export * from './storage/translators/async-storage-reactjs'
 export * from './storage/translators/sync-storage-reactjs'
 export * from './storage/helpers/storage-serializer'
 export * from './storage/helpers/storage-deserializer-maker'
+export * from './storage/helpers/storage-key-maker'
 
 export * from './time/time'
 
 export * from './translators/reactjs/hooks/useMutationWithInvalidations'
 export * from './translators/reactjs/hooks/useObservableValue'
+export * from './translators/reactjs/hooks/useSyncStorageToState'
