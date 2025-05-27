@@ -69,7 +69,7 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
 
     if (event.trigger === Notifications.Trigger.Banner) {
       track.inAppNotificationOpened()
-      navigation.navigateToStakingDashboard()
+      navigation.navigateToExchange()
     }
   }
 
