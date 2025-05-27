@@ -9,6 +9,7 @@ import {IconProps} from '../../../components/Icon/type'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {NotificationItem} from './NotificationPopupItem'
+import {BannerIds} from './show-banners'
 import {SwipeOutWrapper} from './SwipeOutWrapper'
 import {TransactionReceivedNotificationPopup} from './TransactionReceivedNotificationPopup'
 import {useStrings} from './useStrings'
@@ -69,7 +70,9 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
 
     if (event.trigger === Notifications.Trigger.Banner) {
       track.inAppNotificationOpened()
-      navigation.navigateToExchange()
+      if (event.id === BannerIds.BuyCrypto || event.id === BannerIds.TestAda) {
+        navigation.navigateToExchange()
+      }
     }
   }
 

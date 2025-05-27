@@ -24,4 +24,5 @@ export const showBanner = ({id, title, body}: BannerProps) => {
 
 export const BannerIds = {
   BuyCrypto: 23478934728,
+  TestAda: 234682356,
 } as const

@@ -51,6 +51,9 @@ export const ShowBuyBanner = () => {
 export const useBuyBannerNotification = () => {
   const {wallet} = useSelectedWallet()
   const manager = useNotificationManager()
+  const {
+    selected: {network},
+  } = useWalletManager()
 
   const strings = useStrings()
 
@@ -59,18 +62,27 @@ export const useBuyBannerNotification = () => {
   const hasZeroPt = Quantities.isZero(primaryAmount.quantity)
 
   useQuery({
-    queryKey: ['buyCryptoBanner', wallet?.id],
+    queryKey: ['buyCryptoBanner', wallet?.id, network],
     staleTime: time.oneHour,
     queryFn: () => {
       if (hasZeroPt) {
-        showBanner({
-          id: BannerIds.BuyCrypto,
-          title: strings.needMoreCrypto,
-          body: strings.ourTrustedPartners,
-        })
+        if (network === Chain.Network.Preprod) {
+          showBanner({
+            id: BannerIds.TestAda,
+            title: strings.preprodFaucetBannerTitle,
+            body: strings.preprodFaucetBannerText,
+          })
+        } else {
+          showBanner({
+            id: BannerIds.BuyCrypto,
+            title: strings.needMoreCrypto,
+            body: strings.ourTrustedPartners,
+          })
+        }
         return true
       } else {
         manager.events.remove(BannerIds.BuyCrypto)
+        manager.events.remove(BannerIds.TestAda)
         return false
       }
     },
