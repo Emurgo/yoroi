@@ -1,3 +1,4 @@
+import {FetchData} from '@yoroi/common'
 import {ChainSupportedNetworks} from '../chain/network'
 import {PortfolioTokenInfo} from '../portfolio/info'
 import {SwapAggregator} from './aggregator'
@@ -26,5 +27,6 @@ export type SwapManagerMaker = (
     network: ChainSupportedNetworks
     storage: SwapStorage
     partners?: Partial<Record<SwapAggregator, string>>
+    request?: FetchData
   }>,
 ) => SwapManager

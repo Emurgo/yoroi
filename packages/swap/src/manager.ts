@@ -16,6 +16,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
   stakingKey,
   storage,
   partners,
+  request,
 }) => {
   const dexhunterApi = dexhunterApiMaker({
     address,
@@ -23,6 +24,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     primaryTokenInfo,
     isPrimaryToken,
     partner: partners?.[Swap.Aggregator.Dexhunter],
+    request,
   })
   const muesliswapApi = muesliswapApiMaker({
     address,
@@ -32,6 +34,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     stakingKey,
     isPrimaryToken,
     partner: partners?.[Swap.Aggregator.Muesliswap],
+    request,
   })
 
   const settings: Swap.ManagerSettings = {
