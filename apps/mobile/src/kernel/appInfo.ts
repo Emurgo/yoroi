@@ -7,8 +7,8 @@ import {isNightly, isProduction} from './env'
 const environment = isNightly
   ? 'nightly'
   : isProduction
-  ? 'production'
-  : 'development'
+    ? 'production'
+    : 'development'
 const version = Device.osVersion ?? ''
 const release = isProduction ? version : 'dev'
 const build = Device.osBuildId

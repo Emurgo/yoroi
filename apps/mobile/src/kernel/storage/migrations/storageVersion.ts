@@ -16,7 +16,9 @@ export const storageVersionMaker = (storage: App.Storage) => {
         return storage.setItem(keyStorageVersion, storageVersion)
       },
       async read() {
-        return storage.getItem(keyStorageVersion).then((version) => (isNumber(version) ? version : currentVersion))
+        return storage
+          .getItem(keyStorageVersion)
+          .then((version) => (isNumber(version) ? version : currentVersion))
       },
       async newInstallation() {
         return storage.setItem(keyStorageVersion, currentVersion)

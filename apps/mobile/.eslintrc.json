@@ -15,7 +15,8 @@
         "useTabs": false,
         "semi": false
       }
-    ]
+    ],
+    "eqeqeq": "off"
   },
   "root": true
 } 

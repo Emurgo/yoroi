@@ -10,4 +10,9 @@
           "--color"
         ]
     },
+    "jest.jestCommandLine": "npm test --",
+    "jest.runMode": {
+      "type": "on-demand"
+    },
+    "jest.pathToJest": "${workspaceRoot}/node_modules/.bin/jest"
 }

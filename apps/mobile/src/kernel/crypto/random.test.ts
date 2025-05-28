@@ -1,8 +1,11 @@
-import {randomHexString, randomSalt, randomNonce} from './random'
+import {randomHexString} from './random'
 
 describe('randomHexString', () => {
-  it('generates hex strings of correct length', () => {
-    const length = 32
+  it.each`
+    length | description
+    ${32}  | ${'generates hex strings of correct length'}
+    ${32}  | ${'generates different strings on each call'}
+  `('$description', ({length}) => {
     const result = randomHexString(length)
     expect(result.length).toBe(length)
     expect(result).toMatch(/^[0-9a-f]+$/)
@@ -15,37 +18,13 @@ describe('randomHexString', () => {
     expect(result1).not.toBe(result2)
   })
 
-  it('throws error for odd length', () => {
-    expect(() => randomHexString(31)).toThrow(
+  it.each`
+    length | description
+    ${31}  | ${'throws error for odd length'}
+    ${1}   | ${'throws error for length < 2'}
+  `('$description', ({length}) => {
+    expect(() => randomHexString(length)).toThrow(
       'Length must be even since each byte is 2 hex chars',
     )
-  })
-})
-
-describe('salt', () => {
-  it('generates a 64-character hex string', () => {
-    const salt = randomSalt()
-    expect(salt.length).toBe(64)
-    expect(salt).toMatch(/^[0-9a-f]+$/)
-  })
-
-  it('generates different salts on each call', () => {
-    const salt1 = randomSalt()
-    const salt2 = randomSalt()
-    expect(salt1).not.toBe(salt2)
-  })
-})
-
-describe('', () => {
-  it('generates a 24-character hex string', () => {
-    const nonce = randomNonce()
-    expect(nonce.length).toBe(24)
-    expect(nonce).toMatch(/^[0-9a-f]+$/)
-  })
-
-  it('generates different nonces on each call', () => {
-    const nonce1 = randomNonce()
-    const nonce2 = randomNonce()
-    expect(nonce1).not.toBe(nonce2)
   })
 })

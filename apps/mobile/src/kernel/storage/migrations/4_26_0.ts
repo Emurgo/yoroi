@@ -18,13 +18,20 @@ export const migrateAddressMode = async (rootStorage: App.Storage) => {
   await Promise.all(migrations)
 }
 
-const addAddressModeWrapper = (walletsRootStorage: App.Storage) => async (walletMetaToMigrate: WalletMetaV1) => {
-  return walletsRootStorage.setItem(walletMetaToMigrate.id, {...walletMetaToMigrate, addressMode: 'single'})
-}
+const addAddressModeWrapper =
+  (walletsRootStorage: App.Storage) =>
+  async (walletMetaToMigrate: WalletMetaV1) => {
+    return walletsRootStorage.setItem(walletMetaToMigrate.id, {
+      ...walletMetaToMigrate,
+      addressMode: 'single',
+    })
+  }
 
 export const to4_26_0 = migrateAddressMode
 
-export function isWalletMetaV1(walletMeta: unknown): walletMeta is WalletMetaV1 {
+export function isWalletMetaV1(
+  walletMeta: unknown,
+): walletMeta is WalletMetaV1 {
   if (walletMeta == null) return false
   if (typeof walletMeta !== 'object') return false
   return (

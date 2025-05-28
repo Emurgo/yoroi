@@ -1,54 +1,54 @@
-import { App } from "@yoroi/types";
-import * as React from "react";
+import {App} from '@yoroi/types'
+import * as React from 'react'
 
-import { to4_9_0 } from "./4_9_0";
-import { to4_26_0 } from "./4_26_0";
-import { to4_28_0 } from "./4_28_0";
-import { ErrorMigrationVersion } from "./errors";
-import { storageVersionMaker } from "./storageVersion";
-import { logger } from "../../logger/logger";
+import {to4_9_0} from './4_9_0'
+import {to4_26_0} from './4_26_0'
+import {to4_28_0} from './4_28_0'
+import {ErrorMigrationVersion} from './errors'
+import {storageVersionMaker} from './storageVersion'
+import {logger} from '../../logger/logger'
 
 export const useMigrations = (storage: App.Storage) => {
-  const [done, setDone] = React.useState(false);
+  const [done, setDone] = React.useState(false)
 
   React.useEffect(() => {
-    const storageVersion = storageVersionMaker(storage);
+    const storageVersion = storageVersionMaker(storage)
 
     const runMigrations = async () => {
-      const currentVersion = await storageVersion.read();
-      logger.info("useMigrations: Current version", { currentVersion });
+      const currentVersion = await storageVersion.read()
+      logger.info('useMigrations: Current version', {currentVersion})
 
       if (currentVersion !== storageVersion.current) {
         if (currentVersion < 1) {
-          await to4_9_0(storage);
-          await storageVersion.save(1);
-          logger.info("useMigrations: Storages migrated to version 1");
+          await to4_9_0(storage)
+          await storageVersion.save(1)
+          logger.info('useMigrations: Storages migrated to version 1')
         }
 
         if (currentVersion < 2) {
-          await to4_26_0(storage);
-          await storageVersion.save(2);
-          logger.info("useMigrations: Storages migrated to version 2");
+          await to4_26_0(storage)
+          await storageVersion.save(2)
+          logger.info('useMigrations: Storages migrated to version 2')
         }
 
         if (currentVersion < 3) {
-          await to4_28_0(storage);
-          await storageVersion.save(3);
-          logger.info("useMigrations: Storages migrated to version 3");
+          await to4_28_0(storage)
+          await storageVersion.save(3)
+          logger.info('useMigrations: Storages migrated to version 3')
         }
       } else {
-        logger.info("useMigrations: No migrations needed");
+        logger.info('useMigrations: No migrations needed')
       }
 
-      const savedVersion = await storageVersion.read();
+      const savedVersion = await storageVersion.read()
       if (savedVersion != storageVersion.current)
-        throw new ErrorMigrationVersion();
+        throw new ErrorMigrationVersion()
 
-      setDone(true);
-    };
+      setDone(true)
+    }
 
-    runMigrations();
-  }, [storage]);
+    runMigrations()
+  }, [storage])
 
-  return done;
-};
+  return done
+}

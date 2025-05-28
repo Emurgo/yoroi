@@ -57,7 +57,7 @@ export const KeychainStorage = {
 // react-native-keychain doesn't normalize the errors
 // iOS = `Error.code`
 // Android = Error.message
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const errorDecoder = Platform.select<(error: any) => Error>({
   android: (error) => {
     if (/code: 13/.test(error?.message)) return new CancelledByUser()

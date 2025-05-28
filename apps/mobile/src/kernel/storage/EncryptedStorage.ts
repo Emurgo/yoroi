@@ -1,6 +1,8 @@
 import {parseString} from '@yoroi/common'
 
 import {rootStorage} from './storages'
+import {decryptData} from '../crypto/decrypt-data'
+import {encryptData} from '../crypto/encrypt-data'
 
 type StorageKey = `${string}-MASTER_PASSWORD` | string
 export const EncryptedStorageKeys = {
@@ -59,11 +61,3 @@ export type WalletEncryptedStorage = ReturnType<
   typeof makeWalletEncryptedStorage
 >
 export type EncryptedStorage = typeof EncryptedStorage
-
-const encryptData = (data: string, password: string) => {
-  return data
-}
-
-const decryptData = (data: string, password: string) => {
-  return data
-}
