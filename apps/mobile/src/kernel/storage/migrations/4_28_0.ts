@@ -21,53 +21,58 @@ const migrateWalletMeta = async (rootStorage: App.Storage) => {
 
 // before 4.28 yoroi supported only account 0
 const accountVisual = 0
-const updateMeta = (walletsRootStorage: App.Storage) => async (meta: WalletMetaV2) => {
-  // added
-  const version = 3
-
-  // migragted
-  const implementation: Wallet.Implementation = meta.walletImplementationId.includes('shelley')
-    ? 'cardano-cip1852'
-    : 'cardano-bip44'
-  const plate = meta.checksum.TextPart
-  const avatar = new Blockies({seed: meta.checksum.ImagePart}).asBase64()
-
-  const walletStorage = walletsRootStorage.join(`${meta.id}/`)
-  const data = (await walletStorage.getItem('data')) as {
-    isReadOnly?: boolean
-    hwDeviceInfo?: HW.DeviceInfo
-    publicKeyHex?: string
-  }
-  const isReadOnly = data?.isReadOnly ?? false
-  const hwDeviceInfo = data?.hwDeviceInfo ?? null
-  const publicKeyHex = data?.publicKeyHex ?? ''
-
-  await makeWalletEncryptedStorage(meta.id).xpub.write(accountVisual, publicKeyHex)
-
-  // copied over
-  const {isHW, addressMode, name, id, isEasyConfirmationEnabled} = meta
-
-  const upgradedMeta: Wallet.Meta = {
+const updateMeta =
+  (walletsRootStorage: App.Storage) => async (meta: WalletMetaV2) => {
     // added
-    version,
-    isReadOnly,
+    const version = 3
 
-    // migrated
-    implementation,
-    plate,
-    avatar,
-    hwDeviceInfo,
+    // migragted
+    const implementation: Wallet.Implementation =
+      meta.walletImplementationId.includes('shelley')
+        ? 'cardano-cip1852'
+        : 'cardano-bip44'
+    const plate = meta.checksum.TextPart
+    const avatar = new Blockies({seed: meta.checksum.ImagePart}).asBase64()
+
+    const walletStorage = walletsRootStorage.join(`${meta.id}/`)
+    const data = (await walletStorage.getItem('data')) as {
+      isReadOnly?: boolean
+      hwDeviceInfo?: HW.DeviceInfo
+      publicKeyHex?: string
+    }
+    const isReadOnly = data?.isReadOnly ?? false
+    const hwDeviceInfo = data?.hwDeviceInfo ?? null
+    const publicKeyHex = data?.publicKeyHex ?? ''
+
+    await makeWalletEncryptedStorage(meta.id).xpub.write(
+      accountVisual,
+      publicKeyHex,
+    )
 
     // copied over
-    id,
-    name,
-    addressMode,
-    isHW,
-    isEasyConfirmationEnabled,
-  }
+    const {isHW, addressMode, name, id, isEasyConfirmationEnabled} = meta
 
-  return walletsRootStorage.setItem(id, upgradedMeta)
-}
+    const upgradedMeta: Wallet.Meta = {
+      // added
+      version,
+      isReadOnly,
+
+      // migrated
+      implementation,
+      plate,
+      avatar,
+      hwDeviceInfo,
+
+      // copied over
+      id,
+      name,
+      addressMode,
+      isHW,
+      isEasyConfirmationEnabled,
+    }
+
+    return walletsRootStorage.setItem(id, upgradedMeta)
+  }
 
 export const to4_28_0 = migrateWalletMeta
 
@@ -81,7 +86,9 @@ type WalletMetaV2 = {
   checksum: WalletChecksum
   networkId: number
 }
-export function isWalletMetaV2(walletMeta: unknown): walletMeta is WalletMetaV2 {
+export function isWalletMetaV2(
+  walletMeta: unknown,
+): walletMeta is WalletMetaV2 {
   if (walletMeta == null) return false
   if (typeof walletMeta !== 'object') return false
   return (

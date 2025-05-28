@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {StatusBar} from 'expo-status-bar'
-import {Text, View, Alert, TouchableOpacity} from 'react-native'
-import * as LocalAuthentication from 'expo-local-authentication'
+import {Text, View, TouchableOpacity} from 'react-native'
+// import * as LocalAuthentication from 'expo-local-authentication'
 import * as Font from 'expo-font'
 import {AsyncStorageProvider, useSyncStorageToState} from '@yoroi/common'
 import {ThemeProvider, useTheme, atoms as a} from '@yoroi/theme'
@@ -10,9 +10,11 @@ import {
   authStorageKeyManager,
   crashReportsStorageKeyManager,
   rootStorage,
+  rootSyncStorage,
   themeStorageKeyManager,
 } from './src/kernel/storage/storages'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
+import {decryptData} from './src/kernel/crypto/decrypt-data'
 
 function Shell({children}: React.PropsWithChildren) {
   const isMigrated = useMigrations(rootStorage)
@@ -37,7 +39,9 @@ function Yoroi() {
   const [fontsLoaded, setFontsLoaded] = React.useState(false)
   const [isCrashReportsEnabled, setIsCrashReportsEnabled] =
     useSyncStorageToState(crashReportsStorageKeyManager)
-  const [authSetting, setAuthSetting] = useSyncStorageToState(authStorageKeyManager)
+  const [authSetting, setAuthSetting] = useSyncStorageToState(
+    authStorageKeyManager,
+  )
 
   React.useEffect(() => {
     async function loadFonts() {
@@ -116,10 +120,57 @@ function Yoroi() {
 
       <TouchableOpacity
         onPress={() => setAuthSetting(authSetting === 'pin' ? 'os' : 'pin')}
-        style={[a.pt_md, a.p_md, a.rounded_md, {backgroundColor: text_gray_low}]}
+        style={[
+          a.pt_md,
+          a.p_md,
+          a.rounded_md,
+          {backgroundColor: text_gray_low},
+        ]}
       >
         <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
-          Toggle Auth Setting {authSetting === 'pin' ? 'Pin' : 'OS'}
+          Toggle Auth Setting {authSetting?.toUpperCase()}
+        </Text>
+      </TouchableOpacity>
+
+      <View style={[a.p_lg]} />
+      <TouchableOpacity
+        onPress={() => rootSyncStorage.clear()}
+        style={[
+          a.pt_md,
+          a.p_md,
+          a.rounded_md,
+          {backgroundColor: text_gray_low},
+        ]}
+      >
+        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+          Clear Storage
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={async () => {
+          console.log('--------------------------------')
+          const salt =
+            '50515253c0c1c2c3c4c5c6c750515253c0c1c2c3c4c5c6c750515253c0c1c2c3'
+          const nonce = '50515253c0c1c2c3c4c5c6c7'
+          const payload = '308f9977d04e7f3a45abd148905c628e2bb2621360a585f352'
+          const d = await decryptData(
+            [salt, nonce, payload].join(''),
+            'password',
+          )
+          console.log('--------------------------------')
+          console.log(d)
+          console.log('================================')
+        }}
+        style={[
+          a.pt_md,
+          a.p_md,
+          a.rounded_md,
+          {backgroundColor: text_gray_low},
+        ]}
+      >
+        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+          Decrypt Data
         </Text>
       </TouchableOpacity>
     </View>
@@ -134,73 +185,73 @@ export default function App() {
   )
 }
 
-export function _App() {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(true)
+// export default function App() {
+//   const [isAuthenticated, setIsAuthenticated] = React.useState(false)
+//   const [isLoading, setIsLoading] = React.useState(true)
 
-  const authenticate = async () => {
-    try {
-      // Check if hardware supports biometrics
-      const compatible = await LocalAuthentication.hasHardwareAsync()
-      if (!compatible) {
-        Alert.alert(
-          'Error',
-          'Your device does not support biometric authentication',
-        )
-        setIsLoading(false)
-        return
-      }
+//   const authenticate = async () => {
+//     try {
+//       // Check if hardware supports biometrics
+//       const compatible = await LocalAuthentication.hasHardwareAsync()
+//       if (!compatible) {
+//         Alert.alert(
+//           'Error',
+//           'Your device does not support biometric authentication',
+//         )
+//         setIsLoading(false)
+//         return
+//       }
 
-      // Check if biometrics are enrolled
-      const enrolled = await LocalAuthentication.isEnrolledAsync()
-      if (!enrolled) {
-        Alert.alert('Error', 'No biometrics enrolled on this device')
-        setIsLoading(false)
-        return
-      }
+//       // Check if biometrics are enrolled
+//       const enrolled = await LocalAuthentication.isEnrolledAsync()
+//       if (!enrolled) {
+//         Alert.alert('Error', 'No biometrics enrolled on this device')
+//         setIsLoading(false)
+//         return
+//       }
 
-      // Authenticate user
-      const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: 'Authenticate to access the app',
-        fallbackLabel: 'Use passcode',
-      })
+//       // Authenticate user
+//       const result = await LocalAuthentication.authenticateAsync({
+//         promptMessage: 'Authenticate to access the app',
+//         fallbackLabel: 'Use passcode',
+//       })
 
-      setIsAuthenticated(result.success)
-      setIsLoading(false)
-    } catch (error) {
-      console.error('Authentication error:', error)
-      Alert.alert('Error', 'Authentication failed')
-      setIsLoading(false)
-    }
-  }
+//       setIsAuthenticated(result.success)
+//       setIsLoading(false)
+//     } catch (error) {
+//       console.error('Authentication error:', error)
+//       Alert.alert('Error', 'Authentication failed')
+//       setIsLoading(false)
+//     }
+//   }
 
-  React.useEffect(() => {
-    authenticate()
-  }, [])
+//   React.useEffect(() => {
+//     authenticate()
+//   }, [])
 
-  if (isLoading) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-        <StatusBar style="auto" />
-      </View>
-    )
-  }
+//   if (isLoading) {
+//     return (
+//       <View>
+//         <Text>Loading...</Text>
+//         <StatusBar style="auto" />
+//       </View>
+//     )
+//   }
 
-  if (!isAuthenticated) {
-    return (
-      <View>
-        <Text>Authentication Required</Text>
-        <Text onPress={authenticate}>Try Again</Text>
-        <StatusBar style="auto" />
-      </View>
-    )
-  }
+//   if (!isAuthenticated) {
+//     return (
+//       <View>
+//         <Text>Authentication Required</Text>
+//         <Text onPress={authenticate}>Try Again</Text>
+//         <StatusBar style="auto" />
+//       </View>
+//     )
+//   }
 
-  return (
-    <View>
-      <Text>Welcome! You are authenticated!</Text>
-      <StatusBar style="auto" />
-    </View>
-  )
-}
+//   return (
+//     <View>
+//       <Text>Welcome! You are authenticated!</Text>
+//       <StatusBar style="auto" />
+//     </View>
+//   )
+// }

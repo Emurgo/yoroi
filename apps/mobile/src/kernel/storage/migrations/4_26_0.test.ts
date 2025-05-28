@@ -52,8 +52,12 @@ describe('4_26_0 migrations', () => {
 
     const walletMetas = [pwdWalletMeta, hwWalletMeta, bioAuthWalletMeta]
 
-    jest.spyOn(storage, 'getAllKeys').mockResolvedValue(walletMetas.map((meta) => meta.id))
-    jest.spyOn(storage, 'multiGet').mockResolvedValue(walletMetas.map((meta) => [meta.id, meta]))
+    jest
+      .spyOn(storage, 'getAllKeys')
+      .mockResolvedValue(walletMetas.map((meta) => meta.id))
+    jest
+      .spyOn(storage, 'multiGet')
+      .mockResolvedValue(walletMetas.map((meta) => [meta.id, meta]))
     jest.spyOn(storage, 'setItem')
     jest.spyOn(storage, 'removeItem')
 

@@ -8,13 +8,17 @@ describe('migrateAuthSetting', () => {
 
   beforeEach(async () => {
     await rootStorage.clear()
-    await rootStorage.join('appSettings/').setItem('installationId', installationId)
+    await rootStorage
+      .join('appSettings/')
+      .setItem('installationId', installationId)
   })
 
   it('method = null and no pin/os means new setup, it should remain null', async () => {
     await migrateAuthSetting(rootStorage)
 
-    await expect(rootStorage.join('appSettings/').getItem('auth')).resolves.toBeNull()
+    await expect(
+      rootStorage.join('appSettings/').getItem('auth'),
+    ).resolves.toBeNull()
   })
 
   // correct way should make sure that .setItem was not called
@@ -22,11 +26,15 @@ describe('migrateAuthSetting', () => {
   it('method != null remains the same', async () => {
     await rootStorage.join('appSettings/').setItem('auth', os)
     await migrateAuthSetting(rootStorage)
-    await expect(rootStorage.join('appSettings/').getItem('auth')).resolves.toBe(os)
+    await expect(
+      rootStorage.join('appSettings/').getItem('auth'),
+    ).resolves.toBe(os)
 
     await rootStorage.join('appSettings/').setItem('auth', pin)
     await migrateAuthSetting(rootStorage)
-    await expect(rootStorage.join('appSettings/').getItem('auth')).resolves.toBe(pin)
+    await expect(
+      rootStorage.join('appSettings/').getItem('auth'),
+    ).resolves.toBe(pin)
   })
 
   // if the store is inconsistent we favor OS, so the user can disable on device and it will ask for a new pin
@@ -38,7 +46,9 @@ describe('migrateAuthSetting', () => {
 
     await migrateAuthSetting(rootStorage)
 
-    await expect(rootStorage.join('appSettings/').getItem('auth')).resolves.toBe(os)
+    await expect(
+      rootStorage.join('appSettings/').getItem('auth'),
+    ).resolves.toBe(os)
   })
 
   it('old store is pin, method = "pin"', async () => {
@@ -49,7 +59,9 @@ describe('migrateAuthSetting', () => {
 
     await migrateAuthSetting(rootStorage)
 
-    await expect(rootStorage.join('appSettings/').getItem('auth')).resolves.toBe(pin)
+    await expect(
+      rootStorage.join('appSettings/').getItem('auth'),
+    ).resolves.toBe(pin)
   })
 
   // pin hash is deleted when changing to OS auth
@@ -58,6 +70,8 @@ describe('migrateAuthSetting', () => {
 
     await migrateAuthSetting(rootStorage)
 
-    await expect(rootStorage.join('appSettings/').getItem('auth')).resolves.toBe(os)
+    await expect(
+      rootStorage.join('appSettings/').getItem('auth'),
+    ).resolves.toBe(os)
   })
 })

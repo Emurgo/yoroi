@@ -15,6 +15,7 @@ describe('ThemeProvider and useTheme Tests', () => {
     save: jest.fn().mockImplementation((v) => (storedValue = v)),
     read: jest.fn().mockImplementation(() => storedValue),
     remove: jest.fn(),
+    subscribe: jest.fn(),
   }
 
   beforeEach(() => {
@@ -55,6 +56,7 @@ describe('ThemeProvider and useTheme Tests', () => {
       save: jest.fn(),
       read: jest.fn().mockReturnValue('default-dark'),
       remove: jest.fn(),
+      subscribe: jest.fn(),
     }
 
     const TestComponent = () => {

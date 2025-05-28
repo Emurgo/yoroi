@@ -2,7 +2,6 @@ import {numberReplacer, toLoggerMetadata} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import {freeze} from 'immer'
 
-/* eslint-disable no-console */
 const devLogger = freeze({
   [App.Logger.Level.Debug]: console.debug, // console.debug is hidden by default in chrome
   [App.Logger.Level.Log]: console.log,
@@ -10,7 +9,6 @@ const devLogger = freeze({
   [App.Logger.Level.Warn]: console.warn,
   [App.Logger.Level.Error]: console.error,
 })
-/* eslint-enable no-console */
 
 export const devAdapter = (transport = devLogger) => {
   const transporter: App.Logger.Transporter = ({

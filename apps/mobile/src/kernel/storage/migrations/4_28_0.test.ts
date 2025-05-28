@@ -68,8 +68,12 @@ describe('4_28_0 migrations', () => {
 
     const walletMetas = [pwdWalletMeta, hwWalletMeta, bioAuthWalletMeta]
 
-    jest.spyOn(storage, 'getAllKeys').mockResolvedValue(walletMetas.map((meta) => meta.id))
-    jest.spyOn(storage, 'multiGet').mockResolvedValue(walletMetas.map((meta) => [meta.id, meta]))
+    jest
+      .spyOn(storage, 'getAllKeys')
+      .mockResolvedValue(walletMetas.map((meta) => meta.id))
+    jest
+      .spyOn(storage, 'multiGet')
+      .mockResolvedValue(walletMetas.map((meta) => [meta.id, meta]))
     jest.spyOn(storage, 'setItem')
     jest.spyOn(storage, 'getItem').mockResolvedValue({
       isReadOnly: false,
@@ -171,7 +175,11 @@ type WalletMetaV2 = {
   isHW: boolean
   isEasyConfirmationEnabled: boolean
   addressMode: 'single' | 'multiple'
-  walletImplementationId: 'haskell-shelley' | 'haskell-shelley-24' | 'haskell-byron' | 'jormungandr'
+  walletImplementationId:
+    | 'haskell-shelley'
+    | 'haskell-shelley-24'
+    | 'haskell-byron'
+    | 'jormungandr'
   checksum: {
     ImagePart: string
     TextPart: string

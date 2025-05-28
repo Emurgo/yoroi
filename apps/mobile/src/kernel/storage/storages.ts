@@ -21,7 +21,8 @@ export const keyStorage = rootStorage.join('keystore/')
 
 // Settings
 export const appSettingsStorage = rootSyncStorage.join('appSettings/')
-export const appSettingsObservableStorage = observableStorageMaker(appSettingsStorage)
+export const appSettingsObservableStorage =
+  observableStorageMaker(appSettingsStorage)
 const settingsStorageKeyMaker = storageKeyMaker(appSettingsObservableStorage)
 
 // Settings - Theme
@@ -45,7 +46,9 @@ export const parseAuthSetting = (data: unknown) => {
   const parsed = parseSafe(data)
   return isAuthSetting(parsed) ? parsed : null
 }
-export const authStorageKeyManager = settingsStorageKeyMaker<AuthSetting | undefined>({
+export const authStorageKeyManager = settingsStorageKeyMaker<
+  AuthSetting | undefined
+>({
   key: authStorageKey,
   parser: parseAuthSetting,
 })

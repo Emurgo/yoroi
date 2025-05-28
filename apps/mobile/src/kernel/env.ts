@@ -21,7 +21,7 @@ export const frontendFeeAddressPreprod = getEnvString(
 export const banxaTestWallet = getEnvString('BANXA_TEST_WALLET')
 
 export const disableLogbox = Boolean(
-  Constants.expoConfig?.extra?.['DISABLE_LOGBOX'],
+  Constants.expoConfig?.extra?.DISABLE_LOGBOX,
 )
 
 const envLoggerFilter = getEnvString('LOGGER_FILTER')

@@ -10,7 +10,11 @@ export const debugStorage = async <
   IsAsync extends boolean = true,
   Key extends string = string,
 >(
-  storage: App.Storage<IsAsync, Key> | AsyncStorageStatic | MMKV | App.ObservableStorage<IsAsync, Key>,
+  storage:
+    | App.Storage<IsAsync, Key>
+    | AsyncStorageStatic
+    | MMKV
+    | App.ObservableStorage<IsAsync, Key>,
   filter?: (key: string) => boolean,
 ): Promise<void> => {
   const keys = await storage.getAllKeys()
@@ -33,7 +37,8 @@ export const debugStorage = async <
     } else {
       try {
         const parsed = JSON.parse(value)
-        formattedValue = typeof parsed === 'string' ? parsed : JSON.stringify(parsed)
+        formattedValue =
+          typeof parsed === 'string' ? parsed : JSON.stringify(parsed)
       } catch {
         formattedValue = `unknown: ${value}`
       }
@@ -47,7 +52,11 @@ export const debugStorage = async <
       if (i === parts.length - 1) {
         current[part] = formattedValue
       } else {
-        if (!current[part] || typeof current[part] === 'string' || current[part] === null) {
+        if (
+          !current[part] ||
+          typeof current[part] === 'string' ||
+          current[part] === null
+        ) {
           current[part] = {}
         }
         current = current[part] as Tree
@@ -74,7 +83,7 @@ export const debugStorage = async <
     entries.forEach(([key, value], index) => {
       const isLastEntry = index === entries.length - 1
       const newPrefix = `${prefix}${isLast ? '    ' : '│   '}`
-      
+
       if (typeof value === 'string') {
         console.log(`${prefix}${isLastEntry ? '└── ' : '├── '}${key}: ${value}`)
       } else {
