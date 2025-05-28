@@ -118,6 +118,7 @@
   },
   "peerDependencies": {
     "@emurgo/yoroi-lib": "^2.0.0",
+    "@yoroi/common": "^2.0.0",
     "axios": "^1.5.0",
     "bignumber.js": "^9.0.1",
     "rxjs": "^7.8.1"
