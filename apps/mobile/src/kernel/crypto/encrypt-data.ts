@@ -1,5 +1,5 @@
-import {Locker} from '@emurgo/dullahan/.js/yoroi/Locker'
 import {bytes} from '@emurgo/dullahan/.js/core'
+import {Locker} from '@emurgo/dullahan/.js/yoroi/Locker'
 
 import {randomHexString} from './random'
 

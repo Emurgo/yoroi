@@ -1,6 +1,7 @@
+import {freeze} from 'immer'
+
 import {toLoggerMetadata} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {freeze} from 'immer'
 
 import {Sentry} from './sentry'
 

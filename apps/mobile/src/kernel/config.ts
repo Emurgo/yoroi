@@ -1,7 +1,8 @@
 import {App, Chain} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
-import {isDev} from './env'
+import {isDev} from './runtime'
 
 export const governaceAfterBlock = freeze({
   [Chain.Network.Mainnet]: 10782931,

@@ -1,4 +1,5 @@
 import {WalletChecksum} from '@emurgo/cip4-js'
+
 import {Blockies} from '@yoroi/identicon'
 import {App, HW, Wallet} from '@yoroi/types'
 

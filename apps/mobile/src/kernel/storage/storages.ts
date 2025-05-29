@@ -1,3 +1,6 @@
+import {MMKV} from 'react-native-mmkv'
+import {of} from 'rxjs'
+
 import {
   mountAsyncStorage,
   mountMMKVStorage,
@@ -6,8 +9,6 @@ import {
   parseSafe,
   storageKeyMaker,
 } from '@yoroi/common'
-import {MMKV} from 'react-native-mmkv'
-import {of} from 'rxjs'
 import {ThemeName, isThemeName} from '@yoroi/theme'
 
 import {debugStorage} from './debug-storage'

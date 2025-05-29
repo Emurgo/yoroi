@@ -3,6 +3,10 @@
     "@react-native-community",
     "prettier"
   ],
+  "plugins": [
+    "prettier",
+    "import"
+  ],
   "rules": {
     "prettier/prettier": [
       "error",
@@ -13,10 +17,17 @@
         "tabWidth": 2,
         "trailingComma": "all",
         "useTabs": false,
-        "semi": false
+        "semi": false,
+        "importOrder": [
+          "^@yoroi/(.*)$",
+          "^a-zA-Z@",
+          "^./"
+        ],
+        "importOrderSeparation": true,
+        "importOrderSortSpecifiers": true
       }
     ],
     "eqeqeq": "off"
   },
   "root": true
-} 
+}
