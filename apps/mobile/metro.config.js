@@ -7,8 +7,8 @@ const workspaceRoot = path.resolve(projectRoot, '../..')
 
 const config = getDefaultConfig(projectRoot, {
   unstable_enableNewArchitecture: true,
-  // experimentalImportBundleSupport: true,
-  // unstable_enablePackageExports: true,
+  unstable_enablePackageExports: true,
+  experimentalImportBundleSupport: true,
 })
 
 config.watchFolders = [workspaceRoot]

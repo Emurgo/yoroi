@@ -7,9 +7,6 @@ export const unstoppableApiKey = getEnvString('UNSTOPPABLE_API_KEY')
 export const commit = getEnvString('COMMIT')
 
 export const buildVariant = getEnvString('BUILD_VARIANT')
-export const isNightly = buildVariant === 'NIGHTLY'
-export const isProduction = buildVariant === 'PROD'
-export const isDev = __DEV__
 
 export const frontendFeeAddressMainnet = getEnvString(
   'FRONTEND_FEE_ADDRESS_MAINNET',
