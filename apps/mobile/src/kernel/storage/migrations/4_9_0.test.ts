@@ -1,5 +1,6 @@
 import {rootStorage} from '../storages'
-import {migrateAuthSetting, OLD_OS_AUTH_KEY} from './4_9_0'
+
+import {OLD_OS_AUTH_KEY, migrateAuthSetting} from './4_9_0'
 
 describe('migrateAuthSetting', () => {
   const installationId = 'uuidv4'

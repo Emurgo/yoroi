@@ -1,8 +1,10 @@
 import {parseString} from '@yoroi/common'
 
-import {rootStorage} from './storages'
+import {freeze} from 'immer'
+
 import {decryptData} from '../crypto/decrypt-data'
 import {encryptData} from '../crypto/encrypt-data'
+import {rootStorage} from './storages'
 
 type StorageKey = `${string}-MASTER_PASSWORD` | string
 export const EncryptedStorageKeys = {
@@ -38,7 +40,7 @@ export const makeWalletEncryptedStorage = (id: string) => {
   const xPrivKey = EncryptedStorageKeys.xPrivKey(id)
   const xPubStorage = publicStorageMaker(id)
 
-  return {
+  return freeze({
     xpriv: {
       read: (password: string) => EncryptedStorage.read(xPrivKey, password),
       write: (value: string, password: string) =>
@@ -52,9 +54,13 @@ export const makeWalletEncryptedStorage = (id: string) => {
         xPubStorage.setItem(accountVisual.toString(), accountPubKeyHex),
       remove: (accountVisual: number) =>
         xPubStorage.removeItem(accountVisual.toString()),
-      clear: () => keyStorage.removeFolder(`${id}/`),
     },
-  } as const
+    clear: () =>
+      Promise.all([
+        keyStorage.removeFolder(`${id}/`),
+        EncryptedStorage.remove(xPrivKey),
+      ]),
+  } as const)
 }
 
 export type WalletEncryptedStorage = ReturnType<

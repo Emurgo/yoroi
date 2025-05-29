@@ -1,4 +1,5 @@
 import {Locker} from '@emurgo/dullahan/.js/yoroi/Locker'
+
 import {App} from '@yoroi/types'
 
 export const decryptData = async (hexString: string, secretKey: string) => {

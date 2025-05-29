@@ -1,6 +1,7 @@
+import {freeze} from 'immer'
+
 import {isNumber} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {freeze} from 'immer'
 
 import {ErrorMigrationVersion} from './errors'
 

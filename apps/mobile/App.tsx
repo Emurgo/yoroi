@@ -1,11 +1,13 @@
 import * as React from 'react'
-import {StatusBar} from 'expo-status-bar'
-import {Text, View, TouchableOpacity} from 'react-native'
-// import * as LocalAuthentication from 'expo-local-authentication'
-import * as Font from 'expo-font'
-import {AsyncStorageProvider, useSyncStorageToState} from '@yoroi/common'
-import {ThemeProvider, useTheme, atoms as a} from '@yoroi/theme'
+import {Text, TouchableOpacity, View} from 'react-native'
 
+import {AsyncStorageProvider, useSyncStorageToState} from '@yoroi/common'
+import {ThemeProvider, atoms as a, useTheme} from '@yoroi/theme'
+
+import * as Font from 'expo-font'
+import {StatusBar} from 'expo-status-bar'
+import {decryptData} from './src/kernel/crypto/decrypt-data'
+import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
   crashReportsStorageKeyManager,
@@ -13,8 +15,8 @@ import {
   rootSyncStorage,
   themeStorageKeyManager,
 } from './src/kernel/storage/storages'
-import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
-import {decryptData} from './src/kernel/crypto/decrypt-data'
+
+// import * as LocalAuthentication from 'expo-local-authentication'
 
 function Shell({children}: React.PropsWithChildren) {
   const isMigrated = useMigrations(rootStorage)

@@ -1,12 +1,13 @@
 import {App} from '@yoroi/types'
+
 import * as React from 'react'
 
-import {to4_9_0} from './4_9_0'
+import {logger} from '../../logger/logger'
 import {to4_26_0} from './4_26_0'
 import {to4_28_0} from './4_28_0'
+import {to4_9_0} from './4_9_0'
 import {ErrorMigrationVersion} from './errors'
 import {storageVersionMaker} from './storageVersion'
-import {logger} from '../../logger/logger'
 
 export const useMigrations = (storage: App.Storage) => {
   const [done, setDone] = React.useState(false)

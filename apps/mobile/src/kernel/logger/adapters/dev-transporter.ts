@@ -1,5 +1,6 @@
 import {numberReplacer, toLoggerMetadata} from '@yoroi/common'
 import {App} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 const devLogger = freeze({
