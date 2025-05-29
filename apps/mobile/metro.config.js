@@ -23,7 +23,7 @@ config.resolver.nodeModulesPaths = [
 
 // NOTE: workaround for the structure now
 config.resolver.disableHierarchicalLookup = true
-// config.resolver.enablePackageExports = true
+config.resolver.enablePackageExports = true
 
 config.resolver.extraNodeModules = {
   '@yoroi/common': path.resolve(workspaceRoot, 'packages/common'),
@@ -45,6 +45,14 @@ const shims = {
 }
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {
+  // if (moduleName.startsWith('@noble/')) {
+  //   const packageName = moduleName.split('/')[2]
+  //   return context.resolveRequest(
+  //     context,
+  //     `./node_modules/@noble/${packageName}`,
+  //     platform,
+  //   )
+  // }
   return context.resolveRequest(
     context,
     shims[moduleName] ?? moduleName,
