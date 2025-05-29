@@ -5,6 +5,7 @@
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
+    "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "ios": "expo run:ios",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
@@ -55,6 +56,7 @@
     "@react-native-community/eslint-config": "^3.2.0",
     "@types/jest": "^29.5.14",
     "@types/react": "~19.0.10",
+    "dependency-cruiser": "^16.10.2",
     "eslint": "<9",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.0",
