@@ -39,6 +39,7 @@
     "expo-linear-gradient": "~14.1.4",
     "expo-local-authentication": "~16.0.4",
     "expo-status-bar": "~2.2.3",
+    "fast-text-encoding": "^1.0.6",
     "immer": "^10.1.1",
     "npm": "^11.4.1",
     "react": "19.0.0",
@@ -47,6 +48,7 @@
     "react-native-mmkv": "^3.2.0",
     "react-native-quick-base64": "^2.2.0",
     "react-native-quick-crypto": "^0.7.13",
+    "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "^0.20.0",
     "rxjs": "^7.8.2",
     "zod": "^3.25.17"
