@@ -21,6 +21,7 @@
     "@noble/curves": "^1.9.1",
     "@noble/hashes": "^1.8.0",
     "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-navigation/native": "^7.1.9",
     "@sentry/react": "^9.22.0",
     "@sentry/react-native": "^6.14.0",
     "@tanstack/react-query": "^5.76.2",
@@ -51,7 +52,13 @@
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "^0.20.0",
     "rxjs": "^7.8.2",
-    "zod": "^3.25.17"
+    "zod": "^3.25.17",
+    "react-native-screens": "~4.10.0",
+    "react-native-safe-area-context": "5.4.0",
+    "expo-camera": "~16.1.6",
+    "expo-location": "~18.1.5",
+    "expo-notifications": "~0.31.2",
+    "expo-build-properties": "~0.14.6"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
