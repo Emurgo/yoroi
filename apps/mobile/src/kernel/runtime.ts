@@ -7,13 +7,6 @@ export const isNightly = buildVariant === 'NIGHTLY'
 export const isProduction = buildVariant === 'PROD'
 export const isDev = __DEV__
 
-export const isIOS = Platform.OS === 'ios'
-export const isAndroid = Platform.OS === 'android'
-export const isNative = isIOS || isAndroid
-export const isWeb = !isNative
-
-export const platform = isIOS ? 'ios' : isAndroid ? 'android' : 'web'
-
 export const environment = isNightly
   ? 'nightly'
   : isProduction
@@ -23,6 +16,13 @@ export const version = Device.osVersion ?? ''
 export const release = isProduction ? version : 'dev'
 export const build = Device.osBuildId ?? ''
 export const distribution = `${Platform.OS}.${build}`
+
+export const isIOS = Platform.OS === 'ios'
+export const isAndroid = Platform.OS === 'android'
+export const isNative = isIOS || isAndroid
+export const isWeb = !isNative
+
+export const platform = isIOS ? 'ios' : isAndroid ? 'android' : 'web'
 
 export function web(value: unknown) {
   if (isWeb) return value
