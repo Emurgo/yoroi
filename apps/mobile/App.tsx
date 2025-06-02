@@ -1,3 +1,4 @@
+import * as Font from 'expo-font'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
@@ -5,7 +6,7 @@ import {SystemBars} from 'react-native-edge-to-edge'
 import {AsyncStorageProvider, useSyncStorageToState} from '@yoroi/common'
 import {ThemeProvider, atoms as a, useTheme} from '@yoroi/theme'
 
-import * as Font from 'expo-font'
+import {PlatformShell} from './PlatformShell'
 import {decryptData} from './src/kernel/crypto/decrypt-data'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
@@ -182,7 +183,9 @@ function Yoroi() {
 export default function App() {
   return (
     <Shell>
-      <Yoroi />
+      <PlatformShell>
+        <Yoroi />
+      </PlatformShell>
     </Shell>
   )
 }
