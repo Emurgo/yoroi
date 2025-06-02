@@ -59,7 +59,8 @@
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "^0.20.0",
     "rxjs": "^7.8.2",
-    "zod": "^3.25.17"
+    "zod": "^3.25.17",
+    "react-native-gesture-handler": "~2.24.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
