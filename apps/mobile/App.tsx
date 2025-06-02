@@ -1,11 +1,11 @@
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 
 import {AsyncStorageProvider, useSyncStorageToState} from '@yoroi/common'
 import {ThemeProvider, atoms as a, useTheme} from '@yoroi/theme'
 
 import * as Font from 'expo-font'
-import {StatusBar} from 'expo-status-bar'
 import {decryptData} from './src/kernel/crypto/decrypt-data'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
@@ -82,7 +82,7 @@ function Yoroi() {
         {backgroundColor: bg_color_max},
       ]}
     >
-      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <SystemBars style={isDark ? 'light' : 'dark'} />
 
       <Text style={[a.body_2_md_regular, {color: text_gray_low}]}>
         Welcome! base: {basePalette} selectedTheme: {name}
