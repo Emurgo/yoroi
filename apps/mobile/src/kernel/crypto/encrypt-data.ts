@@ -1,7 +1,7 @@
 import {bytes} from '@emurgo/dullahan/.js/core'
 import {Locker} from '@emurgo/dullahan/.js/yoroi/Locker'
 
-import {randomHexString} from './random'
+import {randomHexString} from './random-hex-string'
 
 export const encryptData = async (plainText: string, secretKey: string) => {
   const dataBytes = Buffer.from(plainText, 'hex')
