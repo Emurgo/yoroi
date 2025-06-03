@@ -34,6 +34,7 @@ import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
+import {YoroiRecordLink} from '../../common/YoroiRecordLink/YoroiRecordLink'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
@@ -140,9 +141,7 @@ const ParticipatingInGovernanceVariant = ({
             showRightArrow={!isTxPending}
             onPress={navigateToChangeVote}
           >
-            <Text style={styles.drepInfoTitle}>{strings.drepID}</Text>
-
-            <Text style={styles.drepInfoDescription}>{displayedHash}</Text>
+            <YoroiRecordLink />
           </Action>
         )}
 
@@ -388,7 +387,9 @@ const NeverParticipatedInGovernanceVariant = () => {
           onPress={handleDelegateToYoroi}
           pending={isCreatingTx && pendingVote === 'delegate-to-yoroi'}
           showGradient
-        />
+        >
+          <YoroiRecordLink />
+        </Action>
 
         <Action
           title={strings.actionDelegateToADRepTitle}

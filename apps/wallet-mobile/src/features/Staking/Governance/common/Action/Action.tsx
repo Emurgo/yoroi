@@ -1,7 +1,7 @@
 import {isNonNullable} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
-import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon} from '../../../../../components/Icon'
@@ -21,43 +21,51 @@ type Props = {
 export const Action = ({title, description, onPress, pending, children, showRightArrow, showGradient}: Props) => {
   const {styles, colors} = useStyles()
 
-  const gradientColors = showGradient ? colors.gradient : [colors.baseGradient, colors.baseGradient]
-
   return (
-    <TouchableOpacity onPress={onPress} disabled={pending}>
-      <LinearGradient
-        start={{x: 1, y: 1}}
-        end={{x: 0, y: 0}}
-        colors={gradientColors}
-        style={[styles.gradient, pending && styles.pending, !showGradient && styles.border]}
-      >
-        {pending && (
-          <View style={styles.icon}>
-            <ActivityIndicator color={colors.icon} size="small" />
-          </View>
-        )}
-
-        {showRightArrow && (
-          <View style={styles.icon}>
-            <Icon.ArrowRight size={24} color={colors.icon} />
-          </View>
-        )}
-
-        <View style={styles.root}>
-          <Text style={styles.title}>{title}</Text>
-
-          <Text style={styles.description}>{description}</Text>
-
-          {isNonNullable(children) && (
-            <>
-              <Spacer height={16} />
-
-              {children}
-            </>
+    <Pressable onPress={onPress} disabled={pending}>
+      {({pressed}) => (
+        <LinearGradient
+          start={{x: 1, y: 1}}
+          end={{x: 0, y: 0}}
+          colors={
+            pending
+              ? colors.pending
+              : pressed
+              ? colors.pressedGradient
+              : showGradient
+              ? colors.gradient
+              : colors.transparent
+          }
+          style={[styles.gradient, !showGradient && styles.border]}
+        >
+          {pending && (
+            <View style={styles.icon}>
+              <ActivityIndicator color={colors.icon} size="small" />
+            </View>
           )}
-        </View>
-      </LinearGradient>
-    </TouchableOpacity>
+
+          {showRightArrow && (
+            <View style={styles.icon}>
+              <Icon.ArrowRight size={24} color={colors.icon} />
+            </View>
+          )}
+
+          <View style={styles.root}>
+            <Text style={styles.title}>{title}</Text>
+
+            <Text style={styles.description}>{description}</Text>
+
+            {isNonNullable(children) && (
+              <>
+                <Spacer height={16} />
+
+                {children}
+              </>
+            )}
+          </View>
+        </LinearGradient>
+      )}
+    </Pressable>
   )
 }
 
@@ -86,21 +94,20 @@ const useStyles = () => {
     description: {
       color: color.gray_max,
       ...atoms.font_normal,
-      ...atoms.body_1_lg_medium,
+      ...atoms.body_1_lg_regular,
     },
     border: {
       ...atoms.border,
       borderColor: color.gray_200,
-    },
-    pending: {
-      backgroundColor: color.bg_color_min,
     },
   })
 
   const colors = {
     gradient: color.bg_gradient_1,
     icon: color.gray_max,
-    baseGradient: 'transparent',
+    pressedGradient: color.bg_gradient_2,
+    pending: [color.bg_color_min, color.bg_color_min],
+    transparent: ['transparent', 'transparent'],
   }
 
   return {styles, colors}

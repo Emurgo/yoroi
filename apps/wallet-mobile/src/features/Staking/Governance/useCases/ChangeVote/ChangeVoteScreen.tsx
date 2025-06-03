@@ -20,6 +20,7 @@ import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../common/helpers'
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useStrings} from '../../common/strings'
+import {YoroiRecordLink} from '../../common/YoroiRecordLink/YoroiRecordLink'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
@@ -179,7 +180,9 @@ export const ChangeVoteScreen = () => {
             onPress={handleDelegateToYoroi}
             pending={isCreatingTx && pendingVote === 'delegate-to-yoroi'}
             showGradient
-          />
+          >
+            <YoroiRecordLink />
+          </Action>
         )}
 
         {voteKind !== 'delegate' && (

@@ -79,6 +79,7 @@ export const useStrings = () => {
     delegatingToYoroiDRep: intl.formatMessage(messages.delegatingToYoroiDRep),
     delegateToAYoroiDRepDescription: intl.formatMessage(messages.delegateToAYoroiDRepDescription),
     delegateVotingToDRepDeprecatedFormatNotice: intl.formatMessage(messages.delegateVotingToDRepDeprecatedFormatNotice),
+    yoroiRecord: intl.formatMessage(messages.yoroiRecord),
   }
 }
 
@@ -189,7 +190,8 @@ const messages = defineMessages({
   },
   reviewActions: {
     id: 'components.governance.reviewActions',
-    defaultMessage: '!!!Review the selections carefully to assign yourself a Governance Status',
+    defaultMessage:
+      "!!!Your delegation helps shape Cardano's future. You may change your governance status at any time.",
   },
   actionYouHaveSelectedTxPending: {
     id: 'components.governance.actionYouHaveSelectedTxPending',
@@ -345,6 +347,10 @@ const messages = defineMessages({
   delegateToAYoroiDRepDescription: {
     id: 'components.governance.delegateToAYoroiDRepDescription',
     defaultMessage:
-      '!!!You are designating Yoroi to cast your vote on your behalf for all proposals now and in the future.',
+      '!!!Support the Commercial and Technical adoption of the Cardano roadmap. Please note Yoroi is part of the EMURGO Group.',
+  },
+  yoroiRecord: {
+    id: 'components.governance.yoroiRecord',
+    defaultMessage: '!!!See Yoroi’s voting record',
   },
 })
