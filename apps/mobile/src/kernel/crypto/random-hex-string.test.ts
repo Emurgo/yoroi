@@ -1,4 +1,4 @@
-import {randomHexString} from './random'
+import {randomHexString} from './random-hex-string'
 
 describe('randomHexString', () => {
   it.each`

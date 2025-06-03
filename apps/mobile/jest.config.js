@@ -4,6 +4,9 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@emurgo/dullahan/.*|@sentry/.*)',
   ],
+  moduleNameMapper: {
+    '^react-native$': '<rootDir>/node_modules/react-native',
+  },
   setupFiles: ['<rootDir>/jest.setup.js'],
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
   collectCoverage: true,
