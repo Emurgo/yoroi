@@ -1,7 +1,9 @@
+import {App} from '@yoroi/types'
+import {invalid} from '@yoroi/common'
+
 import * as React from 'react'
 import {useColorScheme} from 'react-native'
 import {freeze} from 'immer'
-import {App} from '@yoroi/types'
 
 import {ThemedPalette, ThemeConfig, ThemeName, ThemeBasePalette} from './types'
 import {defaultLightTheme} from './themes/default-light'
@@ -47,7 +49,7 @@ export const ThemeProvider = ({
 }
 
 export const useTheme = () =>
-  React.useContext(ThemeContext) ?? missingProvider()
+  React.useContext(ThemeContext) ?? invalid('ThemeProvider is missing')
 
 export const usePalette = () => useTheme().palette
 
@@ -66,7 +68,3 @@ const themes: Readonly<Record<Exclude<ThemeName, 'system'>, ThemeConfig>> =
     ['default-light']: defaultLightTheme,
     ['default-dark']: defaultDarkTheme,
   })
-
-const missingProvider = () => {
-  throw new Error('ThemeProvider is missing')
-}

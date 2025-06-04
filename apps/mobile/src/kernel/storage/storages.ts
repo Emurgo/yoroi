@@ -12,6 +12,7 @@ import {
 import {ThemeName, isThemeName} from '@yoroi/theme'
 
 import {debugStorage} from './debug-storage'
+import {LanguageCode, isLanguageCode, systemLocale} from '../i18n/languages'
 
 const rootMMKV = new MMKV({id: 'default.mmkv'})
 export const rootSyncStorage = observableStorageMaker<false, string>(
@@ -29,7 +30,7 @@ const settingsStorageKeyMaker = storageKeyMaker(appSettingsObservableStorage)
 // Settings - Theme
 export const themeStorageKey = 'theme'
 export const themeStorageKeyManager = settingsStorageKeyMaker<ThemeName>({
-  key: 'theme',
+  key: themeStorageKey,
   parser: (data) => {
     const parsed = parseSafe(data)
     return isThemeName(parsed) ? parsed : 'system'
@@ -59,6 +60,16 @@ const crashReportsStorageKey = 'sendCrashReports'
 export const crashReportsStorageKeyManager = settingsStorageKeyMaker<Boolean>({
   key: crashReportsStorageKey,
   parser: (data) => Boolean(parseBoolean(data)),
+})
+
+// Settings - Language
+export const languageStorageKey = 'languageCode'
+export const languageStorageKeyManager = settingsStorageKeyMaker<LanguageCode>({
+  key: languageStorageKey,
+  parser: (data) => {
+    const parsed = parseSafe(data)
+    return isLanguageCode(parsed) ? parsed : systemLocale
+  },
 })
 
 // Debug storage

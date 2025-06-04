@@ -1,12 +1,13 @@
-import {loggerLevel} from '../../config'
-import {loggerFilter, sentryDsn} from '../../env'
 import {
   distribution,
   environment,
   isDev,
   isProduction,
+  loggerFilter,
+  loggerLevel,
   release,
-} from '../../runtime'
+  sentryDsn,
+} from '../../constants'
 import {crashReportsStorageKeyManager} from '../../storage/storages'
 import {devAdapter} from '../adapters/dev-transporter'
 import {Sentry} from '../adapters/sentry'

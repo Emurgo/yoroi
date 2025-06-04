@@ -1,4 +1,5 @@
 import {App} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 export const storageKeyMaker =

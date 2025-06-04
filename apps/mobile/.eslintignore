@@ -5,3 +5,4 @@ jest.config.js
 jest.setup.js
 coverage/ 
 metro.config.js
+src/kernel/i18n/polyfills.ts

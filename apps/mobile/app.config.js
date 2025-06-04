@@ -105,6 +105,7 @@ export default {
         },
       ],
       'expo-font',
+      'expo-localization',
       [
         'expo-camera',
         {

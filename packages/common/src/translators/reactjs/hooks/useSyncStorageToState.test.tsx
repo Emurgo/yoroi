@@ -1,5 +1,6 @@
-import {renderHook, act, waitFor} from '@testing-library/react'
 import {App} from '@yoroi/types'
+
+import {renderHook, act, waitFor} from '@testing-library/react'
 
 import {useSyncStorageToState} from './useSyncStorageToState'
 import {storageKeyMaker} from '../../../storage/helpers/storage-key-maker'
