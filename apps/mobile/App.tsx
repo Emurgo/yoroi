@@ -1,21 +1,25 @@
+import {AsyncStorageProvider, useSyncStorageToState} from '@yoroi/common'
+import {ThemeProvider, atoms as a, useTheme} from '@yoroi/theme'
+
 import * as Font from 'expo-font'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 
-import {AsyncStorageProvider, useSyncStorageToState} from '@yoroi/common'
-import {ThemeProvider, atoms as a, useTheme} from '@yoroi/theme'
-
 import {PlatformShell} from './PlatformShell'
 import {decryptData} from './src/kernel/crypto/decrypt-data'
+import {LanguageProvider, useLanguage} from './src/kernel/i18n/LanguageProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
   crashReportsStorageKeyManager,
+  languageStorageKeyManager,
   rootStorage,
   rootSyncStorage,
   themeStorageKeyManager,
 } from './src/kernel/storage/storages'
+import { useIntl } from 'react-intl'
+import globalMessages from './src/kernel/i18n/global-messages'
 
 // import * as LocalAuthentication from 'expo-local-authentication'
 
@@ -26,7 +30,11 @@ function Shell({children}: React.PropsWithChildren) {
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <ThemeProvider storage={themeStorageKeyManager}>{children}</ThemeProvider>
+      <ThemeProvider storage={themeStorageKeyManager}>
+        <LanguageProvider storage={languageStorageKeyManager}>
+          {children}
+        </LanguageProvider>
+      </ThemeProvider>
     </AsyncStorageProvider>
   )
 }
@@ -45,6 +53,8 @@ function Yoroi() {
   const [authSetting, setAuthSetting] = useSyncStorageToState(
     authStorageKeyManager,
   )
+  const {languageCode, selectLanguage} = useLanguage()
+  const {formatMessage: f} = useIntl()
 
   React.useEffect(() => {
     async function loadFonts() {
@@ -103,7 +113,7 @@ function Yoroi() {
         </Text>
       </TouchableOpacity>
 
-      <View style={[a.p_lg]} />
+      <View style={[a.p_md]} />
 
       <TouchableOpacity
         onPress={() => setIsCrashReportsEnabled(!isCrashReportsEnabled)}
@@ -119,7 +129,7 @@ function Yoroi() {
         </Text>
       </TouchableOpacity>
 
-      <View style={[a.p_lg]} />
+      <View style={[a.p_md]} />
 
       <TouchableOpacity
         onPress={() => setAuthSetting(authSetting === 'pin' ? 'os' : 'pin')}
@@ -135,7 +145,8 @@ function Yoroi() {
         </Text>
       </TouchableOpacity>
 
-      <View style={[a.p_lg]} />
+      <View style={[a.p_md]} />
+
       <TouchableOpacity
         onPress={() => rootSyncStorage.clear()}
         style={[
@@ -149,6 +160,8 @@ function Yoroi() {
           Clear Storage
         </Text>
       </TouchableOpacity>
+
+      <View style={[a.p_md]} />
 
       <TouchableOpacity
         onPress={async () => {
@@ -174,6 +187,24 @@ function Yoroi() {
       >
         <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
           Decrypt Data
+        </Text>
+      </TouchableOpacity>
+
+      <View style={[a.p_md]} />
+
+      <TouchableOpacity
+        onPress={() =>
+          selectLanguage(languageCode === 'en-US' ? 'de-DE' : 'en-US')
+        }
+        style={[
+          a.pt_md,
+          a.p_md,
+          a.rounded_md,
+          {backgroundColor: text_gray_low},
+        ]}
+      >
+        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+          Change Language {languageCode} {f(globalMessages.available)}
         </Text>
       </TouchableOpacity>
     </View>

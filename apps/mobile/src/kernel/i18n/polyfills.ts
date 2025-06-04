@@ -1,4 +1,3 @@
-/* eslint-disable simple-import-sort/imports */
 import '@formatjs/intl-getcanonicallocales/polyfill'
 
 import '@formatjs/intl-locale/polyfill'

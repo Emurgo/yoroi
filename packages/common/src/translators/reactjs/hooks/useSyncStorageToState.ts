@@ -1,10 +1,18 @@
-import * as React from 'react'
 import {App} from '@yoroi/types'
 
-export const useSyncStorageToState = <T, Key extends string = string>(
-  keyManager: App.StorageKeyManager<T, Key>,
-): [T | null, (newValue: T) => void, () => void] => {
-  const [value, setValue] = React.useState<T | null>(() => keyManager.read())
+import * as React from 'react'
+
+/**
+ * @description
+ * This hook is used to sync a storage key to a state.
+ * Important: T is the type returned by the parser function of the key manager.
+ * Therefore if you don't want a undefined / prefer a null, or even a initial value.
+ * Use the parser function of the key manager to handle it.
+ */
+export const useSyncStorageToState = <T, K extends string>(
+  keyManager: App.StorageKeyManager<T, K>,
+): [T, (newValue: T) => void, () => void] => {
+  const [value, setValue] = React.useState<T>(() => keyManager.read())
 
   React.useEffect(() => {
     const subscription = keyManager.subscribe(() =>
