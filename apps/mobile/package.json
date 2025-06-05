@@ -50,6 +50,7 @@
     "expo-font": "~13.3.1",
     "expo-linear-gradient": "~14.1.4",
     "expo-local-authentication": "~16.0.4",
+    "expo-localization": "~16.1.5",
     "expo-location": "~18.1.5",
     "expo-notifications": "~0.31.2",
     "expo-status-bar": "~2.2.3",
@@ -75,12 +76,12 @@
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
     "rxjs": "^7.8.2",
-    "zod": "^3.25.17",
-    "expo-localization": "~16.1.5"
+    "zod": "^3.25.17"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
+    "@formatjs/cli": "^6.7.1",
     "@react-native-community/eslint-config": "^3.2.0",
     "@types/jest": "^29.5.14",
     "@types/react": "~19.0.10",
