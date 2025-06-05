@@ -20,6 +20,7 @@ type ThemeContext = {
   config: ThemeConfig
   paletteName: ThemeName
   basePalette: ThemeBasePalette
+  basePaletteInverted: ThemeBasePalette
   palette: ThemedPalette
   selectTheme: (name: ThemeConfig) => void
   isLight: boolean
@@ -75,7 +76,7 @@ export const ThemeProvider = ({
     detectTheme(hostTheme, selectedThemeConfig),
   )
 
-  const value = React.useMemo(
+  const value = React.useMemo<ThemeContext>(
     () => ({
       config: selectedThemeConfig,
       paletteName,
@@ -123,6 +124,8 @@ export const ThemeProvider = ({
       },
       isLight: themes[paletteName].base === 'light',
       isDark: themes[paletteName].base === 'dark',
+      basePaletteInverted:
+        themes[paletteName].base === 'dark' ? 'light' : 'dark',
     }),
     [hostTheme, storage, paletteName, selectedThemeConfig],
   )
@@ -134,5 +137,5 @@ export const useTheme = () =>
   React.useContext(ThemeContext) ?? invalid('ThemeProvider is missing')
 
 export const usePalette = () => useTheme().palette
-export const useAtoms = () => useTheme().atoms
+export const useThemedAtoms = () => useTheme().atoms
 export const useBasePalette = () => useTheme().basePalette

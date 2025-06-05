@@ -9,7 +9,7 @@ import {
   ThemeProvider,
   useTheme,
   usePalette,
-  useAtoms,
+  useThemedAtoms,
   useBasePalette,
 } from './ThemeProvider'
 import {ThemeConfig} from './types'
@@ -176,7 +176,7 @@ describe('ThemeProvider and useTheme Tests', () => {
   })
 })
 
-describe('useAtoms and useBasePalette Tests', () => {
+describe('useThemedAtoms and useBasePalette Tests', () => {
   let storedValue: ThemeConfig = 'system'
   const mockStorage: App.StorageKeyManager<ThemeConfig> = {
     key: 'theme-name',
@@ -192,9 +192,9 @@ describe('useAtoms and useBasePalette Tests', () => {
     ;(useColorScheme as jest.Mock).mockReturnValue(undefined)
   })
 
-  test('useAtoms provides correct atom styles for dark theme', () => {
+  test('useThemedAtoms provides correct atom styles for dark theme', () => {
     const TestComponent = () => {
-      const atoms = useAtoms()
+      const atoms = useThemedAtoms()
       return (
         <>
           <Text testID="bg-color-max">
@@ -218,10 +218,10 @@ describe('useAtoms and useBasePalette Tests', () => {
     expect(screen.getByTestId('el-primary-max')).toHaveTextContent('#A0B3F2')
   })
 
-  test('useAtoms updates when theme changes', () => {
+  test('useThemedAtoms updates when theme changes', () => {
     const TestComponent = () => {
       const theme = useTheme()
-      const atoms = useAtoms()
+      const atoms = useThemedAtoms()
       return (
         <>
           <Text testID="bg-color-max">
@@ -278,9 +278,9 @@ describe('useAtoms and useBasePalette Tests', () => {
     expect(screen.getByTestId('base-palette')).toHaveTextContent('light')
   })
 
-  test('useAtoms and useBasePalette throw error without ThemeProvider', () => {
+  test('useThemedAtoms and useBasePalette throw error without ThemeProvider', () => {
     const TestComponent = () => {
-      useAtoms()
+      useThemedAtoms()
       useBasePalette()
       return null
     }

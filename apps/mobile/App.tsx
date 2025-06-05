@@ -1,12 +1,12 @@
 import {AsyncStorageProvider, useSyncStorageToState} from '@yoroi/common'
 import {ThemeProvider, atoms as a, useTheme} from '@yoroi/theme'
 
+import {BigNumber} from 'bignumber.js'
 import * as Font from 'expo-font'
 import * as React from 'react'
+import {useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
-import {useIntl} from 'react-intl'
-import {BigNumber} from 'bignumber.js'
 
 import {PlatformShell} from './PlatformShell'
 import {decryptData} from './src/kernel/crypto/decrypt-data'
@@ -15,12 +15,12 @@ import {LanguageProvider, useLanguage} from './src/kernel/i18n/LanguageProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
-  crashReportsStorageKeyManager,
   languageStorageKeyManager,
   rootStorage,
   rootSyncStorage,
   themeStorageKeyManager,
 } from './src/kernel/storage/storages'
+import {LoadingOverlay} from './src/ui/LoadingOverlay/LoadingOverlay'
 
 // import * as LocalAuthentication from 'expo-local-authentication'
 
@@ -43,14 +43,13 @@ function Shell({children}: React.PropsWithChildren) {
 function Yoroi() {
   const {
     isDark,
-    name,
-    palette: {bg_color_max, text_gray_low},
+    config,
+    palette: p,
     basePalette,
     selectTheme,
+    atoms: ta,
   } = useTheme()
   const [fontsLoaded, setFontsLoaded] = React.useState(false)
-  const [isCrashReportsEnabled, setIsCrashReportsEnabled] =
-    useSyncStorageToState(crashReportsStorageKeyManager)
   const [authSetting, setAuthSetting] = useSyncStorageToState(
     authStorageKeyManager,
   )
@@ -86,17 +85,11 @@ function Yoroi() {
   }
 
   return (
-    <View
-      style={[
-        a.flex_1,
-        a.align_center,
-        {backgroundColor: bg_color_max},
-      ]}
-    >
+    <View style={[a.flex_1, ta.bg_color_max]}>
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
-      <Text style={[a.body_2_md_regular, {color: text_gray_low}]}>
-        Welcome! base: {basePalette} selectedTheme: {name}
+      <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
+        Welcome! base: {basePalette} selectedTheme: {config}
       </Text>
 
       <TouchableOpacity
@@ -105,27 +98,11 @@ function Yoroi() {
           a.pt_md,
           a.p_md,
           a.rounded_md,
-          {backgroundColor: text_gray_low},
+          {backgroundColor: p.el_gray_min},
         ]}
       >
-        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           Toggle {isDark ? 'Light' : 'Dark'} Theme
-        </Text>
-      </TouchableOpacity>
-
-      <View style={[a.p_md]} />
-
-      <TouchableOpacity
-        onPress={() => setIsCrashReportsEnabled(!isCrashReportsEnabled)}
-        style={[
-          a.pt_md,
-          a.p_md,
-          a.rounded_md,
-          {backgroundColor: text_gray_low},
-        ]}
-      >
-        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
-          Toggle Crash Reports {isCrashReportsEnabled ? 'Enabled' : 'Disabled'}
         </Text>
       </TouchableOpacity>
 
@@ -137,10 +114,10 @@ function Yoroi() {
           a.pt_md,
           a.p_md,
           a.rounded_md,
-          {backgroundColor: text_gray_low},
+          {backgroundColor: p.el_gray_min},
         ]}
       >
-        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           Toggle Auth Setting {authSetting?.toUpperCase()}
         </Text>
       </TouchableOpacity>
@@ -153,10 +130,10 @@ function Yoroi() {
           a.pt_md,
           a.p_md,
           a.rounded_md,
-          {backgroundColor: text_gray_low},
+          {backgroundColor: p.el_gray_min},
         ]}
       >
-        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           Clear Storage
         </Text>
       </TouchableOpacity>
@@ -165,7 +142,6 @@ function Yoroi() {
 
       <TouchableOpacity
         onPress={async () => {
-          console.log('--------------------------------')
           const salt =
             '50515253c0c1c2c3c4c5c6c750515253c0c1c2c3c4c5c6c750515253c0c1c2c3'
           const nonce = '50515253c0c1c2c3c4c5c6c7'
@@ -174,7 +150,6 @@ function Yoroi() {
             [salt, nonce, payload].join(''),
             'password',
           )
-          console.log('--------------------------------')
           console.log(d)
           console.log('================================')
         }}
@@ -182,10 +157,10 @@ function Yoroi() {
           a.pt_md,
           a.p_md,
           a.rounded_md,
-          {backgroundColor: text_gray_low},
+          {backgroundColor: p.el_gray_min},
         ]}
       >
-        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           Decrypt Data
         </Text>
       </TouchableOpacity>
@@ -194,20 +169,22 @@ function Yoroi() {
 
       <TouchableOpacity
         onPress={() =>
-          selectLanguage(languageCode === 'en-US' ? 'pt-BR' : 'en-US')
+          selectLanguage(languageCode === 'en-US' ? 'de-DE' : 'en-US')
         }
         style={[
           a.pt_md,
           a.p_md,
           a.rounded_md,
-          {backgroundColor: text_gray_low},
+          {backgroundColor: p.el_gray_min},
         ]}
       >
-        <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           Change Language {languageCode} {f(globalMessages.available)} `$
           {BigNumber(10.12).toString()}`
         </Text>
       </TouchableOpacity>
+
+      <LoadingOverlay />
     </View>
   )
 }
