@@ -443,6 +443,25 @@ export const atoms = {
   self_baseline: {
     alignSelf: 'baseline',
   },
+
+  // opacity
+  opacity_0: {
+    opacity: 0,
+  },
+  opacity_25: {
+    opacity: 0.25,
+  },
+  opacity_50: {
+    opacity: 0.5,
+  },
+  opacity_75: {
+    opacity: 0.75,
+  },
+
+  // background
+  bg_transparent: {
+    backgroundColor: 'transparent',
+  },
 } as const
 
 export type ThemeAtoms = typeof atoms

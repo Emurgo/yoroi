@@ -9,7 +9,7 @@ import {
   parseSafe,
   storageKeyMaker,
 } from '@yoroi/common'
-import {ThemeName, isThemeName} from '@yoroi/theme'
+import {ThemeConfig, isThemeConfig} from '@yoroi/theme'
 
 import {AuthSetting} from '../../features/Auth/common/types'
 import {
@@ -34,11 +34,11 @@ const settingsStorageKeyMaker = storageKeyMaker(appSettingsObservableStorage)
 
 // Settings - Theme
 export const themeStorageKey = 'theme'
-export const themeStorageKeyManager = settingsStorageKeyMaker<ThemeName>({
+export const themeStorageKeyManager = settingsStorageKeyMaker<ThemeConfig>({
   key: themeStorageKey,
   parser: (data) => {
     const parsed = parseSafe(data)
-    return isThemeName(parsed) ? parsed : 'system'
+    return isThemeConfig(parsed) ? parsed : 'system'
   },
 })
 
@@ -89,18 +89,10 @@ export const languageStorageKeyManager = settingsStorageKeyMaker<LanguageCode>({
 })
 
 // Debug storage
-if (__DEV__) debugStorage(rootMMKV)
-if (__DEV__) debugStorage(rootStorage)
-
 const observableFunction = (v: unknown) => {
   console.log(`key with value udpated -> `, v)
   return of(null)
 }
-
-rootSyncStorage.observable.subscribe((v) => {
-  observableFunction(v)
-  debugStorage(rootMMKV)
-})
 appSettingsObservableStorage.observable.subscribe((v) => {
   observableFunction(v)
   debugStorage(rootMMKV)
