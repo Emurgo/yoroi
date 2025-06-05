@@ -1,6 +1,6 @@
-import {parseThemeName} from './parse-theme-name'
+import {parseThemeConfig} from './parse-theme-config'
 
-describe('parseThemeName', () => {
+describe('parseThemeConfig', () => {
   it.each`
     input                | expected
     ${'"default-light"'} | ${'default-light'}
@@ -9,7 +9,7 @@ describe('parseThemeName', () => {
   `(
     'should return $expected for valid theme name: $input',
     ({input, expected}) => {
-      expect(parseThemeName(input)).toBe(expected)
+      expect(parseThemeConfig(input)).toBe(expected)
     },
   )
 
@@ -27,7 +27,7 @@ describe('parseThemeName', () => {
   `(
     'should return $expected for invalid input: $input',
     ({input, expected}) => {
-      expect(parseThemeName(input)).toBe(expected)
+      expect(parseThemeConfig(input)).toBe(expected)
     },
   )
 })

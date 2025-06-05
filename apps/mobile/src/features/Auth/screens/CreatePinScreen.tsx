@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {CreatePinInput} from '../CreatePinInput'
+import {CreatePinInput} from '../components/CreatePinInput'
 
 export const CreatePinScreen = ({onDone}: {onDone: () => void}) => {
   return (

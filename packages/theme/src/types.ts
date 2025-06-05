@@ -1,6 +1,6 @@
 import {space} from './tokens/tokens'
 
-export type ThemeConfig = {
+export type ThemeRecord = {
   base: ThemeBasePalette
   name: ThemeName
   theme: ThemedPalette
@@ -8,7 +8,8 @@ export type ThemeConfig = {
 
 export type ThemeBasePalette = 'light' | 'dark'
 
-export type ThemeName = 'default-light' | 'default-dark' | 'system'
+export type ThemeName = 'default-light' | 'default-dark'
+export type ThemeConfig = ThemeName | 'system'
 
 export type HexColor = `#${string}`
 

@@ -6,9 +6,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
 import {logger} from '../../../kernel/logger/logger'
-import {useAuth} from '../AuthProvider'
-import {useAuthWithOs} from '../common/hooks'
-import {Logo} from './Logo'
+import {useAuth} from '../components/AuthProvider'
+import {useAuthWithOs} from '../hooks/hooks'
+import {Logo} from '../components/Logo'
 
 export const OsLoginScreen = () => {
   const {styles} = useStyles()

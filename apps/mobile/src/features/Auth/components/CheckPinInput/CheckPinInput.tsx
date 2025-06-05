@@ -2,9 +2,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {showErrorDialog} from '../../../kernel/dialogs'
-import {errorMessages} from '../../../kernel/i18n/global-messages'
-import {PIN_LENGTH} from '../common/constants'
-import {useCheckPin} from '../common/hooks'
+import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {PIN_LENGTH} from '../../common/constants'
+import {useCheckPin} from '../../hooks/hooks'
 import {PinInput, PinInputRef} from '../PinInput'
 
 export const CheckPinInput = ({onValid}: {onValid: () => void}) => {

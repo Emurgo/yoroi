@@ -1,0 +1,1 @@
+export type AuthSetting = 'pin' | 'os' | null

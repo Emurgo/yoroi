@@ -11,6 +11,7 @@ import {
 } from '@yoroi/common'
 import {ThemeName, isThemeName} from '@yoroi/theme'
 
+import {AuthSetting} from '../../features/Auth/common/types'
 import {
   LanguageCode,
   isLanguageCode,
@@ -42,9 +43,6 @@ export const themeStorageKeyManager = settingsStorageKeyMaker<ThemeName>({
 })
 
 // Settings - Auth
-export type AuthSetting = 'pin' | 'os' | null
-export const authWithOs: AuthSetting = 'os'
-export const authWithPin: AuthSetting = 'pin'
 export const authStorageKey = 'auth'
 export const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined =>
   ['os', 'pin', undefined].includes(data)
@@ -57,6 +55,20 @@ export const authStorageKeyManager = settingsStorageKeyMaker<
 >({
   key: authStorageKey,
   parser: parseAuthSetting,
+})
+
+// Settings - Custom Pin Hash
+export const pinHashStorageKey = 'customPinHash'
+export const pinHashStorageKeyManager = settingsStorageKeyMaker<
+  string | undefined
+>({
+  key: pinHashStorageKey,
+  parser: (data) => {
+    const parsed = parseSafe(data)
+    return typeof parsed === 'string' && parsed.length !== 0
+      ? parsed
+      : undefined
+  },
 })
 
 // Settings - Crash reports

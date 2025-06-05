@@ -3,15 +3,14 @@ import {App} from '@yoroi/types'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, Platform} from 'react-native'
-import RNKeychain from 'react-native-keychain'
-import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {decryptData, encryptData} from '../../../kernel/encryption/encryption'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
 import {Keychain} from '../../../kernel/storage/Keychain'
 import {AuthenticationPrompt} from '../../../kernel/storage/KeychainStorage'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import { encryptData } from '../../../kernel/crypto/encrypt-data'
+import { decryptData } from '../../../kernel/crypto/decrypt-data'
 
 export const useIsAuthOsSupported = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()

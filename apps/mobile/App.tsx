@@ -90,7 +90,6 @@ function Yoroi() {
       style={[
         a.flex_1,
         a.align_center,
-        a.justify_center,
         {backgroundColor: bg_color_max},
       ]}
     >
