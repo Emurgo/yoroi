@@ -1,6 +1,6 @@
-import {isThemeName} from './is-theme-name'
+import {isThemeConfig} from './is-theme-config'
 
-describe('isThemeName', () => {
+describe('isThemeConfig', () => {
   it.each`
     themeName          | expected
     ${'default-light'} | ${true}
@@ -9,7 +9,7 @@ describe('isThemeName', () => {
   `(
     'should return $expected for theme name: $themeName',
     ({themeName, expected}) => {
-      expect(isThemeName(themeName)).toBe(expected)
+      expect(isThemeConfig(themeName)).toBe(expected)
     },
   )
 
@@ -27,7 +27,7 @@ describe('isThemeName', () => {
   `(
     'should return $expected for theme name: $themeName',
     ({themeName, expected}) => {
-      expect(isThemeName(themeName)).toBe(expected)
+      expect(isThemeConfig(themeName)).toBe(expected)
     },
   )
 })

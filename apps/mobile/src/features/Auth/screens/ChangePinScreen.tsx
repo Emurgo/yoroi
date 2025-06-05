@@ -2,8 +2,8 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {CheckPinInput} from '../CheckPinInput'
-import {CreatePinInput} from '../CreatePinInput'
+import {CheckPinInput} from '../components/CheckPinInput'
+import {CreatePinInput} from '../components/CreatePinInput'
 
 export const ChangePinScreen = ({onDone}: {onDone: () => void}) => {
   const [step, setStep] = React.useState<'checkPin' | 'newPin'>('checkPin')
