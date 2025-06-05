@@ -5,8 +5,7 @@ import * as React from 'react'
 import {IntlProvider} from 'react-intl'
 import {Text} from 'react-native'
 
-import {LanguageCode} from './languages'
-import {translations} from './translations'
+import {LanguageCode, syncLocaleToBN, translations} from './localization'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(
   undefined,
@@ -19,7 +18,10 @@ export const LanguageProvider = ({
   storage: App.StorageKeyManager<LanguageCode>
 }>) => {
   const [selectedLanguageCode, setSelectedLanguageCode] =
-    React.useState<LanguageCode>(storage.read())
+    React.useState<LanguageCode>(() => {
+      const languageCode = storage.read()
+      return languageCode
+    })
 
   const value = React.useMemo(
     () => ({

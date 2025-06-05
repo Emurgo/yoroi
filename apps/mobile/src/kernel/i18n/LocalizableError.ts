@@ -1,3 +1,4 @@
+// NOTE: needs a complete rewrite
 export class LocalizableError extends Error {
   id: string
   defaultMessage: string
