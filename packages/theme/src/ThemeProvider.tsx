@@ -21,7 +21,7 @@ export const ThemeProvider = ({
 }>) => {
   const hostTheme = useColorScheme() ?? 'dark'
   const [selectedThemeName, setSelectedThemeName] = React.useState<ThemeName>(
-    storage.read() ?? 'system',
+    () => storage.read(),
   )
   const [paletteName, setPaletteName] = React.useState<
     Exclude<ThemeName, 'system'>

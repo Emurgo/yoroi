@@ -11,8 +11,12 @@ import {
 } from '@yoroi/common'
 import {ThemeName, isThemeName} from '@yoroi/theme'
 
+import {
+  LanguageCode,
+  isLanguageCode,
+  systemLanguageCode,
+} from '../i18n/localization'
 import {debugStorage} from './debug-storage'
-import {LanguageCode, isLanguageCode, systemLocale} from '../i18n/languages'
 
 const rootMMKV = new MMKV({id: 'default.mmkv'})
 export const rootSyncStorage = observableStorageMaker<false, string>(
@@ -68,7 +72,7 @@ export const languageStorageKeyManager = settingsStorageKeyMaker<LanguageCode>({
   key: languageStorageKey,
   parser: (data) => {
     const parsed = parseSafe(data)
-    return isLanguageCode(parsed) ? parsed : systemLocale
+    return isLanguageCode(parsed) ? parsed : systemLanguageCode
   },
 })
 

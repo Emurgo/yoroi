@@ -5,9 +5,12 @@ import * as Font from 'expo-font'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
+import {useIntl} from 'react-intl'
+import {BigNumber} from 'bignumber.js'
 
 import {PlatformShell} from './PlatformShell'
 import {decryptData} from './src/kernel/crypto/decrypt-data'
+import globalMessages from './src/kernel/i18n/global-messages'
 import {LanguageProvider, useLanguage} from './src/kernel/i18n/LanguageProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
@@ -18,8 +21,6 @@ import {
   rootSyncStorage,
   themeStorageKeyManager,
 } from './src/kernel/storage/storages'
-import { useIntl } from 'react-intl'
-import globalMessages from './src/kernel/i18n/global-messages'
 
 // import * as LocalAuthentication from 'expo-local-authentication'
 
@@ -194,7 +195,7 @@ function Yoroi() {
 
       <TouchableOpacity
         onPress={() =>
-          selectLanguage(languageCode === 'en-US' ? 'de-DE' : 'en-US')
+          selectLanguage(languageCode === 'en-US' ? 'pt-BR' : 'en-US')
         }
         style={[
           a.pt_md,
@@ -204,7 +205,8 @@ function Yoroi() {
         ]}
       >
         <Text style={[a.body_2_md_regular, {color: bg_color_max}]}>
-          Change Language {languageCode} {f(globalMessages.available)}
+          Change Language {languageCode} {f(globalMessages.available)} `$
+          {BigNumber(10.12).toString()}`
         </Text>
       </TouchableOpacity>
     </View>
