@@ -1,8 +1,6 @@
-import {BigNumber} from 'bignumber.js'
 import * as Localization from 'expo-localization'
 import {freeze} from 'immer'
 
-import {logger} from '../logger/logger'
 import deDE from './locales/de-DE.json'
 import enUS from './locales/en-US.json'
 import esES from './locales/es-ES.json'
@@ -58,34 +56,6 @@ export const supportedLanguagesCodes: ReadonlyArray<LanguageCode> =
 export const isLanguageCode = (data: unknown): data is LanguageCode =>
   supportedLanguages.some((l) => l.code === data)
 
-export type NumberLocale = {
-  prefix: string
-  decimalSeparator: string
-  groupSeparator: string
-  groupSize: number
-  secondaryGroupSize: number
-  fractionGroupSize: number
-  fractionGroupSeparator: string
-  suffix: string
-}
-
-export const decimalComma: Readonly<NumberLocale> = freeze({
-  prefix: '',
-  decimalSeparator: ',',
-  groupSeparator: ' ',
-  groupSize: 3,
-  secondaryGroupSize: 0,
-  fractionGroupSize: 0,
-  fractionGroupSeparator: ' ',
-  suffix: '',
-})
-
-export const decimalDot: Readonly<NumberLocale> = freeze({
-  ...decimalComma,
-  decimalSeparator: '.',
-  groupSeparator: ',',
-})
-
 /**
  * NOTE: Locale Selection Logic
  *
@@ -106,16 +76,6 @@ export const findLocale = (languageCode: LanguageCode) => {
     (l: Localization.Locale) => l.languageTag === languageCode,
   )
   return locale
-}
-
-// NOTE: should use intl.formatNumber
-export const syncLocaleToBN = (languageCode: LanguageCode) => {
-  const locale = findLocale(languageCode)
-  const numberLocale =
-    locale?.decimalSeparator === '.' ? decimalDot : decimalComma
-  BigNumber.config({
-    FORMAT: numberLocale,
-  })
 }
 
 /**
