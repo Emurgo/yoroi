@@ -27,7 +27,12 @@ import {AppState, AppStateStatus} from 'react-native'
 
 import {isWeb} from '../constants'
 import {logger} from '../logger/logger'
-import {NetworkState} from './types'
+import {ConnectionStatus} from './types'
+
+// IMPORTANT: 
+// 1. don't use the word "network" in this file, it's confusing
+// 2. use "connection" instead, network is for chain-specific stuff
+// 3. don't delete this comment
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,14 +59,16 @@ const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehyd
       cacheKeyIndicator.includes(String(queryKey[0])),
   }
 
-const NetworkContext = React.createContext<NetworkState>(NetworkState.Unclear)
+const ConnectionContext = React.createContext<ConnectionStatus>(
+  ConnectionStatus.Unclear,
+)
 
-export const useNetworkState = () => React.useContext(NetworkContext)
+export const useConnectionStatus = () => React.useContext(ConnectionContext)
 
 const offlineUrl = 'https://localhost/error'
 let failedRequestToUrl = new Set<string>()
 
-// Wrapper for fetchData that updates network state
+// Wrapper for fetchData that updates connection state
 export const request: FetchData = async <T, D = any>(
   config: RequestConfig<D>,
   fetcherConfig?: AxiosRequestConfig<D>,
@@ -74,6 +81,7 @@ export const request: FetchData = async <T, D = any>(
     ...config,
     onSuccess: () => {
       originalOnSuccess?.()
+      // to recover from Unclear only if the request to the url path is successful again
       if (failedRequestToUrl.delete(basePath)) {
         logger.debug('Recovered from request failure', {
           url: config.url,
@@ -96,14 +104,14 @@ export const request: FetchData = async <T, D = any>(
   return fetchData<T, D>(appConfig, fetcherConfig)
 }
 
-export const NetworkProvider = ({children}: React.PropsWithChildren) => {
+export const ConnectionProvider = ({children}: React.PropsWithChildren) => {
   const pendingPromiseRef = React.useRef<Promise<void> | undefined>(undefined)
-  // NOTE: subscribe to onlineManager.subscribe is pointless since
-  // it can have a pending promise that is not resolved yet
-  // and eventually will change the state
-  const [networkState, setNetworkState] = React.useState<NetworkState>(() =>
-    onlineManager.isOnline() ? NetworkState.Online : NetworkState.Unclear,
-  )
+  const [connectionStatus, setConnectionStatus] =
+    React.useState<ConnectionStatus>(() =>
+      onlineManager.isOnline()
+        ? ConnectionStatus.Online
+        : ConnectionStatus.Unclear,
+    )
 
   const checkIsOnlineIfNeeded = React.useCallback(() => {
     if (pendingPromiseRef.current) return
@@ -112,45 +120,46 @@ export const NetworkProvider = ({children}: React.PropsWithChildren) => {
       pendingPromiseRef.current = undefined
 
       const hasFailedRequests = failedRequestToUrl.size > 0
-      
-      // Set network state to Unclear when there's a mismatch between
+
+      // Set connection status to Unclear when there's a mismatch between
       // online status and failed requests
       if ((ok && hasFailedRequests) || (!ok && !hasFailedRequests)) {
-        setNetworkState(NetworkState.Unclear)
+        setConnectionStatus(ConnectionStatus.Unclear)
         return
       }
 
-      // Update online status and network state when there are no failed requests
-      // to recover from Unclear only if the request to the url path is successful again
-      if (!hasFailedRequests) {
-        onlineManager.setOnline(ok)
-        setNetworkState(ok ? NetworkState.Online : NetworkState.Offline)
-      }
+      onlineManager.setOnline(ok)
+      setConnectionStatus(
+        ok ? ConnectionStatus.Online : ConnectionStatus.Offline,
+      )
     })
     pendingPromiseRef.current = promise
   }, [])
 
   React.useEffect(() => {
-    const handleNetworkOffline = () => {
+    const handleConnectionOffline = () => {
       failedRequestToUrl.add(offlineUrl)
-      logger.error('Network offline', {origin: 'NetworkProvider', type: 'http'})
+      logger.error('Connection is offline', {
+        origin: 'ConnectionProvider',
+        type: 'http',
+      })
       onlineManager.setOnline(false)
     }
 
-    const handleNetworkOnline = () => {
+    const handleConnectionOnline = () => {
       if (failedRequestToUrl.delete(offlineUrl)) {
-        logger.debug('Network online', {
-          origin: 'NetworkProvider',
+        logger.debug('Connection is online', {
+          origin: 'ConnectionProvider',
           type: 'http',
         })
       }
       onlineManager.setOnline(true)
     }
 
-    // Set up network listeners
+    // Set up connection listeners
     if (isWeb) {
-      window?.addEventListener('offline', handleNetworkOffline)
-      window?.addEventListener('online', handleNetworkOnline)
+      window?.addEventListener('offline', handleConnectionOffline)
+      window?.addEventListener('online', handleConnectionOnline)
     }
 
     // Set up interval check
@@ -164,8 +173,8 @@ export const NetworkProvider = ({children}: React.PropsWithChildren) => {
 
     return () => {
       if (isWeb) {
-        window?.removeEventListener('offline', handleNetworkOffline)
-        window?.removeEventListener('online', handleNetworkOnline)
+        window?.removeEventListener('offline', handleConnectionOffline)
+        window?.removeEventListener('online', handleConnectionOnline)
       }
 
       clearInterval(interval)
@@ -173,7 +182,7 @@ export const NetworkProvider = ({children}: React.PropsWithChildren) => {
   }, [checkIsOnlineIfNeeded])
 
   return (
-    <NetworkContext.Provider value={networkState}>
+    <ConnectionContext.Provider value={connectionStatus}>
       <PersistQueryClientProvider
         persistOptions={{
           persister,
@@ -183,7 +192,7 @@ export const NetworkProvider = ({children}: React.PropsWithChildren) => {
       >
         {children}
       </PersistQueryClientProvider>
-    </NetworkContext.Provider>
+    </ConnectionContext.Provider>
   )
 }
 
@@ -207,15 +216,12 @@ async function isOnline() {
     if (isRight(response)) return Boolean(response.value.data?.height)
 
     return false
-  } catch (error) {
-    logger.error(error as Error, {origin: 'isOnline', type: 'http'})
-    return false
   } finally {
     clearTimeout(timeout)
   }
 }
 
-// NOTE: part of network - for react-query to manage refetching on focus
+// NOTE: part of connection - for react-query to manage refetching on focus
 focusManager.setEventListener((onFocus) => {
   if (!isWeb) {
     const subscription = AppState.addEventListener(
