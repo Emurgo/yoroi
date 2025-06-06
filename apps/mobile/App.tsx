@@ -9,10 +9,13 @@ import {Text, TouchableOpacity, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 
 import {PlatformShell} from './PlatformShell'
+import {
+  ConnectionProvider,
+  useConnectionStatus,
+} from './src/kernel/connection/ConnectionProvider'
 import {decryptData} from './src/kernel/crypto/decrypt-data'
 import globalMessages from './src/kernel/i18n/global-messages'
 import {LanguageProvider, useLanguage} from './src/kernel/i18n/LanguageProvider'
-import {NetworkProvider, useNetworkState} from './src/kernel/network/NetworkProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
@@ -33,13 +36,13 @@ function Shell({children}: React.PropsWithChildren) {
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <NetworkProvider>
+      <ConnectionProvider>
         <ThemeProvider storage={themeStorageKeyManager}>
           <LanguageProvider storage={languageStorageKeyManager}>
             {children}
           </LanguageProvider>
         </ThemeProvider>
-      </NetworkProvider>
+      </ConnectionProvider>
     </AsyncStorageProvider>
   )
 }
@@ -59,7 +62,7 @@ function Yoroi() {
   )
   const {languageCode, selectLanguage} = useLanguage()
   const {formatMessage: f} = useIntl()
-  const networkState = useNetworkState()
+  const connectionStatus = useConnectionStatus()
 
   React.useEffect(() => {
     async function loadFonts() {
@@ -214,7 +217,7 @@ function Yoroi() {
 
       <View style={[a.p_md]} />
       <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-        Network State: {networkState}
+        Connection State: {connectionStatus}
       </Text>
 
       <LoadingOverlay />
