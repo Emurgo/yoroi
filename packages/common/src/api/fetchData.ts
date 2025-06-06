@@ -8,20 +8,26 @@ declare module 'axios' {
   }
 }
 
+type FetcherHandlers = {
+  onSuccess?(): void
+  onError?(): void
+}
+
 type GetRequestConfig = {
   url: string
   method?: 'get'
   headers?: Record<string, string>
-}
+} & FetcherHandlers
 
 type OtherRequestConfig<D = any> = {
   url: string
   method: 'post' | 'put' | 'delete'
   data?: D
   headers?: Record<string, string>
-}
+} & FetcherHandlers
 
 export type RequestConfig<D = any> = GetRequestConfig | OtherRequestConfig<D>
+
 export type FetchData = <T, D = any>(
   config: RequestConfig<D>,
   fetcherConfig?: AxiosRequestConfig<D>,
@@ -37,6 +43,12 @@ export type FetchData = <T, D = any>(
  *                 The type of `config` varies based on the HTTP method:
  *                 - For `GET` requests, `data` should not be provided.
  *                 - For `POST`, `PUT`, and `DELETE` requests, `data` is optional.
+ *                 The config also includes optional success and error handlers:
+ *                 - `onSuccess`: Callback function called when the request succeeds
+ *                 - `onError`: Callback function called when the request fails
+ *
+ * @note By default, all requests are configured with no-cache headers. If caching is needed,
+ *       you should provide custom headers in the config to override the default behavior.
  *
  * @returns A `Promise` that resolves to the response data on a successful request
  *          or an error object on failure. The error object includes the HTTP status
@@ -47,9 +59,11 @@ export type FetchData = <T, D = any>(
  *
  * @example
  * ```typescript
- * // Example of a GET request
+ * // Example of a GET request with handlers
  * fetchData<{ someDataType }>({
  *   url: 'https://example.com/data',
+ *   onSuccess: () => console.log('Request succeeded'),
+ *   onError: () => console.log('Request failed'),
  * }).then(response => {
  *   // Handle response
  * }).catch(error => {
@@ -59,11 +73,28 @@ export type FetchData = <T, D = any>(
  *
  * @example
  * ```typescript
- * // Example of a POST request with data
+ * // Example of a POST request with data and handlers
  * fetchData<{ someDataType }, { somePayloadType }>({
  *   url: 'https://example.com/data',
  *   method: 'post',
- *   data: {...somePayload}
+ *   data: {...somePayload},
+ *   onSuccess: () => console.log('Request succeeded'),
+ *   onError: () => console.log('Request failed'),
+ * }).then(response => {
+ *   // Handle response
+ * }).catch(error => {
+ *   // Handle error
+ * })
+ * ```
+ *
+ * @example
+ * ```typescript
+ * // Example of a GET request with caching enabled
+ * fetchData<{ someDataType }>({
+ *   url: 'https://example.com/data',
+ *   headers: {
+ *     'Cache-Control': 'max-age=3600', // Cache for 1 hour
+ *   },
  * }).then(response => {
  *   // Handle response
  * }).catch(error => {
@@ -96,12 +127,14 @@ export const fetchData: FetchData = <T, D = any>(
 
   return axios(axiosConfig)
     .then(({status, data}: AxiosResponse<T>) => {
+      config.onSuccess?.()
       return {
         tag: 'right',
         value: {status, data},
       } as const
     })
     .catch((error: AxiosError) => {
+      config.onError?.()
       if (error.response) {
         const status = error.response.status
         const message = error.response.statusText

@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import {Path, Svg} from 'react-native-svg'
 
 export const Logo = () => {

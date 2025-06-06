@@ -1,11 +1,17 @@
+import {useQuery, useQueryClient, UseQueryOptions} from '@tanstack/react-query'
+import * as LocalAuthentication from 'expo-local-authentication'
+import * as React from 'react'
+import {AppState, Platform} from 'react-native'
+
+import {canAuthWithOS} from '../common/helpers'
+
 export const useIsAuthOsSupported = (
   options?: UseQueryOptions<boolean, Error>,
 ) => {
   const queryClient = useQueryClient()
   const query = useQuery({
-    queryKey: ['isAuthOsSupported'],
+    queryKey: ['useIsAuthOsSupported'],
     queryFn: isAuthOsSupported,
-    suspense: true,
     ...options,
   })
 
@@ -22,28 +28,20 @@ export const useIsAuthOsSupported = (
     return () => appStateSubscription?.remove()
   }, [query, queryClient])
 
-  if (query.data == null) return false
-
-  return query.data
+  return Boolean(query.data)
 }
 
-const isAuthOsSupported = () => {
+const isAuthOsSupported = async () => {
   return Platform.select({
     android: async () =>
       canAuthWithOS({
         platform: 'android',
-        supportedBiometryType: await RNKeychain.getSupportedBiometryType(),
       }),
     ios: async () =>
       canAuthWithOS({
         platform: 'ios',
-        supportedBiometryType: await RNKeychain.getSupportedBiometryType(),
-        canImplyAuthentication: await RNKeychain.canImplyAuthentication({
-          authenticationType:
-            RNKeychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
-        }),
+        canImplyAuthentication: await LocalAuthentication.hasHardwareAsync(),
       }),
-    default: () =>
-      Promise.reject(new Error('OS Authentication is not supported')),
+    default: () => Promise.resolve(false),
   })()
 }

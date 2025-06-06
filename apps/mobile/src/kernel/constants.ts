@@ -33,10 +33,12 @@ export const release = isProduction ? version : 'dev'
 export const build = Device.osBuildId ?? ''
 export const distribution = `${Platform.OS}.${build}`
 
+// Platforms - there is one disavantage to using this approach when testing:
+// the react-native module needs to be unloaded and reloaded to change the platform
 export const isIOS = Platform.OS === 'ios'
 export const isAndroid = Platform.OS === 'android'
 export const isNative = isIOS || isAndroid
-export const isWeb = !isNative
+export const isWeb = !isNative && typeof window !== 'undefined' && typeof document !== 'undefined'
 
 export const platform = isIOS ? 'ios' : isAndroid ? 'android' : 'web'
 
