@@ -16,6 +16,7 @@
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.1.0",
     "@emurgo/cip4-js": "^1.0.7",
+    "@emurgo/csl-mobile-bridge-jsi": "^1.0.0-alpha.2",
     "@emurgo/dullahan": "^0.3.4",
     "@expo/metro-runtime": "~5.0.4",
     "@formatjs/intl-datetimeformat": "^6.18.0",
