@@ -1,27 +1,34 @@
-export const canAuthWithOS = (options: IosAuthOptions | AndroidAuthOptions) => {
-  const {platform, supportedBiometryType} = options
+import * as LocalAuthentication from 'expo-local-authentication'
 
-  if (platform === 'ios') {
-    const {canImplyAuthentication} = options
-    if (!canImplyAuthentication) return false
+import {logger} from '../../../kernel/logger/logger'
 
-    return !!supportedBiometryType
+/**
+ * Checks if the device supports and is configured for OS-level authentication
+ * (like Face ID, Touch ID, or other biometric authentication methods).
+ *
+ * @returns {Promise<boolean>} True if the device supports and is configured for OS authentication,
+ *                            false otherwise or if an error occurs
+ */
+export const canAuthWithOS = async () => {
+  try {
+    // Check if the device has the necessary hardware
+    const hasBiometricHardware = await LocalAuthentication.hasHardwareAsync()
+    if (!hasBiometricHardware) {
+      return false
+    }
+
+    // Check if the user has enrolled any authentication methods
+    const hasEnrolledAuth = await LocalAuthentication.isEnrolledAsync()
+    if (!hasEnrolledAuth) {
+      return false
+    }
+
+    // Check if there are any supported authentication types
+    const supportedAuthTypes =
+      await LocalAuthentication.supportedAuthenticationTypesAsync()
+    return supportedAuthTypes.length > 0
+  } catch (error) {
+    logger.error(error as Error, {origin: 'canAuthWithOS', type: 'error'})
+    return false
   }
-
-  if (platform === 'android') {
-    return !!supportedBiometryType
-  }
-
-  return false
-}
-
-type AndroidAuthOptions = {
-  platform: 'android'
-  supportedBiometryType: `${RNKeychain.BIOMETRY_TYPE}` | null
-}
-
-type IosAuthOptions = {
-  platform: 'ios'
-  supportedBiometryType: `${RNKeychain.BIOMETRY_TYPE}` | null
-  canImplyAuthentication: boolean
 }
