@@ -1,29 +1,27 @@
-import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import {atoms as a} from '@yoroi/theme'
+
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {View} from 'react-native'
 
 import {Button} from '../../../components/Button/Button'
 import {logger} from '../../../kernel/logger/logger'
-import {useAuth} from '../components/AuthProvider'
-import {useAuthWithOs} from '../hooks/hooks'
+import {useAuth} from '../common/context'
 import {Logo} from '../components/Logo'
+import {useAuthWithOs} from '../hooks/useAuthWithOS'
 
 export const OsLoginScreen = () => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {login} = useAuth()
 
   const handleOnLogin = React.useCallback(() => {
-    logger.debug(`Auth: Logged in with OS`)
     login()
   }, [login])
 
   const {authWithOs, isLoading} = useAuthWithOs({onSuccess: handleOnLogin})
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.root}>
+    <View style={[a.flex_1, a.flex_col, a.justify_between, a.p_lg]}>
       <TopSection />
 
       <MiddleSection>
@@ -31,25 +29,30 @@ export const OsLoginScreen = () => {
       </MiddleSection>
 
       <BottomSection>
-        <Button title={strings.title} disabled={isLoading} onPress={() => authWithOs()} />
+        <Button
+          title={strings.title}
+          disabled={isLoading}
+          onPress={() => authWithOs()}
+        />
       </BottomSection>
-    </SafeAreaView>
+    </View>
   )
 }
 
 const TopSection = () => {
-  const {styles} = useStyles()
-  return <View style={styles.top} />
+  return <View style={[a.flex_1]} />
 }
 
 const MiddleSection = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.middle}>{children}</View>
+  return (
+    <View style={[a.flex_1, a.flex_col, a.justify_center, a.align_center]}>
+      {children}
+    </View>
+  )
 }
 
 const BottomSection = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.bottom}>{children}</View>
+  return <View style={[a.flex_1, a.flex_col, a.justify_end]}>{children}</View>
 }
 
 const useStrings = () => {
@@ -66,32 +69,3 @@ const messages = defineMessages({
     defaultMessage: '!!!Login',
   },
 })
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-      ...atoms.align_stretch,
-      ...atoms.justify_between,
-      ...atoms.p_lg,
-    },
-    top: {
-      ...atoms.flex_1,
-    },
-    middle: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    bottom: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-      ...atoms.justify_end,
-    },
-  })
-
-  return {styles}
-}

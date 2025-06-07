@@ -1,22 +1,31 @@
-import React from 'react'
-import {StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {atoms as a} from '@yoroi/theme'
+
+import * as React from 'react'
+import {View} from 'react-native'
 
 import {CheckPinInput} from '../components/CheckPinInput'
-import {CreatePinInput} from '../components/CreatePinInput'
+import {CreatePinInput} from '../components/CreatePinInput/CreatePinInput'
 
-export const ChangePinScreen = ({onDone}: {onDone: () => void}) => {
-  const [step, setStep] = React.useState<'checkPin' | 'newPin'>('checkPin')
+export const ChangePinScreen: React.FC<Props> = ({onDone}) => {
+  const [step, setStep] = React.useState<ChangePinStep>('checkPin')
+
+  const handleValidPin = React.useCallback(() => {
+    setStep('newPin')
+  }, [])
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      {step === 'checkPin' ? <CheckPinInput onValid={() => setStep('newPin')} /> : <CreatePinInput onDone={onDone} />}
-    </SafeAreaView>
+    <View style={[a.flex_1]}>
+      {step === 'checkPin' ? (
+        <CheckPinInput onValid={handleValidPin} />
+      ) : (
+        <CreatePinInput onDone={onDone} />
+      )}
+    </View>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-})
+type ChangePinStep = 'checkPin' | 'newPin'
+
+type Props = {
+  onDone: () => void
+}
