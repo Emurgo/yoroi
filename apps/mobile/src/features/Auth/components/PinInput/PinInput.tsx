@@ -1,11 +1,10 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {BACKSPACE, NumericKeyboard} from '../../../components/NumericKeyboard'
 import {Spacer} from '../../../components/Spacer/Spacer'
-import {Text} from '../../../components/Text'
 
 type Props = {
   title?: string
@@ -21,8 +20,15 @@ export type PinInputRef = {
 }
 
 export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
-  const {enabled = true, pinMaxLength, title, subtitles = [], onDone, onGoBack} = props
-  const styles = useStyles()
+  const {
+    enabled = true,
+    pinMaxLength,
+    title,
+    subtitles = [],
+    onDone,
+    onGoBack,
+  } = props
+  const {atoms: ta, palette: p} = useTheme()
 
   const [pin, setPin] = React.useState('')
 
@@ -50,14 +56,34 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   }
 
   return (
-    <View style={styles.pinInput}>
-      <View style={styles.info}>
-        <Text style={styles.title}>{title}</Text>
+    <View style={[a.flex_1, ta.bg_color_max]}>
+      <View style={[a.flex_1, a.align_center, a.justify_center]}>
+        <Text
+          style={[
+            a.body_1_lg_medium,
+            ta.text_gray_max,
+            {fontSize: 20, lineHeight: 30},
+          ]}
+        >
+          {title}
+        </Text>
 
         <Spacer height={4} />
 
         {subtitles.map((subtitle) => (
-          <Text key={subtitle} style={styles.subtitle}>
+          <Text
+            key={subtitle}
+            style={[
+              a.body_2_md_regular,
+              ta.text_gray_max,
+              {
+                fontSize: 14,
+                lineHeight: 22,
+                maxWidth: 320,
+                textAlign: 'center',
+              },
+            ]}
+          >
             {subtitle == null ? null : subtitle}
           </Text>
         ))}
@@ -76,66 +102,25 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   )
 })
 
-type PinPlaceholderProps = {
-  isActive: boolean
-}
-
-const PinPlaceholder = ({isActive}: PinPlaceholderProps) => {
-  const styles = useStyles()
+const PinPlaceholder = ({isActive}: {isActive: boolean}) => {
+  const {atoms: ta, palette: p} = useTheme()
   return (
-    <View style={styles.pinElement}>
-      <View style={[styles.pinCircle, isActive ? styles.pinCircleActive : styles.pinCircleInactive]} />
+    <View
+      style={[
+        a.p_md,
+        a.rounded_md,
+        {borderWidth: 2, borderColor: p.primary_600},
+      ]}
+    >
+      <View
+        style={[
+          {width: 4, height: 4},
+          a.rounded_sm,
+          isActive
+            ? {backgroundColor: p.primary_600}
+            : {borderWidth: 2, borderColor: p.primary_600},
+        ]}
+      />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-
-  const styles = StyleSheet.create({
-    pinInput: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    info: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    title: {
-      fontFamily: 'Rubik-Medium',
-      fontSize: 20,
-      lineHeight: 30,
-      color: color.gray_max,
-    },
-    subtitle: {
-      fontFamily: 'Rubik-Regular',
-      fontSize: 14,
-      lineHeight: 22,
-      color: color.gray_600,
-      maxWidth: 320,
-      textAlign: 'center',
-    },
-    pinContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    pinElement: {
-      paddingHorizontal: 8,
-    },
-    pinCircle: {
-      width: 16,
-      height: 16,
-      borderRadius: 10,
-    },
-    pinCircleInactive: {
-      borderWidth: 2,
-      borderColor: color.primary_600,
-    },
-    pinCircleActive: {
-      backgroundColor: color.primary_600,
-    },
-  })
-  return styles
 }
