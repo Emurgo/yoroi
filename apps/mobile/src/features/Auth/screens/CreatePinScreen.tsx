@@ -1,19 +1,18 @@
-import React from 'react'
-import {StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {atoms as a} from '@yoroi/theme'
 
-import {CreatePinInput} from '../components/CreatePinInput'
+import * as React from 'react'
+import {View} from 'react-native'
 
-export const CreatePinScreen = ({onDone}: {onDone: () => void}) => {
+import {CreatePinInput} from '../components/CreatePinInput/CreatePinInput'
+
+export const CreatePinScreen: React.FC<Props> = ({onDone}) => {
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
+    <View style={[a.flex_1]}>
       <CreatePinInput onDone={onDone} />
-    </SafeAreaView>
+    </View>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-})
+type Props = {
+  onDone: () => void
+}

@@ -51,7 +51,7 @@ export const parseAuthSetting = (data: unknown) => {
   return isAuthSetting(parsed) ? parsed : null
 }
 export const authStorageKeyManager = settingsStorageKeyMaker<
-  AuthSetting | undefined
+  AuthSetting | undefined | null
 >({
   key: authStorageKey,
   parser: parseAuthSetting,
