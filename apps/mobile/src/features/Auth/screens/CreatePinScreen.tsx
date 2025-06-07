@@ -14,5 +14,5 @@ export const CreatePinScreen: React.FC<Props> = ({onDone}) => {
 }
 
 type Props = {
-  onDone: () => void
+  onDone(): void
 }

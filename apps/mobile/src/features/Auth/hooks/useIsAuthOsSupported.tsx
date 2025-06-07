@@ -1,5 +1,4 @@
 import {useQuery, useQueryClient, UseQueryOptions} from '@tanstack/react-query'
-import * as LocalAuthentication from 'expo-local-authentication'
 import * as React from 'react'
 import {AppState, Platform} from 'react-native'
 
@@ -31,17 +30,3 @@ export const useIsAuthOsSupported = (
   return Boolean(query.data)
 }
 
-const isAuthOsSupported = async () => {
-  return Platform.select({
-    android: async () =>
-      canAuthWithOS({
-        platform: 'android',
-      }),
-    ios: async () =>
-      canAuthWithOS({
-        platform: 'ios',
-        canImplyAuthentication: await LocalAuthentication.hasHardwareAsync(),
-      }),
-    default: () => Promise.resolve(false),
-  })()
-}

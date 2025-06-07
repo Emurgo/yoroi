@@ -73,7 +73,7 @@ export const pinHashStorageKeyManager = settingsStorageKeyMaker<
 
 // Settings - Crash reports
 const crashReportsStorageKey = 'sendCrashReports'
-export const crashReportsStorageKeyManager = settingsStorageKeyMaker<Boolean>({
+export const crashReportsStorageKeyManager = settingsStorageKeyMaker<boolean>({
   key: crashReportsStorageKey,
   parser: (data) => Boolean(parseBoolean(data)),
 })
@@ -86,6 +86,13 @@ export const languageStorageKeyManager = settingsStorageKeyMaker<LanguageCode>({
     const parsed = parseSafe(data)
     return isLanguageCode(parsed) ? parsed : systemLanguageCode
   },
+})
+
+// Settings - Screen Share
+export const screenShareStorageKey = 'screenShareEnabled'
+export const screenShareStorageKeyManager = settingsStorageKeyMaker<boolean>({
+  key: screenShareStorageKey,
+  parser: (data) => Boolean(parseBoolean(data)),
 })
 
 // Debug storage

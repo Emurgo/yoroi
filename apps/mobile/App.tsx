@@ -1,35 +1,32 @@
 import {AsyncStorageProvider} from '@yoroi/common'
-import {ThemeProvider, atoms as a, useTheme} from '@yoroi/theme'
+import {ThemeProvider} from '@yoroi/theme'
 
-import {BigNumber} from 'bignumber.js'
 import * as Font from 'expo-font'
 import * as React from 'react'
+<<<<<<< HEAD
 import {useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {Transaction} from '@emurgo/csl-mobile-bridge-jsi'
 import {SafeAreaView} from 'react-native-safe-area-context'
+=======
+>>>>>>> c4e451d83 (chore(mobile): moved Icons)
 
+import {Dev} from './Dev'
 import {PlatformShell} from './PlatformShell'
-import {AuthProvider, useAuth} from './src/features/Auth/common/context'
+import {AuthProvider} from './src/features/Auth/common/context'
 import {
   ConnectionProvider,
-  useConnectionStatus,
 } from './src/kernel/connection/ConnectionProvider'
-import {decryptData} from './src/kernel/crypto/decrypt-data'
-import globalMessages from './src/kernel/i18n/global-messages'
-import {LanguageProvider, useLanguage} from './src/kernel/i18n/LanguageProvider'
+import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
   languageStorageKeyManager,
   pinHashStorageKeyManager,
   rootStorage,
-  rootSyncStorage,
   themeStorageKeyManager,
 } from './src/kernel/storage/storages'
-import {LoadingOverlay} from './src/ui/LoadingOverlay/LoadingOverlay'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 // import * as LocalAuthentication from 'expo-local-authentication'
 
@@ -52,19 +49,7 @@ function AppShell({children}: React.PropsWithChildren) {
 }
 
 function Yoroi() {
-  const {
-    isDark,
-    config,
-    palette: p,
-    basePalette,
-    selectTheme,
-    atoms: ta,
-  } = useTheme()
   const [fontsLoaded, setFontsLoaded] = React.useState(false)
-  const {authSetting, changeAuthSetting, isLoggedIn, login, logout} = useAuth()
-  const {languageCode, selectLanguage} = useLanguage()
-  const {formatMessage: f} = useIntl()
-  const connectionStatus = useConnectionStatus()
 
   React.useEffect(() => {
     async function loadFonts() {
@@ -94,6 +79,7 @@ function Yoroi() {
     return null
   }
 
+<<<<<<< HEAD
   return (
     <SafeAreaView style={[a.flex_1, ta.bg_color_max]}>
       {/* <View style={[a.flex_1, ta.bg_color_max]}> */}
@@ -240,6 +226,9 @@ function Yoroi() {
       <LoadingOverlay />
     </SafeAreaView>
   )
+=======
+  return <Dev />
+>>>>>>> c4e451d83 (chore(mobile): moved Icons)
 }
 
 function BusinessShell({children}: React.PropsWithChildren) {

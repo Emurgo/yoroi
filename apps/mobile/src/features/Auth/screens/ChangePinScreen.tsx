@@ -27,5 +27,5 @@ export const ChangePinScreen: React.FC<Props> = ({onDone}) => {
 type ChangePinStep = 'checkPin' | 'newPin'
 
 type Props = {
-  onDone: () => void
+  onDone(): void
 }
