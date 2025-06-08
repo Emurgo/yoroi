@@ -8,6 +8,7 @@ import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from './src/features/Auth/common/context'
+import {useCopy} from './src/features/Copy/context'
 import {useConnectionStatus} from './src/kernel/connection/ConnectionProvider'
 import {decryptData} from './src/kernel/crypto/decrypt-data'
 import globalMessages from './src/kernel/i18n/global-messages'
@@ -36,6 +37,7 @@ export function Dev() {
       clearTimeout(t)
     }, 3000)
   }, [])
+  const {copy, isCopying} = useCopy()
 
   return (
     <SafeAreaView
@@ -157,6 +159,22 @@ export function Dev() {
       >
         <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           Show Loading for 3 Seconds
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={(event) =>
+          copy({text: 'Hello, world!', feedback: 'Copied', event})
+        }
+        style={[
+          a.pt_md,
+          a.p_md,
+          a.rounded_md,
+          {backgroundColor: p.el_gray_min},
+        ]}
+      >
+        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
+          Copy {isCopying ? 'Copying...' : 'Copy'}
         </Text>
       </TouchableOpacity>
 

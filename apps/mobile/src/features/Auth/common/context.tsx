@@ -6,32 +6,8 @@ import * as React from 'react'
 
 import {useBackgroundTimer} from '../../../hooks/useBackgroundTimer'
 import {logger} from '../../../kernel/logger/logger'
-import {AuthSetting} from './types'
-
-const loggedInState = freeze({
-  status: 'logged-in',
-  isLoggedIn: true,
-  isLoggedOut: false,
-} as const)
-
-const loggedOutState = freeze({
-  status: 'logged-out',
-  isLoggedIn: false,
-  isLoggedOut: true,
-} as const)
-
-const initialState: AuthLoggedState = loggedOutState
-
-const AuthContext = React.createContext<AuthContextType>({
-  ...loggedOutState,
-  authSetting: undefined,
-  pinHash: undefined,
-  login: () => invalid('login'),
-  logout: () => invalid('logout'),
-  changeAuthSetting: () => invalid('changeAuthSetting'),
-  changePinHash: () => invalid('changePinHash'),
-  removePinHash: () => invalid('removePinHash'),
-})
+import {useAuthHostConfig} from '../hooks/useAuthHostConfig'
+import {AuthHostConfig, AuthSetting} from './types'
 
 export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
@@ -45,6 +21,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   const [pinHash, changePinHash, removePinHash] = useSyncStorageToState(
     pinHashStorageKeyManager,
   )
+  const authHostConfig = useAuthHostConfig()
 
   useBackgroundTimer({
     execute: () => {
@@ -59,6 +36,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   const value = React.useMemo(
     () => ({
       ...loggedState,
+      ...authHostConfig,
       login: () => {
         logger.debug(`Logged in with OS`, {
           origin: 'AuthProvider',
@@ -77,6 +55,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       pinHash,
     }),
     [
+      authHostConfig,
       loggedState,
       authSetting,
       pinHash,
@@ -85,11 +64,27 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       removePinHash,
     ],
   )
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return <Context.Provider value={value}>{children}</Context.Provider>
 }
 
+const loggedInState = freeze({
+  status: 'logged-in',
+  isLoggedIn: true,
+  isLoggedOut: false,
+} as const)
+
+const loggedOutState = freeze({
+  status: 'logged-out',
+  isLoggedIn: false,
+  isLoggedOut: true,
+} as const)
+
+const initialState: AuthLoggedState = loggedOutState
+
+const Context = React.createContext<AuthContext | undefined>(undefined)
+
 export const useAuth = () =>
-  React.useContext(AuthContext) ||
+  React.useContext(Context) ||
   invalid('useAuth must be used within an AuthProvider')
 
 type Props = React.PropsWithChildren<{
@@ -118,4 +113,7 @@ type AuthContextActions = {
   removePinHash(): void
 }
 
-type AuthContextType = AuthLoggedState & AuthSettingsState & AuthContextActions
+type AuthContext = AuthLoggedState &
+  AuthSettingsState &
+  AuthContextActions &
+  AuthHostConfig

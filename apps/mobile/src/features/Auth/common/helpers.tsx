@@ -1,34 +1,38 @@
-import * as LocalAuth from 'expo-local-authentication'
-import {Platform} from 'react-native'
+import * as AuthHost from 'expo-local-authentication'
+import {freeze} from 'immer'
 
 import {logger} from '../../../kernel/logger/logger'
+import {AuthHostConfig} from './types'
 
-export const getHostAuthMethods = async () => {
+export const getAuthHostConfig = async (): Promise<
+  Readonly<AuthHostConfig>
+> => {
   try {
-    const methods = await LocalAuth.supportedAuthenticationTypesAsync()
-    logger.info('Host auth methods', {
-      origin: 'getHostAuthMethods',
-      type: 'info',
-      methods,
-    })
-    return methods
+    const [hasHardware, isEnrolled, methods] = await Promise.all([
+      AuthHost.hasHardwareAsync(),
+      AuthHost.isEnrolledAsync(),
+      AuthHost.supportedAuthenticationTypesAsync(),
+    ])
+
+    return freeze(
+      {
+        isSupported: hasHardware,
+        isEnrolled,
+        canAuthWithHost: hasHardware && isEnrolled,
+        methods,
+      },
+      true,
+    )
   } catch (error) {
-    logger.error(error as Error, {origin: 'getHostAuthMethods', type: 'error'})
-    return Promise.resolve([])
+    logger.error(error as Error, {origin: 'getAuthHostConfig', type: 'error'})
+    return freeze(
+      {
+        isSupported: false,
+        isEnrolled: false,
+        canAuthWithHost: false,
+        methods: [],
+      },
+      true,
+    )
   }
 }
-
-export const isAuthOsSupported = () =>
-  Platform.select({
-    native: async () => {
-      const hasBiometricHardware = await LocalAuth.hasHardwareAsync()
-      if (!hasBiometricHardware) return false
-
-      // Check if the user has enrolled any authentication methods
-      const hasEnrolledAuth = await LocalAuth.isEnrolledAsync()
-      if (!hasEnrolledAuth) return false
-
-      return true
-    },
-    default: () => Promise.resolve(false),
-  })

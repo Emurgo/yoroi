@@ -15,9 +15,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Dev} from './Dev'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/common/context'
-import {
-  ConnectionProvider,
-} from './src/kernel/connection/ConnectionProvider'
+import {ClipboardProvider} from './src/features/Copy/context'
+import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
@@ -233,12 +232,14 @@ function Yoroi() {
 
 function BusinessShell({children}: React.PropsWithChildren) {
   return (
-    <AuthProvider
-      authStorageKeyManager={authStorageKeyManager}
-      pinHashStorageKeyManager={pinHashStorageKeyManager}
-    >
-      {children}
-    </AuthProvider>
+    <ClipboardProvider>
+      <AuthProvider
+        authStorageKeyManager={authStorageKeyManager}
+        pinHashStorageKeyManager={pinHashStorageKeyManager}
+      >
+        {children}
+      </AuthProvider>
+    </ClipboardProvider>
   )
 }
 
