@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   Pressable,
   PressableProps,
+  StyleProp,
   StyleSheet,
   Text,
   TextStyle,
@@ -33,7 +34,7 @@ export type ButtonProps = {
   icon?: (p: IconProps) => React.JSX.Element
   isLoading?: boolean
   rightIcon?: boolean
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
   fontOverride?: TextStyle
   bgColorsOverride?: Colors
   fgColorsOverride?: Colors
