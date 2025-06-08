@@ -1,59 +1,62 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {
-  BackHandler,
-  Platform,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native'
+import {BackHandler, Platform, ScrollView, Text, View} from 'react-native'
 
+import {useIntl} from 'react-intl'
+import {LocalizableError} from '../../kernel/i18n/LocalizableError'
 import {logger} from '../../kernel/logger/logger'
 import {Button} from '../Button/Button'
 import {CopyButton} from '../CopyButton/CopyButton'
-import {Space, SpaceHeight} from '../Space/Space'
+import {SpaceHeight} from '../Space/Space'
 import {ExpandableItem} from './ExpandableItem/ExpandableItem'
 
 // TODO: Add error image
+// TODO: Add translations
 interface Props {
   children: React.ReactNode
   debug?: boolean
+  renderError?(error: Error | LocalizableError): React.ReactNode
 }
 
 interface State {
-  hasError: boolean
-  error: string
-  errorInfo: string
+  error: Error | null
+  details: string
 }
 
 export class ErrorBoundary extends React.Component<Props, State> {
   public state: State = {
-    hasError: false,
-    error: '',
-    errorInfo: '',
+    error: null,
+    details: '',
   }
 
-  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    logger.error(error, {errorInfo})
-    
-    if (__DEV__) {
-      console.error('Error caught by ErrorBoundary:', error)
-      console.error('Error Info:', errorInfo)
-    }
-    
+  public componentDidCatch(
+    error: Error | LocalizableError,
+    details: React.ErrorInfo,
+  ) {
+    logger.error(error, {details})
+
     this.setState({
-      error: error.toString(),
-      errorInfo: JSON.stringify(errorInfo),
+      error,
+      details: JSON.stringify(details),
     })
   }
 
-  public static getDerivedStateFromError(_error: Error): State {
-    return {hasError: true, error: '', errorInfo: ''}
+  public static getDerivedStateFromError(
+    error: Error | LocalizableError,
+    details: React.ErrorInfo,
+  ): State {
+    return {
+      error: error,
+      details: JSON.stringify(details),
+    }
   }
 
   render() {
-    if (this.state.hasError) {
+    if (this.state.error) {
+      if (this.props.renderError) {
+        return this.props.renderError(this.state.error)
+      }
       return <ErrorView state={this.state} debug={this.props.debug} />
     }
     return this.props.children
@@ -61,7 +64,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 }
 
 const ErrorView = ({state, debug}: {state: State; debug?: boolean}) => {
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <View
@@ -78,38 +81,34 @@ const ErrorView = ({state, debug}: {state: State; debug?: boolean}) => {
       <SpaceHeight size={70} />
 
       <ScrollView style={[a.w_full]}>
-        <View style={[a.align_center]}>
-          <Text style={[a.heading_4_regular, {color: p.el_gray_max}]}>
-            Oops!!! Something went wrong.
-          </Text>
-
-          <Space.Height.xl />
-
-          {/* <Image source={errorImage} /> */}
-        </View>
-
-        <Space.Height.lg />
-
-        <Text style={[a.body_2_md_regular, {color: p.el_gray_max}]}>
-          Please consider sending this error to Yoroi mobile support.
-          Unfortunately, we can not recover from this error. You need to
-          relaunch the app.
-        </Text>
-
-        <Space.Height.lg />
-
-        <View style={[a.py_lg]}>
-          <View style={[a.flex_row, a.justify_between]}>
-            <Text style={[a.body_2_md_regular, {color: p.el_gray_max}]}>
-              {state.error}
+        <View style={[a.gap_lg]}>
+          <View style={[a.align_center]}>
+            <Text style={[a.heading_4_regular, ta.text_gray_max]}>
+              Oops!!! Something went wrong.
             </Text>
 
-            <CopyButton value={`${state.error}:${state.errorInfo}`} />
+            {/* <Image source={errorImage} /> */}
           </View>
 
-          <Space.Height.lg />
+          <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
+            Please consider sending this error to Yoroi mobile support.
+            Unfortunately, we can not recover from this error. You need to
+            relaunch the app.
+          </Text>
 
-          <ExpandableItem label="Show error" content={state.errorInfo} />
+          <View>
+            <View style={[a.flex_row, a.justify_between]}>
+              <MaybeTranslatedError error={state.error} />
+
+              <CopyButton value={`${state.error}:${state.details}`} />
+            </View>
+
+            <ExpandableItem label="Show error">
+              <Text style={[a.body_2_md_regular, ta.text_error]}>
+                {state.details}
+              </Text>
+            </ExpandableItem>
+          </View>
         </View>
       </ScrollView>
 
@@ -119,5 +118,31 @@ const ErrorView = ({state, debug}: {state: State; debug?: boolean}) => {
         </View>
       )}
     </View>
+  )
+}
+
+export const MaybeTranslatedError = ({
+  error,
+}: {
+  error: Error | LocalizableError | null
+}) => {
+  const {atoms: ta} = useTheme()
+  const intl = useIntl()
+
+  const translated =
+    error instanceof LocalizableError
+      ? intl.formatMessage(error.descriptor)
+      : null
+
+  if (translated) {
+    return (
+      <Text style={[a.body_2_md_regular, ta.text_gray_max]}>{translated}</Text>
+    )
+  }
+
+  return (
+    <Text style={[a.body_2_md_regular, ta.text_gray_max, a.flex_shrink]}>
+      {error?.toString()}
+    </Text>
   )
 }

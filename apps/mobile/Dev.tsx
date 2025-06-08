@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {Text, TouchableOpacity} from 'react-native'
+import {Text, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -13,7 +13,10 @@ import {useConnectionStatus} from './src/kernel/connection/ConnectionProvider'
 import {decryptData} from './src/kernel/crypto/decrypt-data'
 import globalMessages from './src/kernel/i18n/global-messages'
 import {useLanguage} from './src/kernel/i18n/LanguageProvider'
+import {LocalizableError} from './src/kernel/i18n/LocalizableError'
 import {rootSyncStorage} from './src/kernel/storage/storages'
+import {Button, ButtonType} from './src/ui/Button/Button'
+import {CopyButton} from './src/ui/CopyButton/CopyButton'
 import {LoadingOverlay} from './src/ui/LoadingOverlay/LoadingOverlay'
 
 export function Dev() {
@@ -30,6 +33,7 @@ export function Dev() {
   const {formatMessage: f} = useIntl()
   const connectionStatus = useConnectionStatus()
   const [isLoading, setIsLoading] = React.useState(false)
+  const [showCrash, setShowCrash] = React.useState(false)
   const showLoadingFor3Seconds = React.useCallback(() => {
     setIsLoading(true)
     const t = setTimeout(() => {
@@ -49,49 +53,28 @@ export function Dev() {
         Welcome! base: {basePalette} selectedTheme: {config}
       </Text>
 
-      <TouchableOpacity
+      <Button
         onPress={() => selectTheme(isDark ? 'default-light' : 'default-dark')}
-        style={[
-          a.pt_md,
-          a.p_md,
-          a.rounded_md,
-          {backgroundColor: p.el_gray_min},
-        ]}
-      >
-        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-          Toggle {isDark ? 'Light' : 'Dark'} Theme
-        </Text>
-      </TouchableOpacity>
+        type={ButtonType.Secondary}
+        title={`Toggle ${isDark ? 'Light' : 'Dark'} Theme`}
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
 
-      <TouchableOpacity
+      <Button
         onPress={() => changeAuthSetting(authSetting === 'pin' ? 'os' : 'pin')}
-        style={[
-          a.pt_md,
-          a.p_md,
-          a.rounded_md,
-          {backgroundColor: p.el_gray_min},
-        ]}
-      >
-        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-          Toggle Auth Setting {authSetting?.toUpperCase()}
-        </Text>
-      </TouchableOpacity>
+        type={ButtonType.Secondary}
+        title={`Toggle Auth Setting ${authSetting?.toUpperCase()}`}
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
 
-      <TouchableOpacity
+      <Button
         onPress={() => rootSyncStorage.clear()}
-        style={[
-          a.pt_md,
-          a.p_md,
-          a.rounded_md,
-          {backgroundColor: p.el_gray_min},
-        ]}
-      >
-        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-          Clear Storage
-        </Text>
-      </TouchableOpacity>
+        type={ButtonType.Secondary}
+        title="Clear Storage"
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
 
-      <TouchableOpacity
+      <Button
         onPress={async () => {
           const salt =
             '50515253c0c1c2c3c4c5c6c750515253c0c1c2c3c4c5c6c750515253c0c1c2c3'
@@ -104,95 +87,71 @@ export function Dev() {
           console.log(d)
           console.log('================================')
         }}
-        style={[
-          a.pt_md,
-          a.p_md,
-          a.rounded_md,
-          {backgroundColor: p.el_gray_min},
-        ]}
-      >
-        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-          Decrypt Data
-        </Text>
-      </TouchableOpacity>
+        type={ButtonType.Secondary}
+        title="Decrypt Data"
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
 
-      <TouchableOpacity
+      <Button
         onPress={() =>
           selectLanguage(languageCode === 'en-US' ? 'de-DE' : 'en-US')
         }
-        style={[
-          a.pt_md,
-          a.p_md,
-          a.rounded_md,
-          {backgroundColor: p.el_gray_min},
-        ]}
-      >
-        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-          Change Language {languageCode} {f(globalMessages.available)} `$
-          {BigNumber(10.12).toString()}`
-        </Text>
-      </TouchableOpacity>
+        type={ButtonType.Secondary}
+        title={`Change Language ${languageCode} ${f(globalMessages.available)} $${BigNumber(10.12).toString()}`}
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
 
-      <TouchableOpacity
+      <Button
         onPress={() => (isLoggedIn ? logout() : login())}
-        style={[
-          a.pt_md,
-          a.p_md,
-          a.rounded_md,
-          {backgroundColor: p.el_gray_min},
-        ]}
-      >
-        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-          Connection State: {connectionStatus}{' '}
-          {isLoggedIn ? 'Logged In' : 'Logged Out'}
-        </Text>
-      </TouchableOpacity>
+        type={ButtonType.Secondary}
+        title={`Connection State: ${connectionStatus} ${isLoggedIn ? 'Logged In' : 'Logged Out'}`}
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
 
-      <TouchableOpacity
+      <Button
         onPress={showLoadingFor3Seconds}
-        style={[
-          a.pt_md,
-          a.p_md,
-          a.rounded_md,
-          {backgroundColor: p.el_gray_min},
-        ]}
-      >
-        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-          Show Loading for 3 Seconds
-        </Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity
+        type={ButtonType.Secondary}
+        title="Show Loading for 3 Seconds"
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
+
+      <Button
         onPress={(event) =>
           copy({text: 'Hello, world!', feedback: 'Copied', event})
         }
-        style={[
-          a.pt_md,
-          a.p_md,
-          a.rounded_md,
-          {backgroundColor: p.el_gray_min},
-        ]}
-      >
-        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-          Copy {isCopying ? 'Copying...' : 'Copy'}
-        </Text>
-      </TouchableOpacity>
+        type={ButtonType.Secondary}
+        title={`Copy ${isCopying ? 'Copying...' : 'Copy'}`}
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
 
-      <TouchableOpacity
-        onPress={() => {
-          throw new Error('Test error')
-        }}
-        style={[
-          a.pt_md,
-          a.p_md,
-          a.rounded_md,
-          {backgroundColor: p.el_gray_min},
-        ]}
-      >
-        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>Throw Error</Text>
-      </TouchableOpacity>
+      <Button
+        onPress={() => setShowCrash(!showCrash)}
+        type={ButtonType.Primary}
+        title={showCrash ? 'Hide Crash' : 'Show Crash'}
+        style={[a.p_md, {borderRadius: 8}]}
+      />
+
+      <CopyButton
+        style={[a.p_sm, {backgroundColor: 'red'}]}
+        value="Hello, world!"
+        onCopy={() => copy({text: 'Hello, world!', feedback: 'Copied'})}
+      />
+
+      <BuggyComponent showCrash={showCrash} />
 
       <LoadingOverlay isLoading={isLoading} />
     </SafeAreaView>
+  )
+}
+
+const BuggyComponent = ({showCrash}: {showCrash: boolean}) => {
+  if (showCrash) {
+    throw new LocalizableError({id: 'api.error.badRequest'})
+  }
+
+  return (
+    <View>
+      <Text>This component is fine when showCrash is false</Text>
+    </View>
   )
 }
