@@ -161,7 +161,7 @@ export function Dev() {
           Show Loading for 3 Seconds
         </Text>
       </TouchableOpacity>
-
+      
       <TouchableOpacity
         onPress={(event) =>
           copy({text: 'Hello, world!', feedback: 'Copied', event})
@@ -176,6 +176,20 @@ export function Dev() {
         <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           Copy {isCopying ? 'Copying...' : 'Copy'}
         </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => {
+          throw new Error('Test error')
+        }}
+        style={[
+          a.pt_md,
+          a.p_md,
+          a.rounded_md,
+          {backgroundColor: p.el_gray_min},
+        ]}
+      >
+        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>Throw Error</Text>
       </TouchableOpacity>
 
       <LoadingOverlay isLoading={isLoading} />

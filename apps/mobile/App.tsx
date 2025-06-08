@@ -26,6 +26,7 @@ import {
   rootStorage,
   themeStorageKeyManager,
 } from './src/kernel/storage/storages'
+import {ErrorBoundary} from './src/ui/ErrorBoundary/ErrorBoundary'
 
 // import * as LocalAuthentication from 'expo-local-authentication'
 
@@ -39,7 +40,9 @@ function AppShell({children}: React.PropsWithChildren) {
       <ConnectionProvider>
         <ThemeProvider storage={themeStorageKeyManager}>
           <LanguageProvider storage={languageStorageKeyManager}>
-            {children}
+            <ClipboardProvider>
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </ClipboardProvider>
           </LanguageProvider>
         </ThemeProvider>
       </ConnectionProvider>
@@ -232,14 +235,12 @@ function Yoroi() {
 
 function BusinessShell({children}: React.PropsWithChildren) {
   return (
-    <ClipboardProvider>
-      <AuthProvider
-        authStorageKeyManager={authStorageKeyManager}
-        pinHashStorageKeyManager={pinHashStorageKeyManager}
-      >
-        {children}
-      </AuthProvider>
-    </ClipboardProvider>
+    <AuthProvider
+      authStorageKeyManager={authStorageKeyManager}
+      pinHashStorageKeyManager={pinHashStorageKeyManager}
+    >
+      {children}
+    </AuthProvider>
   )
 }
 

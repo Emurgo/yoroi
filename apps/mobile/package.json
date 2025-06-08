@@ -79,7 +79,8 @@
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
     "rxjs": "^7.8.2",
-    "zod": "^3.25.17"
+    "zod": "^3.25.17",
+    "expo-image": "~2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
