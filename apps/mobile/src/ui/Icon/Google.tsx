@@ -8,7 +8,12 @@ export const Google = ({size = 40}: IconProps) => (
     <Rect width={40} height={40} rx={8} fill="url(#pattern0_21862_14624)" />
 
     <Defs>
-      <Pattern id="pattern0_21862_14624" patternContentUnits="objectBoundingBox" width={1} height={1}>
+      <Pattern
+        id="pattern0_21862_14624"
+        patternContentUnits="objectBoundingBox"
+        width={1}
+        height={1}
+      >
         <Use xlinkHref="#image0_21862_14624" transform="scale(.00098)" />
       </Pattern>
 

@@ -1,8 +1,6 @@
 import {useQuery, useQueryClient, UseQueryOptions} from '@tanstack/react-query'
 import * as React from 'react'
-import {AppState, Platform} from 'react-native'
-
-import {canAuthWithOS} from '../common/helpers'
+import {AppState} from 'react-native'
 
 export const useIsAuthOsSupported = (
   options?: UseQueryOptions<boolean, Error>,
@@ -29,4 +27,3 @@ export const useIsAuthOsSupported = (
 
   return Boolean(query.data)
 }
-

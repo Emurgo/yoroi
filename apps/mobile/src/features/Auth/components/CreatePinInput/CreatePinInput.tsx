@@ -1,8 +1,8 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {showErrorDialog} from '../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {showErrorDialog} from '../../../kernel/dialogs'
 import {PIN_LENGTH} from '../../common/constants'
 import {useCreatePin} from '../../hooks/hooks'
 import {PinInput, PinInputRef} from '../PinInput'
@@ -18,8 +18,12 @@ export const CreatePinInput = ({onDone}: Props) => {
   const {createPin, isLoading} = useCreatePin({
     onSuccess: (_, pin) => onDone(pin),
     onError: (error) => {
-      showErrorDialog(errorMessages.generalError, intl, {message: error.message})
-      step === 'pin' ? pinInputRef.current?.clear() : pinConfirmationInputRef.current?.clear()
+      showErrorDialog(errorMessages.generalError, intl, {
+        message: error.message,
+      })
+      step === 'pin'
+        ? pinInputRef.current?.clear()
+        : pinConfirmationInputRef.current?.clear()
     },
   })
   const [pin, setPin] = React.useState('')
@@ -33,7 +37,9 @@ export const CreatePinInput = ({onDone}: Props) => {
   const onPinConfirmation = (pinConfirmation: string) => {
     if (pinConfirmation !== pin) {
       showErrorDialog(errorMessages.pinMismatch, intl)
-      step === 'pin' ? pinInputRef.current?.clear() : pinConfirmationInputRef.current?.clear()
+      step === 'pin'
+        ? pinInputRef.current?.clear()
+        : pinConfirmationInputRef.current?.clear()
       return
     }
 
@@ -69,8 +75,12 @@ const useStrings = () => {
   return {
     pinInputTitle: intl.formatMessage(messages.pinInputTitle),
     pinInputSubtitle: intl.formatMessage(messages.pinInputSubtitle),
-    pinInputConfirmationTitle: intl.formatMessage(messages.pinInputConfirmationTitle),
-    pinInputConfirmationSubTitle: intl.formatMessage(messages.pinInputConfirmationSubTitle),
+    pinInputConfirmationTitle: intl.formatMessage(
+      messages.pinInputConfirmationTitle,
+    ),
+    pinInputConfirmationSubTitle: intl.formatMessage(
+      messages.pinInputConfirmationSubTitle,
+    ),
   }
 }
 

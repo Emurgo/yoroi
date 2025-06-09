@@ -5,12 +5,19 @@ import {StyleSheet, View, ViewStyle} from 'react-native'
 
 import {IconProps} from './type'
 
-export const WalletAvatar = ({image = '', size = 40, style}: IconProps & {image?: string; style?: ViewStyle}) => {
+export const WalletAvatar = ({
+  image = '',
+  size = 40,
+  style,
+}: IconProps & {image?: string; style?: ViewStyle}) => {
   const styles = useStyles()
 
   return (
     <View style={[styles.defaultStyle, style]}>
-      <Image source={{uri: image, width: 64, height: 64}} style={{width: size, height: size}} />
+      <Image
+        source={{uri: image, width: 64, height: 64}}
+        style={{width: size, height: size}}
+      />
     </View>
   )
 }

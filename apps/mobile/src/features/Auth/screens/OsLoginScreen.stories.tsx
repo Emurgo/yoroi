@@ -19,7 +19,9 @@ storiesOf('OsLoginScreen', module)
     <RouteProvider
       params={{
         onSuccess: action('onSuccess'),
-        instructions: ['Please authWithOs so that Yoroi can build your transaction'],
+        instructions: [
+          'Please authWithOs so that Yoroi can build your transaction',
+        ],
       }}
     >
       <OsLoginScreen />

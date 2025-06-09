@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import {AsyncStorageProvider} from '@yoroi/common'

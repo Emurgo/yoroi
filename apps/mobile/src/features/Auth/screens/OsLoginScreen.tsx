@@ -5,7 +5,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
 import {Button} from '../../../components/Button/Button'
-import {logger} from '../../../kernel/logger/logger'
 import {useAuth} from '../common/context'
 import {Logo} from '../components/Logo'
 import {useAuthWithOs} from '../hooks/useAuthWithOS'

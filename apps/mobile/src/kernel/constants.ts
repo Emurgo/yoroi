@@ -38,7 +38,8 @@ export const distribution = `${Platform.OS}.${build}`
 export const isIOS = Platform.OS === 'ios'
 export const isAndroid = Platform.OS === 'android'
 export const isNative = isIOS || isAndroid
-export const isWeb = !isNative && typeof window !== 'undefined' && typeof document !== 'undefined'
+export const isWeb =
+  !isNative && typeof window !== 'undefined' && typeof document !== 'undefined'
 
 export const platform = isIOS ? 'ios' : isAndroid ? 'android' : 'web'
 

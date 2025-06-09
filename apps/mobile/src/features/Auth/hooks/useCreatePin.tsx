@@ -1,4 +1,4 @@
-import { authWithPin } from "../common/constants"
+import {authWithPin} from '../common/constants'
 
 export const useCreatePin = (
   options: UseMutationOptions<void, Error, string>,

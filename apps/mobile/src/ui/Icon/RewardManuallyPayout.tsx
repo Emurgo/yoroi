@@ -3,7 +3,10 @@ import Svg, {G, Path} from 'react-native-svg'
 
 import {IconProps} from './type'
 
-export const RewardManuallyPayout = ({size = 36, color = '#6B7384'}: IconProps) => (
+export const RewardManuallyPayout = ({
+  size = 36,
+  color = '#6B7384',
+}: IconProps) => (
   <Svg viewBox="0 0 36 36" width={size} height={size}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -561.000000)" fill={color}>

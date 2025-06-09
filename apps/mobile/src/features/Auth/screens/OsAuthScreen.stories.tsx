@@ -6,9 +6,15 @@ import {Button} from '../../../components/Button/Button'
 import {OsAuthScreen} from './OsAuthScreen'
 
 storiesOf('OsAuthScreen', module)
-  .add('Default', () => <OsAuthScreen headings={['heading1', 'heading2']} buttons={[]} />)
+  .add('Default', () => (
+    <OsAuthScreen headings={['heading1', 'heading2']} buttons={[]} />
+  ))
   .add('with onGoBack', () => (
-    <OsAuthScreen headings={['heading1', 'heading2']} buttons={[]} onGoBack={action('goBack')} />
+    <OsAuthScreen
+      headings={['heading1', 'heading2']}
+      buttons={[]}
+      onGoBack={action('goBack')}
+    />
   ))
   .add('with buttons', () => (
     <OsAuthScreen

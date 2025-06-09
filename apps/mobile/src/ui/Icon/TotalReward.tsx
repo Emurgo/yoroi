@@ -9,8 +9,17 @@ export const TotalReward = ({size = 44, color = 'black'}: IconProps) => {
 
   return (
     <Svg viewBox="0 0 44 44" width={size} height={size}>
-      <G id="icon/total-rewards.inline" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <G id="icon/bg-for-icon" fill={isDark ? colors.gray_300 : colors.gray_50}>
+      <G
+        id="icon/total-rewards.inline"
+        stroke="none"
+        stroke-width="1"
+        fill="none"
+        fill-rule="evenodd"
+      >
+        <G
+          id="icon/bg-for-icon"
+          fill={isDark ? colors.gray_300 : colors.gray_50}
+        >
           <Circle id="Oval-Copy-4" cx="22" cy="22" r="22" />
         </G>
 

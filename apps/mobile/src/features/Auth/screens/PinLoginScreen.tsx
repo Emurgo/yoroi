@@ -7,10 +7,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {showErrorDialog} from '../../../kernel/dialogs'
 import {errorMessages} from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
-import {useAuth} from '../common/context'
 import {PIN_LENGTH} from '../common/constants'
-import {useCheckPin} from '../hooks/hooks'
+import {useAuth} from '../common/context'
 import {PinInput, PinInputRef} from '../components/PinInput'
+import {useCheckPin} from '../hooks/hooks'
 
 export const PinLoginScreen = () => {
   const pinInputRef = React.useRef<null | PinInputRef>(null)

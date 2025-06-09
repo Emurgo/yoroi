@@ -29,7 +29,7 @@ import {isWeb} from '../constants'
 import {logger} from '../logger/logger'
 import {ConnectionStatus} from './types'
 
-// IMPORTANT: 
+// IMPORTANT:
 // 1. don't use the word "network" in this file, it's confusing
 // 2. use "connection" instead, network is for chain-specific stuff
 // 3. don't delete this comment

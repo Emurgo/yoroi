@@ -7,7 +7,13 @@ import {Icon} from '../Icon'
 storiesOf('Icon', module).add('Gallery', () => {
   return (
     <FilterProvider>
-      <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', padding: 16}}>
+      <ScrollView
+        contentContainerStyle={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          padding: 16,
+        }}
+      >
         <Item icon={<Icon.Bug size={40} />} title="Bug" />
 
         <Item icon={<Icon.Backspace size={40} />} title="Backspace" />
@@ -24,19 +30,35 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Check size={40} />} title="Check" />
 
-        <Item mode="dark" icon={<Icon.YoroiWallet size={40} />} title="YoroiWallet" />
+        <Item
+          mode="dark"
+          icon={<Icon.YoroiWallet size={40} />}
+          title="YoroiWallet"
+        />
 
         <Item icon={<Icon.Cardano size={40} />} title="Cardano" />
 
         <Item icon={<Icon.Ada size={40} />} title="AdaIcon" />
 
-        <Item icon={<Icon.RewardManuallyPayout size={40} />} title="RewardManuallyPayout" />
+        <Item
+          icon={<Icon.RewardManuallyPayout size={40} />}
+          title="RewardManuallyPayout"
+        />
 
-        <Item icon={<Icon.RewardWithdrawn size={40} />} title="RewardWithdrawn" />
+        <Item
+          icon={<Icon.RewardWithdrawn size={40} />}
+          title="RewardWithdrawn"
+        />
 
-        <Item icon={<Icon.StakingKeyDeregistered size={40} />} title="StakingKeyDeregistered" />
+        <Item
+          icon={<Icon.StakingKeyDeregistered size={40} />}
+          title="StakingKeyDeregistered"
+        />
 
-        <Item icon={<Icon.StakingKeyRegistered size={40} />} title="StakingKeyRegistered" />
+        <Item
+          icon={<Icon.StakingKeyRegistered size={40} />}
+          title="StakingKeyRegistered"
+        />
 
         <Item icon={<Icon.Transaction size={40} />} title="Transaction" />
 
@@ -60,25 +82,46 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.TabMenuActive size={40} />} title="Tab Menu Active" />
 
-        <Item icon={<Icon.Direction transactionDirection="SENT" />} title="Sent" />
+        <Item
+          icon={<Icon.Direction transactionDirection="SENT" />}
+          title="Sent"
+        />
 
-        <Item icon={<Icon.Direction transactionDirection="RECEIVED" />} title="Received" />
+        <Item
+          icon={<Icon.Direction transactionDirection="RECEIVED" />}
+          title="Received"
+        />
 
-        <Item icon={<Icon.Direction transactionDirection="SELF" />} title="Intrawallet" />
+        <Item
+          icon={<Icon.Direction transactionDirection="SELF" />}
+          title="Intrawallet"
+        />
 
-        <Item icon={<Icon.Direction transactionDirection="MULTI" />} title="Multi" />
+        <Item
+          icon={<Icon.Direction transactionDirection="MULTI" />}
+          title="Multi"
+        />
 
         <Item icon={<Icon.Settings size={40} />} title="Settings" />
 
-        <Item icon={<Icon.TabDiscoverActive size={40} />} title="Tab Discover Active" />
+        <Item
+          icon={<Icon.TabDiscoverActive size={40} />}
+          title="Tab Discover Active"
+        />
 
         <Item icon={<Icon.TabWallet size={40} />} title="Tab Wallet" />
 
-        <Item icon={<Icon.TabWalletActive size={40} />} title="Tab Wallet Active " />
+        <Item
+          icon={<Icon.TabWalletActive size={40} />}
+          title="Tab Wallet Active "
+        />
 
         <Item icon={<Icon.TabPortfolio size={40} />} title="Tab Portfolio" />
 
-        <Item icon={<Icon.TabPortfolioActive size={40} />} title="Tab Portfolio Active " />
+        <Item
+          icon={<Icon.TabPortfolioActive size={40} />}
+          title="Tab Portfolio Active "
+        />
 
         <Item icon={<Icon.TabStaking size={40} />} title="Tab Stake" />
 
@@ -164,7 +207,10 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Sandbox size={40} />} title="Sandbox" />
 
-        <Item icon={<Icon.SliderSettings size={40} />} title="Slider Settings" />
+        <Item
+          icon={<Icon.SliderSettings size={40} />}
+          title="Slider Settings"
+        />
 
         <Item icon={<Icon.Facebook size={40} />} title="Facebook" />
 
@@ -176,7 +222,10 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.SortTable size={40} />} title="Sort Table" />
 
-        <Item icon={<Icon.HardwareWallet size={40} />} title="Hardware Wallet" />
+        <Item
+          icon={<Icon.HardwareWallet size={40} />}
+          title="Hardware Wallet"
+        />
 
         <Item icon={<Icon.YoroiNightly size={40} />} title="Yoroi Nightly" />
 
@@ -292,7 +341,15 @@ storiesOf('Icon', module).add('Gallery', () => {
   )
 })
 
-const Item = ({title, icon, mode = 'light'}: {title: string; icon: React.ReactElement; mode?: ColorSchemeName}) => {
+const Item = ({
+  title,
+  icon,
+  mode = 'light',
+}: {
+  title: string
+  icon: React.ReactElement
+  mode?: ColorSchemeName
+}) => {
   const filter = useFilter()
 
   return title.includes(filter) ? (
@@ -311,7 +368,11 @@ const Item = ({title, icon, mode = 'light'}: {title: string; icon: React.ReactEl
           backgroundColor: mode === 'dark' ? 'midnightblue' : 'white',
         }}
       >
-        <View style={{borderWidth: 1, borderColor: 'red', borderStyle: 'dashed'}}>{icon}</View>
+        <View
+          style={{borderWidth: 1, borderColor: 'red', borderStyle: 'dashed'}}
+        >
+          {icon}
+        </View>
       </View>
     </View>
   ) : null
@@ -327,7 +388,12 @@ const FilterProvider = ({children}: {children: React.ReactNode}) => {
         <TextInput
           placeholder="Filter Icons"
           autoFocus
-          style={{borderWidth: 1, flex: 1, paddingVertical: 4, paddingHorizontal: 8}}
+          style={{
+            borderWidth: 1,
+            flex: 1,
+            paddingVertical: 4,
+            paddingHorizontal: 8,
+          }}
           onChangeText={setFilter}
         />
       </View>

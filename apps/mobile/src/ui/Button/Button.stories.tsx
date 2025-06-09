@@ -9,7 +9,9 @@ import {Button, ButtonType} from './Button'
 
 storiesOf('Button', module).add('default', () => {
   const {color, isDark, selectThemeName} = useTheme()
-  const [expanded, setExpanded] = React.useState<ButtonType | null>(ButtonType.Primary)
+  const [expanded, setExpanded] = React.useState<ButtonType | null>(
+    ButtonType.Primary,
+  )
 
   return (
     <ScrollView style={{backgroundColor: color.bg_color_max, padding: 16}}>
@@ -37,7 +39,11 @@ storiesOf('Button', module).add('default', () => {
       <Accordion
         label={ButtonType.Primary}
         expanded={expanded === ButtonType.Primary}
-        onChange={() => setExpanded(expanded === ButtonType.Primary ? null : ButtonType.Primary)}
+        onChange={() =>
+          setExpanded(
+            expanded === ButtonType.Primary ? null : ButtonType.Primary,
+          )
+        }
       >
         <Grid>
           <Button title="Button" />
@@ -71,7 +77,11 @@ storiesOf('Button', module).add('default', () => {
       <Accordion
         label={ButtonType.Secondary}
         expanded={expanded === ButtonType.Secondary}
-        onChange={() => setExpanded(expanded === ButtonType.Secondary ? null : ButtonType.Secondary)}
+        onChange={() =>
+          setExpanded(
+            expanded === ButtonType.Secondary ? null : ButtonType.Secondary,
+          )
+        }
       >
         <Grid>
           <Button title="Button" type={ButtonType.Secondary} />
@@ -82,30 +92,64 @@ storiesOf('Button', module).add('default', () => {
         </Grid>
 
         <Grid>
-          <Button title="Button" type={ButtonType.Secondary} icon={Icon.Clock} />
+          <Button
+            title="Button"
+            type={ButtonType.Secondary}
+            icon={Icon.Clock}
+          />
 
-          <Button title="Button" type={ButtonType.Secondary} icon={Icon.Clock} disabled />
+          <Button
+            title="Button"
+            type={ButtonType.Secondary}
+            icon={Icon.Clock}
+            disabled
+          />
         </Grid>
 
         <Grid>
           <Button title="Button" type={ButtonType.Secondary} size="S" />
 
-          <Button title="Button" type={ButtonType.Secondary} size="S" isLoading />
+          <Button
+            title="Button"
+            type={ButtonType.Secondary}
+            size="S"
+            isLoading
+          />
 
-          <Button title="Button" type={ButtonType.Secondary} size="S" disabled />
+          <Button
+            title="Button"
+            type={ButtonType.Secondary}
+            size="S"
+            disabled
+          />
         </Grid>
 
         <Grid>
-          <Button title="Button" type={ButtonType.Secondary} size="S" icon={Icon.Clock} />
+          <Button
+            title="Button"
+            type={ButtonType.Secondary}
+            size="S"
+            icon={Icon.Clock}
+          />
 
-          <Button title="Button" type={ButtonType.Secondary} size="S" icon={Icon.Clock} disabled />
+          <Button
+            title="Button"
+            type={ButtonType.Secondary}
+            size="S"
+            icon={Icon.Clock}
+            disabled
+          />
         </Grid>
       </Accordion>
 
       <Accordion
         label={ButtonType.Critical}
         expanded={expanded === ButtonType.Critical}
-        onChange={() => setExpanded(expanded === ButtonType.Critical ? null : ButtonType.Critical)}
+        onChange={() =>
+          setExpanded(
+            expanded === ButtonType.Critical ? null : ButtonType.Critical,
+          )
+        }
       >
         <Grid>
           <Button title="Button" type={ButtonType.Critical} />
@@ -118,28 +162,51 @@ storiesOf('Button', module).add('default', () => {
         <Grid>
           <Button title="Button" type={ButtonType.Critical} icon={Icon.Clock} />
 
-          <Button title="Button" type={ButtonType.Critical} icon={Icon.Clock} disabled />
+          <Button
+            title="Button"
+            type={ButtonType.Critical}
+            icon={Icon.Clock}
+            disabled
+          />
         </Grid>
 
         <Grid>
           <Button title="Button" type={ButtonType.Critical} size="S" />
 
-          <Button title="Button" type={ButtonType.Critical} size="S" isLoading />
+          <Button
+            title="Button"
+            type={ButtonType.Critical}
+            size="S"
+            isLoading
+          />
 
           <Button title="Button" type={ButtonType.Critical} size="S" disabled />
         </Grid>
 
         <Grid>
-          <Button title="Button" type={ButtonType.Critical} size="S" icon={Icon.Clock} />
+          <Button
+            title="Button"
+            type={ButtonType.Critical}
+            size="S"
+            icon={Icon.Clock}
+          />
 
-          <Button title="Button" type={ButtonType.Critical} size="S" icon={Icon.Clock} disabled />
+          <Button
+            title="Button"
+            type={ButtonType.Critical}
+            size="S"
+            icon={Icon.Clock}
+            disabled
+          />
         </Grid>
       </Accordion>
 
       <Accordion
         label={ButtonType.Text}
         expanded={expanded === ButtonType.Text}
-        onChange={() => setExpanded(expanded === ButtonType.Text ? null : ButtonType.Text)}
+        onChange={() =>
+          setExpanded(expanded === ButtonType.Text ? null : ButtonType.Text)
+        }
       >
         <Grid>
           <Button title="Button" type={ButtonType.Text} />
@@ -152,9 +219,19 @@ storiesOf('Button', module).add('default', () => {
         <Grid>
           <Button title="Button" type={ButtonType.Text} icon={Icon.Clock} />
 
-          <Button title="Button" type={ButtonType.Text} icon={Icon.Clock} rightIcon />
+          <Button
+            title="Button"
+            type={ButtonType.Text}
+            icon={Icon.Clock}
+            rightIcon
+          />
 
-          <Button title="Button" type={ButtonType.Text} icon={Icon.Clock} disabled />
+          <Button
+            title="Button"
+            type={ButtonType.Text}
+            icon={Icon.Clock}
+            disabled
+          />
         </Grid>
 
         <Grid>
@@ -166,18 +243,41 @@ storiesOf('Button', module).add('default', () => {
         </Grid>
 
         <Grid>
-          <Button title="Button" type={ButtonType.Text} size="S" icon={Icon.Clock} />
+          <Button
+            title="Button"
+            type={ButtonType.Text}
+            size="S"
+            icon={Icon.Clock}
+          />
 
-          <Button title="Button" type={ButtonType.Text} size="S" icon={Icon.Clock} rightIcon />
+          <Button
+            title="Button"
+            type={ButtonType.Text}
+            size="S"
+            icon={Icon.Clock}
+            rightIcon
+          />
 
-          <Button title="Button" type={ButtonType.Text} size="S" icon={Icon.Clock} disabled />
+          <Button
+            title="Button"
+            type={ButtonType.Text}
+            size="S"
+            icon={Icon.Clock}
+            disabled
+          />
         </Grid>
       </Accordion>
 
       <Accordion
         label={ButtonType.SecondaryText}
         expanded={expanded === ButtonType.SecondaryText}
-        onChange={() => setExpanded(expanded === ButtonType.SecondaryText ? null : ButtonType.SecondaryText)}
+        onChange={() =>
+          setExpanded(
+            expanded === ButtonType.SecondaryText
+              ? null
+              : ButtonType.SecondaryText,
+          )
+        }
       >
         <Grid>
           <Button title="Button" type={ButtonType.SecondaryText} />
@@ -188,46 +288,96 @@ storiesOf('Button', module).add('default', () => {
         </Grid>
 
         <Grid>
-          <Button title="Button" type={ButtonType.SecondaryText} icon={Icon.Clock} />
+          <Button
+            title="Button"
+            type={ButtonType.SecondaryText}
+            icon={Icon.Clock}
+          />
 
-          <Button title="Button" type={ButtonType.SecondaryText} icon={Icon.Clock} rightIcon />
+          <Button
+            title="Button"
+            type={ButtonType.SecondaryText}
+            icon={Icon.Clock}
+            rightIcon
+          />
 
-          <Button title="Button" type={ButtonType.SecondaryText} icon={Icon.Clock} disabled />
+          <Button
+            title="Button"
+            type={ButtonType.SecondaryText}
+            icon={Icon.Clock}
+            disabled
+          />
         </Grid>
 
         <Grid>
           <Button title="Button" type={ButtonType.SecondaryText} size="S" />
 
-          <Button title="Button" type={ButtonType.SecondaryText} size="S" isLoading />
+          <Button
+            title="Button"
+            type={ButtonType.SecondaryText}
+            size="S"
+            isLoading
+          />
 
-          <Button title="Button" type={ButtonType.SecondaryText} size="S" disabled />
+          <Button
+            title="Button"
+            type={ButtonType.SecondaryText}
+            size="S"
+            disabled
+          />
         </Grid>
 
         <Grid>
-          <Button title="Button" type={ButtonType.SecondaryText} size="S" icon={Icon.Clock} />
+          <Button
+            title="Button"
+            type={ButtonType.SecondaryText}
+            size="S"
+            icon={Icon.Clock}
+          />
 
-          <Button title="Button" type={ButtonType.SecondaryText} size="S" icon={Icon.Clock} rightIcon />
+          <Button
+            title="Button"
+            type={ButtonType.SecondaryText}
+            size="S"
+            icon={Icon.Clock}
+            rightIcon
+          />
 
-          <Button title="Button" type={ButtonType.SecondaryText} size="S" icon={Icon.Clock} disabled />
+          <Button
+            title="Button"
+            type={ButtonType.SecondaryText}
+            size="S"
+            icon={Icon.Clock}
+            disabled
+          />
         </Grid>
       </Accordion>
 
       <Accordion
         label={ButtonType.Circle}
         expanded={expanded === ButtonType.Circle}
-        onChange={() => setExpanded(expanded === ButtonType.Circle ? null : ButtonType.Circle)}
+        onChange={() =>
+          setExpanded(expanded === ButtonType.Circle ? null : ButtonType.Circle)
+        }
       >
         <Grid>
           <Button title="Button" type={ButtonType.Circle} icon={Icon.Clock} />
 
-          <Button title="Button" type={ButtonType.Circle} icon={Icon.Clock} disabled />
+          <Button
+            title="Button"
+            type={ButtonType.Circle}
+            icon={Icon.Clock}
+            disabled
+          />
         </Grid>
       </Accordion>
 
       <Accordion
         label={ButtonType.Link}
         expanded={expanded === ButtonType.Link}
-        onChange={() => setExpanded(expanded === ButtonType.Link ? null : ButtonType.Link)}
+        onChange={() =>
+          setExpanded(expanded === ButtonType.Link ? null : ButtonType.Link)
+        }
       >
         <Grid>
           <Button title="Button" type={ButtonType.Link} />

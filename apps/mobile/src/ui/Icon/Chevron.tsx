@@ -10,10 +10,22 @@ export const Chevron = ({
 }: IconProps & {
   direction?: 'left' | 'right' | 'up' | 'down'
 }) => {
-  const rotate = direction === 'down' ? 0 : direction === 'right' ? 270 : direction === 'left' ? 90 : 180
+  const rotate =
+    direction === 'down'
+      ? 0
+      : direction === 'right'
+        ? 270
+        : direction === 'left'
+          ? 90
+          : 180
 
   return (
-    <Svg width={size} height={size} viewBox="-7 -10 28 28" style={{transform: [{rotate: `${rotate}deg`}]}}>
+    <Svg
+      width={size}
+      height={size}
+      viewBox="-7 -10 28 28"
+      style={{transform: [{rotate: `${rotate}deg`}]}}
+    >
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
