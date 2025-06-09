@@ -32,7 +32,14 @@ export const NoNfts = ({size = 36}: IconProps) => (
     />
 
     <Defs>
-      <LinearGradient id="a" x1={80.031} y1={46.544} x2={70.581} y2={46.544} gradientUnits="userSpaceOnUse">
+      <LinearGradient
+        id="a"
+        x1={80.031}
+        y1={46.544}
+        x2={70.581}
+        y2={46.544}
+        gradientUnits="userSpaceOnUse"
+      >
         <Stop stopColor="#17D0A9" />
 
         <Stop offset="0.062" stopColor="#1AC2AD" />
@@ -48,7 +55,14 @@ export const NoNfts = ({size = 36}: IconProps) => (
         <Stop offset="1" stopColor="#3154CA" />
       </LinearGradient>
 
-      <LinearGradient id="b" x1={94.473} y1={-0.035} x2={45.069} y2={-0.035} gradientUnits="userSpaceOnUse">
+      <LinearGradient
+        id="b"
+        x1={94.473}
+        y1={-0.035}
+        x2={45.069}
+        y2={-0.035}
+        gradientUnits="userSpaceOnUse"
+      >
         <Stop stopColor="#17D0A9" />
 
         <Stop offset="0.062" stopColor="#1AC2AD" />
@@ -64,7 +78,14 @@ export const NoNfts = ({size = 36}: IconProps) => (
         <Stop offset="1" stopColor="#3154CA" />
       </LinearGradient>
 
-      <LinearGradient id="c" x1={56.434} y1={51.08} x2={77.063} y2={51.08} gradientUnits="userSpaceOnUse">
+      <LinearGradient
+        id="c"
+        x1={56.434}
+        y1={51.08}
+        x2={77.063}
+        y2={51.08}
+        gradientUnits="userSpaceOnUse"
+      >
         <Stop stopColor="#17D0A9" />
 
         <Stop offset="0.062" stopColor="#1AC2AD" />

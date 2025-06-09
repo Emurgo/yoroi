@@ -3,7 +3,10 @@ import Svg, {Path} from 'react-native-svg'
 
 import {IconProps} from './type'
 
-export const TabDiscoverActive = ({size = 24, color = '#6B7384'}: IconProps) => {
+export const TabDiscoverActive = ({
+  size = 24,
+  color = '#6B7384',
+}: IconProps) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 25 24" fill="none">
       <Path

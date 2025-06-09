@@ -3,7 +3,10 @@ import Svg, {Circle, G, Line, Path, Rect} from 'react-native-svg'
 
 import {IconProps} from './type'
 
-export const StakingKeyDeregistered = ({size = 36, color = '#6B7384'}: IconProps) => (
+export const StakingKeyDeregistered = ({
+  size = 36,
+  color = '#6B7384',
+}: IconProps) => (
   <Svg viewBox="0 0 36 36" width={size} height={size}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -305.000000)">
@@ -11,7 +14,11 @@ export const StakingKeyDeregistered = ({size = 36, color = '#6B7384'}: IconProps
           <G transform="translate(6.000000, 6.000000)">
             <Rect x="0" y="0" width="24" height="24" />
 
-            <G transform="translate(5.000000, 5.000000)" stroke={color} stroke-width="1.5">
+            <G
+              transform="translate(5.000000, 5.000000)"
+              stroke={color}
+              stroke-width="1.5"
+            >
               <Circle cx="9.70588235" cy="9.70588235" r="5.29411765" />
 
               <Line

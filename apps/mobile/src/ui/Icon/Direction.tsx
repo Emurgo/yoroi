@@ -2,7 +2,10 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
 
-import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types/other'
+import {
+  TransactionDirection,
+  TransactionInfo,
+} from '../../yoroi-wallets/types/other'
 import {Received} from '../Icon/Received'
 import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'
@@ -13,14 +16,23 @@ export const Direction = ({
   transactionDirection,
   size = defaultSize,
   containerStyle,
-}: IconProps & {transactionDirection: TransactionInfo['direction']; containerStyle?: ViewStyle}) => {
+}: IconProps & {
+  transactionDirection: TransactionInfo['direction']
+  containerStyle?: ViewStyle
+}) => {
   const {color} = useTheme()
 
   const iconStyles = styleMap(color)[transactionDirection]
   const IconComponent = iconMap[transactionDirection]
 
   return (
-    <View style={[styles.icon, {backgroundColor: iconStyles?.background}, containerStyle]}>
+    <View
+      style={[
+        styles.icon,
+        {backgroundColor: iconStyles?.background},
+        containerStyle,
+      ]}
+    >
       <IconComponent color={iconStyles?.icon} size={iconStyles.size ?? size} />
     </View>
   )
@@ -28,7 +40,10 @@ export const Direction = ({
 
 const defaultSize = 36
 
-const iconMap: Record<TransactionDirection, ({size, color}: {size: number; color: string}) => JSX.Element> = {
+const iconMap: Record<
+  TransactionDirection,
+  ({size, color}: {size: number; color: string}) => JSX.Element
+> = {
   SENT: Send,
   RECEIVED: Received,
   SELF: Transaction,
@@ -37,7 +52,10 @@ const iconMap: Record<TransactionDirection, ({size, color}: {size: number; color
 
 export const styleMap: (
   color: ThemedPalette,
-) => Record<ThemeStatus, {background: string; icon: string; text: string; size?: number}> = (color) => ({
+) => Record<
+  ThemeStatus,
+  {background: string; icon: string; text: string; size?: number}
+> = (color) => ({
   SELF: {
     text: color.gray_900,
     background: color.gray_100,

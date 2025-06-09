@@ -5,7 +5,10 @@ import {IconProps} from './type'
 
 export const Warning = ({size = 36, color = 'black'}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <Path d="M12 8a1 1 0 011 1v4a1 1 0 11-2 0V9a1 1 0 011-1zM12 15a1 1 0 100 2h.01a1 1 0 100-2H12z" fill={color} />
+    <Path
+      d="M12 8a1 1 0 011 1v4a1 1 0 11-2 0V9a1 1 0 011-1zM12 15a1 1 0 100 2h.01a1 1 0 100-2H12z"
+      fill={color}
+    />
 
     <Path
       fillRule="evenodd"

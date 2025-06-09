@@ -15,7 +15,10 @@ const PinInputWrapper = ({enabled = true}: {enabled?: boolean}) => {
   return (
     <View style={styles.root}>
       <View style={styles.button}>
-        <Button title="Clean Pin" onPress={() => pinInputRef.current?.clear()} />
+        <Button
+          title="Clean Pin"
+          onPress={() => pinInputRef.current?.clear()}
+        />
       </View>
 
       <PinInput

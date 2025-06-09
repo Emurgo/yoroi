@@ -3,7 +3,10 @@ import Svg, {G, Line, Path, Polyline, Rect} from 'react-native-svg'
 
 import {IconProps} from './type'
 
-export const StakingKeyRegistered = ({size = 36, color = '#6B7384'}: IconProps) => (
+export const StakingKeyRegistered = ({
+  size = 36,
+  color = '#6B7384',
+}: IconProps) => (
   <Svg viewBox="0 0 36 36" width={size} height={size}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -245.000000)">
@@ -20,7 +23,12 @@ export const StakingKeyRegistered = ({size = 36, color = '#6B7384'}: IconProps) 
             >
               <Polyline points="5.33333333 8.88888889 11.8790765 2.34314575 15.3777778 5.95555556" />
 
-              <Line x1="8.88888889" y1="12.4444444" x2="15.1742825" y2="6.15905083" />
+              <Line
+                x1="8.88888889"
+                y1="12.4444444"
+                x2="15.1742825"
+                y2="6.15905083"
+              />
 
               <Polyline points="5.33333333 8.88888889 5.33333333 12.4444444 8.88888889 12.4444444" />
 

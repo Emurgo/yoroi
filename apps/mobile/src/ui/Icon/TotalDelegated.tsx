@@ -9,8 +9,17 @@ export const TotalDelegated = ({size = 44, color = 'black'}: IconProps) => {
 
   return (
     <Svg viewBox="0 0 44 44" width={size} height={size}>
-      <G id="icon/total-delegated.inline" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <G id="icon/bg-for-icon" fill={isDark ? colors.gray_300 : colors.gray_50}>
+      <G
+        id="icon/total-delegated.inline"
+        stroke="none"
+        stroke-width="1"
+        fill="none"
+        fill-rule="evenodd"
+      >
+        <G
+          id="icon/bg-for-icon"
+          fill={isDark ? colors.gray_300 : colors.gray_50}
+        >
           <Circle id="Oval-Copy-4" cx="22" cy="22" r="22" />
         </G>
 
@@ -30,7 +39,11 @@ export const TotalDelegated = ({size = 44, color = 'black'}: IconProps) => {
             />
           </G>
 
-          <G id="user-copy" transform="translate(16.615385, 10.153846)" fill={color}>
+          <G
+            id="user-copy"
+            transform="translate(16.615385, 10.153846)"
+            fill={color}
+          >
             <Circle id="Oval" cx="3.52301752" cy="2.13840214" r="2.13840214" />
 
             <Path
@@ -39,7 +52,11 @@ export const TotalDelegated = ({size = 44, color = 'black'}: IconProps) => {
             />
           </G>
 
-          <G id="user-copy-2" transform="translate(8.307692, 0.000000)" fill={color}>
+          <G
+            id="user-copy-2"
+            transform="translate(8.307692, 0.000000)"
+            fill={color}
+          >
             <Circle id="Oval" cx="3.52301752" cy="2.13840214" r="2.13840214" />
 
             <Path

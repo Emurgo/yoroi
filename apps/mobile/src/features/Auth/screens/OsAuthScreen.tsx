@@ -10,7 +10,7 @@ import {ScreenBackground} from '../../../components/ScreenBackground'
 type Props = {
   headings: Array<string>
   subHeadings?: Array<string>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   buttons: Array<any>
   onGoBack?: () => void
   addWelcomeMessage?: boolean

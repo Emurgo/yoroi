@@ -10,6 +10,9 @@ export const Catalyst = ({size = 36, color = 'black'}: IconProps) => (
       fill={color}
     />
 
-    <Path d="M21 14C20.1495 17.9935 16.4435 21 12 21C7.5574 21 3.85141 17.9935 3 14H21Z" fill={color} />
+    <Path
+      d="M21 14C20.1495 17.9935 16.4435 21 12 21C7.5574 21 3.85141 17.9935 3 14H21Z"
+      fill={color}
+    />
   </Svg>
 )
