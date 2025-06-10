@@ -4,7 +4,7 @@ import {App} from '@yoroi/types'
 import {freeze} from 'immer'
 
 const devLogger = freeze({
-  [App.Logger.Level.Debug]: console.debug, // console.debug is hidden by default in chrome
+  [App.Logger.Level.Debug]: console.log, // console.debug is hidden by default in chrome
   [App.Logger.Level.Log]: console.log,
   [App.Logger.Level.Info]: console.info,
   [App.Logger.Level.Warn]: console.warn,
