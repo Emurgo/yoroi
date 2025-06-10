@@ -12,6 +12,7 @@ export const useStrings = () => {
     error: intl.formatMessage(globalMessages.error),
     cancel: intl.formatMessage(globalMessages.cancel),
     authorize: intl.formatMessage(messages.authorize),
+    usePasscode: intl.formatMessage(messages.usePasscode),
   })
 }
 
@@ -19,6 +20,10 @@ const messages = defineMessages({
   authorize: {
     id: 'components.send.biometricauthscreen.authorizeOperation',
     defaultMessage: '!!!Authorize',
+  },
+  usePasscode: {
+    id: 'auth.usePasscode',
+    defaultMessage: '!!!Use passcode',
   },
   tooManyAttempts: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT',
