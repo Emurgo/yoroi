@@ -15,7 +15,7 @@ export default {
     ios: {
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
-      bundleIdentifier: 'com.emurgo.yoroi_v2',
+      bundleIdentifier: 'com.emurgo.yoroiv2',
       infoPlist: {
         NSCameraUsageDescription:
           'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
@@ -28,6 +28,8 @@ export default {
         UIBackgroundModes: ['fetch', 'remote-notification'],
         NSUserNotificationUsageDescription:
           'Allow $(PRODUCT_NAME) to send you notifications about your wallet activity',
+        NSFaceIDUsageDescription:
+          'Allow $(PRODUCT_NAME) to access your face ID for biometric authentication',
       },
       splash: {
         image: './assets/yoroi/splash/light/bootsplash_logo.png',
@@ -49,7 +51,7 @@ export default {
           './assets/yoroi/adaptive-icon/background/background.png',
         backgroundColor: '#ffffff',
       },
-      package: 'com.emurgo.yoroi_v2',
+      package: 'com.emurgo.yoroiv2',
       edgeToEdgeEnabled: true,
       userInterfaceStyle: 'automatic',
       permissions: [
@@ -125,7 +127,7 @@ export default {
         {
           icon: './assets/yoroi/notification-icon.png',
           color: '#ffffff',
-          sounds: ['./assets/yoroi/notification-sound.wav'],
+          // sounds: ['./assets/yoroi/notification-sound.wav'],
         },
       ],
       [

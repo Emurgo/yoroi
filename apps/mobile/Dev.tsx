@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {Text, View} from 'react-native'
+import {Text} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -28,7 +28,15 @@ export function Dev() {
     selectTheme,
     atoms: ta,
   } = useTheme()
-  const {authSetting, changeAuthSetting, isLoggedIn, login, logout} = useAuth()
+  const {
+    authSetting,
+    changeAuthSetting,
+    isLoggedIn,
+    login,
+    logout,
+    authWithHostConfig,
+    authWithHost,
+  } = useAuth()
   const {languageCode, selectLanguage} = useLanguage()
   const {formatMessage: f} = useIntl()
   const connectionStatus = useConnectionStatus()
@@ -137,6 +145,17 @@ export function Dev() {
         onCopy={() => copy({text: 'Hello, world!', feedback: 'Copied'})}
       />
 
+      <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
+        {JSON.stringify(authWithHostConfig, null, 2)}
+      </Text>
+
+      <Button
+        onPress={() => authWithHost().then(console.log).catch(console.error)}
+        type={ButtonType.Secondary}
+        title="Auth with Host"
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
+
       <BuggyComponent showCrash={showCrash} />
 
       <LoadingOverlay isLoading={isLoading} />
@@ -149,9 +168,5 @@ const BuggyComponent = ({showCrash}: {showCrash: boolean}) => {
     throw new LocalizableError({id: 'api.error.badRequest'})
   }
 
-  return (
-    <View>
-      <Text>This component is fine when showCrash is false</Text>
-    </View>
-  )
+  return <></>
 }

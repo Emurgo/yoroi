@@ -6,8 +6,8 @@ import * as React from 'react'
 
 import {useBackgroundTimer} from '../../../hooks/useBackgroundTimer'
 import {logger} from '../../../kernel/logger/logger'
-import {useAuthHostConfig} from '../hooks/useAuthHostConfig'
-import {AuthHostConfig, AuthSetting} from './types'
+import {useAuthWithHost} from '../hooks/useAuthWithHost'
+import {AuthSetting, AuthWithHostConfig} from './types'
 
 export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
@@ -21,22 +21,24 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   const [pinHash, changePinHash, removePinHash] = useSyncStorageToState(
     pinHashStorageKeyManager,
   )
-  const authHostConfig = useAuthHostConfig()
+  const {authWithHostConfig, authWithHost} = useAuthWithHost()
 
+  // NOTE: This should be configurable
   useBackgroundTimer({
+    after: time.seconds(30),
     execute: () => {
       if (loggedState.status === 'logged-in') {
         logger.debug(`Auto Logged out`, {origin: 'AuthProvider', type: 'user'})
         setLoggedState(loggedOutState)
       }
     },
-    after: time.seconds(30),
   })
 
   const value = React.useMemo(
     () => ({
       ...loggedState,
-      ...authHostConfig,
+      authWithHostConfig,
+      authWithHost,
       login: () => {
         logger.debug(`Logged in with OS`, {
           origin: 'AuthProvider',
@@ -53,9 +55,11 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       removePinHash,
       authSetting,
       pinHash,
+      hasPin: !!pinHash,
     }),
     [
-      authHostConfig,
+      authWithHostConfig,
+      authWithHost,
       loggedState,
       authSetting,
       pinHash,
@@ -103,6 +107,7 @@ type AuthLoggedState = {
 type AuthSettingsState = {
   authSetting: AuthSetting | undefined | null
   pinHash: string | undefined
+  hasPin: boolean
 }
 
 type AuthContextActions = {
@@ -115,5 +120,7 @@ type AuthContextActions = {
 
 type AuthContext = AuthLoggedState &
   AuthSettingsState &
-  AuthContextActions &
-  AuthHostConfig
+  AuthContextActions & {
+    authWithHostConfig: AuthWithHostConfig
+    authWithHost(): Promise<boolean>
+  }
