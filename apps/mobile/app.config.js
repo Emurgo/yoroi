@@ -98,6 +98,7 @@ export default {
     },
     plugins: [
       [
+
         'react-native-edge-to-edge',
         {
           android: {
@@ -145,6 +146,7 @@ export default {
           },
         },
       ],
+      './plugins/with-app-turbo-module-provider.js',
     ],
   },
 }
