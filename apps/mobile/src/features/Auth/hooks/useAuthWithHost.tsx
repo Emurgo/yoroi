@@ -5,12 +5,12 @@ import * as React from 'react'
 import {useAppState} from '../../../hooks/useAppState'
 import {logger} from '../../../kernel/logger/logger'
 import {AuthWithHostConfig} from '../common/types'
+import {useStrings} from './useStrings'
 
-// TODO: Add the useAsync here
-// TODO: Add translations
 export const useAuthWithHost = () => {
   const [authWithHostConfig, setAuthWithHostConfig] =
     React.useState<AuthWithHostConfig>(initial)
+  const strings = useStrings()
 
   React.useEffect(() => {
     getAuthHostConfig().then(setAuthWithHostConfig)
@@ -26,21 +26,28 @@ export const useAuthWithHost = () => {
     },
   })
 
-  const authWithHost = React.useCallback(async () => {
-    try {
-      const result = await AuthHost.authenticateAsync({
-        promptMessage: 'Authenticate to continue',
-        fallbackLabel: 'Use passcode',
-        cancelLabel: 'Cancel',
-        disableDeviceFallback: false,
-      })
+  const authWithHost = React.useCallback(
+    async ({noFallback = false}: {noFallback?: boolean} = {}) => {
+      try {
+        const result = await AuthHost.authenticateAsync({
+          promptMessage: strings.authorize,
+          cancelLabel: strings.cancel,
+          fallbackLabel: noFallback ? undefined : strings.usePasscode,
+          disableDeviceFallback: noFallback,
+        })
 
-      return result.success
-    } catch (error) {
-      logger.error(error as Error, {origin: 'authWithHost', type: 'user'})
-      return false
-    }
-  }, [])
+        return result.success
+      } catch (error) {
+        logger.error(error as Error, {
+          origin: 'authWithHost',
+          type: 'user',
+          noFallback,
+        })
+        return false
+      }
+    },
+    [],
+  )
 
   return React.useMemo(
     () =>
