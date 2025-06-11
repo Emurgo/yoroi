@@ -45,8 +45,8 @@ export default {
       adaptiveIcon: {
         foregroundImage:
           './assets/yoroi/adaptive-icon/foreground/foreground.png',
-        monochromeImage:
-          './assets/yoroi/adaptive-icon/monochrome/foreground.png',
+       // monochromeImage:
+       //   './assets/yoroi/adaptive-icon/monochrome/foreground.png',
         backgroundImage:
           './assets/yoroi/adaptive-icon/background/background.png',
         backgroundColor: '#ffffff',
@@ -126,7 +126,7 @@ export default {
       [
         'expo-notifications',
         {
-          icon: './assets/yoroi/notification-icon.png',
+          // icon: './assets/yoroi/notification-icon.png',
           color: '#ffffff',
           // sounds: ['./assets/yoroi/notification-sound.wav'],
         },
