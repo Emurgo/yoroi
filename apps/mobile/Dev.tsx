@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {hex} from '@yoroi/common'
 
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
@@ -8,17 +9,15 @@ import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from './src/features/Auth/common/context'
-import {useCopy} from './src/features/Copy/context'
 import {useConnectionStatus} from './src/kernel/connection/ConnectionProvider'
-import {decryptData} from './src/kernel/crypto/decrypt-data'
+import {encryptData} from './src/kernel/crypto/encrypt-data'
 import globalMessages from './src/kernel/i18n/global-messages'
 import {useLanguage} from './src/kernel/i18n/LanguageProvider'
 import {LocalizableError} from './src/kernel/i18n/LocalizableError'
 import {rootSyncStorage} from './src/kernel/storage/storages'
 import {Button, ButtonType} from './src/ui/Button/Button'
-import {CopyButton} from './src/ui/CopyButton/CopyButton'
 import {LoadingOverlay} from './src/ui/LoadingOverlay/LoadingOverlay'
-import {Transaction} from '@emurgo/csl-mobile-bridge-jsi'
+import { decryptData } from './src/kernel/crypto/decrypt-data'
 
 export function Dev() {
   const {
@@ -84,16 +83,16 @@ export function Dev() {
 
       <Button
         onPress={async () => {
-          const salt =
-            '50515253c0c1c2c3c4c5c6c750515253c0c1c2c3c4c5c6c750515253c0c1c2c3'
-          const nonce = '50515253c0c1c2c3c4c5c6c7'
-          const payload = '308f9977d04e7f3a45abd148905c628e2bb2621360a585f352'
-          const d = await decryptData(
-            [salt, nonce, payload].join(''),
-            'password',
-          )
-          console.log(d)
-          console.log('================================')
+          const encrypted = encryptData({
+            textHex: hex.fromUtf8('masterkey'),
+            secretKey: 'password',
+          })
+          const decrypted = decryptData({
+            cipherTextHex: hex(encrypted),
+            secretKey: 'password',
+          })
+          console.log(encrypted)
+          console.log(decrypted)
         }}
         type={ButtonType.Secondary}
         title="Decrypt Data"

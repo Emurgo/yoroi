@@ -1,3 +1,5 @@
+import {hex} from '@yoroi/common'
+
 import * as Crypto from 'expo-crypto'
 
 export const randomHexString = (length: number) => {
@@ -6,5 +8,5 @@ export const randomHexString = (length: number) => {
   }
 
   const bytes = Crypto.getRandomBytes(length / 2)
-  return Buffer.from(bytes).toString('hex')
+  return hex.fromBytes(bytes)
 }

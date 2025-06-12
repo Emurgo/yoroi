@@ -24,6 +24,7 @@ export * from './utils/predicates'
 export * from './utils/strings'
 export * from './utils/promises'
 export * from './utils/urls'
+export * from './utils/hex'
 
 export * from './logger/throw-logged-error'
 export * from './logger/to-logger-metadata'

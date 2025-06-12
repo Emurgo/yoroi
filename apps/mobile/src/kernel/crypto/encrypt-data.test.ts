@@ -7,7 +7,7 @@ describe('randomSalt', () => {
     ${'generates different salts on each call'}
   `('$description', () => {
     const salt = randomSalt()
-    expect(salt.length).toBe(64)
+    expect(salt.value.length).toBe(64)
     expect(salt).toMatch(/^[0-9a-f]+$/)
   })
 
@@ -25,7 +25,7 @@ describe('randomNonce', () => {
     ${'generates different nonces on each call'}
   `('$description', () => {
     const nonce = randomNonce()
-    expect(nonce.length).toBe(24)
+    expect(nonce.value.length).toBe(24)
     expect(nonce).toMatch(/^[0-9a-f]+$/)
   })
 
