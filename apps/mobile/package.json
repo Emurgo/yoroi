@@ -10,6 +10,8 @@
     "ios": "expo run:ios",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "metrics:pull": "ampli pull mobile",
+    "metrics:status": "ampli status --instanceName=track",
     "web": "expo start --web",
     "test": "jest --config jest.config.js"
   },

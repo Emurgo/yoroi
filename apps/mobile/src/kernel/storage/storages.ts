@@ -18,6 +18,7 @@ import {
   systemLanguageCode,
 } from '../i18n/localization'
 import {debugStorage} from './debug-storage'
+import { Portfolio } from '@yoroi/types'
 
 const rootMMKV = new MMKV({id: 'default.mmkv'})
 export const rootSyncStorage = observableStorageMaker<false, string>(
@@ -57,7 +58,7 @@ export const authStorageKeyManager = settingsStorageKeyMaker<
   parser: parseAuthSetting,
 })
 
-// Settings - Custom Pin Hash
+// Settings - Custom Pin Hash - it is not a HASH
 export const pinHashStorageKey = 'customPinHash'
 export const pinHashStorageKeyManager = settingsStorageKeyMaker<
   string | undefined
@@ -93,6 +94,13 @@ export const screenShareStorageKey = 'screenShareEnabled'
 export const screenShareStorageKeyManager = settingsStorageKeyMaker<boolean>({
   key: screenShareStorageKey,
   parser: (data) => Boolean(parseBoolean(data)),
+})
+
+// Settings - Currency
+export const currencyStorageKey = 'currencySymbol'
+export const currencyStorageKeyManager = settingsStorageKeyMaker<Portfolio.Currency.Symbol>({
+  key: currencyStorageKey,
+  parser: (data) => parseCurrencySymbol(data),
 })
 
 // Debug storage

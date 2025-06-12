@@ -28,8 +28,6 @@ import {
 } from './src/kernel/storage/storages'
 import {ErrorBoundary} from './src/ui/ErrorBoundary/ErrorBoundary'
 
-// import * as LocalAuthentication from 'expo-local-authentication'
-
 function AppShell({children}: React.PropsWithChildren) {
   const isMigrated = useMigrations(rootStorage)
 
@@ -255,74 +253,3 @@ export default function App() {
     </AppShell>
   )
 }
-
-// export default function App() {
-//   const [isAuthenticated, setIsAuthenticated] = React.useState(false)
-//   const [isLoading, setIsLoading] = React.useState(true)
-
-//   const authenticate = async () => {
-//     try {
-//       // Check if hardware supports biometrics
-//       const compatible = await LocalAuthentication.hasHardwareAsync()
-//       if (!compatible) {
-//         Alert.alert(
-//           'Error',
-//           'Your device does not support biometric authentication',
-//         )
-//         setIsLoading(false)
-//         return
-//       }
-
-//       // Check if biometrics are enrolled
-//       const enrolled = await LocalAuthentication.isEnrolledAsync()
-//       if (!enrolled) {
-//         Alert.alert('Error', 'No biometrics enrolled on this device')
-//         setIsLoading(false)
-//         return
-//       }
-
-//       // Authenticate user
-//       const result = await LocalAuthentication.authenticateAsync({
-//         promptMessage: 'Authenticate to access the app',
-//         fallbackLabel: 'Use passcode',
-//       })
-
-//       setIsAuthenticated(result.success)
-//       setIsLoading(false)
-//     } catch (error) {
-//       console.error('Authentication error:', error)
-//       Alert.alert('Error', 'Authentication failed')
-//       setIsLoading(false)
-//     }
-//   }
-
-//   React.useEffect(() => {
-//     authenticate()
-//   }, [])
-
-//   if (isLoading) {
-//     return (
-//       <View>
-//         <Text>Loading...</Text>
-//         <StatusBar style="auto" />
-//       </View>
-//     )
-//   }
-
-//   if (!isAuthenticated) {
-//     return (
-//       <View>
-//         <Text>Authentication Required</Text>
-//         <Text onPress={authenticate}>Try Again</Text>
-//         <StatusBar style="auto" />
-//       </View>
-//     )
-//   }
-
-//   return (
-//     <View>
-//       <Text>Welcome! You are authenticated!</Text>
-//       <StatusBar style="auto" />
-//     </View>
-//   )
-// }

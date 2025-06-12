@@ -70,7 +70,7 @@ export const supportedThemes: Readonly<Record<ThemeName, ThemeName>> = freeze({
 })
 
 // Currencies
-// NOTE: to be moved into pairing module once it's implemented
+// NOTE: to be moved into pairing module/portfolio 
 export const supportedCurrencies = freeze({
   ADA: 'ADA',
   BRL: 'BRL',
