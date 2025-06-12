@@ -1,15 +1,23 @@
-import {decrypt_with_password} from '@emurgo/csl-mobile-bridge-jsi'
-
+import {Hex, hex} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
-export const decryptData = (hexString: string, secretKey: string) => {
-  const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
+import {decrypt_with_password} from '@emurgo/csl-mobile-bridge-jsi'
+
+import {logger} from '../logger/logger'
+
+export const decryptData = ({
+  cipherTextHex,
+  secretKey,
+}: {
+  cipherTextHex: Hex
+  secretKey: string
+}) => {
+  const secretKeyHex = hex.fromUtf8(secretKey)
 
   try {
-    const decryptedBytes = decrypt_with_password(secretKeyHex, hexString)
-    return Buffer.from(decryptedBytes).toString('utf8')
+    return hex(decrypt_with_password(secretKeyHex.value, cipherTextHex.value))
   } catch (error) {
-    console.error('decryptData error', error)
+    logger.error(error as Error, {origin: 'decryptData'})
     throw new App.Errors.WrongPassword()
   }
 }

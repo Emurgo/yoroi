@@ -1,3 +1,5 @@
+import {hex} from '@yoroi/common'
+
 import {decryptData} from './decrypt-data'
 
 describe('decryptData', () => {
@@ -9,7 +11,10 @@ describe('decryptData', () => {
     const password = 'password'
     const ciphertextHex = ''.concat(salt, nonce, payload)
 
-    const decryptedHex = decryptData(ciphertextHex, password)
-    expect(Buffer.from(decryptedHex, 'hex').toString('utf8')).toBe('masterkey')
+    const decryptedHex = decryptData({
+      cipherTextHex: hex(ciphertextHex),
+      secretKey: password,
+    })
+    expect(decryptedHex.utf8).toBe('masterkey')
   })
 })
