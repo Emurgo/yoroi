@@ -52,7 +52,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   )
 }
 
+// Add WASM support - treat as asset only
 config.resolver.assetExts.push('wasm')
-config.resolver.sourceExts.push('wasm')
 
 module.exports = config
