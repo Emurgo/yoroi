@@ -654,6 +654,8 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
           accountState.remainingAmount as Balance.Quantity,
         ])
 
+        this.balanceManager.updatePrimaryDerived({availableRewards: BigInt(accountState.remainingAmount)})
+
         return {
           status: 'staked',
           poolId: stakingStatus.poolKeyHash,
