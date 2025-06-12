@@ -6,16 +6,14 @@ import {decrypt_with_password} from '@emurgo/csl-mobile-bridge-jsi'
 import {logger} from '../logger/logger'
 
 export const decryptData = ({
-  cipherTextHex,
+  encryptedData,
   secretKey,
 }: {
-  cipherTextHex: Hex
-  secretKey: string
+  encryptedData: Hex
+  secretKey: Hex
 }) => {
-  const secretKeyHex = hex.fromUtf8(secretKey)
-
   try {
-    return hex(decrypt_with_password(secretKeyHex.value, cipherTextHex.value))
+    return hex(decrypt_with_password(secretKey.value, encryptedData.value))
   } catch (error) {
     logger.error(error as Error, {origin: 'decryptData'})
     throw new App.Errors.WrongPassword()
