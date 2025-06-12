@@ -51,6 +51,7 @@
     "expo-dev-client": "~5.1.8",
     "expo-device": "~7.1.4",
     "expo-font": "~13.3.1",
+    "expo-image": "~2.2.0",
     "expo-linear-gradient": "~14.1.4",
     "expo-local-authentication": "~16.0.4",
     "expo-localization": "~16.1.5",
@@ -78,12 +79,12 @@
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
     "rxjs": "^7.8.2",
-    "zod": "^3.25.17",
-    "expo-image": "~2.2.0"
+    "zod": "^3.25.17"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
+    "@emurgo/cardano-serialization-lib-nodejs": "^14.1.2",
     "@formatjs/cli": "^6.7.1",
     "@react-native-community/eslint-config": "^3.2.0",
     "@types/jest": "^29.5.14",
