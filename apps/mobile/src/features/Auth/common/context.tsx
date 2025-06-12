@@ -25,10 +25,10 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
 
   // NOTE: This should be configurable
   useBackgroundTimer({
-    after: time.seconds(30),
+    after: time.seconds(1),
     execute: () => {
       if (loggedState.status === 'logged-in') {
-        logger.debug(`Auto Logged out`, {origin: 'AuthProvider', type: 'user'})
+        logger.debug('logout (auto)', {origin: 'AuthProvider', type: 'user'})
         setLoggedState(loggedOutState)
       }
     },
@@ -40,14 +40,14 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       authWithHostConfig,
       authWithHost,
       login: () => {
-        logger.debug(`Logged in with OS`, {
+        logger.debug('login', {
           origin: 'AuthProvider',
           type: 'user',
         })
         setLoggedState(loggedInState)
       },
       logout: () => {
-        logger.debug(`Logged out`, {origin: 'AuthProvider', type: 'user'})
+        logger.debug('logout', {origin: 'AuthProvider', type: 'user'})
         setLoggedState(loggedOutState)
       },
       changeAuthSetting,

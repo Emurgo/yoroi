@@ -1,6 +1,7 @@
 import * as AuthHost from 'expo-local-authentication'
 import {freeze} from 'immer'
 import * as React from 'react'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {useAppState} from '../../../hooks/useAppState'
 import {logger} from '../../../kernel/logger/logger'
@@ -15,6 +16,15 @@ export const useAuthWithHost = () => {
   React.useEffect(() => {
     getAuthHostConfig().then(setAuthWithHostConfig)
   }, [])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      logger.debug(
+        'useAuthWithHost focus - update auth with host config',
+      )
+      getAuthHostConfig().then(setAuthWithHostConfig)
+    }, []),
+  )
 
   useAppState({
     on: 'active',

@@ -1,7 +1,3 @@
-jest.mock("@react-native-async-storage/async-storage", () =>
-  require("@react-native-async-storage/async-storage/jest/async-storage-mock")
-);
-
 jest.mock('expo-device', () => ({
   isDevice: true,
   brand: 'Apple',
@@ -19,7 +15,7 @@ jest.mock('expo-device', () => ({
   getPlatformApiLevelAsync: jest.fn().mockResolvedValue(33),
   getTotalMemoryAsync: jest.fn().mockResolvedValue(4096),
   isRootedExperimentalAsync: jest.fn().mockResolvedValue(false),
-}));
+}))
 
 jest.mock('expo-constants', () => ({
   default: {
@@ -36,4 +32,4 @@ jest.mock('expo-constants', () => ({
     nativeBuildVersion: '1',
     systemVersion: '16.0',
   },
-}));
+}))
