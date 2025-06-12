@@ -289,6 +289,11 @@ import {SwapDex} from './swap/dex'
 import {SwapOrder} from './swap/order'
 import {SwapAggregator} from './swap/aggregator'
 import {SwapProtocol} from './swap/protocol'
+import {
+  PortfolioCurrencyConfig,
+  PortfolioCurrencyConfigBySymbol,
+  PortfolioCurrencySymbol,
+} from './portfolio/currency'
 
 export namespace App {
   export namespace Errors {
@@ -549,6 +554,12 @@ export namespace Explorers {
 export namespace Portfolio {
   export type PrimaryBreakdown = PortfolioPrimaryBreakdown
   export type FungibilityFilter = PortfolioFungibilityFilter
+
+  export namespace Currency {
+    export type Symbol = PortfolioCurrencySymbol
+    export type Config = PortfolioCurrencyConfig
+    export type ConfigBySymbol = PortfolioCurrencyConfigBySymbol
+  }
 
   export namespace Event {
     export type SourceId = PortfolioEventSourceId

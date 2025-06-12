@@ -1,7 +1,7 @@
+import {useFocusEffect} from '@react-navigation/native'
 import * as AuthHost from 'expo-local-authentication'
 import {freeze} from 'immer'
 import * as React from 'react'
-import {useFocusEffect} from '@react-navigation/native'
 
 import {useAppState} from '../../../hooks/useAppState'
 import {logger} from '../../../kernel/logger/logger'
@@ -19,9 +19,7 @@ export const useAuthWithHost = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      logger.debug(
-        'useAuthWithHost focus - update auth with host config',
-      )
+      logger.debug('useAuthWithHost focus - update auth with host config')
       getAuthHostConfig().then(setAuthWithHostConfig)
     }, []),
   )
@@ -83,34 +81,20 @@ const initial: AuthWithHostConfig = {
 export const getAuthHostConfig = async (): Promise<
   Readonly<AuthWithHostConfig>
 > => {
-  try {
-    const [hasHardware, isEnrolled, methods] = await Promise.all([
-      AuthHost.hasHardwareAsync(),
-      AuthHost.isEnrolledAsync(),
-      AuthHost.supportedAuthenticationTypesAsync(),
-    ])
+  const [hasHardware, isEnrolled, methods] = await Promise.all([
+    AuthHost.hasHardwareAsync(),
+    AuthHost.isEnrolledAsync(),
+    AuthHost.supportedAuthenticationTypesAsync(),
+  ])
 
-    return freeze(
-      {
-        isReady: true,
-        isSupported: hasHardware,
-        isEnrolled,
-        canAuthWithHost: hasHardware && isEnrolled,
-        methods,
-      },
-      true,
-    )
-  } catch (error) {
-    logger.error(error as Error, {origin: 'getAuthHostConfig', type: 'error'})
-    return freeze(
-      {
-        isReady: true,
-        isSupported: false,
-        isEnrolled: false,
-        canAuthWithHost: false,
-        methods: [],
-      },
-      true,
-    )
-  }
+  return freeze(
+    {
+      isReady: true,
+      isSupported: hasHardware,
+      isEnrolled,
+      canAuthWithHost: hasHardware && isEnrolled,
+      methods,
+    },
+    true,
+  )
 }

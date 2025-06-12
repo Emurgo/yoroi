@@ -46,13 +46,7 @@ const useCurrency = () => {
 
 export const getCurrencySymbol = async (storage: App.Storage) => {
   const currencySymbol = await storage.join('appSettings/').getItem('currencySymbol', parseCurrencySymbol)
-
-  if (currencySymbol != null) {
-    const stillSupported = Object.values(supportedCurrencies).includes(currencySymbol)
-    if (stillSupported) return currencySymbol
-  }
-
-  return defaultCurrency
+  return currencySymbol ?? defaultCurrency
 }
 
 export const formatCurrency = (value: number, currency: CurrencySymbol) => {
@@ -94,8 +88,7 @@ type CurrencyContext = {
 
 const parseCurrencySymbol = (data: unknown) => {
   const isCurrencySymbol = (data: unknown): data is CurrencySymbol =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Object.values(supportedCurrencies).includes(data as any)
+    Object.values(supportedCurrencies).includes(data as CurrencySymbol)
 
   const parsed = parseSafe(data)
 

@@ -205,7 +205,7 @@ async function isOnline() {
   try {
     const response = await fetchData<Api.Cardano.BestBlock>(
       {
-        // TODO: needs to be changed to the correct url
+        // TODO: we miss a health check endpoint
         url: 'https://zero.yoroiwallet.com/bestblock',
       },
       {

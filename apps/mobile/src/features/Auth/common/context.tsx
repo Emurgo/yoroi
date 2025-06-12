@@ -39,20 +39,18 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       ...loggedState,
       authWithHostConfig,
       authWithHost,
-      login: () => {
+      loggedIn: () => {
         logger.debug('login', {
           origin: 'AuthProvider',
           type: 'user',
         })
         setLoggedState(loggedInState)
       },
-      logout: () => {
+      loggedOut: () => {
         logger.debug('logout', {origin: 'AuthProvider', type: 'user'})
         setLoggedState(loggedOutState)
       },
       changeAuthSetting,
-      changePinHash,
-      removePinHash,
       authSetting,
       pinHash,
       hasPin: !!pinHash,
@@ -64,8 +62,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       authSetting,
       pinHash,
       changeAuthSetting,
-      changePinHash,
-      removePinHash,
     ],
   )
   return <Context.Provider value={value}>{children}</Context.Provider>
@@ -111,11 +107,9 @@ type AuthSettingsState = {
 }
 
 type AuthContextActions = {
-  login(): void
-  logout(): void
+  loggedIn(): void
+  loggedOut(): void
   changeAuthSetting(authSetting: AuthSetting): void
-  changePinHash(pinHash: string): void
-  removePinHash(): void
 }
 
 type AuthContext = AuthLoggedState &

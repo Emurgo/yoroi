@@ -1,6 +1,6 @@
 import {isRight} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
-import {UseQueryOptions, useQuery} from 'react-query'
+import {UseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
 
 export function usePortfolioTokenDiscovery(
   {
@@ -19,7 +19,7 @@ export function usePortfolioTokenDiscovery(
     [Chain.SupportedNetworks, 'usePortfolioTokenDiscovery', Portfolio.Token.Id]
   >,
 ) {
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: [network, 'usePortfolioTokenDiscovery', id],
     ...options,
     queryFn: async () => {
