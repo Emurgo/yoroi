@@ -1,5 +1,5 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
 import {hex} from '@yoroi/common'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
@@ -10,6 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from './src/features/Auth/common/context'
 import {useConnectionStatus} from './src/kernel/connection/ConnectionProvider'
+import {decryptData} from './src/kernel/crypto/decrypt-data'
 import {encryptData} from './src/kernel/crypto/encrypt-data'
 import globalMessages from './src/kernel/i18n/global-messages'
 import {useLanguage} from './src/kernel/i18n/LanguageProvider'
@@ -17,7 +18,6 @@ import {LocalizableError} from './src/kernel/i18n/LocalizableError'
 import {rootSyncStorage} from './src/kernel/storage/storages'
 import {Button, ButtonType} from './src/ui/Button/Button'
 import {LoadingOverlay} from './src/ui/LoadingOverlay/LoadingOverlay'
-import { decryptData } from './src/kernel/crypto/decrypt-data'
 
 export function Dev() {
   const {
@@ -83,15 +83,21 @@ export function Dev() {
 
       <Button
         onPress={async () => {
+          const startEncrypt = Date.now()
           const encrypted = encryptData({
             plainData: hex.fromUtf8('masterkey'),
             secretKey: hex.fromUtf8('password'),
           })
+          console.log('Encryption time:', Date.now() - startEncrypt, 'ms')
+
+          const startDecrypt = Date.now()
           const decrypted = decryptData({
             encryptedData: encrypted,
             secretKey: hex.fromUtf8('password'),
           })
-          console.log(decrypted.utf8)
+          console.log('Decryption time:', Date.now() - startDecrypt, 'ms')
+
+          console.log('Decrypted result:', decrypted.utf8)
         }}
         type={ButtonType.Secondary}
         title="Decrypt Data"
