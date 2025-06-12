@@ -1,7 +1,6 @@
 import {Hex, hex} from '@yoroi/common'
 
-import {encrypt_with_password} from '@emurgo/csl-mobile-bridge-jsi'
-
+import {encrypt_with_password} from './csl'
 import {randomHexString} from './random-hex-string'
 
 export const encryptData = ({

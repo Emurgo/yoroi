@@ -45,19 +45,14 @@ const shims = {
 }
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-  // if (moduleName.startsWith('@noble/')) {
-  //   const packageName = moduleName.split('/')[2]
-  //   return context.resolveRequest(
-  //     context,
-  //     `./node_modules/@noble/${packageName}`,
-  //     platform,
-  //   )
-  // }
   return context.resolveRequest(
     context,
     shims[moduleName] ?? moduleName,
     platform,
   )
 }
+
+config.resolver.assetExts.push('wasm')
+config.resolver.sourceExts.push('wasm')
 
 module.exports = config
