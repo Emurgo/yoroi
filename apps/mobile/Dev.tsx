@@ -84,15 +84,14 @@ export function Dev() {
       <Button
         onPress={async () => {
           const encrypted = encryptData({
-            textHex: hex.fromUtf8('masterkey'),
-            secretKey: 'password',
+            plainData: hex.fromUtf8('masterkey'),
+            secretKey: hex.fromUtf8('password'),
           })
           const decrypted = decryptData({
-            cipherTextHex: hex(encrypted),
-            secretKey: 'password',
+            encryptedData: encrypted,
+            secretKey: hex.fromUtf8('password'),
           })
-          console.log(encrypted)
-          console.log(decrypted)
+          console.log(decrypted.utf8)
         }}
         type={ButtonType.Secondary}
         title="Decrypt Data"

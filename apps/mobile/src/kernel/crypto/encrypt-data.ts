@@ -5,24 +5,23 @@ import {encrypt_with_password} from '@emurgo/csl-mobile-bridge-jsi'
 import {randomHexString} from './random-hex-string'
 
 export const encryptData = ({
-  textHex,
+  plainData,
   secretKey,
 }: {
-  textHex: Hex
-  secretKey: string
+  plainData: Hex
+  secretKey: Hex
 }) => {
-  const saltHex = randomSalt()
-  const nonceHex = randomNonce()
-  const secretKeyHex = hex.fromUtf8(secretKey)
+  const salt = randomSalt()
+  const nonce = randomNonce()
 
-  const encryptedHex = encrypt_with_password(
-    secretKeyHex.value,
-    saltHex.value,
-    nonceHex.value,
-    textHex.value,
+  return hex(
+    encrypt_with_password(
+      secretKey.value,
+      salt.value,
+      nonce.value,
+      plainData.value,
+    ),
   )
-
-  return hex(encryptedHex)
 }
 
 export const randomSalt = () => randomHexString(64)
