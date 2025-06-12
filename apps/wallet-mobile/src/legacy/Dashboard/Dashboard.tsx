@@ -1,35 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {
-  ActivityIndicator,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-  ViewProps,
-} from 'react-native'
+import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner} from '../../components/Banner/Banner'
 import {Button} from '../../components/Button/Button'
 import {useModal} from '../../components/Modal/ModalContext'
 import {Space} from '../../components/Space/Space'
+import {StakeRewardsWithdrawalOperation} from '../../features/ReviewTx/common/operations'
+import {useReviewTx} from '../../features/ReviewTx/common/ReviewTxProvider'
 import {useIsParticipatingInGovernance} from '../../features/Staking/Governance/common/helpers'
 import {useStrings} from '../../features/Staking/Governance/common/strings'
-import {WithdrawWarningModal} from '../../features/Staking/Governance/useCases/WithdrawWarningModal/WithdrawWarningModal'
+import {WithdrawGovernanceWarningModal} from '../../features/Staking/Governance/useCases/WithdrawGovernanceWarningModal/WithdrawGovernanceWarningModal'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {DashboardRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {isEmptyString} from '../../kernel/utils'
-import {useBalances, useIsOnline, useSync} from '../../yoroi-wallets/hooks'
+import {useBalances, useCreateWithdrawTx, useIsOnline, useSync} from '../../yoroi-wallets/hooks'
 import {Amounts} from '../../yoroi-wallets/utils/utils'
 import {PoolTransitionNotice} from '../Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '../Staking/PoolTransition/usePoolTransition'
@@ -37,22 +30,21 @@ import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
-import {useWithdrawStakingRewardsStrings, WithdrawStakingRewards} from './WithdrawStakingRewards/WithdrawStakingRewards'
 
 export const Dashboard = () => {
-  const strings = useWithdrawStakingRewardsStrings()
   const {styles} = useStyles()
+  const {track} = useMetrics()
+
   const intl = useIntl()
   const navigateTo = useNavigateTo()
   const governanceStrings = useStrings()
   const {isPoolRetiring} = usePoolTransition()
-  const {track} = useMetrics()
-
+  const {unsignedTxChanged} = useReviewTx()
+  const {isLoading: isWithdrawLoading, hasRewards, createWithdrawalTx} = useCreateWithdrawTx()
   const {wallet, meta} = useSelectedWallet()
   const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
   const {openModal} = useModal()
-  const {height: windowHeight} = useWindowDimensions()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
@@ -61,27 +53,36 @@ export const Dashboard = () => {
   const isParticipatingInGovernance = useIsParticipatingInGovernance()
   const walletNavigateTo = useWalletNavigation()
 
-  const handleOnParticipatePress = () => {
-    walletNavigateTo.navigateToGovernanceCentre()
-  }
+  const createOnWithdraw =
+    ({shouldDeregister}: {shouldDeregister: boolean}) =>
+    () => {
+      if (!isParticipatingInGovernance) {
+        openModal({
+          title: governanceStrings.withdrawWarningTitle,
+          content: (
+            <WithdrawGovernanceWarningModal onParticipatePress={() => walletNavigateTo.navigateToGovernanceCentre()} />
+          ),
+        })
+        return
+      }
 
-  const onWithdraw = () => {
-    track.claimAdaTransactionInitiated()
-
-    if (!isParticipatingInGovernance) {
-      openModal({
-        title: governanceStrings.withdrawWarningTitle,
-        content: <WithdrawWarningModal onParticipatePress={handleOnParticipatePress} />,
+      createWithdrawalTx({
+        shouldDeregister,
+        onError: navigateTo.failedTx,
+        onSuccess: (unsignedTx) => {
+          unsignedTxChanged(unsignedTx)
+          walletNavigateTo.navigateToTxReview({
+            operations: [<StakeRewardsWithdrawalOperation key="0" />],
+            onSuccess: () => {
+              track.claimAdaTransactionSubmitted()
+              navigateTo.submittedTx()
+            },
+            onError: navigateTo.failedTx,
+          })
+          return
+        },
       })
-      return
     }
-
-    openModal({
-      title: strings.warningModalTitle,
-      content: <WithdrawStakingRewards wallet={wallet} />,
-      height: Math.min(windowHeight * 0.9, 730),
-    })
-  }
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
@@ -131,16 +132,16 @@ export const Dashboard = () => {
                 totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
-                onWithdraw={onWithdraw}
-                disableWithdraw={meta.isReadOnly}
+                ctaProps={{
+                  onPress: createOnWithdraw({shouldDeregister: false}),
+                  disabled: meta.isReadOnly || isWithdrawLoading || !hasRewards,
+                }}
               />
             ) : (
               <UserSummary
                 totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
                 totalRewards={null}
                 totalDelegated={null}
-                onWithdraw={onWithdraw}
-                disableWithdraw
               />
             )}
 
@@ -149,7 +150,12 @@ export const Dashboard = () => {
 
           {stakingInfo?.status === 'staked' && (
             <Row>
-              <StakePoolInfos />
+              <StakePoolInfos
+                ctaProps={{
+                  onPress: createOnWithdraw({shouldDeregister: true}),
+                  disabled: meta.isReadOnly || isWithdrawLoading || !hasRewards,
+                }}
+              />
 
               <Space height="xl" />
             </Row>

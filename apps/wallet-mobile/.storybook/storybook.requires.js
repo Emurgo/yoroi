@@ -232,8 +232,6 @@ const getStories = () => {
     "./src/kernel/metrics/metrics.stories.tsx": require("../src/kernel/metrics/metrics.stories.tsx"),
     "./src/legacy/Dashboard/Dashboard.stories.tsx": require("../src/legacy/Dashboard/Dashboard.stories.tsx"),
     "./src/legacy/Dashboard/StakePoolInfos.stories.tsx": require("../src/legacy/Dashboard/StakePoolInfos.stories.tsx"),
-    "./src/legacy/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.stories.tsx": require("../src/legacy/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.stories.tsx"),
-    "./src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.stories.tsx": require("../src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.stories.tsx"),
     "./src/legacy/HW/Instructions/Instructions.stories.tsx": require("../src/legacy/HW/Instructions/Instructions.stories.tsx"),
     "./src/legacy/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx": require("../src/legacy/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx"),
     "./src/legacy/HW/LedgerConnect/LedgerConnect.stories.tsx": require("../src/legacy/HW/LedgerConnect/LedgerConnect.stories.tsx"),

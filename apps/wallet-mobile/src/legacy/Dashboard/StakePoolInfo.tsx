@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button, ButtonType} from '../../components/Button/Button'
+import {Button, ButtonProps, ButtonType} from '../../components/Button/Button'
 import {CopyButton} from '../../components/CopyButton'
 import {Text} from '../../components/Text'
 import {TitledCard} from '../../components/TitledCard'
@@ -15,11 +15,16 @@ import {isEmptyString} from '../../kernel/utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {StakePoolInfoAndHistory} from '../../yoroi-wallets/types/staking'
 
-export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
+type StakePoolInfoProps = {
+  stakePoolId: string
+  ctaProps: ButtonProps
+}
+export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, bold} = useStyles()
   const {isDark} = useTheme()
   const {wallet} = useSelectedWallet()
+
   const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory({wallet, stakePoolId})
   const homepage = stakePoolInfoAndHistory?.info?.homepage
 
@@ -30,21 +35,20 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
     <View>
       <TitledCard title={strings.title} variant="poolInfo" testID="stakePoolInfoTitleCard">
         <View style={styles.container}>
-          <Text bold style={styles.poolName}>
-            {formatStakepoolNameWithTicker(stakePoolInfoAndHistory.info.ticker, stakePoolInfoAndHistory.info.name) ??
-              strings.unknownPool}
-          </Text>
+          <Button
+            type={ButtonType.Link}
+            title={
+              formatStakepoolNameWithTicker(stakePoolInfoAndHistory.info.ticker, stakePoolInfoAndHistory.info.name) ??
+              strings.unknownPool
+            }
+            onPress={() => !isEmptyString(homepage) && Linking.openURL(homepage)}
+            style={styles.poolName}
+            fontOverride={bold}
+          />
 
           <CopyButton title={stakePoolId} value={stakePoolId} message={strings.copied} />
 
-          {!isEmptyString(homepage) && (
-            <Button
-              type={ButtonType.Secondary}
-              size="S"
-              onPress={() => Linking.openURL(homepage)}
-              title={strings.goToWebsiteButtonLabel}
-            />
-          )}
+          <Button type={ButtonType.Secondary} size="S" title={strings.undelegate} {...ctaProps} />
         </View>
       </TitledCard>
 
@@ -107,8 +111,7 @@ const useStyles = () => {
       ...atoms.gap_md,
     },
     poolName: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
+      ...atoms.self_start,
     },
     warning: {
       ...atoms.p_sm,
@@ -119,7 +122,7 @@ const useStyles = () => {
       ...atoms.body_3_sm_regular,
     },
   })
-  return styles
+  return {styles, bold: atoms.body_1_lg_medium}
 }
 
 const messages = defineMessages({
@@ -145,6 +148,10 @@ const messages = defineMessages({
     id: 'components.delegationsummary.delegatedStakepoolInfo.unknownPool',
     defaultMessage: '!!!Unknown pool',
   },
+  undelegate: {
+    id: 'components.delegationsummary.delegatedStakepoolInfo.undelegate',
+    defaultMessage: '!!!Undelegate',
+  },
 })
 
 const useStrings = () => {
@@ -156,6 +163,7 @@ const useStrings = () => {
     goToWebsiteButtonLabel: intl.formatMessage(messages.goToWebsiteButtonLabel),
     copied: intl.formatMessage(messages.copied),
     unknownPool: intl.formatMessage(messages.unknownPool),
+    undelegate: intl.formatMessage(messages.undelegate),
   }
 }
 

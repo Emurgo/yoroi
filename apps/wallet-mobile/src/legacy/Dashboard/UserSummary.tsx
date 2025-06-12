@@ -4,7 +4,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, ButtonType} from '../../components/Button/Button'
+import {Button, ButtonProps, ButtonType} from '../../components/Button/Button'
 import {Icon} from '../../components/Icon'
 import {Space} from '../../components/Space/Space'
 import {Text} from '../../components/Text'
@@ -21,11 +21,10 @@ type Props = {
   totalAdaSum: BigNumber | null
   totalRewards: BigNumber | null
   totalDelegated: BigNumber | null
-  onWithdraw: () => void
-  disableWithdraw: boolean
+  ctaProps?: ButtonProps
 }
 
-export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdraw, disableWithdraw}: Props) => {
+export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, ctaProps}: Props) => {
   const styles = useStyles()
   const {color} = useTheme()
   const strings = useStrings()
@@ -99,17 +98,19 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
           </View>
         </View>
 
-        <Space height="lg" />
+        {ctaProps && (
+          <>
+            <Space height="lg" />
 
-        <Button
-          type={ButtonType.Secondary}
-          disabled={disableWithdraw}
-          size="S"
-          style={styles.withdrawButton}
-          onPress={onWithdraw}
-          title={strings.withdrawButtonTitle}
-          testID="userSummaryWithdrawButton"
-        />
+            <Button
+              type={ButtonType.Secondary}
+              size="S"
+              title={strings.withdrawButtonTitle}
+              {...ctaProps}
+              testID="userSummaryWithdrawButton"
+            />
+          </>
+        )}
       </View>
     </TitledCard>
   )
@@ -138,9 +139,6 @@ const useStyles = () => {
     value: {
       color: color.text_gray_medium,
       ...atoms.body_1_lg_medium,
-    },
-    withdrawButton: {
-      ...atoms.self_start,
     },
   })
 

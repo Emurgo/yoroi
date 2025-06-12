@@ -11,7 +11,7 @@ type Props = {
   onParticipatePress: () => void
 }
 
-export const WithdrawWarningModal = ({onParticipatePress}: Props) => {
+export const WithdrawGovernanceWarningModal = ({onParticipatePress}: Props) => {
   const strings = useStrings()
   const styles = useStyles()
 

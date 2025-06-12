@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Stake pool delegated",
     "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
     "start": {
-      "line": 126,
+      "line": 129,
       "column": 9,
-      "index": 4022
+      "index": 4138
     },
     "end": {
-      "line": 129,
+      "line": 132,
       "column": 3,
-      "index": 4143
+      "index": 4259
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!If you just delegated to a new stake pool it may  take a couple of minutes for the network to process your request.",
     "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
     "start": {
-      "line": 130,
+      "line": 133,
       "column": 11,
-      "index": 4156
+      "index": 4272
     },
     "end": {
-      "line": 135,
+      "line": 138,
       "column": 3,
-      "index": 4391
+      "index": 4507
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Go to website",
     "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
     "start": {
-      "line": 136,
+      "line": 139,
       "column": 26,
-      "index": 4419
+      "index": 4535
     },
     "end": {
-      "line": 139,
+      "line": 142,
       "column": 3,
-      "index": 4554
+      "index": 4670
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Copied!",
     "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
     "start": {
-      "line": 140,
+      "line": 143,
       "column": 10,
-      "index": 4566
+      "index": 4682
     },
     "end": {
-      "line": 143,
+      "line": 146,
       "column": 3,
-      "index": 4675
+      "index": 4791
     }
   },
   {
@@ -64,14 +64,29 @@
     "defaultMessage": "!!!Unknown pool",
     "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
     "start": {
-      "line": 144,
+      "line": 147,
       "column": 15,
-      "index": 4692
+      "index": 4808
     },
     "end": {
-      "line": 147,
+      "line": 150,
       "column": 3,
-      "index": 4811
+      "index": 4927
+    }
+  },
+  {
+    "id": "components.delegationsummary.delegatedStakepoolInfo.undelegate",
+    "defaultMessage": "!!!Undelegate",
+    "file": "src/legacy/Dashboard/StakePoolInfo.tsx",
+    "start": {
+      "line": 151,
+      "column": 14,
+      "index": 4943
+    },
+    "end": {
+      "line": 154,
+      "column": 3,
+      "index": 5059
     }
   }
 ]

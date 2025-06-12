@@ -13,8 +13,10 @@ import {useCallback} from 'react'
 import {onlineManager, useMutation, UseMutationOptions, useQueries, useQuery, UseQueryOptions} from 'react-query'
 
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
+import {useStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {convertBech32ToHex} from '../cardano/common/signatureUtils'
@@ -22,7 +24,7 @@ import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TxSubmissionStatus} from '../types/other'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {delay} from '../utils/timeUtils'
-import {Utxos} from '../utils/utils'
+import {Quantities, Utxos} from '../utils/utils'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -191,32 +193,37 @@ export const usePlate = ({
   return query.data
 }
 
-export const useWithdrawalTx = (
-  {
-    wallet,
-    addressMode,
-    deregister = false,
-  }: {
-    wallet: YoroiWallet
-    addressMode: Wallet.AddressMode
-    deregister?: boolean
-  },
-  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'withdrawalTx', {deregister: boolean}]>,
-) => {
-  const query = useQuery({
-    ...options,
-    queryKey: [wallet.id, 'withdrawalTx', {deregister}],
-    queryFn: async () => wallet.createWithdrawalTx({shouldDeregister: deregister, addressMode}),
-    retry: false,
-    cacheTime: 0,
-    useErrorBoundary: true,
-    suspense: true,
-  })
+export const useCreateWithdrawTx = () => {
+  const {wallet, meta} = useSelectedWallet()
+  const [isLoading, setIsLoading] = React.useState(false)
+  const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
 
-  return {
-    withdrawalTx: query.data,
-    ...query,
+  const hasRewards =
+    stakingInfo?.status === 'staked' //
+      ? Quantities.isGreaterThan(stakingInfo.rewards, '0')
+      : false
+
+  const createWithdrawalTx = async ({
+    shouldDeregister,
+    onSuccess,
+    onError,
+  }: {
+    shouldDeregister: boolean
+    onSuccess: (unsignedTx: YoroiUnsignedTx) => void
+    onError: (error: unknown) => void
+  }) => {
+    setIsLoading(true)
+
+    try {
+      const res = await wallet.createWithdrawalTx({shouldDeregister, addressMode: meta.addressMode})
+      setIsLoading(false)
+      onSuccess(res)
+    } catch (e) {
+      onError(e)
+    }
   }
+
+  return {hasRewards, isLoading, createWithdrawalTx}
 }
 
 type VotingRegTxAndEncryptedKey = {
