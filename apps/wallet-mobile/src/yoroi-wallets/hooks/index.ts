@@ -219,6 +219,7 @@ export const useCreateWithdrawTx = () => {
       setIsLoading(false)
       onSuccess(res)
     } catch (e) {
+      setIsLoading(false)
       onError(e)
     }
   }

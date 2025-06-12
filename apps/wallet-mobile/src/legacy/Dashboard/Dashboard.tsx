@@ -153,7 +153,7 @@ export const Dashboard = () => {
               <StakePoolInfos
                 ctaProps={{
                   onPress: createOnWithdraw({shouldDeregister: true}),
-                  disabled: meta.isReadOnly || isWithdrawLoading || !hasRewards,
+                  disabled: meta.isReadOnly || isWithdrawLoading,
                 }}
               />
 
