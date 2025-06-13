@@ -13,7 +13,7 @@ import {YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
 import {Quantities} from '../../yoroi-wallets/utils/utils'
 import {StakePoolInfo} from './StakePoolInfo'
 
-export const StakePoolInfos = ({ctaProps}: {ctaProps: ButtonProps}) => {
+export const StakePoolInfos = ({ctaProps}: {ctaProps?: ButtonProps}) => {
   const {wallet} = useSelectedWallet()
   const {stakePoolIds, isLoading} = useStakePoolIds(wallet)
   const {isDark} = useTheme()

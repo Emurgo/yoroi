@@ -17,7 +17,7 @@ import {StakePoolInfoAndHistory} from '../../yoroi-wallets/types/staking'
 
 type StakePoolInfoProps = {
   stakePoolId: string
-  ctaProps: ButtonProps
+  ctaProps?: ButtonProps
 }
 export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
   const strings = useStrings()
@@ -48,7 +48,7 @@ export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
 
           <CopyButton title={stakePoolId} value={stakePoolId} message={strings.copied} />
 
-          <Button type={ButtonType.Secondary} size="S" title={strings.undelegate} {...ctaProps} />
+          {ctaProps && <Button type={ButtonType.Secondary} size="S" title={strings.undelegate} {...ctaProps} />}
         </View>
       </TitledCard>
 
