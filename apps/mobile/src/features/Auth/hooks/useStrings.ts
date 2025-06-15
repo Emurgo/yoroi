@@ -13,6 +13,7 @@ export const useStrings = () => {
     cancel: intl.formatMessage(globalMessages.cancel),
     authorize: intl.formatMessage(messages.authorize),
     usePasscode: intl.formatMessage(messages.usePasscode),
+    titleLoginWithPin: intl.formatMessage(messages.titleLoginWithPin),
   })
 }
 
@@ -32,5 +33,9 @@ const messages = defineMessages({
   unknownError: {
     id: 'components.send.biometricauthscreen.UNKNOWN_ERROR',
     defaultMessage: '!!!Unknown error!',
+  },
+  titleLoginWithPin: {
+    id: 'components.login.custompinlogin.title',
+    defaultMessage: '!!!Enter PIN',
   },
 })

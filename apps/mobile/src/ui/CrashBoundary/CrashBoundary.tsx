@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {BackHandler, Platform, ScrollView, Text, View} from 'react-native'
 
-import {useIntl} from 'react-intl'
+import {useTranslatedError} from '../../hooks/useTranslatedError'
 import {LocalizableError} from '../../kernel/i18n/LocalizableError'
 import {logger} from '../../kernel/logger/logger'
 import {Button} from '../Button/Button'
@@ -20,13 +20,14 @@ interface Props {
 }
 
 interface State {
-  error: Error | null
+  error?: Error | LocalizableError
   details: string
 }
 
-export class ErrorBoundary extends React.Component<Props, State> {
+// NOTE: Unrecoverable error boundary
+export class CrashBoundary extends React.Component<Props, State> {
   public state: State = {
-    error: null,
+    error: undefined,
     details: '',
   }
 
@@ -124,25 +125,14 @@ const ErrorView = ({state, debug}: {state: State; debug?: boolean}) => {
 export const MaybeTranslatedError = ({
   error,
 }: {
-  error: Error | LocalizableError | null
+  error?: Error | LocalizableError
 }) => {
   const {atoms: ta} = useTheme()
-  const intl = useIntl()
-
-  const translated =
-    error instanceof LocalizableError
-      ? intl.formatMessage(error.descriptor)
-      : null
-
-  if (translated) {
-    return (
-      <Text style={[a.body_2_md_regular, ta.text_gray_max]}>{translated}</Text>
-    )
-  }
+  const translatedError = useTranslatedError({error})
 
   return (
     <Text style={[a.body_2_md_regular, ta.text_gray_max, a.flex_shrink]}>
-      {error?.toString()}
+      {translatedError}
     </Text>
   )
 }

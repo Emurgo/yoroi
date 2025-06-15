@@ -462,6 +462,13 @@ export const atoms = {
   bg_transparent: {
     backgroundColor: 'transparent',
   },
+
+  debug: {
+    backgroundColor: 'pink',
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: 'purple',
+  },
 } as const
 
 export type ThemeAtoms = typeof atoms

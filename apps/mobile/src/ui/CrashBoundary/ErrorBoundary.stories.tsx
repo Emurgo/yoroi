@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {ErrorBoundary} from './ErrorBoundary'
+import {ErrorBoundary} from './CrashBoundary'
 
 storiesOf('ErrorBoundary', module)
   .add('Default', () => {

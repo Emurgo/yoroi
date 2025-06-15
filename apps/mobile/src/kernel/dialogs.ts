@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import 'react-intl'
-
-import type {IntlShape} from 'react-intl'
+import {IntlShape, MessageDescriptor} from 'react-intl'
 import {Alert} from 'react-native'
 
 import globalMessages from './i18n/global-messages'
@@ -9,8 +6,8 @@ import globalMessages from './i18n/global-messages'
 type DialogOptions = {
   title: string
   message: string
-  yesButton: string
-  noButton?: string
+  btnYesLabel: string
+  btnNoLabel?: string
 }
 export const DIALOG_BUTTONS = {
   YES: 'Yes',
@@ -20,18 +17,18 @@ type DialogButton = (typeof DIALOG_BUTTONS)[keyof typeof DIALOG_BUTTONS]
 
 const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   new Promise((resolve) => {
-    const {title, message, yesButton, noButton} = translations
-    const buttons: Array<any> = []
+    const {title, message, btnYesLabel, btnNoLabel} = translations
+    const buttons: Array<{text: string; onPress: () => void}> = []
 
-    if (noButton != null) {
+    if (btnNoLabel != null) {
       buttons.push({
-        text: noButton,
+        text: btnNoLabel,
         onPress: () => resolve(DIALOG_BUTTONS.NO),
       })
     }
 
     buttons.push({
-      text: yesButton,
+      text: btnYesLabel,
       onPress: () => resolve(DIALOG_BUTTONS.YES),
     })
     Alert.alert(title, message, buttons, {
@@ -41,10 +38,10 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
 
 export const showErrorDialog = (
   dialog: {
-    title: Record<string, any>
-    message: Record<string, any>
+    title: MessageDescriptor
+    message: MessageDescriptor
   },
-  intl: IntlShape | null | undefined,
+  intl?: IntlShape,
   msgOptions?: {
     message: string
   },
@@ -56,13 +53,16 @@ export const showErrorDialog = (
     message = intl.formatMessage(dialog.message, msgOptions)
     yesButton = intl.formatMessage(globalMessages.ok)
   } else {
-    // in this case the function was called without providing the IntlShape
-    // object, so only an english dialog will be displayed
     title = dialog.title.defaultMessage
 
-    // seems impossible to pass eslint check using a ternary operator here
-    if (msgOptions != null && 'message' in msgOptions) {
-      message = dialog.message.defaultMessage.replace(new RegExp('{message}', 'gi'), msgOptions.message)
+    if (
+      msgOptions?.message != null &&
+      typeof dialog.message.defaultMessage === 'string'
+    ) {
+      message = dialog.message.defaultMessage?.replace(
+        new RegExp('{message}', 'gi'),
+        msgOptions.message,
+      )
     } else {
       message = 'unknown error'
     }
@@ -71,16 +71,20 @@ export const showErrorDialog = (
   }
 
   return showDialog({
-    title,
+    title: String(title),
     message,
-    yesButton,
+    btnYesLabel: yesButton,
   })
 }
 
-export const showConfirmationDialog = (dialog: any | DialogOptions, intl: IntlShape): Promise<DialogButton> =>
+// TODO: revise it looks like it never supposed be working
+export const showConfirmationDialog = (
+  dialog: DialogOptions,
+  intl: IntlShape,
+): Promise<DialogButton> =>
   showDialog({
-    title: intl.formatMessage(dialog.title),
-    message: intl.formatMessage(dialog.message),
-    yesButton: intl.formatMessage(dialog.yesButton),
-    noButton: intl.formatMessage(dialog.noButton),
+    title: intl.formatMessage({defaultMessage: dialog.title}),
+    message: intl.formatMessage({defaultMessage: dialog.message}),
+    btnYesLabel: intl.formatMessage({defaultMessage: dialog.btnYesLabel}),
+    btnNoLabel: intl.formatMessage({defaultMessage: dialog.btnNoLabel}),
   })

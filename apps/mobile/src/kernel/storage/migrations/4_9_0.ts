@@ -1,7 +1,8 @@
 import {parseBoolean} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
-import {authWithOs, authWithPin, parseAuthSetting} from '../storages'
+import {authWithOs, authWithPin} from '../../../features/Auth/common/constants'
+import {parseAuthSetting} from '../storages'
 
 export const getAuthSetting = async (storage: App.Storage) => {
   const authSetting = await storage
