@@ -77,14 +77,18 @@ export const showErrorDialog = (
   })
 }
 
-// TODO: revise it looks like it never supposed be working
 export const showConfirmationDialog = (
-  dialog: DialogOptions,
+  dialog: {
+    title: MessageDescriptor
+    message: MessageDescriptor
+    btnYesLabel: MessageDescriptor
+    btnNoLabel?: MessageDescriptor
+  },
   intl: IntlShape,
 ): Promise<DialogButton> =>
   showDialog({
-    title: intl.formatMessage({defaultMessage: dialog.title}),
-    message: intl.formatMessage({defaultMessage: dialog.message}),
-    btnYesLabel: intl.formatMessage({defaultMessage: dialog.btnYesLabel}),
-    btnNoLabel: intl.formatMessage({defaultMessage: dialog.btnNoLabel}),
+    title: intl.formatMessage(dialog.title),
+    message: intl.formatMessage(dialog.message),
+    btnYesLabel: intl.formatMessage(dialog.btnYesLabel),
+    btnNoLabel: dialog.btnNoLabel ? intl.formatMessage(dialog.btnNoLabel) : undefined,
   })

@@ -12,7 +12,7 @@ type Props = {
   subtitles?: Array<string>
   pinMaxLength: number
   onGoBack?: () => void
-  onDone: (pin: string) => void
+  onDone: (pin: string) => unknown 
 }
 
 export type PinInputRef = {

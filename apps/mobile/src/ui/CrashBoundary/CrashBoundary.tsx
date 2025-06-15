@@ -128,7 +128,7 @@ export const MaybeTranslatedError = ({
   error?: Error | LocalizableError
 }) => {
   const {atoms: ta} = useTheme()
-  const translatedError = useTranslatedError({error})
+  const translatedError = useTranslatedError(error)
 
   return (
     <Text style={[a.body_2_md_regular, ta.text_gray_max, a.flex_shrink]}>

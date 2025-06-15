@@ -7,22 +7,14 @@ import {
   ErrorBoundary as ReactErrorBoundary,
   ErrorBoundaryProps as ReactErrorBoundaryProps,
 } from 'react-error-boundary'
-import {
-  ActivityIndicator,
-  LayoutAnimation,
-  StyleProp,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {ActivityIndicator, StyleProp, View, ViewStyle} from 'react-native'
 
-// TODO: add image for no fallback error
-// import image from '../../assets/img/error.png'
-import {useTranslatedError} from '../../hooks/useTranslatedError'
-import {LocalizableError} from '../../kernel/i18n/LocalizableError'
-import {Button} from '../Button/Button'
-import {SpaceHeight} from '../Space/Space'
+import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
+import {FullErrorFallback} from './FullErrorFallback'
+import {InlineErrorFallback} from './InlineErrorFallback'
+import {LargeErrorFallback} from './LargeErrorFallback'
+import {SmallErrorFallback} from './SmallErrorFallback'
+import {ErrorFallbackProps} from './types'
 
 export const Boundary = (props: BoundaryProps) => {
   return (
@@ -57,14 +49,12 @@ const LoadingFallback = ({
 }: LoadingFallbackProps) => {
   const {isDark} = useTheme()
 
+  if (size === 'full') {
+    return <LoadingOverlay debug={debug} isLoading={true} />
+  }
+
   return (
-    <View
-      style={[
-        size === 'full' && {...a.h_full, ...a.w_full},
-        style,
-        debug && a.debug,
-      ]}
-    >
+    <View style={[style, debug && a.debug]}>
       <ActivityIndicator
         size={size === 'small' ? 'small' : 'large'}
         color={isDark ? 'white' : 'dark'}
@@ -116,169 +106,6 @@ const ErrorBoundary = ({
   )
 }
 
-type ErrorFallbackProps = {
-  error: FallbackProps['error'] | LocalizableError
-  resetErrorBoundary: FallbackProps['resetErrorBoundary']
-  reset?: boolean
-  debug?: boolean
-}
-
-const FullErrorFallback = ({
-  error,
-  resetErrorBoundary,
-  reset = true,
-  debug,
-}: ErrorFallbackProps) => {
-  const translatedError = useTranslatedError({error})
-  const {atoms: ta} = useTheme()
-
-  return (
-    <View
-      style={[
-        a.h_full,
-        a.w_full,
-        a.p_lg,
-        a.flex_1,
-        a.align_center,
-        a.gap_lg,
-        ta.bg_color_max,
-        debug && a.debug,
-      ]}
-    >
-      <View style={[a.align_center, a.justify_center]}>
-        <Text>{translatedError}</Text>
-      </View>
-
-      {/* <Image source={image} /> */}
-
-      {reset && (
-        <Button
-          title="Try again"
-          onPress={() => {
-            resetErrorBoundary()
-          }}
-        />
-      )}
-    </View>
-  )
-}
-
-const LargeErrorFallback = ({
-  error,
-  resetErrorBoundary,
-  reset = true,
-  debug,
-}: ErrorFallbackProps) => {
-  const {atoms: ta} = useTheme()
-  const translatedError = useTranslatedError({error})
-
-  return (
-    <View
-      style={[
-        a.h_full,
-        a.w_full,
-        a.p_lg,
-        a.flex_1,
-        a.align_center,
-        a.gap_lg,
-        ta.bg_color_max,
-        debug && a.debug,
-      ]}
-    >
-      <View style={[a.align_center, a.justify_center]}>
-        <Text>{translatedError}</Text>
-      </View>
-
-      {/* <Image source={image} /> */}
-
-      {reset && (
-        <Button
-          title="Try again"
-          onPress={() => {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-            resetErrorBoundary()
-          }}
-        />
-      )}
-
-      <SpaceHeight fill size="lg" />
-    </View>
-  )
-}
-
-const SmallErrorFallback = ({
-  error,
-  resetErrorBoundary,
-  reset = true,
-  debug,
-}: ErrorFallbackProps) => {
-  const {atoms: ta} = useTheme()
-  const translatedError = useTranslatedError({error})
-
-  return (
-    <View
-      style={[
-        a.h_full,
-        a.w_full,
-        a.p_lg,
-        a.flex_1,
-        a.align_center,
-        a.gap_lg,
-        ta.bg_color_max,
-        debug && a.debug,
-      ]}
-    >
-      <View style={[a.align_center, a.justify_center]}>
-        <Text>{translatedError}</Text>
-      </View>
-
-      {reset && (
-        <Button
-          title="Try again"
-          onPress={() => {
-            resetErrorBoundary()
-          }}
-        />
-      )}
-    </View>
-  )
-}
-
-const InlineErrorFallback = ({
-  error,
-  resetErrorBoundary,
-  reset,
-  debug,
-}: ErrorFallbackProps) => {
-  const {atoms: ta} = useTheme()
-  const translatedError = useTranslatedError({error})
-
-  return (
-    <View
-      style={[
-        a.h_full,
-        a.w_full,
-        a.p_lg,
-        a.flex_1,
-        a.align_center,
-        a.gap_lg,
-        ta.bg_color_max,
-        debug && a.debug,
-      ]}
-    >
-      <TouchableOpacity
-        onLongPress={() => {
-          resetErrorBoundary()
-        }}
-        style={[a.align_center, a.justify_center]}
-        disabled={reset === false}
-      >
-        <Text>{translatedError}</Text>
-      </TouchableOpacity>
-    </View>
-  )
-}
-
 export const ResetError = React.forwardRef<ResetErrorRef, ResetErrorProps>(
   ({resetErrorBoundary, children}, ref) => {
     const {reset} = useQueryErrorResetBoundary()
@@ -312,11 +139,9 @@ type LoadingFallbackProps = {
   size?: 'full' | 'large' | 'small'
   debug?: boolean
 }
-
 export type ResetErrorRef = {
   reset: () => void
 }
-
 type ResetErrorProps = React.PropsWithChildren<{
   resetErrorBoundary: FallbackProps['resetErrorBoundary']
 }>
