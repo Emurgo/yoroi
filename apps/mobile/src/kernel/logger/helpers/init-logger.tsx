@@ -14,7 +14,7 @@ import {Sentry} from '../adapters/sentry'
 import {sentryAdapter} from '../adapters/sentry-transporter'
 import {logger} from '../logger'
 
-const isEnabled = crashReportsStorageKeyManager.read()
+const isEnabled = crashReportsStorageKeyManager.read() || isDev
 
 const sampleRate = isProduction ? 0.25 : 1
 
