@@ -8,6 +8,8 @@ import {useBackgroundTimer} from '../../../hooks/useBackgroundTimer'
 import {logger} from '../../../kernel/logger/logger'
 import {useAuthWithHost} from '../hooks/useAuthWithHost'
 import {AuthSetting, AuthWithHostConfig} from './types'
+import { LocalizableError } from '../../../kernel/i18n/LocalizableError'
+import { errorMessages } from '../../../kernel/i18n/global-messages'
 
 export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
@@ -31,8 +33,12 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   })
 
   const loginWithPin = React.useCallback(async (pin: string) => {
+    console.log('pin -->', pin)
     await new Promise((resolve) => setTimeout(resolve, 2000))
-    return '----> loginWithPin' + pin
+    if (pin === '111111') {
+      return true
+    }
+    throw new LocalizableError(errorMessages.incorrectPin.message)
   }, [])
 
   const value = React.useMemo(
@@ -109,7 +115,7 @@ type AuthContextActions = {
   loggedOut(): void
   changeAuthSetting(authSetting: AuthSetting): void
   authWithHost(): Promise<boolean>
-  loginWithPin(pin: string): Promise<string>
+  loginWithPin(pin: string): Promise<boolean>
 }
 
 type AuthContext = AuthLoggedState &

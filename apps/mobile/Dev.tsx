@@ -56,7 +56,10 @@ export function Dev() {
     >
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
-      <Boundary>
+      <Boundary loading={{
+        enabled: true,
+        size: 'full'
+      }}>
         <LoginWithPinScreen />
       </Boundary>
 
