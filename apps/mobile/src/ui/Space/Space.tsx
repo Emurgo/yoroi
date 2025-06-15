@@ -19,8 +19,6 @@ type WidthProps = BaseProps & {
   size: SpaceSize
 }
 
-const debugStyle = {backgroundColor: 'red', opacity: 0.2}
-
 const getSizeValue = (size: SpaceSize): number => {
   return typeof size === 'number' ? size : tokens.space[size]
 }
@@ -28,10 +26,10 @@ const getSizeValue = (size: SpaceSize): number => {
 export const SpaceHeight = ({size, fill, style, debug}: HeightProps) => (
   <View
     style={[
-      fill && a.flex_1,
-      {height: getSizeValue(size)},
+      fill && {...a.flex_1, minHeight: getSizeValue(size)},
+      !fill && {height: getSizeValue(size)},
       style,
-      debug && debugStyle,
+      debug && a.debug,
     ]}
   />
 )
@@ -39,10 +37,10 @@ export const SpaceHeight = ({size, fill, style, debug}: HeightProps) => (
 export const SpaceWidth = ({size, fill, style, debug}: WidthProps) => (
   <View
     style={[
-      fill && a.flex_1,
-      {width: getSizeValue(size)},
+      fill && {...a.flex_1, minWidth: getSizeValue(size)},
+      !fill && {width: getSizeValue(size)},
       style,
-      debug && debugStyle,
+      debug && a.debug,
     ]}
   />
 )

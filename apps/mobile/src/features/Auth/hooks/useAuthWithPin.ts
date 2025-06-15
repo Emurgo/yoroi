@@ -1,11 +1,12 @@
 import {parseString} from '@yoroi/common'
+
+import {UseMutationOptions} from '@tanstack/react-query'
 import {decryptData} from '../../../kernel/crypto/decrypt-data'
 import {logger} from '../../../kernel/logger/logger'
 
 export const useCheckPin = (
   options: UseMutationOptions<boolean, Error, string> = {},
 ) => {
-  const storage = useAsyncStorage()
   const mutation = useMutation({
     mutationFn: async (pin) => {
       const encryptedPinHash = await storage

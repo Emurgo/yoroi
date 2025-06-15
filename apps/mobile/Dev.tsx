@@ -9,6 +9,7 @@ import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from './src/features/Auth/common/context'
+import {LoginWithPinScreen} from './src/features/Auth/screens/LoginWithPinScreen'
 import {useConnectionStatus} from './src/kernel/connection/ConnectionProvider'
 import {decryptData} from './src/kernel/crypto/decrypt-data'
 import {encryptData} from './src/kernel/crypto/encrypt-data'
@@ -16,6 +17,7 @@ import globalMessages from './src/kernel/i18n/global-messages'
 import {useLanguage} from './src/kernel/i18n/LanguageProvider'
 import {LocalizableError} from './src/kernel/i18n/LocalizableError'
 import {rootSyncStorage} from './src/kernel/storage/storages'
+import {Boundary} from './src/ui/Boundary/Boundary'
 import {Button, ButtonType} from './src/ui/Button/Button'
 import {LoadingOverlay} from './src/ui/LoadingOverlay/LoadingOverlay'
 
@@ -32,8 +34,6 @@ export function Dev() {
     authSetting,
     changeAuthSetting,
     isLoggedIn,
-    login,
-    logout,
     authWithHostConfig,
     authWithHost,
   } = useAuth()
@@ -56,7 +56,11 @@ export function Dev() {
     >
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
-      <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
+      <Boundary>
+        <LoginWithPinScreen />
+      </Boundary>
+
+      {/* <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
         Welcome! base: {basePalette} selectedTheme: {config}
       </Text>
 
@@ -114,13 +118,6 @@ export function Dev() {
       />
 
       <Button
-        onPress={() => (isLoggedIn ? logout() : login())}
-        type={ButtonType.Secondary}
-        title={`Connection State: ${connectionStatus} ${isLoggedIn ? 'Logged In' : 'Logged Out'}`}
-        style={[a.pt_md, a.p_md, a.rounded_md]}
-      />
-
-      <Button
         onPress={showLoadingFor3Seconds}
         type={ButtonType.Secondary}
         title="Show Loading for 3 Seconds"
@@ -145,9 +142,9 @@ export function Dev() {
         style={[a.pt_md, a.p_md, a.rounded_md]}
       />
 
-      <BuggyComponent showCrash={showCrash} />
+      <BuggyComponent showCrash={showCrash} /> */}
 
-      <LoadingOverlay isLoading={isLoading} />
+      <LoadingOverlay />
     </SafeAreaView>
   )
 }

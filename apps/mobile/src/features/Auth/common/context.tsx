@@ -12,14 +12,10 @@ import {AuthSetting, AuthWithHostConfig} from './types'
 export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   authStorageKeyManager,
-  pinHashStorageKeyManager,
 }) => {
   const [loggedState, setLoggedState] = React.useState(initialState)
   const [authSetting, changeAuthSetting] = useSyncStorageToState(
     authStorageKeyManager,
-  )
-  const [pinHash, changePinHash, removePinHash] = useSyncStorageToState(
-    pinHashStorageKeyManager,
   )
   const {authWithHostConfig, authWithHost} = useAuthWithHost()
 
@@ -34,11 +30,17 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
     },
   })
 
+  const loginWithPin = React.useCallback(async (pin: string) => {
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    return '----> loginWithPin' + pin
+  }, [])
+
   const value = React.useMemo(
     () => ({
       ...loggedState,
       authWithHostConfig,
       authWithHost,
+      loginWithPin,
       loggedIn: () => {
         logger.debug('login', {
           origin: 'AuthProvider',
@@ -52,15 +54,13 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       },
       changeAuthSetting,
       authSetting,
-      pinHash,
-      hasPin: !!pinHash,
     }),
     [
       authWithHostConfig,
       authWithHost,
+      loginWithPin,
       loggedState,
       authSetting,
-      pinHash,
       changeAuthSetting,
     ],
   )
@@ -102,19 +102,18 @@ type AuthLoggedState = {
 
 type AuthSettingsState = {
   authSetting: AuthSetting | undefined | null
-  pinHash: string | undefined
-  hasPin: boolean
 }
 
 type AuthContextActions = {
   loggedIn(): void
   loggedOut(): void
   changeAuthSetting(authSetting: AuthSetting): void
+  authWithHost(): Promise<boolean>
+  loginWithPin(pin: string): Promise<string>
 }
 
 type AuthContext = AuthLoggedState &
   AuthSettingsState &
   AuthContextActions & {
     authWithHostConfig: AuthWithHostConfig
-    authWithHost(): Promise<boolean>
   }

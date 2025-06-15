@@ -26,7 +26,8 @@ import {
   rootStorage,
   themeStorageKeyManager,
 } from './src/kernel/storage/storages'
-import {ErrorBoundary} from './src/ui/ErrorBoundary/ErrorBoundary'
+import {CrashBoundary} from './src/ui/CrashBoundary/CrashBoundary'
+import {LoadingOverlayProvider} from './src/ui/LoadingOverlay/context'
 
 function AppShell({children}: React.PropsWithChildren) {
   const isMigrated = useMigrations(rootStorage)
@@ -39,7 +40,9 @@ function AppShell({children}: React.PropsWithChildren) {
         <ThemeProvider storage={themeStorageKeyManager}>
           <LanguageProvider storage={languageStorageKeyManager}>
             <ClipboardProvider>
-              <ErrorBoundary>{children}</ErrorBoundary>
+              <CrashBoundary>
+                <LoadingOverlayProvider>{children}</LoadingOverlayProvider>
+              </CrashBoundary>
             </ClipboardProvider>
           </LanguageProvider>
         </ThemeProvider>

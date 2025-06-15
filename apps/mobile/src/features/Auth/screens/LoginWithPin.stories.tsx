@@ -3,7 +3,7 @@ import {AsyncStorageProvider} from '@yoroi/common'
 import React from 'react'
 
 import {rootStorage} from '../../../kernel/storage/rootStorage'
-import {PinLoginScreen} from './PinLoginScreen'
+import {PinLoginScreen} from './LoginWithPinScreen'
 
 storiesOf('PinLoginScreen', module).add('Default', () => (
   <AsyncStorageProvider

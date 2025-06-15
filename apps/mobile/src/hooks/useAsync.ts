@@ -9,7 +9,7 @@ export const useAsync = <T>({
   withThrow = false,
   enabled = true,
   initialValue,
-}: UseAsyncOptions<T>): UseAsyncResult<T> | T => {
+}: UseAsyncOptions<T>): UseAsyncResult<T> => {
   const [value, setValue] = React.useState(initialValue)
   const [error, setError] = React.useState<Error>()
   const [isPending, setIsPending] = React.useState(enabled)
@@ -74,9 +74,24 @@ export const useAsync = <T>({
 
   if (withSuspense) {
     if (!enabled) {
-      return undefined as T
+      return {
+        value: undefined,
+        error: undefined,
+        isPending: false,
+        hasError: false,
+        done: true,
+        ok: true,
+      }
     }
-    return resource.read()
+    const value = resource.read()
+    return {
+      value,
+      error: undefined,
+      isPending: false,
+      hasError: false,
+      done: true,
+      ok: true,
+    }
   }
 
   return {

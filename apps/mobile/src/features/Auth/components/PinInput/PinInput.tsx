@@ -1,18 +1,18 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
-import _ from 'lodash'
-import React from 'react'
+import {atoms as a, space as s, useTheme} from '@yoroi/theme'
+
+import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {BACKSPACE, NumericKeyboard} from '../../../components/NumericKeyboard'
-import {Spacer} from '../../../components/Spacer/Spacer'
+import {BACKSPACE, NumericKeyboard} from '../../../../ui/NumericKeyboard'
+import {Space} from '../../../../ui/Space/Space'
 
 type Props = {
   title?: string
-  subtitles?: Array<string>
-  onDone: (pin: string) => void
-  pinMaxLength: number
   enabled?: boolean
+  subtitles?: Array<string>
+  pinMaxLength: number
   onGoBack?: () => void
+  onDone: (pin: string) => void
 }
 
 export type PinInputRef = {
@@ -28,8 +28,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
     onDone,
     onGoBack,
   } = props
-  const {atoms: ta, palette: p} = useTheme()
-
+  const {atoms: ta} = useTheme()
   const [pin, setPin] = React.useState('')
 
   React.useImperativeHandle(ref, () => ({
@@ -68,19 +67,19 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
           {title}
         </Text>
 
-        <Spacer height={4} />
+        <Space.Height.sm />
 
         {subtitles.map((subtitle) => (
           <Text
             key={subtitle}
             style={[
               a.body_2_md_regular,
-              ta.text_gray_max,
+              ta.text_gray_medium,
+              a.text_center,
               {
                 fontSize: 14,
                 lineHeight: 22,
                 maxWidth: 320,
-                textAlign: 'center',
               },
             ]}
           >
@@ -88,10 +87,10 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
           </Text>
         ))}
 
-        <Spacer height={24} />
+        <Space.Height._2xl />
 
-        <View style={styles.pinContainer}>
-          {_.range(0, pinMaxLength).map((index) => (
+        <View style={[a.flex_row, a.gap_sm]}>
+          {Array.from({length: pinMaxLength}, (_, index) => (
             <PinPlaceholder key={index} isActive={index < pin.length} />
           ))}
         </View>
@@ -103,19 +102,13 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
 })
 
 const PinPlaceholder = ({isActive}: {isActive: boolean}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   return (
-    <View
-      style={[
-        a.p_md,
-        a.rounded_md,
-        {borderWidth: 2, borderColor: p.primary_600},
-      ]}
-    >
+    <View style={[a.px_sm]}>
       <View
         style={[
-          {width: 4, height: 4},
-          a.rounded_sm,
+          a.rounded_full,
+          {width: s.lg, height: s.lg},
           isActive
             ? {backgroundColor: p.primary_600}
             : {borderWidth: 2, borderColor: p.primary_600},
