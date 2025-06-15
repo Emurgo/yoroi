@@ -14,16 +14,8 @@ export function usePromise<T, A extends unknown[] = []>(
       ? {promise: promiseOrOptions}
       : promiseOrOptions
 
-  const {
-    promise,
-    onSuccess,
-    onError,
-    onSettled,
-    boundaries = {
-      suspense: false,
-      error: false,
-    },
-  } = options
+  const {promise, onSuccess, onError, onSettled, shouldSuspend, shouldThrow} =
+    options
 
   const [value, setValue] = React.useState<T>()
   const [error, setError] = React.useState<Error>()
@@ -57,11 +49,11 @@ export function usePromise<T, A extends unknown[] = []>(
     [promise, onSuccess, onError, onSettled],
   )
 
-  if (boundaries.suspense && isPending && promiseRef.current) {
+  if (shouldSuspend && isPending && promiseRef.current) {
     throw promiseRef.current
   }
 
-  if (boundaries.error && error) {
+  if (shouldThrow && error) {
     throw error
   }
 
@@ -80,10 +72,8 @@ export type UsePromiseOptions<T, A extends unknown[] = []> = {
   onSuccess?: (value: T) => void
   onError?: (error: Error) => void
   onSettled?: () => void
-  boundaries?: {
-    suspense?: boolean
-    error?: boolean
-  }
+  shouldSuspend?: boolean
+  shouldThrow?: boolean
 }
 
 export type UsePromiseResult<T, A extends unknown[] = []> = Readonly<{

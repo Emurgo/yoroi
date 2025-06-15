@@ -31,7 +31,9 @@ export const FullErrorFallback = ({
       ]}
     >
       <View style={[a.align_center, a.justify_center]}>
-        <Text>{translatedError}</Text>
+        <Text style={[ta.text_gray_max, a.body_1_lg_medium]}>
+          {translatedError}
+        </Text>
       </View>
 
       {/* // TODO: add image for no fallback error */}

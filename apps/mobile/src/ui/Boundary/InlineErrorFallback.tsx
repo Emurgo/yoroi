@@ -34,7 +34,9 @@ export const InlineErrorFallback = ({
         style={[a.align_center, a.justify_center]}
         disabled={reset === false}
       >
-        <Text>{translatedError}</Text>
+        <Text style={[ta.text_gray_max, a.body_1_lg_medium]}>
+          {translatedError}
+        </Text>
       </TouchableOpacity>
     </View>
   )

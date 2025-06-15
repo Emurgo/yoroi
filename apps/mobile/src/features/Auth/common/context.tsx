@@ -1,19 +1,20 @@
-import {invalid, time, useSyncStorageToState} from '@yoroi/common'
+import {Hex, hex, invalid, time, useSyncStorageToState} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
 import {freeze} from 'immer'
 import * as React from 'react'
 
 import {useBackgroundTimer} from '../../../hooks/useBackgroundTimer'
+import {decryptData} from '../../../kernel/crypto/decrypt-data'
+import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
 import {useAuthWithHost} from '../hooks/useAuthWithHost'
 import {AuthSetting, AuthWithHostConfig} from './types'
-import { LocalizableError } from '../../../kernel/i18n/LocalizableError'
-import { errorMessages } from '../../../kernel/i18n/global-messages'
 
 export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   authStorageKeyManager,
+  pinStorageKeyManager,
 }) => {
   const [loggedState, setLoggedState] = React.useState(initialState)
   const [authSetting, changeAuthSetting] = useSyncStorageToState(
@@ -33,12 +34,16 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   })
 
   const loginWithPin = React.useCallback(async (pin: string) => {
-    console.log('pin -->', pin)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    if (pin === '111111') {
-      return true
+    const storedPin = pinStorageKeyManager.read()
+    if (!storedPin) {
+      throw new LocalizableError({
+        id: 'api.error.notFound',
+      })
     }
-    throw new LocalizableError(errorMessages.incorrectPin.message)
+    await decryptData({
+      encryptedData: storedPin,
+      secretKey: hex.fromUtf8(pin),
+    })
   }, [])
 
   const value = React.useMemo(
@@ -97,7 +102,7 @@ type Props = React.PropsWithChildren<{
   authStorageKeyManager: Readonly<
     App.StorageKeyManager<AuthSetting | undefined | null>
   >
-  pinHashStorageKeyManager: Readonly<App.StorageKeyManager<string | undefined>>
+  pinStorageKeyManager: Readonly<App.StorageKeyManager<Hex | undefined>>
 }>
 
 type AuthLoggedState = {
@@ -115,7 +120,7 @@ type AuthContextActions = {
   loggedOut(): void
   changeAuthSetting(authSetting: AuthSetting): void
   authWithHost(): Promise<boolean>
-  loginWithPin(pin: string): Promise<boolean>
+  loginWithPin(pin: string): Promise<void>
 }
 
 type AuthContext = AuthLoggedState &

@@ -2,6 +2,8 @@ import {MMKV} from 'react-native-mmkv'
 import {of} from 'rxjs'
 
 import {
+  Hex,
+  hex,
   mountAsyncStorage,
   mountMMKVStorage,
   observableStorageMaker,
@@ -11,6 +13,7 @@ import {
 } from '@yoroi/common'
 import {ThemeConfig, isThemeConfig} from '@yoroi/theme'
 
+import {Portfolio} from '@yoroi/types'
 import {AuthSetting} from '../../features/Auth/common/types'
 import {
   LanguageCode,
@@ -18,7 +21,6 @@ import {
   systemLanguageCode,
 } from '../i18n/localization'
 import {debugStorage} from './debug-storage'
-import { Portfolio } from '@yoroi/types'
 
 const rootMMKV = new MMKV({id: 'default.mmkv'})
 export const rootSyncStorage = observableStorageMaker<false, string>(
@@ -58,16 +60,14 @@ export const authStorageKeyManager = settingsStorageKeyMaker<
   parser: parseAuthSetting,
 })
 
-// Settings - Custom Pin Hash - it is not a HASH
-export const pinHashStorageKey = 'customPinHash'
-export const pinHashStorageKeyManager = settingsStorageKeyMaker<
-  string | undefined
->({
-  key: pinHashStorageKey,
+// Settings - Custom Pin - it is not a HASH
+export const pinStorageKey = 'customPinHash'
+export const pinStorageKeyManager = settingsStorageKeyMaker<Hex | undefined>({
+  key: pinStorageKey,
   parser: (data) => {
     const parsed = parseSafe(data)
     return typeof parsed === 'string' && parsed.length !== 0
-      ? parsed
+      ? hex(parsed)
       : undefined
   },
 })
@@ -98,10 +98,11 @@ export const screenShareStorageKeyManager = settingsStorageKeyMaker<boolean>({
 
 // Settings - Currency
 export const currencyStorageKey = 'currencySymbol'
-export const currencyStorageKeyManager = settingsStorageKeyMaker<Portfolio.Currency.Symbol>({
-  key: currencyStorageKey,
-  parser: (data) => parseCurrencySymbol(data),
-})
+export const currencyStorageKeyManager =
+  settingsStorageKeyMaker<Portfolio.Currency.Symbol>({
+    key: currencyStorageKey,
+    parser: (data) => parseCurrencySymbol(data),
+  })
 
 // Debug storage
 const observableFunction = (v: unknown) => {

@@ -22,7 +22,7 @@ import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
   languageStorageKeyManager,
-  pinHashStorageKeyManager,
+  pinStorageKeyManager,
   rootStorage,
   themeStorageKeyManager,
 } from './src/kernel/storage/storages'
@@ -238,7 +238,7 @@ function BusinessShell({children}: React.PropsWithChildren) {
   return (
     <AuthProvider
       authStorageKeyManager={authStorageKeyManager}
-      pinHashStorageKeyManager={pinHashStorageKeyManager}
+      pinStorageKeyManager={pinStorageKeyManager}
     >
       {children}
     </AuthProvider>
