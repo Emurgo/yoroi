@@ -1,4 +1,5 @@
 import {Api} from '@yoroi/types'
+
 import {tokenInfoMocks} from '../token-info.mocks'
 import {DullahanApiTokenActivityResponse} from './types'
 

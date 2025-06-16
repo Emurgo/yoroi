@@ -1,3 +1,5 @@
+import {Portfolio, Api} from '@yoroi/types'
+
 import {
   toDullahanRequest,
   toProcessedMediaRequest,
@@ -5,7 +7,6 @@ import {
   toTokenActivity,
   toTokenHistory,
 } from './transformers'
-import {Portfolio, Api} from '@yoroi/types'
 
 import {tokenMocks} from '../token.mocks'
 import {

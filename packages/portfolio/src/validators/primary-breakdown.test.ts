@@ -1,6 +1,7 @@
+import {Portfolio} from '@yoroi/types'
+
 import {isPrimaryBreakdown, parsePrimaryBreakdown} from './primary-breakdown'
 import {tokenBalanceMocks} from '../adapters/token-balance.mocks'
-import {Portfolio} from '@yoroi/types'
 
 describe('isPrimaryBreakdown', () => {
   it('should return true for a valid primary balance breakdown', () => {

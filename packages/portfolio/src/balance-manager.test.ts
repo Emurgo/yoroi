@@ -1,6 +1,7 @@
 import {Portfolio} from '@yoroi/types'
-import {BehaviorSubject} from 'rxjs'
 import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
+
+import {BehaviorSubject} from 'rxjs'
 
 import {portfolioBalanceManagerMaker} from './balance-manager'
 import {tokenBalanceMocks} from './adapters/token-balance.mocks'

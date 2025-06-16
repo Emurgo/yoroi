@@ -1,6 +1,8 @@
 import {Api, Portfolio} from '@yoroi/types'
+
 import {BigNumber} from 'bignumber.js'
 import {freeze} from 'immer'
+import {z} from 'zod'
 
 import {parseSecondaryTokenInfoWithCacheRecord} from '../../validators/token-info'
 import {
@@ -9,7 +11,6 @@ import {
   DullahanApiTokenHistoryResponse,
   DullahanApiTokenInfosResponse,
 } from './types'
-import {z} from 'zod'
 
 export const toSecondaryTokenInfos = (
   apiTokenInfosResponse: DullahanApiTokenInfosResponse,

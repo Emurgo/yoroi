@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 export const tokenImageInvalidateMocks = freeze({

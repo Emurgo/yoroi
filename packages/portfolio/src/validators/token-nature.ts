@@ -1,5 +1,6 @@
 import {createTypeGuardFromSchema} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
+
 import {z} from 'zod'
 
 export const TokenNatureSchema = z.nativeEnum(Portfolio.Token.Nature)

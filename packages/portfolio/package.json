@@ -7,9 +7,11 @@
     "cardano",
     "portfolio",
     "browser",
-    "react"
+    "react",
+    "react-native",
+    "typescript"
   ],
-  "homepage": "https://github.com/Emurgo/yoroi/packages/portfolio#readme",
+  "homepage": "https://github.com/Emurgo/yoroi/tree/develop/packages/portfolilo/README.md",
   "bugs": {
     "url": "https://github.com/Emurgo/yoroi/issues"
   },
@@ -169,43 +171,11 @@
     "rxjs": "^7.8.2",
     "zod": "^3.25.17"
   },
-  "packageManager": "yarn@1.22.21",
+  "packageManager": "npm@10.9.0",
   "engines": {
-    "node": ">= 16.19.0"
+    "node": ">= 22.12.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
-  },
-  "react-native-builder-bob": {
-    "source": "src",
-    "output": "lib",
-    "targets": [
-      "commonjs",
-      "module",
-      [
-        "typescript",
-        {
-          "project": "tsconfig.build.json",
-          "tsc": "./node_modules/.bin/tsc"
-        }
-      ]
-    ]
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
-    },
-    "npm": {
-      "publish": true
-    },
-    "github": {
-      "release": false
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "angular"
-      }
-    }
   }
 }

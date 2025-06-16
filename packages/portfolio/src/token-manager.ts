@@ -5,6 +5,7 @@ import {
   hasEntryValue,
   observerMaker,
 } from '@yoroi/common'
+
 import {freeze} from 'immer'
 
 import {createCachedUnknownTokenInfo} from './helpers/create-cached-unknown-token-info'

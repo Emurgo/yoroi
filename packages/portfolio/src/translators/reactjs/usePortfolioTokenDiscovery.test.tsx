@@ -1,9 +1,10 @@
+import {queryClientFixture} from '@yoroi/common'
+import {Chain} from '@yoroi/types'
+
 import * as React from 'react'
 import {QueryClient} from '@tanstack/react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
-import {queryClientFixture} from '@yoroi/common'
-import {Chain} from '@yoroi/types'
 
 import {tokenDiscoveryMocks} from '../../adapters/token-discovery.mocks'
 import {usePortfolioTokenDiscovery} from './usePortfolioTokenDiscovery'

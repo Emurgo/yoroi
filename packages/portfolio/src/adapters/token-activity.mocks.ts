@@ -1,6 +1,8 @@
 import {Api, Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
 import {BigNumber} from 'bignumber.js'
+
 import {tokenInfoMocks} from './token-info.mocks'
 import {duallahanTokenActivityMocks} from './dullahan-api/token-activity.mocks'
 

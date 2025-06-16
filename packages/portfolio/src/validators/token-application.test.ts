@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
+
 import {isTokenApplicaton, parseTokenApplication} from './token-application'
 
 describe('isTokenApplicaton', () => {

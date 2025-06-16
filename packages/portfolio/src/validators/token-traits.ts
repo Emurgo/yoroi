@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
+
 import {z} from 'zod'
 
 export const TraitSchema = z.object({

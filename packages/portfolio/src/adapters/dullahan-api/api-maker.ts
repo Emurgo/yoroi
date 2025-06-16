@@ -6,6 +6,7 @@ import {
   isRight,
 } from '@yoroi/common'
 import {Api, Chain, Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 import {ApiConfig} from '../../types'
