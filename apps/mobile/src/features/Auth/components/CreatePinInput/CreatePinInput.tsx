@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {showErrorDialog} from '../../../kernel/dialogs'
-import {PIN_LENGTH} from '../../common/constants'
+import {pinLength} from '../../common/constants'
 import {useCreatePin} from '../../hooks/hooks'
 import {PinInput, PinInputRef} from '../PinInput'
 
@@ -52,7 +52,7 @@ export const CreatePinInput = ({onDone}: Props) => {
       key="pinInput"
       title={strings.pinInputTitle}
       subtitles={[strings.pinInputSubtitle]}
-      pinMaxLength={PIN_LENGTH}
+      pinMaxLength={pinLength}
       onDone={onPinInput}
     />
   ) : (
@@ -62,7 +62,7 @@ export const CreatePinInput = ({onDone}: Props) => {
       enabled={!isLoading}
       title={strings.pinInputConfirmationTitle}
       subtitles={[strings.pinInputConfirmationSubTitle]}
-      pinMaxLength={PIN_LENGTH}
+      pinMaxLength={pinLength}
       onDone={onPinConfirmation}
       onGoBack={() => setStep('pin')}
     />

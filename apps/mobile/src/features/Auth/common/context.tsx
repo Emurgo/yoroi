@@ -44,7 +44,15 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       encryptedData: storedPin,
       secretKey: hex.fromUtf8(pin),
     })
+    setLoggedState(loggedInState)
   }, [])
+
+  const loginWithHost = React.useCallback(async () => {
+    const ok = await authWithHost()
+    if (ok) {
+      setLoggedState(loggedInState)
+    }
+  }, [authWithHost])
 
   const value = React.useMemo(
     () => ({
@@ -52,6 +60,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       authWithHostConfig,
       authWithHost,
       loginWithPin,
+      loginWithHost,
       loggedIn: () => {
         logger.debug('login', {
           origin: 'AuthProvider',
@@ -70,6 +79,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       authWithHostConfig,
       authWithHost,
       loginWithPin,
+      loginWithHost,
       loggedState,
       authSetting,
       changeAuthSetting,
@@ -121,6 +131,7 @@ type AuthContextActions = {
   changeAuthSetting(authSetting: AuthSetting): void
   authWithHost(): Promise<boolean>
   loginWithPin(pin: string): Promise<void>
+  loginWithHost(): Promise<void>
 }
 
 type AuthContext = AuthLoggedState &

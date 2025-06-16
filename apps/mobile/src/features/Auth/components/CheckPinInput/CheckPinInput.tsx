@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {showErrorDialog} from '../../../kernel/dialogs'
-import {PIN_LENGTH} from '../../common/constants'
+import {pinLength} from '../../common/constants'
 import {useCheckPin} from '../../hooks/hooks'
 import {PinInput, PinInputRef} from '../PinInput'
 
@@ -35,7 +35,7 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
       subtitles={[strings.subtitle]}
       enabled={!isLoading}
       onDone={checkPin}
-      pinMaxLength={PIN_LENGTH}
+      pinMaxLength={pinLength}
     />
   )
 }
