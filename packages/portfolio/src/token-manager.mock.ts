@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
+
 import {BehaviorSubject, Observable} from 'rxjs'
 
 export const createTokenManagerMock = (

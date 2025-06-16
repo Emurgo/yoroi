@@ -1,5 +1,6 @@
-import {z} from 'zod'
 import {Portfolio} from '@yoroi/types'
+
+import {z} from 'zod'
 
 export const PrimaryBreakdownSchema = z.object({
   availableRewards: z.bigint(),

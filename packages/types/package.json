@@ -5,7 +5,10 @@
   "keywords": [
     "yoroi",
     "cardano",
-    "types"
+    "types",
+    "react",
+    "react-native",
+    "typescript"
   ],
   "homepage": "https://github.com/Emurgo/yoroi/tree/develop/packages/types/README.md",
   "bugs": {

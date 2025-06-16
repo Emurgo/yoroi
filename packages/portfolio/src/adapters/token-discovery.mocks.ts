@@ -1,5 +1,6 @@
 import {cacheRecordMaker} from '@yoroi/common'
 import {Api, App, Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 import {tokenInfoMocks} from './token-info.mocks'

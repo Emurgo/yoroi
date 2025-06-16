@@ -8,7 +8,8 @@
     "common",
     "library",
     "react",
-    "react-native"
+    "react-native",
+    "typescript"
   ],
   "homepage": "https://github.com/Emurgo/yoroi/tree/develop/packages/common/README.md",
   "bugs": {

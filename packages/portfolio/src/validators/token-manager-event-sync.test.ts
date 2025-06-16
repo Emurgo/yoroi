@@ -1,5 +1,6 @@
-import {isEventTokenManagerSync} from './token-manager-event-sync'
 import {Portfolio} from '@yoroi/types'
+
+import {isEventTokenManagerSync} from './token-manager-event-sync'
 
 describe('isEventTokenManagerSync', () => {
   it('should return true for valid TokenManagerSync event', () => {

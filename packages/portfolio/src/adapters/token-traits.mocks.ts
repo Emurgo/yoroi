@@ -1,4 +1,5 @@
 import {Api, Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 const nftCryptoKitty: Portfolio.Token.Traits = {

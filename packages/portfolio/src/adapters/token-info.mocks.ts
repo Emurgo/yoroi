@@ -1,5 +1,6 @@
 import {Api, App, Portfolio} from '@yoroi/types'
 import {cacheRecordMaker} from '@yoroi/common'
+
 import {freeze} from 'immer'
 
 import {primaryTokenId} from '../constants'

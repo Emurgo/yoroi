@@ -1,5 +1,6 @@
 import {Api, App, Portfolio} from '@yoroi/types'
 import {cacheRecordSchemaMaker} from '@yoroi/common'
+
 import {z} from 'zod'
 
 import {TokenStatusSchema} from './token-status'

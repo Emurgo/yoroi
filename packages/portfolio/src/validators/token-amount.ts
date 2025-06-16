@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
+
 import {z} from 'zod'
 
 import {TokenInfoSchema} from './token-info'

@@ -1,5 +1,6 @@
 import {storageSerializer} from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 export const portfolioTokenStorageMaker = ({

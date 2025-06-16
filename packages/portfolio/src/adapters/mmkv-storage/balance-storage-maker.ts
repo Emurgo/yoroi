@@ -1,6 +1,8 @@
 import {storageSerializer} from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
+
 import {deserializers} from '../../transformers/deserializers'
 
 export const portfolioBalanceStorageMaker = ({

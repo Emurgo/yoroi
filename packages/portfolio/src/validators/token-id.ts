@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
+
 import {z} from 'zod'
 
 const regexId = /^(?:[a-fA-F0-9]+\.?[a-fA-F0-9]*|\.)$/

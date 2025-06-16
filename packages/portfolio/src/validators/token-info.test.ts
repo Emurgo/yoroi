@@ -1,4 +1,5 @@
 import {App, Portfolio} from '@yoroi/types'
+
 import {tokenInfoMocks} from '../adapters/token-info.mocks'
 import {
   isPrimaryTokenInfo,
