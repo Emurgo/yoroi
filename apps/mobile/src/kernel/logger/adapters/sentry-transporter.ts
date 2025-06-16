@@ -18,7 +18,7 @@ export const sentryAdapter = (sentryRuntime = Sentry) => {
     // simple message, add a breadcrumb
     if (typeof message === 'string') {
       const formattedMessage = metadata.origin?.length
-        ? `${origin} ${message}`
+        ? `${metadata.origin} ${message}`
         : message
       sentryRuntime.addBreadcrumb({
         message: formattedMessage,

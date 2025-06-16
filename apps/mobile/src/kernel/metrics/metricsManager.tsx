@@ -1,10 +1,9 @@
-import {isKeyOf} from '@yoroi/common'
+import {time, useSyncStorageToState} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
-import {EnrichmentPlugin, Event} from '@amplitude/analytics-types'
+import {freeze} from 'immer'
 import * as React from 'react'
 
-import {freeze} from 'immer'
 import {buildVariant} from '../constants'
 import {logger} from '../logger/logger'
 import {
@@ -14,33 +13,10 @@ import {
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
 
-const buildVariants = {
-  NIGHTLY: 'production',
-  PROD: 'production',
-  STAGING: 'development',
-  DEV: 'development',
-} as const
-type MetricsEnv = (typeof buildVariants)[keyof typeof buildVariants]
-type BUILD_VARIANT_KEY = keyof typeof buildVariants
-
-const isBuildVariant = (variant?: string): variant is BUILD_VARIANT_KEY =>
-  typeof variant === 'string' && isKeyOf(variant, buildVariants)
-
-const currentBuildVariant = isBuildVariant(buildVariant) ? buildVariant : 'DEV'
-const environment: MetricsEnv = Object.keys(buildVariants).includes(
-  currentBuildVariant,
-)
-  ? buildVariants[currentBuildVariant]
-  : buildVariants.DEV
-
-const infoPlugin: EnrichmentPlugin = {
-  name: 'info-plugin',
-  type: 'enrichment',
-  setup: async () => Promise.resolve(),
-  execute: async (event: Event) => {
-    return Promise.resolve(event)
-  },
-}
+const environment =
+  buildVariant === 'NIGHTLY' || buildVariant === 'PROD'
+    ? 'production'
+    : 'development'
 
 const metricsStorageMaker = ({
   enabled,
@@ -67,24 +43,21 @@ export const makeMetricsManager = (
   metricsModule: Ampli = ampli,
 ) => {
   const disable = async () => {
+    logger.debug('disable', {origin: 'metricsManager'})
     metricsStorage.enabled.save(false)
     await metricsModule.flush().promise
     metricsModule.client.setOptOut(true)
   }
   const enable = () => {
+    logger.debug('enable', {origin: 'metricsManager'})
     metricsStorage.enabled.save(true)
     metricsModule.client.setOptOut(false)
   }
-  const enabled = () => metricsStorage.enabled.read()
 
-  const consentRequested = () => metricsStorage.consentRequested.read()
-  const requestConsent = () => metricsStorage.consentRequested.save(true)
-  const resetConsent = () => metricsStorage.consentRequested.save(false)
-
-  const init = () => {
-    const isEnabled = enabled()
+  const init = async () => {
+    const isEnabled = metricsStorage.enabled.read()
     if (!metricsModule.isLoaded) {
-      metricsModule
+      await metricsModule
         .load({
           environment,
           client: {
@@ -96,14 +69,25 @@ export const makeMetricsManager = (
               },
             },
           },
+          disabled: !isEnabled,
         })
         .promise.then(() => {
-          if (environment === buildVariants.STAGING) {
-            metricsModule.client.add(infoPlugin)
+          if (environment === 'development') {
+            metricsModule.client.add({
+              name: 'info-plugin',
+              type: 'enrichment',
+              setup: async () => Promise.resolve(),
+              execute: async (event) => {
+                return Promise.resolve(event)
+              },
+            })
           }
         })
         .catch((error: unknown) => {
-          logger.error(`makeMetricsManager: init failed:`, {error, origin: 'metricsManager'})
+          logger.error('failed:', {
+            error,
+            origin: 'metricsManager.init',
+          })
         })
     }
   }
@@ -339,18 +323,11 @@ export const makeMetricsManager = (
     track,
     enable,
     disable,
-    enabled,
-    consentRequested,
-    requestConsent,
-    resetConsent,
   } as const
 }
 
 export type MetricsManager = ReturnType<typeof makeMetricsManager>
-type MetricsManagerContext = Omit<
-  MetricsManager,
-  'enable' | 'disable' | 'requestConsent' | 'resetConsent'
-> &
+type MetricsManagerContext = Omit<MetricsManager, 'enable' | 'disable'> &
   Readonly<{
     enable: () => void
     disable: () => void
@@ -362,27 +339,6 @@ type MetricsState = Readonly<{
   isEnabled: boolean
   isConsentRequested: boolean
 }>
-type MetricsActions = Readonly<{
-  isLoadedChanged: (loaded: boolean) => void
-  isEnabledChanged: (enabled: boolean) => void
-  isConsentRequestedChanged: (enabled: boolean) => void
-}>
-type MetricsAction =
-  | {type: 'isLoadedChanged'; isLoaded: boolean}
-  | {type: 'isEnabledChanged'; isEnabled: boolean}
-  | {type: 'isConsentRequestedChanged'; isConsentRequested: boolean}
-const metricsReducer = (state: MetricsState, action: MetricsAction) => {
-  switch (action.type) {
-    case 'isLoadedChanged':
-      return {...state, isLoaded: action.isLoaded}
-    case 'isEnabledChanged':
-      return {...state, isEnabled: action.isEnabled}
-    case 'isConsentRequestedChanged':
-      return {...state, isConsentRequested: action.isConsentRequested}
-    default:
-      return state
-  }
-}
 type MetricsContextType = MetricsManagerContext & MetricsState
 
 const defaultState: MetricsState = {
@@ -390,91 +346,61 @@ const defaultState: MetricsState = {
   isEnabled: false,
   isConsentRequested: false,
 } as const
-const defaultActions: MetricsActions = {
-  isLoadedChanged: (_loaded: boolean) =>
-    logger.error('[metrics-react] missing initialization'),
-  isEnabledChanged: (_enabled: boolean) =>
-    logger.error('[metrics-react] missing initialization'),
-  isConsentRequestedChanged: (_consentRequested: boolean) =>
-    logger.error('[metrics-react] missing initialization'),
-} as const
 const defaultManager: MetricsManager = mockMetricsManager()
 const MetricsContext = React.createContext<MetricsContextType>({
   ...defaultState,
-  ...defaultActions,
   ...defaultManager,
+  requestConsent: () => {},
+  resetConsent: () => {},
 })
 export const MetricsProvider = ({
   children,
   metricsManager,
-  initialState,
 }: {
   children: React.ReactNode
   metricsManager: MetricsManager
-  initialState?: Partial<MetricsState>
 }) => {
-  const [state, dispatch] = React.useReducer(metricsReducer, {
-    ...defaultState,
-    ...initialState,
-  })
-  const {
-    disable: managerDisable,
-    enable: managerEnable,
-    requestConsent: managerRequestConsent,
-    resetConsent: managerResetConsent,
-  } = metricsManager
-
-  const actions = React.useRef<MetricsActions>({
-    isLoadedChanged: (isLoaded) =>
-      dispatch({type: 'isLoadedChanged', isLoaded}),
-    isEnabledChanged: (isEnabled) =>
-      dispatch({type: 'isEnabledChanged', isEnabled}),
-    isConsentRequestedChanged: (isConsentRequested) =>
-      dispatch({type: 'isConsentRequestedChanged', isConsentRequested}),
-  }).current
-
-  const disable = React.useCallback(() => {
-    actions.isEnabledChanged(false)
-    managerDisable()
-  }, [actions, managerDisable])
-  const enable = React.useCallback(() => {
-    actions.isEnabledChanged(true)
-    managerEnable()
-  }, [actions, managerEnable])
-  const requestConsent = React.useCallback(() => {
-    actions.isConsentRequestedChanged(true)
-    managerRequestConsent()
-  }, [actions, managerRequestConsent])
-  const resetConsent = React.useCallback(() => {
-    actions.isConsentRequestedChanged(false)
-    managerResetConsent()
-  }, [actions, managerResetConsent])
+  const [isLoaded, setIsLoaded] = React.useState(false)
+  const [isEnabled] = useSyncStorageToState(metricsEnabledStorageKeyManager)
+  const [isConsentRequested, setConsentRequested] = useSyncStorageToState(
+    metricsConsentRequestedStorageKeyManager,
+  )
 
   React.useEffect(() => {
-    Promise.all([
-      metricsManager.init(),
-      metricsManager.enabled(),
-      metricsManager.consentRequested(),
-    ]).then(([_, enabled, consentRequested]) => {
-      actions.isLoadedChanged(true)
-      actions.isEnabledChanged(enabled)
-      actions.isConsentRequestedChanged(consentRequested)
-    })
-  }, [actions, metricsManager])
+    metricsManager
+      .init()
+      .catch((error) => {
+        logger.error('metricsManager init failed', {
+          error,
+          origin: 'metricsManager',
+        })
+      })
+      .finally(() => {
+        setIsLoaded(true)
+      })
+  }, [metricsManager])
 
   const context = React.useMemo(
     () => ({
-      ...state,
       ...metricsManager,
-      enable,
-      disable,
-      requestConsent,
-      resetConsent,
+      isEnabled,
+      isConsentRequested,
+      isLoaded,
+      enable: () => metricsManager.enable(),
+      disable: () => metricsManager.disable(),
+      requestConsent: () => setConsentRequested(true),
+      resetConsent: () => setConsentRequested(false),
     }),
-    [disable, enable, requestConsent, resetConsent, metricsManager, state],
+    [
+      metricsManager,
+      setConsentRequested,
+      isEnabled,
+      isConsentRequested,
+      isLoaded,
+    ],
   )
 
-  if (!state.isLoaded) return null
+  if (!isLoaded) return null
 
   return (
     <MetricsContext.Provider value={context}>
@@ -485,4 +411,4 @@ export const MetricsProvider = ({
 
 export const useMetrics = () => React.useContext(MetricsContext)
 
-const flushIntervalMs = 5000
+const flushIntervalMs = time.seconds(5)
