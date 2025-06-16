@@ -22,7 +22,7 @@ export const devAdapter = (transport = devLogger) => {
       ? ' ' + JSON.stringify(toLoggerMetadata(metadata), numberReplacer, 2)
       : ''
     const formattedMessage = metadata.origin?.length
-      ? `${origin} ${message}`
+      ? `${metadata.origin} ${message}`
       : message
 
     transport[level](

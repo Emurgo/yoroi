@@ -83,6 +83,7 @@
     "zod": "^3.25.17"
   },
   "devDependencies": {
+    "@amplitude/ampli": "^1.36.2",
     "@babel/core": "^7.25.2",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
     "@emurgo/cardano-serialization-lib-nodejs": "^14.1.2",

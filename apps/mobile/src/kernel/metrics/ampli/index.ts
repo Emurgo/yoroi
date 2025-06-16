@@ -1,4 +1,5 @@
 /* tslint:disable */
+/* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
 // @ts-nocheck
 /**
@@ -59,10 +60,17 @@ export type LoadOptionsWithEnvironment = LoadOptionsBase & {
   environment: Environment
   client?: {configuration?: ReactNativeOptions}
 }
-export type LoadOptionsWithApiKey = LoadOptionsBase & {client: {apiKey: string; configuration?: ReactNativeOptions}}
-export type LoadOptionsWithClientInstance = LoadOptionsBase & {client: {instance: ReactNativeClient}}
+export type LoadOptionsWithApiKey = LoadOptionsBase & {
+  client: {apiKey: string; configuration?: ReactNativeOptions}
+}
+export type LoadOptionsWithClientInstance = LoadOptionsBase & {
+  client: {instance: ReactNativeClient}
+}
 
-export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance
+export type LoadOptions =
+  | LoadOptionsWithEnvironment
+  | LoadOptionsWithApiKey
+  | LoadOptionsWithClientInstance
 
 export interface ClaimAdaTransactionSettledProperties {
   /**
@@ -294,7 +302,10 @@ export interface ReceiveCopyAddressClickedProperties {
    * |---|---|
    * | Enum Values | CTA Copy Address, Tap Address Details, Long Press wallet Address |
    */
-  copy_address_location: 'CTA Copy Address' | 'Tap Address Details' | 'Long Press wallet Address'
+  copy_address_location:
+    | 'CTA Copy Address'
+    | 'Tap Address Details'
+    | 'Long Press wallet Address'
 }
 
 export interface RestoreWalletEnterPhraseStepStatusProperties {
@@ -954,7 +965,9 @@ export class ClaimAdaTransactionSettled implements BaseEvent {
 export class ClaimAdaTransactionSubmitted implements BaseEvent {
   event_type = 'Claim Ada Transaction Submitted'
 
-  constructor(public event_properties?: ClaimAdaTransactionSubmittedProperties) {
+  constructor(
+    public event_properties?: ClaimAdaTransactionSubmittedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -974,7 +987,9 @@ export class ConnectWalletDetailsPageViewed implements BaseEvent {
 export class ConnectWalletDetailsSubmitted implements BaseEvent {
   event_type = 'Connect Wallet Details Submitted'
 
-  constructor(public event_properties?: ConnectWalletDetailsSubmittedProperties) {
+  constructor(
+    public event_properties?: ConnectWalletDetailsSubmittedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1018,7 +1033,9 @@ export class CreateWalletVerifyPhraseStepViewed implements BaseEvent {
 export class CreateWalletVerifyPhraseWordSelected implements BaseEvent {
   event_type = 'Create Wallet Verify Phrase Word Selected'
 
-  constructor(public event_properties?: CreateWalletVerifyPhraseWordSelectedProperties) {
+  constructor(
+    public event_properties?: CreateWalletVerifyPhraseWordSelectedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1030,12 +1047,16 @@ export class DappPopupSignTransactionPageViewed implements BaseEvent {
 export class DappPopupSignTransactionSubmitted implements BaseEvent {
   event_type = 'Dapp Popup Sign Transaction Submitted'
 
-  constructor(public event_properties?: DappPopupSignTransactionSubmittedProperties) {
+  constructor(
+    public event_properties?: DappPopupSignTransactionSubmittedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
 
-export class DiscoverConnectedBottomSheetDisconnectClicked implements BaseEvent {
+export class DiscoverConnectedBottomSheetDisconnectClicked
+  implements BaseEvent
+{
   event_type = 'Discover Connected Bottom Sheet Disconnect Clicked'
 }
 
@@ -1102,7 +1123,9 @@ export class DiscoverWebViewTabClicked implements BaseEvent {
 export class DiscoverWebViewToolbarSearchActivated implements BaseEvent {
   event_type = 'Discover Web View Toolbar Search Activated'
 
-  constructor(public event_properties: DiscoverWebViewToolbarSearchActivatedProperties) {
+  constructor(
+    public event_properties: DiscoverWebViewToolbarSearchActivatedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1130,7 +1153,9 @@ export class GovernanceChooseDrepPageViewed implements BaseEvent {
 export class GovernanceConfirmTransactionPageViewed implements BaseEvent {
   event_type = 'Governance Confirm Transaction Page Viewed'
 
-  constructor(public event_properties: GovernanceConfirmTransactionPageViewedProperties) {
+  constructor(
+    public event_properties: GovernanceConfirmTransactionPageViewedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1142,7 +1167,9 @@ export class GovernanceDashboardPageViewed implements BaseEvent {
 export class GovernanceTransactionSuccessPageViewed implements BaseEvent {
   event_type = 'Governance Transaction Success Page Viewed'
 
-  constructor(public event_properties: GovernanceTransactionSuccessPageViewedProperties) {
+  constructor(
+    public event_properties: GovernanceTransactionSuccessPageViewedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1250,7 +1277,9 @@ export class PortfolioTokenDetails implements BaseEvent {
 export class PortfolioTokensListPageViewed implements BaseEvent {
   event_type = 'Portfolio Tokens List Page Viewed'
 
-  constructor(public event_properties: PortfolioTokensListPageViewedProperties) {
+  constructor(
+    public event_properties: PortfolioTokensListPageViewedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1258,7 +1287,9 @@ export class PortfolioTokensListPageViewed implements BaseEvent {
 export class PortfolioTokensListSearchActivated implements BaseEvent {
   event_type = 'Portfolio Tokens List Search Activated'
 
-  constructor(public event_properties: PortfolioTokensListSearchActivatedProperties) {
+  constructor(
+    public event_properties: PortfolioTokensListSearchActivatedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1274,7 +1305,9 @@ export class PushNotificationViewed implements BaseEvent {
 export class ReceiveAmountGeneratedPageViewed implements BaseEvent {
   event_type = 'Receive Amount Generated Page Viewed'
 
-  constructor(public event_properties?: ReceiveAmountGeneratedPageViewedProperties) {
+  constructor(
+    public event_properties?: ReceiveAmountGeneratedPageViewedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1318,7 +1351,9 @@ export class RestoreWalletDetailsStepViewed implements BaseEvent {
 export class RestoreWalletEnterPhraseStepStatus implements BaseEvent {
   event_type = 'Restore Wallet Enter Phrase Step Status'
 
-  constructor(public event_properties: RestoreWalletEnterPhraseStepStatusProperties) {
+  constructor(
+    public event_properties: RestoreWalletEnterPhraseStepStatusProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1326,7 +1361,9 @@ export class RestoreWalletEnterPhraseStepStatus implements BaseEvent {
 export class RestoreWalletEnterPhraseStepViewed implements BaseEvent {
   event_type = 'Restore Wallet Enter Phrase Step Viewed'
 
-  constructor(public event_properties: RestoreWalletEnterPhraseStepViewedProperties) {
+  constructor(
+    public event_properties: RestoreWalletEnterPhraseStepViewedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1386,7 +1423,9 @@ export class SendSummarySubmitted implements BaseEvent {
 export class SettingInAppNotificationTimerUpdated implements BaseEvent {
   event_type = 'Setting In App Notification Timer Updated'
 
-  constructor(public event_properties: SettingInAppNotificationTimerUpdatedProperties) {
+  constructor(
+    public event_properties: SettingInAppNotificationTimerUpdatedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1394,7 +1433,9 @@ export class SettingInAppNotificationTimerUpdated implements BaseEvent {
 export class SettingsInAppNotificationsStatusUpdated implements BaseEvent {
   event_type = 'Settings In App Notifications Status Updated'
 
-  constructor(public event_properties?: SettingsInAppNotificationsStatusUpdatedProperties) {
+  constructor(
+    public event_properties?: SettingsInAppNotificationsStatusUpdatedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1406,7 +1447,9 @@ export class SettingsPageViewed implements BaseEvent {
 export class SettingsPushNotificationsStatusUpdated implements BaseEvent {
   event_type = 'Settings Push Notifications Status Updated'
 
-  constructor(public event_properties: SettingsPushNotificationsStatusUpdatedProperties) {
+  constructor(
+    public event_properties: SettingsPushNotificationsStatusUpdatedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
@@ -1418,7 +1461,9 @@ export class StakingCenterDelegationInitiated implements BaseEvent {
 export class StakingCenterDelegationSubmitted implements BaseEvent {
   event_type = 'Staking Center Delegation Submitted'
 
-  constructor(public event_properties?: StakingCenterDelegationSubmittedProperties) {
+  constructor(
+    public event_properties?: StakingCenterDelegationSubmittedProperties,
+  ) {
     this.event_properties = event_properties
   }
 }
