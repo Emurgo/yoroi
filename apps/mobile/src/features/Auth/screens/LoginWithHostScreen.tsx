@@ -4,35 +4,27 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {usePromise} from '../../../hooks/usePromise'
+import {Button} from '../../../ui/Button/Button'
+import {SpaceHeight} from '../../../ui/Space/Space'
 import {useAuth} from '../common/context'
 import {Logo} from '../components/Logo'
-import {useAuthWithOs} from '../hooks/useAuthWithOS'
 
-export const OsLoginScreen = () => {
+export const LoginWithHostScreen = () => {
   const strings = useStrings()
-  const {login} = useAuth()
-
-  const handleOnLogin = React.useCallback(() => {
-    login()
-  }, [login])
-
-  const {authWithOs, isLoading} = useAuthWithOs({onSuccess: handleOnLogin})
+  const {loginWithHost} = useAuth()
+  const {resolve, isPending} = usePromise(loginWithHost)
 
   return (
-    <View style={[a.flex_1, a.flex_col, a.justify_between, a.p_lg]}>
-      <TopSection />
+    <View style={[a.flex_1, a.flex_col, a.justify_between]}>
+      <SpaceHeight fill size="lg" />
 
       <MiddleSection>
         <Logo />
       </MiddleSection>
 
       <BottomSection>
-        <Button
-          title={strings.title}
-          disabled={isLoading}
-          onPress={() => authWithOs()}
-        />
+        <Button title={strings.title} disabled={isPending} onPress={resolve} />
       </BottomSection>
     </View>
   )
@@ -42,7 +34,7 @@ const TopSection = () => {
   return <View style={[a.flex_1]} />
 }
 
-const MiddleSection = ({children}: {children: React.ReactNode}) => {
+const MiddleSection = ({children}: React.PropsWithChildren) => {
   return (
     <View style={[a.flex_1, a.flex_col, a.justify_center, a.align_center]}>
       {children}
@@ -50,15 +42,15 @@ const MiddleSection = ({children}: {children: React.ReactNode}) => {
   )
 }
 
-const BottomSection = ({children}: {children: React.ReactNode}) => {
+const BottomSection = ({children}: React.PropsWithChildren) => {
   return <View style={[a.flex_1, a.flex_col, a.justify_end]}>{children}</View>
 }
 
 const useStrings = () => {
-  const intl = useIntl()
+  const {formatMessage: f} = useIntl()
 
   return {
-    title: intl.formatMessage(messages.title),
+    title: f(messages.title),
   }
 }
 

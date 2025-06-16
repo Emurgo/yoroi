@@ -1,13 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {ClaimAdaTransactionSubmitted} from './ampli'
 import {MetricsManager} from './metricsManager'
 
 export const mockMetricsManager = (): MetricsManager => {
   const disable = () => Promise.resolve()
   const enable = () => Promise.resolve()
-  const enabled = () => Promise.resolve(true)
-  const consentRequested = () => Promise.resolve(false)
+  const enabled = () => false
+  const consentRequested = () => true
   const requestConsent = () => Promise.resolve()
   const resetConsent = () => Promise.resolve()
 
@@ -155,4 +152,4 @@ export const mockMetricsManager = (): MetricsManager => {
   } as const
 }
 
-const e = (event: any, options?: any): any => void 0
+const e = (_e: never, _o?: never): any => void 0

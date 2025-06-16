@@ -96,6 +96,20 @@ export const screenShareStorageKeyManager = settingsStorageKeyMaker<boolean>({
   parser: (data) => Boolean(parseBoolean(data)),
 })
 
+// Settings - Metrics
+export const metricsEnabledStorageKey = 'metrics-enabled'
+export const metricsEnabledStorageKeyManager = settingsStorageKeyMaker<boolean>({
+  key: metricsEnabledStorageKey,
+  parser: (data) => Boolean(parseBoolean(data)),
+})
+export const metricsConsentRequestedStorageKey = 'metrics-consentRequested'
+export const metricsConsentRequestedStorageKeyManager = settingsStorageKeyMaker(
+  {
+    key: metricsConsentRequestedStorageKey,
+    parser: (data) => Boolean(parseBoolean(data)),
+  },
+)
+
 // Settings - Currency
 export const currencyStorageKey = 'currencySymbol'
 export const currencyStorageKeyManager =

@@ -1,24 +1,16 @@
-import {hex} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {Text} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from './src/features/Auth/common/context'
-import {LoginWithPinScreen} from './src/features/Auth/screens/LoginWithPinScreen'
+import {LoginWithHostScreen} from './src/features/Auth/screens/LoginWithHostScreen'
 import {useConnectionStatus} from './src/kernel/connection/ConnectionProvider'
-import {decryptData} from './src/kernel/crypto/decrypt-data'
-import {encryptData} from './src/kernel/crypto/encrypt-data'
-import globalMessages from './src/kernel/i18n/global-messages'
 import {useLanguage} from './src/kernel/i18n/LanguageProvider'
 import {LocalizableError} from './src/kernel/i18n/LocalizableError'
-import {rootSyncStorage} from './src/kernel/storage/storages'
 import {Boundary} from './src/ui/Boundary/Boundary'
-import {Button, ButtonType} from './src/ui/Button/Button'
 import {LoadingOverlay} from './src/ui/LoadingOverlay/LoadingOverlay'
 
 export function Dev() {
@@ -56,11 +48,14 @@ export function Dev() {
     >
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
-      <Boundary loading={{
-        enabled: true,
-        size: 'full'
-      }}>
-        <LoginWithPinScreen />
+      <Boundary
+        loading={{
+          enabled: true,
+          size: 'full',
+        }}
+      >
+        {/* <LoginWithPinScreen /> */}
+        <LoginWithHostScreen />
       </Boundary>
 
       {/* <Text style={[a.body_2_md_regular, ta.text_gray_max]}>

@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {RouteProvider} from '../../../../.storybook/decorators'
-import {OsLoginScreen} from './OsLoginScreen'
+import {OsLoginScreen} from './LoginWithHostScreen'
 
 storiesOf('OsLoginScreen', module)
   .add('Default', () => (
