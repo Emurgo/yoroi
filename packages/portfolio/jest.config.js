@@ -2,15 +2,21 @@ module.exports = {
   preset: 'react-native',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|@react-native-async-storage/async-storage|@testing-library/react-native|@tanstack/react-query)/)'
+    'node_modules/(?!(react-native|@react-native|@react-native-async-storage/async-storage|@testing-library/react-native|@tanstack/react-query)/)',
   ],
+  moduleNameMapper: {
+    '^react-native$': '<rootDir>/node_modules/react-native',
+    '@react-native-async-storage/async-storage':
+      '<rootDir>/node_modules/@react-native-async-storage/async-storage/jest/async-storage-mock',
+  },
   setupFiles: ['<rootDir>/jest.setup.js'],
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
-    '!src/fixtures/**'
+    '!src/fixtures/**',
+    '!src/**/*.mocks.ts',
   ],
   coverageReporters: ['text-summary', 'lcov', 'html'],
   coverageThreshold: {
@@ -18,15 +24,15 @@ module.exports = {
       branches: 100,
       functions: 100,
       lines: 100,
-      statements: 100
-    }
+      statements: 100,
+    },
   },
   modulePathIgnorePatterns: [
     '<rootDir>/example/node_modules',
-    '<rootDir>/lib/'
+    '<rootDir>/lib/',
   ],
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest'
+    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
-  testEnvironment: 'jsdom'
-} 
+  testEnvironment: 'jsdom',
+}

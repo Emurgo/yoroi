@@ -1,4 +1,3 @@
-import {queryClientFixture} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
 import * as React from 'react'
@@ -12,6 +11,7 @@ import {tokenInfoMocks} from '../../adapters/token-info.mocks'
 import {usePortfolioTokenInfo} from './usePortfolioTokenInfo'
 import {createUnknownTokenInfo} from '../../helpers/create-unknown-token-info'
 import {primaryTokenId} from '../../constants'
+import {queryClientFixture} from '../../fixtures/query-client'
 
 describe('usePortfolioTokenInfo', () => {
   let queryClient: QueryClient
@@ -31,17 +31,21 @@ describe('usePortfolioTokenInfo', () => {
       .mockResolvedValue(tokenInfoMocks.apiReponse.nftCryptoKitty.success)
 
     const TestComponent = () => {
-      const {data} = usePortfolioTokenInfo(
-        {
-          id: tokenMocks.nftCryptoKitty.info.id,
-          network: Chain.Network.Mainnet,
-          getTokenInfo: mockedGetTokenInfo,
-          primaryTokenInfo: tokenInfoMocks.primaryETH,
-        },
-        {
-          suspense: true,
-        },
-      )
+      const {data, isLoading} = usePortfolioTokenInfo({
+        id: tokenMocks.nftCryptoKitty.info.id,
+        network: Chain.Network.Mainnet,
+        getTokenInfo: mockedGetTokenInfo,
+        primaryTokenInfo: tokenInfoMocks.primaryETH,
+      })
+
+      if (isLoading) {
+        return (
+          <View>
+            <Text testID="loading">Loading...</Text>
+          </View>
+        )
+      }
+
       return (
         <View>
           <Text testID="data">{JSON.stringify(data)}</Text>
@@ -52,6 +56,8 @@ describe('usePortfolioTokenInfo', () => {
       queryClient,
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
+
+    expect(getByTestId('loading')).toBeDefined()
 
     await waitFor(() => {
       expect(getByTestId('data')).toBeDefined()
@@ -71,17 +77,21 @@ describe('usePortfolioTokenInfo', () => {
       .mockResolvedValue(tokenInfoMocks.primaryETH)
 
     const TestComponent = () => {
-      const {data} = usePortfolioTokenInfo(
-        {
-          id: primaryTokenId,
-          network: Chain.Network.Mainnet,
-          getTokenInfo: mockedGetTokenInfo,
-          primaryTokenInfo: tokenInfoMocks.primaryETH,
-        },
-        {
-          suspense: true,
-        },
-      )
+      const {data, isLoading} = usePortfolioTokenInfo({
+        id: primaryTokenId,
+        network: Chain.Network.Mainnet,
+        getTokenInfo: mockedGetTokenInfo,
+        primaryTokenInfo: tokenInfoMocks.primaryETH,
+      })
+
+      if (isLoading) {
+        return (
+          <View>
+            <Text testID="loading">Loading...</Text>
+          </View>
+        )
+      }
+
       return (
         <View>
           <Text testID="data">{JSON.stringify(data)}</Text>
@@ -92,6 +102,8 @@ describe('usePortfolioTokenInfo', () => {
       queryClient,
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
+
+    expect(getByTestId('loading')).toBeDefined()
 
     await waitFor(() => {
       expect(getByTestId('data')).toBeDefined()
@@ -103,7 +115,7 @@ describe('usePortfolioTokenInfo', () => {
     expect(mockedGetTokenInfo).not.toHaveBeenCalled()
   })
 
-  it('error should return unknonw token', async () => {
+  it('error should return unknown token', async () => {
     const unknownTokenInfo = createUnknownTokenInfo({
       id: tokenMocks.nftCryptoKitty.info.id,
       name: tokenInfoMocks.nftCryptoKitty.id.split('.')[1] ?? '',
@@ -111,17 +123,21 @@ describe('usePortfolioTokenInfo', () => {
     const mockedGetTokenInfo = jest.fn().mockResolvedValue(unknownTokenInfo)
 
     const TestComponent = () => {
-      const {data} = usePortfolioTokenInfo(
-        {
-          id: tokenMocks.nftCryptoKitty.info.id,
-          network: Chain.Network.Mainnet,
-          getTokenInfo: mockedGetTokenInfo,
-          primaryTokenInfo: tokenInfoMocks.primaryETH,
-        },
-        {
-          suspense: true,
-        },
-      )
+      const {data, isLoading} = usePortfolioTokenInfo({
+        id: tokenMocks.nftCryptoKitty.info.id,
+        network: Chain.Network.Mainnet,
+        getTokenInfo: mockedGetTokenInfo,
+        primaryTokenInfo: tokenInfoMocks.primaryETH,
+      })
+
+      if (isLoading) {
+        return (
+          <View>
+            <Text testID="loading">Loading...</Text>
+          </View>
+        )
+      }
+
       return (
         <View>
           <Text testID="data">{JSON.stringify(data)}</Text>
@@ -132,6 +148,8 @@ describe('usePortfolioTokenInfo', () => {
       queryClient,
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
+
+    expect(getByTestId('loading')).toBeDefined()
 
     await waitFor(() => {
       expect(getByTestId('data')).toBeDefined()

@@ -1,4 +1,3 @@
-import {queryClientFixture} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
 import * as React from 'react'
@@ -10,6 +9,7 @@ import {usePortfolioTokenTraits} from './usePortfolioTokenTraits'
 import {wrapperMaker} from '../../fixtures/wrapperMaker'
 import {tokenMocks} from '../../adapters/token.mocks'
 import {tokenTraitsMocks} from '../../adapters/token-traits.mocks'
+import {queryClientFixture} from '../../fixtures/query-client'
 
 describe('usePortfolioTokenTraits', () => {
   let queryClient: QueryClient
@@ -29,16 +29,20 @@ describe('usePortfolioTokenTraits', () => {
       .mockResolvedValue(tokenTraitsMocks.apiResponse.success)
 
     const TestComponent = () => {
-      const {data} = usePortfolioTokenTraits(
-        {
-          id: tokenMocks.nftCryptoKitty.info.id,
-          network: Chain.Network.Mainnet,
-          getTokenTraits: mockedGetTokenTraits,
-        },
-        {
-          suspense: true,
-        },
-      )
+      const {data, isLoading} = usePortfolioTokenTraits({
+        id: tokenMocks.nftCryptoKitty.info.id,
+        network: Chain.Network.Mainnet,
+        getTokenTraits: mockedGetTokenTraits,
+      })
+
+      if (isLoading) {
+        return (
+          <View>
+            <Text testID="loading">Loading...</Text>
+          </View>
+        )
+      }
+
       return (
         <View>
           <Text testID="data">{JSON.stringify(data?.totalItems)}</Text>
@@ -50,6 +54,10 @@ describe('usePortfolioTokenTraits', () => {
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
 
+    // First we should see loading state
+    expect(getByTestId('loading')).toBeDefined()
+
+    // Then we should see the data
     await waitFor(() => {
       expect(getByTestId('data')).toBeDefined()
     })
@@ -66,16 +74,28 @@ describe('usePortfolioTokenTraits', () => {
       .mockResolvedValue(tokenTraitsMocks.apiResponse.error)
 
     const TestComponent = () => {
-      const {data} = usePortfolioTokenTraits(
-        {
-          id: tokenMocks.nftCryptoKitty.info.id,
-          network: Chain.Network.Mainnet,
-          getTokenTraits: mockedGetTokenTraits,
-        },
-        {
-          suspense: true,
-        },
-      )
+      const {data, isLoading, isError} = usePortfolioTokenTraits({
+        id: tokenMocks.nftCryptoKitty.info.id,
+        network: Chain.Network.Mainnet,
+        getTokenTraits: mockedGetTokenTraits,
+      })
+
+      if (isLoading) {
+        return (
+          <View>
+            <Text testID="loading">Loading...</Text>
+          </View>
+        )
+      }
+
+      if (isError) {
+        return (
+          <View>
+            <Text testID="hasError">Error occurred</Text>
+          </View>
+        )
+      }
+
       return (
         <View>
           <Text testID="data">{JSON.stringify(data?.totalItems)}</Text>
@@ -87,6 +107,10 @@ describe('usePortfolioTokenTraits', () => {
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
 
+    // First we should see loading state
+    expect(getByTestId('loading')).toBeDefined()
+
+    // Then we should see the error state
     await waitFor(() => {
       expect(getByTestId('hasError')).toBeDefined()
     })
