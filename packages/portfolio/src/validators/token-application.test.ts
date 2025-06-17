@@ -1,18 +1,18 @@
 import {Portfolio} from '@yoroi/types'
 
-import {isTokenApplicaton, parseTokenApplication} from './token-application'
+import {parseTokenApplication, isTokenApplication} from './token-application'
 
 describe('isTokenApplicaton', () => {
   it('should return true for valid token application', () => {
     const validTokenApplication: Portfolio.Token.Application =
       Portfolio.Token.Application.General
-    const result = isTokenApplicaton(validTokenApplication)
+    const result = isTokenApplication(validTokenApplication)
     expect(result).toBe(true)
   })
 
   it('should return false for invalid token application', () => {
     const invalidTokenApplication: any = 'invalid'
-    const result = isTokenApplicaton(invalidTokenApplication)
+    const result = isTokenApplication(invalidTokenApplication)
     expect(result).toBe(false)
   })
 })

@@ -1,6 +1,8 @@
 import {cacheRecordMaker, storageSerializer} from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
 
+import {Observable} from 'rxjs'
+
 import {portfolioTokenStorageMaker} from './token-storage-maker' // Adjust the path accordingly
 import {tokenMocks} from '../token.mocks'
 import {tokenInfoMocks} from '../token-info.mocks'
@@ -193,5 +195,20 @@ function createMockStorage<K extends string = string>(
         }),
       } as any
     }),
+    observable: jest.fn(
+      () =>
+        ({
+          source: null,
+          operator: null,
+          lift: jest.fn(),
+          subscribe: jest.fn((callback) => {
+            subscriptions.add(callback)
+            return {unsubscribe: jest.fn()}
+          }),
+          pipe: jest.fn(),
+          toPromise: jest.fn(),
+          forEach: jest.fn(),
+        }) as unknown as Observable<K[] | null>,
+    ) as any,
   }
 }

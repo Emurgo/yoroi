@@ -56,8 +56,9 @@ export const parseTokenDiscoveryResponseWithCacheRecord = (
 }
 
 export const TokenDiscoveryWithCacheRecordSchema =
-  // zod doesn't work with string templates yet, check TokenIdSchema for more info
-  cacheRecordSchemaMaker<Portfolio.Token.Discovery>(TokenDiscoverySchema as any)
+  cacheRecordSchemaMaker<Portfolio.Token.Discovery>(
+    TokenDiscoverySchema as any,
+  ) as any
 
 export const isTokenDiscoveryWithCacheRecord = (
   data: unknown,

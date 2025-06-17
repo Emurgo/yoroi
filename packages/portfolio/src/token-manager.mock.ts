@@ -9,8 +9,8 @@ export const createTokenManagerMock = (
   hydrate: jest.fn(),
   subscribe: jest.fn(),
   unsubscribe: jest.fn(),
-  observable$:
-    tokenManagerObservable ?? new BehaviorSubject({} as any).asObservable(),
+  observable$: (tokenManagerObservable ??
+    new BehaviorSubject({} as any).asObservable()) as any,
   sync: jest.fn().mockResolvedValue(new Map()),
   clear: jest.fn(),
   api: {
