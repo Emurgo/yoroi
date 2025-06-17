@@ -1,6 +1,12 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "react-native-mmkv": [
+        "./node_modules/react-native-mmkv"
+      ]
+    }
   }
 }

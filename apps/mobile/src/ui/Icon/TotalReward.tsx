@@ -1,11 +1,12 @@
 import {useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import Svg, {Circle, G, Path} from 'react-native-svg'
 
 import {IconProps} from './type'
 
 export const TotalReward = ({size = 44, color = 'black'}: IconProps) => {
-  const {color: colors, isDark} = useTheme()
+  const {palette: p, isDark} = useTheme()
 
   return (
     <Svg viewBox="0 0 44 44" width={size} height={size}>
@@ -16,10 +17,7 @@ export const TotalReward = ({size = 44, color = 'black'}: IconProps) => {
         fill="none"
         fill-rule="evenodd"
       >
-        <G
-          id="icon/bg-for-icon"
-          fill={isDark ? colors.gray_300 : colors.gray_50}
-        >
+        <G id="icon/bg-for-icon" fill={isDark ? p.gray_300 : p.gray_50}>
           <Circle id="Oval-Copy-4" cx="22" cy="22" r="22" />
         </G>
 
