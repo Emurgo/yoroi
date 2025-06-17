@@ -7,32 +7,30 @@ import {
 } from '@yoroi/common'
 
 import {freeze} from 'immer'
-import {filter} from 'rxjs'
+import {filter, Observable} from 'rxjs'
 
 import {sortTokenAmountsByInfo} from './helpers/sorting'
 import {isEventTokenManagerSync} from './validators/token-manager-event-sync'
 import {isFt} from './helpers/is-ft'
 import {isNft} from './helpers/is-nft'
 
-export const portfolioBalanceManagerMaker = (
-  {
-    tokenManager,
-    primaryTokenInfo,
-    storage,
-    sourceId,
-  }: {
+export const portfolioBalanceManagerMaker: (
+  params: {
     tokenManager: Portfolio.Manager.Token
     storage: Portfolio.Storage.Balance
     primaryTokenInfo: Portfolio.Token.Info
   } & Portfolio.Event.SourceId,
+  options?: {
+    observer?: App.ObserverManager<Portfolio.Event.BalanceManager>
+    queue?: App.QueueTaskManager
+  },
+) => Portfolio.Manager.Balance = (
+  {tokenManager, primaryTokenInfo, storage, sourceId},
   {
     observer = observerMaker<Portfolio.Event.BalanceManager>(),
     queue = queueTaskMaker(),
-  }: {
-    observer?: App.ObserverManager<Portfolio.Event.BalanceManager>
-    queue?: App.QueueTaskManager
   } = {},
-): Portfolio.Manager.Balance => {
+) => {
   let isHydrated = false
   let secondaries: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Amount>> =
     freeze(new Map())
@@ -73,7 +71,9 @@ export const portfolioBalanceManagerMaker = (
     storagePrimaryBreakdown: storage.primaryBreakdown,
   })
 
-  const subscription = tokenManager.observable$
+  const subscription = (
+    tokenManager.observable$ as unknown as Observable<Portfolio.Event.TokenManager>
+  )
     .pipe(
       filter(() => isHydrated),
       filter((dtoEvent) => isNotTriggeredBySelf(sourceId)(dtoEvent)),
@@ -276,7 +276,7 @@ export const portfolioBalanceManagerMaker = (
   const destroy = () => {
     observer.destroy()
     queue.destroy()
-    tokenManager.unsubscribe(subscription)
+    tokenManager.unsubscribe(subscription as any)
   }
 
   const clear = () => {

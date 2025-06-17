@@ -175,7 +175,9 @@ describe('destroy', () => {
           notify: mockedNotify,
           subscribe: jest.fn(),
           unsubscribe: jest.fn(),
-          observable: new BehaviorSubject({} as any).asObservable(),
+          observable: new BehaviorSubject(
+            {} as Portfolio.Event.BalanceManager,
+          ).asObservable() as any,
         },
         queue: {
           enqueue: enqueueMock,
@@ -236,7 +238,7 @@ describe('primary updates', () => {
           notify: mockedNotify,
           subscribe: jest.fn(),
           unsubscribe: jest.fn(),
-          observable: new BehaviorSubject({} as any).asObservable(),
+          observable: new BehaviorSubject({} as any).asObservable() as any,
         },
         queue: {
           enqueue: enqueueMock,
@@ -291,7 +293,7 @@ describe('primary updates', () => {
           notify: mockedNotify,
           subscribe: jest.fn(),
           unsubscribe: jest.fn(),
-          observable: new BehaviorSubject({} as any).asObservable(),
+          observable: new BehaviorSubject({} as any).asObservable() as any,
         },
         queue: {
           enqueue: enqueueMock,
@@ -391,7 +393,7 @@ describe('sync & refresh', () => {
           notify: mockedNotify,
           subscribe: jest.fn(),
           unsubscribe: jest.fn(),
-          observable: new BehaviorSubject({} as any).asObservable(),
+          observable: new BehaviorSubject({} as any).asObservable() as any,
         },
         queue: {
           enqueue: enqueueMock,
@@ -468,7 +470,7 @@ describe('sync & refresh', () => {
           notify: mockedNotify,
           subscribe: jest.fn(),
           unsubscribe: jest.fn(),
-          observable: new BehaviorSubject({} as any).asObservable(),
+          observable: new BehaviorSubject({} as any).asObservable() as any,
         },
         queue: {
           enqueue: enqueueMock,
@@ -529,7 +531,7 @@ describe('sync & refresh', () => {
           notify: mockedNotify,
           subscribe: jest.fn(),
           unsubscribe: jest.fn(),
-          observable: new BehaviorSubject({} as any).asObservable(),
+          observable: new BehaviorSubject({} as any).asObservable() as any,
         },
         queue: {
           enqueue: enqueueMock,
@@ -586,7 +588,7 @@ describe('sync & refresh', () => {
           notify: mockedNotify,
           subscribe: jest.fn(),
           unsubscribe: jest.fn(),
-          observable: new BehaviorSubject({} as any).asObservable(),
+          observable: new BehaviorSubject({} as any).asObservable() as any,
         },
         queue: {
           enqueue: enqueueMock,
@@ -662,7 +664,7 @@ describe('clear', () => {
           subscribe: jest.fn(),
           unsubscribe: jest.fn(),
           destroy: jest.fn(),
-          observable: new BehaviorSubject({} as any).asObservable(),
+          observable: new BehaviorSubject({} as any).asObservable() as any,
         },
       },
     )

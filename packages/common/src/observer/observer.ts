@@ -19,5 +19,5 @@ export const observerMaker = <T>(): App.ObserverManager<T> => {
       eventSubject.complete()
     },
     observable: eventSubject.asObservable(),
-  })
+  } as unknown as App.ObserverManager<T>)
 }

@@ -1,4 +1,5 @@
 import {App} from '@yoroi/types'
+
 import z, {ZodType} from 'zod'
 
 export const cacheRecordSchemaMaker = <T>(
