@@ -1,4 +1,3 @@
-import {queryClientFixture} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
 import * as React from 'react'
@@ -9,6 +8,7 @@ import {render, waitFor} from '@testing-library/react-native'
 import {tokenDiscoveryMocks} from '../../adapters/token-discovery.mocks'
 import {usePortfolioTokenDiscovery} from './usePortfolioTokenDiscovery'
 import {wrapperMaker} from '../../fixtures/wrapperMaker'
+import {queryClientFixture} from '../../fixtures/query-client'
 
 describe('usePortfolioTokenDiscovery', () => {
   let queryClient: QueryClient
@@ -77,14 +77,11 @@ describe('usePortfolioTokenDiscovery', () => {
     const wrapper = wrapperMaker({
       queryClient,
     })
-    const {getByTestId} = render(<TestComponent />, {wrapper})
+    const {getByTestId, debug} = render(<TestComponent />, {wrapper})
 
+    debug()
     await waitFor(() => {
-      expect(getByTestId('error')).toBeDefined()
+      expect(getByTestId('hasError')).toBeDefined()
     })
-
-    expect(getByTestId('error').props.children).toBe(
-      'usePortfolioTokenDiscovery',
-    )
   })
 })

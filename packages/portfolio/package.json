@@ -66,48 +66,6 @@
     "test:watch": "jest --watch --maxWorkers=1",
     "tsc": "tsc --noEmit -p tsconfig.json"
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "prettier": {
-    "bracketSpacing": false,
-    "quoteProps": "consistent",
-    "semi": false,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "useTabs": false
-  },
-  "eslintConfig": {
-    "extends": [
-      "@react-native-community",
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "quoteProps": "consistent",
-          "bracketSpacing": false,
-          "singleQuote": true,
-          "tabWidth": 2,
-          "trailingComma": "all",
-          "useTabs": false,
-          "semi": false
-        }
-      ]
-    },
-    "root": true
-  },
-  "eslintIgnore": [
-    "node_modules/",
-    "lib/",
-    "babel.config.js",
-    "jest.setup.js",
-    "coverage/"
-  ],
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",

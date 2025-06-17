@@ -1,10 +1,8 @@
-import {isRight} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
 
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
-import {createUnknownTokenInfo} from '../../helpers/create-unknown-token-info'
-import {isPrimaryToken} from '../../helpers/is-primary-token'
+import {queryTokenInfo} from '../../helpers/queries'
 
 export function usePortfolioTokenInfo(
   {
@@ -28,13 +26,7 @@ export function usePortfolioTokenInfo(
   const query = useQuery({
     queryKey: [network, 'usePortfolioTokenInfo', id],
     ...options,
-    queryFn: async () => {
-      if (isPrimaryToken(id)) return primaryTokenInfo
-      const response = await getTokenInfo(id)
-      if (isRight(response)) return response.value.data
-      const [, assetName] = id.split('.')
-      return createUnknownTokenInfo({id, name: assetName!})
-    },
+    queryFn: () => queryTokenInfo({id, getTokenInfo, primaryTokenInfo}),
   })
 
   return {
