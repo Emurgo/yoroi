@@ -1,4 +1,5 @@
 import {ThemedPalette, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
 

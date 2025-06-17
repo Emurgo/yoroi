@@ -1,12 +1,14 @@
 import {useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
 import {IconProps} from './type'
 
 export const Switch = (props: IconProps) => {
-  const {color: colors} = useTheme()
-  const {size, color = colors.primary_500} = props
+  const {palette: p} = useTheme()
+  const {size, color = p.primary_500} = props
+
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <Path

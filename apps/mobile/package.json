@@ -13,6 +13,8 @@
     "metrics:pull": "ampli pull mobile",
     "metrics:status": "ampli status --instanceName=track",
     "web": "expo start --web",
+    "tsc": "tsc --noEmit",
+    "tsc:fix": "tsc --noEmit --fix",
     "test": "jest --config jest.config.js"
   },
   "dependencies": {
