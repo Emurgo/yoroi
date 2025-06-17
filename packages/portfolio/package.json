@@ -89,6 +89,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^19.0.0",
     "@types/react-test-renderer": "^19.1.0",
+    "@yoroi/common": "file:../common",
     "@yoroi/types": "file:../types",
     "axios": "^1.9.0",
     "axios-mock-adapter": "^1.22.0",
@@ -115,13 +116,12 @@
     "release-it": "^19.0.2",
     "rxjs": "^7.8.2",
     "typescript": "^5.3.3",
-    "zod": "^3.25.17",
-    "@yoroi/common": "file:../common"
+    "zod": "^3.25.17"
   },
   "peerDependencies": {
-    "@yoroi/common": "file:../common",
     "@react-native-async-storage/async-storage": ">= 2.1.2",
     "@tanstack/react-query": "^5.76.2",
+    "@yoroi/common": "file:../common",
     "bignumber.js": "^9.3.0",
     "immer": "^10.1.1",
     "react": ">= 16.8.0 < 20.0.0",
