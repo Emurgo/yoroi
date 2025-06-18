@@ -4,6 +4,7 @@ import {ThemeProvider} from '@yoroi/theme'
 import * as Font from 'expo-font'
 import * as React from 'react'
 
+import {PairingProvider} from 'src/features/Pairing/context'
 import {Dev} from './Dev'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/common/context'
@@ -13,6 +14,7 @@ import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
+  currencyStorageKeyManager,
   languageStorageKeyManager,
   pinStorageKeyManager,
   rootStorage,
@@ -83,7 +85,9 @@ function BusinessShell({children}: React.PropsWithChildren) {
       authStorageKeyManager={authStorageKeyManager}
       pinStorageKeyManager={pinStorageKeyManager}
     >
-      {children}
+      <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
+        {children}
+      </PairingProvider>
     </AuthProvider>
   )
 }

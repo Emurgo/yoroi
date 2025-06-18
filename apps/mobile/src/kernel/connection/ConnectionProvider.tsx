@@ -51,7 +51,8 @@ const persister = createAsyncStoragePersister({
   key: 'react-query-cache',
 })
 
-const cacheKeyIndicator: QueryKey = freeze(['cache'])
+export const persistPrefixKeyword = 'persist'
+const cacheKeyIndicator: QueryKey = freeze([persistPrefixKeyword])
 const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] =
   {
     shouldDehydrateMutation: () => false,

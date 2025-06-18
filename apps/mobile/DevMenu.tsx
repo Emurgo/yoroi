@@ -9,6 +9,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {debugStorage} from 'src/kernel/storage/debug-storage'
 import {useAuth} from './src/features/Auth/common/context'
+import {usePairing} from './src/features/Pairing/context'
 import globalMessages from './src/kernel/i18n/global-messages'
 import {useLanguage} from './src/kernel/i18n/LanguageProvider'
 import {LocalizableError} from './src/kernel/i18n/LocalizableError'
@@ -39,6 +40,7 @@ export function DevMenu({visible}: {visible: boolean}) {
     }, 3000)
   }, [])
   const metrics = useMetrics()
+  const {currency, ptActivity} = usePairing()
 
   if (!visible) {
     return null
@@ -51,7 +53,8 @@ export function DevMenu({visible}: {visible: boolean}) {
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
       <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-        Welcome! base: {basePalette} selectedTheme: {config}
+        base: {basePalette} selectedTheme: {config} currency: {currency}{' '}
+        ptActivity: {ptActivity.close}
       </Text>
 
       <Button

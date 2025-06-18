@@ -1,10 +1,10 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {fetchData, isRight, time} from '@yoroi/common'
-import {Chain} from '@yoroi/types'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {Chain, Portfolio} from '@yoroi/types'
 
-import {queryInfo} from '../../kernel/query-client'
-import {CurrencySymbol, PriceMultipleResponse} from '../types/other'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+
+import {persistPrefixKeyword} from '../../kernel/connection/ConnectionProvider'
 
 // NOTE: this API should be moved inside portfolio token activity (support PT in the request)
 // NOTE: price API is unique for all networks
@@ -26,20 +26,21 @@ export const usePrimaryTokenActivity = ({
   to,
   options,
 }: {
-  to: CurrencySymbol
+  to: Portfolio.Currency.Symbol
   options?: UseQueryOptions<PrimaryTokenActivity, Error>
 }) => {
   const query = useQuery({
     enabled: to !== ptTicker,
     staleTime: time.oneMinute,
-    cacheTime: time.fiveMinutes,
     retryDelay: time.oneSecond,
-    optimisticResults: true,
     refetchInterval: time.oneMinute,
-    queryKey: [queryInfo.keyToPersist, 'usePrimaryTokenActivity', to],
+    queryKey: [persistPrefixKeyword, 'usePrimaryTokenActivity', to],
     ...options,
     queryFn: async () => {
-      const response = await fetchPtPriceActivity([Date.now(), Date.now() - time.oneDay])
+      const response = await fetchPtPriceActivity([
+        Date.now(),
+        Date.now() - time.oneDay,
+      ])
 
       if (isRight(response)) {
         // NOTE: transformer
@@ -63,6 +64,15 @@ export const usePrimaryTokenActivity = ({
   return {ptActivity: defaultPrimaryTokenActivity, isLoading: query.isLoading}
 }
 
+export type PriceMultipleResponse = {
+  error: string | null
+  tickers: Array<{
+    from: 'ADA'
+    timestamp: number
+    signature: string
+    prices: Record<Portfolio.Currency.Symbol, number>
+  }>
+}
 export const fetchPtPriceActivity = (timestamps: Array<number>) =>
   fetchData<PriceMultipleResponse>({
     url: `${apiBaseUrl}/price/${ptTicker}/${timestamps.join()}`,
