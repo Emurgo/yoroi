@@ -1,18 +1,19 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Text} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {BigNumber} from 'bignumber.js'
 
+import {debugStorage} from 'src/kernel/storage/debug-storage'
 import {useAuth} from './src/features/Auth/common/context'
 import globalMessages from './src/kernel/i18n/global-messages'
 import {useLanguage} from './src/kernel/i18n/LanguageProvider'
 import {LocalizableError} from './src/kernel/i18n/LocalizableError'
 import {useMetrics} from './src/kernel/metrics/metricsManager'
-import {rootSyncStorage} from './src/kernel/storage/storages'
+import {rootMMKV, rootSyncStorage} from './src/kernel/storage/storages'
 import {Button, ButtonType} from './src/ui/Button/Button'
 import {LoadingOverlay} from './src/ui/LoadingOverlay/LoadingOverlay'
 
@@ -112,6 +113,14 @@ export function DevMenu({visible}: {visible: boolean}) {
         type={ButtonType.Secondary}
         title="Test Metrics"
         disabled={!metrics.isEnabled}
+      />
+
+      <Button
+        onPress={() => {
+          debugStorage(rootMMKV)
+        }}
+        type={ButtonType.Secondary}
+        title="DebugStorage"
       />
 
       <BuggyComponent showCrash={showCrash} />

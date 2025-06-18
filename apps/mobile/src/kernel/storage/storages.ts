@@ -16,7 +16,7 @@ import {Portfolio} from '@yoroi/types'
 
 import {MMKV} from 'react-native-mmkv'
 import {of} from 'rxjs'
-import uuid from 'uuid'
+import * as uuid from 'uuid'
 
 import {AuthSetting} from '../../features/Auth/common/types'
 import {defaultCurrency} from '../constants'
@@ -27,7 +27,7 @@ import {
 } from '../i18n/localization'
 import {debugStorage} from './debug-storage'
 
-const rootMMKV = new MMKV({id: 'default.mmkv'})
+export const rootMMKV = new MMKV({id: 'default.mmkv'})
 export const rootSyncStorage = observableStorageMaker<false, string>(
   mountMMKVStorage({path: '/'}, {instance: rootMMKV}),
 )
