@@ -1,5 +1,5 @@
-/* istanbul ignore file */
 import {Api} from '@yoroi/types'
+
 import {protocolParamsMockResponse} from './protocol-params.mocks'
 import {bestBlockMockResponse} from './best-block.mocks'
 import {mockUtxoData} from './utxo-data.mocks'

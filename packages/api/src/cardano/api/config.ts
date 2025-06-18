@@ -1,4 +1,5 @@
 import {Chain} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 export const API_ENDPOINTS: Readonly<

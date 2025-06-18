@@ -1,8 +1,9 @@
-import {z} from 'zod'
+import {Api} from '@yoroi/types'
 import {createTypeGuardFromSchema, fetcher, Fetcher} from '@yoroi/common'
 
+import {z} from 'zod'
+
 import {getTokenIdentity} from '../translators/helpers/getTokenIdentity'
-import {Api} from '@yoroi/types'
 
 export const getTokenSupply =
   (baseUrl: string, request: Fetcher = fetcher) =>

@@ -1,15 +1,16 @@
 import {Fetcher, fetcher, isArray, isRecord} from '@yoroi/common'
-
-import {CIP25_KEY_NFT, CIP25_V2, CIP26_KEY_FT} from './constants'
-import {parseFtMetadataRecord, parseNftMetadataRecord} from './parsers'
-import {getTokenIdentity} from '../translators/helpers/getTokenIdentity'
 import {
   Api,
   ApiMetadataRecord,
   ApiOnChainFtMetadataResult,
   ApiOnChainNftMetadataResult,
 } from '@yoroi/types'
+
 import {AxiosRequestConfig} from 'axios'
+
+import {CIP25_KEY_NFT, CIP25_V2, CIP26_KEY_FT} from './constants'
+import {parseFtMetadataRecord, parseNftMetadataRecord} from './parsers'
+import {getTokenIdentity} from '../translators/helpers/getTokenIdentity'
 
 export const getOnChainMetadatas = (
   baseUrl: string,

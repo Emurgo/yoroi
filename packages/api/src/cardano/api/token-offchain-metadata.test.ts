@@ -1,4 +1,5 @@
 import {ApiTokenRegistryEntry} from '@yoroi/types'
+
 import {
   getOffChainMetadata,
   isTokenRegistryEntry,

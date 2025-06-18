@@ -1,13 +1,14 @@
-import {z} from 'zod'
 import {
   createTypeGuardFromSchema,
   fetcher,
   Fetcher,
   isRecord,
 } from '@yoroi/common'
+import {Api, ApiTokenRegistryProperty} from '@yoroi/types'
+
+import {z} from 'zod'
 
 import {asSubject} from '../translators/transformers/asSubject'
-import {Api, ApiTokenRegistryProperty} from '@yoroi/types'
 
 export const getOffChainMetadata = (
   baseUrl: string,

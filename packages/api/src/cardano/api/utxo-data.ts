@@ -1,6 +1,7 @@
-import {z} from 'zod'
 import {createTypeGuardFromSchema, fetcher, Fetcher} from '@yoroi/common'
 import {Api} from '@yoroi/types'
+
+import {z} from 'zod'
 
 export const getUtxoData =
   (baseUrl: string, request: Fetcher = fetcher) =>
