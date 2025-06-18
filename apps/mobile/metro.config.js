@@ -15,10 +15,14 @@ config.watchFolders = [workspaceRoot]
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
   path.resolve(workspaceRoot, 'node_modules'),
+  path.resolve(workspaceRoot, 'packages/types/node_modules'),
   path.resolve(workspaceRoot, 'packages/common/node_modules'),
+  path.resolve(workspaceRoot, 'packages/explorers/node_modules'),
+  path.resolve(workspaceRoot, 'packages/api/node_modules'),
+  path.resolve(workspaceRoot, 'packages/blockchains/node_modules'),
+  path.resolve(workspaceRoot, 'packages/portfolio/node_modules'),
   path.resolve(workspaceRoot, 'packages/theme/node_modules'),
   path.resolve(workspaceRoot, 'packages/identicon/node_modules'),
-  path.resolve(workspaceRoot, 'packages/types/node_modules'),
 ]
 
 // NOTE: workaround for the structure now
@@ -26,10 +30,14 @@ config.resolver.disableHierarchicalLookup = true
 config.resolver.enablePackageExports = true
 
 config.resolver.extraNodeModules = {
-  '@yoroi/common': path.resolve(workspaceRoot, 'packages/common'),
-  '@yoroi/theme': path.resolve(workspaceRoot, 'packages/theme'),
-  '@yoroi/identicon': path.resolve(workspaceRoot, 'packages/identicon'),
   '@yoroi/types': path.resolve(workspaceRoot, 'packages/types'),
+  '@yoroi/common': path.resolve(workspaceRoot, 'packages/common'),
+  '@yoroi/api': path.resolve(workspaceRoot, 'packages/api'),
+  '@yoroi/portfolio': path.resolve(workspaceRoot, 'packages/portfolio'),
+  '@yoroi/explorers': path.resolve(workspaceRoot, 'packages/explorers'),
+  '@yoroi/identicon': path.resolve(workspaceRoot, 'packages/identicon'),
+  '@yoroi/blockchains': path.resolve(workspaceRoot, 'packages/blockchains'),
+  '@yoroi/theme': path.resolve(workspaceRoot, 'packages/theme'),
 }
 
 config.transformer.minifierConfig = {

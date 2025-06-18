@@ -40,6 +40,7 @@
     "@tanstack/react-query": "^5.76.2",
     "@tanstack/react-query-persist-client": "^5.80.6",
     "@yoroi/common": "file:../../packages/common",
+    "@yoroi/blockchains": "file:../../packages/blockchains",
     "@yoroi/identicon": "file:../../packages/identicon",
     "@yoroi/portfolio": "file:../../packages/portfolio",
     "@yoroi/theme": "file:../../packages/theme",
