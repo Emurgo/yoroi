@@ -2,7 +2,6 @@ import {freeze} from 'immer'
 import {MessageDescriptor, defineMessages} from 'react-intl'
 
 import {ThemeName} from '@yoroi/theme'
-import {supportedCurrencies} from '../constants'
 
 export const confirmationMessages = freeze(
   {
@@ -638,39 +637,39 @@ export const currencyNames: Readonly<
   Record<keyof typeof supportedCurrencies, MessageDescriptor>
 > = freeze(
   defineMessages({
-    [supportedCurrencies.ADA]: {
+    ADA: {
       id: 'global.currency.ADA',
       defaultMessage: `!!!ADA`,
     },
-    [supportedCurrencies.BRL]: {
+    BRL: {
       id: 'global.currency.BRL',
       defaultMessage: `!!!BRL`,
     },
-    [supportedCurrencies.BTC]: {
+    BTC: {
       id: 'global.currency.BTC',
       defaultMessage: `!!!BTC`,
     },
-    [supportedCurrencies.CNY]: {
+    CNY: {
       id: 'global.currency.CNY',
       defaultMessage: `!!!CNY`,
     },
-    [supportedCurrencies.ETH]: {
+    ETH: {
       id: 'global.currency.ETH',
       defaultMessage: `!!!ETH`,
     },
-    [supportedCurrencies.EUR]: {
+    EUR: {
       id: 'global.currency.EUR',
       defaultMessage: `!!!EUR`,
     },
-    [supportedCurrencies.JPY]: {
+    JPY: {
       id: 'global.currency.JPY',
       defaultMessage: `!!!JPY`,
     },
-    [supportedCurrencies.KRW]: {
+    KRW: {
       id: 'global.currency.KRW',
       defaultMessage: `!!!KRW`,
     },
-    [supportedCurrencies.USD]: {
+    USD: {
       id: 'global.currency.USD',
       defaultMessage: `!!!USD`,
     },
