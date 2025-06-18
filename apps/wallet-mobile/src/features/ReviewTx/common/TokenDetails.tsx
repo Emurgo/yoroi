@@ -6,13 +6,13 @@ import * as React from 'react'
 import {ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
+import {Copiable} from '../../../components/Clipboard/Copiable'
 import {Icon} from '../../../components/Icon'
 import {SimpleTab} from '../../../components/SimpleTab/SimpleTab'
 import {Space} from '../../../components/Space/Space'
 import {isEmptyString} from '../../../kernel/utils'
 import {TokenInfoIcon} from '../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {CopiableText} from './CopiableText'
 import {ExplorerInfoLinks} from './ExplorerInfoLinks'
 import {useStrings} from './hooks/useStrings'
 
@@ -186,9 +186,9 @@ const PolicyId = ({policyId}: {policyId: string}) => {
       <Space width="lg" />
 
       <View style={styles.copiableText}>
-        <CopiableText textToCopy={policyId}>
+        <Copiable text={policyId}>
           <Text style={styles.value}>{policyId}</Text>
-        </CopiableText>
+        </Copiable>
       </View>
     </Row>
   )
@@ -207,9 +207,9 @@ const Fingerprint = ({info}: {info: Portfolio.Token.Info}) => {
       <Space width="lg" />
 
       <View style={styles.copiableText}>
-        <CopiableText textToCopy={info.fingerprint}>
+        <Copiable text={info.fingerprint}>
           <Text style={styles.value}>{info.fingerprint}</Text>
-        </CopiableText>
+        </Copiable>
       </View>
     </Row>
   )

@@ -4,12 +4,12 @@ import {Image} from 'expo-image'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {Copiable} from '../../../components/Clipboard/Copiable'
 import {Space} from '../../../components/Space/Space'
 import {isEmptyString} from '../../../kernel/utils'
 import {formatTokenWithText} from '../../../yoroi-wallets/utils/format'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {CopiableText} from './CopiableText'
 import {ExplorerInfoLinks} from './ExplorerInfoLinks'
 import {useStrings} from './hooks/useStrings'
 import {generatePoolName} from './operations'
@@ -119,9 +119,9 @@ const PoolId = ({poolId}: {poolId: string | undefined}) => {
       <Space width="lg" />
 
       <View style={styles.copiableText}>
-        <CopiableText textToCopy={poolId}>
+        <Copiable text={poolId}>
           <Text style={styles.value}>{poolId}</Text>
-        </CopiableText>
+        </Copiable>
       </View>
     </Row>
   )
@@ -139,9 +139,9 @@ const PoolHash = ({poolHash}: {poolHash?: string}) => {
       <Space width="lg" />
 
       <View style={styles.copiableText}>
-        <CopiableText textToCopy={poolHash}>
+        <Copiable text={poolHash}>
           <Text style={styles.value}>{poolHash}</Text>
-        </CopiableText>
+        </Copiable>
       </View>
     </Row>
   )

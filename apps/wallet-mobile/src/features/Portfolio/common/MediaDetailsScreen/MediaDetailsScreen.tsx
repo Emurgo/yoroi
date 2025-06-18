@@ -17,7 +17,7 @@ import {
 } from 'react-native'
 
 import {Boundary} from '../../../../components/Boundary/Boundary'
-import {CopyButton} from '../../../../components/CopyButton'
+import {Copiable} from '../../../../components/Clipboard/Copiable'
 import {FadeIn} from '../../../../components/FadeIn'
 import {Hr} from '../../../../components/Hr/Hr'
 import {MediaPreview} from '../../../../components/MediaPreview/MediaPreview'
@@ -192,11 +192,11 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
       </MetadataRow>
 
       <MetadataRow title={strings.fingerprint}>
-        <CopyButton title={info.fingerprint} value={info.fingerprint} />
+        <Copiable title={info.fingerprint} text={info.fingerprint} />
       </MetadataRow>
 
       <MetadataRow title={strings.policyId}>
-        <CopyButton title={policyId} value={policyId} />
+        <Copiable title={policyId} text={policyId} />
       </MetadataRow>
 
       {traits?.traits.map((trait) => (
@@ -270,15 +270,12 @@ const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
 }
 
 const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
-  const styles = useStyles()
   const strings = useStrings()
   const stringifiedMetadata = JSON.stringify(discovery.originalMetadata, null, 2)
 
   return (
     <View>
-      <View style={styles.copyMetadata}>
-        <CopyButton title={strings.copyMetadata} value={stringifiedMetadata} style={styles.copyButton} />
-      </View>
+      <Copiable title={strings.copyMetadata} text={stringifiedMetadata} />
 
       <Spacer height={14} />
 
@@ -296,13 +293,6 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     flex: {
       ...atoms.flex_1,
-    },
-    copyButton: {
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
     },
     linkContent: {
       display: 'flex',
@@ -333,11 +323,6 @@ const useStyles = () => {
       ...atoms.align_center,
       ...atoms.justify_between,
       ...atoms.gap_lg,
-    },
-    copyMetadata: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
     },
     imageWrapper: {
       display: 'flex',

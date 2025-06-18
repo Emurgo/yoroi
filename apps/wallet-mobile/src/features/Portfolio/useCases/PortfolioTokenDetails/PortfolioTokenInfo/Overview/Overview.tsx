@@ -4,7 +4,7 @@ import React, {useState} from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Accordion} from '../../../../../../components/Accordion/Accordion'
-import {CopyButton} from '../../../../../../components/CopyButton'
+import {Copiable} from '../../../../../../components/Clipboard/Copiable'
 import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {features} from '../../../../../../kernel/features'
 import {isEmptyString} from '../../../../../../kernel/utils'
@@ -69,9 +69,9 @@ export const Overview = () => {
               <Spacer height={4} />
 
               <View style={styles.row}>
-                <Text style={styles.value}>{policyId ?? '--'}</Text>
-
-                <CopyButton value={policyId ?? ''} />
+                <Copiable text={policyId ?? ''}>
+                  <Text style={styles.value}>{policyId ?? '--'}</Text>
+                </Copiable>
               </View>
             </View>
 
@@ -82,11 +82,9 @@ export const Overview = () => {
 
               <Spacer height={4} />
 
-              <View style={styles.row}>
+              <Copiable text={tokenInfo.fingerprint ?? ''}>
                 <Text style={styles.value}>{tokenInfo.fingerprint ?? '--'}</Text>
-
-                <CopyButton value={tokenInfo.fingerprint ?? ''} />
-              </View>
+              </Copiable>
             </View>
 
             <Spacer height={24} />

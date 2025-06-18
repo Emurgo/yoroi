@@ -9,6 +9,7 @@ import {Linking, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} 
 import {useQuery} from 'react-query'
 
 import {Button} from '../../../../../../components/Button/Button'
+import {Copiable} from '../../../../../../components/Clipboard/Copiable'
 import {Divider} from '../../../../../../components/Divider/Divider'
 import {Icon} from '../../../../../../components/Icon'
 import {InfoBanner} from '../../../../../../components/InfoBanner/InfoBanner'
@@ -20,7 +21,6 @@ import {Quantities} from '../../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../../WalletManager/context/WalletManagerProvider'
 import {Accordion} from '../../../../common/Accordion'
-import {CopiableText} from '../../../../common/CopiableText'
 import {useStrings} from '../../../../common/hooks/useStrings'
 import {Operations, useOperations} from '../../../../common/operations'
 import {TokenItem} from '../../../../common/TokenItem'
@@ -178,7 +178,7 @@ const MyWalletSection = ({
     <Accordion label={strings.myWalletLabel}>
       <Space height="lg" />
 
-      <CopiableText textToCopy={address}>
+      <Copiable text={address}>
         <Text style={styles.addressText} numberOfLines={1} ellipsizeMode="middle">
           {address}
         </Text>
@@ -190,7 +190,7 @@ const MyWalletSection = ({
             <Icon.DigitalAsset size={24} color={colors.icon} />
           </>
         )}
-      </CopiableText>
+      </Copiable>
 
       <Space height="sm" />
 
@@ -288,7 +288,7 @@ const OneExternalPartySection = ({
         <Text style={styles.externalPartyAddressText}>{strings.receiveToLabel}:</Text>
 
         {receiverCustomTitle ?? (
-          <CopiableText textToCopy={address}>
+          <Copiable text={address}>
             <Text
               style={[styles.addressText, styles.externalPartiesSectionAddress]}
               numberOfLines={1}
@@ -304,7 +304,7 @@ const OneExternalPartySection = ({
                 <Icon.DigitalAsset size={24} color={colors.icon} />
               </>
             )}
-          </CopiableText>
+          </Copiable>
         )}
       </View>
     </>
@@ -328,7 +328,7 @@ const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => 
       <View key={index}>
         <Space height="lg" />
 
-        <CopiableText textToCopy={address}>
+        <Copiable text={address}>
           <Text style={styles.addressText} numberOfLines={1} ellipsizeMode="middle">
             {address}
           </Text>
@@ -340,7 +340,7 @@ const MultiExternalPartiesSection = ({outputs}: {outputs: FormattedOutputs}) => 
               <Icon.DigitalAsset size={24} color={colors.icon} />
             </>
           )}
-        </CopiableText>
+        </Copiable>
 
         <Space height="sm" />
 

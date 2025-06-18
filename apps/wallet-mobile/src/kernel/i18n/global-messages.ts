@@ -652,6 +652,10 @@ export const themeNames: any = defineMessages({
 })
 
 export default defineMessages({
+  collateral: {
+    id: 'global.collateral',
+    defaultMessage: '!!!Collateral',
+  },
   continue: {
     id: 'global.continue',
     defaultMessage: '!!!Continue',

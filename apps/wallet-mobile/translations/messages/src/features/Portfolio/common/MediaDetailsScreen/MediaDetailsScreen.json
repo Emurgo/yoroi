@@ -4,14 +4,14 @@
     "defaultMessage": "!!!NFT Details",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 366,
+      "line": 351,
       "column": 9,
-      "index": 10495
+      "index": 10119
     },
     "end": {
-      "line": 369,
+      "line": 354,
       "column": 3,
-      "index": 10566
+      "index": 10190
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Overview",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 370,
+      "line": 355,
       "column": 12,
-      "index": 10580
+      "index": 10204
     },
     "end": {
-      "line": 373,
+      "line": 358,
       "column": 3,
-      "index": 10651
+      "index": 10275
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Metadata",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 374,
+      "line": 359,
       "column": 12,
-      "index": 10665
+      "index": 10289
     },
     "end": {
-      "line": 377,
+      "line": 362,
       "column": 3,
-      "index": 10736
+      "index": 10360
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!NFT Name",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 378,
+      "line": 363,
       "column": 11,
-      "index": 10749
+      "index": 10373
     },
     "end": {
-      "line": 381,
+      "line": 366,
       "column": 3,
-      "index": 10819
+      "index": 10443
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Created",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 382,
+      "line": 367,
       "column": 13,
-      "index": 10834
+      "index": 10458
     },
     "end": {
-      "line": 385,
+      "line": 370,
       "column": 3,
-      "index": 10905
+      "index": 10529
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Description",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 386,
+      "line": 371,
       "column": 15,
-      "index": 10922
+      "index": 10546
     },
     "end": {
-      "line": 389,
+      "line": 374,
       "column": 3,
-      "index": 10999
+      "index": 10623
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Author",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 390,
+      "line": 375,
       "column": 10,
-      "index": 11011
+      "index": 10635
     },
     "end": {
-      "line": 393,
+      "line": 378,
       "column": 3,
-      "index": 11078
+      "index": 10702
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Fingerprint",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 394,
+      "line": 379,
       "column": 15,
-      "index": 11095
+      "index": 10719
     },
     "end": {
-      "line": 397,
+      "line": 382,
       "column": 3,
-      "index": 11172
+      "index": 10796
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Policy id",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 398,
+      "line": 383,
       "column": 12,
-      "index": 11186
+      "index": 10810
     },
     "end": {
-      "line": 401,
+      "line": 386,
       "column": 3,
-      "index": 11258
+      "index": 10882
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Details on",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 402,
+      "line": 387,
       "column": 16,
-      "index": 11276
+      "index": 10900
     },
     "end": {
-      "line": 405,
+      "line": 390,
       "column": 3,
-      "index": 11353
+      "index": 10977
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Copy metadata",
     "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
     "start": {
-      "line": 406,
+      "line": 391,
       "column": 16,
-      "index": 11371
+      "index": 10995
     },
     "end": {
-      "line": 409,
+      "line": 394,
       "column": 3,
-      "index": 11451
+      "index": 11075
     }
   }
 ]

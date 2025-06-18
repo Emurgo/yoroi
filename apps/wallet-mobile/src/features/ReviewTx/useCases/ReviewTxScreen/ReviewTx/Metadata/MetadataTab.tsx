@@ -2,8 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {Copiable} from '../../../../../../components/Clipboard/Copiable'
 import {Space} from '../../../../../../components/Space/Space'
-import {CopiableText, CopyButton} from '../../../../common/CopiableText'
 import {useStrings} from '../../../../common/hooks/useStrings'
 import {FormattedMetadata} from '../../../../common/types'
 
@@ -24,18 +24,18 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
 
         <Space width="lg" />
 
-        <CopiableText style={styles.hashContainer} textToCopy={hash}>
+        <Copiable style={styles.hashContainer} text={hash}>
           <Text style={styles.text}>{hash}</Text>
-        </CopiableText>
+        </Copiable>
       </View>
 
       <Space height="lg" />
 
       <View style={styles.metadata}>
         <View style={styles.title}>
-          <Text style={styles.metadataLabel}>{strings.metadataJsonLabel}</Text>
-
-          <CopyButton textToCopy={metadataFormatted} />
+          <Copiable text={metadataFormatted}>
+            <Text style={styles.metadataLabel}>{strings.metadataJsonLabel}</Text>
+          </Copiable>
         </View>
 
         <Space height="lg" />

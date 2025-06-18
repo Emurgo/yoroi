@@ -22,7 +22,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Banner} from '../../../../components/Banner/Banner'
 import {Boundary} from '../../../../components/Boundary/Boundary'
 import {Button} from '../../../../components/Button/Button'
-import {CopyButton} from '../../../../components/CopyButton'
+import {Copiable} from '../../../../components/Clipboard/Copiable'
 import {FadeIn} from '../../../../components/FadeIn'
 import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
@@ -173,7 +173,7 @@ export const TxDetails = () => {
 
           <Label>{strings.transactionId}</Label>
 
-          <CopyButton title={transaction.id} value={transaction.id} />
+          <Copiable title={transaction.id} text={transaction.id} />
         </ScrollView>
 
         <Actions style={styles.borderTop}>

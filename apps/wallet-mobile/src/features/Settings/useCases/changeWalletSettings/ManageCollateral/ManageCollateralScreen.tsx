@@ -17,7 +17,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation} from 'react-query'
 
 import {Button, ButtonType} from '../../../../../components/Button/Button'
-import {CopyButton} from '../../../../../components/CopyButton'
+import {Copiable} from '../../../../../components/Clipboard/Copiable'
 import {ErrorPanel} from '../../../../../components/ErrorPanel/ErrorPanel'
 import {Icon} from '../../../../../components/Icon'
 import {Info} from '../../../../../components/Icon/Info'
@@ -154,11 +154,11 @@ export const ManageCollateralScreen = () => {
         {hasCollateral && (
           <>
             <Row>
-              <Text ellipsizeMode="middle" numberOfLines={1} monospace small style={{flex: 1}} secondary>
-                {collateralId}
-              </Text>
-
-              <CopyButton value={collateralId} />
+              <Copiable text={collateralId}>
+                <Text ellipsizeMode="middle" numberOfLines={1} monospace small style={{flex: 1}} secondary>
+                  {collateralId}
+                </Text>
+              </Copiable>
             </Row>
 
             <Spacer height={16} />

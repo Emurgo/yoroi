@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {CopyButton} from '../../../../components/CopyButton'
+import {Copiable} from '../../../../components/Clipboard/Copiable'
 import {Text} from '../../../../components/Text'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../../kernel/utils'
@@ -46,7 +46,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
         <View style={styles.textRow}>
           <Text style={styles.textAddressDetails}>{address}</Text>
 
-          <CopyButton value={address} onCopy={handleAddressOnCopy} message={strings.addressCopiedMsg} />
+          <Copiable text={address} onCopy={handleAddressOnCopy} feedback={strings.addressCopiedMsg} />
         </View>
       </View>
 
@@ -57,7 +57,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
           <View style={styles.textRow}>
             <Text style={styles.textAddressDetails}>{stakingHash}</Text>
 
-            <CopyButton value={stakingHash} message={strings.addressCopiedMsg} />
+            <Copiable text={stakingHash} feedback={strings.addressCopiedMsg} />
           </View>
         </View>
       )}
@@ -69,7 +69,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
           <View style={styles.textRow}>
             <Text style={styles.textAddressDetails}>{spendingHash}</Text>
 
-            <CopyButton value={spendingHash} message={strings.addressCopiedMsg} />
+            <Copiable text={spendingHash} feedback={strings.addressCopiedMsg} />
           </View>
         </View>
       )}

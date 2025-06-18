@@ -17,6 +17,7 @@ import {useGovernanceBanner} from '../../../Staking/Governance/useCases/useGover
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
 import {TxList} from '../TxList/TxList'
+import {UtxoListButton} from '../UtxoList/UtxoListButton'
 import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
@@ -73,6 +74,8 @@ export const TxHistory = () => {
       </CollapsibleHeader>
 
       <View style={styles.panel}>
+        <UtxoListButton />
+
         <Space height="lg" />
 
         <Text style={styles.title}>{strings.title}</Text>

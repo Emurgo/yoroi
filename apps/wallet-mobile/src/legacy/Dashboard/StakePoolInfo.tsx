@@ -6,7 +6,7 @@ import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, ButtonProps, ButtonType} from '../../components/Button/Button'
-import {CopyButton} from '../../components/CopyButton'
+import {Copiable} from '../../components/Clipboard/Copiable'
 import {Text} from '../../components/Text'
 import {TitledCard} from '../../components/TitledCard'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
@@ -46,7 +46,7 @@ export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
             fontOverride={bold}
           />
 
-          <CopyButton title={stakePoolId} value={stakePoolId} message={strings.copied} />
+          <Copiable title={stakePoolId} text={stakePoolId} feedback={strings.copied} />
 
           {ctaProps && <Button type={ButtonType.Secondary} size="S" title={strings.undelegate} {...ctaProps} />}
         </View>

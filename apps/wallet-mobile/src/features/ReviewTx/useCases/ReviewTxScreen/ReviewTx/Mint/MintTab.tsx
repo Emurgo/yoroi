@@ -2,8 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {Copiable} from '../../../../../../components/Clipboard/Copiable'
 import {Space} from '../../../../../../components/Space/Space'
-import {CopiableText} from '../../../../common/CopiableText'
 import {useStrings} from '../../../../common/hooks/useStrings'
 import {TokenItem} from '../../../../common/TokenItem'
 import {FormattedTx} from '../../../../common/types'
@@ -26,9 +26,9 @@ export const MintTab = ({mintData}: {mintData: FormattedTx['mint']}) => {
 
               <Space width="sm" />
 
-              <CopiableText textToCopy={policyId} style={styles.policyIdTextContainer}>
+              <Copiable text={policyId} style={styles.policyIdTextContainer}>
                 <Text style={styles.policyIdText}>{policyId}</Text>
-              </CopiableText>
+              </Copiable>
             </View>
 
             <View style={styles.token}>

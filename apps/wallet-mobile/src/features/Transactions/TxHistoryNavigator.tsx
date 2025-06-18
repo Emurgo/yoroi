@@ -47,6 +47,7 @@ import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {HeaderRightSwap} from './common/HeaderRightSwap'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
+import {UtxoList} from './useCases/UtxoList/UtxoList'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
@@ -145,6 +146,19 @@ export const TxHistoryNavigator = () => {
                   {() => (
                     <Boundary loading={{size: 'full'}}>
                       <TxDetails />
+                    </Boundary>
+                  )}
+                </Stack.Screen>
+
+                <Stack.Screen
+                  name="utxo-list"
+                  options={{
+                    title: strings.utxoList,
+                  }}
+                >
+                  {() => (
+                    <Boundary loading={{size: 'full'}}>
+                      <UtxoList />
                     </Boundary>
                   )}
                 </Stack.Screen>
@@ -527,6 +541,10 @@ const messages = defineMessages({
     id: 'components.txhistory.notifications.title',
     defaultMessage: '!!!Notifications',
   },
+  utxoList: {
+    id: 'components.utxoList',
+    defaultMessage: '!!!UTxO List',
+  },
 })
 
 const useStrings = () => {
@@ -559,6 +577,7 @@ const useStrings = () => {
     txDetailsTitle: intl.formatMessage(messages.txDetailsTitle),
     settings: intl.formatMessage(messages.settings),
     notificationsTitle: intl.formatMessage(messages.notificationsTitle),
+    utxoList: intl.formatMessage(messages.utxoList),
   }
 }
 

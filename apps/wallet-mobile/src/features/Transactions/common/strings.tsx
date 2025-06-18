@@ -52,6 +52,7 @@ export const useStrings = () => {
     MULTI: intl.formatMessage(txTypeMessages.MULTI),
     assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
     copiedLabel: intl.formatMessage(messages.copiedLabel),
+    collateral: intl.formatMessage(globalMessages.collateral),
   }
 }
 

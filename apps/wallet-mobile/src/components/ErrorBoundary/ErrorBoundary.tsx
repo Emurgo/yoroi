@@ -5,7 +5,7 @@ import {BackHandler, Image, Platform, ScrollView, StyleSheet, Text, View} from '
 import errorImage from '../../assets/img/error.png'
 import {logger} from '../../kernel/logger/logger'
 import {Button} from '../Button/Button'
-import {CopyButton} from '../CopyButton'
+import {Copiable} from '../Clipboard/Copiable'
 import {Space} from '../Space/Space'
 import {Spacer} from '../Spacer/Spacer'
 import {ExpandableItem} from './ExpandableItem'
@@ -76,7 +76,7 @@ const ErrorView = ({state}: {state: State}) => {
           <View style={styles.errorSectionHeader}>
             <Text style={styles.paragraph}>{state.error}</Text>
 
-            <CopyButton value={`${state.error}:${state.errorInfo}`} />
+            <Copiable text={`${state.error}:${state.errorInfo}`} />
           </View>
 
           <Space height="lg" />

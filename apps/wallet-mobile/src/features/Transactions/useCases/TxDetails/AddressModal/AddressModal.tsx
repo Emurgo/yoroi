@@ -5,7 +5,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
-import {CopyButton} from '../../../../../components/CopyButton'
+import {Copiable} from '../../../../../components/Clipboard/Copiable'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useKeyHashes} from '../../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
@@ -43,7 +43,7 @@ export const AddressModal = ({address, path}: Props) => {
       <View>
         <Text style={styles.subtitle}>{strings.walletAddress}</Text>
 
-        <CopyButton title={address} value={address} />
+        <Copiable title={address} text={address} />
 
         <Spacer width={8} />
 
@@ -63,7 +63,7 @@ export const AddressModal = ({address, path}: Props) => {
           <>
             <Text style={styles.subtitle}>{strings.staking}</Text>
 
-            <CopyButton title={keyHashes.staking} value={keyHashes.staking} />
+            <Copiable title={keyHashes.staking} text={keyHashes.staking} />
 
             <Spacer width={8} />
           </>
@@ -73,7 +73,7 @@ export const AddressModal = ({address, path}: Props) => {
           <>
             <Text style={styles.subtitle}>{strings.spending}</Text>
 
-            <CopyButton title={keyHashes.spending} value={keyHashes.spending} />
+            <Copiable title={keyHashes.spending} text={keyHashes.spending} />
           </>
         )}
       </View>

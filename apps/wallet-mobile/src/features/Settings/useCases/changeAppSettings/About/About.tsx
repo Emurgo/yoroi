@@ -1,14 +1,12 @@
 import messaging from '@react-native-firebase/messaging'
 import {useNavigation} from '@react-navigation/native'
-import {truncateString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Pressable, StyleSheet, TextProps, View, ViewProps} from 'react-native'
+import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {useQuery} from 'react-query'
 
-import {CopyButton} from '../../../../../components/CopyButton'
-import {Text} from '../../../../../components/Text'
+import {Copiable} from '../../../../../components/Clipboard/Copiable'
 import {appInfo} from '../../../../../kernel/appInfo'
 import {commit} from '../../../../../kernel/env'
 import {SettingsRouteNavigation} from '../../../../../kernel/navigation'
@@ -25,59 +23,37 @@ export const About = () => {
 
   return (
     <View style={styles.about}>
-      <Row>
-        <LabelText>{strings.currentVersion}</LabelText>
+      <View style={styles.row}>
+        <Text style={styles.labelText}>{strings.currentVersion}</Text>
 
         <Pressable onLongPress={() => navigation.navigate('settings-system-log')}>
-          <ValueText>{appInfo.version}</ValueText>
+          <Text style={styles.valueText}>{appInfo.version}</Text>
         </Pressable>
-      </Row>
+      </View>
 
-      <Row>
-        <LabelText>{strings.commit}</LabelText>
+      <View style={styles.row}>
+        <Text style={styles.labelText}>{strings.commit}</Text>
 
-        <ValueText>{commit}</ValueText>
-      </Row>
+        <Text style={styles.valueText}>{commit}</Text>
+      </View>
 
       {FCMToken !== undefined && (
-        <Row>
-          <LabelText>{strings.fcmToken}</LabelText>
+        <>
+          <Text style={styles.labelText}>{strings.fcmToken}</Text>
 
-          <CopyButton
-            fontOverride={styles.valueText}
-            value={FCMToken}
-            title={truncateString({value: FCMToken, maxLength: 20})}
-          />
-        </Row>
+          <Copiable text={FCMToken}>
+            <View style={{flex: 1}}>
+              <Text style={styles.valueText} numberOfLines={1} ellipsizeMode="middle">
+                {FCMToken}
+              </Text>
+            </View>
+          </Copiable>
+        </>
       )}
     </View>
   )
 }
 
-const Row = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
-  return <View {...props} style={[styles.row, style]} />
-}
-
-const LabelText = ({style, children, ...props}: TextProps) => {
-  const styles = useStyles()
-
-  return (
-    <Text {...props} style={[styles.labelText, style]}>
-      {children}
-    </Text>
-  )
-}
-
-const ValueText = ({style, children, ...props}: TextProps) => {
-  const styles = useStyles()
-
-  return (
-    <Text {...props} style={[styles.valueText, style]}>
-      {children}
-    </Text>
-  )
-}
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({

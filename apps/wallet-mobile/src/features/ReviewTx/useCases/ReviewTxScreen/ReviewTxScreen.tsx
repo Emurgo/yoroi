@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import {CopyButton} from '../../../../components/CopyButton'
+import {Copiable} from '../../../../components/Clipboard/Copiable'
 import {isDev} from '../../../../kernel/env'
 import {ReviewTxRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {useFormattedMetadata} from '../../common/hooks/useFormattedMetadata'
@@ -19,7 +19,7 @@ export const ReviewTxScreen = () => {
   const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
   const cbor = params?.cbor
 
-  if (isDev) navigation.setOptions({headerRight: () => (cbor != null ? <CopyButton value={cbor} /> : null)})
+  if (isDev) navigation.setOptions({headerRight: () => (cbor != null ? <Copiable text={cbor} /> : null)})
 
   const {legacyOnConfirm} = useLegacyOnConfirm({
     unsignedTx,

@@ -7,7 +7,7 @@ import {FlatList, Linking, Platform, StyleSheet, Text, TextProps, View, ViewProp
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
-import {CopyButton} from '../../../components/CopyButton'
+import {Copiable} from '../../../components/Clipboard/Copiable'
 import {Icon} from '../../../components/Icon'
 import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
 import {Space} from '../../../components/Space/Space'
@@ -100,7 +100,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
       <View style={styles.txRow}>
         <Text style={styles.txLabel}>{strings.transactionId}</Text>
 
-        <CopyButton value={txHash} />
+        <Copiable text={txHash} />
       </View>
 
       <Spacer height={8} />

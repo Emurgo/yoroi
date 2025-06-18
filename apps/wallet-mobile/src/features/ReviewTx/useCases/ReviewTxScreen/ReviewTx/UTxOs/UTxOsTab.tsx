@@ -3,12 +3,12 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {Copiable} from '../../../../../../components/Clipboard/Copiable'
 import {Divider} from '../../../../../../components/Divider/Divider'
 import {Space} from '../../../../../../components/Space/Space'
 import {formatTokenWithText} from '../../../../../../yoroi-wallets/utils/format'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Accordion} from '../../../../common/Accordion'
-import {CopiableText} from '../../../../common/CopiableText'
 import {useStrings} from '../../../../common/hooks/useStrings'
 import {TokenItem} from '../../../../common/TokenItem'
 import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs, FormattedTx} from '../../../../common/types'
@@ -53,13 +53,13 @@ const Input = ({input}: {input: FormattedInput}) => {
 
         <Space height="lg" />
 
-        <CopiableText textToCopy={input.address ?? '-'}>
+        <Copiable text={input.address ?? '-'}>
           <Text style={styles.addressText}>{input.address ?? '-'}</Text>
-        </CopiableText>
+        </Copiable>
 
         <Space height="sm" />
 
-        <CopiableText textToCopy={input.txHash}>
+        <Copiable text={input.txHash}>
           <Text style={styles.addressText}>{input.txHash}</Text>
 
           <Space width="sm" />
@@ -67,7 +67,7 @@ const Input = ({input}: {input: FormattedInput}) => {
           <Text style={styles.index}>{`#${input.txIndex}`}</Text>
 
           <Space width="sm" />
-        </CopiableText>
+        </Copiable>
       </View>
 
       <Space height="sm" />
@@ -99,9 +99,9 @@ const Output = ({output}: {output: FormattedOutput}) => {
 
         <Space height="lg" />
 
-        <CopiableText textToCopy={output.address ?? '-'}>
+        <Copiable text={output.address ?? '-'}>
           <Text style={styles.addressText}>{output.address ?? '-'}</Text>
-        </CopiableText>
+        </Copiable>
       </View>
 
       <Space height="sm" />

@@ -152,6 +152,7 @@ export type TxHistoryRoutes = {
   'tx-details': {
     id: string
   }
+  'utxo-list': undefined
   'receive-single': undefined
   'receive-specific-amount': undefined
   'receive-multiple': undefined
@@ -719,6 +720,20 @@ export const useWalletNavigation = () => {
             screen: 'exchange-create-order',
           },
         },
+      })
+    },
+
+    navigateToUtxoList: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'utxo-list'}},
+      })
+    },
+
+    navigateToTxDetails: (id: string) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'tx-details', params: {id}}},
       })
     },
   } as const).current
