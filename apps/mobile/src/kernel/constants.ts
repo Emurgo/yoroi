@@ -1,5 +1,5 @@
 import {ThemeName} from '@yoroi/theme'
-import {App} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 
 import Constants from 'expo-constants'
 import * as Device from 'expo-device'
@@ -69,68 +69,8 @@ export const supportedThemes: Readonly<Record<ThemeName, ThemeName>> = freeze({
   'default-dark': 'default-dark',
 })
 
-// Currencies
-// NOTE: to be moved into pairing module/portfolio 
-export const supportedCurrencies = freeze({
-  ADA: 'ADA',
-  BRL: 'BRL',
-  BTC: 'BTC',
-  CNY: 'CNY',
-  ETH: 'ETH',
-  EUR: 'EUR',
-  JPY: 'JPY',
-  KRW: 'KRW',
-  USD: 'USD',
-} as const)
-
-export type SupportedCurrency = keyof typeof supportedCurrencies
-
-export const configCurrencies: Readonly<
-  Record<
-    keyof typeof supportedCurrencies,
-    {decimals: number; nativeName: string}
-  >
-> = freeze(
-  {
-    [supportedCurrencies.ADA]: {
-      decimals: 6,
-      nativeName: 'Cardano',
-    },
-    [supportedCurrencies.BRL]: {
-      decimals: 2,
-      nativeName: 'Real',
-    },
-    [supportedCurrencies.BTC]: {
-      decimals: 8,
-      nativeName: 'Bitcoin',
-    },
-    [supportedCurrencies.CNY]: {
-      decimals: 2,
-      nativeName: '人民币',
-    },
-    [supportedCurrencies.ETH]: {
-      decimals: 8,
-      nativeName: 'Ethereum',
-    },
-    [supportedCurrencies.EUR]: {
-      decimals: 2,
-      nativeName: 'Euro',
-    },
-    [supportedCurrencies.JPY]: {
-      decimals: 2,
-      nativeName: '日本円',
-    },
-    [supportedCurrencies.KRW]: {
-      decimals: 2,
-      nativeName: '대한민국 원',
-    },
-    [supportedCurrencies.USD]: {
-      decimals: 2,
-      nativeName: 'US Dollar',
-    },
-  } as const,
-  true,
-)
+// Currency
+export const defaultCurrency: Portfolio.Currency.Symbol = 'USD'
 
 // Legal
 export const agreementDate = 1691967600000

@@ -23,6 +23,7 @@ export * from './adapters/token.mocks'
 
 export * from './transformers/deserializers'
 
+export * from './validators/currency-symbol'
 export * from './validators/primary-breakdown'
 export * from './validators/response-record-with-cache-schema-maker'
 export * from './validators/token-application'

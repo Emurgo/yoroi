@@ -9,7 +9,7 @@ import {logger} from '../../kernel/logger/logger'
 import {Button} from '../Button/Button'
 import {CopyButton} from '../CopyButton/CopyButton'
 import {SpaceHeight} from '../Space/Space'
-import {ExpandableItem} from './ExpandableItem/ExpandableItem'
+import {ExpandableItem} from './ExpandableItem'
 
 // TODO: Add error image
 // TODO: Add translations
