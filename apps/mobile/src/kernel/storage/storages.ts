@@ -1,6 +1,3 @@
-import {MMKV} from 'react-native-mmkv'
-import {of} from 'rxjs'
-
 import {
   Hex,
   hex,
@@ -8,13 +5,21 @@ import {
   mountMMKVStorage,
   observableStorageMaker,
   parseBoolean,
+  parseNumber,
   parseSafe,
+  parseString,
   storageKeyMaker,
 } from '@yoroi/common'
+import {parseCurrencySymbol} from '@yoroi/portfolio'
 import {ThemeConfig, isThemeConfig} from '@yoroi/theme'
-
 import {Portfolio} from '@yoroi/types'
+
+import {MMKV} from 'react-native-mmkv'
+import {of} from 'rxjs'
+import uuid from 'uuid'
+
 import {AuthSetting} from '../../features/Auth/common/types'
+import {defaultCurrency} from '../constants'
 import {
   LanguageCode,
   isLanguageCode,
@@ -28,6 +33,34 @@ export const rootSyncStorage = observableStorageMaker<false, string>(
 )
 export const rootStorage = mountAsyncStorage({path: '/'})
 export const keyStorage = rootStorage.join('keystore/')
+
+// Root - Sync Storage
+export const rootStorageObservable = observableStorageMaker(rootSyncStorage)
+export const rootSyncStorageKeyMaker = storageKeyMaker(rootStorageObservable)
+
+// Root - storageVersion
+export const storageCurrentVersion = 3
+export const keyStorageVersion = 'storageVersion'
+export const storageVersionStorageKeyManager = rootSyncStorageKeyMaker({
+  key: keyStorageVersion,
+  parser: (data) => parseNumber(data) ?? storageCurrentVersion,
+})
+
+// Root - installationId
+export const keyInstallationId = 'installationId'
+export const installationIdStorageKeyManager = rootSyncStorageKeyMaker({
+  key: keyInstallationId,
+  parser: (data) => parseString(data),
+})
+export const initInstallationId = () => {
+  const id = installationIdStorageKeyManager.read()
+  if (id != null) return id
+
+  const newInstallationId = uuid.v4()
+  installationIdStorageKeyManager.save(newInstallationId)
+  storageVersionStorageKeyManager.save(storageCurrentVersion)
+  return newInstallationId
+}
 
 // Settings
 export const appSettingsStorage = rootSyncStorage.join('appSettings/')
@@ -98,10 +131,12 @@ export const screenShareStorageKeyManager = settingsStorageKeyMaker<boolean>({
 
 // Settings - Metrics
 export const metricsEnabledStorageKey = 'metrics-enabled'
-export const metricsEnabledStorageKeyManager = settingsStorageKeyMaker<boolean>({
-  key: metricsEnabledStorageKey,
-  parser: (data) => Boolean(parseBoolean(data)),
-})
+export const metricsEnabledStorageKeyManager = settingsStorageKeyMaker<boolean>(
+  {
+    key: metricsEnabledStorageKey,
+    parser: (data) => Boolean(parseBoolean(data)),
+  },
+)
 export const metricsConsentRequestedStorageKey = 'metrics-consentRequested'
 export const metricsConsentRequestedStorageKeyManager = settingsStorageKeyMaker(
   {
@@ -117,8 +152,8 @@ export const currencyStorageKeyManager =
     key: currencyStorageKey,
     // parser: (data) => parseCurrencySymbol(data),
     parser: (data) => {
-      const parsed = parseSafe(data)
-      return parsed as Portfolio.Currency.Symbol
+      const parsed = parseCurrencySymbol(data)
+      return parsed ?? defaultCurrency
     },
   })
 

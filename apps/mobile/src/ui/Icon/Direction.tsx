@@ -3,10 +3,6 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
 
-import {
-  TransactionDirection,
-  TransactionInfo,
-} from '../../yoroi-wallets/types/other'
 import {Received} from '../Icon/Received'
 import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'
@@ -18,12 +14,12 @@ export const Direction = ({
   size = defaultSize,
   containerStyle,
 }: IconProps & {
-  transactionDirection: TransactionInfo['direction']
+  transactionDirection: 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
   containerStyle?: ViewStyle
 }) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
-  const iconStyles = styleMap(color)[transactionDirection]
+  const iconStyles = styleMap(p)[transactionDirection]
   const IconComponent = iconMap[transactionDirection]
 
   return (
@@ -42,8 +38,8 @@ export const Direction = ({
 const defaultSize = 36
 
 const iconMap: Record<
-  TransactionDirection,
-  ({size, color}: {size: number; color: string}) => JSX.Element
+  'SENT' | 'RECEIVED' | 'SELF' | 'MULTI',
+  ({size, color}: {size: number; color: string}) => React.ReactNode
 > = {
   SENT: Send,
   RECEIVED: Received,
