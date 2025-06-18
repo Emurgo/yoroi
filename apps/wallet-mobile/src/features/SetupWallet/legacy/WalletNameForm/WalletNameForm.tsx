@@ -11,7 +11,7 @@ import {ProgressStep} from '../../../../components/ProgressStep'
 import {TextInput} from '../../../../components/TextInput/TextInput'
 import globalMessages from '../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {getWalletNameError, validateWalletName} from '../../../../yoroi-wallets/utils/validators'
+import {getWalletNameError, validateWalletName} from '../../../../wallets/utils/validators'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 
 type Props = {

@@ -3,8 +3,8 @@ import {isString} from '@yoroi/common'
 import _ from 'lodash'
 import {useQuery} from 'react-query'
 
-import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
-import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
+import {wrappedCsl} from '../../../../wallets/cardano/wrappedCsl'
+import {YoroiUnsignedTx} from '../../../../wallets/types/yoroi'
 import {FormattedMetadata, TransactionBody} from '../types'
 
 export const formatMetadata = async (

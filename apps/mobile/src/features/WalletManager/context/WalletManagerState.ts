@@ -4,7 +4,7 @@ import {castDraft, freeze, produce} from 'immer'
 
 import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../../kernel/logger/logger'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {YoroiWallet} from '../../../wallets/cardano/types'
 import {networkManagers} from '../common/constants'
 import {WalletManager} from '../wallet-manager'
 

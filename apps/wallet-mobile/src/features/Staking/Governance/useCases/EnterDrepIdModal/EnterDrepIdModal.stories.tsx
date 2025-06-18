@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import {GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
-import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {mocks} from '../../../../../wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../wallets/mocks/WalletManagerProviderMock'
 import {mocks as governanceMocks} from '../../common/mocks'
 import {EnterDrepIdModal} from './EnterDrepIdModal'
 

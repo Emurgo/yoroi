@@ -12,8 +12,8 @@ import {TitledCard} from '../../components/TitledCard'
 import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
-import {formatAdaWithText} from '../../yoroi-wallets/utils/format'
-import {asQuantity} from '../../yoroi-wallets/utils/utils'
+import {formatAdaWithText} from '../../wallets/utils/format'
+import {asQuantity} from '../../wallets/utils/utils'
 
 const ICON_DIM = 44
 

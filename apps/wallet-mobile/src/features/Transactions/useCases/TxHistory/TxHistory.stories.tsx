@@ -3,8 +3,8 @@ import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
 import {QueryProvider} from '../../../../../.storybook/decorators'
-import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {mocks} from '../../../../wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'
 import {TxHistory} from './TxHistory'
 
 storiesOf('V2/TxHistory', module)

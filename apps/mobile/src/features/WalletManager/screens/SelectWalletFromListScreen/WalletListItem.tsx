@@ -9,7 +9,7 @@ import {Icon} from '../../../../components/Icon'
 import {Loading} from '../../../../components/Loading/Loading'
 import {Space} from '../../../../components/Space/Space'
 import {features} from '../../../../kernel/features'
-import {isByron, isShelley} from '../../../../yoroi-wallets/cardano/utils'
+import {isByron, isShelley} from '../../../../wallets/cardano/utils'
 import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,

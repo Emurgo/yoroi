@@ -14,7 +14,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useCreateGovernanceTx, useStakingKey} from '../../../../../yoroi-wallets/hooks'
+import {useCreateGovernanceTx, useStakingKey} from '../../../../../wallets/hooks'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../common/helpers'

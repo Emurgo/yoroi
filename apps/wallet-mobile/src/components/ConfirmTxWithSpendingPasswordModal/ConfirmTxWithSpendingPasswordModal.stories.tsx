@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {mocks} from '../../yoroi-wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {mocks} from '../../wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../wallets/mocks/WalletManagerProviderMock'
 import {ConfirmTxWithSpendingPasswordModal} from './ConfirmTxWithSpendingPasswordModal'
 
 storiesOf('ConfirmTxWithSpendingPasswordModal', module)

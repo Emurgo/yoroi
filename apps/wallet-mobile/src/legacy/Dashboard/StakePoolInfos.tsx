@@ -7,10 +7,10 @@ import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {ButtonProps} from '../../components/Button/Button'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {StakingInfo} from '../../yoroi-wallets/types/staking'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
-import {Quantities} from '../../yoroi-wallets/utils/utils'
+import {YoroiWallet} from '../../wallets/cardano/types'
+import {StakingInfo} from '../../wallets/types/staking'
+import {YoroiUnsignedTx} from '../../wallets/types/yoroi'
+import {Quantities} from '../../wallets/utils/utils'
 import {StakePoolInfo} from './StakePoolInfo'
 
 export const StakePoolInfos = ({ctaProps}: {ctaProps?: ButtonProps}) => {

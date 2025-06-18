@@ -8,7 +8,7 @@ import {Button} from '../../../../../components/Button/Button'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {TextInput} from '../../../../../components/TextInput/TextInput'
-import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
+import {CardanoMobile} from '../../../../../wallets/wallets'
 import {useStrings} from '../../common/strings'
 
 export type Props = {

@@ -3,9 +3,9 @@ import {GovernanceManager, GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
 import {SafeArea} from '../../../../../components/SafeArea'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {YoroiWallet} from '../../../../../wallets/cardano/types'
+import {mocks} from '../../../../../wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../wallets/mocks/WalletManagerProviderMock'
 import {mocks as governanceMocks} from '../../common/mocks'
 import {ChangeVoteScreen} from './ChangeVoteScreen'
 

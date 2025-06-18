@@ -11,8 +11,8 @@ import {useSelectedNetwork} from '../../../features/WalletManager/common/hooks/u
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {features} from '../../../kernel/features'
 import {useWalletNavigation} from '../../../kernel/navigation'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
+import {YoroiWallet} from '../../../wallets/cardano/types'
+import {asQuantity, Quantities} from '../../../wallets/utils/utils'
 import {useStakingInfo} from '../../Dashboard/StakePoolInfos'
 
 const createDelegationTx = async (wallet: YoroiWallet, poolId: string, meta: Wallet.Meta) => {

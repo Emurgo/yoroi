@@ -8,7 +8,7 @@ import {Button} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'
 import {Text} from '../../../components/Text'
 import globalMessages from '../../../kernel/i18n/global-messages'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../yoroi-wallets/hw/hw'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../wallets/hw/hw'
 
 type Props = {
   onSelectUSB: () => void

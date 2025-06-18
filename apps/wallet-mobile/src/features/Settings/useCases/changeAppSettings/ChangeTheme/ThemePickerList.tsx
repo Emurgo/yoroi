@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 
-import {useThemeStorageMaker} from '../../../../../yoroi-wallets/hooks'
+import {useThemeStorageMaker} from '../../../../../wallets/hooks'
 import {ThemePickerItem} from './ThemePickerItem'
 
 export const ThemePickerList = () => {

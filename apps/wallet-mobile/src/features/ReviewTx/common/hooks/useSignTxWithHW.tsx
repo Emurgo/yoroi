@@ -2,8 +2,8 @@ import {Transaction} from '@emurgo/cross-csl-core'
 import * as React from 'react'
 import {useMutation} from 'react-query'
 
-import {cip30LedgerExtensionMaker} from '../../../../yoroi-wallets/cardano/cip30/cip30-ledger'
-import {BaseLedgerError} from '../../../../yoroi-wallets/hw/hw'
+import {cip30LedgerExtensionMaker} from '../../../../wallets/cardano/cip30/cip30-ledger'
+import {BaseLedgerError} from '../../../../wallets/hw/hw'
 import {useConfirmHWConnectionModal} from '../../../Discover/common/ConfirmHWConnectionModal'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 

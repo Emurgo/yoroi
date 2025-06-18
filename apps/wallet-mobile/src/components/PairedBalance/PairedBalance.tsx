@@ -10,7 +10,7 @@ import {usePortfolioTokenActivity} from '../../features/Portfolio/common/Portfol
 import {useCurrencyPairing} from '../../features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
-import {CurrencySymbol} from '../../yoroi-wallets/types/other'
+import {CurrencySymbol} from '../../wallets/types/other'
 import {Boundary, ResetError, ResetErrorRef} from '../Boundary/Boundary'
 
 type Props = {

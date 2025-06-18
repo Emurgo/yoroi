@@ -8,7 +8,7 @@ import {ShareQRCodeCard} from '../../../../components/ShareQRCodeCard/ShareQRCod
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../../kernel/utils'
-import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
+import {useKeyHashes} from '../../../../wallets/hooks'
 import {useReceive} from '../ReceiveProvider'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {useStrings} from '../useStrings'

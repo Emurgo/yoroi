@@ -14,16 +14,16 @@ import {Icon} from '../../../../components/Icon'
 import {styleMap} from '../../../../components/Icon/Direction'
 import {BalanceError} from '../../../../components/PairedBalance/PairedBalance'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
-import {MultiToken} from '../../../../yoroi-wallets/cardano/MultiToken'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
+import {MultiToken} from '../../../../wallets/cardano/MultiToken'
+import {YoroiWallet} from '../../../../wallets/cardano/types'
+import {TransactionInfo} from '../../../../wallets/types/other'
 import {
   formatDateRelative,
   formatTime,
   formatTokenFractional,
   formatTokenInteger,
-} from '../../../../yoroi-wallets/utils/format'
-import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
+} from '../../../../wallets/utils/format'
+import {asQuantity} from '../../../../wallets/utils/utils'
 import {useCurrencyPairing} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'

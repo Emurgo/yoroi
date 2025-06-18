@@ -3,9 +3,9 @@ import {tokenBalanceMocks} from '@yoroi/portfolio'
 import React from 'react'
 
 import {QueryProvider, RouteProvider} from '../../../../../../../.storybook'
-import {YoroiWallet} from '../../../../../../yoroi-wallets/cardano/types'
-import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {YoroiWallet} from '../../../../../../wallets/cardano/types'
+import {mocks} from '../../../../../../wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../../wallets/mocks/WalletManagerProviderMock'
 import {ZoomMediaImageScreen} from './ZoomMediaImageScreen'
 
 storiesOf('NFT/Details Image', module).add('Default', () => {

@@ -38,7 +38,7 @@ import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
-} from '../../../../yoroi-wallets/utils/validators'
+} from '../../../../wallets/utils/validators'
 import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'

@@ -2,9 +2,9 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {mocks} from '../../yoroi-wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {YoroiWallet} from '../../wallets/cardano/types'
+import {mocks} from '../../wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../wallets/mocks/WalletManagerProviderMock'
 import {StakePoolInfos} from './StakePoolInfos'
 
 storiesOf('StakePoolInfos', module)

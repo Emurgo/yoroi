@@ -9,7 +9,7 @@ import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../yoroi-wallets/hw/hw'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../wallets/hw/hw'
 import {useStrings} from '../../common/useStrings'
 
 const useIsAndroidUsbSupported = () => {
