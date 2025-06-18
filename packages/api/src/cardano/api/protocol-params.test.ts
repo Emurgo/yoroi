@@ -1,6 +1,7 @@
+import axios from 'axios'
+
 import {getProtocolParams, isProtocolParamsResponse} from './protocol-params'
 import {protocolParamsMockResponse} from './protocol-params.mocks'
-import axios from 'axios'
 
 jest.mock('axios')
 const mockedAxios = axios as jest.MockedFunction<typeof axios>
@@ -12,6 +13,7 @@ describe('getProtocolParams', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockedAxios.mockReset && mockedAxios.mockReset()
   })
 
   it('returns parsed data when response is valid', async () => {
@@ -44,14 +46,14 @@ describe('getProtocolParams', () => {
     const result = await protocolParams()
     expect(customFetcher).toHaveBeenCalled()
     expect(result).toEqual(protocolParamsMockResponse)
+    const pp = getProtocolParams(baseUrl)
+    expect(pp).toBeDefined()
   })
   it('uses fetcher and returns data on successful fetch', async () => {
-    mockedAxios.mockResolvedValue({data: protocolParamsMockResponse})
-
-    const protocolParams = getProtocolParams(baseUrl)
+    const fetcher = jest.fn().mockResolvedValue(protocolParamsMockResponse)
+    const protocolParams = getProtocolParams(baseUrl, fetcher)
     const result = await protocolParams()
-
-    expect(mockedAxios).toHaveBeenCalled()
+    expect(fetcher).toHaveBeenCalled()
     expect(result).toEqual(protocolParamsMockResponse)
   })
 

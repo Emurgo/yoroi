@@ -1,5 +1,6 @@
-import {appApiMaker} from './app-api-maker'
 import {fetcher} from '@yoroi/common'
+
+import {appApiMaker} from './app-api-maker'
 
 describe('appApiMaker', () => {
   it('success', async () => {

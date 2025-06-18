@@ -1,3 +1,5 @@
+import {Api} from '@yoroi/types'
+
 import {
   emptyOnChainMetadataRecord,
   findMetadataRecord,
@@ -5,7 +7,6 @@ import {
   getOnChainMetadatas,
 } from './token-onchain-metadata'
 import {mockGetOnChainMetadatas} from './token-onchain-metadata.mocks'
-import {Api} from '@yoroi/types'
 
 describe('getMetadataResult', () => {
   it('should return undefined for everything if the records array is empty', () => {

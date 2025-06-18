@@ -1,10 +1,7 @@
+import {Fetcher} from '@yoroi/common'
+
 import {getBestBlock, isBestBlock} from './best-block'
 import {bestBlockMockResponse} from './best-block.mocks'
-import {fetcher, Fetcher} from '@yoroi/common'
-import axios from 'axios'
-
-jest.mock('axios')
-const mockedAxios = axios as jest.MockedFunction<typeof axios>
 
 describe('getBestBlock', () => {
   const baseUrl = 'https://localhost'
@@ -46,11 +43,11 @@ describe('getBestBlock', () => {
   })
 
   it('uses fetcher and returns data on successful fetch', async () => {
-    mockedAxios.mockResolvedValue({data: bestBlockMockResponse})
-    const tipStatus = getBestBlock(baseUrl, fetcher)
+    const fetcherMock = jest.fn().mockResolvedValue(bestBlockMockResponse)
+    const tipStatus = getBestBlock(baseUrl, fetcherMock)
     const result = await tipStatus()
 
-    expect(mockedAxios).toHaveBeenCalled()
+    expect(fetcherMock).toHaveBeenCalled()
     expect(result).toEqual(bestBlockMockResponse)
   })
 

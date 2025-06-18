@@ -1,6 +1,5 @@
-/* istanbul ignore file */
-
 import {App} from '@yoroi/types'
+
 import {mockGetFrontendFees} from './frontend-fees.mocks'
 
 const loading = () => new Promise(() => {})

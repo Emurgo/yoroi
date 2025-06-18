@@ -1,4 +1,5 @@
 import {Api} from '@yoroi/types'
+
 import {
   getUtxoData,
   parseUtxoDataResponse,

@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import {App} from '@yoroi/types'
 
 const empty: App.FrontendFeesResponse = {} as const

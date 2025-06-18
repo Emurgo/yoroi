@@ -1,6 +1,7 @@
-import {z} from 'zod'
 import {createTypeGuardFromSchema, fetcher, Fetcher} from '@yoroi/common'
 import {App} from '@yoroi/types'
+
+import {z} from 'zod'
 
 export const getFrontendFees =
   (baseUrl: string, request: Fetcher = fetcher) =>

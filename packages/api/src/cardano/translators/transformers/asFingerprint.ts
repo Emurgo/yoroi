@@ -1,5 +1,7 @@
-import AssetFingerprint from '@emurgo/cip14-js'
 import {Balance} from '@yoroi/types'
+
+import AssetFingerprint from '@emurgo/cip14-js'
+
 import {getTokenIdentity} from '../helpers/getTokenIdentity'
 
 /**

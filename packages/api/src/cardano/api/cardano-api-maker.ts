@@ -1,6 +1,7 @@
 import {Fetcher, fetcher} from '@yoroi/common'
-import {freeze} from 'immer'
 import {Api, Chain} from '@yoroi/types'
+
+import {freeze} from 'immer'
 
 import {getProtocolParams as getProtocolParamsWrapper} from './protocol-params'
 import {getBestBlock as getBestBlockWrapper} from './best-block'
