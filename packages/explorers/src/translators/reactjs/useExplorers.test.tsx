@@ -1,7 +1,9 @@
+import {Chain} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
+
 import {render, waitFor} from '@testing-library/react-native'
-import {Chain} from '@yoroi/types'
 
 import {useExplorers} from './useExplorers'
 

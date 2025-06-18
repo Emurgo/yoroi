@@ -1,4 +1,5 @@
 import {Chain, Explorers} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 export const explorerManager: Readonly<
