@@ -1,5 +1,6 @@
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Chain, Network} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 export const primaryTokenInfoMainnet = createPrimaryTokenInfo({

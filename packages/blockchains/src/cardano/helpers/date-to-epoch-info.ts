@@ -1,4 +1,5 @@
 import {Network} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 export function dateToEpochInfo(eras: Network.Manager['eras']) {
