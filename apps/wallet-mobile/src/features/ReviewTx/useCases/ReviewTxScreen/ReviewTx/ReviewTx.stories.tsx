@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {WalletManagerProviderMock} from '../../../../../wallets/mocks/WalletManagerProviderMock'
 import {mocks} from '../../../common/mocks'
 import {FormattedTx} from '../../../common/types'
 import {ReviewTx} from './ReviewTx'

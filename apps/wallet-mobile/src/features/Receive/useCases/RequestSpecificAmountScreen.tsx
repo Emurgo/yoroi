@@ -22,7 +22,7 @@ import {ShareQRCodeCard} from '../../../components/ShareQRCodeCard/ShareQRCodeCa
 import {TextInput} from '../../../components/TextInput/TextInput'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
-import {editedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
+import {editedFormatter} from '../../../wallets/utils/amountUtils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '../common/ReceiveProvider'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'

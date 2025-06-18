@@ -2,7 +2,7 @@ import {ReactNode} from 'react'
 import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 
 import globalMessages, {actionMessages, txLabels} from '../../../kernel/i18n/global-messages'
-import {TransactionDirection} from '../../../yoroi-wallets/types/other'
+import {TransactionDirection} from '../../../wallets/types/other'
 import {messages as receiveMessages} from '../../Receive/common/useStrings'
 
 export const useStrings = () => {

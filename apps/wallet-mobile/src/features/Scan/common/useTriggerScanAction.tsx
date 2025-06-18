@@ -9,7 +9,7 @@ import {useModal} from '../../../components/Modal/ModalContext'
 import {useClaimErrorResolver} from '../../../features/Claim/common/useClaimErrorResolver'
 import {useStrings as useStringsClaim} from '../../../features/Claim/common/useStrings'
 import {AskConfirmation, AskConfirmationActions} from '../../../features/Claim/useCases/AskConfirmation'
-import {pastedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
+import {pastedFormatter} from '../../../wallets/utils/amountUtils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from './useNavigateTo'
 

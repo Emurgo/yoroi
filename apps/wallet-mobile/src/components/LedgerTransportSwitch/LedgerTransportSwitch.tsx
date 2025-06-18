@@ -4,7 +4,7 @@ import {Alert, StyleSheet, View} from 'react-native'
 
 import {useStrings} from '../../features/Swap/common/strings'
 import {useIsUsbSupported} from '../../legacy/HW'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../yoroi-wallets/hw/hw'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '../../wallets/hw/hw'
 import {Button, ButtonType} from '../Button/Button'
 import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'

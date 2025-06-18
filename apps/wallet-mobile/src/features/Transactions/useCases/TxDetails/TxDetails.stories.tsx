@@ -5,8 +5,8 @@ import React from 'react'
 
 import {QueryProvider, RouteProvider} from '../../../../../.storybook/decorators'
 import {rootStorage} from '../../../../kernel/storage/rootStorage'
-import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {mocks} from '../../../../wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'
 import {TxDetails} from './TxDetails'
 
 storiesOf('TxDetails', module)

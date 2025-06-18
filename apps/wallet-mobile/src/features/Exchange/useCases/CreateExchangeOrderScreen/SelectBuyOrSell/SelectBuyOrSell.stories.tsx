@@ -3,8 +3,8 @@ import {exchangeDefaultState, ExchangeProvider, successManagerMock} from '@yoroi
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {mocks} from '../../../../../wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../wallets/mocks/WalletManagerProviderMock'
 import {SelectBuyOrSell} from './SelectBuyOrSell'
 
 const Wrapper = ({children}: ViewProps) => (

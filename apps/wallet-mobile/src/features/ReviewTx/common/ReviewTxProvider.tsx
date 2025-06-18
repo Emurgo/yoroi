@@ -11,7 +11,7 @@ import {castDraft, produce} from 'immer'
 import _ from 'lodash'
 import React from 'react'
 
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types/yoroi'
+import {YoroiUnsignedTx} from '../../../wallets/types/yoroi'
 
 export const useReviewTx = () => React.useContext(ReviewTxContext)
 

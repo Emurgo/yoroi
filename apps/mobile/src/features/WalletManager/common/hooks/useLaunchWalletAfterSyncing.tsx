@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import {logger} from '../../../../kernel/logger/logger'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {YoroiWallet} from '../../../../wallets/cardano/types'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
 /**

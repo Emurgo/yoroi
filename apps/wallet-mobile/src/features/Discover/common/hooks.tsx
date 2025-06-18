@@ -3,7 +3,7 @@ import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {logger} from '../../../kernel/logger/logger'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {YoroiWallet} from '../../../wallets/cardano/types'
 import {walletConfig} from './wallet-config'
 
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {

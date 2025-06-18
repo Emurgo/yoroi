@@ -2,7 +2,7 @@ import {Chain, Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'
-import {makeCardanoWallet} from '../../../yoroi-wallets/cardano/cardano-wallet'
+import {makeCardanoWallet} from '../../../wallets/cardano/cardano-wallet'
 import {networkManagers} from '../common/constants'
 import {WalletFactory} from '../common/types'
 

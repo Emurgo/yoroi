@@ -1,7 +1,7 @@
 import {App} from '@yoroi/types'
 
-import {generateAdaMnemonic, generateWalletRootKey} from '../../yoroi-wallets/cardano/mnemonic/mnemonic'
-import {wrappedCsl} from '../../yoroi-wallets/cardano/wrappedCsl'
+import {generateAdaMnemonic, generateWalletRootKey} from '../../wallets/cardano/mnemonic/mnemonic'
+import {wrappedCsl} from '../../wallets/cardano/wrappedCsl'
 import {decryptData, encryptData} from './encryption'
 
 const mnemonic = [

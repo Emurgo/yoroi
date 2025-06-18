@@ -5,7 +5,7 @@ import {StyleSheet, Text, View, ViewProps} from 'react-native'
 import {Button} from '../../../components/Button/Button'
 import {Icon} from '../../../components/Icon'
 import {Space} from '../../../components/Space/Space'
-import {formatTimeSpan} from '../../../yoroi-wallets/utils/timeUtils'
+import {formatTimeSpan} from '../../../wallets/utils/timeUtils'
 import {usePoolTransition, useStrings} from './usePoolTransition'
 
 export const PoolTransitionNotice = () => {

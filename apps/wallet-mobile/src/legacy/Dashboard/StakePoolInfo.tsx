@@ -12,8 +12,8 @@ import {TitledCard} from '../../components/TitledCard'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isEmptyString} from '../../kernel/utils'
-import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {StakePoolInfoAndHistory} from '../../yoroi-wallets/types/staking'
+import {YoroiWallet} from '../../wallets/cardano/types'
+import {StakePoolInfoAndHistory} from '../../wallets/types/staking'
 
 type StakePoolInfoProps = {
   stakePoolId: string

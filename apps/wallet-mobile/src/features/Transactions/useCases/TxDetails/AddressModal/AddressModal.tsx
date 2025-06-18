@@ -7,7 +7,7 @@ import QRCode from 'react-native-qrcode-svg'
 
 import {Copiable} from '../../../../../components/Clipboard/Copiable'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useKeyHashes} from '../../../../../yoroi-wallets/hooks'
+import {useKeyHashes} from '../../../../../wallets/hooks'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../../common/strings'
 

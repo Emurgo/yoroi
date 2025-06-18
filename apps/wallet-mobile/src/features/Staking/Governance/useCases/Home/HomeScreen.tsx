@@ -24,8 +24,8 @@ import {
   useStakingKey,
   useTransactionInfos,
   useWalletEvent,
-} from '../../../../../yoroi-wallets/hooks'
-import {TransactionInfo} from '../../../../../yoroi-wallets/types/other'
+} from '../../../../../wallets/hooks'
+import {TransactionInfo} from '../../../../../wallets/types/other'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
 import {formatDrepHashToCIP129Format} from '../../common/drep'

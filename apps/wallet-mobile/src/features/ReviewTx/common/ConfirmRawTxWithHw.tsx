@@ -6,7 +6,7 @@ import {useMutation, UseMutationOptions} from 'react-query'
 
 import {Text} from '../../../components/Text'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../legacy/HW'
-import {withBLE, withUSB} from '../../../yoroi-wallets/hw/hwWallet'
+import {withBLE, withUSB} from '../../../wallets/hw/hwWallet'
 import {ActivityIndicator} from '../../Swap/common/ConfirmRawTx/ActivityIndicator'
 import {useStrings} from '../../Swap/common/strings'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'

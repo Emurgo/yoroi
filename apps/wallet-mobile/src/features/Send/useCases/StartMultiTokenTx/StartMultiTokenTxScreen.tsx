@@ -12,7 +12,7 @@ import {ScrollView, useScrollView} from '../../../../components/ScrollView/Scrol
 import {Space} from '../../../../components/Space/Space'
 import {useNextTick} from '../../../../hooks/useNextTick'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
+import {useHasPendingTx, useIsOnline} from '../../../../wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {memoMaxLenght} from '../../common/constants'
 import {AddressErrorWrongNetwork} from '../../common/errors'

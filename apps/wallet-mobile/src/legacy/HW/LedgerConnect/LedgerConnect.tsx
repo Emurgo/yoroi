@@ -21,8 +21,8 @@ import {Spacer} from '../../../components/Spacer/Spacer'
 import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
-import {BluetoothDisabledError, RejectedByUserError} from '../../../yoroi-wallets/hw/hw'
-import {Device} from '../../../yoroi-wallets/types/hw'
+import {BluetoothDisabledError, RejectedByUserError} from '../../../wallets/hw/hw'
+import {Device} from '../../../wallets/types/hw'
 import {DeviceItem} from './DeviceItem'
 
 type Props = {

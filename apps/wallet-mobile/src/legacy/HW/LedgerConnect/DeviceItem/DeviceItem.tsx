@@ -4,7 +4,7 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
-import {Device} from '../../../../yoroi-wallets/types/hw'
+import {Device} from '../../../../wallets/types/hw'
 
 type Props = {
   device: Device

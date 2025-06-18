@@ -7,7 +7,7 @@ import {Icon} from '../../../../../components/Icon'
 import {Text} from '../../../../../components/Text'
 import {themeNames} from '../../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useThemeStorageMaker} from '../../../../../yoroi-wallets/hooks'
+import {useThemeStorageMaker} from '../../../../../wallets/hooks'
 
 type Props = {
   title: SupportedThemes

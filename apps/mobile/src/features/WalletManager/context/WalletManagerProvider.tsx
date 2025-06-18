@@ -2,7 +2,7 @@ import {App, Chain, Wallet} from '@yoroi/types'
 import * as React from 'react'
 
 import {logger} from '../../../kernel/logger/logger'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {YoroiWallet} from '../../../wallets/cardano/types'
 import {WalletManager} from '../wallet-manager'
 import {
   WalletManagerActions,

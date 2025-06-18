@@ -5,7 +5,7 @@ import React from 'react'
 
 import {logger} from '../../../../../kernel/logger/logger'
 import {rootStorage} from '../../../../../kernel/storage/rootStorage'
-import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {mocks} from '../../../../../wallets/mocks/wallet'
 import {buildPortfolioTokenManagers} from '../../../../Portfolio/common/helpers/build-token-managers'
 import {WalletManagerProvider} from '../../../../WalletManager/context/WalletManagerProvider'
 import {WalletManager} from '../../../../WalletManager/wallet-manager'

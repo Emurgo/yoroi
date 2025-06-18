@@ -3,7 +3,7 @@ import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {CardanoMobile} from '../../../yoroi-wallets/wallets'
+import {CardanoMobile} from '../../../wallets/wallets'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
 

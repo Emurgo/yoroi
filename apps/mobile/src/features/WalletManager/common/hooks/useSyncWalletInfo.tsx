@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {YoroiWallet} from '../../../../wallets/cardano/types'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 import {SyncWalletInfo} from '../types'
 

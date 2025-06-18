@@ -13,7 +13,7 @@ import {ScrollView} from '../../../../components/ScrollView/ScrollView'
 import {Text} from '../../../../components/Text'
 import {useLanguage} from '../../../../kernel/i18n'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
+import {useTransactionInfos} from '../../../../wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {triggerNotificationAction} from '../../common/tools'
 import {

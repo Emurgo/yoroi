@@ -1,7 +1,7 @@
 import {App} from '@yoroi/types'
 import cryptoRandomString from 'crypto-random-string'
 
-import {Cardano} from '../../yoroi-wallets/wallets'
+import {Cardano} from '../../wallets/wallets'
 
 export const encryptData = async (plaintextHex: string, secretKey: string): Promise<string> => {
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')

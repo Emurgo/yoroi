@@ -13,7 +13,7 @@ import {ReviewDetailsProps} from '../features/ReviewTx/useCases/ReviewTxScreen/R
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
 import {useSwap} from '../features/Swap/common/SwapProvider'
 import {useSelectedNetwork} from '../features/WalletManager/common/hooks/useSelectedNetwork'
-import {compareArrays} from '../yoroi-wallets/utils/utils'
+import {compareArrays} from '../wallets/utils/utils'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {

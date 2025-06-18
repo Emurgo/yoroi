@@ -5,8 +5,8 @@ import {useQuery, UseQueryOptions} from 'react-query'
 
 import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'
 import {queryInfo} from '../../../kernel/query-client'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {isShelley} from '../../../yoroi-wallets/cardano/utils'
+import {YoroiWallet} from '../../../wallets/cardano/types'
+import {isShelley} from '../../../wallets/cardano/utils'
 import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 

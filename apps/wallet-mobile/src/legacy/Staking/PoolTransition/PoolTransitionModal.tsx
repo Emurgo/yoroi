@@ -8,7 +8,7 @@ import {Button, ButtonType} from '../../../components/Button/Button'
 import {Icon} from '../../../components/Icon'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
-import {formatTimeSpan} from '../../../yoroi-wallets/utils/timeUtils'
+import {formatTimeSpan} from '../../../wallets/utils/timeUtils'
 import {useStrings} from './usePoolTransition'
 
 export const PoolTransitionModal = ({poolTransition}: {poolTransition: PoolTransition}) => {

@@ -32,7 +32,7 @@ import {queryInfo} from './kernel/query-client'
 import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
 import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
-import {useThemeStorageMaker} from './yoroi-wallets/hooks'
+import {useThemeStorageMaker} from './wallets/hooks'
 
 enableScreens(true)
 
@@ -55,18 +55,18 @@ const Yoroi = () => {
   if (!isMigrated) return null
 
   return (
-    <AsyncStorageProvider storage={rootStorage}>
-      <ThemeProvider storage={themeStorage}>
-        <ClipboardProvider>
-          <ErrorBoundary>
-            <MetricsProvider metricsManager={metricsManager}>
-              <QueryClientProvider client={queryInfo.queryClient}>
+    // <AsyncStorageProvider storage={rootStorage}>
+      // <ThemeProvider storage={themeStorage}>
+        // <ClipboardProvider>
+          // <ErrorBoundary>
+            // <MetricsProvider metricsManager={metricsManager}>
+              // <QueryClientProvider client={queryInfo.queryClient}>
                 <WalletManagerProvider walletManager={walletManager}>
-                  <CurrencyProvider>
+                  {/* <CurrencyProvider> */}
                     <PortfolioTokenActivityProvider>
                       <LoadingBoundary style={StyleSheet.absoluteFill}>
-                        <LanguageProvider>
-                          <AuthProvider>
+                        {/* <LanguageProvider> */}
+                          {/* <AuthProvider> */}
                             <TransferProvider>
                               <LinksProvider>
                                 <SetupWalletProvider>

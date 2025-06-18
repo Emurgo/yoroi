@@ -9,7 +9,7 @@ import {TextInput} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {useAddressHex, useStakingKey} from '../../../yoroi-wallets/hooks'
+import {useAddressHex, useStakingKey} from '../../../wallets/hooks'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenInfos} from '../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'

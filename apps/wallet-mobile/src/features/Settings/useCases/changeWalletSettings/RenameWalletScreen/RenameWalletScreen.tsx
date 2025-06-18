@@ -11,7 +11,7 @@ import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {TextInput} from '../../../../../components/TextInput/TextInput'
 import globalMessages from '../../../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../../../kernel/utils'
-import {getWalletNameError} from '../../../../../yoroi-wallets/utils/validators'
+import {getWalletNameError} from '../../../../../wallets/utils/validators'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 

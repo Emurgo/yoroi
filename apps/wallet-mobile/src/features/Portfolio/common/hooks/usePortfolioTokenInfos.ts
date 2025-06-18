@@ -2,7 +2,7 @@ import {createUnknownTokenInfo, isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {YoroiWallet} from '../../../../wallets/cardano/types'
 
 export const usePortfolioTokenInfos = (
   {

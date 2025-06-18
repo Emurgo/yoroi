@@ -12,7 +12,7 @@ import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {isCIP1852AccountPath, isValidPublicKey} from '../../../../yoroi-wallets/cardano/bip44Validators/bip44Validators'
+import {isCIP1852AccountPath, isValidPublicKey} from '../../../../wallets/cardano/bip44Validators/bip44Validators'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()
