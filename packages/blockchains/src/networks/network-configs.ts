@@ -1,5 +1,7 @@
 import {Chain, Network} from '@yoroi/types'
+
 import {freeze} from 'immer'
+
 import {
   byronEraConfig,
   primaryTokenInfoAnyTestnet,
