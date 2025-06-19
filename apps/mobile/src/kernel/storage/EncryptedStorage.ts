@@ -1,4 +1,4 @@
-import {parseString} from '@yoroi/common'
+import {hex, parseString} from '@yoroi/common'
 
 import {freeze} from 'immer'
 
@@ -21,12 +21,18 @@ export const EncryptedStorage = {
       throw new Error('RootKey invalid')
     }
 
-    return decryptData(encrypted, password)
+    return decryptData({
+      encryptedData: hex(encrypted),
+      secretKey: hex.fromUtf8(password),
+    })
   },
 
   // value is a hex, no leading `0x` I.e "DEAD"
   async write(key: StorageKey, value: string, password: string) {
-    const encrypted = await encryptData(value, password)
+    const encrypted = await encryptData({
+      plainData: hex(value),
+      secretKey: hex.fromUtf8(password),
+    })
 
     return keyStorage.setItem(key, encrypted)
   },
@@ -55,11 +61,12 @@ export const makeWalletEncryptedStorage = (id: string) => {
       remove: (accountVisual: number) =>
         xPubStorage.removeItem(accountVisual.toString()),
     },
-    clear: () =>
-      Promise.all([
+    clear: async () => {
+      await Promise.all([
         keyStorage.removeFolder(`${id}/`),
         EncryptedStorage.remove(xPrivKey),
-      ]),
+      ])
+    },
   } as const)
 }
 

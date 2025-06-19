@@ -1,15 +1,19 @@
+import {hex} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Text} from 'react-native'
+import {BleManager, LogLevel} from 'react-native-ble-plx'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {debugStorage} from 'src/kernel/storage/debug-storage'
 import {useAuth} from './src/features/Auth/common/context'
 import {usePairing} from './src/features/Pairing/context'
+import {decryptData} from './src/kernel/crypto/decrypt-data'
+import {encryptData} from './src/kernel/crypto/encrypt-data'
 import globalMessages from './src/kernel/i18n/global-messages'
 import {useLanguage} from './src/kernel/i18n/LanguageProvider'
 import {LocalizableError} from './src/kernel/i18n/LocalizableError'
@@ -119,11 +123,50 @@ export function DevMenu({visible}: {visible: boolean}) {
       />
 
       <Button
+        onPress={async () => {
+          const ble = new BleManager()
+          await ble.enable()
+          ble.setLogLevel(LogLevel.Debug)
+          ble.startDeviceScan([], {allowDuplicates: true}, (error, devices) => {
+            if (error) {
+              console.log(error)
+            }
+            console.log(devices)
+          })
+        }}
+        type={ButtonType.Secondary}
+        title="TBLE"
+      />
+
+      <Button
         onPress={() => {
           debugStorage(rootMMKV)
         }}
         type={ButtonType.Secondary}
         title="DebugStorage"
+      />
+
+      <Button
+        onPress={async () => {
+          const startEncrypt = Date.now()
+          const encrypted = encryptData({
+            plainData: hex.fromUtf8('masterkey'),
+            secretKey: hex.fromUtf8('password'),
+          })
+          console.log('Encryption time:', Date.now() - startEncrypt, 'ms')
+
+          const startDecrypt = Date.now()
+          const decrypted = decryptData({
+            encryptedData: encrypted,
+            secretKey: hex.fromUtf8('password'),
+          })
+          console.log('Decryption time:', Date.now() - startDecrypt, 'ms')
+
+          console.log('Decrypted result:', decrypted.utf8)
+        }}
+        type={ButtonType.Secondary}
+        title="Decrypt Data"
+        style={[a.pt_md, a.p_md, a.rounded_md]}
       />
 
       <BuggyComponent showCrash={showCrash} />
