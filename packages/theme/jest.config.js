@@ -11,7 +11,8 @@ module.exports = {
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/storybook/**',
-    '!src/fixtures/**'
+    '!src/fixtures/**',
+    '!src/**/*.mock.ts'
   ],
   coverageReporters: ['text-summary', 'lcov', 'html'],
   coverageThreshold: {

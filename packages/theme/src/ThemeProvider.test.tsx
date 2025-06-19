@@ -1,5 +1,4 @@
 import {App} from '@yoroi/types'
-import {ErrorBoundary} from '@yoroi/common'
 
 import * as React from 'react'
 import {render, screen, fireEvent} from '@testing-library/react-native'
@@ -140,12 +139,8 @@ describe('ThemeProvider and useTheme Tests', () => {
       .mockImplementation(() => {})
 
     expect(() => {
-      render(
-        <ErrorBoundary>
-          <TestComponent />
-        </ErrorBoundary>,
-      )
-    }).toThrow()
+      render(<TestComponent />)
+    }).toThrow('ThemeProvider is missing')
 
     consoleError.mockRestore()
   })
@@ -290,12 +285,8 @@ describe('useThemedAtoms and useBasePalette Tests', () => {
       .mockImplementation(() => {})
 
     expect(() => {
-      render(
-        <ErrorBoundary>
-          <TestComponent />
-        </ErrorBoundary>,
-      )
-    }).toThrow()
+      render(<TestComponent />)
+    }).toThrow('ThemeProvider is missing')
 
     consoleError.mockRestore()
   })

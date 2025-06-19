@@ -334,6 +334,14 @@ export const atoms = {
   h_full: {
     height: '100%',
   },
+  full_screen: Platform.select({
+    web: {
+      minHeight: '100vh',
+    },
+    default: {
+      height: '100%',
+    },
+  }),
 
   // border
   rounded_xs: {
