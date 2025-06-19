@@ -1,11 +1,10 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
-import {showErrorDialog} from '../../../kernel/dialogs'
 import {pinLength} from '../../common/constants'
-import {useCreatePin} from '../../hooks/hooks'
-import {PinInput, PinInputRef} from '../PinInput'
+import {PinInput, PinInputRef} from '../PinInput/PinInput'
 
 type Props = {onDone: (pin: string) => void}
 export const CreatePinInput = ({onDone}: Props) => {

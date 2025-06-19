@@ -3,7 +3,7 @@ import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {CheckPinInput} from '../components/CheckPinInput'
+import {CheckPinInput} from '../components/CheckPinInput/CheckPinInput'
 import {CreatePinInput} from '../components/CreatePinInput/CreatePinInput'
 
 export const ChangePinScreen: React.FC<Props> = ({onDone}) => {

@@ -10,11 +10,13 @@ import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
 import {useAuthWithHost} from '../hooks/useAuthWithHost'
 import {AuthSetting, AuthWithHostConfig} from './types'
+import {encryptData} from '../../../kernel/crypto/encrypt-data'
 
 export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   authStorageKeyManager,
   pinStorageKeyManager,
+  installationIdKeyManager,
 }) => {
   const [loggedState, setLoggedState] = React.useState(initialState)
   const [authSetting, changeAuthSetting] = useSyncStorageToState(
@@ -33,17 +35,29 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
     },
   })
 
-  const loginWithPin = React.useCallback(async (pin: string) => {
+  const checkPin = React.useCallback((pin: string) => {
     const storedPin = pinStorageKeyManager.read()
     if (!storedPin) {
       throw new LocalizableError({
         id: 'api.error.notFound',
       })
     }
-    await decryptData({
+    decryptData({
       encryptedData: storedPin,
       secretKey: hex.fromUtf8(pin),
     })
+  }, [])
+
+  const createPin = React.useCallback((pin: string) => {
+    const encryptedPin = encryptData({
+      plainData: hex(installationIdKeyManager.read()),
+      secretKey: hex.fromUtf8(pin),
+    })
+    pinStorageKeyManager.save(encryptedPin)
+  }, [])
+
+  const loginWithPin = React.useCallback((pin: string) => {
+    checkPin(pin)
     setLoggedState(loggedInState)
   }, [])
 
@@ -59,6 +73,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       ...loggedState,
       authWithHostConfig,
       authWithHost,
+      checkPin,
+      createPin,
       loginWithPin,
       loginWithHost,
       loggedIn: () => {
@@ -78,6 +94,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
     [
       authWithHostConfig,
       authWithHost,
+      checkPin,
+      createPin,
       loginWithPin,
       loginWithHost,
       loggedState,
@@ -113,6 +131,7 @@ type Props = React.PropsWithChildren<{
     App.StorageKeyManager<AuthSetting | undefined | null>
   >
   pinStorageKeyManager: Readonly<App.StorageKeyManager<Hex | undefined>>
+  installationIdKeyManager: Readonly<App.StorageKeyManager<string>>
 }>
 
 type AuthLoggedState = {
@@ -130,8 +149,10 @@ type AuthContextActions = {
   loggedOut(): void
   changeAuthSetting(authSetting: AuthSetting): void
   authWithHost(): Promise<boolean>
-  loginWithPin(pin: string): Promise<void>
+  loginWithPin(pin: string): void
   loginWithHost(): Promise<void>
+  checkPin(pin: string): void
+  createPin(pin: string): void
 }
 
 type AuthContext = AuthLoggedState &

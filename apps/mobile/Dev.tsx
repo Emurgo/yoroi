@@ -5,6 +5,9 @@ import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {DevMenu} from './DevMenu'
+// import {LoginWithHostScreen} from './src/features/Auth/screens/LoginWithHostScreen'
+// import {LoginWithPinScreen} from './src/features/Auth/screens/LoginWithPinScreen'
+import {ChangePinScreen} from './src/features/Auth/screens/ChangePinScreen'
 import {Boundary} from './src/ui/Boundary/Boundary'
 
 export function Dev() {
@@ -22,11 +25,12 @@ export function Dev() {
           size: 'full',
         }}
       >
+        <ChangePinScreen onDone={() => console.log('----change---')} />
         {/* <LoginWithPinScreen /> */}
         {/* <LoginWithHostScreen /> */}
       </Boundary>
 
-      <DevMenu visible={true} />
+      <DevMenu />
     </SafeAreaView>
   )
 }

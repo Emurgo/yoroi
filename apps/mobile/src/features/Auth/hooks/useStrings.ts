@@ -4,16 +4,18 @@ import {defineMessages, useIntl} from 'react-intl'
 import globalMessages from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
-  const intl = useIntl()
+  const {formatMessage: f} = useIntl()
 
   return freeze({
-    unknownError: intl.formatMessage(messages.unknownError),
-    tooManyAttempts: intl.formatMessage(messages.tooManyAttempts),
-    error: intl.formatMessage(globalMessages.error),
-    cancel: intl.formatMessage(globalMessages.cancel),
-    authorize: intl.formatMessage(messages.authorize),
-    usePasscode: intl.formatMessage(messages.usePasscode),
-    titleLoginWithPin: intl.formatMessage(messages.titleLoginWithPin),
+    unknownError: f(messages.unknownError),
+    tooManyAttempts: f(messages.tooManyAttempts),
+    error: f(globalMessages.error),
+    cancel: f(globalMessages.cancel),
+    authorize: f(messages.authorize),
+    usePasscode: f(messages.usePasscode),
+    titleLoginWithPin: f(messages.titleLoginWithPin),
+    titleChangePin: f(messages.titleChangePin),
+    subtitleChangePin: f(messages.subtitleChangePin),
   })
 }
 
@@ -37,5 +39,13 @@ const messages = defineMessages({
   titleLoginWithPin: {
     id: 'components.login.custompinlogin.title',
     defaultMessage: '!!!Enter PIN',
+  },
+  titleChangePin: {
+    id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
+    defaultMessage: '!!!Enter PIN',
+  },
+  subtitleChangePin: {
+    id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
+    defaultMessage: '!!!Enter your current PIN',
   },
 })

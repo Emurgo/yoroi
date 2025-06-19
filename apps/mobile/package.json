@@ -20,6 +20,7 @@
   "dependencies": {
     "@amplitude/analytics-react-native": "^1.4.13",
     "@amplitude/analytics-types": "^2.9.2",
+    "@cardano-foundation/ledgerjs-hw-app-cardano": "^7.1.4",
     "@craftzdog/react-native-buffer": "^6.1.0",
     "@emurgo/cardano-serialization-lib-browser": "^14.1.2",
     "@emurgo/cardano-serialization-lib-browser-inlined-gc": "14.1.2",
