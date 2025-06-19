@@ -30,7 +30,7 @@ export const UtxoAddressGroup = ({item}: {item: UtxoList[number]}) => {
         data={item.utxos}
         renderItem={({item}) => <UtxoItem item={item} />}
         ItemSeparatorComponent={() => <Space height="md" />}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => `${item.txHash}#${item.txIndex}`}
         nestedScrollEnabled={true}
         testID="utxoList"
         estimatedItemSize={32 * item.utxos.length + 64}

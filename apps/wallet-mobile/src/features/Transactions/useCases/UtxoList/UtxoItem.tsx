@@ -2,7 +2,7 @@ import {FlashList} from '@shopify/flash-list'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Space} from '../../../../components/Space/Space'
 import {useWalletNavigation} from '../../../../kernel/navigation'
@@ -11,7 +11,7 @@ import {MiniTokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/Min
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {UtxoList} from './useUtxoList'
 export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const {wallet} = useSelectedWallet()
   const {navigateToTxDetails} = useWalletNavigation()
   const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} = usePortfolioTokenInfos({
@@ -22,7 +22,7 @@ export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
 
   const utxoId = `${item.txHash}#${item.txIndex}`
 
-  if (tokenInfos === undefined) return <View style={{width: 100, height: 200}} />
+  if (tokenInfos === undefined) return <ActivityIndicator size={22} color={colors.indicator} />
 
   return (
     <View style={styles.container}>
@@ -67,5 +67,9 @@ const useStyles = () => {
     },
   })
 
-  return {styles}
+  const colors = {
+    indicator: color.el_gray_medium,
+  }
+
+  return {styles, colors}
 }
