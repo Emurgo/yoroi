@@ -22,7 +22,7 @@ import {rootMMKV, rootSyncStorage} from './src/kernel/storage/storages'
 import {Button, ButtonType} from './src/ui/Button/Button'
 import {LoadingOverlay} from './src/ui/LoadingOverlay/LoadingOverlay'
 
-export function DevMenu({visible}: {visible: boolean}) {
+export function DevMenu({visible}: {visible?: boolean}) {
   const {
     isDark,
     config,

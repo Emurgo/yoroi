@@ -1,24 +1,23 @@
-import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
+import * as React from 'react'
+import {useIntl} from 'react-intl'
 
+import {usePromise} from '../../../../hooks/usePromise'
+import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
-import {showErrorDialog} from '../../../kernel/dialogs'
 import {pinLength} from '../../common/constants'
-import {useCheckPin} from '../../hooks/hooks'
-import {PinInput, PinInputRef} from '../PinInput'
+import {useAuth} from '../../common/context'
+import {useStrings} from '../../hooks/useStrings'
+import {PinInput, PinInputRef} from '../PinInput/PinInput'
 
 export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
   const pinInputRef = React.useRef<null | PinInputRef>(null)
   const intl = useIntl()
   const strings = useStrings()
-  const {checkPin, isLoading} = useCheckPin({
-    onSuccess: (isValid) => {
-      if (isValid) {
-        onValid()
-      } else {
-        showErrorDialog(errorMessages.incorrectPin, intl)
-        pinInputRef.current?.clear()
-      }
+  const {checkPin} = useAuth()
+  const {resolve, isPending} = usePromise({
+    promise: checkPin,
+    onSuccess: () => {
+      onValid()
     },
     onError: (error) => {
       showErrorDialog(errorMessages.generalError, intl, {
@@ -31,30 +30,11 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
   return (
     <PinInput
       ref={pinInputRef}
-      title={strings.title}
-      subtitles={[strings.subtitle]}
-      enabled={!isLoading}
-      onDone={checkPin}
+      title={strings.titleChangePin}
+      subtitles={[strings.subtitleChangePin]}
+      enabled={!isPending}
+      onDone={resolve}
       pinMaxLength={pinLength}
     />
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    title: intl.formatMessage(messages.title),
-    subtitle: intl.formatMessage(messages.subtitle),
-  }
-}
-const messages = defineMessages({
-  title: {
-    id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
-    defaultMessage: '!!!Enter PIN',
-  },
-  subtitle: {
-    id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
-    defaultMessage: '!!!Enter your current PIN',
-  },
-})
