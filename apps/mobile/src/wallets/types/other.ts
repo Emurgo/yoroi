@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {configCurrencies, supportedCurrencies} from '../../kernel/constants'
 import {TokenEntryPlain} from '../cardano/MultiToken'
 import {CardanoTypes} from '../cardano/types'
 import {RemoteAccountState, RemoteCertificateMeta} from './staking'
@@ -149,20 +147,6 @@ export type TxStatusRequest = {
 export type TxStatusResponse = {
   readonly depth?: Record<string, number>
   readonly submissionStatus?: Record<string, TxSubmissionStatus>
-}
-// Pricing api
-
-export type CurrencySymbol = keyof typeof supportedCurrencies
-export type ConfigCurrencies = typeof configCurrencies
-
-export type PriceMultipleResponse = {
-  error: string | null
-  tickers: Array<{
-    from: 'ADA' // we don't support ERG yet
-    timestamp: number
-    signature: string
-    prices: Record<CurrencySymbol, number>
-  }>
 }
 
 export type BackendConfig = {

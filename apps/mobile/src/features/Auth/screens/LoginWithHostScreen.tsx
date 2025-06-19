@@ -8,7 +8,7 @@ import {usePromise} from '../../../hooks/usePromise'
 import {Button} from '../../../ui/Button/Button'
 import {SpaceHeight} from '../../../ui/Space/Space'
 import {useAuth} from '../common/context'
-import {Logo} from '../components/Logo'
+import {Logo} from '../illustrations/Logo'
 
 export const LoginWithHostScreen = () => {
   const strings = useStrings()

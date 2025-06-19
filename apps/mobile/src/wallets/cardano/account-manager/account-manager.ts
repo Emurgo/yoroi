@@ -1,7 +1,7 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {parseSafe} from '@yoroi/common'
 import {App, Wallet} from '@yoroi/types'
-import _ from 'lodash'
+
 import {defaultMemoize} from 'reselect'
 
 import {logger} from '../../../kernel/logger/logger'

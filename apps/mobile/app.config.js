@@ -97,6 +97,7 @@ export default {
       LOGGER_FILTER: process.env.LOGGER_FILTER || '',
     },
     plugins: [
+      'react-native-ble-plx',
       [
 
         'react-native-edge-to-edge',
