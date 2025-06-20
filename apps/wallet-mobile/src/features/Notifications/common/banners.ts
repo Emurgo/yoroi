@@ -30,4 +30,5 @@ export const BannerIds = {
   BuyCrypto: 23478934728,
   TestAda: 234682356,
   GovernanceParticipation: 576512769,
+  UtxoConsolidation: 76578456,
 } as const

@@ -63,6 +63,9 @@ export const triggerNotificationAction = async (options: {
       case BannerIds.GovernanceParticipation:
         walletNavigation.navigateToGovernanceCentre()
         break
+      case BannerIds.UtxoConsolidation:
+        walletNavigation.navigateToUtxoConsolidation()
+        break
       default:
     }
   }

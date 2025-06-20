@@ -53,6 +53,11 @@ export const useStrings = () => {
     assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
     copiedLabel: intl.formatMessage(messages.copiedLabel),
     collateral: intl.formatMessage(globalMessages.collateral),
+    organizeWallet: intl.formatMessage(messages.organizeWallet),
+    organizeWalletBanner: intl.formatMessage(messages.organizeWalletBanner),
+    organizeWalletDescription: intl.formatMessage(messages.organizeWalletDescription),
+    organizeWalletWarning: intl.formatMessage(messages.organizeWalletWarning),
+    organizeWalletButton: intl.formatMessage(messages.organizeWalletButton),
   }
 }
 
@@ -200,6 +205,28 @@ export const messages = defineMessages({
   verifyLabel: {
     id: 'components.receive.addressverifymodal.title',
     defaultMessage: '!!!Verify Address on Ledger',
+  },
+  organizeWallet: {
+    id: 'components.organizeWallet.title',
+    defaultMessage: '!!!Organize Wallet',
+  },
+  organizeWalletDescription: {
+    id: 'components.organizeWallet.description',
+    defaultMessage:
+      '!!!Your assets are spread accross multiple addresses which may interfere with Dapp connectivity. Merging your ADA and tokens into a single address keeps your wallet organized and more efficient while reducing network fees.',
+  },
+  organizeWalletWarning: {
+    id: 'components.organizeWallet.warning',
+    defaultMessage:
+      '!!!Certain wallets will require more than 1 transaction to merge assets. You will receive a notification if an additional transaction is needed.',
+  },
+  organizeWalletButton: {
+    id: 'components.organizeWallet.button',
+    defaultMessage: '!!!Merge assets',
+  },
+  organizeWalletBanner: {
+    id: 'components.organizeWallet.banner',
+    defaultMessage: '!!!Assets are spread in multiple addresses',
   },
 })
 

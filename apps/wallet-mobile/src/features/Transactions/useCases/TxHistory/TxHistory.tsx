@@ -17,6 +17,7 @@ import {useGovernanceBanner} from '../../../Staking/Governance/useCases/useGover
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
 import {TxList} from '../TxList/TxList'
+import {useUtxoConsolidationBanner} from '../UtxoConsolidation/useUtxoConsolidationBanner'
 import {UtxoListButton} from '../UtxoList/UtxoListButton'
 import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
@@ -28,6 +29,7 @@ import {WarningBanner} from './WarningBanner'
 export const TxHistory = () => {
   useGovernanceBanner()
   useBuyCryptoBanner()
+  useUtxoConsolidationBanner()
 
   const strings = useStrings()
   const {styles, colors} = useStyles()

@@ -76,6 +76,9 @@ export const NotificationPopup = ({event, onPress, onCancel, onExpired}: Props) 
       if (event.id === BannerIds.GovernanceParticipation) {
         navigation.navigateToGovernanceCentre()
       }
+      if (event.id === BannerIds.UtxoConsolidation) {
+        navigation.navigateToUtxoConsolidation()
+      }
     }
   }
 
