@@ -1,7 +1,7 @@
 import {atoms as a} from '@yoroi/theme'
 
 import * as React from 'react'
-import {View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {CheckPinInput} from '../components/CheckPinInput/CheckPinInput'
 import {CreatePinInput} from '../components/CreatePinInput/CreatePinInput'
@@ -14,13 +14,13 @@ export const ChangePinScreen: React.FC<Props> = ({onDone}) => {
   }, [])
 
   return (
-    <View style={[a.flex_1]}>
+    <SafeAreaView style={[a.flex_1, a.full_screen]}>
       {step === 'checkPin' ? (
         <CheckPinInput onValid={handleValidPin} />
       ) : (
         <CreatePinInput onDone={onDone} />
       )}
-    </View>
+    </SafeAreaView>
   )
 }
 

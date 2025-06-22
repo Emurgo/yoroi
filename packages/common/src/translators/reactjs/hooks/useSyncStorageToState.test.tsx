@@ -34,7 +34,7 @@ describe('useSyncStorageToState', () => {
   }
 
   const createKeyManager = (key: TestKey) => {
-    const keyManager: App.StorageKeyManager<TestValue, TestKey> = {
+    const keyManager: App.StorageKeyManager<TestValue, TestValue, TestKey> = {
       key,
       subscribe: jest.fn(() => {
         return {unsubscribe: mockUnsubscribe, closed: false} as any

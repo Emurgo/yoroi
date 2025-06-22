@@ -1,5 +1,6 @@
 {
   "auth.usePasscode": "Use passcode",
+  "auth.error.invalidPin": "Invalid PIN",
   "analytics.accept": "Accept",
   "analytics.anonymous": "Anonymous analytics data",
   "analytics.description": "Share user insights to help us fine tune Yoroi to better serve your needs.",

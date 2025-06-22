@@ -6,11 +6,10 @@ import * as React from 'react'
 
 import {useBackgroundTimer} from '../../../hooks/useBackgroundTimer'
 import {decryptData} from '../../../kernel/crypto/decrypt-data'
-import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
+import {encryptData} from '../../../kernel/crypto/encrypt-data'
 import {logger} from '../../../kernel/logger/logger'
 import {useAuthWithHost} from '../hooks/useAuthWithHost'
 import {AuthSetting, AuthWithHostConfig} from './types'
-import {encryptData} from '../../../kernel/crypto/encrypt-data'
 
 export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,
@@ -38,22 +37,31 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   const checkPin = React.useCallback((pin: string) => {
     const storedPin = pinStorageKeyManager.read()
     if (!storedPin) {
-      throw new LocalizableError({
-        id: 'api.error.notFound',
-      })
+      logger.info('no PIN stored', {origin: 'AuthProvider', type: 'user'})
+      return false
     }
-    decryptData({
-      encryptedData: storedPin,
-      secretKey: hex.fromUtf8(pin),
-    })
+    try {
+      decryptData({
+        encryptedData: storedPin,
+        secretKey: hex.fromUtf8(pin),
+      })
+      return true
+    } catch (error) {
+      logger.error('error checking PIN', {
+        origin: 'AuthProvider',
+        type: 'user',
+        error,
+      })
+      return false
+    }
   }, [])
 
   const createPin = React.useCallback((pin: string) => {
     const encryptedPin = encryptData({
-      plainData: hex(installationIdKeyManager.read()),
+      plainData: hex.fromUtf8(installationIdKeyManager.read() ?? ''),
       secretKey: hex.fromUtf8(pin),
     })
-    pinStorageKeyManager.save(encryptedPin)
+    pinStorageKeyManager.save(encryptedPin.value)
   }, [])
 
   const loginWithPin = React.useCallback((pin: string) => {
@@ -130,8 +138,8 @@ type Props = React.PropsWithChildren<{
   authStorageKeyManager: Readonly<
     App.StorageKeyManager<AuthSetting | undefined | null>
   >
-  pinStorageKeyManager: Readonly<App.StorageKeyManager<Hex | undefined>>
-  installationIdKeyManager: Readonly<App.StorageKeyManager<string>>
+  pinStorageKeyManager: Readonly<App.StorageKeyManager<Hex | undefined, string>>
+  installationIdKeyManager: Readonly<App.StorageKeyManager<string | undefined>>
 }>
 
 type AuthLoggedState = {
@@ -151,7 +159,7 @@ type AuthContextActions = {
   authWithHost(): Promise<boolean>
   loginWithPin(pin: string): void
   loginWithHost(): Promise<void>
-  checkPin(pin: string): void
+  checkPin(pin: string): boolean
   createPin(pin: string): void
 }
 

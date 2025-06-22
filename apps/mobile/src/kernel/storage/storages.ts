@@ -95,7 +95,7 @@ export const authStorageKeyManager = settingsStorageKeyMaker<
 
 // Settings - Custom Pin - it is not a HASH
 export const pinStorageKey = 'customPinHash'
-export const pinStorageKeyManager = settingsStorageKeyMaker<Hex | undefined>({
+export const pinStorageKeyManager = settingsStorageKeyMaker<Hex | undefined, string>({
   key: pinStorageKey,
   parser: (data) => {
     const parsed = parseSafe(data)

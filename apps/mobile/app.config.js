@@ -45,8 +45,8 @@ export default {
       adaptiveIcon: {
         foregroundImage:
           './assets/yoroi/adaptive-icon/foreground/foreground.png',
-       // monochromeImage:
-       //   './assets/yoroi/adaptive-icon/monochrome/foreground.png',
+        // monochromeImage:
+        //   './assets/yoroi/adaptive-icon/monochrome/foreground.png',
         backgroundImage:
           './assets/yoroi/adaptive-icon/background/background.png',
         backgroundColor: '#ffffff',
@@ -99,7 +99,6 @@ export default {
     plugins: [
       'react-native-ble-plx',
       [
-
         'react-native-edge-to-edge',
         {
           android: {

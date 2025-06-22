@@ -1,6 +1,7 @@
 import {IntlShape, MessageDescriptor} from 'react-intl'
 import {Alert} from 'react-native'
 
+import {isNative, isWeb} from './constants'
 import globalMessages from './i18n/global-messages'
 
 type DialogOptions = {
@@ -31,9 +32,21 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
       text: btnYesLabel,
       onPress: () => resolve(DIALOG_BUTTONS.YES),
     })
-    Alert.alert(title, message, buttons, {
-      cancelable: false,
-    })
+
+    if (isNative)
+      Alert.alert(title, message, buttons, {
+        cancelable: false,
+      })
+
+    if (isWeb) {
+      if (btnNoLabel != null) {
+        const result = window.confirm(`${title}\\n\\n${message}`)
+        resolve(result ? DIALOG_BUTTONS.YES : DIALOG_BUTTONS.NO)
+      } else {
+        window.alert(`${title}\\n\\n${message}`)
+        resolve(DIALOG_BUTTONS.YES)
+      }
+    }
   })
 
 export const showErrorDialog = (
@@ -90,5 +103,7 @@ export const showConfirmationDialog = (
     title: intl.formatMessage(dialog.title),
     message: intl.formatMessage(dialog.message),
     btnYesLabel: intl.formatMessage(dialog.btnYesLabel),
-    btnNoLabel: dialog.btnNoLabel ? intl.formatMessage(dialog.btnNoLabel) : undefined,
+    btnNoLabel: dialog.btnNoLabel
+      ? intl.formatMessage(dialog.btnNoLabel)
+      : undefined,
   })

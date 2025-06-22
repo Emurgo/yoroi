@@ -19,7 +19,10 @@ export const useAuthWithHost = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      logger.debug('useAuthWithHost focus - update auth with host config')
+      logger.debug('focus - update auth with host config', {
+        origin: 'useAuthWithHost',
+        type: 'ui',
+      })
       getAuthHostConfig().then(setAuthWithHostConfig)
     }, []),
   )
@@ -27,9 +30,10 @@ export const useAuthWithHost = () => {
   useAppState({
     on: 'active',
     execute: () => {
-      logger.debug(
-        'useAuthWithHost AppState resumed, active, getting auth with host config',
-      )
+      logger.debug('AppState resumed, active, getting auth with host config', {
+        origin: 'useAuthWithHost',
+        type: 'ui',
+      })
       getAuthHostConfig().then(setAuthWithHostConfig)
     },
   })

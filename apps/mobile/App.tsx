@@ -15,6 +15,7 @@ import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
   currencyStorageKeyManager,
+  installationIdStorageKeyManager,
   languageStorageKeyManager,
   pinStorageKeyManager,
   rootStorage,
@@ -84,6 +85,7 @@ function BusinessShell({children}: React.PropsWithChildren) {
     <AuthProvider
       authStorageKeyManager={authStorageKeyManager}
       pinStorageKeyManager={pinStorageKeyManager}
+      installationIdKeyManager={installationIdStorageKeyManager}
     >
       <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
         {children}
