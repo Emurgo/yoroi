@@ -308,8 +308,9 @@ export namespace App {
   > extends AppStorage<IsAsync, K> {}
   export type StorageKeyManager<
     T = unknown,
+    R = T,
     Key extends string = string,
-  > = AppStorageKeyManager<T, Key>
+  > = AppStorageKeyManager<T, R, Key>
   export type StorageFolderName = AppStorageFolderName
   export interface MultiStorage<
     T,

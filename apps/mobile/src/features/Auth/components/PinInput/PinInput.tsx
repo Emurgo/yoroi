@@ -11,8 +11,8 @@ type Props = {
   enabled?: boolean
   subtitles?: Array<string>
   pinMaxLength: number
-  onGoBack?: () => void
-  onDone: (pin: string) => unknown 
+  onGoBack?: () => unknown
+  onDone: (pin: string) => unknown
 }
 
 export type PinInputRef = {

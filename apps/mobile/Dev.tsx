@@ -1,8 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
+import {View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {DevMenu} from './DevMenu'
 // import {LoginWithHostScreen} from './src/features/Auth/screens/LoginWithHostScreen'
@@ -14,9 +14,7 @@ export function Dev() {
   const {isDark, atoms: ta} = useTheme()
 
   return (
-    <SafeAreaView
-      style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.flex_row, a.flex_wrap]}
-    >
+    <View style={[a.full_screen, a.flex_1, ta.bg_color_max]}>
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
       <Boundary
@@ -26,11 +24,12 @@ export function Dev() {
         }}
       >
         <ChangePinScreen onDone={() => console.log('----change---')} />
+        {/* <CreatePinScreen onDone={() => console.log('----change---')} /> */}
         {/* <LoginWithPinScreen /> */}
         {/* <LoginWithHostScreen /> */}
       </Boundary>
 
       <DevMenu />
-    </SafeAreaView>
+    </View>
   )
 }

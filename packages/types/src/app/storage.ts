@@ -40,8 +40,12 @@ export interface AppStorage<
   clear: () => MaybePromise<void, IsAsync>
 }
 
-export type AppStorageKeyManager<T = unknown, Key extends string = string> = {
-  save: (value: T) => void
+export type AppStorageKeyManager<
+  T = unknown,
+  R = T,
+  Key extends string = string,
+> = {
+  save: (value: R) => void
   read: () => T
   remove: () => void
   subscribe: (callback: () => void) => Subscription

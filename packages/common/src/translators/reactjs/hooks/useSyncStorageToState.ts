@@ -9,9 +9,9 @@ import * as React from 'react'
  * Therefore if you don't want a undefined / prefer a null, or even a initial value.
  * Use the parser function of the key manager to handle it.
  */
-export const useSyncStorageToState = <T, K extends string>(
-  keyManager: App.StorageKeyManager<T, K>,
-): [T, (newValue: T) => void, () => void] => {
+export const useSyncStorageToState = <T, R = T, K extends string = string>(
+  keyManager: App.StorageKeyManager<T, R, K>,
+): [T, (newValue: R) => void, () => void] => {
   const [value, setValue] = React.useState<T>(() => keyManager.read())
 
   React.useEffect(() => {
@@ -23,7 +23,7 @@ export const useSyncStorageToState = <T, K extends string>(
   }, [keyManager])
 
   const save = React.useCallback(
-    (newValue: T) => {
+    (newValue: R) => {
       keyManager.save(newValue)
     },
     [keyManager],

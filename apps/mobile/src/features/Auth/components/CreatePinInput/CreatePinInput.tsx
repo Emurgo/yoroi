@@ -1,40 +1,33 @@
-import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
+import * as React from 'react'
+import {useIntl} from 'react-intl'
 
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {logger} from '../../../../kernel/logger/logger'
 import {pinLength} from '../../common/constants'
+import {useAuth} from '../../common/context'
+import {useStrings} from '../../hooks/useStrings'
 import {PinInput, PinInputRef} from '../PinInput/PinInput'
 
-type Props = {onDone: (pin: string) => void}
 export const CreatePinInput = ({onDone}: Props) => {
   const pinInputRef = React.useRef<null | PinInputRef>(null)
   const pinConfirmationInputRef = React.useRef<null | PinInputRef>(null)
 
   const intl = useIntl()
   const strings = useStrings()
+  const {createPin} = useAuth()
 
-  const {createPin, isLoading} = useCreatePin({
-    onSuccess: (_, pin) => onDone(pin),
-    onError: (error) => {
-      showErrorDialog(errorMessages.generalError, intl, {
-        message: error.message,
-      })
-      step === 'pin'
-        ? pinInputRef.current?.clear()
-        : pinConfirmationInputRef.current?.clear()
-    },
-  })
   const [pin, setPin] = React.useState('')
   const [step, setStep] = React.useState<'pin' | 'pinConfirmation'>('pin')
 
-  const onPinInput = (pin: string) => {
+  const handlePinInput = (pin: string) => {
     setPin(pin)
     setStep('pinConfirmation')
   }
 
-  const onPinConfirmation = (pinConfirmation: string) => {
+  const handlePinConfirmation = (pinConfirmation: string) => {
     if (pinConfirmation !== pin) {
+      logger.debug('PIN mismatch', {origin: 'CreatePinInput', type: 'user'})
       showErrorDialog(errorMessages.pinMismatch, intl)
       step === 'pin'
         ? pinInputRef.current?.clear()
@@ -42,7 +35,12 @@ export const CreatePinInput = ({onDone}: Props) => {
       return
     }
 
+    logger.info('A new PIN was created', {
+      origin: 'CreatePinInput',
+      type: 'user',
+    })
     createPin(pin)
+    onDone(pin)
   }
 
   return step === 'pin' ? (
@@ -52,52 +50,19 @@ export const CreatePinInput = ({onDone}: Props) => {
       title={strings.pinInputTitle}
       subtitles={[strings.pinInputSubtitle]}
       pinMaxLength={pinLength}
-      onDone={onPinInput}
+      onDone={handlePinInput}
     />
   ) : (
     <PinInput
       ref={pinConfirmationInputRef}
       key="pinConfirmationInput"
-      enabled={!isLoading}
       title={strings.pinInputConfirmationTitle}
       subtitles={[strings.pinInputConfirmationSubTitle]}
       pinMaxLength={pinLength}
-      onDone={onPinConfirmation}
+      onDone={handlePinConfirmation}
       onGoBack={() => setStep('pin')}
     />
   )
 }
 
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    pinInputTitle: intl.formatMessage(messages.pinInputTitle),
-    pinInputSubtitle: intl.formatMessage(messages.pinInputSubtitle),
-    pinInputConfirmationTitle: intl.formatMessage(
-      messages.pinInputConfirmationTitle,
-    ),
-    pinInputConfirmationSubTitle: intl.formatMessage(
-      messages.pinInputConfirmationSubTitle,
-    ),
-  }
-}
-
-const messages = defineMessages({
-  pinInputTitle: {
-    id: 'components.initialization.custompinscreen.pinInputTitle',
-    defaultMessage: '!!!Enter PIN',
-  },
-  pinInputSubtitle: {
-    id: 'components.initialization.custompinscreen.pinInputSubtitle',
-    defaultMessage: '!!!Choose a new PIN to quickly access your wallet',
-  },
-  pinInputConfirmationTitle: {
-    id: 'components.initialization.custompinscreen.pinConfirmationTitle',
-    defaultMessage: '!!!Repeat PIN',
-  },
-  pinInputConfirmationSubTitle: {
-    id: 'components.firstrun.custompinscreen.pinInputConfirmationSubTitle',
-    defaultMessage: '!!!Repeat a new PIN to quickly access your wallet',
-  },
-})
+type Props = {onDone: (pin: string) => void}

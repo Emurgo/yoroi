@@ -1,4 +1,4 @@
-import {Platform} from 'react-native'
+import {Platform, StyleProp, ViewStyle} from 'react-native'
 
 import {fontSize, lineHeight, tokens} from '../tokens/tokens'
 
@@ -341,7 +341,7 @@ export const atoms = {
     default: {
       height: '100%',
     },
-  }),
+  }) as StyleProp<ViewStyle>,
 
   // border
   rounded_xs: {
