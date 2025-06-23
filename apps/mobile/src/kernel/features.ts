@@ -1,4 +1,4 @@
-import {isDev} from './env'
+import {isDev} from './constants'
 
 export const features = {
   useTestnet: false,
@@ -9,9 +9,9 @@ export const features = {
   portfolioPerformance: false,
   portfolioNews: false,
   portfolioExport: false,
-  walletListFeedback: false,
+  walletListFeedback: isDev,
   walletListAggregatedBalance: isDev,
-  walletListSwipeableActions: false,
+  walletListSwipeableActions: isDev,
   swapTokenLinks: true,
   utxoConsolidation: isDev,
 }
@@ -19,9 +19,11 @@ export const features = {
 export const debugWalletInfo = {
   WALLET_NAME: features.useTestnet ? 'Auto Testnet' : 'Auto Nightly',
   PASSWORD: '1234567890',
-  MNEMONIC1: ['dry balcony arctic what garbage sort', 'cart shine egg lamp manual bottom', 'slide assault bus'].join(
-    ' ',
-  ),
+  MNEMONIC1: [
+    'dry balcony arctic what garbage sort',
+    'cart shine egg lamp manual bottom',
+    'slide assault bus',
+  ].join(' '),
   MNEMONIC2: [
     'able grunt edge report orange wide',
     'amount decrease congress flee smile impulse',
