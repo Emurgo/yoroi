@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {useStrings} from '../../../common/hooks/useStrings'
-import {PortfolioDappsTab, usePortfolio} from '../../../common/context'
+import {PortfolioDappsTab, usePortfolio} from '../../../context/PortfolioProvider'
 import {TabsGradient} from '../../../ui/TabsGradient/Tabs'
 
 export const PortfolioDAppTabs = () => {

@@ -6,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {usePortfolio} from '../../common/context'
+import {usePortfolio} from '../../context/PortfolioProvider'
 import {BalanceCard} from './BalanceCard/BalanceCard'
 import {DashboardNFTsList} from './DashboardNFTsList/DashboardNFTsList'
 import {DashboardTokensList} from './DashboardTokensList/DashboardTokensList'

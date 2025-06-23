@@ -16,7 +16,7 @@ import {aggregatePrimaryAmount} from '../../../common/helpers/aggregatePrimaryAm
 import {useStrings} from '../../../common/hooks/useStrings'
 import {useZeroBalance} from '../../../common/hooks/useZeroBalance'
 import {Line} from '../../../ui/Line'
-import {usePortfolio} from '../../../common/context'
+import {usePortfolio} from '../../../context/PortfolioProvider'
 import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
 import {TokenEmptyList} from '../../../ui/TokenEmptyList/TokenEmptyList'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'

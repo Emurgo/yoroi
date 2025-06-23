@@ -43,7 +43,7 @@ export function usePromise<T, A extends unknown[] = []>(
         .finally(() => {
           setIsPending(false)
           promiseRef.current = null
-          onSettled?.()
+          onSettled?.({value, error})
         })
     },
     [promise, onSuccess, onError, onSettled],
@@ -71,7 +71,7 @@ export type UsePromiseOptions<T, A extends unknown[] = []> = {
   promise: (...args: A) => Promise<T>
   onSuccess?: (value: T) => void
   onError?: (error: Error) => void
-  onSettled?: () => void
+  onSettled?: ({value, error}: {value?: T; error?: Error}) => void
   shouldSuspend?: boolean
   shouldThrow?: boolean
 }

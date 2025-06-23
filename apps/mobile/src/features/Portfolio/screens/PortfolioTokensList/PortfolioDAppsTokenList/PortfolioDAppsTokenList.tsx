@@ -12,7 +12,7 @@ import {ILiquidityPool, useGetLiquidityPool} from '../../../common/hooks/useGetL
 import {IOpenOrders, useGetOpenOrders} from '../../../common/hooks/useGetOpenOrders'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
 import {Line} from '../../../ui/Line'
-import {PortfolioDappsTab, usePortfolio} from '../../../common/context'
+import {PortfolioDappsTab, usePortfolio} from '../../../context/PortfolioProvider'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {LendAndBorrowTab} from './LendAndBorrowTab'
 import {LiquidityPoolTab} from './LiquidityPoolTab'

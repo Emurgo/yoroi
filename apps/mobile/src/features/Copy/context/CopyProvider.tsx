@@ -61,7 +61,7 @@ const CopyFeedback = React.memo(({copied}: {copied: CopiedState}) => {
   )
 })
 
-export const ClipboardProvider = React.memo(
+export const CopyProvider = React.memo(
   ({children}: React.PropsWithChildren) => {
     const {height, width} = useWindowDimensions()
     const [copied, setCopied] = React.useState<CopiedState | null>(null)

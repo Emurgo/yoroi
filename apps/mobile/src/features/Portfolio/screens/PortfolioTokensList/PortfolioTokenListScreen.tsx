@@ -9,7 +9,7 @@ import {useSearchOnNavBar} from '../../../Search/SearchContext'
 import {NetworkTag} from '../../../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGetDAppsPortfolioBalance} from '../../common/hooks/useGetDAppsPortfolioBalance'
 import {useStrings} from '../../common/hooks/useStrings'
-import {PortfolioListTab, usePortfolio} from '../../common/context'
+import {PortfolioListTab, usePortfolio} from '../../context/PortfolioProvider'
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
 import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'
 
