@@ -1,23 +1,23 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
-import {Alert, Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Alert, Animated, Text, TouchableOpacity, View} from 'react-native'
 import {Swipeable} from 'react-native-gesture-handler'
 
-import {Icon} from '../../../../components/Icon'
-import {Loading} from '../../../../components/Loading/Loading'
-import {Space} from '../../../../components/Space/Space'
 import {features} from '../../../../kernel/features'
+import {Icon} from '../../../../ui/Icon'
+import {Loading} from '../../../../ui/Loading/Loading'
+import {Space, SpaceHeight} from '../../../../ui/Space/Space'
 import {isByron, isShelley} from '../../../../wallets/cardano/utils'
 import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '../../../SetupWallet/illustrations/ChevronRight'
-import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
-import {useSyncWalletInfo} from '../../hooks/useSyncWalletInfo'
 import {useAutomaticWalletOpener} from '../../context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '../../context/WalletManagerProvider'
+import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
+import {useSyncWalletInfo} from '../../hooks/useSyncWalletInfo'
 
 type Props = {
   walletMeta: Wallet.Meta
@@ -25,16 +25,21 @@ type Props = {
 }
 
 export const WalletListItem = ({walletMeta, onPress}: Props) => {
-  const {styles, colors} = useStyles()
+  const {palette: p, atoms: ta} = useTheme()
 
   const [isButtonPressed, setIsButtonPressed] = React.useState(false)
-  const implementationName = React.useMemo(() => getImplementationName(walletMeta), [walletMeta])
+  const implementationName = React.useMemo(
+    () => getImplementationName(walletMeta),
+    [walletMeta],
+  )
   const {
     selected: {meta},
     walletManager,
   } = useWalletManager()
-  const {shouldOpen: shouldAutomaticWalletOpen, setShouldOpen: setShouldAutomaticWalletOpen} =
-    useAutomaticWalletOpener()
+  const {
+    shouldOpen: shouldAutomaticWalletOpen,
+    setShouldOpen: setShouldAutomaticWalletOpen,
+  } = useAutomaticWalletOpener()
 
   const isSelected = meta?.id === walletMeta.id
 
@@ -44,7 +49,11 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      if (shouldAutomaticWalletOpen && isSelected && hasSyncedLastSelectedNetwork) {
+      if (
+        shouldAutomaticWalletOpen &&
+        isSelected &&
+        hasSyncedLastSelectedNetwork
+      ) {
         onPress(walletMeta)
         setShouldAutomaticWalletOpen(false)
       }
@@ -60,31 +69,54 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
   // NOTE: dev only - temporary to show Product
   const handleOnDeleteWallet = () => {
-    Alert.alert('Delete Wallet', 'Are you sure you want to delete this wallet?', [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () => {
-          walletManager.removeWallet(walletMeta.id)
+    Alert.alert(
+      'Delete Wallet',
+      'Are you sure you want to delete this wallet?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
         },
-      },
-    ])
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            walletManager.removeWallet(walletMeta.id)
+          },
+        },
+      ],
+    )
   }
 
-  const renderRightActions = (progress: Animated.AnimatedInterpolation<string | number>) => {
+  const renderRightActions = (
+    progress: Animated.AnimatedInterpolation<string | number>,
+  ) => {
     const translateX = progress.interpolate({
       inputRange: [0, 1],
       outputRange: [80, 0],
     })
 
     return (
-      <Animated.View style={[styles.rightContainer, {transform: [{translateX}]}]}>
-        <TouchableOpacity style={styles.rigthActionsContainer} onPress={handleOnDeleteWallet}>
-          <Text style={styles.actionDangerousText}>DELETE</Text>
+      <Animated.View
+        style={[
+          a.justify_center,
+          a.align_center,
+          {transform: [{translateX}], width: 100},
+        ]}
+      >
+        <TouchableOpacity
+          style={[a.justify_center, a.align_center, a.px_md]}
+          onPress={handleOnDeleteWallet}
+        >
+          <Text
+            style={[
+              a.body_2_md_medium,
+              a.p_sm,
+              {backgroundColor: p.sys_magenta_100, color: p.sys_magenta_500},
+            ]}
+          >
+            DELETE
+          </Text>
         </TouchableOpacity>
       </Animated.View>
     )
@@ -96,25 +128,36 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
       renderRightActions={(progress) => renderRightActions(progress)}
       enabled={features.walletListSwipeableActions}
     >
-      <View style={styles.item}>
+      <View
+        style={[a.flex_row, a.justify_between, a.align_center, a.flex_wrap]}
+      >
         <TouchableOpacity
           activeOpacity={1}
           disabled={!hasSyncedLastSelectedNetwork}
           onPress={() => onPress(walletMeta)}
-          style={[styles.leftSide, !hasSyncedLastSelectedNetwork && styles.disabled]}
+          style={[
+            a.flex_row,
+            a.align_center,
+            !hasSyncedLastSelectedNetwork && {opacity: 0.5},
+          ]}
           onPressIn={() => setIsButtonPressed(true)}
           onPressOut={() => setIsButtonPressed(false)}
         >
           <Icon.WalletAvatar image={walletMeta.avatar} />
 
-          <Space height="md" />
+          <Space.Height.md />
 
-          <View style={styles.walletDetails}>
-            <Text style={styles.walletName} numberOfLines={1}>
+          <View style={[a.justify_between, a.flex_1]}>
+            <Text
+              style={[a.flex_1, a.body_1_lg_medium, ta.text_gray_medium]}
+              numberOfLines={1}
+            >
               {walletMeta.name}
             </Text>
 
-            <Text style={[styles.walletMeta, isButtonPressed && styles.walletMetaPressed]}>
+            <Text
+              style={[ta.text_gray_low, {opacity: isButtonPressed ? 1 : 0.5}]}
+            >
               {`${walletMeta.plate} | ${implementationName}`}
             </Text>
           </View>
@@ -123,13 +166,13 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
             <>
               {syncWalletInfo?.status === 'syncing' && <Loading />}
 
-              <Space width="md" />
+              <Space.Width.md />
 
-              {isSelected && <Icon.Check size={20} color={colors.selected} />}
+              {isSelected && <Icon.Check size={20} color={p.primary_600} />}
             </>
           )}
 
-          <Space width="xl" />
+          <Space.Width.xl />
 
           <Chevron pressed={isButtonPressed} />
         </TouchableOpacity>
@@ -139,15 +182,17 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 }
 
 const Chevron = ({pressed}: {pressed: boolean}) => {
-  const {styles} = useStyles()
-
   return (
-    <View style={styles.chevron}>
-      <Space height="sm" />
+    <View style={[a.flex_col, a.align_start]}>
+      <Space.Height.sm />
 
-      {pressed ? <ChevronRightDarkIllustration /> : <ChevronRightGrayIllustration />}
+      {pressed ? (
+        <ChevronRightDarkIllustration />
+      ) : (
+        <ChevronRightGrayIllustration />
+      )}
 
-      <Space fill />
+      <SpaceHeight fill size="sm" />
     </View>
   )
 }
@@ -156,68 +201,4 @@ const getImplementationName = (walletMeta: Wallet.Meta) => {
   if (isByron(walletMeta.implementation)) return 'Byron'
   if (isShelley(walletMeta.implementation)) return 'Shelley'
   return 'Unknown'
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    item: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-      ...atoms.flex_wrap,
-    },
-    leftSide: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    walletDetails: {
-      ...atoms.justify_between,
-      ...atoms.flex_1,
-    },
-    walletName: {
-      ...atoms.flex_1,
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    walletMeta: {
-      color: color.text_gray_low,
-      opacity: 0.5,
-    },
-    walletMetaPressed: {
-      color: color.gray_max,
-      opacity: 1,
-    },
-    disabled: {
-      opacity: 0.5,
-    },
-    rightContainer: {
-      ...atoms.justify_center,
-      ...atoms.align_center,
-      width: 100,
-    },
-    rigthActionsContainer: {
-      ...atoms.justify_center,
-      ...atoms.align_center,
-      ...atoms.px_md,
-    },
-    actionDangerousText: {
-      color: color.sys_magenta_500,
-      ...atoms.body_2_md_medium,
-      ...atoms.p_sm,
-      backgroundColor: color.sys_magenta_100,
-    },
-    chevron: {
-      ...atoms.flex_col,
-      ...atoms.align_start,
-    },
-  })
-
-  const colors = {
-    white: color.white_static,
-    selected: color.primary_600,
-    icon: color.gray_600,
-  }
-
-  return {styles, colors} as const
 }
