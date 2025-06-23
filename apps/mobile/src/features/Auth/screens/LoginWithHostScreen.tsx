@@ -8,7 +8,7 @@ import {usePromise} from '../../../hooks/usePromise'
 import {Button} from '../../../ui/Button/Button'
 import {SpaceHeight} from '../../../ui/Space/Space'
 import {useAuth} from '../common/context'
-import {Logo} from '../illustrations/Logo'
+import {Logo} from '../ui/illustrations/Logo'
 
 export const LoginWithHostScreen = () => {
   const strings = useStrings()
@@ -28,10 +28,6 @@ export const LoginWithHostScreen = () => {
       </BottomSection>
     </View>
   )
-}
-
-const TopSection = () => {
-  return <View style={[a.flex_1]} />
 }
 
 const MiddleSection = ({children}: React.PropsWithChildren) => {

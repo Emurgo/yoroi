@@ -11,7 +11,7 @@ import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/Pr
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {PnlTag} from '../../../ui/PnlTag/PnlTag'
-import {PortfolioListTab, usePortfolio} from '../../../common/context'
+import {PortfolioListTab, usePortfolio} from '../../../context/PortfolioProvider'
 import {SkeletonQuantityChange} from './SkeletonQuantityChange'
 import {TokenValueBalance} from './TokenValueBalance'
 import {TokenValuePairedBalance} from './TokenValuePairedBalance'

@@ -4,7 +4,7 @@ import {Chain, Portfolio} from '@yoroi/types'
 
 import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
-import {persistPrefixKeyword} from '../../kernel/connection/ConnectionProvider'
+import {persistPrefixKeyword} from '../../../kernel/connection/ConnectionProvider'
 
 // NOTE: this API should be moved inside portfolio token activity (support PT in the request)
 // NOTE: price API is unique for all networks

@@ -4,7 +4,7 @@ import {StyleSheet, TouchableOpacity} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {features} from '../../../../kernel/features'
-import {PortfolioDetailsTab, usePortfolio} from '../../common/context'
+import {PortfolioDetailsTab, usePortfolio} from '../../context/PortfolioProvider'
 
 const ExportTokenTransactions = () => {
   const {styles, colors} = useStyles()

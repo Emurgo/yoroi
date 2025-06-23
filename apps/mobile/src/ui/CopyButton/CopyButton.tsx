@@ -3,7 +3,7 @@ import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleProp, TextStyle, View, ViewStyle} from 'react-native'
 
-import {useCopy} from '../../features/Copy/context'
+import {useCopy} from '../../features/Copy/context/CopyProvider'
 import {Button, ButtonType} from '../Button/Button'
 import {Icon} from '../Icon'
 

@@ -4,7 +4,7 @@ import {App, Portfolio} from '@yoroi/types'
 
 import * as React from 'react'
 
-import {usePrimaryTokenActivity} from './usePrimaryTokenActivity'
+import {usePrimaryTokenActivity} from '../hooks/usePrimaryTokenActivity'
 
 export const PairingProvider = ({
   children,

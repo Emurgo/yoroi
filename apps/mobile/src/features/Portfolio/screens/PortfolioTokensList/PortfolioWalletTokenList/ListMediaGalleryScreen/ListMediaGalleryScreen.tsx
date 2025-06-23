@@ -14,7 +14,7 @@ import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSe
 import {usePortfolioBalances} from '../../../../common/hooks/usePortfolioBalances'
 import {useStrings} from '../../../../common/hooks/useStrings'
 import {useTrackNftGallerySearchActivated} from '../../../../common/hooks/useTrackNftGallerySearchActivated'
-import {MediaGallery} from '../../../../common/MediaGallery/MediaGallery'
+import {MediaGallery} from '../../../../ui/MediaGallery/MediaGallery'
 import {useNavigateTo} from '../../../../common/navigation'
 import {EmptyGallery} from './EmptyGallery'
 

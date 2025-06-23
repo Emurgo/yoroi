@@ -4,11 +4,11 @@ import {ThemeProvider} from '@yoroi/theme'
 import * as Font from 'expo-font'
 import * as React from 'react'
 
-import {PairingProvider} from 'src/features/Pairing/context'
+import {PairingProvider} from 'src/features/Pairing/context/PairingProvider'
 import {Dev} from './Dev'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/common/context'
-import {ClipboardProvider} from './src/features/Copy/context'
+import {CopyProvider} from './src/features/Copy/context/CopyProvider'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
@@ -34,11 +34,11 @@ function AppShell({children}: React.PropsWithChildren) {
       <ConnectionProvider>
         <ThemeProvider storage={themeStorageKeyManager}>
           <LanguageProvider storage={languageStorageKeyManager}>
-            <ClipboardProvider>
+            <CopyProvider>
               <CrashBoundary>
                 <LoadingOverlayProvider>{children}</LoadingOverlayProvider>
               </CrashBoundary>
-            </ClipboardProvider>
+            </CopyProvider>
           </LanguageProvider>
         </ThemeProvider>
       </ConnectionProvider>
