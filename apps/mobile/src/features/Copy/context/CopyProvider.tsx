@@ -120,4 +120,4 @@ export const CopyProvider = React.memo(
 
 export const useCopy = () =>
   React.useContext(ClipboardContext) ??
-  invalid('useCopy must be used within a ClipboardProvider')
+  invalid('useCopy must be used within a CopyProvider')
