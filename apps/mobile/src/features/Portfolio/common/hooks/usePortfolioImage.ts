@@ -7,7 +7,7 @@ import {useMutation, useQuery, useQueryClient} from 'react-query'
 
 import {isDev} from '../../../../kernel/env'
 import {logger} from '../../../../kernel/logger/logger'
-import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '../../../WalletManager/hooks/useSelectedNetwork'
 
 export const usePortfolioImageInvalidate = () => {
   const {

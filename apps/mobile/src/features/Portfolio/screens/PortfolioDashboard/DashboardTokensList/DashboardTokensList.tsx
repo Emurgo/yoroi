@@ -5,7 +5,7 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View}
 
 import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {useStrings} from '../../../common/hooks/useStrings'

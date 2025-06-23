@@ -8,7 +8,7 @@ import * as React from 'react'
 import {merge, switchMap} from 'rxjs'
 
 import {logger} from '../../../kernel/logger/logger'
-import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '../../WalletManager/hooks/useSelectedNetwork'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 const queryKey = ['portfolioTokenActivity']

@@ -14,8 +14,8 @@ import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '../../../SetupWallet/illustrations/ChevronRight'
-import {useSelectedNetwork} from '../../common/hooks/useSelectedNetwork'
-import {useSyncWalletInfo} from '../../common/hooks/useSyncWalletInfo'
+import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
+import {useSyncWalletInfo} from '../../hooks/useSyncWalletInfo'
 import {useAutomaticWalletOpener} from '../../context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 

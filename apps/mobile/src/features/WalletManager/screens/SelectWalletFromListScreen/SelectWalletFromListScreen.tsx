@@ -19,7 +19,7 @@ import {
   handleNotificationInternalNavigationAction,
   shouldHandleNotificationInternalNavigationAction,
 } from '../../../Notifications/common/tools'
-import {useWalletMetas} from '../../common/hooks/useWalletMetas'
+import {useWalletMetas} from '../../hooks/useWalletMetas'
 import {useStrings} from '../../common/useStrings'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 import {SupportIllustration} from '../../illustrations/SupportIllustration'

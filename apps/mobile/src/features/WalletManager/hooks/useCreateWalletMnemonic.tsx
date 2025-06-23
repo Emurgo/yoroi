@@ -2,7 +2,7 @@ import {Wallet} from '@yoroi/types'
 
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 
-import {useWalletManager} from '../../context/WalletManagerProvider'
+import {useWalletManager} from '../context/WalletManagerProvider'
 
 type CreateWalletMnemonic = {
   name: string
