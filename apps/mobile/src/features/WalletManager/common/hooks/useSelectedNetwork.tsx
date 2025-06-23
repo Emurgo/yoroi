@@ -1,5 +1,6 @@
-import {freeze} from 'immer'
 import * as React from 'react'
+
+import {freeze} from 'immer'
 
 import {useWalletManager} from '../../context/WalletManagerProvider'
 

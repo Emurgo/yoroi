@@ -1,16 +1,22 @@
+import {time} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
-import {useQuery, UseQueryOptions} from 'react-query'
 
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+
+import {persistPrefixKeyword} from '../../../../kernel/connection/ConnectionProvider'
 import {useSelectedNetwork} from './useSelectedNetwork'
 
-export const useBestBlock = ({options}: {options?: UseQueryOptions<Chain.Cardano.BestBlock, Error>}) => {
+export const useBestBlock = ({
+  options,
+}: {
+  options?: UseQueryOptions<Chain.Cardano.BestBlock, Error>
+}) => {
   const {networkManager, network} = useSelectedNetwork()
   const query = useQuery<Chain.Cardano.BestBlock, Error>({
-    suspense: true,
-    staleTime: 10_000,
+    staleTime: time.seconds(10),
     retry: 3,
-    retryDelay: 1_000,
-    queryKey: [network, 'tipStatus'],
+    retryDelay: time.oneSecond,
+    queryKey: [persistPrefixKeyword, network, 'tipStatus'],
     queryFn: () =>
       networkManager.api.bestBlock().catch(() => ({
         // TODO: Without this it break when offline. Needs better fixing

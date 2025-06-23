@@ -1,7 +1,8 @@
-import {walletChecksum} from '@emurgo/cip4-js'
 import {difference, parseSafe, time} from '@yoroi/common'
-import {Blockies} from '@yoroi/identicon'
 import {App, Chain, HW, Network, Wallet} from '@yoroi/types'
+import {Blockies} from '@yoroi/identicon'
+
+import {walletChecksum} from '@emurgo/cip4-js'
 import {freeze} from 'immer'
 import {
   BehaviorSubject,
@@ -21,11 +22,14 @@ import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import {Keychain, KeychainManager} from '../../kernel/storage/Keychain'
-import {rootStorage} from '../../kernel/storage/rootStorage'
+import {rootStorage} from '../../kernel/storage/storages'
 import {keyManager} from '../../wallets/cardano/key-manager/key-manager'
 import {WalletEvent, YoroiWallet} from '../../wallets/cardano/types'
 import {wrappedCsl} from '../../wallets/cardano/wrappedCsl'
-import {validatePassword, validateWalletName} from '../../wallets/utils/validators'
+import {
+  validatePassword,
+  validateWalletName,
+} from '../../wallets/utils/validators'
 import {networkManagers} from './common/constants'
 import {
   SyncWalletInfo,
@@ -41,10 +45,18 @@ export class WalletManager {
   // keep it in sync with storage version
   static readonly version = 3
   readonly #wallets: Map<YoroiWallet['id'], YoroiWallet> = new Map()
-  readonly #walletMetas$ = new BehaviorSubject<Map<YoroiWallet['id'], Wallet.Meta>>(new Map())
-  readonly #syncWalletInfos$ = new BehaviorSubject<SyncWalletInfos>(freeze(new Map()))
-  readonly #selectedWalletId$ = new BehaviorSubject<YoroiWallet['id'] | null>(null)
-  readonly #selectedNetwork$ = new BehaviorSubject<Chain.SupportedNetworks>(Chain.Network.Mainnet)
+  readonly #walletMetas$ = new BehaviorSubject<
+    Map<YoroiWallet['id'], Wallet.Meta>
+  >(new Map())
+  readonly #syncWalletInfos$ = new BehaviorSubject<SyncWalletInfos>(
+    freeze(new Map()),
+  )
+  readonly #selectedWalletId$ = new BehaviorSubject<YoroiWallet['id'] | null>(
+    null,
+  )
+  readonly #selectedNetwork$ = new BehaviorSubject<Chain.SupportedNetworks>(
+    Chain.Network.Mainnet,
+  )
   readonly #isSyncing$ = new BehaviorSubject<boolean>(false)
   readonly #syncControl$ = new BehaviorSubject<boolean>(true)
 
@@ -54,7 +66,9 @@ export class WalletManager {
   // injected (constructor)
   readonly #keychainManager?: KeychainManager
   readonly #rootStorage: App.Storage
-  readonly #networkManagers: Readonly<Record<Chain.SupportedNetworks, Network.Manager>>
+  readonly #networkManagers: Readonly<
+    Record<Chain.SupportedNetworks, Network.Manager>
+  >
 
   // @deprecated legacy to be replaced by networkManager.rootStorage
   readonly #walletsRootStorage: App.Storage
@@ -62,7 +76,11 @@ export class WalletManager {
   // @deprecated should consume one of the streams
   #subscriptions: Array<WalletManagerSubscription> = []
 
-  constructor({keychainManager, rootStorage, networkManagers}: WalletManagerOptions) {
+  constructor({
+    keychainManager,
+    rootStorage,
+    networkManagers,
+  }: WalletManagerOptions) {
     this.#networkManagers = networkManagers
     this.#keychainManager = keychainManager
     this.#rootStorage = rootStorage
@@ -86,10 +104,16 @@ export class WalletManager {
    */
   private updateMeta(
     id: Wallet.Meta['id'],
-    meta: Partial<Pick<Wallet.Meta, 'addressMode' | 'isEasyConfirmationEnabled' | 'name' | 'hwDeviceInfo'>>,
+    meta: Partial<
+      Pick<
+        Wallet.Meta,
+        'addressMode' | 'isEasyConfirmationEnabled' | 'name' | 'hwDeviceInfo'
+      >
+    >,
   ) {
     const walletMeta = this.#walletMetas$.value.get(id)
-    if (!walletMeta) throwLoggedError('WalletManager: updateMeta meta not found')
+    if (!walletMeta)
+      throwLoggedError('WalletManager: updateMeta meta not found')
 
     // optmistic update
     const newMeta: Wallet.Meta = {...walletMeta, ...meta}
@@ -112,7 +136,9 @@ export class WalletManager {
   }
 
   setSelectedNetwork(network: Chain.SupportedNetworks) {
-    logger.debug('WalletManager: setSelectedNetwork new network selected', {network})
+    logger.debug('WalletManager: setSelectedNetwork new network selected', {
+      network,
+    })
     this.hydrate({isForced: true, network}).then(() => {
       this.#selectedNetwork$.next(network)
       this.restartSyncing()
@@ -149,10 +175,14 @@ export class WalletManager {
   }
 
   getWalletsByNetwork = () => {
-    const openedWalletsByNetwork = new Map<Chain.SupportedNetworks, Set<YoroiWallet['id']>>()
+    const openedWalletsByNetwork = new Map<
+      Chain.SupportedNetworks,
+      Set<YoroiWallet['id']>
+    >()
 
     this.#wallets.forEach(({id, networkManager: {network}}) => {
-      if (!openedWalletsByNetwork.has(network)) openedWalletsByNetwork.set(network, new Set())
+      if (!openedWalletsByNetwork.has(network))
+        openedWalletsByNetwork.set(network, new Set())
 
       openedWalletsByNetwork.get(network)?.add(id)
     })
@@ -220,7 +250,10 @@ export class WalletManager {
       wallets.map(({id}) => id),
       Array.from(infos.keys()),
     ).forEach((id) => {
-      logger.debug('WalletManager: resetSyncWalletInfos deleting wallet from sync list', {id})
+      logger.debug(
+        'WalletManager: resetSyncWalletInfos deleting wallet from sync list',
+        {id},
+      )
       infos.delete(id)
     })
 
@@ -240,7 +273,9 @@ export class WalletManager {
             return from(wallets)
           }),
           concatMap((wallet) => {
-            logger.debug('WalletManager: syncAll syncing walet', {walletId: wallet.id})
+            logger.debug('WalletManager: syncAll syncing walet', {
+              walletId: wallet.id,
+            })
             const info = this.#syncWalletInfos$.value.get(wallet.id)
             const syncWalletInfo: SyncWalletInfo = {
               status: 'syncing',
@@ -253,7 +288,10 @@ export class WalletManager {
             this.#syncWalletInfos$.next(freeze(infos))
             return from(wallet.sync({isForced: false})).pipe(
               catchError((error) => {
-                logger.error('WalletManager: syncAll error syncing walet', {error, walletId: wallet.id})
+                logger.error('WalletManager: syncAll error syncing walet', {
+                  error,
+                  walletId: wallet.id,
+                })
                 const syncWalletInfo: SyncWalletInfo = {
                   status: 'error',
                   error,
@@ -267,8 +305,13 @@ export class WalletManager {
                 return of()
               }),
               finalize(() => {
-                if (this.#syncWalletInfos$.value.get(wallet.id)?.status !== 'error') {
-                  logger.debug('WalletManager: syncAll done syncing walet', {walletId: wallet.id})
+                if (
+                  this.#syncWalletInfos$.value.get(wallet.id)?.status !==
+                  'error'
+                ) {
+                  logger.debug('WalletManager: syncAll done syncing walet', {
+                    walletId: wallet.id,
+                  })
                   const syncWalletInfo: SyncWalletInfo = {
                     status: 'done',
                     updatedAt: Date.now(),
@@ -292,7 +335,9 @@ export class WalletManager {
     if (!this.#syncSubscription) {
       this.#syncSubscription = this.#syncControl$
         .pipe(
-          switchMap((isActive) => (isActive ? interval(this.#syncInterval).pipe(startWith(0)) : of())),
+          switchMap((isActive) =>
+            isActive ? interval(this.#syncInterval).pipe(startWith(0)) : of(),
+          ),
           concatMap(() => of(syncWallets())),
         )
         .subscribe()
@@ -332,7 +377,9 @@ export class WalletManager {
       .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
       .then((walletMetas) => walletMetas.filter(isWalletMeta)) // filter corrupted wallet metas
 
-    const metasToLoad = walletMetas.filter((meta) => !this.#walletMetas$.value.has(meta.id) || isForced)
+    const metasToLoad = walletMetas.filter(
+      (meta) => !this.#walletMetas$.value.has(meta.id) || isForced,
+    )
 
     // metas dictates wallets to be loaded
     if (metasToLoad.length > 0) {
@@ -353,11 +400,17 @@ export class WalletManager {
       this.#walletMetas$.next(freeze(metas))
     }
 
-    return {wallets: Array.from(this.#wallets.values()), metas: Array.from(this.#walletMetas$.value.values())}
+    return {
+      wallets: Array.from(this.#wallets.values()),
+      metas: Array.from(this.#walletMetas$.value.values()),
+    }
   }
 
   async walletIdsMarkedForDeletion() {
-    const ids = await this.#rootStorage.getItem('deletedWalletIds', parseDeletedWalletIds)
+    const ids = await this.#rootStorage.getItem(
+      'deletedWalletIds',
+      parseDeletedWalletIds,
+    )
 
     return ids ?? []
   }
@@ -375,7 +428,8 @@ export class WalletManager {
 
         await this.#walletsRootStorage.removeItem(id) // remove wallet meta
         await encryptedStorage.xpriv.remove() // remove auth with password
-        await encryptedStorage.xpub.clear() // remove all accounts
+        // TODO: remove all accounts
+        await encryptedStorage.xpub.remove(0) // remove all accounts
 
         await this.#keychainManager?.removeWalletKey(id) // remove auth with os
       }),
@@ -396,25 +450,39 @@ export class WalletManager {
   isWalletAccountDuplicated(publicKeyHex: string) {
     const {plate} = this.checksum(publicKeyHex)
 
-    return Array.from(this.walletMetas.values()).some((walletMeta) => walletMeta.plate === plate)
+    return Array.from(this.walletMetas.values()).some(
+      (walletMeta) => walletMeta.plate === plate,
+    )
   }
 
   findWalletMetadataByPublicKeyHex(publicKeyHex: string) {
     const {plate} = this.checksum(publicKeyHex)
 
-    return Array.from(this.walletMetas.values()).find((walletMeta) => walletMeta.plate === plate)
+    return Array.from(this.walletMetas.values()).find(
+      (walletMeta) => walletMeta.plate === plate,
+    )
   }
 
   validateWalletName(newName: string, oldName: string | null = null) {
-    const walletNames = Array.from(this.walletMetas.values()).map(({name}) => name)
+    const walletNames = Array.from(this.walletMetas.values()).map(
+      ({name}) => name,
+    )
     const nameErrors = validateWalletName(newName, oldName, walletNames)
 
     return nameErrors
   }
 
-  async generateWalletKeys(walletImplementation: Wallet.Implementation, mnemonic: string, accountVisual?: number) {
+  async generateWalletKeys(
+    walletImplementation: Wallet.Implementation,
+    mnemonic: string,
+    accountVisual?: number,
+  ) {
     const {csl, release} = wrappedCsl()
-    const keys = await keyManager(walletImplementation)({mnemonic, csl, accountVisual})
+    const keys = await keyManager(walletImplementation)({
+      mnemonic,
+      csl,
+      accountVisual,
+    })
     release()
 
     return keys
@@ -428,12 +496,17 @@ export class WalletManager {
     this.#subscriptions.push(subscription)
 
     return () => {
-      this.#subscriptions = this.#subscriptions.filter((sub) => sub !== subscription)
+      this.#subscriptions = this.#subscriptions.filter(
+        (sub) => sub !== subscription,
+      )
     }
   }
 
   async disableEasyConfirmation(id: YoroiWallet['id']) {
-    if (!this.#keychainManager) throwLoggedError('WalletManager: disableEasyConfirmation KeychainManager not available')
+    if (!this.#keychainManager)
+      throwLoggedError(
+        'WalletManager: disableEasyConfirmation KeychainManager not available',
+      )
 
     await this.#keychainManager.removeWalletKey(id)
 
@@ -443,11 +516,14 @@ export class WalletManager {
   }
 
   async enableEasyConfirmation(id: YoroiWallet['id'], password: string) {
-    if (!this.#keychainManager) throwLoggedError('WalletManager: enableEasyConfirmation KeychainManager not available')
+    if (!this.#keychainManager)
+      throwLoggedError(
+        'WalletManager: enableEasyConfirmation KeychainManager not available',
+      )
 
     const encryptedStorage = makeWalletEncryptedStorage(id)
     const rootKey = await encryptedStorage.xpriv.read(password)
-    this.#keychainManager.setWalletKey(id, rootKey)
+    this.#keychainManager.setWalletKey(id, rootKey.value)
 
     this.updateMeta(id, {
       isEasyConfirmationEnabled: true,
@@ -458,7 +534,10 @@ export class WalletManager {
     this.updateMeta(id, {name})
   }
 
-  changeWalletAddressMode(id: YoroiWallet['id'], addressMode: Wallet.AddressMode) {
+  changeWalletAddressMode(
+    id: YoroiWallet['id'],
+    addressMode: Wallet.AddressMode,
+  ) {
     this.updateMeta(id, {addressMode})
   }
 
@@ -477,13 +556,16 @@ export class WalletManager {
   }) {
     const validationResult = validatePassword(newPassword, newPassword)
     if (Object.keys(validationResult).length > 0) {
-      logger.error('WalletManager: changeWalletPassword new password is not valid', {id})
+      logger.error(
+        'WalletManager: changeWalletPassword new password is not valid',
+        {id},
+      )
       throw new Error('New password is not valid')
     }
 
     const encryptedStorage = makeWalletEncryptedStorage(id)
     const rootKey = await encryptedStorage.xpriv.read(oldPassword)
-    return encryptedStorage.xpriv.write(rootKey, newPassword)
+    return encryptedStorage.xpriv.write(rootKey.value, newPassword)
   }
 
   /**
@@ -514,8 +596,14 @@ export class WalletManager {
     const encryptedStorage = makeWalletEncryptedStorage(id)
     const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
 
-    logger.debug('WalletManager: loadWallet loading wallet', {id, accountVisual, implementation, isForced})
-    if (!accountPubKeyHex) throwLoggedError('WalletManager: loadWallet accountPubKeyHex not found')
+    logger.debug('WalletManager: loadWallet loading wallet', {
+      id,
+      accountVisual,
+      implementation,
+      isForced,
+    })
+    if (!accountPubKeyHex)
+      throwLoggedError('WalletManager: loadWallet accountPubKeyHex not found')
 
     const wallet = await walletFactory.build({
       id,
@@ -540,7 +628,10 @@ export class WalletManager {
    */
   async removeWallet(id: string) {
     const deletedWalletIds = await this.walletIdsMarkedForDeletion()
-    await this.#rootStorage.setItem('deletedWalletIds', [...deletedWalletIds, id])
+    await this.#rootStorage.setItem('deletedWalletIds', [
+      ...deletedWalletIds,
+      id,
+    ])
 
     // can't update the walletInfo here cuz it might be in the middle of wallet syncing
     this.#wallets.delete(id)
@@ -570,14 +661,18 @@ export class WalletManager {
     const id = uuid.v4()
 
     const {csl, release} = wrappedCsl()
-    const {rootKey, accountPubKeyHex} = await walletFactory.makeKeys({mnemonic, csl})
+    const {rootKey, accountPubKeyHex} = await walletFactory.makeKeys({
+      mnemonic,
+      csl,
+    })
     release()
 
     const encryptedStorage = makeWalletEncryptedStorage(id)
     await encryptedStorage.xpriv.write(rootKey, password)
     await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
 
-    const {ImagePart: seed, TextPart: plate} = walletFactory.calcChecksum(accountPubKeyHex)
+    const {ImagePart: seed, TextPart: plate} =
+      walletFactory.calcChecksum(accountPubKeyHex)
     const avatar = new Blockies({seed}).asBase64()
 
     const meta: Wallet.Meta = {
@@ -621,7 +716,8 @@ export class WalletManager {
     const walletFactory = getWalletFactory({network, implementation})
     const id = uuid.v4()
 
-    const {ImagePart: seed, TextPart: plate} = walletFactory.calcChecksum(accountPubKeyHex)
+    const {ImagePart: seed, TextPart: plate} =
+      walletFactory.calcChecksum(accountPubKeyHex)
     const avatar = new Blockies({seed}).asBase64()
 
     const encryptedStorage = makeWalletEncryptedStorage(id)
@@ -647,13 +743,21 @@ export class WalletManager {
   }
 }
 
-export const walletManager = new WalletManager({networkManagers, rootStorage, keychainManager: Keychain})
+export const walletManager = new WalletManager({
+  networkManagers,
+  rootStorage,
+  keychainManager: Keychain,
+})
 
 export const mockWalletManager = {} as WalletManager
 
 const parseDeletedWalletIds = (data: unknown) => {
   const isWalletIds = (data: unknown): data is Array<string> => {
-    return !!data && Array.isArray(data) && data.every((item) => typeof item === 'string')
+    return (
+      !!data &&
+      Array.isArray(data) &&
+      data.every((item) => typeof item === 'string')
+    )
   }
   const parsed = parseSafe(data)
 

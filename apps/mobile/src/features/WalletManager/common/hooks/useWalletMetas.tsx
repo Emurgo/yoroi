@@ -1,6 +1,7 @@
+import * as React from 'react'
+
 import {useObservableValue} from '@yoroi/common'
 import {Wallet} from '@yoroi/types'
-import * as React from 'react'
 
 import {useWalletManager} from '../../context/WalletManagerProvider'
 

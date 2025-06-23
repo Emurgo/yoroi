@@ -5,7 +5,7 @@ import {View} from 'react-native'
 
 import {pinLength} from '../common/constants'
 import {useAuth} from '../common/context'
-import {PinInput, PinInputRef} from '../components/PinInput/PinInput'
+import {PinInput, PinInputRef} from '../ui/PinInput/PinInput'
 import {useStrings} from '../hooks/useStrings'
 
 export const LoginWithPinScreen = () => {
