@@ -10,7 +10,7 @@ import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {debugStorage} from 'src/kernel/storage/debug-storage'
-import {useAuth} from './src/features/Auth/common/context'
+import {useAuth} from './src/features/Auth/context/AuthProvider'
 import {usePairing} from './src/features/Pairing/context/PairingProvider'
 import {decryptData} from './src/kernel/crypto/decrypt-data'
 import {encryptData} from './src/kernel/crypto/encrypt-data'

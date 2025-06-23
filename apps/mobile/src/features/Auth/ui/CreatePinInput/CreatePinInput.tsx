@@ -5,7 +5,7 @@ import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
 import {pinLength} from '../../common/constants'
-import {useAuth} from '../../common/context'
+import {useAuth} from '../../context/AuthProvider'
 import {useStrings} from '../../hooks/useStrings'
 import {PinInput, PinInputRef} from '../PinInput/PinInput'
 

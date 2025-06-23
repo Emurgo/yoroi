@@ -9,7 +9,7 @@ import {decryptData} from '../../../kernel/crypto/decrypt-data'
 import {encryptData} from '../../../kernel/crypto/encrypt-data'
 import {logger} from '../../../kernel/logger/logger'
 import {useAuthWithHost} from '../hooks/useAuthWithHost'
-import {AuthSetting, AuthWithHostConfig} from './types'
+import {AuthSetting, AuthWithHostConfig} from '../common/types'
 
 export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,

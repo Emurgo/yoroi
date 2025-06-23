@@ -4,7 +4,7 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {pinLength} from '../common/constants'
-import {useAuth} from '../common/context'
+import {useAuth} from '../context/AuthProvider'
 import {PinInput, PinInputRef} from '../ui/PinInput/PinInput'
 import {useStrings} from '../hooks/useStrings'
 
