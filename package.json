@@ -1,8 +1,0 @@
-{
-  "devDependencies": {
-    "@testing-library/jest-native": "^5.4.3",
-    "@testing-library/react-native": "^13.2.0",
-    "eslint-plugin-import": "^2.31.0",
-    "jest-expo": "^53.0.5"
-  }
-}

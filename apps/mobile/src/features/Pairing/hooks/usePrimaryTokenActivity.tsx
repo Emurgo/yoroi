@@ -6,22 +6,6 @@ import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {persistPrefixKeyword} from '../../../kernel/connection/ConnectionProvider'
 
-// NOTE: this API should be moved inside portfolio token activity (support PT in the request)
-// NOTE: price API is unique for all networks
-const apiBaseUrl = networkConfigs[Chain.Network.Mainnet].legacyApiBaseUrl
-const ptTicker = networkConfigs[Chain.Network.Mainnet].primaryTokenInfo.ticker
-
-type PrimaryTokenActivity = {
-  ts: number
-  close: number
-  open: number
-}
-const defaultPrimaryTokenActivity: PrimaryTokenActivity = {
-  ts: 0,
-  close: 0,
-  open: 0,
-}
-
 export const usePrimaryTokenActivity = ({
   to,
   options,
@@ -73,6 +57,23 @@ export type PriceMultipleResponse = {
     prices: Record<Portfolio.Currency.Symbol, number>
   }>
 }
+
+// NOTE: this API should be moved inside portfolio token activity (support PT in the request)
+// NOTE: price API is unique for all networks
+const apiBaseUrl = networkConfigs[Chain.Network.Mainnet].legacyApiBaseUrl
+const ptTicker = networkConfigs[Chain.Network.Mainnet].primaryTokenInfo.ticker
+
+type PrimaryTokenActivity = {
+  ts: number
+  close: number
+  open: number
+}
+const defaultPrimaryTokenActivity: PrimaryTokenActivity = {
+  ts: 0,
+  close: 0,
+  open: 0,
+}
+
 export const fetchPtPriceActivity = (timestamps: Array<number>) =>
   fetchData<PriceMultipleResponse>({
     url: `${apiBaseUrl}/price/${ptTicker}/${timestamps.join()}`,
