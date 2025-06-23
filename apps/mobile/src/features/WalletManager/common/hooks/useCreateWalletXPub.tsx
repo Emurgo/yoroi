@@ -1,5 +1,6 @@
 import {HW, Wallet} from '@yoroi/types'
-import {useMutation, UseMutationOptions} from 'react-query'
+
+import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
@@ -13,10 +14,20 @@ type CreateWalletXPub = {
   accountVisual: number
 }
 
-export const useCreateWalletXPub = (options?: UseMutationOptions<Wallet.Meta, Error, CreateWalletXPub>) => {
+export const useCreateWalletXPub = (
+  options?: UseMutationOptions<Wallet.Meta, Error, CreateWalletXPub>,
+) => {
   const {walletManager} = useWalletManager()
   const mutation = useMutation({
-    mutationFn: ({name, bip44AccountPublic, implementation, hwDeviceInfo, readOnly, addressMode, accountVisual}) =>
+    mutationFn: ({
+      name,
+      bip44AccountPublic,
+      implementation,
+      hwDeviceInfo,
+      readOnly,
+      addressMode,
+      accountVisual,
+    }) =>
       walletManager.createWalletXPub({
         name,
         accountPubKeyHex: bip44AccountPublic,

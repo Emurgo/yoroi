@@ -1,5 +1,6 @@
 import {Wallet} from '@yoroi/types'
-import {useMutation, UseMutationOptions} from 'react-query'
+
+import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
@@ -12,10 +13,19 @@ type CreateWalletMnemonic = {
   accountVisual: number
 }
 
-export const useCreateWalletMnemonic = (options?: UseMutationOptions<Wallet.Meta, Error, CreateWalletMnemonic>) => {
+export const useCreateWalletMnemonic = (
+  options?: UseMutationOptions<Wallet.Meta, Error, CreateWalletMnemonic>,
+) => {
   const {walletManager} = useWalletManager()
   const mutation = useMutation({
-    mutationFn: ({name, mnemonicPhrase, password, implementation, addressMode, accountVisual}) =>
+    mutationFn: ({
+      name,
+      mnemonicPhrase,
+      password,
+      implementation,
+      addressMode,
+      accountVisual,
+    }) =>
       walletManager.createWalletMnemonic({
         name,
         mnemonic: mnemonicPhrase,

@@ -1,5 +1,5 @@
-import {Chain, Wallet} from '@yoroi/types'
-import {NetworkManager} from '@yoroi/types/lib/typescript/network/manager'
+import {Chain, Network, Wallet} from '@yoroi/types'
+
 import {castDraft, freeze, produce} from 'immer'
 
 import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'
@@ -8,12 +8,17 @@ import {YoroiWallet} from '../../../wallets/cardano/types'
 import {networkManagers} from '../common/constants'
 import {WalletManager} from '../wallet-manager'
 
-export const walletManagerReducer = (state: WalletManagerState, action: WalletManagerAction) => {
+export const walletManagerReducer = (
+  state: WalletManagerState,
+  action: WalletManagerAction,
+) => {
   return produce(state, (draft) => {
     switch (action.type) {
       case WalletManagerActionType.NetworkSelected:
         draft.selected.network = action.network
-        draft.selected.networkManager = castDraft(networkManagers[action.network])
+        draft.selected.networkManager = castDraft(
+          networkManagers[action.network],
+        )
         break
 
       case WalletManagerActionType.WalletSelected:
@@ -56,7 +61,7 @@ export type WalletManagerState = {
     wallet: YoroiWallet | null
     meta: Wallet.Meta | null
     network: Chain.SupportedNetworks
-    networkManager: NetworkManager
+    networkManager: Network.Manager
   }
 }
 
@@ -78,12 +83,17 @@ export enum WalletManagerActionType {
   SelectedMetaUpdated = 'selectedMetaUpdated',
 }
 export type WalletManagerActions = {
-  walletSelected(args: {wallet: YoroiWallet | null; meta: Wallet.Meta | null}): void
+  walletSelected(args: {
+    wallet: YoroiWallet | null
+    meta: Wallet.Meta | null
+  }): void
   networkSelected(network: Chain.SupportedNetworks): void
   selectedMetaUpdated(metas: Map<YoroiWallet['id'], Wallet.Meta>): void
 }
 
-export type WalletManagerContextType = WalletManagerState & {walletManager: WalletManager | null}
+export type WalletManagerContextType = WalletManagerState & {
+  walletManager: WalletManager | null
+}
 export const walletManagerInitialContext: WalletManagerContextType = freeze(
   {
     ...walletManagerDefaultState,

@@ -1,4 +1,5 @@
 import {App} from '@yoroi/types'
+
 import {freeze} from 'immer'
 import * as React from 'react'
 
