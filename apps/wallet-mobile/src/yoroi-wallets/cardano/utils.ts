@@ -16,7 +16,7 @@ import {toAssetNameHex, toPolicyId} from './api/utils'
 import {withMinAmounts} from './getMinAmounts'
 import {MultiToken} from './MultiToken'
 import {CardanoTypes, YoroiWallet} from './types'
-import {wrappedCsl as getCSL, wrappedCsl} from './wrappedCsl'
+import {wrappedCsl} from './wrappedCsl'
 
 export const deriveRewardAddressHex = async (
   accountPubKeyHex: string,
@@ -232,7 +232,7 @@ export const getTransactionUnspentOutput = async ({
   bytes: Uint8Array
   index: number
 }) => {
-  const {csl, release} = getCSL()
+  const {csl, release} = wrappedCsl()
   try {
     const tx = await csl.Transaction.fromBytes(bytes)
     const body = await tx.body()

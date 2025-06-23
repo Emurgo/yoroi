@@ -33,7 +33,6 @@ export const useUtxoConsolidationBanner = () => {
           )
 
           if (!last || new Date(last.date).getTime() + time.oneWeek < Date.now()) {
-            console.log('showing')
             showBanner({
               id: BannerIds.UtxoConsolidation,
               title: strings.organizeWallet,
