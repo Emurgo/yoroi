@@ -20,9 +20,9 @@ import {
   shouldHandleNotificationInternalNavigationAction,
 } from '../../../Notifications/common/tools'
 import {useWalletMetas} from '../../hooks/useWalletMetas'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '../../hooks/useStrings'
 import {useWalletManager} from '../../context/WalletManagerProvider'
-import {SupportIllustration} from '../../illustrations/SupportIllustration'
+import {SupportIllustration} from '../../ui/illustrations/SupportIllustration'
 import {AggregatedBalance} from './AggregatedBalance'
 import {WalletListItem} from './WalletListItem'
 
