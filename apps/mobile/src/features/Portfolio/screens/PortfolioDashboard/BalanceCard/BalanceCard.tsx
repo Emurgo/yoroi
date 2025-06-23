@@ -6,7 +6,7 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {usePairing} from '../../../../Pairing/context/PairingProvider'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 import {usePortfolioTokenActivity} from '../../../context/PortfolioProvider'
 import {aggregatePrimaryAmount} from '../../../common/helpers/aggregatePrimaryAmount'
 import {BalanceCardContent} from './BalanceCardContent'

@@ -10,7 +10,7 @@ import {MediaPreview} from '../../../../../../components/MediaPreview/MediaPrevi
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
 import {NftRoutes, useParams} from '../../../../../../kernel/navigation'
 import {isEmptyString} from '../../../../../../kernel/utils'
-import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '../../../../../WalletManager/hooks/useSelectedWallet'
 
 type Params = NftRoutes['nft-details']
 

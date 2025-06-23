@@ -26,7 +26,7 @@ import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs/Tabs'
 import {Text} from '../../../../components/Text'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {NftRoutes} from '../../../../kernel/navigation'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
 import {usePortfolioImageInvalidate} from '../../common/hooks/usePortfolioImage'
 import {useNavigateTo} from '../../common/navigation'
 

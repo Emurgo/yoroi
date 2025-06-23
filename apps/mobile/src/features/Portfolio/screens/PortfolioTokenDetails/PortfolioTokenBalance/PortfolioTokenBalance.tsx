@@ -5,7 +5,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {LoadingBoundary} from '../../../../../components/Boundary/Boundary'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 import {usePortfolioTokenDetailParams} from '../../../common/hooks/useNavigateTo'
 import {PortfolioTokenDetailBalanceSkeleton} from './PortfolioTokenDetailBalanceSkeleton'
 

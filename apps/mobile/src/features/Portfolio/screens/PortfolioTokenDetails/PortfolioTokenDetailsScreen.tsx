@@ -12,7 +12,7 @@ import {throwLoggedError} from '../../../../kernel/logger/helpers/throw-logged-e
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {TxFilter} from '../../../Transactions/useCases/TxList/TxFilterProvider'
 import {TxList} from '../../../Transactions/useCases/TxList/TxList'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
 import {usePortfolioTokenDetailParams} from '../../common/hooks/useNavigateTo'
 import {useStrings} from '../../common/hooks/useStrings'
 import {PortfolioDetailsTab, usePortfolio} from '../../context/PortfolioProvider'

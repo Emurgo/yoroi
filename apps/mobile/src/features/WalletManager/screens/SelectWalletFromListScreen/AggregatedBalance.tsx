@@ -11,7 +11,7 @@ import {BalanceCardContent} from '../../../Portfolio/screens/PortfolioDashboard/
 import {BalanceCardSkeleton} from '../../../Portfolio/screens/PortfolioDashboard/BalanceCard/BalanceCardSkeleton'
 import {BalanceHeaderCard} from '../../../Portfolio/screens/PortfolioDashboard/BalanceCard/BalanceHeaderCard'
 import {useCurrencyPairing} from '../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {useSelectedNetwork} from '../../common/hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
 
 export const AggregatedBalance = () => {
   const {styles, colors} = useStyles()
