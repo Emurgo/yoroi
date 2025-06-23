@@ -32,6 +32,7 @@ export const useStrings = () => {
     singleOrMultipleDetails: intl.formatMessage(messages.singleOrMultipleDetails),
     selectMultiple: intl.formatMessage(messages.selectMultiple),
     singleAddressWallet: intl.formatMessage(messages.singleAddressWallet),
+    singleAddressWarning: intl.formatMessage(messages.singleAddressWarning),
     yoroiZendesk: intl.formatMessage(messages.yoroiZendesk),
     ok: intl.formatMessage(messages.ok),
   }
@@ -155,6 +156,11 @@ export const messages = defineMessages({
   singleAddressWallet: {
     id: 'components.receive.receivescreen.singleAddressWallet',
     defaultMessage: '!!!Single address wallet',
+  },
+  singleAddressWarning: {
+    id: 'components.receive.receivescreen.singleAddressWarning',
+    defaultMessage:
+      '!!!You have selected a preference for Single Address mode, but your UTxOs are spread among multiple addresses. This may affect some dapps that only support single address.',
   },
   ok: {
     id: 'global.ok',
