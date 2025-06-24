@@ -1,11 +1,12 @@
-import {act, renderHook} from '@testing-library/react-hooks'
-import {queryClientFixture} from '@yoroi/common'
-import {QueryClient} from 'react-query'
+import {act, renderHook} from '@testing-library/react'
+
+import {QueryClient} from '@tanstack/react-query'
 
 import {wrapperMaker} from '../../../fixtures/wrapperMaker'
 import {claimManagerMockInstances} from '../../../manager.mocks'
 import {defaultClaimState} from '../state/state'
 import {useClaim} from '../hooks/useClaim'
+import {queryClientFixture} from '../../../fixtures/query-client'
 
 describe('ClaimProvider', () => {
   let queryClient: QueryClient

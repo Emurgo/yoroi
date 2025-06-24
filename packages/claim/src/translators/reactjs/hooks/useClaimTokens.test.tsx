@@ -1,13 +1,15 @@
-import {QueryClient} from 'react-query'
-import {renderHook, act} from '@testing-library/react-hooks'
-import {queryClientFixture} from '@yoroi/common'
 import {Claim, Scan} from '@yoroi/types'
+
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {act, renderHook, waitFor} from '@testing-library/react'
+import * as React from 'react'
 
 import {
   claimApiMockResponses,
   claimManagerMockInstances,
 } from '../../../manager.mocks'
-import {wrapperMaker} from '../../../fixtures/wrapperMaker'
+import {queryClientFixture} from '../../../fixtures/query-client'
+import {ClaimProvider} from '../provider/ClaimProvider'
 import {useClaimTokens} from './useClaimTokens'
 
 describe('useClaimTokens', () => {
@@ -37,18 +39,26 @@ describe('useClaimTokens', () => {
         .mockResolvedValue(claimApiMockResponses.claimTokens.processing),
     }
 
-    const wrapper = wrapperMaker({
-      claimManager: claimManagerMock,
-      queryClient,
+    const wrapper = ({children}: React.PropsWithChildren) => (
+      <QueryClientProvider client={queryClient}>
+        <ClaimProvider manager={claimManagerMock}>{children}</ClaimProvider>
+      </QueryClientProvider>
+    )
+
+    const {result} = renderHook(() => useClaimTokens(), {wrapper})
+
+    // Initial state
+    expect(result.current.isError).toBe(false)
+
+    // Trigger the claim action
+    await act(async () => {
+      result.current.claimTokens(scanClaimAction)
     })
 
-    const {result, waitFor: waitForHook} = renderHook(() => useClaimTokens(), {
-      wrapper,
+    // Wait for the mutation to complete
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true)
     })
-
-    await act(async () => result.current.claimTokens(scanClaimAction))
-
-    await waitForHook(() => expect(result.current.isLoading).toBe(false))
 
     expect(claimManagerMock.claimTokens).toHaveBeenCalledTimes(1)
     expect(claimManagerMock.claimTokens).toHaveBeenCalledWith(scanClaimAction)

@@ -1,4 +1,5 @@
 import {Scan} from '@yoroi/types'
+
 import {claimApiMockResponses} from '../../../manager.mocks'
 import {
   claimReducer,

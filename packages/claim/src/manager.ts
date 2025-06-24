@@ -1,5 +1,6 @@
 import {FetchData, fetchData, isLeft} from '@yoroi/common'
 import {Api, Claim, Portfolio, Scan} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 import {asClaimApiError, asClaimToken} from './transformers'
