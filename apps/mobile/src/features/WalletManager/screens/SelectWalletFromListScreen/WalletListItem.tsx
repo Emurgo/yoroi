@@ -121,7 +121,6 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
       </Animated.View>
     )
   }
-  // ____________________________________________________
 
   return (
     <Swipeable
