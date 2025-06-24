@@ -23,6 +23,7 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'packages/portfolio/node_modules'),
   path.resolve(workspaceRoot, 'packages/theme/node_modules'),
   path.resolve(workspaceRoot, 'packages/identicon/node_modules'),
+  path.resolve(workspaceRoot, 'packages/claim/node_modules'),
 ]
 
 // NOTE: workaround for the structure now
@@ -38,6 +39,7 @@ config.resolver.extraNodeModules = {
   '@yoroi/identicon': path.resolve(workspaceRoot, 'packages/identicon'),
   '@yoroi/blockchains': path.resolve(workspaceRoot, 'packages/blockchains'),
   '@yoroi/theme': path.resolve(workspaceRoot, 'packages/theme'),
+  '@yoroi/claim': path.resolve(workspaceRoot, 'packages/claim'),
 }
 
 config.transformer.minifierConfig = {
