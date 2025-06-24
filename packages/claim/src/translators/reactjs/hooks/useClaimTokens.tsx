@@ -1,12 +1,15 @@
 import {Claim, Scan} from '@yoroi/types'
 import {useMutationWithInvalidations} from '@yoroi/common'
-import {UseMutationOptions} from 'react-query'
+
+import {UseMutationOptions, UseMutationResult} from '@tanstack/react-query'
 
 import {useClaim} from './useClaim'
 
 export const useClaimTokens = (
   options: UseMutationOptions<Claim.Info, Error, Scan.ActionClaim> = {},
-) => {
+): UseMutationResult<Claim.Info, Error, Scan.ActionClaim> & {
+  claimTokens: (variables: Scan.ActionClaim) => void
+} => {
   const {claimTokens, address} = useClaim()
 
   const mutation = useMutationWithInvalidations<
@@ -21,7 +24,6 @@ export const useClaimTokens = (
 
   return {
     ...mutation,
-
     claimTokens: mutation.mutate,
   } as const
 }

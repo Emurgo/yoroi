@@ -1,4 +1,5 @@
 import {Claim, Scan} from '@yoroi/types'
+
 import * as React from 'react'
 
 import {claimManagerMockInstances} from '../../../manager.mocks'
