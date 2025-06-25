@@ -10,7 +10,8 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
-    '!src/fixtures/**'
+    '!src/fixtures/**',
+    '!src/**/*.mocks.ts'
   ],
   coverageReporters: ['text-summary', 'lcov', 'html'],
   coverageThreshold: {
