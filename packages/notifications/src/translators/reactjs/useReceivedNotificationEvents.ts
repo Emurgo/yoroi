@@ -1,16 +1,20 @@
-import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 import {Notifications as NotificationTypes} from '@yoroi/types'
-import {useNotificationManager} from './NotificationProvider'
+
 import * as React from 'react'
+import {useQuery, useQueryClient, UseQueryOptions} from '@tanstack/react-query'
+
+import {useNotificationManager} from './NotificationProvider'
 
 export const useReceivedNotificationEvents = (
-  options: UseQueryOptions<ReadonlyArray<NotificationTypes.Event>, Error> = {},
+  options: Partial<
+    UseQueryOptions<ReadonlyArray<NotificationTypes.Event>, Error>
+  > = {},
 ) => {
   const queryClient = useQueryClient()
   const manager = useNotificationManager()
   React.useEffect(() => {
     const subscription = manager.unreadCounterByGroup$.subscribe(() =>
-      queryClient.invalidateQueries(['receivedNotificationEvents']),
+      queryClient.invalidateQueries({queryKey: ['receivedNotificationEvents']}),
     )
     return () => {
       subscription.unsubscribe()

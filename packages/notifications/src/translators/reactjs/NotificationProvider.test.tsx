@@ -5,6 +5,7 @@ import {
 } from './NotificationProvider'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {render, renderHook} from '@testing-library/react-native'
+
 import {createManagerMock} from './mocks'
 
 describe('NotificationProvider', () => {

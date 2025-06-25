@@ -56,6 +56,7 @@
     "@yoroi/links": "file:../../packages/links",
     "@yoroi/exchange": "file:../../packages/exchange",
     "@yoroi/explorers": "file:../../packages/explorers",
+    "@yoroi/notifications": "file:../../packages/notifications",
     "axios": "^1.9.0",
     "bignumber.js": "^9.3.0",
     "expo": "~53.0.7",

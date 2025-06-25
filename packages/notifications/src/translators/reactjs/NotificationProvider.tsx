@@ -1,5 +1,6 @@
-import * as React from 'react'
 import {Notifications} from '@yoroi/types'
+
+import * as React from 'react'
 
 type NotificationContextType = {
   manager: Notifications.Manager
