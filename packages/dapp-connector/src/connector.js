@@ -29,14 +29,23 @@
  * @Property {string} origin
  */
 
-const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessionId}) => {
+const initWallet = ({
+  iconUrl,
+  apiVersion,
+  walletName,
+  supportedExtensions,
+  sessionId,
+}) => {
   // https://github.com/facebook/hermes/issues/114
   // https://github.com/facebook/hermes/issues/612
   'babel plugin show source'
   if (typeof iconUrl !== 'string') throw new Error('iconUrl must be a string')
-  if (typeof apiVersion !== 'string') throw new Error('apiVersion must be a string')
-  if (typeof walletName !== 'string') throw new Error('walletName must be a string')
-  if (!Array.isArray(supportedExtensions)) throw new Error('supportedExtensions must be an array')
+  if (typeof apiVersion !== 'string')
+    throw new Error('apiVersion must be a string')
+  if (typeof walletName !== 'string')
+    throw new Error('walletName must be a string')
+  if (!Array.isArray(supportedExtensions))
+    throw new Error('supportedExtensions must be an array')
 
   if (window.cardano && window.cardano[walletName]) return
 
@@ -84,7 +93,12 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
     }
 
     if (options?.doNotWaitForResponse) {
-      postMessage({id: requestId, method, source: 'dapp-connector', params: {args, browserContext: getContext()}})
+      postMessage({
+        id: requestId,
+        method,
+        source: 'dapp-connector',
+        params: {args, browserContext: getContext()},
+      })
       return Promise.resolve()
     }
     const promise = new Promise((resolve, reject) => {
@@ -96,7 +110,9 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   }
 
   const logMessage = (...args) => {
-    callExternalMethod('log_message', ['[yoroi-mobile-connector]:', ...args], {doNotWaitForResponse: true})
+    callExternalMethod('log_message', ['[yoroi-mobile-connector]:', ...args], {
+      doNotWaitForResponse: true,
+    })
   }
 
   window.addEventListener('error', (event) => {
@@ -131,7 +147,12 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
     return JSON.stringify(error)
   }
 
-  const apisWhichRequireWindowFocus = ['api.getCollateral', 'api.signTx', 'api.signData', 'api.cip95.signData']
+  const apisWhichRequireWindowFocus = [
+    'api.getCollateral',
+    'api.signTx',
+    'api.signData',
+    'api.cip95.signData',
+  ]
 
   window.addEventListener('message', (event) => {
     if (!event.data || typeof event.data.id !== 'string') return
@@ -168,20 +189,28 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
       getUtxos: (...args) => callExternalMethod('api.getUtxos', args),
       getCollateral: (...args) => callExternalMethod('api.getCollateral', args),
       getBalance: (...args) => callExternalMethod('api.getBalance', args),
-      getUsedAddresses: (...args) => callExternalMethod('api.getUsedAddresses', args),
-      getUnusedAddresses: (...args) => callExternalMethod('api.getUnusedAddresses', args),
-      getChangeAddress: (...args) => callExternalMethod('api.getChangeAddress', args),
-      getRewardAddresses: (...args) => callExternalMethod('api.getRewardAddresses', args),
+      getUsedAddresses: (...args) =>
+        callExternalMethod('api.getUsedAddresses', args),
+      getUnusedAddresses: (...args) =>
+        callExternalMethod('api.getUnusedAddresses', args),
+      getChangeAddress: (...args) =>
+        callExternalMethod('api.getChangeAddress', args),
+      getRewardAddresses: (...args) =>
+        callExternalMethod('api.getRewardAddresses', args),
       signTx: (...args) => callExternalMethod('api.signTx', args),
       signData: (...args) => callExternalMethod('api.signData', args),
       submitTx: (...args) => callExternalMethod('api.submitTx', args),
       experimental: {on: () => {}},
       cip95: supportsCIP95
         ? {
-            signData: (...args) => callExternalMethod('api.cip95.signData', args),
-            getPubDRepKey: (...args) => callExternalMethod('api.cip95.getPubDRepKey', args),
-            getRegisteredPubStakeKeys: (...args) => callExternalMethod('api.cip95.getRegisteredPubStakeKeys', args),
-            getUnregisteredPubStakeKeys: (...args) => callExternalMethod('api.cip95.getUnregisteredPubStakeKeys', args),
+            signData: (...args) =>
+              callExternalMethod('api.cip95.signData', args),
+            getPubDRepKey: (...args) =>
+              callExternalMethod('api.cip95.getPubDRepKey', args),
+            getRegisteredPubStakeKeys: (...args) =>
+              callExternalMethod('api.cip95.getRegisteredPubStakeKeys', args),
+            getUnregisteredPubStakeKeys: (...args) =>
+              callExternalMethod('api.cip95.getUnregisteredPubStakeKeys', args),
           }
         : undefined,
     }

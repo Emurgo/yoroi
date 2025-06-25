@@ -1,16 +1,22 @@
 import {isKeyOf, isRecord, createTypeGuardFromSchema} from '@yoroi/common'
+import {Chain} from '@yoroi/types'
+
 import {Storage} from './adapters/async-storage'
 import {z} from 'zod'
-import {Address, TransactionUnspentOutput, TransactionWitnessSet, Value} from '@emurgo/cross-csl-core'
+import {
+  Address,
+  TransactionUnspentOutput,
+  TransactionWitnessSet,
+  Value,
+} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
-import {Chain} from '@yoroi/types'
 
 type Context = {
   browserOrigin: string
   wallet: ResolverWallet
   trustedOrigin: string
   storage: Storage
-  supportedExtensions: Array<{cip: number}>
+  supportedExtensions: ReadonlyArray<{cip: number}>
 }
 
 type ResolvableMethod<T> = (params: unknown, context: Context) => Promise<T>
@@ -43,14 +49,20 @@ type Resolver = {
 
 export const resolver: Resolver = {
   logMessage: async (params) => {
-    if (isRecord(params) && isKeyOf('args', params) && Array.isArray(params.args)) {
+    if (
+      isRecord(params) &&
+      isKeyOf('args', params) &&
+      Array.isArray(params.args)
+    ) {
       console.log('Log From Dapp Connector:', ...params.args)
     }
   },
   enable: async (_params: unknown, context: Context) => {
     assertOriginsMatch(context)
     if (await hasWalletAcceptedConnection(context)) return true
-    const manualAccept = await context.wallet.confirmConnection(context.trustedOrigin)
+    const manualAccept = await context.wallet.confirmConnection(
+      context.trustedOrigin,
+    )
     if (!manualAccept) return false
     await context.storage.save({
       walletId: context.wallet.id,
@@ -68,11 +80,17 @@ export const resolver: Resolver = {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
       const tx =
-        isRecord(params) && isKeyOf('args', params) && Array.isArray(params.args) && typeof params.args[0] === 'string'
+        isRecord(params) &&
+        isKeyOf('args', params) &&
+        Array.isArray(params.args) &&
+        typeof params.args[0] === 'string'
           ? params.args[0]
           : undefined
       const partialSign =
-        isRecord(params) && isKeyOf('args', params) && Array.isArray(params.args) && typeof params.args[1] === 'boolean'
+        isRecord(params) &&
+        isKeyOf('args', params) &&
+        Array.isArray(params.args) &&
+        typeof params.args[1] === 'boolean'
           ? params.args[1]
           : undefined
       if (tx === undefined) throw new Error('Invalid params')
@@ -83,14 +101,21 @@ export const resolver: Resolver = {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
       const address =
-        isRecord(params) && isKeyOf('args', params) && Array.isArray(params.args) && typeof params.args[0] === 'string'
+        isRecord(params) &&
+        isKeyOf('args', params) &&
+        Array.isArray(params.args) &&
+        typeof params.args[0] === 'string'
           ? params.args[0]
           : undefined
       const payload =
-        isRecord(params) && isKeyOf('args', params) && Array.isArray(params.args) && typeof params.args[1] === 'string'
+        isRecord(params) &&
+        isKeyOf('args', params) &&
+        Array.isArray(params.args) &&
+        typeof params.args[1] === 'string'
           ? params.args[1]
           : undefined
-      if (address === undefined || payload === undefined) throw new Error('Invalid params')
+      if (address === undefined || payload === undefined)
+        throw new Error('Invalid params')
       return context.wallet.signData(address, payload)
     },
     submitTx: async (params: unknown, context: Context) => {
@@ -112,7 +137,9 @@ export const resolver: Resolver = {
 
       const defaultCollateral = '1000000'
       const value =
-        isRecord(params) && Array.isArray(params.args) && typeof params.args[0] === 'string'
+        isRecord(params) &&
+        Array.isArray(params.args) &&
+        typeof params.args[0] === 'string'
           ? params.args[0]
           : defaultCollateral
       const result = await context.wallet.getCollateral(value)
@@ -172,22 +199,29 @@ export const resolver: Resolver = {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
       const value =
-        isRecord(params) && Array.isArray(params.args) && typeof params.args[0] === 'string'
+        isRecord(params) &&
+        Array.isArray(params.args) &&
+        typeof params.args[0] === 'string'
           ? params.args[0]
           : undefined
       const pagination =
-        isRecord(params) && Array.isArray(params.args) && isPaginationParams(params.args[1])
+        isRecord(params) &&
+        Array.isArray(params.args) &&
+        isPaginationParams(params.args[1])
           ? params.args[1]
           : undefined
       const utxos = await context.wallet.getUtxos(value, pagination)
-      if (utxos === null || (utxos.length === 0 && typeof value === 'string')) return null
+      if (utxos === null || (utxos.length === 0 && typeof value === 'string'))
+        return null
       return Promise.all(utxos.map((u) => u.toHex()))
     },
     getUsedAddresses: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
       const pagination =
-        isRecord(params) && Array.isArray(params.args) && isPaginationParams(params.args[0])
+        isRecord(params) &&
+        Array.isArray(params.args) &&
+        isPaginationParams(params.args[0])
           ? params.args[0]
           : undefined
       const addresses = await context.wallet.getUsedAddresses(pagination)
@@ -206,7 +240,10 @@ export const resolver: Resolver = {
         if (!supportsCIP95(context)) throw new Error('CIP95 is not supported')
         return context.wallet.cip95.getRegisteredPubStakeKeys()
       },
-      getUnregisteredPubStakeKeys: async (_params: unknown, context: Context) => {
+      getUnregisteredPubStakeKeys: async (
+        _params: unknown,
+        context: Context,
+      ) => {
         assertOriginsMatch(context)
         await assertWalletAcceptedConnection(context)
         if (!supportsCIP95(context)) throw new Error('CIP95 is not supported')
@@ -230,7 +267,8 @@ export const resolver: Resolver = {
           typeof params.args[1] === 'string'
             ? params.args[1]
             : undefined
-        if (address === undefined || payload === undefined) throw new Error('Invalid params')
+        if (address === undefined || payload === undefined)
+          throw new Error('Invalid params')
         return context.wallet.cip95.signData(address, payload)
       },
     },
@@ -244,25 +282,34 @@ const isPaginationParams = createTypeGuardFromSchema(paginationSchema)
 
 const assertOriginsMatch = (context: Context) => {
   if (context.browserOrigin !== context.trustedOrigin) {
-    throw new Error(`Origins do not match: ${context.browserOrigin} !== ${context.trustedOrigin}`)
+    throw new Error(
+      `Origins do not match: ${context.browserOrigin} !== ${context.trustedOrigin}`,
+    )
   }
 }
 
 const assertWalletAcceptedConnection = async (context: Context) => {
   if (!(await hasWalletAcceptedConnection(context))) {
-    throw new Error(`Wallet ${context.wallet.id} has not accepted the connection to ${context.trustedOrigin}`)
+    throw new Error(
+      `Wallet ${context.wallet.id} has not accepted the connection to ${context.trustedOrigin}`,
+    )
   }
 }
 
 const supportsCIP95 = (
   context: Context,
-): context is Context & {wallet: ResolverWallet & {cip95: CIP95ResolverWallet}} => {
+): context is Context & {
+  wallet: ResolverWallet & {cip95: CIP95ResolverWallet}
+} => {
   return context.wallet.cip95 !== undefined
 }
 
 const hasWalletAcceptedConnection = async (context: Context) => {
   const connections = await context.storage.read()
-  const requestedConnection = {walletId: context.wallet.id, dappOrigin: context.trustedOrigin}
+  const requestedConnection = {
+    walletId: context.wallet.id,
+    dappOrigin: context.trustedOrigin,
+  }
   return connections.some(
     (c) =>
       c.walletId === requestedConnection.walletId &&
@@ -274,7 +321,12 @@ const hasWalletAcceptedConnection = async (context: Context) => {
 const handleMethod = async (
   method: string,
   params: {browserContext?: {origin?: unknown}},
-  trustedContext: {wallet: ResolverWallet; origin: string; storage: Storage; supportedExtensions: Array<{cip: number}>},
+  trustedContext: {
+    wallet: ResolverWallet
+    origin: string
+    storage: Storage
+    supportedExtensions: ReadonlyArray<{cip: number}>
+  },
 ) => {
   const browserOrigin = String(params?.browserContext?.origin || '')
 
@@ -310,8 +362,10 @@ const methods = {
   'api.signData': resolver.api.signData,
   'api.cip95.signData': resolver.api.cip95.signData,
   'api.cip95.getPubDRepKey': resolver.api.cip95.getPubDRepKey,
-  'api.cip95.getRegisteredPubStakeKeys': resolver.api.cip95.getRegisteredPubStakeKeys,
-  'api.cip95.getUnregisteredPubStakeKeys': resolver.api.cip95.getUnregisteredPubStakeKeys,
+  'api.cip95.getRegisteredPubStakeKeys':
+    resolver.api.cip95.getRegisteredPubStakeKeys,
+  'api.cip95.getUnregisteredPubStakeKeys':
+    resolver.api.cip95.getUnregisteredPubStakeKeys,
 }
 
 export const resolverHandleEvent = async (
@@ -320,7 +374,7 @@ export const resolverHandleEvent = async (
   wallet: ResolverWallet,
   sendMessage: (id: string, result: unknown, error?: Error) => void,
   storage: Storage,
-  supportedExtensions: Array<{cip: number}>,
+  supportedExtensions: ReadonlyArray<{cip: number}>,
 ) => {
   const trustedOrigin = new URL(trustedUrl).origin
   if (typeof eventData !== 'string') return
@@ -339,7 +393,12 @@ export const resolverHandleEvent = async (
   if (!isRecord(params)) return
 
   try {
-    const result = await handleMethod(method, params, {origin: trustedOrigin, wallet, storage, supportedExtensions})
+    const result = await handleMethod(method, params, {
+      origin: trustedOrigin,
+      wallet,
+      storage,
+      supportedExtensions,
+    })
     if (method !== LOG_MESSAGE_EVENT) sendMessage(id, result)
   } catch (error) {
     sendMessage(id, null, error as Error)
@@ -356,11 +415,20 @@ export type ResolverWallet = {
   getUsedAddresses: (pagination?: Pagination) => Promise<Address[]>
   getChangeAddress: () => Promise<Address>
   getRewardAddresses: () => Promise<Address[]>
-  getUtxos: (value?: string, pagination?: Pagination) => Promise<TransactionUnspentOutput[] | null>
+  getUtxos: (
+    value?: string,
+    pagination?: Pagination,
+  ) => Promise<TransactionUnspentOutput[] | null>
   getCollateral: (value?: string) => Promise<TransactionUnspentOutput[] | null>
   submitTx: (cbor: string) => Promise<string>
-  signTx: (txHex: string, partialSign?: boolean) => Promise<TransactionWitnessSet>
-  signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
+  signTx: (
+    txHex: string,
+    partialSign?: boolean,
+  ) => Promise<TransactionWitnessSet>
+  signData: (
+    address: string,
+    payload: string,
+  ) => Promise<{signature: string; key: string}>
   sendReorganisationTx: (value?: string) => Promise<void>
   cip95?: CIP95ResolverWallet
 }
@@ -369,7 +437,10 @@ type CIP95ResolverWallet = {
   getPubDRepKey: () => Promise<string>
   getRegisteredPubStakeKeys: () => Promise<string[]>
   getUnregisteredPubStakeKeys: () => Promise<string[]>
-  signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
+  signData: (
+    address: string,
+    payload: string,
+  ) => Promise<{signature: string; key: string}>
 }
 
 type Pagination = {

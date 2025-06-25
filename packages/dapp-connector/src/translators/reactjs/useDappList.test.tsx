@@ -1,8 +1,9 @@
-import {useDappList} from './useDappList'
-import {renderHook, waitFor} from '@testing-library/react-native'
-import * as React from 'react'
-import {QueryClientProvider} from 'react-query'
 import {queryClientFixture} from '@yoroi/common'
+import {renderHook, waitFor} from '@testing-library/react-native'
+import {QueryClientProvider} from '@tanstack/react-query'
+
+import {useDappList} from './useDappList'
+import * as React from 'react'
 import {DappConnectorProvider} from './DappConnectorProvider'
 import {managerMock} from '../../manager.mocks'
 
@@ -12,7 +13,9 @@ describe('useDappList', () => {
 
     const wrapper = ({children}: React.PropsWithChildren) => (
       <QueryClientProvider client={client}>
-        <DappConnectorProvider manager={managerMock}>{children}</DappConnectorProvider>
+        <DappConnectorProvider manager={managerMock}>
+          {children}
+        </DappConnectorProvider>
       </QueryClientProvider>
     )
 

@@ -23,7 +23,31 @@ yarn add @yoroi/common
 ## 🚀 Usage
 
 ```typescript
-import { /* your imports */ } from '@yoroi/common';
+import { truncateString, atomicFormatter } from '@yoroi/common';
+
+// Example 1: Truncate a long string
+const longText = 'This is a very long string that needs to be truncated.';
+const shortText = truncateString({ value: longText, maxLength: 20 });
+console.log(shortText); // Output: 'This is a ...truncated.'
+
+// Example 2: Format a bigint with decimals
+const formatted = atomicFormatter({ value: 1234567890000000000n, decimalPlaces: 18 });
+console.log(formatted); // Output: '1.234567890000000000'
+
+// Example 3: Use a React hook to subscribe to an observable
+import * as React from 'react';
+import { BehaviorSubject } from 'rxjs';
+import { useObservableValue } from '@yoroi/common';
+
+const count$ = new BehaviorSubject(0);
+
+function Counter() {
+  const count = useObservableValue({
+    observable$: count$,
+    getter: () => count$.getValue(),
+  });
+  return <div>Count: {count}</div>;
+}
 ```
 
 ## 📚 Documentation

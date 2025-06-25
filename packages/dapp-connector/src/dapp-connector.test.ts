@@ -1,3 +1,7 @@
+import {Chain} from '@yoroi/types'
+
+import {init} from '@emurgo/cross-csl-nodejs'
+
 import {storageMock} from './storage.mocks'
 import {mockedData} from './mocks'
 import {connectionStorageMaker} from './adapters/async-storage'
@@ -5,8 +9,6 @@ import {dappConnectorMaker} from './dapp-connector'
 import {Api, dappConnectorApiMaker} from './adapters/api'
 import {mockedDAppList} from './manager.mocks'
 import {ResolverWallet} from './resolver'
-import {init} from '@emurgo/cross-csl-nodejs'
-import {Chain} from '@yoroi/types'
 
 const getDappConnector = (wallet = mockWallet) => {
   const storage = connectionStorageMaker({storage: storageMock})
@@ -70,12 +72,19 @@ describe('DappConnector', () => {
       const dappConnector = getDappConnector()
       await dappConnector.addConnection({dappOrigin: 'fake-url-1'})
       await dappConnector.addConnection({dappOrigin: 'fake-url-2'})
-      await dappConnector.addConnection({walletId: 'new-wallet-id', dappOrigin: 'fake-url-1'})
+      await dappConnector.addConnection({
+        walletId: 'new-wallet-id',
+        dappOrigin: 'fake-url-1',
+      })
 
       await dappConnector.removeConnection({dappOrigin: 'fake-url-1'})
       expect(await dappConnector.listAllConnections()).toEqual([
         {walletId, dappOrigin: 'fake-url-2', network: Chain.Network.Mainnet},
-        {walletId: 'new-wallet-id', dappOrigin: 'fake-url-1', network: Chain.Network.Mainnet},
+        {
+          walletId: 'new-wallet-id',
+          dappOrigin: 'fake-url-1',
+          network: Chain.Network.Mainnet,
+        },
       ])
     })
 
@@ -85,7 +94,10 @@ describe('DappConnector', () => {
       await dappConnector.addConnection({dappOrigin: 'fake-url-2'})
       await dappConnector.addConnection({dappOrigin: 'fake-url-3'})
 
-      await dappConnector.removeConnections([{dappOrigin: 'fake-url-1'}, {dappOrigin: 'fake-url-3'}])
+      await dappConnector.removeConnections([
+        {dappOrigin: 'fake-url-1'},
+        {dappOrigin: 'fake-url-3'},
+      ])
       expect(await dappConnector.listAllConnections()).toEqual([
         {walletId, dappOrigin: 'fake-url-2', network: Chain.Network.Mainnet},
       ])
@@ -94,18 +106,25 @@ describe('DappConnector', () => {
     it('should throw an error if connection already exists', async () => {
       const dappConnector = getDappConnector()
       await dappConnector.addConnection({dappOrigin: 'fake-url'})
-      await expect(dappConnector.addConnection({walletId, dappOrigin: 'fake-url'})).rejects.toThrow(
+      await expect(
+        dappConnector.addConnection({walletId, dappOrigin: 'fake-url'}),
+      ).rejects.toThrow(
         `Connection already exists: {"walletId":"${walletId}","dappOrigin":"fake-url","network":"mainnet"}`,
       )
     })
 
     it('should throw an error if connection does not have wallet id', async () => {
       const dappConnector = getDappConnector()
-      await dappConnector.addConnection({walletId: false, dappOrigin: 'fake-url'} as any)
+      await dappConnector.addConnection({
+        walletId: false,
+        dappOrigin: 'fake-url',
+      } as any)
 
       await expect(async () => {
         await dappConnector.listAllConnections()
-      }).rejects.toThrow(`connectionStorageMaker.normaliseDappConnection: walletId is required`)
+      }).rejects.toThrow(
+        `connectionStorageMaker.normaliseDappConnection: walletId is required`,
+      )
     })
 
     it('should throw an error if connection does not have dapp origin', async () => {
@@ -114,12 +133,18 @@ describe('DappConnector', () => {
 
       await expect(async () => {
         await dappConnector.listAllConnections()
-      }).rejects.toThrow(`connectionStorageMaker.normaliseDappConnection: dappOrigin is required`)
+      }).rejects.toThrow(
+        `connectionStorageMaker.normaliseDappConnection: dappOrigin is required`,
+      )
     })
 
     it('should assign network mainnet if was missing', async () => {
       const dappConnector = getDappConnector()
-      await dappConnector.addConnection({walletId, dappOrigin: 'fake-url', network: false} as any)
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'fake-url',
+        network: false,
+      } as any)
       expect(await dappConnector.listAllConnections()).toEqual([
         {walletId, dappOrigin: 'fake-url', network: Chain.Network.Mainnet},
       ])
@@ -147,7 +172,11 @@ describe('DappConnector', () => {
       const event = createEvent('unknown')
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(event, trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Unknown method 'unknown'`))
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(`Unknown method 'unknown'`),
+      )
     })
 
     it('should ignore if the event malformed', async () => {
@@ -163,7 +192,11 @@ describe('DappConnector', () => {
       await dappConnector.handleEvent(event2, trustedUrl, sendMessage2)
       expect(sendMessage2).not.toHaveBeenCalled()
 
-      const event3 = JSON.stringify({method: 'test', id: '1', source: 'dapp-connector'})
+      const event3 = JSON.stringify({
+        method: 'test',
+        id: '1',
+        source: 'dapp-connector',
+      })
       const sendMessage3 = jest.fn()
       await dappConnector.handleEvent(event3, trustedUrl, sendMessage3)
       expect(sendMessage3).not.toHaveBeenCalled()
@@ -176,40 +209,77 @@ describe('DappConnector', () => {
 
     it('should throw an error if the event is not from a trusted origin', async () => {
       const dappConnector = getDappConnector()
-      const event = JSON.stringify({method: 'cardano_enable', id: '1', source: 'dapp-connector', params: {}})
+      const event = JSON.stringify({
+        method: 'cardano_enable',
+        id: '1',
+        source: 'dapp-connector',
+        params: {},
+      })
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(event, 'https://another-url.com', sendMessage)
+      await dappConnector.handleEvent(
+        event,
+        'https://another-url.com',
+        sendMessage,
+      )
       const errorMessage = 'Origins do not match:  !== https://another-url.com'
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(errorMessage))
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(errorMessage),
+      )
     })
 
     it('should throw an error if the origins do not match', async () => {
       const dappConnector = getDappConnector()
       const event = createEvent('cardano_enable')
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(event, 'https://another-url.com', sendMessage)
-      const errorMessage = 'Origins do not match: https://yoroi-wallet.com !== https://another-url.com'
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(errorMessage))
+      await dappConnector.handleEvent(
+        event,
+        'https://another-url.com',
+        sendMessage,
+      )
+      const errorMessage =
+        'Origins do not match: https://yoroi-wallet.com !== https://another-url.com'
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(errorMessage),
+      )
     })
 
     it('should handle log_message event without responding to client', async () => {
       const dappConnector = getDappConnector()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('log_message', {args: [1, 2]}), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('log_message', {args: [1, 2]}),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).not.toHaveBeenCalledWith(sendMessage)
 
-      await dappConnector.handleEvent(createEvent('log_message'), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('log_message'),
+        trustedUrl,
+        sendMessage,
+      )
     })
 
     it('should ignore log_message event if it has no arguments', async () => {
       const dappConnector = getDappConnector()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('log_message', {args: undefined}), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('log_message', {args: undefined}),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).not.toHaveBeenCalledWith(sendMessage)
     })
 
     it('should handle cardano_enable event with true if the user confirms connection', async () => {
-      const dappConnector = getDappConnector({...mockWallet, confirmConnection: () => Promise.resolve(true)})
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        confirmConnection: () => Promise.resolve(true),
+      })
       const event = createEvent('cardano_enable')
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(event, trustedUrl, sendMessage)
@@ -217,7 +287,10 @@ describe('DappConnector', () => {
     })
 
     it('should handle cardano_enable event with false if the user does not confirm connection', async () => {
-      const dappConnector = getDappConnector({...mockWallet, confirmConnection: () => Promise.resolve(false)})
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        confirmConnection: () => Promise.resolve(false),
+      })
       const event = createEvent('cardano_enable')
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(event, trustedUrl, sendMessage)
@@ -225,7 +298,10 @@ describe('DappConnector', () => {
     })
 
     it('should not rely on user confirmation if the dapp is enabled', async () => {
-      const wallet = {...mockWallet, confirmConnection: () => Promise.resolve(true)}
+      const wallet = {
+        ...mockWallet,
+        confirmConnection: () => Promise.resolve(true),
+      }
       const dappConnector = getDappConnector(wallet)
       const event = createEvent('cardano_enable')
       const sendMessage1 = jest.fn()
@@ -238,17 +314,27 @@ describe('DappConnector', () => {
     })
 
     it('should save dapp connection if cardano_enable is resolved', async () => {
-      const dappConnector = getDappConnector({...mockWallet, confirmConnection: () => Promise.resolve(true)})
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        confirmConnection: () => Promise.resolve(true),
+      })
       const event = createEvent('cardano_enable')
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(event, trustedUrl, sendMessage)
       expect(await dappConnector.listAllConnections()).toEqual([
-        {walletId: walletId, dappOrigin: 'https://yoroi-wallet.com', network: Chain.Network.Mainnet},
+        {
+          walletId: walletId,
+          dappOrigin: 'https://yoroi-wallet.com',
+          network: Chain.Network.Mainnet,
+        },
       ])
     })
 
     it('should not save dapp connection if cardano_enable is rejected', async () => {
-      const dappConnector = getDappConnector({...mockWallet, confirmConnection: () => Promise.resolve(false)})
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        confirmConnection: () => Promise.resolve(false),
+      })
       const event = createEvent('cardano_enable')
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(event, trustedUrl, sendMessage)
@@ -264,10 +350,16 @@ describe('DappConnector', () => {
     })
 
     it('should handle cardano_is_enabled event with true for connected wallets', async () => {
-      const dappConnector = getDappConnector({...mockWallet, confirmConnection: () => Promise.resolve(true)})
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        confirmConnection: () => Promise.resolve(true),
+      })
       const event = createEvent('cardano_is_enabled')
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId: walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.addConnection({
+        walletId: walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
       await dappConnector.handleEvent(event, trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', true)
     })
@@ -278,28 +370,56 @@ describe('DappConnector', () => {
       const dappConnector = getDappConnector()
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(createEvent(''), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Method is required`))
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(`Method is required`),
+      )
     })
 
     it('should throw an error if api method is not known', async () => {
       const dappConnector = getDappConnector()
       const sendMessage1 = jest.fn()
 
-      await dappConnector.handleEvent(createEvent('api.unknown'), trustedUrl, sendMessage1)
-      expect(sendMessage1).toHaveBeenCalledWith('1', null, new Error(`Unknown method 'api.unknown'`))
+      await dappConnector.handleEvent(
+        createEvent('api.unknown'),
+        trustedUrl,
+        sendMessage1,
+      )
+      expect(sendMessage1).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(`Unknown method 'api.unknown'`),
+      )
 
       const sendMessage2 = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.unknown.something'), trustedUrl, sendMessage2)
-      expect(sendMessage2).toHaveBeenCalledWith('1', null, new Error(`Unknown method 'api.unknown.something'`))
+      await dappConnector.handleEvent(
+        createEvent('api.unknown.something'),
+        trustedUrl,
+        sendMessage2,
+      )
+      expect(sendMessage2).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(`Unknown method 'api.unknown.something'`),
+      )
     })
 
     it('should throw an error if user has not approved connection', async () => {
       const dappConnector = getDappConnector()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.getBalance'), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('api.getBalance'),
+        trustedUrl,
+        sendMessage,
+      )
       const errorMessage =
         'Wallet b5d94758-26c5-48b0-af2b-6e68c3ef2dbf has not accepted the connection to https://yoroi-wallet.com'
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(errorMessage))
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(errorMessage),
+      )
     })
   })
 
@@ -307,37 +427,73 @@ describe('DappConnector', () => {
     it('should resolve getNetworkId with given networkId', async () => {
       const dappConnector = getDappConnector()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId: walletId, dappOrigin: 'https://yoroi-wallet.com'})
-      await dappConnector.handleEvent(createEvent('api.getNetworkId'), trustedUrl, sendMessage)
+      await dappConnector.addConnection({
+        walletId: walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getNetworkId'),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', mockWallet.networkId)
     })
 
     it('should resolve getBalance with mocked data', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.getBalance'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].balance)
+      await dappConnector.handleEvent(
+        createEvent('api.getBalance'),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        mockedData[walletId].balance,
+      )
     })
 
     it('should throw in getBalance with when incorrect arguments are presented', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.getBalance', {args: [1]}), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
+      await dappConnector.handleEvent(
+        createEvent('api.getBalance', {args: [1]}),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(`Invalid params`),
+      )
     })
 
     it('should resolve getChangeAddress with mocked data', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.getChangeAddress'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].changeAddresses[0])
+      await dappConnector.handleEvent(
+        createEvent('api.getChangeAddress'),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        mockedData[walletId].changeAddresses[0],
+      )
     })
 
     it('should resolve getRewardAddresses with mocked data', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.getRewardAddresses'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].rewardAddresses)
+      await dappConnector.handleEvent(
+        createEvent('api.getRewardAddresses'),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        mockedData[walletId].rewardAddresses,
+      )
     })
 
     it('should resolve getUsedAddresses with mocked data', async () => {
@@ -346,8 +502,15 @@ describe('DappConnector', () => {
         getUsedAddresses: () => Promise.resolve([{toHex: () => '00'}] as any),
       })
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
-      await dappConnector.handleEvent(createEvent('api.getUsedAddresses'), trustedUrl, sendMessage)
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getUsedAddresses'),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
     })
 
@@ -357,7 +520,10 @@ describe('DappConnector', () => {
         getUsedAddresses: () => Promise.resolve([{toHex: () => '00'}] as any),
       })
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
       await dappConnector.handleEvent(
         createEvent('api.getUsedAddresses', {
           args: [{page: 1, limit: 1}],
@@ -371,22 +537,38 @@ describe('DappConnector', () => {
     it('should resolve signTx with mocked data if partial sign is unknown', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.signTx', {args: ['CBOR']}), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('api.signTx', {args: ['CBOR']}),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', 'a0')
     })
 
     it('should resolve signTx with mocked data if partial sign is known', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.signTx', {args: ['CBOR', true]}), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('api.signTx', {args: ['CBOR', true]}),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', 'a0')
     })
 
     it('should throw in signTx with when incorrect arguments are presented', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.signTx', {args: []}), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
+      await dappConnector.handleEvent(
+        createEvent('api.signTx', {args: []}),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(`Invalid params`),
+      )
     })
 
     it('should resolve signData with mocked data', async () => {
@@ -408,22 +590,42 @@ describe('DappConnector', () => {
     it('should throw in signData with when incorrect arguments are presented', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.signData', {args: []}), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
+      await dappConnector.handleEvent(
+        createEvent('api.signData', {args: []}),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(`Invalid params`),
+      )
     })
 
     it('should resolve submitTx with mocked data', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.submitTx', {args: ['CBOR']}), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('api.submitTx', {args: ['CBOR']}),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', 'tx-id')
     })
 
     it('should throw in submitTx with when incorrect arguments are presented', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.submitTx', {args: []}), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
+      await dappConnector.handleEvent(
+        createEvent('api.submitTx', {args: []}),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error(`Invalid params`),
+      )
     })
 
     it('should resolve getCollateral with mocked data', async () => {
@@ -432,8 +634,15 @@ describe('DappConnector', () => {
         getCollateral: () => Promise.resolve([{toHex: () => '00'}] as any),
       })
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
-      await dappConnector.handleEvent(createEvent('api.getCollateral'), trustedUrl, sendMessage)
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getCollateral'),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
     })
 
@@ -444,8 +653,15 @@ describe('DappConnector', () => {
         getBalance: () => CSL.Value.fromHex('00'),
       })
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
-      await dappConnector.handleEvent(createEvent('api.getCollateral', {args: ['100000000']}), trustedUrl, sendMessage)
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getCollateral', {args: ['100000000']}),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', null)
     })
 
@@ -453,15 +669,27 @@ describe('DappConnector', () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
         getCollateral: () => Promise.resolve([]),
-        getBalance: async () => CSL.Value.new(await CSL.BigNum.fromStr('20000000')),
-        sendReorganisationTx: async () => ({toHex: () => '00'} as any),
+        getBalance: async () =>
+          CSL.Value.new(await CSL.BigNum.fromStr('20000000')),
+        sendReorganisationTx: async () => ({toHex: () => '00'}) as any,
       })
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
-      await dappConnector.handleEvent(createEvent('api.getCollateral', {args: ['10000000']}), trustedUrl, sendMessage)
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getCollateral', {args: ['10000000']}),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', null)
 
-      await dappConnector.handleEvent(createEvent('api.getCollateral', {args: []}), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('api.getCollateral', {args: []}),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', null)
     })
 
@@ -469,13 +697,26 @@ describe('DappConnector', () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
         getCollateral: () => Promise.resolve([]),
-        getBalance: async () => CSL.Value.new(await CSL.BigNum.fromStr('20000000')),
-        sendReorganisationTx: async () => Promise.reject(new Error('Reorganisation failed')),
+        getBalance: async () =>
+          CSL.Value.new(await CSL.BigNum.fromStr('20000000')),
+        sendReorganisationTx: async () =>
+          Promise.reject(new Error('Reorganisation failed')),
       })
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
-      await dappConnector.handleEvent(createEvent('api.getCollateral', {args: ['10000000']}), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Reorganisation failed'))
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getCollateral', {args: ['10000000']}),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error('Reorganisation failed'),
+      )
     })
 
     it('should resolve getUnusedAddresses with mocked data', async () => {
@@ -484,16 +725,30 @@ describe('DappConnector', () => {
         getUnusedAddresses: () => Promise.resolve([{toHex: () => '00'}] as any),
       })
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
-      await dappConnector.handleEvent(createEvent('api.getUnusedAddresses'), trustedUrl, sendMessage)
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getUnusedAddresses'),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
     })
 
     it('should resolve getExtensions with CIP30', async () => {
       const dappConnector = getDappConnector()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
-      await dappConnector.handleEvent(createEvent('api.getExtensions'), trustedUrl, sendMessage)
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getExtensions'),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', [{cip: 30}, {cip: 95}])
     })
 
@@ -503,8 +758,15 @@ describe('DappConnector', () => {
         getUtxos: () => Promise.resolve([{toHex: () => '00'}] as any),
       })
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
-      await dappConnector.handleEvent(createEvent('api.getUtxos'), trustedUrl, sendMessage)
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getUtxos'),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
     })
 
@@ -514,7 +776,10 @@ describe('DappConnector', () => {
         getUtxos: () => Promise.resolve([{toHex: () => '00'}] as any),
       })
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
       await dappConnector.handleEvent(
         createEvent('api.getUtxos', {
           args: ['100000000', {page: 1, limit: 1}],
@@ -528,7 +793,11 @@ describe('DappConnector', () => {
     it('should resolve getUtxos with null if not enough funds', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.getUtxos', {args: ['100000000']}), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('api.getUtxos', {args: ['100000000']}),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', null)
     })
   })
@@ -543,15 +812,30 @@ describe('DappConnector', () => {
         },
       })
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.cip95.getPubDRepKey'), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('api.cip95.getPubDRepKey'),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', '00')
     })
 
     it('should throw an error on getPubDRepKey if CIP95 is not supported', async () => {
-      const dappConnector = await initDappConnectorWithConnection({...mockWallet, cip95: undefined})
+      const dappConnector = await initDappConnectorWithConnection({
+        ...mockWallet,
+        cip95: undefined,
+      })
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.cip95.getPubDRepKey'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('CIP95 is not supported'))
+      await dappConnector.handleEvent(
+        createEvent('api.cip95.getPubDRepKey'),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error('CIP95 is not supported'),
+      )
     })
 
     it('should respond with unregistered pub stake keys', async () => {
@@ -563,15 +847,30 @@ describe('DappConnector', () => {
         },
       })
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.cip95.getUnregisteredPubStakeKeys'), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('api.cip95.getUnregisteredPubStakeKeys'),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
     })
 
     it('should throw an error on getUnregisteredPubStakeKeys if CIP95 is not supported', async () => {
-      const dappConnector = await initDappConnectorWithConnection({...mockWallet, cip95: undefined})
+      const dappConnector = await initDappConnectorWithConnection({
+        ...mockWallet,
+        cip95: undefined,
+      })
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.cip95.getUnregisteredPubStakeKeys'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('CIP95 is not supported'))
+      await dappConnector.handleEvent(
+        createEvent('api.cip95.getUnregisteredPubStakeKeys'),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error('CIP95 is not supported'),
+      )
     })
 
     it('should respond with registered pub stake keys', async () => {
@@ -583,15 +882,30 @@ describe('DappConnector', () => {
         },
       })
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.cip95.getRegisteredPubStakeKeys'), trustedUrl, sendMessage)
+      await dappConnector.handleEvent(
+        createEvent('api.cip95.getRegisteredPubStakeKeys'),
+        trustedUrl,
+        sendMessage,
+      )
       expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
     })
 
     it('should throw an error on getRegisteredPubStakeKeys if CIP95 is not supported', async () => {
-      const dappConnector = await initDappConnectorWithConnection({...mockWallet, cip95: undefined})
+      const dappConnector = await initDappConnectorWithConnection({
+        ...mockWallet,
+        cip95: undefined,
+      })
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.cip95.getRegisteredPubStakeKeys'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('CIP95 is not supported'))
+      await dappConnector.handleEvent(
+        createEvent('api.cip95.getRegisteredPubStakeKeys'),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error('CIP95 is not supported'),
+      )
     })
 
     it('should respond with signed data', async () => {
@@ -620,12 +934,23 @@ describe('DappConnector', () => {
     it('should throw an error on signData if params are invalid', async () => {
       const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.cip95.signData'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Invalid params'))
+      await dappConnector.handleEvent(
+        createEvent('api.cip95.signData'),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error('Invalid params'),
+      )
     })
 
     it('should throw an error on signData if CIP95 is not supported', async () => {
-      const dappConnector = await initDappConnectorWithConnection({...mockWallet, cip95: undefined})
+      const dappConnector = await initDappConnectorWithConnection({
+        ...mockWallet,
+        cip95: undefined,
+      })
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(
         createEvent('api.cip95.signData', {
@@ -637,7 +962,11 @@ describe('DappConnector', () => {
         trustedUrl,
         sendMessage,
       )
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('CIP95 is not supported'))
+      expect(sendMessage).toHaveBeenCalledWith(
+        '1',
+        null,
+        new Error('CIP95 is not supported'),
+      )
     })
   })
 
@@ -651,16 +980,27 @@ describe('DappConnector', () => {
 
 const initDappConnectorWithConnection = async (wallet?: ResolverWallet) => {
   const dappConnector = getDappConnector(wallet)
-  await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+  await dappConnector.addConnection({
+    walletId,
+    dappOrigin: 'https://yoroi-wallet.com',
+  })
   return dappConnector
 }
 
-const createEvent = (method: string, params?: object, source = 'dapp-connector') => {
+const createEvent = (
+  method: string,
+  params?: object,
+  source = 'dapp-connector',
+) => {
   return JSON.stringify({
     id: '1',
     method,
     source,
-    params: {args: [], ...params, browserContext: {origin: 'https://yoroi-wallet.com'}},
+    params: {
+      args: [],
+      ...params,
+      browserContext: {origin: 'https://yoroi-wallet.com'},
+    },
   })
 }
 
@@ -682,7 +1022,11 @@ const mockWallet: ResolverWallet = {
       '017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
     ),
   getRewardAddresses: () =>
-    Promise.all([CSL.Address.fromHex('e184d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693')]),
+    Promise.all([
+      CSL.Address.fromHex(
+        'e184d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
+      ),
+    ]),
   getUtxos: () => Promise.resolve([]),
   getCollateral: () => Promise.resolve([]),
   submitTx: () => Promise.resolve('tx-id'),
@@ -691,8 +1035,10 @@ const mockWallet: ResolverWallet = {
   },
   cip95: {
     getPubDRepKey: () => Promise.reject(new Error('Not implemented')),
-    getUnregisteredPubStakeKeys: () => Promise.reject(new Error('Not implemented')),
-    getRegisteredPubStakeKeys: () => Promise.reject(new Error('Not implemented')),
+    getUnregisteredPubStakeKeys: () =>
+      Promise.reject(new Error('Not implemented')),
+    getRegisteredPubStakeKeys: () =>
+      Promise.reject(new Error('Not implemented')),
     signData: () => Promise.reject(new Error('Not implemented')),
   },
 }

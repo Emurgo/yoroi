@@ -1,8 +1,13 @@
-# Yoroi Dapp Connector Module
+# @yoroi/dapp-connector
+
+[![npm version](https://img.shields.io/npm/v/@yoroi/dapp-connector.svg)](https://www.npmjs.com/package/@yoroi/dapp-connector)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![codecov](https://codecov.io/gh/Emurgo/yoroi/branch/develop/graph/badge.svg?component=dapp-connector)](https://codecov.io/gh/Emurgo/yoroi)
 
 The Yoroi Dapp Connector package is a utility for interacting with dApps on the Cardano Blockchain.
 
 ## Development
+
 The package is 100% covered by unit tests which need to pass before merging any changes. To run the tests, use the following command:
 
 ```bash
@@ -13,6 +18,7 @@ In the same file you can already find implemented methods such as `getExtensions
 The same methods will later need to be implemented in the `resolver.ts` file as well and a mapping needs to be added to the `methods` variable.
 
 ## DApp List
+
 DApps in the Yoroi application are fetched from the endpoints defined in the `src/adapters/api.ts` file. Adding, changing, or removing a dApp from the list needs to be done on the server side. No new app nor package release is needed to update the list of dApps.
 
 ## Installation
@@ -23,6 +29,7 @@ Install the package using npm or yarn :
 npm install @yoroi/dapp-connector --save
 npm install @yoroi/types --save-dev
 ```
+
 ```bash
 yarn add @yoroi/dapp-connector --save
 yarn add @yoroi/types --save-dev
@@ -116,3 +123,58 @@ const getInitScript = (sessionId: string, dappConnector: DappConnector) => {
   })
 }
 ```
+
+## 📚 Documentation
+
+For detailed documentation, please visit our [documentation site](https://github.com/Emurgo/yoroi/wiki).
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+## 🏗️ Development
+
+```bash
+# Install dependencies
+npm install
+
+# Build the package
+npm run build
+
+# Build for development
+npm run build:dev
+
+# Build for release
+npm run build:release
+```
+
+## 📊 Code Coverage
+
+The package maintains a minimum code coverage threshold of 20% with a 1% threshold for status checks.
+
+[![Code Coverage](https://codecov.io/gh/Emurgo/yoroi/branch/develop/graphs/sunburst.svg?component=dapp-connector)](https://codecov.io/gh/Emurgo/yoroi)
+
+## 📈 Dependency Graph
+
+Below is a visualization of the package's internal dependencies:
+
+![Dependency Graph](./dependency-graph.svg)
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](https://github.com/Emurgo/yoroi/blob/develop/CONTRIBUTING.md) for more details.
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](https://github.com/Emurgo/yoroi/blob/develop/LICENSE) file for details.
+
+## 🔗 Links
+
+- [GitHub Repository](https://github.com/Emurgo/yoroi/tree/develop/packages/dapp-connector)
+- [Issue Tracker](https://github.com/Emurgo/yoroi/issues)
