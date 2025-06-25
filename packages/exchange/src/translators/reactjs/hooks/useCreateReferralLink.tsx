@@ -1,6 +1,7 @@
 import {Exchange} from '@yoroi/types'
+
+import {UseSuspenseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
 import {AxiosRequestConfig} from 'axios'
-import {UseQueryOptions, useQuery} from 'react-query'
 
 export const useCreateReferralLink = (
   {
@@ -14,7 +15,7 @@ export const useCreateReferralLink = (
     referralLinkCreate: Exchange.Manager['referralLink']['create']
     fetcherConfig?: AxiosRequestConfig
   },
-  options?: UseQueryOptions<
+  options?: UseSuspenseQueryOptions<
     URL,
     Error,
     URL,
@@ -25,9 +26,7 @@ export const useCreateReferralLink = (
     ]
   >,
 ) => {
-  const query = useQuery({
-    suspense: true,
-    useErrorBoundary: true,
+  const query = useSuspenseQuery({
     ...options,
     queryKey: ['useCreateReferralLink', queries, providerId],
     queryFn: async ({signal}) =>

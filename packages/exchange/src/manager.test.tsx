@@ -1,5 +1,7 @@
 import {Exchange} from '@yoroi/types'
+
 import {freeze} from 'immer'
+
 import {exchangeManagerMaker} from './manager'
 
 describe('referralLink', () => {

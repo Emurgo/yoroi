@@ -1,4 +1,5 @@
 import {Exchange} from '@yoroi/types'
+
 import {isOrderType} from './order-types'
 
 describe('isOrderType', () => {

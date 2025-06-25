@@ -1,14 +1,15 @@
+import {Exchange} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
-import {Exchange} from '@yoroi/types'
-import {QueryClient} from 'react-query'
-import {queryClientFixture} from '@yoroi/common'
+import {QueryClient} from '@tanstack/react-query'
 
 import {useExchangeProvidersByOrderType} from './useExchangeProvidersByOrderType'
 import {exchangeManagerMaker} from '../../../manager'
 import {providers} from '../../../adapters/api'
 import {wrapper as wrapperFixture} from '../../../fixtures/wrapper'
+import {queryClientFixture} from '../../../fixtures/query-client'
 
 describe('useExchangeProvidersByOrderType', () => {
   let queryClient: QueryClient

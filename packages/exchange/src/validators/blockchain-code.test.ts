@@ -1,4 +1,5 @@
 import {Exchange} from '@yoroi/types'
+
 import {isBlockchainCode} from './blockchain-code'
 
 describe('isBlockchainCode', () => {

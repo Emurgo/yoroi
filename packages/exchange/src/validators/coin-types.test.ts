@@ -1,4 +1,5 @@
 import {Exchange} from '@yoroi/types'
+
 import {isCoinType} from './coin-types'
 
 describe('isCoinType', () => {

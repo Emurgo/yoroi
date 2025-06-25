@@ -1,4 +1,5 @@
 import {Exchange} from '@yoroi/types'
+
 import {ZodError} from 'zod'
 
 export function getValidationError(error: unknown) {
