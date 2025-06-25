@@ -505,6 +505,7 @@ export const transformersMaker = ({
 
 export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
   ({
+    [Dex.Cswap]: Swap.Protocol.Cswap,
     [Dex.Minswap_v1]: Swap.Protocol.Minswap_v1,
     [Dex.Minswap_v2]: Swap.Protocol.Minswap_v2,
     [Dex.Wingriders_v1]: Swap.Protocol.Wingriders_v1,
@@ -520,6 +521,7 @@ export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
+    [Swap.Protocol.Cswap]: Dex.Cswap,
     [Swap.Protocol.Minswap_v1]: Dex.Minswap_v1,
     [Swap.Protocol.Minswap_v2]: Dex.Minswap_v2,
     [Swap.Protocol.Minswap_stable]: Dex.Unsupported,

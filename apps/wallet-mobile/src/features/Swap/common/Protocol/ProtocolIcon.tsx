@@ -23,5 +23,6 @@ const icons: Record<Swap.Dex, React.FunctionComponent<{size?: number}>> = {
   [Swap.Dex.Vyfi]: Icon.VyfiSwap,
   [Swap.Dex.Sundaeswap]: Icon.SundaeSwap,
   [Swap.Dex.Splash]: Icon.Swap,
+  [Swap.Dex.Cswap]: Icon.Cswap,
   [Swap.Dex.Unsupported]: Icon.Swap,
 } as const

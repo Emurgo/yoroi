@@ -10,5 +10,6 @@ export const dexUrls: Readonly<Record<Swap.Dex, string>> = freeze({
   [Swap.Dex.Vyfi]: 'https://app.vyfi.io',
   [Swap.Dex.Wingriders]: 'https://www.wingriders.com',
   [Swap.Dex.Splash]: 'https://www.splash.trade',
+  [Swap.Dex.Cswap]: 'https://www.cswap.info',
   [Swap.Dex.Unsupported]: '',
 } as const)

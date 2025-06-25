@@ -7,5 +7,6 @@ export enum SwapDex {
   Vyfi = 'vyfi',
   Wingriders = 'wingriders',
   Splash = 'splash',
+  Cswap = 'cswap',
   Unsupported = 'unsupported',
 }
