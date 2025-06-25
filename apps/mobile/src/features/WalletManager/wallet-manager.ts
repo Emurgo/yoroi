@@ -1,6 +1,6 @@
 import {difference, parseSafe, time} from '@yoroi/common'
-import {App, Chain, HW, Network, Wallet} from '@yoroi/types'
 import {Blockies} from '@yoroi/identicon'
+import {App, Chain, HW, Network, Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'
 import {freeze} from 'immer'
