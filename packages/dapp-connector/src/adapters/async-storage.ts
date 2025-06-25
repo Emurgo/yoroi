@@ -1,5 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {BaseStorage, Chain} from '@yoroi/types'
+
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const initialDeps = {storage: AsyncStorage} as const
 
@@ -12,15 +13,21 @@ export type Storage = {
 
 const key = 'dapp-connections'
 
-export const connectionStorageMaker = (deps: {storage: BaseStorage | typeof AsyncStorage} = initialDeps): Storage => {
+export const connectionStorageMaker = (
+  deps: {storage: BaseStorage | typeof AsyncStorage} = initialDeps,
+): Storage => {
   const {storage} = deps
 
   const save = async (connection: DappConnection) => {
     const connections = await read()
 
-    const containsConnection = connections.some((c) => areConnectionsEqual(c, connection))
+    const containsConnection = connections.some((c) =>
+      areConnectionsEqual(c, connection),
+    )
     if (containsConnection) {
-      throw new Error(`Connection already exists: ${JSON.stringify(connection)}`)
+      throw new Error(
+        `Connection already exists: ${JSON.stringify(connection)}`,
+      )
     }
 
     const newConnections = [...connections, connection]
@@ -29,13 +36,17 @@ export const connectionStorageMaker = (deps: {storage: BaseStorage | typeof Asyn
 
   const read = async (): Promise<DappConnection[]> => {
     const connections = await storage.getItem(key)
-    const parsed: Partial<DappConnection>[] = connections ? JSON.parse(connections) : []
+    const parsed: Partial<DappConnection>[] = connections
+      ? JSON.parse(connections)
+      : []
     return parsed.map(normaliseDappConnection)
   }
 
   const remove = async (connection: DappConnection) => {
     const connections = await read()
-    const newConnections = connections.filter((c) => !areConnectionsEqual(c, connection))
+    const newConnections = connections.filter(
+      (c) => !areConnectionsEqual(c, connection),
+    )
     await storage.setItem(key, JSON.stringify(newConnections))
   }
 
@@ -48,17 +59,25 @@ export const connectionStorageMaker = (deps: {storage: BaseStorage | typeof Asyn
 }
 
 const areConnectionsEqual = (a: DappConnection, b: DappConnection) =>
-  a.walletId === b.walletId && a.dappOrigin === b.dappOrigin && a.network === b.network
+  a.walletId === b.walletId &&
+  a.dappOrigin === b.dappOrigin &&
+  a.network === b.network
 
-const normaliseDappConnection = (connection: Partial<DappConnection>): DappConnection => {
+const normaliseDappConnection = (
+  connection: Partial<DappConnection>,
+): DappConnection => {
   const {walletId, dappOrigin, network} = connection
 
   if (!walletId) {
-    throw new Error('connectionStorageMaker.normaliseDappConnection: walletId is required')
+    throw new Error(
+      'connectionStorageMaker.normaliseDappConnection: walletId is required',
+    )
   }
 
   if (!dappOrigin) {
-    throw new Error('connectionStorageMaker.normaliseDappConnection: dappOrigin is required')
+    throw new Error(
+      'connectionStorageMaker.normaliseDappConnection: dappOrigin is required',
+    )
   }
 
   if (!network) {

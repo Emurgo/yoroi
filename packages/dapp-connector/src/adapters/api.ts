@@ -1,14 +1,25 @@
-import {FetchData, fetchData, getApiError, isLeft, createTypeGuardFromSchema} from '@yoroi/common'
+import {
+  FetchData,
+  fetchData,
+  getApiError,
+  isLeft,
+  createTypeGuardFromSchema,
+} from '@yoroi/common'
+import {Chain} from '@yoroi/types'
+
 import {freeze} from 'immer'
 import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
-import {Chain} from '@yoroi/types'
 
-const dappListHosts: Readonly<Record<Chain.SupportedNetworks, string>> = freeze({
-  [Chain.Network.Mainnet]: 'https://daehx1qv45z7c.cloudfront.net/data.json',
-  [Chain.Network.Preprod]: 'https://daehx1qv45z7c.cloudfront.net/preprod.json',
-  [Chain.Network.Preview]: 'https://daehx1qv45z7c.cloudfront.net/preview.json',
-})
+const dappListHosts: Readonly<Record<Chain.SupportedNetworks, string>> = freeze(
+  {
+    [Chain.Network.Mainnet]: 'https://daehx1qv45z7c.cloudfront.net/data.json',
+    [Chain.Network.Preprod]:
+      'https://daehx1qv45z7c.cloudfront.net/preprod.json',
+    [Chain.Network.Preview]:
+      'https://daehx1qv45z7c.cloudfront.net/preview.json',
+  },
+)
 
 const initialDeps = freeze({request: fetchData}, true)
 
@@ -17,11 +28,19 @@ type GetDAppsOptions = {
 }
 
 export type Api = {
-  getDApps: (options: GetDAppsOptions, fetcherConfig?: AxiosRequestConfig) => Promise<DappListResponse>
+  getDApps: (
+    options: GetDAppsOptions,
+    fetcherConfig?: AxiosRequestConfig,
+  ) => Promise<DappListResponse>
 }
 
-export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialDeps): Api => {
-  const getDApps = async (options: GetDAppsOptions, fetcherConfig?: AxiosRequestConfig): Promise<DappListResponse> => {
+export const dappConnectorApiMaker = ({
+  request,
+}: {request: FetchData} = initialDeps): Api => {
+  const getDApps = async (
+    options: GetDAppsOptions,
+    fetcherConfig?: AxiosRequestConfig,
+  ): Promise<DappListResponse> => {
     const url = dappListHosts[options.network]
 
     const response = await request<unknown>({url}, fetcherConfig)
@@ -29,7 +48,9 @@ export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialD
     if (isLeft(response)) throw getApiError(response.error)
 
     if (!isDappListResponse(response.value.data)) {
-      throw new Error('Invalid dapp list response: ' + JSON.stringify(response.value.data))
+      throw new Error(
+        'Invalid dapp list response: ' + JSON.stringify(response.value.data),
+      )
     }
 
     const {hostname, protocol} = new URL(url)

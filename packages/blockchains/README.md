@@ -1,6 +1,6 @@
 # @yoroi/blockchains
 
-[![npm version](https://img.shields.io/npm/v/@yoroi/theme.svg)](https://www.npmjs.com/package/@yoroi/blockchains)
+[![npm version](https://img.shields.io/npm/v/@yoroi/blockchains.svg)](https://www.npmjs.com/package/@yoroi/blockchains)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![codecov](https://codecov.io/gh/Emurgo/yoroi/branch/develop/graph/badge.svg?component=blockchains)](https://codecov.io/gh/Emurgo/yoroi)
 

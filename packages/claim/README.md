@@ -1,5 +1,9 @@
 # @yoroi/claim
 
+[![npm version](https://img.shields.io/npm/v/@yoroi/claim.svg)](https://www.npmjs.com/package/@yoroi/claim)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![codecov](https://codecov.io/gh/Emurgo/yoroi/branch/develop/graph/badge.svg?component=claim)](https://codecov.io/gh/Emurgo/yoroi)
+
 ## Overview
 
 The `@yoroi/claim` is a utility package designed to handle token claims on the Cardano blockchain, following the CIP-99 (Cardano Improvement Proposal 99) standard for Proof of Ownership (POO) in decentralized token claiming. It provides an API for managing claim requests and responses, including error handling, token synchronization, and status management for claims.
