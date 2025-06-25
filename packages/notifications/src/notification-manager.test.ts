@@ -1,8 +1,10 @@
-import {notificationManagerMaker} from './notification-manager'
-import {mountAsyncStorage} from '@yoroi/common/src'
+import {mountAsyncStorage} from '@yoroi/common'
+import {Notifications} from '@yoroi/types'
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {BehaviorSubject, Subject} from 'rxjs'
-import {Notifications} from '@yoroi/types'
+
+import {notificationManagerMaker} from './notification-manager'
 
 const createManager = () => {
   const eventsStorage = mountAsyncStorage({path: 'events/'})
@@ -259,9 +261,10 @@ describe('NotificationManager', () => {
       eventsStorage,
       configStorage,
       subscriptions: {
-        [Notifications.Trigger.TransactionReceived]: notificationSubscription,
-        [Notifications.Trigger.RewardsUpdated]: new Subject(),
-        [Notifications.Trigger.PrimaryTokenPriceChanged]: new Subject(),
+        [Notifications.Trigger.TransactionReceived]:
+          notificationSubscription as any,
+        [Notifications.Trigger.RewardsUpdated]: new Subject() as any,
+        [Notifications.Trigger.PrimaryTokenPriceChanged]: new Subject() as any,
       },
     })
 

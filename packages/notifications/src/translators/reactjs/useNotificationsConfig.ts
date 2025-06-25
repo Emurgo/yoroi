@@ -1,14 +1,18 @@
-import {useQuery, UseQueryOptions} from 'react-query'
-import {useNotificationManager} from './NotificationProvider'
 import {Notifications} from '@yoroi/types'
+
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+
+import {useNotificationManager} from './NotificationProvider'
 
 const queryKey = ['notificationsConfig'] as const
 
-type Options = UseQueryOptions<
-  Notifications.Config,
-  Error,
-  Notifications.Config,
-  typeof queryKey
+type Options = Partial<
+  UseQueryOptions<
+    Notifications.Config,
+    Error,
+    Notifications.Config,
+    typeof queryKey
+  >
 >
 
 export const useNotificationsConfig = (options: Options = {}) => {

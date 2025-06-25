@@ -1,5 +1,6 @@
-import {BehaviorSubject, Subject, Subscription, of} from 'rxjs'
 import {App, Notifications} from '@yoroi/types'
+
+import {BehaviorSubject, Subject, Subscription, of} from 'rxjs'
 import {concatMap, delay} from 'rxjs/operators'
 
 type EventsStorageData = ReadonlyArray<Notifications.Event>

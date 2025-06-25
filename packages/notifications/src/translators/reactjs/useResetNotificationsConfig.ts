@@ -1,10 +1,12 @@
-import {UseMutationOptions} from 'react-query'
-import {Notifications as NotificationTypes} from '@yoroi/types'
+import {Notifications} from '@yoroi/types'
 import {useMutationWithInvalidations} from '@yoroi/common'
+
+import {UseMutationOptions} from '@tanstack/react-query'
+
 import {useNotificationManager} from './NotificationProvider'
 
 export const useResetNotificationsConfig = (
-  options: UseMutationOptions<NotificationTypes.Config, Error> = {},
+  options: UseMutationOptions<Notifications.Config, Error> = {},
 ) => {
   const manager = useNotificationManager()
   const mutationFn = async () => {

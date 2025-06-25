@@ -1,0 +1,37 @@
+module.exports = {
+  preset: 'react-native',
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(react-native|@react-native|@react-native-async-storage/async-storage|@testing-library/react-native|@tanstack/react-query)/)'
+  ],
+  moduleNameMapper: {
+    '^@tanstack/react-query$': '<rootDir>/node_modules/@tanstack/react-query',
+    '^rxjs$': '<rootDir>/node_modules/rxjs',
+  },
+  setupFiles: ['<rootDir>/jest.setup.js'],
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
+  collectCoverage: true,
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/fixtures/**',
+    '!src/**/*.mocks.ts'
+  ],
+  coverageReporters: ['text-summary', 'lcov', 'html'],
+  coverageThreshold: {
+    global: {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100
+    }
+  },
+  modulePathIgnorePatterns: [
+    '<rootDir>/example/node_modules',
+    '<rootDir>/lib/'
+  ],
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest'
+  },
+  testEnvironment: 'jsdom'
+} 

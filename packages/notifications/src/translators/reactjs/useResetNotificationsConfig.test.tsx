@@ -1,12 +1,14 @@
+import {Notifications} from '@yoroi/types'
+
 import * as React from 'react'
 import {act, renderHook, waitFor} from '@testing-library/react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {queryClientFixture} from '@yoroi/common'
+import {QueryClientProvider} from '@tanstack/react-query'
+
 import {NotificationProvider} from './NotificationProvider'
-import {QueryClientProvider} from 'react-query'
 import {useResetNotificationsConfig} from './useResetNotificationsConfig'
-import {Notifications} from '@yoroi/types'
 import {createManagerMock} from './mocks'
+import {queryClientFixture} from '../../fixtures/query-client'
 
 describe('useResetNotificationsConfig', () => {
   beforeEach(() => AsyncStorage.clear())

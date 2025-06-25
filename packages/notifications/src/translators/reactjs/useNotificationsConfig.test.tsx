@@ -1,11 +1,12 @@
 import * as React from 'react'
 import {renderHook, waitFor} from '@testing-library/react-native'
-import {useNotificationsConfig} from './useNotificationsConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {queryClientFixture} from '@yoroi/common'
+import {QueryClientProvider} from '@tanstack/react-query'
+
+import {useNotificationsConfig} from './useNotificationsConfig'
 import {NotificationProvider} from './NotificationProvider'
-import {QueryClientProvider} from 'react-query'
 import {createManagerMock} from './mocks'
+import {queryClientFixture} from '../../fixtures/query-client'
 
 describe('useNotificationsConfig', () => {
   beforeEach(() => AsyncStorage.clear())

@@ -1,4 +1,5 @@
 import {mountAsyncStorage} from '@yoroi/common'
+
 import {notificationManagerMaker} from '../../notification-manager'
 
 export const createManagerMock = () => {
