@@ -1,4 +1,5 @@
 import {Links} from '@yoroi/types'
+
 import {ZodTypeAny} from 'zod'
 
 import {SchemaInfer} from './types'

@@ -1,4 +1,5 @@
 import {Links} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 import {LinksCardanoClaimV1, LinksCardanoLegacyTransfer} from './types'

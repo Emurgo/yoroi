@@ -1,6 +1,7 @@
 import {Links, Writable} from '@yoroi/types'
-import {LinksCardanoUriConfig} from './types'
 import {isArrayOfString, isString, isUrl} from '@yoroi/common'
+
+import {LinksCardanoUriConfig} from './types'
 
 /**
  * Prepares and validates parameters for a Cardano URI link based on a given configuration.
@@ -83,10 +84,13 @@ export const preapareParams = ({
   }
 
   return Object.freeze(
-    Array.from(paramEntries).reduce((sanitizedParams, [key, value]) => {
-      sanitizedParams[key] = value
-      return sanitizedParams
-    }, {} as Writable<Links.Link<LinksCardanoUriConfig>['params']>), // safe since is a subset of params
+    Array.from(paramEntries).reduce(
+      (sanitizedParams, [key, value]) => {
+        sanitizedParams[key] = value
+        return sanitizedParams
+      },
+      {} as Writable<Links.Link<LinksCardanoUriConfig>['params']>,
+    ), // safe since is a subset of params
   )
 }
 

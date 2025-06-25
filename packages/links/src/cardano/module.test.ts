@@ -1,4 +1,5 @@
 import {Links} from '@yoroi/types'
+
 import {linksCardanoModuleMaker} from './module'
 import {configCardanoClaimV1, configCardanoLegacyTransfer} from './constants'
 
