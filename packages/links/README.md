@@ -1,8 +1,13 @@
 # @yoroi/links
 
+[![npm version](https://img.shields.io/npm/v/@yoroi/links.svg)](https://www.npmjs.com/package/@yoroi/links)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![codecov](https://codecov.io/gh/Emurgo/yoroi/branch/develop/graph/badge.svg?component=links)](https://codecov.io/gh/Emurgo/yoroi)
+
 ## Overview
 
 This package provides type-safe way to create and parse cryptocurrency-related links based on its URI definition (ABNF). It is designed to support different types of operations. It supports Cardano operations such as claims and legacy transfers within its blockchain ecosystem. It also allows to interpret and build crypto links.
+**Important** to note that some links are handled by the app before the navigation.
 
 ## Features
 
@@ -27,23 +32,6 @@ yarn add @yoroi/links
 
 ```typescript
 import {linksCardanoModuleMaker, configCardanoClaimV1} from '@yoroi/links'
-```
-
-### How to create a link
-
-```typescript
-const {create} = linksCardanoModuleMaker()
-
-const cardanoLink = create({
-  config: configCardanoClaimV1,
-  params: {
-    faucet_url: 'https://someendpoint/airdrop',
-    code: 'CardanoSummit2024',
-    other: 'other param',
-  },
-})
-
-console.log(cardanoLink.link)
 ```
 
 ### How to parse a link
@@ -74,21 +62,11 @@ console.log(parsedLink)
 | Scheme        | Authority | Description                             |
 | ------------- | --------- | --------------------------------------- |
 | `web+cardano` | `claim`   | Used for proof of onboarding / airdrops |
-| `web+cardano` | ` `       | Used for legacy payment requests        |
+| `web+cardano` | ``        | Used for legacy payment requests        |
 
 ## Yoroi Usage
 
 > [!IMPORTANT] > **Important** Yoroi uses in query string arrays as name[index], e.g `whateverArray[0]=1&whateverArray[1]=`
-
-### Importing the module
-
-```typescript
-import {
-  linksYoroiModuleMaker,
-  linksCardanoModuleMaker,
-  configCardanoLegacyTransfer,
-} from '@yoroi/links'
-```
 
 ### How to create a link
 
@@ -169,7 +147,7 @@ This schema is for validating transfer requests of ADA and includes the followin
   - `receiver`: A string with a maximum length of 256 characters, it can be a wallet address or any domain name for your wallet address.
   - `datum` (optional) A CBOR string with a maximum length of 1024 characters.
   - `amounts`: An array of objects (with a minimum of 1 and maximum of 10 elements) where each object contains:
-    - `tokenId`: A string with a maximum length of 256 characters, represented by `policyId` and `assetName` in hex, separated by a `.`, for ADA both are valid `.` or ` ` empty string.
+    - `tokenId`: A string with a maximum length of 256 characters, represented by `policyId` and `assetName` in hex, separated by a `.`, for ADA both are valid `.` or `` empty string.
     - `quantity`: A string with a maximum length of 80 characters, atomic, Cardano Lovelaces.
 - `memo` (optional): A string with a maximum length of 256 characters, stored in the wallet local storage wallet, it is not included in the transaction.
 
@@ -228,3 +206,62 @@ Coming soon.
 - [URI](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiGtpWV-eOCAxVSmokEHdBOAn0QFnoECBQQAQ&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FUniform_Resource_Identifier&usg=AOvVaw2i8uSyn7gtMV9bW4Nmh4dK&opi=89978449)
 - [ABNF](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjYq-3u-OOCAxVxvokEHTx1CqsQFnoECBIQAQ&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FAugmented_Backus%25E2%2580%2593Naur_form&usg=AOvVaw3GEFuH6Hby-NUw6cxQpQUz&opi=89978449)
 - [RFC-2234](https://datatracker.ietf.org/doc/html/rfc2234)
+
+## Contributing
+
+We welcome contributions from the community! If you find a bug or have a feature request, please open an issue or submit a pull request.
+
+## 📚 Documentation
+
+For detailed documentation, please visit our [documentation site](https://github.com/Emurgo/yoroi/wiki).
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+## 🏗️ Development
+
+```bash
+# Install dependencies
+npm install
+
+# Build the package
+npm run build
+
+# Build for development
+npm run build:dev
+
+# Build for release
+npm run build:release
+```
+
+## 📊 Code Coverage
+
+The package maintains a minimum code coverage threshold of 20% with a 1% threshold for status checks.
+
+[![Code Coverage](https://codecov.io/gh/Emurgo/yoroi/branch/develop/graphs/sunburst.svg?component=links)](https://codecov.io/gh/Emurgo/yoroi)
+
+## 📈 Dependency Graph
+
+Below is a visualization of the package's internal dependencies:
+
+![Dependency Graph](./dependency-graph.svg)
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](https://github.com/Emurgo/yoroi/blob/develop/CONTRIBUTING.md) for more details.
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](https://github.com/Emurgo/yoroi/blob/develop/LICENSE) file for details.
+
+## 🔗 Links
+
+- [GitHub Repository](https://github.com/Emurgo/yoroi/tree/develop/packages/links)
+- [Issue Tracker](https://github.com/Emurgo/yoroi/issues)

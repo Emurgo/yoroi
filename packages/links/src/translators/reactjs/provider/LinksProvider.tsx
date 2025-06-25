@@ -1,5 +1,6 @@
-import * as React from 'react'
 import {Links} from '@yoroi/types'
+
+import * as React from 'react'
 
 import {
   LinksActionType,
@@ -23,10 +24,9 @@ export const LinksContext =
 export const LinksProvider = ({
   children,
   initialState,
-}: {
-  children: React.ReactNode
+}: React.PropsWithChildren<{
   initialState?: LinksState
-}) => {
+}>) => {
   const [state, dispatch] = React.useReducer(linksReducer, {
     ...defaultLinksState,
     ...initialState,

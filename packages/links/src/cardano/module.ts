@@ -1,5 +1,6 @@
 import {Links} from '@yoroi/types'
 import {isArray} from '@yoroi/common'
+
 import {freeze} from 'immer'
 
 import {preapareParams} from './params'

@@ -1,4 +1,5 @@
 import {Links} from '@yoroi/types'
+
 import {freeze, produce, castDraft} from 'immer'
 
 export type LinksState = Readonly<{

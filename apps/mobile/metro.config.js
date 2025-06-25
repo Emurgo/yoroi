@@ -26,6 +26,7 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'packages/claim/node_modules'),
   path.resolve(workspaceRoot, 'packages/setup-wallet/node_modules'),
   path.resolve(workspaceRoot, 'packages/exchange/node_modules'),
+  path.resolve(workspaceRoot, 'packages/links/node_modules'),
 ]
 
 // NOTE: workaround for the structure now
@@ -44,6 +45,7 @@ config.resolver.extraNodeModules = {
   '@yoroi/claim': path.resolve(workspaceRoot, 'packages/claim'),
   '@yoroi/setup-wallet': path.resolve(workspaceRoot, 'packages/setup-wallet'),
   '@yoroi/exchange': path.resolve(workspaceRoot, 'packages/exchange'),
+  '@yoroi/links': path.resolve(workspaceRoot, 'packages/links'),
 }
 
 config.transformer.minifierConfig = {
