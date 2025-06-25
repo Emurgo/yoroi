@@ -3,6 +3,7 @@ import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
 import {useQuery} from 'react-query'
 
+import {features} from '../../../../kernel/features'
 import {BannerIds, showBanner} from '../../../Notifications/common/banners'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
@@ -24,7 +25,7 @@ export const useUtxoConsolidationBanner = () => {
   useQuery({
     queryKey: ['utxoConsolidationBanner', wallet?.id, network],
     staleTime: time.fiveMinutes,
-    enabled: !isLoading,
+    enabled: !isLoading && features.utxoConsolidation,
     queryFn: async () => {
       if (isConsolidationNeeded) {
         if (network === Chain.Network.Mainnet) {

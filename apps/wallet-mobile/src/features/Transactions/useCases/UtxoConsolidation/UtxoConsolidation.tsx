@@ -12,6 +12,9 @@ export const UtxoConsolidation = () => {
   const strings = useStrings()
   const {styles, color} = useStyles()
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
+  // TODO: Needs tx building with utxo selection
+  const shouldShowNotice = true
+  const handleOnPress = () => null
 
   return (
     <View style={styles.container}>
@@ -21,7 +24,7 @@ export const UtxoConsolidation = () => {
 
           <Text style={styles.description}>{strings.organizeWalletDescription}</Text>
 
-          {true && (
+          {shouldShowNotice && (
             <View style={styles.notice}>
               <Icon.Info size={20} color={color.el_gray_max} />
 
@@ -32,7 +35,7 @@ export const UtxoConsolidation = () => {
       </ScrollView>
 
       <View style={[styles.button, isScrollBarShown && styles.actionsScroll]}>
-        <Button onPress={() => null} title={strings.organizeWalletButton} />
+        <Button onPress={handleOnPress} title={strings.organizeWalletButton} />
       </View>
     </View>
   )
