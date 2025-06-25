@@ -88,7 +88,9 @@ function BusinessShell({children}: React.PropsWithChildren) {
       installationIdKeyManager={installationIdStorageKeyManager}
     >
       <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
+        {/* <WalletManagerProvider walletManager={walletManager}> */}
         {children}
+        {/* </WalletManagerProvider> */}
       </PairingProvider>
     </AuthProvider>
   )

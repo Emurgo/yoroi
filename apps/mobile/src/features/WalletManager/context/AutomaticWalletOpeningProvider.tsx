@@ -4,9 +4,13 @@ import * as React from 'react'
 
 import {logger} from '../../../kernel/logger/logger'
 
-const AutomaticWalletOpenerContext = React.createContext<AutomaticWalletOpenerContextType | undefined>(undefined)
+const AutomaticWalletOpenerContext = React.createContext<
+  AutomaticWalletOpenerContextType | undefined
+>(undefined)
 
-export const AutomaticWalletOpenerProvider: React.FC<React.PropsWithChildren> = ({children}) => {
+export const AutomaticWalletOpenerProvider: React.FC<
+  React.PropsWithChildren
+> = ({children}) => {
   const [shouldOpen, setShouldOpen] = React.useState(false)
 
   return (
@@ -25,7 +29,9 @@ export const useAutomaticWalletOpener = () => {
   const context = React.useContext(AutomaticWalletOpenerContext)
 
   if (context == undefined) {
-    const error = new App.Errors.InvalidState('AutomaticWalletOpenerProvider is not set, invalid state reached')
+    const error = new App.Errors.InvalidState(
+      'AutomaticWalletOpenerProvider is not set, invalid state reached',
+    )
     logger.error(error)
     throw error
   }

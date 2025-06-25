@@ -10,8 +10,10 @@ export const useAddressMode = () => {
   } = useSelectedWallet()
 
   return React.useMemo(() => {
-    const enableMultipleMode = () => walletManager.changeWalletAddressMode(id, 'multiple')
-    const enableSingleMode = () => walletManager.changeWalletAddressMode(id, 'single')
+    const enableMultipleMode = () =>
+      walletManager.changeWalletAddressMode(id, 'multiple')
+    const enableSingleMode = () =>
+      walletManager.changeWalletAddressMode(id, 'single')
 
     const toggle = () => {
       if (addressMode === 'single') {

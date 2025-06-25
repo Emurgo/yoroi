@@ -1,12 +1,22 @@
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+// TODO: fix after cross-csl-core is updated
+// import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {App, Chain, HW, Network, Portfolio} from '@yoroi/types'
 
 import {KeychainManager} from '../../../kernel/storage/Keychain'
-import {CardanoTypes, WalletEvent, YoroiWallet} from '../../../wallets/cardano/types'
+import {
+  CardanoTypes,
+  WalletEvent,
+  YoroiWallet,
+} from '../../../wallets/cardano/types'
 
-export type NetworkTokenManagers = Readonly<Record<Chain.SupportedNetworks, Portfolio.Manager.Token>>
+export type NetworkTokenManagers = Readonly<
+  Record<Chain.SupportedNetworks, Portfolio.Manager.Token>
+>
 
-export type WalletManagerEvent = {type: 'hw-device-info'; hwDeviceInfo: HW.DeviceInfo}
+export type WalletManagerEvent = {
+  type: 'hw-device-info'
+  hwDeviceInfo: HW.DeviceInfo
+}
 
 export type WalletManagerOptions = {
   keychainManager?: Readonly<KeychainManager>
@@ -14,7 +24,9 @@ export type WalletManagerOptions = {
   rootStorage: Readonly<App.Storage>
 }
 
-export type WalletManagerSubscription = (event: WalletManagerEvent | WalletEvent) => void
+export type WalletManagerSubscription = (
+  event: WalletManagerEvent | WalletEvent,
+) => void
 
 export type SyncWalletInfo = {
   id: YoroiWallet['id']
@@ -44,6 +56,8 @@ export type WalletFactory = {
     csl,
   }: {
     mnemonic: string
-    csl: WasmModuleProxy
+    // TODO: fix after cross-csl-core is updated
+    // csl: WasmModuleProxy
+    csl: any
   }): Promise<{rootKey: string; accountPubKeyHex: string}>
 }

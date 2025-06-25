@@ -14,7 +14,9 @@ export const useSelectedWallet = () => {
   return React.useMemo(() => {
     if (!wallet || !meta)
       throwLoggedError(
-        new App.Errors.InvalidState('useSelectedWallet wallet/meta is not set when expected, invalid state reached'),
+        new App.Errors.InvalidState(
+          'useSelectedWallet wallet/meta is not set when expected, invalid state reached',
+        ),
       )
 
     return freeze({wallet, meta} as const)

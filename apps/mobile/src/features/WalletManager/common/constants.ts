@@ -1,10 +1,11 @@
 import {buildNetworkManagers} from '@yoroi/blockchains'
 import {Chain, Wallet} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 import {isDev} from '../../../kernel/constants'
 import {logger} from '../../../kernel/logger/logger'
-import {buildPortfolioTokenManagers} from '../../Portfolio/common/helpers/build-token-managers'
+import {tokenManagers} from '../../Portfolio/common/constants'
 
 export const addressModes: ReadonlyArray<Wallet.AddressMode> = freeze([
   'single',
@@ -15,8 +16,6 @@ export const implementations: ReadonlyArray<Wallet.Implementation> = freeze([
   'cardano-bip44',
 ] as const)
 
-// TODO: move to portfolio constants
-const {tokenManagers} = buildPortfolioTokenManagers()
 export const networkManagers = buildNetworkManagers({tokenManagers, logger})
 
 // NOTE: needs update, SupportedNetworks is a client thing
