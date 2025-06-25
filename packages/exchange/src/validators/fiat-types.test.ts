@@ -1,4 +1,5 @@
 import {Exchange} from '@yoroi/types'
+
 import {isFiatType} from './fiat-types'
 
 describe('isFiatType', () => {

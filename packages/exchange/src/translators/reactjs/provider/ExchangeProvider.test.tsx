@@ -1,5 +1,6 @@
-import {act, renderHook} from '@testing-library/react-hooks'
+import {act, renderHook} from '@testing-library/react'
 import * as React from 'react'
+
 import {ExchangeProvider} from './ExchangeProvider'
 import {successManagerMock} from '../../../manager.mocks'
 import {useExchange} from '../hooks/useExchange'

@@ -1,4 +1,5 @@
 import {Exchange} from '@yoroi/types'
+
 import {AxiosRequestConfig} from 'axios'
 import {freeze} from 'immer'
 

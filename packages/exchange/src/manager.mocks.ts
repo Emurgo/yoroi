@@ -1,5 +1,6 @@
-import {freeze} from 'immer'
 import {Exchange} from '@yoroi/types'
+
+import {freeze} from 'immer'
 
 import {providers} from './adapters/api'
 
@@ -45,7 +46,7 @@ export const successManagerMock: Exchange.Manager = {
         ({
           ['sell']: 'banxa',
           ['buy']: 'banxa',
-        } as {[key in 'sell' | 'buy']: string}),
+        }) as {[key in 'sell' | 'buy']: string},
     },
     list: {
       byOrderType: providerListByFeature.success,

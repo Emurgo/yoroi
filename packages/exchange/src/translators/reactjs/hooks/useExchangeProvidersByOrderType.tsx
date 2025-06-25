@@ -1,5 +1,6 @@
 import {Exchange} from '@yoroi/types'
-import {UseQueryOptions, useQuery} from 'react-query'
+
+import {UseSuspenseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
 
 export const useExchangeProvidersByOrderType = (
   {
@@ -9,16 +10,14 @@ export const useExchangeProvidersByOrderType = (
     orderType: Exchange.OrderType
     providerListByOrderType: Exchange.Manager['provider']['list']['byOrderType']
   },
-  options?: UseQueryOptions<
+  options?: UseSuspenseQueryOptions<
     ReadonlyArray<[string, Exchange.Provider]>,
     Error,
     ReadonlyArray<[string, Exchange.Provider]>,
     ['useExchangeProvidersByOrderType', Exchange.OrderType]
   >,
 ) => {
-  const query = useQuery({
-    suspense: true,
-    useErrorBoundary: true,
+  const query = useSuspenseQuery({
     ...options,
     queryKey: ['useExchangeProvidersByOrderType', orderType],
     queryFn: () => providerListByOrderType(orderType),

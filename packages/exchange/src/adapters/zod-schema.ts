@@ -1,4 +1,5 @@
 import {z} from 'zod'
+
 import {isOrderType} from '../validators/order-types'
 import {isFiatType} from '../validators/fiat-types'
 import {isCoinType} from '../validators/coin-types'

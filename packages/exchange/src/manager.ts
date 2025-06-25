@@ -1,6 +1,8 @@
 import {Exchange} from '@yoroi/types'
+
 import {AxiosRequestConfig} from 'axios'
 import {freeze} from 'immer'
+
 import {urlReferralQueryStringParamsSchema} from './adapters/zod-schema'
 import {getValidationError} from './helpers/get-validation-error'
 import {baseUrlAdapter} from './adapters/base-url-adapter'

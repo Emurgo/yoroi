@@ -1,5 +1,6 @@
-import * as React from 'react'
 import {Exchange} from '@yoroi/types'
+
+import * as React from 'react'
 
 import {
   ExchangeActionType,

@@ -1,5 +1,7 @@
 import {Exchange} from '@yoroi/types'
+
 import {freeze, produce} from 'immer'
+
 import {errorManagerMock} from '../../../manager.mocks'
 
 export const exchangeReducer = (
