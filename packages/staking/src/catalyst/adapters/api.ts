@@ -1,6 +1,7 @@
 import {FetchData, isRight} from '@yoroi/common'
-import {freeze} from 'immer'
 import {Api} from '@yoroi/types'
+
+import {freeze} from 'immer'
 import {AxiosRequestConfig} from 'axios'
 
 import {Catalyst} from '../../types'

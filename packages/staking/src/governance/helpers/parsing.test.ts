@@ -1,9 +1,10 @@
+import {init} from '@emurgo/cross-csl-nodejs'
+
 import {
   convertDrepHashToCIP129Format,
   convertHexKeyHashToBech32Format,
   parseDrepId,
 } from './parsing'
-import {init} from '@emurgo/cross-csl-nodejs'
 
 describe('convertHexKeyHashToBech32Format', () => {
   const cardano = init('global')

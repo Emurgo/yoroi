@@ -3,7 +3,7 @@ import {
   UseMutationOptions,
   useQuery,
   UseQueryOptions,
-} from 'react-query'
+} from '@tanstack/react-query'
 import {useGovernance} from './context'
 import {GovernanceAction, VoteKind} from '../../manager'
 import {useMutationWithInvalidations} from '@yoroi/common'
@@ -12,7 +12,7 @@ import {StakingKeyState} from '../../types'
 
 export const useIsValidDRepID = (
   id: string,
-  options: UseQueryOptions<void, Error> = {},
+  options: Partial<UseQueryOptions<void, Error>> = {},
 ) => {
   const {manager} = useGovernance()
   return useQuery({
@@ -24,11 +24,11 @@ export const useIsValidDRepID = (
 
 export const useStakingKeyState = (
   stakingKeyHash: string,
-  options: UseQueryOptions<StakingKeyState, Error> = {},
+  options: Partial<UseQueryOptions<StakingKeyState, Error>> = {},
 ) => {
   const {manager} = useGovernance()
   return useQuery({
-    cacheTime: 0,
+    gcTime: 0,
     staleTime: 0,
     queryKey: ['governanceStakingKeyState', stakingKeyHash],
     queryFn: () => manager.getStakingKeyState(stakingKeyHash),
@@ -39,7 +39,7 @@ export const useStakingKeyState = (
 
 export const useLatestGovernanceAction = (
   walletId: string,
-  options: UseQueryOptions<GovernanceAction | null, Error> = {},
+  options: Partial<UseQueryOptions<GovernanceAction | null, Error>> = {},
 ) => {
   const {manager} = useGovernance()
 
@@ -120,7 +120,7 @@ export const useVotingCertificate = (
 
 export const useBech32DRepID = (
   hexId: string,
-  options: UseQueryOptions<string, Error> = {},
+  options: Partial<UseQueryOptions<string, Error>> = {},
 ) => {
   const {manager} = useGovernance()
 

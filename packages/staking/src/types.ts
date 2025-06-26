@@ -1,3 +1,5 @@
+import {Api as AppApi} from '@yoroi/types'
+
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -11,7 +13,6 @@ import {
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
 import {AxiosRequestConfig} from 'axios'
-import {Api as AppApi} from '@yoroi/types'
 
 export namespace CardanoTypes {
   export type TxMetadata = TxMetadataType

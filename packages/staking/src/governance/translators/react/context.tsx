@@ -1,21 +1,22 @@
-import React, {createContext, PropsWithChildren, useContext} from 'react'
+import * as React from 'react'
+
 import {GovernanceManager} from '../../manager'
 
 type ContextType = {
   manager: GovernanceManager
 }
 
-const Context = createContext<ContextType | null>(null)
+const Context = React.createContext<ContextType | null>(null)
 
 export const useGovernance = () => {
-  const context = useContext(Context)
+  const context = React.useContext(Context)
   if (!context) {
     throw new Error('useGovernance must be used within a GovernanceProvider')
   }
   return context
 }
 
-type ProviderProps = PropsWithChildren<{
+type ProviderProps = React.PropsWithChildren<{
   manager: GovernanceManager
 }>
 

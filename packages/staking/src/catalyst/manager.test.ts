@@ -1,5 +1,4 @@
 import {catalystManagerMaker} from './manager'
-import {describe} from '@jest/globals'
 import {mockFundInfo} from './fund-info.mocks'
 
 describe('isRegistrationOpen', () => {

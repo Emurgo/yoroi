@@ -1,4 +1,5 @@
 import {freeze} from 'immer'
+
 import {Catalyst} from '../types'
 
 export function toFundInfo(

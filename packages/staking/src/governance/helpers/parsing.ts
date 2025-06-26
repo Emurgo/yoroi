@@ -1,5 +1,6 @@
-import {CardanoTypes} from '../../types'
 import {bech32 as bech32Module} from 'bech32'
+
+import {CardanoTypes} from '../../types'
 
 export const parseDrepId = async (
   drepId: string,

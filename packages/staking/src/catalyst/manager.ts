@@ -23,14 +23,14 @@ function fundStatus(
     when < votingStart
       ? 'pending'
       : when >= votingStart && when < votingEnd
-      ? 'running'
-      : 'done'
+        ? 'running'
+        : 'done'
   const results =
     when < votingEnd
       ? 'pending'
       : when >= votingEnd && when < tallyingEnd
-      ? 'running'
-      : 'done'
+        ? 'running'
+        : 'done'
 
   return freeze({registration, voting, results} as const)
 }

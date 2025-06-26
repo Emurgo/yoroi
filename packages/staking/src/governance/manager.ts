@@ -1,8 +1,9 @@
+import {App, Chain} from '@yoroi/types'
+
 import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
 import {convertHexKeyHashToBech32Format, parseDrepId} from './helpers'
 import {StakingKeyState} from './types'
-import {App, Chain} from '@yoroi/types'
 
 export type Config = {
   network: Chain.SupportedNetworks
