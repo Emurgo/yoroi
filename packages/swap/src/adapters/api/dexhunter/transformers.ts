@@ -517,7 +517,7 @@ export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
     [Dex.Muesliswap_clp]: Swap.Protocol.Muesliswap_clp,
     [Dex.Muesliswap_v2]: Swap.Protocol.Muesliswap_v2,
     [Dex.Unsupported]: Swap.Protocol.Unsupported,
-  }[dex] ?? Swap.Protocol.Unsupported)
+  })[dex] ?? Swap.Protocol.Unsupported
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
@@ -536,7 +536,7 @@ export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
     [Swap.Protocol.Muesliswap_clp]: Dex.Muesliswap_clp,
     [Swap.Protocol.Spectrum_v1]: Dex.Unsupported,
     [Swap.Protocol.Unsupported]: Dex.Unsupported,
-  }[dex] ?? Dex.Unsupported)
+  })[dex] ?? Dex.Unsupported
 
 export const DexhunterProtocols = Object.values(Dex)
   .filter((p) => p !== Dex.Unsupported)

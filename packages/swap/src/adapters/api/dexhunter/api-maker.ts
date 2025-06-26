@@ -6,7 +6,9 @@ import {
   isRight,
 } from '@yoroi/common'
 import {Api, Chain, Left, Portfolio, Swap} from '@yoroi/types'
+
 import {freeze} from 'immer'
+
 import {
   CancelResponse,
   EstimateResponse,
@@ -196,8 +198,8 @@ export const dexhunterApiMaker = (
           body.wantedPrice !== undefined
             ? 'limitEstimate'
             : body.amountOut !== undefined
-            ? 'reverseEstimate'
-            : 'estimate'
+              ? 'reverseEstimate'
+              : 'estimate'
 
         const response = await request<
           EstimateResponse | ReverseEstimateResponse | LimitEstimateResponse

@@ -1,5 +1,6 @@
 import {Api, Portfolio, Swap} from '@yoroi/types'
 import {isLeft, isRight} from '@yoroi/common'
+
 import {freeze} from 'immer'
 
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'

@@ -1,6 +1,6 @@
 # @yoroi/staking
 
-[![npm version](https://img.shields.io/npm/v/@yoroi/portfolio.svg)](https://www.npmjs.com/package/@yoroi/staking)
+[![npm version](https://img.shields.io/npm/v/@yoroi/staking.svg)](https://www.npmjs.com/package/@yoroi/staking)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![codecov](https://codecov.io/gh/Emurgo/yoroi/branch/develop/graph/badge.svg?component=staking)](https://codecov.io/gh/Emurgo/yoroi)
 

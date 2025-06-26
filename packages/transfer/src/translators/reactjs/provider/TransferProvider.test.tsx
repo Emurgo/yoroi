@@ -1,6 +1,8 @@
-import {act, renderHook} from '@testing-library/react-hooks'
 import {Chain, Links, Resolver} from '@yoroi/types'
+
+import {act, renderHook} from '@testing-library/react-native'
 import * as React from 'react'
+
 import {useTransfer} from '../hooks/useTransfer'
 import {defaultTransferState} from '../state/state'
 

@@ -1,7 +1,9 @@
-import {getSwapConfigApiMaker} from './getSwapConfig'
 import {FetchData} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
+
+import {getSwapConfigApiMaker} from './getSwapConfig'
 
 const mockFetchData = (async ({url}: {url: string}) => {
   if (url !== undefined) {
@@ -68,7 +70,7 @@ describe('getSwapConfigApiMaker', () => {
             ],
           },
         },
-      } as any)
+      }) as any
 
     await expect(
       getSwapConfigApiMaker({request: invalidFetchData})(),
@@ -82,7 +84,7 @@ describe('getSwapConfigApiMaker', () => {
       ({
         tag: 'left',
         error: new Error('Network error'),
-      } as any)
+      }) as any
 
     await expect(
       getSwapConfigApiMaker({request: networkErrorFetchData})(),

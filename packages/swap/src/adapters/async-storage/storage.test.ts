@@ -1,67 +1,69 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import {Swap} from '@yoroi/types'
-
 import {swapStorageMaker, swapStorageSettingsKey} from './storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-jest.mock('@react-native-async-storage/async-storage')
-
+jest.mock('@react-native-async-storage/async-storage', () => {
+  const mock = require('@react-native-async-storage/async-storage/jest/async-storage-mock')
+  return {
+    __esModule: true,
+    default: mock,
+    ...mock,
+  }
+})
 const mockedAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>
 
 describe('swapStorageMaker', () => {
-  let swapStorage: Swap.Storage
+  let storage: ReturnType<typeof swapStorageMaker>
 
   beforeEach(() => {
     jest.clearAllMocks()
-    swapStorage = swapStorageMaker()
+    storage = swapStorageMaker()
   })
 
-  it('settings.save', async () => {
+  it('should save settings', async () => {
     const settings = {
-      slippage: 0.1,
-      routingPreference: 'auto',
-    } as const
-    await swapStorage.settings.save(settings)
+      slippage: 0.5,
+      routingPreference: 'auto' as const,
+    }
+    await storage.settings.save(settings)
     expect(mockedAsyncStorage.setItem).toHaveBeenCalledWith(
       swapStorageSettingsKey,
       JSON.stringify(settings),
     )
   })
 
-  it('settings.read', async () => {
+  it('should read settings', async () => {
     const settings = {
-      slippage: 0.1,
-      routingPreference: 'auto',
+      slippage: 0.2,
+      routingPreference: 'auto' as const,
     }
-    mockedAsyncStorage.getItem.mockResolvedValue(JSON.stringify(settings))
-    const result = await swapStorage.settings.read()
+    mockedAsyncStorage.getItem.mockResolvedValueOnce(JSON.stringify(settings))
+    const result = await storage.settings.read()
     expect(result).toEqual(settings)
     expect(mockedAsyncStorage.getItem).toHaveBeenCalledWith(
       swapStorageSettingsKey,
     )
   })
 
-  it('settings.read should fallback to default when wrong data', async () => {
-    const defaultSettings = {
+  it('should fallback to default settings on invalid data', async () => {
+    mockedAsyncStorage.getItem.mockResolvedValueOnce('not-json')
+    const result = await storage.settings.read()
+    expect(result).toEqual({
       slippage: 1,
       routingPreference: 'auto',
-    }
-    mockedAsyncStorage.getItem.mockResolvedValue('[1, 2, ]')
-    const result2 = await swapStorage.settings.read()
-    expect(result2).toEqual(defaultSettings)
-    expect(mockedAsyncStorage.getItem).toHaveBeenCalledWith(
-      swapStorageSettingsKey,
-    )
+    })
   })
 
-  it('settings.remove', async () => {
-    await swapStorage.settings.remove()
+  it('should remove settings', async () => {
+    await storage.settings.remove()
     expect(mockedAsyncStorage.removeItem).toHaveBeenCalledWith(
       swapStorageSettingsKey,
     )
   })
 
-  it('clear', async () => {
-    await swapStorage.clear()
-    expect(mockedAsyncStorage.removeItem).toHaveBeenCalledTimes(1)
+  it('should clear all swap storage', async () => {
+    await storage.clear()
+    expect(mockedAsyncStorage.removeItem).toHaveBeenCalledWith(
+      swapStorageSettingsKey,
+    )
   })
 })

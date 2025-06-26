@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "@react-native-community",
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "quoteProps": "consistent",
+        "bracketSpacing": false,
+        "singleQuote": true,
+        "tabWidth": 2,
+        "trailingComma": "all",
+        "useTabs": false,
+        "semi": false
+      }
+    ]
+  },
+  "root": true
+} 

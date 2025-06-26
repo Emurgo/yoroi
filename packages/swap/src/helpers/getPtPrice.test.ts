@@ -1,4 +1,5 @@
 import {Portfolio, Swap} from '@yoroi/types'
+
 import {getPtPrice} from './getPtPrice'
 
 describe('getPtPrice', () => {

@@ -347,7 +347,7 @@ export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
     [Dex.Spectrum_v1]: Swap.Protocol.Spectrum_v1,
     [Dex.Teddy_v1]: Swap.Protocol.Teddy_v1,
     [Dex.Unsupported]: Swap.Protocol.Unsupported,
-  }[dex] ?? Swap.Protocol.Unsupported)
+  })[dex] ?? Swap.Protocol.Unsupported
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
@@ -366,7 +366,7 @@ export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
     [Swap.Protocol.Muesliswap_clp]: Dex.Muesliswap_clp,
     [Swap.Protocol.Spectrum_v1]: Dex.Spectrum_v1,
     [Swap.Protocol.Unsupported]: Dex.Unsupported,
-  }[dex] ?? Dex.Unsupported)
+  })[dex] ?? Dex.Unsupported
 
 export const MuesliswapProtocols = Object.values(Dex)
   .filter((p) => p !== Dex.Unsupported)
