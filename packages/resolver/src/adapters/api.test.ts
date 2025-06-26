@@ -1,4 +1,5 @@
 import {Resolver} from '@yoroi/types'
+
 import {init} from '@emurgo/cross-csl-nodejs'
 
 import {resolverApiMaker} from './api'

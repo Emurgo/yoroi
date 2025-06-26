@@ -1,4 +1,5 @@
 import {Resolver} from '@yoroi/types'
+
 import * as React from 'react'
 
 import {resolverManagerMocks} from '../../manager.mocks'

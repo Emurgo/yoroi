@@ -1,5 +1,7 @@
 import {Resolver} from '@yoroi/types'
 
+import {freeze} from 'immer'
+
 export const resolverManagerMaker = (
   resolverStorage: Resolver.Storage,
   resolverApi: Resolver.Api,
@@ -7,8 +9,11 @@ export const resolverManagerMaker = (
   const {showNotice} = resolverStorage
   const {getCardanoAddresses} = resolverApi
 
-  return {
-    crypto: {getCardanoAddresses},
-    showNotice,
-  } as const
+  return freeze(
+    {
+      crypto: {getCardanoAddresses},
+      showNotice,
+    } as const,
+    true,
+  )
 }

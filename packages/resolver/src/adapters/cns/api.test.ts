@@ -1,6 +1,8 @@
-import {init} from '@emurgo/cross-csl-nodejs'
 import {Api, Resolver} from '@yoroi/types'
+
+import {init} from '@emurgo/cross-csl-nodejs'
 import {ZodError, ZodIssue} from 'zod'
+
 import {cnsCryptoAddress, handleCnsApiError} from './api'
 import {resolveAddress} from './api-helpers'
 

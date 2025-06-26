@@ -1,7 +1,8 @@
 import {FetchData} from '@yoroi/common'
 import {Left, Resolver} from '@yoroi/types'
-import {makeCnsCardanoApi} from './cardano-api-maker'
 import {CardanoApi} from '@yoroi/api'
+
+import {makeCnsCardanoApi} from './cardano-api-maker'
 import {inlineDatumMock, metadataMock} from './cardano-api-maker.mocks'
 
 jest.mock('@yoroi/api')

@@ -1,6 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {parseBoolean} from '@yoroi/common'
 import {Resolver, BaseStorage} from '@yoroi/types'
+
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const initialDeps = {storage: AsyncStorage} as const
 

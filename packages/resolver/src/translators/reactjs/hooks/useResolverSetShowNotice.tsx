@@ -1,4 +1,4 @@
-import {UseMutationOptions} from 'react-query'
+import {UseMutationOptions} from '@tanstack/react-query'
 
 import {useResolver} from '../provider/ResolverProvider'
 import {useMutationWithInvalidations} from '../../../utils/useMutationWithInvalidations'

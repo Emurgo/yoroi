@@ -1,6 +1,8 @@
 import {Api, Resolver} from '@yoroi/types'
+
 import {AxiosRequestConfig} from 'axios'
 import {WasmModuleProxy, freeContext} from '@emurgo/cross-csl-core'
+
 import {handleZodErrors} from '../zod-errors'
 import {makeCnsCardanoApi} from './cardano-api-maker'
 import {resolveAddress} from './api-helpers'

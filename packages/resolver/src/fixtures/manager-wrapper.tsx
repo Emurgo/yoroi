@@ -1,6 +1,7 @@
 import {Resolver} from '@yoroi/types'
+
 import * as React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 
 import {SuspenseBoundary} from './SuspenseBoundary'
 import {ErrorBoundary} from './ErrorBoundary'
@@ -13,15 +14,14 @@ type Props = {
 
 export const wrapperManagerFixture =
   ({queryClient, resolverManager}: Props) =>
-  ({children}: {children: React.ReactNode}) =>
-    (
-      <QueryClientProvider client={queryClient}>
-        <ErrorBoundary>
-          <SuspenseBoundary>
-            <ResolverProvider resolverManager={resolverManager}>
-              {children}
-            </ResolverProvider>
-          </SuspenseBoundary>
-        </ErrorBoundary>
-      </QueryClientProvider>
-    )
+  ({children}: {children: React.ReactNode}) => (
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
+        <SuspenseBoundary>
+          <ResolverProvider resolverManager={resolverManager}>
+            {children}
+          </ResolverProvider>
+        </SuspenseBoundary>
+      </ErrorBoundary>
+    </QueryClientProvider>
+  )

@@ -1,5 +1,6 @@
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Resolver} from '@yoroi/types'
+
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {AxiosRequestConfig} from 'axios'
 
 import {CnsApiConfig} from './api'

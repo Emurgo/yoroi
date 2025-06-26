@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import {mockResolverApi} from '../adapters/api.mocks'
 import {mockStorageMaker} from '../adapters/storage.mocks'
 import {resolverManagerMaker} from './manager'

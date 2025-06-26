@@ -1,5 +1,7 @@
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Api} from '@yoroi/types'
+
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+
 import {AssocMap, BuiltinByteString} from './types'
 import {CNSUserRecord} from './types'
 

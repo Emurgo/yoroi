@@ -1,4 +1,5 @@
 import {init} from '@emurgo/cross-csl-nodejs'
+
 import {cnsCardanoApiMock} from './cardano-api-maker.mocks'
 import {AssocMap, BuiltinByteString, CNSUserRecord} from './types'
 import {

@@ -1,5 +1,5 @@
-import {QueryClient} from 'react-query'
-import {renderHook, act} from '@testing-library/react-hooks'
+import {QueryClient} from '@tanstack/react-query'
+import {renderHook, act} from '@testing-library/react'
 
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
