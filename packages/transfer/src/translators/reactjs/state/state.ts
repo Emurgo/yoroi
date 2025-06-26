@@ -1,5 +1,6 @@
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
 import {Chain, Links, Portfolio, Resolver, Transfer} from '@yoroi/types'
+
 import {castDraft, freeze, produce} from 'immer'
 
 import {targetGetAllocatedToOthers} from '../../../helpers/target-get-allocated-to-others'
