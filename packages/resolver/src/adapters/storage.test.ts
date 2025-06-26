@@ -1,5 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {Resolver} from '@yoroi/types'
+
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {resolverStorageMaker, resolverStorageNoticedKey} from './storage'
 

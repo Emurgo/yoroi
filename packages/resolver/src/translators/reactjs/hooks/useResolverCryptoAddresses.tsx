@@ -1,10 +1,10 @@
-import {UseQueryOptions, useQuery} from 'react-query'
 import {Resolver} from '@yoroi/types'
+import {time} from '@yoroi/common'
+
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {useResolver} from '../provider/ResolverProvider'
 
-// half of average block time
-const tenSeconds = 10 * 1000
 export const useResolverCryptoAddresses = (
   {
     resolve,
@@ -23,10 +23,10 @@ export const useResolverCryptoAddresses = (
   const {crypto} = useResolver()
 
   const query = useQuery({
-    useErrorBoundary: true,
+    throwOnError: true,
     queryKey: ['useResolverCryptoAddresses', resolve],
     staleTime: 0,
-    cacheTime: tenSeconds,
+    gcTime: time.seconds(10),
     ...options,
     queryFn: ({signal}) =>
       crypto.getCardanoAddresses({resolve, strategy}, {signal}),
