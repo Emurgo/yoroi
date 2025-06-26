@@ -1,4 +1,5 @@
 import {Swap} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 export const dexUrls: Readonly<Record<Swap.Dex, string>> = freeze({

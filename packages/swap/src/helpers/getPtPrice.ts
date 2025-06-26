@@ -1,12 +1,11 @@
-import {isRight} from '@yoroi/common'
+import {isRight, time} from '@yoroi/common'
 import {Portfolio, Swap} from '@yoroi/types'
-
-const CACHE_TIMEOUT = 5 * 60 * 1000 // 5 minutes in milliseconds
 
 export const getPtPrice = (
   primaryTokenInfo: Portfolio.Token.Info,
   api: Swap.Api,
 ) => {
+  // TODO: react-query now has persistance, we can drop it here and move to client.
   const priceCache: Record<
     Portfolio.Token.Id,
     {price: number; timestamp: number}
@@ -18,7 +17,7 @@ export const getPtPrice = (
     const cached = priceCache[id]
     const now = Date.now()
 
-    if (cached && now - cached.timestamp < CACHE_TIMEOUT) {
+    if (cached && now - cached.timestamp < time.minutes(5)) {
       return cached.price
     }
 
@@ -26,6 +25,7 @@ export const getPtPrice = (
       .estimate({
         tokenIn: primaryTokenInfo.id,
         tokenOut: id,
+        // NOTE: arbritraty to return a price
         amountIn: 50,
         slippage: 0,
       })
