@@ -1,11 +1,10 @@
-import {props} from 'lodash/fp'
 import React from 'react'
 import Svg, {Defs, LinearGradient, Path, Stop} from 'react-native-svg'
 
 import {IconProps} from './type'
 
 export const Cswap = ({size = 28}: IconProps) => (
-  <Svg width={size} height={size * 1.14285714} viewBox="0 0 28 32" fill="none" {...props}>
+  <Svg width={size} height={size * 1.14285714} viewBox="0 0 28 32" fill="none">
     <Path d="M14 32l14-8V8l-14 8v16z" fill="url(#paint0_linear_5140_22880)" />
 
     <Path d="M14 0L0 8l14 8 14-8-14-8z" fill="url(#paint1_linear_5140_22880)" />
