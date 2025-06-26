@@ -1,4 +1,6 @@
 import {Chain, Links, Resolver} from '@yoroi/types'
+import {tokenBalanceMocks} from '@yoroi/portfolio'
+
 import {
   TargetAction,
   TransferAction,
@@ -7,7 +9,6 @@ import {
   combinedReducers,
   defaultTransferState,
 } from './state'
-import {tokenBalanceMocks} from '@yoroi/portfolio'
 
 describe('State Actions', () => {
   it('unknown', () => {
