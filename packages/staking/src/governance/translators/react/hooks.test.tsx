@@ -1,5 +1,8 @@
-import {afterEach, describe} from '@jest/globals'
-import React, {PropsWithChildren} from 'react'
+import * as React from 'react'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {init} from '@emurgo/cross-csl-nodejs'
+import {act, renderHook, waitFor} from '@testing-library/react-native'
+
 import {
   useDelegationCertificate,
   useIsValidDRepID,
@@ -9,16 +12,13 @@ import {
 } from './hooks'
 import {GovernanceProvider} from './context'
 import {managerMock} from '../../mocks'
-import {act, renderHook, waitFor} from '@testing-library/react-native'
-import {QueryClient, QueryClientProvider} from 'react-query'
 import {GovernanceManager} from '../../manager'
-import {init} from '@emurgo/cross-csl-nodejs'
 
 const createMocks = (managerPatch: Partial<GovernanceManager>) => {
   const manager = {...managerMock, ...managerPatch}
   const queryClient = new QueryClient()
-  queryClient.setDefaultOptions({queries: {cacheTime: 0, retry: false}})
-  const wrapper = ({children}: PropsWithChildren<{}>) => {
+  queryClient.setDefaultOptions({queries: {staleTime: 0, retry: false}})
+  const wrapper = ({children}: React.PropsWithChildren) => {
     return (
       <QueryClientProvider client={queryClient}>
         <GovernanceProvider manager={manager}>{children}</GovernanceProvider>

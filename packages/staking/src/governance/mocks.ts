@@ -1,5 +1,6 @@
-import {GovernanceManager} from './manager'
 import {Chain} from '@yoroi/types'
+
+import {GovernanceManager} from './manager'
 
 export const managerMock: GovernanceManager = {
   network: Chain.Network.Mainnet,

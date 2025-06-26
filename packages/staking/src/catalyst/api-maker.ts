@@ -1,4 +1,5 @@
 import {FetchData, fetchData} from '@yoroi/common'
+
 import {freeze} from 'immer'
 
 import {Catalyst} from '../types'

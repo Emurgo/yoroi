@@ -1,6 +1,5 @@
 # @yoroi/portfolio
 
-
 [![npm version](https://img.shields.io/npm/v/@yoroi/portfolio.svg)](https://www.npmjs.com/package/@yoroi/portfolio)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![codecov](https://codecov.io/gh/Emurgo/yoroi/branch/develop/graph/badge.svg?component=portfolio)](https://codecov.io/gh/Emurgo/yoroi)

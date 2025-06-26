@@ -1,8 +1,9 @@
+import {invalid} from '@yoroi/common'
+
 import * as React from 'react'
 
 import {Catalyst} from '../../types'
 import {catalystConfig} from '../config'
-import {invalid} from '@yoroi/common'
 import {
   catalystReducer,
   catalystDefaultState,

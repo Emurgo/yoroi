@@ -1,8 +1,10 @@
-import {governanceManagerMaker, GovernanceAction} from './manager'
-import {init} from '@emurgo/cross-csl-nodejs'
-import {GovernanceApi, governanceApiMaker} from './api'
-import {fetcher, mountAsyncStorage} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
+import {fetcher, mountAsyncStorage} from '@yoroi/common'
+
+import {init} from '@emurgo/cross-csl-nodejs'
+
+import {governanceManagerMaker, GovernanceAction} from './manager'
+import {GovernanceApi, governanceApiMaker} from './api'
 
 const apiMock: GovernanceApi = {
   getDRepById: () =>

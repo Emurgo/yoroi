@@ -1,6 +1,8 @@
-import {z} from 'zod'
-import {Catalyst} from '../types'
 import {createTypeGuardFromSchema} from '@yoroi/common'
+
+import {z} from 'zod'
+
+import {Catalyst} from '../types'
 
 const FundChallengeSchema = z.object({
   id: z.number(),

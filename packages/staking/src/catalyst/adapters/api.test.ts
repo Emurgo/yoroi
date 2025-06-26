@@ -1,4 +1,5 @@
 import {Api} from '@yoroi/types'
+
 import {Catalyst} from '../../types'
 import {catalystGetFundInfo} from './api'
 import {mockCatalystApiFundInfo} from './fund-info.mocks'
