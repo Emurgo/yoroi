@@ -21,10 +21,6 @@ project(appmodules)
 # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++")
 
 # Find and link libc++
-find_library(CPP_SHARED c++)
-if(CPP_SHARED)
-    message(STATUS "Found libc++: ${CPP_SHARED}")
-endif()
 
 # Find package paths using npm
 execute_process(
@@ -117,10 +113,5 @@ target_link_libraries(cxx_modules_loader
         jsi
         cls_mobile_bridge_jsi)
 
-# Link C++ standard library for Android
-if(CPP_SHARED)
-    target_link_libraries(cxx_modules_loader ${CPP_SHARED})
-    target_link_libraries(${CMAKE_PROJECT_NAME} ${CPP_SHARED})
-endif()
 
 target_link_libraries(${CMAKE_PROJECT_NAME} cxx_modules_loader)
