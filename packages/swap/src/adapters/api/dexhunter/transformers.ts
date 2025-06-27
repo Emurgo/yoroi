@@ -17,8 +17,8 @@ import {
   ReverseEstimateResponse,
   Split,
   TokensResponse,
+  DexhunterApiConfig,
 } from './types'
-import {DexhunterApiConfig} from './api-maker'
 import {isDex} from './validators'
 
 export const ptIdDh =

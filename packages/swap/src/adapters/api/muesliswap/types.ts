@@ -1,4 +1,5 @@
-import {Portfolio} from '@yoroi/types'
+import {FetchData} from '@yoroi/common'
+import {Chain, Portfolio} from '@yoroi/types'
 
 export const Dex = {
   Muesliswap_v2: 'muesliswap-v2',
@@ -204,3 +205,14 @@ export type LimitOrderResponse = {
 }
 
 export type LimitQuoteResponse = QuoteResponse
+
+export type MuesliswapApiConfig = {
+  partner?: string
+  addressHex: string
+  address: string
+  primaryTokenInfo: Portfolio.Token.Info
+  isPrimaryToken: (token: string | null | undefined) => boolean
+  stakingKey: string
+  network: Chain.SupportedNetworks
+  request?: FetchData
+}

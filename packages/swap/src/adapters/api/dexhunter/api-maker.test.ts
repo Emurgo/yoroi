@@ -1,9 +1,9 @@
 import {fetchData} from '@yoroi/common'
 import {Api, Chain} from '@yoroi/types'
 
-import {dexhunterApiMaker, DexhunterApiConfig} from './api-maker'
+import {dexhunterApiMaker} from './api-maker'
 import {api} from './api.mocks'
-import {BuildResponse, LimitBuildResponse} from './types'
+import {BuildResponse, DexhunterApiConfig, LimitBuildResponse} from './types'
 
 jest.mock('@yoroi/common', () => ({
   fetchData: jest.fn(),
