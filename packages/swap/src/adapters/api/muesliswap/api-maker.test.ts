@@ -1,13 +1,9 @@
 import {fetchData} from '@yoroi/common'
 import {Api, Chain, Left} from '@yoroi/types'
 
-import {
-  MuesliswapApiConfig,
-  muesliswapApiMaker,
-  parseMuesliError,
-} from './api-maker'
+import {muesliswapApiMaker, parseMuesliError} from './api-maker'
 import {api} from './api.mocks'
-import {ApiResponseError} from '@yoroi/types/lib/typescript/api/response'
+import {MuesliswapApiConfig} from './types'
 
 jest.mock('@yoroi/common', () => ({
   fetchData: jest.fn(),
@@ -421,7 +417,7 @@ describe('muesliswapApiMaker', () => {
 
 describe('parseMuesliError', () => {
   it('parses error when responseData.detail is present', () => {
-    const input: Left<ApiResponseError> = {
+    const input: Left<Api.ResponseError> = {
       tag: 'left',
       error: {
         status: 500,
@@ -443,7 +439,7 @@ describe('parseMuesliError', () => {
         status: 500,
         message: 'Cancel error',
       },
-    } as Left<ApiResponseError>
+    } as Left<Api.ResponseError>
 
     const result = parseMuesliError(input)
 
@@ -454,7 +450,7 @@ describe('parseMuesliError', () => {
   })
 
   it('strips leading and trailing quotes if detail is a JSON string', () => {
-    const input: Left<ApiResponseError> = {
+    const input: Left<Api.ResponseError> = {
       tag: 'left',
       error: {
         status: 500,

@@ -14,8 +14,8 @@ import {
   QuoteResponse,
   Split,
   TokensResponse,
+  MuesliswapApiConfig,
 } from './types'
-import {MuesliswapApiConfig} from './api-maker'
 import {resolveDexes} from './helpers'
 
 export const transformersMaker = ({

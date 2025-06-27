@@ -1,11 +1,5 @@
-import {
-  FetchData,
-  fetchData,
-  isLeft,
-  isNonNullable,
-  isRight,
-} from '@yoroi/common'
-import {Api, Chain, Left, Portfolio, Swap} from '@yoroi/types'
+import {fetchData, isLeft, isNonNullable, isRight} from '@yoroi/common'
+import {Api, Chain, Left, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -17,19 +11,10 @@ import {
   QuoteResponse,
   LimitOrderResponse,
   LimitQuoteResponse,
+  MuesliswapApiConfig,
 } from './types'
 import {MuesliswapProtocols, transformersMaker} from './transformers'
 
-export type MuesliswapApiConfig = {
-  partner?: string
-  addressHex: string
-  address: string
-  primaryTokenInfo: Portfolio.Token.Info
-  isPrimaryToken: (token: string | null | undefined) => boolean
-  stakingKey: string
-  network: Chain.SupportedNetworks
-  request?: FetchData
-}
 export const muesliswapApiMaker = (
   config: MuesliswapApiConfig,
 ): Readonly<Swap.Api> => {

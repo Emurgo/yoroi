@@ -1,3 +1,6 @@
+import {FetchData} from '@yoroi/common'
+import {Chain, Portfolio} from '@yoroi/types'
+
 export const Dex = {
   Minswap_v1: 'MINSWAP',
   Minswap_v2: 'MINSWAPV2',
@@ -228,4 +231,13 @@ export type SignRequest = {
 export type SignResponse = {
   cbor?: string
   strat_id?: string
+}
+
+export type DexhunterApiConfig = {
+  address: string
+  primaryTokenInfo: Portfolio.Token.Info
+  isPrimaryToken: (token: string | null | undefined) => boolean
+  partner?: string
+  network: Chain.SupportedNetworks
+  request?: FetchData
 }
