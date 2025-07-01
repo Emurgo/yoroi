@@ -14,5 +14,6 @@
     "jest.runMode": {
       "type": "on-demand"
     },
-    "jest.pathToJest": "${workspaceRoot}/node_modules/.bin/jest"
+    "jest.pathToJest": "${workspaceRoot}/node_modules/.bin/jest",
+    "cmake.sourceDirectory": "${workspaceRoot}/apps/mobile/plugins/android_jni"
 }
