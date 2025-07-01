@@ -23,7 +23,6 @@
     "@cardano-foundation/ledgerjs-hw-app-cardano": "^7.1.4",
     "@craftzdog/react-native-buffer": "^6.1.0",
     "@emurgo/cardano-serialization-lib-browser": "^14.1.2",
-    "@emurgo/cardano-serialization-lib-browser-inlined-gc": "14.1.2",
     "@emurgo/cip4-js": "^1.0.7",
     "@emurgo/csl-mobile-bridge-jsi": "^1.0.0-alpha.5",
     "@expo/metro-runtime": "~5.0.4",
