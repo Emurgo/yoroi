@@ -30,7 +30,9 @@ type ModalActions = {
   stopLoading: () => void
 }
 
-const ModalContext = React.createContext<undefined | (ModalState & ModalActions)>(undefined)
+const ModalContext = React.createContext<
+  undefined | (ModalState & ModalActions)
+>(undefined)
 
 export const useModal = () => {
   const value = React.useContext(ModalContext)
@@ -47,7 +49,10 @@ export const ModalProvider = ({
   children: React.ReactNode
   initialState?: Partial<ModalState>
 }) => {
-  const [state, dispatch] = React.useReducer(modalReducer, {...defaultState, ...initialState})
+  const [state, dispatch] = React.useReducer(modalReducer, {
+    ...defaultState,
+    ...initialState,
+  })
   const navigation = useNavigation()
   const onCloseRef = React.useRef<() => void>()
   const actions = React.useRef<ModalActions>({
@@ -58,9 +63,27 @@ export const ModalProvider = ({
         onCloseRef.current?.()
       }
     },
-    openModal: ({title = '', content, height, onClose, full = false, footer, canContinue, canDiscard = true}) => {
+    openModal: ({
+      title = '',
+      content,
+      height,
+      onClose,
+      full = false,
+      footer,
+      canContinue,
+      canDiscard = true,
+    }) => {
       Keyboard.dismiss()
-      dispatch({type: 'open', title, content, footer, height, full, canContinue, canDiscard})
+      dispatch({
+        type: 'open',
+        title,
+        content,
+        footer,
+        height,
+        full,
+        canContinue,
+        canDiscard,
+      })
       navigation.navigate('modal')
       onCloseRef.current = onClose
     },
@@ -69,9 +92,14 @@ export const ModalProvider = ({
     setCanContinue: (v) => dispatch({type: 'canContinue', canContinue: v}),
   }).current
 
-  const context = React.useMemo(() => ({...state, ...actions}), [state, actions])
+  const context = React.useMemo(
+    () => ({...state, ...actions}),
+    [state, actions],
+  )
 
-  return <ModalContext.Provider value={context}>{children}</ModalContext.Provider>
+  return (
+    <ModalContext.Provider value={context}>{children}</ModalContext.Provider>
+  )
 }
 
 type ModalAction =
@@ -133,6 +161,8 @@ const defaultState: ModalState = Object.freeze({
   canDiscard: true,
 })
 
-const getLastRouteName = (navigation: NavigationProp<ReactNavigation.RootParamList>) => {
+const getLastRouteName = (
+  navigation: NavigationProp<ReactNavigation.RootParamList>,
+) => {
   return navigation.getState().routes.slice(-1)[0].name
 }

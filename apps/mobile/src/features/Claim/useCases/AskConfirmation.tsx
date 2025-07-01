@@ -2,9 +2,10 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../components/Button/Button'
-import {useModal} from '../../../components/Modal/ModalContext'
-import {Spacer} from '../../../components/Spacer/Spacer'
+import {useModal} from '../../../ui/Modal/ModalContext'
+
+import {Button, ButtonType} from '../../../ui/Button/Button'
+import {Space} from '../../../ui/Space/Space'
 import {useStrings} from '../common/useStrings'
 
 type Props = {
@@ -21,19 +22,19 @@ export const AskConfirmation = ({address, url, code}: Props) => {
     <View style={styles.root}>
       <Text style={styles.warning}>{strings.addressSharingWarning}</Text>
 
-      <Spacer height={20} />
+      <Space.Height.xl />
 
       <Text style={styles.monospace}>{address}</Text>
 
-      <Spacer fill />
+      <Space.Height.lg fill />
 
       <Item label={strings.domain} value={domain} />
 
-      <Spacer height={16} />
+      <Space.Height.lg />
 
       <Item label={strings.code} value={code} />
 
-      <Spacer fill />
+      <Space.Height.lg fill />
     </View>
   )
 }
@@ -51,16 +52,31 @@ const Item = ({label, value}: {label: string; value: string}) => {
   )
 }
 
-export const AskConfirmationActions = ({onContinue}: {onContinue: () => void}) => {
+export const AskConfirmationActions = ({
+  onContinue,
+}: {
+  onContinue: () => void
+}) => {
   const strings = useStrings()
   const {closeModal, isLoading} = useModal()
   const styles = useStyles()
 
   return (
     <View style={styles.actions}>
-      <Button size="S" type={ButtonType.Secondary} title={strings.cancel} onPress={closeModal} disabled={isLoading} />
+      <Button
+        size="S"
+        type={ButtonType.Secondary}
+        title={strings.cancel}
+        onPress={closeModal}
+        disabled={isLoading}
+      />
 
-      <Button size="S" title={strings.continue} onPress={onContinue} disabled={isLoading} />
+      <Button
+        size="S"
+        title={strings.continue}
+        onPress={onContinue}
+        disabled={isLoading}
+      />
     </View>
   )
 }
