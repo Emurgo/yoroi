@@ -54,6 +54,10 @@ describe('getDexByProtocol', () => {
     expect(getDexByProtocol(Swap.Protocol.Splash_v1)).toBe(Swap.Dex.Splash)
   })
 
+  it('should return Cswap for Cswap protocol', () => {
+    expect(getDexByProtocol(Swap.Protocol.Cswap)).toBe(Swap.Dex.Cswap)
+  })
+
   it('should return Unsupported for Unsupported protocol', () => {
     expect(getDexByProtocol(Swap.Protocol.Unsupported)).toBe(
       Swap.Dex.Unsupported,

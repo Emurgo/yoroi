@@ -4,6 +4,7 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Space} from '../../../../components/Space/Space'
+import {features} from '../../../../kernel/features'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {useUtxoList} from './useUtxoList'
 import {UtxoAddressGroup} from './UtxoAddressGroup'
@@ -20,7 +21,7 @@ export const UtxoList = () => {
       <FlashList
         data={utxoList}
         ListHeaderComponent={
-          utxoList.length > 1 && isSingle ? (
+          features.utxoConsolidation && utxoList.length > 1 && isSingle ? (
             <>
               <WarningSingleAddress />
 

@@ -2,6 +2,7 @@ import {FetchData} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
 
 export const Dex = {
+  Cswap: 'CSWAP',
   Minswap_v1: 'MINSWAP',
   Minswap_v2: 'MINSWAPV2',
   Wingriders_v1: 'WINGRIDER',

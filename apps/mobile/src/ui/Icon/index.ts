@@ -32,6 +32,7 @@ import {Copy} from './Copy'
 import {CopySuccess} from './CopySuccess'
 import {Cross} from './Cross'
 import {CrossCircle} from './CrossCircle'
+import {Cswap} from './Cswap'
 import {Danger} from './Danger'
 import {DApp} from './DApp'
 import {DappConnector} from './DappConnector'
@@ -171,6 +172,7 @@ export const Icon = {
   CopySuccess,
   Cross,
   CrossCircle,
+  Cswap,
   DappConnector,
   Delete,
   Device,

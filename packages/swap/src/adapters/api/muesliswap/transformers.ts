@@ -351,6 +351,7 @@ export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
+    [Swap.Protocol.Cswap]: undefined,
     [Swap.Protocol.Minswap_v1]: Dex.Minswap_v1,
     [Swap.Protocol.Minswap_v2]: Dex.Minswap_v2,
     [Swap.Protocol.Minswap_stable]: Dex.Minswap_stable,

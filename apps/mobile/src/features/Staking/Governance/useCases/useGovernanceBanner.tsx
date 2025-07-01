@@ -1,8 +1,9 @@
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
-import {useQuery} from 'react-query'
+import {useQuery, useQueryClient} from 'react-query'
 
+import {useWalletEvent} from '../../../../yoroi-wallets/hooks'
 import {BannerIds, showBanner} from '../../../Notifications/common/banners'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -10,6 +11,7 @@ import {useIsParticipatingInGovernance} from '../common/helpers'
 import {useStrings} from '../common/strings'
 
 export const useGovernanceBanner = () => {
+  const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const manager = useNotificationManager()
   const {
@@ -17,12 +19,14 @@ export const useGovernanceBanner = () => {
   } = useWalletManager()
 
   const isParticipating = useIsParticipatingInGovernance()
+  const queryKey = ['governanceBanner', wallet?.id, network]
+  const queryClient = useQueryClient()
 
-  const strings = useStrings()
+  useWalletEvent(wallet, 'utxos', () => queryClient.invalidateQueries(queryKey))
 
   useQuery({
-    queryKey: ['governanceBanner', wallet?.id, network],
-    staleTime: time.oneHour,
+    queryKey,
+    staleTime: time.fiveMinutes,
     queryFn: async () => {
       if (!isParticipating) {
         if (network === Chain.Network.Mainnet) {

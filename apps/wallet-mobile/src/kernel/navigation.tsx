@@ -153,6 +153,7 @@ export type TxHistoryRoutes = {
     id: string
   }
   'utxo-list': undefined
+  'utxo-consolidation': undefined
   'receive-single': undefined
   'receive-specific-amount': undefined
   'receive-multiple': undefined
@@ -727,6 +728,13 @@ export const useWalletNavigation = () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {screen: 'history', params: {screen: 'utxo-list'}},
+      })
+    },
+
+    navigateToUtxoConsolidation: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'utxo-consolidation'}},
       })
     },
 

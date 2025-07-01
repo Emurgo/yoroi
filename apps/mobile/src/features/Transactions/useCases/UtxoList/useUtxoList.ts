@@ -1,3 +1,4 @@
+import type {TransactionUnspentOutput, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {primaryTokenId} from '@yoroi/portfolio'
 import {Balance} from '@yoroi/types'
@@ -104,40 +105,49 @@ const transformUtxo = (utxo: RawUtxo): Utxo => {
 async function toTransactionUnspentOutputHex(this: Utxo): Promise<string> {
   const {csl, release} = wrappedCsl()
   try {
-    const input = await csl.TransactionInput.new(await csl.TransactionHash.fromHex(this.txHash), this.txIndex)
-    const value = await csl.Value.new(await csl.BigNum.fromStr(this.balance[primaryTokenId] ?? '0'))
-
-    const assetIds = Object.keys(this.balance).filter((v) => v !== primaryTokenId)
-
-    if (assetIds.length > 0) {
-      const multiAsset = await csl.MultiAsset.new()
-
-      const groupedByPolicyId = assetIds.reduce((acc, cur) => {
-        const policyId = toPolicyId(cur)
-        acc[policyId] = acc[policyId] ?? []
-        acc[policyId].push(cur)
-        return acc
-      }, {} as Record<string, Array<string>>)
-
-      for (const policyIdStr of Object.keys(groupedByPolicyId)) {
-        const assetGroup = groupedByPolicyId[policyIdStr]
-        const policyId = await csl.ScriptHash.fromBytes(new Uint8Array(Buffer.from(policyIdStr, 'hex')))
-        const assets = await csl.Assets.new()
-        for (const asset of assetGroup) {
-          const name = await csl.AssetName.new(new Uint8Array(Buffer.from(toAssetNameHex(asset), 'hex')))
-          const amount = await csl.BigNum.fromStr(this.balance[asset])
-          await assets.insert(name, amount)
-        }
-        await multiAsset.insert(policyId, assets)
-      }
-
-      await value.setMultiasset(multiAsset)
-    }
-    const receiver = await csl.Address.fromBech32(this.receiver)
-    if (!receiver) throw new Error('Invalid receiver')
-    const output = await csl.TransactionOutput.new(receiver, value)
-    return (await csl.TransactionUnspentOutput.new(input, output)).toHex()
+    return (await utxoToTransactionUnspentOutput({csl, utxo: this})).toHex()
   } finally {
     release()
   }
+}
+
+type UtxoToCsl = {
+  csl: WasmModuleProxy
+  utxo: Utxo
+}
+
+export const utxoToTransactionUnspentOutput = async ({csl, utxo}: UtxoToCsl): Promise<TransactionUnspentOutput> => {
+  const input = await csl.TransactionInput.new(await csl.TransactionHash.fromHex(utxo.txHash), utxo.txIndex)
+  const value = await csl.Value.new(await csl.BigNum.fromStr(utxo.balance[primaryTokenId] ?? '0'))
+
+  const assetIds = Object.keys(utxo.balance).filter((v) => v !== primaryTokenId)
+
+  if (assetIds.length > 0) {
+    const multiAsset = await csl.MultiAsset.new()
+
+    const groupedByPolicyId = assetIds.reduce((acc, cur) => {
+      const policyId = toPolicyId(cur)
+      acc[policyId] = acc[policyId] ?? []
+      acc[policyId].push(cur)
+      return acc
+    }, {} as Record<string, Array<string>>)
+
+    for (const policyIdStr of Object.keys(groupedByPolicyId)) {
+      const assetGroup = groupedByPolicyId[policyIdStr]
+      const policyId = await csl.ScriptHash.fromBytes(new Uint8Array(Buffer.from(policyIdStr, 'hex')))
+      const assets = await csl.Assets.new()
+      for (const asset of assetGroup) {
+        const name = await csl.AssetName.new(new Uint8Array(Buffer.from(toAssetNameHex(asset), 'hex')))
+        const amount = await csl.BigNum.fromStr(utxo.balance[asset])
+        await assets.insert(name, amount)
+      }
+      await multiAsset.insert(policyId, assets)
+    }
+
+    await value.setMultiasset(multiAsset)
+  }
+  const receiver = await csl.Address.fromBech32(utxo.receiver)
+  if (!receiver) throw new Error('Invalid receiver')
+  const output = await csl.TransactionOutput.new(receiver, value)
+  return csl.TransactionUnspentOutput.new(input, output)
 }

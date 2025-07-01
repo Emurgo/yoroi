@@ -47,6 +47,7 @@ import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {HeaderRightSwap} from './common/HeaderRightSwap'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
+import {UtxoConsolidation} from './useCases/UtxoConsolidation/UtxoConsolidation'
 import {UtxoList} from './useCases/UtxoList/UtxoList'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
@@ -162,6 +163,14 @@ export const TxHistoryNavigator = () => {
                     </Boundary>
                   )}
                 </Stack.Screen>
+
+                <Stack.Screen
+                  name="utxo-consolidation"
+                  component={UtxoConsolidation}
+                  options={{
+                    title: strings.organizeWallet,
+                  }}
+                />
 
                 <Stack.Screen
                   name="receive-single"
@@ -545,6 +554,10 @@ const messages = defineMessages({
     id: 'components.utxoList',
     defaultMessage: '!!!UTxO List',
   },
+  organizeWallet: {
+    id: 'components.organizeWallet.title',
+    defaultMessage: '!!!Organize Wallet',
+  },
 })
 
 const useStrings = () => {
@@ -578,6 +591,7 @@ const useStrings = () => {
     settings: intl.formatMessage(messages.settings),
     notificationsTitle: intl.formatMessage(messages.notificationsTitle),
     utxoList: intl.formatMessage(messages.utxoList),
+    organizeWallet: intl.formatMessage(messages.organizeWallet),
   }
 }
 

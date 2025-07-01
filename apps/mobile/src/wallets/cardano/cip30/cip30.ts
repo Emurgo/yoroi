@@ -21,7 +21,7 @@ import {getDerivationPathForAddress, getTransactionSigners} from '../common/sign
 import {Pagination, YoroiWallet} from '../types'
 import {copyFromCSL, copyMultipleFromCSL, createRawTxSigningKey, identifierToCardanoAsset} from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
-import {wrappedCsl as getCSL} from '../wrappedCsl'
+import {wrappedCsl} from '../wrappedCsl'
 
 export const cip30ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
   return new CIP30Extension(wallet, meta)
@@ -35,7 +35,7 @@ class CIP30Extension {
   constructor(private wallet: YoroiWallet, private meta: Wallet.Meta) {}
 
   async getBalance(tokenId = '*'): Promise<CSL.Value> {
-    const {csl, release} = getCSL()
+    const {csl, release} = wrappedCsl()
     try {
       const value = await _getBalance(csl, tokenId, this.wallet.utxos, this.wallet.portfolioPrimaryTokenInfo.id)
       return copyFromCSL(CardanoMobile.Value, value)
@@ -66,7 +66,7 @@ class CIP30Extension {
   }
 
   async getUtxos(value?: string, pagination?: Pagination): Promise<CSL.TransactionUnspentOutput[] | null> {
-    const {csl, release} = getCSL()
+    const {csl, release} = wrappedCsl()
     try {
       const utxos = await _getUtxos(csl, this.wallet, this.meta, value, pagination)
       if (utxos === null) return null
@@ -77,7 +77,7 @@ class CIP30Extension {
   }
 
   async getCollateral(value?: string): Promise<CSL.TransactionUnspentOutput[] | null> {
-    const {csl, release} = getCSL()
+    const {csl, release} = wrappedCsl()
     try {
       const valueStr = value?.trim() ?? collateralConfig.minLovelace.toString()
       const valueNum = new BigNumber(valueStr)
@@ -121,7 +121,7 @@ class CIP30Extension {
   }
 
   async signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}> {
-    const {csl, release} = getCSL()
+    const {csl, release} = wrappedCsl()
     try {
       const payloadInBytes = Buffer.from(payload, 'hex')
       const normalisedAddress = await normalizeToAddress(csl, address)
@@ -155,7 +155,7 @@ class CIP30Extension {
   }
 
   async signTx(rootKey: string, cbor: string, partial = false): Promise<CSL.TransactionWitnessSet> {
-    const {csl, release} = getCSL()
+    const {csl, release} = wrappedCsl()
     try {
       const signers = await getTransactionSigners(cbor, this.wallet, this.meta, partial)
       const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
@@ -180,7 +180,7 @@ class CIP30Extension {
       addressMode: this.meta.addressMode,
     })
     const txBody = await yoroiUnsignedTx.unsignedTx.txBuilder.build()
-    const {csl, release} = getCSL()
+    const {csl, release} = wrappedCsl()
     try {
       const emptyWitnessSet = await csl.TransactionWitnessSet.new()
       const tx = await csl.Transaction.new(txBody, emptyWitnessSet, undefined)
@@ -212,7 +212,7 @@ const remoteAssetToMultiasset = async (csl: WasmModuleProxy, remoteAssets: UtxoA
   return multiasset
 }
 const cardanoUtxoFromRemoteFormat = async (u: RemoteUnspentOutput): Promise<CSL.TransactionUnspentOutput> => {
-  const {csl, release} = getCSL()
+  const {csl, release} = wrappedCsl()
   try {
     const input = await csl.TransactionInput.new(await csl.TransactionHash.fromHex(u.txHash), u.txIndex)
     const value = await csl.Value.new(await csl.BigNum.fromStr(u.amount))

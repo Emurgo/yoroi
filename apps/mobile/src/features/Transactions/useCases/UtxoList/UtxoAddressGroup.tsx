@@ -1,7 +1,7 @@
 import {FlashList} from '@shopify/flash-list'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Copiable} from '../../../../components/Clipboard/Copiable'
 import {Space} from '../../../../components/Space/Space'
@@ -13,7 +13,9 @@ export const UtxoAddressGroup = ({item}: {item: UtxoList[number]}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.path}>{item.path}</Text>
+        <TouchableOpacity onPress={() => Linking.openURL('https://cips.cardano.org/cip/CIP-1852')}>
+          <Text style={styles.path}>{item.path}</Text>
+        </TouchableOpacity>
 
         <Copiable text={item.address}>
           <View style={{flex: 1}}>

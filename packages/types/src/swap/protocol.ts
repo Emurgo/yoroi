@@ -1,4 +1,5 @@
 export const SwapProtocol = Object.freeze({
+  Cswap: 'cswap',
   Minswap_v1: 'minswap-v1',
   Minswap_v2: 'minswap-v2',
   Minswap_stable: 'minswap-stable',

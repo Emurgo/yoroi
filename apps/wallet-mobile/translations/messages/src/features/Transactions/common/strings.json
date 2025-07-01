@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Sent funds",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 60,
+      "line": 65,
       "column": 8,
-      "index": 3339
+      "index": 3724
     },
     "end": {
-      "line": 63,
+      "line": 68,
       "column": 3,
-      "index": 3434
+      "index": 3819
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Received funds",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 64,
+      "line": 69,
       "column": 12,
-      "index": 3448
+      "index": 3833
     },
     "end": {
-      "line": 67,
+      "line": 72,
       "column": 3,
-      "index": 3551
+      "index": 3936
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Intrawallet transaction",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 68,
+      "line": 73,
       "column": 8,
-      "index": 3561
+      "index": 3946
     },
     "end": {
-      "line": 71,
+      "line": 76,
       "column": 3,
-      "index": 3669
+      "index": 4054
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Multi-party transaction",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 72,
+      "line": 77,
       "column": 9,
-      "index": 3680
+      "index": 4065
     },
     "end": {
-      "line": 75,
+      "line": 80,
       "column": 3,
-      "index": 3789
+      "index": 4174
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!/{idx}",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 79,
+      "line": 84,
       "column": 24,
-      "index": 3860
+      "index": 4245
     },
     "end": {
-      "line": 82,
+      "line": 87,
       "column": 3,
-      "index": 3961
+      "index": 4346
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!/change",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 83,
+      "line": 88,
       "column": 23,
-      "index": 3986
+      "index": 4371
     },
     "end": {
-      "line": 86,
+      "line": 91,
       "column": 3,
-      "index": 4087
+      "index": 4472
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!not mine",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 87,
+      "line": 92,
       "column": 24,
-      "index": 4113
+      "index": 4498
     },
     "end": {
-      "line": 90,
+      "line": 95,
       "column": 3,
-      "index": 4216
+      "index": 4601
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Fee:",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 91,
+      "line": 96,
       "column": 16,
-      "index": 4234
+      "index": 4619
     },
     "end": {
-      "line": 94,
+      "line": 99,
       "column": 3,
-      "index": 4317
+      "index": 4702
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!From Addresses",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 95,
+      "line": 100,
       "column": 17,
-      "index": 4336
+      "index": 4721
     },
     "end": {
-      "line": 98,
+      "line": 103,
       "column": 3,
-      "index": 4438
+      "index": 4823
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!To Addresses",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 99,
+      "line": 104,
       "column": 15,
-      "index": 4455
+      "index": 4840
     },
     "end": {
-      "line": 102,
+      "line": 107,
       "column": 3,
-      "index": 4553
+      "index": 4938
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Memo",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 103,
+      "line": 108,
       "column": 8,
-      "index": 4563
+      "index": 4948
     },
     "end": {
-      "line": 106,
+      "line": 111,
       "column": 3,
-      "index": 4646
+      "index": 5031
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Transaction ID",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 107,
+      "line": 112,
       "column": 17,
-      "index": 4665
+      "index": 5050
     },
     "end": {
-      "line": 110,
+      "line": 115,
       "column": 3,
-      "index": 4767
+      "index": 5152
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Transaction assurance level",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 111,
+      "line": 116,
       "column": 20,
-      "index": 4789
+      "index": 5174
     },
     "end": {
-      "line": 114,
+      "line": 119,
       "column": 3,
-      "index": 4907
+      "index": 5292
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 115,
+      "line": 120,
       "column": 17,
-      "index": 4926
+      "index": 5311
     },
     "end": {
-      "line": 118,
+      "line": 123,
       "column": 3,
-      "index": 5075
+      "index": 5460
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 119,
+      "line": 124,
       "column": 16,
-      "index": 5093
+      "index": 5478
     },
     "end": {
-      "line": 122,
+      "line": 127,
       "column": 3,
-      "index": 5242
+      "index": 5627
     }
   },
   {
@@ -229,14 +229,14 @@
     "defaultMessage": "!!!Open in explorer",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 123,
+      "line": 128,
       "column": 18,
-      "index": 5262
+      "index": 5647
     },
     "end": {
-      "line": 126,
+      "line": 131,
       "column": 3,
-      "index": 5343
+      "index": 5728
     }
   },
   {
@@ -244,14 +244,14 @@
     "defaultMessage": "!!!Transactions",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 127,
+      "line": 132,
       "column": 9,
-      "index": 5354
+      "index": 5739
     },
     "end": {
-      "line": 130,
+      "line": 135,
       "column": 3,
-      "index": 5446
+      "index": 5831
     }
   },
   {
@@ -259,14 +259,14 @@
     "defaultMessage": "!!!Note:",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 131,
+      "line": 136,
       "column": 16,
-      "index": 5464
+      "index": 5849
     },
     "end": {
-      "line": 134,
+      "line": 139,
       "column": 3,
-      "index": 5563
+      "index": 5948
     }
   },
   {
@@ -274,14 +274,14 @@
     "defaultMessage": "!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 135,
+      "line": 140,
       "column": 11,
-      "index": 5576
+      "index": 5961
     },
     "end": {
-      "line": 138,
+      "line": 143,
       "column": 3,
-      "index": 5758
+      "index": 6143
     }
   },
   {
@@ -289,14 +289,14 @@
     "defaultMessage": "!!!No transactions to show yet",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 139,
+      "line": 144,
       "column": 18,
-      "index": 5778
+      "index": 6163
     },
     "end": {
-      "line": 142,
+      "line": 147,
       "column": 3,
-      "index": 5894
+      "index": 6279
     }
   },
   {
@@ -304,14 +304,14 @@
     "defaultMessage": "!!!Fee",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 143,
+      "line": 148,
       "column": 7,
-      "index": 5903
+      "index": 6288
     },
     "end": {
-      "line": 146,
+      "line": 151,
       "column": 3,
-      "index": 5992
+      "index": 6377
     }
   },
   {
@@ -320,14 +320,14 @@
     "defaultMessage": "!!!{cnt} assets",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 147,
+      "line": 152,
       "column": 10,
-      "index": 6004
+      "index": 6389
     },
     "end": {
-      "line": 151,
+      "line": 156,
       "column": 3,
-      "index": 6156
+      "index": 6541
     }
   },
   {
@@ -335,14 +335,14 @@
     "defaultMessage": "!!!ADA sent",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 152,
+      "line": 157,
       "column": 23,
-      "index": 6181
+      "index": 6566
     },
     "end": {
-      "line": 155,
+      "line": 160,
       "column": 3,
-      "index": 6291
+      "index": 6676
     }
   },
   {
@@ -350,14 +350,14 @@
     "defaultMessage": "!!!ADA received",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 156,
+      "line": 161,
       "column": 27,
-      "index": 6320
+      "index": 6705
     },
     "end": {
-      "line": 159,
+      "line": 164,
       "column": 3,
-      "index": 6438
+      "index": 6823
     }
   },
   {
@@ -365,14 +365,14 @@
     "defaultMessage": "!!!Intrawallet",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 160,
+      "line": 165,
       "column": 23,
-      "index": 6463
+      "index": 6848
     },
     "end": {
-      "line": 163,
+      "line": 168,
       "column": 3,
-      "index": 6576
+      "index": 6961
     }
   },
   {
@@ -380,14 +380,14 @@
     "defaultMessage": "!!!Multiparty",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 164,
+      "line": 169,
       "column": 24,
-      "index": 6602
+      "index": 6987
     },
     "end": {
-      "line": 167,
+      "line": 172,
       "column": 3,
-      "index": 6715
+      "index": 7100
     }
   },
   {
@@ -395,14 +395,14 @@
     "defaultMessage": "!!![Unknown asset name]",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 168,
+      "line": 173,
       "column": 20,
-      "index": 6737
+      "index": 7122
     },
     "end": {
-      "line": 171,
+      "line": 176,
       "column": 3,
-      "index": 6830
+      "index": 7215
     }
   },
   {
@@ -410,14 +410,14 @@
     "defaultMessage": "!!!Your wallet address",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 172,
+      "line": 177,
       "column": 17,
-      "index": 6849
+      "index": 7234
     },
     "end": {
-      "line": 175,
+      "line": 180,
       "column": 3,
-      "index": 6957
+      "index": 7342
     }
   },
   {
@@ -425,14 +425,14 @@
     "defaultMessage": "!!!BIP32 path:",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 176,
+      "line": 181,
       "column": 13,
-      "index": 6972
+      "index": 7357
     },
     "end": {
-      "line": 179,
+      "line": 184,
       "column": 3,
-      "index": 7068
+      "index": 7453
     }
   },
   {
@@ -440,14 +440,14 @@
     "defaultMessage": "!!!Copy address",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 180,
+      "line": 185,
       "column": 13,
-      "index": 7083
+      "index": 7468
     },
     "end": {
-      "line": 183,
+      "line": 188,
       "column": 3,
-      "index": 7180
+      "index": 7565
     }
   },
   {
@@ -455,14 +455,14 @@
     "defaultMessage": "!!!Address Copied",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 184,
+      "line": 189,
       "column": 15,
-      "index": 7197
+      "index": 7582
     },
     "end": {
-      "line": 187,
+      "line": 192,
       "column": 3,
-      "index": 7298
+      "index": 7683
     }
   },
   {
@@ -470,14 +470,14 @@
     "defaultMessage": "!!!Spending",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 188,
+      "line": 193,
       "column": 12,
-      "index": 7312
+      "index": 7697
     },
     "end": {
-      "line": 191,
+      "line": 196,
       "column": 3,
-      "index": 7411
+      "index": 7796
     }
   },
   {
@@ -485,14 +485,14 @@
     "defaultMessage": "!!!Staking",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 192,
+      "line": 197,
       "column": 11,
-      "index": 7424
+      "index": 7809
     },
     "end": {
-      "line": 195,
+      "line": 200,
       "column": 3,
-      "index": 7521
+      "index": 7906
     }
   },
   {
@@ -500,14 +500,14 @@
     "defaultMessage": "!!!Title",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 196,
+      "line": 201,
       "column": 20,
-      "index": 7543
+      "index": 7928
     },
     "end": {
-      "line": 199,
+      "line": 204,
       "column": 3,
-      "index": 7629
+      "index": 8014
     }
   },
   {
@@ -515,14 +515,89 @@
     "defaultMessage": "!!!Verify Address on Ledger",
     "file": "src/features/Transactions/common/strings.tsx",
     "start": {
-      "line": 200,
+      "line": 205,
       "column": 15,
-      "index": 7646
+      "index": 8031
     },
     "end": {
-      "line": 203,
+      "line": 208,
       "column": 3,
-      "index": 7757
+      "index": 8142
+    }
+  },
+  {
+    "id": "components.organizeWallet.title",
+    "defaultMessage": "!!!Organize Wallet",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 209,
+      "column": 18,
+      "index": 8162
+    },
+    "end": {
+      "line": 212,
+      "column": 3,
+      "index": 8252
+    }
+  },
+  {
+    "id": "components.organizeWallet.description",
+    "defaultMessage": "!!!Your assets are spread accross multiple addresses which may interfere with Dapp connectivity. Merging your ADA and tokens into a single address keeps your wallet organized and more efficient while reducing network fees.",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 213,
+      "column": 29,
+      "index": 8283
+    },
+    "end": {
+      "line": 217,
+      "column": 3,
+      "index": 8589
+    }
+  },
+  {
+    "id": "components.organizeWallet.warning",
+    "defaultMessage": "!!!Certain wallets will require more than 1 transaction to merge assets. You will receive a notification if an additional transaction is needed.",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 218,
+      "column": 25,
+      "index": 8616
+    },
+    "end": {
+      "line": 222,
+      "column": 3,
+      "index": 8840
+    }
+  },
+  {
+    "id": "components.organizeWallet.button",
+    "defaultMessage": "!!!Merge assets",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 223,
+      "column": 24,
+      "index": 8866
+    },
+    "end": {
+      "line": 226,
+      "column": 3,
+      "index": 8954
+    }
+  },
+  {
+    "id": "components.organizeWallet.banner",
+    "defaultMessage": "!!!Assets are spread in multiple addresses",
+    "file": "src/features/Transactions/common/strings.tsx",
+    "start": {
+      "line": 227,
+      "column": 24,
+      "index": 8980
+    },
+    "end": {
+      "line": 230,
+      "column": 3,
+      "index": 9095
     }
   }
 ]
