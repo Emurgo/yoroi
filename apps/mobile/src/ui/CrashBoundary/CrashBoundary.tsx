@@ -7,7 +7,7 @@ import {useTranslatedError} from '../../hooks/useTranslatedError'
 import {LocalizableError} from '../../kernel/i18n/LocalizableError'
 import {logger} from '../../kernel/logger/logger'
 import {Button} from '../Button/Button'
-import {CopyButton} from '../CopyButton/CopyButton'
+import {Copiable} from '../Copiable/Copiable'
 import {SpaceHeight} from '../Space/Space'
 import {ExpandableItem} from './ExpandableItem'
 
@@ -101,7 +101,7 @@ const ErrorView = ({state, debug}: {state: State; debug?: boolean}) => {
             <View style={[a.flex_row, a.justify_between]}>
               <MaybeTranslatedError error={state.error} />
 
-              <CopyButton value={`${state.error}:${state.details}`} />
+              <Copiable text={`${state.error}:${state.details}`} />
             </View>
 
             <ExpandableItem label="Show error">
