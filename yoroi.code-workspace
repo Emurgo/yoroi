@@ -65,8 +65,8 @@
       "path": "./packages/portfolio"
     },
     {
-      "name": "@yoroi/wallet-mobile",
-      "path": "./apps/wallet-mobile"
+      "name": "@yoroi/mobile",
+      "path": "./apps/mobile"
     },
     {
       "name": "@yoroi/notifications",
