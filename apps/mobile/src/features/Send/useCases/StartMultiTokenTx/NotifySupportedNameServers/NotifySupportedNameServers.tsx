@@ -1,11 +1,11 @@
 import {useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon} from '../../../../../components/Icon'
-import {PressableIcon} from '../../../../../components/PressableIcon/PressableIcon'
+
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useStrings} from '../../../common/strings'
 
@@ -32,9 +32,13 @@ export const NotifySupportedNameServers = () => {
         colors={[colors.lightGreen, colors.lightBlue]}
       >
         <View style={styles.header}>
-          <Text style={styles.title}>{`${strings.resolverNoticeTitle} `}😇</Text>
+          <Text style={styles.title}>
+            {`${strings.resolverNoticeTitle} `}😇
+          </Text>
 
-          <PressableIcon icon={Icon.CrossCircle} onPress={handleOnClose} size={24} color={colors.iconColor} />
+          <TouchableOpacity onPress={handleOnClose}>
+            <Icon.CrossCircle size={24} color={colors.iconColor} />
+          </TouchableOpacity>
         </View>
 
         <Spacer height={10} />

@@ -3,16 +3,25 @@ import {sortTokenAmountsByInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {App, Claim, Portfolio} from '@yoroi/types'
 import React from 'react'
-import {FlatList, Linking, Platform, StyleSheet, Text, TextProps, View, ViewProps} from 'react-native'
+import {
+  FlatList,
+  Linking,
+  Platform,
+  StyleSheet,
+  Text,
+  TextProps,
+  TouchableOpacity,
+  View,
+  ViewProps,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
 import {Copiable} from '../../../components/Clipboard/Copiable'
 import {Icon} from '../../../components/Icon'
-import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
-import {Space} from '../../../components/Space/Space'
-import {Spacer} from '../../../components/Spacer/Spacer'
+
 import {isEmptyString} from '../../../kernel/utils'
+import {Space} from '../../../ui/Space/Space'
 import {TokenAmountItem} from '../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useDialogs} from '../common/useDialogs'
@@ -26,7 +35,10 @@ export const ShowSuccessScreen = () => {
   const navigateTo = useNavigateTo()
   const {claimInfo} = useClaim()
 
-  if (!claimInfo) throw new App.Errors.InvalidState('ClaimInfo is not set, reached an invalid state')
+  if (!claimInfo)
+    throw new App.Errors.InvalidState(
+      'ClaimInfo is not set, reached an invalid state',
+    )
 
   const {status, txHash, amounts} = claimInfo
 
@@ -45,7 +57,7 @@ export const ShowSuccessScreen = () => {
       </View>
 
       <Actions>
-        <Spacer height={16} />
+        <Space.Height.lg />
 
         {!isEmptyString(txHash) && (
           <>
@@ -57,18 +69,24 @@ export const ShowSuccessScreen = () => {
 
         <Button onPress={navigateTo.back} title={strings.ok} />
 
-        <Spacer height={16} />
+        <Space.Height.lg />
       </Actions>
     </SafeAreaView>
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => <View style={[style, {paddingHorizontal: 16}]} {...props} />
+const Actions = ({style, ...props}: ViewProps) => (
+  <View style={[style, {paddingHorizontal: 16}]} {...props} />
+)
 const Header = ({style, ...props}: ViewProps) => {
   const {styles} = useStyles()
   return <View style={[styles.header, style]} {...props} />
 }
-const Status = ({status, style, ...props}: TextProps & {status: Claim.Status}) => {
+const Status = ({
+  status,
+  style,
+  ...props
+}: TextProps & {status: Claim.Status}) => {
   const {styles} = useStyles()
   const dialogs = useDialogs()
   const dialog: Record<Claim.Status, {message: string; title: string}> = {
@@ -103,31 +121,41 @@ const TxHash = ({txHash}: {txHash: string}) => {
         <Copiable text={txHash} />
       </View>
 
-      <Spacer height={8} />
+      <Space.Height.sm />
 
       <View style={styles.txRow}>
-        <Text style={[styles.monospace]} numberOfLines={1} ellipsizeMode="middle">
+        <Text
+          style={[styles.monospace]}
+          numberOfLines={1}
+          ellipsizeMode="middle"
+        >
           {txHash}
         </Text>
 
-        <PressableIcon
-          icon={Icon.ExternalLink}
+        <TouchableOpacity
           onPress={() => Linking.openURL(explorers.cardanoscan.tx(txHash))}
-          color={colors.icon}
-          size={16}
-        />
+        >
+          <Icon.ExternalLink color={colors.icon} size={16} />
+        </TouchableOpacity>
       </View>
     </>
   )
 }
 
-const AmountList = ({amounts}: {amounts: ReadonlyArray<Portfolio.Token.Amount>}) => {
+const AmountList = ({
+  amounts,
+}: {
+  amounts: ReadonlyArray<Portfolio.Token.Amount>
+}) => {
   const {wallet} = useSelectedWallet()
   const {styles} = useStyles()
 
   return (
     <FlatList
-      data={sortTokenAmountsByInfo({amounts, primaryTokenInfo: wallet.portfolioPrimaryTokenInfo})}
+      data={sortTokenAmountsByInfo({
+        amounts,
+        primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+      })}
       renderItem={({item: amount}) => <TokenAmountItem amount={amount} />}
       ItemSeparatorComponent={() => <Space height="lg" />}
       style={styles.list}

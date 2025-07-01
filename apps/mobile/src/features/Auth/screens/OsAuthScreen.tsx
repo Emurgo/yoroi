@@ -3,9 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View} from 'react-native'
-
-import {Icon} from '../../../components/Icon'
-import {ScreenBackground} from '../../../components/ScreenBackground'
+import {Icon} from '../../../ui/Icon'
 
 type Props = {
   headings: Array<string>
@@ -27,7 +25,7 @@ export const OsAuthScreen = ({
   const {atoms: ta, palette: p} = useTheme()
 
   return (
-    <ScreenBackground style={[a.flex_1, a.p_lg]}>
+    <View style={[a.flex_1, a.p_lg, ta.bg_color_max]}>
       <View style={[a.flex_1]}>
         <View style={[a.flex_1, onGoBack ? null : a.pt_lg]}>
           {onGoBack && (
@@ -67,7 +65,7 @@ export const OsAuthScreen = ({
           <Action>{buttons}</Action>
         )}
       </View>
-    </ScreenBackground>
+    </View>
   )
 }
 
