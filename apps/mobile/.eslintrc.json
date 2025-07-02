@@ -27,7 +27,8 @@
         "importOrderSortSpecifiers": true
       }
     ],
-    "eqeqeq": "off"
+    "eqeqeq": "off",
+    "react-native/no-inline-styles": "off"
   },
   "root": true
 }

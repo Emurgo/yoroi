@@ -1,8 +1,8 @@
 import {useHeaderHeight} from '@react-navigation/elements'
 import {useFocusEffect} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {LayoutAnimation, StyleSheet, Text, View} from 'react-native'
+import {LayoutAnimation, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import infoIcon from '../../../../assets/img/icon/info-light-green.png'
@@ -32,8 +32,7 @@ export const TxHistory = () => {
   useUtxoConsolidationBanner()
 
   const strings = useStrings()
-  const {styles, colors} = useStyles()
-  const {isDark} = useTheme()
+  const {atoms: ta, palette: p, isDark} = useTheme()
 
   const {track} = useMetrics()
   useGetImportantAlertsModal({enabled: true})
@@ -45,7 +44,9 @@ export const TxHistory = () => {
   )
 
   const {wallet, meta} = useSelectedWallet()
-  const [showWarning, setShowWarning] = React.useState(meta.implementation === 'cardano-bip44')
+  const [showWarning, setShowWarning] = React.useState(
+    meta.implementation === 'cardano-bip44',
+  )
   const headerHeight = useHeaderHeight()
 
   const {sync, isLoading: isLoadingWallet} = useSync(wallet)
@@ -62,10 +63,18 @@ export const TxHistory = () => {
 
   return (
     <LinearGradient
-      colors={isDark ? ['rgba(19, 57, 54, 1)', 'rgba(20, 24, 58, 1)', 'rgba(22, 25, 45, 1)'] : colors.gradient} // it fixes a weird bug
+      colors={
+        isDark
+          ? [
+              'rgba(19, 57, 54, 1)',
+              'rgba(20, 24, 58, 1)',
+              'rgba(22, 25, 45, 1)',
+            ]
+          : p.bg_gradient_1
+      } // it fixes a weird bug
       start={{x: isDark ? 0.5 : 0.5, y: isDark ? 0 : 0.5}}
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
-      style={styles.root}
+      style={{flex: 1}}
     >
       <Spacer height={headerHeight} />
 
@@ -75,12 +84,26 @@ export const TxHistory = () => {
         <ActionsBanner disabled={isLoading} />
       </CollapsibleHeader>
 
-      <View style={styles.panel}>
+      <View
+        style={[
+          a.flex_1,
+          ta.bg_color_max,
+          {
+            paddingTop: 8,
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+          },
+        ]}
+      >
         <UtxoListButton />
 
         <Space height="lg" />
 
-        <Text style={styles.title}>{strings.title}</Text>
+        <Text
+          style={[a.body_1_lg_medium, {color: p.gray_900, textAlign: 'center'}]}
+        >
+          {strings.title}
+        </Text>
 
         <Space height="xl" />
 
@@ -95,48 +118,21 @@ export const TxHistory = () => {
             message={strings.warningMessage}
             showCloseIcon
             onRequestClose={() => {
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+              LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut,
+              )
               setShowWarning(false)
             }}
-            style={styles.warningNoteStyles}
+            style={{position: 'absolute', zIndex: 2, bottom: 0}}
           />
         )}
 
-        <TxList onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
+        <TxList
+          onScroll={onScroll}
+          refreshing={isLoading}
+          onRefresh={handleOnRefresh}
+        />
       </View>
     </LinearGradient>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-    },
-    warningNoteStyles: {
-      position: 'absolute',
-      zIndex: 2,
-      bottom: 0,
-    },
-    title: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_900,
-      textAlign: 'center',
-    },
-    panel: {
-      flex: 1,
-      paddingTop: 8,
-      backgroundColor: color.bg_color_max,
-      borderTopLeftRadius: 24,
-      borderTopRightRadius: 24,
-    },
-  })
-
-  const colors = {
-    gradient: color.bg_gradient_1,
-  }
-
-  return {styles, colors}
 }

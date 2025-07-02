@@ -1,9 +1,9 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {GestureResponderEvent, StyleSheet, View} from 'react-native'
+import {GestureResponderEvent, View} from 'react-native'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
@@ -22,18 +22,20 @@ import {useWalletManager} from '../../../WalletManager/context/WalletManagerProv
 import {useStrings} from '../../common/strings'
 
 export const ActionsBanner = (props: {disabled: boolean}) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const swapForm = useSwap()
   const {tokenOutId, isLoading} = useSwapConfig()
   const disabled = props.disabled || isLoading
   const navigateTo = useNavigateTo()
+  const {palette: p} = useTheme()
 
   const {isSingle, addressMode} = useAddressMode()
-  const {next: nextReceiveAddress, used: usedAddresses} = useReceiveAddressesStatus(addressMode)
+  const {next: nextReceiveAddress, used: usedAddresses} =
+    useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
   const {copy} = useCopy()
-  const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
+  const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} =
+    useMultipleAddressesInfo()
 
   const {reset: resetSendState} = useTransfer()
 
@@ -68,7 +70,11 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
 
     track.swapInitiated({
       from_asset: [
-        {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
+        {
+          asset_name: portfolioPrimaryTokenInfo.name,
+          asset_ticker: portfolioPrimaryTokenInfo.ticker,
+          policy_id: '',
+        },
       ],
       to_asset: [{asset_name: '', asset_ticker: '', policy_id: ''}],
       order_type: 'market',
@@ -103,13 +109,15 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
   }
 
   const handleOnLongPressReceive = (event: GestureResponderEvent) => {
-    track.receiveCopyAddressClicked({copy_address_location: 'Long Press wallet Address'})
+    track.receiveCopyAddressClicked({
+      copy_address_location: 'Long Press wallet Address',
+    })
     copy({text: nextReceiveAddress, event, feedback: strings.copiedLabel})
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.centralized}>
+    <View style={[a.py_xl, a.flex_row, a.justify_center, a.gap_lg]}>
+      <View style={[a.align_center, a.justify_center]}>
         <Button
           type={ButtonType.Circle}
           icon={Icon.Received}
@@ -119,12 +127,21 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
           onLongPress={handleOnLongPressReceive}
         />
 
-        <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.receiveLabel}</Text>
+        <Text
+          style={[
+            a.pt_sm,
+            a.body_3_sm_medium,
+            {color: p.text_gray_medium},
+            disabled && {color: p.text_gray_low},
+          ]}
+        >
+          {strings.receiveLabel}
+        </Text>
       </View>
 
       {!meta.isReadOnly && (
         <>
-          <View style={styles.centralized}>
+          <View style={[a.align_center, a.justify_center]}>
             <Button
               type={ButtonType.Circle}
               icon={Icon.Send}
@@ -133,10 +150,19 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
               disabled={disabled}
             />
 
-            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.sendLabel}</Text>
+            <Text
+              style={[
+                a.pt_sm,
+                a.body_3_sm_medium,
+                {color: p.text_gray_medium},
+                disabled && {color: p.text_gray_low},
+              ]}
+            >
+              {strings.sendLabel}
+            </Text>
           </View>
 
-          <View style={styles.centralized}>
+          <View style={[a.align_center, a.justify_center]}>
             <Button
               type={ButtonType.Circle}
               icon={Icon.Swap}
@@ -145,10 +171,19 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
               disabled={disabled}
             />
 
-            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.swapLabel}</Text>
+            <Text
+              style={[
+                a.pt_sm,
+                a.body_3_sm_medium,
+                {color: p.text_gray_medium},
+                disabled && {color: p.text_gray_low},
+              ]}
+            >
+              {strings.swapLabel}
+            </Text>
           </View>
 
-          <View style={styles.centralized}>
+          <View style={[a.align_center, a.justify_center]}>
             <Button
               type={ButtonType.Circle}
               icon={Icon.Exchange}
@@ -157,38 +192,21 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
               disabled={disabled}
             />
 
-            <Text style={[styles.actionLabel, disabled && styles.disabledLabel]}>{strings.exchange}</Text>
+            <Text
+              style={[
+                a.pt_sm,
+                a.body_3_sm_medium,
+                {color: p.text_gray_medium},
+                disabled && {color: p.text_gray_low},
+              ]}
+            >
+              {strings.exchange}
+            </Text>
           </View>
         </>
       )}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.py_xl,
-      ...atoms.flex_row,
-      ...atoms.justify_center,
-      ...atoms.gap_lg,
-    },
-    centralized: {
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-    actionLabel: {
-      ...atoms.pt_sm,
-      ...atoms.body_3_sm_medium,
-      color: color.text_gray_medium,
-    },
-    disabledLabel: {
-      color: color.text_gray_low,
-    },
-  })
-
-  return {styles}
 }
 
 const useNavigateTo = () => {

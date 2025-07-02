@@ -1,7 +1,7 @@
 import {amountFormatter} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
@@ -10,7 +10,11 @@ import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/Priva
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
 
-export const LockedDeposit = ({ignorePrivacy = false}: {ignorePrivacy?: boolean}) => {
+export const LockedDeposit = ({
+  ignorePrivacy = false,
+}: {
+  ignorePrivacy?: boolean
+}) => {
   const {wallet} = useSelectedWallet()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {lockedAsStorageCost} = usePortfolioPrimaryBreakdown({wallet})
@@ -26,50 +30,52 @@ export const LockedDeposit = ({ignorePrivacy = false}: {ignorePrivacy?: boolean}
             quantity: 0n,
             info: wallet.portfolioPrimaryTokenInfo,
           }),
-    [ignorePrivacy, isPrivacyActive, lockedAsStorageCost, privacyPlaceholder, wallet.portfolioPrimaryTokenInfo],
+    [
+      ignorePrivacy,
+      isPrivacyActive,
+      lockedAsStorageCost,
+      privacyPlaceholder,
+      wallet.portfolioPrimaryTokenInfo,
+    ],
   )
 
   return <FormattedAmount amount={amount} />
 }
 
 const FormattedAmount = ({amount}: {amount: string}) => {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   return (
     <Row>
       <Label />
 
       <Spacer width={4} />
 
-      <Text style={styles.label}>{amount}</Text>
+      <Text style={[{color: p.gray_600}, a.body_2_md_regular]}>{amount}</Text>
     </Row>
   )
 }
 
 const Row = ({children}: {children: React.ReactNode}) => {
-  const styles = useStyles()
-  return <View style={styles.root}>{children}</View>
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      {children}
+    </View>
+  )
 }
 
 const Label = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
-  return <Text style={styles.label}>{strings.lockedDeposit}:</Text>
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    label: {
-      color: color.gray_600,
-      ...atoms.body_2_md_regular,
-    },
-  })
-
-  return styles
+  return (
+    <Text style={[{color: p.gray_600}, a.body_2_md_regular]}>
+      {strings.lockedDeposit}:
+    </Text>
+  )
 }

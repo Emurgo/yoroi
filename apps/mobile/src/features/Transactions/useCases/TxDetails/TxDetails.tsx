@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
-import {useTheme} from '@yoroi/theme'
-import {BigNumber} from 'bignumber.js'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
 import {IntlShape, useIntl} from 'react-intl'
 import {
   LayoutAnimation,
   Linking,
-  StyleSheet,
-  Text as RNText,
+  Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -20,19 +18,21 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner} from '../../../../components/Banner/Banner'
-import {Boundary} from '../../../../components/Boundary/Boundary'
-import {Button} from '../../../../components/Button/Button'
-import {Copiable} from '../../../../components/Clipboard/Copiable'
 import {FadeIn} from '../../../../components/FadeIn'
-import {Icon} from '../../../../components/Icon'
 import {useModal} from '../../../../components/Modal/ModalContext'
-import {Text} from '../../../../components/Text'
 import {isEmptyString} from '../../../../kernel/utils'
+import {Boundary} from '../../../../ui/Boundary/Boundary'
+import {Button} from '../../../../ui/Button/Button'
+import {Copiable} from '../../../../ui/Copiable/Copiable'
+import {Icon} from '../../../../ui/Icon'
 import {MultiToken} from '../../../../wallets/cardano/MultiToken'
 import {CardanoTypes} from '../../../../wallets/cardano/types'
 import {useTransactionInfos} from '../../../../wallets/hooks'
 import {TransactionInfo} from '../../../../wallets/types/other'
-import {formatDateAndTime, formatTokenWithSymbol} from '../../../../wallets/utils/format'
+import {
+  formatDateAndTime,
+  formatTokenWithSymbol,
+} from '../../../../wallets/utils/format'
 import {asQuantity} from '../../../../wallets/utils/utils'
 import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useBestBlock} from '../../../WalletManager/common/hooks/useBestBlock'
@@ -46,20 +46,28 @@ export const TxDetails = () => {
   const screenHeight = useWindowDimensions().height
   const modalHeight = Math.min(screenHeight * 0.8, 650) // to include derivation path in case it is possible
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const intl = useIntl()
   const {id} = useRoute().params as Params
   const {wallet} = useSelectedWallet()
   const explorers = wallet.networkManager.explorers
-  const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
-  const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
+  const internalAddressIndex = fromPairs(
+    wallet.internalAddresses.map((addr, i) => [addr, i]),
+  )
+  const externalAddressIndex = fromPairs(
+    wallet.externalAddresses.map((addr, i) => [addr, i]),
+  )
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
-  const [expandedOutItemId, setExpandedOutItemId] = useState<null | ItemId>(null)
+  const [expandedOutItemId, setExpandedOutItemId] = useState<null | ItemId>(
+    null,
+  )
   const transactions = useTransactionInfos({wallet})
   const transaction = transactions[id]
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
-  const submittedAt = isNonNullable(transaction.submittedAt) ? formatDateAndTime(transaction.submittedAt, intl) : ''
+  const submittedAt = isNonNullable(transaction.submittedAt)
+    ? formatDateAndTime(transaction.submittedAt, intl)
+    : ''
 
   const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
     intl,
@@ -67,7 +75,10 @@ export const TxDetails = () => {
     internalAddressIndex,
     externalAddressIndex,
   )
-  const txFee = transaction.fee != null ? MultiToken.fromArray(transaction.fee).getDefault() : null
+  const txFee =
+    transaction.fee != null
+      ? MultiToken.fromArray(transaction.fee).getDefault()
+      : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount = amountAsMT.getDefault()
 
@@ -82,11 +93,18 @@ export const TxDetails = () => {
   }
 
   const openAddressModal = (address: string) =>
-    openModal({title: strings.addessModalTitle, content: <AddressModal address={address} />, height: modalHeight})
+    openModal({
+      title: strings.addessModalTitle,
+      content: <AddressModal address={address} />,
+      height: modalHeight,
+    })
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
-      <FadeIn style={styles.fade}>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
+    <SafeAreaView
+      edges={['bottom', 'left', 'right']}
+      style={[a.flex_1, ta.bg_color_max]}
+    >
+      <FadeIn style={a.flex_1}>
+        <ScrollView contentContainerStyle={a.px_lg}>
           <Banner label={strings[transaction.direction]}>
             <Boundary>
               <AdaAmount amount={amount} />
@@ -97,14 +115,10 @@ export const TxDetails = () => {
 
           <Label>{strings.memo}</Label>
 
-          <Text secondary monospace>
-            {memo}
-          </Text>
+          <Text>{memo}</Text>
 
-          <View style={styles.borderTop}>
-            <Text secondary monospace style={styles.center}>
-              {submittedAt}
-            </Text>
+          <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
+            <Text style={[a.pt_lg, a.self_center]}>{submittedAt}</Text>
 
             <Label>{strings.fromAddresses}</Label>
           </View>
@@ -115,25 +129,36 @@ export const TxDetails = () => {
 
               {item.assets.length > 0 && (
                 <TouchableOpacity
-                  style={styles.assetsExpandable}
+                  style={[
+                    a.pt_md,
+                    a.pb_xl,
+                    a.flex_row,
+                    a.justify_between,
+                    a.align_center,
+                  ]}
                   activeOpacity={0.5}
                   onPress={() => toggleExpandIn(item.id)}
                 >
-                  <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
+                  <Text
+                    style={[{color: p.gray_900}, a.body_2_md_regular]}
+                  >{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
 
                   <Icon.Chevron
                     direction={expandedInItemId === item.id ? 'up' : 'down'}
-                    color={colors.iconColor}
+                    color={p.gray_500}
                     size={23}
                   />
                 </TouchableOpacity>
               )}
 
-              <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
+              <ExpandableAssetList
+                expanded={expandedInItemId === item.id}
+                assets={item.assets}
+              />
             </View>
           ))}
 
-          <View style={styles.borderTop}>
+          <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
             <Label>{strings.toAddresses}</Label>
           </View>
 
@@ -143,27 +168,40 @@ export const TxDetails = () => {
 
               {item.assets.length > 0 && (
                 <TouchableOpacity
-                  style={styles.assetsExpandable}
+                  style={[
+                    a.pt_md,
+                    a.pb_xl,
+                    a.flex_row,
+                    a.justify_between,
+                    a.align_center,
+                  ]}
                   activeOpacity={0.5}
                   onPress={() => toggleExpandOut(item.id)}
                 >
-                  <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
+                  <Text
+                    style={[{color: p.gray_900}, a.body_2_md_regular]}
+                  >{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
 
                   <Icon.Chevron
                     direction={expandedOutItemId === item.id ? 'up' : 'down'}
-                    color={colors.iconColor}
+                    color={p.gray_500}
                     size={23}
                   />
                 </TouchableOpacity>
               )}
 
-              <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
+              <ExpandableAssetList
+                expanded={expandedOutItemId === item.id}
+                assets={item.assets}
+              />
             </View>
           ))}
 
-          {cntOmittedTo > 0 && <Text>{strings.omittedCount(cntOmittedTo)}</Text>}
+          {cntOmittedTo > 0 && (
+            <Text>{strings.omittedCount(cntOmittedTo)}</Text>
+          )}
 
-          <View style={styles.borderTop}>
+          <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
             <Label>{strings.txAssuranceLevel}</Label>
           </View>
 
@@ -176,9 +214,11 @@ export const TxDetails = () => {
           <Copiable title={transaction.id} text={transaction.id} />
         </ScrollView>
 
-        <Actions style={styles.borderTop}>
+        <Actions style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
           <Button
-            onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
+            onPress={() =>
+              Linking.openURL(explorers.cardanoscan.tx(transaction.id))
+            }
             title={strings.openInExplorer}
           />
         </Actions>
@@ -196,29 +236,52 @@ const Confirmations = ({transaction}: {transaction: TransactionInfo}) => {
   })
 
   return (
-    <Text secondary>
-      {strings.confirmations(transaction.blockNumber === 0 ? 0 : bestBlock.height - transaction.blockNumber)}
+    <Text>
+      {strings.confirmations(
+        transaction.blockNumber === 0
+          ? 0
+          : bestBlock.height - transaction.blockNumber,
+      )}
     </Text>
   )
 }
 
 const Label = ({children}: {children: string}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
-  return <Text style={styles.label}>{children}</Text>
+  return (
+    <Text
+      style={[
+        a.pt_lg,
+        a.body_2_md_regular,
+        {color: p.text_gray_medium, marginBottom: 8},
+      ]}
+    >
+      {children}
+    </Text>
+  )
 }
 
 const AdaAmount = ({amount}: {amount: BigNumber}) => {
   const {wallet} = useSelectedWallet()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
-  const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
+  const amountStyle = amount.gte(0)
+    ? {color: p.primary_600, fontWeight: '500'}
+    : {color: p.sys_magenta_500, fontWeight: '500'}
 
   if (isPrivacyActive) {
     return <Text style={amountStyle}>{privacyPlaceholder}</Text>
   }
 
-  return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}</Text>
+  return (
+    <Text style={amountStyle}>
+      {formatTokenWithSymbol(
+        asQuantity(amount),
+        wallet.portfolioPrimaryTokenInfo,
+      )}
+    </Text>
+  )
 }
 
 const Fee = ({amount}: {amount: BigNumber}) => {
@@ -226,14 +289,18 @@ const Fee = ({amount}: {amount: BigNumber}) => {
   const {wallet} = useSelectedWallet()
 
   const text = `${strings.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}`
-  return <Text small>{text}</Text>
+  return <Text>{text}</Text>
 }
 
 const ExpandableAssetList: React.VFC<{
   expanded: boolean
   assets: CardanoTypes.TokenEntry[]
 }> = ({expanded, assets}) => {
-  return <View style={{borderWidth: 1, borderColor: 'transparent'}}>{expanded && <AssetList assets={assets} />}</View>
+  return (
+    <View style={{borderWidth: 1, borderColor: 'transparent'}}>
+      {expanded && <AssetList assets={assets} />}
+    </View>
+  )
 }
 
 type AddressEntryProps = {
@@ -242,21 +309,41 @@ type AddressEntryProps = {
   isHighlighted: boolean
   showModalForAddress: (text: string) => void
 }
-const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: AddressEntryProps) => {
-  const {styles} = useStyles()
+const AddressEntry = ({
+  address,
+  path,
+  isHighlighted,
+  showModalForAddress,
+}: AddressEntryProps) => {
+  const {palette: p} = useTheme()
   const pathText = `(${path})`
   return (
     <>
-      <RNText style={styles.path}>{pathText}</RNText>
+      <Text style={[{color: p.text_gray_low}, a.body_2_md_regular]}>
+        {pathText}
+      </Text>
 
-      <TouchableOpacity activeOpacity={0.5} onPress={() => showModalForAddress(address)}>
-        <RNText style={[styles.address, isHighlighted && styles.addressBold]}>{address}</RNText>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => showModalForAddress(address)}
+      >
+        <Text
+          style={[
+            {color: p.text_gray_medium},
+            a.body_2_md_regular,
+            isHighlighted && a.body_2_md_medium,
+          ]}
+        >
+          {address}
+        </Text>
       </TouchableOpacity>
     </>
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => <View style={[{padding: 16}, style]} {...props} />
+const Actions = ({style, ...props}: ViewProps) => (
+  <View style={[{padding: 16}, style]} {...props} />
+)
 
 const getShownAddresses = (
   intl: IntlShape,
@@ -266,7 +353,8 @@ const getShownAddresses = (
 ) => {
   const isMyReceive = (address: string) => externalAddressIndex[address] != null
   const isMyChange = (address: string) => internalAddressIndex[address] != null
-  const isMyAddress = (address: string) => isMyReceive(address) || isMyChange(address)
+  const isMyAddress = (address: string) =>
+    isMyReceive(address) || isMyChange(address)
 
   const getPath = (address: string) => {
     if (isMyReceive(address)) {
@@ -321,7 +409,9 @@ const getShownAddresses = (
     path: getPath(address),
     isHighlighted: isHighlightedTo(address),
   }))
-  const toFiltered = toAddresses.filter(({address}) => (filterTo != null ? filterTo(address) : true))
+  const toFiltered = toAddresses.filter(({address}) =>
+    filterTo != null ? filterTo(address) : true,
+  )
   const cntOmittedTo = toAddresses.length - toFiltered.length
 
   return {
@@ -336,69 +426,3 @@ type Params = {
 }
 
 type ItemId = number
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-    fade: {
-      ...atoms.flex_1,
-    },
-    contentContainer: {
-      ...atoms.px_lg,
-    },
-    positiveAmount: {
-      color: color.primary_600,
-      fontWeight: '500',
-    },
-    negativeAmount: {
-      color: color.sys_magenta_500,
-      fontWeight: '500',
-    },
-    label: {
-      ...atoms.pt_lg,
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-      marginBottom: 8,
-    },
-    assetsExpandable: {
-      ...atoms.pt_md,
-      ...atoms.pb_xl,
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    assetsTitle: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_900,
-    },
-    center: {
-      ...atoms.pt_lg,
-      ...atoms.self_center,
-    },
-    borderTop: {
-      borderTopWidth: 1,
-      borderColor: color.gray_200,
-    },
-    address: {
-      color: color.text_gray_medium,
-      ...atoms.body_2_md_regular,
-    },
-    addressBold: {
-      ...atoms.body_2_md_medium,
-    },
-    path: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_low,
-    },
-  })
-
-  const colors = {
-    iconColor: color.gray_500,
-  }
-
-  return {styles, colors} as const
-}
