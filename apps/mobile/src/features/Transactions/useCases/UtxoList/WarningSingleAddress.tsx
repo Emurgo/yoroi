@@ -1,22 +1,29 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
 import {useWalletNavigation} from '../../../../kernel/navigation'
+import {Button, ButtonType} from '../../../../ui/Button/Button'
+import {Icon} from '../../../../ui/Icon'
 import {useStrings} from '../../common/strings'
 
 export const WarningSingleAddress = () => {
-  const {styles, color} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {navigateToUtxoConsolidation} = useWalletNavigation()
 
   return (
-    <View style={styles.notice}>
-      <Icon.Warning size={20} color={color.sys_magenta_500} />
+    <View
+      style={[
+        a.p_lg,
+        a.gap_md,
+        a.rounded_sm,
+        {backgroundColor: p.sys_magenta_100},
+      ]}
+    >
+      <Icon.Warning size={20} color={p.sys_magenta_500} />
 
-      <Text style={styles.text}>
+      <Text style={[{color: p.gray_max}, a.body_2_md_regular]}>
         <Text>{strings.organizeWalletDescription}</Text>
       </Text>
 
@@ -28,23 +35,4 @@ export const WarningSingleAddress = () => {
       />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    notice: {
-      ...atoms.p_lg,
-      ...atoms.gap_md,
-      ...atoms.rounded_sm,
-      backgroundColor: color.sys_magenta_100,
-    },
-    text: {
-      color: color.gray_max,
-      ...atoms.body_2_md_regular,
-    },
-  })
-
-  return {styles, color}
 }

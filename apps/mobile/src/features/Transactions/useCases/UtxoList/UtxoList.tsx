@@ -1,23 +1,22 @@
 import {FlashList} from '@shopify/flash-list'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {Space} from '../../../../components/Space/Space'
 import {features} from '../../../../kernel/features'
+import {Space} from '../../../../ui/Space/Space'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {useUtxoList} from './useUtxoList'
 import {UtxoAddressGroup} from './UtxoAddressGroup'
 import {WarningSingleAddress} from './WarningSingleAddress'
 export const UtxoList = () => {
-  const {styles} = useStyles()
   const {utxoList} = useUtxoList()
   const {isSingle} = useAddressMode()
 
   if (utxoList === undefined) return null
 
   return (
-    <View style={styles.container}>
+    <View style={[a.flex, a.flex_1, a.p_lg]}>
       <FlashList
         data={utxoList}
         ListHeaderComponent={
@@ -25,12 +24,12 @@ export const UtxoList = () => {
             <>
               <WarningSingleAddress />
 
-              <Space height="lg" />
+              <Space.Height.lg />
             </>
           ) : null
         }
         renderItem={({item}) => <UtxoAddressGroup item={item} />}
-        ItemSeparatorComponent={() => <Space height="lg" />}
+        ItemSeparatorComponent={() => <SpaceHeight.lg />}
         keyExtractor={(item) => item.path}
         nestedScrollEnabled={true}
         testID="utxoList"
@@ -38,18 +37,4 @@ export const UtxoList = () => {
       />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.flex,
-      ...atoms.flex_1,
-      ...atoms.p_lg,
-    },
-  })
-
-  return {styles}
 }

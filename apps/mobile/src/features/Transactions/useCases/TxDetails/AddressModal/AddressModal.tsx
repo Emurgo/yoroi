@@ -1,8 +1,7 @@
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
-import {useTheme} from '@yoroi/theme'
-import {fromPairs} from 'lodash'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
 import {Copiable} from '../../../../../components/Clipboard/Copiable'
@@ -25,23 +24,39 @@ type Props = {
 export const AddressModal = ({address, path}: Props) => {
   const strings = useStrings()
   const keyHashes = useKeyHashes({address})
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const {
     meta: {implementation},
   } = useSelectedWallet()
 
-  const derivationPath = path ? addressVisualDerivationPathMaker(implementation)(path) : null
+  const derivationPath = path
+    ? addressVisualDerivationPathMaker(implementation)(path)
+    : null
 
   return (
-    <View style={styles.scroll}>
-      <View style={styles.qrCode}>
-        <QRCode value={address} size={140} backgroundColor={colors.white} color={colors.black} />
+    <View style={[a.flex_1, a.px_lg]}>
+      <View
+        style={[
+          a.align_center,
+          a.rounded_sm,
+          a.p_lg,
+          {backgroundColor: p.white_static, alignSelf: 'center'},
+        ]}
+      >
+        <QRCode
+          value={address}
+          size={140}
+          backgroundColor={p.white_static}
+          color={p.black_static}
+        />
       </View>
 
       <Spacer width={4} />
 
       <View>
-        <Text style={styles.subtitle}>{strings.walletAddress}</Text>
+        <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+          {strings.walletAddress}
+        </Text>
 
         <Copiable title={address} text={address} />
 
@@ -49,10 +64,14 @@ export const AddressModal = ({address, path}: Props) => {
 
         {derivationPath !== null && (
           <>
-            <Text style={styles.subtitle}>{strings.BIP32path}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.BIP32path}
+            </Text>
 
-            <View style={styles.row}>
-              <Text style={styles.address}>{derivationPath}</Text>
+            <View style={a.flex_row}>
+              <Text style={[a.body_1_lg_regular, {flex: 1, color: p.gray_900}]}>
+                {derivationPath}
+              </Text>
             </View>
 
             <Spacer width={8} />
@@ -61,7 +80,9 @@ export const AddressModal = ({address, path}: Props) => {
 
         {keyHashes?.staking != null && keyHashes.staking !== '' && (
           <>
-            <Text style={styles.subtitle}>{strings.staking}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.staking}
+            </Text>
 
             <Copiable title={keyHashes.staking} text={keyHashes.staking} />
 
@@ -71,7 +92,9 @@ export const AddressModal = ({address, path}: Props) => {
 
         {keyHashes?.spending != null && keyHashes.spending !== '' && (
           <>
-            <Text style={styles.subtitle}>{strings.spending}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.spending}
+            </Text>
 
             <Copiable title={keyHashes.spending} text={keyHashes.spending} />
           </>
@@ -87,53 +110,27 @@ type ExternalProps = {
 
 export default (props: ExternalProps) => {
   const {wallet} = useSelectedWallet()
-  const externalIndex: number | undefined = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))[
-    props.address
-  ]
-  const internalIndex: number | undefined = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[
-    props.address
-  ]
+  const externalIndex: number | undefined = fromPairs(
+    wallet.externalAddresses.map((addr, i) => [addr, i]),
+  )[props.address]
+  const internalIndex: number | undefined = fromPairs(
+    wallet.internalAddresses.map((addr, i) => [addr, i]),
+  )[props.address]
 
-  if (externalIndex !== undefined) return <AddressModal path={{account: 0, index: externalIndex, role: 0}} {...props} />
-  if (internalIndex !== undefined) return <AddressModal path={{account: 0, index: internalIndex, role: 1}} {...props} />
+  if (externalIndex !== undefined)
+    return (
+      <AddressModal
+        path={{account: 0, index: externalIndex, role: 0}}
+        {...props}
+      />
+    )
+  if (internalIndex !== undefined)
+    return (
+      <AddressModal
+        path={{account: 0, index: internalIndex, role: 1}}
+        {...props}
+      />
+    )
 
   return <AddressModal {...props} />
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    scroll: {
-      flex: 1,
-      ...atoms.px_lg,
-    },
-    qrCode: {
-      ...atoms.align_center,
-      ...atoms.rounded_sm,
-      ...atoms.p_lg,
-      backgroundColor: color.white_static,
-      alignSelf: 'center',
-    },
-    subtitle: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_600,
-    },
-    row: {
-      ...atoms.flex_row,
-    },
-    address: {
-      flex: 1,
-      ...atoms.body_1_lg_regular,
-      color: color.gray_900,
-    },
-  })
-
-  const colors = {
-    white: color.white_static,
-    black: color.black_static,
-    transparent: 'transparent',
-    backgroundGradientCard: color.bg_gradient_1,
-  }
-
-  return {styles, colors} as const
 }
