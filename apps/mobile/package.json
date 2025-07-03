@@ -48,6 +48,7 @@
     "@tanstack/query-async-storage-persister": "^5.80.6",
     "@tanstack/react-query": "^5.76.2",
     "@tanstack/react-query-persist-client": "^5.80.6",
+    "@yoroi/api": "file:../../packages/api",
     "@yoroi/blockchains": "file:../../packages/blockchains",
     "@yoroi/common": "file:../../packages/common",
     "@yoroi/claim": "file:../../packages/claim",

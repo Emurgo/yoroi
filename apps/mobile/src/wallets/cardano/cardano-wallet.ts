@@ -1,34 +1,45 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {walletChecksum} from '@emurgo/cip4-js'
 import * as CSL from '@emurgo/cross-csl-core'
-import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-lib'
+import {
+  createSignedLedgerTxFromCbor,
+  signRawTransaction,
+} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi} from '@yoroi/api'
-import {cardanoConfig, derivationConfig, protocolParamsPlaceholder} from '@yoroi/blockchains'
+import {
+  cardanoConfig,
+  derivationConfig,
+  protocolParamsPlaceholder,
+} from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import {freeze} from 'immer'
-import _ from 'lodash'
+
 import {defaultMemoize} from 'reselect'
 import {Observable} from 'rxjs'
 
 import {toLedgerSignRequest} from '../../features/Discover/common/ledger'
 import {buildPortfolioBalanceManager} from '../../features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
-import {makeMemosManager, MemosManager} from '../../features/Transactions/common/memos/memosManager'
+import {
+  makeMemosManager,
+  MemosManager,
+} from '../../features/Transactions/common/memos/memosManager'
 import {LocalizableError} from '../../kernel/i18n/LocalizableError'
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
-import {isEmptyString} from '../../kernel/utils'
+import {
+  makeWalletEncryptedStorage,
+  WalletEncryptedStorage,
+} from '../../kernel/storage/EncryptedStorage'
 import type {
   AccountStateResponse,
   FundInfoResponse,
   PoolInfoRequest,
   RawUtxo,
-  Transaction,
   TxStatusRequest,
   TxStatusResponse,
 } from '../types/other'
@@ -36,13 +47,20 @@ import {StakingInfo} from '../types/staking'
 import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {Quantities} from '../utils/utils'
 import {Cardano, CardanoMobile} from '../wallets'
-import {AccountManager, accountManagerMaker, Addresses} from './account-manager/account-manager'
+import {
+  AccountManager,
+  accountManagerMaker,
+  Addresses,
+} from './account-manager/account-manager'
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
-import {filterAddressesByStakingKey, getDelegationStatus} from './delegationUtils'
 import {
-  doesCardanoAppVersionSupportCIP36,
+  filterAddressesByStakingKey,
+  getDelegationStatus,
+} from './delegationUtils'
+import {
   doesCardanoAppVersionSupportCIP1694,
+  doesCardanoAppVersionSupportCIP36,
   getCardanoAppMajorVersion,
   signTxWithLedger,
 } from './hw/hw'
@@ -62,11 +80,19 @@ import {
   YoroiWallet,
 } from './types'
 import {yoroiUnsignedTx} from './unsignedTx/unsignedTx'
-import {deriveRewardAddressHex, getAddressedUtxos, getHexAddressingMap, toRecipients} from './utils'
+import {
+  deriveRewardAddressHex,
+  getAddressedUtxos,
+  getHexAddressingMap,
+  toRecipients,
+} from './utils'
 import {makeUtxoManager, UtxoManager} from './utxoManager/utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
 
-export const makeCardanoWallet = (networkManager: Network.Manager, implementation: Wallet.Implementation) => {
+export const makeCardanoWallet = (
+  networkManager: Network.Manager,
+  implementation: Wallet.Implementation,
+) => {
   const implementationConfig = cardanoConfig.implementations[implementation]
 
   const appApi = AppApi.appApiMaker({baseUrl: networkManager.legacyApiBaseUrl})
@@ -121,7 +147,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         tokenManager,
       } = networkManager
       const walletRootStorage = legacyRootStorage.join(`${id}/`)
-      const accountStorage = walletRootStorage.join(`accounts/${accountVisual}/`)
+      const accountStorage = walletRootStorage.join(
+        `accounts/${accountVisual}/`,
+      )
 
       // TODO: revisit it should be part of staking manager (when staking is supported/desired)
       const rewardAddressHex = implementationConfig.features.staking
@@ -138,7 +166,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         apiUrl: legacyApiBaseUrl,
       })
 
-      const transactionManager = await TransactionManager.create(accountStorage.join('txs/'))
+      const transactionManager = await TransactionManager.create(
+        accountStorage.join('txs/'),
+      )
       // TODO: revisit memos should be per network and shouldn't be cleared on wallet clear (unless user selects it)
       const memosManager = await makeMemosManager(accountStorage.join('memos/'))
       const {balanceManager} = buildPortfolioBalanceManager({
@@ -170,7 +200,8 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         accountVisual,
         protocolParams,
       })
-      if (!isYoroiWallet(wallet)) throwLoggedError('ShelleyWallet: build invalid wallet')
+      if (!isYoroiWallet(wallet))
+        throwLoggedError('ShelleyWallet: build invalid wallet')
 
       wallet.isInitialized = true
       wallet.notify({type: 'initialize'})
@@ -247,9 +278,14 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       if (addressMode === 'single') return this.externalChain.addresses[0]
 
       const candidateAddresses = this.internalChain.addresses
-      const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
-      const changeAddress = _.first(unseen)
-      if (!changeAddress) throwLoggedError('CardanoWallet: getChangeAddress unable to resolve change address')
+      const unseen = candidateAddresses.filter(
+        (addr) => !this.isUsedAddress(addr),
+      )
+      const [changeAddress] = unseen
+      if (!changeAddress)
+        throwLoggedError(
+          'CardanoWallet: getChangeAddress unable to resolve change address',
+        )
       return changeAddress
     }
 
@@ -310,14 +346,19 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         }
       }
 
-      throwLoggedError(`ShelleyWallet: getAddressing missing address info for: ${address} `)
+      throwLoggedError(
+        `ShelleyWallet: getAddressing missing address info for: ${address} `,
+      )
     }
 
     async getFirstPaymentAddress() {
       const externalAddress = this.externalAddresses[0]
       const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
       const address = await Cardano.Wasm.BaseAddress.fromAddress(addr)
-      if (!address) throwLoggedError('ShelleyWallet: getFirstPaymentAddress invalid address')
+      if (!address)
+        throwLoggedError(
+          'ShelleyWallet: getFirstPaymentAddress invalid address',
+        )
       return address
     }
 
@@ -335,13 +376,13 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       if (implementationConfig.features.staking) {
         const derivation = implementationConfig.features.staking.derivation
 
-        const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(
+        const accountPubKey = CardanoMobile.Bip32PublicKey.fromBytes(
           new Uint8Array(Buffer.from(this.publicKeyHex, 'hex')),
         )
-        const stakingKey = await accountPubKey
+        const stakingKey = accountPubKey
           .derive(derivation.role)
-          .then((key) => key.derive(derivation.index))
-          .then((key) => key.toRawKey())
+          .derive(derivation.index)
+          .toRawKey()
 
         return stakingKey
       }
@@ -390,7 +431,8 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
           defaults: toLibToken(this.portfolioPrimaryTokenInfo),
         }
 
-        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
+        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
+          this.protocolParams
 
         const unsignedTx = await Cardano.createUnsignedDelegationTx(
           absSlotNumber,
@@ -412,7 +454,13 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
           },
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkManager, addressedUtxos, primaryTokenId, keyDeposit})
+        return yoroiUnsignedTx({
+          unsignedTx,
+          networkManager,
+          addressedUtxos,
+          primaryTokenId,
+          keyDeposit,
+        })
       }
 
       throwLoggedError('createDelegationTx staking not supported')
@@ -433,13 +481,18 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
         try {
           const absSlotNumber = await this.getAbsoluteSlotNumber()
-          const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
-            .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(new Uint8Array(bytes)))
+          const votingPublicKey = await Promise.resolve(
+            Buffer.from(catalystKeyHex, 'hex'),
+          )
+            .then((bytes) =>
+              CardanoMobile.PrivateKey.fromExtendedBytes(new Uint8Array(bytes)),
+            )
             .then((key) => key.toPublic())
           const stakingPublicKey = await this.getStakingKey()
           const changeAddr = this.getAddressedChangeAddress(addressMode)
 
-          const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
+          const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
+            this.protocolParams
 
           const config = {
             keyDeposit,
@@ -456,12 +509,13 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
           const baseAddr = await this.getFirstPaymentAddress()
 
-          const paymentAddressCIP36 = await baseAddr
-            .toAddress()
-            .then((a) => a.toBytes())
-            .then((b) => Buffer.from(b).toString('hex'))
+          const paymentAddressCIP36 = Buffer.from(
+            baseAddr.toAddress().toBytes(),
+          ).toString('hex')
 
-          const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32(undefined)))
+          const addressingCIP36 = this.getAddressing(
+            baseAddr.toAddress().toBech32(undefined),
+          )
 
           const unsignedTx = await Cardano.createUnsignedVotingTx(
             absSlotNumber,
@@ -479,7 +533,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
             supportsCIP36,
           )
 
-          const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32(undefined))
+          const rewardAddress = await this.getRewardAddress().then((address) =>
+            address.toBech32(undefined),
+          )
           const votingRegistration: {
             votingPublicKey: string
             stakingPublicKey: string
@@ -529,7 +585,8 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
           networkManager.legacyApiBaseUrl,
         )
 
-        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
+        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
+          this.protocolParams
 
         const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
           accountState,
@@ -539,7 +596,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
           [
             {
               addressing: {
-                path: Array.from(implementationConfig.features.staking.addressing),
+                path: Array.from(
+                  implementationConfig.features.staking.addressing,
+                ),
                 startLevel: derivationConfig.keyLevel.purpose,
               },
               rewardAddress: this.rewardAddressHex,
@@ -582,7 +641,8 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const addressedUtxos = await this.getAddressedUtxos()
 
-      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
+      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
+        this.protocolParams
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(
@@ -613,7 +673,11 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
           keyDeposit,
         })
       } catch (e) {
-        if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
+        if (
+          e instanceof NotEnoughMoneyToSendError ||
+          e instanceof NoOutputsError
+        )
+          throw e
         throw new App.Errors.LibraryError((e as Error).message)
       }
     }
@@ -621,7 +685,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     async getAllUtxosForKey() {
       if (implementationConfig.features.staking) {
         return filterAddressesByStakingKey(
-          await CardanoMobile.Credential.fromKeyhash(await (await this.getStakingKey()).hash()),
+          await CardanoMobile.Credential.fromKeyhash(
+            await (await this.getStakingKey()).hash(),
+          ),
           await this.getAddressedUtxos(),
           false,
         )
@@ -631,7 +697,10 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
     getDelegationStatus() {
       if (implementationConfig.features.staking) {
-        const certsForKey = this.transactionManager.perRewardAddressCertificates[this.rewardAddressHex]
+        const certsForKey =
+          this.transactionManager.perRewardAddressCertificates[
+            this.rewardAddressHex
+          ]
         return getDelegationStatus(this.rewardAddressHex, certsForKey)
       }
 
@@ -654,7 +723,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
           accountState.remainingAmount as Balance.Quantity,
         ])
 
-        this.balanceManager.updatePrimaryDerived({availableRewards: BigInt(accountState.remainingAmount)})
+        this.balanceManager.updatePrimaryDerived({
+          availableRewards: BigInt(accountState.remainingAmount),
+        })
 
         return {
           status: 'staked',
@@ -699,7 +770,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       // NOTE: there is room for data inconsistency here
 
       // NOTE: this will invalidate all tokens for that network which means other wallets will be affected too
-      this.networkManager.tokenManager.clear({sourceId: `resync-wallet-${this.id}`})
+      this.networkManager.tokenManager.clear({
+        sourceId: `resync-wallet-${this.id}`,
+      })
 
       // TODO: missing accounts clear (it wasnt reseting it before, so 🤷‍♂️)
       this.balanceManager.clear()
@@ -715,7 +788,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     // sync
     async sync({isForced = false}: {isForced?: boolean} = {}) {
       if (!this.isInitialized) {
-        logger.error('ShelleyWallet: sync wallet not initialized', {id: this.id})
+        logger.error('ShelleyWallet: sync wallet not initialized', {
+          id: this.id,
+        })
         return Promise.resolve()
       }
 
@@ -723,7 +798,10 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
       await Promise.all([
         this.syncUtxos({isForced}),
-        this.transactionManager.doSync(this.addressesInBlocks, networkManager.legacyApiBaseUrl),
+        this.transactionManager.doSync(
+          this.addressesInBlocks,
+          networkManager.legacyApiBaseUrl,
+        ),
       ])
     }
 
@@ -738,19 +816,21 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     }
 
     private getAddressedUtxos() {
-      const addressedUtxos = this.utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
-        const addressing = this.getAddressing(utxo.receiver)
+      const addressedUtxos = this.utxos.map(
+        (utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
+          const addressing = this.getAddressing(utxo.receiver)
 
-        return {
-          addressing,
-          txIndex: utxo.tx_index,
-          txHash: utxo.tx_hash,
-          amount: utxo.amount,
-          receiver: utxo.receiver,
-          utxoId: utxo.utxo_id,
-          assets: utxo.assets,
-        }
-      })
+          return {
+            addressing,
+            txIndex: utxo.tx_index,
+            txHash: utxo.tx_hash,
+            amount: utxo.amount,
+            receiver: utxo.receiver,
+            utxoId: utxo.utxo_id,
+            assets: utxo.assets,
+          }
+        },
+      )
 
       return Promise.resolve(addressedUtxos)
     }
@@ -759,7 +839,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
-      return new BigNumber(this.networkManager.epoch.progress(new Date(time)).absoluteSlot)
+      return new BigNumber(
+        this.networkManager.epoch.progress(new Date(time)).absoluteSlot,
+      )
     }
 
     async createUnsignedTx({
@@ -777,7 +859,11 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const addressedUtxos = await this.getAddressedUtxos()
 
-      const recipients = await toRecipients(entries, this.portfolioPrimaryTokenInfo, this.protocolParams)
+      const recipients = await toRecipients(
+        entries,
+        this.portfolioPrimaryTokenInfo,
+        this.protocolParams,
+      )
 
       const containsDatum = recipients.some((recipient) => recipient.datum)
 
@@ -798,7 +884,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
             keyDeposit,
             linearFee: {
               coefficient,
-              constant: containsDatum ? String(BigInt(constant) * 2n) : constant,
+              constant: containsDatum
+                ? String(BigInt(constant) * 2n)
+                : constant,
             },
             minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
             coinsPerUtxoByte,
@@ -818,28 +906,35 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
           keyDeposit,
         })
       } catch (e) {
-        if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
+        if (
+          e instanceof NotEnoughMoneyToSendError ||
+          e instanceof NoOutputsError
+        )
+          throw e
         throwLoggedError(new App.Errors.LibraryError((e as Error).message))
       }
     }
 
     async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
-      const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(
+      const masterKey = CardanoMobile.Bip32PrivateKey.fromBytes(
         new Uint8Array(Buffer.from(decryptedMasterKey, 'hex')),
       )
-      const accountPrivateKey = await masterKey
+      const accountPrivateKey = masterKey
         .derive(implementationConfig.derivations.base.harden.purpose)
-        .then((key) => key.derive(implementationConfig.derivations.base.harden.coinType))
-        .then((key) => key.derive(this.accountVisual + derivationConfig.hardStart))
-      const accountPrivateKeyHex = await accountPrivateKey.asBytes().then(toHex)
+        .derive(implementationConfig.derivations.base.harden.coinType)
+        .derive(this.accountVisual + derivationConfig.hardStart)
+
+      const accountPrivateKeyHex = Buffer.from(
+        accountPrivateKey.asBytes(),
+      ).toString('hex')
 
       let stakingPrivateKey
       if (implementationConfig.features.staking) {
         const derivation = implementationConfig.features.staking.derivation
-        stakingPrivateKey = await accountPrivateKey
+        stakingPrivateKey = accountPrivateKey
           .derive(derivation.role)
-          .then((key) => key.derive(derivation.index))
-          .then((key) => key.toRawKey())
+          .derive(derivation.index)
+          .toRawKey()
       }
 
       const needsStakingKey =
@@ -850,15 +945,20 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         unsignedTx.governance
 
       if (needsStakingKey && !stakingPrivateKey) {
-        throwLoggedError('CardanoWallet: signTx required staking key but not supported')
+        throwLoggedError(
+          'CardanoWallet: signTx required staking key but not supported',
+        )
       }
 
-      const stakingKeys = needsStakingKey && stakingPrivateKey ? [stakingPrivateKey] : undefined
+      const stakingKeys =
+        needsStakingKey && stakingPrivateKey ? [stakingPrivateKey] : undefined
 
       const datumDatas = unsignedTx.entries
         .map((entry) => entry.datum)
         .filter(isNonNullable)
-        .filter((datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum)
+        .filter(
+          (datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum,
+        )
 
       if (datumDatas.length > 0) {
         const signedTx = await unsignedTx.unsignedTx.sign(
@@ -884,20 +984,36 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       return yoroiSignedTx({unsignedTx, signedTx})
     }
 
-    async ledgerSupportsCIP36(useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<boolean> {
+    async ledgerSupportsCIP36(
+      useUSB: boolean,
+      hwDeviceInfo: HW.DeviceInfo,
+    ): Promise<boolean> {
       if (!hwDeviceInfo) throw new Error('Invalid wallet state')
-      return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(hwDeviceInfo, useUSB))
+      return doesCardanoAppVersionSupportCIP36(
+        await getCardanoAppMajorVersion(hwDeviceInfo, useUSB),
+      )
     }
 
-    async ledgerSupportsCIP1694(useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<boolean> {
+    async ledgerSupportsCIP1694(
+      useUSB: boolean,
+      hwDeviceInfo: HW.DeviceInfo,
+    ): Promise<boolean> {
       if (!hwDeviceInfo) throw new Error('Invalid wallet state')
-      return doesCardanoAppVersionSupportCIP1694(await getCardanoAppMajorVersion(hwDeviceInfo, useUSB))
+      return doesCardanoAppVersionSupportCIP1694(
+        await getCardanoAppMajorVersion(hwDeviceInfo, useUSB),
+      )
     }
 
-    async signRawTxWithLedger(cbor: string, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<void> {
+    async signRawTxWithLedger(
+      cbor: string,
+      useUSB: boolean,
+      hwDeviceInfo: HW.DeviceInfo,
+    ): Promise<void> {
       let stakingAddressing
       if (implementationConfig.features.staking) {
-        stakingAddressing = Array.from(implementationConfig.features.staking.addressing)
+        stakingAddressing = Array.from(
+          implementationConfig.features.staking.addressing,
+        )
       }
 
       const payload = await toLedgerSignRequest(
@@ -912,7 +1028,11 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         stakingAddressing,
       )
 
-      const signedLedgerTx = await signTxWithLedger(payload, hwDeviceInfo, useUSB)
+      const signedLedgerTx = await signTxWithLedger(
+        payload,
+        hwDeviceInfo,
+        useUSB,
+      )
 
       const bytes = await createSignedLedgerTxFromCbor(
         CardanoMobile,
@@ -931,11 +1051,20 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       useUSB: boolean,
       hwDeviceInfo: HW.DeviceInfo,
     ): Promise<YoroiSignedTx> {
-      const appAdaVersion = await getCardanoAppMajorVersion(hwDeviceInfo, useUSB)
+      const appAdaVersion = await getCardanoAppMajorVersion(
+        hwDeviceInfo,
+        useUSB,
+      )
 
-      if (!doesCardanoAppVersionSupportCIP36(appAdaVersion) && unsignedTx.voting.registration) {
+      if (
+        !doesCardanoAppVersionSupportCIP36(appAdaVersion) &&
+        unsignedTx.voting.registration
+      ) {
         if (implementationConfig.features.staking) {
-          logger.info('ShelleyWallet: signTxWithLedger ledger app version <= 5, no CIP-36 support', {appAdaVersion})
+          logger.info(
+            'ShelleyWallet: signTxWithLedger ledger app version <= 5, no CIP-36 support',
+            {appAdaVersion},
+          )
           const ledgerPayload = await Cardano.buildVotingLedgerPayloadV5(
             unsignedTx.unsignedTx,
             this.networkManager.chainId,
@@ -943,7 +1072,11 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
             Array.from(implementationConfig.features.staking.addressing),
           )
 
-          const signedLedgerTx = await signTxWithLedger(ledgerPayload, hwDeviceInfo, useUSB)
+          const signedLedgerTx = await signTxWithLedger(
+            ledgerPayload,
+            hwDeviceInfo,
+            useUSB,
+          )
 
           const signedTx = await Cardano.buildLedgerSignedTx(
             unsignedTx.unsignedTx,
@@ -956,14 +1089,21 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
           return yoroiSignedTx({unsignedTx, signedTx})
         }
 
-        throwLoggedError('signTxWithLedger voting registration staking not supported')
+        throwLoggedError(
+          'signTxWithLedger voting registration staking not supported',
+        )
       }
 
-      logger.info('ShelleyWallet: signTxWithLedger ledger app version > 5, using CIP-36', {appAdaVersion})
+      logger.info(
+        'ShelleyWallet: signTxWithLedger ledger app version > 5, using CIP-36',
+        {appAdaVersion},
+      )
 
       let stakingAddressing
       if (implementationConfig.features.staking) {
-        stakingAddressing = Array.from(implementationConfig.features.staking.addressing)
+        stakingAddressing = Array.from(
+          implementationConfig.features.staking.addressing,
+        )
       }
       const ledgerPayload = await Cardano.buildLedgerPayload(
         unsignedTx.unsignedTx,
@@ -972,12 +1112,18 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         stakingAddressing,
       )
 
-      const signedLedgerTx = await signTxWithLedger(ledgerPayload, hwDeviceInfo, useUSB)
+      const signedLedgerTx = await signTxWithLedger(
+        ledgerPayload,
+        hwDeviceInfo,
+        useUSB,
+      )
 
       const datumDatas = unsignedTx.entries
         .map((entry) => entry.datum)
         .filter(isNonNullable)
-        .filter((datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum)
+        .filter(
+          (datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum,
+        )
 
       const signedTx = await Cardano.buildLedgerSignedTx(
         unsignedTx.unsignedTx,
@@ -998,7 +1144,10 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     }
 
     async submitTransaction(base64SignedTx: string) {
-      await legacyApi.submitTransaction(base64SignedTx, networkManager.legacyApiBaseUrl)
+      await legacyApi.submitTransaction(
+        base64SignedTx,
+        networkManager.legacyApiBaseUrl,
+      )
     }
 
     private async syncUtxos({isForced = false}: {isForced?: boolean} = {}) {
@@ -1016,7 +1165,10 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
           coinsPerUtxoByteStr: this.protocolParams.coinsPerUtxoByte,
         })
 
-        const balancesToSync = toBalanceManagerSyncArgs(newUtxos, BigInt(lockedAsStorageCost.toString()))
+        const balancesToSync = toBalanceManagerSyncArgs(
+          newUtxos,
+          BigInt(lockedAsStorageCost.toString()),
+        )
 
         this.balanceManager.syncBalances(balancesToSync)
 
@@ -1027,9 +1179,13 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       return false
     }
 
-    private _getUtxos = defaultMemoize((utxos: RawUtxo[], collateralId: string) => {
-      return collateralId.length > 0 ? utxos.filter((utxo) => utxo.utxo_id !== collateralId) : utxos
-    })
+    private _getUtxos = defaultMemoize(
+      (utxos: RawUtxo[], collateralId: string) => {
+        return collateralId.length > 0
+          ? utxos.filter((utxo) => utxo.utxo_id !== collateralId)
+          : utxos
+      },
+    )
 
     get utxos() {
       return this._getUtxos(this._utxos, this._collateralId)
@@ -1048,11 +1204,13 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       const collateralId = this.collateralId
       const collateralUtxo = utxos.findById(collateralId)
       const quantity =
-        collateralUtxo?.amount !== undefined && !isEmptyString(collateralUtxo.amount)
+        collateralUtxo?.amount !== undefined && !(collateralUtxo.amount === '')
           ? BigInt(collateralUtxo?.amount)
           : 0n
       const collateralTxId = collateralId ? collateralId.split(':')[0] : null
-      const isConfirmed = !!collateralTxId && Object.values(this.transactions).some((tx) => tx.id === collateralTxId)
+      const isConfirmed =
+        !!collateralTxId &&
+        Object.values(this.transactions).some((tx) => tx.id === collateralTxId)
 
       return freeze({
         utxo: collateralUtxo,
@@ -1085,7 +1243,10 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     }
 
     async fetchAccountState(): Promise<AccountStateResponse> {
-      return legacyApi.bulkGetAccountState([this.rewardAddressHex], networkManager.legacyApiBaseUrl)
+      return legacyApi.bulkGetAccountState(
+        [this.rewardAddressHex],
+        networkManager.legacyApiBaseUrl,
+      )
     }
 
     async fetchPoolInfo(request: PoolInfoRequest) {
@@ -1093,7 +1254,10 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {
-      return legacyApi.getFundInfo(networkManager.legacyApiBaseUrl, this.isMainnet)
+      return legacyApi.getFundInfo(
+        networkManager.legacyApiBaseUrl,
+        this.isMainnet,
+      )
     }
 
     async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
@@ -1104,12 +1268,17 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
     private subscriptions: Array<WalletSubscription> = []
 
-    private _onTxHistoryUpdateSubscriptions: Array<(wallet: YoroiWallet) => void> = []
+    private _onTxHistoryUpdateSubscriptions: Array<
+      (wallet: YoroiWallet) => void
+    > = []
 
     private _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
-      _.mapValues(perAddressTxs, (txs) => {
-        return txs.length > 0
-      }),
+      Object.fromEntries(
+        Object.entries(perAddressTxs).map(([address, txs]) => [
+          address,
+          (txs as Array<string>).length > 0,
+        ]),
+      ),
     )
 
     // =================== getters =================== //
@@ -1122,7 +1291,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     }
 
     get isUsedAddressIndex() {
-      return this._isUsedAddressIndexSelector(this.transactionManager.perAddressTxs)
+      return this._isUsedAddressIndexSelector(
+        this.transactionManager.perAddressTxs,
+      )
     }
 
     get transactions() {
@@ -1153,7 +1324,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       this.subscriptions.push(subscription)
 
       return () => {
-        this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
+        this.subscriptions = this.subscriptions.filter(
+          (sub) => sub !== subscription,
+        )
       }
     }
 
@@ -1165,14 +1338,17 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       this._onTxHistoryUpdateSubscriptions.push(subscription)
 
       return () => {
-        this._onTxHistoryUpdateSubscriptions = this._onTxHistoryUpdateSubscriptions.filter(
-          (sub) => sub !== subscription,
-        )
+        this._onTxHistoryUpdateSubscriptions =
+          this._onTxHistoryUpdateSubscriptions.filter(
+            (sub) => sub !== subscription,
+          )
       }
     }
 
     private setupSubscriptions() {
-      this.transactionManager.subscribe(() => this.notify({type: 'transactions', transactions: this.transactions}))
+      this.transactionManager.subscribe(() =>
+        this.notify({type: 'transactions', transactions: this.transactions}),
+      )
       this.transactionManager.subscribe(this.notifyOnTxHistoryUpdate)
       this.internalChain.addSubscriberToNewAddresses(() =>
         this.notify({type: 'addresses', addresses: this.internalAddresses}),
@@ -1188,8 +1364,6 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     }
   }
 }
-
-const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
 
 const isNonEmpty = (arr: unknown[] | undefined) => {
   return arr && arr.length > 0
@@ -1209,9 +1383,18 @@ const parseTransactions = (
       ? [...internalAddresses, ...externalAddresses, rewardAddressHex]
       : [...internalAddresses, ...externalAddresses]
 
-  return _.mapValues(transactions, (tx: Transaction) => {
-    return processTxHistoryData(tx, addresses, confirmationCounts[tx.id] || 0, memos[tx.id] ?? null, primaryTokenInfo)
-  })
+  return Object.fromEntries(
+    Object.entries(transactions).map(([txId, tx]) => [
+      txId,
+      processTxHistoryData(
+        tx,
+        addresses,
+        confirmationCounts[tx.id] || 0,
+        memos[tx.id] ?? null,
+        primaryTokenInfo,
+      ),
+    ]),
+  )
 }
 
 const parseTransactionsMemoized = defaultMemoize(parseTransactions)
