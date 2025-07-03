@@ -16,7 +16,11 @@ type Props = {
   isFetching: boolean
   isSearching: boolean
 }
-export const LiquidityPoolTab = ({tokensList = [], isFetching, isSearching}: Props) => {
+export const LiquidityPoolTab = ({
+  tokensList = [],
+  isFetching,
+  isSearching,
+}: Props) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const hasEmpty = tokensList.length === 0
@@ -35,7 +39,9 @@ export const LiquidityPoolTab = ({tokensList = [], isFetching, isSearching}: Pro
     if (isSearching)
       return (
         <View>
-          <Text style={styles.textAvailable}>{strings.countLiquidityPoolsAvailable(tokensList.length)}</Text>
+          <Text style={styles.textAvailable}>
+            {strings.countLiquidityPoolsAvailable(tokensList.length)}
+          </Text>
 
           <Spacer height={16} />
         </View>
@@ -74,9 +80,17 @@ export const LiquidityPoolTab = ({tokensList = [], isFetching, isSearching}: Pro
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (
-          <DAppTokenItem onPress={() => onTokenPress(item)} tokenInfo={item} splitTokenSymbol="-" />
+          <DAppTokenItem
+            onPress={() => onTokenPress(item)}
+            tokenInfo={item}
+            splitTokenSymbol="-"
+          />
         )}
-        ListEmptyComponent={!isFetching ? <TokenEmptyList emptyText={strings.noDataFound} /> : undefined}
+        ListEmptyComponent={
+          !isFetching ? (
+            <TokenEmptyList emptyText={strings.noDataFound} />
+          ) : undefined
+        }
         contentContainerStyle={styles.listContainer}
       />
     </View>

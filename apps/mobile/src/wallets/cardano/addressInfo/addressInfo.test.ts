@@ -16,31 +16,38 @@ const shelley_testnet_type0_addressKeyHashes = {
 }
 
 // enterprise
-const shelley_mainnet_type6_address = 'addr1vyht4ja0zcn45qvyx477qlyp6j5ftu5ng0prt9608dxp6lgpnh5ft'
+const shelley_mainnet_type6_address =
+  'addr1vyht4ja0zcn45qvyx477qlyp6j5ftu5ng0prt9608dxp6lgpnh5ft'
 const shelley_mainnet_type6_addressKeyHashes = {
   spending: '',
   staking: '',
 }
 
 // reward
-const reward_mainnet_address = 'stake1u948jr02falxxqphnv3g3rkd3mdzqmtqq3x0tjl39m7dqngqg0fxp'
+const reward_mainnet_address =
+  'stake1u948jr02falxxqphnv3g3rkd3mdzqmtqq3x0tjl39m7dqngqg0fxp'
 const reward_mainnet_addressKeyHashes = {
   spending: '6a790dea4f7e6300379b22888ecd8eda206d60044cf5cbf12efcd04d',
   staking: '',
 }
-const reward_testnet_address = 'stake_test1uq3ejar8nmvc2xnxn4frrhw8myggfa2g5jlpsfj0c3mh84cwvmp2w'
+const reward_testnet_address =
+  'stake_test1uq3ejar8nmvc2xnxn4frrhw8myggfa2g5jlpsfj0c3mh84cwvmp2w'
 const reward_testnet_addressKeyHashes = {
   spending: '239974679ed9851a669d5231ddc7d91084f548a4be18264fc47773d7',
   staking: '',
 }
 
 // byron
-const byron_testnet_address = '2cWKMJemoBaiMAyuzsGqrau1e6Rpeu4zVPzFcXvu4NPHfZhhDeyxznT1jnujyJnJA4bK5'
-const byron_mainnet_address = 'Ae2tdPwUPEZ9uHfzhw3vXUrTFLowct5hMMHeNjfsrkQv5XSi5PhSs2yRNUb'
+const byron_testnet_address =
+  '2cWKMJemoBaiMAyuzsGqrau1e6Rpeu4zVPzFcXvu4NPHfZhhDeyxznT1jnujyJnJA4bK5'
+const byron_mainnet_address =
+  'Ae2tdPwUPEZ9uHfzhw3vXUrTFLowct5hMMHeNjfsrkQv5XSi5PhSs2yRNUb'
 
 // jor
-const jorgamndur_testnet = 'ta1svy0mwwm7mdwcuj308aapjw6ra4c3e6cygd0f333nvtjzxg8ahdvxlswdf0'
-const jorgamndur_mainnet = '1q5smgquwzdh4eyc77gf6ddxp2atz8ej3rt94nt6l0qes0vexf5g4cw68kdx'
+const jorgamndur_testnet =
+  'ta1svy0mwwm7mdwcuj308aapjw6ra4c3e6cygd0f333nvtjzxg8ahdvxlswdf0'
+const jorgamndur_mainnet =
+  '1q5smgquwzdh4eyc77gf6ddxp2atz8ej3rt94nt6l0qes0vexf5g4cw68kdx'
 
 const emptyKeyHashes = {
   spending: null,

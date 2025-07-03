@@ -13,9 +13,11 @@ describe('hw', () => {
     }
     const mockResponse: GetVersionResponse = {
       version,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       compatibility: {} as any,
     }
-    expect(() => checkDeviceVersion(mockResponse)).toThrow(DeprecatedAdaAppError)
+    expect(() => checkDeviceVersion(mockResponse)).toThrow(
+      DeprecatedAdaAppError,
+    )
   })
 })

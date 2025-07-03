@@ -1,7 +1,7 @@
 import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
-import {useCallback, useMemo} from 'react'
 import * as React from 'react'
+import {useCallback, useMemo} from 'react'
 import {PixelRatio, Platform} from 'react-native'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 
@@ -84,7 +84,13 @@ export const usePortfolioImage = ({
   const [isError, setError] = React.useState(false)
   const [isLoading, setLoading] = React.useState(true)
 
-  const queryKey = ['native-asset-img', policy, name, `${width}x${height}`, contentFit]
+  const queryKey = [
+    'native-asset-img',
+    policy,
+    name,
+    `${width}x${height}`,
+    contentFit,
+  ]
 
   const query = useQuery({
     enabled: isMediaTypeSupported,

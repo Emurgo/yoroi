@@ -58,7 +58,12 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
       </ScrollView>
 
       <Actions style={styles.actions}>
-        <Button size="S" type={ButtonType.Secondary} onPress={handleOnCancel} title={strings.cancel} />
+        <Button
+          size="S"
+          type={ButtonType.Secondary}
+          onPress={handleOnCancel}
+          title={strings.cancel}
+        />
 
         <Button size="S" onPress={onContinue} title={strings.continue} />
       </Actions>

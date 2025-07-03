@@ -3,7 +3,10 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {Boundary} from '../../components/Boundary/Boundary'
-import {defaultStackNavigationOptions, PortfolioRoutes} from '../../kernel/navigation'
+import {
+  defaultStackNavigationOptions,
+  PortfolioRoutes,
+} from '../../kernel/navigation'
 import {SearchProvider} from '../Search/SearchContext'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {TxDetails} from '../Transactions/useCases/TxDetails/TxDetails'
@@ -45,7 +48,10 @@ export const PortfolioNavigator = () => {
 
         <Stack.Screen
           name="portfolio-token-details"
-          options={{title: strings.tokenDetail, headerRight: () => <ExportTokenTransactions />}}
+          options={{
+            title: strings.tokenDetail,
+            headerRight: () => <ExportTokenTransactions />,
+          }}
           getComponent={() => PortfolioTokenDetailsScreen}
         />
 

@@ -1,6 +1,12 @@
-import {convertDrepHashToCIP105Format, convertDrepHashToCIP129Format} from '@yoroi/staking'
+import {
+  convertDrepHashToCIP105Format,
+  convertDrepHashToCIP129Format,
+} from '@yoroi/staking'
 
-export const formatDrepHashToCIP129Format = (hash: string, kind: 'script' | 'key'): string => {
+export const formatDrepHashToCIP129Format = (
+  hash: string,
+  kind: 'script' | 'key',
+): string => {
   try {
     return convertDrepHashToCIP129Format(hash, kind)
   } catch {

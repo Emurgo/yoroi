@@ -60,7 +60,11 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
   if (step === 'connect-transport') {
     return (
       <ScrollView style={styles.scroll}>
-        <LedgerConnect useUSB={transportType === 'USB'} onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
+        <LedgerConnect
+          useUSB={transportType === 'USB'}
+          onConnectBLE={onConnectBLE}
+          onConnectUSB={onConnectUSB}
+        />
       </ScrollView>
     )
   }
@@ -98,7 +102,11 @@ const useStyles = () => {
 }
 
 export const useSignRawTxWithHw = (
-  options?: UseMutationOptions<void, Error, {cbor: string; useUSB: boolean; hwDeviceInfo: HW.DeviceInfo}>,
+  options?: UseMutationOptions<
+    void,
+    Error,
+    {cbor: string; useUSB: boolean; hwDeviceInfo: HW.DeviceInfo}
+  >,
 ) => {
   const {wallet} = useSelectedWallet()
   const mutation = useMutation({

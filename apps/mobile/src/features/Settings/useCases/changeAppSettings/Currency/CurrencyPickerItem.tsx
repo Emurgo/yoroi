@@ -15,7 +15,12 @@ type Props = {
   isSelected: boolean
 }
 
-export const CurrencyPickerItem = ({nativeName, symbol, selectCurrency, isSelected}: Props) => {
+export const CurrencyPickerItem = ({
+  nativeName,
+  symbol,
+  selectCurrency,
+  isSelected,
+}: Props) => {
   const strings = useStrings()
   const {colors} = useStyles()
 
@@ -35,7 +40,9 @@ export const CurrencyPickerItem = ({nativeName, symbol, selectCurrency, isSelect
           <Subtitle>{subtitle}</Subtitle>
         </Description>
 
-        <Selected>{isSelected && <Icon.Check size={24} color={colors.checkIcon} />}</Selected>
+        <Selected>
+          {isSelected && <Icon.Check size={24} color={colors.checkIcon} />}
+        </Selected>
       </Row>
     </TouchableOpacity>
   )
@@ -99,6 +106,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    translatedName: (symbol: CurrencySymbol) => intl.formatMessage(currencyNames[symbol]),
+    translatedName: (symbol: CurrencySymbol) =>
+      intl.formatMessage(currencyNames[symbol]),
   }
 }

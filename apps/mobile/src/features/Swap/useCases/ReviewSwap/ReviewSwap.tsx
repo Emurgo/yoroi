@@ -29,8 +29,12 @@ export const ReviewSwap = () => {
   const swapForm = useSwap()
 
   if (swapForm.createTx === undefined) return null
-  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
-  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
+  const tokenInInfo = swapForm.tokenInfos.get(
+    swapForm.tokenInInput.tokenId ?? undefinedToken,
+  )
+  const tokenOutInfo = swapForm.tokenInfos.get(
+    swapForm.tokenOutInput.tokenId ?? undefinedToken,
+  )
 
   const trackSwapOrderSubmitted = () => {
     track.swapOrderSubmitted({
@@ -42,7 +46,11 @@ export const ReviewSwap = () => {
         },
       ],
       to_asset: [
-        {asset_name: tokenOutInfo?.name, asset_ticker: tokenOutInfo?.ticker, policy_id: tokenOutInfo?.id.split('.')[0]},
+        {
+          asset_name: tokenOutInfo?.name,
+          asset_ticker: tokenOutInfo?.ticker,
+          policy_id: tokenOutInfo?.id.split('.')[0],
+        },
       ],
       order_type: swapForm.orderType,
       slippage_tolerance: swapForm.slippageInput.value,
@@ -70,8 +78,15 @@ export const ReviewSwap = () => {
       onSuccess: onSwapTxSuccess,
       onError: onSwapTxError,
       cbor: swapForm.createTx?.cbor,
-      receiverCustomTitle: protocol !== undefined ? <ProtocolAvatar protocol={protocol} /> : undefined,
-      details: {component: <TransactionSummary swapForm={swapForm} />, title: strings.swapDetailsTitle, height: 600},
+      receiverCustomTitle:
+        protocol !== undefined ? (
+          <ProtocolAvatar protocol={protocol} />
+        ) : undefined,
+      details: {
+        component: <TransactionSummary swapForm={swapForm} />,
+        title: strings.swapDetailsTitle,
+        height: 600,
+      },
     })
   }
 

@@ -1,6 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Animated, StyleSheet, Text, TextProps, View, ViewProps} from 'react-native'
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TextProps,
+  View,
+  ViewProps,
+} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {StepperProgress} from '../../../components/StepperProgress/StepperProgress'
@@ -39,11 +46,21 @@ export const PinBox = ({
 
   return (
     <TouchableOpacity
-      style={[styles.pinBox, selected && styles.pinBoxSelected, error && styles.pinBoxError, done && styles.pinDone]}
+      style={[
+        styles.pinBox,
+        selected && styles.pinBoxSelected,
+        error && styles.pinBoxError,
+        done && styles.pinDone,
+      ]}
       onPress={onPress}
     >
       {!selected || done ? (
-        <PinDigit style={[children === undefined && styles.pinDigitUnselected, done && styles.pinDigitDone]}>
+        <PinDigit
+          style={[
+            children === undefined && styles.pinDigitUnselected,
+            done && styles.pinDigitDone,
+          ]}
+        >
           {children === undefined ? '—' : children}
         </PinDigit>
       ) : (
@@ -57,11 +74,23 @@ const PinDigit = ({style, ...props}: TextProps) => {
   return <Text {...props} style={[styles.pinDigit, style]} />
 }
 
-export const Stepper = ({currentStep, totalSteps, title}: {currentStep: number; totalSteps: number; title: string}) => {
+export const Stepper = ({
+  currentStep,
+  totalSteps,
+  title,
+}: {
+  currentStep: number
+  totalSteps: number
+  title: string
+}) => {
   const styles = useStyles()
   return (
     <View style={styles.stepper}>
-      <StepperProgress currentStepTitle={title} currentStep={currentStep} totalSteps={totalSteps} />
+      <StepperProgress
+        currentStepTitle={title}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+      />
     </View>
   )
 }

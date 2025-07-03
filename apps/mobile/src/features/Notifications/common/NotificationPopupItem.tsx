@@ -11,7 +11,12 @@ type Props = {
   description: string
 }
 
-export const NotificationItem = ({onPress, icon, title, description}: Props) => {
+export const NotificationItem = ({
+  onPress,
+  icon,
+  title,
+  description,
+}: Props) => {
   const {styles} = useStyles()
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
@@ -57,5 +62,11 @@ const useStyles = () => {
     },
   })
 
-  return {styles, colors: {iconColor: color.secondary_600, iconBackground: color.secondary_100}}
+  return {
+    styles,
+    colors: {
+      iconColor: color.secondary_600,
+      iconBackground: color.secondary_100,
+    },
+  }
 }

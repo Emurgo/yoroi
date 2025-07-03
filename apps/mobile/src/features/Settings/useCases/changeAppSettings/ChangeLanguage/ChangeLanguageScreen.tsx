@@ -8,7 +8,10 @@ import {LanguagePicker} from '../../../../../components/LanguagePicker/LanguageP
 export const ChangeLanguageScreen = () => {
   const styles = useStyles()
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
       <LanguagePicker />
     </SafeAreaView>
   )

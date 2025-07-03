@@ -1,4 +1,3 @@
-/* eslint-disable no-empty */
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {SendToken} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
@@ -18,50 +17,41 @@ import {MultiToken} from './MultiToken'
 import {CardanoTypes, YoroiWallet} from './types'
 import {wrappedCsl} from './wrappedCsl'
 
-export const deriveRewardAddressHex = async (
+export const deriveRewardAddressHex = (
   accountPubKeyHex: string,
   chainId: number,
   role: number,
   index: number,
-): Promise<string> => {
-  const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(
+): string => {
+  const accountPubKeyPtr = CardanoMobile.Bip32PublicKey.fromBytes(
     Buffer.from(accountPubKeyHex, 'hex'),
   )
-  const stakingKey = await (
-    await (await accountPubKeyPtr.derive(role)).derive(index)
-  ).toRawKey()
-  const credential = await CardanoMobile.Credential.fromKeyhash(
-    await stakingKey.hash(),
-  )
-  const rewardAddr = await CardanoMobile.RewardAddress.new(chainId, credential)
-  const rewardAddrAsAddr = await rewardAddr.toAddress()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const result = Buffer.from(
-    (await rewardAddrAsAddr.toBytes()) as any,
+  const stakingKey = accountPubKeyPtr.derive(role).derive(index).toRawKey()
+  const credential = CardanoMobile.Credential.fromKeyhash(stakingKey.hash())
+  const rewardAddr = CardanoMobile.RewardAddress.new(chainId, credential)
+  const rewardAddrAsAddr = rewardAddr.toAddress()
+
+  const result = Buffer.from(rewardAddrAsAddr.toBytes() as any, 'hex').toString(
     'hex',
-  ).toString('hex')
+  )
   return result
 }
 
-export const deriveRewardAddressFromAddress = async (
+export const deriveRewardAddressFromAddress = (
   address: string,
   chainId: number,
-): Promise<string> => {
+): string => {
   const {csl, release} = wrappedCsl()
 
   try {
-    const result = await csl.Address.fromBech32(address)
-      .then((address) => csl.BaseAddress.fromAddress(address))
-      .then(
-        (baseAddress) =>
-          baseAddress?.stakeCred() ?? invalid('invalid base address'),
-      )
-      .then((stakeCredential) =>
-        csl.RewardAddress.new(chainId, stakeCredential),
-      )
-      .then((rewardAddress) => rewardAddress.toAddress())
-      .then((rewardAddrAsAddress) => rewardAddrAsAddress.toBech32(undefined))
-      .catch((error) => error)
+    const result = csl.RewardAddress.new(
+      chainId,
+      csl.BaseAddress.fromAddress(
+        csl.Address.fromBech32(address),
+      )?.stakeCred() ?? invalid('invalid base address'),
+    )
+      .toAddress()
+      .toBech32(undefined)
 
     if (typeof result !== 'string')
       throw new Error('Its not possible to derive reward address')
@@ -74,46 +64,41 @@ export const deriveRewardAddressFromAddress = async (
 /**
  * Multi-asset related
  */
-export const identifierToCardanoAsset = async (
+export const identifierToCardanoAsset = (
   tokenId: string,
-): Promise<{
+): {
   policyId: CardanoTypes.ScriptHash
   name: CardanoTypes.AssetName
-}> => {
+} => {
   const policyId = toPolicyId(tokenId)
   const assetNameHex = toAssetNameHex(tokenId)
 
   return {
-    policyId: await CardanoMobile.ScriptHash.fromBytes(
-      Buffer.from(policyId, 'hex'),
-    ),
-    name: await CardanoMobile.AssetName.new(Buffer.from(assetNameHex, 'hex')),
+    policyId: CardanoMobile.ScriptHash.fromBytes(Buffer.from(policyId, 'hex')),
+    name: CardanoMobile.AssetName.new(Buffer.from(assetNameHex, 'hex')),
   }
 }
 
-export const cardanoValueFromRemoteFormat = async (utxo: RawUtxo) => {
-  const value = await CardanoMobile.Value.new(
-    await CardanoMobile.BigNum.fromStr(utxo.amount),
+export const cardanoValueFromRemoteFormat = (utxo: RawUtxo) => {
+  const value = CardanoMobile.Value.new(
+    CardanoMobile.BigNum.fromStr(utxo.amount),
   )
   if (utxo.assets.length === 0) return value
-  const assets = await CardanoMobile.MultiAsset.new()
+  const assets = CardanoMobile.MultiAsset.new()
 
   for (const remoteAsset of utxo.assets) {
-    const {policyId, name} = await identifierToCardanoAsset(remoteAsset.assetId)
-    let policyContent = await assets.get(policyId)
+    const {policyId, name} = identifierToCardanoAsset(remoteAsset.assetId)
+    let policyContent = assets.get(policyId)
     policyContent = policyContent?.hasValue()
       ? policyContent
-      : await CardanoMobile.Assets.new()
-    await policyContent.insert(
-      name,
-      await CardanoMobile.BigNum.fromStr(remoteAsset.amount),
-    )
+      : CardanoMobile.Assets.new()
+    policyContent.insert(name, CardanoMobile.BigNum.fromStr(remoteAsset.amount))
     // recall: we always have to insert since WASM returns copies of objects
-    await assets.insert(policyId, policyContent)
+    assets.insert(policyId, policyContent)
   }
 
-  if ((await assets.len()) > 0) {
-    await value.setMultiasset(assets)
+  if (assets.len() > 0) {
+    value.setMultiasset(assets)
   }
 
   return value
@@ -211,68 +196,68 @@ export const isTokenInfo = (
   return !!(token as Balance.TokenInfo).kind
 }
 
-export const generateCIP30UtxoCbor = async (utxo: RawUtxo) => {
-  const txHash = await CardanoMobile.TransactionHash.fromBytes(
+export const generateCIP30UtxoCbor = (utxo: RawUtxo) => {
+  const txHash = CardanoMobile.TransactionHash.fromBytes(
     Buffer.from(utxo.tx_hash, 'hex'),
   )
   if (!txHash) throw new Error('Invalid tx hash')
 
   const index = utxo.tx_index
-  const input = await CardanoMobile.TransactionInput.new(txHash, index)
-  const address = await CardanoMobile.Address.fromBech32(utxo.receiver)
+  const input = CardanoMobile.TransactionInput.new(txHash, index)
+  const address = CardanoMobile.Address.fromBech32(utxo.receiver)
   if (!address) throw new Error('Invalid address')
 
-  const amount = await CardanoMobile.BigNum.fromStr(utxo.amount)
+  const amount = CardanoMobile.BigNum.fromStr(utxo.amount)
   if (!amount) throw new Error('Invalid amount')
 
-  const collateral = await CardanoMobile.Value.new(amount)
-  const output = await CardanoMobile.TransactionOutput.new(address, collateral)
-  const transactionUnspentOutput =
-    await CardanoMobile.TransactionUnspentOutput.new(input, output)
+  const collateral = CardanoMobile.Value.new(amount)
+  const output = CardanoMobile.TransactionOutput.new(address, collateral)
+  const transactionUnspentOutput = CardanoMobile.TransactionUnspentOutput.new(
+    input,
+    output,
+  )
 
   return transactionUnspentOutput.toHex()
 }
 
-export const createRawTxSigningKey = async (
+export const createRawTxSigningKey = (
   rootKey: string,
   derivationPath: number[],
 ) => {
   if (derivationPath.length !== 5) throw new Error('Invalid derivation path')
-  const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(
+  const masterKey = CardanoMobile.Bip32PrivateKey.fromBytes(
     Buffer.from(rootKey, 'hex'),
   )
-  const accountPrivateKey = await masterKey
+  const accountPrivateKey = masterKey
     .derive(derivationPath[0])
-    .then((key) => key.derive(derivationPath[1]))
-    .then((key) => key.derive(derivationPath[2]))
-    .then((key) => key.derive(derivationPath[3]))
-    .then((key) => key.derive(derivationPath[4]))
+    .derive(derivationPath[1])
+    .derive(derivationPath[2])
+    .derive(derivationPath[3])
+    .derive(derivationPath[4])
 
-  const rawKey = await accountPrivateKey.toRawKey()
-  const bech32 = await rawKey.toBech32()
+  const rawKey = accountPrivateKey.toRawKey()
+  const bech32 = rawKey.toBech32()
 
-  const pkey = await CardanoMobile.PrivateKey.fromBech32(bech32)
+  const pkey = CardanoMobile.PrivateKey.fromBech32(bech32)
   if (!pkey) throw new Error('Invalid private key')
   return pkey
 }
 
-export const copyFromCSL = async <T extends {toHex: () => Promise<string>}>(
-  creator: {fromHex: (hex: string) => Promise<T>},
+export const copyFromCSL = <T extends {toHex: () => string}>(
+  creator: {fromHex: (hex: string) => T},
   value: T,
-): Promise<T> => {
-  return creator.fromHex(await value.toHex())
+): T => {
+  return creator.fromHex(value.toHex())
 }
 
-export const copyMultipleFromCSL = async <
-  T extends {toHex: () => Promise<string>},
->(
+export const copyMultipleFromCSL = <T extends {toHex: () => string}>(
   items: T[],
-  creator: {fromHex: (hex: string) => Promise<T>},
+  creator: {fromHex: (hex: string) => T},
 ) => {
-  return Promise.all(items.map((item) => copyFromCSL(creator, item)))
+  return items.map((item) => copyFromCSL(creator, item))
 }
 
-export const getTransactionUnspentOutput = async ({
+export const getTransactionUnspentOutput = ({
   txId,
   bytes,
   index,
@@ -283,41 +268,39 @@ export const getTransactionUnspentOutput = async ({
 }) => {
   const {csl, release} = wrappedCsl()
   try {
-    const tx = await csl.Transaction.fromBytes(bytes)
-    const body = await tx.body()
-    const originalOutput = await (await body.outputs()).get(index)
+    const tx = csl.Transaction.fromBytes(bytes)
+    const body = tx.body()
+    const originalOutput = body.outputs().get(index)
 
     const txHash = txId.split(':')[index]
-    const input = await csl.TransactionInput.new(
-      await csl.TransactionHash.fromHex(txHash),
+    const input = csl.TransactionInput.new(
+      csl.TransactionHash.fromHex(txHash),
       0,
     )
-    const value = await originalOutput.amount()
-    const receiver = await originalOutput.address()
-    const output = await csl.TransactionOutput.new(receiver, value)
+    const value = originalOutput.amount()
+    const receiver = originalOutput.address()
+    const output = csl.TransactionOutput.new(receiver, value)
     return copyFromCSL(
       CardanoMobile.TransactionUnspentOutput,
-      await CardanoMobile.TransactionUnspentOutput.new(input, output),
+      CardanoMobile.TransactionUnspentOutput.new(input, output),
     )
   } finally {
     release()
   }
 }
 
-export const getHexAddressingMap = async (
+export const getHexAddressingMap = (
   csl: WasmModuleProxy,
   wallet: YoroiWallet,
 ) => {
-  const addressedUtxos = wallet.utxos.map(async (utxo: RawUtxo) => {
+  const addressedUtxos = wallet.utxos.map((utxo: RawUtxo) => {
     const addressing = wallet.getAddressing(utxo.receiver)
-    const hexAddress = await normalizeToAddress(csl, utxo.receiver).then((a) =>
-      a?.toHex(),
-    )
+    const hexAddress = normalizeToAddress(csl, utxo.receiver)?.toHex()
 
     return {addressing, hexAddress}
   })
 
-  const addressing = await Promise.all(addressedUtxos)
+  const addressing = addressedUtxos
   return addressing.reduce<{[addressHex: string]: Array<number>}>(
     (acc, curr) => {
       if (!curr.hexAddress) return acc

@@ -55,7 +55,11 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
       <Spacer fill height={16} />
 
       <View style={styles.actions}>
-        <Button type={ButtonType.Text} title={strings.selectMultiple} onPress={handleOnMultiple} />
+        <Button
+          type={ButtonType.Text}
+          title={strings.selectMultiple}
+          onPress={handleOnMultiple}
+        />
 
         <Button title={strings.singleAddressWallet} onPress={handleOnSingle} />
       </View>

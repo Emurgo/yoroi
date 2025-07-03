@@ -22,24 +22,34 @@ export const WarnLimitPrice = ({
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.description}>{strings.limitPriceWarningDescription}</Text>
+        <Text style={styles.description}>
+          {strings.limitPriceWarningDescription}
+        </Text>
 
         <Spacer height={16} />
 
         <View style={styles.table}>
           <View style={styles.row}>
-            <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
+            <Text style={styles.label}>
+              {strings.limitPriceWarningYourPrice}
+            </Text>
 
             <View style={styles.textWrapper}>
-              <Text style={styles.value}>{`1 ${tokenInTicker} = ${wantedPrice} ${tokenOutTicker}`}</Text>
+              <Text
+                style={styles.value}
+              >{`1 ${tokenInTicker} = ${wantedPrice} ${tokenOutTicker}`}</Text>
             </View>
           </View>
 
           <View style={styles.row}>
-            <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
+            <Text style={styles.label}>
+              {strings.limitPriceWarningMarketPrice}
+            </Text>
 
             <View style={styles.textWrapper}>
-              <Text style={styles.value}>{`1 ${tokenInTicker} = ${marketPrice} ${tokenOutTicker}`}</Text>
+              <Text
+                style={styles.value}
+              >{`1 ${tokenInTicker} = ${marketPrice} ${tokenOutTicker}`}</Text>
             </View>
           </View>
         </View>

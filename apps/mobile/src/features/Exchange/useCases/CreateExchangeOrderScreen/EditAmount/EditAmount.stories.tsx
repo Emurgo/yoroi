@@ -1,5 +1,9 @@
 import {storiesOf} from '@storybook/react-native'
-import {exchangeDefaultState, ExchangeProvider, successManagerMock} from '@yoroi/exchange'
+import {
+  exchangeDefaultState,
+  ExchangeProvider,
+  successManagerMock,
+} from '@yoroi/exchange'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -12,7 +16,10 @@ storiesOf('Exchange Edit Amount', module).add('initial - message', () => {
   return (
     <WalletManagerProviderMock wallet={mocks.wallet}>
       <SearchProvider>
-        <ExchangeProvider manager={successManagerMock} initialState={{...exchangeDefaultState, providerId: 'banxa'}}>
+        <ExchangeProvider
+          manager={successManagerMock}
+          initialState={{...exchangeDefaultState, providerId: 'banxa'}}
+        >
           <View style={styles.container}>
             <EditAmount />
           </View>

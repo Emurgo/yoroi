@@ -6,7 +6,10 @@ type YoroiSignedTxInfo = {
   signedTx: CardanoTypes.SignedTx
 }
 
-export const yoroiSignedTx = ({unsignedTx, signedTx}: YoroiSignedTxInfo): YoroiSignedTx => {
+export const yoroiSignedTx = ({
+  unsignedTx,
+  signedTx,
+}: YoroiSignedTxInfo): YoroiSignedTx => {
   const {unsignedTx: _, ...yoroiTxInfo} = unsignedTx
 
   return {

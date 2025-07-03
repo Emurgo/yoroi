@@ -11,7 +11,9 @@ export const useStrings = () => {
     tosAgreement: intl.formatMessage(messages.tosAgreement),
     continue: intl.formatMessage(messages.continue),
     acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
-    acceptPrivacyPolicyTitle: intl.formatMessage(messages.acceptPrivacyPolicyTitle),
+    acceptPrivacyPolicyTitle: intl.formatMessage(
+      messages.acceptPrivacyPolicyTitle,
+    ),
     languagePickerTitle: intl.formatMessage(messages.languagePickerTitle),
     tosAnd: intl.formatMessage(messages.tosAnd),
     privacyPolicy: intl.formatMessage(messages.privacyPolicy),
@@ -69,7 +71,8 @@ const messages = defineMessages({
   },
   biometricDescription: {
     id: 'components.walletinit.biometricScreen.biometricDescription.description',
-    defaultMessage: '!!!Use your device biometrics for a more convenient access to your Yoroi wallet',
+    defaultMessage:
+      '!!!Use your device biometrics for a more convenient access to your Yoroi wallet',
   },
   ignoreButton: {
     id: 'components.walletinit.biometricScreen.ignoreButton.title',

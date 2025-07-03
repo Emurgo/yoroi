@@ -30,10 +30,15 @@ export const useUtxoConsolidationBanner = () => {
       if (isConsolidationNeeded) {
         if (network === Chain.Network.Mainnet) {
           const last = (await manager.events.read()).find(
-            (ev) => ev.trigger === Notifications.Trigger.Banner && ev.id === BannerIds.UtxoConsolidation,
+            (ev) =>
+              ev.trigger === Notifications.Trigger.Banner &&
+              ev.id === BannerIds.UtxoConsolidation,
           )
 
-          if (!last || new Date(last.date).getTime() + time.oneWeek < Date.now()) {
+          if (
+            !last ||
+            new Date(last.date).getTime() + time.oneWeek < Date.now()
+          ) {
             showBanner({
               id: BannerIds.UtxoConsolidation,
               title: strings.organizeWallet,

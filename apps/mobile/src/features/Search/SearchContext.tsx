@@ -2,7 +2,13 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {StackNavigationOptions} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import {produce} from 'immer'
-import React, {createContext, ReactNode, useCallback, useContext, useReducer} from 'react'
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useReducer,
+} from 'react'
 import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../../components/Icon'
@@ -21,7 +27,9 @@ type SearchActions = {
   hideSearch: () => void
 }
 
-const SearchContext = createContext<undefined | (SearchState & SearchActions)>(undefined)
+const SearchContext = createContext<undefined | (SearchState & SearchActions)>(
+  undefined,
+)
 
 export const useSearch = () => {
   const value = useContext(SearchContext)
@@ -38,18 +46,27 @@ export const SearchProvider = ({
   children: ReactNode
   initialState?: Partial<SearchState>
 }) => {
-  const [state, dispatch] = useReducer(searchReducer, {...defaultState, ...initialState})
+  const [state, dispatch] = useReducer(searchReducer, {
+    ...defaultState,
+    ...initialState,
+  })
   const actions = React.useRef<SearchActions>({
     clearSearch: () => dispatch({type: 'clear'}),
     closeSearch: () => dispatch({type: 'close'}),
-    searchChanged: (search: string) => dispatch({type: 'searchChanged', search}),
+    searchChanged: (search: string) =>
+      dispatch({type: 'searchChanged', search}),
     showSearch: () => dispatch({type: 'showSearch'}),
     hideSearch: () => dispatch({type: 'hideSearch'}),
   }).current
 
-  const context = React.useMemo(() => ({...state, ...actions}), [state, actions])
+  const context = React.useMemo(
+    () => ({...state, ...actions}),
+    [state, actions],
+  )
 
-  return <SearchContext.Provider value={context}>{children}</SearchContext.Provider>
+  return (
+    <SearchContext.Provider value={context}>{children}</SearchContext.Provider>
+  )
 }
 
 type SearchAction =
@@ -94,7 +111,11 @@ function searchReducer(state: SearchState, action: SearchAction) {
   })
 }
 
-const defaultState: SearchState = Object.freeze({search: '', visible: false, isSearching: false})
+const defaultState: SearchState = Object.freeze({
+  search: '',
+  visible: false,
+  isSearching: false,
+})
 
 export const useSearchOnNavBar = ({
   placeholder,
@@ -113,7 +134,10 @@ export const useSearchOnNavBar = ({
 }) => {
   const navigation = useNavigation()
   const {atoms, color} = useTheme()
-  const defaultNavigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
+  const defaultNavigationOptions = React.useMemo(
+    () => defaultStackNavigationOptions(atoms, color),
+    [atoms, color],
+  )
 
   const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 
@@ -141,7 +165,8 @@ export const useSearchOnNavBar = ({
     () => ({
       ...defaultNavigationOptions,
       headerTitle: () => <InputSearch placeholder={placeholder} />,
-      headerRight: () => (search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null),
+      headerRight: () =>
+        search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null,
       headerLeft: () => <BackButton onPress={handleGoBack} />,
       headerTitleAlign: 'left',
       headerTitleContainerStyle: {
@@ -149,7 +174,13 @@ export const useSearchOnNavBar = ({
       },
       headerBackTitleVisible: false,
     }),
-    [defaultNavigationOptions, handleCloseSearch, handleGoBack, placeholder, search.length],
+    [
+      defaultNavigationOptions,
+      handleCloseSearch,
+      handleGoBack,
+      placeholder,
+      search.length,
+    ],
   )
 
   const withSearchButton: StackNavigationOptions = React.useMemo(
@@ -162,16 +193,27 @@ export const useSearchOnNavBar = ({
       headerBackTitleVisible: false,
       ...extraNavigationOptions,
     }),
-    [defaultNavigationOptions, extraNavigationOptions, handleGoBack, noBack, showSearch, title],
+    [
+      defaultNavigationOptions,
+      extraNavigationOptions,
+      handleGoBack,
+      noBack,
+      showSearch,
+      title,
+    ],
   )
 
   React.useLayoutEffect(() => {
-    if (!isChild) navigation.setOptions(visible ? withSearchInput : withSearchButton)
+    if (!isChild)
+      navigation.setOptions(visible ? withSearchInput : withSearchButton)
   })
 
   useFocusEffect(
     React.useCallback(() => {
-      if (isChild) navigation.getParent()?.setOptions(visible ? withSearchInput : withSearchButton)
+      if (isChild)
+        navigation
+          .getParent()
+          ?.setOptions(visible ? withSearchInput : withSearchButton)
     }, [isChild, navigation, visible, withSearchButton, withSearchInput]),
   )
 }
@@ -193,7 +235,9 @@ export const useDisableSearchOnBar = ({
       if (isChild)
         navigation.getParent()?.setOptions({
           ...defaultStackNavigationOptions(atoms, color),
-          headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
+          headerLeft: onBack
+            ? () => <BackButton onPress={onBack} />
+            : undefined,
           headerRight: undefined,
           title,
         })

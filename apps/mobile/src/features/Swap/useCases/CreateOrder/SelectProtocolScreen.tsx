@@ -21,14 +21,20 @@ export const SelectProtocolScreen = () => {
 
   if (limitOptions === undefined) return null
 
-  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
-  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
+  const tokenInInfo = swapForm.tokenInfos.get(
+    swapForm.tokenInInput.tokenId ?? undefinedToken,
+  )
+  const tokenOutInfo = swapForm.tokenInfos.get(
+    swapForm.tokenOutInput.tokenId ?? undefinedToken,
+  )
 
   const tokenInTicker = tokenInInfo?.ticker ?? tokenInInfo?.name ?? '-'
   const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
 
   const formatPrice = (price: number) => {
-    const roundedPrice = price.toFixed(tokenOutInfo?.decimals ?? 0).replace(/\.0+$/, '')
+    const roundedPrice = price
+      .toFixed(tokenOutInfo?.decimals ?? 0)
+      .replace(/\.0+$/, '')
     return roundedPrice !== '0' ? roundedPrice : price.toFixed(6)
   }
 
@@ -43,7 +49,10 @@ export const SelectProtocolScreen = () => {
         renderItem={({item}) => (
           <TouchableOpacity
             onPress={() => {
-              swapForm.action({type: 'WantedPriceInputChanged', value: String(item.initialPrice)})
+              swapForm.action({
+                type: 'WantedPriceInputChanged',
+                value: String(item.initialPrice),
+              })
               swapForm.action({type: 'ProtocolSelected', value: item.protocol})
               navigation.goBack()
             }}
@@ -56,7 +65,11 @@ export const SelectProtocolScreen = () => {
                   ? colors.gradient
                   : [colors.baseGradient, colors.baseGradient]
               }
-              style={[styles.card, !(item.protocol === swapForm.selectedProtocol.value) && styles.border]}
+              style={[
+                styles.card,
+                !(item.protocol === swapForm.selectedProtocol.value) &&
+                  styles.border,
+              ]}
             >
               <View style={styles.row}>
                 <ProtocolAvatar protocol={item.protocol} preventOpenLink />
@@ -65,7 +78,9 @@ export const SelectProtocolScreen = () => {
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>{strings.price}</Text>
 
-                <Text style={styles.rowValue}>{`1 ${tokenInTicker} = ${formatPrice(
+                <Text
+                  style={styles.rowValue}
+                >{`1 ${tokenInTicker} = ${formatPrice(
                   item.initialPrice,
                 )} ${tokenOutTicker}`}</Text>
               </View>
@@ -73,7 +88,9 @@ export const SelectProtocolScreen = () => {
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>{strings.batcherFee}</Text>
 
-                <Text style={styles.rowValue}>{`${item.batcherFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}</Text>
+                <Text
+                  style={styles.rowValue}
+                >{`${item.batcherFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}</Text>
               </View>
             </LinearGradient>
           </TouchableOpacity>
@@ -81,7 +98,11 @@ export const SelectProtocolScreen = () => {
         keyExtractor={(item) => item.protocol}
       />
 
-      <Counter counter={counter} unitsText={strings.pools(counter)} closingText={strings.available} />
+      <Counter
+        counter={counter}
+        unitsText={strings.pools(counter)}
+        closingText={strings.available}
+      />
     </SafeAreaView>
   )
 }

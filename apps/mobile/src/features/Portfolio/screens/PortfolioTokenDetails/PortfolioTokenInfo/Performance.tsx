@@ -17,7 +17,9 @@ export const Performance = () => {
     wallet: {balances},
   } = useSelectedWallet()
   const tokenInfo = balances.records.get(tokenId)
-  const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : '-'
+  const tokenSymbol = tokenInfo
+    ? infoExtractName(tokenInfo.info, {mode: 'currency'})
+    : '-'
   const {data, isFetching} = useGetPortfolioTokenInfo(tokenSymbol)
   const strings = useStrings()
 
@@ -48,13 +50,29 @@ export const Performance = () => {
 
         <Spacer height={16} /> */}
 
-        <TextGroup loading={isFetching} value={`${value?.user?.bought ?? '-/-'} USD`} label={strings.bought} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.user?.bought ?? '-/-'} USD`}
+          label={strings.bought}
+        />
 
-        <TextGroup loading={isFetching} value={`${value?.user?.receive ?? '-/-'} USD`} label={strings.received} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.user?.receive ?? '-/-'} USD`}
+          label={strings.received}
+        />
 
-        <TextGroup loading={isFetching} value={`${value?.user?.sent ?? '-/-'} USD`} label={strings.sent} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.user?.sent ?? '-/-'} USD`}
+          label={strings.sent}
+        />
 
-        <TextGroup loading={isFetching} value={`${value?.user?.sold ?? '-/-'} USD`} label={strings.sold} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.user?.sold ?? '-/-'} USD`}
+          label={strings.sold}
+        />
       </View>
 
       <Spacer height={24} />
@@ -70,13 +88,29 @@ export const Performance = () => {
           label={strings.tokenPriceChange}
         />
 
-        <TextGroup loading={isFetching} value={`${value?.market?.price ?? '-/-'} USD`} label={strings.tokenPrice} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.market?.price ?? '-/-'} USD`}
+          label={strings.tokenPrice}
+        />
 
-        <TextGroup loading={isFetching} value={`${value?.market?.cap ?? '-/-'} USD`} label={strings.marketCap} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.market?.cap ?? '-/-'} USD`}
+          label={strings.marketCap}
+        />
 
-        <TextGroup loading={isFetching} value={`${value?.market?.vol ?? '-/-'} USD`} label={strings._24hVolume} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.market?.vol ?? '-/-'} USD`}
+          label={strings._24hVolume}
+        />
 
-        <TextGroup loading={isFetching} value={`#${value?.market?.rank ?? '-/-'}`} label={strings.rank} />
+        <TextGroup
+          loading={isFetching}
+          value={`#${value?.market?.rank ?? '-/-'}`}
+          label={strings.rank}
+        />
 
         <Spacer height={16} />
 
@@ -98,9 +132,17 @@ export const Performance = () => {
           label={strings.maxSupply}
         />
 
-        <TextGroup loading={isFetching} value={`${value?.market?.ath ?? '-/-'} USD`} label={strings.allTimeHigh} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.market?.ath ?? '-/-'} USD`}
+          label={strings.allTimeHigh}
+        />
 
-        <TextGroup loading={isFetching} value={`${value?.market?.atl ?? '-/-'} USD`} label={strings.allTimeLow} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.market?.atl ?? '-/-'} USD`}
+          label={strings.allTimeLow}
+        />
       </View>
     </View>
   )
@@ -126,7 +168,10 @@ const TextGroup = ({label, loading, value, children}: TextGroupProps) => {
       )}
 
       {loading ? (
-        <SkeletonPlaceholder borderRadius={20} backgroundColor={colors.skeleton}>
+        <SkeletonPlaceholder
+          borderRadius={20}
+          backgroundColor={colors.skeleton}
+        >
           <SkeletonPlaceholder.Item width={64} height={16} />
         </SkeletonPlaceholder>
       ) : (

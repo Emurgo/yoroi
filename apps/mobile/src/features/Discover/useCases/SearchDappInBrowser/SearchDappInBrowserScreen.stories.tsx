@@ -7,7 +7,11 @@ import {BrowserProvider} from '../../common/BrowserProvider'
 import {SearchDappInBrowserScreen} from './SearchDappInBrowserScreen'
 
 storiesOf('Discover SearchDappInBrowserScreen', module)
-  .addDecorator((story) => <WalletManagerProviderMock wallet={walletMocks.wallet}>{story()}</WalletManagerProviderMock>)
+  .addDecorator((story) => (
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
+      {story()}
+    </WalletManagerProviderMock>
+  ))
   .add('initial', () => <Initial />)
 
 const Initial = () => {

@@ -47,11 +47,21 @@ const useSizeModal = () => {
   const mediumScreenHeight = 800
   const largerScreenHeight = 900
   const PERCENTAGE_NAME_PASSWORD =
-    HEIGHT_SCREEN >= largerScreenHeight ? 58 : HEIGHT_SCREEN >= mediumScreenHeight ? 65 : 85
-  const PERCENTAGE_CHECKSUM = HEIGHT_SCREEN >= largerScreenHeight ? 48 : HEIGHT_SCREEN >= mediumScreenHeight ? 55 : 75
+    HEIGHT_SCREEN >= largerScreenHeight
+      ? 58
+      : HEIGHT_SCREEN >= mediumScreenHeight
+        ? 65
+        : 85
+  const PERCENTAGE_CHECKSUM =
+    HEIGHT_SCREEN >= largerScreenHeight
+      ? 48
+      : HEIGHT_SCREEN >= mediumScreenHeight
+        ? 55
+        : 75
 
   const HEIGHT_MODAL_CHECKSUM = (HEIGHT_SCREEN / 100) * PERCENTAGE_CHECKSUM
-  const HEIGHT_MODAL_NAME_PASSWORD = (HEIGHT_SCREEN / 100) * PERCENTAGE_NAME_PASSWORD
+  const HEIGHT_MODAL_NAME_PASSWORD =
+    (HEIGHT_SCREEN / 100) * PERCENTAGE_NAME_PASSWORD
 
   return {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} as const
 }
@@ -69,9 +79,12 @@ export const SaveNanoXScreen = () => {
   const bold = useBold()
   const {walletManager} = useWalletManager()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
-  const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
+  const [name, setName] = React.useState(
+    features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '',
+  )
 
-  const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged} = useSetupWallet()
+  const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged} =
+    useSetupWallet()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -90,7 +103,9 @@ export const SaveNanoXScreen = () => {
       const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
 
       if (!walletMeta) {
-        const error = new Error('WalletDetailsScreen: wallet meta is invalid, reached an invalid state.')
+        const error = new Error(
+          'WalletDetailsScreen: wallet meta is invalid, reached an invalid state.',
+        )
         logger.error(error)
         throw error
       }
@@ -104,14 +119,20 @@ export const SaveNanoXScreen = () => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+          : showErrorDialog(errorMessages.generalError, intl, {
+              message: error.message,
+            })
       })
     },
   })
 
   const nameErrors = !isLoading ? walletManager.validateWalletName(name) : null
   const walletNameErrorText = getWalletNameError(
-    {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
+    {
+      tooLong: strings.tooLong,
+      nameAlreadyTaken: strings.nameAlreadyTaken,
+      mustBeFilled: strings.mustBeFilled,
+    },
     nameErrors,
   )
 
@@ -136,14 +157,20 @@ export const SaveNanoXScreen = () => {
         <View style={[styles.flex, styles.modal]}>
           <CardAboutPhrase
             title={strings.walletNameModalCardTitle}
-            linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
+            linesOfText={[
+              strings.walletNameModalCardFirstItem,
+              strings.walletNameModalCardSecondItem,
+            ]}
           />
 
           <Space height="lg" />
 
           <CardAboutPhrase
             title={strings.walletPasswordModalCardTitle}
-            linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
+            linesOfText={[
+              strings.walletPasswordModalCardFirstItem,
+              strings.walletPasswordModalCardSecondItem,
+            ]}
           />
 
           <Space height="lg" />
@@ -192,8 +219,15 @@ export const SaveNanoXScreen = () => {
 
   return (
     <KeyboardAvoidingView style={[styles.root, styles.flex]}>
-      <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeAreaView, styles.flex]}>
-        <StepperProgress currentStep={2} currentStepTitle={strings.stepWalletDetails} totalSteps={2} />
+      <SafeAreaView
+        edges={['left', 'right', 'bottom']}
+        style={[styles.safeAreaView, styles.flex]}
+      >
+        <StepperProgress
+          currentStep={2}
+          currentStepTitle={strings.stepWalletDetails}
+          totalSteps={2}
+        />
 
         <Space height="xl" />
 
@@ -214,7 +248,11 @@ export const SaveNanoXScreen = () => {
             label={strings.walletDetailsNameInput}
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
-            errorText={!isEmptyString(walletNameErrorText) && !isLoading ? walletNameErrorText : undefined}
+            errorText={
+              !isEmptyString(walletNameErrorText) && !isLoading
+                ? walletNameErrorText
+                : undefined
+            }
             errorDelay={0}
             returnKeyType="next"
             testID="walletNameInput"
@@ -225,7 +263,11 @@ export const SaveNanoXScreen = () => {
           <Space height="lg" />
 
           <View style={styles.checksum}>
-            <Icon.WalletAvatar image={new Blockies({seed}).asBase64()} style={styles.walletChecksum} size={24} />
+            <Icon.WalletAvatar
+              image={new Blockies({seed}).asBase64()}
+              style={styles.walletChecksum}
+              size={24}
+            />
 
             <Space width="sm" />
 
@@ -256,7 +298,10 @@ const Info = ({onPress}: {onPress: () => void}) => {
   const {color, isDark} = useTheme()
   return (
     <TouchableOpacity onPress={onPress}>
-      <InfoIcon size={24} color={isDark ? color.white_static : color.black_static} />
+      <InfoIcon
+        size={24}
+        color={isDark ? color.white_static : color.black_static}
+      />
     </TouchableOpacity>
   )
 }

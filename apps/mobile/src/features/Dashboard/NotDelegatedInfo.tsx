@@ -17,9 +17,13 @@ export const NotDelegatedInfo = () => {
         <Image source={NotDelegatedImage} />
       </View>
 
-      <Text style={[styles.text, styles.textFirstLine]}>{strings.firstLine}</Text>
+      <Text style={[styles.text, styles.textFirstLine]}>
+        {strings.firstLine}
+      </Text>
 
-      <Text style={[styles.text, styles.textSecondLine]}>{strings.secondLine}</Text>
+      <Text style={[styles.text, styles.textSecondLine]}>
+        {strings.secondLine}
+      </Text>
 
       <Line />
     </View>

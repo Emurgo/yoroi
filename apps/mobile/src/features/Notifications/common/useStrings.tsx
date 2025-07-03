@@ -7,7 +7,9 @@ export const useStrings = () => {
     tapToView: intl.formatMessage(messages.tapToView),
     stakingRewardsReceived: intl.formatMessage(messages.stakingRewardsReceived),
     assetsReceived: intl.formatMessage(messages.assetsReceived),
-    intraWalletTransactionSent: intl.formatMessage(messages.intraWalletTransactionSent),
+    intraWalletTransactionSent: intl.formatMessage(
+      messages.intraWalletTransactionSent,
+    ),
     multipleAssetsReceived: intl.formatMessage(messages.multipleAssetsReceived),
     received: intl.formatMessage(messages.received),
     multipleAssetsSent: intl.formatMessage(messages.multipleAssetsSent),
@@ -68,7 +70,8 @@ const messages = defineMessages({
   },
   turnOnAlerts: {
     id: 'notifications.turnOnAlerts',
-    defaultMessage: '!!!Turn on notifications to get alerts and updates about your wallet.',
+    defaultMessage:
+      '!!!Turn on notifications to get alerts and updates about your wallet.',
   },
   skip: {
     id: 'notifications.skip',

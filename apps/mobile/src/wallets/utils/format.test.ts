@@ -1,11 +1,17 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
 
-import {formatTokenAmount, formatTokenFractional, formatTokenInteger} from './format'
+import {
+  formatTokenAmount,
+  formatTokenFractional,
+  formatTokenInteger,
+} from './format'
 import {asQuantity} from './utils'
 
 describe('formatAda', () => {
   it('formats zero', () => {
-    expect(formatTokenAmount(asQuantity(0), primaryTokenInfoMainnet)).toEqual('0.000000')
+    expect(formatTokenAmount(asQuantity(0), primaryTokenInfoMainnet)).toEqual(
+      '0.000000',
+    )
   })
 
   it('formats positive', () => {
@@ -18,7 +24,9 @@ describe('formatAda', () => {
       ['9999999000000', '9,999,999.000000'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenAmount(asQuantity(ada), primaryTokenInfoMainnet)).toEqual(formatted)
+      expect(
+        formatTokenAmount(asQuantity(ada), primaryTokenInfoMainnet),
+      ).toEqual(formatted)
     })
   })
   it('formats negative', () => {
@@ -31,14 +39,18 @@ describe('formatAda', () => {
       ['-9999999000000', '-9,999,999.000000'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenAmount(asQuantity(ada), primaryTokenInfoMainnet)).toEqual(formatted)
+      expect(
+        formatTokenAmount(asQuantity(ada), primaryTokenInfoMainnet),
+      ).toEqual(formatted)
     })
   })
 })
 
 describe('formatAdaFractional', () => {
   it('formats zero', () => {
-    expect(formatTokenFractional(asQuantity(0), primaryTokenInfoMainnet)).toEqual('')
+    expect(
+      formatTokenFractional(asQuantity(0), primaryTokenInfoMainnet),
+    ).toEqual('')
   })
 
   it('formats positive', () => {
@@ -51,7 +63,9 @@ describe('formatAdaFractional', () => {
       ['9999999000000', ''],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenFractional(asQuantity(ada), primaryTokenInfoMainnet)).toEqual(formatted)
+      expect(
+        formatTokenFractional(asQuantity(ada), primaryTokenInfoMainnet),
+      ).toEqual(formatted)
     })
   })
   it('formats negative', () => {
@@ -64,14 +78,18 @@ describe('formatAdaFractional', () => {
       ['-9999999000000', ''],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenFractional(asQuantity(ada), primaryTokenInfoMainnet)).toEqual(formatted)
+      expect(
+        formatTokenFractional(asQuantity(ada), primaryTokenInfoMainnet),
+      ).toEqual(formatted)
     })
   })
 })
 
 describe('formatAdaInteger', () => {
   it('formats zero', () => {
-    expect(formatTokenInteger(asQuantity(0), primaryTokenInfoMainnet)).toEqual('0')
+    expect(formatTokenInteger(asQuantity(0), primaryTokenInfoMainnet)).toEqual(
+      '0',
+    )
   })
 
   it('formats positive', () => {
@@ -85,7 +103,9 @@ describe('formatAdaInteger', () => {
       ['9999999000000', '9,999,999'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenInteger(asQuantity(ada), primaryTokenInfoMainnet)).toEqual(formatted)
+      expect(
+        formatTokenInteger(asQuantity(ada), primaryTokenInfoMainnet),
+      ).toEqual(formatted)
     })
   })
   it('formats negative', () => {
@@ -99,7 +119,9 @@ describe('formatAdaInteger', () => {
       ['-9999999000000', '-9,999,999'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenInteger(asQuantity(ada), primaryTokenInfoMainnet)).toEqual(formatted)
+      expect(
+        formatTokenInteger(asQuantity(ada), primaryTokenInfoMainnet),
+      ).toEqual(formatted)
     })
   })
 })

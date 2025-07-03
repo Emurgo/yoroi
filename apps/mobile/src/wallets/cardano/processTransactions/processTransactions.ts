@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {isArray, isString} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
@@ -13,7 +12,11 @@ import {
   TransactionInfo,
 } from '../../types/other'
 import {Token} from '../../types/tokens'
-import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../MultiToken'
+import {
+  getDefaultNetworkTokenEntry,
+  MultiToken,
+  strToDefaultMultiAsset,
+} from '../MultiToken'
 import {multiTokenFromRemote} from '../utils'
 
 const ASSURANCE_LEVELS = {
@@ -99,11 +102,14 @@ export const processTxHistoryData = (
     {},
   )
 
-  const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, primaryTokenInfo)
+  const _strToDefaultMultiAsset = (amount: string) =>
+    strToDefaultMultiAsset(amount, primaryTokenInfo)
   // collateral
   const collateral = tx.collateralInputs || []
-  const isNonNativeScriptExecution = Number(tx.scriptSize) > 0 || collateral.length > 0
-  const isInvalidScriptExecution = isNonNativeScriptExecution && !tx.validContract
+  const isNonNativeScriptExecution =
+    Number(tx.scriptSize) > 0 || collateral.length > 0
+  const isInvalidScriptExecution =
+    isNonNativeScriptExecution && !tx.validContract
   // TODO: check if is it possible to have not owned address in collateral inputs
   // NOTE: only add the tx inputs to account it if the execution has failed
   const ownUtxoCollateralInputs = isInvalidScriptExecution
@@ -119,8 +125,12 @@ export const processTxHistoryData = (
         amount: w.amount,
         assets: [],
       }))
-  const ownUtxoInputs = utxoInputs.filter(({address}) => ownAddresses.includes(address))
-  const ownUtxoOutputs = utxoOutputs.filter(({address}) => ownAddresses.includes(address))
+  const ownUtxoInputs = utxoInputs.filter(({address}) =>
+    ownAddresses.includes(address),
+  )
+  const ownUtxoOutputs = utxoOutputs.filter(({address}) =>
+    ownAddresses.includes(address),
+  )
 
   const ownImplicitInput: MultiToken = _strToDefaultMultiAsset('0')
 
@@ -149,25 +159,38 @@ export const processTxHistoryData = (
     return _strToDefaultMultiAsset('0')
   })()
 
-  const unifiedInputs = [...utxoInputs, ...accountingInputs, ...ownUtxoCollateralInputs]
+  const unifiedInputs = [
+    ...utxoInputs,
+    ...accountingInputs,
+    ...ownUtxoCollateralInputs,
+  ]
   const unifiedOutputs = [
     ...utxoOutputs, // ...accountingOutpus,
   ]
-  const ownInputs = unifiedInputs.filter(({address}) => ownAddresses.includes(address))
-  const ownOutputs = unifiedOutputs.filter(({address}) => ownAddresses.includes(address))
+  const ownInputs = unifiedInputs.filter(({address}) =>
+    ownAddresses.includes(address),
+  )
+  const ownOutputs = unifiedOutputs.filter(({address}) =>
+    ownAddresses.includes(address),
+  )
 
   const totalIn = _sum(unifiedInputs, primaryTokenInfo)
 
   const totalOut = _sum(unifiedOutputs, primaryTokenInfo)
 
-  const ownIn = _sum(ownInputs, primaryTokenInfo).joinAddMutable(ownImplicitInput)
+  const ownIn = _sum(ownInputs, primaryTokenInfo).joinAddMutable(
+    ownImplicitInput,
+  )
 
-  const ownOut = _sum(ownOutputs, primaryTokenInfo).joinAddMutable(ownImplicitOutput)
+  const ownOut = _sum(ownOutputs, primaryTokenInfo).joinAddMutable(
+    ownImplicitOutput,
+  )
 
   const hasOnlyOwnInputs = ownInputs.length === unifiedInputs.length
   const hasOnlyOwnOutputs = ownOutputs.length === unifiedOutputs.length
   const isIntraWallet = hasOnlyOwnInputs && hasOnlyOwnOutputs
-  const isMultiParty = ownInputs.length > 0 && ownInputs.length !== unifiedInputs.length
+  const isMultiParty =
+    ownInputs.length > 0 && ownInputs.length !== unifiedInputs.length
 
   if (isMultiParty && !_multiPartyWarningCache[tx.id]) {
     _multiPartyWarningCache[tx.id] = true
@@ -209,11 +232,16 @@ export const processTxHistoryData = (
   //    balance = sum(delta)
   // recall: if the tx has withdrawals or refunds to this wallet, they are
   // included in own utxo outputs
-  const delta = _sum(ownUtxoOutputs, primaryTokenInfo).joinSubtractMutable(_sum(ownUtxoInputs, primaryTokenInfo))
+  const delta = _sum(ownUtxoOutputs, primaryTokenInfo).joinSubtractMutable(
+    _sum(ownUtxoInputs, primaryTokenInfo),
+  )
 
   let amount
   let fee
-  const remoteFee = tx.fee != null ? _strToDefaultMultiAsset(new BigNumber(tx.fee).times(-1).toString()) : null
+  const remoteFee =
+    tx.fee != null
+      ? _strToDefaultMultiAsset(new BigNumber(tx.fee).times(-1).toString())
+      : null
   let direction
 
   if (isInvalidScriptExecution) {

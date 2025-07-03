@@ -32,7 +32,8 @@ export const NoFundsScreen = () => {
     navigation.navigate('exchange-create-order')
   }
 
-  const buttonText = network === Chain.Network.Mainnet ? strings.buyAda : strings.goToFaucet
+  const buttonText =
+    network === Chain.Network.Mainnet ? strings.buyAda : strings.goToFaucet
 
   return (
     <SafeArea style={styles.root}>

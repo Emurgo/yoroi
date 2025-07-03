@@ -15,9 +15,11 @@ export const priceChange = (previous: number, current: number): Return => {
     }
   const changeValue = current - previous
   const changePercent = (100 * changeValue) / previous
-  const variantPnl = changeValue < 0 ? 'danger' : changeValue > 0 ? 'success' : 'neutral'
+  const variantPnl =
+    changeValue < 0 ? 'danger' : changeValue > 0 ? 'success' : 'neutral'
 
   return {changeValue, changePercent, variantPnl}
 }
 
-export const formatPriceChange = (change: number, decimals?: number) => new BigNumber(change).toFormat(decimals ?? 2)
+export const formatPriceChange = (change: number, decimals?: number) =>
+  new BigNumber(change).toFormat(decimals ?? 2)

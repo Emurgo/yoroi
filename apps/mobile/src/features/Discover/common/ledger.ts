@@ -3,13 +3,13 @@ import 'cbor-rn-prereqs'
 import {
   AddressType,
   AssetGroup,
-  Certificate as LedgerCertificate,
   CertificateType,
   CredentialParamsType,
   Datum,
   DatumType,
   DRepParams,
   DRepParamsType,
+  Certificate as LedgerCertificate,
   RequiredSigner,
   SignTransactionRequest,
   Token,
@@ -37,7 +37,9 @@ import {
 import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
 import cborUtils from 'cbor'
 
-async function toLedgerTokenBundle(assets?: MultiAsset): Promise<Array<AssetGroup> | null> {
+async function toLedgerTokenBundle(
+  assets?: MultiAsset,
+): Promise<Array<AssetGroup> | null> {
   if (assets == null) return null
   const assetGroup: Array<AssetGroup> = []
 
@@ -60,14 +62,18 @@ async function toLedgerTokenBundle(assets?: MultiAsset): Promise<Array<AssetGrou
       })
     }
     // sort by asset name to the order specified by rfc7049
-    tokens.sort((token1, token2) => compareCborKey(token1.assetNameHex, token2.assetNameHex))
+    tokens.sort((token1, token2) =>
+      compareCborKey(token1.assetNameHex, token2.assetNameHex),
+    )
     assetGroup.push({
       policyIdHex: Buffer.from(await policyId.toBytes()).toString('hex'),
       tokens,
     })
   }
   // sort by policy id to the order specified by rfc7049
-  assetGroup.sort((asset1, asset2) => compareCborKey(asset1.policyIdHex, asset2.policyIdHex))
+  assetGroup.sort((asset1, asset2) =>
+    compareCborKey(asset1.policyIdHex, asset2.policyIdHex),
+  )
   return assetGroup
 }
 
@@ -134,7 +140,10 @@ async function formatLedgerWithdrawals(
       }
     }
     if (stakeCredential === null) {
-      throw new Error('Failed to resolve credential type for reward address: ' + rewardAddressPayload)
+      throw new Error(
+        'Failed to resolve credential type for reward address: ' +
+          rewardAddressPayload,
+      )
     }
     result.push({
       amount: await withdrawalAmount.toStr(),
@@ -188,7 +197,9 @@ export const formatLedgerCertificates = async (
             type: CredentialParamsType.KEY_PATH,
             keyPath: stakingDerivationPath,
           },
-          poolKeyHashHex: Buffer.from(await delegationCert.poolKeyhash().then((x) => x.toBytes())).toString('hex'),
+          poolKeyHashHex: Buffer.from(
+            await delegationCert.poolKeyhash().then((x) => x.toBytes()),
+          ).toString('hex'),
         },
       })
       continue
@@ -211,12 +222,16 @@ export const formatLedgerCertificates = async (
       }
     }
 
-    throw new Error(`formatLedgerCertificates Ledger doesn't support this certificate type`)
+    throw new Error(
+      `formatLedgerCertificates Ledger doesn't support this certificate type`,
+    )
   }
   return result
 }
 
-const mapDrepParams = async (certificate: VoteDelegation): Promise<DRepParams | undefined> => {
+const mapDrepParams = async (
+  certificate: VoteDelegation,
+): Promise<DRepParams | undefined> => {
   const drep = await certificate.drep()
   const drepKind = await drep.kind()
 
@@ -283,13 +298,17 @@ export async function toLedgerSignRequest(
 
   const txHasSetTags = tagsState === csl.TransactionSetsState.AllSetsHaveTag
 
-  async function formatInputs(inputs: TransactionInputs): Promise<Array<TxInput>> {
+  async function formatInputs(
+    inputs: TransactionInputs,
+  ): Promise<Array<TxInput>> {
     const formatted = []
     for (let i = 0; i < (await inputs.len()); i++) {
       const input = await inputs.get(i)
       const hash = await input.transactionId().then((t) => t.toHex())
       const index = await input.index()
-      const ownUtxo = addressedUtxos.find((utxo) => utxo.txHash === hash && utxo.txIndex === index)
+      const ownUtxo = addressedUtxos.find(
+        (utxo) => utxo.txHash === hash && utxo.txIndex === index,
+      )
       formatted.push({
         txHashHex: hash,
         outputIndex: index,
@@ -299,7 +318,10 @@ export async function toLedgerSignRequest(
     return formatted
   }
 
-  async function formatOutput(output: TransactionOutput, isPostAlonzoTransactionOutput: boolean): Promise<TxOutput> {
+  async function formatOutput(
+    output: TransactionOutput,
+    isPostAlonzoTransactionOutput: boolean,
+  ): Promise<TxOutput> {
     const addr = await output.address()
     let destination: TxOutputDestination | null = null
 
@@ -341,8 +363,13 @@ export async function toLedgerSignRequest(
 
     const baseAddr = await csl.BaseAddress.fromAddress(addr)
     if (baseAddr) {
-      const enterpriseAddr = await csl.EnterpriseAddress.new(networkId, await baseAddr.paymentCred())
-      const paymentAddress = await enterpriseAddr.toAddress().then((a) => a.toHex())
+      const enterpriseAddr = await csl.EnterpriseAddress.new(
+        networkId,
+        await baseAddr.paymentCred(),
+      )
+      const paymentAddress = await enterpriseAddr
+        .toAddress()
+        .then((a) => a.toHex())
       const ownPaymentPath = ownUtxoAddressMap[paymentAddress]
       if (ownPaymentPath) {
         const stake = await baseAddr.stakeCred()
@@ -415,7 +442,9 @@ export async function toLedgerSignRequest(
       .amount()
       .then((a) => a.coin())
       .then((c) => c.toStr())
-    const tokenBundle = await toLedgerTokenBundle(await output.amount().then((a) => a.multiasset()))
+    const tokenBundle = await toLedgerTokenBundle(
+      await output.amount().then((a) => a.multiasset()),
+    )
     const outputDataHash = await output.dataHash()
     const plutusData = await output.plutusData()
     const scriptRef = await output.scriptRef()
@@ -458,7 +487,8 @@ export async function toLedgerSignRequest(
   const nativeOutputs = await txBody.outputs()
   for (let i = 0; i < (await nativeOutputs.len()); i++) {
     const o = await nativeOutputs.get(i)
-    const isPostAlonzoTransactionOutput = parsedCbor.get(1)?.constructor?.name === 'Map'
+    const isPostAlonzoTransactionOutput =
+      parsedCbor.get(1)?.constructor?.name === 'Map'
     outputs.push(await formatOutput(o, isPostAlonzoTransactionOutput))
   }
 
@@ -476,15 +506,25 @@ export async function toLedgerSignRequest(
   const additionalWitnessPaths: number[][] = []
   const formattedRequiredSigners: RequiredSigner[] = []
 
-  async function hashHexToOwnAddressPath(hashHex: string): Promise<Array<number>> {
+  async function hashHexToOwnAddressPath(
+    hashHex: string,
+  ): Promise<Array<number>> {
     const hash = await csl.Ed25519KeyHash.fromHex(hashHex)
-    const enterpriseAddress = await csl.EnterpriseAddress.new(networkId, await csl.Credential.fromKeyhash(hash))
+    const enterpriseAddress = await csl.EnterpriseAddress.new(
+      networkId,
+      await csl.Credential.fromKeyhash(hash),
+    )
       .then((a) => a.toAddress())
       .then((a) => a.toHex())
-    const stakeAddress = await csl.RewardAddress.new(networkId, await csl.Credential.fromKeyhash(hash))
+    const stakeAddress = await csl.RewardAddress.new(
+      networkId,
+      await csl.Credential.fromKeyhash(hash),
+    )
       .then((r) => r.toAddress())
       .then((a) => a.toHex())
-    return ownUtxoAddressMap[enterpriseAddress] || ownStakeAddressMap[stakeAddress]
+    return (
+      ownUtxoAddressMap[enterpriseAddress] || ownStakeAddressMap[stakeAddress]
+    )
   }
 
   const requiredSignerHashHexes = await getRequiredSignerHashHexes()
@@ -522,13 +562,19 @@ export async function toLedgerSignRequest(
   let formattedCertificates: LedgerCertificate[] | null = null
   const certificates = await txBody.certs()
   if (certificates && stakingDerivationPath) {
-    formattedCertificates = await formatLedgerCertificates(certificates, stakingDerivationPath)
+    formattedCertificates = await formatLedgerCertificates(
+      certificates,
+      stakingDerivationPath,
+    )
   }
 
   let formattedWithdrawals: Withdrawal[] | null = null
   const withdrawals = await txBody.withdrawals()
   if (withdrawals) {
-    formattedWithdrawals = await formatLedgerWithdrawals(withdrawals, addressingMap)
+    formattedWithdrawals = await formatLedgerWithdrawals(
+      withdrawals,
+      addressingMap,
+    )
   }
 
   // TODO: support CIP36 aux data
@@ -552,7 +598,10 @@ export async function toLedgerSignRequest(
   let formattedCollateralReturn: TxOutput | null = null
   const collateralReturn = await txBody.collateralReturn()
   if (collateralReturn) {
-    formattedCollateralReturn = await formatOutput(collateralReturn, parsedCbor.get(16)?.constructor?.name === 'Map')
+    formattedCollateralReturn = await formatOutput(
+      collateralReturn,
+      parsedCbor.get(16)?.constructor?.name === 'Map',
+    )
   }
 
   let formattedReferenceInputs = null
@@ -580,20 +629,28 @@ export async function toLedgerSignRequest(
       certificates: formattedCertificates,
       withdrawals: formattedWithdrawals,
       auxiliaryData: formattedAuxiliaryData,
-      validityIntervalStart: (await txBody.validityStartIntervalBignum().then((n) => n?.toStr())) ?? null,
+      validityIntervalStart:
+        (await txBody.validityStartIntervalBignum().then((n) => n?.toStr())) ??
+        null,
       mint:
-        JSON.parse((await txBody.mint().then((m) => m?.toJson())) ?? 'null')?.map(
-          ([policyIdHex, assets]: [string, Record<string, string>]) => ({
-            policyIdHex,
-            tokens: Object.keys(assets).map((assetNameHex) => ({assetNameHex, amount: assets[assetNameHex]})),
-          }),
-        ) ?? null,
-      scriptDataHashHex: (await txBody.scriptDataHash().then((h) => h?.toHex())) ?? null,
+        JSON.parse(
+          (await txBody.mint().then((m) => m?.toJson())) ?? 'null',
+        )?.map(([policyIdHex, assets]: [string, Record<string, string>]) => ({
+          policyIdHex,
+          tokens: Object.keys(assets).map((assetNameHex) => ({
+            assetNameHex,
+            amount: assets[assetNameHex],
+          })),
+        })) ?? null,
+      scriptDataHashHex:
+        (await txBody.scriptDataHash().then((h) => h?.toHex())) ?? null,
       collateralInputs: formattedCollateral,
-      requiredSigners: formattedRequiredSigners.length > 0 ? formattedRequiredSigners : null,
+      requiredSigners:
+        formattedRequiredSigners.length > 0 ? formattedRequiredSigners : null,
       includeNetworkId: (await txBody.networkId()) != null,
       collateralOutput: formattedCollateralReturn,
-      totalCollateral: (await txBody.totalCollateral().then((c) => c?.toStr())) ?? null,
+      totalCollateral:
+        (await txBody.totalCollateral().then((c) => c?.toStr())) ?? null,
       referenceInputs: formattedReferenceInputs,
     },
     additionalWitnessPaths,

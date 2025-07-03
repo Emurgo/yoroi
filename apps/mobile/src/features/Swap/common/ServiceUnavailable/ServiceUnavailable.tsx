@@ -12,7 +12,9 @@ type ServiceUnavailableProps = {
   resetErrorBoundary?: () => void
 }
 
-export const ServiceUnavailable = ({resetErrorBoundary}: ServiceUnavailableProps) => {
+export const ServiceUnavailable = ({
+  resetErrorBoundary,
+}: ServiceUnavailableProps) => {
   const strings = useStrings()
   const styles = useStyles()
 
@@ -29,7 +31,11 @@ export const ServiceUnavailable = ({resetErrorBoundary}: ServiceUnavailableProps
 
         <Spacer height={20} />
 
-        <Button onPress={resetErrorBoundary} title={strings.tryAgain} style={styles.button} />
+        <Button
+          onPress={resetErrorBoundary}
+          title={strings.tryAgain}
+          style={styles.button}
+        />
       </View>
     </SafeAreaView>
   )

@@ -1,14 +1,18 @@
 import {useNavigation} from '@react-navigation/native'
 import {Chain} from '@yoroi/types'
 
-import {SettingsRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
+import {
+  SettingsRouteNavigation,
+  useWalletNavigation,
+} from '../../../kernel/navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<SettingsRouteNavigation>()
   const walletNavigation = useWalletNavigation()
 
   return {
-    enableLoginWithPin: () => walletNavigation.navigation.navigate('enable-login-with-pin'),
+    enableLoginWithPin: () =>
+      walletNavigation.navigation.navigate('enable-login-with-pin'),
     enableLoginWithOs: () => navigation.navigate('enable-login-with-os'),
     changeLanguage: () => navigation.navigate('change-language'),
     changeCurrency: () => navigation.navigate('change-currency'),
@@ -19,8 +23,10 @@ export const useNavigateTo = () => {
     privacyPolicy: () => navigation.navigate('privacy-policy'),
     analytics: () => walletNavigation.navigateToAnalyticsSettings(),
     changeCustomPin: () => navigation.navigate('change-custom-pin'),
-    enableEasyConfirmation: () => navigation.navigate('enable-easy-confirmation'),
-    disableEasyConfirmation: () => navigation.navigate('disable-easy-confirmation'),
+    enableEasyConfirmation: () =>
+      navigation.navigate('enable-easy-confirmation'),
+    disableEasyConfirmation: () =>
+      navigation.navigate('disable-easy-confirmation'),
     preparingNetworks: (selectedNetwork: Chain.SupportedNetworks) =>
       navigation.navigate('preparing-network', {selectedNetwork}),
   }

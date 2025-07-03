@@ -11,7 +11,9 @@ export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
 
-  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({onSuccess: () => navigation.goBack()})
+  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({
+    onSuccess: () => navigation.goBack(),
+  })
 
   return (
     <OsAuthScreen

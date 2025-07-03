@@ -1,9 +1,17 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native'
 
 import {useStrings} from '../../../common/hooks/useStrings'
-import {PortfolioDappsTab, usePortfolio} from '../../../context/PortfolioProvider'
+import {
+  PortfolioDappsTab,
+  usePortfolio,
+} from '../../../context/PortfolioProvider'
 import {TabsGradient} from '../../../ui/TabsGradient/Tabs'
 
 export const PortfolioDAppTabs = () => {
@@ -46,7 +54,10 @@ type TabProps = {
 const Tab = ({onPress, label, active}: TouchableOpacityProps & TabProps) => {
   const {styles} = useStyles()
   return (
-    <TouchableOpacity style={[styles.tab, active && styles.tabActive]} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.tab, active && styles.tabActive]}
+      onPress={onPress}
+    >
       <Text style={styles.tabText}>{label}</Text>
     </TouchableOpacity>
   )

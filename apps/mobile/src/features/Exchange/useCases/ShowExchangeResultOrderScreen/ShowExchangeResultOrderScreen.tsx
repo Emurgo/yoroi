@@ -1,4 +1,8 @@
-import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
+import {
+  exchangeApiMaker,
+  exchangeManagerMaker,
+  ExchangeProvider,
+} from '@yoroi/exchange'
 import {useLinks} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
@@ -38,7 +42,8 @@ export const ShowExchangeResultOrderScreen = () => {
   }, [action?.info?.params?.isSandbox])
 
   // NOTE: should never happen, caller should handle it
-  if (action == null || action.info.useCase !== 'order/show-create-result') return null
+  if (action == null || action.info.useCase !== 'order/show-create-result')
+    return null
   const params: Links.ExchangeShowCreateResultParams = action.info.params
 
   const handleOnClose = () => {
@@ -50,7 +55,8 @@ export const ShowExchangeResultOrderScreen = () => {
     openModal({title: strings.buySellCrypto, content: <DescribeAction />})
   }
 
-  const {showOrderDetails, Logo, name, showProviderDetails} = sanitizeParams(params)
+  const {showOrderDetails, Logo, name, showProviderDetails} =
+    sanitizeParams(params)
 
   return (
     <ExchangeProvider manager={exchangeManager}>
@@ -67,7 +73,10 @@ export const ShowExchangeResultOrderScreen = () => {
               <>
                 <Spacer width={4} />
 
-                <TouchableOpacity style={{transform: [{translateY: 3}]}} onPress={handleOnShowDetails}>
+                <TouchableOpacity
+                  style={{transform: [{translateY: 3}]}}
+                  onPress={handleOnShowDetails}
+                >
                   <Icon.Info size={26} />
                 </TouchableOpacity>
               </>
@@ -79,13 +88,17 @@ export const ShowExchangeResultOrderScreen = () => {
           {showOrderDetails && (
             <>
               <ContentResult title={strings.cryptoAmountYouGet}>
-                <Text style={styles.contentValueText}>{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
+                <Text
+                  style={styles.contentValueText}
+                >{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
               </ContentResult>
 
               <Spacer height={16} />
 
               <ContentResult title={strings.fiatAmountYouGet}>
-                <Text style={styles.contentValueText}>{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
+                <Text
+                  style={styles.contentValueText}
+                >{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
               </ContentResult>
             </>
           )}
@@ -127,7 +140,10 @@ const providerName = {
 
 const sanitizeParams = (params: Links.ExchangeShowCreateResultParams) => {
   const showOrderDetails =
-    params.coin != null && params.coinAmount != null && params.fiat != null && params.fiatAmount != null
+    params.coin != null &&
+    params.coinAmount != null &&
+    params.fiat != null &&
+    params.fiatAmount != null
 
   const Logo = providerLogo[params?.provider as keyof typeof providerLogo]
   const name = providerName[params?.provider as keyof typeof providerName]

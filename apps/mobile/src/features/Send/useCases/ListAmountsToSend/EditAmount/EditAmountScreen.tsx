@@ -4,7 +4,15 @@ import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
-import {InteractionManager, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
+import {
+  InteractionManager,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewProps,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../../components/Button/Button'
@@ -35,7 +43,14 @@ export const EditAmountScreen = () => {
   const balances = usePortfolioBalances({wallet})
   const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
 
-  const {selectedTokenId, amountRemoved, amountChanged, allocated, selectedTargetIndex, targets} = useTransfer()
+  const {
+    selectedTokenId,
+    amountRemoved,
+    amountChanged,
+    allocated,
+    selectedTargetIndex,
+    targets,
+  } = useTransfer()
 
   const amount = targets[selectedTargetIndex].entry.amounts[selectedTokenId]
   const initialQuantity = amount.quantity
@@ -46,13 +61,21 @@ export const EditAmountScreen = () => {
 
   const [quantity, setQuantity] = React.useState(initialQuantity)
   const [inputValue, setInputValue] = React.useState(
-    initialQuantity === 0n ? '' : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
+    initialQuantity === 0n
+      ? ''
+      : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
   )
-  const spendable = isPrimary ? available - primaryBreakdown.lockedAsStorageCost : available
+  const spendable = isPrimary
+    ? available - primaryBreakdown.lockedAsStorageCost
+    : available
 
   React.useEffect(() => {
     setQuantity(initialQuantity)
-    setInputValue(initialQuantity === 0n ? '' : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat())
+    setInputValue(
+      initialQuantity === 0n
+        ? ''
+        : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
+    )
   }, [amount.info.decimals, initialQuantity])
 
   const isFocused = useIsFocused()
@@ -74,19 +97,28 @@ export const EditAmountScreen = () => {
   const handleOnChangeQuantity = React.useCallback(
     (text: string) => {
       try {
-        const [input, quantity] = Quantities.parseFromText(text, amount.info.decimals ?? 0, numberLocale)
+        const [input, quantity] = Quantities.parseFromText(
+          text,
+          amount.info.decimals ?? 0,
+          numberLocale,
+        )
 
         setInputValue(input)
         setQuantity(BigInt(quantity))
       } catch (error) {
-        logger.error('EditAmountScreen: handleOnChangeQuantity error parsing input', {error})
+        logger.error(
+          'EditAmountScreen: handleOnChangeQuantity error parsing input',
+          {error},
+        )
       }
     },
     [amount.info.decimals, numberLocale],
   )
 
   const handleOnMaxBalance = React.useCallback(() => {
-    setInputValue(atomicBreakdown(spendable, amount.info.decimals).bn.toFormat())
+    setInputValue(
+      atomicBreakdown(spendable, amount.info.decimals).bn.toFormat(),
+    )
     setQuantity(spendable)
   }, [amount.info.decimals, spendable])
 
@@ -100,7 +132,10 @@ export const EditAmountScreen = () => {
 
   return (
     <KeyboardAvoidingView style={[styles.flex, styles.root]}>
-      <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.flex, styles.safeAreaView]}>
+      <SafeAreaView
+        edges={['bottom', 'left', 'right']}
+        style={[styles.flex, styles.safeAreaView]}
+      >
         <ScrollView style={styles.scrollView} bounces={false}>
           <TokenAmountItem
             amount={{
@@ -112,7 +147,11 @@ export const EditAmountScreen = () => {
 
           <Spacer height={46} />
 
-          <AmountInput onChange={handleOnChangeQuantity} value={inputValue} ticker={amount.info.ticker} />
+          <AmountInput
+            onChange={handleOnChangeQuantity}
+            value={inputValue}
+            ticker={amount.info.ticker}
+          />
 
           <Center>
             {isPrimary && (

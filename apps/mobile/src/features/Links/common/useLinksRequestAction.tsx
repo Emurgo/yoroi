@@ -28,11 +28,20 @@ export const useLinksRequestAction = () => {
   const navigateTo = useNavigateTo()
 
   const {addTab, setTabActive, tabs} = useBrowser()
-  const {memoChanged, receiverResolveChanged, amountChanged, reset, linkActionChanged} = useTransfer()
+  const {
+    memoChanged,
+    receiverResolveChanged,
+    amountChanged,
+    reset,
+    linkActionChanged,
+  } = useTransfer()
 
   const startTransferWithLink = React.useCallback(
     (action: Links.YoroiAction, decimals: number) => {
-      logger.debug('useLinksRequestAction: startTransferWithLink', {action, decimals})
+      logger.debug('useLinksRequestAction: startTransferWithLink', {
+        action,
+        decimals,
+      })
       if (action.info.useCase === 'request/ada-with-link') {
         reset()
         try {
@@ -78,8 +87,16 @@ export const useLinksRequestAction = () => {
   )
 
   const openRequestedPaymentAdaWithLink = React.useCallback(
-    ({params, isTrusted}: {params: Links.TransferRequestAdaWithLinkParams; isTrusted: boolean}, decimals: number) => {
-      const title = isTrusted ? strings.trustedPaymentRequestedTitle : strings.untrustedPaymentRequestedTitle
+    (
+      {
+        params,
+        isTrusted,
+      }: {params: Links.TransferRequestAdaWithLinkParams; isTrusted: boolean},
+      decimals: number,
+    ) => {
+      const title = isTrusted
+        ? strings.trustedPaymentRequestedTitle
+        : strings.untrustedPaymentRequestedTitle
       const handleOnContinue = () =>
         startTransferWithLink(
           {
@@ -95,12 +112,21 @@ export const useLinksRequestAction = () => {
         )
 
       const content = (
-        <RequestedAdaPaymentWithLinkScreen onContinue={handleOnContinue} params={params} isTrusted={isTrusted} />
+        <RequestedAdaPaymentWithLinkScreen
+          onContinue={handleOnContinue}
+          params={params}
+          isTrusted={isTrusted}
+        />
       )
 
       openModal({title: title, content: content, height: heightBreakpoint})
     },
-    [strings.trustedPaymentRequestedTitle, strings.untrustedPaymentRequestedTitle, startTransferWithLink, openModal],
+    [
+      strings.trustedPaymentRequestedTitle,
+      strings.untrustedPaymentRequestedTitle,
+      startTransferWithLink,
+      openModal,
+    ],
   )
 
   const launchDappUrl = React.useCallback(
@@ -130,12 +156,29 @@ export const useLinksRequestAction = () => {
         }
       }
     },
-    [actionFinished, addTab, closeModal, linkActionChanged, navigateTo, setTabActive, tabs, track],
+    [
+      actionFinished,
+      addTab,
+      closeModal,
+      linkActionChanged,
+      navigateTo,
+      setTabActive,
+      tabs,
+      track,
+    ],
   )
 
   const openRequestedBrowserLaunchDappUrl = React.useCallback(
-    ({params, isTrusted}: {params: Links.BrowserLaunchDappUrlParams; isTrusted: boolean}) => {
-      const title = isTrusted ? strings.trustedBrowserLaunchDappUrlTitle : strings.untrustedBrowserLaunchDappUrlTitle
+    ({
+      params,
+      isTrusted,
+    }: {
+      params: Links.BrowserLaunchDappUrlParams
+      isTrusted: boolean
+    }) => {
+      const title = isTrusted
+        ? strings.trustedBrowserLaunchDappUrlTitle
+        : strings.untrustedBrowserLaunchDappUrlTitle
       const handleOnContinue = () =>
         launchDappUrl({
           info: {
@@ -148,12 +191,21 @@ export const useLinksRequestAction = () => {
         })
 
       const content = (
-        <RequestedBrowserLaunchDappUrlScreen onContinue={handleOnContinue} params={params} isTrusted={isTrusted} />
+        <RequestedBrowserLaunchDappUrlScreen
+          onContinue={handleOnContinue}
+          params={params}
+          isTrusted={isTrusted}
+        />
       )
 
       openModal({title: title, content: content, height: heightBreakpoint})
     },
-    [launchDappUrl, openModal, strings.trustedBrowserLaunchDappUrlTitle, strings.untrustedBrowserLaunchDappUrlTitle],
+    [
+      launchDappUrl,
+      openModal,
+      strings.trustedBrowserLaunchDappUrlTitle,
+      strings.untrustedBrowserLaunchDappUrlTitle,
+    ],
   )
 
   React.useEffect(() => {
@@ -173,10 +225,19 @@ export const useLinksRequestAction = () => {
             })
             break
           default:
-            logger.error(new Error(`useLinksRequestAction: unknown useCase: ${action?.info.useCase}`))
+            logger.error(
+              new Error(
+                `useLinksRequestAction: unknown useCase: ${action?.info.useCase}`,
+              ),
+            )
             break
         }
       }
     })
-  }, [action, openRequestedBrowserLaunchDappUrl, openRequestedPaymentAdaWithLink, wallet])
+  }, [
+    action,
+    openRequestedBrowserLaunchDappUrl,
+    openRequestedPaymentAdaWithLink,
+    wallet,
+  ])
 }

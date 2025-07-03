@@ -9,7 +9,9 @@ type ReceiveAddressesStatus = {
   next: string
   canIncrease: boolean
 }
-export const useReceiveAddressesStatus = (addressMode: Wallet.AddressMode): Readonly<ReceiveAddressesStatus> => {
+export const useReceiveAddressesStatus = (
+  addressMode: Wallet.AddressMode,
+): Readonly<ReceiveAddressesStatus> => {
   const {wallet} = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
 
@@ -25,10 +27,16 @@ export const useReceiveAddressesStatus = (addressMode: Wallet.AddressMode): Read
       }
       return addresses
     },
-    {used: [], unused: []} as Omit<ReceiveAddressesStatus, 'next' | 'canIncrease'>,
+    {used: [], unused: []} as Omit<
+      ReceiveAddressesStatus,
+      'next' | 'canIncrease'
+    >,
   )
   const info = wallet.receiveAddressInfo
-  const limitUnused = addressesStatus.unused.slice(0, info.lastUsedIndexVisual + 1)
+  const limitUnused = addressesStatus.unused.slice(
+    0,
+    info.lastUsedIndexVisual + 1,
+  )
   const multipleAddress = addressesStatus.unused[0] ?? addressesStatus.used[0]
   const nextAddress = isSingle ? singleAddress : multipleAddress
   const result: ReceiveAddressesStatus = {

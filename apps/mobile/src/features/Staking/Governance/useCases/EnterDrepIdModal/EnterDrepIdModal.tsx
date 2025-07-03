@@ -12,7 +12,11 @@ import {CardanoMobile} from '../../../../../wallets/wallets'
 import {useStrings} from '../../common/strings'
 
 export type Props = {
-  onSubmit?: (options: {type: 'key' | 'script'; hash: string; CIP105: boolean}) => void
+  onSubmit?: (options: {
+    type: 'key' | 'script'
+    hash: string
+    CIP105: boolean
+  }) => void
 }
 
 const FIND_DREPS_LINK = ''
@@ -22,14 +26,19 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const styles = useStyles()
   const [drepId, setDrepId] = React.useState('')
 
-  const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {retry: false, enabled: drepId.length > 0})
+  const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
+    retry: false,
+    enabled: drepId.length > 0,
+  })
 
-  const handleOnPress = () =>
-    parseDrepId(drepId, CardanoMobile)
-      .then(({hash, type}) => {
-        onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
-      })
-      .catch(() => Alert.alert(strings.error, strings.invalidDRepId))
+  const handleOnPress = () => {
+    try {
+      const {hash, type} = parseDrepId(drepId, CardanoMobile)
+      onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
+    } catch (e) {
+      Alert.alert(strings.error, strings.invalidDRepId)
+    }
+  }
 
   const handleOnLinkPress = () => {
     Linking.openURL(FIND_DREPS_LINK)
@@ -70,7 +79,12 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
       <Button
         title={strings.confirm}
-        disabled={isNonNullable(error) || drepId.length === 0 || !isFetched || isFetching}
+        disabled={
+          isNonNullable(error) ||
+          drepId.length === 0 ||
+          !isFetched ||
+          isFetching
+        }
         onPress={handleOnPress}
       />
 

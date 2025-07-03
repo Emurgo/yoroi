@@ -1,6 +1,11 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {storiesOf} from '@storybook/react-native'
-import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
+import {
+  resolverApiMaker,
+  resolverManagerMaker,
+  ResolverProvider,
+  resolverStorageMaker,
+} from '@yoroi/resolver'
 import {TransferProvider} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
@@ -12,7 +17,9 @@ import {mocks as walletMocks} from '../../../../../wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../../wallets/mocks/WalletManagerProviderMock'
 import {NotifySupportedNameServers} from './NotifySupportedNameServers'
 
-storiesOf('Send NotifySupportedNameServers', module).add('initial', () => <Initial />)
+storiesOf('Send NotifySupportedNameServers', module).add('initial', () => (
+  <Initial />
+))
 
 const Initial = () => {
   const wallet: YoroiWallet = walletMocks.wallet

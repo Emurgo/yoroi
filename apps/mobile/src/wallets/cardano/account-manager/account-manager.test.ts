@@ -5,12 +5,15 @@ const getAddr = (i: number) => `Addr${i}`
 describe('AddressChain', () => {
   let chain: AddressChain | undefined
   let used: number[] = []
-  const filterFn = (addrs: string[]) => Promise.resolve(addrs.filter((addr) => used.map(getAddr).includes(addr)))
+  const filterFn = (addrs: string[]) =>
+    Promise.resolve(addrs.filter((addr) => used.map(getAddr).includes(addr)))
 
   beforeEach(() => {
     used = []
     chain = new AddressChain(
-      {generate: (ids) => Promise.resolve(ids.map(getAddr))} as AddressGenerator,
+      {
+        generate: (ids) => Promise.resolve(ids.map(getAddr)),
+      } as AddressGenerator,
       5 /* block size */,
       2 /* gap limit */,
     )
@@ -66,7 +69,11 @@ describe('AddressChain', () => {
     const pubKey44 =
         '7f53efa3c08093db3824235769079e96ef96b6680fc254f6c021ec420e4d1555' +
         'b5bafb0b1fc6c8040cc8f69f7c1948dfb4dcadec4acd09730c0efb39c6159362',
-      chain = new AddressChain(new AddressGenerator(pubKey44, 1, 'cardano-bip44', chainId), 5, 2)
+      chain = new AddressChain(
+        new AddressGenerator(pubKey44, 1, 'cardano-bip44', chainId),
+        5,
+        2,
+      )
 
     expect.assertions(2)
 

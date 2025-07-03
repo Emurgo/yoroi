@@ -1,6 +1,11 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {InteractionManager, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {
+  InteractionManager,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 import {Button, ButtonType} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
@@ -59,9 +64,20 @@ export const GetImportantAlertsModal = () => {
 
       <Spacer fill />
 
-      <Button size="M" title={strings.skip} onPress={closeModal} type={ButtonType.Text} style={styles.button} />
+      <Button
+        size="M"
+        title={strings.skip}
+        onPress={closeModal}
+        type={ButtonType.Text}
+        style={styles.button}
+      />
 
-      <Button size="M" title={strings.turnOnNotifications} onPress={handleTurnOnPress} style={styles.button} />
+      <Button
+        size="M"
+        title={strings.turnOnNotifications}
+        onPress={handleTurnOnPress}
+        style={styles.button}
+      />
     </View>
   )
 }

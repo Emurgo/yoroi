@@ -3,6 +3,9 @@ import React from 'react'
 
 import {CameraPermissionDeniedIllustration} from './CameraPermissionDeniedIlustration'
 
-storiesOf('Scan Illustrations Gallery', module).add('Camera permission denied', () => {
-  return <CameraPermissionDeniedIllustration />
-})
+storiesOf('Scan Illustrations Gallery', module).add(
+  'Camera permission denied',
+  () => {
+    return <CameraPermissionDeniedIllustration />
+  },
+)

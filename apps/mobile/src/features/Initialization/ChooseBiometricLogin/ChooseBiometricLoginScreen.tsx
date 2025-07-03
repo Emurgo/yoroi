@@ -1,5 +1,9 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {
+  parseBoolean,
+  useAsyncStorage,
+  useMutationWithInvalidations,
+} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Alert, StyleSheet, Text, View} from 'react-native'
@@ -41,7 +45,9 @@ export const ChooseBiometricLoginScreen = () => {
 
         <Space height="lg" />
 
-        <Text style={styles.biometricDescription}>{strings.biometricDescription}</Text>
+        <Text style={styles.biometricDescription}>
+          {strings.biometricDescription}
+        </Text>
       </View>
 
       <View>
@@ -112,7 +118,12 @@ const useStyles = () => {
 
 const chooseBiometricLoginScreenShownKey = 'choose-biometric-login-screen-shown'
 export const useShowBiometricsScreen = (
-  options: UseQueryOptions<boolean, Error, boolean, ['useShowBiometricsScreen']> = {},
+  options: UseQueryOptions<
+    boolean,
+    Error,
+    boolean,
+    ['useShowBiometricsScreen']
+  > = {},
 ) => {
   const storage = useAsyncStorage()
 
@@ -121,7 +132,10 @@ export const useShowBiometricsScreen = (
     suspense: true,
     ...options,
     queryKey: ['useShowBiometricsScreen'],
-    queryFn: () => storage.getItem(chooseBiometricLoginScreenShownKey).then((value) => parseBoolean(value) ?? true),
+    queryFn: () =>
+      storage
+        .getItem(chooseBiometricLoginScreenShownKey)
+        .then((value) => parseBoolean(value) ?? true),
   })
 
   return {
@@ -134,7 +148,11 @@ const useSetScreenShown = () => {
   const storage = useAsyncStorage()
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: async () => storage.setItem(chooseBiometricLoginScreenShownKey, JSON.stringify(false)),
+    mutationFn: async () =>
+      storage.setItem(
+        chooseBiometricLoginScreenShownKey,
+        JSON.stringify(false),
+      ),
     invalidateQueries: [['useShowBiometricsScreen']],
   })
 

@@ -37,7 +37,9 @@ export const StakingCenter = () => {
   const {unsignedTxChanged} = useReviewTx()
   const navigateTo = useNavigateTo()
 
-  const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(null)
+  const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(
+    null,
+  )
   const [isContentLoaded, setIsContentLoaded] = React.useState(false)
   const [url, setUrl] = React.useState<null | string>(null)
 
@@ -99,7 +101,9 @@ export const StakingCenter = () => {
 
   return (
     <SafeAreaView edges={['right', 'bottom', 'left']} style={styles.root}>
-      {shouldDisplayPoolIDInput && <PoolDetailScreen onPressDelegate={setSelectedPoolId} />}
+      {shouldDisplayPoolIDInput && (
+        <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
+      )}
 
       {shouldDisplayPoolList && (
         <View style={styles.poolList}>
@@ -127,7 +131,11 @@ export const StakingCenter = () => {
         </View>
       )}
 
-      <PleaseWaitModal title="" spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={isLoading} />
+      <PleaseWaitModal
+        title=""
+        spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
+        visible={isLoading}
+      />
     </SafeAreaView>
   )
 }
@@ -154,7 +162,8 @@ const noPoolDataDialog = defineMessages({
   },
   message: {
     id: 'components.stakingcenter.noPoolDataDialog.message',
-    defaultMessage: '!!!The data from the stake pool(s) you selected is invalid. Please try again',
+    defaultMessage:
+      '!!!The data from the stake pool(s) you selected is invalid. Please try again',
   },
 })
 

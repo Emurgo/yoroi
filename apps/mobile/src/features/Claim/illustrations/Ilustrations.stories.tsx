@@ -3,6 +3,9 @@ import React from 'react'
 
 import {ClaimSuccessIllustration} from './ClaimSuccessIllustration'
 
-storiesOf('Claim Illustrations Gallery', module).add('Claim request success', () => {
-  return <ClaimSuccessIllustration />
-})
+storiesOf('Claim Illustrations Gallery', module).add(
+  'Claim request success',
+  () => {
+    return <ClaimSuccessIllustration />
+  },
+)

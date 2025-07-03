@@ -36,23 +36,35 @@ export const getTransactionReceivedNotificationTitle = (
   }
 
   if (isReceived) {
-    const details = getTransactionInfoDetails(tx, wallet.portfolioPrimaryTokenInfo)
+    const details = getTransactionInfoDetails(
+      tx,
+      wallet.portfolioPrimaryTokenInfo,
+    )
 
     return details.hasReceivedMultipleAssets
       ? strings.multipleAssetsReceived
       : `${formatAssets(
-          Quantities.format(details.firstAssetAmountReceived, details.firstReceivedAsset.denomination),
+          Quantities.format(
+            details.firstAssetAmountReceived,
+            details.firstReceivedAsset.denomination,
+          ),
           details.firstReceivedAsset.name,
         )} ${strings.received}`
   }
 
   if (isSent) {
-    const details = getTransactionInfoDetails(tx, wallet.portfolioPrimaryTokenInfo)
+    const details = getTransactionInfoDetails(
+      tx,
+      wallet.portfolioPrimaryTokenInfo,
+    )
 
     return details.hasSentMultipleAssets
       ? strings.multipleAssetsSent
       : `${formatAssets(
-          Quantities.format(details.firstAssetAmountSent, details.firstSentAsset.denomination),
+          Quantities.format(
+            details.firstAssetAmountSent,
+            details.firstSentAsset.denomination,
+          ),
           details.firstSentAsset.name,
         )} ${strings.sent}`
   }
@@ -92,7 +104,11 @@ export const getTransactionReceivedNotificationIcon = (
   return null
 }
 
-export const TransactionReceivedNotification = ({event}: {event: Notifications.Event}) => {
+export const TransactionReceivedNotification = ({
+  event,
+}: {
+  event: Notifications.Event
+}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const transactionInfos = useTransactionInfos({wallet})
@@ -101,15 +117,28 @@ export const TransactionReceivedNotification = ({event}: {event: Notifications.E
 
   return (
     <NotificationItem
-      icon={<IconWrapper>{getTransactionReceivedNotificationIcon(event, transactionInfos)}</IconWrapper>}
-      title={getTransactionReceivedNotificationTitle(event, strings, transactionInfos, wallet)}
+      icon={
+        <IconWrapper>
+          {getTransactionReceivedNotificationIcon(event, transactionInfos)}
+        </IconWrapper>
+      }
+      title={getTransactionReceivedNotificationTitle(
+        event,
+        strings,
+        transactionInfos,
+        wallet,
+      )}
       description={strings.tapToView}
     />
   )
 }
 const IconWrapper = ({children}: {children: React.ReactNode}) => {
   const {styles, colors} = useStyles()
-  return <View style={[styles.icon, {backgroundColor: colors.iconBackground}]}>{children}</View>
+  return (
+    <View style={[styles.icon, {backgroundColor: colors.iconBackground}]}>
+      {children}
+    </View>
+  )
 }
 
 const useStyles = () => {
@@ -124,7 +153,13 @@ const useStyles = () => {
     },
   })
 
-  return {styles, colors: {iconColor: color.secondary_600, iconBackground: color.secondary_100}}
+  return {
+    styles,
+    colors: {
+      iconColor: color.secondary_600,
+      iconBackground: color.secondary_100,
+    },
+  }
 }
 
 const sumTokenFromTxData = (
@@ -138,13 +173,21 @@ const sumTokenFromTxData = (
   }, Quantities.zero)
 }
 
-const findToken = (tokens: Token[], identifier: string, primaryTokenInfo: Portfolio.Token.Info) => {
+const findToken = (
+  tokens: Token[],
+  identifier: string,
+  primaryTokenInfo: Portfolio.Token.Info,
+) => {
   if (identifier === primaryTokenInfo.id) {
-    return {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
+    return {
+      name: primaryTokenInfo.name,
+      denomination: primaryTokenInfo.decimals,
+    }
   }
 
   const token = tokens.find((t) => t.identifier === identifier)
-  const name = token?.metadata?.longName ?? token?.metadata?.ticker ?? identifier
+  const name =
+    token?.metadata?.longName ?? token?.metadata?.ticker ?? identifier
   const denomination = token?.metadata.numberOfDecimals ?? 0
   return {name, denomination}
 }
@@ -156,7 +199,10 @@ const sumPtFromOutputs = (outputs: TransactionInfo['outputs']) => {
   }, Quantities.zero)
 }
 
-const getTransactionInfoDetails = (info: TransactionInfo, primaryTokenInfo: Portfolio.Token.Info) => {
+const getTransactionInfoDetails = (
+  info: TransactionInfo,
+  primaryTokenInfo: Portfolio.Token.Info,
+) => {
   const ptReceived = sumPtFromOutputs(info.outputs)
   const ptSent = sumPtFromOutputs(info.inputs)
 
@@ -166,17 +212,28 @@ const getTransactionInfoDetails = (info: TransactionInfo, primaryTokenInfo: Port
   const assetsReceived = info.outputs.flatMap((o) => o.assets)
   const assetsSent = info.inputs.flatMap((i) => i.assets)
 
-  const hasReceivedMultipleAssets = assetsReceived.length > 1 || (assetsReceived.length === 1 && hasReceivedPt)
-  const hasSentMultipleAssets = assetsSent.length > 1 || (assetsSent.length === 1 && hasSentPt)
+  const hasReceivedMultipleAssets =
+    assetsReceived.length > 1 || (assetsReceived.length === 1 && hasReceivedPt)
+  const hasSentMultipleAssets =
+    assetsSent.length > 1 || (assetsSent.length === 1 && hasSentPt)
 
-  const firstAssetIdReceived = assetsReceived[0]?.identifier ?? primaryTokenInfo.id
-  const firstAssetAmountReceived = hasReceivedPt ? ptReceived : sumTokenFromTxData(info.outputs, firstAssetIdReceived)
+  const firstAssetIdReceived =
+    assetsReceived[0]?.identifier ?? primaryTokenInfo.id
+  const firstAssetAmountReceived = hasReceivedPt
+    ? ptReceived
+    : sumTokenFromTxData(info.outputs, firstAssetIdReceived)
   const firstReceivedAsset = hasReceivedPt
     ? {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
-    : findToken(Object.values(info.tokens), firstAssetIdReceived, primaryTokenInfo)
+    : findToken(
+        Object.values(info.tokens),
+        firstAssetIdReceived,
+        primaryTokenInfo,
+      )
 
   const firstAssetIdSent = assetsSent[0]?.identifier ?? primaryTokenInfo.id
-  const firstAssetAmountSent = hasSentPt ? ptSent : sumTokenFromTxData(info.inputs, firstAssetIdSent)
+  const firstAssetAmountSent = hasSentPt
+    ? ptSent
+    : sumTokenFromTxData(info.inputs, firstAssetIdSent)
   const firstSentAsset = hasSentPt
     ? {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
     : findToken(Object.values(info.tokens), firstAssetIdSent, primaryTokenInfo)

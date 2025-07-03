@@ -9,7 +9,13 @@ import {Space} from '../../../components/Space/Space'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 
-export const ExplorerInfoLinks = ({value, type}: {value: string; type: keyof Explorers.Manager}) => {
+export const ExplorerInfoLinks = ({
+  value,
+  type,
+}: {
+  value: string
+  type: keyof Explorers.Manager
+}) => {
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
   const strings = useStrings()
@@ -28,7 +34,11 @@ export const ExplorerInfoLinks = ({value, type}: {value: string; type: keyof Exp
             <Button
               type={ButtonType.Link}
               title={title}
-              onPress={async () => Linking.openURL(wallet.networkManager.explorers[explorer][type](value))}
+              onPress={async () =>
+                Linking.openURL(
+                  wallet.networkManager.explorers[explorer][type](value),
+                )
+              }
             />
           </View>
         ))}

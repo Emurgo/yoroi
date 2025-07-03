@@ -22,7 +22,10 @@ export type StakePoolInfoRequest = {
   poolIds: Array<string>
 }
 
-export type StakePoolInfosAndHistories = Record<string, StakePoolInfoAndHistory | null>
+export type StakePoolInfosAndHistories = Record<
+  string,
+  StakePoolInfoAndHistory | null
+>
 
 type StakePoolInfo = {
   name?: string

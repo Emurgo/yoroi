@@ -3,7 +3,11 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components/Spacer/Spacer'
-import {DAppCountConnectedSkeleton, DAppItemSkeleton, DAppTabSkeleton} from './DAppListItem/DAppItemSkeleton'
+import {
+  DAppCountConnectedSkeleton,
+  DAppItemSkeleton,
+  DAppTabSkeleton,
+} from './DAppListItem/DAppItemSkeleton'
 
 export const ListSkeleton = () => {
   const styles = useStyles()

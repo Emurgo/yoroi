@@ -1,7 +1,10 @@
 import {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {confirmationMessages, txLabels} from '../../../kernel/i18n/global-messages'
+import globalMessages, {
+  confirmationMessages,
+  txLabels,
+} from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -16,40 +19,69 @@ export const useStrings = () => {
     assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
     assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
     availableFunds: intl.formatMessage(globalMessages.availableFunds),
-    availableFundsBannerIsFetching: intl.formatMessage(messages.availableFundsBannerIsFetching),
-    availableFundsBannerNotAvailable: intl.formatMessage(messages.availableFundsBannerNotAvailable),
-    backButton: intl.formatMessage(confirmationMessages.commonButtons.backButton),
+    availableFundsBannerIsFetching: intl.formatMessage(
+      messages.availableFundsBannerIsFetching,
+    ),
+    availableFundsBannerNotAvailable: intl.formatMessage(
+      messages.availableFundsBannerNotAvailable,
+    ),
+    backButton: intl.formatMessage(
+      confirmationMessages.commonButtons.backButton,
+    ),
     balanceAfterLabel: intl.formatMessage(messages.balanceAfterLabel),
-    balanceAfterNotAvailable: intl.formatMessage(messages.balanceAfterNotAvailable),
-    checkboxSendAll: (options: {assetId: string}) => intl.formatMessage(messages.checkboxSendAll, options),
+    balanceAfterNotAvailable: intl.formatMessage(
+      messages.balanceAfterNotAvailable,
+    ),
+    checkboxSendAll: (options: {assetId: string}) =>
+      intl.formatMessage(messages.checkboxSendAll, options),
     checkboxSendAllAssets: intl.formatMessage(messages.checkboxSendAllAssets),
     continueButton: intl.formatMessage(messages.continueButton),
-    domainNotRegisteredError: intl.formatMessage(messages.domainNotRegisteredError),
-    domainRecordNotFoundError: intl.formatMessage(messages.domainRecordNotFoundError),
+    domainNotRegisteredError: intl.formatMessage(
+      messages.domainNotRegisteredError,
+    ),
+    domainRecordNotFoundError: intl.formatMessage(
+      messages.domainRecordNotFoundError,
+    ),
     domainUnsupportedError: intl.formatMessage(messages.domainUnsupportedError),
-    errorBannerNetworkError: intl.formatMessage(messages.errorBannerNetworkError),
-    errorBannerPendingOutgoingTransaction: intl.formatMessage(messages.errorBannerPendingOutgoingTransaction),
+    errorBannerNetworkError: intl.formatMessage(
+      messages.errorBannerNetworkError,
+    ),
+    errorBannerPendingOutgoingTransaction: intl.formatMessage(
+      messages.errorBannerPendingOutgoingTransaction,
+    ),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     feeLabel: intl.formatMessage(messages.feeLabel),
     feeNotAvailable: intl.formatMessage(messages.feeNotAvailable),
     found: intl.formatMessage(messages.found),
-    helperAddressErrorInvalid: intl.formatMessage(messages.helperAddressErrorInvalid),
-    helperAddressErrorWrongBlockchain: intl.formatMessage(messages.helperAddressErrorWrongBlockchain),
-    helperAddressErrorWrongNetwork: intl.formatMessage(messages.helperAddressErrorWrongNetwork),
+    helperAddressErrorInvalid: intl.formatMessage(
+      messages.helperAddressErrorInvalid,
+    ),
+    helperAddressErrorWrongBlockchain: intl.formatMessage(
+      messages.helperAddressErrorWrongBlockchain,
+    ),
+    helperAddressErrorWrongNetwork: intl.formatMessage(
+      messages.helperAddressErrorWrongNetwork,
+    ),
     helperMemoErrorTooLong: intl.formatMessage(messages.helperMemoErrorTooLong),
     helperMemoInstructions: intl.formatMessage(messages.helperMemoInstructions),
-    helperResolverErrorDomainNotFound: intl.formatMessage(messages.helperResolverErrorDomainNotFound),
-    manyNameServersWarning: (options: {b: (content: ReactNode[]) => ReactNode}) =>
-      intl.formatMessage(messages.manyNameServersWarning, options),
+    helperResolverErrorDomainNotFound: intl.formatMessage(
+      messages.helperResolverErrorDomainNotFound,
+    ),
+    manyNameServersWarning: (options: {
+      b: (content: ReactNode[]) => ReactNode
+    }) => intl.formatMessage(messages.manyNameServersWarning, options),
     max: intl.formatMessage(globalMessages.max),
     memoLabel: intl.formatMessage(messages.memoLabel),
-    minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
+    minPrimaryBalanceForTokens: intl.formatMessage(
+      amountInputErrorMessages.minPrimaryBalanceForTokens,
+    ),
     next: intl.formatMessage(globalMessages.next),
     nfts: (qty: number) => intl.formatMessage(globalMessages.nfts, {qty}),
     noAssets: intl.formatMessage(messages.noAssets),
-    noAssetsAddedYet: (fungible: string) => intl.formatMessage(messages.noAssetsAddedYet, {fungible}),
+    noAssetsAddedYet: (fungible: string) =>
+      intl.formatMessage(messages.noAssetsAddedYet, {fungible}),
     noBalance: intl.formatMessage(amountInputErrorMessages.insufficientBalance),
     ok: intl.formatMessage(globalMessages.ok),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
@@ -60,7 +92,9 @@ export const useStrings = () => {
     resolverNoticeText: intl.formatMessage(messages.resolverNoticeText),
     searchTokens: intl.formatMessage(messages.searchTokens),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
-    sendAllContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
+    sendAllContinueButton: intl.formatMessage(
+      confirmationMessages.commonButtons.continueButton,
+    ),
     sendAllWarningAlert1: (options: {assetNameOrId: string}) =>
       intl.formatMessage(messages.sendAllWarningAlert1, options),
     sendAllWarningAlert2: intl.formatMessage(messages.sendAllWarningAlert2),
@@ -108,7 +142,8 @@ const amountInputErrorMessages = defineMessages({
   },
   assetOverflow: {
     id: 'components.send.sendscreen.amountInput.error.assetOverflow',
-    defaultMessage: '!!!!Maximum value of a token inside a UTXO exceeded (overflow).',
+    defaultMessage:
+      '!!!!Maximum value of a token inside a UTXO exceeded (overflow).',
   },
   minPrimaryBalanceForTokens: {
     id: 'global.info.minPrimaryBalanceForTokens',
@@ -210,7 +245,8 @@ const messages = defineMessages({
   },
   manyNameServersWarning: {
     id: 'send.warning.resolver.manyNameServers',
-    defaultMessage: '!!!There are <b>two addresses</b> for this domain. Please SELECT the desired domain.',
+    defaultMessage:
+      '!!!There are <b>two addresses</b> for this domain. Please SELECT the desired domain.',
   },
   noAssetsAddedYet: {
     id: 'components.send.assetselectorscreen.noAssetsAddedYet',
@@ -227,7 +263,8 @@ const messages = defineMessages({
   },
   sendAllWarningAlert1: {
     id: 'components.send.sendscreen.sendAllWarningAlert1',
-    defaultMessage: '!!!All you {assetNameOrId} balance will be transferred in this transaction.',
+    defaultMessage:
+      '!!!All you {assetNameOrId} balance will be transferred in this transaction.',
   },
   sendAllWarningAlert2: {
     id: 'components.send.sendscreen.sendAllWarningAlert2',
@@ -237,7 +274,8 @@ const messages = defineMessages({
   },
   sendAllWarningAlert3: {
     id: 'components.send.sendscreen.sendAllWarningAlert3',
-    defaultMessage: '!!!After you confirm the transaction in the next screen, your wallet will be emptied.',
+    defaultMessage:
+      '!!!After you confirm the transaction in the next screen, your wallet will be emptied.',
   },
   continueButton: {
     id: 'components.send.sendscreen.continueButton',
@@ -245,11 +283,13 @@ const messages = defineMessages({
   },
   errorBannerNetworkError: {
     id: 'components.send.sendscreen.errorBannerNetworkError',
-    defaultMessage: '!!!We are experiencing issues with fetching your current balance. Click to retry.',
+    defaultMessage:
+      '!!!We are experiencing issues with fetching your current balance. Click to retry.',
   },
   errorBannerPendingOutgoingTransaction: {
     id: 'components.send.sendscreen.errorBannerPendingOutgoingTransaction',
-    defaultMessage: '!!!You cannot send a new transaction while an existing one is still pending',
+    defaultMessage:
+      '!!!You cannot send a new transaction while an existing one is still pending',
   },
   submittedTxTitle: {
     id: 'components.send.sendscreen.submittedTxTitle',
@@ -269,7 +309,8 @@ const messages = defineMessages({
   },
   failedTxText: {
     id: 'components.send.sendscreen.failedTxText',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+    defaultMessage:
+      '!!!Your transaction has not been processed properly due to technical issues',
   },
   failedTxButton: {
     id: 'components.send.sendscreen.failedTxButton',
@@ -298,7 +339,8 @@ const messages = defineMessages({
   },
   helperAddressErrorInvalid: {
     id: 'send.helper.addressError.invalid',
-    defaultMessage: '!!!Please enter a valid receiver address, ADA Handle or domain',
+    defaultMessage:
+      '!!!Please enter a valid receiver address, ADA Handle or domain',
   },
   helperAddressErrorWrongBlockchain: {
     id: 'send.helper.addressError.wrongBlockchain',

@@ -1,9 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  ImageSourcePropType,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
@@ -11,7 +18,10 @@ import {ProgressStep} from '../../../../components/ProgressStep'
 import {TextInput} from '../../../../components/TextInput/TextInput'
 import globalMessages from '../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {getWalletNameError, validateWalletName} from '../../../../wallets/utils/validators'
+import {
+  getWalletNameError,
+  validateWalletName,
+} from '../../../../wallets/utils/validators'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 
 type Props = {
@@ -43,7 +53,9 @@ export const WalletNameForm = ({
   const [name, setName] = React.useState(defaultWalletName ?? '')
   const {track} = useMetrics()
   const {walletManager} = useWalletManager()
-  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
+  const walletNames = Array.from(walletManager.walletMetas.values()).map(
+    ({name}) => name,
+  )
   const validationErrors = validateWalletName(name, null, walletNames)
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorMessages = {
@@ -51,7 +63,8 @@ export const WalletNameForm = ({
     nameAlreadyTaken: strings.walletNameErrorNameAlreadyTaken,
     mustBeFilled: strings.walletNameErrorMustBeFilled,
   }
-  const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) ?? undefined
+  const walletNameErrorText =
+    getWalletNameError(errorMessages, validationErrors) ?? undefined
 
   useFocusEffect(
     React.useCallback(() => {
@@ -63,12 +76,18 @@ export const WalletNameForm = ({
     <View style={styles.root}>
       <KeyboardAvoidingView style={{flex: 1}}>
         {progress != null && (
-          <ProgressStep currentStep={progress.currentStep} totalSteps={progress.totalSteps} displayStepNumber />
+          <ProgressStep
+            currentStep={progress.currentStep}
+            totalSteps={progress.totalSteps}
+            displayStepNumber
+          />
         )}
 
         <ScrollView style={{flex: 1}} bounces={false}>
           <View style={[styles.container, containerStyle]}>
-            <View style={styles.heading}>{image != null && <Image source={image} />}</View>
+            <View style={styles.heading}>
+              {image != null && <Image source={image} />}
+            </View>
 
             {topContent}
 
@@ -146,8 +165,14 @@ const useStrings = () => {
   return {
     walletNameInputLabel: intl.formatMessage(messages.walletNameInputLabel),
     save: intl.formatMessage(messages.save),
-    walletNameErrorTooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
-    walletNameErrorNameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
-    walletNameErrorMustBeFilled: intl.formatMessage(globalMessages.walletNameErrorMustBeFilled),
+    walletNameErrorTooLong: intl.formatMessage(
+      globalMessages.walletNameErrorTooLong,
+    ),
+    walletNameErrorNameAlreadyTaken: intl.formatMessage(
+      globalMessages.walletNameErrorNameAlreadyTaken,
+    ),
+    walletNameErrorMustBeFilled: intl.formatMessage(
+      globalMessages.walletNameErrorMustBeFilled,
+    ),
   }
 }

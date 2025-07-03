@@ -21,7 +21,11 @@ export const StakePoolInfos = ({ctaProps}: {ctaProps?: ButtonProps}) => {
   return stakePoolIds != null ? (
     <View>
       {stakePoolIds.map((stakePoolId) => (
-        <StakePoolInfo key={stakePoolId} stakePoolId={stakePoolId} ctaProps={ctaProps} />
+        <StakePoolInfo
+          key={stakePoolId}
+          stakePoolId={stakePoolId}
+          ctaProps={ctaProps}
+        />
       ))}
     </View>
   ) : isLoading ? (
@@ -49,7 +53,12 @@ export const usePrefetchStakingInfo = (wallet: YoroiWallet) => {
 
 export const useStakingInfo = (
   wallet: YoroiWallet,
-  options?: UseQueryOptions<StakingInfo, Error, StakingInfo, [string, 'stakingInfo']>,
+  options?: UseQueryOptions<
+    StakingInfo,
+    Error,
+    StakingInfo,
+    [string, 'stakingInfo']
+  >,
 ) => {
   const query = useQuery({
     ...options,
@@ -59,7 +68,9 @@ export const useStakingInfo = (
   })
 
   React.useEffect(() => {
-    const unsubscribe = wallet.subscribe(({type}) => type === 'utxos' && query.refetch())
+    const unsubscribe = wallet.subscribe(
+      ({type}) => type === 'utxos' && query.refetch(),
+    )
 
     return () => unsubscribe?.()
   }, [query, wallet])
@@ -72,7 +83,12 @@ export const useStakingInfo = (
 
 const useStakePoolIds = (
   wallet: YoroiWallet,
-  options?: UseQueryOptions<StakingInfo, Error, StakingInfo, [string, 'stakingInfo']>,
+  options?: UseQueryOptions<
+    StakingInfo,
+    Error,
+    StakingInfo,
+    [string, 'stakingInfo']
+  >,
 ) => {
   const {stakingInfo, ...query} = useStakingInfo(wallet, options)
 
@@ -83,8 +99,17 @@ const useStakePoolIds = (
 }
 
 export const useStakingTx = (
-  {wallet, meta, poolId}: {wallet: YoroiWallet; poolId?: string; meta: Wallet.Meta},
-  options: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'stakingTx']>,
+  {
+    wallet,
+    meta,
+    poolId,
+  }: {wallet: YoroiWallet; poolId?: string; meta: Wallet.Meta},
+  options: UseQueryOptions<
+    YoroiUnsignedTx,
+    Error,
+    YoroiUnsignedTx,
+    [string, 'stakingTx']
+  >,
 ) => {
   const query = useQuery({
     ...options,

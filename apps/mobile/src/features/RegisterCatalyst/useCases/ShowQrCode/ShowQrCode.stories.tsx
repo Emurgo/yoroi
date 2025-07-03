@@ -13,7 +13,10 @@ storiesOf('Catalyst QrCode', module).add('Show', () => {
     fundStatus: action('fundStatus') as Catalyst.Manager['fundStatus'],
   }
   return (
-    <CatalystProvider manager={manager} initialState={{votingKeyEncrypted: 'votingKeyEncrypted'}}>
+    <CatalystProvider
+      manager={manager}
+      initialState={{votingKeyEncrypted: 'votingKeyEncrypted'}}
+    >
       <QrCode />
     </CatalystProvider>
   )

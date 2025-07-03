@@ -2,7 +2,10 @@ import {useTheme} from '@yoroi/theme'
 import React, {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {TokenChartInterval, useGetPortfolioTokenChart} from '../../../common/hooks/useGetPortfolioTokenChart'
+import {
+  TokenChartInterval,
+  useGetPortfolioTokenChart,
+} from '../../../common/hooks/useGetPortfolioTokenChart'
 import {ChartPlaceholder} from './ChartPlaceholder'
 import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'
@@ -14,7 +17,9 @@ export const PortfolioTokenChart = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const [timeInterval, setTimeInterval] = useState<TokenChartInterval>(TokenChartInterval.DAY)
+  const [timeInterval, setTimeInterval] = useState<TokenChartInterval>(
+    TokenChartInterval.DAY,
+  )
 
   const {data, isFetching} = useGetPortfolioTokenChart(timeInterval)
 
@@ -31,15 +36,28 @@ export const PortfolioTokenChart = () => {
       ) : (
         <>
           <TokenPerformance
-            tokenPerformance={data?.[Math.max(0, Math.min(data.length - 1, selectedIndex))]}
+            tokenPerformance={
+              data?.[Math.max(0, Math.min(data.length - 1, selectedIndex))]
+            }
             timeInterval={timeInterval}
           />
 
-          {!data ? <ChartPlaceholder /> : <TokenChart onValueSelected={handleChartSelected} dataSources={data} />}
+          {!data ? (
+            <ChartPlaceholder />
+          ) : (
+            <TokenChart
+              onValueSelected={handleChartSelected}
+              dataSources={data}
+            />
+          )}
         </>
       )}
 
-      <TokenChartToolbar disabled={isFetching} timeInterval={timeInterval} onChange={setTimeInterval} />
+      <TokenChartToolbar
+        disabled={isFetching}
+        timeInterval={timeInterval}
+        onChange={setTimeInterval}
+      />
     </View>
   )
 }

@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-raw-text */
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
@@ -56,15 +55,24 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
     <View style={styles.root}>
       <Tooltip
         numberOfLine={3}
-        title={!tokenPerformance ? strings.noDataFound : strings.tokenPriceChangeTooltip(intervalLabel)}
+        title={
+          !tokenPerformance
+            ? strings.noDataFound
+            : strings.tokenPriceChangeTooltip(intervalLabel)
+        }
       >
         <View style={styles.tokenChangeWrapper}>
           <PnlTag withIcon={variant !== 'neutral'} variant={variant}>
-            {!tokenPerformance ? '—' : formatPriceChange(tokenPerformance.changePercent)}%
+            {!tokenPerformance
+              ? '—'
+              : formatPriceChange(tokenPerformance.changePercent)}
+            %
           </PnlTag>
 
           <PnlTag variant={variant}>{`${
-            !tokenPerformance ? '—' : formatPriceChange(tokenPerformance.changeValue, config.decimals)
+            !tokenPerformance
+              ? '—'
+              : formatPriceChange(tokenPerformance.changeValue, config.decimals)
           } ${currency}`}</PnlTag>
         </View>
       </Tooltip>
@@ -74,7 +82,9 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
           <Text style={styles.tokenPriceSymbol}>—</Text>
         ) : (
           <>
-            <Text style={styles.tokenPrice}>{formatPriceChange(tokenPerformance.value, config.decimals)}</Text>
+            <Text style={styles.tokenPrice}>
+              {formatPriceChange(tokenPerformance.value, config.decimals)}
+            </Text>
 
             <Text style={styles.tokenPriceSymbol}>{currency}</Text>
           </>

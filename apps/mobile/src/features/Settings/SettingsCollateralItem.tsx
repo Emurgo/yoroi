@@ -3,10 +3,18 @@ import React from 'react'
 
 import {useCollateralInfo} from '../../wallets/cardano/utxoManager/useCollateralInfo'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
-import {NavigatedSettingsItem, NavigatedSettingsItemProps} from './SettingsItems'
+import {
+  NavigatedSettingsItem,
+  NavigatedSettingsItemProps,
+} from './SettingsItems'
 import {usePrivacyMode} from './useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
-export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: NavigatedSettingsItemProps) => {
+export const SettingsCollateralItem = ({
+  label,
+  onNavigate,
+  icon,
+  disabled,
+}: NavigatedSettingsItemProps) => {
   const {wallet} = useSelectedWallet()
   const {amount} = useCollateralInfo(wallet)
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
@@ -19,8 +27,15 @@ export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: Navi
 
     return !isPrivacyActive
       ? amountFormatter({template: '{{value}} {{ticker}}'})(amountCollateral)
-      : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(amountCollateral)
-  }, [amount.quantity, isPrivacyActive, privacyPlaceholder, wallet.portfolioPrimaryTokenInfo])
+      : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(
+          amountCollateral,
+        )
+  }, [
+    amount.quantity,
+    isPrivacyActive,
+    privacyPlaceholder,
+    wallet.portfolioPrimaryTokenInfo,
+  ])
 
   return (
     <NavigatedSettingsItem

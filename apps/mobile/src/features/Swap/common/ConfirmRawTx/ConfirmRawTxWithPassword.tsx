@@ -10,7 +10,11 @@ type Props = {
   summary?: string
 }
 
-export const ConfirmRawTxWithPassword = ({onConfirm, onError, summary}: Props) => {
+export const ConfirmRawTxWithPassword = ({
+  onConfirm,
+  onError,
+  summary,
+}: Props) => {
   const {wallet} = useSelectedWallet()
 
   const handlePasswordConfirm = async (password: string) => {
@@ -18,7 +22,13 @@ export const ConfirmRawTxWithPassword = ({onConfirm, onError, summary}: Props) =
     return onConfirm?.(rootKey)
   }
 
-  return <PasswordInput onConfirm={handlePasswordConfirm} onError={onError} summary={summary} />
+  return (
+    <PasswordInput
+      onConfirm={handlePasswordConfirm}
+      onError={onError}
+      summary={summary}
+    />
+  )
 }
 
 const PasswordInput = ({

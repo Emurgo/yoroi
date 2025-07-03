@@ -32,7 +32,11 @@ export const FailedTxScreen = () => {
       <Space fill />
 
       <Actions>
-        <Button onPress={navigateTo.home} title={strings.failedTxButton} style={styles.button} />
+        <Button
+          onPress={navigateTo.home}
+          title={strings.failedTxButton}
+          style={styles.button}
+        />
       </Actions>
     </SafeArea>
   )

@@ -10,7 +10,12 @@ type ButtonActionGroupProps = {
   disabled?: boolean
 }
 
-export const ButtonActionGroup = ({labels, onSelect, selected, disabled}: ButtonActionGroupProps) => {
+export const ButtonActionGroup = ({
+  labels,
+  onSelect,
+  selected,
+  disabled,
+}: ButtonActionGroupProps) => {
   const handleOnPress = (orderType: OrderType) => onSelect(orderType)
   const styles = useStyles()
 
@@ -21,7 +26,10 @@ export const ButtonActionGroup = ({labels, onSelect, selected, disabled}: Button
           <TouchableOpacity
             disabled={disabled}
             onPress={() => handleOnPress(labelItem.value)}
-            style={[styles.button, labelItem.value === selected && styles.selected]}
+            style={[
+              styles.button,
+              labelItem.value === selected && styles.selected,
+            ]}
           >
             <Text style={styles.label}>{labelItem.label}</Text>
           </TouchableOpacity>

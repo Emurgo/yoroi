@@ -1,9 +1,17 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ActivityIndicator, StyleSheet, Text, TextInput as RNTextInput} from 'react-native'
+import {
+  ActivityIndicator,
+  TextInput as RNTextInput,
+  StyleSheet,
+  Text,
+} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
-import {TextInput, TextInputProps} from '../../../../../components/TextInput/TextInput'
+import {
+  TextInput,
+  TextInputProps,
+} from '../../../../../components/TextInput/TextInput'
 import {useNavigateTo} from '../../../common/navigation'
 import {ScannerButton} from '../../../common/ScannerButton'
 import {useStrings} from '../../../common/strings'
@@ -11,7 +19,11 @@ import {ShowResolvedAddressSelected} from './ShowResolvedAddressSelected'
 
 export const InputReceiver = React.forwardRef(
   (
-    {isLoading, isValid, ...props}: {isLoading?: boolean; isValid?: boolean} & TextInputProps,
+    {
+      isLoading,
+      isValid,
+      ...props
+    }: {isLoading?: boolean; isValid?: boolean} & TextInputProps,
     ref: React.ForwardedRef<RNTextInput>,
   ) => {
     const strings = useStrings()

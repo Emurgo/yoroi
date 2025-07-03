@@ -1,4 +1,9 @@
-import {amountFormatter, infoExtractName, isNft, isPrimaryToken} from '@yoroi/portfolio'
+import {
+  amountFormatter,
+  infoExtractName,
+  isNft,
+  isPrimaryToken,
+} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -40,7 +45,9 @@ export const TokenAmountItem = ({
   const {height: windowHeight} = useWindowDimensions()
   const {styles, colors} = useStyles()
   const {privacyPlaceholder, isPrivacyActive} = usePrivacyMode()
-  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
+  const priceImpactRiskTheme = usePriceImpactRiskTheme(
+    priceImpactRisk ?? 'none',
+  )
 
   const {info} = amount
   const isPrimary = isPrimaryToken(info)
@@ -52,7 +59,8 @@ export const TokenAmountItem = ({
       ? amountFormatter({dropTraillingZeros: true})(amount)
       : privacyPlaceholder
 
-  const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : colors.text
+  const priceImpactRiskTextColor =
+    orderType === 'market' ? priceImpactRiskTheme.text : colors.text
 
   const handleShowTokenDetails = () => {
     openModal({
@@ -65,15 +73,28 @@ export const TokenAmountItem = ({
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
-        <TokenInfoIcon info={amount.info} size={variant === 'swap' ? 'md' : 'lg'} />
+        <TokenInfoIcon
+          info={amount.info}
+          size={variant === 'swap' ? 'md' : 'lg'}
+        />
       </Left>
 
       <Middle>
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="middle"
+          style={styles.name}
+          testID="tokenInfoText"
+        >
           {name}
         </Text>
 
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="middle"
+          style={styles.detail}
+          testID="tokenFingerprintText"
+        >
           {detail}
         </Text>
       </Middle>
@@ -81,32 +102,52 @@ export const TokenAmountItem = ({
       <Right style={styles.end}>
         {!isNft(info) && variant !== 'swap' && (
           <View testID="tokenAmountText" style={styles.quantityWrapper}>
-            {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
+            {priceImpactRisk === 'moderate' && (
+              <Icon.Info size={24} color={priceImpactRiskTextColor} />
+            )}
 
-            {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
+            {priceImpactRisk === 'high' && (
+              <Icon.Warning size={24} color={priceImpactRiskTextColor} />
+            )}
 
-            <Text style={[styles.quantity, {color: priceImpactRiskTextColor}]}>{formattedQuantity}</Text>
+            <Text style={[styles.quantity, {color: priceImpactRiskTextColor}]}>
+              {formattedQuantity}
+            </Text>
           </View>
         )}
 
         {variant !== 'swap' && (
-          <PairedBalance textStyle={styles.pairedBalance} amount={amount} ignorePrivacy={ignorePrivacy} />
+          <PairedBalance
+            textStyle={styles.pairedBalance}
+            amount={amount}
+            ignorePrivacy={ignorePrivacy}
+          />
         )}
 
         {variant === 'swap' && (
           <View style={styles.row}>
             {amount.quantity > 0n && (
               <View>
-                <Text style={[styles.quantity, {textAlign: 'right'}]}>{formattedQuantity}</Text>
+                <Text style={[styles.quantity, {textAlign: 'right'}]}>
+                  {formattedQuantity}
+                </Text>
 
-                <PairedBalance textStyle={styles.pairedBalance} amount={amount} ignorePrivacy={ignorePrivacy} />
+                <PairedBalance
+                  textStyle={styles.pairedBalance}
+                  amount={amount}
+                  ignorePrivacy={ignorePrivacy}
+                />
               </View>
             )}
 
             {features.swapTokenLinks && (
               <Button
                 type={ButtonType.SecondaryText}
-                fgColorsOverride={{disabled: colors.info, idle: colors.info, pressed: colors.info}}
+                fgColorsOverride={{
+                  disabled: colors.info,
+                  idle: colors.info,
+                  pressed: colors.info,
+                }}
                 style={styles.info}
                 size="S"
                 icon={Icon.InfoCircle}
@@ -122,9 +163,14 @@ export const TokenAmountItem = ({
 
 const Left = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 const Middle = ({style, ...props}: ViewProps) => (
-  <View style={[style, {flex: 1, justifyContent: 'center', paddingHorizontal: 8}]} {...props} />
+  <View
+    style={[style, {flex: 1, justifyContent: 'center', paddingHorizontal: 8}]}
+    {...props}
+  />
 )
-const Right = ({style, ...props}: ViewProps) => <View style={style} {...props} />
+const Right = ({style, ...props}: ViewProps) => (
+  <View style={style} {...props} />
+)
 
 export const AmountItemPlaceholder = ({style}: ViewProps) => {
   const {styles} = useStyles()

@@ -88,7 +88,13 @@ export const useLegacyOnConfirm = ({
 
     openModal({
       title: strings.signTransaction,
-      content: <ConfirmTxWithOsModal unsignedTx={unsignedTx} onSuccess={handleOnSuccess} onError={handleOnError} />,
+      content: (
+        <ConfirmTxWithOsModal
+          unsignedTx={unsignedTx}
+          onSuccess={handleOnSuccess}
+          onError={handleOnError}
+        />
+      ),
     })
   }
 

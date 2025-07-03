@@ -32,7 +32,11 @@ export const SubmittedTxScreen = () => {
       <Space fill />
 
       <Actions>
-        <Button onPress={navigateTo.navigateToTxHistory} title={strings.submittedTxButton} style={styles.button} />
+        <Button
+          onPress={navigateTo.navigateToTxHistory}
+          title={strings.submittedTxButton}
+          style={styles.button}
+        />
       </Actions>
     </SafeArea>
   )

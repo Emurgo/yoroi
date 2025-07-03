@@ -6,7 +6,13 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {Api, Wallet} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
+import {
+  FlatList,
+  InteractionManager,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary} from '../../../../components/Boundary/Boundary'
@@ -35,7 +41,13 @@ export const SaveReadOnlyWalletScreen = () => {
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
 
-  const {publicKeyHex, path, walletImplementation, accountVisual, walletIdChanged} = useSetupWallet()
+  const {
+    publicKeyHex,
+    path,
+    walletImplementation,
+    accountVisual,
+    walletIdChanged,
+  } = useSetupWallet()
 
   const normalizedPath = path.map((i) => {
     if (i >= derivationConfig.hardStart) return i - derivationConfig.hardStart
@@ -49,7 +61,9 @@ export const SaveReadOnlyWalletScreen = () => {
       const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
 
       if (!walletMeta) {
-        const error = new Error('WalletDetailsScreen: wallet meta is invalid, reached an invalid state.')
+        const error = new Error(
+          'WalletDetailsScreen: wallet meta is invalid, reached an invalid state.',
+        )
         logger.error(error)
         throw error
       }
@@ -62,7 +76,9 @@ export const SaveReadOnlyWalletScreen = () => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+          : showErrorDialog(errorMessages.generalError, intl, {
+              message: error.message,
+            })
       })
     },
   })
@@ -83,14 +99,21 @@ export const SaveReadOnlyWalletScreen = () => {
   )
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="saveReadOnlyWalletContainer">
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.container}
+      testID="saveReadOnlyWalletContainer"
+    >
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={strings.defaultWalletName}
         containerStyle={styles.walletFormStyle}
         bottomContent={
           <Boundary>
-            <WalletInfoView normalizedPath={normalizedPath} publicKeyHex={publicKeyHex} />
+            <WalletInfoView
+              normalizedPath={normalizedPath}
+              publicKeyHex={publicKeyHex}
+            />
           </Boundary>
         }
         isWaiting={isLoading}
@@ -201,7 +224,11 @@ const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
   const {
     networkManager: {chainId},
   } = useSelectedNetwork()
-  const plate = usePlate({chainId, publicKeyHex, implementation: walletImplementation})
+  const plate = usePlate({
+    chainId,
+    publicKeyHex,
+    implementation: walletImplementation,
+  })
 
   return (
     <View style={styles.walletInfoContainer}>
@@ -210,7 +237,10 @@ const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
           <Text>{strings.checksumLabel}</Text>
 
           {!isEmptyString(plate.accountPlate.ImagePart) && (
-            <CheckSumView icon={plate.accountPlate.ImagePart} checksum={plate.accountPlate.TextPart} />
+            <CheckSumView
+              icon={plate.accountPlate.ImagePart}
+              checksum={plate.accountPlate.TextPart}
+            />
           )}
         </View>
 

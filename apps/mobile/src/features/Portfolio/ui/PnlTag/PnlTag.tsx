@@ -9,22 +9,47 @@ interface Props extends ViewProps {
   withIcon?: boolean
 }
 
-export const PnlTag = ({children, withIcon = false, variant, style, ...etc}: Props) => {
+export const PnlTag = ({
+  children,
+  withIcon = false,
+  variant,
+  style,
+  ...etc
+}: Props) => {
   const {styles} = useStyles()
 
-  const icon = variant === 'danger' ? <Icon.AngleDown size={16} /> : <Icon.AngleUp size={16} />
+  const icon =
+    variant === 'danger' ? (
+      <Icon.AngleDown size={16} />
+    ) : (
+      <Icon.AngleUp size={16} />
+    )
 
   const textStyles = React.useMemo(() => {
     if (variant === 'neutral') return [styles.label, styles.labelNeutral]
     if (variant === 'success') return [styles.label, styles.labelSuccess]
     return [styles.label, styles.labelDanger]
-  }, [styles.label, styles.labelDanger, styles.labelNeutral, styles.labelSuccess, variant])
+  }, [
+    styles.label,
+    styles.labelDanger,
+    styles.labelNeutral,
+    styles.labelSuccess,
+    variant,
+  ])
 
   const variantStyles = React.useMemo(() => {
-    if (variant === 'neutral') return [styles.pnlTagContainer, styles.pnlNeutral]
-    if (variant === 'success') return [styles.pnlTagContainer, styles.pnlSuccess]
+    if (variant === 'neutral')
+      return [styles.pnlTagContainer, styles.pnlNeutral]
+    if (variant === 'success')
+      return [styles.pnlTagContainer, styles.pnlSuccess]
     return [styles.pnlTagContainer, styles.pnlDanger]
-  }, [styles.pnlDanger, styles.pnlNeutral, styles.pnlSuccess, styles.pnlTagContainer, variant])
+  }, [
+    styles.pnlDanger,
+    styles.pnlNeutral,
+    styles.pnlSuccess,
+    styles.pnlTagContainer,
+    variant,
+  ])
 
   return (
     <View style={[...variantStyles, style]} {...etc}>

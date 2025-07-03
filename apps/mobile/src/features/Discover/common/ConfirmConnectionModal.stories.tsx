@@ -4,7 +4,10 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {Button} from '../../../components/Button/Button'
-import {ConfirmConnectionModal, useOpenConfirmConnectionModal} from './ConfirmConnectionModal'
+import {
+  ConfirmConnectionModal,
+  useOpenConfirmConnectionModal,
+} from './ConfirmConnectionModal'
 
 storiesOf('Discover ConfirmConnectionModal', module)
   .addDecorator((story) => <View style={{padding: 20}}>{story()}</View>)
@@ -49,7 +52,10 @@ const WithButton = () => {
 
   return (
     <View>
-      <Button title="Open modal without warning" onPress={handleOnPressNoWarning} />
+      <Button
+        title="Open modal without warning"
+        onPress={handleOnPressNoWarning}
+      />
 
       <Button title="Open modal with warning" onPress={handleOnPressWarning} />
     </View>

@@ -31,7 +31,9 @@ export const usePromptRootKey = () => {
       if (meta.isEasyConfirmationEnabled) {
         openModal({
           title: title ?? strings.confirmTx,
-          content: <ConfirmRawTxWithOs onSuccess={handleOnConfirm} onError={onError} />,
+          content: (
+            <ConfirmRawTxWithOs onSuccess={handleOnConfirm} onError={onError} />
+          ),
           height: modalHeight,
           onClose,
         })
@@ -40,7 +42,12 @@ export const usePromptRootKey = () => {
 
       openModal({
         title: title ?? strings.confirmTx,
-        content: <ConfirmRawTxWithPassword summary={summary} onConfirm={handleOnConfirm} />,
+        content: (
+          <ConfirmRawTxWithPassword
+            summary={summary}
+            onConfirm={handleOnConfirm}
+          />
+        ),
         height: modalHeight,
         onClose,
       })

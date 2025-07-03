@@ -14,12 +14,20 @@ describe('toSendTokenList', () => {
       [secondaryToken.identifier]: '456',
     }
 
-    const primaryAsToken = asSendToken({tokenId: primaryTokenInfoMainnet.id, quantity: '123'})
-    const secondaryAsToken = asSendToken({tokenId: secondaryToken.identifier, quantity: '456'})
+    const primaryAsToken = asSendToken({
+      tokenId: primaryTokenInfoMainnet.id,
+      quantity: '123',
+    })
+    const secondaryAsToken = asSendToken({
+      tokenId: secondaryToken.identifier,
+      quantity: '456',
+    })
 
     const sendTokenList: Array<SendToken> = [primaryAsToken, secondaryAsToken]
 
-    expect(toSendTokenList(amounts, primaryTokenInfoMainnet)).toEqual(sendTokenList)
+    expect(toSendTokenList(amounts, primaryTokenInfoMainnet)).toEqual(
+      sendTokenList,
+    )
   })
 })
 

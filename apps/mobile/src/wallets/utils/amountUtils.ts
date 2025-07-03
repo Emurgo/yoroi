@@ -25,11 +25,14 @@ export const stripAllButFirstDecimalSeparator = (number: string) => {
 
 export const stripCommas = (number: string) => number.replace(/,/g, '')
 
-export const stripInvalidCharacters = (number: string) => number.replace(/[^0-9.,]/g, '')
+export const stripInvalidCharacters = (number: string) =>
+  number.replace(/[^0-9.,]/g, '')
 
-export const formatSeparatorWithoutDigits = (number: string) => (number === '.' ? '0.' : number)
+export const formatSeparatorWithoutDigits = (number: string) =>
+  number === '.' ? '0.' : number
 
-export const formatMultiLangSeparator = (number: string) => number.replace(/,/g, '.')
+export const formatMultiLangSeparator = (number: string) =>
+  number.replace(/,/g, '.')
 
 export const pastedFormatter = compose(
   formatSeparatorWithoutDigits,
@@ -45,4 +48,5 @@ export const editedFormatter = compose(
   stripInvalidCharacters,
 )
 
-const insertAt = (str: string, pos: number, text: string) => [str.slice(0, pos), text, str.slice(pos)].join('')
+const insertAt = (str: string, pos: number, text: string) =>
+  [str.slice(0, pos), text, str.slice(pos)].join('')

@@ -1,5 +1,4 @@
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
-import {PromiseAllLimited} from '@yoroi/common'
 import BigNumber from 'bignumber.js'
 
 import {logger} from '../../../kernel/logger/logger'
@@ -29,21 +28,24 @@ export async function calcLockedDeposit({
     const dataCost = await csl.DataCost.newCoinsPerByte(coinsPerUtxoByte)
 
     const normalizedAddress = await normalizeToAddress(cslProvided.csl, address)
-    if (normalizedAddress === undefined) throw new Error('calcLockedDeposit::Error not a valid address')
+    if (normalizedAddress === undefined)
+      throw new Error('calcLockedDeposit::Error not a valid address')
 
-    const promises = utxosWithAssets.map((u) => {
-      return () =>
-        cardanoValueFromRemoteFormat(u)
-          .then((v) => csl.TransactionOutput.new(normalizedAddress, v))
-          .then((txOutput) => csl.minAdaForOutput(txOutput, dataCost))
-          .then((m) => m.toStr())
+    const results = utxosWithAssets.map((u) => {
+      const value = cardanoValueFromRemoteFormat(u)
+      const txOutput = csl.TransactionOutput.new(normalizedAddress, value)
+      const minAda = csl.minAdaForOutput(txOutput, dataCost)
+      return minAda.toStr()
     })
-    const results = await PromiseAllLimited(promises, 20)
+
     const totalLocked = results.reduce((acc, v) => acc.plus(v), result)
 
     return totalLocked
   } catch (e) {
-    logger.error(e as Error, {utxosLength: rawUtxos.length, coinsPerUtxoByteStr})
+    logger.error(e as Error, {
+      utxosLength: rawUtxos.length,
+      coinsPerUtxoByteStr,
+    })
     return result
   } finally {
     cslProvided.release()

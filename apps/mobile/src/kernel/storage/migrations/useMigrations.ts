@@ -1,5 +1,5 @@
-import {App} from '@yoroi/types'
 import {isNumber} from '@yoroi/common'
+import {App} from '@yoroi/types'
 
 import * as React from 'react'
 

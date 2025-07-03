@@ -17,7 +17,10 @@ import {useStrings} from './useStrings'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
-type OnConfirmOptions = {transportType: TransportType; deviceInfo: HW.DeviceInfo}
+type OnConfirmOptions = {
+  transportType: TransportType
+  deviceInfo: HW.DeviceInfo
+}
 
 type Props = {
   onConfirm: (options: OnConfirmOptions) => Promise<void>
@@ -35,7 +38,11 @@ export const useConfirmHWConnectionModal = () => {
         content: (
           <ErrorBoundary
             fallbackRender={({error, resetErrorBoundary}) => (
-              <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />
+              <ModalError
+                error={error}
+                resetErrorBoundary={resetErrorBoundary}
+                onCancel={onCancel}
+              />
             )}
           >
             <ConfirmHWConnectionModal onConfirm={onConfirm} />
@@ -91,7 +98,13 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
   }
 
   if (step === 'connect-transport') {
-    return <LedgerConnect useUSB={transportType === 'USB'} onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
+    return (
+      <LedgerConnect
+        useUSB={transportType === 'USB'}
+        onConnectBLE={onConnectBLE}
+        onConnectUSB={onConnectUSB}
+      />
+    )
   }
 
   return (

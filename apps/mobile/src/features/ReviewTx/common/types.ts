@@ -64,10 +64,17 @@ type AssertEqual<T, Expected> = T extends Expected
     : ['Type', Expected, 'is not equal to', T]
   : ['Type', T, 'is not equal to', Expected]
 
-type UnionToIntersection<U> = (U extends unknown ? (x: U) => void : never) extends (x: infer I) => void ? I : never
+type UnionToIntersection<U> = (
+  U extends unknown ? (x: U) => void : never
+) extends (x: infer I) => void
+  ? I
+  : never
 
 type Transformed<T> = {
-  [K in keyof UnionToIntersection<T>]: {type: K; value: UnionToIntersection<T>[K]}
+  [K in keyof UnionToIntersection<T>]: {
+    type: K
+    value: UnionToIntersection<T>[K]
+  }
 }[keyof UnionToIntersection<T>]
 
 export type FormattedCertificate = Transformed<CertificateJSON>
@@ -92,7 +99,11 @@ export const CertificateType = {
   VoteRegistrationAndDelegation: 'VoteRegistrationAndDelegation', // NO
 } as const
 
-export type CertificateType = (typeof CertificateType)[keyof typeof CertificateType]
+export type CertificateType =
+  (typeof CertificateType)[keyof typeof CertificateType]
 
 // Makes sure CertificateType lists all the certificates in CertificateJSON
-export type AssertAllImplementedCertTypes = AssertEqual<CertificateType, keyof UnionToIntersection<CertificateJSON>>
+export type AssertAllImplementedCertTypes = AssertEqual<
+  CertificateType,
+  keyof UnionToIntersection<CertificateJSON>
+>

@@ -18,7 +18,8 @@ type PasswordStrength = {
   satisfiesPasswordRequirement?: boolean
 }
 
-const pickOnlyFailingValidations = (validation: Record<string, unknown>) => _.pickBy(validation)
+const pickOnlyFailingValidations = (validation: Record<string, unknown>) =>
+  _.pickBy(validation)
 
 export const REQUIRED_PASSWORD_LENGTH = 10
 
@@ -34,7 +35,10 @@ const getPasswordStrength = (password: string): PasswordStrength => {
   return {isStrong: false}
 }
 
-export const validatePassword = (password: string, passwordConfirmation: string): PasswordValidationErrors =>
+export const validatePassword = (
+  password: string,
+  passwordConfirmation: string,
+): PasswordValidationErrors =>
   pickOnlyFailingValidations({
     passwordReq: !password,
     passwordConfirmationReq: !passwordConfirmation,
@@ -50,7 +54,9 @@ export const validateWalletName = (
   pickOnlyFailingValidations({
     mustBeFilled: !newWalletName,
     tooLong: newWalletName.length > 40,
-    nameAlreadyTaken: newWalletName !== oldWalletName && walletNames.some((x) => newWalletName === x),
+    nameAlreadyTaken:
+      newWalletName !== oldWalletName &&
+      walletNames.some((x) => newWalletName === x),
   })
 
 export const getWalletNameError = (

@@ -30,10 +30,12 @@ export const onlyAdaOneReceiver: FormattedTx = {
       address:
         'addr1qykrmfm7qmhpvmt6xkapegwun67wf75pcghm7p3a78gmm470ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqrqg5yh',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
+      txHash:
+        '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
     },
     {
       assets: [
@@ -61,10 +63,12 @@ export const onlyAdaOneReceiver: FormattedTx = {
       address:
         'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: 'ee2a6b1ca4887e5d0827225ab1351418ce17c551ee4f59f68e901a9f6a2a51a8',
+      txHash:
+        'ee2a6b1ca4887e5d0827225ab1351418ce17c551ee4f59f68e901a9f6a2a51a8',
     },
   ],
   outputs: [
@@ -94,7 +98,8 @@ export const onlyAdaOneReceiver: FormattedTx = {
       address:
         'addr1q8a3kt40xel75qeknwcsa75jevg9nljf64vjxfdmz24p00d84fs97ylhclpxmu3ej5dyy8wjjl54tk8tjynnwag83a2q90y4sx',
       addressKind: 0,
-      rewardAddress: 'stake1uxn65czlz0mu0snd7gue2xjzrhff0624mr4ezfehw5rc74qrjwn0v',
+      rewardAddress:
+        'stake1uxn65czlz0mu0snd7gue2xjzrhff0624mr4ezfehw5rc74qrjwn0v',
       ownAddress: false,
     },
     {
@@ -123,7 +128,8 @@ export const onlyAdaOneReceiver: FormattedTx = {
       address:
         'addr1q9eggas5e4l0jzhhhxfds0q3rr3243zrydgyvm4myh6mu770ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwq0nyf7t',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
     },
   ],
@@ -180,10 +186,12 @@ export const onlyAdaOneReceiverReferenceInputs: FormattedTx = {
       address:
         'addr1qykrmfm7qmhpvmt6xkapegwun67wf75pcghm7p3a78gmm470ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqrqg5yh',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
+      txHash:
+        '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
     },
     {
       assets: [
@@ -211,10 +219,12 @@ export const onlyAdaOneReceiverReferenceInputs: FormattedTx = {
       address:
         'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: 'ee2a6b1ca4887e5d0827225ab1351418ce17c551ee4f59f68e901a9f6a2a51a8',
+      txHash:
+        'ee2a6b1ca4887e5d0827225ab1351418ce17c551ee4f59f68e901a9f6a2a51a8',
     },
   ],
   outputs: [
@@ -244,7 +254,8 @@ export const onlyAdaOneReceiverReferenceInputs: FormattedTx = {
       address:
         'addr1q8a3kt40xel75qeknwcsa75jevg9nljf64vjxfdmz24p00d84fs97ylhclpxmu3ej5dyy8wjjl54tk8tjynnwag83a2q90y4sx',
       addressKind: 0,
-      rewardAddress: 'stake1uxn65czlz0mu0snd7gue2xjzrhff0624mr4ezfehw5rc74qrjwn0v',
+      rewardAddress:
+        'stake1uxn65czlz0mu0snd7gue2xjzrhff0624mr4ezfehw5rc74qrjwn0v',
       ownAddress: false,
     },
     {
@@ -273,7 +284,8 @@ export const onlyAdaOneReceiverReferenceInputs: FormattedTx = {
       address:
         'addr1q9eggas5e4l0jzhhhxfds0q3rr3243zrydgyvm4myh6mu770ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwq0nyf7t',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
     },
   ],
@@ -326,10 +338,12 @@ export const onlyAdaOneReceiverReferenceInputs: FormattedTx = {
       address:
         'addr1qykrmfm7qmhpvmt6xkapegwun67wf75pcghm7p3a78gmm470ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqrqg5yh',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
+      txHash:
+        '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
     },
   ],
 }
@@ -362,10 +376,12 @@ export const onlyAdaOneReceiverMint: FormattedTx = {
       address:
         'addr1qykrmfm7qmhpvmt6xkapegwun67wf75pcghm7p3a78gmm470ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqrqg5yh',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
+      txHash:
+        '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
     },
     {
       assets: [
@@ -393,10 +409,12 @@ export const onlyAdaOneReceiverMint: FormattedTx = {
       address:
         'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: 'ee2a6b1ca4887e5d0827225ab1351418ce17c551ee4f59f68e901a9f6a2a51a8',
+      txHash:
+        'ee2a6b1ca4887e5d0827225ab1351418ce17c551ee4f59f68e901a9f6a2a51a8',
     },
   ],
   outputs: [
@@ -426,7 +444,8 @@ export const onlyAdaOneReceiverMint: FormattedTx = {
       address:
         'addr1q8a3kt40xel75qeknwcsa75jevg9nljf64vjxfdmz24p00d84fs97ylhclpxmu3ej5dyy8wjjl54tk8tjynnwag83a2q90y4sx',
       addressKind: 0,
-      rewardAddress: 'stake1uxn65czlz0mu0snd7gue2xjzrhff0624mr4ezfehw5rc74qrjwn0v',
+      rewardAddress:
+        'stake1uxn65czlz0mu0snd7gue2xjzrhff0624mr4ezfehw5rc74qrjwn0v',
       ownAddress: false,
     },
     {
@@ -455,7 +474,8 @@ export const onlyAdaOneReceiverMint: FormattedTx = {
       address:
         'addr1q9eggas5e4l0jzhhhxfds0q3rr3243zrydgyvm4myh6mu770ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwq0nyf7t',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
     },
   ],
@@ -497,7 +517,8 @@ export const onlyAdaOneReceiverMint: FormattedTx = {
         ticker: '',
         symbol: '',
         description: '',
-        originalImage: 'https://ipfs.io/ipfs/QmNzUxafVyqXkSW4vTzeh2JfjcwCvsA3KjpdGT635k33Ap',
+        originalImage:
+          'https://ipfs.io/ipfs/QmNzUxafVyqXkSW4vTzeh2JfjcwCvsA3KjpdGT635k33Ap',
       },
       '1',
     ],
@@ -517,7 +538,8 @@ export const onlyAdaOneReceiverMint: FormattedTx = {
         ticker: '',
         symbol: '',
         description: '',
-        originalImage: 'https://ipfs.io/ipfs/QmYNof7Xj6ydsebhFF7qYnLXrU3kt68D1u2yb8JrQMuFkM/0',
+        originalImage:
+          'https://ipfs.io/ipfs/QmYNof7Xj6ydsebhFF7qYnLXrU3kt68D1u2yb8JrQMuFkM/0',
       },
       '1',
     ],
@@ -587,7 +609,8 @@ export const multiAssetOneReceiver: FormattedTx = {
             ticker: '',
             symbol: '',
             description: '',
-            originalImage: 'https://ipfs.io/ipfs/QmNbZQLBoqNdsmmVJ42Yip5wcbRiqTbwgFAi3ChWQX74nm',
+            originalImage:
+              'https://ipfs.io/ipfs/QmNbZQLBoqNdsmmVJ42Yip5wcbRiqTbwgFAi3ChWQX74nm',
           },
           quantity: '1',
         },
@@ -595,10 +618,12 @@ export const multiAssetOneReceiver: FormattedTx = {
       address:
         'addr1qyf4x8lvcyrwcxzkyz3lykyzfu7s7x307dlafgsu89qzge8lfl229ahk888cgakug24y86qtduvn065c3gw7dg5002cqdskm74',
       addressKind: 0,
-      rewardAddress: 'stake1u8l5l49z7mmrnnuywmwy92jraq9k7xfha2vg580x528h4vq93y240',
+      rewardAddress:
+        'stake1u8l5l49z7mmrnnuywmwy92jraq9k7xfha2vg580x528h4vq93y240',
       ownAddress: true,
       txIndex: 0,
-      txHash: 'a80c36642e3872381b39251874c32a88a59b8d9814e963ecbb411bfc711e645f',
+      txHash:
+        'a80c36642e3872381b39251874c32a88a59b8d9814e963ecbb411bfc711e645f',
     },
     {
       assets: [
@@ -626,10 +651,12 @@ export const multiAssetOneReceiver: FormattedTx = {
       address:
         'addr1qyf4x8lvcyrwcxzkyz3lykyzfu7s7x307dlafgsu89qzge8lfl229ahk888cgakug24y86qtduvn065c3gw7dg5002cqdskm74',
       addressKind: 0,
-      rewardAddress: 'stake1u8l5l49z7mmrnnuywmwy92jraq9k7xfha2vg580x528h4vq93y240',
+      rewardAddress:
+        'stake1u8l5l49z7mmrnnuywmwy92jraq9k7xfha2vg580x528h4vq93y240',
       ownAddress: true,
       txIndex: 0,
-      txHash: 'b3f1e57d20a1161aa0479d80decc8548bd8167a835dc2175b6dec1233770ab13',
+      txHash:
+        'b3f1e57d20a1161aa0479d80decc8548bd8167a835dc2175b6dec1233770ab13',
     },
   ],
   outputs: [
@@ -693,7 +720,8 @@ export const multiAssetOneReceiver: FormattedTx = {
             ticker: '',
             symbol: '',
             description: '',
-            originalImage: 'https://ipfs.io/ipfs/QmNbZQLBoqNdsmmVJ42Yip5wcbRiqTbwgFAi3ChWQX74nm',
+            originalImage:
+              'https://ipfs.io/ipfs/QmNbZQLBoqNdsmmVJ42Yip5wcbRiqTbwgFAi3ChWQX74nm',
           },
           quantity: '1',
         },
@@ -701,7 +729,8 @@ export const multiAssetOneReceiver: FormattedTx = {
       address:
         'addr1q88frqvq2jgcc5qdgz9fgw60ge5zt4mzlmgc8k275gjyajk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqa3kc0s',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: false,
     },
     {
@@ -752,7 +781,8 @@ export const multiAssetOneReceiver: FormattedTx = {
       address:
         'addr1qyf4x8lvcyrwcxzkyz3lykyzfu7s7x307dlafgsu89qzge8lfl229ahk888cgakug24y86qtduvn065c3gw7dg5002cqdskm74',
       addressKind: 0,
-      rewardAddress: 'stake1u8l5l49z7mmrnnuywmwy92jraq9k7xfha2vg580x528h4vq93y240',
+      rewardAddress:
+        'stake1u8l5l49z7mmrnnuywmwy92jraq9k7xfha2vg580x528h4vq93y240',
       ownAddress: true,
     },
     {
@@ -781,7 +811,8 @@ export const multiAssetOneReceiver: FormattedTx = {
       address:
         'addr1qyf4x8lvcyrwcxzkyz3lykyzfu7s7x307dlafgsu89qzge8lfl229ahk888cgakug24y86qtduvn065c3gw7dg5002cqdskm74',
       addressKind: 0,
-      rewardAddress: 'stake1u8l5l49z7mmrnnuywmwy92jraq9k7xfha2vg580x528h4vq93y240',
+      rewardAddress:
+        'stake1u8l5l49z7mmrnnuywmwy92jraq9k7xfha2vg580x528h4vq93y240',
       ownAddress: true,
     },
   ],
@@ -838,10 +869,12 @@ const onlyAdaMultiReceiver: FormattedTx = {
       address:
         'addr1qykrmfm7qmhpvmt6xkapegwun67wf75pcghm7p3a78gmm470ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqrqg5yh',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
+      txHash:
+        '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
     },
     {
       assets: [
@@ -881,7 +914,8 @@ const onlyAdaMultiReceiver: FormattedTx = {
             ticker: '',
             symbol: '',
             description: '',
-            originalImage: 'https://ipfs.io/ipfs/QmNbZQLBoqNdsmmVJ42Yip5wcbRiqTbwgFAi3ChWQX74nm',
+            originalImage:
+              'https://ipfs.io/ipfs/QmNbZQLBoqNdsmmVJ42Yip5wcbRiqTbwgFAi3ChWQX74nm',
           },
           quantity: '1',
         },
@@ -889,10 +923,12 @@ const onlyAdaMultiReceiver: FormattedTx = {
       address:
         'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: 'ee2a6b1ca4887e5d0827225ab1351418ce17c551ee4f59f68e901a9f6a2a51a8',
+      txHash:
+        'ee2a6b1ca4887e5d0827225ab1351418ce17c551ee4f59f68e901a9f6a2a51a8',
     },
   ],
   outputs: [
@@ -922,7 +958,8 @@ const onlyAdaMultiReceiver: FormattedTx = {
       address:
         'addr1q8a3kt40xel75qeknwcsa75jevg9nljf64vjxfdmz24p00d84fs97ylhclpxmu3ej5dyy8wjjl54tk8tjynnwag83a2q90y4sx',
       addressKind: 0,
-      rewardAddress: 'stake1uxn65czlz0mu0snd7gue2xjzrhff0624mr4ezfehw5rc74qrjwn0v',
+      rewardAddress:
+        'stake1uxn65czlz0mu0snd7gue2xjzrhff0624mr4ezfehw5rc74qrjwn0v',
       ownAddress: false,
     },
     {
@@ -951,7 +988,8 @@ const onlyAdaMultiReceiver: FormattedTx = {
       address:
         'addr1q88frqvq2jgcc5qdgz9fgw60ge5zt4mzlmgc8k275gjyajk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqa3kc0s',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: false,
     },
     {
@@ -980,7 +1018,8 @@ const onlyAdaMultiReceiver: FormattedTx = {
       address:
         'addr1q9eggas5e4l0jzhhhxfds0q3rr3243zrydgyvm4myh6mu770ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwq0nyf7t',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
     },
   ],
@@ -1037,10 +1076,12 @@ const multiAssetMultiReceiver: FormattedTx = {
       address:
         'addr1qykrmfm7qmhpvmt6xkapegwun67wf75pcghm7p3a78gmm470ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqrqg5yh',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
+      txHash:
+        '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
     },
     {
       assets: [
@@ -1080,7 +1121,8 @@ const multiAssetMultiReceiver: FormattedTx = {
             ticker: '',
             symbol: '',
             description: '',
-            originalImage: 'https://ipfs.io/ipfs/QmNbZQLBoqNdsmmVJ42Yip5wcbRiqTbwgFAi3ChWQX74nm',
+            originalImage:
+              'https://ipfs.io/ipfs/QmNbZQLBoqNdsmmVJ42Yip5wcbRiqTbwgFAi3ChWQX74nm',
           },
           quantity: '1',
         },
@@ -1088,10 +1130,12 @@ const multiAssetMultiReceiver: FormattedTx = {
       address:
         'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 0,
-      txHash: 'ee2a6b1ca4887e5d0827225ab1351418ce17c551ee4f59f68e901a9f6a2a51a8',
+      txHash:
+        'ee2a6b1ca4887e5d0827225ab1351418ce17c551ee4f59f68e901a9f6a2a51a8',
     },
   ],
   outputs: [
@@ -1121,7 +1165,8 @@ const multiAssetMultiReceiver: FormattedTx = {
       address:
         'addr1q8a3kt40xel75qeknwcsa75jevg9nljf64vjxfdmz24p00d84fs97ylhclpxmu3ej5dyy8wjjl54tk8tjynnwag83a2q90y4sx',
       addressKind: 0,
-      rewardAddress: 'stake1uxn65czlz0mu0snd7gue2xjzrhff0624mr4ezfehw5rc74qrjwn0v',
+      rewardAddress:
+        'stake1uxn65czlz0mu0snd7gue2xjzrhff0624mr4ezfehw5rc74qrjwn0v',
       ownAddress: false,
     },
     {
@@ -1162,7 +1207,8 @@ const multiAssetMultiReceiver: FormattedTx = {
             ticker: '',
             symbol: '',
             description: '',
-            originalImage: 'https://ipfs.io/ipfs/QmNbZQLBoqNdsmmVJ42Yip5wcbRiqTbwgFAi3ChWQX74nm',
+            originalImage:
+              'https://ipfs.io/ipfs/QmNbZQLBoqNdsmmVJ42Yip5wcbRiqTbwgFAi3ChWQX74nm',
           },
           quantity: '1',
         },
@@ -1170,7 +1216,8 @@ const multiAssetMultiReceiver: FormattedTx = {
       address:
         'addr1q88frqvq2jgcc5qdgz9fgw60ge5zt4mzlmgc8k275gjyajk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqa3kc0s',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: false,
     },
     {
@@ -1199,7 +1246,8 @@ const multiAssetMultiReceiver: FormattedTx = {
       address:
         'addr1q9eggas5e4l0jzhhhxfds0q3rr3243zrydgyvm4myh6mu770ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwq0nyf7t',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
     },
   ],
@@ -1256,10 +1304,12 @@ const operationsWarning: FormattedTx = {
       address:
         'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 1,
-      txHash: '1a2070bd83bbbe8b8d5146a06d5eeb00631ed236bb79f5f54451d1e0e777943a',
+      txHash:
+        '1a2070bd83bbbe8b8d5146a06d5eeb00631ed236bb79f5f54451d1e0e777943a',
     },
   ],
   outputs: [
@@ -1289,7 +1339,8 @@ const operationsWarning: FormattedTx = {
       address:
         'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
     },
   ],
@@ -1320,7 +1371,8 @@ const operationsWarning: FormattedTx = {
         stake_credential: {
           Key: 'cf085cc39aa4ff52de1ea606ee581aac1dab8166d6830e7a9b6cecdc',
         },
-        pool_keyhash: '2a8294ad7538b15353b9ffd81e26dafe846ffc3f6b9e331d4c1dc030',
+        pool_keyhash:
+          '2a8294ad7538b15353b9ffd81e26dafe846ffc3f6b9e331d4c1dc030',
       },
     },
     {
@@ -1338,7 +1390,8 @@ const operationsWarning: FormattedTx = {
         stake_credential: {
           Key: 'a7aa605f13f7c7c26df239951a421dd297e955d8eb91273775078f54',
         },
-        pool_keyhash: 'dbda39c8d064ff9801e376f8350efafe67c07e9e9244dd613aee5125',
+        pool_keyhash:
+          'dbda39c8d064ff9801e376f8350efafe67c07e9e9244dd613aee5125',
       },
     },
     {
@@ -1356,7 +1409,8 @@ const operationsWarning: FormattedTx = {
         stake_credential: {
           Key: 'a7aa605f13f7c7c26df239951a421dd297e955d8eb91273775078f54',
         },
-        pool_keyhash: 'dbda39c8d064ff9801e376f8350efafe67c07e9e9244dd613aee5125',
+        pool_keyhash:
+          'dbda39c8d064ff9801e376f8350efafe67c07e9e9244dd613aee5125',
       },
     },
     {
@@ -1374,7 +1428,8 @@ const operationsWarning: FormattedTx = {
         stake_credential: {
           Key: 'a7aa605f13f7c7c26df239951a421dd297e955d8eb91273775078f54',
         },
-        pool_keyhash: 'dbda39c8d064ff9801e376f8350efafe67c07e9e9244dd613aee5125',
+        pool_keyhash:
+          'dbda39c8d064ff9801e376f8350efafe67c07e9e9244dd613aee5125',
       },
     },
     {
@@ -1392,7 +1447,8 @@ const operationsWarning: FormattedTx = {
         stake_credential: {
           Key: 'a7aa605f13f7c7c26df239951a421dd297e955d8eb91273775078f54',
         },
-        pool_keyhash: 'dbda39c8d064ff9801e376f8350efafe67c07e9e9244dd613aee5125',
+        pool_keyhash:
+          'dbda39c8d064ff9801e376f8350efafe67c07e9e9244dd613aee5125',
       },
     },
     {
@@ -1410,7 +1466,8 @@ const operationsWarning: FormattedTx = {
         stake_credential: {
           Key: 'a7aa605f13f7c7c26df239951a421dd297e955d8eb91273775078f54',
         },
-        pool_keyhash: 'dbda39c8d064ff9801e376f8350efafe67c07e9e9244dd613aee5125',
+        pool_keyhash:
+          'dbda39c8d064ff9801e376f8350efafe67c07e9e9244dd613aee5125',
       },
     },
   ],
@@ -1442,10 +1499,12 @@ const operationsWarning: FormattedTx = {
       address:
         'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
       addressKind: 0,
-      rewardAddress: 'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
+      rewardAddress:
+        'stake1u88sshxrn2j075k7r6nqdmjcr2kpm2upvmtgxrn6ndkwehqyy4w9s',
       ownAddress: true,
       txIndex: 1,
-      txHash: '1a2070bd83bbbe8b8d5146a06d5eeb00631ed236bb79f5f54451d1e0e777943a',
+      txHash:
+        '1a2070bd83bbbe8b8d5146a06d5eeb00631ed236bb79f5f54451d1e0e777943a',
     },
   ],
 }

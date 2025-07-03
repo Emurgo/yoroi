@@ -29,7 +29,11 @@ export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
   baseApiUrl: string,
 ): Promise<{isLast: boolean; transactions: Array<RawTransaction>}> => {
-  const transactions = await fetchDefault<Array<RawTransaction>>('v2/txs/history', request, baseApiUrl)
+  const transactions = await fetchDefault<Array<RawTransaction>>(
+    'v2/txs/history',
+    request,
+    baseApiUrl,
+  )
 
   return {
     transactions,
@@ -37,15 +41,25 @@ export const fetchNewTxHistory = async (
   }
 }
 
-export const filterUsedAddresses = async (addresses: Addresses, baseApiUrl: string): Promise<Addresses> => {
+export const filterUsedAddresses = async (
+  addresses: Addresses,
+  baseApiUrl: string,
+): Promise<Addresses> => {
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
-  const used = await fetchDefault<Addresses>('v2/addresses/filterUsed', {addresses: copy}, baseApiUrl)
+  const used = await fetchDefault<Addresses>(
+    'v2/addresses/filterUsed',
+    {addresses: copy},
+    baseApiUrl,
+  )
   // We need to do this so that we keep original order of addresses
   return copy.filter((addr) => used.includes(addr))
 }
 
-export const submitTransaction = async (signedTx: string, baseApiUrl: string): Promise<void> => {
+export const submitTransaction = async (
+  signedTx: string,
+  baseApiUrl: string,
+): Promise<void> => {
   try {
     await fetchDefault('txs/signed', {signedTx}, baseApiUrl)
   } catch (e) {
@@ -53,25 +67,42 @@ export const submitTransaction = async (signedTx: string, baseApiUrl: string): P
   }
 }
 
-export const getAccountState = (request: AccountStateRequest, baseApiUrl: string): Promise<AccountStateResponse> => {
+export const getAccountState = (
+  request: AccountStateRequest,
+  baseApiUrl: string,
+): Promise<AccountStateResponse> => {
   return fetchDefault('account/state', request, baseApiUrl)
 }
 
-export const bulkGetAccountState = async (addresses: Addresses, baseApiUrl: string): Promise<AccountStateResponse> => {
+export const bulkGetAccountState = async (
+  addresses: Addresses,
+  baseApiUrl: string,
+): Promise<AccountStateResponse> => {
   const chunks = _.chunk(addresses, limitApiRecords)
-  const responses = await Promise.all(chunks.map((addrs) => getAccountState({addresses: addrs}, baseApiUrl)))
+  const responses = await Promise.all(
+    chunks.map((addrs) => getAccountState({addresses: addrs}, baseApiUrl)),
+  )
   return Object.assign({}, ...responses)
 }
 
-export const getPoolInfo = (request: PoolInfoRequest, baseApiUrl: string): Promise<StakePoolInfosAndHistories> => {
+export const getPoolInfo = (
+  request: PoolInfoRequest,
+  baseApiUrl: string,
+): Promise<StakePoolInfosAndHistories> => {
   return fetchDefault('pool/info', request, baseApiUrl)
 }
 
-export const getFundInfo = (baseApiUrl: string, isMainnet: boolean): Promise<FundInfoResponse> => {
+export const getFundInfo = (
+  baseApiUrl: string,
+  isMainnet: boolean,
+): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
   return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, baseApiUrl, 'GET')
 }
 
-export const fetchTxStatus = (request: TxStatusRequest, baseApiUrl: string): Promise<TxStatusResponse> => {
+export const fetchTxStatus = (
+  request: TxStatusRequest,
+  baseApiUrl: string,
+): Promise<TxStatusResponse> => {
   return fetchDefault('tx/status', request, baseApiUrl)
 }

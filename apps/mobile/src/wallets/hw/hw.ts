@@ -14,7 +14,9 @@ const requestLedgerPermissions = async () => {
   return denied ? Promise.reject() : Promise.resolve()
 }
 
-export const useLedgerPermissions = (options?: UseMutationOptions<void, Error>) => {
+export const useLedgerPermissions = (
+  options?: UseMutationOptions<void, Error>,
+) => {
   const mutation = useMutation({
     ...options,
     mutationFn: requestLedgerPermissions,
@@ -30,7 +32,9 @@ export const useLedgerPermissions = (options?: UseMutationOptions<void, Error>) 
 const BLUETOOTH_SCAN = 'android.permission.BLUETOOTH_SCAN'
 const BLUETOOTH_CONNECT = 'android.permission.BLUETOOTH_CONNECT'
 const getLedgerPermissions = () => {
-  const permissions: Array<Permission> = [PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION]
+  const permissions: Array<Permission> = [
+    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  ]
   if (Number(Platform.Version) >= 31) {
     permissions.push(BLUETOOTH_CONNECT as Permission)
     permissions.push(BLUETOOTH_SCAN as Permission)

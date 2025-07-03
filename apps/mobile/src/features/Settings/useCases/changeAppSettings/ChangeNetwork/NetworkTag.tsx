@@ -2,7 +2,15 @@ import {networkConfigs} from '@yoroi/blockchains'
 import {useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import {Button, ButtonType} from '../../../../../components/Button/Button'
 import {useModal} from '../../../../../components/Modal/ModalContext'
@@ -41,7 +49,11 @@ export const NetworkTag = ({
 
   const onPress = () => {
     if (directChangeActive && selectedNetwork !== Chain.Network.Mainnet) {
-      const nextNetwork = availableNetworks[(availableNetworks.indexOf(selectedNetwork) + 1) % availableNetworks.length]
+      const nextNetwork =
+        availableNetworks[
+          (availableNetworks.indexOf(selectedNetwork) + 1) %
+            availableNetworks.length
+        ]
 
       if (nextNetwork === Chain.Network.Mainnet) {
         openModal({
@@ -50,7 +62,10 @@ export const NetworkTag = ({
             <MainnetWarningDialog
               onCancel={closeModal}
               onOk={() => {
-                track.networkSelected({to_network: nextNetwork, from_network: selectedNetwork})
+                track.networkSelected({
+                  to_network: nextNetwork,
+                  from_network: selectedNetwork,
+                })
                 walletManager.setSelectedNetwork(nextNetwork)
                 closeModal()
               }}
@@ -62,7 +77,10 @@ export const NetworkTag = ({
         return
       }
 
-      track.networkSelected({to_network: nextNetwork, from_network: selectedNetwork})
+      track.networkSelected({
+        to_network: nextNetwork,
+        from_network: selectedNetwork,
+      })
       walletManager.setSelectedNetwork(nextNetwork)
       return
     }
@@ -86,7 +104,12 @@ export const NetworkTag = ({
         <View style={styles.tagContainer}>
           <Tag
             onPress={onPress}
-            disabled={((directChangeActive && selectedNetwork === Chain.Network.Mainnet) || disabled) ?? false}
+            disabled={
+              ((directChangeActive &&
+                selectedNetwork === Chain.Network.Mainnet) ||
+                disabled) ??
+              false
+            }
           />
         </View>
       )}
@@ -94,18 +117,35 @@ export const NetworkTag = ({
   )
 }
 
-const PreprodTag = ({onPress, disabled}: {onPress: () => void; disabled: boolean}) => {
+const PreprodTag = ({
+  onPress,
+  disabled,
+}: {
+  onPress: () => void
+  disabled: boolean
+}) => {
   const {styles} = useStyles()
   const {name} = networkConfigs[Chain.Network.Preprod]
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.5} style={styles.preprodTag} disabled={disabled}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.5}
+      style={styles.preprodTag}
+      disabled={disabled}
+    >
       <Text>{name}</Text>
     </TouchableOpacity>
   )
 }
 
-const MainnetWarningDialog = ({onCancel, onOk}: {onCancel: () => void; onOk: () => void}) => {
+const MainnetWarningDialog = ({
+  onCancel,
+  onOk,
+}: {
+  onCancel: () => void
+  onOk: () => void
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -116,7 +156,12 @@ const MainnetWarningDialog = ({onCancel, onOk}: {onCancel: () => void; onOk: () 
       <Spacer fill />
 
       <View style={styles.warningModalActions}>
-        <Button size="S" type={ButtonType.Secondary} title="Cancel" onPress={onCancel} />
+        <Button
+          size="S"
+          type={ButtonType.Secondary}
+          title="Cancel"
+          onPress={onCancel}
+        />
 
         <Space width="lg" />
 

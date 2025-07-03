@@ -2,7 +2,13 @@ import {useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
@@ -44,21 +50,30 @@ export const SwapSettings = () => {
   const {styles, colors} = useStyles()
 
   const swapForm = useSwap()
-  const [aggregator, setAggregator] = React.useState(swapForm.managerSettings.routingPreference)
+  const [aggregator, setAggregator] = React.useState(
+    swapForm.managerSettings.routingPreference,
+  )
 
   const assignAggregator = (a: Swap.ManagerSettings['routingPreference']) => {
     setAggregator(a)
-    swapForm.assignManagerSettings({...swapForm.managerSettings, routingPreference: a})
+    swapForm.assignManagerSettings({
+      ...swapForm.managerSettings,
+      routingPreference: a,
+    })
     swapForm.action({type: 'Refresh'})
   }
 
-  const defaultSelectedChoice = getChoiceBySlippage(Number(swapForm.managerSettings.slippage), numberLocale)
+  const defaultSelectedChoice = getChoiceBySlippage(
+    Number(swapForm.managerSettings.slippage),
+    numberLocale,
+  )
   const defaultInputValue =
     defaultSelectedChoice.label === 'Custom'
       ? new BigNumber(swapForm.managerSettings.slippage).toFormat(numberLocale)
       : ''
 
-  const [selectedChoiceLabel, setSelectedChoiceLabel] = React.useState<ChoiceKind>(defaultSelectedChoice.label)
+  const [selectedChoiceLabel, setSelectedChoiceLabel] =
+    React.useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = React.useState(defaultInputValue)
 
   const strings = useStrings()
@@ -68,7 +83,8 @@ export const SwapSettings = () => {
   const isSelectedChoiceCustom = selectedChoiceLabel === 'Custom'
 
   const commit = (value: string | number) => {
-    const slippage = typeof value === 'string' ? parseNumber(value, numberLocale) : value
+    const slippage =
+      typeof value === 'string' ? parseNumber(value, numberLocale) : value
     track.swapSlippageChanged({slippage_tolerance: slippage})
     swapForm.action({type: 'SlippageInputChanged', value: slippage})
     swapForm.assignManagerSettings({...swapForm.managerSettings, slippage})
@@ -87,11 +103,15 @@ export const SwapSettings = () => {
   }
 
   const isInputEnabled = isSelectedChoiceCustom
-  const hasError = isSelectedChoiceCustom && !validateSlippage(inputValue, numberLocale)
+  const hasError =
+    isSelectedChoiceCustom && !validateSlippage(inputValue, numberLocale)
 
   return (
     <KeyboardAvoidingView style={[styles.flex, styles.root]}>
-      <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.flex, styles.safeAreaView]}>
+      <SafeAreaView
+        edges={['bottom', 'left', 'right']}
+        style={[styles.flex, styles.safeAreaView]}
+      >
         <ScrollView bounces={false} style={styles.flex}>
           <Text style={styles.heading}>{strings.slippageTolerance}</Text>
 
@@ -99,10 +119,20 @@ export const SwapSettings = () => {
             {CHOICES.map((choice, index) => (
               <TouchableOpacity
                 key={index}
-                style={[styles.choiceButton, selectedChoiceLabel === choice.label && styles.selectedChoiceButton]}
+                style={[
+                  styles.choiceButton,
+                  selectedChoiceLabel === choice.label &&
+                    styles.selectedChoiceButton,
+                ]}
                 onPress={() => handleChoicePress(choice.label)}
               >
-                <Text style={[styles.label, selectedChoiceLabel === choice.label && styles.selectedChoiceLabel]}>
+                <Text
+                  style={[
+                    styles.label,
+                    selectedChoiceLabel === choice.label &&
+                      styles.selectedChoiceLabel,
+                  ]}
+                >
                   {choice.label}
                 </Text>
               </TouchableOpacity>
@@ -111,22 +141,33 @@ export const SwapSettings = () => {
 
           {selectedChoice.label === 'Custom' && (
             <TextInput
-              value={isInputEnabled ? inputValue : new BigNumber(selectedChoice.value).toFormat(numberLocale)}
+              value={
+                isInputEnabled
+                  ? inputValue
+                  : new BigNumber(selectedChoice.value).toFormat(numberLocale)
+              }
               onChangeText={handleInputChange}
               editable={isInputEnabled}
               key={isInputEnabled ? 'enabled' : 'disabled'}
               selectTextOnFocus={isInputEnabled}
               autoFocus={isInputEnabled}
-              style={[styles.input, !isSelectedChoiceCustom && {backgroundColor: colors.background}]}
+              style={[
+                styles.input,
+                !isSelectedChoiceCustom && {backgroundColor: colors.background},
+              ]}
               keyboardType="numeric"
               selectionColor={colors.selected}
               cursorColor={colors.cursor}
               right={<Text style={styles.percentLabel}>%</Text>}
               helper={
                 isSelectedChoiceCustom && !hasError ? (
-                  <Text style={[styles.textInfo, styles.bottomText]}>{strings.enterSlippage}</Text>
+                  <Text style={[styles.textInfo, styles.bottomText]}>
+                    {strings.enterSlippage}
+                  </Text>
                 ) : isSelectedChoiceCustom && hasError ? (
-                  <Text style={[styles.bottomText, styles.errorText]}>{strings.slippageToleranceError}</Text>
+                  <Text style={[styles.bottomText, styles.errorText]}>
+                    {strings.slippageToleranceError}
+                  </Text>
                 ) : undefined
               }
             />
@@ -140,7 +181,13 @@ export const SwapSettings = () => {
 
               <SettingsSwitch
                 value={aggregator === 'auto'}
-                onValueChange={() => assignAggregator(aggregator === 'auto' ? ['muesliswap', 'dexhunter'] : 'auto')}
+                onValueChange={() =>
+                  assignAggregator(
+                    aggregator === 'auto'
+                      ? ['muesliswap', 'dexhunter']
+                      : 'auto',
+                  )
+                }
               />
             </View>
 
@@ -152,7 +199,11 @@ export const SwapSettings = () => {
                   <SettingsSwitch
                     value={aggregator.includes('dexhunter')}
                     onValueChange={() =>
-                      assignAggregator(aggregator.includes('dexhunter') ? ['muesliswap'] : [...aggregator, 'dexhunter'])
+                      assignAggregator(
+                        aggregator.includes('dexhunter')
+                          ? ['muesliswap']
+                          : [...aggregator, 'dexhunter'],
+                      )
                     }
                   />
                 </View>
@@ -164,7 +215,9 @@ export const SwapSettings = () => {
                     value={aggregator.includes('muesliswap')}
                     onValueChange={() =>
                       assignAggregator(
-                        aggregator.includes('muesliswap') ? ['dexhunter'] : [...aggregator, 'muesliswap'],
+                        aggregator.includes('muesliswap')
+                          ? ['dexhunter']
+                          : [...aggregator, 'muesliswap'],
                       )
                     }
                   />
@@ -269,7 +322,10 @@ const parseNumber = (text: string, format: NumberLocale) => {
   return Number(Quantities.denominated(quantity, MAX_DECIMALS))
 }
 
-const getChoiceBySlippage = (slippage: number, format: NumberLocale): Choice => {
+const getChoiceBySlippage = (
+  slippage: number,
+  format: NumberLocale,
+): Choice => {
   return (
     CHOICES.find((choice) => choice.value === slippage) ?? {
       label: 'Custom',
@@ -279,5 +335,10 @@ const getChoiceBySlippage = (slippage: number, format: NumberLocale): Choice => 
 }
 
 const getChoiceByLabel = (label: ChoiceKind): Choice => {
-  return CHOICES.find((choice) => choice.label === label) ?? {label: 'Custom', value: ''}
+  return (
+    CHOICES.find((choice) => choice.label === label) ?? {
+      label: 'Custom',
+      value: '',
+    }
+  )
 }

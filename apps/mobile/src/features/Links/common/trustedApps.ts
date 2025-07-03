@@ -3,11 +3,19 @@ import {freeze} from 'immer'
 import {anzensLogo, banxaLogo, cardanoSpotLogo, encryptusLogo} from './logos'
 
 export const trustedApps: Readonly<
-  Map<string, {name: string; vkey: string | undefined; logo: string; provider: string}>
+  Map<
+    string,
+    {name: string; vkey: string | undefined; logo: string; provider: string}
+  >
 > = freeze(
   new Map(
     __DEV__
-      ? [['yoroi', {name: 'Yoroi Test', provider: 'EMURGO', vkey: '', logo: ''}]]
+      ? [
+          [
+            'yoroi',
+            {name: 'Yoroi Test', provider: 'EMURGO', vkey: '', logo: ''},
+          ],
+        ]
       : [
           [
             '18d1545a-a59b-45cb-a180-157b110c77fe',

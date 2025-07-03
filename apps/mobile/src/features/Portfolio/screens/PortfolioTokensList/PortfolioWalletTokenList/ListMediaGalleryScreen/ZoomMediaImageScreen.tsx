@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
 // @ts-ignore
 import ViewTransformer from 'react-native-easy-view-transformer'
 

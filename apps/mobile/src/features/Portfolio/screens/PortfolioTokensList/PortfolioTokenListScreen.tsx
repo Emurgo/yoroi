@@ -25,7 +25,8 @@ export const PortfolioTokenListScreen = () => {
   const {listTab, setListTab} = usePortfolio()
   // TODO: missing dAppsBalance
   const dAppsBalance = useGetDAppsPortfolioBalance(0n)
-  const hasDApps = dAppsBalance !== undefined && Number(dAppsBalance.quantity) > 0
+  const hasDApps =
+    dAppsBalance !== undefined && Number(dAppsBalance.quantity) > 0
 
   React.useEffect(() => {
     track.portfolioTokensListPageViewed({tokens_tab: tabs[listTab]})
@@ -34,7 +35,9 @@ export const PortfolioTokenListScreen = () => {
   useSearchOnNavBar({
     title: strings.tokenList,
     placeholder: strings.searchTokens,
-    extraNavigationOptions: {headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>},
+    extraNavigationOptions: {
+      headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+    },
   })
 
   return (

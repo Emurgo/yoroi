@@ -63,11 +63,19 @@ describe('filterByFungibility', () => {
     symbol: undefined,
   } as const
 
-  const allTokenInfos: Balance.TokenInfo[] = [fakeToken1, fakeToken2, nft1, nft2]
+  const allTokenInfos: Balance.TokenInfo[] = [
+    fakeToken1,
+    fakeToken2,
+    nft1,
+    nft2,
+  ]
   const nftTokenInfos: Balance.TokenInfo[] = [nft1, nft2]
   const ftTokenInfos: Balance.TokenInfo[] = [fakeToken1, fakeToken2]
 
-  it.each<{fungibilityFilter: 'all' | 'ft' | 'nft'; result: Balance.TokenInfo[]}>([
+  it.each<{
+    fungibilityFilter: 'all' | 'ft' | 'nft'
+    result: Balance.TokenInfo[]
+  }>([
     {
       fungibilityFilter: 'all',
       result: allTokenInfos,
@@ -84,7 +92,12 @@ describe('filterByFungibility', () => {
       fungibilityFilter: 'random-value' as never,
       result: allTokenInfos,
     },
-  ])('should return correct tokenInfos if fungibility is "$fungibility"', ({fungibilityFilter, result}) => {
-    expect(allTokenInfos.filter(filterByFungibility({fungibilityFilter}))).toEqual(result)
-  })
+  ])(
+    'should return correct tokenInfos if fungibility is "$fungibility"',
+    ({fungibilityFilter, result}) => {
+      expect(
+        allTokenInfos.filter(filterByFungibility({fungibilityFilter})),
+      ).toEqual(result)
+    },
+  )
 })

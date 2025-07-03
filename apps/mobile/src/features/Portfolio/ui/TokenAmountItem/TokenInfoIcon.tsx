@@ -13,15 +13,27 @@ type TokenInfoIconProps = {
   size?: 'sm' | 'md' | 'lg' | 'xl'
   imageStyle?: ImageStyle
 }
-export const TokenInfoIcon = ({info, size = 'lg', imageStyle}: TokenInfoIconProps) => {
+export const TokenInfoIcon = ({
+  info,
+  size = 'lg',
+  imageStyle,
+}: TokenInfoIconProps) => {
   const {styles, colors} = useStyles()
   const [policy, name] = !info ? '.' : info.id.split('.')
-  const {uri, headers, onError, onLoad, isError} = usePortfolioImage({policy, name, width: 64, height: 64})
+  const {uri, headers, onError, onLoad, isError} = usePortfolioImage({
+    policy,
+    name,
+    width: 64,
+    height: 64,
+  })
 
   if (!info || isError) {
     return (
       <View style={[styles.icon, styles[size], styles.placeholder]}>
-        <Icon.Coins2 color={colors.icon} size={{sm: 18, md: 20, lg: 24, xl: 42}[size]} />
+        <Icon.Coins2
+          color={colors.icon}
+          size={{sm: 18, md: 20, lg: 24, xl: 42}[size]}
+        />
       </View>
     )
   }
@@ -29,7 +41,10 @@ export const TokenInfoIcon = ({info, size = 'lg', imageStyle}: TokenInfoIconProp
   if (isPrimaryToken(info))
     return (
       <View style={[styles.icon, styles[size], styles.primary, imageStyle]}>
-        <Icon.Cardano color="white" size={{sm: 20, md: 28, lg: 35, xl: 70}[size]} />
+        <Icon.Cardano
+          color="white"
+          size={{sm: 20, md: 28, lg: 35, xl: 70}[size]}
+        />
       </View>
     )
 

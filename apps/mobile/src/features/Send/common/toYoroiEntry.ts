@@ -8,7 +8,10 @@ export function toYoroiEntry(entry: Transfer.Entry): YoroiEntry {
     address: entry.address,
     datum: entry.datum,
     amounts: Object.fromEntries(
-      Object.entries(entry.amounts).map(([tokenId, amount]) => [tokenId, asQuantity(amount.quantity.toString())]),
+      Object.entries(entry.amounts).map(([tokenId, amount]) => [
+        tokenId,
+        asQuantity(amount.quantity.toString()),
+      ]),
     ),
   }
 

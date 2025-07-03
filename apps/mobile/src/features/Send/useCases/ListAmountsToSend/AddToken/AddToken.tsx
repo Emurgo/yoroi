@@ -1,7 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -11,12 +17,21 @@ type AddTokenButtonProps = {
   disabled?: boolean
   style?: StyleProp<ViewStyle>
 }
-export const AddTokenButton = ({onPress, disabled, style}: AddTokenButtonProps) => {
+export const AddTokenButton = ({
+  onPress,
+  disabled,
+  style,
+}: AddTokenButtonProps) => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
 
   return (
-    <TouchableOpacity onPress={onPress} disabled={disabled} testID="addTokenButton" style={[style, styles.button]}>
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled}
+      testID="addTokenButton"
+      style={[style, styles.button]}
+    >
       <Icon.Plus size={26} color={colors.iconColor} />
 
       <Spacer width={4} />

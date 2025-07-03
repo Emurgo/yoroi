@@ -14,10 +14,16 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useCreateGovernanceTx, useStakingKey} from '../../../../../wallets/hooks'
+import {
+  useCreateGovernanceTx,
+  useStakingKey,
+} from '../../../../../wallets/hooks'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
-import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../common/helpers'
+import {
+  mapStakingKeyStateToGovernanceAction,
+  useGovernanceActions,
+} from '../../common/helpers'
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useStrings} from '../../common/strings'
 import {YoroiRecordLink} from '../../common/YoroiRecordLink/YoroiRecordLink'
@@ -27,22 +33,35 @@ export const ChangeVoteScreen = () => {
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const stakingKeyHash = useStakingKey(wallet)
-  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {suspense: true})
-  const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
+  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {
+    suspense: true,
+  })
+  const action = stakingStatus
+    ? mapStakingKeyStateToGovernanceAction(stakingStatus)
+    : null
   const {openModal} = useModal()
   const {manager} = useGovernance()
   const [pendingVote, setPendingVote] = React.useState<
-    'abstain' | 'no-confidence' | 'delegate-to-yoroi' | 'delegate-not-yoroi' | null
+    | 'abstain'
+    | 'no-confidence'
+    | 'delegate-to-yoroi'
+    | 'delegate-not-yoroi'
+    | null
   >(null)
   const {styles} = useStyles()
   const governanceActions = useGovernanceActions()
 
-  const {createCertificate: createDelegationCertificate, isLoading: isCreatingDelegationCertificate} =
-    useDelegationCertificate({
-      useErrorBoundary: true,
-    })
+  const {
+    createCertificate: createDelegationCertificate,
+    isLoading: isCreatingDelegationCertificate,
+  } = useDelegationCertificate({
+    useErrorBoundary: true,
+  })
 
-  const {createCertificate: createVotingCertificate, isLoading: isCreatingVotingCertificate} = useVotingCertificate({
+  const {
+    createCertificate: createVotingCertificate,
+    isLoading: isCreatingVotingCertificate,
+  } = useVotingCertificate({
     useErrorBoundary: true,
   })
 
@@ -52,7 +71,13 @@ export const ChangeVoteScreen = () => {
 
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
-  const openDRepIdModal = (onSubmit: (options: {hash: string; type: 'script' | 'key'; CIP105: boolean}) => void) => {
+  const openDRepIdModal = (
+    onSubmit: (options: {
+      hash: string
+      type: 'script' | 'key'
+      CIP105: boolean
+    }) => void,
+  ) => {
     openModal({
       title: strings.enterDRepID,
       content: (
@@ -159,10 +184,14 @@ export const ChangeVoteScreen = () => {
   }
 
   const voteKind = action?.kind
-  const voteHash = voteKind === 'delegate' && action != null ? action.hash : undefined
+  const voteHash =
+    voteKind === 'delegate' && action != null ? action.hash : undefined
   const isCreatingTx =
-    createGovernanceTxMutation.isLoading || isCreatingVotingCertificate || isCreatingDelegationCertificate
-  const isDelegatingToDrep = voteKind === 'delegate' && voteHash !== GOVERNANCE_YOROI_DREP_ID_HEX
+    createGovernanceTxMutation.isLoading ||
+    isCreatingVotingCertificate ||
+    isCreatingDelegationCertificate
+  const isDelegatingToDrep =
+    voteKind === 'delegate' && voteHash !== GOVERNANCE_YOROI_DREP_ID_HEX
 
   return (
     <ScrollView style={styles.root}>

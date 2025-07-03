@@ -18,7 +18,15 @@ type Props = {
   showGradient?: boolean
 }
 
-export const Action = ({title, description, onPress, pending, children, showRightArrow, showGradient}: Props) => {
+export const Action = ({
+  title,
+  description,
+  onPress,
+  pending,
+  children,
+  showRightArrow,
+  showGradient,
+}: Props) => {
   const {styles, colors} = useStyles()
 
   return (
@@ -31,10 +39,10 @@ export const Action = ({title, description, onPress, pending, children, showRigh
             pending
               ? colors.pending
               : pressed
-              ? colors.pressedGradient
-              : showGradient
-              ? colors.gradient
-              : colors.transparent
+                ? colors.pressedGradient
+                : showGradient
+                  ? colors.gradient
+                  : colors.transparent
           }
           style={[styles.gradient, !showGradient && styles.border]}
         >

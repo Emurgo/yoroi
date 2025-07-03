@@ -1,5 +1,9 @@
 import {atomicBreakdown} from '@yoroi/common'
-import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
+import {
+  useCreateReferralLink,
+  useExchange,
+  useExchangeProvidersByOrderType,
+} from '@yoroi/exchange'
 import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Exchange} from '@yoroi/types'
@@ -46,9 +50,19 @@ export const CreateExchangeOrderScreen = () => {
   const {openModal, closeModal} = useModal()
 
   const navigateTo = useNavigateTo()
-  const {orderType, canExchange, providerId, provider, amount, referralLink: managerReferralLink} = useExchange()
+  const {
+    orderType,
+    canExchange,
+    providerId,
+    provider,
+    amount,
+    referralLink: managerReferralLink,
+  } = useExchange()
 
-  const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
+  const providers = useExchangeProvidersByOrderType({
+    orderType,
+    providerListByOrderType: provider.list.byOrderType,
+  })
   const providerSelected = new Map(providers).get(providerId)
   const fee = providerSelected?.supportedOrders[orderType]?.fee ?? 0
 
@@ -57,7 +71,10 @@ export const CreateExchangeOrderScreen = () => {
   const {height: deviceHeight} = useWindowDimensions()
 
   const quantity = BigInt(amount.value)
-  const orderAmount = atomicBreakdown(quantity, wallet.portfolioPrimaryTokenInfo.decimals).bn.toNumber()
+  const orderAmount = atomicBreakdown(
+    quantity,
+    wallet.portfolioPrimaryTokenInfo.decimals,
+  ).bn.toNumber()
   const returnUrl = encodeURIComponent(
     linksYoroiModuleMaker('yoroi').exchange.order.showCreateResult({
       provider: providerSelected?.id ?? '',
@@ -68,7 +85,9 @@ export const CreateExchangeOrderScreen = () => {
       appId: providerSelected?.appId,
     }),
   )
-  const walletAddress = wallet.isMainnet ? wallet.externalAddresses[0] : banxaTestWallet
+  const walletAddress = wallet.isMainnet
+    ? wallet.externalAddresses[0]
+    : banxaTestWallet
 
   const urlOptions: Exchange.ReferralUrlQueryStringParams = {
     orderType: orderType,
@@ -106,7 +125,10 @@ export const CreateExchangeOrderScreen = () => {
 
         if (referralLink.toString() !== '') {
           Linking.openURL(referralLink.toString())
-          track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
+          track.exchangeSubmitted({
+            ramp_type: orderType === 'sell' ? 'Sell' : 'Buy',
+            ada_amount: orderAmount,
+          })
           walletNavigation.navigateToTxHistory()
         }
       },
@@ -136,11 +158,17 @@ export const CreateExchangeOrderScreen = () => {
   const isPreprod = network === Chain.Network.Preprod
   const exchangeDisabled = isLoading || (wallet.isMainnet && !canExchange)
 
-  const feeText = isPreprod && orderType === 'sell' ? strings.playground : `${fee}% ${strings.fee}`
+  const feeText =
+    isPreprod && orderType === 'sell'
+      ? strings.playground
+      : `${fee}% ${strings.fee}`
 
   return (
     <KeyboardAvoidingView style={styles.root}>
-      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.safeAreaView}>
+      <SafeAreaView
+        edges={['bottom', 'left', 'right']}
+        style={styles.safeAreaView}
+      >
         <ScrollView style={styles.scroll}>
           <View
             style={styles.container}
@@ -185,7 +213,10 @@ const useAbortSignal = () => {
   const timeoutIdRef = React.useRef<ReturnType<typeof setTimeout> | undefined>()
 
   const setupTimeout = (timeoutMs: number) => {
-    timeoutIdRef.current = setTimeout(() => abortController.abort(), timeoutMs ?? 0)
+    timeoutIdRef.current = setTimeout(
+      () => abortController.abort(),
+      timeoutMs ?? 0,
+    )
   }
 
   React.useEffect(() => {

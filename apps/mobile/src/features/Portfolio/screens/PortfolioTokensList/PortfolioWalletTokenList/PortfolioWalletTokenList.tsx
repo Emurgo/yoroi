@@ -1,6 +1,10 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
-import {amountBreakdown, infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
+import {
+  amountBreakdown,
+  infoExtractName,
+  isPrimaryToken,
+} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
@@ -15,9 +19,9 @@ import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWall
 import {aggregatePrimaryAmount} from '../../../common/helpers/aggregatePrimaryAmount'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {useZeroBalance} from '../../../common/hooks/useZeroBalance'
-import {Line} from '../../../ui/Line'
-import {usePortfolio} from '../../../context/PortfolioProvider'
 import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
+import {usePortfolio} from '../../../context/PortfolioProvider'
+import {Line} from '../../../ui/Line'
 import {TokenEmptyList} from '../../../ui/TokenEmptyList/TokenEmptyList'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {TokenBalanceItem} from './TokenBalanceItem'
@@ -55,7 +59,11 @@ export const PortfolioWalletTokenList = () => {
         // Compare based on weighted value (price * amount)
         return (tokenActivity[b.info.id]?.price.close ?? new BigNumber(0))
           .multipliedBy(amountBreakdown(b).bn)
-          .comparedTo((tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)).multipliedBy(amountBreakdown(a).bn))
+          .comparedTo(
+            (
+              tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)
+            ).multipliedBy(amountBreakdown(a).bn),
+          )
       }) ?? [],
     [balances.fts, tokenActivity],
   )
@@ -151,7 +159,12 @@ type HeadingListProps = {
   countTokensList: number
   amount: Portfolio.Token.Amount
 }
-const HeadingList = ({isFirstUser, isShowBalanceCard, countTokensList, amount}: HeadingListProps) => {
+const HeadingList = ({
+  isFirstUser,
+  isShowBalanceCard,
+  countTokensList,
+  amount,
+}: HeadingListProps) => {
   const strings = useStrings()
   const {styles} = useStyles()
 
@@ -167,7 +180,9 @@ const HeadingList = ({isFirstUser, isShowBalanceCard, countTokensList, amount}: 
 
       <Spacer height={16} />
 
-      <Text style={styles.textAvailable}>{strings.tokensAvailable(isFirstUser ? 0 : countTokensList)}</Text>
+      <Text style={styles.textAvailable}>
+        {strings.tokensAvailable(isFirstUser ? 0 : countTokensList)}
+      </Text>
 
       <Spacer height={8} />
     </View>

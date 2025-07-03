@@ -5,7 +5,8 @@ import {Linking, StyleSheet, TouchableOpacity} from 'react-native'
 import {Text} from '../../../../../components/Text'
 import {useStrings} from '../strings'
 
-const LEARN_MORE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8582793481231-Governance'
+const LEARN_MORE_LINK =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8582793481231-Governance'
 
 export const LearnMoreLink = () => {
   const strings = useStrings()

@@ -6,7 +6,10 @@ import {Button} from '../../../../components/Button/Button'
 import {SafeArea} from '../../../../components/SafeArea'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useBlockGoBack, useWalletNavigation} from '../../../../kernel/navigation'
+import {
+  useBlockGoBack,
+  useWalletNavigation,
+} from '../../../../kernel/navigation'
 import {FailedTxIcon} from '../../../ReviewTx/illustrations/FailedTxIcon'
 import {useStrings} from '../../common/strings'
 
@@ -33,7 +36,11 @@ export const FailedTxScreen = () => {
       <Space fill />
 
       <Actions>
-        <Button onPress={resetToStartTransfer} title={strings.failedTxButton} style={styles.button} />
+        <Button
+          onPress={resetToStartTransfer}
+          title={strings.failedTxButton}
+          style={styles.button}
+        />
       </Actions>
     </SafeArea>
   )

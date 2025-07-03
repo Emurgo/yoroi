@@ -20,7 +20,11 @@ describe('assetUtils', () => {
     it('should return 0 when there are no assets', async () => {
       const utxos = mocks.utxos.filter((u) => u.assets.length === 0)
 
-      const lockedDeposit = await calcLockedDeposit({rawUtxos: utxos, address, coinsPerUtxoByteStr: '4310'})
+      const lockedDeposit = await calcLockedDeposit({
+        rawUtxos: utxos,
+        address,
+        coinsPerUtxoByteStr: '4310',
+      })
 
       expect(lockedDeposit).toEqual(new BigNumber('0'))
     })

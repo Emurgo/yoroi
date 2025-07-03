@@ -19,7 +19,10 @@ const hasValue = (utxo: RawUtxo) => {
   return new BigNumber(asQuantity(utxo.amount)).gte(0)
 }
 
-export function isAmountInCollateralRange(amount: RawUtxo['amount'], {maxLovelace, minLovelace}: CollateralConfig) {
+export function isAmountInCollateralRange(
+  amount: RawUtxo['amount'],
+  {maxLovelace, minLovelace}: CollateralConfig,
+) {
   const value = new BigNumber(asQuantity(amount))
   const min = new BigNumber(minLovelace)
   const max = new BigNumber(maxLovelace)
@@ -33,8 +36,16 @@ export const findCollateralCandidates = (
   return utxos
     .filter(isPureUtxo)
     .filter(hasValue)
-    .filter((utxo) => isAmountInCollateralRange(utxo.amount, {maxLovelace, minLovelace, maxUTxOs}))
-    .sort((a, b) => new BigNumber(asQuantity(a.amount)).comparedTo(asQuantity(b.amount)))
+    .filter((utxo) =>
+      isAmountInCollateralRange(utxo.amount, {
+        maxLovelace,
+        minLovelace,
+        maxUTxOs,
+      }),
+    )
+    .sort((a, b) =>
+      new BigNumber(asQuantity(a.amount)).comparedTo(asQuantity(b.amount)),
+    )
 }
 
 export function utxosMaker(
@@ -49,7 +60,11 @@ export function utxosMaker(
   }
 
   const drawnCollateral = () => {
-    const candidates = findCollateralCandidates(utxos, {maxLovelace, minLovelace, maxUTxOs})
+    const candidates = findCollateralCandidates(utxos, {
+      maxLovelace,
+      minLovelace,
+      maxUTxOs,
+    })
     const collateral = candidates.find(first)
     return collateral?.utxo_id
   }
@@ -57,7 +72,8 @@ export function utxosMaker(
   return {
     findById,
     isAmountInCollateralRange,
-    findCollateralCandidates: () => findCollateralCandidates(utxos, {maxLovelace, minLovelace, maxUTxOs}),
+    findCollateralCandidates: () =>
+      findCollateralCandidates(utxos, {maxLovelace, minLovelace, maxUTxOs}),
     drawnCollateral,
     exists,
   } as const

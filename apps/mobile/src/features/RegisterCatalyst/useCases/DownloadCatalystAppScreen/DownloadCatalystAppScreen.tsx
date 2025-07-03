@@ -3,7 +3,16 @@ import {useTheme} from '@yoroi/theme'
 import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {Image, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  Image,
+  Linking,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '../../../../assets/img/app-store-badge.png'
@@ -52,10 +61,18 @@ export const DownloadCatalystAppScreen = () => {
       openModal({
         title: strings.attention,
         content: <WarningModal />,
-        footer: <Button title={strings.iUnderstandButton} onPress={closeModal} />,
+        footer: (
+          <Button title={strings.iUnderstandButton} onPress={closeModal} />
+        ),
         height: 300,
       })
-  }, [closeModal, openModal, stakingInfo?.status, strings.attention, strings.iUnderstandButton])
+  }, [
+    closeModal,
+    openModal,
+    stakingInfo?.status,
+    strings.attention,
+    strings.iUnderstandButton,
+  ])
 
   const fundName = fund.info.fundName
   const registrationStart = `${formatDate(fund.info.snapshotStart)}: ${strings.snapshotStart}`
@@ -64,10 +81,16 @@ export const DownloadCatalystAppScreen = () => {
   const votingResults = `${formatDate(fund.info.tallyingEnd)}: ${strings.votingResults}`
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
       <Stepper title={strings.title} currentStep={1} totalSteps={3} />
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={styles.contentContainer}
+      >
         <CatalystStep1 />
 
         <Space height="lg" />

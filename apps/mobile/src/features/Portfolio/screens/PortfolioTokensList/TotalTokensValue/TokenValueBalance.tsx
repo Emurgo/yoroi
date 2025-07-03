@@ -14,7 +14,12 @@ type Props = {
   isPrimaryTokenActive: boolean
   rate?: number
 }
-export const TokenValueBalance = ({amount, isFetching, isPrimaryTokenActive, rate}: Props) => {
+export const TokenValueBalance = ({
+  amount,
+  isFetching,
+  isPrimaryTokenActive,
+  rate,
+}: Props) => {
   const {currency, config} = useCurrencyPairing()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {styles} = useStyles()
@@ -29,12 +34,16 @@ export const TokenValueBalance = ({amount, isFetching, isPrimaryTokenActive, rat
           {isPrivacyActive
             ? privacyPlaceholder
             : isPrimaryTokenActive
-            ? amountBreakdown(amount).bn.toFormat(2)
-            : amountBreakdown(amount).bn.times(rate).toFormat(config.decimals)}
+              ? amountBreakdown(amount).bn.toFormat(2)
+              : amountBreakdown(amount)
+                  .bn.times(rate)
+                  .toFormat(config.decimals)}
         </Text>
       )}
 
-      <Text style={styles.symbol}>{isPrimaryTokenActive ? name : currency}</Text>
+      <Text style={styles.symbol}>
+        {isPrimaryTokenActive ? name : currency}
+      </Text>
     </View>
   )
 }

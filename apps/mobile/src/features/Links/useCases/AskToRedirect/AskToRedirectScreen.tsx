@@ -1,6 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Linking, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
+import {
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ViewProps,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
@@ -28,7 +35,12 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
       </ScrollView>
 
       <Actions style={styles.actions}>
-        <Button size="S" type={ButtonType.Secondary} onPress={closeModal} title={strings.cancel} />
+        <Button
+          size="S"
+          type={ButtonType.Secondary}
+          onPress={closeModal}
+          title={strings.cancel}
+        />
 
         <Spacer width={16} />
 

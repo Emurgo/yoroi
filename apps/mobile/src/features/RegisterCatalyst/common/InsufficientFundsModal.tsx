@@ -10,7 +10,10 @@ import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfo
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useCatalystCurrentFund} from './hooks'
 
-const formatter = amountFormatter({template: `{{value}} {{ticker}}`, dropTraillingZeros: true})
+const formatter = amountFormatter({
+  template: `{{value}} {{ticker}}`,
+  dropTraillingZeros: true,
+})
 
 export const InsufficientFundsModal = () => {
   const strings = useStrings()
@@ -43,7 +46,13 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    insufficientBalance: ({requiredBalance, currentBalance}: {requiredBalance: string; currentBalance: string}) =>
+    insufficientBalance: ({
+      requiredBalance,
+      currentBalance,
+    }: {
+      requiredBalance: string
+      currentBalance: string
+    }) =>
       intl.formatMessage(globalMessages.insufficientBalance, {
         requiredBalance,
         currentBalance,

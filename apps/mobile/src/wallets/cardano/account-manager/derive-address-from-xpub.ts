@@ -15,7 +15,12 @@ export const deriveAddressFromXPub = async ({
   implementation: Wallet.Implementation
   accountPubKeyHex: string
 }) => {
-  const addrGenerator = new AddressGenerator(accountPubKeyHex, role, implementation, chainId)
+  const addrGenerator = new AddressGenerator(
+    accountPubKeyHex,
+    role,
+    implementation,
+    chainId,
+  )
   const addresses = await addrGenerator.generate([...Array(count).keys()])
 
   return addresses

@@ -14,7 +14,9 @@ export const useConfirmConnection = () => {
   return React.useCallback(
     async (origin: string, manager: DappConnector) => {
       const recommendedDApps = await manager.getDAppList()
-      const selectedDapp = recommendedDApps.dapps.find((dapp) => dapp.origins.includes(origin))
+      const selectedDapp = recommendedDApps.dapps.find((dapp) =>
+        dapp.origins.includes(origin),
+      )
       const name = selectedDapp?.name ?? origin
       const website = origin
       const logo = selectedDapp?.logo ?? ''
@@ -57,6 +59,11 @@ export const useConfirmConnection = () => {
         openMainModal()
       })
     },
-    [openConfirmConnectionModal, openUnverifiedDappModal, closeModal, invalidateConnectedDapps],
+    [
+      openConfirmConnectionModal,
+      openUnverifiedDappModal,
+      closeModal,
+      invalidateConnectedDapps,
+    ],
   )
 }

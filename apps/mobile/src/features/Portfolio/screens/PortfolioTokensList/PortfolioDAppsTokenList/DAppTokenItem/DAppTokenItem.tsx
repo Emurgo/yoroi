@@ -4,8 +4,8 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {PairedBalance} from '../../../../../../components/PairedBalance/PairedBalance'
-import {AssetLogo} from '../../../../ui/AssetLogo/AssetLogo'
 import {ILiquidityPool} from '../../../../common/hooks/useGetLiquidityPool'
+import {AssetLogo} from '../../../../ui/AssetLogo/AssetLogo'
 import {TokenInfoIcon} from '../../../../ui/TokenAmountItem/TokenInfoIcon'
 
 type Props = {
@@ -14,7 +14,11 @@ type Props = {
   onPress?: () => void
 }
 
-export const DAppTokenItem = ({tokenInfo, splitTokenSymbol, onPress}: Props) => {
+export const DAppTokenItem = ({
+  tokenInfo,
+  splitTokenSymbol,
+  onPress,
+}: Props) => {
   const {styles} = useStyles()
 
   const [firstToken, secondToken] = tokenInfo.assets
@@ -27,23 +31,35 @@ export const DAppTokenItem = ({tokenInfo, splitTokenSymbol, onPress}: Props) => 
       <View style={styles.tokenInfoContainer}>
         <View style={styles.logoContainer}>
           <AssetLogo style={styles.logoFirst}>
-            <TokenInfoIcon info={firstToken.info} size="sm" imageStyle={styles.logoSize} />
+            <TokenInfoIcon
+              info={firstToken.info}
+              size="sm"
+              imageStyle={styles.logoSize}
+            />
           </AssetLogo>
 
           <AssetLogo style={styles.logoSecond}>
-            <TokenInfoIcon info={secondToken.info} size="sm" imageStyle={styles.logoSize} />
+            <TokenInfoIcon
+              info={secondToken.info}
+              size="sm"
+              imageStyle={styles.logoSize}
+            />
           </AssetLogo>
         </View>
 
         <View>
-          <Text style={styles.symbol}>{`${firstTokenName} ${splitTokenSymbol} ${secondTokenName}`}</Text>
+          <Text
+            style={styles.symbol}
+          >{`${firstTokenName} ${splitTokenSymbol} ${secondTokenName}`}</Text>
 
           <Text style={styles.dexName}>{tokenInfo.dex.name}</Text>
         </View>
       </View>
 
       <View>
-        <Text style={styles.sumBalance}>{`${firstTokenBalance} ${firstTokenName}`}</Text>
+        <Text
+          style={styles.sumBalance}
+        >{`${firstTokenBalance} ${firstTokenName}`}</Text>
 
         <PairedBalance amount={firstToken} textStyle={styles.pairedBalance} />
       </View>

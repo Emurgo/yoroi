@@ -13,10 +13,14 @@ import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../wallets/hw/hw'
 import {useStrings} from '../../common/useStrings'
 
 const useIsAndroidUsbSupported = () => {
-  const [isAndroidUsbSupported, setIsAndroidUsbSupported] = React.useState(false)
+  const [isAndroidUsbSupported, setIsAndroidUsbSupported] =
+    React.useState(false)
   React.useEffect(() => {
     DeviceInfo.getApiLevel().then((sdk) =>
-      setIsAndroidUsbSupported(Platform.OS === 'android' && sdk >= HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK),
+      setIsAndroidUsbSupported(
+        Platform.OS === 'android' &&
+          sdk >= HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK,
+      ),
     )
   }, [])
 
@@ -40,7 +44,11 @@ export const SelectHwConnectionModal = () => {
 
 const SelectBluetoothSection = () => {
   const strings = useStrings()
-  const {useUSBChanged: USBChanged, walletImplementationChanged, setupTypeChanged} = useSetupWallet()
+  const {
+    useUSBChanged: USBChanged,
+    walletImplementationChanged,
+    setupTypeChanged,
+  } = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const navigateHw = () => {
@@ -76,7 +84,11 @@ const SelectUsbSection = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const isAndroidUsbSupported = useIsAndroidUsbSupported()
-  const {useUSBChanged: USBChanged, walletImplementationChanged, setupTypeChanged} = useSetupWallet()
+  const {
+    useUSBChanged: USBChanged,
+    walletImplementationChanged,
+    setupTypeChanged,
+  } = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const navigateHw = () => {

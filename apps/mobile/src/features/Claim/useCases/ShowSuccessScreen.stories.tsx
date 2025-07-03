@@ -1,6 +1,10 @@
 import {DecoratorFunction} from '@storybook/addons'
 import {storiesOf} from '@storybook/react-native'
-import {claimManagerMockInstances, ClaimProvider, mocksState} from '@yoroi/claim'
+import {
+  claimManagerMockInstances,
+  ClaimProvider,
+  mocksState,
+} from '@yoroi/claim'
 import * as React from 'react'
 import {QueryClientProvider} from 'react-query'
 
@@ -12,7 +16,9 @@ import {ShowSuccessScreen} from './ShowSuccessScreen'
 const AppDecorator: DecoratorFunction<React.ReactNode> = (story) => {
   return (
     <QueryClientProvider client={queryClientFixture()}>
-      <WalletManagerProviderMock wallet={walletMocks.wallet}>{story()}</WalletManagerProviderMock>
+      <WalletManagerProviderMock wallet={walletMocks.wallet}>
+        {story()}
+      </WalletManagerProviderMock>
     </QueryClientProvider>
   )
 }
@@ -21,21 +27,30 @@ storiesOf('Claim ShowSuccessScreen', module)
   .addDecorator(AppDecorator)
   .add('processing', () => {
     return (
-      <ClaimProvider manager={claimManagerMockInstances.error} initialState={mocksState.withClaimTokenProcessing}>
+      <ClaimProvider
+        manager={claimManagerMockInstances.error}
+        initialState={mocksState.withClaimTokenProcessing}
+      >
         <ShowSuccessScreen />
       </ClaimProvider>
     )
   })
   .add('accepted', () => {
     return (
-      <ClaimProvider manager={claimManagerMockInstances.error} initialState={mocksState.withClaimTokenAccepted}>
+      <ClaimProvider
+        manager={claimManagerMockInstances.error}
+        initialState={mocksState.withClaimTokenAccepted}
+      >
         <ShowSuccessScreen />
       </ClaimProvider>
     )
   })
   .add('done', () => {
     return (
-      <ClaimProvider manager={claimManagerMockInstances.error} initialState={mocksState.withClaimTokenDone}>
+      <ClaimProvider
+        manager={claimManagerMockInstances.error}
+        initialState={mocksState.withClaimTokenDone}
+      >
         <ShowSuccessScreen />
       </ClaimProvider>
     )

@@ -1,5 +1,9 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {configCardanoLegacyTransfer, linksCardanoModuleMaker, linksYoroiModuleMaker} from '@yoroi/links'
+import {
+  configCardanoLegacyTransfer,
+  linksCardanoModuleMaker,
+  linksYoroiModuleMaker,
+} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
@@ -17,7 +21,10 @@ import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
 import {Icon} from '../../../components/Icon'
 import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '../../../components/Modal/ModalContext'
-import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
+import {
+  ScrollView,
+  useScrollView,
+} from '../../../components/ScrollView/ScrollView'
 import {ShareQRCodeCard} from '../../../components/ShareQRCodeCard/ShareQRCodeCard'
 import {TextInput} from '../../../components/TextInput/TextInput'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
@@ -51,12 +58,22 @@ export const RequestSpecificAmountScreen = () => {
       content: <Modal amount={amount} address={selectedAddress} />,
       height: modalHeight,
     })
-  }, [track, amount, openModal, strings.amountToReceive, selectedAddress, modalHeight])
+  }, [
+    track,
+    amount,
+    openModal,
+    strings.amountToReceive,
+    selectedAddress,
+    modalHeight,
+  ])
 
   const handleOnChangeAmount = (amount: string) => {
     const edited = editedFormatter(amount)
     const numberOfDecimals = (edited.split('.')[1] ?? []).length
-    if (Number(edited) <= Number.MAX_SAFE_INTEGER && numberOfDecimals <= wallet.portfolioPrimaryTokenInfo.decimals) {
+    if (
+      Number(edited) <= Number.MAX_SAFE_INTEGER &&
+      numberOfDecimals <= wallet.portfolioPrimaryTokenInfo.decimals
+    ) {
       setAmount(edited)
     }
   }
@@ -69,10 +86,19 @@ export const RequestSpecificAmountScreen = () => {
 
   return (
     <KeyboardAvoidingView style={[styles.flex, styles.root]}>
-      <SafeAreaView style={[styles.flex, styles.container]} edges={['left', 'right', 'bottom']}>
-        <ScrollView ref={scrollViewRef} style={styles.flex} onScrollBarChange={setIsScrollBarShown}>
+      <SafeAreaView
+        style={[styles.flex, styles.container]}
+        edges={['left', 'right', 'bottom']}
+      >
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.flex}
+          onScrollBarChange={setIsScrollBarShown}
+        >
           <View style={styles.request}>
-            <Text style={styles.textAddressDetails}>{strings.specificAmountDescription}</Text>
+            <Text style={styles.textAddressDetails}>
+              {strings.specificAmountDescription}
+            </Text>
 
             <TextInput
               label={strings.ADALabel}
@@ -84,14 +110,24 @@ export const RequestSpecificAmountScreen = () => {
             />
 
             <View style={styles.textSection}>
-              <Text style={[styles.textAddressDetails, {color: colors.gray}]}>{strings.address}</Text>
+              <Text style={[styles.textAddressDetails, {color: colors.gray}]}>
+                {strings.address}
+              </Text>
 
               <Text style={styles.textAddressDetails}>{selectedAddress}</Text>
             </View>
           </View>
         </ScrollView>
 
-        <View style={[styles.actions, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
+        <View
+          style={[
+            styles.actions,
+            isScrollBarShown && {
+              borderTopWidth: 1,
+              borderTopColor: colors.lightGray,
+            },
+          ]}
+        >
           <Button
             onPress={handleOnGenerateLink}
             disabled={!hasAmount}
@@ -128,13 +164,17 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
   const hasAmount = !isEmptyString(amount)
   const hasAddress = !isEmptyString(address)
   const content = hasAmount ? yoroiPaymentRequestLink : address
-  const title = hasAmount ? `${amount} ${portfolioPrimaryTokenInfo.ticker.toLocaleUpperCase()}` : ''
+  const title = hasAmount
+    ? `${amount} ${portfolioPrimaryTokenInfo.ticker.toLocaleUpperCase()}`
+    : ''
 
   const {copy} = useCopy()
 
   return (
     <View style={[styles.container, styles.flex]}>
-      <RNScrollView contentContainerStyle={[styles.flex_grow, styles.modalContainer]}>
+      <RNScrollView
+        contentContainerStyle={[styles.flex_grow, styles.modalContainer]}
+      >
         {hasAddress ? (
           <ShareQRCodeCard
             title={title}
@@ -156,7 +196,9 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
 
       <View style={styles.actions}>
         <Button
-          onPress={(event: GestureResponderEvent) => copy({text: content, feedback: strings.copyLinkMsg, event})}
+          onPress={(event: GestureResponderEvent) =>
+            copy({text: content, feedback: strings.copyLinkMsg, event})
+          }
           disabled={!hasAmount}
           title={strings.copyLinkBtn}
           icon={Icon.Copy}

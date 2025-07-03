@@ -11,7 +11,13 @@ type CounterTypes = {
   closingText?: string
 }
 
-export const Counter = ({openingText, counter, unitsText, closingText, style}: CounterTypes & ViewProps) => {
+export const Counter = ({
+  openingText,
+  counter,
+  unitsText,
+  closingText,
+  style,
+}: CounterTypes & ViewProps) => {
   const styles = useStyles()
 
   return (
@@ -21,10 +27,18 @@ export const Counter = ({openingText, counter, unitsText, closingText, style}: C
       <Text>
         <Text style={styles.counterTextBold}> {counter} </Text>
 
-        {unitsText !== undefined && <Text style={styles.counterTextBold}> {unitsText ?? ''} </Text>}
+        {unitsText !== undefined && (
+          <Text style={styles.counterTextBold}> {unitsText ?? ''} </Text>
+        )}
 
         {closingText !== undefined && (
-          <Text style={[openingText != undefined ? styles.counterTextBold : styles.counterText]}>
+          <Text
+            style={[
+              openingText != undefined
+                ? styles.counterTextBold
+                : styles.counterText,
+            ]}
+          >
             {closingText ?? ''}
           </Text>
         )}

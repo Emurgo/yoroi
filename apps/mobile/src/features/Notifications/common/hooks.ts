@@ -1,7 +1,10 @@
 import messaging from '@react-native-firebase/messaging'
 import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
-import {Notifications as NotificationTypes, Notifications as YoroiNotifications} from '@yoroi/types'
+import {
+  Notifications as NotificationTypes,
+  Notifications as YoroiNotifications,
+} from '@yoroi/types'
 import React from 'react'
 import {Notifications} from 'react-native-notifications'
 
@@ -15,30 +18,42 @@ import {triggerNotificationAction} from './tools'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
 const initPushNotifications = (walletNavigation: WalletNavigation) => {
-  const unsubscribeFromForegroundMessage = messaging().onMessage((remoteMessage) => {
-    const {notification} = remoteMessage
+  const unsubscribeFromForegroundMessage = messaging().onMessage(
+    (remoteMessage) => {
+      const {notification} = remoteMessage
 
-    if (notification && isString(notification.title) && isString(notification.body)) {
-      const pushNotification = createPushNotification({
-        id: remoteMessage.sentTime ?? 0,
-        title: notification.title,
-        description: notification.body,
-        data: remoteMessage.data,
-      })
-      pushNotificationsManager.events.push(pushNotification)
+      if (
+        notification &&
+        isString(notification.title) &&
+        isString(notification.body)
+      ) {
+        const pushNotification = createPushNotification({
+          id: remoteMessage.sentTime ?? 0,
+          title: notification.title,
+          description: notification.body,
+          data: remoteMessage.data,
+        })
+        pushNotificationsManager.events.push(pushNotification)
 
-      logger.info('FCM Message Notification in foreground: ', {notification})
-    }
-  })
-
-  const notificationOpenedSubscription = Notifications.events().registerNotificationOpened(
-    (notification, completion) => {
-      const payloadId = notification.payload['google.sent_time']
-      const id = parseNotificationId(payloadId)
-      triggerNotificationAction({manager: pushNotificationsManager, id, walletNavigation, source: 'os'})
-      completion()
+        logger.info('FCM Message Notification in foreground: ', {notification})
+      }
     },
   )
+
+  const notificationOpenedSubscription =
+    Notifications.events().registerNotificationOpened(
+      (notification, completion) => {
+        const payloadId = notification.payload['google.sent_time']
+        const id = parseNotificationId(payloadId)
+        triggerNotificationAction({
+          manager: pushNotificationsManager,
+          id,
+          walletNavigation,
+          source: 'os',
+        })
+        completion()
+      },
+    )
 
   return () => {
     notificationOpenedSubscription.remove()
@@ -58,10 +73,16 @@ type UseInitNotificationsProps = {
   pushEnabled: boolean
 }
 
-export const useInitNotifications = ({localEnabled, pushEnabled}: UseInitNotificationsProps) => {
+export const useInitNotifications = ({
+  localEnabled,
+  pushEnabled,
+}: UseInitNotificationsProps) => {
   const manager = useNotificationManager()
   const walletNavigation = useWalletNavigation()
-  React.useEffect(() => (localEnabled ? initLocalNotifications(manager) : undefined), [localEnabled, manager])
+  React.useEffect(
+    () => (localEnabled ? initLocalNotifications(manager) : undefined),
+    [localEnabled, manager],
+  )
   React.useEffect(
     () => (pushEnabled ? initPushNotifications(walletNavigation) : undefined),
     [walletNavigation, pushEnabled, manager],
@@ -73,7 +94,11 @@ export const useInitNotifications = ({localEnabled, pushEnabled}: UseInitNotific
 
 messaging().setBackgroundMessageHandler((remoteMessage) => {
   const remoteNotification = remoteMessage.notification
-  if (remoteNotification && isString(remoteNotification.title) && isString(remoteNotification.body)) {
+  if (
+    remoteNotification &&
+    isString(remoteNotification.title) &&
+    isString(remoteNotification.body)
+  ) {
     // Automatically shown by the OS
     pushNotificationsManager.events.push(
       createPushNotification({
@@ -83,7 +108,9 @@ messaging().setBackgroundMessageHandler((remoteMessage) => {
         data: remoteMessage.data,
       }),
     )
-    logger.info(`FCM Message Notification in background`, {notification: remoteMessage.notification})
+    logger.info(`FCM Message Notification in background`, {
+      notification: remoteMessage.notification,
+    })
   }
   return Promise.resolve()
 })

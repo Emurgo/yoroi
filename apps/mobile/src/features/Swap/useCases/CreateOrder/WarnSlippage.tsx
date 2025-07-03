@@ -29,7 +29,9 @@ export const WarnSlippage = ({onConfirm, slippage, ticker}: Props) => {
 
       <View style={styles.table}>
         <View style={styles.row}>
-          <Text style={styles.label}>{strings.slippageWarningYourSlippage}</Text>
+          <Text style={styles.label}>
+            {strings.slippageWarningYourSlippage}
+          </Text>
 
           <View style={styles.textWrapper}>
             <Text style={styles.value}>{slippageTolerance}</Text>
@@ -56,7 +58,12 @@ export const WarnSlippage = ({onConfirm, slippage, ticker}: Props) => {
           onPress={closeModal}
         />
 
-        <Button testID="swapConfirmButton" size="S" title={strings.limitPriceWarningConfirm} onPress={onConfirm} />
+        <Button
+          testID="swapConfirmButton"
+          size="S"
+          title={strings.limitPriceWarningConfirm}
+          onPress={onConfirm}
+        />
       </View>
     </View>
   )

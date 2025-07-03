@@ -18,7 +18,13 @@ const Label1Selected = ({initial}: {initial: OrderType}) => {
     setSelected(label)
   }
 
-  return <ButtonActionGroup labels={labels} onSelect={handleActive} selected={selected} />
+  return (
+    <ButtonActionGroup
+      labels={labels}
+      onSelect={handleActive}
+      selected={selected}
+    />
+  )
 }
 
 const labels: {label: string; value: OrderType}[] = [

@@ -38,7 +38,7 @@ export const mockAmount = (symbol: string) =>
       website: 'https://www.cardano.org/',
     },
     quantity: BigInt(4800000),
-  } as Portfolio.Token.Amount)
+  }) as Portfolio.Token.Amount
 
 const listLiquidityPool: ILiquidityPool[] = [
   {
@@ -62,7 +62,12 @@ const listLiquidityPool: ILiquidityPool[] = [
 ]
 
 export const useGetLiquidityPool = (
-  options: UseQueryOptions<ILiquidityPool[], Error, ILiquidityPool[], ['useGetLiquidityPool']> = {},
+  options: UseQueryOptions<
+    ILiquidityPool[],
+    Error,
+    ILiquidityPool[],
+    ['useGetLiquidityPool']
+  > = {},
 ) => {
   const query = useQuery({
     useErrorBoundary: true,

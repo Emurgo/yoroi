@@ -30,7 +30,9 @@ const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
  * @param metadataJson - The JSON string representation of metadata.
  * @returns The parsed metadata object or null if parsing fails or validation fails.
  */
-export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | null => {
+export const parseOrderTxMetadata = (
+  metadataJson: string,
+): OrderTxMetadata | null => {
   const parsedMetadata = parseSafe(metadataJson)
   if (!isOrderTxMetadata(parsedMetadata)) return null
 
@@ -42,7 +44,8 @@ export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | nu
 }
 
 export const getPriceImpactRisk = (priceImpact: number) => {
-  if (priceImpact < PRICE_IMPACT_MODERATE_RISK || isNaN(priceImpact)) return 'none'
+  if (priceImpact < PRICE_IMPACT_MODERATE_RISK || isNaN(priceImpact))
+    return 'none'
   if (priceImpact > PRICE_IMPACT_HIGH_RISK) return 'high'
   return 'moderate'
 }

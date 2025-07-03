@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {walletChecksum} from '@emurgo/cip4-js'
 import * as CSL from '@emurgo/cross-csl-core'
 import {
@@ -351,10 +350,10 @@ export const makeCardanoWallet = (
       )
     }
 
-    async getFirstPaymentAddress() {
+    getFirstPaymentAddress() {
       const externalAddress = this.externalAddresses[0]
-      const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
-      const address = await Cardano.Wasm.BaseAddress.fromAddress(addr)
+      const addr = Cardano.Wasm.Address.fromBech32(externalAddress)
+      const address = Cardano.Wasm.BaseAddress.fromAddress(addr)
       if (!address)
         throwLoggedError(
           'ShelleyWallet: getFirstPaymentAddress invalid address',
@@ -372,7 +371,7 @@ export const makeCardanoWallet = (
     // end of account
 
     // staking
-    public async getStakingKey() {
+    public getStakingKey() {
       if (implementationConfig.features.staking) {
         const derivation = implementationConfig.features.staking.derivation
 
@@ -390,9 +389,9 @@ export const makeCardanoWallet = (
       throwLoggedError('getStakingKey staking not supported')
     }
 
-    private async getRewardAddress() {
+    private getRewardAddress() {
       if (implementationConfig.features.staking) {
-        const baseAddr = await this.getFirstPaymentAddress()
+        const baseAddr = this.getFirstPaymentAddress()
         if (!baseAddr) throwLoggedError('getRewardAddress invalid address')
         return baseAddr.toAddress()
       }
@@ -414,9 +413,9 @@ export const makeCardanoWallet = (
 
         const absSlotNumber = await this.getAbsoluteSlotNumber()
         const changeAddr = this.getAddressedChangeAddress(addressMode)
-        const addressedUtxos = await this.getAddressedUtxos()
+        const addressedUtxos = this.getAddressedUtxos()
         const registrationStatus = this.getDelegationStatus().isRegistered
-        const stakingKey = await this.getStakingKey()
+        const stakingKey = this.getStakingKey()
         const delegationType = registrationStatus
           ? RegistrationStatus.DelegateOnly
           : RegistrationStatus.RegisterAndDelegate
@@ -481,14 +480,10 @@ export const makeCardanoWallet = (
 
         try {
           const absSlotNumber = await this.getAbsoluteSlotNumber()
-          const votingPublicKey = await Promise.resolve(
-            Buffer.from(catalystKeyHex, 'hex'),
-          )
-            .then((bytes) =>
-              CardanoMobile.PrivateKey.fromExtendedBytes(new Uint8Array(bytes)),
-            )
-            .then((key) => key.toPublic())
-          const stakingPublicKey = await this.getStakingKey()
+          const votingPublicKey = CardanoMobile.PrivateKey.fromExtendedBytes(
+            new Uint8Array(Buffer.from(catalystKeyHex, 'hex')),
+          ).toPublic()
+          const stakingPublicKey = this.getStakingKey()
           const changeAddr = this.getAddressedChangeAddress(addressMode)
 
           const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
@@ -505,9 +500,9 @@ export const makeCardanoWallet = (
           const txOptions = {}
           const nonce = absSlotNumber.toNumber()
 
-          const addressedUtxos = await this.getAddressedUtxos()
+          const addressedUtxos = this.getAddressedUtxos()
 
-          const baseAddr = await this.getFirstPaymentAddress()
+          const baseAddr = this.getFirstPaymentAddress()
 
           const paymentAddressCIP36 = Buffer.from(
             baseAddr.toAddress().toBytes(),
@@ -533,23 +528,21 @@ export const makeCardanoWallet = (
             supportsCIP36,
           )
 
-          const rewardAddress = await this.getRewardAddress().then((address) =>
-            address.toBech32(undefined),
-          )
+          const rewardAddress = this.getRewardAddress().toBech32(undefined)
           const votingRegistration: {
             votingPublicKey: string
             stakingPublicKey: string
             rewardAddress: string
             nonce: number
           } = {
-            votingPublicKey: await votingPublicKey.toBech32(),
-            stakingPublicKey: await stakingPublicKey.toBech32(),
+            votingPublicKey: votingPublicKey.toBech32(),
+            stakingPublicKey: stakingPublicKey.toBech32(),
             rewardAddress,
             nonce,
           }
 
           return {
-            votingRegTx: await yoroiUnsignedTx({
+            votingRegTx: yoroiUnsignedTx({
               unsignedTx,
               networkManager: this.networkManager,
               votingRegistration,
@@ -682,13 +675,11 @@ export const makeCardanoWallet = (
       }
     }
 
-    async getAllUtxosForKey() {
+    getAllUtxosForKey() {
       if (implementationConfig.features.staking) {
         return filterAddressesByStakingKey(
-          await CardanoMobile.Credential.fromKeyhash(
-            await (await this.getStakingKey()).hash(),
-          ),
-          await this.getAddressedUtxos(),
+          CardanoMobile.Credential.fromKeyhash(this.getStakingKey().hash()),
+          this.getAddressedUtxos(),
           false,
         )
       }
@@ -832,7 +823,7 @@ export const makeCardanoWallet = (
         },
       )
 
-      return Promise.resolve(addressedUtxos)
+      return addressedUtxos
     }
 
     private async getAbsoluteSlotNumber() {
@@ -857,7 +848,7 @@ export const makeCardanoWallet = (
       const absSlotNumber = await this.getAbsoluteSlotNumber()
 
       const changeAddr = this.getAddressedChangeAddress(addressMode)
-      const addressedUtxos = await this.getAddressedUtxos()
+      const addressedUtxos = this.getAddressedUtxos()
 
       const recipients = await toRecipients(
         entries,
@@ -961,7 +952,7 @@ export const makeCardanoWallet = (
         )
 
       if (datumDatas.length > 0) {
-        const signedTx = await unsignedTx.unsignedTx.sign(
+        const signedTx = unsignedTx.unsignedTx.sign(
           derivationConfig.keyLevel.account,
           accountPrivateKeyHex,
           new Set<string>(),
@@ -973,7 +964,7 @@ export const makeCardanoWallet = (
         return yoroiSignedTx({unsignedTx, signedTx})
       }
 
-      const signedTx = await unsignedTx.unsignedTx.sign(
+      const signedTx = unsignedTx.unsignedTx.sign(
         derivationConfig.keyLevel.account,
         accountPrivateKeyHex,
         new Set<string>(),
@@ -1021,8 +1012,8 @@ export const makeCardanoWallet = (
         cbor,
         this.networkManager.chainId,
         this.networkManager.protocolMagic,
-        await getHexAddressingMap(CardanoMobile, this),
-        await getHexAddressingMap(CardanoMobile, this),
+        getHexAddressingMap(CardanoMobile, this),
+        getHexAddressingMap(CardanoMobile, this),
         getAddressedUtxos(this),
         [],
         stakingAddressing,
@@ -1034,7 +1025,7 @@ export const makeCardanoWallet = (
         useUSB,
       )
 
-      const bytes = await createSignedLedgerTxFromCbor(
+      const bytes = createSignedLedgerTxFromCbor(
         CardanoMobile,
         cbor,
         signedLedgerTx,

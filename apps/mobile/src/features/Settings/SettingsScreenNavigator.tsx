@@ -72,9 +72,17 @@ export const SettingsScreenNavigator = () => {
         }}
       />
 
-      <Stack.Screen name="about" component={About} options={{title: strings.aboutTitle}} />
+      <Stack.Screen
+        name="about"
+        component={About}
+        options={{title: strings.aboutTitle}}
+      />
 
-      <Stack.Screen name="settings-system-log" component={SystemLogScreen} options={{title: strings.systemLogTitle}} />
+      <Stack.Screen
+        name="settings-system-log"
+        component={SystemLogScreen}
+        options={{title: strings.systemLogTitle}}
+      />
 
       <Stack.Screen //
         name="main-settings"
@@ -143,7 +151,11 @@ export const SettingsScreenNavigator = () => {
         options={{
           title: strings.networkTitle,
           headerRight: () => (
-            <TouchableOpacity onPress={handleOpenModal} activeOpacity={0.5} style={{...atoms.px_lg}}>
+            <TouchableOpacity
+              onPress={handleOpenModal}
+              activeOpacity={0.5}
+              style={{...atoms.px_lg}}
+            >
               <Icon.Info size={24} color={color.gray_900} />
             </TouchableOpacity>
           ),
@@ -223,7 +235,10 @@ const SettingsTabNavigator = () => {
       style={{backgroundColor: color.bg_color_max}}
       screenOptions={({route}) => ({
         ...defaultMaterialTopTabNavigationOptions(atoms, color),
-        tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
+        tabBarLabel:
+          route.name === 'wallet-settings'
+            ? strings.walletTabTitle
+            : strings.appTabTitle,
       })}
     >
       <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />
@@ -353,8 +368,12 @@ const useStrings = () => {
     collateral: intl.formatMessage(messages.collateral),
     currency: intl.formatMessage(globalMessages.currency),
     customPinTitle: intl.formatMessage(messages.customPinTitle),
-    disableEasyConfirmationTitle: intl.formatMessage(messages.disableEasyConfirmationTitle),
-    enableEasyConfirmationTitle: intl.formatMessage(messages.enableEasyConfirmationTitle),
+    disableEasyConfirmationTitle: intl.formatMessage(
+      messages.disableEasyConfirmationTitle,
+    ),
+    enableEasyConfirmationTitle: intl.formatMessage(
+      messages.enableEasyConfirmationTitle,
+    ),
     languageTitle: intl.formatMessage(messages.languageTitle),
     systemLogTitle: intl.formatMessage(messages.systemLogTitle),
     privacyPolicyTitle: intl.formatMessage(messages.privacyPolicyTitle),

@@ -84,7 +84,8 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0].entry,
             amounts: {
-              [tokenMocks.nftCryptoKitty.info.id]: tokenMocks.nftCryptoKitty.balance,
+              [tokenMocks.nftCryptoKitty.info.id]:
+                tokenMocks.nftCryptoKitty.balance,
             },
           },
         },
@@ -99,7 +100,8 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0].entry,
             amounts: {
-              [tokenMocks.nftCryptoKitty.info.id]: tokenMocks.nftCryptoKitty.balance,
+              [tokenMocks.nftCryptoKitty.info.id]:
+                tokenMocks.nftCryptoKitty.balance,
             },
           },
         },

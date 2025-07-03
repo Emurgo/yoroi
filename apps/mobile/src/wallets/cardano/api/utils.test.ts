@@ -35,7 +35,9 @@ describe('api utils', () => {
     expect(toDisplayAssetName(noName)).toEqual('')
 
     const longName = '1'.repeat(128)
-    expect(toDisplayAssetName(policyId + '.' + utf8ToHex(longName))).toEqual('1'.repeat(32))
+    expect(toDisplayAssetName(policyId + '.' + utf8ToHex(longName))).toEqual(
+      '1'.repeat(32),
+    )
   })
 
   describe('toTokenSubject', () => {
@@ -83,10 +85,14 @@ describe('api utils', () => {
       const policyId = '1'.repeat(56)
 
       const tokenIdentifier = policyId + '.'
-      expect(toTokenId(tokenIdentifier)).toBe('11111111111111111111111111111111111111111111111111111111.')
+      expect(toTokenId(tokenIdentifier)).toBe(
+        '11111111111111111111111111111111111111111111111111111111.',
+      )
 
       const tokenSubject = policyId
-      expect(toTokenId(tokenSubject)).toBe('11111111111111111111111111111111111111111111111111111111.')
+      expect(toTokenId(tokenSubject)).toBe(
+        '11111111111111111111111111111111111111111111111111111111.',
+      )
     })
   })
 
@@ -119,7 +125,8 @@ describe('api utils', () => {
   describe('tokenInfo', () => {
     it('tokenInfo', () => {
       const entry: TokenRegistryEntry = {
-        subject: '1111111111111111111111111111111111111111111111111111111161737365744e616d65',
+        subject:
+          '1111111111111111111111111111111111111111111111111111111161737365744e616d65',
         name: {
           value: 'assetName',
           signatures: [],
@@ -179,7 +186,8 @@ describe('api utils', () => {
 
     it('tokenInfo with optionals/defaults', () => {
       const entry: TokenRegistryEntry = {
-        subject: '1111111111111111111111111111111111111111111111111111111161737365744e616d65',
+        subject:
+          '1111111111111111111111111111111111111111111111111111111161737365744e616d65',
         name: {
           value: 'assetName',
           signatures: [],
@@ -218,7 +226,11 @@ describe('api utils', () => {
     })
 
     it('fallback', () => {
-      expect(fallbackTokenInfo('11111111111111111111111111111111111111111111111111111111')).toEqual<Balance.TokenInfo>({
+      expect(
+        fallbackTokenInfo(
+          '11111111111111111111111111111111111111111111111111111111',
+        ),
+      ).toEqual<Balance.TokenInfo>({
         kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.',
         fingerprint: 'asset17jfppv3h7hnsjfqq5lyp52dyhwstfv9e4uauga',
@@ -234,7 +246,9 @@ describe('api utils', () => {
       })
 
       expect(
-        fallbackTokenInfo('1111111111111111111111111111111111111111111111111111111161737365744e616d65'),
+        fallbackTokenInfo(
+          '1111111111111111111111111111111111111111111111111111111161737365744e616d65',
+        ),
       ).toEqual<Balance.TokenInfo>({
         kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',

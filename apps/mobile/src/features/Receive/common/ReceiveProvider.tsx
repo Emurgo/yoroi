@@ -1,5 +1,4 @@
 import {produce} from 'immer'
-import _ from 'lodash'
 import React from 'react'
 
 export const useReceive = () => React.useContext(ReceiveContext)
@@ -17,7 +16,8 @@ export const ReceiveProvider = ({
   })
 
   const actions = React.useRef<ReceiveActions>({
-    selectedAddressChanged: (address: string) => dispatch({type: ReceiveActionType.SelectedAddressChanged, address}),
+    selectedAddressChanged: (address: string) =>
+      dispatch({type: ReceiveActionType.SelectedAddressChanged, address}),
   }).current
 
   const context = React.useMemo(
@@ -28,7 +28,11 @@ export const ReceiveProvider = ({
     [state, actions],
   )
 
-  return <ReceiveContext.Provider value={context}>{children}</ReceiveContext.Provider>
+  return (
+    <ReceiveContext.Provider value={context}>
+      {children}
+    </ReceiveContext.Provider>
+  )
 }
 
 const receiveReducer = (state: ReceiveState, action: ReceiveAction) => {
@@ -44,7 +48,10 @@ const receiveReducer = (state: ReceiveState, action: ReceiveAction) => {
   })
 }
 
-type ReceiveAction = {type: ReceiveActionType.SelectedAddressChanged; address: string}
+type ReceiveAction = {
+  type: ReceiveActionType.SelectedAddressChanged
+  address: string
+}
 
 type ReceiveState = {
   selectedAddress: string
@@ -75,4 +82,6 @@ enum ReceiveActionType {
 
 type ReceiveContext = ReceiveState & ReceiveActions
 
-const ReceiveContext = React.createContext<ReceiveContext>(initialReceiveContext)
+const ReceiveContext = React.createContext<ReceiveContext>(
+  initialReceiveContext,
+)

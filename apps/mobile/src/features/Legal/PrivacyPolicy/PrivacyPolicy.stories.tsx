@@ -3,4 +3,6 @@ import React from 'react'
 
 import {PrivacyPolicy} from './PrivacyPolicy'
 
-storiesOf('PrivacyPolicy', module).add('Default', () => <PrivacyPolicy languageCode="en-US" />)
+storiesOf('PrivacyPolicy', module).add('Default', () => (
+  <PrivacyPolicy languageCode="en-US" />
+))

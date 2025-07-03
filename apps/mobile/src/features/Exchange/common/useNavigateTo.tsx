@@ -7,7 +7,9 @@ export const useNavigateTo = () => {
   const navigation = useNavigation<ExchangeRoutesNavigation>()
 
   return useRef({
-    exchangeSelectBuyProvider: () => navigation.navigate('exchange-select-buy-provider'),
-    exchangeSelectSellProvider: () => navigation.navigate('exchange-select-sell-provider'),
+    exchangeSelectBuyProvider: () =>
+      navigation.navigate('exchange-select-buy-provider'),
+    exchangeSelectSellProvider: () =>
+      navigation.navigate('exchange-select-sell-provider'),
   }).current
 }

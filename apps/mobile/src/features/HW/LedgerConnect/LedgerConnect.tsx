@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
@@ -18,10 +16,16 @@ import {Button} from '../../../components/Button/Button'
 import {Loading} from '../../../components/Loading/Loading'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
-import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
+import globalMessages, {
+  confirmationMessages,
+  ledgerMessages,
+} from '../../../kernel/i18n/global-messages'
 import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
-import {BluetoothDisabledError, RejectedByUserError} from '../../../wallets/hw/hw'
+import {
+  BluetoothDisabledError,
+  RejectedByUserError,
+} from '../../../wallets/hw/hw'
 import {Device} from '../../../wallets/types/hw'
 import {DeviceItem} from './DeviceItem'
 
@@ -217,7 +221,13 @@ class LedgerConnectInt extends React.Component<Props, State> {
     const {error, waiting, deviceObj} = this.state
     const {intl, onWaitingMessage, styles} = this.props
 
-    const ListHeaderWrapper = ({msg, err}: {msg: string; err?: string | null}) => (
+    const ListHeaderWrapper = ({
+      msg,
+      err,
+    }: {
+      msg: string
+      err?: string | null
+    }) => (
       <View style={styles.listHeader}>
         <Text style={[styles.paragraph, styles.paragraphText]}>{msg}</Text>
 
@@ -248,14 +258,20 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
   render() {
     const {intl, useUSB, styles} = this.props
-    const {error, devices, refreshing, deviceId, deviceObj, waiting} = this.state
+    const {error, devices, refreshing, deviceId, deviceObj, waiting} =
+      this.state
 
-    const rows = [intl.formatMessage(ledgerMessages.enterPin), intl.formatMessage(ledgerMessages.openApp)]
+    const rows = [
+      intl.formatMessage(ledgerMessages.enterPin),
+      intl.formatMessage(ledgerMessages.openApp),
+    ]
     return (
       <>
         <Space height="lg" />
 
-        <Text style={styles.paragraphText}>{intl.formatMessage(messages.introline)}</Text>
+        <Text style={styles.paragraphText}>
+          {intl.formatMessage(messages.introline)}
+        </Text>
 
         <Space height="lg" />
 
@@ -270,7 +286,11 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
           <Space height="lg" />
 
-          {!useUSB && <Text style={styles.caption}>{intl.formatMessage(messages.caption)}</Text>}
+          {!useUSB && (
+            <Text style={styles.caption}>
+              {intl.formatMessage(messages.caption)}
+            </Text>
+          )}
         </View>
 
         <Space height="lg" />
@@ -286,7 +306,11 @@ class LedgerConnectInt extends React.Component<Props, State> {
           style={styles.flatList}
           data={devices}
           renderItem={({item}: {item: Device}) => (
-            <DeviceItem disabled={waiting} device={item} onSelect={() => this._onSelectDevice(item)} />
+            <DeviceItem
+              disabled={waiting}
+              device={item}
+              onSelect={() => this._onSelectDevice(item)}
+            />
           )}
           ListHeaderComponent={this.ListHeader}
           keyExtractor={(item) => item.id.toString()}
@@ -308,7 +332,9 @@ class LedgerConnectInt extends React.Component<Props, State> {
               }
               this._onConfirm(deviceObj)
             }}
-            title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
+            title={intl.formatMessage(
+              confirmationMessages.commonButtons.confirmButton,
+            )}
             style={styles.button}
           />
         )}
@@ -335,11 +361,13 @@ const messages = defineMessages({
   },
   usbDeviceReady: {
     id: 'components.ledger.ledgerconnect.usbDeviceReady',
-    defaultMessage: '!!!USB device is ready, please tap on Confirm to continue.',
+    defaultMessage:
+      '!!!USB device is ready, please tap on Confirm to continue.',
   },
   error: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
-    defaultMessage: '!!!An error occurred while trying to connect with your hardware wallet:',
+    defaultMessage:
+      '!!!An error occurred while trying to connect with your hardware wallet:',
   },
 })
 
@@ -347,7 +375,9 @@ const deviceAddition =
   (device: Device) =>
   ({devices}: {devices: Device[]}) => {
     return {
-      devices: devices.some((i) => i.id === device.id) ? devices : devices.concat(device),
+      devices: devices.some((i) => i.id === device.id)
+        ? devices
+        : devices.concat(device),
     }
   }
 

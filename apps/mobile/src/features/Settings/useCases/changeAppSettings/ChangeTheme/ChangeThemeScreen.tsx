@@ -10,7 +10,10 @@ export const ChangeThemeScreen = () => {
   const styles = useStyles()
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={styles.safeAreaView}
+    >
       <Boundary>
         <ThemePickerList />
       </Boundary>

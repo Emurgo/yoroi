@@ -11,7 +11,10 @@ export const ReadPrivacyPolicyScreen = () => {
   const {languageCode} = useLanguage()
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <PrivacyPolicy languageCode={languageCode} />
       </ScrollView>

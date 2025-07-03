@@ -25,7 +25,8 @@ export const useNotificationManagerMaker = () => {
       configStorage: configStorage.join(`${walletId}/`),
       subscriptions: {
         [Notifications.Trigger.TransactionReceived]: transactionReceivedSubject,
-        [Notifications.Trigger.PrimaryTokenPriceChanged]: primaryTokenPriceChangedSubject,
+        [Notifications.Trigger.PrimaryTokenPriceChanged]:
+          primaryTokenPriceChangedSubject,
         [Notifications.Trigger.RewardsUpdated]: rewardsUpdatedSubject,
         [Notifications.Trigger.Banner]: bannerTriggersSubject,
       },

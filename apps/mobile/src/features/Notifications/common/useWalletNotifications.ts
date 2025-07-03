@@ -5,10 +5,13 @@ import * as React from 'react'
 import {pushNotificationsManager} from './notification-manager'
 
 export const useWalletNotifications = () => {
-  const {data: receivedNotifications = [], refetch} = useReceivedNotificationEvents()
+  const {data: receivedNotifications = [], refetch} =
+    useReceivedNotificationEvents()
 
   React.useEffect(() => {
-    const subscription = pushNotificationsManager.newEvents$.subscribe(() => refetch())
+    const subscription = pushNotificationsManager.newEvents$.subscribe(() =>
+      refetch(),
+    )
 
     return () => {
       subscription.unsubscribe()
@@ -17,7 +20,9 @@ export const useWalletNotifications = () => {
 
   const data = React.useMemo(() => {
     return receivedNotifications.filter(
-      (e) => e.trigger === Notifications.Trigger.Push || e.trigger === Notifications.Trigger.Banner,
+      (e) =>
+        e.trigger === Notifications.Trigger.Push ||
+        e.trigger === Notifications.Trigger.Banner,
     )
   }, [receivedNotifications])
   return {data, refetch}

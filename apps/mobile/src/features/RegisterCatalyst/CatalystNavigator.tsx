@@ -31,7 +31,10 @@ export const CatalystNavigator = () => {
     }, [track]),
   )
 
-  const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
+  const navigationOptions = React.useMemo(
+    () => defaultStackNavigationOptions(atoms, color),
+    [atoms, color],
+  )
 
   return (
     <Stack.Navigator
@@ -58,7 +61,11 @@ export const CatalystNavigator = () => {
         <Stack.Screen name="confirm-pin" component={ConfirmPin} />
 
         {/* STEP 4 */}
-        <Stack.Screen component={QrCode} name="qr-code" options={{...navigationOptions, headerLeft: () => null}} />
+        <Stack.Screen
+          component={QrCode}
+          name="qr-code"
+          options={{...navigationOptions, headerLeft: () => null}}
+        />
       </Stack.Group>
     </Stack.Navigator>
   )

@@ -9,7 +9,13 @@ import {Checkbox} from '../../../../components/Checkbox/Checkbox'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useNavigateTo} from '../../CatalystNavigator'
-import {Actions, Description, PinBox, Row, Stepper} from '../../common/components'
+import {
+  Actions,
+  Description,
+  PinBox,
+  Row,
+  Stepper,
+} from '../../common/components'
 import {useStrings} from '../../common/strings'
 
 export const DisplayPin = () => {
@@ -28,7 +34,10 @@ export const DisplayPin = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
       <Stepper title={strings.step2Title} currentStep={2} totalSteps={3} />
 
       <ScrollView bounces={false}>
@@ -54,13 +63,21 @@ export const DisplayPin = () => {
 
         <Space height="xl" />
 
-        <Checkbox text={strings.checkbox} checked={checked} onChange={setChecked} />
+        <Checkbox
+          text={strings.checkbox}
+          checked={checked}
+          onChange={setChecked}
+        />
       </ScrollView>
 
       <Spacer fill />
 
       <Actions>
-        <Button onPress={() => onNext()} title={strings.continueButton} disabled={!checked} />
+        <Button
+          onPress={() => onNext()}
+          title={strings.continueButton}
+          disabled={!checked}
+        />
       </Actions>
     </SafeAreaView>
   )

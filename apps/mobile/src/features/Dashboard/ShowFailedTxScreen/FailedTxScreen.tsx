@@ -34,7 +34,11 @@ export const FailedTxScreen = () => {
       <Space fill />
 
       <Actions>
-        <Button onPress={resetToTxHistory} title={strings.failedTxButton} style={styles.button} />
+        <Button
+          onPress={resetToTxHistory}
+          title={strings.failedTxButton}
+          style={styles.button}
+        />
       </Actions>
     </SafeArea>
   )
@@ -94,7 +98,8 @@ const messages = defineMessages({
   },
   failedTxText: {
     id: 'components.delegation.failedTx.text',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
+    defaultMessage:
+      '!!!Your transaction has not been processed properly due to technical issues.',
   },
   failedTxButton: {
     id: 'components.delegation.failedTx.button',

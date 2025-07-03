@@ -15,7 +15,11 @@ import {YoroiWallet} from '../../../wallets/cardano/types'
 import {asQuantity, Quantities} from '../../../wallets/utils/utils'
 import {useStakingInfo} from '../../Dashboard/StakePoolInfos'
 
-const createDelegationTx = async (wallet: YoroiWallet, poolId: string, meta: Wallet.Meta) => {
+const createDelegationTx = async (
+  wallet: YoroiWallet,
+  poolId: string,
+  meta: Wallet.Meta,
+) => {
   const accountStates = await wallet.fetchAccountState()
   const accountState = accountStates[wallet.rewardAddressHex]
   if (!accountState) throw new Error('Account state not found')
@@ -52,7 +56,10 @@ export const usePoolTransition = () => {
     retry: false,
     staleTime: Infinity,
     queryKey: [wallet.id, 'poolTransition', currentPoolId],
-    queryFn: () => (features.poolTransition ? poolInfoApi.getTransition(currentPoolId, init) : null),
+    queryFn: () =>
+      features.poolTransition
+        ? poolInfoApi.getTransition(currentPoolId, init)
+        : null,
   })
 
   const poolTransition = poolTransitionQuery.data ?? null

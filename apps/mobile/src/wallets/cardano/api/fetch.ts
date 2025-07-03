@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Api} from '@yoroi/types'
 import {Platform} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
@@ -9,9 +8,14 @@ import {ApiError, ApiHistoryError} from '../errors'
 
 type RequestMethod = 'POST' | 'GET'
 
-type ResponseChecker<T> = (rawResponse: Record<string, any>, requestPayload: Record<string, any>) => Promise<T>
+type ResponseChecker<T> = (
+  rawResponse: Record<string, any>,
+  requestPayload: Record<string, any>,
+) => Promise<T>
 
-const _checkResponse: ResponseChecker<Record<string, any>> = async (rawResponse) => {
+const _checkResponse: ResponseChecker<Record<string, any>> = async (
+  rawResponse,
+) => {
   let responseBody = {}
 
   try {

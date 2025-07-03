@@ -2,7 +2,12 @@ import {usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import * as React from 'react'
-import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'react-native'
+import {
+  Animated,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleSheet,
+} from 'react-native'
 
 import {SafeArea} from '../../../../components/SafeArea'
 import {Spacer} from '../../../../components/Spacer/Spacer'
@@ -15,7 +20,10 @@ import {TxList} from '../../../Transactions/useCases/TxList/TxList'
 import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
 import {usePortfolioTokenDetailParams} from '../../common/hooks/useNavigateTo'
 import {useStrings} from '../../common/hooks/useStrings'
-import {PortfolioDetailsTab, usePortfolio} from '../../context/PortfolioProvider'
+import {
+  PortfolioDetailsTab,
+  usePortfolio,
+} from '../../context/PortfolioProvider'
 import {Actions} from './Actions'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
@@ -41,7 +49,10 @@ export const PortfolioTokenDetailsScreen = () => {
   const HEADER_HEIGHT = 304
   const {styles} = useStyles(HEADER_HEIGHT)
 
-  if (!tokenInfo) throwLoggedError(new App.Errors.InvalidState('Token info not found, invalid state'))
+  if (!tokenInfo)
+    throwLoggedError(
+      new App.Errors.InvalidState('Token info not found, invalid state'),
+    )
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = e.nativeEvent.contentOffset.y
@@ -79,12 +90,25 @@ export const PortfolioTokenDetailsScreen = () => {
         />
       </Tabs>
     )
-  }, [detailsTab, setDetailsTab, strings.overview, strings.performance, strings.transactions, styles.tab, styles.tabs])
+  }, [
+    detailsTab,
+    setDetailsTab,
+    strings.overview,
+    strings.performance,
+    strings.transactions,
+    styles.tab,
+    styles.tabs,
+  ])
 
   return (
     <SafeArea>
       <TxFilter tokenId={tokenId}>
-        <Animated.View style={[styles.tabsSticky, isStickyTab ? styles.tabsStickyActive : styles.tabsStickyInactive]}>
+        <Animated.View
+          style={[
+            styles.tabsSticky,
+            isStickyTab ? styles.tabsStickyActive : styles.tabsStickyInactive,
+          ]}
+        >
           {renderTabs}
         </Animated.View>
 

@@ -14,7 +14,8 @@ export const useLegalAgreement = () => {
   const storage = useAsyncStorage()
   const query = useQuery({
     queryKey: [queryKey],
-    queryFn: () => storage.join('appSettings/').getItem<LegalAgreement>(queryKey),
+    queryFn: () =>
+      storage.join('appSettings/').getItem<LegalAgreement>(queryKey),
     suspense: true,
   })
 
@@ -26,7 +27,9 @@ export const useAgreeWithLegal = () => {
   const queryClient = useQueryClient()
 
   const mutationFn = useCallback(async () => {
-    await storage.join('appSettings/').setItem<LegalAgreement>(queryKey, {latestAcceptedAgreementsDate: agreementDate})
+    await storage.join('appSettings/').setItem<LegalAgreement>(queryKey, {
+      latestAcceptedAgreementsDate: agreementDate,
+    })
   }, [storage])
 
   const mutation = useMutation({

@@ -1,6 +1,10 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import {isString, time} from '@yoroi/common'
-import {traitValueExpander, usePortfolioTokenDiscovery, usePortfolioTokenTraits} from '@yoroi/portfolio'
+import {
+  traitValueExpander,
+  usePortfolioTokenDiscovery,
+  usePortfolioTokenTraits,
+} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Explorers, Network, Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
@@ -56,7 +60,9 @@ export const MediaDetailsScreen = () => {
       <SafeAreaView>
         <ScrollView
           contentContainerStyle={styles.contentContainer}
-          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isLoading} />}
+          refreshControl={
+            <RefreshControl onRefresh={onRefresh} refreshing={isLoading} />
+          }
         >
           <SelectableMedia info={amount.info} />
 
@@ -87,7 +93,11 @@ export const MediaDetailsScreen = () => {
           </Tabs>
 
           <Boundary loading={{enabled: true}}>
-            <Details info={amount.info} activeTab={activeTab} networkManager={networkManager} />
+            <Details
+              info={amount.info}
+              activeTab={activeTab}
+              networkManager={networkManager}
+            />
           </Boundary>
         </ScrollView>
       </SafeAreaView>
@@ -151,13 +161,28 @@ const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
   const imageWidth = dimensions.width - horizontalPadding
 
   return (
-    <TouchableOpacity onPress={() => navigateTo.nftZoom(info.id)} style={styles.imageWrapper}>
-      <MediaPreview info={info} style={styles.image} height={imageHeight} width={imageWidth} contentFit="contain" />
+    <TouchableOpacity
+      onPress={() => navigateTo.nftZoom(info.id)}
+      style={styles.imageWrapper}
+    >
+      <MediaPreview
+        info={info}
+        style={styles.image}
+        height={imageHeight}
+        width={imageWidth}
+        contentFit="contain"
+      />
     </TouchableOpacity>
   )
 }
 
-const MetadataRow = ({title, children}: {title: string; children: ReactNode}) => {
+const MetadataRow = ({
+  title,
+  children,
+}: {
+  title: string
+  children: ReactNode
+}) => {
   const styles = useStyles()
   return (
     <View style={styles.rowContainer}>
@@ -188,7 +213,9 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
       </MetadataRow>
 
       <MetadataRow title={strings.description}>
-        <Text style={styles.name}>{normalizeMetadataString(info.description)}</Text>
+        <Text style={styles.name}>
+          {normalizeMetadataString(info.description)}
+        </Text>
       </MetadataRow>
 
       <MetadataRow title={strings.fingerprint}>
@@ -211,7 +238,9 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => Linking.openURL(explorers.cardanoscan.token(info.fingerprint))}
+            onPress={() =>
+              Linking.openURL(explorers.cardanoscan.token(info.fingerprint))
+            }
             style={{flex: 2}}
           >
             <View style={styles.linkContent}>
@@ -222,7 +251,9 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => Linking.openURL(explorers.cexplorer.token(info.fingerprint))}
+            onPress={() =>
+              Linking.openURL(explorers.cexplorer.token(info.fingerprint))
+            }
             style={{flex: 4}}
           >
             <View style={styles.linkContent}>
@@ -248,14 +279,20 @@ const normalizeMetadataString = (content?: unknown): string => {
 const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
   const styles = useStyles()
   const expandedTraitValue = traitValueExpander(trait.value)
-  const isOpenableLink = expandedTraitValue.type === 'link' && isSupportedUrl(expandedTraitValue.transformedValue)
+  const isOpenableLink =
+    expandedTraitValue.type === 'link' &&
+    isSupportedUrl(expandedTraitValue.transformedValue)
 
   return (
     <MetadataRow title={trait.type}>
       <View style={styles.rowBetween}>
         {isOpenableLink && expandedTraitValue.type === 'link' ? (
           <View style={[styles.linkContent, styles.flex]}>
-            <TouchableOpacity onPress={() => Linking.openURL(expandedTraitValue.transformedValue)}>
+            <TouchableOpacity
+              onPress={() =>
+                Linking.openURL(expandedTraitValue.transformedValue)
+              }
+            >
               <Text style={styles.linkText}>{trait.value}</Text>
             </TouchableOpacity>
           </View>
@@ -271,7 +308,11 @@ const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
 
 const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
   const strings = useStrings()
-  const stringifiedMetadata = JSON.stringify(discovery.originalMetadata, null, 2)
+  const stringifiedMetadata = JSON.stringify(
+    discovery.originalMetadata,
+    null,
+    2,
+  )
 
   return (
     <View>
@@ -284,7 +325,8 @@ const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
   )
 }
 
-const isSupportedUrl = (url: string) => url.toLocaleLowerCase().startsWith('https')
+const isSupportedUrl = (url: string) =>
+  url.toLocaleLowerCase().startsWith('https')
 
 type ActiveTab = 'overview' | 'metadata'
 

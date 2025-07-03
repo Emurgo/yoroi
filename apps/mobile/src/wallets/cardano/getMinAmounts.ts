@@ -1,4 +1,3 @@
-import {BigNum} from '@emurgo/cross-csl-core'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {Balance, Chain, Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
@@ -9,22 +8,30 @@ import {CardanoMobile} from '../wallets'
 import {cardanoValueFromMultiToken} from './cardanoValueFromMultiToken'
 import {MultiToken} from './MultiToken'
 
-export const withMinAmounts = async (
+export const withMinAmounts = (
   address: Address,
   amounts: Balance.Amounts,
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
-): Promise<Balance.Amounts> => {
+): Balance.Amounts => {
   const amountsWithPrimaryToken = withPrimaryToken(amounts, primaryTokenInfo)
-  const minAmounts = await getMinAmounts(address, amountsWithPrimaryToken, primaryTokenInfo, protocolParams)
+  const minAmounts = getMinAmounts(
+    address,
+    amountsWithPrimaryToken,
+    primaryTokenInfo,
+    protocolParams,
+  )
 
   return Amounts.map(amountsWithPrimaryToken, (amount) => ({
     ...amount,
-    quantity: Quantities.max(amount.quantity, Amounts.getAmount(minAmounts, amount.tokenId).quantity),
+    quantity: Quantities.max(
+      amount.quantity,
+      Amounts.getAmount(minAmounts, amount.tokenId).quantity,
+    ),
   }))
 }
 
-export const getMinAmounts = async (
+export const getMinAmounts = (
   address: Address,
   amounts: Balance.Amounts,
   primaryTokenInfo: Portfolio.Token.Info,
@@ -41,32 +48,32 @@ export const getMinAmounts = async (
     {defaultIdentifier: primaryTokenInfo.id},
   )
 
-  const [value, coinsPerUtxoByte] = await Promise.all([
-    cardanoValueFromMultiToken(multiToken),
-    CardanoMobile.BigNum.fromStr(protocolParams.coinsPerUtxoByte),
-  ])
+  const value = cardanoValueFromMultiToken(multiToken)
+  const coinsPerUtxoByte = CardanoMobile.BigNum.fromStr(
+    protocolParams.coinsPerUtxoByte,
+  )
 
-  const normalizedAddress = await normalizeToAddress(CardanoMobile, address).catch(() => {
+  const normalizedAddress = normalizeToAddress(CardanoMobile, address)
+
+  if (normalizedAddress === undefined)
     throw new Error('getMinAmounts::Error not a valid address')
-  })
 
-  if (normalizedAddress === undefined) throw new Error('getMinAmounts::Error not a valid address')
+  const txOutput = CardanoMobile.TransactionOutput.new(normalizedAddress, value)
+  const dataCost = CardanoMobile.DataCost.newCoinsPerByte(coinsPerUtxoByte)
 
-  const [txOutput, dataCost] = await Promise.all([
-    CardanoMobile.TransactionOutput.new(normalizedAddress, value),
-    CardanoMobile.DataCost.newCoinsPerByte(coinsPerUtxoByte),
-  ])
-
-  const minAda = await CardanoMobile.minAdaForOutput(txOutput, dataCost)
-    .then((minAda: BigNum) => minAda.toStr())
-    .then(asQuantity)
+  const minAda = asQuantity(
+    CardanoMobile.minAdaForOutput(txOutput, dataCost).toStr(),
+  )
 
   return {
     [primaryTokenInfo.id]: minAda,
   } as Balance.Amounts
 }
 
-export const withPrimaryToken = (amounts: Balance.Amounts, primaryTokenInfo: Portfolio.Token.Info): Balance.Amounts => {
+export const withPrimaryToken = (
+  amounts: Balance.Amounts,
+  primaryTokenInfo: Portfolio.Token.Info,
+): Balance.Amounts => {
   if (Amounts.includes(amounts, primaryTokenInfo.id)) return amounts
 
   return {

@@ -11,5 +11,7 @@ const styles = StyleSheet.create({
 })
 
 storiesOf('ApplicationSettingsScreen', module)
-  .addDecorator((getStory) => <View style={styles.applicationSettingsScreen}>{getStory()}</View>)
+  .addDecorator((getStory) => (
+    <View style={styles.applicationSettingsScreen}>{getStory()}</View>
+  ))
   .add('Default', () => <ApplicationSettingsScreen />)

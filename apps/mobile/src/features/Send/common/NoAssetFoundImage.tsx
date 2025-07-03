@@ -1,5 +1,13 @@
 import * as React from 'react'
-import Svg, {ClipPath, Defs, G, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
+import Svg, {
+  ClipPath,
+  Defs,
+  G,
+  LinearGradient,
+  Path,
+  Stop,
+  SvgProps,
+} from 'react-native-svg'
 
 export function NoAssetFoundImage(props: SvgProps) {
   return (

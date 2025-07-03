@@ -11,9 +11,18 @@ type Props = {
   onExpired: () => void
 }
 
-export const TransactionReceivedNotificationPopup = ({event, onPress, onSwipeOut, onExpired}: Props) => {
+export const TransactionReceivedNotificationPopup = ({
+  event,
+  onPress,
+  onSwipeOut,
+  onExpired,
+}: Props) => {
   return (
-    <SwipeOutWrapper onSwipeOut={onSwipeOut} onExpired={onExpired} onPress={onPress}>
+    <SwipeOutWrapper
+      onSwipeOut={onSwipeOut}
+      onExpired={onExpired}
+      onPress={onPress}
+    >
       <TransactionReceivedNotification event={event} />
     </SwipeOutWrapper>
   )

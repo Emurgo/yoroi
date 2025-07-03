@@ -3,7 +3,9 @@ import * as React from 'react'
 
 import {CountDAppsAvailable} from './CountDAppsAvailable'
 
-storiesOf('Discover CountDAppsAvailable', module).add('initial', () => <Initial />)
+storiesOf('Discover CountDAppsAvailable', module).add('initial', () => (
+  <Initial />
+))
 
 const Initial = () => {
   return <CountDAppsAvailable total={10} />

@@ -11,7 +11,10 @@ export const ReadTermsOfServiceScreen = () => {
   const {languageCode} = useLanguage()
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <TermsOfService languageCode={languageCode} />
       </ScrollView>

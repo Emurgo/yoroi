@@ -11,7 +11,11 @@ const WithInitial = ({initial}: {initial: number}) => {
   }
   return (
     <View>
-      <ButtonGroup<string> labels={['label1', 'label2']} onSelect={handleActive} initial={initial} />
+      <ButtonGroup<string>
+        labels={['label1', 'label2']}
+        onSelect={handleActive}
+        initial={initial}
+      />
     </View>
   )
 }
@@ -22,7 +26,10 @@ const NoInitial = () => {
   }
   return (
     <View>
-      <ButtonGroup<string> labels={Array.from({length: 10}, () => Math.random().toString())} onSelect={handleActive} />
+      <ButtonGroup<string>
+        labels={Array.from({length: 10}, () => Math.random().toString())}
+        onSelect={handleActive}
+      />
     </View>
   )
 }

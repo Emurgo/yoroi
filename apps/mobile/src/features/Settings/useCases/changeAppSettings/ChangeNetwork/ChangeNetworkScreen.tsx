@@ -1,4 +1,10 @@
-import {isBoolean, parseSafe, time, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {
+  isBoolean,
+  parseSafe,
+  time,
+  useAsyncStorage,
+  useMutationWithInvalidations,
+} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'
@@ -28,7 +34,10 @@ export const ChangeNetworkScreen = () => {
   }, [handleOpenModal, networkNoticeShown])
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={styles.safeAreaView}
+    >
       <Boundary>
         <NetworkPickerList />
       </Boundary>
@@ -60,7 +69,9 @@ export const useHandleOpenNetworkNoticeModal = () => {
 
           <Space height="lg" />
 
-          <Text style={styles.modalTextTitle}>{strings.networkNoticeListTitle}</Text>
+          <Text style={styles.modalTextTitle}>
+            {strings.networkNoticeListTitle}
+          </Text>
 
           <Text style={styles.modalText}>{strings.networkNoticeList}</Text>
 
@@ -69,7 +80,9 @@ export const useHandleOpenNetworkNoticeModal = () => {
           {Platform.OS === 'android' && <Space height="lg" />}
         </View>
       ),
-      footer: <Button title={strings.networkNoticeButton} onPress={closeModal} />,
+      footer: (
+        <Button title={strings.networkNoticeButton} onPress={closeModal} />
+      ),
       height: 450,
       onClose,
     })
@@ -78,11 +91,14 @@ export const useHandleOpenNetworkNoticeModal = () => {
   return {handleOpenModal}
 }
 
-const useSetNetworkNoticeShown = (options?: UseMutationOptions<void, Error, void>) => {
+const useSetNetworkNoticeShown = (
+  options?: UseMutationOptions<void, Error, void>,
+) => {
   const storage = useAsyncStorage()
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: () => storage.join('appSettings/').setItem('networkNoticeShown', true),
+    mutationFn: () =>
+      storage.join('appSettings/').setItem('networkNoticeShown', true),
     invalidateQueries: [['useSetShowNetworkNoticeInfo']],
     ...options,
   })
@@ -90,7 +106,9 @@ const useSetNetworkNoticeShown = (options?: UseMutationOptions<void, Error, void
   return mutation.mutate
 }
 
-const useNetworkNoticeShown = (options?: UseQueryOptions<boolean, Error, boolean>) => {
+const useNetworkNoticeShown = (
+  options?: UseQueryOptions<boolean, Error, boolean>,
+) => {
   const storage = useAsyncStorage()
 
   const query = useQuery({
@@ -98,7 +116,9 @@ const useNetworkNoticeShown = (options?: UseQueryOptions<boolean, Error, boolean
     queryKey: ['useNetworkNoticeShown'],
     ...options,
     queryFn: async () => {
-      const result = await storage.join('appSettings/').getItem('networkNoticeShown')
+      const result = await storage
+        .join('appSettings/')
+        .getItem('networkNoticeShown')
       const parsed = parseSafe(result)
       return isBoolean(parsed) ? parsed : false
     },

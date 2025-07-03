@@ -27,7 +27,11 @@ export const CreateExchangeButton = ({
   const isPreprod = network === Chain.Network.Preprod
   const isBuy = orderType === 'buy'
 
-  const title = isBuy ? (isPreprod ? strings.createOrderPreprodFaucetButtonText : strings.proceed) : strings.proceed
+  const title = isBuy
+    ? isPreprod
+      ? strings.createOrderPreprodFaucetButtonText
+      : strings.proceed
+    : strings.proceed
 
   const handleOnPress = () => {
     if (isPreprod && isBuy) {
@@ -40,7 +44,12 @@ export const CreateExchangeButton = ({
 
   return (
     <View style={[styles.actions, style]}>
-      <Button testID="rampOnOffButton" title={title} onPress={handleOnPress} disabled={disabled} />
+      <Button
+        testID="rampOnOffButton"
+        title={title}
+        onPress={handleOnPress}
+        disabled={disabled}
+      />
     </View>
   )
 }

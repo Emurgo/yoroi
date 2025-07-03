@@ -5,13 +5,29 @@ export const ConectionErrorImage = () => {
   return (
     <Svg width="254" height="191" viewBox="0 0 254 191" fill="none">
       <G opacity="0.2">
-        <Path d="M86.7314 189.069L253.622 94.186" stroke="#1D45BA" strokeWidth="0.5" />
+        <Path
+          d="M86.7314 189.069L253.622 94.186"
+          stroke="#1D45BA"
+          strokeWidth="0.5"
+        />
 
-        <Path d="M23.312 141.794L178.995 53.2837" stroke="#1D45BA" strokeWidth="0.5" />
+        <Path
+          d="M23.312 141.794L178.995 53.2837"
+          stroke="#1D45BA"
+          strokeWidth="0.5"
+        />
 
-        <Path d="M77.0493 41.9404L252.857 141.765" stroke="#1D45BA" strokeWidth="0.5" />
+        <Path
+          d="M77.0493 41.9404L252.857 141.765"
+          stroke="#1D45BA"
+          strokeWidth="0.5"
+        />
 
-        <Path d="M0.856934 106.958L148.229 190.638" stroke="#1D45BA" strokeWidth="0.5" />
+        <Path
+          d="M0.856934 106.958L148.229 190.638"
+          stroke="#1D45BA"
+          strokeWidth="0.5"
+        />
       </G>
 
       <Path

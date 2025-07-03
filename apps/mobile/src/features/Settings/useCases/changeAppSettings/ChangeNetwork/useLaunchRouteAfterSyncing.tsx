@@ -4,7 +4,11 @@ import * as React from 'react'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 
-export function useLaunchRouteAfterSyncing({selectedNetwork}: {selectedNetwork: Chain.SupportedNetworks}) {
+export function useLaunchRouteAfterSyncing({
+  selectedNetwork,
+}: {
+  selectedNetwork: Chain.SupportedNetworks
+}) {
   const walletNavigation = useWalletNavigation()
   const {
     walletManager,
@@ -13,14 +17,17 @@ export function useLaunchRouteAfterSyncing({selectedNetwork}: {selectedNetwork: 
 
   const walletId = wallet?.id ?? null
 
-  if (walletId === null) throw new Error('useLaunchRouteAfterSyncing: wallet cannot be null')
+  if (walletId === null)
+    throw new Error('useLaunchRouteAfterSyncing: wallet cannot be null')
 
   React.useEffect(() => {
-    const subSelectedNetwork = walletManager.selectedNetwork$.subscribe((network) => {
-      if (network === selectedNetwork) {
-        walletNavigation.resetToWalletSelection()
-      }
-    })
+    const subSelectedNetwork = walletManager.selectedNetwork$.subscribe(
+      (network) => {
+        if (network === selectedNetwork) {
+          walletNavigation.resetToWalletSelection()
+        }
+      },
+    )
     return () => subSelectedNetwork.unsubscribe()
   }, [selectedNetwork, walletManager, walletNavigation])
 }

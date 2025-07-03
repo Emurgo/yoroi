@@ -10,9 +10,15 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
-import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../../kernel/dialogs'
+import {
+  DIALOG_BUTTONS,
+  showConfirmationDialog,
+} from '../../../../kernel/dialogs'
 import {confirmationMessages} from '../../../../kernel/i18n/global-messages'
-import {SettingsRouteNavigation, useWalletNavigation} from '../../../../kernel/navigation'
+import {
+  SettingsRouteNavigation,
+  useWalletNavigation,
+} from '../../../../kernel/navigation'
 import {useResync} from '../../../../wallets/hooks'
 import {useAuth} from '../../../Auth/AuthProvider'
 import {useAuthSetting} from '../../../Auth/common/hooks'
@@ -21,13 +27,19 @@ import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelected
 import {useNavigateTo} from '../../common/navigation'
 import {SettingsSwitch} from '../../common/SettingsSwitch'
 import {SettingsCollateralItem} from '../../SettingsCollateralItem'
-import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../../SettingsItems'
+import {
+  NavigatedSettingsItem,
+  SettingsBuildItem,
+  SettingsItem,
+  SettingsSection,
+} from '../../SettingsItems'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const {resetToWalletSelection, navigateToNotificationSettings} = useWalletNavigation()
+  const {resetToWalletSelection, navigateToNotificationSettings} =
+    useWalletNavigation()
   const authSetting = useAuthSetting()
   const addressMode = useAddressMode()
 
@@ -65,7 +77,11 @@ export const WalletSettingsScreen = () => {
             onNavigate={onSwitchWallet}
           />
 
-          <NavigatedSettingsItem icon={<Icon.Logout {...iconProps} />} label={strings.logout} onNavigate={logout} />
+          <NavigatedSettingsItem
+            icon={<Icon.Logout {...iconProps} />}
+            label={strings.logout}
+            onNavigate={logout}
+          />
 
           <NavigatedSettingsItem
             icon={<Icon.Wallet {...iconProps} />}
@@ -137,7 +153,10 @@ export const WalletSettingsScreen = () => {
         <Spacer height={24} />
 
         <SettingsSection title={strings.about}>
-          <SettingsBuildItem label={strings.walletType} value={intl.formatMessage(getWalletType(implementation))} />
+          <SettingsBuildItem
+            label={strings.walletType}
+            value={intl.formatMessage(getWalletType(implementation))}
+          />
         </SettingsSection>
 
         <Spacer height={24} />
@@ -146,7 +165,9 @@ export const WalletSettingsScreen = () => {
   )
 }
 
-const getWalletType = (implementation: Wallet.Implementation): MessageDescriptor => {
+const getWalletType = (
+  implementation: Wallet.Implementation,
+): MessageDescriptor => {
   if (implementation === 'cardano-bip44') return messages.byronWallet
   if (implementation === 'cardano-cip1852') return messages.shelleyWallet
 
@@ -167,7 +188,10 @@ const ResyncButton = () => {
   })
 
   const onResync = async () => {
-    const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
+    const selection = await showConfirmationDialog(
+      confirmationMessages.resync,
+      intl,
+    )
     if (selection === DIALOG_BUTTONS.YES) {
       walletIdChanged(wallet.id)
       resync()
@@ -205,7 +229,12 @@ const AddressModeSwitcher = (props: {isSingle: boolean}) => {
     })
   }
 
-  return <SettingsSwitch value={!isSingleLocal} onValueChange={handleOnSwitchAddressMode} />
+  return (
+    <SettingsSwitch
+      value={!isSingleLocal}
+      onValueChange={handleOnSwitchAddressMode}
+    />
+  )
 }
 
 const useLogout = () => {
@@ -213,7 +242,10 @@ const useLogout = () => {
   const intl = useIntl()
 
   return async () => {
-    const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
+    const selection = await showConfirmationDialog(
+      confirmationMessages.logout,
+      intl,
+    )
     if (selection === DIALOG_BUTTONS.YES) {
       logout() // triggers navigation to login
     }
@@ -255,7 +287,8 @@ const messages = defineMessages({
   },
   easyConfirmationInfo: {
     id: 'components.settings.walletsettingscreen.easyConfirmationInfo',
-    defaultMessage: '!!!Skip the password and approve transactions with biometrics',
+    defaultMessage:
+      '!!!Skip the password and approve transactions with biometrics',
   },
   removeWallet: {
     id: 'components.settings.walletsettingscreen.removeWallet',
@@ -275,7 +308,8 @@ const messages = defineMessages({
   },
   multipleAddressesInfo: {
     id: 'global.multipleAddressesInfo',
-    defaultMessage: '!!!By enabling this you can operate with more wallet addresses',
+    defaultMessage:
+      '!!!By enabling this you can operate with more wallet addresses',
   },
   // note: moved here from application settings
   network: {

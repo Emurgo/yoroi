@@ -20,9 +20,15 @@ import {Icon} from '../../components/Icon'
 import {useModal} from '../../components/Modal/ModalContext'
 import {Spacer} from '../../components/Spacer/Spacer'
 import {Text} from '../../components/Text'
-import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
+import globalMessages, {
+  confirmationMessages,
+} from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
-import {defaultStackNavigationOptions, MenuRoutes, useWalletNavigation} from '../../kernel/navigation'
+import {
+  defaultStackNavigationOptions,
+  MenuRoutes,
+  useWalletNavigation,
+} from '../../kernel/navigation'
 import {usePrefetchStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
 import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTransition'
 import {useCanVote} from '../RegisterCatalyst/common/hooks'
@@ -45,7 +51,11 @@ export const MenuNavigator = () => {
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >
-      <MenuStack.Screen name="_menu" component={Menu} options={{title: strings.menu}} />
+      <MenuStack.Screen
+        name="_menu"
+        component={Menu}
+        options={{title: strings.menu}}
+      />
     </MenuStack.Navigator>
   )
 }
@@ -65,7 +75,10 @@ export const Menu = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        bounces={false}
+      >
         <AppSettings //
           label={strings.settings}
           onPress={navigateTo.settings}
@@ -76,7 +89,11 @@ export const Menu = () => {
           label={strings.stakingCenter}
           onPress={navigateTo.stakingCenter}
           left={<Icon.TabStaking size={24} color={color.gray_600} />}
-          right={isPoolRetiring ? <Icon.Warning size={24} color={color.sys_magenta_500} /> : null}
+          right={
+            isPoolRetiring ? (
+              <Icon.Warning size={24} color={color.sys_magenta_500} />
+            ) : null
+          }
         />
 
         <Governance
@@ -164,7 +181,16 @@ const Item = ({
 
       <Spacer width={12} />
 
-      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24, color: color.gray_900}}>{label}</Text>
+      <Text
+        style={{
+          fontFamily: 'Rubik-Medium',
+          fontSize: 16,
+          lineHeight: 24,
+          color: color.gray_900,
+        }}
+      >
+        {label}
+      </Text>
 
       <Spacer fill />
 
@@ -181,7 +207,15 @@ const Staking = Item
 const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
-const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
+const Catalyst = ({
+  label,
+  left,
+  onPress,
+}: {
+  label: string
+  left: React.ReactElement
+  onPress: () => void
+}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {sufficientFunds} = useCanVote(wallet)
@@ -204,11 +238,18 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
   return <Item label={label} onPress={handlePress} left={left} />
 }
 
-const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
-const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
+const SUPPORT_TICKET_LINK =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
+const KNOWLEDGE_BASE_LINK =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const useNavigateTo = () => {
-  const {navigation, navigateToSettings, navigateToGovernanceCentre, navigateToStakingDashboard} = useWalletNavigation()
+  const {
+    navigation,
+    navigateToSettings,
+    navigateToGovernanceCentre,
+    navigateToStakingDashboard,
+  } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
 
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)

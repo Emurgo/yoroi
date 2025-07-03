@@ -8,19 +8,36 @@ type Props = {
 
 export const YoroiLogoIllustration = (props: Props) => {
   return (
-    <Svg width={props.width} height={props.height} viewBox="0 0 35 37" fill="none">
+    <Svg
+      width={props.width}
+      height={props.height}
+      viewBox="0 0 35 37"
+      fill="none"
+    >
       <Path
         d="M16.844 8.619L5.581.324H9.12l8.351 5.96v2.534c-.217 0-.438-.066-.626-.2z"
         fill="url(#paint0_linear_11211_123795)"
       />
 
-      <Path d="M21.248 18.116L7.47 8.302V5.49l16 11.306-2.222 1.32z" fill="url(#paint1_linear_11211_123795)" />
+      <Path
+        d="M21.248 18.116L7.47 8.302V5.49l16 11.306-2.222 1.32z"
+        fill="url(#paint1_linear_11211_123795)"
+      />
 
-      <Path d="M21.915 12.377l4.889-3.616V6.063L20.026 11l1.89 1.378z" fill="url(#paint2_linear_11211_123795)" />
+      <Path
+        d="M21.915 12.377l4.889-3.616V6.063L20.026 11l1.89 1.378z"
+        fill="url(#paint2_linear_11211_123795)"
+      />
 
-      <Path d="M26.248 15.476l.555-.459v-2.64l-2.444 1.722 1.889 1.377z" fill="url(#paint3_linear_11211_123795)" />
+      <Path
+        d="M26.248 15.476l.555-.459v-2.64l-2.444 1.722 1.889 1.377z"
+        fill="url(#paint3_linear_11211_123795)"
+      />
 
-      <Path d="M7.47 14.384l9.111 6.371 2.278-1.262L7.47 11.457v2.927z" fill="url(#paint4_linear_11211_123795)" />
+      <Path
+        d="M7.47 14.384l9.111 6.371 2.278-1.262L7.47 11.457v2.927z"
+        fill="url(#paint4_linear_11211_123795)"
+      />
 
       <Path
         d="M29.419.324l-11.32 8.295c-.188.133-.41.199-.629.199V6.284l8.393-5.96h3.556z"

@@ -8,11 +8,20 @@ import {TabPanel} from '../../../../../components/Tabs/Tabs'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
-import {ILiquidityPool, useGetLiquidityPool} from '../../../common/hooks/useGetLiquidityPool'
-import {IOpenOrders, useGetOpenOrders} from '../../../common/hooks/useGetOpenOrders'
+import {
+  ILiquidityPool,
+  useGetLiquidityPool,
+} from '../../../common/hooks/useGetLiquidityPool'
+import {
+  IOpenOrders,
+  useGetOpenOrders,
+} from '../../../common/hooks/useGetOpenOrders'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
+import {
+  PortfolioDappsTab,
+  usePortfolio,
+} from '../../../context/PortfolioProvider'
 import {Line} from '../../../ui/Line'
-import {PortfolioDappsTab, usePortfolio} from '../../../context/PortfolioProvider'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {LendAndBorrowTab} from './LendAndBorrowTab'
 import {LiquidityPoolTab} from './LiquidityPoolTab'
@@ -27,7 +36,8 @@ export const PortfolioDAppsTokenList = () => {
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const {dappsTab} = usePortfolio()
 
-  const {data: liquidityPools, isFetching: liquidityPoolFetching} = useGetLiquidityPool()
+  const {data: liquidityPools, isFetching: liquidityPoolFetching} =
+    useGetLiquidityPool()
   const {data: openOrders, isFetching: openOrdersFetching} = useGetOpenOrders()
 
   const filterListWithSearch = React.useCallback(
@@ -104,7 +114,11 @@ export const PortfolioDAppsTokenList = () => {
       </TabPanel>
 
       <TabPanel active={dappsTab === PortfolioDappsTab.OpenOrders}>
-        <OpenOrdersTab tokensList={getListOpenOrders} isFetching={openOrdersFetching} isSearching={isSearching} />
+        <OpenOrdersTab
+          tokensList={getListOpenOrders}
+          isFetching={openOrdersFetching}
+          isSearching={isSearching}
+        />
       </TabPanel>
 
       <TabPanel active={dappsTab === PortfolioDappsTab.LendAndBorrow}>

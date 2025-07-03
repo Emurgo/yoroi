@@ -24,7 +24,8 @@ export const QrCode = () => {
   const {votingKeyEncrypted, reset} = useCatalyst()
   const navigateTo = useNavigateTo()
 
-  if (votingKeyEncrypted === null) throw new Error('votingKeyEncrypted cannot be null')
+  if (votingKeyEncrypted === null)
+    throw new Error('votingKeyEncrypted cannot be null')
 
   const {copy, isCopying} = useCopy()
 
@@ -37,13 +38,22 @@ export const QrCode = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
       <ScrollView bounces={false} contentContainerStyle={styles.padding}>
         <ShareQRCodeCard
           title={strings.step4QrTitle}
           qrContent={votingKeyEncrypted}
           shareContent={votingKeyEncrypted}
-          onLongPress={(event) => copy({text: votingKeyEncrypted, feedback: strings.step4QrCopiedText, event})}
+          onLongPress={(event) =>
+            copy({
+              text: votingKeyEncrypted,
+              feedback: strings.step4QrCopiedText,
+              event,
+            })
+          }
           shareLabel={strings.step4QrShareLabel}
         />
 
@@ -53,11 +63,20 @@ export const QrCode = () => {
 
         <Space height="lg" />
 
-        <Checkbox onChange={setChecked} checked={checked} style={styles.checkbox} text={strings.step4QrCheckbox} />
+        <Checkbox
+          onChange={setChecked}
+          checked={checked}
+          style={styles.checkbox}
+          text={strings.step4QrCheckbox}
+        />
       </ScrollView>
 
       <Actions style={styles.padding}>
-        <Button onPress={onNext} title={strings.completeButton} disabled={isCopying || !checked} />
+        <Button
+          onPress={onNext}
+          title={strings.completeButton}
+          disabled={isCopying || !checked}
+        />
       </Actions>
     </SafeAreaView>
   )

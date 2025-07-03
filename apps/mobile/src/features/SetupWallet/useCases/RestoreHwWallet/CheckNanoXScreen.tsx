@@ -2,7 +2,14 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Linking, Platform, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {
+  Linking,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewProps,
+} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -33,7 +40,11 @@ export const CheckNanoXScreen = () => {
   )
 
   const commonRequirements = [strings.appInstalled, strings.appOpened]
-  const usbRequirements = [strings.haveOTGAdapter, strings.usbAlwaysConnected, ...commonRequirements]
+  const usbRequirements = [
+    strings.haveOTGAdapter,
+    strings.usbAlwaysConnected,
+    ...commonRequirements,
+  ]
   const bleRequirements = [
     strings.bluetoothEnabled,
     ...(Platform.OS === 'android' ? [strings.locationEnabled] : []),
@@ -41,8 +52,16 @@ export const CheckNanoXScreen = () => {
   ]
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StepperProgress style={styles.stepper} currentStepTitle="Intro" currentStep={1} totalSteps={3} />
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
+      <StepperProgress
+        style={styles.stepper}
+        currentStepTitle="Intro"
+        currentStep={1}
+        totalSteps={3}
+      />
 
       <ScrollView style={styles.scroll} bounces={false}>
         <Space height="lg" />
@@ -63,13 +82,18 @@ export const CheckNanoXScreen = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={onContinue} title={strings.continueButton} testID="continueButton" />
+        <Button
+          onPress={onContinue}
+          title={strings.continueButton}
+          testID="continueButton"
+        />
       </Actions>
     </SafeAreaView>
   )
 }
 
-const ledgerSupport = 'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/4413677248399-Hardware-Wallet-Ledger-Trezor'
+const ledgerSupport =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/4413677248399-Hardware-Wallet-Ledger-Trezor'
 
 const LedgerSupportLink = () => {
   const onPress = () => Linking.openURL(ledgerSupport)

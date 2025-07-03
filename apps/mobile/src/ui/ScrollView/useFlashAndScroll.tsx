@@ -9,7 +9,8 @@ export const useFlashAndScroll = () => {
       scrollViewRef.current?.flashScrollIndicators()
     }, 500)
 
-    const event = Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow'
+    const event =
+      Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow'
 
     const showSubscription = Keyboard.addListener(event, () => {
       scrollViewRef.current?.scrollToEnd()
