@@ -1,6 +1,5 @@
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {init} from '@emurgo/cross-csl-mobile'
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 const cardano = init('wrappedCSL')
 
@@ -27,7 +26,8 @@ export const wrappedCsl = (): {csl: WasmModuleProxy; release: VoidFunction} => {
     if (obj instanceof Promise) {
       return obj.then((result) => trackIfNeeded(result)) as any
     }
-    if (Array.isArray(obj)) return obj.map((o) => trackIfNeeded(o) as any) as any
+    if (Array.isArray(obj))
+      return obj.map((o) => trackIfNeeded(o) as any) as any
     return obj
   }
 
@@ -39,6 +39,7 @@ export const wrappedCsl = (): {csl: WasmModuleProxy; release: VoidFunction} => {
       }
 
       return new Proxy(prop, {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         get: (target: any, name: string) => {
           if (name === 'prototype') return target[name]
           const isFunc = typeof target[name] === 'function'
@@ -57,6 +58,8 @@ export const wrappedCsl = (): {csl: WasmModuleProxy; release: VoidFunction} => {
 
 const isClass = (func: any) => {
   return (
-    typeof func === 'function' && (/^\s*class\s+/.test(func.toString()) || func.name[0] === func.name[0].toUpperCase())
+    typeof func === 'function' &&
+    (/^\s*class\s+/.test(func.toString()) ||
+      func.name[0] === func.name[0].toUpperCase())
   )
 }
