@@ -3,7 +3,14 @@ import {isPrimaryTokenInfo, usePortfolioTokenDiscovery} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
 import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
 import {Copiable} from '../../../components/Clipboard/Copiable'
@@ -16,7 +23,11 @@ import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWal
 import {ExplorerInfoLinks} from './ExplorerInfoLinks'
 import {useStrings} from './hooks/useStrings'
 
-export const TokenDetails = ({tokenInfo}: {tokenInfo: Portfolio.Token.Info | undefined}) => {
+export const TokenDetails = ({
+  tokenInfo,
+}: {
+  tokenInfo: Portfolio.Token.Info | undefined
+}) => {
   const {styles} = useStyles()
 
   if (tokenInfo == null) return null
@@ -36,7 +47,11 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
   const {styles} = useStyles()
   const [policyId, assetName] = info?.id.split('.') ?? ['', '']
 
-  const title = !isEmptyString(info.ticker) ? info.ticker : !isEmptyString(info.name) ? info.name : ''
+  const title = !isEmptyString(info.ticker)
+    ? info.ticker
+    : !isEmptyString(info.name)
+      ? info.name
+      : ''
 
   return (
     <View style={styles.header}>
@@ -46,7 +61,9 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
 
       {!isEmptyString(title) && <Text style={styles.headerText}>{title}</Text>}
 
-      {!isPrimaryTokenInfo(info) && <Text style={styles.headerText}>{`(${assetName})`}</Text>}
+      {!isPrimaryTokenInfo(info) && (
+        <Text style={styles.headerText}>{`(${assetName})`}</Text>
+      )}
 
       <Space height="xl" />
 
@@ -63,21 +80,26 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const [activeTab, setActiveTab] = React.useState<'overview' | 'json'>('overview')
-
-  const {tokenDiscovery, isLoading: isDiscoveryLoading} = usePortfolioTokenDiscovery(
-    {
-      id: info.id,
-      network: wallet.networkManager.network,
-      getTokenDiscovery: wallet.networkManager.tokenManager.api.tokenDiscovery,
-    },
-    {
-      staleTime: time.session,
-      enabled: !isPrimaryTokenInfo(info),
-    },
+  const [activeTab, setActiveTab] = React.useState<'overview' | 'json'>(
+    'overview',
   )
 
-  if (isPrimaryTokenInfo(info)) return <Text style={styles.description}>{strings.adaDescription}</Text>
+  const {tokenDiscovery, isLoading: isDiscoveryLoading} =
+    usePortfolioTokenDiscovery(
+      {
+        id: info.id,
+        network: wallet.networkManager.network,
+        getTokenDiscovery:
+          wallet.networkManager.tokenManager.api.tokenDiscovery,
+      },
+      {
+        staleTime: time.session,
+        enabled: !isPrimaryTokenInfo(info),
+      },
+    )
+
+  if (isPrimaryTokenInfo(info))
+    return <Text style={styles.description}>{strings.adaDescription}</Text>
 
   return (
     <View style={styles.info}>
@@ -88,7 +110,11 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
           isActive={activeTab === 'overview'}
         />
 
-        <SimpleTab name={strings.json} onPress={() => setActiveTab('json')} isActive={activeTab === 'json'} />
+        <SimpleTab
+          name={strings.json}
+          onPress={() => setActiveTab('json')}
+          isActive={activeTab === 'json'}
+        />
       </View>
 
       <Space width="lg" />
@@ -99,7 +125,11 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
         <ActivityIndicator size={22} color={colors.indicatorColor} />
       ) : (
         <>
-          <Overview info={info} discovery={tokenDiscovery} isActive={activeTab === 'overview'} />
+          <Overview
+            info={info}
+            discovery={tokenDiscovery}
+            isActive={activeTab === 'overview'}
+          />
 
           <Json discovery={tokenDiscovery} isActive={activeTab === 'json'} />
         </>
@@ -108,21 +138,34 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
   )
 }
 
-const Json = ({discovery, isActive}: {discovery?: Portfolio.Token.Discovery; isActive: boolean}) => {
+const Json = ({
+  discovery,
+  isActive,
+}: {
+  discovery?: Portfolio.Token.Discovery
+  isActive: boolean
+}) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
   const {copy} = useCopy()
 
   if (!isActive || !discovery) return null
 
-  const stringifiedMetadata = JSON.stringify(discovery.originalMetadata, null, 2)
+  const stringifiedMetadata = JSON.stringify(
+    discovery.originalMetadata,
+    null,
+    2,
+  )
 
   return (
     <View style={styles.json}>
       <View style={styles.jsonHeader}>
         <Text style={styles.jsonLabel}>{strings.metadata}</Text>
 
-        <TouchableOpacity onPress={() => copy({text: stringifiedMetadata})} activeOpacity={0.5}>
+        <TouchableOpacity
+          onPress={() => copy({text: stringifiedMetadata})}
+          activeOpacity={0.5}
+        >
           <Icon.Copy size={24} color={colors.copy} />
         </TouchableOpacity>
       </View>
@@ -241,7 +284,9 @@ const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
       <Row>
         <Text style={styles.label}>{strings.tokenSupply}</Text>
 
-        <Text style={styles.value}>{isEmptyString(discovery?.supply) ? '-' : discovery?.supply}</Text>
+        <Text style={styles.value}>
+          {isEmptyString(discovery?.supply) ? '-' : discovery?.supply}
+        </Text>
       </Row>
     </View>
   )

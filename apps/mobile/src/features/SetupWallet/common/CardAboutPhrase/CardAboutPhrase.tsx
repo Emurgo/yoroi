@@ -52,7 +52,8 @@ export const CardAboutPhrase = ({
       )}
 
       {linesOfText.map((textLine, index) => {
-        const handleShowChecksum = checksumImage !== undefined && checksumLine === index + 1
+        const handleShowChecksum =
+          checksumImage !== undefined && checksumLine === index + 1
         return (
           <View key={index + '_ITEM_CARD'} style={styles.itemContainer}>
             <Text style={styles.bullet}>•</Text>

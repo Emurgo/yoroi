@@ -81,7 +81,8 @@ type RemoteTransactionUtxoInput = {
   readonly txHash: string
 }
 // not considering account txs for now
-type RemoteTransactionInput = RemoteTransactionInputBase & RemoteTransactionUtxoInput
+type RemoteTransactionInput = RemoteTransactionInputBase &
+  RemoteTransactionUtxoInput
 type RemoteTransactionOutput = {
   readonly address: string
   readonly amount: string
@@ -164,9 +165,14 @@ export const TRANSACTION_STATUS = {
   PENDING: 'Pending',
   FAILED: 'Failed',
 }
-type TransactionStatus = (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
+type TransactionStatus =
+  (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
 
-type TxMetadata = Array<{label: string; map_json?: any; text_scalar?: string | null}>
+type TxMetadata = Array<{
+  label: string
+  map_json?: any
+  text_scalar?: string | null
+}>
 export type TxMetadataInfo = Record<string, any>
 
 export type TransactionInfo = {
@@ -204,7 +210,8 @@ export const TRANSACTION_DIRECTION = {
   // intra-wallet
   MULTI: 'MULTI', // multi-party
 } as const
-export type TransactionDirection = (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION]
+export type TransactionDirection =
+  (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION]
 
 export const TRANSACTION_TYPE = {
   BYRON: 'byron',

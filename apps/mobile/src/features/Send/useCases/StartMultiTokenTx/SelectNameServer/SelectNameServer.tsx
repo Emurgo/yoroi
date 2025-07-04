@@ -13,11 +13,14 @@ import {useStrings} from '../../../common/strings'
 
 export const SelectNameServer = () => {
   const strings = useStrings()
-  const {targets, selectedTargetIndex, nameServerSelectedChanged} = useTransfer()
+  const {targets, selectedTargetIndex, nameServerSelectedChanged} =
+    useTransfer()
   const receiver = targets[selectedTargetIndex].receiver
   const {addressRecords} = receiver
   const addressRecordsEntries = toAddressRecordsEntries(addressRecords)
-  const labels = addressRecordsEntries.map(([nameServer]) => nameServerName[nameServer])
+  const labels = addressRecordsEntries.map(
+    ([nameServer]) => nameServerName[nameServer],
+  )
 
   const shouldShow = addressRecordsEntries.length > 1
 
@@ -59,7 +62,9 @@ export const SelectNameServer = () => {
             <>
               <Spacer height={16} />
 
-              <WarningBanner content={String(strings.manyNameServersWarning(bold))} />
+              <WarningBanner
+                content={String(strings.manyNameServersWarning(bold))}
+              />
             </>
           )}
         </>
@@ -68,13 +73,18 @@ export const SelectNameServer = () => {
   )
 }
 
-const toAddressRecordsEntries = (addressRecords: Resolver.Receiver['addressRecords']) =>
-  Object.entries(addressRecords ?? {}).reduce((acc, [key, value]) => {
-    if (isNameServer(key)) {
-      acc.push([key, value])
-    }
-    return acc
-  }, [] as [Resolver.NameServer, string][])
+const toAddressRecordsEntries = (
+  addressRecords: Resolver.Receiver['addressRecords'],
+) =>
+  Object.entries(addressRecords ?? {}).reduce(
+    (acc, [key, value]) => {
+      if (isNameServer(key)) {
+        acc.push([key, value])
+      }
+      return acc
+    },
+    [] as [Resolver.NameServer, string][],
+  )
 
 const bold = {b: (text: ReactNode) => <Text style={styles.bold}>{text}</Text>}
 

@@ -33,7 +33,9 @@ export class MultiToken {
   }
 
   add: (arg0: TokenEntry) => MultiToken = (entry) => {
-    const existingEntry = this.values.find((value) => value.identifier === entry.identifier)
+    const existingEntry = this.values.find(
+      (value) => value.identifier === entry.identifier,
+    )
 
     if (existingEntry == null) {
       this.values.push(entry)
@@ -102,13 +104,17 @@ export class MultiToken {
   }
 
   getDefaultEntry: (arg0: void) => TokenEntry = () => {
-    return this.values.filter((value) => value.identifier === this.defaults.defaultIdentifier)[0]
+    return this.values.filter(
+      (value) => value.identifier === this.defaults.defaultIdentifier,
+    )[0]
   }
 
   getDefaultId: (arg0: void) => string = () => this.defaults.defaultIdentifier
 
   nonDefaultEntries: (arg0: void) => Array<TokenEntry> = () => {
-    return this.values.filter((value) => !(value.identifier === this.defaults.defaultIdentifier))
+    return this.values.filter(
+      (value) => !(value.identifier === this.defaults.defaultIdentifier),
+    )
   }
 
   asMap: (arg0: void) => Map<string, BigNumber> = () => {
@@ -160,12 +166,17 @@ export class MultiToken {
 /**
  * Utility functions
  */
-export const getDefaultNetworkTokenEntry = (primaryTokenInfo: Portfolio.Token.Info): DefaultTokenEntry => {
+export const getDefaultNetworkTokenEntry = (
+  primaryTokenInfo: Portfolio.Token.Info,
+): DefaultTokenEntry => {
   return {
     defaultIdentifier: primaryTokenInfo.id,
   }
 }
-export const strToDefaultMultiAsset = (amount: string, primaryTokenInfo: Portfolio.Token.Info) => {
+export const strToDefaultMultiAsset = (
+  amount: string,
+  primaryTokenInfo: Portfolio.Token.Info,
+) => {
   return new MultiToken(
     [
       {

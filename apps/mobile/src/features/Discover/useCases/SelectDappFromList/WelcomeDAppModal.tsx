@@ -26,7 +26,9 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
         <View style={styles.container}>
           <Image source={IllustrationDAppImage} style={styles.welcomeImage} />
 
-          <Text style={styles.welcomeText}>{strings.welcomeToYoroiDAppExplorerDescription}</Text>
+          <Text style={styles.welcomeText}>
+            {strings.welcomeToYoroiDAppExplorerDescription}
+          </Text>
         </View>
       ),
       footer: (

@@ -13,7 +13,12 @@ export const TokenNews = () => {
   const [expanded, setExpanded] = useState(true)
 
   return (
-    <Accordion label={strings.news} expanded={expanded} onChange={setExpanded} wrapperStyle={styles.root}>
+    <Accordion
+      label={strings.news}
+      expanded={expanded}
+      onChange={setExpanded}
+      wrapperStyle={styles.root}
+    >
       <FlatList
         horizontal
         data={Array.from({length: 10}).map((_, i) => i)}

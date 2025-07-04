@@ -1,5 +1,9 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {
+  parseBoolean,
+  useAsyncStorage,
+  useMutationWithInvalidations,
+} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -21,7 +25,8 @@ export const DarkThemeAnnouncement = () => {
   const strings = useStrings()
   const {isDark} = useTheme()
   const {track} = useMetrics()
-  const {setScreenShown, isLoading: isSetScreenShownLoading} = useSetScreenShown()
+  const {setScreenShown, isLoading: isSetScreenShownLoading} =
+    useSetScreenShown()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
@@ -48,8 +53,16 @@ export const DarkThemeAnnouncement = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.root}>
-      <ScrollView bounces={false} ref={scrollViewRef} persistentScrollbar={true} showsVerticalScrollIndicator={true}>
+    <SafeAreaView
+      edges={['left', 'right', 'top', 'bottom']}
+      style={styles.root}
+    >
+      <ScrollView
+        bounces={false}
+        ref={scrollViewRef}
+        persistentScrollbar={true}
+        showsVerticalScrollIndicator={true}
+      >
         <View style={styles.content}>
           <Space height="_2xl" />
 
@@ -67,7 +80,11 @@ export const DarkThemeAnnouncement = () => {
         </View>
       </ScrollView>
 
-      <Button title={strings.continue} disabled={isSetScreenShownLoading} onPress={navigate} />
+      <Button
+        title={strings.continue}
+        disabled={isSetScreenShownLoading}
+        onPress={navigate}
+      />
 
       {Platform.OS === 'android' && <Space height="lg" />}
     </SafeAreaView>
@@ -94,14 +111,21 @@ const Toggle = () => {
         thumbColor={isLight ? color.sys_yellow_500 : color.el_primary_medium}
       />
 
-      {isDark && Platform.OS === 'ios' && <Pressable style={styles.switchCircle} onPress={handleOnValueChange} />}
+      {isDark && Platform.OS === 'ios' && (
+        <Pressable style={styles.switchCircle} onPress={handleOnValueChange} />
+      )}
     </View>
   )
 }
 
 const darkThemeAnnouncementShownKey = 'dark-theme-announcement-shown-key'
 export const useShowDarkThemeAnnouncementScreen = (
-  options: UseQueryOptions<boolean, Error, boolean, ['useShowDarkThemeAnnouncementScreen']> = {},
+  options: UseQueryOptions<
+    boolean,
+    Error,
+    boolean,
+    ['useShowDarkThemeAnnouncementScreen']
+  > = {},
 ) => {
   const storage = useAsyncStorage()
 
@@ -110,7 +134,10 @@ export const useShowDarkThemeAnnouncementScreen = (
     suspense: true,
     ...options,
     queryKey: ['useShowDarkThemeAnnouncementScreen'],
-    queryFn: () => storage.getItem(darkThemeAnnouncementShownKey).then((value) => parseBoolean(value) ?? true),
+    queryFn: () =>
+      storage
+        .getItem(darkThemeAnnouncementShownKey)
+        .then((value) => parseBoolean(value) ?? true),
   })
 
   return {
@@ -123,7 +150,8 @@ const useSetScreenShown = () => {
   const storage = useAsyncStorage()
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: async () => storage.setItem(darkThemeAnnouncementShownKey, JSON.stringify(false)),
+    mutationFn: async () =>
+      storage.setItem(darkThemeAnnouncementShownKey, JSON.stringify(false)),
     invalidateQueries: [['useShowDarkThemeAnnouncementScreen']],
   })
 

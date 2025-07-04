@@ -13,21 +13,34 @@ import {useLanguage} from '../../../../kernel/i18n'
 import {themeNames} from '../../../../kernel/i18n/global-messages'
 import {defaultLanguage} from '../../../../kernel/i18n/languages'
 import {useCrashReports} from '../../../../wallets/hooks'
-import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../../Auth/common/hooks'
+import {
+  useAuthSetting,
+  useAuthWithOs,
+  useIsAuthOsSupported,
+} from '../../../Auth/common/hooks'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 import {useNavigateTo} from '../../common/navigation'
 import {SettingsSwitch} from '../../common/SettingsSwitch'
-import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../../SettingsItems'
+import {
+  NavigatedSettingsItem,
+  SettingsItem,
+  SettingsSection,
+} from '../../SettingsItems'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
-import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from './ScreenShare'
+import {
+  useChangeScreenShareSetting,
+  useScreenShareSettingEnabled,
+} from './ScreenShare'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const {name} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
-  const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
+  const language =
+    supportedLanguages.find((lang) => lang.code === languageCode) ??
+    defaultLanguage
 
   const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
   const {currency} = useCurrencyPairing()
@@ -173,8 +186,10 @@ export const ApplicationSettingsScreen = () => {
 
 // to avoid switch jumps
 const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
-  const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading} = usePrivacyMode()
-  const [isLocalPrivacyActive, setIsLocalPrivacyOff] = React.useState(isPrivacyActive)
+  const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading} =
+    usePrivacyMode()
+  const [isLocalPrivacyActive, setIsLocalPrivacyOff] =
+    React.useState(isPrivacyActive)
 
   const onTogglePrivacyMode = () => {
     setIsLocalPrivacyOff((prevState) => {
@@ -198,7 +213,11 @@ const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
 }
 
 // to avoid switch jumps
-const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean}) => {
+const CrashReportsSwitch = ({
+  crashReportEnabled,
+}: {
+  crashReportEnabled: boolean
+}) => {
   const {enable, disable} = useCrashReports()
   const [isLocalEnabled, setIsLocalEnabled] = React.useState(crashReportEnabled)
 
@@ -214,20 +233,39 @@ const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean})
     })
   }
 
-  return <SettingsSwitch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={isNightly || isDev} />
+  return (
+    <SettingsSwitch
+      value={isLocalEnabled}
+      onValueChange={onToggleCrashReports}
+      disabled={isNightly || isDev}
+    />
+  )
 }
 
 // to avoid switch jumps
-const ScreenSharingSwitch = ({screenSharingEnabled, disabled}: {screenSharingEnabled: boolean; disabled?: boolean}) => {
+const ScreenSharingSwitch = ({
+  screenSharingEnabled,
+  disabled,
+}: {
+  screenSharingEnabled: boolean
+  disabled?: boolean
+}) => {
   const {changeScreenShareSettings} = useChangeScreenShareSetting()
-  const [isLocalEnabled, setIsLocalEnabled] = React.useState(screenSharingEnabled)
+  const [isLocalEnabled, setIsLocalEnabled] =
+    React.useState(screenSharingEnabled)
 
   const onToggle = (enabled: boolean) => {
     changeScreenShareSettings(enabled)
     setIsLocalEnabled(enabled)
   }
 
-  return <SettingsSwitch value={isLocalEnabled} onValueChange={onToggle} disabled={disabled} />
+  return (
+    <SettingsSwitch
+      value={isLocalEnabled}
+      onValueChange={onToggle}
+      disabled={disabled}
+    />
+  )
 }
 
 const useStrings = () => {
@@ -252,7 +290,8 @@ const useStrings = () => {
     privacyPolicy: intl.formatMessage(messages.privacyPolicy),
     screenSharing: intl.formatMessage(messages.screenSharing),
     screenSharingInfo: intl.formatMessage(messages.screenSharingInfo),
-    translateThemeName: (theme: SupportedThemes) => intl.formatMessage(themeNames[theme]),
+    translateThemeName: (theme: SupportedThemes) =>
+      intl.formatMessage(themeNames[theme]),
     network: intl.formatMessage(messages.network),
   }
 }
@@ -296,7 +335,8 @@ const messages = defineMessages({
   },
   privacyModeInfo: {
     id: 'components.settings.applicationsettingsscreen.privacyModeInfo',
-    defaultMessage: '!!!This function will be applied to all wallets in your app',
+    defaultMessage:
+      '!!!This function will be applied to all wallets in your app',
   },
   biometricsSignIn: {
     id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
@@ -304,7 +344,8 @@ const messages = defineMessages({
   },
   biometricsSignInInfo: {
     id: 'components.settings.applicationsettingsscreen.biometricsSignInInfo',
-    defaultMessage: '!!!Changes to this option will be reflected after restarting the application',
+    defaultMessage:
+      '!!!Changes to this option will be reflected after restarting the application',
   },
   crashReporting: {
     id: 'components.settings.applicationsettingsscreen.crashReporting',
@@ -312,7 +353,8 @@ const messages = defineMessages({
   },
   crashReportingInfo: {
     id: 'components.settings.applicationsettingsscreen.crashReportingInfo',
-    defaultMessage: '!!!Changes to this option will be reflected after restarting the application',
+    defaultMessage:
+      '!!!Changes to this option will be reflected after restarting the application',
   },
   analytics: {
     id: 'components.settings.applicationsettingsscreen.analytics',

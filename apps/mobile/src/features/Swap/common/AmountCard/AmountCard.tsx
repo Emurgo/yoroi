@@ -1,7 +1,14 @@
 import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Platform, Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, ButtonType} from '../../../../components/Button/Button'
@@ -27,28 +34,36 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const balances = usePortfolioBalances({wallet})
   const swapForm = useSwap()
   const navigate = useNavigateTo()
-  const navigateTo = direction === 'in' ? navigate.selectTokenIn : navigate.selectTokenOut
-  const tokenInput = swapForm[direction === 'in' ? 'tokenInInput' : 'tokenOutInput']
+  const navigateTo =
+    direction === 'in' ? navigate.selectTokenIn : navigate.selectTokenOut
+  const tokenInput =
+    swapForm[direction === 'in' ? 'tokenInInput' : 'tokenOutInput']
 
   const amount = {
     info: swapForm.tokenInfos.get(tokenInput.tokenId ?? undefinedToken),
-    quantity: balances.records.get(tokenInput.tokenId ?? undefinedToken)?.quantity,
+    quantity: balances.records.get(tokenInput.tokenId ?? undefinedToken)
+      ?.quantity,
   }
   const info = amount.info
 
   const decimals = info?.decimals ?? 0
   const value = tokenInput.value
-  const quantity = BigInt(Math.floor(Number(value ?? 0) * 10 ** (info?.decimals ?? 0)))
+  const quantity = BigInt(
+    Math.floor(Number(value ?? 0) * 10 ** (info?.decimals ?? 0)),
+  )
   const touched = tokenInput.isTouched
-  const inputRef = direction === 'in' ? swapForm.tokenInInputRef : swapForm.tokenOutInputRef
+  const inputRef =
+    direction === 'in' ? swapForm.tokenInInputRef : swapForm.tokenOutInputRef
   const error = direction === 'in' ? tokenInput.error : null
   const testID = direction === 'in' ? 'swap:sell-edit' : 'swap:buy-edit'
 
   const noTokenSelected = !touched
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+
   const name = info?.ticker || info?.name || ''
   const formattedAmount =
-    !info || (amount?.quantity ?? 0n) === 0n ? '0' : formatTokenWithText(amount?.quantity ?? 0n, info, 18)
+    !info || (amount?.quantity ?? 0n) === 0n
+      ? '0'
+      : formatTokenWithText(amount?.quantity ?? 0n, info, 18)
 
   const focusInput = () => {
     if (inputRef?.current) {
@@ -66,7 +81,9 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
       />
 
       <View style={styles.between}>
-        <Text style={styles.label}>{direction === 'in' ? strings.from : strings.to}</Text>
+        <Text style={styles.label}>
+          {direction === 'in' ? strings.from : strings.to}
+        </Text>
 
         {direction === 'in' && info && !isPrimaryTokenInfo(info) && (
           <View>
@@ -77,7 +94,9 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
               onPress={() =>
                 swapForm.action({
                   type: 'TokenInAmountChanged',
-                  value: (Number(amount.quantity) / 10 ** decimals).toFixed(decimals),
+                  value: (Number(amount.quantity) / 10 ** decimals).toFixed(
+                    decimals,
+                  ),
                 })
               }
             />
@@ -90,7 +109,9 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
           <View style={styles.token}>
             <TokenInfoIcon info={info} size="md" />
 
-            <Text style={styles.coinName}>{noTokenSelected || !info ? strings.selectToken : name}</Text>
+            <Text style={styles.coinName}>
+              {noTokenSelected || !info ? strings.selectToken : name}
+            </Text>
 
             <Icon.Chevron direction="down" size={24} color={colors.gray} />
           </View>
@@ -108,11 +129,21 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             placeholder="0"
             placeholderTextColor={colors.placeholder}
             onChangeText={(value) =>
-              swapForm.action({type: direction === 'in' ? 'TokenInAmountChanged' : 'TokenOutAmountChanged', value})
+              swapForm.action({
+                type:
+                  direction === 'in'
+                    ? 'TokenInAmountChanged'
+                    : 'TokenOutAmountChanged',
+                value,
+              })
             }
             allowFontScaling
             selectionColor={isFocused ? colors.focused : colors.blur}
-            style={[styles.amountInput, value === '0' && styles.grayText, !isEmptyString(error) && styles.errorText]}
+            style={[
+              styles.amountInput,
+              value === '0' && styles.grayText,
+              !isEmptyString(error) && styles.errorText,
+            ]}
             underlineColorAndroid="transparent"
             ref={inputRef}
             editable={touched}

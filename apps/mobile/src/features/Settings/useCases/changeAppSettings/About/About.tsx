@@ -26,7 +26,9 @@ export const About = () => {
       <View style={styles.row}>
         <Text style={styles.labelText}>{strings.currentVersion}</Text>
 
-        <Pressable onLongPress={() => navigation.navigate('settings-system-log')}>
+        <Pressable
+          onLongPress={() => navigation.navigate('settings-system-log')}
+        >
           <Text style={styles.valueText}>{appInfo.version}</Text>
         </Pressable>
       </View>
@@ -43,7 +45,11 @@ export const About = () => {
 
           <Copiable text={FCMToken}>
             <View style={{flex: 1}}>
-              <Text style={styles.valueText} numberOfLines={1} ellipsizeMode="middle">
+              <Text
+                style={styles.valueText}
+                numberOfLines={1}
+                ellipsizeMode="middle"
+              >
                 {FCMToken}
               </Text>
             </View>

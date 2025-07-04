@@ -1,7 +1,10 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {ledgerMessages, txLabels} from '../../../kernel/i18n/global-messages'
+import globalMessages, {
+  ledgerMessages,
+  txLabels,
+} from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -9,29 +12,51 @@ export const useStrings = () => {
   return React.useRef({
     discoverTitle: intl.formatMessage(messages.discoverTitle),
     searchDApps: intl.formatMessage(messages.searchDApps),
-    welcomeToYoroiDAppExplorer: intl.formatMessage(messages.welcomeToYoroiDAppExplorer),
-    welcomeToYoroiDAppExplorerDescription: intl.formatMessage(messages.welcomeToYoroiDAppExplorerDescription),
+    welcomeToYoroiDAppExplorer: intl.formatMessage(
+      messages.welcomeToYoroiDAppExplorer,
+    ),
+    welcomeToYoroiDAppExplorerDescription: intl.formatMessage(
+      messages.welcomeToYoroiDAppExplorerDescription,
+    ),
     next: intl.formatMessage(messages.next),
-    totalDAppAvailable: (count: number) => intl.formatMessage(messages.totalDAppAvailable, {count}),
-    totalDAppConnected: (count: number) => intl.formatMessage(messages.dAppConnected, {count}),
+    totalDAppAvailable: (count: number) =>
+      intl.formatMessage(messages.totalDAppAvailable, {count}),
+    totalDAppConnected: (count: number) =>
+      intl.formatMessage(messages.dAppConnected, {count}),
     connected: intl.formatMessage(messages.connected),
     recommended: intl.formatMessage(messages.recommended),
     done: intl.formatMessage(messages.done),
     openDApp: intl.formatMessage(messages.openDApp),
-    disconnectWalletFromDApp: intl.formatMessage(messages.disconnectWalletFromDApp),
+    disconnectWalletFromDApp: intl.formatMessage(
+      messages.disconnectWalletFromDApp,
+    ),
     dAppActions: intl.formatMessage(messages.dAppActions),
-    confirmConnectionModalTitle: intl.formatMessage(messages.confirmConnectionModalTitle),
-    confirmConnectionModalConnectTo: intl.formatMessage(messages.confirmConnectionModalConnectTo),
-    confirmConnectionModalConnect: intl.formatMessage(messages.confirmConnectionModalConnect),
-    confirmConnectionModalAllowThisDAppTo: intl.formatMessage(messages.confirmConnectionModalAllowThisDAppTo),
-    confirmConnectionModalPermission1: intl.formatMessage(messages.confirmConnectionModalPermission1),
-    confirmConnectionModalPermission2: intl.formatMessage(messages.confirmConnectionModalPermission2),
+    confirmConnectionModalTitle: intl.formatMessage(
+      messages.confirmConnectionModalTitle,
+    ),
+    confirmConnectionModalConnectTo: intl.formatMessage(
+      messages.confirmConnectionModalConnectTo,
+    ),
+    confirmConnectionModalConnect: intl.formatMessage(
+      messages.confirmConnectionModalConnect,
+    ),
+    confirmConnectionModalAllowThisDAppTo: intl.formatMessage(
+      messages.confirmConnectionModalAllowThisDAppTo,
+    ),
+    confirmConnectionModalPermission1: intl.formatMessage(
+      messages.confirmConnectionModalPermission1,
+    ),
+    confirmConnectionModalPermission2: intl.formatMessage(
+      messages.confirmConnectionModalPermission2,
+    ),
     confirmTx: intl.formatMessage(messages.confirmTx),
     understand: intl.formatMessage(messages.understand),
     disclaimerModalText: intl.formatMessage(messages.disclaimerModalText),
     disclaimerModalTitle: intl.formatMessage(messages.disclaimerModalTitle),
     disconnectDApp: intl.formatMessage(messages.disconnectDApp),
-    confirmDisconnectDAppDescription: intl.formatMessage(messages.confirmDisconnectDAppDescription),
+    confirmDisconnectDAppDescription: intl.formatMessage(
+      messages.confirmDisconnectDAppDescription,
+    ),
     cancel: intl.formatMessage(messages.cancel),
     confirm: intl.formatMessage(messages.confirm),
     signTransaction: intl.formatMessage(txLabels.signTransaction),
@@ -48,30 +73,58 @@ export const useStrings = () => {
     signData: intl.formatMessage(messages.signData),
     signMessage: intl.formatMessage(messages.signMessage),
     testnetWarningTitle: intl.formatMessage(messages.testnetWarningTitle),
-    testnetWarningDescription: intl.formatMessage(messages.testnetWarningDescription),
+    testnetWarningDescription: intl.formatMessage(
+      messages.testnetWarningDescription,
+    ),
     singleAddress: intl.formatMessage(messages.singleAddress),
     singleAddressWarning: intl.formatMessage(messages.singleAddressWarning),
     filterChildOptionsDAO: intl.formatMessage(messages.filterChildOptionsDAO),
     filterChildOptionsDEX: intl.formatMessage(messages.filterChildOptionsDEX),
     filterChildOptionsDeFi: intl.formatMessage(messages.filterChildOptionsDeFi),
-    filterChildOptionsDecentralisedStorage: intl.formatMessage(messages.filterChildOptionsDecentralisedStorage),
-    filterChildOptionsEntertainment: intl.formatMessage(messages.filterChildOptionsEntertainment),
-    filterChildOptionsNFTMarketplace: intl.formatMessage(messages.filterChildOptionsNFTMarketplace),
+    filterChildOptionsDecentralisedStorage: intl.formatMessage(
+      messages.filterChildOptionsDecentralisedStorage,
+    ),
+    filterChildOptionsEntertainment: intl.formatMessage(
+      messages.filterChildOptionsEntertainment,
+    ),
+    filterChildOptionsNFTMarketplace: intl.formatMessage(
+      messages.filterChildOptionsNFTMarketplace,
+    ),
     filterChildOptionsNews: intl.formatMessage(messages.filterChildOptionsNews),
-    filterChildOptionsStablecoin: intl.formatMessage(messages.filterChildOptionsStablecoin),
-    filterChildOptionsTradingTools: intl.formatMessage(messages.filterChildOptionsTradingTools),
-    filterParentOptionsCommunity: intl.formatMessage(messages.filterParentOptionsCommunity),
-    filterParentOptionsInvestment: intl.formatMessage(messages.filterParentOptionsInvestment),
-    filterParentOptionsMedia: intl.formatMessage(messages.filterParentOptionsMedia),
+    filterChildOptionsStablecoin: intl.formatMessage(
+      messages.filterChildOptionsStablecoin,
+    ),
+    filterChildOptionsTradingTools: intl.formatMessage(
+      messages.filterChildOptionsTradingTools,
+    ),
+    filterParentOptionsCommunity: intl.formatMessage(
+      messages.filterParentOptionsCommunity,
+    ),
+    filterParentOptionsInvestment: intl.formatMessage(
+      messages.filterParentOptionsInvestment,
+    ),
+    filterParentOptionsMedia: intl.formatMessage(
+      messages.filterParentOptionsMedia,
+    ),
     filterParentOptionsNFT: intl.formatMessage(messages.filterParentOptionsNFT),
-    filterParentOptionsTrading: intl.formatMessage(messages.filterParentOptionsTrading),
+    filterParentOptionsTrading: intl.formatMessage(
+      messages.filterParentOptionsTrading,
+    ),
     learnMore: intl.formatMessage(globalMessages.learnMore),
     disconnectWarning: intl.formatMessage(messages.disconnectWarning),
-    collateralTxPendingTitle: intl.formatMessage(messages.collateralTxPendingTitle),
-    collateralNotFoundTitle: intl.formatMessage(messages.collateralNotFoundTitle),
-    collateralTxPendingText: intl.formatMessage(messages.collateralTxPendingText),
+    collateralTxPendingTitle: intl.formatMessage(
+      messages.collateralTxPendingTitle,
+    ),
+    collateralNotFoundTitle: intl.formatMessage(
+      messages.collateralNotFoundTitle,
+    ),
+    collateralTxPendingText: intl.formatMessage(
+      messages.collateralTxPendingText,
+    ),
     collateralNotFoundText: intl.formatMessage(messages.collateralNotFoundText),
-    collateralNotFoundActionText: intl.formatMessage(messages.collateralNotFoundActionText),
+    collateralNotFoundActionText: intl.formatMessage(
+      messages.collateralNotFoundActionText,
+    ),
   }).current
 }
 
@@ -198,7 +251,8 @@ const messages = Object.freeze(
     },
     signDataNotSupported: {
       id: 'discover.ledger.signDataNotSupported',
-      defaultMessage: '!!!The Ledger Cardano app does not support data signing at this moment.',
+      defaultMessage:
+        '!!!The Ledger Cardano app does not support data signing at this moment.',
     },
     transactionReview: {
       id: 'discover.reviewTransaction.transactionReview',
@@ -312,7 +366,8 @@ const messages = Object.freeze(
     },
     collateralNotFoundText: {
       id: 'discover.modal.collateralNotFoundText',
-      defaultMessage: '!!!To continue with this action, you need to generate a collateral',
+      defaultMessage:
+        '!!!To continue with this action, you need to generate a collateral',
     },
     collateralNotFoundTitle: {
       id: 'discover.modal.collateralNotFoundTitle',

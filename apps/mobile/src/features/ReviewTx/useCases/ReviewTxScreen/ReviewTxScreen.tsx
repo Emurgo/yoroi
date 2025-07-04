@@ -19,7 +19,10 @@ export const ReviewTxScreen = () => {
   const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
   const cbor = params?.cbor
 
-  if (isDev) navigation.setOptions({headerRight: () => (cbor != null ? <Copiable text={cbor} /> : null)})
+  if (isDev)
+    navigation.setOptions({
+      headerRight: () => (cbor != null ? <Copiable text={cbor} /> : null),
+    })
 
   const {legacyOnConfirm} = useLegacyOnConfirm({
     unsignedTx,
@@ -41,7 +44,11 @@ export const ReviewTxScreen = () => {
 
   const txBody = useTxBody({cbor, unsignedTx})
   const formattedTx = useFormattedTx(txBody)
-  const formattedMetadata = useFormattedMetadata({txBody, unsignedTx, cbor: cbor ?? null})
+  const formattedMetadata = useFormattedMetadata({
+    txBody,
+    unsignedTx,
+    cbor: cbor ?? null,
+  })
 
   React.useEffect(() => {
     return () => {

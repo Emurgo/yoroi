@@ -50,10 +50,15 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const onSuccess = (hwDeviceInfo: HW.DeviceInfo) => {
     hwDeviceInfoChanged(hwDeviceInfo)
 
-    const duplicatedAccountWalletMeta = walletManager.findWalletMetadataByPublicKeyHex(hwDeviceInfo.bip44AccountPublic)
+    const duplicatedAccountWalletMeta =
+      walletManager.findWalletMetadataByPublicKeyHex(
+        hwDeviceInfo.bip44AccountPublic,
+      )
 
     if (duplicatedAccountWalletMeta) {
-      const {plate, seed} = walletManager.checksum(hwDeviceInfo.bip44AccountPublic)
+      const {plate, seed} = walletManager.checksum(
+        hwDeviceInfo.bip44AccountPublic,
+      )
 
       openModal({
         title: strings.restoreDuplicatedWalletModalTitle,
@@ -64,7 +69,11 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
             duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
           />
         ),
-        footer: <WalletDuplicatedModalActions duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id} />,
+        footer: (
+          <WalletDuplicatedModalActions
+            duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
+          />
+        ),
       })
       return
     }
@@ -75,25 +84,41 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const onError = (error: Error) => {
     if (error instanceof LocalizableError) {
       showErrorDialog(errorMessages.generalLocalizableError, intl, {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        message: intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values as any),
+        message: intl.formatMessage(
+          {id: error.id, defaultMessage: error.defaultMessage},
+          error.values as any,
+        ),
       })
     } else {
-      showErrorDialog(errorMessages.hwConnectionError, intl, {message: String(error.message)})
+      showErrorDialog(errorMessages.hwConnectionError, intl, {
+        message: String(error.message),
+      })
     }
   }
 
   const onConnectBLE = (deviceId: string) => {
-    return getHWDeviceInfo(walletImplementation, deviceId, null, useUSB).then(onSuccess).catch(onError)
+    return getHWDeviceInfo(walletImplementation, deviceId, null, useUSB)
+      .then(onSuccess)
+      .catch(onError)
   }
 
   const onConnectUSB = (deviceObj: HW.DeviceObj) => {
-    return getHWDeviceInfo(walletImplementation, null, deviceObj, useUSB).then(onSuccess).catch(onError)
+    return getHWDeviceInfo(walletImplementation, null, deviceObj, useUSB)
+      .then(onSuccess)
+      .catch(onError)
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StepperProgress style={styles.stepper} currentStepTitle="Connect" currentStep={2} totalSteps={3} />
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
+      <StepperProgress
+        style={styles.stepper}
+        currentStepTitle="Connect"
+        currentStep={2}
+        totalSteps={3}
+      />
 
       <View style={styles.content}>
         <LedgerConnect

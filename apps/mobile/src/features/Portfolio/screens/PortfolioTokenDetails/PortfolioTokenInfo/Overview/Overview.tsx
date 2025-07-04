@@ -34,9 +34,18 @@ export const Overview = () => {
     <View style={styles.scrollView}>
       <Spacer height={8} />
 
-      <Accordion label={strings.info} expanded={expanded} onChange={setExpanded} wrapperStyle={styles.container}>
+      <Accordion
+        label={strings.info}
+        expanded={expanded}
+        onChange={setExpanded}
+        wrapperStyle={styles.container}
+      >
         <View style={styles.tokenInfoContainer}>
-          <TokenInfoIcon size="sm" info={tokenInfo} imageStyle={styles.tokenLogo} />
+          <TokenInfoIcon
+            size="sm"
+            info={tokenInfo}
+            imageStyle={styles.tokenLogo}
+          />
 
           <Text style={styles.tokenName}>{tokenSymbol}</Text>
         </View>
@@ -51,7 +60,9 @@ export const Overview = () => {
           <Spacer height={4} />
 
           {!isEmptyString(tokenInfo.website) ? (
-            <TouchableOpacity onPress={() => Linking.openURL(tokenInfo.website)}>
+            <TouchableOpacity
+              onPress={() => Linking.openURL(tokenInfo.website)}
+            >
               <Text style={styles.linkText}>{tokenInfo.website}</Text>
             </TouchableOpacity>
           ) : (
@@ -83,7 +94,9 @@ export const Overview = () => {
               <Spacer height={4} />
 
               <Copiable text={tokenInfo.fingerprint ?? ''}>
-                <Text style={styles.value}>{tokenInfo.fingerprint ?? '--'}</Text>
+                <Text style={styles.value}>
+                  {tokenInfo.fingerprint ?? '--'}
+                </Text>
               </Copiable>
             </View>
 

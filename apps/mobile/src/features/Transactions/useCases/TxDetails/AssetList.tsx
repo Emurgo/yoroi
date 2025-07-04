@@ -21,7 +21,7 @@ type AssetListProps = {
 }
 export const AssetList = ({assets, onSelect}: AssetListProps) => {
   const intl = useIntl()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <View>
@@ -69,7 +69,7 @@ const AssetRow = ({entry, onSelect}: AssetRowProps) => {
   const isPrimary = isPrimaryToken(tokenInfo?.id)
   const primaryTicker = wallet.portfolioPrimaryTokenInfo.ticker
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const name = isEmptyString(tokenInfo?.name)
     ? strings.unknownAssetName

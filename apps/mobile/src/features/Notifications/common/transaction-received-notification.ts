@@ -19,15 +19,22 @@ type BuildNotificationsParams = {
   walletIds: string[]
 }
 
-const buildNotifications = async ({appStorage, sinceDate, walletIds}: BuildNotificationsParams) => {
+const buildNotifications = async ({
+  appStorage,
+  sinceDate,
+  walletIds,
+}: BuildNotificationsParams) => {
   const notifications: NotificationTypes.TransactionReceivedEvent[] = []
 
   for (const walletId of walletIds) {
     const wallet = walletManager.getWalletById(walletId)
     if (!wallet) continue
 
-    const fullStorageKey = `wallet/${walletId}/${wallet.networkManager.network}/${storageKey}/` as const
-    const storage = buildProcessedNotificationsStorage(appStorage.join(fullStorageKey))
+    const fullStorageKey =
+      `wallet/${walletId}/${wallet.networkManager.network}/${storageKey}/` as const
+    const storage = buildProcessedNotificationsStorage(
+      appStorage.join(fullStorageKey),
+    )
     const processed = await storage.getValues()
     const allTxIds = getTxIds(wallet)
 
@@ -48,16 +55,20 @@ const buildNotifications = async ({appStorage, sinceDate, walletIds}: BuildNotif
 
     newTxIds.forEach((id) => {
       const txDate = transactions[id].submittedAt ?? new Date().toISOString()
-      const isConfirmedAfterDeadline = new Date(txDate).getTime() > sinceDate.getTime()
+      const isConfirmedAfterDeadline =
+        new Date(txDate).getTime() > sinceDate.getTime()
       if (!isConfirmedAfterDeadline) return
       const metadata: NotificationTypes.TransactionReceivedEvent['metadata'] = {
         txId: id,
-        isSentByUser: transactions[id]?.direction === TRANSACTION_DIRECTION.SENT,
+        isSentByUser:
+          transactions[id]?.direction === TRANSACTION_DIRECTION.SENT,
         nextTxsCounter: newTxIds.length + processed.length,
         previousTxsCounter: processed.length,
         walletId,
       }
-      notifications.push(createTransactionReceivedNotification(metadata, new Date(txDate)))
+      notifications.push(
+        createTransactionReceivedNotification(metadata, new Date(txDate)),
+      )
     })
   }
 
@@ -82,9 +93,14 @@ export const createTransactionReceivedNotification = (
   } as const
 }
 
-export const transactionReceivedSubject = new Subject<NotificationTypes.TransactionReceivedEvent>()
+export const transactionReceivedSubject =
+  new Subject<NotificationTypes.TransactionReceivedEvent>()
 
-export const useTransactionReceivedNotifications = ({enabled}: {enabled: boolean}) => {
+export const useTransactionReceivedNotifications = ({
+  enabled,
+}: {
+  enabled: boolean
+}) => {
   const {walletManager} = useWalletManager()
   const asyncStorage = useAsyncStorage()
   const walletId = walletManager.selectedWalledId
@@ -93,23 +109,36 @@ export const useTransactionReceivedNotifications = ({enabled}: {enabled: boolean
     if (!enabled || !walletId) return
     const subscriptionBeginDate = new Date()
     let latestStatuses: Map<string, SyncWalletInfo> = new Map()
-    const subscription = walletManager.syncWalletInfos$.subscribe(async (status) => {
-      const selectedWalletOldStatus = latestStatuses.get(walletId)
-      const selectedWalletCurrentStatus = status.get(walletId)
-      latestStatuses = status
+    const subscription = walletManager.syncWalletInfos$.subscribe(
+      async (status) => {
+        const selectedWalletOldStatus = latestStatuses.get(walletId)
+        const selectedWalletCurrentStatus = status.get(walletId)
+        latestStatuses = status
 
-      if (selectedWalletOldStatus?.status !== 'done' && selectedWalletCurrentStatus?.status === 'done') {
-        const notifications = await buildNotifications({
-          appStorage: asyncStorage,
-          sinceDate: subscriptionBeginDate,
-          walletIds: [walletId],
-        })
-        notifications.forEach((notification) => transactionReceivedSubject.next(notification))
-      }
-    })
+        if (
+          selectedWalletOldStatus?.status !== 'done' &&
+          selectedWalletCurrentStatus?.status === 'done'
+        ) {
+          const notifications = await buildNotifications({
+            appStorage: asyncStorage,
+            sinceDate: subscriptionBeginDate,
+            walletIds: [walletId],
+          })
+          notifications.forEach((notification) =>
+            transactionReceivedSubject.next(notification),
+          )
+        }
+      },
+    )
 
     return () => {
       subscription.unsubscribe()
     }
-  }, [walletManager, asyncStorage, enabled, walletId, walletManager.selectedNetwork])
+  }, [
+    walletManager,
+    asyncStorage,
+    enabled,
+    walletId,
+    walletManager.selectedNetwork,
+  ])
 }

@@ -16,7 +16,9 @@ export const useShowLiquidityPoolModal = () => {
   const handleShowLiquidityPoolModal = React.useCallback(
     (liquidityPool: ILiquidityPool) => {
       openModal({
-        content: <LiquidityPoolModal splitTokenSymbol="-" tokenInfo={liquidityPool} />,
+        content: (
+          <LiquidityPoolModal splitTokenSymbol="-" tokenInfo={liquidityPool} />
+        ),
         height: dialogHeight,
       })
     },

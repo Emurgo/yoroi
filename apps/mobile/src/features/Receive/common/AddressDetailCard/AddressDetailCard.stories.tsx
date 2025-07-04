@@ -9,7 +9,9 @@ import {AddressDetailCard} from './AddressDetailCard'
 storiesOf('Receive AddressDetailCard', module)
   .addDecorator((story) => (
     <View style={styles.container}>
-      <ReceiveProvider initialState={{selectedAddress: mocks.address}}>{story()}</ReceiveProvider>
+      <ReceiveProvider initialState={{selectedAddress: mocks.address}}>
+        {story()}
+      </ReceiveProvider>
     </View>
   ))
   .add('with address', () => <AddressDetailCard title="Test Title" />)

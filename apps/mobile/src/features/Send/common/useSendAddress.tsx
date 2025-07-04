@@ -41,7 +41,12 @@ export const useSendAddress = () => {
 
 const useValidateAddress = (
   {address, chainId}: {address: string; chainId: number},
-  options?: UseQueryOptions<boolean, Error, boolean, ['useValidateAddress', string, number]>,
+  options?: UseQueryOptions<
+    boolean,
+    Error,
+    boolean,
+    ['useValidateAddress', string, number]
+  >,
 ) => {
   const query = useQuery({
     ...options,
@@ -58,11 +63,11 @@ const useValidateAddress = (
 }
 
 // NOTE: should be a wallet function from address manager
-const validateAddress = async (address: string, chainId: number) => {
-  const chainAddress = await normalizeToAddress(CardanoMobile, address)
+const validateAddress = (address: string, chainId: number) => {
+  const chainAddress = normalizeToAddress(CardanoMobile, address)
   if (!chainAddress) throw new AddressErrorInvalid()
 
-  const chainAddressChainId = await chainAddress.networkId()
+  const chainAddressChainId = chainAddress.networkId()
   if (chainAddressChainId !== chainId) throw new AddressErrorWrongNetwork()
 
   return true

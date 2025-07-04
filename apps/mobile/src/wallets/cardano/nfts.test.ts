@@ -14,7 +14,9 @@ describe('convertNft', () => {
         nameHex: utf8ToHex('32'),
       })
 
-      expect(nft.id).toEqual('8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.3332')
+      expect(nft.id).toEqual(
+        '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.3332',
+      )
     })
   })
 
@@ -27,7 +29,9 @@ describe('convertNft', () => {
         nameHex: utf8ToHex('Image1'),
       })
 
-      expect(nft.fingerprint).toEqual('asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3')
+      expect(nft.fingerprint).toEqual(
+        'asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3',
+      )
     })
   })
 
@@ -96,8 +100,12 @@ describe('convertNft', () => {
         nameHex: utf8ToHex('1'),
       })
 
-      expect(nft.icon).toEqual('https://ipfs.io/ipfs/QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs')
-      expect(nft.image).toEqual('https://ipfs.io/ipfs/QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs')
+      expect(nft.icon).toEqual(
+        'https://ipfs.io/ipfs/QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs',
+      )
+      expect(nft.image).toEqual(
+        'https://ipfs.io/ipfs/QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs',
+      )
     })
 
     it('supports non-ipfs images', () => {
@@ -138,7 +146,9 @@ describe('convertNft', () => {
         nameHex: utf8ToHex('1'),
       })
 
-      expect(nft.group).toEqual('8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4')
+      expect(nft.group).toEqual(
+        '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
+      )
     })
   })
 
@@ -185,7 +195,10 @@ describe('getNftFilenameMediaType', () => {
       ],
     })
 
-    const mediaType = getNftFilenameMediaType(customMediaTypeNft, 'https://example.com/image.jpg')
+    const mediaType = getNftFilenameMediaType(
+      customMediaTypeNft,
+      'https://example.com/image.jpg',
+    )
     expect(mediaType).toEqual('image/jpeg')
   })
 
@@ -205,69 +218,106 @@ describe('getNftFilenameMediaType', () => {
     const customMediaTypeNft = getNftWithCustomOriginalMetadata({
       files: [{mediaType: 1, src: 'image.jpg'}],
     })
-    expect(getNftFilenameMediaType(customMediaTypeNft, 'image.jpg')).toEqual(undefined)
+    expect(getNftFilenameMediaType(customMediaTypeNft, 'image.jpg')).toEqual(
+      undefined,
+    )
 
     const customMediaTypeNft2 = getNftWithCustomOriginalMetadata({
       files: [{mediaType: null, src: 'image.jpg'}],
     })
-    expect(getNftFilenameMediaType(customMediaTypeNft2, 'image.jpg')).toEqual(undefined)
+    expect(getNftFilenameMediaType(customMediaTypeNft2, 'image.jpg')).toEqual(
+      undefined,
+    )
 
     const customMediaTypeNft3 = getNftWithCustomOriginalMetadata({
       files: [{mediaType: undefined, src: 'image.jpg'}],
     })
-    expect(getNftFilenameMediaType(customMediaTypeNft3, 'image.jpg')).toEqual(undefined)
+    expect(getNftFilenameMediaType(customMediaTypeNft3, 'image.jpg')).toEqual(
+      undefined,
+    )
 
     const customMediaTypeNft4 = getNftWithCustomOriginalMetadata({
       files: [{mediaType: {}, src: 'image.jpg'}],
     })
-    expect(getNftFilenameMediaType(customMediaTypeNft4, 'image.jpg')).toEqual(undefined)
+    expect(getNftFilenameMediaType(customMediaTypeNft4, 'image.jpg')).toEqual(
+      undefined,
+    )
 
     const customMediaTypeNft5 = getNftWithCustomOriginalMetadata({
       files: [{mediaType: [], src: 'image.jpg'}],
     })
-    expect(getNftFilenameMediaType(customMediaTypeNft5, 'image.jpg')).toEqual(undefined)
+    expect(getNftFilenameMediaType(customMediaTypeNft5, 'image.jpg')).toEqual(
+      undefined,
+    )
 
     const customMediaTypeNft6 = getNftWithCustomOriginalMetadata({
       files: [{mediaType: true, src: 'image.jpg'}],
     })
-    expect(getNftFilenameMediaType(customMediaTypeNft6, 'image.jpg')).toEqual(undefined)
+    expect(getNftFilenameMediaType(customMediaTypeNft6, 'image.jpg')).toEqual(
+      undefined,
+    )
   })
 
   it('resolves to undefined when original metadata is not present', () => {
-    const mediaType = getNftFilenameMediaType(getNftWithCustomOriginalMetadata(undefined), 'unknown.jpg')
+    const mediaType = getNftFilenameMediaType(
+      getNftWithCustomOriginalMetadata(undefined),
+      'unknown.jpg',
+    )
     expect(mediaType).toEqual(undefined)
   })
 
   it('resolves to undefined when files is wrongly typed', () => {
-    const nftWithFilesUndefined = getNftWithCustomOriginalMetadata({files: undefined})
-    expect(getNftFilenameMediaType(nftWithFilesUndefined, 'unknown.jpg')).toEqual(undefined)
+    const nftWithFilesUndefined = getNftWithCustomOriginalMetadata({
+      files: undefined,
+    })
+    expect(
+      getNftFilenameMediaType(nftWithFilesUndefined, 'unknown.jpg'),
+    ).toEqual(undefined)
 
     const nftWithFilesNull = getNftWithCustomOriginalMetadata({files: null})
-    expect(getNftFilenameMediaType(nftWithFilesNull, 'unknown.jpg')).toEqual(undefined)
+    expect(getNftFilenameMediaType(nftWithFilesNull, 'unknown.jpg')).toEqual(
+      undefined,
+    )
 
     const nftWithFilesObject = getNftWithCustomOriginalMetadata({files: {}})
-    expect(getNftFilenameMediaType(nftWithFilesObject, 'unknown.jpg')).toEqual(undefined)
+    expect(getNftFilenameMediaType(nftWithFilesObject, 'unknown.jpg')).toEqual(
+      undefined,
+    )
 
     const nftWithFilesNumber = getNftWithCustomOriginalMetadata({files: 1})
-    expect(getNftFilenameMediaType(nftWithFilesNumber, 'unknown.jpg')).toEqual(undefined)
+    expect(getNftFilenameMediaType(nftWithFilesNumber, 'unknown.jpg')).toEqual(
+      undefined,
+    )
 
-    const nftWithFilesString = getNftWithCustomOriginalMetadata({files: 'string'})
-    expect(getNftFilenameMediaType(nftWithFilesString, 'unknown.jpg')).toEqual(undefined)
+    const nftWithFilesString = getNftWithCustomOriginalMetadata({
+      files: 'string',
+    })
+    expect(getNftFilenameMediaType(nftWithFilesString, 'unknown.jpg')).toEqual(
+      undefined,
+    )
 
     const nftWithFilesBoolean = getNftWithCustomOriginalMetadata({files: true})
-    expect(getNftFilenameMediaType(nftWithFilesBoolean, 'unknown.jpg')).toEqual(undefined)
+    expect(getNftFilenameMediaType(nftWithFilesBoolean, 'unknown.jpg')).toEqual(
+      undefined,
+    )
 
     const nftWithFilesEmptyArray = getNftWithCustomOriginalMetadata({files: []})
-    expect(getNftFilenameMediaType(nftWithFilesEmptyArray, 'unknown.jpg')).toEqual(undefined)
+    expect(
+      getNftFilenameMediaType(nftWithFilesEmptyArray, 'unknown.jpg'),
+    ).toEqual(undefined)
 
     const nftWithFilesArrayWithWrongType = getNftWithCustomOriginalMetadata({
       files: [1, null, undefined, 'string', {}, [], true, false],
     })
-    expect(getNftFilenameMediaType(nftWithFilesArrayWithWrongType, 'unknown.jpg')).toEqual(undefined)
+    expect(
+      getNftFilenameMediaType(nftWithFilesArrayWithWrongType, 'unknown.jpg'),
+    ).toEqual(undefined)
   })
 })
 
-const getNftWithCustomOriginalMetadata = (metadata: unknown): Balance.TokenInfo => ({
+const getNftWithCustomOriginalMetadata = (
+  metadata: unknown,
+): Balance.TokenInfo => ({
   ...nft,
   metadatas: {mintNft: metadata},
 })

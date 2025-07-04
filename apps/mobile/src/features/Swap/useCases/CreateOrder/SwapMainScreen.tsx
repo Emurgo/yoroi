@@ -35,8 +35,12 @@ export const SwapMainScreen = () => {
   const {openModal, closeModal} = useModal()
   const navigateTo = useNavigateTo()
 
-  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
-  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
+  const tokenInInfo = swapForm.tokenInfos.get(
+    swapForm.tokenInInput.tokenId ?? undefinedToken,
+  )
+  const tokenOutInfo = swapForm.tokenInfos.get(
+    swapForm.tokenOutInput.tokenId ?? undefinedToken,
+  )
 
   const tokenInTicker = tokenInInfo?.ticker ?? tokenInInfo?.name ?? '-'
   const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
@@ -60,9 +64,18 @@ export const SwapMainScreen = () => {
         ),
         footer: (
           <View style={styles.buttonsWrapper}>
-            <Button size="S" type={ButtonType.Secondary} title={strings.limitPriceWarningBack} onPress={closeModal} />
+            <Button
+              size="S"
+              type={ButtonType.Secondary}
+              title={strings.limitPriceWarningBack}
+              onPress={closeModal}
+            />
 
-            <Button size="S" title={strings.limitPriceWarningConfirm} onPress={swapForm.create} />
+            <Button
+              size="S"
+              title={strings.limitPriceWarningConfirm}
+              onPress={swapForm.create}
+            />
           </View>
         ),
       })
@@ -88,28 +101,39 @@ export const SwapMainScreen = () => {
             <View style={styles.between}>
               <View style={styles.group}>
                 <Button
-                  onPress={() => swapForm.action({type: 'ChangeOrderType', value: 'market'})}
+                  onPress={() =>
+                    swapForm.action({type: 'ChangeOrderType', value: 'market'})
+                  }
                   type={ButtonType.SecondaryText}
                   title={strings.marketButton}
                   size="M"
                   fontOverride={styles.groupFont}
-                  {...(swapForm.orderType === 'market' && {style: styles.activeButton})}
+                  {...(swapForm.orderType === 'market' && {
+                    style: styles.activeButton,
+                  })}
                 />
 
                 <Button
-                  onPress={() => swapForm.action({type: 'ChangeOrderType', value: 'limit'})}
+                  onPress={() =>
+                    swapForm.action({type: 'ChangeOrderType', value: 'limit'})
+                  }
                   type={ButtonType.SecondaryText}
                   title={strings.limitButton}
                   size="M"
                   fontOverride={styles.groupFont}
-                  {...(swapForm.orderType === 'limit' && {style: styles.activeButton})}
+                  {...(swapForm.orderType === 'limit' && {
+                    style: styles.activeButton,
+                  })}
                 />
               </View>
 
               <View style={styles.group}>
                 <RefreshButton
                   onPress={() => swapForm.action({type: 'Refresh'})}
-                  disabled={!swapForm.tokenInInput.isTouched || !swapForm.tokenOutInput.isTouched}
+                  disabled={
+                    !swapForm.tokenInInput.isTouched ||
+                    !swapForm.tokenOutInput.isTouched
+                  }
                 />
 
                 <Button
@@ -149,14 +173,18 @@ export const SwapMainScreen = () => {
                 <View style={styles.group}>
                   <Icon.Warning size={15} color={color.sys_magenta_500} />
 
-                  <Text style={styles.errorText}>{swapForm.tokenOutInput.error}</Text>
+                  <Text style={styles.errorText}>
+                    {swapForm.tokenOutInput.error}
+                  </Text>
                 </View>
               )}
             </View>
 
             {swapForm.orderType === 'limit' && <LimitInput />}
 
-            {swapForm.orderType === 'market' && <ShowPriceImpact priceImpact={swapForm.estimate?.priceImpact} />}
+            {swapForm.orderType === 'market' && (
+              <ShowPriceImpact priceImpact={swapForm.estimate?.priceImpact} />
+            )}
 
             {swapForm.orderType === 'limit' &&
               swapForm.selectedProtocol.value !== undefined &&
@@ -164,7 +192,10 @@ export const SwapMainScreen = () => {
                 <View style={styles.between}>
                   <Text style={styles.label}>{strings.route}</Text>
 
-                  <ProtocolAvatar protocol={swapForm.selectedProtocol.value} onPress={navigateTo.selectProtocol} />
+                  <ProtocolAvatar
+                    protocol={swapForm.selectedProtocol.value}
+                    onPress={navigateTo.selectProtocol}
+                  />
                 </View>
               )}
 
@@ -173,10 +204,20 @@ export const SwapMainScreen = () => {
         </View>
       </ScrollView>
 
-      <View style={[styles.actions, (deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
+      <View
+        style={[
+          styles.actions,
+          (deviceHeight < contentHeight || isKeyboardOpen) &&
+            styles.actionBorder,
+        ]}
+      >
         <Button
           testID="swapButton"
-          title={swapForm.orderType === 'market' ? strings.swapButton : strings.placeOrder}
+          title={
+            swapForm.orderType === 'market'
+              ? strings.swapButton
+              : strings.placeOrder
+          }
           disabled={!swapForm.canSwap}
           isLoading={swapForm.isLoading}
           onPress={onSwapPress}

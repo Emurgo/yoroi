@@ -6,7 +6,10 @@ import {YoroiWallet} from '../../../../wallets/cardano/types'
 import {filterBySyncEvent as isSyncEvent} from '../helpers/filter-by-sync-event'
 
 export const usePortfolioPrimaryBalance = ({wallet}: {wallet: YoroiWallet}) => {
-  const observable$ = React.useMemo(() => wallet.balance$.pipe(filter(isSyncEvent)), [wallet])
+  const observable$ = React.useMemo(
+    () => wallet.balance$.pipe(filter(isSyncEvent)),
+    [wallet],
+  )
   const getter = React.useCallback(() => wallet.primaryBalance, [wallet])
 
   return useObservableValue({

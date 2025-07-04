@@ -13,7 +13,9 @@ describe('cip30ExtensionMaker', () => {
     const cip30 = cip30ExtensionMaker(mockWallet, mocks.walletMeta)
     const result = await cip30.submitTx(txCbor)
     expect(mockWallet.submitTransaction).toHaveBeenCalled()
-    expect(result).toBe('1a6205dc7a5a0493ef64487ca7033d12ba8f85a7d4a6e62d3c8eaa570d74eb53')
+    expect(result).toBe(
+      '1a6205dc7a5a0493ef64487ca7033d12ba8f85a7d4a6e62d3c8eaa570d74eb53',
+    )
   })
 
   it('should support getUtxos', async () => {

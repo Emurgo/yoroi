@@ -10,7 +10,9 @@ import {EnterDrepIdModal} from './EnterDrepIdModal'
 storiesOf('Governance/EnterDrepIdModal', module)
   .addDecorator((story) => (
     <WalletManagerProviderMock wallet={mocks.wallet}>
-      <GovernanceProvider manager={governanceMocks.governanceManager}>{story()}</GovernanceProvider>
+      <GovernanceProvider manager={governanceMocks.governanceManager}>
+        {story()}
+      </GovernanceProvider>
     </WalletManagerProviderMock>
   ))
   .add('Default', () => <EnterDrepIdModal />)

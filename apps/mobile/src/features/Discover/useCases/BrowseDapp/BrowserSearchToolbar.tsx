@@ -1,6 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, TextInput, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
@@ -12,7 +18,12 @@ type Props = {
   onSearchChange: (value: string) => void
   onSearchSubmit: () => void
 }
-export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, searchValue}: Props) => {
+export const BrowserSearchToolbar = ({
+  onBack,
+  onSearchChange,
+  onSearchSubmit,
+  searchValue,
+}: Props) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
   const {track} = useMetrics()

@@ -1,6 +1,11 @@
 import {useTheme} from '@yoroi/theme'
 import React, {ReactElement} from 'react'
-import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native'
 
 import {Hr} from '../../components/Hr/Hr'
 import {Icon} from '../../components/Icon'
@@ -8,7 +13,9 @@ import {Spacer} from '../../components/Spacer/Spacer'
 import {Text} from '../../components/Text'
 import {isEmptyString} from '../../kernel/utils'
 
-const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
+const Touchable = (props: TouchableOpacityProps) => (
+  <TouchableOpacity {...props} activeOpacity={0.5} />
+)
 
 type SettingsSectionProps = {
   title?: string
@@ -42,7 +49,13 @@ type SettingsItemProps = {
   info?: string
 }
 
-export const SettingsItem = ({label, children, disabled, icon, info}: SettingsItemProps) => {
+export const SettingsItem = ({
+  label,
+  children,
+  disabled,
+  icon,
+  info,
+}: SettingsItemProps) => {
   const {styles} = useStyles()
 
   return (
@@ -53,7 +66,11 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
 
           {icon && <Spacer width={10} />}
 
-          <Text style={[styles.label, styles.itemText, disabled && styles.disabled]}>{label}</Text>
+          <Text
+            style={[styles.label, styles.itemText, disabled && styles.disabled]}
+          >
+            {label}
+          </Text>
 
           <View>{children}</View>
         </View>
@@ -79,13 +96,21 @@ export type NavigatedSettingsItemProps = {
   selected?: string
 }
 
-export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, selected}: NavigatedSettingsItemProps) => {
+export const NavigatedSettingsItem = ({
+  label,
+  onNavigate,
+  icon,
+  disabled,
+  selected,
+}: NavigatedSettingsItemProps) => {
   const {styles, colors} = useStyles()
   return (
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
         <View style={styles.row}>
-          {!isEmptyString(selected) && <Text style={styles.navigationItem}>{selected}</Text>}
+          {!isEmptyString(selected) && (
+            <Text style={styles.navigationItem}>{selected}</Text>
+          )}
 
           <Spacer width={16} />
 

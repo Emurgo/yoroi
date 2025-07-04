@@ -1,7 +1,15 @@
 import React from 'react'
-import {InteractionManager, LayoutAnimation, View, ViewProps} from 'react-native'
+import {
+  InteractionManager,
+  LayoutAnimation,
+  View,
+  ViewProps,
+} from 'react-native'
 
-export const CollapsibleHeader = ({expanded, children}: {expanded: boolean} & ViewProps) => {
+export const CollapsibleHeader = ({
+  expanded,
+  children,
+}: {expanded: boolean} & ViewProps) => {
   const [_expanded, setExpanded] = React.useState(expanded)
   const firstRenderRef = React.useRef(true)
 
@@ -23,7 +31,9 @@ export const CollapsibleHeader = ({expanded, children}: {expanded: boolean} & Vi
 
   return _expanded ? (
     <View style={{overflow: 'hidden'}}>
-      <View style={!expanded && {position: 'absolute', width: '100%'}}>{children}</View>
+      <View style={!expanded && {position: 'absolute', width: '100%'}}>
+        {children}
+      </View>
     </View>
   ) : null
 }

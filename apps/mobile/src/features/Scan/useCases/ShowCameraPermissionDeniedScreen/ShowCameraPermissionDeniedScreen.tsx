@@ -7,7 +7,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {Text} from '../../../../components/Text'
-import {useBlockGoBack, useWalletNavigation} from '../../../../kernel/navigation'
+import {
+  useBlockGoBack,
+  useWalletNavigation,
+} from '../../../../kernel/navigation'
 import {useStrings} from '../../common/useStrings'
 import {CameraPermissionDeniedIllustration} from '../../illustrations/CameraPermissionDeniedIlustration'
 
@@ -19,7 +22,10 @@ export const ShowCameraPermissionDeniedScreen = () => {
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right', 'bottom']} style={styles.container}>
+    <SafeAreaView
+      edges={['top', 'left', 'right', 'bottom']}
+      style={styles.container}
+    >
       <ScrollView contentContainerStyle={styles.scroll} bounces={false}>
         <CameraPermissionDeniedIllustration />
 
@@ -29,11 +35,20 @@ export const ShowCameraPermissionDeniedScreen = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={resetToTxHistory} title={strings.continue} size="S" type={ButtonType.Secondary} />
+        <Button
+          onPress={resetToTxHistory}
+          title={strings.continue}
+          size="S"
+          type={ButtonType.Secondary}
+        />
 
         <Spacer height={16} />
 
-        <Button onPress={() => openSettings()} title={strings.openAppSettings} size="S" />
+        <Button
+          onPress={() => openSettings()}
+          title={strings.openAppSettings}
+          size="S"
+        />
       </Actions>
     </SafeAreaView>
   )

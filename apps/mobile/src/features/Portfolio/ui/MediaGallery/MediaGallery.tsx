@@ -2,7 +2,13 @@ import {FlashList, FlashListProps} from '@shopify/flash-list'
 import {useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 import {MediaPreview} from '../../../../components/MediaPreview/MediaPreview'
 import {Spacer} from '../../../../components/Spacer/Spacer'
@@ -29,7 +35,8 @@ export const MediaGallery = ({
 }: Props) => {
   const dimensions = useWindowDimensions()
   const minSize = Math.min(dimensions.width, dimensions.height)
-  const imageSize = (minSize - horizontalPadding * 2) / numberOfColumns - imageHorizontalPadding
+  const imageSize =
+    (minSize - horizontalPadding * 2) / numberOfColumns - imageHorizontalPadding
 
   return (
     <GalleryList
@@ -41,7 +48,11 @@ export const MediaGallery = ({
       ListEmptyComponent={ListEmptyComponent}
       withVerticalPadding={withVerticalPadding}
       renderMedia={(amount) => (
-        <TouchableOpacity onPress={() => onSelect(amount)} disabled={readOnly} key={amount.info.id}>
+        <TouchableOpacity
+          onPress={() => onSelect(amount)}
+          disabled={readOnly}
+          key={amount.info.id}
+        >
           <Media info={amount.info} imageSize={imageSize} />
         </TouchableOpacity>
       )}
@@ -49,12 +60,23 @@ export const MediaGallery = ({
   )
 }
 
-function Media({info, imageSize}: {info: Portfolio.Token.Info; imageSize: number}) {
+function Media({
+  info,
+  imageSize,
+}: {
+  info: Portfolio.Token.Info
+  imageSize: number
+}) {
   const styles = useStyles()
   return (
     <View>
       <View style={styles.imageWrapper}>
-        <MediaPreview info={info} width={imageSize} height={imageSize} style={styles.image} />
+        <MediaPreview
+          info={info}
+          width={imageSize}
+          height={imageSize}
+          style={styles.image}
+        />
       </View>
 
       <Spacer height={imagePadding} />
@@ -86,7 +108,9 @@ function GalleryList({
   imageSize: number
   data: ReadonlyArray<Portfolio.Token.Amount>
 }) {
-  const [loadedAmounts, setLoadedAmounts] = React.useState(data.slice(0, batchSize))
+  const [loadedAmounts, setLoadedAmounts] = React.useState(
+    data.slice(0, batchSize),
+  )
   const [currentIndex, setCurrentIndex] = React.useState(batchSize)
 
   React.useEffect(() => {
@@ -110,7 +134,11 @@ function GalleryList({
       numColumns={2}
       renderItem={({item, index}) => (
         <View
-          style={[index % 2 === 0 ? {paddingRight: imageHorizontalPadding} : {paddingLeft: imageHorizontalPadding}]}
+          style={[
+            index % 2 === 0
+              ? {paddingRight: imageHorizontalPadding}
+              : {paddingLeft: imageHorizontalPadding},
+          ]}
         >
           <View>{renderMedia(item)}</View>
 

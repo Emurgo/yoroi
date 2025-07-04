@@ -10,7 +10,8 @@ import {buildProcessedNotificationsStorage} from './processed-notifications-stor
 
 const storageKey = 'rewards-updated-notification-history'
 
-export const rewardsUpdatedSubject = new Subject<NotificationTypes.RewardsUpdatedEvent>()
+export const rewardsUpdatedSubject =
+  new Subject<NotificationTypes.RewardsUpdatedEvent>()
 
 const buildNotifications = async (appStorage: App.Storage) => {
   const walletIds = [...walletManager.walletMetas.keys()]
@@ -20,8 +21,11 @@ const buildNotifications = async (appStorage: App.Storage) => {
     const wallet = walletManager.getWalletById(walletId)
     if (!wallet) continue
 
-    const fullStorageKey = `wallet/${walletId}/${wallet.networkManager.network}/${storageKey}/` as const
-    const storage = buildProcessedNotificationsStorage(appStorage.join(fullStorageKey))
+    const fullStorageKey =
+      `wallet/${walletId}/${wallet.networkManager.network}/${storageKey}/` as const
+    const storage = buildProcessedNotificationsStorage(
+      appStorage.join(fullStorageKey),
+    )
     const stakingInfo = await wallet.getStakingInfo()
     if (stakingInfo.status !== 'staked') continue
 
@@ -42,7 +46,9 @@ const buildNotifications = async (appStorage: App.Storage) => {
   return notifications
 }
 
-const createRewardsUpdatedNotification = (walletId: string): NotificationTypes.RewardsUpdatedEvent => {
+const createRewardsUpdatedNotification = (
+  walletId: string,
+): NotificationTypes.RewardsUpdatedEvent => {
   return {
     id: generateNotificationId(),
     date: new Date().toISOString(),
@@ -54,7 +60,11 @@ const createRewardsUpdatedNotification = (walletId: string): NotificationTypes.R
   } as const
 }
 
-export const useRewardsUpdatedNotifications = ({enabled}: {enabled: boolean}) => {
+export const useRewardsUpdatedNotifications = ({
+  enabled,
+}: {
+  enabled: boolean
+}) => {
   const {walletManager, selected} = useWalletManager()
   const asyncStorage = useAsyncStorage()
   const [subscriptionBeginTime] = React.useState(new Date())
@@ -63,18 +73,24 @@ export const useRewardsUpdatedNotifications = ({enabled}: {enabled: boolean}) =>
   React.useEffect(() => {
     if (!enabled || !wallet) return
 
-    const subscription = walletManager.syncWalletInfos$.subscribe(async (status) => {
-      const info = wallet.networkManager.epoch.info(new Date())
-      if (info.start.getTime() <= subscriptionBeginTime.getTime()) return
+    const subscription = walletManager.syncWalletInfos$.subscribe(
+      async (status) => {
+        const info = wallet.networkManager.epoch.info(new Date())
+        if (info.start.getTime() <= subscriptionBeginTime.getTime()) return
 
-      const walletInfos = Array.from(status.values())
-      const walletsDoneSyncing = walletInfos.filter((info) => info.status === 'done')
-      const areAllDone = walletsDoneSyncing.length === walletInfos.length
-      if (!areAllDone) return
+        const walletInfos = Array.from(status.values())
+        const walletsDoneSyncing = walletInfos.filter(
+          (info) => info.status === 'done',
+        )
+        const areAllDone = walletsDoneSyncing.length === walletInfos.length
+        if (!areAllDone) return
 
-      const notifications = await buildNotifications(asyncStorage)
-      notifications.forEach((notification) => rewardsUpdatedSubject.next(notification))
-    })
+        const notifications = await buildNotifications(asyncStorage)
+        notifications.forEach((notification) =>
+          rewardsUpdatedSubject.next(notification),
+        )
+      },
+    )
 
     return () => {
       subscription.unsubscribe()

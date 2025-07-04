@@ -9,10 +9,10 @@ import {useIntl} from 'react-intl'
 import {
   InteractionManager,
   Linking,
+  TextInput as RNTextInput,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput as RNTextInput,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -54,11 +54,21 @@ const useSizeModal = () => {
   const mediumScreenHeight = 800
   const largerScreenHeight = 900
   const PERCENTAGE_NAME_PASSWORD =
-    HEIGHT_SCREEN >= largerScreenHeight ? 58 : HEIGHT_SCREEN >= mediumScreenHeight ? 65 : 85
-  const PERCENTAGE_CHECKSUM = HEIGHT_SCREEN >= largerScreenHeight ? 48 : HEIGHT_SCREEN >= mediumScreenHeight ? 55 : 75
+    HEIGHT_SCREEN >= largerScreenHeight
+      ? 58
+      : HEIGHT_SCREEN >= mediumScreenHeight
+        ? 65
+        : 85
+  const PERCENTAGE_CHECKSUM =
+    HEIGHT_SCREEN >= largerScreenHeight
+      ? 48
+      : HEIGHT_SCREEN >= mediumScreenHeight
+        ? 55
+        : 75
 
   const HEIGHT_MODAL_CHECKSUM = (HEIGHT_SCREEN / 100) * PERCENTAGE_CHECKSUM
-  const HEIGHT_MODAL_NAME_PASSWORD = (HEIGHT_SCREEN / 100) * PERCENTAGE_NAME_PASSWORD
+  const HEIGHT_MODAL_NAME_PASSWORD =
+    (HEIGHT_SCREEN / 100) * PERCENTAGE_NAME_PASSWORD
 
   return {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} as const
 }
@@ -74,7 +84,9 @@ export const WalletDetailsScreen = () => {
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const {walletManager} = useWalletManager()
-  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
+  const walletNames = Array.from(walletManager.walletMetas.values()).map(
+    ({name}) => name,
+  )
   const intl = useIntl()
   const storage = useAsyncStorage()
   const {
@@ -87,9 +99,13 @@ export const WalletDetailsScreen = () => {
     accountVisual,
   } = useSetupWallet()
   const {plate, seed} = walletManager.checksum(publicKeyHex)
-  const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
+  const [name, setName] = React.useState(
+    features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '',
+  )
   const passwordRef = React.useRef<RNTextInput>(null)
-  const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
+  const [password, setPassword] = React.useState(
+    features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
+  )
 
   useFocusEffect(
     React.useCallback(() => {
@@ -114,7 +130,9 @@ export const WalletDetailsScreen = () => {
       const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
 
       if (!walletMeta) {
-        const error = new Error('WalletDetailsScreen: wallet meta is invalid, reached an invalid state.')
+        const error = new Error(
+          'WalletDetailsScreen: wallet meta is invalid, reached an invalid state.',
+        )
         logger.error(error)
         throw error
       }
@@ -127,21 +145,35 @@ export const WalletDetailsScreen = () => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+          : showErrorDialog(errorMessages.generalError, intl, {
+              message: error.message,
+            })
       })
     },
   })
 
   const passwordErrorText =
     passwordErrors.passwordIsWeak && !isLoading
-      ? strings.passwordStrengthRequirement({requiredPasswordLength: REQUIRED_PASSWORD_LENGTH})
+      ? strings.passwordStrengthRequirement({
+          requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
+        })
       : undefined
   const passwordConfirmationErrorText =
-    passwordErrors.matchesConfirmation && !isLoading ? strings.repeatPasswordInputError : undefined
+    passwordErrors.matchesConfirmation && !isLoading
+      ? strings.repeatPasswordInputError
+      : undefined
 
-  const nameErrors = validateWalletName(name, null, !isCreateWalletSuccess ? walletNames : [])
+  const nameErrors = validateWalletName(
+    name,
+    null,
+    !isCreateWalletSuccess ? walletNames : [],
+  )
   const walletNameErrorText = getWalletNameError(
-    {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
+    {
+      tooLong: strings.tooLong,
+      nameAlreadyTaken: strings.nameAlreadyTaken,
+      mustBeFilled: strings.mustBeFilled,
+    },
     nameErrors,
   )
 
@@ -156,7 +188,15 @@ export const WalletDetailsScreen = () => {
       addressMode,
       accountVisual,
     })
-  }, [accountVisual, createWallet, mnemonic, name, password, track, walletImplementation])
+  }, [
+    accountVisual,
+    createWallet,
+    mnemonic,
+    name,
+    password,
+    track,
+    walletImplementation,
+  ])
 
   const showModalTipsPassword = React.useCallback(() => {
     openModal({
@@ -166,12 +206,18 @@ export const WalletDetailsScreen = () => {
           <View style={styles.modalContent}>
             <CardAboutPhrase
               title={strings.walletNameModalCardTitle}
-              linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
+              linesOfText={[
+                strings.walletNameModalCardFirstItem,
+                strings.walletNameModalCardSecondItem,
+              ]}
             />
 
             <CardAboutPhrase
               title={strings.walletPasswordModalCardTitle}
-              linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
+              linesOfText={[
+                strings.walletPasswordModalCardFirstItem,
+                strings.walletPasswordModalCardSecondItem,
+              ]}
             />
           </View>
         </View>
@@ -252,7 +298,10 @@ export const WalletDetailsScreen = () => {
 
   return (
     <KeyboardAvoidingView style={styles.root}>
-      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <SafeAreaView
+        edges={['left', 'right', 'bottom']}
+        style={styles.safeAreaView}
+      >
         <StepperProgress
           style={styles.steps}
           currentStep={4}
@@ -266,14 +315,21 @@ export const WalletDetailsScreen = () => {
           <Info onPress={showModalTipsPassword} />
         </View>
 
-        <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.content}
+        >
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus={!showRestoreWalletInfoModal}
             label={strings.walletDetailsNameInput}
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
-            errorText={!isEmptyString(walletNameErrorText) && !isLoading ? walletNameErrorText : undefined}
+            errorText={
+              !isEmptyString(walletNameErrorText) && !isLoading
+                ? walletNameErrorText
+                : undefined
+            }
             errorDelay={0}
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
@@ -315,7 +371,11 @@ export const WalletDetailsScreen = () => {
           />
 
           <View style={styles.checksum}>
-            <Icon.WalletAvatar image={new Blockies({seed}).asBase64()} style={styles.walletChecksum} size={24} />
+            <Icon.WalletAvatar
+              image={new Blockies({seed}).asBase64()}
+              style={styles.walletChecksum}
+              size={24}
+            />
 
             <Space width="sm" />
 
@@ -331,7 +391,11 @@ export const WalletDetailsScreen = () => {
           <Button
             title={strings.next}
             onPress={() => handleCreateWallet()}
-            disabled={isLoading || Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
+            disabled={
+              isLoading ||
+              Object.keys(passwordErrors).length > 0 ||
+              Object.keys(nameErrors).length > 0
+            }
             testID="walletFormContinueButton"
           />
         </Actions>
@@ -344,7 +408,10 @@ const Info = ({onPress}: {onPress: () => void}) => {
   const {color, isDark} = useTheme()
   return (
     <TouchableOpacity onPress={onPress}>
-      <InfoIcon size={24} color={isDark ? color.white_static : color.black_static} />
+      <InfoIcon
+        size={24}
+        color={isDark ? color.white_static : color.black_static}
+      />
     </TouchableOpacity>
   )
 }

@@ -17,13 +17,17 @@ export const aggregatePrimaryAmount = ({
 
   return Object.values(tokenAmountRecords).reduce(
     (totalAmount, tokenAmount) => {
-      const tokenPrimaryPrice = tokenActivity?.[tokenAmount.info.id]?.price.close ?? new BigNumber(0)
+      const tokenPrimaryPrice =
+        tokenActivity?.[tokenAmount.info.id]?.price.close ?? new BigNumber(0)
 
       const quantity =
         tokenAmount.info.id === primaryTokenInfo.id
           ? tokenAmount.quantity
           : BigInt(
-              amountBreakdown(tokenAmount).bn.times(tokenPrimaryPrice).shiftedBy(primaryTokenInfo.decimals).toFixed(0),
+              amountBreakdown(tokenAmount)
+                .bn.times(tokenPrimaryPrice)
+                .shiftedBy(primaryTokenInfo.decimals)
+                .toFixed(0),
             )
       totalAmount.quantity += quantity
       return totalAmount

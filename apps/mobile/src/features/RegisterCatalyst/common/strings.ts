@@ -1,6 +1,10 @@
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../kernel/i18n/global-messages'
+import globalMessages, {
+  confirmationMessages,
+  errorMessages,
+  txLabels,
+} from '../../../kernel/i18n/global-messages'
 import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 
 export const useStrings = () => {
@@ -9,10 +13,16 @@ export const useStrings = () => {
   return {
     title: intl.formatMessage(messages.title),
     subTitle: intl.formatMessage(messages.subTitle),
-    stakingKeyNotRegistered: intl.formatMessage(messages.stakingKeyNotRegistered),
+    stakingKeyNotRegistered: intl.formatMessage(
+      messages.stakingKeyNotRegistered,
+    ),
     tip: intl.formatMessage(messages.tip),
-    continueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
-    iUnderstandButton: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
+    continueButton: intl.formatMessage(
+      confirmationMessages.commonButtons.continueButton,
+    ),
+    iUnderstandButton: intl.formatMessage(
+      confirmationMessages.commonButtons.iUnderstandButton,
+    ),
     attention: intl.formatMessage(globalMessages.attention),
     registrationStart: intl.formatMessage(messages.registrationStart),
     snapshotStart: intl.formatMessage(messages.snapshotStart),
@@ -26,19 +36,27 @@ export const useStrings = () => {
     step3Description: intl.formatMessage(messages.step3Description),
     signTransaction: intl.formatMessage(txLabels.signTransaction),
     errorMessage: (error: LocalizableError) =>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
+      intl.formatMessage(
+        {id: error.id, defaultMessage: error.defaultMessage},
+        (error as any).values,
+      ),
     fees: intl.formatMessage(txLabels.fees),
     confirmationTitle: intl.formatMessage(messages.confirmationTitle),
-    passwordSignDescription: intl.formatMessage(messages.passwordSignDescription),
+    passwordSignDescription: intl.formatMessage(
+      messages.passwordSignDescription,
+    ),
     authOsInstructions: intl.formatMessage(messages.authOsInstructions),
     password: intl.formatMessage(txLabels.password),
     errorTitle: intl.formatMessage(errorMessages.generalTxError.title),
-    generalErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
+    generalErrorMessage: intl.formatMessage(
+      errorMessages.generalTxError.message,
+    ),
     confirm: intl.formatMessage(messages.confirm),
     step4Description: intl.formatMessage(messages.step4Description),
     step4Title: intl.formatMessage(messages.step4Title),
-    completeButton: intl.formatMessage(confirmationMessages.commonButtons.completeButton),
+    completeButton: intl.formatMessage(
+      confirmationMessages.commonButtons.completeButton,
+    ),
     step4QrTitle: intl.formatMessage(messages.step4QrTitle),
     step4QrShareLabel: intl.formatMessage(messages.step4QrShareLabel),
     step4QrCopiedText: intl.formatMessage(messages.step4QrCopiedText),
@@ -53,7 +71,8 @@ const messages = defineMessages({
   },
   subTitle: {
     id: 'components.catalyst.step1.subTitle',
-    defaultMessage: '!!!Before you begin, make sure to\ndownload the Catalyst Voting App',
+    defaultMessage:
+      '!!!Before you begin, make sure to\ndownload the Catalyst Voting App',
   },
   stakingKeyNotRegistered: {
     id: 'components.catalyst.step1.stakingKeyNotRegistered',
@@ -107,7 +126,8 @@ const messages = defineMessages({
   },
   step3Description: {
     id: 'components.catalyst.step3.description',
-    defaultMessage: '!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app',
+    defaultMessage:
+      '!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app',
   },
   confirmationTitle: {
     id: 'components.catalyst.confirmTx.title',
@@ -120,7 +140,8 @@ const messages = defineMessages({
   },
   authOsInstructions: {
     id: 'components.catalyst.confirmTx.bioAuthInstructions',
-    defaultMessage: '!!!Please authenticate so that Yoroi can generate the required certificate for voting',
+    defaultMessage:
+      '!!!Please authenticate so that Yoroi can generate the required certificate for voting',
   },
   confirm: {
     id: 'global.actions.dialogs.commonbuttons.confirmButton',
@@ -149,6 +170,7 @@ const messages = defineMessages({
   },
   step4QrCheckbox: {
     id: 'components.catalyst.step4.qrCheckbox',
-    defaultMessage: '!!!I confirm that I have saved the QR and hash codes and understand they are irretrievable.',
+    defaultMessage:
+      '!!!I confirm that I have saved the QR and hash codes and understand they are irretrievable.',
   },
 })

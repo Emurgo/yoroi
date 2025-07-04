@@ -4,7 +4,8 @@ import {Linking} from 'react-native'
 import {Button, ButtonType} from '../../../../components/Button/Button'
 import {useStrings} from '../strings'
 
-const SWAP_ZENDESK_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8154256843407-Swap'
+const SWAP_ZENDESK_LINK =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8154256843407-Swap'
 
 export const SwapInfoLink = () => {
   const strings = useStrings()

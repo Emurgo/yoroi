@@ -1,4 +1,9 @@
-import {isBoolean, parseSafe, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {
+  isBoolean,
+  parseSafe,
+  useAsyncStorage,
+  useMutationWithInvalidations,
+} from '@yoroi/common'
 import {useQuery} from 'react-query'
 
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
@@ -9,11 +14,14 @@ const storageDAppWelcome = 'dapp-explorer-welcome-dialog'
 export const useShowWelcomeDApp = () => {
   const {wallet} = useSelectedWallet()
   const storage = useAsyncStorage()
-  const walletStorage = storage.join(`wallet/${wallet.id}/${storageRootDAppExplorer}/`)
+  const walletStorage = storage.join(
+    `wallet/${wallet.id}/${storageRootDAppExplorer}/`,
+  )
   const queryKey = [wallet.id, storageDAppWelcome]
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: (value: boolean) => walletStorage.setItem(storageDAppWelcome, value),
+    mutationFn: (value: boolean) =>
+      walletStorage.setItem(storageDAppWelcome, value),
     invalidateQueries: [queryKey],
   })
 

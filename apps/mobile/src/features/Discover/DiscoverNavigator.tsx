@@ -6,7 +6,10 @@ import {ErrorBoundary} from 'react-error-boundary'
 
 import {LoadingBoundary} from '../../components/Boundary/Boundary'
 import {SomethingWentWrong} from '../../components/SomethingWentWrong/SomethingWentWrong'
-import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
+import {
+  defaultStackNavigationOptions,
+  DiscoverRoutes,
+} from '../../kernel/navigation'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {BrowserNavigator} from './BrowserNavigator'
 import {useStrings} from './common/useStrings'
@@ -33,7 +36,10 @@ export const DiscoverNavigator = () => {
         }}
         initialRouteName="discover-select-dapp-from-list"
       >
-        <Stack.Screen name="discover-select-dapp-from-list" options={{title: strings.discoverTitle}}>
+        <Stack.Screen
+          name="discover-select-dapp-from-list"
+          options={{title: strings.discoverTitle}}
+        >
           {() => (
             <ErrorBoundary FallbackComponent={SomethingWentWrong}>
               <LoadingBoundary fallback={<ListSkeleton />}>
@@ -43,7 +49,11 @@ export const DiscoverNavigator = () => {
           )}
         </Stack.Screen>
 
-        <Stack.Screen name="discover-browser" component={BrowserNavigator} options={{headerShown: false}} />
+        <Stack.Screen
+          name="discover-browser"
+          component={BrowserNavigator}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </DappConnectorProvider>
   )

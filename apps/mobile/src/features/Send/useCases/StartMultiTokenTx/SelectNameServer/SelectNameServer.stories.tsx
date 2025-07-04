@@ -1,8 +1,17 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {storiesOf} from '@storybook/react-native'
 import {tokenBalanceMocks} from '@yoroi/portfolio'
-import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
-import {defaultTransferState, TransferProvider, TransferState} from '@yoroi/transfer'
+import {
+  resolverApiMaker,
+  resolverManagerMaker,
+  ResolverProvider,
+  resolverStorageMaker,
+} from '@yoroi/resolver'
+import {
+  defaultTransferState,
+  TransferProvider,
+  TransferState,
+} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 
@@ -19,7 +28,9 @@ storiesOf('Send SelectNameServer', module)
 
     return (
       <QueryProvider>
-        <WalletManagerProviderMock wallet={wallet}>{story()}</WalletManagerProviderMock>
+        <WalletManagerProviderMock wallet={wallet}>
+          {story()}
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })

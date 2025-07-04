@@ -13,9 +13,16 @@ export const Rate = ({rate, name}: Props) => {
     <Text style={[styles.boxExchange]}>
       <Text style={[styles.textWhite, styles.normalText]}>1 {name} = </Text>
 
-      <Text style={[styles.textWhite, styles.normalText, styles.usdExchangeText]}>{rate.toFixed(config.decimals)}</Text>
+      <Text
+        style={[styles.textWhite, styles.normalText, styles.usdExchangeText]}
+      >
+        {rate.toFixed(config.decimals)}
+      </Text>
 
-      <Text style={[styles.textWhite, styles.usdExchangeFiat]}> {currency}</Text>
+      <Text style={[styles.textWhite, styles.usdExchangeFiat]}>
+        {' '}
+        {currency}
+      </Text>
     </Text>
   )
 }

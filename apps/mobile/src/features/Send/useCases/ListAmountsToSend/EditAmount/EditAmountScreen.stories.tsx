@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable react/jsx-curly-brace-presence */
 import {storiesOf} from '@storybook/react-native'
 import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
@@ -59,7 +57,9 @@ const Adding = () => {
 const InsuficientBalance = () => {
   return (
     <WalletManagerProviderMock wallet={walletMocks.wallet}>
-      <TransferProvider initialState={sendMocks.editingAmount.insuficientBalance}>
+      <TransferProvider
+        initialState={sendMocks.editingAmount.insuficientBalance}
+      >
         <EditAmountScreen />
       </TransferProvider>
     </WalletManagerProviderMock>

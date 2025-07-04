@@ -21,9 +21,13 @@ export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
 
   return (
     <View style={styles.row}>
-      {priceImpactRisk === 'moderate' && <Icon.Info size={20} color={textColor} />}
+      {priceImpactRisk === 'moderate' && (
+        <Icon.Info size={20} color={textColor} />
+      )}
 
-      {priceImpactRisk === 'high' && <Icon.Warning size={20} color={textColor} />}
+      {priceImpactRisk === 'high' && (
+        <Icon.Warning size={20} color={textColor} />
+      )}
 
       <Text style={[{color: textColor}, styles.text]}>
         <Text>{strings.priceImpact}</Text>

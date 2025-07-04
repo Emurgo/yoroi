@@ -10,27 +10,63 @@ export const useStrings = () => {
     scanTitle: intl.formatMessage(messages.scanTitle),
 
     ok: intl.formatMessage(globalMessages.ok),
-    cameraPermissionDeniedTitle: intl.formatMessage(messages.cameraPermissionDeniedTitle),
-    cameraPermissionDeniedHelp: intl.formatMessage(messages.cameraPermissionDeniedHelp),
+    cameraPermissionDeniedTitle: intl.formatMessage(
+      messages.cameraPermissionDeniedTitle,
+    ),
+    cameraPermissionDeniedHelp: intl.formatMessage(
+      messages.cameraPermissionDeniedHelp,
+    ),
     errorUnknownTitle: intl.formatMessage(messages.errorUnknownTitle),
     errorUnknownHelp: intl.formatMessage(messages.errorUnknownHelp),
-    errorUnknownContentTitle: intl.formatMessage(messages.errorUnknownContentTitle),
-    errorUnknownContentHelp: intl.formatMessage(messages.errorUnknownContentHelp),
+    errorUnknownContentTitle: intl.formatMessage(
+      messages.errorUnknownContentTitle,
+    ),
+    errorUnknownContentHelp: intl.formatMessage(
+      messages.errorUnknownContentHelp,
+    ),
 
-    linksErrorExtraParamsDeniedTitle: intl.formatMessage(messages.linksErrorExtraParamsDeniedTitle),
-    linksErrorExtraParamsDeniedHelp: intl.formatMessage(messages.linksErrorExtraParamsDeniedHelp),
-    linksErrorForbiddenParamsProvidedTitle: intl.formatMessage(messages.linksErrorForbiddenParamsProvidedTitle),
-    linksErrorForbiddenParamsProvidedHelp: intl.formatMessage(messages.linksErrorForbiddenParamsProvidedHelp),
-    linksErrorRequiredParamsMissingTitle: intl.formatMessage(messages.linksErrorRequiredParamsMissingTitle),
-    linksErrorRequiredParamsMissingHelp: intl.formatMessage(messages.linksErrorRequiredParamsMissingHelp),
-    linksErrorParamsValidationFailedTitle: intl.formatMessage(messages.linksErrorParamsValidationFailedTitle),
-    linksErrorParamsValidationFailedHelp: intl.formatMessage(messages.linksErrorParamsValidationFailedHelp),
-    linksErrorUnsupportedAuthorityTitle: intl.formatMessage(messages.linksErrorUnsupportedAuthorityTitle),
-    linksErrorUnsupportedAuthorityHelp: intl.formatMessage(messages.linksErrorUnsupportedAuthorityHelp),
-    linksErrorUnsupportedVersionTitle: intl.formatMessage(messages.linksErrorUnsupportedVersionTitle),
-    linksErrorUnsupportedVersionHelp: intl.formatMessage(messages.linksErrorUnsupportedVersionHelp),
-    linksErrorSchemeNotImplementedTitle: intl.formatMessage(messages.linksErrorSchemeNotImplementedTitle),
-    linksErrorSchemeNotImplementedHelp: intl.formatMessage(messages.linksErrorSchemeNotImplementedHelp),
+    linksErrorExtraParamsDeniedTitle: intl.formatMessage(
+      messages.linksErrorExtraParamsDeniedTitle,
+    ),
+    linksErrorExtraParamsDeniedHelp: intl.formatMessage(
+      messages.linksErrorExtraParamsDeniedHelp,
+    ),
+    linksErrorForbiddenParamsProvidedTitle: intl.formatMessage(
+      messages.linksErrorForbiddenParamsProvidedTitle,
+    ),
+    linksErrorForbiddenParamsProvidedHelp: intl.formatMessage(
+      messages.linksErrorForbiddenParamsProvidedHelp,
+    ),
+    linksErrorRequiredParamsMissingTitle: intl.formatMessage(
+      messages.linksErrorRequiredParamsMissingTitle,
+    ),
+    linksErrorRequiredParamsMissingHelp: intl.formatMessage(
+      messages.linksErrorRequiredParamsMissingHelp,
+    ),
+    linksErrorParamsValidationFailedTitle: intl.formatMessage(
+      messages.linksErrorParamsValidationFailedTitle,
+    ),
+    linksErrorParamsValidationFailedHelp: intl.formatMessage(
+      messages.linksErrorParamsValidationFailedHelp,
+    ),
+    linksErrorUnsupportedAuthorityTitle: intl.formatMessage(
+      messages.linksErrorUnsupportedAuthorityTitle,
+    ),
+    linksErrorUnsupportedAuthorityHelp: intl.formatMessage(
+      messages.linksErrorUnsupportedAuthorityHelp,
+    ),
+    linksErrorUnsupportedVersionTitle: intl.formatMessage(
+      messages.linksErrorUnsupportedVersionTitle,
+    ),
+    linksErrorUnsupportedVersionHelp: intl.formatMessage(
+      messages.linksErrorUnsupportedVersionHelp,
+    ),
+    linksErrorSchemeNotImplementedTitle: intl.formatMessage(
+      messages.linksErrorSchemeNotImplementedTitle,
+    ),
+    linksErrorSchemeNotImplementedHelp: intl.formatMessage(
+      messages.linksErrorSchemeNotImplementedHelp,
+    ),
 
     continue: intl.formatMessage(messages.continue),
     openAppSettings: intl.formatMessage(messages.openAppSettings),
@@ -50,7 +86,8 @@ const messages = Object.freeze(
     },
     cameraPermissionDeniedHelp: {
       id: 'scan.cameraPermissionDenied.help',
-      defaultMessage: '!!!Open the app settings and enable the camera permission.',
+      defaultMessage:
+        '!!!Open the app settings and enable the camera permission.',
     },
     errorUnknownTitle: {
       id: 'scan.errorUnknown.title',

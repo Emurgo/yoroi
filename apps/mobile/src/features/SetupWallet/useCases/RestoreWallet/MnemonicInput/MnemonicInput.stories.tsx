@@ -8,16 +8,24 @@ import {MnemonicInput} from './MnemonicInput'
 
 storiesOf('MnemonicInput', module)
   .add('valid', () => {
-    const [suggestedWords, setSuggestedWords] = React.useState<Array<string>>([])
-    const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>(Array.from({length}).map(() => ''))
-    const mnenonicRefs = React.useRef(mnemonicWords.map(() => React.createRef<MnemonicWordInputRef>())).current
+    const [suggestedWords, setSuggestedWords] = React.useState<Array<string>>(
+      [],
+    )
+    const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>(
+      Array.from({length}).map(() => ''),
+    )
+    const mnenonicRefs = React.useRef(
+      mnemonicWords.map(() => React.createRef<MnemonicWordInputRef>()),
+    ).current
     const [_, setFocusedIndex] = React.useState<number>(0)
     const {scrollViewRef} = useScrollView()
-    const [mnemonicSelectedWords, setMnemonicSelectedWords] = React.useState<Array<string>>(
-      Array.from({length: 15}).map(() => ''),
-    )
+    const [mnemonicSelectedWords, setMnemonicSelectedWords] = React.useState<
+      Array<string>
+    >(Array.from({length: 15}).map(() => ''))
     const [mnemonic, setMnemonic] = React.useState('')
-    const [inputErrorsIndexes, setInputErrorsIndexes] = React.useState<Array<number>>([])
+    const [inputErrorsIndexes, setInputErrorsIndexes] = React.useState<
+      Array<number>
+    >([])
 
     const onSelect = (index: number, word: string) => {
       setMnemonicWords((words) => {
@@ -40,7 +48,9 @@ storiesOf('MnemonicInput', module)
     }
 
     const onClearError = (indexToRemove: number) => {
-      const newInputErrors = inputErrorsIndexes.filter((index) => index !== indexToRemove)
+      const newInputErrors = inputErrorsIndexes.filter(
+        (index) => index !== indexToRemove,
+      )
       setInputErrorsIndexes(newInputErrors)
     }
 
@@ -67,15 +77,23 @@ storiesOf('MnemonicInput', module)
     )
   })
   .add('invalid', () => {
-    const [suggestedWords, setSuggestedWords] = React.useState<Array<string>>([])
-    const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>(Array.from({length}).map(() => ''))
-    const mnenonicRefs = React.useRef(mnemonicWords.map(() => React.createRef<MnemonicWordInputRef>())).current
-    const [_, setFocusedIndex] = React.useState<number>(0)
-    const [mnemonicSelectedWords, setMnemonicSelectedWords] = React.useState<Array<string>>(
-      Array.from({length: 15}).map(() => ''),
+    const [suggestedWords, setSuggestedWords] = React.useState<Array<string>>(
+      [],
     )
+    const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>(
+      Array.from({length}).map(() => ''),
+    )
+    const mnenonicRefs = React.useRef(
+      mnemonicWords.map(() => React.createRef<MnemonicWordInputRef>()),
+    ).current
+    const [_, setFocusedIndex] = React.useState<number>(0)
+    const [mnemonicSelectedWords, setMnemonicSelectedWords] = React.useState<
+      Array<string>
+    >(Array.from({length: 15}).map(() => ''))
     const [mnemonic, setMnemonic] = React.useState('')
-    const [inputErrorsIndexes, setInputErrorsIndexes] = React.useState<Array<number>>([])
+    const [inputErrorsIndexes, setInputErrorsIndexes] = React.useState<
+      Array<number>
+    >([])
     const {scrollViewRef} = useScrollView()
 
     const onSelect = (index: number, word: string) => {
@@ -99,7 +117,9 @@ storiesOf('MnemonicInput', module)
     }
 
     const onClearError = (indexToRemove: number) => {
-      const newInputErrors = inputErrorsIndexes.filter((index) => index !== indexToRemove)
+      const newInputErrors = inputErrorsIndexes.filter(
+        (index) => index !== indexToRemove,
+      )
       setInputErrorsIndexes(newInputErrors)
     }
 

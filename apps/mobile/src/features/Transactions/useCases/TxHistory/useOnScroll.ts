@@ -1,5 +1,9 @@
 import {useRef} from 'react'
-import {NativeScrollEvent, NativeSyntheticEvent, ScrollViewProps} from 'react-native'
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollViewProps,
+} from 'react-native'
 
 const noop = () => undefined
 
@@ -8,14 +12,21 @@ type Callbacks = {
   onScrollDown?: ScrollViewProps['onScroll']
   buffer?: number
 }
-export const useOnScroll = ({onScrollUp = noop, onScrollDown = noop, buffer = 100}: Callbacks) => {
+export const useOnScroll = ({
+  onScrollUp = noop,
+  onScrollDown = noop,
+  buffer = 100,
+}: Callbacks) => {
   const previousScrollOffset = useRef(0)
 
   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const {nativeEvent} = event
     const topBounce = nativeEvent.contentOffset.y < 0
     const bottomBounce =
-      nativeEvent.contentSize.height - nativeEvent.contentOffset.y - nativeEvent.layoutMeasurement.height < 0
+      nativeEvent.contentSize.height -
+        nativeEvent.contentOffset.y -
+        nativeEvent.layoutMeasurement.height <
+      0
     const topReached = nativeEvent.contentOffset.y === 0
     const scrollOffset = nativeEvent.contentOffset.y
 

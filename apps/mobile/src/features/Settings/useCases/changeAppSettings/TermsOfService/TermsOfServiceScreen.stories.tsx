@@ -11,5 +11,7 @@ const styles = StyleSheet.create({
 })
 
 storiesOf('TermsOfServiceScreen', module)
-  .addDecorator((getStory) => <View style={styles.termsOfServiceScreen}>{getStory()}</View>)
+  .addDecorator((getStory) => (
+    <View style={styles.termsOfServiceScreen}>{getStory()}</View>
+  ))
   .add('Default', () => <TermsOfServiceScreen />)

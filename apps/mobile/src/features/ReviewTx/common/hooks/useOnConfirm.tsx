@@ -20,7 +20,11 @@ export type OnConfirm = {
   cbor?: string | null
   preventSubmit?: boolean
   partial?: boolean
-  onSuccess?: (args?: {tx?: Transaction; rootKey?: string; signedTx?: YoroiSignedTx}) => void
+  onSuccess?: (args?: {
+    tx?: Transaction
+    rootKey?: string
+    signedTx?: YoroiSignedTx
+  }) => void
   onError?: ((error: unknown) => void) | null
   onCancel?: () => void
   onClose?: () => void
@@ -42,7 +46,11 @@ export const useOnConfirm = ({
   const {openModal} = useModal()
   const strings = useStrings()
 
-  const handleOnSuccess = (args?: {tx?: Transaction; rootKey?: string; signedTx?: YoroiSignedTx}) => {
+  const handleOnSuccess = (args?: {
+    tx?: Transaction
+    rootKey?: string
+    signedTx?: YoroiSignedTx
+  }) => {
     if (onSuccess) {
       onSuccess({rootKey: args?.rootKey, tx: args?.tx})
       return
@@ -82,7 +90,11 @@ export const useOnConfirm = ({
         content: (
           <ErrorBoundary
             fallbackRender={({error, resetErrorBoundary}) => (
-              <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />
+              <ModalError
+                error={error}
+                resetErrorBoundary={resetErrorBoundary}
+                onCancel={onCancel}
+              />
             )}
           >
             <ConfirmRawTxWithHW onSuccess={handleOnSuccess} cbor={cbor} />
@@ -115,9 +127,16 @@ export const useOnConfirm = ({
   return {onConfirm} as const
 }
 
-const submitTx = async (cbor: string, rootKey: string, wallet: YoroiWallet, meta: Wallet.Meta) => {
+const submitTx = async (
+  cbor: string,
+  rootKey: string,
+  wallet: YoroiWallet,
+  meta: Wallet.Meta,
+) => {
   const signers = await getTransactionSigners(cbor, wallet, meta)
-  const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
+  const keys = await Promise.all(
+    signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)),
+  )
   const response = await wallet.signRawTx(cbor, keys)
   if (!response) throw new Error('useOnConfirm:: not possible to sign tx')
   const hexBase64 = Buffer.from(response).toString('base64')

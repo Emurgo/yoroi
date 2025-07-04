@@ -57,7 +57,8 @@ const useStrings = () => {
 const messages = defineMessages({
   beforeConfirm: {
     id: 'components.send.confirmscreen.beforeConfirm',
-    defaultMessage: '!!!Before tapping on confirm, please follow these instructions:',
+    defaultMessage:
+      '!!!Before tapping on confirm, please follow these instructions:',
   },
 })
 

@@ -1,10 +1,24 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Dimensions, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback} from 'react-native'
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import WebView from 'react-native-webview'
-import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
+import {
+  WebViewNavigation,
+  WebViewNavigationEvent,
+} from 'react-native-webview/lib/WebViewTypes'
 
 import {Icon} from '../../../../components/Icon'
 import {Spacer} from '../../../../components/Spacer/Spacer'
@@ -19,7 +33,8 @@ import {BrowserToolbar} from './BrowserToolbar'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
-export type WebViewState = Partial<WebViewNavigation> & Required<Pick<WebViewNavigation, 'url'>>
+export type WebViewState = Partial<WebViewNavigation> &
+  Required<Pick<WebViewNavigation, 'url'>>
 
 type Props = {
   tab: TabItem
@@ -28,7 +43,15 @@ type Props = {
 export const WebViewItem = ({tab, index}: Props) => {
   const {styles, colors} = useStyles()
   const webViewRef = React.useRef<WebView>(null)
-  const {tabs, updateTab, tabsOpen, openTabs, setTabActive, removeTab, tabActiveIndex} = useBrowser()
+  const {
+    tabs,
+    updateTab,
+    tabsOpen,
+    openTabs,
+    setTabActive,
+    removeTab,
+    tabActiveIndex,
+  } = useBrowser()
   const webURL = tab?.url
   const {domainName} = getDomainFromUrl(webURL)
   const isTabActive = index === tabActiveIndex
@@ -38,7 +61,10 @@ export const WebViewItem = ({tab, index}: Props) => {
   const scaleXWebview = useSharedValue(1)
   const opacityValue = useSharedValue(0)
 
-  const {initScript, handleEvent} = useConnectWalletToWebView(wallet, webViewRef)
+  const {initScript, handleEvent} = useConnectWalletToWebView(
+    wallet,
+    webViewRef,
+  )
 
   const containerStyleAnimated = useAnimatedStyle(() => {
     return {transform: [{scaleX: scaleXWebview.value}]}
@@ -88,7 +114,10 @@ export const WebViewItem = ({tab, index}: Props) => {
     if (tabsOpen) {
       scaleXWebview.value = withTiming(scaleXRatio, timingConfig)
     } else {
-      scaleXWebview.value = withTiming(isTabActive ? 1 : scaleXRatio, timingConfig)
+      scaleXWebview.value = withTiming(
+        isTabActive ? 1 : scaleXRatio,
+        timingConfig,
+      )
     }
   }, [isTabActive, opacityValue, scaleXWebview, tabsOpen])
 
@@ -104,7 +133,11 @@ export const WebViewItem = ({tab, index}: Props) => {
         <Animated.View
           style={
             tabsOpen
-              ? [styles.switchTabRoot, styles.roundedContainer, isTabActive && styles.switchTabRootActive]
+              ? [
+                  styles.switchTabRoot,
+                  styles.roundedContainer,
+                  isTabActive && styles.switchTabRootActive,
+                ]
               : styles.webViewContainer
           }
         >
@@ -130,18 +163,29 @@ export const WebViewItem = ({tab, index}: Props) => {
 
           {tabsOpen && (
             <LinearGradient
-              style={[StyleSheet.absoluteFillObject, styles.roundedInsideContainer]}
+              style={[
+                StyleSheet.absoluteFillObject,
+                styles.roundedInsideContainer,
+              ]}
               colors={['#000000A1', '#00000000']}
             />
           )}
 
           {tabsOpen && (
-            <TouchableOpacity style={styles.closeTabPosition} onPress={handleCloseTab}>
+            <TouchableOpacity
+              style={styles.closeTabPosition}
+              onPress={handleCloseTab}
+            >
               <Icon.Close size={20} color={colors.whiteStatic} />
             </TouchableOpacity>
           )}
 
-          {!tabsOpen && isTabActive && <BrowserTabBar webViewRef={webViewRef} webViewState={webViewStateRest} />}
+          {!tabsOpen && isTabActive && (
+            <BrowserTabBar
+              webViewRef={webViewRef}
+              webViewState={webViewStateRest}
+            />
+          )}
         </Animated.View>
 
         {tabsOpen && (

@@ -1,4 +1,9 @@
-import {isDomain, isNameServer, isResolvableDomain, useResolverCryptoAddresses} from '@yoroi/resolver'
+import {
+  isDomain,
+  isNameServer,
+  isResolvableDomain,
+  useResolverCryptoAddresses,
+} from '@yoroi/resolver'
 import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
@@ -7,9 +12,15 @@ import {useQueryClient} from 'react-query'
 export const useSendReceiver = () => {
   const queryClient = useQueryClient()
 
-  const {targets, selectedTargetIndex, receiverResolveChanged, addressRecordsFetched} = useTransfer()
+  const {
+    targets,
+    selectedTargetIndex,
+    receiverResolveChanged,
+    addressRecordsFetched,
+  } = useTransfer()
   const receiver = targets[selectedTargetIndex].receiver
-  const isUnsupportedDomain = !isResolvableDomain(receiver.resolve) && isDomain(receiver.resolve)
+  const isUnsupportedDomain =
+    !isResolvableDomain(receiver.resolve) && isDomain(receiver.resolve)
 
   const {
     error: receiverError,
@@ -34,11 +45,18 @@ export const useSendReceiver = () => {
   )
 
   const isWrongBlockchainError = React.useMemo(
-    () => isNotResolvedDomain && cryptoAddresses.some(({error}) => error instanceof Resolver.Errors.WrongBlockchain),
+    () =>
+      isNotResolvedDomain &&
+      cryptoAddresses.some(
+        ({error}) => error instanceof Resolver.Errors.WrongBlockchain,
+      ),
     [cryptoAddresses, isNotResolvedDomain],
   )
 
-  const debouncedRefetch = React.useMemo(() => debounceMaker(refetch, 300), [refetch])
+  const debouncedRefetch = React.useMemo(
+    () => debounceMaker(refetch, 300),
+    [refetch],
+  )
 
   const cancelPendingRequests = React.useCallback(
     () => queryClient.cancelQueries({queryKey: ['useResolverCryptoAddresses']}),
@@ -46,7 +64,8 @@ export const useSendReceiver = () => {
   )
 
   React.useEffect(() => {
-    if (receiver.as === 'domain') cancelPendingRequests().then(() => debouncedRefetch.call())
+    if (receiver.as === 'domain')
+      cancelPendingRequests().then(() => debouncedRefetch.call())
     if (receiver.as === 'address') cancelPendingRequests()
     return () => debouncedRefetch.clear()
   }, [
@@ -62,8 +81,15 @@ export const useSendReceiver = () => {
   React.useEffect(() => {
     if (isSuccess && cryptoAddresses !== undefined) {
       const records = cryptoAddresses.reduce(
-        (addressRecords: Resolver.Receiver['addressRecords'], {address, nameServer}) => {
-          if (address !== null && nameServer !== null && isNameServer(nameServer) === true)
+        (
+          addressRecords: Resolver.Receiver['addressRecords'],
+          {address, nameServer},
+        ) => {
+          if (
+            address !== null &&
+            nameServer !== null &&
+            isNameServer(nameServer) === true
+          )
             if (addressRecords !== undefined) {
               return {...addressRecords, [nameServer]: address}
             } else {
@@ -86,7 +112,10 @@ export const useSendReceiver = () => {
   }
 }
 
-const debounceMaker = <T extends (...args: never[]) => unknown>(callback: T, delay: number) => {
+const debounceMaker = <T extends (...args: never[]) => unknown>(
+  callback: T,
+  delay: number,
+) => {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
 
   const clear = () => {

@@ -19,14 +19,20 @@ export const useIsUsbSupported = () => {
   const [isUSBSupported, setUSBSupported] = React.useState(false)
   React.useEffect(() => {
     DeviceInfo.getApiLevel().then((sdk) =>
-      setUSBSupported(Platform.OS === 'android' && sdk >= HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK),
+      setUSBSupported(
+        Platform.OS === 'android' &&
+          sdk >= HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK,
+      ),
     )
   }, [])
 
   return isUSBSupported
 }
 
-export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
+export const LedgerTransportSwitchView = ({
+  onSelectUSB,
+  onSelectBLE,
+}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
@@ -39,7 +45,10 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
   const getUsbButtonTitle = (): string => {
     if (Platform.OS === 'ios') {
       return strings.usbButtonDisabled
-    } else if (!HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT || !isUSBSupported) {
+    } else if (
+      !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT ||
+      !isUSBSupported
+    ) {
       return strings.usbButtonNotSupported
     } else {
       return strings.usbButton
@@ -59,7 +68,9 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
       <Button
         onPress={onSelectUSB}
         title={getUsbButtonTitle()}
-        disabled={!isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
+        disabled={
+          !isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
+        }
         testID="connectWithUSBButton"
       />
 
@@ -69,7 +80,11 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
 
       <Space height="md" />
 
-      <Button onPress={() => request()} title={strings.bluetoothButton} testID="connectWithBLEButton" />
+      <Button
+        onPress={() => request()}
+        title={strings.bluetoothButton}
+        testID="connectWithBLEButton"
+      />
     </ScrollView>
   )
 }
@@ -101,7 +116,8 @@ const messages = defineMessages({
   },
   bluetoothExplanation: {
     id: 'components.ledger.ledgertransportswitchmodal.bluetoothExplanation',
-    defaultMessage: '!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:',
+    defaultMessage:
+      '!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:',
   },
   bluetoothButton: {
     id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',

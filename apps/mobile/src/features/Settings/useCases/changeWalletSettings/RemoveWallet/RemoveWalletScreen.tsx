@@ -1,7 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {InteractionManager, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {
+  InteractionManager,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewProps,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../../components/Button/Button'
@@ -9,7 +15,11 @@ import {Checkbox} from '../../../../../components/Checkbox/Checkbox'
 import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
-import {Checkmark, TextInput, TextInputProps} from '../../../../../components/TextInput/TextInput'
+import {
+  Checkmark,
+  TextInput,
+  TextInputProps,
+} from '../../../../../components/TextInput/TextInput'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
@@ -27,24 +37,37 @@ export const RemoveWalletScreen = () => {
     } else {
       resetToWalletSelection()
     }
-    InteractionManager.runAfterInteractions(() => walletManager.removeWallet(meta.id))
+    InteractionManager.runAfterInteractions(() =>
+      walletManager.removeWallet(meta.id),
+    )
   }, [meta.id, resetToWalletSelection, resetToWalletSetupInit, walletManager])
 
-  const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
+  const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] =
+    React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
-  const disabled = (!meta.isHW && !hasMnemonicWrittenDown) || meta.name !== typedWalletName
+  const disabled =
+    (!meta.isHW && !hasMnemonicWrittenDown) || meta.name !== typedWalletName
 
   return (
     <KeyboardAvoidingView style={styles.root}>
-      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <SafeAreaView
+        edges={['left', 'right', 'bottom']}
+        style={styles.safeAreaView}
+      >
         <ScrollView bounces={false}>
           <Description>
-            {!meta.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
+            {!meta.isHW && (
+              <Text style={styles.description}>
+                {strings.descriptionParagraph1}
+              </Text>
+            )}
 
             <Spacer height={24} />
 
-            <Text style={styles.description}>{strings.descriptionParagraph2}</Text>
+            <Text style={styles.description}>
+              {strings.descriptionParagraph2}
+            </Text>
           </Description>
 
           <Spacer height={32} />
@@ -63,7 +86,11 @@ export const RemoveWalletScreen = () => {
               value={typedWalletName}
               onChangeText={setTypedWalletName}
               right={typedWalletName === meta.name ? <Checkmark /> : undefined}
-              errorText={typedWalletName !== meta.name ? strings.walletNameMismatchError : undefined}
+              errorText={
+                typedWalletName !== meta.name
+                  ? strings.walletNameMismatchError
+                  : undefined
+              }
             />
           </WalletInfo>
         </ScrollView>
@@ -99,7 +126,14 @@ const WalletInfo = (props: ViewProps) => {
   return <View {...props} style={styles.descriptionContainer} />
 }
 const WalletNameInput = (props: TextInputProps) => {
-  return <TextInput {...props} autoFocus enablesReturnKeyAutomatically returnKeyType="done" />
+  return (
+    <TextInput
+      {...props}
+      autoFocus
+      enablesReturnKeyAutomatically
+      returnKeyType="done"
+    />
+  )
 }
 const Actions = (props: ViewProps) => {
   const styles = useStyles()
@@ -109,7 +143,8 @@ const Actions = (props: ViewProps) => {
 const messages = defineMessages({
   descriptionParagraph1: {
     id: 'components.settings.removewalletscreen.descriptionParagraph1',
-    defaultMessage: '!!!If you wish to permanently delete the wallet make sure you have written down the mnemonic.',
+    defaultMessage:
+      '!!!If you wish to permanently delete the wallet make sure you have written down the mnemonic.',
   },
   descriptionParagraph2: {
     id: 'components.settings.removewalletscreen.descriptionParagraph2',
@@ -146,7 +181,9 @@ const useStrings = () => {
     descriptionParagraph2: intl.formatMessage(messages.descriptionParagraph2),
     walletName: intl.formatMessage(messages.walletName),
     walletNameInput: intl.formatMessage(messages.walletNameInput),
-    walletNameMismatchError: intl.formatMessage(messages.walletNameMismatchError),
+    walletNameMismatchError: intl.formatMessage(
+      messages.walletNameMismatchError,
+    ),
     remove: intl.formatMessage(messages.remove),
     hasWrittenDownMnemonic: intl.formatMessage(messages.hasWrittenDownMnemonic),
   }

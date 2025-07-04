@@ -1,9 +1,18 @@
 import {useNavigation} from '@react-navigation/native'
 import {parseNumber} from '@yoroi/common'
-import {useNotificationsConfig, useUpdateNotificationsConfig} from '@yoroi/notifications'
+import {
+  useNotificationsConfig,
+  useUpdateNotificationsConfig,
+} from '@yoroi/notifications'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../../../components/Button/Button'
@@ -46,9 +55,12 @@ export const ManageNotificationDisplayDurationScreen = () => {
 
   const strings = useStrings()
   const savedChoice = getChoiceByValue(config.displayDuration)
-  const [selectedChoiceId, setSelectedChoiceId] = React.useState<ChoiceKind>(savedChoice.id)
+  const [selectedChoiceId, setSelectedChoiceId] = React.useState<ChoiceKind>(
+    savedChoice.id,
+  )
   const selectedChoice = getChoiceById(selectedChoiceId)
-  const defaultInputValue = savedChoice.id === 'Manual' ? formatNumber(config.displayDuration) : ''
+  const defaultInputValue =
+    savedChoice.id === 'Manual' ? formatNumber(config.displayDuration) : ''
   const [inputValue, setInputValue] = React.useState(defaultInputValue)
 
   const isSelectedChoiceManual = selectedChoiceId === 'Manual'
@@ -67,7 +79,10 @@ export const ManageNotificationDisplayDurationScreen = () => {
   }
 
   const handleSubmit = () => {
-    const displayDuration = selectedChoice.id === 'Manual' ? parseNumber(inputValue) : selectedChoice.value
+    const displayDuration =
+      selectedChoice.id === 'Manual'
+        ? parseNumber(inputValue)
+        : selectedChoice.value
     track.settingInAppNotificationTimerUpdated({duration: displayDuration ?? 0})
     updateConfig({displayDuration})
     navigation.goBack()
@@ -75,7 +90,10 @@ export const ManageNotificationDisplayDurationScreen = () => {
 
   return (
     <KeyboardAvoidingView style={[styles.flex, styles.root]}>
-      <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.flex, styles.safeAreaView]}>
+      <SafeAreaView
+        edges={['bottom', 'left', 'right']}
+        style={[styles.flex, styles.safeAreaView]}
+      >
         <ScrollView bounces={false} style={styles.flex}>
           <Text style={styles.description}>{strings.description}</Text>
 
@@ -85,10 +103,18 @@ export const ManageNotificationDisplayDurationScreen = () => {
               return (
                 <TouchableOpacity
                   key={index}
-                  style={[styles.choiceButton, isSelected && styles.selectedChoiceButton]}
+                  style={[
+                    styles.choiceButton,
+                    isSelected && styles.selectedChoiceButton,
+                  ]}
                   onPress={() => handleChoicePress(choice.id)}
                 >
-                  <Text style={[styles.choiceLabel, isSelected && styles.selectedChoiceLabel]}>
+                  <Text
+                    style={[
+                      styles.choiceLabel,
+                      isSelected && styles.selectedChoiceLabel,
+                    ]}
+                  >
                     {getLabelById(choice.id, strings)}
                   </Text>
                 </TouchableOpacity>
@@ -100,13 +126,20 @@ export const ManageNotificationDisplayDurationScreen = () => {
             <Text style={styles.label}>{strings.displayDuration}</Text>
 
             <TextInput
-              value={selectedChoice.id === 'Manual' ? inputValue : formatNumber(selectedChoice.value)}
+              value={
+                selectedChoice.id === 'Manual'
+                  ? inputValue
+                  : formatNumber(selectedChoice.value)
+              }
               onChangeText={handleInputChange}
               editable={isInputEnabled}
               key={isInputEnabled ? 'enabled' : 'disabled'}
               selectTextOnFocus={isInputEnabled}
               autoFocus={isInputEnabled}
-              style={[styles.input, !isSelectedChoiceManual && {backgroundColor: colors.background}]}
+              style={[
+                styles.input,
+                !isSelectedChoiceManual && {backgroundColor: colors.background},
+              ]}
               keyboardType="numeric"
               selectionColor={colors.cursor}
               right={<Text style={styles.percentLabel}>{strings.seconds}</Text>}
@@ -116,13 +149,21 @@ export const ManageNotificationDisplayDurationScreen = () => {
           </View>
         </ScrollView>
 
-        <Button testID="applyButton" title={strings.apply} disabled={isButtonDisabled} onPress={handleSubmit} />
+        <Button
+          testID="applyButton"
+          title={strings.apply}
+          disabled={isButtonDisabled}
+          onPress={handleSubmit}
+        />
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
 }
 
-const getLabelById = (id: ChoiceKind, strings: ReturnType<typeof useStrings>) => {
+const getLabelById = (
+  id: ChoiceKind,
+  strings: ReturnType<typeof useStrings>,
+) => {
   switch (id) {
     case '2s':
       return strings.twoSeconds
@@ -216,7 +257,11 @@ const getChoiceById = (id: ChoiceKind): Choice => {
 }
 
 const getChoiceByValue = (value: number): Choice => {
-  return CHOICES.find((choice) => choice.id !== 'Manual' && choice.value === value) ?? {id: 'Manual'}
+  return (
+    CHOICES.find(
+      (choice) => choice.id !== 'Manual' && choice.value === value,
+    ) ?? {id: 'Manual'}
+  )
 }
 
 const isInputValid = (text: string) => {

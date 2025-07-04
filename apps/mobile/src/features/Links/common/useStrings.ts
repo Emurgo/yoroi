@@ -7,20 +7,40 @@ export const useStrings = () => {
   const intl = useIntl()
 
   return React.useRef({
-    trustedPaymentRequestedTitle: intl.formatMessage(messages.trustedPaymentRequestedTitle),
-    trustedPaymentRequestedDescription: intl.formatMessage(messages.trustedPaymentRequestedDescription),
-    untrustedPaymentRequestedTitle: intl.formatMessage(messages.untrustedPaymentRequestedTitle),
-    untrustedPaymentRequestedDescription: intl.formatMessage(messages.untrustedPaymentRequestedDescription),
+    trustedPaymentRequestedTitle: intl.formatMessage(
+      messages.trustedPaymentRequestedTitle,
+    ),
+    trustedPaymentRequestedDescription: intl.formatMessage(
+      messages.trustedPaymentRequestedDescription,
+    ),
+    untrustedPaymentRequestedTitle: intl.formatMessage(
+      messages.untrustedPaymentRequestedTitle,
+    ),
+    untrustedPaymentRequestedDescription: intl.formatMessage(
+      messages.untrustedPaymentRequestedDescription,
+    ),
 
-    trustedBrowserLaunchDappUrlTitle: intl.formatMessage(messages.trustedBrowserLaunchDappUrlTitle),
-    trustedBrowserLaunchDappUrlDescription: intl.formatMessage(messages.trustedBrowserLaunchDappUrlDescription),
-    untrustedBrowserLaunchDappUrlTitle: intl.formatMessage(messages.untrustedBrowserLaunchDappUrlTitle),
-    untrustedBrowserLaunchDappUrlDescription: intl.formatMessage(messages.untrustedBrowserLaunchDappUrlDescription),
+    trustedBrowserLaunchDappUrlTitle: intl.formatMessage(
+      messages.trustedBrowserLaunchDappUrlTitle,
+    ),
+    trustedBrowserLaunchDappUrlDescription: intl.formatMessage(
+      messages.trustedBrowserLaunchDappUrlDescription,
+    ),
+    untrustedBrowserLaunchDappUrlTitle: intl.formatMessage(
+      messages.untrustedBrowserLaunchDappUrlTitle,
+    ),
+    untrustedBrowserLaunchDappUrlDescription: intl.formatMessage(
+      messages.untrustedBrowserLaunchDappUrlDescription,
+    ),
 
     askToOpenAWalletTitle: intl.formatMessage(messages.askToOpenAWalletTitle),
-    askToOpenAWalletDescription: intl.formatMessage(messages.askToOpenAWalletDescription),
+    askToOpenAWalletDescription: intl.formatMessage(
+      messages.askToOpenAWalletDescription,
+    ),
     askToRedirectTitle: intl.formatMessage(messages.askToRedirectTitle),
-    askToRedirectDescription: intl.formatMessage(messages.askToRedirectDescription),
+    askToRedirectDescription: intl.formatMessage(
+      messages.askToRedirectDescription,
+    ),
 
     unknown: intl.formatMessage(globalMessages.unknown),
     disclaimer: intl.formatMessage(globalMessages.disclaimer),

@@ -54,7 +54,9 @@ const LoadingResolveReceiver = () => {
   return (
     <QueryProvider>
       <WalletManagerProviderMock wallet={wallet}>
-        <TransferProvider initialState={sendMocks.startTx.loading.resolveReceiver}>
+        <TransferProvider
+          initialState={sendMocks.startTx.loading.resolveReceiver}
+        >
           <Boundary>
             <StartMultiTokenTxScreen />
           </Boundary>

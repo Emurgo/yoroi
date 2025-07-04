@@ -27,7 +27,10 @@ export const RenameWalletScreen = () => {
 
   const {walletManager} = useWalletManager()
   const [newWalletName, setNewWalletName] = React.useState(walletName)
-  const validationErrors = walletManager.validateWalletName(newWalletName, walletName)
+  const validationErrors = walletManager.validateWalletName(
+    newWalletName,
+    walletName,
+  )
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorText = getWalletNameError(
     {
@@ -44,8 +47,14 @@ export const RenameWalletScreen = () => {
 
   return (
     <KeyboardAvoidingView style={styles.root}>
-      <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
-        <ScrollView contentContainerStyle={styles.scrollContentContainer} bounces={false}>
+      <SafeAreaView
+        style={styles.safeAreaView}
+        edges={['left', 'right', 'bottom']}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContentContainer}
+          bounces={false}
+        >
           <WalletNameInput
             returnKeyType="done"
             errorDelay={0}
@@ -117,7 +126,11 @@ const useStrings = () => {
     changeButton: intl.formatMessage(messages.changeButton),
     walletNameInputLabel: intl.formatMessage(messages.walletNameInputLabel),
     tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
-    nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
-    mustBeFilled: intl.formatMessage(globalMessages.walletNameErrorMustBeFilled),
+    nameAlreadyTaken: intl.formatMessage(
+      globalMessages.walletNameErrorNameAlreadyTaken,
+    ),
+    mustBeFilled: intl.formatMessage(
+      globalMessages.walletNameErrorMustBeFilled,
+    ),
   }
 }

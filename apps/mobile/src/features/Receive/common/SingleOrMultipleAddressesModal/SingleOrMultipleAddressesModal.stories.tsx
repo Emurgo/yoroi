@@ -8,27 +8,30 @@ import {mocks} from '../../../../wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'
 import {SingleOrMultipleAddressesModal} from './SingleOrMultipleAddressesModal'
 
-storiesOf('Receive SingleOrMultipleAddressesModal', module).add('default', () => (
-  <WalletManagerProviderMock wallet={mocks.wallet}>
-    <AsyncStorageProvider
-      storage={{
-        ...rootStorage,
-        join: (joinKey) => {
-          const joined = rootStorage.join(joinKey)
-          return {
-            ...joined,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            getItem: async (key, parser): Promise<any> => {
-              if (key === mocks.wallet.id) {
-                return mocks.walletMeta
-              }
-              return joined.getItem(key, parser)
-            },
-          }
-        },
-      }}
-    >
-      <SingleOrMultipleAddressesModal onConfirm={action('onConfirm')} />
-    </AsyncStorageProvider>
-  </WalletManagerProviderMock>
-))
+storiesOf('Receive SingleOrMultipleAddressesModal', module).add(
+  'default',
+  () => (
+    <WalletManagerProviderMock wallet={mocks.wallet}>
+      <AsyncStorageProvider
+        storage={{
+          ...rootStorage,
+          join: (joinKey) => {
+            const joined = rootStorage.join(joinKey)
+            return {
+              ...joined,
+
+              getItem: async (key, parser): Promise<any> => {
+                if (key === mocks.wallet.id) {
+                  return mocks.walletMeta
+                }
+                return joined.getItem(key, parser)
+              },
+            }
+          },
+        }}
+      >
+        <SingleOrMultipleAddressesModal onConfirm={action('onConfirm')} />
+      </AsyncStorageProvider>
+    </WalletManagerProviderMock>
+  ),
+)

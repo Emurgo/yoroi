@@ -4,7 +4,10 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {useStrings} from '../../../common/hooks/useStrings'
-import {PortfolioListTab, usePortfolio} from '../../../context/PortfolioProvider'
+import {
+  PortfolioListTab,
+  usePortfolio,
+} from '../../../context/PortfolioProvider'
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 
 type Props = {
@@ -15,11 +18,17 @@ export const TotalTokensValue = ({amount}: Props) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const {listTab} = usePortfolio()
-  const title = listTab === PortfolioListTab.Wallet ? strings.totalWalletValue : strings.totalDAppValue
+  const title =
+    listTab === PortfolioListTab.Wallet
+      ? strings.totalWalletValue
+      : strings.totalDAppValue
 
   return (
     <View style={styles.root}>
-      <TotalTokensValueContent amount={amount} headerCard={<Text style={[styles.normalText]}>{title}</Text>} />
+      <TotalTokensValueContent
+        amount={amount}
+        headerCard={<Text style={[styles.normalText]}>{title}</Text>}
+      />
     </View>
   )
 }

@@ -1,11 +1,19 @@
 import {Transaction} from '@emurgo/cross-csl-core'
-import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, ResolverWallet} from '@yoroi/dapp-connector'
-import {DappConnector} from '@yoroi/dapp-connector'
+import {
+  connectionStorageMaker,
+  DappConnector,
+  dappConnectorApiMaker,
+  dappConnectorMaker,
+  ResolverWallet,
+} from '@yoroi/dapp-connector'
 import {App, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {cip30ExtensionMaker} from '../../../wallets/cardano/cip30/cip30'
-import {cip95ExtensionMaker, supportsCIP95} from '../../../wallets/cardano/cip95/cip95'
+import {
+  cip95ExtensionMaker,
+  supportsCIP95,
+} from '../../../wallets/cardano/cip95/cip95'
 import {YoroiWallet} from '../../../wallets/cardano/types'
 import {collateralConfig} from '../../../wallets/cardano/utxoManager/utxos'
 
@@ -63,19 +71,32 @@ type CreateDappConnectorOptions = {
   appStorage: App.Storage
   wallet: YoroiWallet
   meta: Wallet.Meta
-  confirmConnection: (origin: string, manager: DappConnector) => Promise<boolean>
+  confirmConnection: (
+    origin: string,
+    manager: DappConnector,
+  ) => Promise<boolean>
   signTx: (options: {cbor: string; manager: DappConnector}) => Promise<string>
   signData: (address: string, payload: string) => Promise<string>
-  signTxWithHW: (options: {cbor: string; partial?: boolean; manager: DappConnector}) => Promise<Transaction>
-  signDataWithHW: (address: string, payload: string) => Promise<{signature: string; key: string}>
+  signTxWithHW: (options: {
+    cbor: string
+    partial?: boolean
+    manager: DappConnector
+  }) => Promise<Transaction>
+  signDataWithHW: (
+    address: string,
+    payload: string,
+  ) => Promise<{signature: string; key: string}>
   sendReorganisationTx: ({manager}: {manager: DappConnector}) => Promise<void>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
-  const {wallet, meta, appStorage, confirmConnection, signTx, signData} = options
+  const {wallet, meta, appStorage, confirmConnection, signTx, signData} =
+    options
   const api = dappConnectorApiMaker()
   const cip30 = cip30ExtensionMaker(wallet, meta)
-  const cip95 = supportsCIP95(meta.implementation) ? cip95ExtensionMaker(wallet, meta) : null
+  const cip95 = supportsCIP95(meta.implementation)
+    ? cip95ExtensionMaker(wallet, meta)
+    : null
 
   const cip95handler = cip95
     ? {
@@ -126,7 +147,10 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     // NOTE: amount (value argument) is a CIP-30 requirement for getCollateral method
     // but in Yoroi collateral is generated with minimum amount at the moment
     sendReorganisationTx: async (value?: string) => {
-      if (value && new BigNumber(value).gt(new BigNumber(collateralConfig.maxLovelace))) {
+      if (
+        value &&
+        new BigNumber(value).gt(new BigNumber(collateralConfig.maxLovelace))
+      ) {
         return Promise.reject(new Error('Collateral value is too high'))
       }
 
@@ -134,7 +158,9 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     },
     cip95: cip95handler,
   }
-  const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
+  const storage = connectionStorageMaker({
+    storage: appStorage.join('dapp-connections/'),
+  })
   const manager = dappConnectorMaker(storage, handlerWallet, api)
   return manager
 }

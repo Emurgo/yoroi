@@ -14,8 +14,17 @@ import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
 
 export const SelectProviderFromListScreen = () => {
   const styles = useStyles()
-  const {orderType, providerId: selectedProvider, orderTypeChanged, providerIdChanged, provider} = useExchange()
-  const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
+  const {
+    orderType,
+    providerId: selectedProvider,
+    orderTypeChanged,
+    providerIdChanged,
+    provider,
+  } = useExchange()
+  const providers = useExchangeProvidersByOrderType({
+    orderType,
+    providerListByOrderType: provider.list.byOrderType,
+  })
   const strings = useStrings()
 
   const handleOnSelectProvider = React.useCallback(
@@ -33,11 +42,18 @@ export const SelectProviderFromListScreen = () => {
       <FlatList
         style={styles.list}
         data={providers}
-        renderItem={({item: [providerId, provider]}: {item: [string, Exchange.Provider]}) => {
+        renderItem={({
+          item: [providerId, provider],
+        }: {
+          item: [string, Exchange.Provider]
+        }) => {
           const fee = provider.supportedOrders[orderType]?.fee ?? 0
           // TODO: update for the logo from the provider later
-          const ProviderLogo = providerId === 'banxa' ? BanxaLogo : EncryptusLogo
-          const rightAdornment = selectedProvider === providerId && <CheckIcon />
+          const ProviderLogo =
+            providerId === 'banxa' ? BanxaLogo : EncryptusLogo
+          const rightAdornment = selectedProvider === providerId && (
+            <CheckIcon />
+          )
           const leftAdornment = <ProviderLogo size={40} />
           return (
             <ProviderItem
@@ -51,7 +67,7 @@ export const SelectProviderFromListScreen = () => {
         }}
         ItemSeparatorComponent={() => <Space height="lg" />}
         keyExtractor={([providerId]) => providerId}
-      ></FlatList>
+      />
     </SafeAreaView>
   )
 }

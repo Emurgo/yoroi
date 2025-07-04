@@ -1,16 +1,26 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native'
 
 import {useStrings} from '../useStrings'
 
-export const LearnMoreButton = ({activeOpacity = 0.5, ...props}: TouchableOpacityProps) => {
+export const LearnMoreButton = ({
+  activeOpacity = 0.5,
+  ...props
+}: TouchableOpacityProps) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <TouchableOpacity activeOpacity={activeOpacity} {...props}>
-      <Text style={{...styles.text, textDecorationLine: 'none'}}>{strings.learnMore}</Text>
+      <Text style={{...styles.text, textDecorationLine: 'none'}}>
+        {strings.learnMore}
+      </Text>
     </TouchableOpacity>
   )
 }

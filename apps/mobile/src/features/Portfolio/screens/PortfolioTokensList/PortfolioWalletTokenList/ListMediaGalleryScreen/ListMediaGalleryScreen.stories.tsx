@@ -19,7 +19,10 @@ storiesOf('NFT/Gallery', module)
         nfts: [tokenBalanceMocks.nftCryptoKitty],
         records: new Map([
           [tokenBalanceMocks.ftNoTicker.info.id, tokenBalanceMocks.ftNoTicker],
-          [tokenBalanceMocks.nftCryptoKitty.info.id, tokenBalanceMocks.nftCryptoKitty],
+          [
+            tokenBalanceMocks.nftCryptoKitty.info.id,
+            tokenBalanceMocks.nftCryptoKitty,
+          ],
         ]),
       },
     }
@@ -40,7 +43,9 @@ storiesOf('NFT/Gallery', module)
         all: [tokenBalanceMocks.ftNoTicker],
         fts: [tokenBalanceMocks.ftNoTicker],
         nfts: [],
-        records: new Map([[tokenBalanceMocks.ftNoTicker.info.id, tokenBalanceMocks.ftNoTicker]]),
+        records: new Map([
+          [tokenBalanceMocks.ftNoTicker.info.id, tokenBalanceMocks.ftNoTicker],
+        ]),
       },
     }
     return (

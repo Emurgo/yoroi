@@ -3,4 +3,6 @@ import React from 'react'
 
 import {EnableLoginWithOsScreen} from './EnableLoginWithOsScreen'
 
-storiesOf('EnableLoginWithOsScreen', module).add('Default', () => <EnableLoginWithOsScreen />)
+storiesOf('EnableLoginWithOsScreen', module).add('Default', () => (
+  <EnableLoginWithOsScreen />
+))

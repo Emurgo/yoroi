@@ -50,8 +50,20 @@ export const AmountCard: React.FC<AmountCardProps> = ({
 
   return (
     <View>
-      <View style={[styles.container, isFocused && styles.active, !isEmptyString(error) && styles.borderError]}>
-        {label != null && <Text style={[styles.label, !isEmptyString(error) && styles.labelError]}>{label}</Text>}
+      <View
+        style={[
+          styles.container,
+          isFocused && styles.active,
+          !isEmptyString(error) && styles.borderError,
+        ]}
+      >
+        {label != null && (
+          <Text
+            style={[styles.label, !isEmptyString(error) && styles.labelError]}
+          >
+            {label}
+          </Text>
+        )}
 
         <View style={styles.content}>
           <Pressable style={styles.amountWrapper} onPress={() => focusInput()}>

@@ -29,7 +29,10 @@ export const DisableEasyConfirmationScreen = () => {
       </View>
 
       <View style={styles.actions}>
-        <Button title={strings.disableButton} onPress={handleOnDisableConfirmation} />
+        <Button
+          title={strings.disableButton}
+          onPress={handleOnDisableConfirmation}
+        />
       </View>
     </SafeAreaView>
   )
@@ -47,7 +50,8 @@ const useStrings = () => {
 const messages = defineMessages({
   disableHeading: {
     id: 'components.settings.disableeasyconfirmationscreen.disableHeading',
-    defaultMessage: '!!!By disabling this option you will be able to spend your assets only with your master password.',
+    defaultMessage:
+      '!!!By disabling this option you will be able to spend your assets only with your master password.',
   },
   disableButton: {
     id: 'components.settings.disableeasyconfirmationscreen.disableButton',

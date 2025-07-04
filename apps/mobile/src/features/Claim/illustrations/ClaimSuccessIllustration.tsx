@@ -1,10 +1,26 @@
 import * as React from 'react'
-import Svg, {Defs, G, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
+import Svg, {
+  Defs,
+  G,
+  LinearGradient,
+  Path,
+  Stop,
+  SvgProps,
+} from 'react-native-svg'
 
 // TODO: Get from Product the oficial illustration
-export const ClaimSuccessIllustration = ({zoom = 1, ...props}: SvgProps & {zoom?: number}) => {
+export const ClaimSuccessIllustration = ({
+  zoom = 1,
+  ...props
+}: SvgProps & {zoom?: number}) => {
   return (
-    <Svg width={255 * zoom} height={192 * zoom} viewBox="0 0 255 192" fill="none" {...props}>
+    <Svg
+      width={255 * zoom}
+      height={192 * zoom}
+      viewBox="0 0 255 192"
+      fill="none"
+      {...props}
+    >
       <G opacity={0.2} stroke="#1D45BA" strokeWidth={0.5}>
         <Path d="M87.734 189.069l166.891-94.883M24.315 141.794l155.683-88.51M78.052 41.94l175.807 99.825M1.86 106.958l147.372 83.68" />
       </G>

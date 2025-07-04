@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-native/no-raw-text */
 import {useTheme} from '@yoroi/theme'
 import * as shape from 'd3-shape'
 import React, {memo, useEffect, useMemo, useState} from 'react'
@@ -26,7 +24,10 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
           valueList: [...pre.valueList, next.value],
         }
       },
-      {labelList: [], valueList: []} as {labelList: string[]; valueList: number[]},
+      {labelList: [], valueList: []} as {
+        labelList: string[]
+        valueList: number[]
+      },
     )
 
     return {
@@ -125,7 +126,13 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
       <G x={xPosition} key="tooltip">
         <G x={x}>
           {/* Vertical line for tooltip */}
-          <Line y1={centerY} y2={maxY - 5} stroke={colors.stroke} strokeWidth={2} strokeDasharray={[6, 3]} />
+          <Line
+            y1={centerY}
+            y2={maxY - 5}
+            stroke={colors.stroke}
+            strokeWidth={2}
+            strokeDasharray={[6, 3]}
+          />
 
           {/* Dot Circle or tooltip */}
           <Circle cy={centerY} r={8} fill={colors.stroke} />
@@ -133,9 +140,21 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
 
         {/* Tooltip content */}
         <G x={adjustedX} y={adjustedY}>
-          <Rect y={0} rx={ttRadius} ry={ttRadius} width={ttWidth} height={ttHeight} fill={colors.tooltip} />
+          <Rect
+            y={0}
+            rx={ttRadius}
+            ry={ttRadius}
+            width={ttWidth}
+            height={ttHeight}
+            fill={colors.tooltip}
+          />
 
-          <SvgText x={6} y={ttHeight / 2 + 4} fontSize={12} fill={colors.tooltipText}>
+          <SvgText
+            x={6}
+            y={ttHeight / 2 + 4}
+            fontSize={12}
+            fill={colors.tooltipText}
+          >
             {labelList[positionX]}
           </SvgText>
         </G>

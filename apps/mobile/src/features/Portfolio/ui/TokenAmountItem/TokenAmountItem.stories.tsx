@@ -18,13 +18,19 @@ storiesOf('TokenAmountItem', module).add('Gallery', () => (
       <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
         <Text>Fungible primary token</Text>
 
-        <TokenAmountItem amount={primaryAmount} style={{backgroundColor: 'white', padding: 16, borderRadius: 8}} />
+        <TokenAmountItem
+          amount={primaryAmount}
+          style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
+        />
 
         <Spacer height={40} />
 
         <Text>Fungible non-primary token</Text>
 
-        <TokenAmountItem amount={secondaryAmount} style={{backgroundColor: 'white', padding: 16, borderRadius: 8}} />
+        <TokenAmountItem
+          amount={secondaryAmount}
+          style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
+        />
       </View>
     </WalletManagerProviderMock>
   </QueryProvider>

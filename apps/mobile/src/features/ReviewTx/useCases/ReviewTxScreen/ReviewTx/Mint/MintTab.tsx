@@ -22,7 +22,9 @@ export const MintTab = ({mintData}: {mintData: FormattedTx['mint']}) => {
             <Space height="lg" />
 
             <View style={styles.policyId}>
-              <Text style={styles.policyIdLabel}>{`${strings.policyIdLabel}:`}</Text>
+              <Text
+                style={styles.policyIdLabel}
+              >{`${strings.policyIdLabel}:`}</Text>
 
               <Space width="sm" />
 
@@ -32,7 +34,12 @@ export const MintTab = ({mintData}: {mintData: FormattedTx['mint']}) => {
             </View>
 
             <View style={styles.token}>
-              <TokenItem key={index} tokenInfo={info} label={`${count} ${info.name}`} isPrimaryToken={false} />
+              <TokenItem
+                key={index}
+                tokenInfo={info}
+                label={`${count} ${info.name}`}
+                isPrimaryToken={false}
+              />
             </View>
           </View>
         )

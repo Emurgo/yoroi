@@ -6,7 +6,8 @@ export const useStrings = () => {
   return {
     portfolio: intl.formatMessage(messages.portfolio),
     totalWalletValue: intl.formatMessage(messages.totalWalletValue),
-    tokens: (qty: number) => intl.formatMessage(messages.tokens, {countTokens: qty}),
+    tokens: (qty: number) =>
+      intl.formatMessage(messages.tokens, {countTokens: qty}),
     buyADATitle: intl.formatMessage(messages.buyADATitle),
     buyADADescription: intl.formatMessage(messages.buyADADescription),
     buyCrypto: intl.formatMessage(messages.buyCrypto),
@@ -16,7 +17,8 @@ export const useStrings = () => {
     tokenList: intl.formatMessage(messages.tokenList),
     walletToken: intl.formatMessage(messages.walletToken),
     dappsToken: intl.formatMessage(messages.dappsToken),
-    tokensAvailable: (qty: number) => intl.formatMessage(messages.tokensAvailable, {countTokens: qty}),
+    tokensAvailable: (qty: number) =>
+      intl.formatMessage(messages.tokensAvailable, {countTokens: qty}),
     searchTokens: intl.formatMessage(messages.searchTokens),
     noTokensFound: intl.formatMessage(messages.noTokensFound),
     totalDAppValue: intl.formatMessage(messages.totalDAppValue),
@@ -26,8 +28,11 @@ export const useStrings = () => {
     tokenDetail: intl.formatMessage(messages.tokenDetail),
     availableSoon: intl.formatMessage(messages.availableSoon),
     countLiquidityPoolsAvailable: (qty: number) =>
-      intl.formatMessage(messages.countLiquidityPoolsAvailable, {countLiquidityPools: qty}),
-    countOpenOrders: (qty: number) => intl.formatMessage(messages.countOpenOrders, {countOpenOrders: qty}),
+      intl.formatMessage(messages.countLiquidityPoolsAvailable, {
+        countLiquidityPools: qty,
+      }),
+    countOpenOrders: (qty: number) =>
+      intl.formatMessage(messages.countOpenOrders, {countOpenOrders: qty}),
     noDataFound: intl.formatMessage(messages.noDataFound),
     value: intl.formatMessage(messages.value),
     dex: intl.formatMessage(messages.dex),
@@ -76,11 +81,19 @@ export const useStrings = () => {
     news: intl.formatMessage(messages.news),
     detailsOn: intl.formatMessage(messages.detailsOn),
     totalPortfolioValue: intl.formatMessage(messages.totalPortfolioValue),
-    totalPortfolioValueTooltip: intl.formatMessage(messages.totalPortfolioValueTooltip),
-    totalWalletValueTooltip: intl.formatMessage(messages.totalWalletValueTooltip),
+    totalPortfolioValueTooltip: intl.formatMessage(
+      messages.totalPortfolioValueTooltip,
+    ),
+    totalWalletValueTooltip: intl.formatMessage(
+      messages.totalWalletValueTooltip,
+    ),
     totalDAppsValueTooltip: intl.formatMessage(messages.totalDAppsValueTooltip),
-    portfolioSwapTokensTitle: intl.formatMessage(messages.portfolioSwapTokensTitle),
-    portfolioSwapTokensDescription: intl.formatMessage(messages.portfolioSwapTokensDescription),
+    portfolioSwapTokensTitle: intl.formatMessage(
+      messages.portfolioSwapTokensTitle,
+    ),
+    portfolioSwapTokensDescription: intl.formatMessage(
+      messages.portfolioSwapTokensDescription,
+    ),
     startSwapping: intl.formatMessage(messages.startSwapping),
     titleMediaDetails: intl.formatMessage(messages.titleMediaDetails),
     title: intl.formatMessage(messages.title),
@@ -214,11 +227,13 @@ const messages = defineMessages({
   },
   totalWalletValueTooltip: {
     id: 'portfolio.portfolioTokensListScreen.totalWalletValueTooltip',
-    defaultMessage: '!!!% Balance performance \n+/- Balance change \nin 24 hours',
+    defaultMessage:
+      '!!!% Balance performance \n+/- Balance change \nin 24 hours',
   },
   totalDAppsValueTooltip: {
     id: 'portfolio.portfolioTokensListScreen.totalDAppsValueTooltip',
-    defaultMessage: '!!!% Performance \n+/- Balance change \nin 24 hours (DApps)',
+    defaultMessage:
+      '!!!% Performance \n+/- Balance change \nin 24 hours (DApps)',
   },
   total: {
     id: 'components.governance.total',
@@ -394,7 +409,8 @@ const messages = defineMessages({
   },
   portfolioSwapTokensDescription: {
     id: 'portfolio.portfolioDashboardScreen.portfolioSwapTokensDescription',
-    defaultMessage: '!!!Swap tokens seamlessly within Yoroi. Access new investment opportunities and explore DeFi',
+    defaultMessage:
+      '!!!Swap tokens seamlessly within Yoroi. Access new investment opportunities and explore DeFi',
   },
   startSwapping: {
     id: 'portfolio.portfolioDashboardScreen.startSwapping',

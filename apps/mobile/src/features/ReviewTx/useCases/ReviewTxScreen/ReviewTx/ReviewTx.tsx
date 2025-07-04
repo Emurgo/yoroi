@@ -1,4 +1,7 @@
-import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs'
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabBarProps,
+} from '@react-navigation/material-top-tabs'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
@@ -14,7 +17,10 @@ import {
 
 import {Button} from '../../../../../components/Button/Button'
 import {SafeArea} from '../../../../../components/SafeArea'
-import {ScrollView, useScrollView} from '../../../../../components/ScrollView/ScrollView'
+import {
+  ScrollView,
+  useScrollView,
+} from '../../../../../components/ScrollView/ScrollView'
 import {isEmptyString} from '../../../../../kernel/utils'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {FormattedMetadata, FormattedTx} from '../../../common/types'
@@ -55,21 +61,38 @@ export const ReviewTx = ({
   ]
   const [activeTab, setActiveTab] = React.useState<Tabs>(tabsData[0][1])
 
-  const showMetadataTab = !isEmptyString(formattedMetadata?.hash) && formattedMetadata?.metadata != null
+  const showMetadataTab =
+    !isEmptyString(formattedMetadata?.hash) &&
+    formattedMetadata?.metadata != null
   const showMintTab = !!formattedTx.mint
   const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
 
   if (showMetadataTab) tabsData.push([strings.metadataTab, 'metadata'])
   if (showMintTab) tabsData.push([strings.mintTab, 'mint'])
-  if (showReferenceInoutsTab) tabsData.push([strings.referenceInputsTab, 'reference_inputs'])
+  if (showReferenceInoutsTab)
+    tabsData.push([strings.referenceInputsTab, 'reference_inputs'])
 
   // intentionally not using ref
-  const {isScrollBarShown: isOverviewScrollBarShown, setIsScrollBarShown: setOverviewIsScrollBarShown} = useScrollView()
-  const {isScrollBarShown: isUtxosScrollBarShown, setIsScrollBarShown: setUtxosIsScrollBarShown} = useScrollView()
-  const {isScrollBarShown: isMetadataScrollBarShown, setIsScrollBarShown: setMetadataIsScrollBarShown} = useScrollView()
-  const {isScrollBarShown: isMintScrollBarShown, setIsScrollBarShown: setMintIsScrollBarShown} = useScrollView()
-  const {isScrollBarShown: isReferenceInputsScrollBarShown, setIsScrollBarShown: setReferenceInputsIsScrollBarShown} =
-    useScrollView()
+  const {
+    isScrollBarShown: isOverviewScrollBarShown,
+    setIsScrollBarShown: setOverviewIsScrollBarShown,
+  } = useScrollView()
+  const {
+    isScrollBarShown: isUtxosScrollBarShown,
+    setIsScrollBarShown: setUtxosIsScrollBarShown,
+  } = useScrollView()
+  const {
+    isScrollBarShown: isMetadataScrollBarShown,
+    setIsScrollBarShown: setMetadataIsScrollBarShown,
+  } = useScrollView()
+  const {
+    isScrollBarShown: isMintScrollBarShown,
+    setIsScrollBarShown: setMintIsScrollBarShown,
+  } = useScrollView()
+  const {
+    isScrollBarShown: isReferenceInputsScrollBarShown,
+    setIsScrollBarShown: setReferenceInputsIsScrollBarShown,
+  } = useScrollView()
 
   const scrollbarActive =
     (isOverviewScrollBarShown && activeTab === 'overview') ||
@@ -88,7 +111,10 @@ export const ReviewTx = ({
       >
         <MaterialTab.Screen name="overview">
           {() => (
-            <ScrollView style={styles.root} onScrollBarChange={setOverviewIsScrollBarShown}>
+            <ScrollView
+              style={styles.root}
+              onScrollBarChange={setOverviewIsScrollBarShown}
+            >
               <OverviewTab
                 tx={formattedTx}
                 extraOperations={operations}
@@ -103,7 +129,10 @@ export const ReviewTx = ({
 
         <MaterialTab.Screen name="utxos">
           {() => (
-            <ScrollView style={styles.root} onScrollBarChange={setUtxosIsScrollBarShown}>
+            <ScrollView
+              style={styles.root}
+              onScrollBarChange={setUtxosIsScrollBarShown}
+            >
               <UTxOsTab tx={formattedTx} />
             </ScrollView>
           )}
@@ -112,8 +141,14 @@ export const ReviewTx = ({
         {showMetadataTab && (
           <MaterialTab.Screen name="metadata">
             {() => (
-              <ScrollView style={styles.root} onScrollBarChange={setMetadataIsScrollBarShown}>
-                <MetadataTab hash={formattedMetadata?.hash ?? null} metadata={formattedMetadata?.metadata ?? null} />
+              <ScrollView
+                style={styles.root}
+                onScrollBarChange={setMetadataIsScrollBarShown}
+              >
+                <MetadataTab
+                  hash={formattedMetadata?.hash ?? null}
+                  metadata={formattedMetadata?.metadata ?? null}
+                />
               </ScrollView>
             )}
           </MaterialTab.Screen>
@@ -122,7 +157,10 @@ export const ReviewTx = ({
         {showMintTab && (
           <MaterialTab.Screen name="mint">
             {() => (
-              <ScrollView style={styles.root} onScrollBarChange={setMintIsScrollBarShown}>
+              <ScrollView
+                style={styles.root}
+                onScrollBarChange={setMintIsScrollBarShown}
+              >
                 <MintTab mintData={formattedTx.mint} />
               </ScrollView>
             )}
@@ -132,8 +170,13 @@ export const ReviewTx = ({
         {showReferenceInoutsTab && (
           <MaterialTab.Screen name="reference_inputs">
             {() => (
-              <ScrollView style={styles.root} onScrollBarChange={setReferenceInputsIsScrollBarShown}>
-                <ReferenceInputsTab referenceInputs={formattedTx.referenceInputs} />
+              <ScrollView
+                style={styles.root}
+                onScrollBarChange={setReferenceInputsIsScrollBarShown}
+              >
+                <ReferenceInputsTab
+                  referenceInputs={formattedTx.referenceInputs}
+                />
               </ScrollView>
             )}
           </MaterialTab.Screen>
@@ -147,14 +190,23 @@ export const ReviewTx = ({
   )
 }
 
-const TabBar = ({navigation, state, tabsData}: MaterialTopTabBarProps & {tabsData: Array<Array<string>>}) => {
+const TabBar = ({
+  navigation,
+  state,
+  tabsData,
+}: MaterialTopTabBarProps & {tabsData: Array<Array<string>>}) => {
   const {styles} = useStyles()
 
   return (
     <FlatList
       data={tabsData}
       renderItem={({item: [label, key], index}) => (
-        <Tab key={key} active={state.index === index} label={label} onPress={() => navigation.navigate(key)} />
+        <Tab
+          key={key}
+          active={state.index === index}
+          label={label}
+          onPress={() => navigation.navigate(key)}
+        />
       )}
       style={styles.tabBar}
       showsHorizontalScrollIndicator={false}
@@ -174,9 +226,20 @@ export const Tab = ({
   const {styles} = useStyles()
 
   return (
-    <TouchableOpacity style={[styles.tab, style]} onPress={onPress} testID={testID}>
+    <TouchableOpacity
+      style={[styles.tab, style]}
+      onPress={onPress}
+      testID={testID}
+    >
       <View style={styles.tabContainer}>
-        <Text style={[styles.tabText, active ? styles.tabTextActive : styles.tabTextInactive]}>{label}</Text>
+        <Text
+          style={[
+            styles.tabText,
+            active ? styles.tabTextActive : styles.tabTextInactive,
+          ]}
+        >
+          {label}
+        </Text>
       </View>
 
       {active && <View style={styles.indicator} />}
@@ -184,7 +247,13 @@ export const Tab = ({
   )
 }
 
-const Actions = ({children, style}: {children: React.ReactNode; style?: StyleProp<ViewStyle>}) => {
+const Actions = ({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) => {
   const {styles} = useStyles()
   return <View style={[styles.actions, style]}>{children}</View>
 }

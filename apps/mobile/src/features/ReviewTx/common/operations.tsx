@@ -13,7 +13,10 @@ import {wrappedCsl} from '../../../wallets/cardano/wrappedCsl'
 import {usePoolInfo} from '../../../wallets/hooks'
 import {formatTokenWithText} from '../../../wallets/utils/format'
 import {asQuantity, Quantities} from '../../../wallets/utils/utils'
-import {formatDrepHashToCIP105Format, formatDrepHashToCIP129Format} from '../../Staking/Governance/common/drep'
+import {
+  formatDrepHashToCIP105Format,
+  formatDrepHashToCIP129Format,
+} from '../../Staking/Governance/common/drep'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 import {PoolDetails} from './PoolDetails'
@@ -34,7 +37,11 @@ export const StakeRegistrationOperation = ({
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.registerStakingKey} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.registerStakingKey}
+        showWarning={showWarning}
+        strike={strike}
+      />
 
       <Space width="lg" />
 
@@ -45,26 +52,48 @@ export const StakeRegistrationOperation = ({
   )
 }
 
-export const StakeDeregistrationOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
+export const StakeDeregistrationOperation = ({
+  showWarning,
+  strike,
+}: {
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.deregisterStakingKey} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.deregisterStakingKey}
+        showWarning={showWarning}
+        strike={strike}
+      />
     </View>
   )
 }
 
-export const StakeRewardsWithdrawalOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
+export const StakeRewardsWithdrawalOperation = ({
+  showWarning,
+  strike,
+}: {
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.rewardsWithdrawalLabel} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.rewardsWithdrawalLabel}
+        showWarning={showWarning}
+        strike={strike}
+      />
 
-      <Text style={[styles.operationValue, strike && styles.strike]}>{strings.rewardsWithdrawalText}</Text>
+      <Text style={[styles.operationValue, strike && styles.strike]}>
+        {strings.rewardsWithdrawalText}
+      </Text>
     </View>
   )
 }
@@ -96,39 +125,67 @@ export const StakeDelegationOperation = ({
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.delegateStake} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.delegateStake}
+        showWarning={showWarning}
+        strike={strike}
+      />
 
       <Space width="lg" />
 
       <TouchableOpacity activeOpacity={0.5} onPress={handleShowPoolDetails}>
-        <Text style={[styles.operationLink, strike && styles.strike]}>{poolName}</Text>
+        <Text style={[styles.operationLink, strike && styles.strike]}>
+          {poolName}
+        </Text>
       </TouchableOpacity>
     </View>
   )
 }
 
 export const generatePoolName = (poolInfo: FullPoolInfo) => {
-  return poolInfo.explorer != null ? `[${poolInfo.explorer.ticker}] ${poolInfo.explorer.name}` : null
+  return poolInfo.explorer != null
+    ? `[${poolInfo.explorer.ticker}] ${poolInfo.explorer.name}`
+    : null
 }
 
-export const AbstainOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
+export const AbstainOperation = ({
+  showWarning,
+  strike,
+}: {
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.selectAbstain} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.selectAbstain}
+        showWarning={showWarning}
+        strike={strike}
+      />
     </View>
   )
 }
 
-export const NoConfidenceOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
+export const NoConfidenceOperation = ({
+  showWarning,
+  strike,
+}: {
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.selectNoConfidence} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.selectNoConfidence}
+        showWarning={showWarning}
+        strike={strike}
+      />
     </View>
   )
 }
@@ -153,21 +210,33 @@ export const VoteDelegationOperation = ({
   return (
     <>
       <View style={styles.operation}>
-        <Label label={strings.delegateVotingToDRep} showWarning={showWarning} strike={strike} />
+        <Label
+          label={strings.delegateVotingToDRep}
+          showWarning={showWarning}
+          strike={strike}
+        />
 
         <Space width="lg" />
 
-        <Text style={[styles.operationValue, strike && styles.strike]}>{CIP129label}</Text>
+        <Text style={[styles.operationValue, strike && styles.strike]}>
+          {CIP129label}
+        </Text>
       </View>
 
       <Space height="sm" />
 
       <View style={styles.operation}>
-        <Label label={strings.delegateVotingToDRepSpecified} showWarning={showWarning} strike={strike} />
+        <Label
+          label={strings.delegateVotingToDRepSpecified}
+          showWarning={showWarning}
+          strike={strike}
+        />
 
         <Space width="lg" />
 
-        <Text style={[styles.operationValue, strike && styles.strike]}>{CIP105label}</Text>
+        <Text style={[styles.operationValue, strike && styles.strike]}>
+          {CIP105label}
+        </Text>
       </View>
     </>
   )
@@ -188,7 +257,11 @@ export const DrepRegistrationOperation = ({
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.drepRegistration} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.drepRegistration}
+        showWarning={showWarning}
+        strike={strike}
+      />
 
       <Space width="lg" />
 
@@ -199,13 +272,23 @@ export const DrepRegistrationOperation = ({
   )
 }
 
-export const DrepDeregistrationOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
+export const DrepDeregistrationOperation = ({
+  showWarning,
+  strike,
+}: {
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.drepDeregistration} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.drepDeregistration}
+        showWarning={showWarning}
+        strike={strike}
+      />
     </View>
   )
 }
@@ -225,7 +308,11 @@ export const PoolRegistrationOperation = ({
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.poolRegistration} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.poolRegistration}
+        showWarning={showWarning}
+        strike={strike}
+      />
 
       <Space width="lg" />
 
@@ -236,33 +323,63 @@ export const PoolRegistrationOperation = ({
   )
 }
 
-export const PoolRetirementOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
+export const PoolRetirementOperation = ({
+  showWarning,
+  strike,
+}: {
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.poolRetirement} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.poolRetirement}
+        showWarning={showWarning}
+        strike={strike}
+      />
     </View>
   )
 }
-export const DrepUpdateOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
+export const DrepUpdateOperation = ({
+  showWarning,
+  strike,
+}: {
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.drepUpdate} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.drepUpdate}
+        showWarning={showWarning}
+        strike={strike}
+      />
     </View>
   )
 }
-export const MoveInstantaneousRewardsOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
+export const MoveInstantaneousRewardsOperation = ({
+  showWarning,
+  strike,
+}: {
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.moveInstantaneousRewards} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.moveInstantaneousRewards}
+        showWarning={showWarning}
+        strike={strike}
+      />
     </View>
   )
 }
@@ -278,27 +395,51 @@ export const CommitteeHotAuthorizationOperation = ({
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.committeeHotAuthorization} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.committeeHotAuthorization}
+        showWarning={showWarning}
+        strike={strike}
+      />
     </View>
   )
 }
 
-export const CommitteeColdResignOperation = ({showWarning, strike}: {showWarning?: boolean; strike?: boolean}) => {
+export const CommitteeColdResignOperation = ({
+  showWarning,
+  strike,
+}: {
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.operation}>
-      <Label label={strings.committeeColdResign} showWarning={showWarning} strike={strike} />
+      <Label
+        label={strings.committeeColdResign}
+        showWarning={showWarning}
+        strike={strike}
+      />
     </View>
   )
 }
 
-const Label = ({label, showWarning, strike}: {label: string; showWarning?: boolean; strike?: boolean}) => {
+const Label = ({
+  label,
+  showWarning,
+  strike,
+}: {
+  label: string
+  showWarning?: boolean
+  strike?: boolean
+}) => {
   const {colors, styles} = useStyles()
   return (
     <View style={styles.operationLabelContainer}>
-      <Text style={[styles.operationLabel, strike && styles.strike]}>{label}</Text>
+      <Text style={[styles.operationLabel, strike && styles.strike]}>
+        {label}
+      </Text>
 
       {showWarning && (
         <View style={styles.infoIcon}>
@@ -329,14 +470,18 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
     }
 
   const certificatesTypes = certificates.map((cert) => cert.type)
-  certificatesTypes.forEach((cert) => updateOperationsCount(cert, operationCount))
+  certificatesTypes.forEach((cert) =>
+    updateOperationsCount(cert, operationCount),
+  )
 
   return certificates.reduce<Operations>(
     (acc, certificate, index) => {
       const fistElementIndex = certificatesTypes.indexOf(certificate.type)
       const isFistElement = fistElementIndex === index
-      const isNotFirstElementDuplicated = operationCount[certificate.type] > 1 && !isFistElement
-      const isFirstElementDuplicated = operationCount[certificate.type] > 1 && isFistElement
+      const isNotFirstElementDuplicated =
+        operationCount[certificate.type] > 1 && !isFistElement
+      const isFirstElementDuplicated =
+        operationCount[certificate.type] > 1 && isFistElement
 
       switch (certificate.type) {
         case CertificateType.StakeRegistration: {
@@ -444,7 +589,8 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               totalFee: acc.totalFee,
             }
 
-          const hash = ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
+          const hash =
+            ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
           const type = 'KeyHash' in drep ? 'key' : 'script'
           return {
             components: [
@@ -639,7 +785,10 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
   )
 }
 
-const updateOperationsCount = (operation: CertificateType, operationsCount: OperationsCount) => {
+const updateOperationsCount = (
+  operation: CertificateType,
+  operationsCount: OperationsCount,
+) => {
   let count = operationsCount[operation]
 
   if (count != null) {

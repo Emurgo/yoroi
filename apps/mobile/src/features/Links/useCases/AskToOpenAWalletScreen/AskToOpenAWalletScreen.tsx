@@ -30,7 +30,12 @@ export const AskToOpenWalletScreen = () => {
       </ScrollView>
 
       <Actions style={styles.actions}>
-        <Button size="S" type={ButtonType.Secondary} onPress={handleOnCancel} title={strings.cancel} />
+        <Button
+          size="S"
+          type={ButtonType.Secondary}
+          onPress={handleOnCancel}
+          title={strings.cancel}
+        />
 
         <Spacer width={16} />
 

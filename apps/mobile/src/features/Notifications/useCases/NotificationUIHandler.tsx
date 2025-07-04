@@ -4,7 +4,10 @@ import {useNotificationManager} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
 
-import {isTxHistoryRoute, isWalletSelectionRoute} from '../../../kernel/navigation'
+import {
+  isTxHistoryRoute,
+  isWalletSelectionRoute,
+} from '../../../kernel/navigation'
 import {useNotificationDisplaySettings} from '../../Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {pushNotificationsManager} from '../common/notification-manager'
@@ -44,20 +47,29 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
   const [events, setEvents] = React.useState<Notifications.Event[]>([])
   const navigator = useNavigation()
   const navigatorState = navigator.getState()
-  const isWalletSelectionScreen = React.useMemo(() => isWalletSelectionRoute(navigatorState), [navigatorState])
-  const isTxHistoryScreen = React.useMemo(() => isTxHistoryRoute(navigatorState), [navigatorState])
+  const isWalletSelectionScreen = React.useMemo(
+    () => isWalletSelectionRoute(navigatorState),
+    [navigatorState],
+  )
+  const isTxHistoryScreen = React.useMemo(
+    () => isTxHistoryRoute(navigatorState),
+    [navigatorState],
+  )
 
   React.useEffect(() => {
-    if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen) return
+    if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen)
+      return
     const pushEvent = (event: Notifications.Event) => {
       setEvents((e) => [...e, event])
     }
 
-    const pushSubscription = pushNotificationsManager.newEvents$.subscribe((e) => {
-      if (e.trigger === Notifications.Trigger.Push) {
-        pushEvent(e)
-      }
-    })
+    const pushSubscription = pushNotificationsManager.newEvents$.subscribe(
+      (e) => {
+        if (e.trigger === Notifications.Trigger.Push) {
+          pushEvent(e)
+        }
+      },
+    )
 
     const localSubscription = manager.newEvents$.subscribe((event) => {
       if (

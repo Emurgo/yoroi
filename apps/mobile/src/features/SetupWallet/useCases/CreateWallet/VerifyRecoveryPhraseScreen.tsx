@@ -2,7 +2,14 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View} from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -22,7 +29,8 @@ export const VerifyRecoveryPhraseScreen = () => {
   const bold = useBold()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
-  const {mnemonic, publicKeyHexChanged, accountVisual, walletImplementation} = useSetupWallet()
+  const {mnemonic, publicKeyHexChanged, accountVisual, walletImplementation} =
+    useSetupWallet()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -36,11 +44,14 @@ export const VerifyRecoveryPhraseScreen = () => {
     .sort()
     .map((word: string, id: number) => ({word, id}))
 
-  const mnemonicDefault: Array<Entry> = mnemonic.split(' ').map((word: string, id: number) => ({word, id}))
+  const mnemonicDefault: Array<Entry> = mnemonic
+    .split(' ')
+    .map((word: string, id: number) => ({word, id}))
 
   const [userEntries, setUserEntries] = React.useState<Array<Entry>>([])
   const appendEntry = (entry: Entry) => setUserEntries([...userEntries, entry])
-  const removeLastEntry = () => setUserEntries((entries) => entries.slice(0, -1))
+  const removeLastEntry = () =>
+    setUserEntries((entries) => entries.slice(0, -1))
   const removeLastEntryAndAddNew = (entry: Entry) => {
     setUserEntries((entries) => {
       const updatedEntries = entries.slice(0, -1)
@@ -50,7 +61,8 @@ export const VerifyRecoveryPhraseScreen = () => {
   }
 
   const isPhraseComplete = userEntries.length === mnemonicEntries.length
-  const isValidPhrase = userEntries.map((entry) => entry.word).join(' ') === mnemonic
+  const isValidPhrase =
+    userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
   const disabled = !isPhraseComplete || !isValidPhrase
 
@@ -59,7 +71,9 @@ export const VerifyRecoveryPhraseScreen = () => {
   const isLastWordValid = () => {
     const lastUserEntryId = userEntries.length - 1
     const isMatch = mnemonicDefault.some(
-      (defaultValue) => defaultValue.id === lastUserEntryId && defaultValue.word === lastUserEntry?.word,
+      (defaultValue) =>
+        defaultValue.id === lastUserEntryId &&
+        defaultValue.word === lastUserEntry?.word,
     )
     return isMatch
   }
@@ -73,7 +87,9 @@ export const VerifyRecoveryPhraseScreen = () => {
         style={styles.padding}
       />
 
-      <Text style={[styles.title, styles.padding]}>{strings.verifyRecoveryPhraseTitle(bold)}</Text>
+      <Text style={[styles.title, styles.padding]}>
+        {strings.verifyRecoveryPhraseTitle(bold)}
+      </Text>
 
       <MnemonicInput
         onPress={removeLastEntry}
@@ -126,7 +142,9 @@ const ErrorMessage = () => {
 
       <Space width="sm" />
 
-      <Text style={styles.errorMessage}>{strings.verifyRecoveryPhraseErrorMessage}</Text>
+      <Text style={styles.errorMessage}>
+        {strings.verifyRecoveryPhraseErrorMessage}
+      </Text>
     </View>
   )
 }
@@ -140,7 +158,9 @@ const SuccessMessage = () => {
 
       <Space width="sm" />
 
-      <Text style={styles.successMessage}>{strings.verifyRecoveryPhraseSuccessMessage}</Text>
+      <Text style={styles.successMessage}>
+        {strings.verifyRecoveryPhraseSuccessMessage}
+      </Text>
     </View>
   )
 }
@@ -151,33 +171,46 @@ type MnemonicInputProps = {
   error: boolean
   onPress: () => void
 }
-const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputProps) => {
+const MnemonicInput = ({
+  defaultMnemonic,
+  userEntries,
+  onPress,
+}: MnemonicInputProps) => {
   const {styles, colors} = useStyles()
 
   const {mnemonic} = useSetupWallet()
 
   const isPhraseComplete = userEntries.length === defaultMnemonic.length
-  const isValidPhrase = userEntries.map((entry) => entry.word).join(' ') === mnemonic
+  const isValidPhrase =
+    userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
   const lastUserEntry = userEntries.findLast((last) => last)
 
   const isLastWordValid = () => {
     const lastUserEntryId = userEntries.length - 1
     const isWordValid = defaultMnemonic.some(
-      (defaultValue) => defaultValue.id === lastUserEntryId && defaultValue.word === lastUserEntry?.word,
+      (defaultValue) =>
+        defaultValue.id === lastUserEntryId &&
+        defaultValue.word === lastUserEntry?.word,
     )
     return isWordValid
   }
 
   return (
-    <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={[styles.recoveryPhrase, styles.padding]}>
+    <Animated.View
+      layout={Layout}
+      entering={FadeIn}
+      exiting={FadeOut}
+      style={[styles.recoveryPhrase, styles.padding]}
+    >
       <View style={[StyleSheet.absoluteFill, {backgroundColor: colors.bg}]} />
 
       <View style={styles.recoveryPhraseBackground}>
         <View style={styles.recoveryPhraseOutline}>
           {userEntries.map((entry, index, array) => {
             const isLast = index === array.length - 1
-            const recoveryWordError = !isLastWordValid() && lastUserEntry?.id === entry.id
+            const recoveryWordError =
+              !isLastWordValid() && lastUserEntry?.id === entry.id
 
             return (
               <TouchableOpacity
@@ -187,7 +220,12 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                 disabled={!isLast || !recoveryWordError}
                 style={styles.wordBadge}
               >
-                <Animated.View style={styles.wordBadgeView} layout={Layout} entering={FadeIn} exiting={FadeOut}>
+                <Animated.View
+                  style={styles.wordBadgeView}
+                  layout={Layout}
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                >
                   <WordBadge
                     word={`${(index + 1).toString()}.`}
                     used
@@ -200,14 +238,20 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                     layout={Layout}
                     entering={FadeIn}
                     exiting={FadeOut}
-                    style={[styles.wordBadgeContainerOutline, recoveryWordError && styles.errorBadgeBackground]}
+                    style={[
+                      styles.wordBadgeContainerOutline,
+                      recoveryWordError && styles.errorBadgeBackground,
+                    ]}
                   >
                     {!recoveryWordError && (
                       <View
                         style={[
                           StyleSheet.absoluteFill,
                           {
-                            backgroundColor: isPhraseComplete && isValidPhrase ? colors.gradientGreen : colors.buttonBg,
+                            backgroundColor:
+                              isPhraseComplete && isValidPhrase
+                                ? colors.gradientGreen
+                                : colors.buttonBg,
                           },
                         ]}
                       />
@@ -219,7 +263,8 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                       defaultMnemonic={defaultMnemonic}
                       style={[
                         styles.mnemonicInputWordBadge,
-                        isPhraseComplete && isValidPhrase && {color: colors.black},
+                        isPhraseComplete &&
+                          isValidPhrase && {color: colors.black},
                       ]}
                     />
                   </Animated.View>
@@ -249,13 +294,16 @@ const WordBadges = ({
   removeLastEntryAndAddNew,
 }: WordBadgesProps) => {
   const {track} = useMetrics()
-  const isWordUsed = (entryId: number) => userEntries.some((entry) => entry.id === entryId)
+  const isWordUsed = (entryId: number) =>
+    userEntries.some((entry) => entry.id === entryId)
 
   const lastUserEntry = userEntries.findLast((last) => last)
   const isLastWordValid = () => {
     const lastUserEntryId = userEntries.length - 1
     const isMatch = defaultMnemonic.some(
-      (defaultValue) => defaultValue.id === lastUserEntryId && defaultValue.word === lastUserEntry?.word,
+      (defaultValue) =>
+        defaultValue.id === lastUserEntryId &&
+        defaultValue.word === lastUserEntry?.word,
     )
     return isMatch
   }
@@ -277,18 +325,37 @@ const WordBadges = ({
       {mnemonicEntries.map((entry) => {
         const isUsed = isWordUsed(entry.id)
 
-        const usedError = isUsed && !isLastWordValid() && lastUserEntry?.id === entry.id
+        const usedError =
+          isUsed && !isLastWordValid() && lastUserEntry?.id === entry.id
 
         return (
           <TouchableOpacity
-            testID={isUsed ? `wordBadgeTapped-${entry.word}` : `wordBadgeNonTapped-${entry.word}`}
+            testID={
+              isUsed
+                ? `wordBadgeTapped-${entry.word}`
+                : `wordBadgeNonTapped-${entry.word}`
+            }
             key={entry.id}
             activeOpacity={0.5}
             disabled={isUsed}
             onPress={() => selectWord(entry)}
           >
-            <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.wordBadgeContainer}>
-              <View style={[StyleSheet.absoluteFill, {backgroundColor: !usedError ? colors.buttonBg : colors.error}]} />
+            <Animated.View
+              layout={Layout}
+              entering={FadeIn}
+              exiting={FadeOut}
+              style={styles.wordBadgeContainer}
+            >
+              <View
+                style={[
+                  StyleSheet.absoluteFill,
+                  {
+                    backgroundColor: !usedError
+                      ? colors.buttonBg
+                      : colors.error,
+                  },
+                ]}
+              />
 
               {isUsed && <View style={styles.usedWordBackground} />}
 
@@ -315,10 +382,21 @@ type WordBadgeProps = {
   defaultMnemonic: Array<Entry>
   style?: StyleProp<Animated.AnimateStyle<StyleProp<TextStyle>>>
 }
-const WordBadge = ({word, used, usedError, recoveryWordError, style}: WordBadgeProps) => {
+const WordBadge = ({
+  word,
+  used,
+  usedError,
+  recoveryWordError,
+  style,
+}: WordBadgeProps) => {
   const {styles} = useStyles()
   return (
-    <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.wordBadge}>
+    <Animated.View
+      layout={Layout}
+      entering={FadeIn}
+      exiting={FadeOut}
+      style={styles.wordBadge}
+    >
       <Animated.Text
         layout={Layout}
         entering={FadeIn}

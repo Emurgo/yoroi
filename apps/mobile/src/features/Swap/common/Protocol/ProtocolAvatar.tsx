@@ -13,19 +13,28 @@ type Props = {
   preventOpenLink?: boolean
 }
 
-export const ProtocolAvatar = ({protocol, append = '', onPress, preventOpenLink = false}: Props) => {
+export const ProtocolAvatar = ({
+  protocol,
+  append = '',
+  onPress,
+  preventOpenLink = false,
+}: Props) => {
   const styles = useStyles()
   const formattedName = `${protocol.charAt(0).toUpperCase()}${protocol.slice(1).replace(/-/, ' ')}${append}`
 
   return (
     <TouchableOpacity
-      onPress={onPress ?? (() => Linking.openURL(getDexUrlByProtocol(protocol)))}
+      onPress={
+        onPress ?? (() => Linking.openURL(getDexUrlByProtocol(protocol)))
+      }
       style={[styles.container, styles.button]}
       disabled={preventOpenLink}
     >
       <ProtocolIcon protocol={protocol} size={18} />
 
-      <Text style={[styles.text, !preventOpenLink && styles.link]}>{formattedName}</Text>
+      <Text style={[styles.text, !preventOpenLink && styles.link]}>
+        {formattedName}
+      </Text>
     </TouchableOpacity>
   )
 }

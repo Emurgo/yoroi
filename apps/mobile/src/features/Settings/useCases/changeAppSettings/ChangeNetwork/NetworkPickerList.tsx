@@ -18,11 +18,13 @@ export const NetworkPickerList = () => {
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
   const {network: selectedNetwork} = useSelectedNetwork()
-  const {setShouldOpen: setShouldAutomaticWalletOpen} = useAutomaticWalletOpener()
+  const {setShouldOpen: setShouldAutomaticWalletOpen} =
+    useAutomaticWalletOpener()
   const {track} = useMetrics()
 
   // to improve UX
-  const [localSelectedNetwork, setLocalSelectedNetwork] = React.useState(selectedNetwork)
+  const [localSelectedNetwork, setLocalSelectedNetwork] =
+    React.useState(selectedNetwork)
   React.useEffect(() => {
     setLocalSelectedNetwork(selectedNetwork)
   }, [selectedNetwork])
@@ -52,7 +54,11 @@ export const NetworkPickerList = () => {
   )
 }
 
-const networks = freeze(Object.values(networkConfigs).filter(({network}) => availableNetworks.includes(network)))
+const networks = freeze(
+  Object.values(networkConfigs).filter(({network}) =>
+    availableNetworks.includes(network),
+  ),
+)
 
 const useStyles = () => {
   const {atoms} = useTheme()

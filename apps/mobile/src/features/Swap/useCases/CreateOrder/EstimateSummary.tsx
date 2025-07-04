@@ -22,8 +22,12 @@ export const EstimateSummary = () => {
   const {openModal} = useModal()
   const navigateTo = useNavigateTo()
 
-  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
-  const tokenOutInfo = swapForm.tokenInfos.get(swapForm.tokenOutInput.tokenId ?? undefinedToken)
+  const tokenInInfo = swapForm.tokenInfos.get(
+    swapForm.tokenInInput.tokenId ?? undefinedToken,
+  )
+  const tokenOutInfo = swapForm.tokenInfos.get(
+    swapForm.tokenOutInput.tokenId ?? undefinedToken,
+  )
 
   const tokenInTicker = tokenInInfo?.ticker ?? tokenInInfo?.name ?? '-'
   const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
@@ -33,7 +37,9 @@ export const EstimateSummary = () => {
   if (swapForm.estimate === undefined) return null
 
   const netPrice = swapForm.estimate.netPrice
-  const roundedPrice = netPrice.toFixed(tokenOutInfo?.decimals ?? 0).replace(/\.0+$/, '')
+  const roundedPrice = netPrice
+    .toFixed(tokenOutInfo?.decimals ?? 0)
+    .replace(/\.0+$/, '')
   const price = roundedPrice !== '0' ? roundedPrice : netPrice.toFixed(6)
 
   const expand = () =>
@@ -57,8 +63,14 @@ export const EstimateSummary = () => {
             <View style={styles.composedText}>
               <ProtocolAvatar
                 protocol={protocol}
-                onPress={swapForm.orderType === 'limit' ? navigateTo.selectProtocol : expand}
-                {...((swapForm.estimate?.splits.length ?? 0) > 1 && {append: '...'})}
+                onPress={
+                  swapForm.orderType === 'limit'
+                    ? navigateTo.selectProtocol
+                    : expand
+                }
+                {...((swapForm.estimate?.splits.length ?? 0) > 1 && {
+                  append: '...',
+                })}
               />
             </View>
           )
@@ -67,7 +79,11 @@ export const EstimateSummary = () => {
 
       <Row
         label={strings.price}
-        description={swapForm.orderType === 'limit' ? strings.limitPriceInfo : strings.marketPriceInfo}
+        description={
+          swapForm.orderType === 'limit'
+            ? strings.limitPriceInfo
+            : strings.marketPriceInfo
+        }
         value={`1 ${tokenInTicker} = ${price} ${tokenOutTicker}`}
       />
 
@@ -117,7 +133,11 @@ const Row = ({
             onPress={() =>
               openModal({
                 title: label,
-                content: <Text style={[styles.container, styles.description]}>{description}</Text>,
+                content: (
+                  <Text style={[styles.container, styles.description]}>
+                    {description}
+                  </Text>
+                ),
                 footer: <SwapInfoLink />,
               })
             }
@@ -128,7 +148,11 @@ const Row = ({
         )}
       </View>
 
-      {typeof value === 'string' || typeof value === 'number' ? <Text style={styles.rowValue}>{value}</Text> : value}
+      {typeof value === 'string' || typeof value === 'number' ? (
+        <Text style={styles.rowValue}>{value}</Text>
+      ) : (
+        value
+      )}
     </View>
   )
 }
@@ -136,18 +160,28 @@ const Row = ({
 export const Splits = ({data}: {data: Swap.Split[]}) => {
   const {styles} = useStyles()
 
-  const total = data.reduce((acc, curr) => (acc += curr.expectedOutputWithoutSlippage), 0)
+  const total = data.reduce(
+    (acc, curr) => (acc += curr.expectedOutputWithoutSlippage),
+    0,
+  )
 
   return (
     <View style={styles.list}>
       {[...data]
-        .sort((a, b) => b.expectedOutputWithoutSlippage - a.expectedOutputWithoutSlippage)
+        .sort(
+          (a, b) =>
+            b.expectedOutputWithoutSlippage - a.expectedOutputWithoutSlippage,
+        )
         .map((split, index) => (
           <View key={index} style={[styles.composedText, styles.between]}>
             <ProtocolAvatar protocol={split.protocol} preventOpenLink />
 
             <Text style={styles.textValue}>
-              {((100 * (split.expectedOutputWithoutSlippage ?? 0)) / total).toFixed(2)} %
+              {(
+                (100 * (split.expectedOutputWithoutSlippage ?? 0)) /
+                total
+              ).toFixed(2)}{' '}
+              %
             </Text>
           </View>
         ))}

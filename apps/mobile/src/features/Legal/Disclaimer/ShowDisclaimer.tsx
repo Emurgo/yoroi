@@ -8,7 +8,10 @@ import Markdown from 'react-native-markdown-display'
 import {Button, ButtonType} from '../../../components/Button/Button'
 import {Checkbox} from '../../../components/Checkbox/Checkbox'
 import {useModal} from '../../../components/Modal/ModalContext'
-import globalMessages, {actionMessages, confirmationMessages} from '../../../kernel/i18n/global-messages'
+import globalMessages, {
+  actionMessages,
+  confirmationMessages,
+} from '../../../kernel/i18n/global-messages'
 import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {loadText} from './loadText'
@@ -44,7 +47,11 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
         ),
         footer: (
           <View style={styles.actions}>
-            <Button type={ButtonType.Secondary} title={strings.cancel} onPress={resetToTxHistory} />
+            <Button
+              type={ButtonType.Secondary}
+              title={strings.cancel}
+              onPress={resetToTxHistory}
+            />
 
             <Proceed
               title={strings.proceed}
@@ -82,7 +89,13 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
 
 const Check = ({text}: {text: string}) => {
   const {canContinue = false, setCanContinue} = useModal()
-  return <Checkbox text={text} checked={canContinue} onChange={() => setCanContinue(!canContinue)} />
+  return (
+    <Checkbox
+      text={text}
+      checked={canContinue}
+      onChange={() => setCanContinue(!canContinue)}
+    />
+  )
 }
 
 const Proceed = ({title, onPress}: {title: string; onPress: () => void}) => {
@@ -98,7 +111,7 @@ const useStyles = () => {
       ...atoms.px_lg,
       ...atoms.pb_lg,
     },
-    // eslint-disable-next-line react-native/no-unused-styles
+
     body: {
       ...atoms.body_1_lg_regular,
       ...atoms.py_sm,
@@ -120,6 +133,8 @@ const useStrings = () => {
     disclaimer: intl.formatMessage(globalMessages.disclaimer),
     cancel: intl.formatMessage(globalMessages.cancel),
     proceed: intl.formatMessage(actionMessages.proceed),
-    accept: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
+    accept: intl.formatMessage(
+      confirmationMessages.commonButtons.iUnderstandButton,
+    ),
   }
 }

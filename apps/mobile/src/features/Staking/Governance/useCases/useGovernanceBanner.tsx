@@ -31,10 +31,15 @@ export const useGovernanceBanner = () => {
       if (!isParticipating) {
         if (network === Chain.Network.Mainnet) {
           const last = (await manager.events.read()).find(
-            (ev) => ev.trigger === Notifications.Trigger.Banner && ev.id === BannerIds.GovernanceParticipation,
+            (ev) =>
+              ev.trigger === Notifications.Trigger.Banner &&
+              ev.id === BannerIds.GovernanceParticipation,
           )
 
-          if (!last || new Date(last.date).getTime() + time.oneMonth < Date.now()) {
+          if (
+            !last ||
+            new Date(last.date).getTime() + time.oneMonth < Date.now()
+          ) {
             showBanner({
               id: BannerIds.GovernanceParticipation,
               title: strings.newToGovernanceTitle,

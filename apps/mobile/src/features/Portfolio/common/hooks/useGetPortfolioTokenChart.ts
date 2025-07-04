@@ -24,7 +24,8 @@ export const TokenChartInterval = {
   ALL: 'ALL',
 } as const
 
-export type TokenChartInterval = (typeof TokenChartInterval)[keyof typeof TokenChartInterval]
+export type TokenChartInterval =
+  (typeof TokenChartInterval)[keyof typeof TokenChartInterval]
 
 type TokenChartData = {
   label: string
@@ -45,7 +46,10 @@ const getTimestamps = (timeInterval: TokenChartInterval) => {
   }[timeInterval ?? TokenChartInterval.DAY]
 
   const step = (now - from) / resolution
-  const spread = Array.from({length: resolution}, (_, i) => from + Math.round(step * i))
+  const spread = Array.from(
+    {length: resolution},
+    (_, i) => from + Math.round(step * i),
+  )
   spread.push(now)
   return spread
 }
@@ -53,9 +57,17 @@ const getTimestamps = (timeInterval: TokenChartInterval) => {
 // TODO: needs fixing, it should be consumed by selected network
 const ptTicker = networkConfigs[Chain.Network.Mainnet].primaryTokenInfo.ticker
 
-export const ptPriceQueryFn = async ({queryKey}: {queryKey: ['ptPriceHistory', TokenChartInterval]}) => {
+export const ptPriceQueryFn = async ({
+  queryKey,
+}: {
+  queryKey: ['ptPriceHistory', TokenChartInterval]
+}) => {
   const response = await fetchPtPriceActivity(getTimestamps(queryKey[1]))
-  if (isRight(response) && !response.value.data.error && response.value.data.tickers.length !== 0) {
+  if (
+    isRight(response) &&
+    !response.value.data.error &&
+    response.value.data.tickers.length !== 0
+  ) {
     return response.value.data.tickers
   }
   throw new Error('Failed to fetch token chart data for PT')
@@ -67,7 +79,12 @@ export const useGetPortfolioTokenChart = (
     TokenChartData[] | null,
     Error,
     TokenChartData[] | null,
-    ['useGetPortfolioTokenChart', string, TokenChartInterval, ReturnType<typeof useCurrencyPairing>['currency']?]
+    [
+      'useGetPortfolioTokenChart',
+      string,
+      TokenChartInterval,
+      ReturnType<typeof useCurrencyPairing>['currency']?,
+    ]
   > = {},
 ) => {
   const {id: tokenId} = usePortfolioTokenDetailParams()
@@ -96,7 +113,10 @@ export const useGetPortfolioTokenChart = (
   })
 
   const ptQuery = useQuery({
-    enabled: tokenInfo && isPrimaryToken(tokenInfo.info) && Boolean(ptPriceQuery?.data),
+    enabled:
+      tokenInfo &&
+      isPrimaryToken(tokenInfo.info) &&
+      Boolean(ptPriceQuery?.data),
     staleTime: time.oneMinute,
     ...options,
     queryKey: ['useGetPortfolioTokenChart', 'pt', timeInterval, currency],
@@ -107,7 +127,10 @@ export const useGetPortfolioTokenChart = (
       const tickers = ptPriceQuery?.data ?? []
       if (tickers.length === 0) throw new Error('No PT price data')
 
-      const validCurrency = currency === ptTicker ? supportedCurrencies.USD : currency ?? supportedCurrencies.USD
+      const validCurrency =
+        currency === ptTicker
+          ? supportedCurrencies.USD
+          : (currency ?? supportedCurrencies.USD)
 
       const initialPrice = tickers[0].prices[validCurrency]
       const records = tickers
@@ -115,10 +138,13 @@ export const useGetPortfolioTokenChart = (
           const value = ticker.prices[validCurrency]
           if (value === undefined) return undefined
           const {changePercent, changeValue} = priceChange(initialPrice, value)
-          const label = new Date(ticker.timestamp).toLocaleString(languageCode, {
-            dateStyle: 'short',
-            timeStyle: 'short',
-          })
+          const label = new Date(ticker.timestamp).toLocaleString(
+            languageCode,
+            {
+              dateStyle: 'short',
+              timeStyle: 'short',
+            },
+          )
           return {label, value, changePercent, changeValue}
         })
         .filter(Boolean) as TokenChartData[]
@@ -132,9 +158,16 @@ export const useGetPortfolioTokenChart = (
     refetchOnMount: false,
     enabled: tokenInfo && !isPrimaryToken(tokenInfo.info),
     ...options,
-    queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval],
+    queryKey: [
+      'useGetPortfolioTokenChart',
+      tokenInfo?.info.id ?? '',
+      timeInterval,
+    ],
     queryFn: async () => {
-      const response = await tokenManager.api.tokenHistory(tokenId, chartIntervalToHistoryPeriod(timeInterval))
+      const response = await tokenManager.api.tokenHistory(
+        tokenId,
+        chartIntervalToHistoryPeriod(timeInterval),
+      )
       if (isRight(response)) {
         const prices = response.value.data.prices
 
@@ -145,7 +178,10 @@ export const useGetPortfolioTokenChart = (
           .map((price) => {
             const value = price.close.toNumber()
             if (value === undefined) return undefined
-            const {changePercent, changeValue} = priceChange(initialPrice, value)
+            const {changePercent, changeValue} = priceChange(
+              initialPrice,
+              value,
+            )
             const label = new Date(price.ts).toLocaleString(languageCode, {
               dateStyle: 'short',
               timeStyle: 'short',
@@ -164,7 +200,9 @@ export const useGetPortfolioTokenChart = (
   return tokenInfo && isPrimaryToken(tokenInfo.info) ? ptQuery : otherQuery
 }
 
-const chartIntervalToHistoryPeriod = (i: TokenChartInterval): Portfolio.Token.HistoryPeriod =>
+const chartIntervalToHistoryPeriod = (
+  i: TokenChartInterval,
+): Portfolio.Token.HistoryPeriod =>
   ({
     [TokenChartInterval.DAY]: Portfolio.Token.HistoryPeriod.OneDay,
     [TokenChartInterval.WEEK]: Portfolio.Token.HistoryPeriod.OneWeek,
@@ -172,4 +210,4 @@ const chartIntervalToHistoryPeriod = (i: TokenChartInterval): Portfolio.Token.Hi
     [TokenChartInterval.SIX_MONTHS]: Portfolio.Token.HistoryPeriod.SixMonth,
     [TokenChartInterval.YEAR]: Portfolio.Token.HistoryPeriod.OneYear,
     [TokenChartInterval.ALL]: Portfolio.Token.HistoryPeriod.All,
-  }[i] ?? Portfolio.Token.HistoryPeriod.OneDay)
+  })[i] ?? Portfolio.Token.HistoryPeriod.OneDay

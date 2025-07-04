@@ -13,17 +13,24 @@ type Props = {
   isFetching: boolean
   isPrimaryTokenActive: boolean
 }
-export const TokenValuePairedBalance = ({amount, isFetching, isPrimaryTokenActive}: Props) => {
+export const TokenValuePairedBalance = ({
+  amount,
+  isFetching,
+  isPrimaryTokenActive,
+}: Props) => {
   const {styles} = useStyles()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
   const name = infoExtractName(amount.info)
 
   if (isFetching) return <SkeletonPairedToken />
-  if (isPrimaryTokenActive) return <PairedBalance amount={amount} textStyle={styles.pairedBalance} />
+  if (isPrimaryTokenActive)
+    return <PairedBalance amount={amount} textStyle={styles.pairedBalance} />
   return (
     <Text style={[styles.pairedBalance]}>{`${
-      isPrivacyActive ? privacyPlaceholder : amountBreakdown(amount).bn.toFormat(2)
+      isPrivacyActive
+        ? privacyPlaceholder
+        : amountBreakdown(amount).bn.toFormat(2)
     } ${name}`}</Text>
   )
 }

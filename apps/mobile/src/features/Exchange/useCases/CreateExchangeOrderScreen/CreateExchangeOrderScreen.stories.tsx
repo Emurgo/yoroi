@@ -1,5 +1,9 @@
 import {storiesOf} from '@storybook/react-native'
-import {exchangeDefaultState, ExchangeProvider, successManagerMock} from '@yoroi/exchange'
+import {
+  exchangeDefaultState,
+  ExchangeProvider,
+  successManagerMock,
+} from '@yoroi/exchange'
 import {produce} from 'immer'
 import React from 'react'
 
@@ -8,14 +12,21 @@ import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManager
 import {CreateExchangeOrderScreen} from './CreateExchangeOrderScreen'
 
 storiesOf('Exchange CreateExchangeOrderScreen', module) //
-  .addDecorator((story) => <WalletManagerProviderMock wallet={walletMocks.wallet}>{story()}</WalletManagerProviderMock>)
+  .addDecorator((story) => (
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
+      {story()}
+    </WalletManagerProviderMock>
+  ))
   .add('initial', () => <Initial />)
   .add('buy', () => <BuyAda />)
   .add('sell', () => <SellAda />)
 
 const Initial = () => {
   return (
-    <ExchangeProvider manager={successManagerMock} initialState={{...exchangeDefaultState, providerId: 'banxa'}}>
+    <ExchangeProvider
+      manager={successManagerMock}
+      initialState={{...exchangeDefaultState, providerId: 'banxa'}}
+    >
       <CreateExchangeOrderScreen />
     </ExchangeProvider>
   )
@@ -25,7 +36,10 @@ const BuyAda = () => {
     draft.orderType = 'buy'
   })
   return (
-    <ExchangeProvider manager={successManagerMock} initialState={{...initialState, providerId: 'banxa'}}>
+    <ExchangeProvider
+      manager={successManagerMock}
+      initialState={{...initialState, providerId: 'banxa'}}
+    >
       <CreateExchangeOrderScreen />
     </ExchangeProvider>
   )
@@ -36,7 +50,10 @@ const SellAda = () => {
     draft.orderType = 'sell'
   })
   return (
-    <ExchangeProvider manager={successManagerMock} initialState={{...initialState, providerId: 'banxa'}}>
+    <ExchangeProvider
+      manager={successManagerMock}
+      initialState={{...initialState, providerId: 'banxa'}}
+    >
       <CreateExchangeOrderScreen />
     </ExchangeProvider>
   )

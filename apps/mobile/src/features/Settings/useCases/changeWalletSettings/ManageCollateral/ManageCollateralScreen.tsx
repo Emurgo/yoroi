@@ -25,14 +25,25 @@ import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
-import {SettingsStackRoutes, useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation'
+import {
+  SettingsStackRoutes,
+  useUnsafeParams,
+  useWalletNavigation,
+} from '../../../../../kernel/navigation'
 import {useCollateralInfo} from '../../../../../wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../../../wallets/cardano/utxoManager/useSetCollateralId'
-import {collateralConfig, utxosMaker} from '../../../../../wallets/cardano/utxoManager/utxos'
+import {
+  collateralConfig,
+  utxosMaker,
+} from '../../../../../wallets/cardano/utxoManager/utxos'
 import {useBalances} from '../../../../../wallets/hooks'
 import {RawUtxo} from '../../../../../wallets/types/other'
 import {YoroiEntry, YoroiSignedTx} from '../../../../../wallets/types/yoroi'
-import {Amounts, asQuantity, Quantities} from '../../../../../wallets/utils/utils'
+import {
+  Amounts,
+  asQuantity,
+  Quantities,
+} from '../../../../../wallets/utils/utils'
 import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useReviewTx} from '../../../../ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
@@ -56,17 +67,21 @@ export const ManageCollateralScreen = () => {
   const balances = useBalances(wallet)
   const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
-  const lockedAmount = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
+  const lockedAmount = asQuantity(
+    wallet.primaryBreakdown.lockedAsStorageCost.toString(),
+  )
 
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 
   const {mutate: createUnsignedTx, isLoading: isLoadingTx} = useMutation({
-    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
+    mutationFn: (entries: YoroiEntry[]) =>
+      wallet.createUnsignedTx({entries, addressMode}),
     retry: false,
     useErrorBoundary: true,
   })
 
-  const {isLoading: isLoadingCollateral, setCollateralId} = useSetCollateralId(wallet)
+  const {isLoading: isLoadingCollateral, setCollateralId} =
+    useSetCollateralId(wallet)
   const handleRemoveCollateral = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setCollateralId('')
@@ -77,7 +92,8 @@ export const ManageCollateralScreen = () => {
   }
 
   const handleOnSuccess = (signedTx?: YoroiSignedTx) => {
-    if (signedTx?.signedTx?.id == null) throw new Error('ManageCollateralScreen:: invalid state')
+    if (signedTx?.signedTx?.id == null)
+      throw new Error('ManageCollateralScreen:: invalid state')
     const collateralId = `${signedTx.signedTx.id}:0`
     setCollateralId(collateralId)
     resetToTxHistory()
@@ -89,7 +105,10 @@ export const ManageCollateralScreen = () => {
     createUnsignedTx([createCollateralEntry(wallet)], {
       onSuccess: (yoroiUnsignedTx) => {
         unsignedTxChanged(yoroiUnsignedTx)
-        navigateToTxReview({onSuccess: (args) => handleOnSuccess(args?.signedTx), operations: [<Operation key="0" />]})
+        navigateToTxReview({
+          onSuccess: (args) => handleOnSuccess(args?.signedTx),
+          operations: [<Operation key="0" />],
+        })
       },
     })
   }
@@ -107,10 +126,18 @@ export const ManageCollateralScreen = () => {
       return
     }
 
-    const primaryTokenBalance = new BigNumber(Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id).quantity)
-    const lockedBalance = Quantities.isZero(lockedAmount) ? new BigNumber(0) : new BigNumber(lockedAmount)
+    const primaryTokenBalance = new BigNumber(
+      Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id).quantity,
+    )
+    const lockedBalance = Quantities.isZero(lockedAmount)
+      ? new BigNumber(0)
+      : new BigNumber(lockedAmount)
 
-    if (primaryTokenBalance.minus(lockedBalance).isLessThan(collateralConfig.minLovelace)) {
+    if (
+      primaryTokenBalance
+        .minus(lockedBalance)
+        .isLessThan(collateralConfig.minLovelace)
+    ) {
       Alert.alert(
         strings.notEnoughFundsAlertTitle,
         strings.notEnoughFundsAlertMessage,
@@ -127,7 +154,12 @@ export const ManageCollateralScreen = () => {
     openModal({
       title: strings.initialCollateralInfoModalTitle,
       content: <InitialCollateralInfoModal />,
-      footer: <ModalsButtons onConfirm={handleGenerateCollateral} onCancel={closeModal} />,
+      footer: (
+        <ModalsButtons
+          onConfirm={handleGenerateCollateral}
+          onCancel={closeModal}
+        />
+      ),
       height: Math.min(screenHeight * 0.9, 650),
     })
   }
@@ -136,7 +168,10 @@ export const ManageCollateralScreen = () => {
   const shouldShowBackButton = !shouldShowPrimaryButton && !!params?.backButton
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right', 'bottom']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['top', 'left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
       <ScrollView>
         <Text style={styles.heading}>{strings.lockedAsCollateral}</Text>
 
@@ -155,7 +190,14 @@ export const ManageCollateralScreen = () => {
           <>
             <Row>
               <Copiable text={collateralId}>
-                <Text ellipsizeMode="middle" numberOfLines={1} monospace small style={{flex: 1}} secondary>
+                <Text
+                  ellipsizeMode="middle"
+                  numberOfLines={1}
+                  monospace
+                  small
+                  style={{flex: 1}}
+                  secondary
+                >
                   {collateralId}
                 </Text>
               </Copiable>
@@ -175,11 +217,18 @@ export const ManageCollateralScreen = () => {
       </ScrollView>
 
       {shouldShowPrimaryButton && (
-        <Button title={strings.generateCollateral} onPress={handleCollateralInfoModal} disabled={isLoading} />
+        <Button
+          title={strings.generateCollateral}
+          onPress={handleCollateralInfoModal}
+          disabled={isLoading}
+        />
       )}
 
       {shouldShowBackButton && params?.backButton && (
-        <Button title={params.backButton.content} onPress={params.backButton.onPress} />
+        <Button
+          title={params.backButton.content}
+          onPress={params.backButton.onPress}
+        />
       )}
 
       <Space height="lg" />
@@ -187,14 +236,27 @@ export const ManageCollateralScreen = () => {
   )
 }
 
-const ModalsButtons = ({onConfirm, onCancel}: {onConfirm: () => void; onCancel: () => void}) => {
+const ModalsButtons = ({
+  onConfirm,
+  onCancel,
+}: {
+  onConfirm: () => void
+  onCancel: () => void
+}) => {
   const strings = useStrings()
 
   return (
     <View>
-      <Button type={ButtonType.SecondaryText} title={strings.cancel} onPress={onCancel} />
+      <Button
+        type={ButtonType.SecondaryText}
+        title={strings.cancel}
+        onPress={onCancel}
+      />
 
-      <Button title={strings.initialCollateralInfoModalButton} onPress={onConfirm} />
+      <Button
+        title={strings.initialCollateralInfoModalButton}
+        onPress={onConfirm}
+      />
     </View>
   )
 }
@@ -205,7 +267,12 @@ type ActionableAmountProps = {
   onRemove(): void
   disabled?: boolean
 }
-const ActionableAmount = ({amount, onRemove, collateralId, disabled}: ActionableAmountProps) => {
+const ActionableAmount = ({
+  amount,
+  onRemove,
+  collateralId,
+  disabled,
+}: ActionableAmountProps) => {
   const {styles} = useStyles()
 
   const handleRemove = () => onRemove()
@@ -225,17 +292,29 @@ const ActionableAmount = ({amount, onRemove, collateralId, disabled}: Actionable
   )
 }
 
-const Left = ({style, ...props}: ViewProps) => <View style={[style, {flex: 1}]} {...props} />
-const Right = ({style, ...props}: ViewProps) => <View style={[style, {paddingLeft: 16}]} {...props} />
+const Left = ({style, ...props}: ViewProps) => (
+  <View style={[style, {flex: 1}]} {...props} />
+)
+const Right = ({style, ...props}: ViewProps) => (
+  <View style={[style, {paddingLeft: 16}]} {...props} />
+)
 const Row = ({style, ...props}: ViewProps) => (
-  <View style={[style, {flexDirection: 'row', alignItems: 'center'}]} {...props} />
+  <View
+    style={[style, {flexDirection: 'row', alignItems: 'center'}]}
+    {...props}
+  />
 )
 
 const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
   const {colors} = useStyles()
 
   return (
-    <TouchableOpacity testID="removeAmountButton" {...props} disabled={disabled} style={{opacity: disabled ? 0.5 : 1}}>
+    <TouchableOpacity
+      testID="removeAmountButton"
+      {...props}
+      disabled={disabled}
+      style={{opacity: disabled ? 0.5 : 1}}
+    >
       <Icon.CrossCircle size={26} color={colors.iconColor} />
     </TouchableOpacity>
   )
@@ -247,12 +326,18 @@ const Operation = () => {
   const {openModal} = useModal()
 
   const handleOnPressInfo = () => {
-    openModal({title: strings.collateralInfoModalTitle, content: <CollateralInfoModal />, height: 500})
+    openModal({
+      title: strings.collateralInfoModalTitle,
+      content: <CollateralInfoModal />,
+      height: 500,
+    })
   }
 
   return (
     <View style={styles.operation}>
-      <Text style={styles.operationText}>{strings.collateralInfoModalLabel}</Text>
+      <Text style={styles.operationText}>
+        {strings.collateralInfoModalLabel}
+      </Text>
 
       <Space width="xs" />
 

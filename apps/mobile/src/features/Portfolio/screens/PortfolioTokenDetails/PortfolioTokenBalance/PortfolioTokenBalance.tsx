@@ -16,7 +16,9 @@ export const PortfolioTokenBalance = () => {
   } = useSelectedWallet()
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const tokenInfo = balances.records.get(tokenId)
-  const tokenName = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : '-'
+  const tokenName = tokenInfo
+    ? infoExtractName(tokenInfo.info, {mode: 'currency'})
+    : '-'
 
   if (!tokenInfo) return <PortfolioTokenDetailBalanceSkeleton />
 
@@ -24,12 +26,18 @@ export const PortfolioTokenBalance = () => {
     <LoadingBoundary fallback={<PortfolioTokenDetailBalanceSkeleton />}>
       <View>
         <View style={styles.tokenWrapper}>
-          <Text style={styles.tokenBalance}>{amountBreakdown(tokenInfo).bn.toFormat(2)}</Text>
+          <Text style={styles.tokenBalance}>
+            {amountBreakdown(tokenInfo).bn.toFormat(2)}
+          </Text>
 
           <Text style={styles.symbol}>{tokenName}</Text>
         </View>
 
-        <PairedBalance textStyle={styles.usdLabel} ignorePrivacy amount={tokenInfo} />
+        <PairedBalance
+          textStyle={styles.usdLabel}
+          ignorePrivacy
+          amount={tokenInfo}
+        />
       </View>
     </LoadingBoundary>
   )

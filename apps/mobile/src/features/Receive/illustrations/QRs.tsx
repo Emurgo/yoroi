@@ -1,5 +1,12 @@
 import * as React from 'react'
-import Svg, {Defs, G, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
+import Svg, {
+  Defs,
+  G,
+  LinearGradient,
+  Path,
+  Stop,
+  SvgProps,
+} from 'react-native-svg'
 
 export const QRs = (props: SvgProps) => {
   return (

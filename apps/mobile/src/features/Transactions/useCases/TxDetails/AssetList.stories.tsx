@@ -12,7 +12,10 @@ storiesOf('AssetList', module)
     return (
       <QueryClientProvider client={new QueryClient()}>
         <WalletManagerProviderMock wallet={mocks.wallet}>
-          <AssetList assets={mocks.tokenEntries} onSelect={action('onSelect')} />
+          <AssetList
+            assets={mocks.tokenEntries}
+            onSelect={action('onSelect')}
+          />
         </WalletManagerProviderMock>
       </QueryClientProvider>
     )
@@ -21,7 +24,10 @@ storiesOf('AssetList', module)
     return (
       <QueryClientProvider client={new QueryClient()}>
         <WalletManagerProviderMock wallet={mocks.wallet}>
-          <AssetList assets={mocks.tokenEntries} onSelect={action('onSelect')} />
+          <AssetList
+            assets={mocks.tokenEntries}
+            onSelect={action('onSelect')}
+          />
         </WalletManagerProviderMock>
       </QueryClientProvider>
     )

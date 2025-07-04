@@ -1,10 +1,19 @@
 import * as React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-export const Info = ({size = 24, color = '#000'}: {size?: number; color?: string}) => {
+export const Info = ({
+  size = 24,
+  color = '#000',
+}: {
+  size?: number
+  color?: string
+}) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path d="M12 7a1 1 0 100 2h.01a1 1 0 100-2H12zM12 10a1 1 0 00-1 1v5a1 1 0 102 0v-5a1 1 0 00-1-1z" fill={color} />
+      <Path
+        d="M12 7a1 1 0 100 2h.01a1 1 0 100-2H12zM12 10a1 1 0 00-1 1v5a1 1 0 102 0v-5a1 1 0 00-1-1z"
+        fill={color}
+      />
 
       <Path
         fillRule="evenodd"

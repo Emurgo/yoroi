@@ -106,7 +106,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@emurgo/yoroi-lib": "^2.0.0",
+    "@emurgo/yoroi-lib": "3.0.0-beta.1",
     "axios": "1.9.0",
     "immer": "10.1.1",
     "bignumber.js": "9.3.0",
@@ -119,4 +119,4 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   }
- }
+}

@@ -63,12 +63,23 @@ export const useOpenConfirmConnectionModal = () => {
         onClose: props.onClose,
       })
     },
-    [openModal, strings.confirmConnectionModalTitle, strings.confirmConnectionModalConnect, track, closeModal],
+    [
+      openModal,
+      strings.confirmConnectionModalTitle,
+      strings.confirmConnectionModalConnect,
+      track,
+      closeModal,
+    ],
   )
   return {openConfirmConnectionModal: open, closeModal}
 }
 
-export const ConfirmConnectionModal = ({name, website, logo, showSingleAddressWarning}: Props) => {
+export const ConfirmConnectionModal = ({
+  name,
+  website,
+  logo,
+  showSingleAddressWarning,
+}: Props) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
@@ -86,7 +97,9 @@ export const ConfirmConnectionModal = ({name, website, logo, showSingleAddressWa
       <Space height="sm" />
 
       <View style={styles.line}>
-        <Text style={styles.text}>{strings.confirmConnectionModalConnectTo}</Text>
+        <Text style={styles.text}>
+          {strings.confirmConnectionModalConnectTo}
+        </Text>
 
         <Text style={styles.bold}>{name}</Text>
       </View>
@@ -107,12 +120,18 @@ export const ConfirmConnectionModal = ({name, website, logo, showSingleAddressWa
 
       <Space height="lg" />
 
-      <Text style={styles.text}>{strings.confirmConnectionModalAllowThisDAppTo}</Text>
+      <Text style={styles.text}>
+        {strings.confirmConnectionModalAllowThisDAppTo}
+      </Text>
 
       <View style={styles.boxDesAllowConnectDApp}>
-        <Text style={styles.text}>{`\u2022 ${strings.confirmConnectionModalPermission1}`}</Text>
+        <Text
+          style={styles.text}
+        >{`\u2022 ${strings.confirmConnectionModalPermission1}`}</Text>
 
-        <Text style={styles.text}>{`\u2022 ${strings.confirmConnectionModalPermission2}`}</Text>
+        <Text
+          style={styles.text}
+        >{`\u2022 ${strings.confirmConnectionModalPermission2}`}</Text>
       </View>
 
       <Spacer height={46} />
@@ -135,9 +154,14 @@ const SingleAddressDAppWarning = () => {
     <WarningBanner
       content={
         <>
-          <Text style={styles.warningText}>{`${strings.singleAddressWarning} `}</Text>
+          <Text
+            style={styles.warningText}
+          >{`${strings.singleAddressWarning} `}</Text>
 
-          <Text style={[styles.warningText, styles.link]} onPress={handleOnPress}>
+          <Text
+            style={[styles.warningText, styles.link]}
+            onPress={handleOnPress}
+          >
             {strings.learnMore}
           </Text>
         </>

@@ -46,7 +46,10 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
 
       <Info
         label={strings.poolSize}
-        value={formatTokenWithText(asQuantity(explorer?.stake ?? Quantities.zero), wallet.portfolioPrimaryTokenInfo)}
+        value={formatTokenWithText(
+          asQuantity(explorer?.stake ?? Quantities.zero),
+          wallet.portfolioPrimaryTokenInfo,
+        )}
       />
 
       <Space height="sm" />
@@ -59,18 +62,27 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
 
       <Space height="sm" />
 
-      <Info label={strings.poolSaturation} value={`${explorer?.saturation ?? '-'}%`} />
+      <Info
+        label={strings.poolSaturation}
+        value={`${explorer?.saturation ?? '-'}%`}
+      />
 
       <Space height="sm" />
 
       <Info
         label={strings.poolTaxFix}
-        value={formatTokenWithText(asQuantity(explorer?.taxFix ?? Quantities.zero), wallet.portfolioPrimaryTokenInfo)}
+        value={formatTokenWithText(
+          asQuantity(explorer?.taxFix ?? Quantities.zero),
+          wallet.portfolioPrimaryTokenInfo,
+        )}
       />
 
       <Space width="sm" />
 
-      <Info label={strings.poolTaxRatio} value={`${explorer?.taxRatio ?? '-'}%`} />
+      <Info
+        label={strings.poolTaxRatio}
+        value={`${explorer?.taxRatio ?? '-'}%`}
+      />
 
       <Space width="sm" />
 
@@ -78,8 +90,8 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
         label={strings.poolPledge}
         value={formatTokenWithText(
           asQuantity(
-            (lastChainPoolInfo?.payload as {poolParams: {pledge: string}})?.['poolParams']?.['pledge'] ??
-              Quantities.zero,
+            (lastChainPoolInfo?.payload as {poolParams: {pledge: string}})
+              ?.poolParams?.pledge ?? Quantities.zero,
           ),
           wallet.portfolioPrimaryTokenInfo,
         )}

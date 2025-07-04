@@ -13,8 +13,14 @@ const defaultNotificationDisplayDurationInSeconds = 4 // 4 seconds
 const fadeInTime = 200
 const fadeOutPaddingTime = 100
 
-export const SwipeOutWrapper = ({children, onSwipeOut, onExpired, onPress}: Props) => {
-  const {pan, panResponder, fadeIn, opacity, fadeOut, translateY} = usePanAnimation({onRelease: onSwipeOut, onPress})
+export const SwipeOutWrapper = ({
+  children,
+  onSwipeOut,
+  onExpired,
+  onPress,
+}: Props) => {
+  const {pan, panResponder, fadeIn, opacity, fadeOut, translateY} =
+    usePanAnimation({onRelease: onSwipeOut, onPress})
   const onExpiredRef = React.useRef(onExpired)
   onExpiredRef.current = onExpired
 
@@ -22,14 +28,22 @@ export const SwipeOutWrapper = ({children, onSwipeOut, onExpired, onPress}: Prop
   fadeOutRef.current = fadeOut
 
   const {data: notificationConfig} = useNotificationsConfig()
-  const displayDuration = (notificationConfig?.displayDuration ?? defaultNotificationDisplayDurationInSeconds) * 1000
+  const displayDuration =
+    (notificationConfig?.displayDuration ??
+      defaultNotificationDisplayDurationInSeconds) * 1000
 
   React.useLayoutEffect(() => {
     requestAnimationFrame(() => {
       fadeIn()
 
-      const expiredTimeout = setTimeout(() => onExpiredRef.current(), displayDuration)
-      const fadeOutTimeout = setTimeout(() => fadeOutRef.current(), displayDuration - fadeInTime - fadeOutPaddingTime)
+      const expiredTimeout = setTimeout(
+        () => onExpiredRef.current(),
+        displayDuration,
+      )
+      const fadeOutTimeout = setTimeout(
+        () => fadeOutRef.current(),
+        displayDuration - fadeInTime - fadeOutPaddingTime,
+      )
 
       return () => {
         clearTimeout(expiredTimeout)
@@ -51,7 +65,13 @@ export const SwipeOutWrapper = ({children, onSwipeOut, onExpired, onPress}: Prop
   )
 }
 
-const usePanAnimation = ({onRelease, onPress}: {onRelease: () => void; onPress: () => void}) => {
+const usePanAnimation = ({
+  onRelease,
+  onPress,
+}: {
+  onRelease: () => void
+  onPress: () => void
+}) => {
   const pan = React.useRef(new Animated.ValueXY()).current
   const opacity = React.useRef(new Animated.Value(0)).current
   const translateY = React.useRef(new Animated.Value(-50)).current
@@ -98,26 +118,37 @@ const usePanAnimation = ({onRelease, onPress}: {onRelease: () => void; onPress: 
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: (e, gestureState) => {
         if (gestureState.dx > 0) {
-          Animated.event([null, {dx: pan.x, dy: pan.y}], {useNativeDriver: false})(e, gestureState)
+          Animated.event([null, {dx: pan.x, dy: pan.y}], {
+            useNativeDriver: false,
+          })(e, gestureState)
         }
       },
       onPanResponderRelease: (e, gestureState) => {
-        const shouldFinishSwipe = gestureState.dx > screenWidth * screenLimitInPercentAfterWhichShouldRelease
+        const shouldFinishSwipe =
+          gestureState.dx >
+          screenWidth * screenLimitInPercentAfterWhichShouldRelease
 
         if (shouldFinishSwipe) {
-          Animated.spring(pan, {toValue: {x: screenWidth, y: 0}, useNativeDriver: false}).start(() => onRelease())
+          Animated.spring(pan, {
+            toValue: {x: screenWidth, y: 0},
+            useNativeDriver: false,
+          }).start(() => onRelease())
           return
         }
 
         const isSlightMovement =
-          Math.abs(gestureState.dx) < slightMovementThreshold && Math.abs(gestureState.dy) < slightMovementThreshold
+          Math.abs(gestureState.dx) < slightMovementThreshold &&
+          Math.abs(gestureState.dy) < slightMovementThreshold
 
         if (isSlightMovement) {
           onPress()
           return
         }
 
-        Animated.spring(pan, {toValue: {x: 0, y: 0}, useNativeDriver: false}).start()
+        Animated.spring(pan, {
+          toValue: {x: 0, y: 0},
+          useNativeDriver: false,
+        }).start()
       },
     }),
   ).current

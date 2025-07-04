@@ -25,30 +25,53 @@ export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
   const {isDark} = useTheme()
   const {wallet} = useSelectedWallet()
 
-  const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory({wallet, stakePoolId})
+  const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory({
+    wallet,
+    stakePoolId,
+  })
   const homepage = stakePoolInfoAndHistory?.info?.homepage
 
-  if (isLoading) return <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
+  if (isLoading)
+    return <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
   if (!stakePoolInfoAndHistory?.info) return null
 
   return (
     <View>
-      <TitledCard title={strings.title} variant="poolInfo" testID="stakePoolInfoTitleCard">
+      <TitledCard
+        title={strings.title}
+        variant="poolInfo"
+        testID="stakePoolInfoTitleCard"
+      >
         <View style={styles.container}>
           <Button
             type={ButtonType.Link}
             title={
-              formatStakepoolNameWithTicker(stakePoolInfoAndHistory.info.ticker, stakePoolInfoAndHistory.info.name) ??
-              strings.unknownPool
+              formatStakepoolNameWithTicker(
+                stakePoolInfoAndHistory.info.ticker,
+                stakePoolInfoAndHistory.info.name,
+              ) ?? strings.unknownPool
             }
-            onPress={() => !isEmptyString(homepage) && Linking.openURL(homepage)}
+            onPress={() =>
+              !isEmptyString(homepage) && Linking.openURL(homepage)
+            }
             style={styles.poolName}
             fontOverride={bold}
           />
 
-          <Copiable title={stakePoolId} text={stakePoolId} feedback={strings.copied} />
+          <Copiable
+            title={stakePoolId}
+            text={stakePoolId}
+            feedback={strings.copied}
+          />
 
-          {ctaProps && <Button type={ButtonType.Secondary} size="S" title={strings.undelegate} {...ctaProps} />}
+          {ctaProps && (
+            <Button
+              type={ButtonType.Secondary}
+              size="S"
+              title={strings.undelegate}
+              {...ctaProps}
+            />
+          )}
         </View>
       </TitledCard>
 
@@ -79,14 +102,18 @@ export const useStakePoolInfoAndHistory = (
     ...options,
     queryKey: [wallet.id, 'stakePoolInfo', stakePoolId],
     queryFn: async () => {
-      const stakePoolInfosAndHistories = await wallet.fetchPoolInfo({poolIds: [stakePoolId]})
+      const stakePoolInfosAndHistories = await wallet.fetchPoolInfo({
+        poolIds: [stakePoolId],
+      })
 
-      if (stakePoolInfosAndHistories[stakePoolId]?.info?.name != null) return stakePoolInfosAndHistories[stakePoolId]
+      if (stakePoolInfosAndHistories[stakePoolId]?.info?.name != null)
+        return stakePoolInfosAndHistories[stakePoolId]
 
       const history = stakePoolInfosAndHistories[stakePoolId]?.history
       if (history == null) return null
 
-      const explorerPoolInfo = await poolInfoApi.getSingleExplorerPoolInfo(stakePoolId)
+      const explorerPoolInfo =
+        await poolInfoApi.getSingleExplorerPoolInfo(stakePoolId)
 
       return {
         history,
@@ -168,7 +195,10 @@ const useStrings = () => {
 }
 
 const formatStakepoolNameWithTicker = (ticker?: string, name?: string) => {
-  const nameWithTicker = [!isEmptyString(ticker) && !isEmptyString(name) ? `(${ticker})` : ticker, name]
+  const nameWithTicker = [
+    !isEmptyString(ticker) && !isEmptyString(name) ? `(${ticker})` : ticker,
+    name,
+  ]
     .join(' ')
     .trim()
   if (nameWithTicker.length > 0) return nameWithTicker

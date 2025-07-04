@@ -1,7 +1,11 @@
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
-import {DAppCountConnectedSkeleton, DAppItemSkeleton, DAppTabSkeleton} from './DAppItemSkeleton'
+import {
+  DAppCountConnectedSkeleton,
+  DAppItemSkeleton,
+  DAppTabSkeleton,
+} from './DAppItemSkeleton'
 
 storiesOf('Discover DAppItemSkeleton', module)
   .add('initial', () => <Initial />)

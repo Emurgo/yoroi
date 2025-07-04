@@ -4,7 +4,12 @@ import {cip95ExtensionMaker} from './cip95'
 
 describe('cip95ExtensionMaker', () => {
   it('should throw an error for unsupported wallet implementation', async () => {
-    expect(() => cip95ExtensionMaker(mocks.wallet, {...mocks.walletMeta, implementation: 'cardano-bip44'})).toThrow()
+    expect(() =>
+      cip95ExtensionMaker(mocks.wallet, {
+        ...mocks.walletMeta,
+        implementation: 'cardano-bip44',
+      }),
+    ).toThrow()
   })
 
   it('should support signData', async () => {
@@ -25,24 +30,40 @@ describe('cip95ExtensionMaker', () => {
 
   it('should support getRegisteredPubStakeKeys', async () => {
     const registeredResult = await cip95ExtensionMaker(
-      {...mocks.wallet, getStakingInfo: () => Promise.resolve({status: 'registered'})},
-      mocks.walletMeta,
-    ).getRegisteredPubStakeKeys()
-
-    expect(registeredResult).toEqual(['01c01f8b958699ae769a246e9785db5a70e023977ea4b856dfacf23c23346caf'])
-
-    const stakedResult = await cip95ExtensionMaker(
       {
         ...mocks.wallet,
-        getStakingInfo: () => Promise.resolve({status: 'staked', amount: '10', poolId: 'pool1', rewards: '10'}),
+        getStakingInfo: () => Promise.resolve({status: 'registered'}),
       },
       mocks.walletMeta,
     ).getRegisteredPubStakeKeys()
 
-    expect(stakedResult).toEqual(['01c01f8b958699ae769a246e9785db5a70e023977ea4b856dfacf23c23346caf'])
+    expect(registeredResult).toEqual([
+      '01c01f8b958699ae769a246e9785db5a70e023977ea4b856dfacf23c23346caf',
+    ])
+
+    const stakedResult = await cip95ExtensionMaker(
+      {
+        ...mocks.wallet,
+        getStakingInfo: () =>
+          Promise.resolve({
+            status: 'staked',
+            amount: '10',
+            poolId: 'pool1',
+            rewards: '10',
+          }),
+      },
+      mocks.walletMeta,
+    ).getRegisteredPubStakeKeys()
+
+    expect(stakedResult).toEqual([
+      '01c01f8b958699ae769a246e9785db5a70e023977ea4b856dfacf23c23346caf',
+    ])
 
     const notRegisteredResult = await cip95ExtensionMaker(
-      {...mocks.wallet, getStakingInfo: () => Promise.resolve({status: 'not-registered'})},
+      {
+        ...mocks.wallet,
+        getStakingInfo: () => Promise.resolve({status: 'not-registered'}),
+      },
       mocks.walletMeta,
     ).getRegisteredPubStakeKeys()
 
@@ -51,7 +72,10 @@ describe('cip95ExtensionMaker', () => {
 
   it('should support getUnregisteredPubStakeKeys', async () => {
     const registeredResult = await cip95ExtensionMaker(
-      {...mocks.wallet, getStakingInfo: () => Promise.resolve({status: 'registered'})},
+      {
+        ...mocks.wallet,
+        getStakingInfo: () => Promise.resolve({status: 'registered'}),
+      },
       mocks.walletMeta,
     ).getUnregisteredPubStakeKeys()
 
@@ -60,7 +84,13 @@ describe('cip95ExtensionMaker', () => {
     const stakedResult = await cip95ExtensionMaker(
       {
         ...mocks.wallet,
-        getStakingInfo: () => Promise.resolve({status: 'staked', amount: '10', poolId: 'pool1', rewards: '10'}),
+        getStakingInfo: () =>
+          Promise.resolve({
+            status: 'staked',
+            amount: '10',
+            poolId: 'pool1',
+            rewards: '10',
+          }),
       },
       mocks.walletMeta,
     ).getUnregisteredPubStakeKeys()
@@ -68,11 +98,16 @@ describe('cip95ExtensionMaker', () => {
     expect(stakedResult).toEqual([])
 
     const notRegisteredResult = await cip95ExtensionMaker(
-      {...mocks.wallet, getStakingInfo: () => Promise.resolve({status: 'not-registered'})},
+      {
+        ...mocks.wallet,
+        getStakingInfo: () => Promise.resolve({status: 'not-registered'}),
+      },
       mocks.walletMeta,
     ).getUnregisteredPubStakeKeys()
 
-    expect(notRegisteredResult).toEqual(['01c01f8b958699ae769a246e9785db5a70e023977ea4b856dfacf23c23346caf'])
+    expect(notRegisteredResult).toEqual([
+      '01c01f8b958699ae769a246e9785db5a70e023977ea4b856dfacf23c23346caf',
+    ])
   })
 })
 

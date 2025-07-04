@@ -10,7 +10,10 @@ type Props = {
 export const LabelCategoryDApp = ({category}: Props) => {
   const {styles} = useStyles()
   const mappedStrings = useMappedStrings()
-  const text = React.useMemo(() => mappedStrings(category) ?? category, [mappedStrings, category])
+  const text = React.useMemo(
+    () => mappedStrings(category) ?? category,
+    [mappedStrings, category],
+  )
 
   return (
     <View style={styles.labelContainer}>

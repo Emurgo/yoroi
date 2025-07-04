@@ -10,7 +10,8 @@ storiesOf('Discover DAppListItem', module)
 const mockDApp = {
   id: 'cardano_spot',
   name: 'Cardano Spot',
-  description: 'Join a global Cardano Community: a single space to communicate, engage, educate with Cardano',
+  description:
+    'Join a global Cardano Community: a single space to communicate, engage, educate with Cardano',
   category: 'media',
   logo: 'https://daehx1qv45z7c.cloudfront.net/cardano-spot.png',
   uri: 'https://cardanospot.io/landing',

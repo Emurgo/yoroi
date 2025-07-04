@@ -1,5 +1,13 @@
 import * as React from 'react'
-import Svg, {ClipPath, Defs, G, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
+import Svg, {
+  ClipPath,
+  Defs,
+  G,
+  LinearGradient,
+  Path,
+  Stop,
+  SvgProps,
+} from 'react-native-svg'
 
 export const Biometric = (props: SvgProps) => {
   return (
@@ -56,7 +64,10 @@ export const Biometric = (props: SvgProps) => {
           fill="#ED8600"
         />
 
-        <Path d="M140.588 194.188l-.013 4.919h-5.701l.013-4.913 5.701-.006z" fill="#ED8600" />
+        <Path
+          d="M140.588 194.188l-.013 4.919h-5.701l.013-4.913 5.701-.006z"
+          fill="#ED8600"
+        />
 
         <Path
           d="M145.122 176.508h-5.694l-14.709 8.533v3.295l10.155 5.851h5.701l14.708-8.533v-3.295l-10.161-5.851zM149.502 190.021l40.779 23.657a1.333 1.333 0 00-1.334.126l-40.778-23.657a1.284 1.284 0 011.333-.126z"
@@ -98,9 +109,15 @@ export const Biometric = (props: SvgProps) => {
           fill="#ED8600"
         />
 
-        <Path d="M168.931 211.068l.007 2.443 4.927-2.842-.006-2.443-4.928 2.842z" fill="#ED8600" />
+        <Path
+          d="M168.931 211.068l.007 2.443 4.927-2.842-.006-2.443-4.928 2.842z"
+          fill="#ED8600"
+        />
 
-        <Path d="M166.991 209.937l1.94 1.131 4.928-2.842-1.947-1.125-4.921 2.836z" fill="#ECBA09" />
+        <Path
+          d="M166.991 209.937l1.94 1.131 4.928-2.842-1.947-1.125-4.921 2.836z"
+          fill="#ECBA09"
+        />
 
         <Path
           d="M28 73.28l4.88-2.863c3.861 1.997 7.335 2.11 9.902.626l-4.88 2.829c-2.568 1.484-6.042 1.404-9.902-.593z"

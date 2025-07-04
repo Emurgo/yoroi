@@ -14,7 +14,11 @@ describe('UTXO utility functions', () => {
   })
 
   describe('isAmountInCollateralRange', () => {
-    const config: CollateralConfig = {minLovelace: '100', maxLovelace: '200', maxUTxOs: 3}
+    const config: CollateralConfig = {
+      minLovelace: '100',
+      maxLovelace: '200',
+      maxUTxOs: 3,
+    }
 
     it('returns true if amount is within range', () => {
       expect(isAmountInCollateralRange('150', config)).toBe(true)
@@ -26,7 +30,11 @@ describe('UTXO utility functions', () => {
   })
 
   describe('utxosMaker', () => {
-    const config: CollateralConfig = {minLovelace: '50', maxLovelace: '200', maxUTxOs: 3}
+    const config: CollateralConfig = {
+      minLovelace: '50',
+      maxLovelace: '200',
+      maxUTxOs: 3,
+    }
     const utils = utxosMaker(mockRawUtxos, config)
 
     it('findById returns the correct UTXO by id', () => {
@@ -42,7 +50,10 @@ describe('UTXO utility functions', () => {
     })
 
     it('findCollateralCandidates returns UTXOs that are pure and within the specified range', () => {
-      expect(utils.findCollateralCandidates()).toEqual([mockRawUtxos[0], mockRawUtxos[2]])
+      expect(utils.findCollateralCandidates()).toEqual([
+        mockRawUtxos[0],
+        mockRawUtxos[2],
+      ])
     })
 
     it('drawnCollateral returns the id of the first UTXO that is pure and within the specified range', () => {

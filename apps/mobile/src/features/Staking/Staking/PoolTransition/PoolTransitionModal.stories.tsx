@@ -4,7 +4,10 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {PoolTransitionModal, PoolTransitionModalActions} from './PoolTransitionModal'
+import {
+  PoolTransitionModal,
+  PoolTransitionModalActions,
+} from './PoolTransitionModal'
 
 const mock: PoolTransition = {
   current: {
@@ -49,7 +52,9 @@ storiesOf('PoolTransitionModal', module)
   .add('Past deadline', () => (
     <View style={{flex: 1, justifyContent: 'flex-end'}}>
       <View style={{height: 600, padding: 8}}>
-        <PoolTransitionModal poolTransition={{...mock, deadlineMilliseconds: 0}} />
+        <PoolTransitionModal
+          poolTransition={{...mock, deadlineMilliseconds: 0}}
+        />
 
         <PoolTransitionModalActions onContinue={action('Navigate')} />
       </View>

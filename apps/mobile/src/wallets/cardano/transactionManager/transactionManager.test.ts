@@ -15,7 +15,12 @@ import {
   mockedTipStatusResponse,
   mockTx,
 } from '../mocks'
-import {makeTxManagerStorage, syncTxs, toCachedTx, TransactionManager} from './transactionManager'
+import {
+  makeTxManagerStorage,
+  syncTxs,
+  toCachedTx,
+  TransactionManager,
+} from './transactionManager'
 
 jest.mock('../api/api', () => ({
   getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
@@ -52,7 +57,10 @@ describe('transactionManager', () => {
     expect(txManager.perRewardAddressCertificates).toEqual({})
     expect(txManager.confirmationCounts).toEqual({})
 
-    await txManager.doSync(mockedAddressesByChunks, mockedBackendConfig.API_ROOT)
+    await txManager.doSync(
+      mockedAddressesByChunks,
+      mockedBackendConfig.API_ROOT,
+    )
 
     expect(txManager.transactions).toMatchSnapshot()
     expect(txManager.perAddressTxs).toMatchSnapshot()
@@ -168,7 +176,9 @@ describe('syncTxs (undefined means no updates)', () => {
     }
     const response = {
       ...mockedLocalTransactions,
-      ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
+      ...fromPairs(
+        mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)]),
+      ),
     }
 
     const result = await syncTxs(params)
@@ -193,7 +203,9 @@ describe('syncTxs (undefined means no updates)', () => {
           .mockResolvedValueOnce(mockedEmptyHistoryResponse),
       },
     }
-    const response = fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)]))
+    const response = fromPairs(
+      mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)]),
+    )
 
     const result = await syncTxs(params)
 
@@ -201,7 +213,10 @@ describe('syncTxs (undefined means no updates)', () => {
     expect(params.api.fetchNewTxHistory).toBeCalledTimes(5)
   })
 
-  it.each([ApiHistoryError.errors.REFERENCE_BLOCK_MISMATCH, ApiHistoryError.errors.REFERENCE_TX_NOT_FOUND])(
+  it.each([
+    ApiHistoryError.errors.REFERENCE_BLOCK_MISMATCH,
+    ApiHistoryError.errors.REFERENCE_TX_NOT_FOUND,
+  ])(
     `should return current txs minus txs after last_tx.height if receives %p`,
     async (error) => {
       const params = {
@@ -209,7 +224,12 @@ describe('syncTxs (undefined means no updates)', () => {
         baseApiUrl: mockedBackendConfig.API_ROOT,
         transactions: {
           ...mockedLocalTransactions,
-          ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
+          ...fromPairs(
+            mockedHistoryResponse.transactions.map((t) => [
+              t.hash,
+              toCachedTx(t),
+            ]),
+          ),
         },
         api: {
           getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
@@ -236,7 +256,11 @@ describe('syncTxs (undefined means no updates)', () => {
         getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
         fetchNewTxHistory: jest
           .fn()
-          .mockRejectedValueOnce(new ApiHistoryError(ApiHistoryError.errors.REFERENCE_BEST_BLOCK_MISMATCH))
+          .mockRejectedValueOnce(
+            new ApiHistoryError(
+              ApiHistoryError.errors.REFERENCE_BEST_BLOCK_MISMATCH,
+            ),
+          )
           .mockResolvedValueOnce(mockedEmptyHistoryResponse)
           .mockResolvedValueOnce(mockedEmptyHistoryResponse),
       },

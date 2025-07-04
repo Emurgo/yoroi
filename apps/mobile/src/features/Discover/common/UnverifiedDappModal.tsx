@@ -27,7 +27,9 @@ export const useOpenUnverifiedDappModal = () => {
             <Spacer fill />
           </View>
         ),
-        footer: <Button title={strings.understand} onPress={options.onConfirm} />,
+        footer: (
+          <Button title={strings.understand} onPress={options.onConfirm} />
+        ),
         height: 320 + insets.bottom,
         onClose: options.onClose,
       })

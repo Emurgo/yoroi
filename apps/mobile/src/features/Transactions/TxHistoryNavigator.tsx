@@ -1,9 +1,21 @@
 import {init} from '@emurgo/cross-csl-mobile'
-import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack'
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack'
 import {claimManagerMaker, ClaimProvider} from '@yoroi/claim'
 import {useAsyncStorage} from '@yoroi/common'
-import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
-import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
+import {
+  exchangeApiMaker,
+  exchangeManagerMaker,
+  ExchangeProvider,
+} from '@yoroi/exchange'
+import {
+  resolverApiMaker,
+  resolverManagerMaker,
+  ResolverProvider,
+  resolverStorageMaker,
+} from '@yoroi/resolver'
 import {GovernanceProvider} from '@yoroi/staking'
 import {ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver} from '@yoroi/types'
@@ -13,7 +25,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Boundary} from '../../components/Boundary/Boundary'
 import {unstoppableApiKey} from '../../kernel/env'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
-import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes} from '../../kernel/navigation'
+import {
+  BackButton,
+  defaultStackNavigationOptions,
+  TxHistoryRoutes,
+} from '../../kernel/navigation'
 import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '../Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '../Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
@@ -91,7 +107,11 @@ export const TxHistoryNavigator = () => {
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       tokenManager: wallet.networkManager.tokenManager,
     })
-  }, [wallet.externalAddresses, wallet.networkManager.tokenManager, wallet.portfolioPrimaryTokenInfo])
+  }, [
+    wallet.externalAddresses,
+    wallet.networkManager.tokenManager,
+    wallet.portfolioPrimaryTokenInfo,
+  ])
 
   // exchange
   const exchangeManager = React.useMemo(() => {
@@ -105,7 +125,10 @@ export const TxHistoryNavigator = () => {
     return manager
   }, [wallet.isMainnet])
 
-  const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
+  const navigationOptions = React.useMemo(
+    () => defaultStackNavigationOptions(atoms, color),
+    [atoms, color],
+  )
 
   return (
     <ReceiveProvider key={wallet.id}>
@@ -116,7 +139,8 @@ export const TxHistoryNavigator = () => {
             manager={exchangeManager}
             initialState={{
               providerId: 'banxa',
-              providerSuggestedByOrderType: exchangeManager.provider.suggested.byOrderType(),
+              providerSuggestedByOrderType:
+                exchangeManager.provider.suggested.byOrderType(),
             }}
           >
             <GovernanceProvider manager={manager}>
@@ -125,7 +149,9 @@ export const TxHistoryNavigator = () => {
                 screenOptions={{
                   ...navigationOptions,
                   gestureEnabled: true,
-                  headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+                  headerTitle: ({children}) => (
+                    <NetworkTag>{children}</NetworkTag>
+                  ),
                 }}
               >
                 <Stack.Screen
@@ -134,7 +160,9 @@ export const TxHistoryNavigator = () => {
                   options={{
                     title: meta.name,
                     headerTransparent: true,
-                    ...(!meta.isReadOnly && {headerRight: () => <HeaderRightHistory />}),
+                    ...(!meta.isReadOnly && {
+                      headerRight: () => <HeaderRightHistory />,
+                    }),
                   }}
                 />
 
@@ -405,9 +433,13 @@ export const TxHistoryNavigator = () => {
                     headerTransparent: true,
                     title: strings.scanTitle,
                     headerTintColor: color.white_static,
-                    headerLeft: (props) => <BackButton color={color.white_static} {...props} />,
+                    headerLeft: (props) => (
+                      <BackButton color={color.white_static} {...props} />
+                    ),
                     headerTitle: ({children}) => (
-                      <NetworkTag textStyle={{color: color.white_static}}>{children}</NetworkTag>
+                      <NetworkTag textStyle={{color: color.white_static}}>
+                        {children}
+                      </NetworkTag>
                     ),
                   }}
                 />
@@ -431,7 +463,10 @@ export const TxHistoryNavigator = () => {
                 <Stack.Screen
                   name="claim-show-success"
                   component={ShowSuccessScreen}
-                  options={{title: strings.claimShowSuccess, headerLeft: () => null}}
+                  options={{
+                    title: strings.claimShowSuccess,
+                    headerLeft: () => null,
+                  }}
                 />
               </Stack.Navigator>
             </GovernanceProvider>
@@ -565,14 +600,24 @@ const useStrings = () => {
 
   return {
     claimShowSuccess: intl.formatMessage(messages.claimShowSuccessTitle),
-    confirmationTransaction: intl.formatMessage(messages.confirmationTransaction),
+    confirmationTransaction: intl.formatMessage(
+      messages.confirmationTransaction,
+    ),
     reviewSwapTitle: intl.formatMessage(messages.reviewSwapTitle),
     confirmTitle: intl.formatMessage(messages.confirmTitle),
-    describeSelectedAddressTitle: intl.formatMessage(messages.describeSelectedAddressTitle),
+    describeSelectedAddressTitle: intl.formatMessage(
+      messages.describeSelectedAddressTitle,
+    ),
     editAmountTitle: intl.formatMessage(messages.editAmountTitle),
-    exchangeCreateOrderTitle: intl.formatMessage(messages.exchangeCreateOrderTitle),
-    exchangeSelectBuyProvider: intl.formatMessage(messages.exchangeSelectBuyProvider),
-    exchangeSelectSellProvider: intl.formatMessage(messages.exchangeSelectSellProvider),
+    exchangeCreateOrderTitle: intl.formatMessage(
+      messages.exchangeCreateOrderTitle,
+    ),
+    exchangeSelectBuyProvider: intl.formatMessage(
+      messages.exchangeSelectBuyProvider,
+    ),
+    exchangeSelectSellProvider: intl.formatMessage(
+      messages.exchangeSelectSellProvider,
+    ),
     listAmountsToSendTitle: intl.formatMessage(messages.listAmountsToSendTitle),
     qrScannerTitle: intl.formatMessage(messages.qrScannerTitle),
     receiveInfoText: intl.formatMessage(messages.receiveInfoText),
@@ -595,7 +640,10 @@ const useStrings = () => {
   }
 }
 
-const sendOptions = (navigationOptions: StackNavigationOptions, color: ThemedPalette) => ({
+const sendOptions = (
+  navigationOptions: StackNavigationOptions,
+  color: ThemedPalette,
+) => ({
   ...navigationOptions,
   headerStyle: {
     elevation: 0,

@@ -24,7 +24,12 @@ type Props = {
   ctaProps?: ButtonProps
 }
 
-export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, ctaProps}: Props) => {
+export const UserSummary = ({
+  totalAdaSum,
+  totalRewards,
+  totalDelegated,
+  ctaProps,
+}: Props) => {
   const styles = useStyles()
   const {color} = useTheme()
   const strings = useStrings()
@@ -44,10 +49,17 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, ctaProps
           <View style={styles.amountBlock}>
             <Text style={styles.label}>{strings.availableFunds}:</Text>
 
-            <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
+            <Text
+              bold
+              style={styles.value}
+              testID="userSummaryAvailableFundsText"
+            >
               {!isPrivacyActive
                 ? totalAdaSum != null
-                  ? formatAdaWithText(asQuantity(totalAdaSum), wallet.portfolioPrimaryTokenInfo)
+                  ? formatAdaWithText(
+                      asQuantity(totalAdaSum),
+                      wallet.portfolioPrimaryTokenInfo,
+                    )
                   : '-'
                 : '******'}
             </Text>
@@ -69,7 +81,10 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, ctaProps
             <Text bold style={styles.value} testID="userSummaryRewardsText">
               {!isPrivacyActive
                 ? totalRewards != null
-                  ? formatAdaWithText(asQuantity(totalRewards), wallet.portfolioPrimaryTokenInfo)
+                  ? formatAdaWithText(
+                      asQuantity(totalRewards),
+                      wallet.portfolioPrimaryTokenInfo,
+                    )
                   : '-'
                 : '******'}
             </Text>
@@ -80,7 +95,10 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, ctaProps
 
         <View style={styles.row}>
           <View style={styles.icon}>
-            <Icon.TotalDelegated color={color.el_primary_medium} size={ICON_DIM} />
+            <Icon.TotalDelegated
+              color={color.el_primary_medium}
+              size={ICON_DIM}
+            />
           </View>
 
           <Space width="lg" />
@@ -91,7 +109,10 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, ctaProps
             <Text bold style={styles.value} testID="userSummaryDelegatedText">
               {!isPrivacyActive
                 ? totalDelegated != null
-                  ? formatAdaWithText(asQuantity(totalDelegated), wallet.portfolioPrimaryTokenInfo)
+                  ? formatAdaWithText(
+                      asQuantity(totalDelegated),
+                      wallet.portfolioPrimaryTokenInfo,
+                    )
                   : '-'
                 : '******'}
             </Text>

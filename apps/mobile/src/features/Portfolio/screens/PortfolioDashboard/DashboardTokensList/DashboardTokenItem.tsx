@@ -1,4 +1,8 @@
-import {amountBreakdown, infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
+import {
+  amountBreakdown,
+  infoExtractName,
+  isPrimaryToken,
+} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {PortfolioTokenAmount} from '@yoroi/types/lib/typescript/portfolio/amount'
@@ -9,10 +13,13 @@ import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalan
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
+import {
+  formatPriceChange,
+  priceChange,
+} from '../../../common/helpers/priceChange'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
-import {PnlTag} from '../../../ui/PnlTag/PnlTag'
 import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
+import {PnlTag} from '../../../ui/PnlTag/PnlTag'
 import {TokenInfoIcon} from '../../../ui/TokenAmountItem/TokenInfoIcon'
 
 type Props = {
@@ -22,7 +29,10 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
-  const formattedQuantity = isPrivacyActive === false ? amountBreakdown(tokenInfo).bn.toFormat(2) : privacyPlaceholder
+  const formattedQuantity =
+    isPrivacyActive === false
+      ? amountBreakdown(tokenInfo).bn.toFormat(2)
+      : privacyPlaceholder
 
   const {info} = tokenInfo ?? {}
 
@@ -34,13 +44,19 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
   const {open, close} = isPrimaryToken(info)
     ? ptActivity
-    : {close: secondaryActivity?.close.toNumber(), open: secondaryActivity?.open.toNumber()}
+    : {
+        close: secondaryActivity?.close.toNumber(),
+        open: secondaryActivity?.open.toNumber(),
+      }
 
   const {changePercent, variantPnl} = priceChange(open ?? 0, close ?? 0)
   const isMissingPrices = open === undefined || close === undefined
 
   return (
-    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
+    <TouchableOpacity
+      onPress={() => navigationTo.tokenDetail({id: info.id})}
+      style={styles.root}
+    >
       <View style={styles.container}>
         <TokenInfo info={info} />
 
@@ -48,14 +64,23 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
         <View style={styles.quantityContainer}>
           <PnlTag withIcon variant={variantPnl}>
-            <Text>{isMissingPrices ? '— ' : formatPriceChange(changePercent)}%</Text>
+            <Text>
+              {isMissingPrices ? '— ' : formatPriceChange(changePercent)}%
+            </Text>
           </PnlTag>
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={styles.tokenValue}>
+          <Text
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            style={styles.tokenValue}
+          >
             {formattedQuantity}
           </Text>
 
-          <PairedBalance textStyle={styles.pairedTokenValue} amount={tokenInfo} />
+          <PairedBalance
+            textStyle={styles.pairedTokenValue}
+            amount={tokenInfo}
+          />
         </View>
       </View>
     </TouchableOpacity>

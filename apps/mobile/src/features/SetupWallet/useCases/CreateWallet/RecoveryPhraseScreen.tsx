@@ -3,7 +3,14 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
-import {Linking, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  Linking,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button/Button'
@@ -28,7 +35,11 @@ export const RecoveryPhraseScreen = () => {
   const [isBlur, setIsBlur] = React.useState(true)
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
-  const {mnemonicChanged, showCreateWalletInfoModal, showCreateWalletInfoModalChanged} = useSetupWallet()
+  const {
+    mnemonicChanged,
+    showCreateWalletInfoModal,
+    showCreateWalletInfoModalChanged,
+  } = useSetupWallet()
   const {track} = useMetrics()
   const bold = useBold()
 
@@ -102,7 +113,11 @@ export const RecoveryPhraseScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <View style={styles.content}>
-        <StepperProgress currentStep={2} currentStepTitle={strings.stepRecoveryPhrase} totalSteps={4} />
+        <StepperProgress
+          currentStep={2}
+          currentStepTitle={strings.stepRecoveryPhrase}
+          totalSteps={4}
+        />
 
         <Text style={styles.title}>
           {strings.recoveryPhraseTitle(bold)}
@@ -112,14 +127,22 @@ export const RecoveryPhraseScreen = () => {
 
         <View style={styles.mnemonicWords}>
           <BlurView
-            experimentalBlurMethod={Platform.OS === 'android' ? 'dimezisBlurView' : 'none'}
+            experimentalBlurMethod={
+              Platform.OS === 'android' ? 'dimezisBlurView' : 'none'
+            }
             intensity={isBlur ? 14 : 0}
             style={styles.blurView}
           />
 
           {mnemonic.split(' ').map((word, index) => (
-            <View key={`mnemonic-${index}`} testID={`mnemonic-${index}`} style={styles.mnemonicTextContainer}>
-              <View style={[StyleSheet.absoluteFill, styles.buttonBackground]} />
+            <View
+              key={`mnemonic-${index}`}
+              testID={`mnemonic-${index}`}
+              style={styles.mnemonicTextContainer}
+            >
+              <View
+                style={[StyleSheet.absoluteFill, styles.buttonBackground]}
+              />
 
               <Text style={styles.mnemonicText}>
                 <Text style={styles.mnemonicText}>{index + 1}. </Text>
@@ -139,7 +162,9 @@ export const RecoveryPhraseScreen = () => {
           {isBlur ? <EyeOpenIllustration /> : <EyeClosedIllustration />}
 
           <Text style={styles.blurTextButton}>
-            {!isBlur ? strings.hideRecoveryPhraseButton : strings.showRecoveryPhraseButton}
+            {!isBlur
+              ? strings.hideRecoveryPhraseButton
+              : strings.showRecoveryPhraseButton}
           </Text>
         </TouchableOpacity>
       </View>
@@ -167,7 +192,10 @@ const Info = ({onPress, testID}: {onPress: () => void; testID?: string}) => {
   return (
     <TouchableOpacity style={styles.info} onPress={onPress}>
       <View style={styles.infoIcon} testID={testID}>
-        <InfoIcon size={24} color={isDark ? color.white_static : color.black_static} />
+        <InfoIcon
+          size={24}
+          color={isDark ? color.white_static : color.black_static}
+        />
       </View>
     </TouchableOpacity>
   )

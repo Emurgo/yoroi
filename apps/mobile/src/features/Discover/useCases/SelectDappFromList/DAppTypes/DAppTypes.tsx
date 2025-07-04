@@ -1,6 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -14,7 +20,10 @@ type Props = {
 export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
   const {styles} = useStyles()
   const scrollViewRef = React.useRef<ScrollView | null>(null)
-  const sorted = React.useMemo(() => sortTypes(types, selectedTypes), [types, selectedTypes])
+  const sorted = React.useMemo(
+    () => sortTypes(types, selectedTypes),
+    [types, selectedTypes],
+  )
 
   return (
     <ScrollView
@@ -49,7 +58,10 @@ export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
 const sortTypes = (types: string[], selectedTypes: string[]) => {
   return types
     .sort((firstType, secondType) => firstType.localeCompare(secondType))
-    .sort((firstType, secondType) => selectedTypes.indexOf(secondType) - selectedTypes.indexOf(firstType))
+    .sort(
+      (firstType, secondType) =>
+        selectedTypes.indexOf(secondType) - selectedTypes.indexOf(firstType),
+    )
 }
 
 type TypeItemProps = {
@@ -59,12 +71,21 @@ type TypeItemProps = {
   disabled?: boolean
   isLimited?: boolean
 }
-const TypeItem = ({name, isActive = false, onToggle, disabled = false, isLimited = false}: TypeItemProps) => {
+const TypeItem = ({
+  name,
+  isActive = false,
+  onToggle,
+  disabled = false,
+  isLimited = false,
+}: TypeItemProps) => {
   const {styles} = useStyles()
 
   const [isPressed, setIsPressed] = React.useState(false)
   const mappedStrings = useMappedStrings()
-  const text = React.useMemo(() => mappedStrings(name) ?? name, [mappedStrings, name])
+  const text = React.useMemo(
+    () => mappedStrings(name) ?? name,
+    [mappedStrings, name],
+  )
 
   const getBoxChipStyle = React.useMemo(() => {
     if (disabled) return styles.boxDisabledStyle

@@ -13,9 +13,13 @@ export const useStrings = () => {
     stakingKeyHash: intl.formatMessage(messages.stakingKeyHash),
     address: intl.formatMessage(messages.address),
     specificAmount: intl.formatMessage(messages.specificAmount),
-    requestSpecificAmountButton: intl.formatMessage(messages.requestSpecificAmountButton),
+    requestSpecificAmountButton: intl.formatMessage(
+      messages.requestSpecificAmountButton,
+    ),
     copyAddressButton: intl.formatMessage(messages.copyAddressButton),
-    specificAmountDescription: intl.formatMessage(messages.specificAmountDescription),
+    specificAmountDescription: intl.formatMessage(
+      messages.specificAmountDescription,
+    ),
     ADALabel: intl.formatMessage(messages.ADALabel),
     generateLink: intl.formatMessage(messages.generateLink),
     multipleAddress: intl.formatMessage(messages.multipleAddress),
@@ -29,7 +33,9 @@ export const useStrings = () => {
     generateButton: intl.formatMessage(messages.generateButton),
     infoAddressLimit: intl.formatMessage(messages.infoAddressLimit),
     singleOrMultiple: intl.formatMessage(messages.singleOrMultiple),
-    singleOrMultipleDetails: intl.formatMessage(messages.singleOrMultipleDetails),
+    singleOrMultipleDetails: intl.formatMessage(
+      messages.singleOrMultipleDetails,
+    ),
     selectMultiple: intl.formatMessage(messages.selectMultiple),
     singleAddressWallet: intl.formatMessage(messages.singleAddressWallet),
     singleAddressWarning: intl.formatMessage(messages.singleAddressWarning),
@@ -89,7 +95,8 @@ export const messages = defineMessages({
   },
   specificAmountDescription: {
     id: 'components.receive.receivescreen.specificAmountDescription',
-    defaultMessage: '!!!Generate a unique wallet address for requesting a specific amount of ADA from another wallet.',
+    defaultMessage:
+      '!!!Generate a unique wallet address for requesting a specific amount of ADA from another wallet.',
   },
   ADALabel: {
     id: 'components.receive.receivescreen.ADALabel',

@@ -95,7 +95,12 @@ const MockTokenList = [
 
 export const useGetPortfolioTokenInfo = (
   name: string,
-  options: UseQueryOptions<IPortfolioTokenInfo, Error, IPortfolioTokenInfo, ['useGetPortfolioTokenInfo', string]> = {},
+  options: UseQueryOptions<
+    IPortfolioTokenInfo,
+    Error,
+    IPortfolioTokenInfo,
+    ['useGetPortfolioTokenInfo', string]
+  > = {},
 ) => {
   const query = useQuery({
     useErrorBoundary: true,
@@ -104,7 +109,9 @@ export const useGetPortfolioTokenInfo = (
     queryKey: ['useGetPortfolioTokenInfo', name],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 2000))
-      return MockTokenList.find((token) => token.name === name) as IPortfolioTokenInfo
+      return MockTokenList.find(
+        (token) => token.name === name,
+      ) as IPortfolioTokenInfo
     },
   })
 

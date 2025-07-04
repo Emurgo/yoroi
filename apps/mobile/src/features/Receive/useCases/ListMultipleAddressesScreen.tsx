@@ -46,9 +46,12 @@ export const ListMultipleAddressesScreen = () => {
   const addressInfos = toAddressInfos(addresses)
   const hasReachedGapLimit = !addresses.canIncrease
 
-  const handleOnViewableItemsChanged = React.useCallback(({viewableItems}: {viewableItems: ViewToken[]}) => {
-    inView.current = viewableItems.length
-  }, [])
+  const handleOnViewableItemsChanged = React.useCallback(
+    ({viewableItems}: {viewableItems: ViewToken[]}) => {
+      inView.current = viewableItems.length
+    },
+    [],
+  )
 
   const renderAddressInfo = React.useCallback(
     ({item, index}: {item: AddressInfo; index: number}) => (
@@ -122,7 +125,10 @@ export const ListMultipleAddressesScreen = () => {
       <Animated.View
         style={[
           styles.footer,
-          {display: hasReachedGapLimit ? 'none' : 'flex', borderTopWidth: inView.current < addressInfos.length ? 1 : 0},
+          {
+            display: hasReachedGapLimit ? 'none' : 'flex',
+            borderTopWidth: inView.current < addressInfos.length ? 1 : 0,
+          },
         ]}
         layout={Layout}
       >
@@ -136,7 +142,10 @@ export const ListMultipleAddressesScreen = () => {
   )
 }
 
-const toAddressInfos = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
+const toAddressInfos = (addresses: {
+  unused: string[]
+  used: string[]
+}): AddressInfo[] => {
   const unusedAddresses = addresses.unused.map((address) => ({
     address,
     isUsed: false,

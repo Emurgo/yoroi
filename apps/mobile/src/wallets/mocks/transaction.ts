@@ -3,15 +3,17 @@ import BigNumber from 'bignumber.js'
 import {TransactionInfo} from '../types/other'
 
 export const mockTransactionInfos: Record<string, TransactionInfo> = {
-  ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52: {
+  'ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52': {
     id: 'ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52',
     inputs: [
       {
-        address: 'addr_test1vzpwq95z3xyum8vqndgdd9mdnmafh3djcxnc6jemlgdmswcve6tkw',
+        address:
+          'addr_test1vzpwq95z3xyum8vqndgdd9mdnmafh3djcxnc6jemlgdmswcve6tkw',
         amount: '481040108',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
           },
         ],
@@ -24,7 +26,8 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
         amount: '1407406',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
           },
         ],
@@ -35,7 +38,8 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
         amount: '479460117',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('172585'),
           },
         ],
@@ -101,7 +105,8 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
         amount: '481040108',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1654170'),
           },
         ],
@@ -114,7 +119,8 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
         amount: '1407406',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1654170'),
           },
         ],
@@ -125,7 +131,8 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
         amount: '479460117',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1654170'),
           },
         ],
@@ -193,7 +200,8 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
         amount: '481040108',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
           },
         ],
@@ -206,7 +214,8 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
         amount: '1407406',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
           },
         ],
@@ -217,7 +226,8 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
         amount: '479460117',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('172585'),
           },
         ],
@@ -278,7 +288,9 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
   },
 }
 
-export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): TransactionInfo => {
+export const mockTransactionInfo = (
+  transaction?: Partial<TransactionInfo>,
+): TransactionInfo => {
   return {
     id: 'ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52',
     inputs: [
@@ -288,7 +300,8 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
         amount: '481040108',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
           },
         ],
@@ -301,7 +314,8 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
         amount: '1407406',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
           },
         ],
@@ -312,7 +326,8 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
         amount: '479460117',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            identifier:
+              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('172585'),
           },
         ],

@@ -1,6 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, View} from 'react-native'
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 export const TabsGradient = ({children}: React.PropsWithChildren) => {
@@ -11,7 +17,11 @@ export const TabsGradient = ({children}: React.PropsWithChildren) => {
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const {x} = event.nativeEvent.contentOffset
     setEnableStartGradient(x > 0)
-    setEnableEndGradient(x < event.nativeEvent.contentSize.width - event.nativeEvent.layoutMeasurement.width)
+    setEnableEndGradient(
+      x <
+        event.nativeEvent.contentSize.width -
+          event.nativeEvent.layoutMeasurement.width,
+    )
   }
 
   return (

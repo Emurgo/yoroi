@@ -12,9 +12,14 @@ export const useNavigateTo = () => {
     tokensList: () => navigation.navigate('portfolio-tokens-list'),
     tokenDetail: (params: PortfolioTokenDetailParams) =>
       navigation.navigate('portfolio-token-details', {id: params.id}),
-    nftsList: () => navigation.navigate('portfolio-nfts', {screen: 'nft-gallery'}),
+    nftsList: () =>
+      navigation.navigate('portfolio-nfts', {screen: 'nft-gallery'}),
     nftDetails: (id: Portfolio.Token.Id) =>
-      navigation.navigate('portfolio-nfts', {screen: 'nft-details', params: {id}, initial: true}),
+      navigation.navigate('portfolio-nfts', {
+        screen: 'nft-details',
+        params: {id},
+        initial: true,
+      }),
     resetTabAndSend: () => {
       navigation.reset({index: 0, routes: [{name: 'dashboard-portfolio'}]})
       navigation.navigate('history', {screen: 'send-start-tx'})
@@ -33,7 +38,8 @@ export const useNavigateTo = () => {
       navigation.navigate('history', {
         screen: 'swap-preprod-notice',
       }),
-    buyAda: () => navigation.navigate('history', {screen: 'exchange-create-order'}),
+    buyAda: () =>
+      navigation.navigate('history', {screen: 'exchange-create-order'}),
   } as const).current
 }
 

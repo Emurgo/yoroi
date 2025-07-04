@@ -4,7 +4,9 @@ import {View} from 'react-native'
 
 import {LabelSingleAddress} from './LabelSingleAddress'
 
-storiesOf('Discover LabelSingleAddress', module).add('initial', () => <Initial />)
+storiesOf('Discover LabelSingleAddress', module).add('initial', () => (
+  <Initial />
+))
 
 const Initial = () => {
   return (

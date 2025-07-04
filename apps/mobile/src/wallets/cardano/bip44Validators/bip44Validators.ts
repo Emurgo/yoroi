@@ -4,7 +4,8 @@ import {CardanoMobile} from '../../wallets'
 
 const isString = (s: unknown) => typeof s === 'string' || s instanceof String
 
-const isUInt32 = (i: unknown) => Number.isInteger(i) && typeof i === 'number' && i >= 0 && i < 4294967296
+const isUInt32 = (i: unknown) =>
+  Number.isInteger(i) && typeof i === 'number' && i >= 0 && i < 4294967296
 
 export const isValidPath = (path: unknown): boolean => {
   if (!(Array.isArray(path) && path.length > 0 && path.length <= 5)) {
@@ -22,20 +23,25 @@ export const isCIP1852AccountPath = (path: Array<number>): boolean => {
   // note: allows non-zero accounts
   return (
     path.length === 3 &&
-    (path[0] === cardanoConfig.implementations['cardano-cip1852'].derivations.base.harden.purpose ||
+    (path[0] ===
+      cardanoConfig.implementations['cardano-cip1852'].derivations.base.harden
+        .purpose ||
       path[0] === 1852) &&
-    (path[1] === cardanoConfig.implementations['cardano-cip1852'].derivations.base.harden.coinType || path[1] === 1815)
+    (path[1] ===
+      cardanoConfig.implementations['cardano-cip1852'].derivations.base.harden
+        .coinType ||
+      path[1] === 1815)
   )
 }
 
-const canParsePublicKey = async (publicKeyHex: string): Promise<boolean> => {
+const canParsePublicKey = (publicKeyHex: string): boolean => {
   try {
-    await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
+    CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
     return true
   } catch (_e) {
     return false
   }
 }
 
-export const isValidPublicKey = async (key: string): Promise<boolean> =>
+export const isValidPublicKey = (key: string): boolean =>
   key != null && isString(key) && canParsePublicKey(key)

@@ -9,7 +9,7 @@ import {
 import {useTheme} from '@yoroi/theme'
 import {Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Switch as RNSwitch, View} from 'react-native'
+import {Switch as RNSwitch, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
@@ -51,7 +51,10 @@ const Screen = () => {
         <View style={{padding: 16, gap: 8}}>
           <Text style={{fontSize: 24}}>Notifications Playground</Text>
 
-          <Button title="Trigger Transaction Received Notification" onPress={handleOnTriggerTransactionReceived} />
+          <Button
+            title="Trigger Transaction Received Notification"
+            onPress={handleOnTriggerTransactionReceived}
+          />
 
           <Text style={{fontSize: 24}}>Settings</Text>
 
@@ -67,7 +70,10 @@ const Screen = () => {
 const ReceivedNotificationsList = () => {
   const {data: receivedNotifications = []} = useReceivedNotificationEvents()
   const sortedNotifications = React.useMemo(
-    () => [...receivedNotifications].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+    () =>
+      [...receivedNotifications].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      ),
     [receivedNotifications],
   )
   return (
@@ -82,13 +88,20 @@ const ReceivedNotificationsList = () => {
       </Text>
 
       {sortedNotifications.map((notification) => (
-        <ReceivedNotification key={notification.id} notification={notification} />
+        <ReceivedNotification
+          key={notification.id}
+          notification={notification}
+        />
       ))}
     </View>
   )
 }
 
-const ReceivedNotification = ({notification}: {notification: NotificationTypes.Event}) => {
+const ReceivedNotification = ({
+  notification,
+}: {
+  notification: NotificationTypes.Event
+}) => {
   const readStatus = notification.isRead ? 'Read' : 'Unread'
 
   if (notification.trigger === NotificationTypes.Trigger.TransactionReceived) {
@@ -126,7 +139,8 @@ const NotificationSettings = () => {
   const {mutate: resetConfig} = useResetNotificationsConfig({
     onSuccess: (config) => setLocalConfig(config),
   })
-  const [localConfig, setLocalConfig] = React.useState<NotificationTypes.Config | null>(null)
+  const [localConfig, setLocalConfig] =
+    React.useState<NotificationTypes.Config | null>(null)
 
   const handleSaveConfig = (newConfig: NotificationTypes.Config) => {
     saveConfig(newConfig)
@@ -137,14 +151,18 @@ const NotificationSettings = () => {
 
   if (config === null) return null
 
-  const handleOnUpdateTransactionReceivedConfig = (value: NotificationTypes.Config['TransactionReceived']) => {
+  const handleOnUpdateTransactionReceivedConfig = (
+    value: NotificationTypes.Config['TransactionReceived'],
+  ) => {
     handleSaveConfig({
       ...config,
       [NotificationTypes.Trigger.TransactionReceived]: value,
     })
   }
 
-  const handleOnUpdateRewardsUpdatedConfig = (value: NotificationTypes.Config['RewardsUpdated']) => {
+  const handleOnUpdateRewardsUpdatedConfig = (
+    value: NotificationTypes.Config['RewardsUpdated'],
+  ) => {
     handleSaveConfig({
       ...config,
       [NotificationTypes.Trigger.RewardsUpdated]: value,
@@ -167,7 +185,7 @@ const NotificationSettings = () => {
 
   return (
     <View>
-      <Button title="Reset" onPress={handleOnReset}></Button>
+      <Button title="Reset" onPress={handleOnReset} />
 
       <View style={{gap: 16}}>
         <TransactionReceivedSetting
@@ -204,7 +222,10 @@ const TransactionReceivedSetting = ({
       <View style={styles.row}>
         <Text>Notify</Text>
 
-        <Switch value={value.notify} onValueChange={(notify) => onChange({notify})} />
+        <Switch
+          value={value.notify}
+          onValueChange={(notify) => onChange({notify})}
+        />
       </View>
     </View>
   )
@@ -225,7 +246,10 @@ const RewardsUpdateSetting = ({
       <View style={styles.row}>
         <Text>Notify</Text>
 
-        <Switch value={value.notify} onValueChange={(notify) => onChange({notify})} />
+        <Switch
+          value={value.notify}
+          onValueChange={(notify) => onChange({notify})}
+        />
       </View>
     </View>
   )
@@ -236,7 +260,9 @@ const PrimaryTokenPriceChangedSetting = ({
   onChange,
 }: {
   value: NotificationTypes.Config['PrimaryTokenPriceChanged']
-  onChange: (value: NotificationTypes.Config['PrimaryTokenPriceChanged']) => void
+  onChange: (
+    value: NotificationTypes.Config['PrimaryTokenPriceChanged'],
+  ) => void
 }) => {
   const styles = useStyles()
   return (
@@ -246,7 +272,10 @@ const PrimaryTokenPriceChangedSetting = ({
       <View style={styles.row}>
         <Text>Notify</Text>
 
-        <Switch value={value.notify} onValueChange={(notify) => onChange({...value, notify})} />
+        <Switch
+          value={value.notify}
+          onValueChange={(notify) => onChange({...value, notify})}
+        />
       </View>
 
       <View style={styles.row}>

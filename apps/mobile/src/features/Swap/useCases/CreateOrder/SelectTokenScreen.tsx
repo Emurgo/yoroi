@@ -17,7 +17,10 @@ import {SwapTokenRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {getTokenIdParts} from '../../../Portfolio/common/helpers/get-token-id-parts'
 import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenActivity} from '../../../Portfolio/common/PortfolioTokenActivityProvider'
-import {AmountItemPlaceholder, TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {
+  AmountItemPlaceholder,
+  TokenAmountItem,
+} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
 import {NoAssetFoundImage} from '../../../Send/common/NoAssetFoundImage'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
@@ -63,7 +66,9 @@ export const SelectTokenScreen = () => {
     <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <Boundary loading={loading}>
         <ErrorBoundary
-          fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
+          fallbackRender={({resetErrorBoundary}) => (
+            <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />
+          )}
         >
           <TokenList direction={direction} />
         </ErrorBoundary>
@@ -92,7 +97,11 @@ const TokenList = ({direction}: Direction) => {
           // Compare based on weighted value (price * amount)
           return (tokenActivity[b.info.id]?.price.close ?? new BigNumber(0))
             .multipliedBy(amountBreakdown(b).bn)
-            .comparedTo((tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)).multipliedBy(amountBreakdown(a).bn))
+            .comparedTo(
+              (
+                tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)
+              ).multipliedBy(amountBreakdown(a).bn),
+            )
         })
         .map(({info: {id}}) => id)
         .filter((ti) => tokenInfos.has(ti)),
@@ -104,9 +113,14 @@ const TokenList = ({direction}: Direction) => {
   )
 
   const filteredTokenList = React.useMemo(() => {
-    const ownedList = ownedTokens.map((ti) => tokenInfos.get(ti)).filter(isNonNullable)
+    const ownedList = ownedTokens
+      .map((ti) => tokenInfos.get(ti))
+      .filter(isNonNullable)
 
-    if (direction === 'in') return [strings.yourAssets, ...ownedList].filter(filterBySearch(assetSearchTerm))
+    if (direction === 'in')
+      return [strings.yourAssets, ...ownedList].filter(
+        filterBySearch(assetSearchTerm),
+      )
 
     const verifiedList = verifiedTokens
       .map((ti) => tokenInfos.get(ti))
@@ -144,7 +158,11 @@ const TokenList = ({direction}: Direction) => {
           isString(item) ? (
             <Text style={styles.sectionHeading}>{item}</Text>
           ) : (
-            <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
+            <Boundary
+              loading={{
+                fallback: <AmountItemPlaceholder style={styles.item} />,
+              }}
+            >
               <SelectableToken
                 tokenInfo={item}
                 quantity={wallet.balances.records.get(item.id)?.quantity ?? 0n}
@@ -154,7 +172,9 @@ const TokenList = ({direction}: Direction) => {
           )
         }
         bounces={false}
-        keyExtractor={(item) => (isString(item) ? item : `${item.name}-${item.id}`)}
+        keyExtractor={(item) =>
+          isString(item) ? item : `${item.name}-${item.id}`
+        }
         testID="assetsList"
         estimatedItemSize={72}
         ListEmptyComponent={<EmptyList />}
@@ -176,7 +196,11 @@ type SelectableTokenProps = Direction & {
   tokenInfo: Portfolio.Token.Info
   quantity: bigint
 }
-const SelectableToken = ({direction, tokenInfo, quantity}: SelectableTokenProps) => {
+const SelectableToken = ({
+  direction,
+  tokenInfo,
+  quantity,
+}: SelectableTokenProps) => {
   const {styles} = useStyles()
   const {id, name, ticker} = tokenInfo
   // NOTE: no need to subscribe to the balance
@@ -189,10 +213,12 @@ const SelectableToken = ({direction, tokenInfo, quantity}: SelectableTokenProps)
   const shouldUpdateToken =
     direction === 'in'
       ? id !== swapForm.tokenInInput.tokenId || !swapForm.tokenInInput.isTouched
-      : id !== swapForm.tokenOutInput.tokenId || !swapForm.tokenOutInput.isTouched
+      : id !== swapForm.tokenOutInput.tokenId ||
+        !swapForm.tokenOutInput.isTouched
   const shouldSwitchTokens =
     direction === 'in'
-      ? id === swapForm.tokenOutInput.tokenId && swapForm.tokenOutInput.isTouched
+      ? id === swapForm.tokenOutInput.tokenId &&
+        swapForm.tokenOutInput.isTouched
       : id === swapForm.tokenInInput.tokenId && swapForm.tokenInInput.isTouched
 
   const handleOnTokenSelection = () => {
@@ -200,11 +226,15 @@ const SelectableToken = ({direction, tokenInfo, quantity}: SelectableTokenProps)
 
     if (direction === 'in') {
       track.swapAssetFromChanged({
-        from_asset: [{asset_name: name, asset_ticker: ticker, policy_id: policyId}],
+        from_asset: [
+          {asset_name: name, asset_ticker: ticker, policy_id: policyId},
+        ],
       })
     } else {
       track.swapAssetToChanged({
-        to_asset: [{asset_name: name, asset_ticker: ticker, policy_id: policyId}],
+        to_asset: [
+          {asset_name: name, asset_ticker: ticker, policy_id: policyId},
+        ],
       })
     }
 
@@ -215,16 +245,30 @@ const SelectableToken = ({direction, tokenInfo, quantity}: SelectableTokenProps)
     }
 
     if (shouldUpdateToken) {
-      swapForm.action({type: direction === 'in' ? 'TokenInIdChanged' : 'TokenOutIdChanged', value: id})
-      swapForm.action({type: direction === 'in' ? 'TokenInInputTouched' : 'TokenOutInputTouched'})
+      swapForm.action({
+        type: direction === 'in' ? 'TokenInIdChanged' : 'TokenOutIdChanged',
+        value: id,
+      })
+      swapForm.action({
+        type:
+          direction === 'in' ? 'TokenInInputTouched' : 'TokenOutInputTouched',
+      })
     }
     navigateTo.startSwap()
     closeSearch()
   }
 
   return (
-    <TouchableOpacity style={styles.item} onPress={handleOnTokenSelection} testID="selectTokenButton">
-      <TokenAmountItem amount={{info: tokenInfo, quantity}} ignorePrivacy variant="swap" />
+    <TouchableOpacity
+      style={styles.item}
+      onPress={handleOnTokenSelection}
+      testID="selectTokenButton"
+    >
+      <TokenAmountItem
+        amount={{info: tokenInfo, quantity}}
+        ignorePrivacy
+        variant="swap"
+      />
     </TouchableOpacity>
   )
 }
@@ -232,7 +276,8 @@ const SelectableToken = ({direction, tokenInfo, quantity}: SelectableTokenProps)
 const EmptyList = () => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
-  if (isSearching && assetSearchTerm.length > 0) return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
+  if (isSearching && assetSearchTerm.length > 0)
+    return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
 
   return null
 }
@@ -249,7 +294,9 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
       <Spacer height={25} />
 
       <Text style={styles.contentText}>
-        {assetSearchTerm === '' ? strings.noAssetsFound : strings.noAssetsFoundFor(assetSearchTerm)}
+        {assetSearchTerm === ''
+          ? strings.noAssetsFound
+          : strings.noAssetsFoundFor(assetSearchTerm)}
       </Text>
     </View>
   )

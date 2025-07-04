@@ -25,7 +25,10 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
   const styles = useStyles()
 
   return (
-    <TitledCard title={intl.formatMessage(messages.epochProgressTitle)} testID="epochProgressTitleCard">
+    <TitledCard
+      title={intl.formatMessage(messages.epochProgressTitle)}
+      testID="epochProgressTitleCard"
+    >
       <View style={styles.wrapper}>
         <ProgressCircle percentage={percentage} />
 
@@ -33,7 +36,9 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
 
         <View style={styles.stats}>
           <View style={styles.row}>
-            <Text style={styles.label}>{intl.formatMessage(messages.epochProgressTitle)}:</Text>
+            <Text style={styles.label}>
+              {intl.formatMessage(messages.epochProgressTitle)}:
+            </Text>
 
             <Text style={styles.value}>{currentEpoch}</Text>
           </View>
@@ -41,10 +46,14 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
           <Space height="sm" />
 
           <View style={styles.row}>
-            <Text style={styles.label}>{intl.formatMessage(messages.endsInLabel)}:</Text>
+            <Text style={styles.label}>
+              {intl.formatMessage(messages.endsInLabel)}:
+            </Text>
 
             <View style={styles.timeWrapper}>
-              {endTime.d != null && <Text style={styles.timeBlock}>{endTime.d}</Text>}
+              {endTime.d != null && (
+                <Text style={styles.timeBlock}>{endTime.d}</Text>
+              )}
 
               <Space width="xs" />
 

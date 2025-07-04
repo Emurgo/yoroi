@@ -1,5 +1,12 @@
 import * as React from 'react'
-import Svg, {Circle, Defs, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
+import Svg, {
+  Circle,
+  Defs,
+  LinearGradient,
+  Path,
+  Stop,
+  SvgProps,
+} from 'react-native-svg'
 
 export const LedgerCheckIllustration = (props: SvgProps) => {
   return (
@@ -11,7 +18,10 @@ export const LedgerCheckIllustration = (props: SvgProps) => {
         fill="url(#paint0_linear_25505_245837)"
       />
 
-      <Path fill="url(#paint1_linear_25505_245837)" d="M169.5 50H190.1587V89.31739999999999H169.5z" />
+      <Path
+        fill="url(#paint1_linear_25505_245837)"
+        d="M169.5 50H190.1587V89.31739999999999H169.5z"
+      />
 
       <Path
         fillRule="evenodd"
@@ -20,9 +30,19 @@ export const LedgerCheckIllustration = (props: SvgProps) => {
         fill="url(#paint2_linear_25505_245837)"
       />
 
-      <Circle cx={179.229} cy={109.131} r={9} fill="url(#paint3_linear_25505_245837)" />
+      <Circle
+        cx={179.229}
+        cy={109.131}
+        r={9}
+        fill="url(#paint3_linear_25505_245837)"
+      />
 
-      <Circle cx={179.5} cy={38.2871} r={9} fill="url(#paint4_linear_25505_245837)" />
+      <Circle
+        cx={179.5}
+        cy={38.2871}
+        r={9}
+        fill="url(#paint4_linear_25505_245837)"
+      />
 
       <Path
         d="M229.56 83.908c0-.256.098-.512.293-.707 6.867-6.866 10.648-16.01 10.648-25.747 0-9.737-3.781-18.88-10.648-25.747a.999.999 0 111.414-1.414c7.244 7.244 11.233 16.89 11.233 27.161s-3.989 19.918-11.233 27.161a.999.999 0 01-1.707-.707z"

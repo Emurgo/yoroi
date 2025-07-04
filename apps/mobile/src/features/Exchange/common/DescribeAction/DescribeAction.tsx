@@ -13,12 +13,16 @@ export const DescribeAction = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {orderType, providerId, provider} = useExchange()
-  const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
+  const providers = useExchangeProvidersByOrderType({
+    orderType,
+    providerListByOrderType: provider.list.byOrderType,
+  })
   const providerSelected = Object.fromEntries(providers)[providerId]
   const name = providerSelected?.name ?? ''
 
   const handleOnContactProvider = () => {
-    if (providerSelected?.supportUrl != null) Linking.openURL(providerSelected.supportUrl)
+    if (providerSelected?.supportUrl != null)
+      Linking.openURL(providerSelected.supportUrl)
   }
 
   const handleOnContactYoroi = () => {
@@ -27,7 +31,9 @@ export const DescribeAction = () => {
 
   return (
     <View style={styles.modalContent}>
-      <Text style={styles.description}>{strings.descriptionBuySellADATransaction}</Text>
+      <Text style={styles.description}>
+        {strings.descriptionBuySellADATransaction}
+      </Text>
 
       <Spacer height={24} />
 
@@ -41,7 +47,9 @@ export const DescribeAction = () => {
         <Text style={styles.description}>{strings.and} </Text>
 
         <TouchableOpacity onPress={handleOnContactYoroi}>
-          <Text style={[styles.description, styles.linkText]}>{strings.customerSupport}</Text>
+          <Text style={[styles.description, styles.linkText]}>
+            {strings.customerSupport}
+          </Text>
         </TouchableOpacity>
 
         <Text style={styles.description}>{strings.significant}</Text>

@@ -18,7 +18,7 @@ const bleRoute = {
   name: 'name',
   params: {
     useUSB: false,
-    networkId: networkConfigs['mainnet'].chainId,
+    networkId: networkConfigs.mainnet.chainId,
     walletImplementationId: 'cardano-bip44',
   },
 }
@@ -28,7 +28,7 @@ const usbRoute = {
   name: 'name',
   params: {
     useUSB: true,
-    networkId: networkConfigs['mainnet'].chainId,
+    networkId: networkConfigs.mainnet.chainId,
     walletImplementationId: 'cardano-bip44',
   },
 }

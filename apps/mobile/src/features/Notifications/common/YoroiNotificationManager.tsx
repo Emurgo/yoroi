@@ -9,5 +9,7 @@ type Props = {
 
 export const YoroiNotificationManager: React.FC<Props> = ({children}) => {
   const manager = useNotificationManagerMaker()
-  return <NotificationProvider manager={manager}>{children}</NotificationProvider>
+  return (
+    <NotificationProvider manager={manager}>{children}</NotificationProvider>
+  )
 }

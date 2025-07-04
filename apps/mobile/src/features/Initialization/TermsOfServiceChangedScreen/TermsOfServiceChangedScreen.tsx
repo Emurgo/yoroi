@@ -1,6 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BlueCheckbox} from '../../../components/BlueCheckbox/BlueCheckbox'
@@ -33,7 +39,10 @@ export const TermsOfServiceChangedScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView bounces={false} contentContainerStyle={styles.scrollableContentContainer}>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={styles.scrollableContentContainer}
+      >
         <YoroiLogo />
 
         <Spacer height={80} />
@@ -46,12 +55,21 @@ export const TermsOfServiceChangedScreen = () => {
 
         <Spacer height={24} />
 
-        <BlueCheckbox checked={accepted} spacing={8} onPress={onPressCheckbox} style={styles.checkbox}>
+        <BlueCheckbox
+          checked={accepted}
+          spacing={8}
+          onPress={onPressCheckbox}
+          style={styles.checkbox}
+        >
           <View style={styles.checkboxRow}>
-            <Text style={styles.checkboxText}>{`${strings.tosIAgreeWith} `}</Text>
+            <Text
+              style={styles.checkboxText}
+            >{`${strings.tosIAgreeWith} `}</Text>
 
             <TouchableOpacity onPress={onTosLinkPress}>
-              <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.tosAgreement}</Text>
+              <Text style={[styles.checkboxText, styles.checkboxLink]}>
+                {strings.tosAgreement}
+              </Text>
             </TouchableOpacity>
 
             <Text style={styles.checkboxText}>{` `}</Text>
@@ -61,14 +79,20 @@ export const TermsOfServiceChangedScreen = () => {
             <Text style={styles.checkboxText}>{` `}</Text>
 
             <TouchableOpacity onPress={onPrivacyLinkPress}>
-              <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.privacyPolicy}</Text>
+              <Text style={[styles.checkboxText, styles.checkboxLink]}>
+                {strings.privacyPolicy}
+              </Text>
             </TouchableOpacity>
           </View>
         </BlueCheckbox>
 
         <Spacer fill />
 
-        <Button title={strings.continue} disabled={!accepted} onPress={onPressContinue} />
+        <Button
+          title={strings.continue}
+          disabled={!accepted}
+          onPress={onPressContinue}
+        />
       </ScrollView>
     </SafeAreaView>
   )

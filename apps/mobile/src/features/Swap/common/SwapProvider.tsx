@@ -46,10 +46,22 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       isPrimaryToken,
       partners,
     })
-  }, [network, stakingKey, address, addressHex, wallet.portfolioPrimaryTokenInfo, partners])
+  }, [
+    network,
+    stakingKey,
+    address,
+    addressHex,
+    wallet.portfolioPrimaryTokenInfo,
+    partners,
+  ])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
-    queryKey: ['useSwapOrders', network, stakingKey, swapManager.settings.routingPreference],
+    queryKey: [
+      'useSwapOrders',
+      network,
+      stakingKey,
+      swapManager.settings.routingPreference,
+    ],
     queryFn: async () => {
       const res = await swapManager.api.orders()
       if (isRight(res)) return res.value.data
@@ -58,12 +70,19 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   })
 
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
-    queryKey: ['useSwapTokenIds', network, swapManager.settings.routingPreference],
+    queryKey: [
+      'useSwapTokenIds',
+      network,
+      swapManager.settings.routingPreference,
+    ],
     queryFn: async () => {
       const res = await swapManager.api.tokens()
       if (isRight(res)) {
-        const tokenIds = res.value.data.map(({id}) => id).filter((id) => excludedTokens.indexOf(id) === -1)
-        if (!tokenIds.includes(state.tokenOutInput.tokenId ?? undefinedToken)) action({type: 'ResetForm'})
+        const tokenIds = res.value.data
+          .map(({id}) => id)
+          .filter((id) => excludedTokens.indexOf(id) === -1)
+        if (!tokenIds.includes(state.tokenOutInput.tokenId ?? undefinedToken))
+          action({type: 'ResetForm'})
         return tokenIds
       }
       return []
@@ -77,14 +96,15 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   useFocusEffect(refetches)
 
-  const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} = usePortfolioTokenInfos(
-    {
-      wallet,
-      tokenIds,
-      sourceId: 'SwapProvider',
-    },
-    {suspense: true},
-  )
+  const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} =
+    usePortfolioTokenInfos(
+      {
+        wallet,
+        tokenIds,
+        sourceId: 'SwapProvider',
+      },
+      {suspense: true},
+    )
 
   const tokenOutInputRef = React.useRef<TextInput | null>(null)
   const tokenInInputRef = React.useRef<TextInput | null>(null)
@@ -105,7 +125,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       state.tokenOutInput.tokenId,
     ],
     async () => {
-      if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) throw Error()
+      if (
+        state.tokenInInput.tokenId === undefined ||
+        state.tokenOutInput.tokenId === undefined
+      )
+        throw Error()
 
       const res = await swapManager.api.limitOptions({
         tokenIn: state.tokenInInput.tokenId,
@@ -125,17 +149,27 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   React.useEffect(() => {
     const value = limitOptions?.defaultProtocol
-    if (value !== undefined && state.selectedProtocol.isTouched === false && state.selectedProtocol.value !== value) {
+    if (
+      value !== undefined &&
+      state.selectedProtocol.isTouched === false &&
+      state.selectedProtocol.value !== value
+    ) {
       action({type: 'ProtocolChanged', value})
     } else {
-      const current = limitOptions?.options.find((p) => p.protocol === state.selectedProtocol.value)
+      const current = limitOptions?.options.find(
+        (p) => p.protocol === state.selectedProtocol.value,
+      )
       if (state.selectedProtocol.isTouched === true && current === undefined) {
         action({type: 'ProtocolChanged', value})
       }
     }
 
     const wantedPrice = limitOptions?.wantedPrice
-    if (wantedPrice !== undefined && wantedPrice > 0 && state.selectedProtocol.value === limitOptions?.defaultProtocol)
+    if (
+      wantedPrice !== undefined &&
+      wantedPrice > 0 &&
+      state.selectedProtocol.value === limitOptions?.defaultProtocol
+    )
       action({type: 'WantedPriceInputChanged', value: String(wantedPrice)})
   }, [
     limitOptions?.defaultProtocol,
@@ -146,15 +180,24 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   ])
 
   React.useEffect(() => {
-    const tokenAmount = balances.records.get(state.tokenInInput.tokenId ?? undefinedToken)
-    const tokenBalance = Number(tokenAmount?.quantity ?? 0n) / 10 ** (tokenAmount?.info?.decimals ?? 0)
+    const tokenAmount = balances.records.get(
+      state.tokenInInput.tokenId ?? undefinedToken,
+    )
+    const tokenBalance =
+      Number(tokenAmount?.quantity ?? 0n) /
+      10 ** (tokenAmount?.info?.decimals ?? 0)
     const hasEnoughBalance = tokenBalance >= Number(state.tokenInInput.value)
     if (!hasEnoughBalance) {
       action({type: 'TokenInErrorChanged', value: strings.notEnoughBalance})
     } else {
       action({type: 'TokenInErrorChanged', value: null})
     }
-  }, [balances.records, state.tokenInInput.tokenId, state.tokenInInput.value, strings.notEnoughBalance])
+  }, [
+    balances.records,
+    state.tokenInInput.tokenId,
+    state.tokenInInput.value,
+    strings.notEnoughBalance,
+  ])
 
   React.useEffect(() => {
     if (!state.needsNewEstimate) return
@@ -174,7 +217,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         ...(state.lastInputTouched === 'in'
           ? {
               amountIn: Number(state.tokenInInput.value),
-              ...(state.orderType === 'limit' && {wantedPrice: Number(state.wantedPrice)}),
+              ...(state.orderType === 'limit' && {
+                wantedPrice: Number(state.wantedPrice),
+              }),
             }
           : {
               amountOut: Number(state.tokenOutInput.value),
@@ -186,21 +231,31 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         if (isLeft(response)) {
           action({type: SwapAction.EstimateError, value: response.error})
         } else {
-          action({type: SwapAction.EstimateResponse, value: response.value.data})
+          action({
+            type: SwapAction.EstimateResponse,
+            value: response.value.data,
+          })
         }
       })
   }, [state, swapManager.api])
 
   const create = React.useCallback(async () => {
-    if (state.tokenInInput.tokenId === undefined || state.tokenOutInput.tokenId === undefined) return
+    if (
+      state.tokenInInput.tokenId === undefined ||
+      state.tokenOutInput.tokenId === undefined
+    )
+      return
 
     setIsLoading(true)
 
     const tokenInInfo = tokenInfos.get(state.tokenInInput.tokenId)
     const tokenOutInfo = tokenInfos.get(state.tokenOutInput.tokenId)
 
-    const quantityIn = Number(state.tokenInInput.value) * 10 ** (tokenInInfo?.decimals ?? 0)
-    const amountsIn: Balance.Amounts = {[state.tokenInInput.tokenId]: `${quantityIn}`}
+    const quantityIn =
+      Number(state.tokenInInput.value) * 10 ** (tokenInInfo?.decimals ?? 0)
+    const amountsIn: Balance.Amounts = {
+      [state.tokenInInput.tokenId]: `${quantityIn}`,
+    }
     const inputs = await getInputs(amountsIn)
 
     track.swapOrderSelected({
@@ -212,7 +267,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         },
       ],
       to_asset: [
-        {asset_name: tokenOutInfo?.name, asset_ticker: tokenOutInfo?.ticker, policy_id: tokenOutInfo?.id.split('.')[0]},
+        {
+          asset_name: tokenOutInfo?.name,
+          asset_ticker: tokenOutInfo?.ticker,
+          policy_id: tokenOutInfo?.id.split('.')[0],
+        },
       ],
       order_type: state.orderType,
       slippage_tolerance: state.slippageInput.value,
@@ -422,7 +481,9 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.canSwap = true
 
         if (state.lastInputTouched === 'in') {
-          draft.tokenOutInput.value = String(action.value.totalOutputWithoutSlippage ?? 0)
+          draft.tokenOutInput.value = String(
+            action.value.totalOutputWithoutSlippage ?? 0,
+          )
         } else {
           draft.tokenInInput.value = String(action.value.totalInput ?? 0)
         }

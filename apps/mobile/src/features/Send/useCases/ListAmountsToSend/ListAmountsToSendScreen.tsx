@@ -45,7 +45,13 @@ export const ListAmountsToSendScreen = () => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
   }, [navigation])
 
-  const {memo, targets, selectedTargetIndex, tokenSelectedChanged, amountRemoved} = useTransfer()
+  const {
+    memo,
+    targets,
+    selectedTargetIndex,
+    tokenSelectedChanged,
+    amountRemoved,
+  } = useTransfer()
   const {saveMemo} = useSaveMemo({wallet})
   const {amounts} = targets[selectedTargetIndex].entry
   const selectedTokensCounter = Object.keys(amounts).length
@@ -54,14 +60,14 @@ export const ListAmountsToSendScreen = () => {
     meta: {addressMode},
   } = useSelectedWallet()
   const {mutate: createUnsignedTx, isLoading} = useMutation({
-    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
+    mutationFn: (entries: YoroiEntry[]) =>
+      wallet.createUnsignedTx({entries, addressMode}),
     retry: false,
     useErrorBoundary: true,
   })
 
   React.useEffect(() => {
     track.sendSelectAssetUpdated(assetsToSendProperties({amounts}))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amounts, selectedTokensCounter, track])
 
   const onEdit = (tokenId: Portfolio.Token.Id) => {
@@ -79,10 +85,14 @@ export const ListAmountsToSendScreen = () => {
     amountRemoved(tokenId)
   }
 
-  const sendProperties = React.useMemo(() => assetsToSendProperties({amounts}), [amounts])
+  const sendProperties = React.useMemo(
+    () => assetsToSendProperties({amounts}),
+    [amounts],
+  )
 
   const handleOnSuccess = (signedTx?: YoroiSignedTx) => {
-    if (signedTx?.signedTx?.id == null) throw new Error('ListAmountsToSendScreen:: invalid state')
+    if (signedTx?.signedTx?.id == null)
+      throw new Error('ListAmountsToSendScreen:: invalid state')
     track.sendSummarySubmitted(sendProperties)
 
     if (memo.length > 0) {
@@ -104,7 +114,10 @@ export const ListAmountsToSendScreen = () => {
     createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)], {
       onSuccess: (yoroiUnsignedTx) => {
         unsignedTxChanged(yoroiUnsignedTx)
-        navigateToTxReview({onSuccess: (args) => handleOnSuccess(args?.signedTx), onError})
+        navigateToTxReview({
+          onSuccess: (args) => handleOnSuccess(args?.signedTx),
+          onError,
+        })
       },
     })
   }
@@ -119,7 +132,11 @@ export const ListAmountsToSendScreen = () => {
         data={Object.values(amounts)}
         renderItem={({item: amount}) => (
           <Boundary>
-            <ActionableAmount amount={amount} onRemove={onRemove} onEdit={onEdit} />
+            <ActionableAmount
+              amount={amount}
+              onRemove={onRemove}
+              onEdit={onEdit}
+            />
           </Boundary>
         )}
         bounces={false}
@@ -152,7 +169,11 @@ type ActionableAmountProps = {
   onEdit(tokenId: Portfolio.Token.Id): void
   onRemove(tokenId: Portfolio.Token.Id): void
 }
-const ActionableAmount = ({amount, onRemove, onEdit}: ActionableAmountProps) => {
+const ActionableAmount = ({
+  amount,
+  onRemove,
+  onEdit,
+}: ActionableAmountProps) => {
   const {styles} = useStyles()
 
   const handleRemove = () => onRemove(amount.info.id)
@@ -173,8 +194,12 @@ const ActionableAmount = ({amount, onRemove, onEdit}: ActionableAmountProps) => 
   )
 }
 
-const Left = ({style, ...props}: ViewProps) => <View style={[style, {flex: 1}]} {...props} />
-const Right = ({style, ...props}: ViewProps) => <View style={[style, {paddingLeft: 16}]} {...props} />
+const Left = ({style, ...props}: ViewProps) => (
+  <View style={[style, {flex: 1}]} {...props} />
+)
+const Right = ({style, ...props}: ViewProps) => (
+  <View style={[style, {paddingLeft: 16}]} {...props} />
+)
 const Actions = ({style, ...props}: ViewProps) => {
   const {styles} = useStyles()
   return <View style={[style, styles.actions]} {...props} />
@@ -191,7 +216,11 @@ type EditAmountButtonProps = {
 }
 const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
   return (
-    <TouchableOpacity style={{paddingVertical: 16}} onPress={onPress} testID="editAmountButton">
+    <TouchableOpacity
+      style={{paddingVertical: 16}}
+      onPress={onPress}
+      testID="editAmountButton"
+    >
       {children}
     </TouchableOpacity>
   )

@@ -1,6 +1,5 @@
 /* tslint:disable */
-/* eslint-disable eslint-comments/no-unlimited-disable */
-/* eslint-disable */
+
 // @ts-nocheck
 /**
  * Ampli - A strong typed wrapper for your Analytics

@@ -49,7 +49,10 @@ export const BrowserProvider = ({
 
   const storageId = wallet?.id != null ? `${wallet.id}-${network}` : null
 
-  const [browserState, dispatch] = React.useReducer(browserReducer, {...defaultState, ...initialState})
+  const [browserState, dispatch] = React.useReducer(browserReducer, {
+    ...defaultState,
+    ...initialState,
+  })
 
   React.useEffect(() => {
     if (storageId === null) return
@@ -63,7 +66,10 @@ export const BrowserProvider = ({
     if (state) {
       dispatch({type: BrowserActionType.SetState, state})
     } else {
-      dispatch({type: BrowserActionType.SetState, state: {...defaultState, ...initialState}})
+      dispatch({
+        type: BrowserActionType.SetState,
+        state: {...defaultState, ...initialState},
+      })
     }
   }, [storageId, initialState])
 
@@ -75,7 +81,10 @@ export const BrowserProvider = ({
       dispatch({type: BrowserActionType.SetTabActive, index})
     },
     updateTab: (tabIndex, tabInfo) => {
-      dispatch({type: BrowserActionType.UpdateTab, payload: {tabInfo, tabIndex}})
+      dispatch({
+        type: BrowserActionType.UpdateTab,
+        payload: {tabInfo, tabIndex},
+      })
     },
     removeTab: (index) => {
       dispatch({type: BrowserActionType.RemoveTab, index})
@@ -90,11 +99,16 @@ export const BrowserProvider = ({
     [actions, browserState],
   )
 
-  return <BrowserContext.Provider value={context}>{children}</BrowserContext.Provider>
+  return (
+    <BrowserContext.Provider value={context}>
+      {children}
+    </BrowserContext.Provider>
+  )
 }
 
 export const useBrowser = () =>
-  React.useContext(BrowserContext) ?? invalid('useBrowser: needs to be wrapped in a BrowserProvider')
+  React.useContext(BrowserContext) ??
+  invalid('useBrowser: needs to be wrapped in a BrowserProvider')
 
 enum BrowserActionType {
   AddTab = 'addTab',
@@ -142,7 +156,10 @@ type BrowserActions = Readonly<{
   openTabs: (isOpen: boolean) => void
 }>
 
-const browserReducer = (state: BrowserState, action: BrowserContextAction): BrowserState => {
+const browserReducer = (
+  state: BrowserState,
+  action: BrowserContextAction,
+): BrowserState => {
   return produce(state, (draft) => {
     switch (action.type) {
       case BrowserActionType.AddTab:

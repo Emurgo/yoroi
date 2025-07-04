@@ -4,7 +4,9 @@ import {logger} from '../../kernel/logger/logger'
 
 export const withUSB = (meta: Wallet.Meta, deviceObj: HW.DeviceObj) => {
   if (!meta.hwDeviceInfo) {
-    logger.error(`HW device info not found in meta, reached invalid state`, {id: meta.name})
+    logger.error(`HW device info not found in meta, reached invalid state`, {
+      id: meta.name,
+    })
     throw new App.Errors.InvalidState('HW device info not found')
   }
 
@@ -19,7 +21,9 @@ export const withUSB = (meta: Wallet.Meta, deviceObj: HW.DeviceObj) => {
 
 export const withBLE = (meta: Wallet.Meta, deviceId: string) => {
   if (!meta.hwDeviceInfo) {
-    logger.error(`HW device info not found in meta, reached invalid state`, {id: meta.name})
+    logger.error(`HW device info not found in meta, reached invalid state`, {
+      id: meta.name,
+    })
     throw new App.Errors.InvalidState('HW device info not found')
   }
 

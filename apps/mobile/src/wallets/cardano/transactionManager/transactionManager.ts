@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {isArray, parseSafe, PromiseAllLimited} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import {fromPairs, mapValues, max} from 'lodash'
@@ -30,9 +28,13 @@ type TransactionManagerState = {
 
 export class TransactionManager {
   #state: TransactionManagerState
-  #subscriptions: Array<(transactions: TransactionManagerState['transactions']) => void> = []
+  #subscriptions: Array<
+    (transactions: TransactionManagerState['transactions']) => void
+  > = []
   #perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
-  #perAddressCertificatesSelector = defaultMemoize(perAddressCertificatesSelector)
+  #perAddressCertificatesSelector = defaultMemoize(
+    perAddressCertificatesSelector,
+  )
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
   #storage: TxManagerStorage
 
@@ -55,7 +57,13 @@ export class TransactionManager {
     })
   }
 
-  private constructor({storage, transactions}: {storage: TxManagerStorage; transactions: Record<string, Transaction>}) {
+  private constructor({
+    storage,
+    transactions,
+  }: {
+    storage: TxManagerStorage
+    transactions: Record<string, Transaction>
+  }) {
     this.#storage = storage
     this.#state = {
       perAddressSyncMetadata: {},
@@ -244,7 +252,11 @@ export async function syncTxs({
   }
 }
 
-function txHistoryPayloadFactory(addresses: Array<string>, metadata: SyncMetadata, currentBestBlockHash: string) {
+function txHistoryPayloadFactory(
+  addresses: Array<string>,
+  metadata: SyncMetadata,
+  currentBestBlockHash: string,
+) {
   const request: TxHistoryRequest = {
     addresses,
     untilBlock: currentBestBlockHash,
@@ -263,7 +275,9 @@ function txHistoryPayloadFactory(addresses: Array<string>, metadata: SyncMetadat
   return request
 }
 
-function getLatestYoroiTransaction(txs: Array<Transaction>): undefined | TimeForTx {
+function getLatestYoroiTransaction(
+  txs: Array<Transaction>,
+): undefined | TimeForTx {
   const blockInfo: Array<TimeForTx> = []
 
   for (const tx of txs) {
@@ -300,11 +314,17 @@ function getLatestYoroiTransaction(txs: Array<Transaction>): undefined | TimeFor
   return best
 }
 
-function getLatestApiTransaction(txs: Array<RawTransaction>): undefined | TimeForTx {
+function getLatestApiTransaction(
+  txs: Array<RawTransaction>,
+): undefined | TimeForTx {
   const blockInfo: Array<TimeForTx> = []
 
   for (const tx of txs) {
-    if (tx.block_hash != null && tx.tx_ordinal != null && tx.block_num != null) {
+    if (
+      tx.block_hash != null &&
+      tx.tx_ordinal != null &&
+      tx.block_num != null
+    ) {
       blockInfo.push({
         blockHash: tx.block_hash,
         txHash: tx.hash,
@@ -421,9 +441,14 @@ export type TimestampedCertMeta = {
   epoch: number
   certificates: Array<RemoteCertificateMeta>
 }
-type PerAddressCertificatesDict = Record<string, Record<string, TimestampedCertMeta>>
+type PerAddressCertificatesDict = Record<
+  string,
+  Record<string, TimestampedCertMeta>
+>
 
-const perAddressCertificatesSelector = (state: TransactionManagerState): PerAddressCertificatesDict => {
+const perAddressCertificatesSelector = (
+  state: TransactionManagerState,
+): PerAddressCertificatesDict => {
   const transactions = state.transactions
   const addressToPerTxCerts: PerAddressCertificatesDict = {}
 
@@ -434,7 +459,8 @@ const perAddressCertificatesSelector = (state: TransactionManagerState): PerAddr
     epoch: number | null | undefined,
     addr: string,
   ) => {
-    const current: Record<string, TimestampedCertMeta> = addressToPerTxCerts[addr] || {}
+    const current: Record<string, TimestampedCertMeta> =
+      addressToPerTxCerts[addr] || {}
 
     if (current[txId] == null && submittedAt != null && epoch != null) {
       current[txId] = {
@@ -470,7 +496,9 @@ const confirmationCountsSelector = (state: TransactionManagerState) => {
     }
 
     const getBlockNum = ({address}: {address: string}) =>
-      perAddressSyncMetadata[address] ? perAddressSyncMetadata[address].bestBlockNum : 0
+      perAddressSyncMetadata[address]
+        ? perAddressSyncMetadata[address].bestBlockNum
+        : 0
 
     const bestBlockNum: any = max([
       state.bestBlockNum || 0,
@@ -494,7 +522,9 @@ type TxManagerStorage = {
   clear: () => Promise<void>
 }
 
-export const makeTxManagerStorage = (storage: App.Storage): TxManagerStorage => ({
+export const makeTxManagerStorage = (
+  storage: App.Storage,
+): TxManagerStorage => ({
   loadTxs: async () => {
     const txids = await storage.getItem('txids', parseTxids)
     if (!txids) return {}
@@ -502,14 +532,17 @@ export const makeTxManagerStorage = (storage: App.Storage): TxManagerStorage => 
 
     const tuples = await storage.multiGet(txids, parseTx)
 
-    return tuples.reduce((result: TransactionManagerState['transactions'], [txid, tx]) => {
-      if (!tx) {
-        logger.warn('makeTxManagerStorage: corrupted transaction', {txid})
-        return result
-      }
+    return tuples.reduce(
+      (result: TransactionManagerState['transactions'], [txid, tx]) => {
+        if (!tx) {
+          logger.warn('makeTxManagerStorage: corrupted transaction', {txid})
+          return result
+        }
 
-      return {...result, [tx.id]: tx}
-    }, {})
+        return {...result, [tx.id]: tx}
+      },
+      {},
+    )
   },
 
   saveTxs: async (txs: TransactionManagerState['transactions']) => {
@@ -532,7 +565,8 @@ const parseTxids = (data: string | null | undefined) => {
   const txids = parseSafe(data)
 
   const isTxids = (data: unknown): data is Array<string> =>
-    Array.isArray(data) && data.every((item: unknown) => typeof item === 'string')
+    Array.isArray(data) &&
+    data.every((item: unknown) => typeof item === 'string')
 
   return isTxids(txids) ? txids : []
 }

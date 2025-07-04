@@ -77,14 +77,16 @@ export const toAssetNameHex = (tokenIdentifier: string) => {
   return tokenSubject.slice(56, 56 + maxAssetNameLengthInBytes * 2)
 }
 
-export const toTokenSubject = (tokenIdentifier: string) => tokenIdentifier.replace('.', '')
+export const toTokenSubject = (tokenIdentifier: string) =>
+  tokenIdentifier.replace('.', '')
 
 export const toTokenId = (tokenIdentifier: string) => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
 }
 
-export const utf8ToHex = (text: string) => Buffer.from(text, 'utf-8').toString('hex')
+export const utf8ToHex = (text: string) =>
+  Buffer.from(text, 'utf-8').toString('hex')
 
 export const toTokenInfo = (token: LegacyToken): Balance.TokenInfo => {
   const policyId = toPolicyId(token.identifier)
@@ -94,7 +96,10 @@ export const toTokenInfo = (token: LegacyToken): Balance.TokenInfo => {
     kind: 'ft',
     id: toTokenId(token.identifier),
     name: assetName,
-    fingerprint: toTokenFingerprint({policyId: token.metadata.policyId, assetNameHex: token.metadata.assetName}),
+    fingerprint: toTokenFingerprint({
+      policyId: token.metadata.policyId,
+      assetNameHex: token.metadata.assetName,
+    }),
     description: token.metadata.longName ?? undefined,
     ticker: token.metadata.ticker ?? assetName,
     icon: undefined,
@@ -122,6 +127,9 @@ export const toTokenFingerprint = ({
   policyId: string
   assetNameHex: string | undefined
 }) => {
-  const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
+  const assetFingerprint = AssetFingerprint.fromParts(
+    Buffer.from(policyId, 'hex'),
+    Buffer.from(assetNameHex, 'hex'),
+  )
   return assetFingerprint.fingerprint()
 }

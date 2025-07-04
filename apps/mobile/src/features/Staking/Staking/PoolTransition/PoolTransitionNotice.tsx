@@ -24,7 +24,9 @@ export const PoolTransitionNotice = () => {
       </Row>
 
       <Text style={styles.text}>
-        <Text>{isActive ? strings.poolWillStopRewards : strings.poolNoRewards}</Text>
+        <Text>
+          {isActive ? strings.poolWillStopRewards : strings.poolNoRewards}
+        </Text>
 
         {isActive && (
           <Text style={styles.bold}>
@@ -36,7 +38,11 @@ export const PoolTransitionNotice = () => {
       </Text>
 
       <Actions>
-        <Button style={styles.noticeButton} onPress={navigateToUpdate} title={strings.update} />
+        <Button
+          style={styles.noticeButton}
+          onPress={navigateToUpdate}
+          title={strings.update}
+        />
 
         <Space fill />
       </Actions>

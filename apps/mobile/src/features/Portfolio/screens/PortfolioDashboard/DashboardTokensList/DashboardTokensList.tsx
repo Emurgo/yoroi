@@ -1,7 +1,14 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -39,11 +46,21 @@ export const DashboardTokensList = () => {
     if (isJustADA) {
       return (
         <View style={styles.justAdaContainer}>
-          <View style={[styles.tokenItemContainer, {width: cardItemWidthForJustAda}]}>
+          <View
+            style={[
+              styles.tokenItemContainer,
+              {width: cardItemWidthForJustAda},
+            ]}
+          >
             <DashboardTokenItem tokenInfo={tokensList[0]} />
           </View>
 
-          <View style={[styles.tokenItemContainer, {width: cardItemWidthForJustAda}]}>
+          <View
+            style={[
+              styles.tokenItemContainer,
+              {width: cardItemWidthForJustAda},
+            ]}
+          >
             <TradeTokensBanner />
           </View>
         </View>
@@ -69,7 +86,11 @@ export const DashboardTokensList = () => {
 
   return (
     <View style={styles.root}>
-      <Heading countTokens={tokensList.length} onPress={handleDirectTokensList} isFirstUser={isFirstUser} />
+      <Heading
+        countTokens={tokensList.length}
+        onPress={handleDirectTokensList}
+        isFirstUser={isFirstUser}
+      />
 
       {renderTokensList()}
     </View>
@@ -86,8 +107,13 @@ const Heading = ({countTokens, onPress, isFirstUser}: HeadingProps) => {
   const strings = useStrings()
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.container, styles.actionsContainer]}>
-      <Text style={styles.title}>{strings.tokens(isFirstUser ? 0 : countTokens)}</Text>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.container, styles.actionsContainer]}
+    >
+      <Text style={styles.title}>
+        {strings.tokens(isFirstUser ? 0 : countTokens)}
+      </Text>
 
       <Icon.ArrowRight color={colors.gray_800} size={24} />
     </TouchableOpacity>
@@ -103,8 +129,10 @@ const useStyles = () => {
   const GAP_ITEMS = 8
   const GAP_FOR_JUST_ADA = 16
   const initCardWidth = SCREEN_WIDTH - PADDING_LEFT_SIDE
-  const cardItemWidth = (initCardWidth - PADDING_RIGHT_SIDE_FOR_ITEMS - GAP_ITEMS) / 2
-  const cardItemWidthForJustAda = (initCardWidth - PADDING_RIGHT_SIDE_FOR_JUST_ADA - GAP_FOR_JUST_ADA) / 2
+  const cardItemWidth =
+    (initCardWidth - PADDING_RIGHT_SIDE_FOR_ITEMS - GAP_ITEMS) / 2
+  const cardItemWidthForJustAda =
+    (initCardWidth - PADDING_RIGHT_SIDE_FOR_JUST_ADA - GAP_FOR_JUST_ADA) / 2
 
   const styles = StyleSheet.create({
     container: {

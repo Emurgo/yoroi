@@ -22,18 +22,32 @@ export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
   const {track} = useMetrics()
 
   const handleSelectTheme = (theme: SupportedThemes) => {
-    track.themeSelected({theme: theme === 'default-light' ? 'light' : theme === 'default-dark' ? 'dark' : 'auto'})
+    track.themeSelected({
+      theme:
+        theme === 'default-light'
+          ? 'light'
+          : theme === 'default-dark'
+            ? 'dark'
+            : 'auto',
+    })
     setLocalTheme(theme)
     selectTheme(theme)
   }
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={() => handleSelectTheme(title)}>
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={() => handleSelectTheme(title)}
+    >
       <Row>
         <Description>
           <Title>{strings.translateThemeName(title)}</Title>
         </Description>
 
-        <Selected>{themeStorage.read() === title && <Icon.Check size={24} color={colors.checkIcon} />}</Selected>
+        <Selected>
+          {themeStorage.read() === title && (
+            <Icon.Check size={24} color={colors.checkIcon} />
+          )}
+        </Selected>
       </Row>
     </TouchableOpacity>
   )
@@ -89,6 +103,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    translateThemeName: (theme: SupportedThemes) => intl.formatMessage(themeNames[theme]),
+    translateThemeName: (theme: SupportedThemes) =>
+      intl.formatMessage(themeNames[theme]),
   }
 }

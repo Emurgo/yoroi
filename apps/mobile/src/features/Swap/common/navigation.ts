@@ -9,8 +9,10 @@ export const useNavigateTo = () => {
 
   return useRef({
     selectProtocol: () => swapNavigation.navigate('swap-select-protocol'),
-    selectTokenIn: () => swapNavigation.navigate('swap-select-token', {direction: 'in'}),
-    selectTokenOut: () => swapNavigation.navigate('swap-select-token', {direction: 'out'}),
+    selectTokenIn: () =>
+      swapNavigation.navigate('swap-select-token', {direction: 'in'}),
+    selectTokenOut: () =>
+      swapNavigation.navigate('swap-select-token', {direction: 'out'}),
     startSwap: () => swapNavigation.navigate('swap-main'),
     orders: () => swapNavigation.navigate('swap-orders'),
     swapSettings: () => swapNavigation.navigate('swap-settings'),

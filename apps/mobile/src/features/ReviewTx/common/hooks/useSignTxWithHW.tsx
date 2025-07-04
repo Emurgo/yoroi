@@ -27,7 +27,12 @@ export const useSignTxWithHW = () => {
           onConfirm: async ({transportType, deviceInfo}) => {
             try {
               const cip30 = cip30LedgerExtensionMaker(wallet, meta)
-              const tx = await cip30.signTx(options.cbor, options.partial ?? false, deviceInfo, transportType === 'USB')
+              const tx = await cip30.signTx(
+                options.cbor,
+                options.partial ?? false,
+                deviceInfo,
+                transportType === 'USB',
+              )
               resolve(tx)
               if (options.onSuccess) options.onSuccess(tx)
               closeModal()
