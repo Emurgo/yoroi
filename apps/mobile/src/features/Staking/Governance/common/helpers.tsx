@@ -21,30 +21,43 @@ import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
 
 export const useIsParticipatingInGovernance = () => {
-  const status = useGovernanceStatus({suspense: true, useErrorBoundary: false, retry: false})
+  const status = useGovernanceStatus({
+    suspense: true,
+    useErrorBoundary: false,
+    retry: false,
+  })
   return status !== null
 }
 
-export const useGovernanceStatus = (options: UseQueryOptions<StakingKeyState, Error> = {}) => {
+export const useGovernanceStatus = (
+  options: UseQueryOptions<StakingKeyState, Error> = {},
+) => {
   const {wallet} = useSelectedWallet()
   const stakingKeyHash = useStakingKey(wallet)
-  const {data: stakingStatus, refetch} = useStakingKeyState(stakingKeyHash, options)
+  const {data: stakingStatus, refetch} = useStakingKeyState(
+    stakingKeyHash,
+    options,
+  )
 
   useWalletEvent(wallet, 'utxos', refetch)
 
   return React.useMemo(() => {
-    return stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
+    return stakingStatus
+      ? mapStakingKeyStateToGovernanceAction(stakingStatus)
+      : null
   }, [stakingStatus])
 }
 
-export const mapStakingKeyStateToGovernanceAction = (state: StakingKeyState): GovernanceVote | null => {
+export const mapStakingKeyStateToGovernanceAction = (
+  state: StakingKeyState,
+): GovernanceVote | null => {
   if (!state.drepDelegation) return null
   const vote = state.drepDelegation
   return vote.action === 'abstain'
     ? {kind: 'abstain'}
     : vote.action === 'no-confidence'
-    ? {kind: 'no-confidence'}
-    : {kind: 'delegate', hash: vote.hash, type: vote.type}
+      ? {kind: 'no-confidence'}
+      : {kind: 'delegate', hash: vote.hash, type: vote.type}
 }
 
 export const useGovernanceManagerMaker = () => {
@@ -56,7 +69,9 @@ export const useGovernanceManagerMaker = () => {
   } = useSelectedWallet()
 
   const storage = useAsyncStorage()
-  const governanceStorage = storage.join(`wallet/${walletId}/staking-governance/`)
+  const governanceStorage = storage.join(
+    `wallet/${walletId}/staking-governance/`,
+  )
 
   return React.useMemo(
     () =>
@@ -75,7 +90,9 @@ export const useGovernanceActions = () => {
   const {wallet} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const {unsignedTxChanged} = useReviewTx()
-  const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)
+  const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(
+    wallet.id,
+  )
   const {navigateToTxReview} = useWalletNavigation()
   const strings = useStrings()
 
@@ -94,14 +111,26 @@ export const useGovernanceActions = () => {
 
     navigateToTxReview({
       onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null) throw new Error('useGovernanceActions:: invalid state')
-        updateLatestGovernanceAction({kind: 'delegate-to-drep', hash, type, txID: args.signedTx.signedTx.id})
+        if (args?.signedTx?.signedTx?.id == null)
+          throw new Error('useGovernanceActions:: invalid state')
+        updateLatestGovernanceAction({
+          kind: 'delegate-to-drep',
+          hash,
+          type,
+          txID: args.signedTx.signedTx.id,
+        })
         navigateTo.submittedTx()
       },
       onError: navigateTo.failedTx,
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
       ...(CIP105
-        ? {operationsNotice: <InfoBanner content={strings.delegateVotingToDRepDeprecatedFormatNotice} />}
+        ? {
+            operationsNotice: (
+              <InfoBanner
+                content={strings.delegateVotingToDRepDeprecatedFormatNotice}
+              />
+            ),
+          }
         : {}),
     })
   }
@@ -111,8 +140,13 @@ export const useGovernanceActions = () => {
 
     navigateToTxReview({
       onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null) throw new Error('useGovernanceActions:: invalid state')
-        updateLatestGovernanceAction({kind: 'vote', vote: 'abstain', txID: args?.signedTx.signedTx.id})
+        if (args?.signedTx?.signedTx?.id == null)
+          throw new Error('useGovernanceActions:: invalid state')
+        updateLatestGovernanceAction({
+          kind: 'vote',
+          vote: 'abstain',
+          txID: args?.signedTx.signedTx.id,
+        })
         navigateTo.submittedTx()
       },
       onError: navigateTo.failedTx,
@@ -120,13 +154,22 @@ export const useGovernanceActions = () => {
     })
   }
 
-  const handleNoConfidenceAction = ({unsignedTx}: {unsignedTx: YoroiUnsignedTx}) => {
+  const handleNoConfidenceAction = ({
+    unsignedTx,
+  }: {
+    unsignedTx: YoroiUnsignedTx
+  }) => {
     unsignedTxChanged(unsignedTx)
 
     navigateToTxReview({
       onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null) throw new Error('useGovernanceActions:: invalid state')
-        updateLatestGovernanceAction({kind: 'vote', vote: 'no-confidence', txID: args?.signedTx.signedTx.id})
+        if (args?.signedTx?.signedTx?.id == null)
+          throw new Error('useGovernanceActions:: invalid state')
+        updateLatestGovernanceAction({
+          kind: 'vote',
+          vote: 'no-confidence',
+          txID: args?.signedTx.signedTx.id,
+        })
         navigateTo.submittedTx()
       },
       onError: navigateTo.failedTx,
@@ -134,5 +177,9 @@ export const useGovernanceActions = () => {
     })
   }
 
-  return {handleDelegateAction, handleAbstainAction, handleNoConfidenceAction} as const
+  return {
+    handleDelegateAction,
+    handleAbstainAction,
+    handleNoConfidenceAction,
+  } as const
 }

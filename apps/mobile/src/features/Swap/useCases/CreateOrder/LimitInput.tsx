@@ -15,14 +15,22 @@ export const LimitInput = () => {
   const {isDark} = useTheme()
 
   const swapForm = useSwap()
-  const tokenInInfo = swapForm.tokenInfos.get(swapForm.tokenInInput.tokenId ?? undefinedToken)
+  const tokenInInfo = swapForm.tokenInfos.get(
+    swapForm.tokenInInput.tokenId ?? undefinedToken,
+  )
   const disabled = swapForm.orderType === 'market'
 
   const tokenInTicker = tokenInInfo?.ticker ?? tokenInInfo?.name ?? '-'
 
   return (
     <>
-      <View style={[styles.container, disabled && styles.disabled, isFocused && styles.active]}>
+      <View
+        style={[
+          styles.container,
+          disabled && styles.disabled,
+          isFocused && styles.active,
+        ]}
+      >
         <Text style={styles.label}>{strings.limitPrice}</Text>
 
         <View style={styles.content}>
@@ -32,7 +40,9 @@ export const LimitInput = () => {
             value={swapForm.wantedPrice}
             placeholder="0"
             placeholderTextColor={color.gray_600}
-            onChangeText={(value) => swapForm.action({type: 'WantedPriceInputChanged', value})}
+            onChangeText={(value) =>
+              swapForm.action({type: 'WantedPriceInputChanged', value})
+            }
             allowFontScaling
             selectionColor={color.input_selected}
             style={styles.amountInput}

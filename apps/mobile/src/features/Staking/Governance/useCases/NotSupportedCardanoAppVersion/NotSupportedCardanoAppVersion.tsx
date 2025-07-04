@@ -35,13 +35,18 @@ export const NotSupportedCardanoAppVersion = () => {
       </Container>
 
       <Container>
-        <Text style={styles.description}>{strings.notSupportedVersionDescription}</Text>
+        <Text style={styles.description}>
+          {strings.notSupportedVersionDescription}
+        </Text>
       </Container>
 
       <Spacer fill />
 
       <Actions>
-        <Button title={strings.notSupportedVersionButton} onPress={handleOnPress} />
+        <Button
+          title={strings.notSupportedVersionButton}
+          onPress={handleOnPress}
+        />
       </Actions>
     </SafeArea>
   )

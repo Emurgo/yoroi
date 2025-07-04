@@ -588,7 +588,6 @@ export class WalletManager {
     isForced?: boolean
     network?: Chain.SupportedNetworks
   }): Promise<YoroiWallet> {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (this.#wallets.has(id) && !isForced) return this.#wallets.get(id)!
 
     const walletFactory = getWalletFactory({network, implementation})

@@ -17,7 +17,11 @@ const useTos = ({languageCode}: {languageCode: LanguageCode}) => {
   return query.data
 }
 
-export const TermsOfService = ({languageCode}: {languageCode: LanguageCode}) => {
+export const TermsOfService = ({
+  languageCode,
+}: {
+  languageCode: LanguageCode
+}) => {
   const tos = useTos({languageCode})
   const styles = useStyles()
 

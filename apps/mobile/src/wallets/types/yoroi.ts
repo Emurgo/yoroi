@@ -50,4 +50,9 @@ export type YoroiMetadata = {
   [label: string]: string
 }
 
-export type YoroiNftModerationStatus = 'consent' | 'blocked' | 'approved' | 'pending' | 'manual_review'
+export type YoroiNftModerationStatus =
+  | 'consent'
+  | 'blocked'
+  | 'approved'
+  | 'pending'
+  | 'manual_review'

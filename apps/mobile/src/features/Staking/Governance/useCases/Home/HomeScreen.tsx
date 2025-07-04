@@ -29,7 +29,10 @@ import {TransactionInfo} from '../../../../../wallets/types/other'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
 import {formatDrepHashToCIP129Format} from '../../common/drep'
-import {mapStakingKeyStateToGovernanceAction, useGovernanceActions} from '../../common/helpers'
+import {
+  mapStakingKeyStateToGovernanceAction,
+  useGovernanceActions,
+} from '../../common/helpers'
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
@@ -41,27 +44,41 @@ export const HomeScreen = () => {
   const {wallet} = useSelectedWallet()
   const txInfos = useTransactionInfos({wallet})
   const stakingKeyHash = useStakingKey(wallet)
-  const [isPendingRefetchAfterTxConfirmation, setIsPendingRefetchAfterTxConfirmation] = React.useState(false)
+  const [
+    isPendingRefetchAfterTxConfirmation,
+    setIsPendingRefetchAfterTxConfirmation,
+  ] = React.useState(false)
 
-  const {data: stakingStatus, refetch: refetchStakingKeyState} = useStakingKeyState(stakingKeyHash, {
-    refetchOnMount: true,
-    suspense: true,
-  })
+  const {data: stakingStatus, refetch: refetchStakingKeyState} =
+    useStakingKeyState(stakingKeyHash, {
+      refetchOnMount: true,
+      suspense: true,
+    })
 
   useWalletEvent(wallet, 'utxos', refetchStakingKeyState)
 
-  const {data: lastSubmittedTx, isLoading} = useLatestGovernanceAction(wallet.id)
+  const {data: lastSubmittedTx, isLoading} = useLatestGovernanceAction(
+    wallet.id,
+  )
 
   const submittedTxId = lastSubmittedTx?.txID
 
-  const isTxPending = isString(submittedTxId) && !isTxConfirmed(submittedTxId, txInfos)
+  const isTxPending =
+    isString(submittedTxId) && !isTxConfirmed(submittedTxId, txInfos)
 
   React.useEffect(() => {
     if (!isTxPending && submittedTxId !== undefined) {
       setIsPendingRefetchAfterTxConfirmation(true)
-      refetchStakingKeyState().finally(() => setIsPendingRefetchAfterTxConfirmation(false))
+      refetchStakingKeyState().finally(() =>
+        setIsPendingRefetchAfterTxConfirmation(false),
+      )
     }
-  }, [isTxPending, submittedTxId, refetchStakingKeyState, setIsPendingRefetchAfterTxConfirmation])
+  }, [
+    isTxPending,
+    submittedTxId,
+    refetchStakingKeyState,
+    setIsPendingRefetchAfterTxConfirmation,
+  ])
 
   const txPendingDisplayed = isTxPending || isPendingRefetchAfterTxConfirmation
 
@@ -69,7 +86,11 @@ export const HomeScreen = () => {
 
   if (txPendingDisplayed && isNonNullable(lastSubmittedTx)) {
     if (lastSubmittedTx.kind === 'delegate-to-drep') {
-      const action: GovernanceVote = {kind: 'delegate', hash: lastSubmittedTx.hash, type: lastSubmittedTx.type}
+      const action: GovernanceVote = {
+        kind: 'delegate',
+        hash: lastSubmittedTx.hash,
+        type: lastSubmittedTx.type,
+      }
       return <ParticipatingInGovernanceVariant action={action} isTxPending />
     }
     if (lastSubmittedTx.kind === 'vote' && lastSubmittedTx.vote === 'abstain') {
@@ -77,13 +98,18 @@ export const HomeScreen = () => {
       return <ParticipatingInGovernanceVariant action={action} isTxPending />
     }
 
-    if (lastSubmittedTx.kind === 'vote' && lastSubmittedTx.vote === 'no-confidence') {
+    if (
+      lastSubmittedTx.kind === 'vote' &&
+      lastSubmittedTx.vote === 'no-confidence'
+    ) {
       const action: GovernanceVote = {kind: 'no-confidence'}
       return <ParticipatingInGovernanceVariant action={action} isTxPending />
     }
   }
 
-  const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
+  const action = stakingStatus
+    ? mapStakingKeyStateToGovernanceAction(stakingStatus)
+    : null
   if (action !== null) {
     return <ParticipatingInGovernanceVariant action={action} />
   }
@@ -101,23 +127,34 @@ const ParticipatingInGovernanceVariant = ({
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
 
-  const displayedHash = action.kind === 'delegate' ? formatDrepHashToCIP129Format(action.hash, action.type) : null
-  const isDelegatingToYoroiDrep = action.kind === 'delegate' && action.hash === GOVERNANCE_YOROI_DREP_ID_HEX
-  const isDelegatingToDrep = action.kind === 'delegate' && action.hash !== GOVERNANCE_YOROI_DREP_ID_HEX
+  const displayedHash =
+    action.kind === 'delegate'
+      ? formatDrepHashToCIP129Format(action.hash, action.type)
+      : null
+  const isDelegatingToYoroiDrep =
+    action.kind === 'delegate' && action.hash === GOVERNANCE_YOROI_DREP_ID_HEX
+  const isDelegatingToDrep =
+    action.kind === 'delegate' && action.hash !== GOVERNANCE_YOROI_DREP_ID_HEX
 
   const actionsTitles = (action: GovernanceVote) =>
     isDelegatingToYoroiDrep
       ? strings.delegateToAYoroiDrep
       : isDelegatingToDrep
-      ? strings.delegateToADRep
-      : action.kind === 'abstain'
-      ? strings.actionAbstainTitle
-      : strings.actionNoConfidenceTitle
+        ? strings.delegateToADRep
+        : action.kind === 'abstain'
+          ? strings.actionAbstainTitle
+          : strings.actionNoConfidenceTitle
   const selectedActionTitle = actionsTitles(action)
 
   const introduction = isTxPending
-    ? strings.actionYouHaveSelectedTxPending(selectedActionTitle, formattingOptions(styles))
-    : strings.actionYouHaveSelected(selectedActionTitle, formattingOptions(styles))
+    ? strings.actionYouHaveSelectedTxPending(
+        selectedActionTitle,
+        formattingOptions(styles),
+      )
+    : strings.actionYouHaveSelected(
+        selectedActionTitle,
+        formattingOptions(styles),
+      )
 
   const navigateToChangeVote = () => {
     navigateTo.changeVote()
@@ -188,13 +225,14 @@ const ParticipatingInGovernanceVariant = ({
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formattingOptions = (styles: any) => {
   return {
     b: (text: ReactNode) => {
       return <Text style={[styles.description, styles.bold]}>{text}</Text>
     },
-    textComponent: (text: ReactNode) => <Text style={styles.description}>{text}</Text>,
+    textComponent: (text: ReactNode) => (
+      <Text style={styles.description}>{text}</Text>
+    ),
   }
 }
 
@@ -208,7 +246,11 @@ const NeverParticipatedInGovernanceVariant = () => {
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
   const {track} = useMetrics()
   const [pendingVote, setPendingVote] = React.useState<
-    'abstain' | 'no-confidence' | 'delegate-to-yoroi' | 'delegate-not-yoroi' | null
+    | 'abstain'
+    | 'no-confidence'
+    | 'delegate-to-yoroi'
+    | 'delegate-not-yoroi'
+    | null
   >(null)
   const governanceActions = useGovernanceActions()
 
@@ -222,12 +264,17 @@ const NeverParticipatedInGovernanceVariant = () => {
   useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
   const needsToRegisterStakingKey = !hasStakingKeyRegistered
 
-  const {createCertificate: createDelegationCertificate, isLoading: isCreatingDelegationCertificate} =
-    useDelegationCertificate({
-      useErrorBoundary: true,
-    })
+  const {
+    createCertificate: createDelegationCertificate,
+    isLoading: isCreatingDelegationCertificate,
+  } = useDelegationCertificate({
+    useErrorBoundary: true,
+  })
 
-  const {createCertificate: createVotingCertificate, isLoading: isCreatingVotingCertificate} = useVotingCertificate({
+  const {
+    createCertificate: createVotingCertificate,
+    isLoading: isCreatingVotingCertificate,
+  } = useVotingCertificate({
     useErrorBoundary: true,
   })
 
@@ -240,7 +287,13 @@ const NeverParticipatedInGovernanceVariant = () => {
     },
   })
 
-  const openDRepIdModal = (onSubmit: (options: {hash: string; type: 'key' | 'script'; CIP105: boolean}) => void) => {
+  const openDRepIdModal = (
+    onSubmit: (options: {
+      hash: string
+      type: 'key' | 'script'
+      CIP105: boolean
+    }) => void,
+  ) => {
     track.governanceChooseDrepPageViewed()
 
     openModal({
@@ -267,7 +320,8 @@ const NeverParticipatedInGovernanceVariant = () => {
             const stakeCert = needsToRegisterStakingKey
               ? await manager.createStakeRegistrationCertificate(stakingKey)
               : null
-            const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
+            const certs =
+              stakeCert !== null ? [stakeCert, certificate] : [certificate]
             const unsignedTx = await createGovernanceTxMutation.mutateAsync({
               certificates: certs,
               addressMode: meta.addressMode,
@@ -297,7 +351,8 @@ const NeverParticipatedInGovernanceVariant = () => {
           const stakeCert = needsToRegisterStakingKey
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
-          const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
+          const certs =
+            stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await createGovernanceTxMutation.mutateAsync({
             certificates: certs,
             addressMode: meta.addressMode,
@@ -325,7 +380,8 @@ const NeverParticipatedInGovernanceVariant = () => {
           const stakeCert = needsToRegisterStakingKey
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
-          const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
+          const certs =
+            stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await createGovernanceTxMutation.mutateAsync({
             certificates: certs,
             addressMode: meta.addressMode,
@@ -350,7 +406,8 @@ const NeverParticipatedInGovernanceVariant = () => {
           const stakeCert = needsToRegisterStakingKey
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
-          const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
+          const certs =
+            stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await createGovernanceTxMutation.mutateAsync({
             certificates: certs,
             addressMode: meta.addressMode,
@@ -365,7 +422,9 @@ const NeverParticipatedInGovernanceVariant = () => {
   }
 
   const isCreatingTx =
-    createGovernanceTxMutation.isLoading || isCreatingDelegationCertificate || isCreatingVotingCertificate
+    createGovernanceTxMutation.isLoading ||
+    isCreatingDelegationCertificate ||
+    isCreatingVotingCertificate
 
   return (
     <ScrollView style={styles.root}>
@@ -417,7 +476,10 @@ const NeverParticipatedInGovernanceVariant = () => {
   )
 }
 
-const isTxConfirmed = (txId: string, txInfos: Record<string, TransactionInfo>) => {
+const isTxConfirmed = (
+  txId: string,
+  txInfos: Record<string, TransactionInfo>,
+) => {
   return Object.values(txInfos).some((tx) => tx.id === txId)
 }
 

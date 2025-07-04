@@ -32,7 +32,8 @@ export const useTxBody = ({
     },
   )
 
-  if (query.data === undefined) throw new Error('useTxBody: cannot extract txBody')
+  if (query.data === undefined)
+    throw new Error('useTxBody: cannot extract txBody')
   return query.data
 }
 const getCborTxBody = async (cbor: string) => {

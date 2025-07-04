@@ -1,20 +1,36 @@
 import {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {errorMessages, ledgerMessages, txLabels} from '../../../../kernel/i18n/global-messages'
+import globalMessages, {
+  errorMessages,
+  ledgerMessages,
+  txLabels,
+} from '../../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
   return {
     governanceCentreTitle: intl.formatMessage(messages.governanceCentreTitle),
     confirmTxTitle: intl.formatMessage(messages.confirmTxTitle),
-    learnMoreAboutGovernance: intl.formatMessage(messages.learnMoreAboutGovernance),
-    actionDelegateToADRepTitle: intl.formatMessage(messages.actionDelegateToADRepTitle),
-    actionDelegateToADRepDescription: intl.formatMessage(messages.actionDelegateToADRepDescription),
+    learnMoreAboutGovernance: intl.formatMessage(
+      messages.learnMoreAboutGovernance,
+    ),
+    actionDelegateToADRepTitle: intl.formatMessage(
+      messages.actionDelegateToADRepTitle,
+    ),
+    actionDelegateToADRepDescription: intl.formatMessage(
+      messages.actionDelegateToADRepDescription,
+    ),
     actionAbstainTitle: intl.formatMessage(messages.actionAbstainTitle),
-    actionAbstainDescription: intl.formatMessage(messages.actionAbstainDescription),
-    actionNoConfidenceTitle: intl.formatMessage(messages.actionNoConfidenceTitle),
-    actionNoConfidenceDescription: intl.formatMessage(messages.actionNoConfidenceDescription),
+    actionAbstainDescription: intl.formatMessage(
+      messages.actionAbstainDescription,
+    ),
+    actionNoConfidenceTitle: intl.formatMessage(
+      messages.actionNoConfidenceTitle,
+    ),
+    actionNoConfidenceDescription: intl.formatMessage(
+      messages.actionNoConfidenceDescription,
+    ),
     drepKey: intl.formatMessage(messages.drepKey),
     delegateToADRep: intl.formatMessage(messages.delegateToADRep),
     delegatingToADRep: intl.formatMessage(messages.delegatingToADRep),
@@ -24,30 +40,54 @@ export const useStrings = () => {
     selectNoConfidence: intl.formatMessage(messages.selectNoConfidence),
     operations: intl.formatMessage(messages.operations),
     drepID: intl.formatMessage(messages.drepID),
-    thankYouForParticipating: intl.formatMessage(messages.thankYouForParticipating),
-    thisTransactionCanTakeAWhile: intl.formatMessage(messages.thisTransactionCanTakeAWhile),
+    thankYouForParticipating: intl.formatMessage(
+      messages.thankYouForParticipating,
+    ),
+    thisTransactionCanTakeAWhile: intl.formatMessage(
+      messages.thisTransactionCanTakeAWhile,
+    ),
     participationBenefits: intl.formatMessage(messages.participationBenefits),
     goToGovernance: intl.formatMessage(messages.goToGovernance),
     findDRepHere: intl.formatMessage(messages.findDRepHere),
     reviewActions: intl.formatMessage(messages.reviewActions),
-    actionYouHaveSelectedTxPending: (action: string, formattingOptions: FormattingOptions) =>
-      intl.formatMessage(messages.actionYouHaveSelectedTxPending, {...formattingOptions, action}),
-    actionYouHaveSelected: (action: string, formattingOptions: FormattingOptions) =>
-      intl.formatMessage(messages.actionYouHaveSelected, {...formattingOptions, action}),
+    actionYouHaveSelectedTxPending: (
+      action: string,
+      formattingOptions: FormattingOptions,
+    ) =>
+      intl.formatMessage(messages.actionYouHaveSelectedTxPending, {
+        ...formattingOptions,
+        action,
+      }),
+    actionYouHaveSelected: (
+      action: string,
+      formattingOptions: FormattingOptions,
+    ) =>
+      intl.formatMessage(messages.actionYouHaveSelected, {
+        ...formattingOptions,
+        action,
+      }),
     changeDRep: intl.formatMessage(messages.changeDRep),
     confirm: intl.formatMessage(messages.confirm),
     transactionDetails: intl.formatMessage(messages.transactionDetails),
     total: intl.formatMessage(messages.total),
     transactionFailed: intl.formatMessage(messages.transactionFailed),
-    notSupportedVersionTitle: intl.formatMessage(messages.notSupportedVersionTitle),
-    notSupportedVersionDescription: intl.formatMessage(messages.notSupportedVersionDescription),
+    notSupportedVersionTitle: intl.formatMessage(
+      messages.notSupportedVersionTitle,
+    ),
+    notSupportedVersionDescription: intl.formatMessage(
+      messages.notSupportedVersionDescription,
+    ),
     noFunds: intl.formatMessage(messages.noFunds),
-    transactionFailedDescription: intl.formatMessage(messages.transactionFailedDescription),
+    transactionFailedDescription: intl.formatMessage(
+      messages.transactionFailedDescription,
+    ),
     tryAgain: intl.formatMessage(messages.tryAgain),
     buyAda: intl.formatMessage(messages.buyAda),
     goToFaucet: intl.formatMessage(messages.goToFaucet),
     withdrawWarningTitle: intl.formatMessage(messages.withdrawWarningTitle),
-    withdrawWarningDescription: intl.formatMessage(messages.withdrawWarningDescription),
+    withdrawWarningDescription: intl.formatMessage(
+      messages.withdrawWarningDescription,
+    ),
     withdrawWarningButton: intl.formatMessage(messages.withdrawWarningButton),
     enterDRepID: intl.formatMessage(messages.enterDRepID),
     signTransaction: intl.formatMessage(txLabels.signingTx),
@@ -58,15 +98,21 @@ export const useStrings = () => {
     enterPassword: intl.formatMessage(messages.enterPassword),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
     fees: intl.formatMessage(txLabels.fees),
-    hardwareWalletSupportComingSoon: intl.formatMessage(messages.hardwareWalletSupportComingSoon),
-    workingOnHardwareWalletSupport: intl.formatMessage(messages.workingOnHardwareWalletSupport),
+    hardwareWalletSupportComingSoon: intl.formatMessage(
+      messages.hardwareWalletSupportComingSoon,
+    ),
+    workingOnHardwareWalletSupport: intl.formatMessage(
+      messages.workingOnHardwareWalletSupport,
+    ),
     goToWallet: intl.formatMessage(messages.goToWallet),
     txFees: intl.formatMessage(messages.txFees),
     registerStakingKey: intl.formatMessage(messages.registerStakingKey),
     enterDrepIDInfo: intl.formatMessage(messages.enterDrepIDInfo),
     goToStaking: intl.formatMessage(messages.goToStaking),
     readyToCollectRewards: intl.formatMessage(messages.readyToCollectRewards),
-    notSupportedVersionButton: intl.formatMessage(messages.notSupportedVersionButton),
+    notSupportedVersionButton: intl.formatMessage(
+      messages.notSupportedVersionButton,
+    ),
     scriptNotSupported: intl.formatMessage(messages.scriptNotSupported),
     submittedTxButton: intl.formatMessage(messages.submittedTxButton),
     submittedTxText: intl.formatMessage(messages.submittedTxText),
@@ -77,15 +123,22 @@ export const useStrings = () => {
     invalidDRepId: intl.formatMessage(messages.invalidDRepId),
     delegateToAYoroiDrep: intl.formatMessage(messages.delegateToAYoroiDrep),
     delegatingToYoroiDRep: intl.formatMessage(messages.delegatingToYoroiDRep),
-    delegateToAYoroiDRepDescription: intl.formatMessage(messages.delegateToAYoroiDRepDescription),
-    delegateVotingToDRepDeprecatedFormatNotice: intl.formatMessage(messages.delegateVotingToDRepDeprecatedFormatNotice),
+    delegateToAYoroiDRepDescription: intl.formatMessage(
+      messages.delegateToAYoroiDRepDescription,
+    ),
+    delegateVotingToDRepDeprecatedFormatNotice: intl.formatMessage(
+      messages.delegateVotingToDRepDeprecatedFormatNotice,
+    ),
     yoroiRecord: intl.formatMessage(messages.yoroiRecord),
     newToGovernanceTitle: intl.formatMessage(messages.newToGovernanceTitle),
     newToGovernanceText: intl.formatMessage(messages.newToGovernanceText),
   }
 }
 
-type FormattingOptions = Record<'b' | 'textComponent', (text: ReactNode[]) => ReactNode>
+type FormattingOptions = Record<
+  'b' | 'textComponent',
+  (text: ReactNode[]) => ReactNode
+>
 
 const messages = defineMessages({
   governanceCentreTitle: {
@@ -115,7 +168,8 @@ const messages = defineMessages({
   },
   actionAbstainDescription: {
     id: 'components.governance.actionAbstainDescription',
-    defaultMessage: '!!!You are choosing not to cast a vote on all proposals now and in the future.',
+    defaultMessage:
+      '!!!You are choosing not to cast a vote on all proposals now and in the future.',
   },
   actionNoConfidenceTitle: {
     id: 'components.governance.actionNoConfidenceTitle',
@@ -123,7 +177,8 @@ const messages = defineMessages({
   },
   actionNoConfidenceDescription: {
     id: 'components.governance.actionNoConfidenceDescription',
-    defaultMessage: '!!!You are expressing a lack of trust for all proposals now and in the future.',
+    defaultMessage:
+      '!!!You are expressing a lack of trust for all proposals now and in the future.',
   },
   drepKey: {
     id: 'components.governance.drepKey',
@@ -147,7 +202,8 @@ const messages = defineMessages({
   },
   delegateVotingToDRepDeprecatedFormatNotice: {
     id: 'components.governance.delegateVotingToDRepDeprecatedFormatNotice',
-    defaultMessage: '!!!We automatically updated your DRep address to the latest format (CIP 129).',
+    defaultMessage:
+      '!!!We automatically updated your DRep address to the latest format (CIP 129).',
   },
   selectAbstain: {
     id: 'components.governance.selectAbstain',
@@ -227,11 +283,13 @@ const messages = defineMessages({
   },
   noFunds: {
     id: 'components.governance.noFunds',
-    defaultMessage: '!!!To participate in governance you need to have ADA in your wallet',
+    defaultMessage:
+      '!!!To participate in governance you need to have ADA in your wallet',
   },
   transactionFailedDescription: {
     id: 'components.governance.transactionFailedDescription',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
+    defaultMessage:
+      '!!!Your transaction has not been processed properly due to technical issues.',
   },
   tryAgain: {
     id: 'components.governance.tryAgain',
@@ -268,7 +326,8 @@ const messages = defineMessages({
   },
   workingOnHardwareWalletSupport: {
     id: 'components.governance.workingOnHardwareWalletSupport',
-    defaultMessage: '!!!We are currently working on integrating hardware wallet support for Governance',
+    defaultMessage:
+      '!!!We are currently working on integrating hardware wallet support for Governance',
   },
   goToWallet: {
     id: 'components.governance.goToWallet',
@@ -284,7 +343,8 @@ const messages = defineMessages({
   },
   enterDrepIDInfo: {
     id: 'components.governance.enterDrepIDInfo',
-    defaultMessage: '!!!Identify your preferred DRep and enter their ID below to delegate your vote',
+    defaultMessage:
+      '!!!Identify your preferred DRep and enter their ID below to delegate your vote',
   },
   goToStaking: {
     id: 'components.governance.goToStaking',
@@ -300,7 +360,8 @@ const messages = defineMessages({
   },
   notSupportedVersionDescription: {
     id: 'components.governance.notSupportedVersionDescription',
-    defaultMessage: '!!!To be able to vote you need to update your Cardano ADA app to 7.',
+    defaultMessage:
+      '!!!To be able to vote you need to update your Cardano ADA app to 7.',
   },
   notSupportedVersionButton: {
     id: 'components.governance.notSupportedVersionButton',
@@ -328,7 +389,8 @@ const messages = defineMessages({
   },
   failedTxText: {
     id: 'components.governance.failedTxText',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
+    defaultMessage:
+      '!!!Your transaction has not been processed properly due to technical issues.',
   },
   failedTxButton: {
     id: 'components.governance.failedTxButton',

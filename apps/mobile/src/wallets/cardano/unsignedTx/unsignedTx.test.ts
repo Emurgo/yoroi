@@ -3,7 +3,12 @@ import BigNumber from 'bignumber.js'
 
 import {YoroiEntry, YoroiMetadata} from '../../types/yoroi'
 import {CardanoTypes} from '../types'
-import {toAmounts, toDisplayAddress, toEntriesFromOutputs, toMetadata} from './unsignedTx'
+import {
+  toAmounts,
+  toDisplayAddress,
+  toEntriesFromOutputs,
+  toMetadata,
+} from './unsignedTx'
 
 describe('YoroiUnsignedTx', () => {
   it('toAmounts converts TokenEntry[] to Balance.Amounts', () => {
@@ -17,8 +22,8 @@ describe('YoroiUnsignedTx', () => {
 
     expect(toAmounts(tokenEntries)).toEqual({
       '.': '4',
-      token123: '2',
-      token456: '2',
+      'token123': '2',
+      'token456': '2',
     } as Balance.Amounts)
   })
 
@@ -62,8 +67,8 @@ describe('YoroiUnsignedTx', () => {
     ]
 
     const expectedEntries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'.': '1', token123: '2'}},
-      {address: 'address2', amounts: {'.': '1', token123: '2'}},
+      {address: 'address1', amounts: {'.': '1', 'token123': '2'}},
+      {address: 'address2', amounts: {'.': '1', 'token123': '2'}},
     ]
     expect(await toEntriesFromOutputs(addressedValues)).toEqual(expectedEntries)
   })
@@ -79,7 +84,8 @@ describe('YoroiUnsignedTx', () => {
     })
 
     it('converts pointer addresses to display format', async () => {
-      const pointerAddress = '419493315cd92eb5d8c4304e67b7e16ae36d61d34502694657811a2c8e640200'
+      const pointerAddress =
+        '419493315cd92eb5d8c4304e67b7e16ae36d61d34502694657811a2c8e640200'
 
       expect(await toDisplayAddress(pointerAddress)).toBe(
         'addr1gx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzernyqgqq9uys76',
@@ -87,7 +93,8 @@ describe('YoroiUnsignedTx', () => {
     })
 
     it('converts enterprise addresses to display format', async () => {
-      const enterpriseAddress = '619493315cd92eb5d8c4304e67b7e16ae36d61d34502694657811a2c8e'
+      const enterpriseAddress =
+        '619493315cd92eb5d8c4304e67b7e16ae36d61d34502694657811a2c8e'
 
       expect(await toDisplayAddress(enterpriseAddress)).toBe(
         'addr1vx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzers66hrl8',
@@ -95,19 +102,26 @@ describe('YoroiUnsignedTx', () => {
     })
 
     it('converts byron addresses to display format', async () => {
-      const byronAddress = '82d818582183581cab56f22552e28af9ce124da76f8f87b622b4d70ab4d8a24f196a8bfea0001add00c102'
+      const byronAddress =
+        '82d818582183581cab56f22552e28af9ce124da76f8f87b622b4d70ab4d8a24f196a8bfea0001add00c102'
 
-      expect(await toDisplayAddress(byronAddress)).toBe('Ae2tdPwUPEZDuM3S8RBo5RYn25Tv4rEiu9MYephhjqL2ZxFAeoUzTXcVcpZ')
+      expect(await toDisplayAddress(byronAddress)).toBe(
+        'Ae2tdPwUPEZDuM3S8RBo5RYn25Tv4rEiu9MYephhjqL2ZxFAeoUzTXcVcpZ',
+      )
     })
 
     it('converts stake addresses to display format', async () => {
-      const stakeAddress = 'e1e0c88d248e9c2ddab6f8f46afd470f07a20f43f5f945df643233c8ec'
+      const stakeAddress =
+        'e1e0c88d248e9c2ddab6f8f46afd470f07a20f43f5f945df643233c8ec'
 
-      expect(await toDisplayAddress(stakeAddress)).toBe('stake1u8sv3rfy36wzmk4klr6x4l28pur6yr6r7hu5thmyxgeu3mqw94567')
+      expect(await toDisplayAddress(stakeAddress)).toBe(
+        'stake1u8sv3rfy36wzmk4klr6x4l28pur6yr6r7hu5thmyxgeu3mqw94567',
+      )
     })
 
     it('does not convert bech32 addresses', async () => {
-      const bech32Address = 'addr1vpu5vlrf4xkxv2qpwngf6cjhtw542ayty80v8dyr49rf5eg0yu80w'
+      const bech32Address =
+        'addr1vpu5vlrf4xkxv2qpwngf6cjhtw542ayty80v8dyr49rf5eg0yu80w'
 
       expect(await toDisplayAddress(bech32Address)).toBe(bech32Address)
     })

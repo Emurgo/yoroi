@@ -57,7 +57,9 @@ export const DescribeSelectedAddressScreen = () => {
     isShowingMultipleAddressInfo &&
       openModal({
         title: strings.singleOrMultiple,
-        content: <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />,
+        content: (
+          <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />
+        ),
         height: singleOrMultipleAddressesModalHeight,
       })
   }, [
@@ -76,10 +78,17 @@ export const DescribeSelectedAddressScreen = () => {
   )
 
   return (
-    <SafeAreaView style={[styles.root, styles.flex]} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView
+      style={[styles.root, styles.flex]}
+      edges={['left', 'right', 'bottom']}
+    >
       <ScrollView style={styles.flex}>
         <View style={[styles.address, styles.flex]}>
-          {hasAddress ? <AddressDetailCard title={strings.addresscardTitle} /> : <SkeletonAdressDetail />}
+          {hasAddress ? (
+            <AddressDetailCard title={strings.addresscardTitle} />
+          ) : (
+            <SkeletonAdressDetail />
+          )}
         </View>
       </ScrollView>
 
@@ -92,7 +101,12 @@ export const DescribeSelectedAddressScreen = () => {
           testID="receive:request-specific-amount-link"
         />
 
-        <Button onPress={onCopy} disabled={!hasAddress} title={strings.copyAddressButton} icon={Icon.Copy} />
+        <Button
+          onPress={onCopy}
+          disabled={!hasAddress}
+          title={strings.copyAddressButton}
+          icon={Icon.Copy}
+        />
       </View>
     </SafeAreaView>
   )

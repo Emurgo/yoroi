@@ -8,10 +8,16 @@ import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
 import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
+import {
+  formatPriceChange,
+  priceChange,
+} from '../../../common/helpers/priceChange'
 import {useStrings} from '../../../common/hooks/useStrings'
+import {
+  PortfolioListTab,
+  usePortfolio,
+} from '../../../context/PortfolioProvider'
 import {PnlTag} from '../../../ui/PnlTag/PnlTag'
-import {PortfolioListTab, usePortfolio} from '../../../context/PortfolioProvider'
 import {SkeletonQuantityChange} from './SkeletonQuantityChange'
 import {TokenValueBalance} from './TokenValueBalance'
 import {TokenValuePairedBalance} from './TokenValuePairedBalance'
@@ -30,7 +36,8 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
     ptActivity: {close, open},
     isLoading,
   } = useCurrencyPairing()
-  const {isPrimaryTokenActive, setIsPrimaryTokenActive, listTab} = usePortfolio()
+  const {isPrimaryTokenActive, setIsPrimaryTokenActive, listTab} =
+    usePortfolio()
   const {togglePrivacyMode} = usePrivacyMode()
 
   const {changePercent, changeValue, variantPnl} = priceChange(open, close)
@@ -43,7 +50,10 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
 
       <View style={styles.balanceContainer}>
         <View style={styles.balanceBox}>
-          <TouchableOpacity style={styles.balanceBox} onPress={() => togglePrivacyMode()}>
+          <TouchableOpacity
+            style={styles.balanceBox}
+            onPress={() => togglePrivacyMode()}
+          >
             <TokenValueBalance
               rate={close}
               amount={amount}
@@ -52,17 +62,26 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => setIsPrimaryTokenActive(!isPrimaryTokenActive)}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setIsPrimaryTokenActive(!isPrimaryTokenActive)}
+          >
             <Icon.Change color={color.el_gray_max} />
           </TouchableOpacity>
         </View>
 
         <View style={styles.rowBetween}>
-          <TokenValuePairedBalance amount={amount} isFetching={isLoading} isPrimaryTokenActive={isPrimaryTokenActive} />
+          <TokenValuePairedBalance
+            amount={amount}
+            isFetching={isLoading}
+            isPrimaryTokenActive={isPrimaryTokenActive}
+          />
 
           <Tooltip
             title={
-              listTab === PortfolioListTab.Dapps ? strings.totalDAppsValueTooltip : strings.totalWalletValueTooltip
+              listTab === PortfolioListTab.Dapps
+                ? strings.totalDAppsValueTooltip
+                : strings.totalWalletValueTooltip
             }
           >
             <View style={styles.varyContainer}>

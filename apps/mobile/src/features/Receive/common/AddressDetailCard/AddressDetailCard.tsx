@@ -62,9 +62,13 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
 
   if (isEmptyString(address)) return
 
-  const handleOnPageChange = (event: {nativeEvent: {contentOffset: {x: number}}}) => {
+  const handleOnPageChange = (event: {
+    nativeEvent: {contentOffset: {x: number}}
+  }) => {
     const offset = event.nativeEvent.contentOffset.x
-    const index = Math.floor(offset / (itemsPerPage * screenWidth - minToSwitchPage))
+    const index = Math.floor(
+      offset / (itemsPerPage * screenWidth - minToSwitchPage),
+    )
     setScrollPosition(Math.max(index, 0))
   }
 
@@ -76,7 +80,13 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
             title={item.title}
             qrContent={item.address}
             shareContent={`${strings.address} ${item.address}`}
-            onLongPress={(event) => copy({text: item.address, feedback: strings.addressCopiedMsg, event})}
+            onLongPress={(event) =>
+              copy({
+                text: item.address,
+                feedback: strings.addressCopiedMsg,
+                event,
+              })
+            }
             testID="receive:address-detail-card"
             onShare={() => track.receiveShareAddressClicked()}
             shareLabel={strings.shareLabel}
@@ -84,7 +94,11 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
         )
       case 'Details':
         return (
-          <ShareDetailsCard address={item.address} stakingHash={item.stakingHash} spendingHash={item.spendingHash} />
+          <ShareDetailsCard
+            address={item.address}
+            stakingHash={item.stakingHash}
+            spendingHash={item.spendingHash}
+          />
         )
       default:
         return null
@@ -118,7 +132,8 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
             style={[
               styles.circle,
               {
-                backgroundColor: index === scrollPosition ? colors.active : colors.inactive,
+                backgroundColor:
+                  index === scrollPosition ? colors.active : colors.inactive,
               },
             ]}
           />

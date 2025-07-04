@@ -13,7 +13,13 @@ type ButtonCardProps = {
   testID?: string
 }
 
-export const ButtonCard = ({title, subTitle, icon = null, onPress, testID}: ButtonCardProps) => {
+export const ButtonCard = ({
+  title,
+  subTitle,
+  icon = null,
+  onPress,
+  testID,
+}: ButtonCardProps) => {
   const {styles, colors} = useStyles()
 
   return (
@@ -36,7 +42,9 @@ export const ButtonCard = ({title, subTitle, icon = null, onPress, testID}: Butt
         <View style={styles.textContainer}>
           <Text style={styles.titleCentre}>{title}</Text>
 
-          {subTitle !== undefined && <Text style={styles.subTitle}>{subTitle}</Text>}
+          {subTitle !== undefined && (
+            <Text style={styles.subTitle}>{subTitle}</Text>
+          )}
         </View>
       )}
 

@@ -8,7 +8,6 @@
  */
 
 import {castDraft, produce} from 'immer'
-import _ from 'lodash'
 import React from 'react'
 
 import {YoroiUnsignedTx} from '../../../wallets/types/yoroi'
@@ -40,7 +39,11 @@ export const ReviewTxProvider = ({
     [state, actions],
   )
 
-  return <ReviewTxContext.Provider value={context}>{children}</ReviewTxContext.Provider>
+  return (
+    <ReviewTxContext.Provider value={context}>
+      {children}
+    </ReviewTxContext.Provider>
+  )
 }
 
 const reviewTxReducer = (state: ReviewTxState, action: ReviewTxAction) => {
@@ -88,4 +91,6 @@ enum ReviewTxActionType {
 
 type ReviewTxContext = ReviewTxState & ReviewTxActions
 
-const ReviewTxContext = React.createContext<ReviewTxContext>(initialReviewTxContext)
+const ReviewTxContext = React.createContext<ReviewTxContext>(
+  initialReviewTxContext,
+)

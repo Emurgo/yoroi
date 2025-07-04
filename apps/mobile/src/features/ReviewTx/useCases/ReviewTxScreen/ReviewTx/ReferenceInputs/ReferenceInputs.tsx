@@ -8,7 +8,11 @@ import {useStrings} from '../../../../common/hooks/useStrings'
 import {FormattedTx} from '../../../../common/types'
 import {Inputs} from '../UTxOs/UTxOsTab'
 
-export const ReferenceInputsTab = ({referenceInputs}: {referenceInputs: FormattedTx['referenceInputs']}) => {
+export const ReferenceInputsTab = ({
+  referenceInputs,
+}: {
+  referenceInputs: FormattedTx['referenceInputs']
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -16,7 +20,9 @@ export const ReferenceInputsTab = ({referenceInputs}: {referenceInputs: Formatte
     <View style={styles.root}>
       <Space height="lg" />
 
-      <Accordion label={`${strings.utxosInputsLabel} (${referenceInputs.length})`}>
+      <Accordion
+        label={`${strings.utxosInputsLabel} (${referenceInputs.length})`}
+      >
         <Inputs inputs={referenceInputs} />
       </Accordion>
     </View>

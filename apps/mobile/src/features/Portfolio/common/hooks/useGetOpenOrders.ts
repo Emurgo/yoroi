@@ -36,7 +36,12 @@ const listOpenOrders: IOpenOrders[] = [
 ]
 
 export const useGetOpenOrders = (
-  options: UseQueryOptions<IOpenOrders[], Error, IOpenOrders[], ['useGetOpenOrders']> = {},
+  options: UseQueryOptions<
+    IOpenOrders[],
+    Error,
+    IOpenOrders[],
+    ['useGetOpenOrders']
+  > = {},
 ) => {
   const query = useQuery({
     useErrorBoundary: true,

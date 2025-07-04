@@ -1,8 +1,18 @@
-import {amountFormatter, infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
+import {
+  amountFormatter,
+  infoExtractName,
+  isPrimaryToken,
+} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, useWindowDimensions, View, ViewProps} from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+  ViewProps,
+} from 'react-native'
 
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {Text} from '../../../../components/Text'
@@ -36,11 +46,20 @@ export const MiniTokenAmountItem = ({amount}: MiniTokenAmountItemProps) => {
   }
 
   return (
-    <TouchableOpacity testID="miniAssetItem" onPress={handleShowTokenDetails} style={styles.container}>
+    <TouchableOpacity
+      testID="miniAssetItem"
+      onPress={handleShowTokenDetails}
+      style={styles.container}
+    >
       <View style={styles.info}>
         <TokenInfoIcon info={amount.info} size="sm" />
 
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="middle"
+          style={styles.name}
+          testID="tokenInfoText"
+        >
           {name}
         </Text>
       </View>

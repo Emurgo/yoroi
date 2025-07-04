@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'

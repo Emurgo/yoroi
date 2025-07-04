@@ -41,9 +41,19 @@ export const Actions = ({tokenInfo}: Props) => {
 
     track.swapInitiated({
       from_asset: [
-        {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
+        {
+          asset_name: portfolioPrimaryTokenInfo.name,
+          asset_ticker: portfolioPrimaryTokenInfo.ticker,
+          policy_id: '',
+        },
       ],
-      to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.id}],
+      to_asset: [
+        {
+          asset_name: tokenInfo.name,
+          asset_ticker: tokenInfo.ticker,
+          policy_id: tokenInfo.id,
+        },
+      ],
       order_type: 'market',
       slippage_tolerance: 1,
     })

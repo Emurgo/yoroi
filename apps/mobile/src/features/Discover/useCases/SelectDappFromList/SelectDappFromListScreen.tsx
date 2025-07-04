@@ -31,7 +31,9 @@ export const SelectDappFromListScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const [currentTab, setCurrentTab] = React.useState<TDAppTabs>('connected')
-  const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>([])
+  const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>(
+    [],
+  )
   const {track} = useMetrics()
   const [isShowedWelcomeDApp] = useShowWelcomeDApp()
 
@@ -46,13 +48,19 @@ export const SelectDappFromListScreen = () => {
     placeholder: strings.searchDApps,
     noBack: true,
     extraNavigationOptions: {
-      headerTitle: ({children}) => <NetworkTag style={styles.networkTag}>{children}</NetworkTag>,
+      headerTitle: ({children}) => (
+        <NetworkTag style={styles.networkTag}>{children}</NetworkTag>
+      ),
     },
   })
-  const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true})
+  const {data: connectedOrigins = []} = useDAppsConnected({
+    refetchOnMount: true,
+  })
 
   const isDappConnected = (dappOrigins: string[]) => {
-    return dappOrigins.some((dappOrigin) => connectedOrigins.includes(dappOrigin))
+    return dappOrigins.some((dappOrigin) =>
+      connectedOrigins.includes(dappOrigin),
+    )
   }
 
   const handleToggleCategory = React.useCallback(
@@ -97,7 +105,12 @@ export const SelectDappFromListScreen = () => {
               onCategoryToggle={handleToggleCategory}
             />
           }
-          renderItem={({item: entry}) => <DAppListItem dApp={entry} connected={isDappConnected(entry.origins)} />}
+          renderItem={({item: entry}) => (
+            <DAppListItem
+              dApp={entry}
+              connected={isDappConnected(entry.origins)}
+            />
+          )}
           ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
           ListFooterComponent={() => <Spacer style={styles.dAppsBox} />}
         />
@@ -147,7 +160,9 @@ const HeaderControl = ({
   const {visible} = useSearch()
   const styles = useStyles()
   const strings = useStrings()
-  const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true})
+  const {data: connectedOrigins = []} = useDAppsConnected({
+    refetchOnMount: true,
+  })
   const hasConnectedDapps = connectedOrigins.length > 0
   const {data: list} = useDappList({suspense: true})
   const filters = Object.keys(list?.filters ?? {})
@@ -182,7 +197,11 @@ const HeaderControl = ({
 
       {(!hasConnectedDapps || currentTab === DAppTabs.recommended) && (
         <View>
-          <DAppTypes types={filters} onToggle={onCategoryToggle} selectedTypes={selectedCategories} />
+          <DAppTypes
+            types={filters}
+            onToggle={onCategoryToggle}
+            selectedTypes={selectedCategories}
+          />
 
           <CountDAppsAvailable total={count} />
 
@@ -197,17 +216,23 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   const {search, visible} = useSearch()
   const {track} = useMetrics()
   const {data: list} = useDappList({suspense: true})
-  const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true})
+  const {data: connectedOrigins = []} = useDAppsConnected({
+    refetchOnMount: true,
+  })
   const hasConnectedDapps = connectedOrigins.length > 0
   const isSearching = visible
 
   const isDappConnected = (dappOrigins: string[]) => {
-    return dappOrigins.some((dappOrigin) => connectedOrigins.includes(dappOrigin))
+    return dappOrigins.some((dappOrigin) =>
+      connectedOrigins.includes(dappOrigin),
+    )
   }
 
-  const dAppOriginsThatAreConnectedButNotInList = connectedOrigins.filter((connectedOrigin) => {
-    return !list?.dapps.some((dapp) => dapp.origins.includes(connectedOrigin))
-  })
+  const dAppOriginsThatAreConnectedButNotInList = connectedOrigins.filter(
+    (connectedOrigin) => {
+      return !list?.dapps.some((dapp) => dapp.origins.includes(connectedOrigin))
+    },
+  )
 
   React.useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined
@@ -242,13 +267,20 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
 
   if (!list?.dapps) return []
 
-  const allDapps = tab === 'connected' ? [...list.dapps, ...getDAppsConnectedButNotInList()] : list.dapps
+  const allDapps =
+    tab === 'connected'
+      ? [...list.dapps, ...getDAppsConnectedButNotInList()]
+      : list.dapps
 
   if (isSearching) {
     if (search?.length > 0) {
       return allDapps
-        .filter((dApp) => dApp.name.toLowerCase().includes(search.toLowerCase()))
-        .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
+        .filter((dApp) =>
+          dApp.name.toLowerCase().includes(search.toLowerCase()),
+        )
+        .sort((dAppFirst, dAppSecond) =>
+          dAppFirst.name.localeCompare(dAppSecond.name),
+        )
         .concat(getGoogleSearchItem(search))
     }
 
@@ -258,14 +290,24 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   if (hasConnectedDapps && tab === DAppTabs.connected) {
     return allDapps
       .filter((dApp) => isDappConnected(dApp.origins))
-      .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
+      .sort((dAppFirst, dAppSecond) =>
+        dAppFirst.name.localeCompare(dAppSecond.name),
+      )
   }
 
   if (categoriesSelected.length > 0) {
     return allDapps
-      .filter((dApp) => categoriesSelected.some((filter) => list.filters[filter].includes(dApp.category)))
-      .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
+      .filter((dApp) =>
+        categoriesSelected.some((filter) =>
+          list.filters[filter].includes(dApp.category),
+        ),
+      )
+      .sort((dAppFirst, dAppSecond) =>
+        dAppFirst.name.localeCompare(dAppSecond.name),
+      )
   }
 
-  return allDapps.sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
+  return allDapps.sort((dAppFirst, dAppSecond) =>
+    dAppFirst.name.localeCompare(dAppSecond.name),
+  )
 }

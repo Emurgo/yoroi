@@ -35,7 +35,9 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
     if (isSearching)
       return (
         <View>
-          <Text style={styles.textAvailable}>{strings.countOpenOrders(tokensList.length)}</Text>
+          <Text style={styles.textAvailable}>
+            {strings.countOpenOrders(tokensList.length)}
+          </Text>
 
           <Spacer height={16} />
         </View>
@@ -70,9 +72,17 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (
-          <DAppTokenItem onPress={() => onTokenPress(item)} tokenInfo={item} splitTokenSymbol="/" />
+          <DAppTokenItem
+            onPress={() => onTokenPress(item)}
+            tokenInfo={item}
+            splitTokenSymbol="/"
+          />
         )}
-        ListEmptyComponent={!isFetching ? <TokenEmptyList emptyText={strings.noDataFound} /> : undefined}
+        ListEmptyComponent={
+          !isFetching ? (
+            <TokenEmptyList emptyText={strings.noDataFound} />
+          ) : undefined
+        }
         contentContainerStyle={styles.listContainer}
       />
     </View>

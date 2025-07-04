@@ -26,7 +26,9 @@ export const useStrings = () => {
     utxosInputsLabel: intl.formatMessage(messages.utxosInputsLabel),
     utxosOutputsLabel: intl.formatMessage(messages.utxosOutputsLabel),
     utxosYourAddressLabel: intl.formatMessage(messages.utxosYourAddressLabel),
-    utxosForeignAddressLabel: intl.formatMessage(messages.utxosForeignAddressLabel),
+    utxosForeignAddressLabel: intl.formatMessage(
+      messages.utxosForeignAddressLabel,
+    ),
     overview: intl.formatMessage(messages.overview),
     json: intl.formatMessage(messages.json),
     metadata: intl.formatMessage(messages.metadata),
@@ -48,14 +50,20 @@ export const useStrings = () => {
     details: intl.formatMessage(messages.details),
     tokenDetailsTitle: intl.formatMessage(messages.tokenDetailsTitle),
     walletBalanceTitle: intl.formatMessage(messages.walletBalanceTitle),
-    walletBalanceTokensTitle: intl.formatMessage(messages.walletBalanceTokensTitle),
+    walletBalanceTokensTitle: intl.formatMessage(
+      messages.walletBalanceTokensTitle,
+    ),
     walletBalanceNFTsTitle: intl.formatMessage(messages.walletBalanceNFTsTitle),
     poolDetailsTitle: intl.formatMessage(messages.poolDetailsTitle),
     registerStakingKey: intl.formatMessage(messages.registerStakingKey),
     poolRegistration: intl.formatMessage(messages.poolRegistration),
     poolRetirement: intl.formatMessage(messages.poolRetirement),
-    moveInstantaneousRewards: intl.formatMessage(messages.moveInstantaneousRewards),
-    committeeHotAuthorization: intl.formatMessage(messages.committeeHotAuthorization),
+    moveInstantaneousRewards: intl.formatMessage(
+      messages.moveInstantaneousRewards,
+    ),
+    committeeHotAuthorization: intl.formatMessage(
+      messages.committeeHotAuthorization,
+    ),
     committeeColdResign: intl.formatMessage(messages.committeeColdResign),
     drepUpdate: intl.formatMessage(messages.drepUpdate),
     drepRegistration: intl.formatMessage(messages.drepRegistration),
@@ -63,7 +71,9 @@ export const useStrings = () => {
     selectAbstain: intl.formatMessage(messages.selectAbstain),
     selectNoConfidence: intl.formatMessage(messages.selectNoConfidence),
     delegateVotingToDRep: intl.formatMessage(messages.delegateVotingToDRep),
-    delegateVotingToDRepSpecified: intl.formatMessage(messages.delegateVotingToDRepSpecified),
+    delegateVotingToDRepSpecified: intl.formatMessage(
+      messages.delegateVotingToDRepSpecified,
+    ),
     delegateStake: intl.formatMessage(messages.delegateStake),
     deregisterStakingKey: intl.formatMessage(messages.deregisterStakingKey),
     rewardsWithdrawalLabel: intl.formatMessage(messages.rewardsWithdrawalLabel),
@@ -72,20 +82,34 @@ export const useStrings = () => {
     submittedTxText: intl.formatMessage(messages.submittedTxText),
     submittedTxButton: intl.formatMessage(messages.submittedTxButton),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
-    infraestructureIssueTitle: intl.formatMessage(messages.infraestructureIssueTitle),
-    infraestructureIssueText: intl.formatMessage(messages.infraestructureIssueText),
-    infraestructureIssueButton: intl.formatMessage(messages.infraestructureIssueButton),
+    infraestructureIssueTitle: intl.formatMessage(
+      messages.infraestructureIssueTitle,
+    ),
+    infraestructureIssueText: intl.formatMessage(
+      messages.infraestructureIssueText,
+    ),
+    infraestructureIssueButton: intl.formatMessage(
+      messages.infraestructureIssueButton,
+    ),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
-    multiExternalPartiesSectionLabel: intl.formatMessage(messages.multiExternalPartiesSectionLabel),
-    multiExternalPartiesSectionNotice: intl.formatMessage(messages.multiExternalPartiesSectionNotice),
+    multiExternalPartiesSectionLabel: intl.formatMessage(
+      messages.multiExternalPartiesSectionLabel,
+    ),
+    multiExternalPartiesSectionNotice: intl.formatMessage(
+      messages.multiExternalPartiesSectionNotice,
+    ),
     receiveLabel: intl.formatMessage(messages.receiveLabel),
     operationsLabel: intl.formatMessage(messages.operationsLabel),
     policyIdLabel: intl.formatMessage(messages.policyIdLabel),
     createdBy: intl.formatMessage(messages.createdBy),
     operationsLogTitle: intl.formatMessage(messages.operationsLogTitle),
-    operationsLogWarningText: intl.formatMessage(messages.operationsLogWarningText),
-    operationsLogWarningTitle: intl.formatMessage(messages.operationsLogWarningTitle),
+    operationsLogWarningText: intl.formatMessage(
+      messages.operationsLogWarningText,
+    ),
+    operationsLogWarningTitle: intl.formatMessage(
+      messages.operationsLogWarningTitle,
+    ),
     operationsNoticeText: intl.formatMessage(messages.operationsNoticeText),
     operationsNoticeButton: intl.formatMessage(messages.operationsNoticeButton),
     operationsNoticeTitle: intl.formatMessage(messages.operationsNoticeTitle),
@@ -332,7 +356,8 @@ const messages = defineMessages({
   },
   operationsLogWarningText: {
     id: 'txReview.operations.warning.text',
-    defaultMessage: '!!!Please check the operations log before confirming this transaction.',
+    defaultMessage:
+      '!!!Please check the operations log before confirming this transaction.',
   },
   selectNoConfidence: {
     id: 'txReview.operations.selectNoConfidence',
@@ -356,7 +381,8 @@ const messages = defineMessages({
   },
   submittedTxText: {
     id: 'txReview.submittedTxText',
-    defaultMessage: '!!!Check this transaction in the list of wallet transactions',
+    defaultMessage:
+      '!!!Check this transaction in the list of wallet transactions',
   },
   submittedTxButton: {
     id: 'txReview.submittedTxButton',
@@ -368,7 +394,8 @@ const messages = defineMessages({
   },
   failedTxText: {
     id: 'txReview.failedTxText',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
+    defaultMessage:
+      '!!!Your transaction has not been processed properly due to technical issues.',
   },
   failedTxButton: {
     id: 'txReview.failedTxButton',
@@ -380,7 +407,8 @@ const messages = defineMessages({
   },
   infraestructureIssueText: {
     id: 'txReview.infraestructureIssueText',
-    defaultMessage: '!!!Please go back and try again. If this keep happening, contact our support team.',
+    defaultMessage:
+      '!!!Please go back and try again. If this keep happening, contact our support team.',
   },
   infraestructureIssueButton: {
     id: 'txReview.infraestructureIssueButton',

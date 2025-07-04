@@ -8,7 +8,9 @@ storiesOf('ConfirmWithSpendingPassword', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('Initial', () => <ConfirmWithSpendingPassword />)
   .add('Loading', () => <ConfirmWithSpendingPassword isLoading />)
-  .add('Error', () => <ConfirmWithSpendingPassword error={new Error('Example error')} />)
+  .add('Error', () => (
+    <ConfirmWithSpendingPassword error={new Error('Example error')} />
+  ))
 
 const styles = StyleSheet.create({
   container: {

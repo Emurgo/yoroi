@@ -1,6 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import WebView from 'react-native-webview'
@@ -23,7 +29,9 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   const totalTabs = Math.min(tabs.length, 99)
 
   const colorBackward = webViewState.canGoBack ? color.gray_800 : color.gray_500
-  const colorForward = webViewState.canGoForward ? color.gray_800 : color.gray_500
+  const colorForward = webViewState.canGoForward
+    ? color.gray_800
+    : color.gray_500
   const colorRefresh = !webViewState.loading ? color.gray_800 : color.gray_500
 
   const handleRefresh = () => {
@@ -63,7 +71,9 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   }
 
   return (
-    <View style={[styles.root, styles.shadow, {paddingBottom: insets.bottom + 12}]}>
+    <View
+      style={[styles.root, styles.shadow, {paddingBottom: insets.bottom + 12}]}
+    >
       <Touch disabled={!webViewState.canGoBack} onPress={handleBackward}>
         <Icon.Backward color={colorBackward} />
       </Touch>
@@ -87,7 +97,10 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   )
 }
 
-const Touch = ({children, ...props}: React.PropsWithChildren<TouchableOpacityProps>) => {
+const Touch = ({
+  children,
+  ...props
+}: React.PropsWithChildren<TouchableOpacityProps>) => {
   return <TouchableOpacity {...props}>{children}</TouchableOpacity>
 }
 

@@ -1,16 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {walletChecksum} from '@emurgo/cip4-js'
 import {Certificate} from '@emurgo/cross-csl-core'
 import {FullPoolInfo, PoolInfoApi} from '@emurgo/yoroi-lib'
-import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
+import AsyncStorage, {
+  AsyncStorageStatic,
+} from '@react-native-async-storage/async-storage'
 import {cardanoConfig} from '@yoroi/blockchains'
-import {mountMMKVStorage, observableStorageMaker, parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
+import {
+  mountMMKVStorage,
+  observableStorageMaker,
+  parseBoolean,
+  useMutationWithInvalidations,
+} from '@yoroi/common'
 import {themeStorageMaker} from '@yoroi/theme'
 import {App, Balance, HW, Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback} from 'react'
-import {onlineManager, useMutation, UseMutationOptions, useQueries, useQuery, UseQueryOptions} from 'react-query'
+import {
+  onlineManager,
+  useMutation,
+  UseMutationOptions,
+  useQueries,
+  useQuery,
+  UseQueryOptions,
+} from 'react-query'
 
 import {useSelectedNetwork} from '../../features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../features/WalletManager/hooks/useSelectedWallet'
@@ -21,14 +34,20 @@ import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-f
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {convertBech32ToHex} from '../cardano/common/signatureUtils'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TxSubmissionStatus} from '../types/other'
+import {
+  TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
+  TxSubmissionStatus,
+} from '../types/other'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {delay} from '../utils/timeUtils'
 import {Quantities, Utxos} from '../utils/utils'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
-export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = AsyncStorage) => {
+export const getCrashReportsEnabled = async (
+  storage: AsyncStorageStatic = AsyncStorage,
+) => {
   const data = await storage.getItem(crashReportsStorageKey)
   return parseBoolean(data) ?? false
 }
@@ -45,7 +64,9 @@ const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
   return query.data ?? true
 }
 
-const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
+const useSetCrashReportsEnabled = (
+  storage: AsyncStorageStatic = AsyncStorage,
+) => {
   const mutation = useMutationWithInvalidations<void, Error, boolean>({
     useErrorBoundary: true,
     mutationFn: async (enabled) => {
@@ -79,7 +100,11 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
   useWalletEvent(wallet, event, callback)
 }
 
-export const useWalletEvent = (wallet: YoroiWallet, event: WalletEvent['type'], callback: () => void) => {
+export const useWalletEvent = (
+  wallet: YoroiWallet,
+  event: WalletEvent['type'],
+  callback: () => void,
+) => {
   React.useEffect(() => {
     const unsubWallet = wallet.subscribe((subscriptionEvent) => {
       if (subscriptionEvent.type !== event) return
@@ -112,15 +137,21 @@ export const useStakingKey = (wallet: YoroiWallet) => {
       .then((r) => r.hash())
       .then((h) => h.toBytes())
       .then((bytes) => Buffer.from(bytes).toString('hex'))
-  const result = useQuery([wallet.id, 'stakingKey'], getPublicKeyHex, {suspense: true})
+  const result = useQuery([wallet.id, 'stakingKey'], getPublicKeyHex, {
+    suspense: true,
+  })
   if (!result.data) throw new Error('invalid state')
   return result.data
 }
 
 export const useAddressHex = (wallet: YoroiWallet) => {
-  const result = useQuery([wallet.id, 'addressHex'], () => convertBech32ToHex(wallet.externalAddresses[0]), {
-    suspense: true,
-  })
+  const result = useQuery(
+    [wallet.id, 'addressHex'],
+    () => convertBech32ToHex(wallet.externalAddresses[0]),
+    {
+      suspense: true,
+    },
+  )
   if (!result.data) throw new Error('invalid state')
   return result.data
 }
@@ -144,10 +175,16 @@ export const useKeyHashes = ({address}: {address: string}) => {
         }),
     },
   ])
-  return {spending: spendingData.data?.spending, staking: stakingData.data?.staking}
+  return {
+    spending: spendingData.data?.spending,
+    staking: stakingData.data?.staking,
+  }
 }
 
-export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
+export const useSync = (
+  wallet: YoroiWallet,
+  options?: UseMutationOptions<void, Error>,
+) => {
   const mutation = useMutation({
     ...options,
     mutationFn: () => wallet.sync({isForced: true}),
@@ -215,7 +252,10 @@ export const useCreateWithdrawTx = () => {
     setIsLoading(true)
 
     try {
-      const res = await wallet.createWithdrawalTx({shouldDeregister, addressMode: meta.addressMode})
+      const res = await wallet.createWithdrawalTx({
+        shouldDeregister,
+        addressMode: meta.addressMode,
+      })
       setIsLoading(false)
       onSuccess(res)
     } catch (e) {
@@ -237,7 +277,12 @@ export const useVotingRegTx = (
     catalystKeyHex,
     supportsCIP36,
     addressMode,
-  }: {wallet: YoroiWallet; catalystKeyHex: string; supportsCIP36: boolean; addressMode: Wallet.AddressMode},
+  }: {
+    wallet: YoroiWallet
+    catalystKeyHex: string
+    supportsCIP36: boolean
+    addressMode: Wallet.AddressMode
+  },
   options?: UseQueryOptions<
     VotingRegTxAndEncryptedKey,
     Error,
@@ -250,8 +295,14 @@ export const useVotingRegTx = (
     retry: false,
     cacheTime: 0,
     suspense: true,
-    queryKey: [catalystKeyHex, wallet.id, 'voting-reg-tx', JSON.stringify({supportsCIP36})],
-    queryFn: () => wallet.createVotingRegTx({catalystKeyHex, supportsCIP36, addressMode}),
+    queryKey: [
+      catalystKeyHex,
+      wallet.id,
+      'voting-reg-tx',
+      JSON.stringify({supportsCIP36}),
+    ],
+    queryFn: () =>
+      wallet.createVotingRegTx({catalystKeyHex, supportsCIP36, addressMode}),
   })
 
   if (!query.data) throw new Error('invalid state')
@@ -262,7 +313,11 @@ export const useVotingRegTx = (
 export const useSignWithPasswordAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}>
+    signTx?: UseMutationOptions<
+      YoroiSignedTx,
+      Error,
+      {unsignedTx: YoroiUnsignedTx; password: string}
+    >
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
@@ -295,7 +350,11 @@ export const useSignWithPasswordAndSubmitTx = (
 export const useSignWithHwAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; useUSB: boolean}>
+    signTx?: UseMutationOptions<
+      YoroiSignedTx,
+      Error,
+      {unsignedTx: YoroiUnsignedTx; useUSB: boolean}
+    >
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
@@ -329,7 +388,11 @@ export const useSignWithHwAndSubmitTx = (
 export const useSignAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string}>
+    signTx?: UseMutationOptions<
+      YoroiSignedTx,
+      Error,
+      {unsignedTx: YoroiUnsignedTx; rootKey: string}
+    >
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
@@ -362,7 +425,11 @@ export const useSignAndSubmitTx = (
 
 export const useSignTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string}> = {},
+  options: UseMutationOptions<
+    YoroiSignedTx,
+    Error,
+    {unsignedTx: YoroiUnsignedTx; rootKey: string}
+  > = {},
 ) => {
   const mutation = useMutation({
     mutationFn: ({unsignedTx, rootKey}) => wallet.signTx(unsignedTx, rootKey),
@@ -378,7 +445,11 @@ export const useSignTx = (
 
 export const useSignTxWithPassword = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}> = {},
+  options: UseMutationOptions<
+    YoroiSignedTx,
+    Error,
+    {unsignedTx: YoroiUnsignedTx; password: string}
+  > = {},
 ) => {
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, password}) => {
@@ -404,7 +475,8 @@ export const useSignTxWithHW = (
   > = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: async ({unsignedTx, useUSB, hwDeviceInfo}) => wallet.signTxWithLedger(unsignedTx, useUSB, hwDeviceInfo),
+    mutationFn: async ({unsignedTx, useUSB, hwDeviceInfo}) =>
+      wallet.signTxWithLedger(unsignedTx, useUSB, hwDeviceInfo),
     retry: false,
     ...options,
   })
@@ -416,7 +488,9 @@ export const useSignTxWithHW = (
 }
 
 export const useTransactionInfos = ({wallet}: {wallet: YoroiWallet}) => {
-  const [transactionInfos, setTransactionInfos] = React.useState(() => wallet.transactions)
+  const [transactionInfos, setTransactionInfos] = React.useState(
+    () => wallet.transactions,
+  )
 
   React.useEffect(() => {
     const unsubscribe = wallet.subscribe((event) => {
@@ -442,7 +516,12 @@ export const useHasPendingTx = ({wallet}: {wallet: YoroiWallet}) => {
 
 export const useFrontendFees = (
   wallet: YoroiWallet,
-  options?: UseQueryOptions<App.FrontendFeesResponse, Error, App.FrontendFeesResponse, [string, 'frontend-fees']>,
+  options?: UseQueryOptions<
+    App.FrontendFeesResponse,
+    Error,
+    App.FrontendFeesResponse,
+    [string, 'frontend-fees']
+  >,
 ) => {
   const query = useQuery({
     suspense: true,
@@ -564,7 +643,10 @@ export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {
   return Utxos.toAmounts(utxos, wallet.portfolioPrimaryTokenInfo.id)
 }
 
-export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
+export const useResync = (
+  wallet: YoroiWallet,
+  options?: UseMutationOptions<void, Error>,
+) => {
   const mutation = useMutation({
     mutationFn: () => wallet.resync(),
     ...options,
@@ -593,10 +675,23 @@ export const useSaveMemo = (
 
 export const useCreateGovernanceTx = (
   wallet: YoroiWallet,
-  options?: UseMutationOptions<YoroiUnsignedTx, Error, {certificates: Certificate[]; addressMode: Wallet.AddressMode}>,
+  options?: UseMutationOptions<
+    YoroiUnsignedTx,
+    Error,
+    {certificates: Certificate[]; addressMode: Wallet.AddressMode}
+  >,
 ) => {
-  const mutationFn = ({certificates, addressMode}: {certificates: Certificate[]; addressMode: Wallet.AddressMode}) => {
-    return wallet.createUnsignedGovernanceTx({votingCertificates: certificates, addressMode})
+  const mutationFn = ({
+    certificates,
+    addressMode,
+  }: {
+    certificates: Certificate[]
+    addressMode: Wallet.AddressMode
+  }) => {
+    return wallet.createUnsignedGovernanceTx({
+      votingCertificates: certificates,
+      addressMode,
+    })
   }
 
   const mutation = useMutation({mutationFn, retry: false, ...options})

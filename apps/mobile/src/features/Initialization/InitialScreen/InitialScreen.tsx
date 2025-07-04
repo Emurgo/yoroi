@@ -1,6 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BlueCheckbox} from '../../../components/BlueCheckbox/BlueCheckbox'
@@ -26,7 +33,10 @@ export const InitialScreen = () => {
     navigateTo.readPrivacyPolicy()
   }
 
-  const onLanguageChange = React.useCallback(() => setTosAccepted(false), [setTosAccepted])
+  const onLanguageChange = React.useCallback(
+    () => setTosAccepted(false),
+    [setTosAccepted],
+  )
 
   useLanguage({
     onChange: onLanguageChange,
@@ -46,7 +56,10 @@ export const InitialScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView bounces={false} contentContainerStyle={styles.scrollableContentContainer}>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={styles.scrollableContentContainer}
+      >
         <YoroiLogo />
 
         <Spacer height={80} />
@@ -59,12 +72,21 @@ export const InitialScreen = () => {
 
         <Spacer height={30} />
 
-        <BlueCheckbox checked={tosAccepted} spacing={8} onPress={onPressTosCheckbox} style={styles.checkbox}>
+        <BlueCheckbox
+          checked={tosAccepted}
+          spacing={8}
+          onPress={onPressTosCheckbox}
+          style={styles.checkbox}
+        >
           <View style={styles.checkboxRow}>
-            <Text style={styles.checkboxText}>{`${strings.tosIAgreeWith} `}</Text>
+            <Text
+              style={styles.checkboxText}
+            >{`${strings.tosIAgreeWith} `}</Text>
 
             <TouchableOpacity onPress={onTosLinkPress} testID="linkToS">
-              <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.tosAgreement}</Text>
+              <Text style={[styles.checkboxText, styles.checkboxLink]}>
+                {strings.tosAgreement}
+              </Text>
             </TouchableOpacity>
 
             <Text style={styles.checkboxText}>{` `}</Text>
@@ -73,15 +95,25 @@ export const InitialScreen = () => {
 
             <Text style={styles.checkboxText}>{` `}</Text>
 
-            <TouchableOpacity onPress={onPrivacyLinkPress} testID="linkPrivacyPolicy">
-              <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.privacyPolicy}</Text>
+            <TouchableOpacity
+              onPress={onPrivacyLinkPress}
+              testID="linkPrivacyPolicy"
+            >
+              <Text style={[styles.checkboxText, styles.checkboxLink]}>
+                {strings.privacyPolicy}
+              </Text>
             </TouchableOpacity>
           </View>
         </BlueCheckbox>
 
         <Spacer fill />
 
-        <Button title={strings.continue} disabled={!tosAccepted} onPress={onPressContinue} testID="buttonContinue" />
+        <Button
+          title={strings.continue}
+          disabled={!tosAccepted}
+          onPress={onPressContinue}
+          testID="buttonContinue"
+        />
       </ScrollView>
     </SafeAreaView>
   )
@@ -91,7 +123,9 @@ const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
   const {styles, color} = useStyles()
   const {isDark} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
-  const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
+  const language =
+    supportedLanguages.find((lang) => lang.code === languageCode) ??
+    defaultLanguage
 
   return (
     <TouchableOpacity onPress={onPress} testID="dropDownLanguagePicker">

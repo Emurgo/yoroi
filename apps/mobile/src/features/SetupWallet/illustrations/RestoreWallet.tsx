@@ -1,5 +1,12 @@
 import * as React from 'react'
-import Svg, {Defs, Ellipse, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
+import Svg, {
+  Defs,
+  Ellipse,
+  LinearGradient,
+  Path,
+  Stop,
+  SvgProps,
+} from 'react-native-svg'
 
 export const RestoreWallet = (props: SvgProps) => {
   return (

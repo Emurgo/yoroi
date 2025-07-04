@@ -21,7 +21,8 @@ export const useStrings = () => {
 export const messages = defineMessages({
   description: {
     id: 'components.settings.manageNotificationDisplayDuration.description',
-    defaultMessage: '!!!Adjust the display duration of in-app notifications to suit your preferences.',
+    defaultMessage:
+      '!!!Adjust the display duration of in-app notifications to suit your preferences.',
   },
   apply: {
     id: 'components.settings.manageNotificationDisplayDuration.apply',

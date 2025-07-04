@@ -13,7 +13,12 @@ describe('toBalanceManagerSyncArgs', () => {
         utxo_id: '',
         assets: [
           {assetId: `${policyId}.DEAD`, amount: '50', policyId, name: 'DEAD'},
-          {assetId: `${policyId}.DEADFEED`, amount: '30', policyId, name: 'DEADFEED'},
+          {
+            assetId: `${policyId}.DEADFEED`,
+            amount: '30',
+            policyId,
+            name: 'DEADFEED',
+          },
         ],
       },
       {
@@ -34,8 +39,12 @@ describe('toBalanceManagerSyncArgs', () => {
 
     expect(result.primaryStated.totalFromTxs).toBe(300n)
     expect(result.primaryStated.lockedAsStorageCost).toBe(10n)
-    expect(result.secondaryBalances.get(`${policyId}.DEAD`)?.quantity).toBe(120n)
-    expect(result.secondaryBalances.get(`${policyId}.DEADFEED`)?.quantity).toBe(30n)
+    expect(result.secondaryBalances.get(`${policyId}.DEAD`)?.quantity).toBe(
+      120n,
+    )
+    expect(result.secondaryBalances.get(`${policyId}.DEADFEED`)?.quantity).toBe(
+      30n,
+    )
     expect(result.secondaryBalances.get(`${policyId}.3031`)?.quantity).toBe(80n)
   })
 })

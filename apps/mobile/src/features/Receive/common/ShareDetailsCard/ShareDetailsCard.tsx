@@ -16,7 +16,11 @@ type AddressDetailsProps = {
   spendingHash?: string
 }
 
-export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDetailsProps) => {
+export const ShareDetailsCard = ({
+  address,
+  spendingHash,
+  stakingHash,
+}: AddressDetailsProps) => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const {track} = useMetrics()
@@ -26,7 +30,9 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
   const hasSpendingHash = !isEmptyString(spendingHash)
 
   const handleAddressOnCopy = () => {
-    track.receiveCopyAddressClicked({copy_address_location: 'Tap Address Details'})
+    track.receiveCopyAddressClicked({
+      copy_address_location: 'Tap Address Details',
+    })
   }
 
   return (
@@ -41,18 +47,26 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
       <Text style={styles.title}>{strings.walletAddress}</Text>
 
       <View style={styles.textSection}>
-        <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.address}</Text>
+        <Text style={[styles.textAddress, {color: colors.grayText}]}>
+          {strings.address}
+        </Text>
 
         <View style={styles.textRow}>
           <Text style={styles.textAddressDetails}>{address}</Text>
 
-          <Copiable text={address} onCopy={handleAddressOnCopy} feedback={strings.addressCopiedMsg} />
+          <Copiable
+            text={address}
+            onCopy={handleAddressOnCopy}
+            feedback={strings.addressCopiedMsg}
+          />
         </View>
       </View>
 
       {hasStakingHash && (
         <View style={styles.textSection}>
-          <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.stakingKeyHash}</Text>
+          <Text style={[styles.textAddress, {color: colors.grayText}]}>
+            {strings.stakingKeyHash}
+          </Text>
 
           <View style={styles.textRow}>
             <Text style={styles.textAddressDetails}>{stakingHash}</Text>
@@ -64,7 +78,9 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
 
       {hasSpendingHash && (
         <View style={styles.textSection}>
-          <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.spendingKeyHash}</Text>
+          <Text style={[styles.textAddress, {color: colors.grayText}]}>
+            {strings.spendingKeyHash}
+          </Text>
 
           <View style={styles.textRow}>
             <Text style={styles.textAddressDetails}>{spendingHash}</Text>
@@ -76,7 +92,9 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
 
       {Boolean(lastUsed) && (
         <View style={styles.textSection}>
-          <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.lastUsed}</Text>
+          <Text style={[styles.textAddress, {color: colors.grayText}]}>
+            {strings.lastUsed}
+          </Text>
 
           <View style={styles.textRow}>
             <Text style={styles.textAddressDetails}>{lastUsed}</Text>

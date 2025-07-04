@@ -22,13 +22,18 @@ export const PreparingWalletScreen = () => {
   useLaunchWalletAfterSyncing({isGlobalSyncPaused, walletId})
 
   if (isEmptyString(walletId)) {
-    const error = new Error('PreparingWalletScreen: walletId is empty, reached an invalid state.')
+    const error = new Error(
+      'PreparingWalletScreen: walletId is empty, reached an invalid state.',
+    )
     logger.error(error)
     throw error
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom', 'top']} style={styles.root}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom', 'top']}
+      style={styles.root}
+    >
       <Text style={styles.title}>{strings.preparingWallet}</Text>
     </SafeAreaView>
   )

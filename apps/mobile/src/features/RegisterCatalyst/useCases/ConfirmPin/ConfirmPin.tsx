@@ -1,12 +1,21 @@
 import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewProps,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 
 import {Button} from '../../../../components/Button/Button'
-import {BACKSPACE, NumericKeyboard} from '../../../../components/NumericKeyboard'
+import {
+  BACKSPACE,
+  NumericKeyboard,
+} from '../../../../components/NumericKeyboard'
 import {Space} from '../../../../components/Space/Space'
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useWalletNavigation} from '../../../../kernel/navigation'
@@ -15,7 +24,13 @@ import {encryptWithPassword} from '../../../../wallets/cardano/catalyst/catalyst
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../CatalystNavigator'
-import {Actions, Description, PinBox, Row, Stepper} from '../../common/components'
+import {
+  Actions,
+  Description,
+  PinBox,
+  Row,
+  Stepper,
+} from '../../common/components'
 import {useStrings} from '../../common/strings'
 
 export const ConfirmPin = () => {
@@ -42,7 +57,11 @@ export const ConfirmPin = () => {
       unsignedTxChanged(votingRegTx.votingRegTx)
       navigateToTxReview({
         onCIP36SupportChange: async (supportsCIP36: boolean) => {
-          votingRegTx = await wallet.createVotingRegTx({catalystKeyHex, supportsCIP36, addressMode: meta.addressMode})
+          votingRegTx = await wallet.createVotingRegTx({
+            catalystKeyHex,
+            supportsCIP36,
+            addressMode: meta.addressMode,
+          })
           unsignedTxChanged(votingRegTx.votingRegTx)
         },
         onSuccess: navigateTo.qrCode,
@@ -201,7 +220,10 @@ export const ConfirmPin = () => {
   )
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
       <Padding>
         <Stepper title={strings.step3Title} currentStep={3} totalSteps={3} />
       </Padding>
@@ -212,25 +234,45 @@ export const ConfirmPin = () => {
         <Space height="lg" />
 
         <Row style={{justifyContent: 'center'}}>
-          <PinBox onPress={() => handleOnPress(1)} done={done} error={pin1Error} selected={currentActivePin === 1}>
+          <PinBox
+            onPress={() => handleOnPress(1)}
+            done={done}
+            error={pin1Error}
+            selected={currentActivePin === 1}
+          >
             {pin1Value}
           </PinBox>
 
           <Space height="lg" />
 
-          <PinBox onPress={() => handleOnPress(2)} done={done} error={pin2Error} selected={currentActivePin === 2}>
+          <PinBox
+            onPress={() => handleOnPress(2)}
+            done={done}
+            error={pin2Error}
+            selected={currentActivePin === 2}
+          >
             {pin2Value}
           </PinBox>
 
           <Spacer width={16} />
 
-          <PinBox onPress={() => handleOnPress(3)} done={done} error={pin3Error} selected={currentActivePin === 3}>
+          <PinBox
+            onPress={() => handleOnPress(3)}
+            done={done}
+            error={pin3Error}
+            selected={currentActivePin === 3}
+          >
             {pin3Value}
           </PinBox>
 
           <Spacer width={16} />
 
-          <PinBox onPress={() => handleOnPress(4)} done={done} error={pin4Error} selected={currentActivePin === 4}>
+          <PinBox
+            onPress={() => handleOnPress(4)}
+            done={done}
+            error={pin4Error}
+            selected={currentActivePin === 4}
+          >
             {pin4Value}
           </PinBox>
         </Row>
@@ -240,7 +282,11 @@ export const ConfirmPin = () => {
 
       <Padding>
         <Actions>
-          <Button onPress={() => onNext()} title={strings.continueButton} disabled={!done || isLoading} />
+          <Button
+            onPress={() => onNext()}
+            title={strings.continueButton}
+            disabled={!done || isLoading}
+          />
         </Actions>
       </Padding>
 
@@ -267,7 +313,11 @@ interface GenerateKeysOutput {
 type GenerateKeysError = Error
 
 const useGenerateVotingKeys = (
-  options?: UseMutationOptions<GenerateKeysOutput, GenerateKeysError, GenerateKeysInput>,
+  options?: UseMutationOptions<
+    GenerateKeysOutput,
+    GenerateKeysError,
+    GenerateKeysInput
+  >,
 ) => {
   const mutation = useMutation(async (pin: string) => {
     const catalystKey = await generatePrivateKeyForCatalyst()

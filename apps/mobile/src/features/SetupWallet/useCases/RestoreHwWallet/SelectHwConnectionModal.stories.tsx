@@ -5,13 +5,19 @@ import {Button, StyleSheet, View} from 'react-native'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {SelectHwConnectionModal} from './SelectHwConnectionModal'
 
-storiesOf('AddWallet Select Hw Connection Modal', module).add('initial', () => <Wrapper />)
+storiesOf('AddWallet Select Hw Connection Modal', module).add('initial', () => (
+  <Wrapper />
+))
 
 const Wrapper = () => {
   const {openModal} = useModal()
 
   const handleOpenModal = React.useCallback(() => {
-    openModal({title: 'Modal Test', content: <SelectHwConnectionModal />, height: 340})
+    openModal({
+      title: 'Modal Test',
+      content: <SelectHwConnectionModal />,
+      height: 340,
+    })
   }, [openModal])
 
   return (

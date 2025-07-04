@@ -1,19 +1,30 @@
 import {initUtxo, UtxoModels, UtxoStorage} from '@emurgo/yoroi-lib'
-import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
+import {
+  Utxo,
+  UtxoAtSafePoint,
+  UtxoDiffToBestBlock,
+} from '@emurgo/yoroi-lib/dist/utxo/models'
 import {isString, parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import {parseInt} from 'lodash'
 
 import {RawUtxo} from '../../types/other'
 
-export const makeUtxoManager = async ({storage, apiUrl}: {storage: App.Storage; apiUrl: string}) => {
+export const makeUtxoManager = async ({
+  storage,
+  apiUrl,
+}: {
+  storage: App.Storage
+  apiUrl: string
+}) => {
   const managerStorage = makeUtxoManagerStorage(storage)
   const serviceStorage = makeUtxoStorage(storage.join('utxos/'))
   const service = initUtxo(serviceStorage, `${apiUrl}/`)
 
   let addrCounter = await managerStorage.addrCounter.read()
 
-  const getCachedUtxos = () => service.getAvailableUtxos().then((utxos) => utxos.map(serializer))
+  const getCachedUtxos = () =>
+    service.getAvailableUtxos().then((utxos) => utxos.map(serializer))
   const initialUtxos = await getCachedUtxos()
 
   const getCollateralId = async (): Promise<string> => {
@@ -25,7 +36,8 @@ export const makeUtxoManager = async ({storage, apiUrl}: {storage: App.Storage; 
 
   // utxo state is related to the addresses used, if it changes a reset is needed
   const sync = (addresses: Array<string>) => {
-    if (addresses.length === addrCounter) return service.syncUtxoState(addresses)
+    if (addresses.length === addrCounter)
+      return service.syncUtxoState(addresses)
 
     return serviceStorage
       .clearUtxoState()
@@ -48,7 +60,8 @@ export const makeUtxoManager = async ({storage, apiUrl}: {storage: App.Storage; 
 
     initialCollateralId,
     getCollateralId,
-    setCollateralId: (utxoId: RawUtxo['utxo_id']) => managerStorage.collateral.save(utxoId),
+    setCollateralId: (utxoId: RawUtxo['utxo_id']) =>
+      managerStorage.collateral.save(utxoId),
   } as const
 }
 
@@ -60,7 +73,10 @@ export const makeUtxoManagerStorage = (storage: App.Storage) => {
     addrCounter: {
       save: (count: number) => storage.setItem(addrCounterKey, count),
       clear: () => storage.removeItem(addrCounterKey),
-      read: () => storage.getItem(addrCounterKey, (count) => (count != null ? parseInt(count) : 0)),
+      read: () =>
+        storage.getItem(addrCounterKey, (count) =>
+          count != null ? parseInt(count) : 0,
+        ),
     },
     collateral: {
       save: (utxoId: string) => storage.setItem(collateralKey, utxoId),
@@ -89,16 +105,20 @@ const diffPath = 'diff'
 const safePointPath = 'safe-point'
 
 export const makeUtxoStorage = (storage: App.Storage) => {
-  const getUtxoDiffToBestBlock = () => storage.getItem(diffPath, parseDiff).then((diff) => diff ?? [])
+  const getUtxoDiffToBestBlock = () =>
+    storage.getItem(diffPath, parseDiff).then((diff) => diff ?? [])
   const setUtxoDiffToBestBlock = (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) =>
     storage.setItem(diffPath, utxoDiffToBestBlock)
 
-  const getUtxoAtSafePoint = async (): Promise<UtxoModels.UtxoAtSafePoint | undefined> => {
+  const getUtxoAtSafePoint = async (): Promise<
+    UtxoModels.UtxoAtSafePoint | undefined
+  > => {
     const safePoint = await storage.getItem(safePointPath, parseSafePoint)
     if (!safePoint) return undefined
     return safePoint
   }
-  const setUtxoAtSafePoint = (utxoAtSafePoint: UtxoAtSafePoint) => storage.setItem(safePointPath, utxoAtSafePoint)
+  const setUtxoAtSafePoint = (utxoAtSafePoint: UtxoAtSafePoint) =>
+    storage.setItem(safePointPath, utxoAtSafePoint)
 
   const utxoStorage: UtxoStorage = {
     getUtxoAtSafePoint,
@@ -108,16 +128,24 @@ export const makeUtxoStorage = (storage: App.Storage) => {
     getUtxoDiffToBestBlock,
     appendUtxoDiffToBestBlock: async (diff: UtxoDiffToBestBlock) => {
       const currentDiffs = await getUtxoDiffToBestBlock()
-      if (currentDiffs.find((d) => d.lastBestBlockHash === diff.lastBestBlockHash)) return
+      if (
+        currentDiffs.find((d) => d.lastBestBlockHash === diff.lastBestBlockHash)
+      )
+        return
       return setUtxoDiffToBestBlock([...currentDiffs, diff])
     },
     removeDiffWithBestBlock: async (blockHash: string) => {
       const currentDiffs = await getUtxoDiffToBestBlock()
-      return setUtxoDiffToBestBlock(currentDiffs.filter((d) => d.lastBestBlockHash !== blockHash))
+      return setUtxoDiffToBestBlock(
+        currentDiffs.filter((d) => d.lastBestBlockHash !== blockHash),
+      )
     },
 
     clearUtxoState: () =>
-      Promise.all([storage.removeItem(safePointPath), storage.removeItem(diffPath)]).then(() => undefined),
+      Promise.all([
+        storage.removeItem(safePointPath),
+        storage.removeItem(diffPath),
+      ]).then(() => undefined),
   }
 
   return utxoStorage
@@ -129,7 +157,11 @@ const parseSafePoint = (data: unknown) => {
 }
 const isSafePoint = (data: unknown): data is UtxoAtSafePoint => {
   const candidate = data as UtxoAtSafePoint
-  return !!candidate && !!candidate.lastSafeBlockHash && Array.isArray(candidate.utxos)
+  return (
+    !!candidate &&
+    !!candidate.lastSafeBlockHash &&
+    Array.isArray(candidate.utxos)
+  )
 }
 
 const parseDiff = (data: unknown) => {

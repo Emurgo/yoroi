@@ -12,7 +12,8 @@ export const useNavigateTo = () => {
     enableLogingWithPin: () => navigation.navigate('enable-login-with-pin'),
     readTermsOfService: () => navigation.navigate('read-terms-of-service'),
     readPrivacyPolicy: () => navigation.navigate('read-privacy-policy'),
-    termsOfServiceChanged: () => navigation.navigate('terms-of-service-changed'),
+    termsOfServiceChanged: () =>
+      navigation.navigate('terms-of-service-changed'),
     analyticsChanged: () => navigation.navigate('analytics-changed'),
   }).current
 }

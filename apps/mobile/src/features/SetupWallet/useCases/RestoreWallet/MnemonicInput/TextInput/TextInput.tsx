@@ -1,8 +1,17 @@
 import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, TextInput as RNTextInput, TextInputProps as RNTextInputProps, View, ViewStyle} from 'react-native'
-import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-native-paper'
+import {
+  TextInput as RNTextInput,
+  TextInputProps as RNTextInputProps,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
+import {
+  HelperText as HelperTextRNP,
+  TextInput as RNPTextInput,
+} from 'react-native-paper'
 
 import {isEmptyString} from '../../../../../../kernel/utils'
 
@@ -39,152 +48,156 @@ const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
   }, [callback, delay, value])
 }
 
-export const TextInput = React.forwardRef((props: TextInputProps, ref: React.ForwardedRef<RNTextInput>) => {
-  const {
-    value,
-    containerStyle,
-    renderComponentStyle,
-    helper,
-    errorText,
-    errorOnMount,
-    errorDelay,
-    noHelper,
-    textAlign,
-    faded,
-    showErrorOnBlur,
-    autoComplete = 'off',
-    onFocus,
-    onBlur,
-    onChangeText,
-    onChange,
-    autoFocus,
-    selectTextOnAutoFocus,
-    isValidPhrase = false,
-    cursorColor,
-    selectionColor,
-    ...restProps
-  } = props
+export const TextInput = React.forwardRef(
+  (props: TextInputProps, ref: React.ForwardedRef<RNTextInput>) => {
+    const {
+      value,
+      containerStyle,
+      renderComponentStyle,
+      helper,
+      errorText,
+      errorOnMount,
+      errorDelay,
+      noHelper,
+      textAlign,
+      faded,
+      showErrorOnBlur,
+      autoComplete = 'off',
+      onFocus,
+      onBlur,
+      onChangeText,
+      onChange,
+      autoFocus,
+      selectTextOnAutoFocus,
+      isValidPhrase = false,
+      cursorColor,
+      selectionColor,
+      ...restProps
+    } = props
 
-  const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
-  const [isValidWord, setIsValidWord] = React.useState(false)
-  const {colors} = useStyles()
-  const {isDark} = useTheme()
+    const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
+    const [isValidWord, setIsValidWord] = React.useState(false)
+    const {colors} = useStyles()
+    const {isDark} = useTheme()
 
-  useDebounced(
-    React.useCallback(() => setErrorTextEnabled(true), []),
-    value,
-    errorDelay,
-  )
-  const showError = errorTextEnabled && !isEmptyString(errorText)
-  const showHelperComponent = helper != null && !isString(helper)
+    useDebounced(
+      React.useCallback(() => setErrorTextEnabled(true), []),
+      value,
+      errorDelay,
+    )
+    const showError = errorTextEnabled && !isEmptyString(errorText)
+    const showHelperComponent = helper != null && !isString(helper)
 
-  const helperToShow = showError ? (
-    <HelperText type="error" visible>
-      {errorText}
-    </HelperText>
-  ) : showHelperComponent ? (
-    helper
-  ) : (
-    <HelperText type="info" visible>
-      {helper}
-    </HelperText>
-  )
+    const helperToShow = showError ? (
+      <HelperText type="error" visible>
+        {errorText}
+      </HelperText>
+    ) : showHelperComponent ? (
+      helper
+    ) : (
+      <HelperText type="info" visible>
+        {helper}
+      </HelperText>
+    )
 
-  React.useEffect(() => {
-    if (value === '') setIsValidWord(false)
-  }, [value])
+    React.useEffect(() => {
+      if (value === '') setIsValidWord(false)
+    }, [value])
 
-  return (
-    <View style={containerStyle}>
-      <RNPTextInput
-        ref={ref}
-        style={{textAlign}}
-        value={value}
-        onChange={(e) => {
-          setErrorTextEnabled(false)
-          setIsValidWord(false)
-
-          onChange?.(e)
-        }}
-        onChangeText={(e) => {
-          setErrorTextEnabled(false)
-          setIsValidWord(false)
-
-          onChangeText?.(e)
-        }}
-        autoCorrect={false}
-        autoComplete={autoComplete}
-        autoCapitalize="none"
-        autoFocus={selectTextOnAutoFocus || autoFocus}
-        onFocus={(event) => {
-          // selectTextOnFocus + autoFocus doesn't work as expected
-          // also there is a bug on ios for selectTextOnFocus: https://github.com/facebook/react-native/issues/30585
-          // note: selectTextOnFocus is not equal to selectTextOnAutoFocus
-          if (selectTextOnAutoFocus) event.currentTarget.setSelection(0, value?.length)
-
-          if (onFocus) onFocus(event)
-        }}
-        theme={{
-          roundness: 8,
-          colors: {
-            background: isValidPhrase
-              ? colors.positiveGreen
-              : isValidWord && isEmptyString(errorText)
-              ? colors.positiveGray
-              : colors.none,
-            placeholder: faded
-              ? colors.focusInput
-              : isValidWord && isEmptyString(errorText)
-              ? colors.none
-              : colors.input,
-            primary: faded ? colors.input : colors.focusInput,
-            error: colors.textError,
-          },
-        }}
-        mode="outlined"
-        error={errorTextEnabled && !isEmptyString(errorText)}
-        render={({style, ...inputProps}) => (
-          <InputContainer>
-            <RNTextInput
-              {...inputProps}
-              cursorColor={cursorColor}
-              selectionColor={selectionColor}
-              keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
-              style={[
-                style,
-                renderComponentStyle,
-                {
-                  color: isValidPhrase
-                    ? colors.successText
-                    : errorTextEnabled && !isEmptyString(errorText)
-                    ? colors.textError
-                    : colors.text,
-                  flex: 1,
-                },
-              ]}
-            />
-          </InputContainer>
-        )}
-        onBlur={(e) => {
-          if (!isEmptyString(errorText)) {
-            if (showErrorOnBlur && !errorTextEnabled) setErrorTextEnabled(true)
-            setIsValidWord(false)
-          } else if (value === '') {
-            setIsValidWord(false)
+    return (
+      <View style={containerStyle}>
+        <RNPTextInput
+          ref={ref}
+          style={{textAlign}}
+          value={value}
+          onChange={(e) => {
             setErrorTextEnabled(false)
-          } else {
-            setIsValidWord(true)
-          }
+            setIsValidWord(false)
 
-          onBlur?.(e)
-        }}
-        {...restProps}
-      />
+            onChange?.(e)
+          }}
+          onChangeText={(e) => {
+            setErrorTextEnabled(false)
+            setIsValidWord(false)
 
-      {!noHelper && helperToShow}
-    </View>
-  )
-})
+            onChangeText?.(e)
+          }}
+          autoCorrect={false}
+          autoComplete={autoComplete}
+          autoCapitalize="none"
+          autoFocus={selectTextOnAutoFocus || autoFocus}
+          onFocus={(event) => {
+            // selectTextOnFocus + autoFocus doesn't work as expected
+            // also there is a bug on ios for selectTextOnFocus: https://github.com/facebook/react-native/issues/30585
+            // note: selectTextOnFocus is not equal to selectTextOnAutoFocus
+            if (selectTextOnAutoFocus)
+              event.currentTarget.setSelection(0, value?.length)
+
+            if (onFocus) onFocus(event)
+          }}
+          theme={{
+            roundness: 8,
+            colors: {
+              background: isValidPhrase
+                ? colors.positiveGreen
+                : isValidWord && isEmptyString(errorText)
+                  ? colors.positiveGray
+                  : colors.none,
+              placeholder: faded
+                ? colors.focusInput
+                : isValidWord && isEmptyString(errorText)
+                  ? colors.none
+                  : colors.input,
+              primary: faded ? colors.input : colors.focusInput,
+              error: colors.textError,
+            },
+          }}
+          mode="outlined"
+          error={errorTextEnabled && !isEmptyString(errorText)}
+          render={({style, ...inputProps}) => (
+            <InputContainer>
+              <RNTextInput
+                {...inputProps}
+                cursorColor={cursorColor}
+                selectionColor={selectionColor}
+                keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
+                style={[
+                  style,
+                  renderComponentStyle,
+                  {
+                    color: isValidPhrase
+                      ? colors.successText
+                      : errorTextEnabled && !isEmptyString(errorText)
+                        ? colors.textError
+                        : colors.text,
+                    flex: 1,
+                  },
+                ]}
+              />
+            </InputContainer>
+          )}
+          onBlur={(e) => {
+            if (!isEmptyString(errorText)) {
+              if (showErrorOnBlur && !errorTextEnabled)
+                setErrorTextEnabled(true)
+              setIsValidWord(false)
+            } else if (value === '') {
+              setIsValidWord(false)
+              setErrorTextEnabled(false)
+            } else {
+              setIsValidWord(true)
+            }
+
+            onBlur?.(e)
+          }}
+          {...restProps}
+        />
+
+        {!noHelper && helperToShow}
+      </View>
+    )
+  },
+)
 
 const HelperText = ({
   children,

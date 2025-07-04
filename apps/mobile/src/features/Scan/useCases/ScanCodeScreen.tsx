@@ -4,7 +4,10 @@ import * as React from 'react'
 import {Alert, AlertButton} from 'react-native'
 import {z} from 'zod'
 
-import {CameraCodeScanner, CameraCodeScannerMethods} from '../../../components/CameraCodeScanner/CameraCodeScanner'
+import {
+  CameraCodeScanner,
+  CameraCodeScannerMethods,
+} from '../../../components/CameraCodeScanner/CameraCodeScanner'
 import * as feedback from '../../../kernel/haptics/feedback'
 import {ScanRoutes, useParams} from '../../../kernel/navigation'
 import {parseScanAction} from '../common/parsers'
@@ -38,7 +41,9 @@ export const ScanCodeScreen = () => {
         feedback.error()
 
         const errorDialog = scanErrorResolver(error as Error)
-        Alert.alert(errorDialog.title, errorDialog.message, buttons, {cancelable: false})
+        Alert.alert(errorDialog.title, errorDialog.message, buttons, {
+          cancelable: false,
+        })
       }
     },
     [buttons, scanErrorResolver, trigger],
@@ -59,5 +64,8 @@ const ScanStartParamsSchema = z.object({
   insideFeature: z.union([z.literal('scan'), z.literal('send')]),
 })
 
-const isScanStartParams = createTypeGuardFromSchema<Params>(ScanStartParamsSchema)
-const isParams = (params?: unknown): params is Params => isScanStartParams(params)
+const isScanStartParams = createTypeGuardFromSchema<Params>(
+  ScanStartParamsSchema,
+)
+const isParams = (params?: unknown): params is Params =>
+  isScanStartParams(params)

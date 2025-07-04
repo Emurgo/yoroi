@@ -12,7 +12,12 @@ export const ShowAddressLimitInfo = () => {
   const {styles, colors, color} = useStyles()
 
   return (
-    <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOut} style={styles.smallAddressCard}>
+    <Animated.View
+      layout={Layout}
+      entering={FadeInUp}
+      exiting={FadeOut}
+      style={styles.smallAddressCard}
+    >
       <Icon.Info size={24} color={colors.icon} />
 
       <Text style={styles.text}>
@@ -23,7 +28,9 @@ export const ShowAddressLimitInfo = () => {
             Linking.openURL(YoroiZendeskLink)
           }}
         >
-          <Text style={{color: color.primary_500, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
+          <Text style={{color: color.primary_500, borderWidth: 1}}>
+            {strings.yoroiZendesk}
+          </Text>
         </TouchableWithoutFeedback>
       </Text>
     </Animated.View>

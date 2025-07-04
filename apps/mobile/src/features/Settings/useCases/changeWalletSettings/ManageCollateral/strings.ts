@@ -9,15 +9,31 @@ export const useStrings = () => {
     removeCollateral: intl.formatMessage(messages.removeCollateral),
     collateralSpent: intl.formatMessage(messages.collateralSpent),
     generateCollateral: intl.formatMessage(messages.generateCollateral),
-    notEnoughFundsAlertTitle: intl.formatMessage(messages.notEnoughFundsAlertTitle),
-    notEnoughFundsAlertMessage: intl.formatMessage(messages.notEnoughFundsAlertMessage),
+    notEnoughFundsAlertTitle: intl.formatMessage(
+      messages.notEnoughFundsAlertTitle,
+    ),
+    notEnoughFundsAlertMessage: intl.formatMessage(
+      messages.notEnoughFundsAlertMessage,
+    ),
     notEnoughFundsAlertOK: intl.formatMessage(messages.notEnoughFundsAlertOK),
-    collateralInfoModalLabel: intl.formatMessage(messages.collateralInfoModalLabel),
-    collateralInfoModalTitle: intl.formatMessage(messages.collateralInfoModalTitle),
-    collateralInfoModalText: intl.formatMessage(messages.collateralInfoModalText),
-    initialCollateralInfoModalTitle: intl.formatMessage(messages.initialCollateralInfoModalTitle),
-    initialCollateralInfoModalText: intl.formatMessage(messages.initialCollateralInfoModalText),
-    initialCollateralInfoModalButton: intl.formatMessage(messages.initialCollateralInfoModalButton),
+    collateralInfoModalLabel: intl.formatMessage(
+      messages.collateralInfoModalLabel,
+    ),
+    collateralInfoModalTitle: intl.formatMessage(
+      messages.collateralInfoModalTitle,
+    ),
+    collateralInfoModalText: intl.formatMessage(
+      messages.collateralInfoModalText,
+    ),
+    initialCollateralInfoModalTitle: intl.formatMessage(
+      messages.initialCollateralInfoModalTitle,
+    ),
+    initialCollateralInfoModalText: intl.formatMessage(
+      messages.initialCollateralInfoModalText,
+    ),
+    initialCollateralInfoModalButton: intl.formatMessage(
+      messages.initialCollateralInfoModalButton,
+    ),
     learnMore: intl.formatMessage(globalMessages.learnMore),
     cancel: intl.formatMessage(globalMessages.cancel),
   }
@@ -30,11 +46,13 @@ const messages = defineMessages({
   },
   removeCollateral: {
     id: 'components.settings.collateral.removeCollateral',
-    defaultMessage: '!!!If you want to return the amount locked as collateral to your balance press the remove icon',
+    defaultMessage:
+      '!!!If you want to return the amount locked as collateral to your balance press the remove icon',
   },
   collateralSpent: {
     id: 'components.settings.collateral.collateralSpent',
-    defaultMessage: '!!!Your collateral is gone, please generate new collateral',
+    defaultMessage:
+      '!!!Your collateral is gone, please generate new collateral',
   },
   generateCollateral: {
     id: 'components.settings.collateral.generateCollateral',
@@ -46,7 +64,8 @@ const messages = defineMessages({
   },
   notEnoughFundsAlertMessage: {
     id: 'components.settings.collateral.notEnoughFundsAlertMessage',
-    defaultMessage: '!!!We could not find enough funds in this wallet to create collateral.',
+    defaultMessage:
+      '!!!We could not find enough funds in this wallet to create collateral.',
   },
   notEnoughFundsAlertOK: {
     id: 'components.settings.collateral.notEnoughFundsAlertOK',

@@ -1,6 +1,10 @@
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {actionMessages, errorMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
+import globalMessages, {
+  actionMessages,
+  errorMessages,
+  ledgerMessages,
+} from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -12,7 +16,9 @@ export const useStrings = () => {
     allAssets: intl.formatMessage(messages.allAssets),
     swapTitle: intl.formatMessage(messages.swapTitle),
     swapDetailsTitle: intl.formatMessage(messages.swapDetailsTitle),
-    swapCancellationDetailsTitle: intl.formatMessage(messages.swapCancellationDetailsTitle),
+    swapCancellationDetailsTitle: intl.formatMessage(
+      messages.swapCancellationDetailsTitle,
+    ),
     tokenSwap: intl.formatMessage(messages.tokenSwap),
     orderSwap: intl.formatMessage(messages.orderSwap),
     dex: intl.formatMessage(messages.dex),
@@ -31,7 +37,8 @@ export const useStrings = () => {
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
     slippageToleranceInfo: intl.formatMessage(messages.slippageToleranceInfo),
     swapButton: intl.formatMessage(messages.swapButton),
-    verifiedBy: (pool: string) => intl.formatMessage(messages.verifiedBy, {pool}),
+    verifiedBy: (pool: string) =>
+      intl.formatMessage(messages.verifiedBy, {pool}),
     assetsIn: intl.formatMessage(messages.assetsIn),
     slippageInfo: intl.formatMessage(messages.slippageInfo),
     autoPool: intl.formatMessage(messages.autoPool),
@@ -44,11 +51,15 @@ export const useStrings = () => {
     swapFeesTitle: intl.formatMessage(messages.swapFeesTitle),
     swapLiquidityFee: intl.formatMessage(messages.swapLiquidityFee),
     swapLiqProvFee: intl.formatMessage(messages.swapLiqProvFee),
-    swapLiquidityFeeInfo: (fee: string, options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
-      intl.formatMessage(messages.swapLiquidityFeeInfo, {fee, ...options}),
+    swapLiquidityFeeInfo: (
+      fee: string,
+      options: {b: (content: React.ReactNode[]) => React.ReactNode},
+    ) => intl.formatMessage(messages.swapLiquidityFeeInfo, {fee, ...options}),
     swapFees: intl.formatMessage(messages.swapFees),
-    poolVerification: (pool: string) => intl.formatMessage(messages.poolVerification, {pool}),
-    poolVerificationInfo: (pool: string) => intl.formatMessage(messages.poolVerificationInfo, {pool}),
+    poolVerification: (pool: string) =>
+      intl.formatMessage(messages.poolVerification, {pool}),
+    poolVerificationInfo: (pool: string) =>
+      intl.formatMessage(messages.poolVerificationInfo, {pool}),
     eachVerifiedToken: intl.formatMessage(messages.eachVerifiedToken),
     verifiedBadge: intl.formatMessage(messages.verifiedBadge),
     enterSlippage: intl.formatMessage(messages.enterSlippage),
@@ -56,7 +67,8 @@ export const useStrings = () => {
     pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
     openOrders: intl.formatMessage(messages.openOrders),
     noAssetsFound: intl.formatMessage(messages.noAssetsFound),
-    noAssetsFoundFor: (search: string) => intl.formatMessage(messages.noAssetsFoundFor, {search}),
+    noAssetsFoundFor: (search: string) =>
+      intl.formatMessage(messages.noAssetsFoundFor, {search}),
     completedOrders: intl.formatMessage(messages.completedOrders),
     signTransaction: intl.formatMessage(messages.signTransaction),
     enterSpendingPassword: intl.formatMessage(messages.enterSpendingPassword),
@@ -78,7 +90,9 @@ export const useStrings = () => {
       }),
     priceImpactDescription: (risk: 'moderate' | 'high') =>
       intl.formatMessage(
-        risk === 'moderate' ? messages.priceImpactModerateDescription : messages.priceImpactHighDescription,
+        risk === 'moderate'
+          ? messages.priceImpactModerateDescription
+          : messages.priceImpactHighDescription,
       ),
     priceImpactInfo: intl.formatMessage(messages.priceImpactInfo),
     tvl: intl.formatMessage(messages.tvl),
@@ -92,26 +106,50 @@ export const useStrings = () => {
     listCompletedOrders: intl.formatMessage(messages.listCompletedOrders),
     listOpenOrders: intl.formatMessage(messages.listOpenOrders),
     listOrdersSheetTitle: intl.formatMessage(messages.listOrdersSheetTitle),
-    listOrdersSheetButtonText: intl.formatMessage(messages.listOrdersSheetButtonText),
-    listOrdersSheetContentTitle: intl.formatMessage(messages.listOrdersSheetContentTitle),
+    listOrdersSheetButtonText: intl.formatMessage(
+      messages.listOrdersSheetButtonText,
+    ),
+    listOrdersSheetContentTitle: intl.formatMessage(
+      messages.listOrdersSheetContentTitle,
+    ),
     listOrdersSheetLink: intl.formatMessage(messages.listOrdersSheetLink),
-    listOrdersSheetAssetPrice: intl.formatMessage(messages.listOrdersSheetAssetPrice),
-    listOrdersSheetAssetAmount: intl.formatMessage(messages.listOrdersSheetAssetAmount),
-    listOrdersSheetTotalReturned: intl.formatMessage(messages.listOrdersSheetTotalReturned),
-    listOrdersSheetCancellationFee: intl.formatMessage(messages.listOrdersSheetCancellationFee),
+    listOrdersSheetAssetPrice: intl.formatMessage(
+      messages.listOrdersSheetAssetPrice,
+    ),
+    listOrdersSheetAssetAmount: intl.formatMessage(
+      messages.listOrdersSheetAssetAmount,
+    ),
+    listOrdersSheetTotalReturned: intl.formatMessage(
+      messages.listOrdersSheetTotalReturned,
+    ),
+    listOrdersSheetCancellationFee: intl.formatMessage(
+      messages.listOrdersSheetCancellationFee,
+    ),
     listOrdersSheetConfirm: intl.formatMessage(messages.listOrdersSheetConfirm),
     listOrdersSheetBack: intl.formatMessage(messages.listOrdersSheetBack),
     listOrdersTimeCreated: intl.formatMessage(messages.listOrdersTimeCreated),
-    listOrdersTimeCompleted: intl.formatMessage(messages.listOrdersTimeCompleted),
-    listOrdersLiquidityPool: intl.formatMessage(messages.listOrdersLiquidityPool),
+    listOrdersTimeCompleted: intl.formatMessage(
+      messages.listOrdersTimeCompleted,
+    ),
+    listOrdersLiquidityPool: intl.formatMessage(
+      messages.listOrdersLiquidityPool,
+    ),
     listOrdersTotal: intl.formatMessage(messages.listOrdersTotal),
     listOrdersTxId: intl.formatMessage(messages.listOrdersTxId),
     limitPriceWarningTitle: intl.formatMessage(messages.limitPriceWarningTitle),
-    limitPriceWarningDescription: intl.formatMessage(messages.limitPriceWarningDescription),
-    limitPriceWarningYourPrice: intl.formatMessage(messages.limitPriceWarningYourPrice),
-    limitPriceWarningMarketPrice: intl.formatMessage(messages.limitPriceWarningMarketPrice),
+    limitPriceWarningDescription: intl.formatMessage(
+      messages.limitPriceWarningDescription,
+    ),
+    limitPriceWarningYourPrice: intl.formatMessage(
+      messages.limitPriceWarningYourPrice,
+    ),
+    limitPriceWarningMarketPrice: intl.formatMessage(
+      messages.limitPriceWarningMarketPrice,
+    ),
     limitPriceWarningBack: intl.formatMessage(messages.limitPriceWarningBack),
-    limitPriceWarningConfirm: intl.formatMessage(messages.limitPriceWarningConfirm),
+    limitPriceWarningConfirm: intl.formatMessage(
+      messages.limitPriceWarningConfirm,
+    ),
     error: intl.formatMessage(globalMessages.error),
     rejectedByUser: intl.formatMessage(ledgerMessages.rejectedByUserError),
     routingPreferences: intl.formatMessage(messages.routingPreferences),
@@ -132,41 +170,66 @@ export const useStrings = () => {
     collateralNotFound: intl.formatMessage(messages.collateralNotFound),
     noActiveCollateral: intl.formatMessage(messages.noActiveCollateral),
     collateralTxPending: intl.formatMessage(messages.collateralTxPending),
-    collateralTxPendingTitle: intl.formatMessage(messages.collateralTxPendingTitle),
+    collateralTxPendingTitle: intl.formatMessage(
+      messages.collateralTxPendingTitle,
+    ),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
-    generalTxErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
-    incorrectPasswordTitle: intl.formatMessage(errorMessages.incorrectPassword.title),
-    incorrectPasswordMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
+    generalTxErrorMessage: intl.formatMessage(
+      errorMessages.generalTxError.message,
+    ),
+    incorrectPasswordTitle: intl.formatMessage(
+      errorMessages.incorrectPassword.title,
+    ),
+    incorrectPasswordMessage: intl.formatMessage(
+      errorMessages.incorrectPassword.message,
+    ),
     notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
     notEnoughSupply: intl.formatMessage(messages.notEnoughSupply),
     notEnoughFeeBalance: intl.formatMessage(messages.notEnoughFeeBalance),
     noPool: intl.formatMessage(messages.noPool),
     generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
-    generalErrorMessage: (e: string) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
+    generalErrorMessage: (e: string) =>
+      intl.formatMessage(errorMessages.generalError.message, {message: e}),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
     continue: intl.formatMessage(messages.continue),
     cancel: intl.formatMessage(globalMessages.cancel),
     tryAgain: intl.formatMessage(globalMessages.tryAgain),
-    bluetoothDisabledError: intl.formatMessage(ledgerMessages.bluetoothDisabledError),
-    ledgerBluetoothDisabledError: intl.formatMessage(ledgerMessages.bluetoothDisabledError),
-    ledgerGeneralConnectionError: intl.formatMessage(ledgerMessages.connectionError),
+    bluetoothDisabledError: intl.formatMessage(
+      ledgerMessages.bluetoothDisabledError,
+    ),
+    ledgerBluetoothDisabledError: intl.formatMessage(
+      ledgerMessages.bluetoothDisabledError,
+    ),
+    ledgerGeneralConnectionError: intl.formatMessage(
+      ledgerMessages.connectionError,
+    ),
     ledgerUserError: intl.formatMessage(ledgerMessages.connectionError),
-    ledgerAdaAppNeedsToBeOpenError: intl.formatMessage(ledgerMessages.appOpened),
+    ledgerAdaAppNeedsToBeOpenError: intl.formatMessage(
+      ledgerMessages.appOpened,
+    ),
     slippageWarningTitle: intl.formatMessage(messages.slippageWarningTitle),
     slippageWarningText: intl.formatMessage(messages.slippageWarningText),
-    slippageWarningYourSlippage: intl.formatMessage(messages.slippageWarningYourSlippage),
-    slippageWarningChangeAmount: intl.formatMessage(messages.slippageWarningChangeAmount),
+    slippageWarningYourSlippage: intl.formatMessage(
+      messages.slippageWarningYourSlippage,
+    ),
+    slippageWarningChangeAmount: intl.formatMessage(
+      messages.slippageWarningChangeAmount,
+    ),
     serviceUnavailable: intl.formatMessage(messages.serviceUnavailable),
     serviceUnavailableInfo: intl.formatMessage(messages.serviceUnavailableInfo),
     emptyOpenOrders: intl.formatMessage(messages.emptyOpenOrders),
     emptyOpenOrdersSub: intl.formatMessage(messages.emptyOpenOrdersSub),
     emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
-    emptySearchCompletedOrders: intl.formatMessage(messages.emptySearchCompletedOrders),
+    emptySearchCompletedOrders: intl.formatMessage(
+      messages.emptySearchCompletedOrders,
+    ),
     emptySearchOpenOrders: intl.formatMessage(messages.emptySearchOpenOrders),
     warning: intl.formatMessage(messages.warning),
-    missingCollateral: intl.formatMessage(errorMessages.missingCollateral.title),
+    missingCollateral: intl.formatMessage(
+      errorMessages.missingCollateral.title,
+    ),
     backToSwapOrders: intl.formatMessage(messages.backToSwapOrders),
     preprodNoticeTitle: intl.formatMessage(messages.preprodNoticeTitle),
     preprodNoticeText: intl.formatMessage(messages.preprodNoticeText),
@@ -175,7 +238,9 @@ export const useStrings = () => {
     failedTxScreenButton: intl.formatMessage(messages.failedTxScreenButton),
     submittedTxScreenTitle: intl.formatMessage(messages.submittedTxScreenTitle),
     submittedTxScreenText: intl.formatMessage(messages.submittedTxScreenText),
-    submittedTxScreenButton: intl.formatMessage(messages.submittedTxScreenButton),
+    submittedTxScreenButton: intl.formatMessage(
+      messages.submittedTxScreenButton,
+    ),
     from: intl.formatMessage(messages.from),
     to: intl.formatMessage(messages.to),
     sell: intl.formatMessage(actionMessages.sell),
@@ -281,7 +346,8 @@ const messages = defineMessages({
   },
   slippageToleranceError: {
     id: 'swap.swapScreen.slippageToleranceError',
-    defaultMessage: '!!!Slippage must be a number between 0 and 75 and have up to 1 decimal',
+    defaultMessage:
+      '!!!Slippage must be a number between 0 and 75 and have up to 1 decimal',
   },
   slippageToleranceInfo: {
     id: 'swap.swapScreen.slippageToleranceInfo',
@@ -297,7 +363,8 @@ const messages = defineMessages({
   },
   slippageInfo: {
     id: 'swap.swapScreen.slippageInfo',
-    defaultMessage: '!!!Slippage tolerance is set as a percentage of the total swap value.',
+    defaultMessage:
+      '!!!Slippage tolerance is set as a percentage of the total swap value.',
   },
   autoPool: {
     id: 'swap.swapScreen.autoPool',
@@ -317,7 +384,8 @@ const messages = defineMessages({
   },
   routeDescription: {
     id: 'swap.swapScreen.routeDescription',
-    defaultMessage: '!!!The route shows the path your swap takes to find the best price',
+    defaultMessage:
+      '!!!The route shows the path your swap takes to find the best price',
   },
   changePool: {
     id: 'swap.swapScreen.changePool',
@@ -359,7 +427,8 @@ const messages = defineMessages({
   },
   swapMinReceived: {
     id: 'swap.swapScreen.swapMinReceived',
-    defaultMessage: '!!!Minimum amount of assets you can get because of the slippage tolerance.',
+    defaultMessage:
+      '!!!Minimum amount of assets you can get because of the slippage tolerance.',
   },
   swapMinReceivedTitle: {
     id: 'swap.swapScreen.swapMinReceivedTitle',
@@ -367,7 +436,8 @@ const messages = defineMessages({
   },
   enterSlippage: {
     id: 'swap.swapScreen.enterSlippage',
-    defaultMessage: '!!!Enter a value from 0% to 75%. You can also enter up to 1 decimal',
+    defaultMessage:
+      '!!!Enter a value from 0% to 75%. You can also enter up to 1 decimal',
   },
   poolVerification: {
     id: 'swap.swapScreen.poolVerification',
@@ -454,7 +524,8 @@ const messages = defineMessages({
   },
   transactionDisplay: {
     id: 'swap.swapScreen.transactionDisplay',
-    defaultMessage: '!!!Your transactions will be displayed both in the list of transaction and Open swap orders',
+    defaultMessage:
+      '!!!Your transactions will be displayed both in the list of transaction and Open swap orders',
   },
   dex: {
     id: 'swap.swapScreen.dex',
@@ -580,7 +651,8 @@ const messages = defineMessages({
   },
   bluetoothExplanation: {
     id: 'components.ledger.ledgertransportswitchmodal.bluetoothExplanation',
-    defaultMessage: '!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:',
+    defaultMessage:
+      '!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:',
   },
   bluetoothButton: {
     id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
@@ -596,7 +668,8 @@ const messages = defineMessages({
   },
   serviceUnavailableInfo: {
     id: 'global.error.serviceUnavailableInfo',
-    defaultMessage: '!!!The server is temporarily busy due to maintenance downtime or capacity problems',
+    defaultMessage:
+      '!!!The server is temporarily busy due to maintenance downtime or capacity problems',
   },
   goToTransactions: {
     id: 'components.send.sendscreen.submittedTxButton',
@@ -638,7 +711,8 @@ const messages = defineMessages({
   },
   noActiveCollateral: {
     id: 'components.send.confirmscreen.noActiveCollateral',
-    defaultMessage: '!!!To continue with this action, you need to generate a collateral',
+    defaultMessage:
+      '!!!To continue with this action, you need to generate a collateral',
   },
   collateralTxPendingTitle: {
     id: 'components.send.confirmscreen.collateralTxPendingTitle',
@@ -655,7 +729,8 @@ const messages = defineMessages({
   },
   failedTxText: {
     id: 'components.send.sendscreen.failedTxText',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
+    defaultMessage:
+      '!!!Your transaction has not been processed properly due to technical issues.',
   },
   failedTxButton: {
     id: 'components.send.sendscreen.failedTxButton',
@@ -700,7 +775,8 @@ const messages = defineMessages({
   },
   slippageWarningChangeAmount: {
     id: 'swap.slippage.changeAmount',
-    defaultMessage: '!!!Increase the amount to proceed or change slippage tolerance to 0%',
+    defaultMessage:
+      '!!!Increase the amount to proceed or change slippage tolerance to 0%',
   },
   emptyOpenOrders: {
     id: 'swap.listOrders.emptyOpenOrders',
@@ -737,11 +813,13 @@ const messages = defineMessages({
   },
   priceImpactModerateDescription: {
     id: 'swap.swapScreen.priceImpactModerateDescription',
-    defaultMessage: '!!!may cause a difference in the amount you actually receive. Consider this at your own risk.',
+    defaultMessage:
+      '!!!may cause a difference in the amount you actually receive. Consider this at your own risk.',
   },
   priceImpactInfo: {
     id: 'swap.swapScreen.priceImpactInfo',
-    defaultMessage: '!!!Price impact is a difference between the actual market price and your price due to trade size.',
+    defaultMessage:
+      '!!!Price impact is a difference between the actual market price and your price due to trade size.',
   },
   warning: {
     id: 'components.txhistory.flawedwalletmodal.title',
@@ -757,7 +835,8 @@ const messages = defineMessages({
   },
   failedTxScreenText: {
     id: 'swap.failedTxScreen.text',
-    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues.',
+    defaultMessage:
+      '!!!Your transaction has not been processed properly due to technical issues.',
   },
   failedTxScreenButton: {
     id: 'swap.failedTxScreen.button',

@@ -11,5 +11,7 @@ const styles = StyleSheet.create({
 })
 
 storiesOf('PrivacyPolicyScreen', module)
-  .addDecorator((getStory) => <View style={styles.decorator}>{getStory()}</View>)
+  .addDecorator((getStory) => (
+    <View style={styles.decorator}>{getStory()}</View>
+  ))
   .add('Default', () => <PrivacyPolicyScreen />)

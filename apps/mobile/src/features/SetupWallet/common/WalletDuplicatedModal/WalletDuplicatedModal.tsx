@@ -24,17 +24,25 @@ export const WalletDuplicatedModal = ({
 
   return (
     <View style={styles.modal}>
-      <Text style={styles.modalText}>{strings.restoreDuplicatedWalletModalText}</Text>
+      <Text style={styles.modalText}>
+        {strings.restoreDuplicatedWalletModalText}
+      </Text>
 
       <Space height="lg" />
 
       <View style={styles.checksum}>
-        <Icon.WalletAvatar image={new Blockies({seed}).asBase64()} style={styles.walletChecksum} size={38} />
+        <Icon.WalletAvatar
+          image={new Blockies({seed}).asBase64()}
+          style={styles.walletChecksum}
+          size={38}
+        />
 
         <Space width="sm" />
 
         <View>
-          <Text style={styles.plateName}>{duplicatedAccountWalletMetaName}</Text>
+          <Text style={styles.plateName}>
+            {duplicatedAccountWalletMetaName}
+          </Text>
 
           <Text style={styles.plateText}>{plate}</Text>
         </View>

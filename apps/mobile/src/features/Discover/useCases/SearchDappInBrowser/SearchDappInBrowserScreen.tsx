@@ -68,7 +68,12 @@ export const SearchDappInBrowserScreen = () => {
 
       <ScrollView style={styles.dAppContainer}>
         {searchValue !== '' && (
-          <DAppListItem key={googleItem.id} dApp={googleItem} connected={false} onPress={() => handleSubmit(true)} />
+          <DAppListItem
+            key={googleItem.id}
+            dApp={googleItem}
+            connected={false}
+            onPress={() => handleSubmit(true)}
+          />
         )}
       </ScrollView>
     </View>

@@ -27,7 +27,12 @@ export const ButtonGroup = <T extends string>({
         <>
           {index > 0 && <Spacer width={8} />}
 
-          <LinearGradient style={styles.gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={colors.gradientColor}>
+          <LinearGradient
+            style={styles.gradient}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            colors={colors.gradientColor}
+          >
             <TouchableOpacity
               onPress={() => {
                 setSelected(index)

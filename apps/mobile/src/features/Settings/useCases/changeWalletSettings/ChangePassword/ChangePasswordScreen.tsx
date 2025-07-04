@@ -2,16 +2,28 @@ import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
+import {
+  TextInput as RNTextInput,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewProps,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
 import {Button} from '../../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Checkmark, TextInput} from '../../../../../components/TextInput/TextInput'
+import {
+  Checkmark,
+  TextInput,
+} from '../../../../../components/TextInput/TextInput'
 import {errorMessages} from '../../../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../../../wallets/cardano/types'
-import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../../../wallets/utils/validators'
+import {
+  REQUIRED_PASSWORD_LENGTH,
+  validatePassword,
+} from '../../../../../wallets/utils/validators'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 
@@ -22,16 +34,23 @@ export const ChangePasswordScreen = () => {
 
   const currentPasswordRef = React.useRef<RNTextInput>(null)
   const [currentPassword, setCurrentPassword] = React.useState('')
-  const currentPasswordErrors = currentPassword.length === 0 ? {currentPasswordRequired: true} : {}
+  const currentPasswordErrors =
+    currentPassword.length === 0 ? {currentPasswordRequired: true} : {}
 
   const newPasswordRef = React.useRef<RNTextInput>(null)
   const [newPassword, setNewPassword] = React.useState('')
 
   const newPasswordConfirmationRef = React.useRef<RNTextInput>(null)
-  const [newPasswordConfirmation, setNewPasswordConfirmation] = React.useState('')
-  const newPasswordErrors = validatePassword(newPassword, newPasswordConfirmation)
+  const [newPasswordConfirmation, setNewPasswordConfirmation] =
+    React.useState('')
+  const newPasswordErrors = validatePassword(
+    newPassword,
+    newPasswordConfirmation,
+  )
 
-  const hasErrors = Object.keys(currentPasswordErrors).length > 0 || Object.keys(newPasswordErrors).length > 0
+  const hasErrors =
+    Object.keys(currentPasswordErrors).length > 0 ||
+    Object.keys(newPasswordErrors).length > 0
 
   const {wallet} = useSelectedWallet()
   const {changePassword, isError, reset} = useChangePassword(wallet, {
@@ -41,8 +60,15 @@ export const ChangePasswordScreen = () => {
 
   return (
     <KeyboardAvoidingView style={styles.root}>
-      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-        <ScrollView bounces={false} keyboardDismissMode="on-drag" contentContainerStyle={styles.contentContainer}>
+      <SafeAreaView
+        edges={['left', 'right', 'bottom']}
+        style={styles.safeAreaView}
+      >
+        <ScrollView
+          bounces={false}
+          keyboardDismissMode="on-drag"
+          contentContainerStyle={styles.contentContainer}
+        >
           <CurrentPasswordInput
             ref={currentPasswordRef}
             enablesReturnKeyAutomatically
@@ -65,11 +91,17 @@ export const ChangePasswordScreen = () => {
             label={strings.newPasswordInputLabel}
             value={newPassword}
             onChangeText={setNewPassword}
-            errorText={newPasswordErrors.passwordIsWeak ? strings.passwordStrengthRequirement : undefined}
+            errorText={
+              newPasswordErrors.passwordIsWeak
+                ? strings.passwordStrengthRequirement
+                : undefined
+            }
             helper={strings.passwordStrengthRequirement}
             returnKeyType="next"
             onSubmitEditing={() => newPasswordConfirmationRef.current?.focus()}
-            right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
+            right={
+              !newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined
+            }
             autoComplete="off"
           />
 
@@ -80,10 +112,15 @@ export const ChangePasswordScreen = () => {
             label={strings.repeatPasswordInputLabel}
             value={newPasswordConfirmation}
             onChangeText={setNewPasswordConfirmation}
-            errorText={newPasswordErrors.matchesConfirmation ? strings.repeatPasswordInputNotMatchError : undefined}
+            errorText={
+              newPasswordErrors.matchesConfirmation
+                ? strings.repeatPasswordInputNotMatchError
+                : undefined
+            }
             returnKeyType="done"
             right={
-              !newPasswordErrors.matchesConfirmation && !newPasswordErrors.passwordConfirmationReq ? (
+              !newPasswordErrors.matchesConfirmation &&
+              !newPasswordErrors.passwordConfirmationReq ? (
                 <Checkmark />
               ) : undefined
             }
@@ -144,13 +181,22 @@ const useStrings = () => {
   return {
     oldPasswordInputLabel: intl.formatMessage(messages.oldPasswordInputLabel),
     newPasswordInputLabel: intl.formatMessage(messages.newPasswordInputLabel),
-    passwordStrengthRequirement: intl.formatMessage(messages.passwordStrengthRequirement, {
-      requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
-    }),
-    repeatPasswordInputLabel: intl.formatMessage(messages.repeatPasswordInputLabel),
-    repeatPasswordInputNotMatchError: intl.formatMessage(messages.repeatPasswordInputNotMatchError),
+    passwordStrengthRequirement: intl.formatMessage(
+      messages.passwordStrengthRequirement,
+      {
+        requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
+      },
+    ),
+    repeatPasswordInputLabel: intl.formatMessage(
+      messages.repeatPasswordInputLabel,
+    ),
+    repeatPasswordInputNotMatchError: intl.formatMessage(
+      messages.repeatPasswordInputNotMatchError,
+    ),
     continueButton: intl.formatMessage(messages.continueButton),
-    incorrectPassword: intl.formatMessage(errorMessages.incorrectPassword.title),
+    incorrectPassword: intl.formatMessage(
+      errorMessages.incorrectPassword.title,
+    ),
   }
 }
 
@@ -179,7 +225,11 @@ const useStyles = () => {
 
 const useChangePassword = (
   wallet: YoroiWallet,
-  mutationOptions: MutationOptions<void, Error, {currentPassword: string; newPassword: string}>,
+  mutationOptions: MutationOptions<
+    void,
+    Error,
+    {currentPassword: string; newPassword: string}
+  >,
 ) => {
   const {walletManager} = useWalletManager()
   const {mutate, ...mutation} = useMutation(

@@ -1,5 +1,13 @@
 import * as React from 'react'
-import Svg, {Defs, Ellipse, G, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
+import Svg, {
+  Defs,
+  Ellipse,
+  G,
+  LinearGradient,
+  Path,
+  Stop,
+  SvgProps,
+} from 'react-native-svg'
 
 export function WalletAssetImage(props: SvgProps) {
   return (

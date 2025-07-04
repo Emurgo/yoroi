@@ -1,4 +1,7 @@
-import {MessageAddressFieldType, MessageData} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {
+  MessageAddressFieldType,
+  MessageData,
+} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {Transaction} from '@emurgo/cross-csl-core'
 import {createSignedLedgerTxFromCbor} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
@@ -13,12 +16,18 @@ import {YoroiWallet} from '../types'
 import {getAddressedUtxos, getHexAddressingMap} from '../utils'
 import {wrappedCsl} from '../wrappedCsl'
 
-export const cip30LedgerExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
+export const cip30LedgerExtensionMaker = (
+  wallet: YoroiWallet,
+  meta: Wallet.Meta,
+) => {
   return new CIP30LedgerExtension(wallet, meta)
 }
 
 class CIP30LedgerExtension {
-  constructor(private wallet: YoroiWallet, private meta: Wallet.Meta) {}
+  constructor(
+    private wallet: YoroiWallet,
+    private meta: Wallet.Meta,
+  ) {}
 
   async signData(
     address: string,
@@ -30,18 +39,25 @@ class CIP30LedgerExtension {
     try {
       const normalizedAddress = await normalizeToAddress(csl, address)
       if (!normalizedAddress) throw new Error('Invalid address')
-      const rewardAddress = await csl.RewardAddress.fromAddress(normalizedAddress)
-      const rewardAddressHex = await rewardAddress?.toAddress().then((a) => a.toHex())
+      const rewardAddress =
+        await csl.RewardAddress.fromAddress(normalizedAddress)
+      const rewardAddressHex = await rewardAddress
+        ?.toAddress()
+        .then((a) => a.toHex())
 
       const stakingSigningPath =
         this.meta.implementation === 'cardano-cip1852'
-          ? cardanoConfig.implementations[this.meta.implementation].features.staking.addressing
+          ? cardanoConfig.implementations[this.meta.implementation].features
+              .staking.addressing
           : null
 
       const signingPath =
-        rewardAddressHex === this.wallet.rewardAddressHex && Array.isArray(stakingSigningPath)
+        rewardAddressHex === this.wallet.rewardAddressHex &&
+        Array.isArray(stakingSigningPath)
           ? stakingSigningPath
-          : this.wallet.getAddressing(await normalizedAddress.toBech32(undefined)).path
+          : this.wallet.getAddressing(
+              await normalizedAddress.toBech32(undefined),
+            ).path
 
       const ledgerPayload: MessageData = {
         messageHex: payload,
@@ -50,7 +66,11 @@ class CIP30LedgerExtension {
         preferHexDisplay: false,
         addressFieldType: MessageAddressFieldType.KEY_HASH,
       }
-      const response = await signMessageWithLedger(ledgerPayload, hwDeviceInfo, useUSB)
+      const response = await signMessageWithLedger(
+        ledgerPayload,
+        hwDeviceInfo,
+        useUSB,
+      )
       return encodeHardwareWalletSignResult({
         addressHex: response.addressFieldHex,
         signatureHex: response.signatureHex,
@@ -62,14 +82,22 @@ class CIP30LedgerExtension {
     }
   }
 
-  async signTx(cbor: string, partial: boolean, hwDeviceInfo: HW.DeviceInfo, useUSB: boolean): Promise<Transaction> {
+  async signTx(
+    cbor: string,
+    partial: boolean,
+    hwDeviceInfo: HW.DeviceInfo,
+    useUSB: boolean,
+  ): Promise<Transaction> {
     const {csl, release} = wrappedCsl()
     try {
       if (!partial) await assertHasAllSigners(cbor, this.wallet, this.meta)
 
       const stakingSigningPath =
         this.meta.implementation === 'cardano-cip1852'
-          ? Array.from(cardanoConfig.implementations[this.meta.implementation].features.staking.addressing)
+          ? Array.from(
+              cardanoConfig.implementations[this.meta.implementation].features
+                .staking.addressing,
+            )
           : undefined
 
       const payload = await toLedgerSignRequest(
@@ -84,8 +112,13 @@ class CIP30LedgerExtension {
         stakingSigningPath,
       )
 
-      const signedLedgerTx = await signTxWithLedger(payload, hwDeviceInfo, useUSB)
-      const implementationConfig = cardanoConfig.implementations[this.meta.implementation]
+      const signedLedgerTx = await signTxWithLedger(
+        payload,
+        hwDeviceInfo,
+        useUSB,
+      )
+      const implementationConfig =
+        cardanoConfig.implementations[this.meta.implementation]
       const bytes = await createSignedLedgerTxFromCbor(
         csl,
         cbor,

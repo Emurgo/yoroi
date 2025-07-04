@@ -17,7 +17,10 @@ storiesOf('NFT/Details Image', module).add('Default', () => {
       nfts: [tokenBalanceMocks.nftCryptoKitty],
       records: new Map([
         [tokenBalanceMocks.ftNoTicker.info.id, tokenBalanceMocks.ftNoTicker],
-        [tokenBalanceMocks.nftCryptoKitty.info.id, tokenBalanceMocks.nftCryptoKitty],
+        [
+          tokenBalanceMocks.nftCryptoKitty.info.id,
+          tokenBalanceMocks.nftCryptoKitty,
+        ],
       ]),
     },
   }

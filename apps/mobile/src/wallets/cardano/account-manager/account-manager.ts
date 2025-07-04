@@ -19,14 +19,19 @@ export class AddressGenerator {
   _accountPubKeyPtr: undefined | CardanoTypes.Bip32PublicKey
   _rewardAddressHex: undefined | string
 
-  constructor(accountPubKeyHex: string, role: number, implementation: Wallet.Implementation, chainId: number) {
+  constructor(
+    accountPubKeyHex: string,
+    role: number,
+    implementation: Wallet.Implementation,
+    chainId: number,
+  ) {
     this.accountPubKeyHex = accountPubKeyHex
     this.role = role
     this.implementation = implementation
     this.chainId = chainId
   }
 
-  async getRewardAddressHex() {
+  getRewardAddressHex() {
     const config = cardanoConfig.implementations[this.implementation]
     if (!config.features.staking) return null
     const staking = config.features.staking
@@ -35,25 +40,27 @@ export class AddressGenerator {
 
     // cache account public key
     if (this._accountPubKeyPtr == null) {
-      this._accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.accountPubKeyHex, 'hex'))
+      this._accountPubKeyPtr = CardanoMobile.Bip32PublicKey.fromBytes(
+        Buffer.from(this.accountPubKeyHex, 'hex'),
+      )
     }
 
-    const stakingRawKey = await this._accountPubKeyPtr
+    const stakingRawKey = this._accountPubKeyPtr
       .derive(staking.derivation.role)
-      .then((withRole) => withRole.derive(staking.derivation.index))
-      .then((withIndex) => withIndex.toRawKey())
-    const stakingKeyHash = await stakingRawKey.hash()
+      .derive(staking.derivation.index)
+      .toRawKey()
+    const stakingKeyHash = stakingRawKey.hash()
 
-    const credential = await CardanoMobile.Credential.fromKeyhash(stakingKeyHash)
-    const rewardAddr = await CardanoMobile.RewardAddress.new(this.chainId, credential)
-    const rewardAddrAsAddr = await rewardAddr.toAddress()
-    const rewardAddrBytes = await rewardAddrAsAddr.toBytes()
+    const credential = CardanoMobile.Credential.fromKeyhash(stakingKeyHash)
+    const rewardAddr = CardanoMobile.RewardAddress.new(this.chainId, credential)
+    const rewardAddrAsAddr = rewardAddr.toAddress()
+    const rewardAddrBytes = rewardAddrAsAddr.toBytes()
 
     this._rewardAddressHex = Buffer.from(rewardAddrBytes).toString('hex')
     return this._rewardAddressHex
   }
 
-  async generate(indexes: Array<number>): Promise<Array<string>> {
+  generate(indexes: Array<number>): Array<string> {
     const config = cardanoConfig.implementations[this.implementation]
 
     if (!config.features.staking) {
@@ -61,37 +68,36 @@ export class AddressGenerator {
     } else {
       // cache account public key
       if (this._accountPubKeyPtr == null) {
-        this._accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.accountPubKeyHex, 'hex'))
+        this._accountPubKeyPtr = CardanoMobile.Bip32PublicKey.fromBytes(
+          Buffer.from(this.accountPubKeyHex, 'hex'),
+        )
       }
 
       const staking = config.features.staking
-      const stakingCredential = await this._accountPubKeyPtr
-        .derive(staking.derivation.role)
-        .then((withRole) => withRole.derive(staking.derivation.index))
-        .then((withIndex) => withIndex.toRawKey())
-        .then((rawKey) => rawKey.hash())
-        .then((keyHash) => CardanoMobile.Credential.fromKeyhash(keyHash))
-
-      const withType = await this._accountPubKeyPtr.derive(this.role)
-      return Promise.all(
-        indexes.map(async (index) => {
-          const addressCredential = await withType
-            .derive(index)
-            .then((withIndex) => withIndex.toRawKey())
-            .then((rawKey) => rawKey.hash())
-            .then((keyHash) => CardanoMobile.Credential.fromKeyhash(keyHash))
-
-          const baseAddressBech32 = await CardanoMobile.BaseAddress.new(
-            this.chainId,
-            addressCredential,
-            stakingCredential,
-          )
-            .then((base) => base.toAddress())
-            .then((address) => address.toBech32(undefined))
-
-          return baseAddressBech32
-        }),
+      const stakingCredential = CardanoMobile.Credential.fromKeyhash(
+        this._accountPubKeyPtr
+          .derive(staking.derivation.role)
+          .derive(staking.derivation.index)
+          .toRawKey()
+          .hash(),
       )
+
+      const withType = this._accountPubKeyPtr.derive(this.role)
+      return indexes.map((index) => {
+        const addressCredential = CardanoMobile.Credential.fromKeyhash(
+          withType.derive(index).toRawKey().hash(),
+        )
+
+        const baseAddressBech32 = CardanoMobile.BaseAddress.new(
+          this.chainId,
+          addressCredential,
+          stakingCredential,
+        )
+          .toAddress()
+          .toBech32(undefined)
+
+        return baseAddressBech32
+      })
     }
   }
 
@@ -110,7 +116,8 @@ export class AddressGenerator {
   }
 }
 
-const _addressToIdxSelector = (addresses: Array<string>) => _.fromPairs(addresses.map((addr, i) => [addr, i]))
+const _addressToIdxSelector = (addresses: Array<string>) =>
+  _.fromPairs(addresses.map((addr, i) => [addr, i]))
 
 export class AddressChain {
   _addresses: Addresses = []
@@ -119,7 +126,8 @@ export class AddressChain {
   _gapLimit: number
   _isInitialized = false
   _subscriptions: Array<(addresses: Addresses) => unknown> = []
-  _addressToIdxSelector: (addresses: Addresses) => Record<string, number> = defaultMemoize(_addressToIdxSelector)
+  _addressToIdxSelector: (addresses: Addresses) => Record<string, number> =
+    defaultMemoize(_addressToIdxSelector)
   #lastUsedIndex: number
   #lastUsedIndexVisual: number
 
@@ -152,7 +160,8 @@ export class AddressChain {
     return {
       lastUsedIndex: this.#lastUsedIndex,
       lastUsedIndexVisual: this.#lastUsedIndexVisual,
-      canIncrease: this.#lastUsedIndexVisual - this.#lastUsedIndex < this._gapLimit,
+      canIncrease:
+        this.#lastUsedIndexVisual - this.#lastUsedIndex < this._gapLimit,
     } as const
   }
 
@@ -162,7 +171,14 @@ export class AddressChain {
   }
 
   static fromJSON(data: AddressChainJSON, chainId: number) {
-    const {gapLimit, blockSize, addresses, addressGenerator, lastUsedIndex, lastUsedIndexVirtual} = data
+    const {
+      gapLimit,
+      blockSize,
+      addresses,
+      addressGenerator,
+      lastUsedIndex,
+      lastUsedIndexVirtual,
+    } = data
     const chain = new AddressChain(
       AddressGenerator.fromJSON(addressGenerator, chainId),
       blockSize,
@@ -193,15 +209,17 @@ export class AddressChain {
     this._subscriptions.forEach((handler) => handler(newAddresses))
   }
 
-  async _discoverNewBlock() {
+  _discoverNewBlock() {
     const addresses = this.addresses
     const start = this.size()
     const idxs = _.range(start, start + this._blockSize)
 
-    const newAddresses = await this._addressGenerator.generate(idxs)
+    const newAddresses = this._addressGenerator.generate(idxs)
 
     if (this.addresses !== addresses) {
-      logger.warn('AddressChain: discoverNewBlock concurrent modification to addresses')
+      logger.warn(
+        'AddressChain: discoverNewBlock concurrent modification to addresses',
+      )
     } else {
       this._extendAddresses(newAddresses)
     }
@@ -212,9 +230,9 @@ export class AddressChain {
     return block
   }
 
-  async initialize() {
+  initialize() {
     if (this._isInitialized) return
-    await this._discoverNewBlock()
+    this._discoverNewBlock()
     this._isInitialized = true
   }
 
@@ -231,18 +249,21 @@ export class AddressChain {
 
     // Index relative to the start of the block
     // It is okay to "overshoot" with -1 here
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     const lastUsedIdx = used.length > 0 ? block.indexOf(_.last(used)!) : -1
     const lastUsedAddress = lastUsedIdx > 0 ? used[lastUsedIdx] : null
-    const lastUsedRealIndex = lastUsedAddress != null ? this.addresses.indexOf(lastUsedAddress) : 0
+    const lastUsedRealIndex =
+      lastUsedAddress != null ? this.addresses.indexOf(lastUsedAddress) : 0
 
-    if (lastUsedRealIndex > this.#lastUsedIndex) this.#lastUsedIndex = lastUsedRealIndex
-    if (lastUsedRealIndex > this.#lastUsedIndexVisual) this.#lastUsedIndexVisual = lastUsedRealIndex
+    if (lastUsedRealIndex > this.#lastUsedIndex)
+      this.#lastUsedIndex = lastUsedRealIndex
+    if (lastUsedRealIndex > this.#lastUsedIndexVisual)
+      this.#lastUsedIndexVisual = lastUsedRealIndex
 
     const needsNewBlock = lastUsedIdx + this._gapLimit >= this._blockSize
 
     if (needsNewBlock) {
-      await this._discoverNewBlock()
+      this._discoverNewBlock()
       return true
     } else {
       return false
@@ -267,23 +288,23 @@ export class AddressChain {
   }
 }
 
-const getBIP44Addresses = async (
+const getBIP44Addresses = (
   accountPubKeyHex: string,
   role: number,
   indexes: Array<number>,
-): Promise<Array<string>> => {
+): Array<string> => {
   const protocolMagic = 764824073
   const addresses: Array<string> = []
 
-  const withRole = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex')).then((pubKey) =>
-    pubKey.derive(role),
-  )
+  const withRole = CardanoMobile.Bip32PublicKey.fromBytes(
+    Buffer.from(accountPubKeyHex, 'hex'),
+  ).derive(role)
 
   for (const index of indexes) {
-    const byronAddrBs58 = await withRole
-      .derive(index)
-      .then((withIndex) => CardanoMobile.ByronAddress.icarusFromKey(withIndex, protocolMagic))
-      .then((addr) => addr.toBase58())
+    const byronAddrBs58 = CardanoMobile.ByronAddress.icarusFromKey(
+      withRole.derive(index),
+      protocolMagic,
+    ).toBase58()
     addresses.push(byronAddrBs58)
   }
 
@@ -315,7 +336,12 @@ export const accountManagerMaker = async ({
     addresses?.internalChain != null
       ? AddressChain.fromJSON(addresses.internalChain, chainId)
       : new AddressChain(
-          new AddressGenerator(accountPubKeyHex, config.derivations.base.roles.internal, implementation, chainId),
+          new AddressGenerator(
+            accountPubKeyHex,
+            config.derivations.base.roles.internal,
+            implementation,
+            chainId,
+          ),
           addressesPerRequest,
           derivationConfig.gapLimit,
         )
@@ -324,13 +350,18 @@ export const accountManagerMaker = async ({
     addresses?.externalChain != null
       ? AddressChain.fromJSON(addresses.externalChain, chainId)
       : new AddressChain(
-          new AddressGenerator(accountPubKeyHex, config.derivations.base.roles.external, implementation, chainId),
+          new AddressGenerator(
+            accountPubKeyHex,
+            config.derivations.base.roles.external,
+            implementation,
+            chainId,
+          ),
           addressesPerRequest,
           derivationConfig.gapLimit,
         )
 
-  await internalChain.initialize()
-  await externalChain.initialize()
+  internalChain.initialize()
+  externalChain.initialize()
 
   const save = async () => {
     await storage.setItem(storageKey, {
@@ -345,10 +376,16 @@ export const accountManagerMaker = async ({
 
   // TODO: API should be injected
   const discoverAddresses = async () => {
-    const addressesBeforeRequest = internalChain.addresses.length + externalChain.addresses.length
-    const filterFn = (addrs: Addresses) => legacyApi.filterUsedAddresses(addrs, baseApiUrl)
-    await Promise.all([internalChain.sync(filterFn), externalChain.sync(filterFn)])
-    const addressesAfterRequest = internalChain.addresses.length + externalChain.addresses.length
+    const addressesBeforeRequest =
+      internalChain.addresses.length + externalChain.addresses.length
+    const filterFn = (addrs: Addresses) =>
+      legacyApi.filterUsedAddresses(addrs, baseApiUrl)
+    await Promise.all([
+      internalChain.sync(filterFn),
+      externalChain.sync(filterFn),
+    ])
+    const addressesAfterRequest =
+      internalChain.addresses.length + externalChain.addresses.length
     const hasAddedNewAddress = addressesAfterRequest !== addressesBeforeRequest
     if (hasAddedNewAddress) await save()
   }
@@ -357,7 +394,8 @@ export const accountManagerMaker = async ({
     const internalAddresses = internalChain.getBlocks()
     const externalAddresses = externalChain.getBlocks()
 
-    if (rewardAddressHex != '') return [...internalAddresses, ...externalAddresses, [rewardAddressHex]]
+    if (rewardAddressHex != '')
+      return [...internalAddresses, ...externalAddresses, [rewardAddressHex]]
 
     return [...internalAddresses, ...externalAddresses]
   }
@@ -414,7 +452,11 @@ const parseAccountJSON = (data: unknown) => {
 
 const isAccountJSON = (data: unknown): data is AccountJSON => {
   const candidate = data as AccountJSON
-  return !!candidate && typeof candidate === 'object' && keys.every((key) => key in candidate)
+  return (
+    !!candidate &&
+    typeof candidate === 'object' &&
+    keys.every((key) => key in candidate)
+  )
 }
 
 const keys: Array<keyof AccountJSON> = ['internalChain', 'externalChain']

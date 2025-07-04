@@ -14,7 +14,10 @@ storiesOf('AddWallet CardAboutPhrase', module)
     />
   ))
   .add('with title and without background color and spacing', () => (
-    <CardAboutPhrase title="Title" linesOfText={['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']} />
+    <CardAboutPhrase
+      title="Title"
+      linesOfText={['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']}
+    />
   ))
 
 const styles = StyleSheet.create({

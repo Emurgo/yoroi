@@ -37,11 +37,17 @@ export const AboutRecoveryPhraseScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView bounces={false} contentContainerStyle={styles.scroll}>
-        <StepperProgress currentStep={1} currentStepTitle={strings.stepAboutRecoveryPhrase} totalSteps={4} />
+        <StepperProgress
+          currentStep={1}
+          currentStepTitle={strings.stepAboutRecoveryPhrase}
+          totalSteps={4}
+        />
 
         <Space height="lg" />
 
-        <Text style={styles.aboutRecoveryPhraseTitle}>{strings.aboutRecoveryPhraseTitle(bold)}</Text>
+        <Text style={styles.aboutRecoveryPhraseTitle}>
+          {strings.aboutRecoveryPhraseTitle(bold)}
+        </Text>
 
         <Space height="lg" />
 
@@ -65,7 +71,9 @@ export const AboutRecoveryPhraseScreen = () => {
 
         <Button
           title={strings.next}
-          onPress={() => navigation.navigate('setup-wallet-recovery-phrase-mnemonic')}
+          onPress={() =>
+            navigation.navigate('setup-wallet-recovery-phrase-mnemonic')
+          }
           testID="setup-step1-next-button"
         />
       </Actions>
@@ -73,7 +81,9 @@ export const AboutRecoveryPhraseScreen = () => {
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => <View style={style} {...props} />
+const Actions = ({style, ...props}: ViewProps) => (
+  <View style={style} {...props} />
+)
 
 const useBold = () => {
   const {styles} = useStyles()

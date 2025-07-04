@@ -1,7 +1,15 @@
 import {useTheme} from '@yoroi/theme'
 import {wordlists} from 'bip39'
 import * as React from 'react'
-import {Platform, ScrollView, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View} from 'react-native'
+import {
+  Platform,
+  TextInput as RNTextInput,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
 import {Space} from '../../../../../components/Space/Space'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -49,7 +57,8 @@ export const MnemonicInput = ({
   const {styles, colors} = useStyles()
 
   const isMnemonicCompleted = !isEmptyString(mnemonic)
-  const error = !isValidPhrase && isMnemonicCompleted ? strings.invalidChecksum : ''
+  const error =
+    !isValidPhrase && isMnemonicCompleted ? strings.invalidChecksum : ''
 
   return (
     <View>
@@ -101,7 +110,13 @@ export const MnemonicInput = ({
   )
 }
 
-const ClearAllButton = ({onPress, testID}: {onPress: () => void; testID?: string}) => {
+const ClearAllButton = ({
+  onPress,
+  testID,
+}: {
+  onPress: () => void
+  testID?: string
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   return (
@@ -153,7 +168,9 @@ const MnemonicWordsInput = ({
           <View
             key={index}
             style={styles.mnemonicInput}
-            onLayout={({nativeEvent}) => (rowHeightRef.current = nativeEvent.layout.height)}
+            onLayout={({nativeEvent}) =>
+              (rowHeightRef.current = nativeEvent.layout.height)
+            }
             testID={`mnemonicInput${index}`}
           >
             <Text style={styles.mnemonicIndex}>{index + 1}.</Text>
@@ -171,13 +188,19 @@ const MnemonicWordsInput = ({
                 if (rowHeightRef.current == null) return
                 const columnNumber = index % 3
                 const rowNumber = (index - columnNumber) / 3
-                scrollViewRef?.current?.scrollTo({y: rowNumber * rowHeightRef.current})
+                scrollViewRef?.current?.scrollTo({
+                  y: rowNumber * rowHeightRef.current,
+                })
 
                 onFocus(index)
               }}
               isValidPhrase={isValidPhrase}
               onKeyPress={(currentWord: string) => {
-                if (mnenonicRefs[index].current && isEmptyString(currentWord) && index > 0) {
+                if (
+                  mnenonicRefs[index].current &&
+                  isEmptyString(currentWord) &&
+                  index > 0
+                ) {
                   mnenonicRefs[index - 1]?.current?.focus()
                 }
               }}
@@ -189,7 +212,9 @@ const MnemonicWordsInput = ({
         )
       })}
 
-      {mnemonicSelectedWords.length === 15 && <View style={styles.mnemonicInput} />}
+      {mnemonicSelectedWords.length === 15 && (
+        <View style={styles.mnemonicInput} />
+      )}
     </View>
   )
 }
@@ -208,7 +233,10 @@ type MnemonicWordInputProps = {
   error: boolean
 }
 
-const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInputProps>(
+const MnemonicWordInput = React.forwardRef<
+  MnemonicWordInputRef,
+  MnemonicWordInputProps
+>(
   (
     {
       onSelect,
@@ -314,8 +342,12 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
         }}
         onBlur={handleOnBlur}
         cursorColor={colors.primary_600} // only works for android
-        selectionColor={Platform.OS === 'android' ? colors.input_selected : undefined} // on ios, selectionColor changes cursor and selection
-        keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
+        selectionColor={
+          Platform.OS === 'android' ? colors.input_selected : undefined
+        } // on ios, selectionColor changes cursor and selection
+        keyboardType={
+          Platform.OS === 'android' ? 'visible-password' : undefined
+        } // to hide keyboard suggestions on android
         keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
       />
     )
@@ -328,7 +360,9 @@ const normalizeText = (text: string) => {
   return text.trim().toLowerCase().replace(NON_LOWERCASE_LETTERS, '')
 }
 const getMatchingWords = (targetWord: string) =>
-  (wordlists.EN as Array<string>).filter((word) => word.startsWith(normalizeText(targetWord)))
+  (wordlists.EN as Array<string>).filter((word) =>
+    word.startsWith(normalizeText(targetWord)),
+  )
 
 const useAutoFocus = (ref: React.RefObject<MnemonicWordInputRef>) =>
   React.useEffect(() => {

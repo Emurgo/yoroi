@@ -28,7 +28,9 @@ export const ShowPreprodNotice = () => {
 
         <Space height="lg" />
 
-        <Text style={styles.title}>{strings.createOrderPreprodNoticeTitle}</Text>
+        <Text style={styles.title}>
+          {strings.createOrderPreprodNoticeTitle}
+        </Text>
 
         <Text style={styles.text}>{strings.createOrderPreprodNoticeText}</Text>
       </View>

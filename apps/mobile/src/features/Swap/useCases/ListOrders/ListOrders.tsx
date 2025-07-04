@@ -3,11 +3,17 @@ import {isLeft, truncateString} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Api, Portfolio, Swap} from '@yoroi/types'
-import _ from 'lodash'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {useIntl} from 'react-intl'
-import {FlatList, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  FlatList,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {Divider} from 'react-native-paper'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
@@ -99,7 +105,9 @@ export const ListOrders = () => {
         }}
       >
         <ErrorBoundary
-          fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
+          fallbackRender={({resetErrorBoundary}) => (
+            <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />
+          )}
         >
           <Content filter={filter} />
         </ErrorBoundary>
@@ -135,14 +143,19 @@ const Content = ({filter}: {filter: Filter}) => {
         <Counter
           openingText={strings.youHave}
           counter={orders?.length ?? 0}
-          closingText={filter === 'open' ? strings.listOpenOrders : strings.listCompletedOrders}
+          closingText={
+            filter === 'open'
+              ? strings.listOpenOrders
+              : strings.listCompletedOrders
+          }
         />
       )}
     </View>
   )
 }
 
-const tokenName = (token?: Portfolio.Token.Info) => token?.ticker ?? token?.name ?? token?.id ?? '-'
+const tokenName = (token?: Portfolio.Token.Info) =>
+  token?.ticker ?? token?.name ?? token?.id ?? '-'
 
 const Order = ({order}: {order: Swap.Order}) => {
   const intl = useIntl()
@@ -158,9 +171,14 @@ const Order = ({order}: {order: Swap.Order}) => {
   const tokenInInfo = swapForm.tokenInfos.get(order.tokenIn)
   const tokenOutInfo = swapForm.tokenInfos.get(order.tokenOut)
 
-  const amountOut = order.actualAmountOut === 0 ? order.expectedAmountOut : order.actualAmountOut
+  const amountOut =
+    order.actualAmountOut === 0
+      ? order.expectedAmountOut
+      : order.actualAmountOut
   const priceCalc = amountOut === 0 ? 0 : order.amountIn / amountOut
-  const roundedPrice = priceCalc.toFixed(tokenOutInfo?.decimals ?? 0).replace(/\.0+$/, '')
+  const roundedPrice = priceCalc
+    .toFixed(tokenOutInfo?.decimals ?? 0)
+    .replace(/\.0+$/, '')
   const price = roundedPrice !== '0' ? roundedPrice : priceCalc.toFixed(6)
 
   const priceStr = `1 ${tokenName(tokenInInfo)} = ${price} ${tokenName(tokenOutInfo)}`
@@ -186,7 +204,11 @@ const Order = ({order}: {order: Swap.Order}) => {
             <Text style={styles.heading}>{tokenName(tokenOutInfo)}</Text>
           </View>
 
-          <Icon.Chevron direction={expanded ? 'up' : 'down'} color={color.el_gray_max} size={24} />
+          <Icon.Chevron
+            direction={expanded ? 'up' : 'down'}
+            color={color.el_gray_max}
+            size={24}
+          />
         </View>
       </TouchableOpacity>
 
@@ -217,9 +239,17 @@ const Order = ({order}: {order: Swap.Order}) => {
 
         {expanded && (
           <React.Fragment>
-            <Row label={strings.listOrdersTotal} value={`${order.amountIn} ${tokenName(tokenInInfo)}`} />
+            <Row
+              label={strings.listOrdersTotal}
+              value={`${order.amountIn} ${tokenName(tokenInInfo)}`}
+            />
 
-            <Row label={strings.route} value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />} />
+            <Row
+              label={strings.route}
+              value={
+                <ProtocolAvatar protocol={order.protocol} preventOpenLink />
+              }
+            />
 
             {lastTxHash !== '' && (
               <Row
@@ -228,7 +258,9 @@ const Order = ({order}: {order: Swap.Order}) => {
                   <Button
                     type={ButtonType.Link}
                     style={styles.inlineLink}
-                    onPress={() => Linking.openURL(explorers.cexplorer.tx(lastTxHash))}
+                    onPress={() =>
+                      Linking.openURL(explorers.cexplorer.tx(lastTxHash))
+                    }
                     title={shortenedTxHash}
                   />
                 }
@@ -238,7 +270,12 @@ const Order = ({order}: {order: Swap.Order}) => {
         )}
 
         {order.status === 'open' && tokenInInfo && (
-          <OrderCancellation order={order} tokenInInfo={tokenInInfo} price={priceStr} amount={amountOutStr} />
+          <OrderCancellation
+            order={order}
+            tokenInInfo={tokenInInfo}
+            price={priceStr}
+            amount={amountOutStr}
+          />
         )}
       </View>
     </View>
@@ -252,7 +289,12 @@ type CancellationProps = {
   amount: string
 }
 
-const OrderCancellation = ({order, tokenInInfo, price, amount}: CancellationProps) => {
+const OrderCancellation = ({
+  order,
+  tokenInInfo,
+  price,
+  amount,
+}: CancellationProps) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const {openModal, closeModal} = useModal()
@@ -275,7 +317,13 @@ const OrderCancellation = ({order, tokenInInfo, price, amount}: CancellationProp
           details: {
             title: strings.swapCancellationDetailsTitle,
             component: (
-              <Details order={order} tokenInInfo={tokenInInfo} price={price} amount={amount} response={response} />
+              <Details
+                order={order}
+                tokenInInfo={tokenInInfo}
+                price={price}
+                amount={amount}
+                response={response}
+              />
             ),
           },
         })
@@ -294,13 +342,25 @@ const OrderCancellation = ({order, tokenInInfo, price, amount}: CancellationProp
         />
       ),
       footer: isLeft(response) ? (
-        <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={closeModal} />
+        <Button
+          type={ButtonType.Secondary}
+          title={strings.listOrdersSheetBack}
+          onPress={closeModal}
+        />
       ) : (
         <View style={styles.group}>
-          <Button type={ButtonType.Secondary} title={strings.listOrdersSheetBack} onPress={closeModal} />
+          <Button
+            type={ButtonType.Secondary}
+            title={strings.listOrdersSheetBack}
+            onPress={closeModal}
+          />
 
           {response.value.data.cbor !== undefined && (
-            <Button type={ButtonType.Critical} title={strings.listOrdersSheetConfirm} onPress={onOrderCancelConfirm} />
+            <Button
+              type={ButtonType.Critical}
+              title={strings.listOrdersSheetConfirm}
+              onPress={onOrderCancelConfirm}
+            />
           )}
         </View>
       ),
@@ -341,16 +401,25 @@ const OrderCancellationConfirmation = ({
   return (
     <View style={styles.root}>
       <React.Fragment>
-        <Row label={strings.route} value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />} />
+        <Row
+          label={strings.route}
+          value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />}
+        />
 
         <Row label={strings.listOrdersSheetAssetPrice} value={price} />
 
         <Row label={strings.listOrdersSheetAssetAmount} value={amount} />
 
-        <Row label={strings.listOrdersSheetTotalReturned} value={`${order.amountIn} ${tokenName(tokenInInfo)}`} />
+        <Row
+          label={strings.listOrdersSheetTotalReturned}
+          value={`${order.amountIn} ${tokenName(tokenInInfo)}`}
+        />
 
         {fee !== undefined && (
-          <Row label={strings.listOrdersSheetCancellationFee} value={`${fee} ${primaryTokenInfoMainnet.ticker}}`} />
+          <Row
+            label={strings.listOrdersSheetCancellationFee}
+            value={`${fee} ${primaryTokenInfoMainnet.ticker}}`}
+          />
         )}
       </React.Fragment>
 
@@ -359,14 +428,24 @@ const OrderCancellationConfirmation = ({
   )
 }
 
-const Row = ({label, value}: {label: string; value: string | React.ReactNode}) => {
+const Row = ({
+  label,
+  value,
+}: {
+  label: string
+  value: string | React.ReactNode
+}) => {
   const {styles} = useStyles()
 
   return (
     <View style={styles.row}>
       <Text style={styles.rowLabel}>{label}</Text>
 
-      {typeof value === 'string' ? <Text style={styles.rowValue}>{value}</Text> : value}
+      {typeof value === 'string' ? (
+        <Text style={styles.rowValue}>{value}</Text>
+      ) : (
+        value
+      )}
     </View>
   )
 }
@@ -383,17 +462,25 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
           <EmptyOpenOrdersIllustration style={styles.illustration} />
 
           <Text style={styles.contentText}>
-            {isSearching ? `${strings.emptySearchOpenOrders} "${assetSearchTerm}"` : strings.emptyOpenOrders}
+            {isSearching
+              ? `${strings.emptySearchOpenOrders} "${assetSearchTerm}"`
+              : strings.emptyOpenOrders}
           </Text>
 
-          {!isSearching && <Text style={styles.contentSubText}>{strings.emptyOpenOrdersSub}</Text>}
+          {!isSearching && (
+            <Text style={styles.contentSubText}>
+              {strings.emptyOpenOrdersSub}
+            </Text>
+          )}
         </React.Fragment>
       ) : (
         <React.Fragment>
           <EmptyCompletedOrdersIllustration style={styles.illustration} />
 
           <Text style={styles.contentText}>
-            {isSearching ? `${strings.emptySearchCompletedOrders} "${assetSearchTerm}"` : strings.emptyCompletedOrders}
+            {isSearching
+              ? `${strings.emptySearchCompletedOrders} "${assetSearchTerm}"`
+              : strings.emptyCompletedOrders}
           </Text>
         </React.Fragment>
       )}
@@ -418,19 +505,28 @@ const Details = ({
   const tokenInInfo = portfolioTokenInfos.tokenInfos?.get(order.tokenIn)
   const tokenOutInfo = portfolioTokenInfos.tokenInfos?.get(order.tokenOut)
 
-  if (tokenInInfo == null) throw new Error('Swap Cancellation:: invalid state: tokenInInfo')
-  if (tokenOutInfo == null) throw new Error('Swap Cancellation:: invalid state: tokenOutInfo')
+  if (tokenInInfo == null)
+    throw new Error('Swap Cancellation:: invalid state: tokenInInfo')
+  if (tokenOutInfo == null)
+    throw new Error('Swap Cancellation:: invalid state: tokenOutInfo')
 
-  const amountOut = order.actualAmountOut === 0 ? order.expectedAmountOut : order.actualAmountOut
+  const amountOut =
+    order.actualAmountOut === 0
+      ? order.expectedAmountOut
+      : order.actualAmountOut
 
   const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
 
   const isFromPrimary = tokenOutInfo?.nature === Portfolio.Token.Nature.Primary
-  const fromDetail = isFromPrimary ? tokenOutInfo?.description : tokenOutInfo?.fingerprint
+  const fromDetail = isFromPrimary
+    ? tokenOutInfo?.description
+    : tokenOutInfo?.fingerprint
   const fromName = infoExtractName(tokenOutInfo)
 
   const isToPrimary = tokenOutInfo?.nature === Portfolio.Token.Nature.Primary
-  const toDetail = isToPrimary ? tokenOutInfo?.description : tokenOutInfo?.fingerprint
+  const toDetail = isToPrimary
+    ? tokenOutInfo?.description
+    : tokenOutInfo?.fingerprint
   const toName = infoExtractName(tokenOutInfo)
   const amountInStr = `${Number(order.amountIn.toFixed(tokenInInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
 
@@ -445,12 +541,22 @@ const Details = ({
 
         <Middle>
           <View style={styles.row}>
-            <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="middle"
+              style={styles.name}
+              testID="tokenInfoText"
+            >
               {fromName}
             </Text>
           </View>
 
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="middle"
+            style={styles.detail}
+            testID="tokenFingerprintText"
+          >
             {fromDetail}
           </Text>
         </Middle>
@@ -471,12 +577,22 @@ const Details = ({
 
         <Middle>
           <View style={styles.row}>
-            <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="middle"
+              style={styles.name}
+              testID="tokenInfoText"
+            >
               {toName}
             </Text>
           </View>
 
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="middle"
+            style={styles.detail}
+            testID="tokenFingerprintText"
+          >
             {toDetail}
           </Text>
         </Middle>
@@ -505,9 +621,14 @@ const Details = ({
 
 const Left = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 const Middle = ({style, ...props}: ViewProps) => (
-  <View style={[style, {flex: 1, justifyContent: 'center', paddingHorizontal: 8}]} {...props} />
+  <View
+    style={[style, {flex: 1, justifyContent: 'center', paddingHorizontal: 8}]}
+    {...props}
+  />
 )
-const Right = ({style, ...props}: ViewProps) => <View style={style} {...props} />
+const Right = ({style, ...props}: ViewProps) => (
+  <View style={style} {...props} />
+)
 
 const useStyles = () => {
   const {color, atoms} = useTheme()

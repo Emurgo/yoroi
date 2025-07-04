@@ -11,7 +11,13 @@ import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSe
 import {Accordion} from '../../../../common/Accordion'
 import {useStrings} from '../../../../common/hooks/useStrings'
 import {TokenItem} from '../../../../common/TokenItem'
-import {FormattedInput, FormattedInputs, FormattedOutput, FormattedOutputs, FormattedTx} from '../../../../common/types'
+import {
+  FormattedInput,
+  FormattedInputs,
+  FormattedOutput,
+  FormattedOutputs,
+  FormattedTx,
+} from '../../../../common/types'
 
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()
@@ -26,7 +32,12 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
         <Inputs inputs={tx.inputs} />
       </Accordion>
 
-      <Fee fee={formatTokenWithText(tx.fee.quantity, wallet.portfolioPrimaryTokenInfo)} />
+      <Fee
+        fee={formatTokenWithText(
+          tx.fee.quantity,
+          wallet.portfolioPrimaryTokenInfo,
+        )}
+      />
 
       <Accordion label={`${strings.utxosOutputsLabel} (${tx.outputs.length})`}>
         <Outputs outputs={tx.outputs} />
@@ -38,7 +49,9 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
 }
 
 export const Inputs = ({inputs}: {inputs: FormattedInputs}) => {
-  return inputs.map((input, index) => <Input key={`${input.address}-${index}`} input={input} />)
+  return inputs.map((input, index) => (
+    <Input key={`${input.address}-${index}`} input={input} />
+  ))
 }
 
 const Input = ({input}: {input: FormattedInput}) => {
@@ -74,17 +87,27 @@ const Input = ({input}: {input: FormattedInput}) => {
 
       <View style={styles.tokenItems}>
         {input.assets.map((asset, index) => {
-          const isPrimary = asset.tokenInfo.nature === Portfolio.Token.Nature.Primary
+          const isPrimary =
+            asset.tokenInfo.nature === Portfolio.Token.Nature.Primary
           const label = formatTokenWithText(asset.quantity, asset.tokenInfo)
 
-          return <TokenItem tokenInfo={asset.tokenInfo} key={index} label={label} isPrimaryToken={isPrimary} />
+          return (
+            <TokenItem
+              tokenInfo={asset.tokenInfo}
+              key={index}
+              label={label}
+              isPrimaryToken={isPrimary}
+            />
+          )
         })}
       </View>
     </View>
   )
 }
 const Outputs = ({outputs}: {outputs: FormattedOutputs}) => {
-  return outputs.map((output, index) => <Output key={`${output.address}-${index}`} output={output} />)
+  return outputs.map((output, index) => (
+    <Output key={`${output.address}-${index}`} output={output} />
+  ))
 }
 
 const Output = ({output}: {output: FormattedOutput}) => {
@@ -108,7 +131,8 @@ const Output = ({output}: {output: FormattedOutput}) => {
 
       <View style={styles.tokenItems}>
         {output.assets.map((asset, index) => {
-          const isPrimary = asset.tokenInfo.nature === Portfolio.Token.Nature.Primary
+          const isPrimary =
+            asset.tokenInfo.nature === Portfolio.Token.Nature.Primary
           const label = formatTokenWithText(asset.quantity, asset.tokenInfo)
 
           return (
@@ -145,16 +169,30 @@ const Fee = ({fee}: {fee: string}) => {
   )
 }
 
-const UtxoTitle = ({isInput, isOwnAdddress}: {isOwnAdddress: boolean | null; isInput: boolean}) => {
+const UtxoTitle = ({
+  isInput,
+  isOwnAdddress,
+}: {
+  isOwnAdddress: boolean | null
+  isInput: boolean
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   const label =
-    isOwnAdddress != null ? (isOwnAdddress ? strings.utxosYourAddressLabel : strings.utxosForeignAddressLabel) : '-'
+    isOwnAdddress != null
+      ? isOwnAdddress
+        ? strings.utxosYourAddressLabel
+        : strings.utxosForeignAddressLabel
+      : '-'
 
   return (
     <View style={styles.utxoTitle}>
-      <View style={[isInput ? styles.utxoTitleCircleInput : styles.utxoTitleCircleOutput]} />
+      <View
+        style={[
+          isInput ? styles.utxoTitleCircleInput : styles.utxoTitleCircleOutput,
+        ]}
+      />
 
       <Space width="sm" />
 

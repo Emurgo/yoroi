@@ -14,8 +14,8 @@ import {useSelectedWallet} from '../../../../../WalletManager/hooks/useSelectedW
 import {usePortfolioBalances} from '../../../../common/hooks/usePortfolioBalances'
 import {useStrings} from '../../../../common/hooks/useStrings'
 import {useTrackNftGallerySearchActivated} from '../../../../common/hooks/useTrackNftGallerySearchActivated'
-import {MediaGallery} from '../../../../ui/MediaGallery/MediaGallery'
 import {useNavigateTo} from '../../../../common/navigation'
+import {MediaGallery} from '../../../../ui/MediaGallery/MediaGallery'
 import {EmptyGallery} from './EmptyGallery'
 
 export const ListMediaGalleryScreen = () => {
@@ -31,13 +31,17 @@ export const ListMediaGalleryScreen = () => {
   useSearchOnNavBar({
     title: strings.title,
     placeholder: strings.search,
-    extraNavigationOptions: {headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>},
+    extraNavigationOptions: {
+      headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+    },
   })
   const {search, isSearching} = useSearch()
 
   const filteredAmounts = React.useMemo(() => {
     const byName = infoFilterByName(search)
-    return isSearching ? balances.nfts.filter(({info}) => byName(info)) : balances.nfts
+    return isSearching
+      ? balances.nfts.filter(({info}) => byName(info))
+      : balances.nfts
   }, [balances.nfts, isSearching, search])
 
   useFocusEffect(
@@ -54,7 +58,10 @@ export const ListMediaGalleryScreen = () => {
   if (hasEmptySearchResult) {
     return (
       <Wrapper>
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewError}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewError}
+        >
           <EmptyGallery message={strings.noNftsFound} />
         </ScrollView>
       </Wrapper>
@@ -64,7 +71,10 @@ export const ListMediaGalleryScreen = () => {
   if (hasNotNfts) {
     return (
       <Wrapper>
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewError}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewError}
+        >
           <EmptyGallery
             message={strings.noNftsInWallet}
             heading={
@@ -93,7 +103,9 @@ export const ListMediaGalleryScreen = () => {
 
         <MediaGallery
           amounts={filteredAmounts}
-          onSelect={(amount: Portfolio.Token.Amount) => navigateTo.nftDetails(amount.info.id)}
+          onSelect={(amount: Portfolio.Token.Amount) =>
+            navigateTo.nftDetails(amount.info.id)
+          }
         />
       </View>
     </Wrapper>
@@ -103,7 +115,10 @@ export const ListMediaGalleryScreen = () => {
 const Wrapper = ({children}: {children: ReactNode}) => {
   const styles = useStyles()
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
       <View style={styles.container}>
         <Space height="lg" />
 

@@ -18,9 +18,13 @@ export const useStrings = () => {
     cryptoAmountYouGet: intl.formatMessage(messages.cryptoAmountYouGet),
     currentBalance: intl.formatMessage(messages.currentBalance),
     customerSupport: intl.formatMessage(messages.customerSupport),
-    descriptionBuySellADATransaction: intl.formatMessage(messages.descriptionBuySellADATransaction),
+    descriptionBuySellADATransaction: intl.formatMessage(
+      messages.descriptionBuySellADATransaction,
+    ),
     disclaimer: intl.formatMessage(messages.disclaimer),
-    contentDisclaimerPreprod: intl.formatMessage(messages.contentDisclaimerPreprod),
+    contentDisclaimerPreprod: intl.formatMessage(
+      messages.contentDisclaimerPreprod,
+    ),
     fiatAmountYouGet: intl.formatMessage(messages.fiatAmountYouGet),
     goToTransactions: intl.formatMessage(messages.goToTransactions),
     notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
@@ -36,12 +40,24 @@ export const useStrings = () => {
     ourTrustedPartners: intl.formatMessage(messages.ourTrustedPartners),
     needMoreCrypto: intl.formatMessage(messages.needMoreCrypto),
     fee: intl.formatMessage(messages.fee),
-    preprodFaucetBannerTitle: intl.formatMessage(messages.preprodFaucetBannerTitle),
-    preprodFaucetBannerText: intl.formatMessage(messages.preprodFaucetBannerText),
-    preprodFaucetBannerButtonText: intl.formatMessage(messages.preprodFaucetBannerButtonText),
-    createOrderPreprodFaucetButtonText: intl.formatMessage(messages.createOrderPreprodFaucetButtonText),
-    createOrderPreprodNoticeTitle: intl.formatMessage(messages.createOrderPreprodNoticeTitle),
-    createOrderPreprodNoticeText: intl.formatMessage(messages.createOrderPreprodNoticeText),
+    preprodFaucetBannerTitle: intl.formatMessage(
+      messages.preprodFaucetBannerTitle,
+    ),
+    preprodFaucetBannerText: intl.formatMessage(
+      messages.preprodFaucetBannerText,
+    ),
+    preprodFaucetBannerButtonText: intl.formatMessage(
+      messages.preprodFaucetBannerButtonText,
+    ),
+    createOrderPreprodFaucetButtonText: intl.formatMessage(
+      messages.createOrderPreprodFaucetButtonText,
+    ),
+    createOrderPreprodNoticeTitle: intl.formatMessage(
+      messages.createOrderPreprodNoticeTitle,
+    ),
+    createOrderPreprodNoticeText: intl.formatMessage(
+      messages.createOrderPreprodNoticeText,
+    ),
     playground: intl.formatMessage(messages.playground),
     close: intl.formatMessage(globalMessages.close),
     error: intl.formatMessage(globalMessages.error),
@@ -152,7 +168,8 @@ const messages = Object.freeze(
     },
     significant: {
       id: 'rampOnOff.resultRampOnOff.significant',
-      defaultMessage: '!!!if you witnessed any significant transaction delays or errors.',
+      defaultMessage:
+        '!!!if you witnessed any significant transaction delays or errors.',
     },
     getFirstCrypto: {
       id: 'rampOnOff.rampOnOffScreen.getFirstCrypto',
@@ -192,7 +209,8 @@ const messages = Object.freeze(
     },
     createOrderPreprodNoticeText: {
       id: 'rampOnOff.createRampOnOff.createorder.preprodnotice.text',
-      defaultMessage: '!!!Switch network or top up your testnet network wallet with the free Cardano faucet',
+      defaultMessage:
+        '!!!Switch network or top up your testnet network wallet with the free Cardano faucet',
     },
     playground: {
       id: 'rampOnOff.createRampOnOff.createorder.playground',
@@ -204,7 +222,8 @@ const messages = Object.freeze(
     },
     linkError: {
       id: 'rampOnOff.createRampOnOff.linkError',
-      defaultMessage: '!!!This service is currently unavailable. Please try again later',
+      defaultMessage:
+        '!!!This service is currently unavailable. Please try again later',
     },
   }),
 )

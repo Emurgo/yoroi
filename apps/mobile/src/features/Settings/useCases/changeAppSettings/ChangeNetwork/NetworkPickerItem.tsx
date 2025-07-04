@@ -13,7 +13,12 @@ type Props = {
   onSelectNetwork: (network: Chain.SupportedNetworks) => void
 }
 
-export const NetworkPickerItem = ({name, itemNetwork, selectedNetwork, onSelectNetwork}: Props) => {
+export const NetworkPickerItem = ({
+  name,
+  itemNetwork,
+  selectedNetwork,
+  onSelectNetwork,
+}: Props) => {
   const {colors} = useStyles()
 
   return (
@@ -28,7 +33,11 @@ export const NetworkPickerItem = ({name, itemNetwork, selectedNetwork, onSelectN
           <Title>{name}</Title>
         </Description>
 
-        <Selected>{itemNetwork === selectedNetwork && <Icon.Check size={24} color={colors.checkIcon} />}</Selected>
+        <Selected>
+          {itemNetwork === selectedNetwork && (
+            <Icon.Check size={24} color={colors.checkIcon} />
+          )}
+        </Selected>
       </Row>
     </TouchableOpacity>
   )

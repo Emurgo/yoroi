@@ -14,7 +14,10 @@ export const filterBySearch = (searchTerm: string) => {
     }
 
     if (tokenInfo.kind === 'nft') {
-      return tokenInfo.name?.toLocaleLowerCase().includes(searchTermLowerCase) ?? false
+      return (
+        tokenInfo.name?.toLocaleLowerCase().includes(searchTermLowerCase) ??
+        false
+      )
     }
     return false
   }

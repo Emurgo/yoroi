@@ -1,7 +1,14 @@
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {Alert, Linking, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
+import {
+  Alert,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
@@ -14,7 +21,11 @@ import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {WarningBanner} from '../../../../../components/WarningBanner/WarningBanner'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useBrowser} from '../../../common/BrowserProvider'
-import {type DAppItem, getDappFallbackLogo, isGoogleSearchItem} from '../../../common/helpers'
+import {
+  type DAppItem,
+  getDappFallbackLogo,
+  isGoogleSearchItem,
+} from '../../../common/helpers'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {LabelSingleAddress} from '../../../common/LabelSingleAddress'
@@ -41,13 +52,17 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const heightDialogByHeightScreen = dApp.isSingleAddress ? 612 : 492
 
   const heightDialogByInit = INIT_DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
-  const dialogHeight = heightDialogByInit < heightDialogByHeightScreen ? heightDialogByHeightScreen : heightDialogByInit
+  const dialogHeight =
+    heightDialogByInit < heightDialogByHeightScreen
+      ? heightDialogByHeightScreen
+      : heightDialogByInit
 
   const [isPressed, setIsPressed] = React.useState(false)
 
   const disconnectDApp = useDisconnectDapp()
 
-  const logo = dApp.logo.length === 0 ? getDappFallbackLogo(dApp.uri) : dApp.logo
+  const logo =
+    dApp.logo.length === 0 ? getDappFallbackLogo(dApp.uri) : dApp.logo
 
   const handlePressing = (isPressIn: boolean) => {
     setIsPressed(isPressIn)
@@ -71,10 +86,14 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
   const handleConfirmDisconnect = (dApp: DAppItem) => {
     closeModal()
-    Alert.alert(strings.disconnectDApp, strings.confirmDisconnectDAppDescription, [
-      {text: strings.cancel, style: 'cancel'},
-      {text: strings.confirm, onPress: () => handleDisconnectDApp(dApp)},
-    ])
+    Alert.alert(
+      strings.disconnectDApp,
+      strings.confirmDisconnectDAppDescription,
+      [
+        {text: strings.cancel, style: 'cancel'},
+        {text: strings.confirm, onPress: () => handleDisconnectDApp(dApp)},
+      ],
+    )
   }
 
   const handlePress = () => {
@@ -151,7 +170,11 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
       onPress={handlePress}
     >
       <View style={styles.dAppItemContainer}>
-        {isGoogleSearchItem(dApp) ? <Icon.Google /> : <Image source={{uri: logo}} style={styles.dAppLogo} />}
+        {isGoogleSearchItem(dApp) ? (
+          <Icon.Google />
+        ) : (
+          <Image source={{uri: logo}} style={styles.dAppLogo} />
+        )}
 
         <View style={styles.flexFull}>
           <Text numberOfLines={1} style={styles.nameText}>
@@ -159,7 +182,14 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
           </Text>
 
           {dApp?.description !== undefined && (
-            <Text style={[styles.descriptionText, isPressed && styles.descriptionTextActive]}>{dApp.description}</Text>
+            <Text
+              style={[
+                styles.descriptionText,
+                isPressed && styles.descriptionTextActive,
+              ]}
+            >
+              {dApp.description}
+            </Text>
           )}
 
           <Spacer height={8} />
@@ -169,7 +199,9 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
             {dApp.isSingleAddress && <LabelSingleAddress />}
 
-            {!isGoogleSearchItem(dApp) && <LabelCategoryDApp category={dApp.category} />}
+            {!isGoogleSearchItem(dApp) && (
+              <LabelCategoryDApp category={dApp.category} />
+            )}
           </View>
         </View>
       </View>
@@ -192,9 +224,14 @@ const SingleAddressDAppWarning = () => {
     <WarningBanner
       content={
         <>
-          <Text style={styles.warningText}>{`${strings.singleAddressWarning} `}</Text>
+          <Text
+            style={styles.warningText}
+          >{`${strings.singleAddressWarning} `}</Text>
 
-          <Text style={[styles.warningText, styles.link]} onPress={handleOnPress}>
+          <Text
+            style={[styles.warningText, styles.link]}
+            onPress={handleOnPress}
+          >
             {strings.learnMore}
           </Text>
         </>

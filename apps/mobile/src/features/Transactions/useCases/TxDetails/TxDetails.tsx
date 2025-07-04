@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'

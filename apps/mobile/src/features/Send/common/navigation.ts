@@ -1,14 +1,23 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {AppRouteNavigation, TxHistoryRouteNavigation} from '../../../kernel/navigation'
+import {
+  AppRouteNavigation,
+  TxHistoryRouteNavigation,
+} from '../../../kernel/navigation'
 
 export const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation & AppRouteNavigation>()
+  const navigation = useNavigation<
+    TxHistoryRouteNavigation & AppRouteNavigation
+  >()
 
   return useRef({
     selectedTokens: () => navigation.navigate('send-list-amounts-to-send'),
-    addToken: ({shouldPopPrevious}: {shouldPopPrevious: boolean} = {shouldPopPrevious: false}) => {
+    addToken: (
+      {shouldPopPrevious}: {shouldPopPrevious: boolean} = {
+        shouldPopPrevious: false,
+      },
+    ) => {
       if (shouldPopPrevious) navigation.pop()
       navigation.navigate('send-select-token-from-list')
     },
@@ -33,7 +42,10 @@ export const useNavigateTo = () => {
                       {
                         name: 'history',
                         state: {
-                          routes: [{name: 'history-list'}, {name: 'send-start-tx'}],
+                          routes: [
+                            {name: 'history-list'},
+                            {name: 'send-start-tx'},
+                          ],
                         },
                       },
                     ],

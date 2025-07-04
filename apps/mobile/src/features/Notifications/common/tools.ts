@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging'
 import {isNumber, isRecord, isString} from '@yoroi/common'
-import {Notifications as YoroiNotifications, Portfolio} from '@yoroi/types'
+import {Portfolio, Notifications as YoroiNotifications} from '@yoroi/types'
 import {Linking, PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
@@ -16,7 +16,9 @@ export const triggerNotificationsPermissionModal = async () => {
 
   // Android requires manual permission request
   if (Platform.OS === 'android') {
-    await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    )
   }
 
   await uiStorage.setItem(permissionModalStorageKey, true)
@@ -24,7 +26,8 @@ export const triggerNotificationsPermissionModal = async () => {
 
 export const getNotificationsAuthorizationStatus = async () => {
   const status = await messaging().hasPermission()
-  const modalNeverTriggered = (await uiStorage.getItem(permissionModalStorageKey)) !== true
+  const modalNeverTriggered =
+    (await uiStorage.getItem(permissionModalStorageKey)) !== true
 
   if (status === messaging.AuthorizationStatus.AUTHORIZED) {
     return 'authorized'
@@ -34,7 +37,10 @@ export const getNotificationsAuthorizationStatus = async () => {
     return 'denied'
   }
 
-  if (status === messaging.AuthorizationStatus.NOT_DETERMINED || modalNeverTriggered) {
+  if (
+    status === messaging.AuthorizationStatus.NOT_DETERMINED ||
+    modalNeverTriggered
+  ) {
     return 'not_determined'
   }
 
@@ -70,15 +76,25 @@ export const triggerNotificationAction = async (options: {
     }
   }
 
-  if (event.trigger === YoroiNotifications.Trigger.Push && isRecord(event.metadata.data)) {
+  if (
+    event.trigger === YoroiNotifications.Trigger.Push &&
+    isRecord(event.metadata.data)
+  ) {
     const {data} = event.metadata
-    if (isString(data.action) && data.action === 'open_url' && isString(data.url)) {
+    if (
+      isString(data.action) &&
+      data.action === 'open_url' &&
+      isString(data.url)
+    ) {
       await Linking.openURL(data.url)
     }
 
     if (isString(data.action) && data.action === 'open_screen') {
       if (source === 'os') {
-        await uiStorage.setItem('triggerNotificationInternalNavigationAction', event.id)
+        await uiStorage.setItem(
+          'triggerNotificationInternalNavigationAction',
+          event.id,
+        )
       } else {
         handleInternalNavigation(event, walletNavigation, false)
       }
@@ -91,7 +107,9 @@ export const clearNotificationInternalNavigationAction = async () => {
 }
 
 export const shouldHandleNotificationInternalNavigationAction = async () => {
-  const id = await uiStorage.getItem('triggerNotificationInternalNavigationAction')
+  const id = await uiStorage.getItem(
+    'triggerNotificationInternalNavigationAction',
+  )
   return isNumber(id)
 }
 
@@ -99,7 +117,9 @@ export const handleNotificationInternalNavigationAction = async (
   manager: YoroiNotifications.Manager,
   walletNavigation: WalletNavigation,
 ) => {
-  const id = await uiStorage.getItem('triggerNotificationInternalNavigationAction')
+  const id = await uiStorage.getItem(
+    'triggerNotificationInternalNavigationAction',
+  )
   if (!isNumber(id)) return
   await clearNotificationInternalNavigationAction()
   const allEvents = await manager.events.read()
@@ -118,7 +138,11 @@ const handleInternalNavigation = (
   if (!isRecord(event.metadata.data)) return
 
   const {data} = event.metadata
-  if (isString(data.action) && data.action === 'open_screen' && isString(data.screen)) {
+  if (
+    isString(data.action) &&
+    data.action === 'open_screen' &&
+    isString(data.screen)
+  ) {
     const {screen} = data
     switch (screen) {
       case 'wallet':
@@ -128,7 +152,9 @@ const handleInternalNavigation = (
         walletNavigation.navigateToStakingDashboard()
         break
       case 'swap':
-        walletNavigation.navigateToSwap((data.tokenOutId as Portfolio.Token.Id) || undefined)
+        walletNavigation.navigateToSwap(
+          (data.tokenOutId as Portfolio.Token.Id) || undefined,
+        )
         break
       case 'governance':
         walletNavigation.navigateToGovernanceCentre()

@@ -7,7 +7,8 @@ export const parseScanAction = (codeContent: string): Scan.Action => {
 
   // NOTE: if it is a string < 256 with valid characters, it'd be consider a Yoroi Receiver (wallet address | domain name)
   if (!isPossibleLink) {
-    if (codeContent.length > 255 || !nonProtocolRegex.test(codeContent)) throw new Scan.Errors.UnknownContent()
+    if (codeContent.length > 255 || !nonProtocolRegex.test(codeContent))
+      throw new Scan.Errors.UnknownContent()
     return freeze({
       action: 'send-only-receiver',
       receiver: codeContent,
@@ -24,7 +25,8 @@ export const parseScanAction = (codeContent: string): Scan.Action => {
   const cardanoLinks = linksCardanoModuleMaker()
   const parsedCardanoLink = cardanoLinks.parse(codeContent)
 
-  if (parsedCardanoLink === undefined) throw new Links.Errors.SchemeNotImplemented()
+  if (parsedCardanoLink === undefined)
+    throw new Links.Errors.SchemeNotImplemented()
 
   if (parsedCardanoLink.config.authority === 'claim') {
     const {faucet_url: url, code, ...params} = parsedCardanoLink.params

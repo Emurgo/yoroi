@@ -1,6 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {AppState, Linking, Platform, ScrollView, StyleSheet, View} from 'react-native'
+import {
+  AppState,
+  Linking,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ButtonType} from '../../../../../../components/Button/Button'
@@ -37,7 +44,10 @@ export const ManageNotificationSettings = () => {
         <Spacer height={24} />
 
         <SettingsSection title={strings.inAppNotifications}>
-          <SettingsItem icon={<Icon.Bell {...styles.icon} />} label={strings.inAppNotifications}>
+          <SettingsItem
+            icon={<Icon.Bell {...styles.icon} />}
+            label={strings.inAppNotifications}
+          >
             <InAppNotificationDisplaySwitcher />
           </SettingsItem>
 
@@ -54,11 +64,17 @@ export const ManageNotificationSettings = () => {
 
 export function useNotificationPermission() {
   const {track} = useMetrics()
-  const [permission, setPermission] = React.useState<'authorized' | 'not_determined' | 'denied'>('not_determined')
+  const [permission, setPermission] = React.useState<
+    'authorized' | 'not_determined' | 'denied'
+  >('not_determined')
 
   React.useEffect(() => {
-    const handleAppStateChange = async () => setPermission(await getNotificationsAuthorizationStatus())
-    const subscription = AppState.addEventListener('change', handleAppStateChange)
+    const handleAppStateChange = async () =>
+      setPermission(await getNotificationsAuthorizationStatus())
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    )
 
     return () => {
       subscription.remove()
@@ -66,7 +82,8 @@ export function useNotificationPermission() {
   }, [])
 
   React.useEffect(() => {
-    const fetchPermission = async () => setPermission(await getNotificationsAuthorizationStatus())
+    const fetchPermission = async () =>
+      setPermission(await getNotificationsAuthorizationStatus())
 
     fetchPermission()
   }, [])
@@ -82,7 +99,9 @@ export function useNotificationPermission() {
 
     const currentStatus = await getNotificationsAuthorizationStatus()
     const nextStatus = currentStatus === 'authorized' ? 'denied' : 'authorized'
-    track.settingsPushNotificationsStatusUpdated({is_enabled: nextStatus === 'authorized' ? 'enabled' : 'disabled'})
+    track.settingsPushNotificationsStatusUpdated({
+      is_enabled: nextStatus === 'authorized' ? 'enabled' : 'disabled',
+    })
     setPermission(nextStatus)
   }
 
@@ -97,15 +116,23 @@ const PushNotificationSettingsItem = () => {
 
   if (permission === 'authorized' || permission === 'not_determined') {
     return (
-      <SettingsItem icon={<Icon.Bell {...styles.icon} />} label={strings.pushNotifications}>
-        <SettingsSwitch value={permission === 'authorized'} onValueChange={togglePermissions} />
+      <SettingsItem
+        icon={<Icon.Bell {...styles.icon} />}
+        label={strings.pushNotifications}
+      >
+        <SettingsSwitch
+          value={permission === 'authorized'}
+          onValueChange={togglePermissions}
+        />
       </SettingsItem>
     )
   }
 
   return (
     <View>
-      <Text style={styles.enableSetting}>{strings.enableNotificationsThroughSettings}</Text>
+      <Text style={styles.enableSetting}>
+        {strings.enableNotificationsThroughSettings}
+      </Text>
 
       <Button
         style={styles.enableSettingButton}

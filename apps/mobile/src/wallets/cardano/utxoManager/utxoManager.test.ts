@@ -63,12 +63,18 @@ describe('utxo storage', () => {
       return expect(safePoint).toEqual(undefined)
     })
 
-    await replaceUtxoAtSafePoint(utxoAtSafePoint1.utxos, utxoAtSafePoint1.lastSafeBlockHash)
+    await replaceUtxoAtSafePoint(
+      utxoAtSafePoint1.utxos,
+      utxoAtSafePoint1.lastSafeBlockHash,
+    )
     await getUtxoAtSafePoint().then((safePoint) => {
       return expect(safePoint).toEqual(utxoAtSafePoint1)
     })
 
-    await replaceUtxoAtSafePoint(utxoAtSafePoint2.utxos, utxoAtSafePoint2.lastSafeBlockHash)
+    await replaceUtxoAtSafePoint(
+      utxoAtSafePoint2.utxos,
+      utxoAtSafePoint2.lastSafeBlockHash,
+    )
     await getUtxoAtSafePoint().then((safePoint) => {
       return expect(safePoint).toEqual(utxoAtSafePoint2)
     })

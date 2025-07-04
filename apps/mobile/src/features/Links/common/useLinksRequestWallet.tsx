@@ -17,12 +17,18 @@ export const useLinksRequestWallet = () => {
   const {action} = useLinks()
 
   const askToOpenAWallet = React.useCallback(() => {
-    openModal({title: strings.askToOpenAWalletTitle, content: <AskToOpenWalletScreen />, height: heightBreakpoint})
+    openModal({
+      title: strings.askToOpenAWalletTitle,
+      content: <AskToOpenWalletScreen />,
+      height: heightBreakpoint,
+    })
   }, [openModal, strings.askToOpenAWalletTitle])
 
   React.useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      const isWalletRequested = action?.info.useCase === 'request/ada-with-link' || action?.info.useCase === 'launch'
+      const isWalletRequested =
+        action?.info.useCase === 'request/ada-with-link' ||
+        action?.info.useCase === 'launch'
       if (isWalletRequested && wallet == null) askToOpenAWallet()
     })
   }, [askToOpenAWallet, action?.info.useCase, wallet])

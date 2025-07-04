@@ -2,7 +2,10 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 
-import {defaultStackNavigationOptions, InititalizationRoutes} from '../../kernel/navigation'
+import {
+  defaultStackNavigationOptions,
+  InititalizationRoutes,
+} from '../../kernel/navigation'
 import {useAuth} from '../Auth/AuthProvider'
 import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
 import {AnalyticsNoticeScreen} from './AnalyticsNoticeScreen'
@@ -23,7 +26,11 @@ export const InitializationNavigator = () => {
         ...defaultStackNavigationOptions(atoms, color),
       }}
     >
-      <Stack.Screen name="initial" component={InitialScreen} options={{headerShown: false}} />
+      <Stack.Screen
+        name="initial"
+        component={InitialScreen}
+        options={{headerShown: false}}
+      />
 
       <Stack.Screen //
         name="language-pick"

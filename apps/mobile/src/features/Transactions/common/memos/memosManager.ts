@@ -11,7 +11,8 @@ export const makeMemosManager = async (storage: App.Storage) => {
 
   let memos = await getMemos()
 
-  const updateMemos = (txId: string, memo: string) => (memos = {...memos, [txId]: memo})
+  const updateMemos = (txId: string, memo: string) =>
+    (memos = {...memos, [txId]: memo})
 
   const saveMemo = async (txId: string, memo: string): Promise<void> => {
     await storage.setItem(txId, memo)

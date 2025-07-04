@@ -19,7 +19,9 @@ const buildNotifications = async (
   manager: NotificationTypes.Manager,
 ): Promise<NotificationTypes.PrimaryTokenPriceChangedEvent[]> => {
   const notifications: NotificationTypes.PrimaryTokenPriceChangedEvent[] = []
-  const storage = buildProcessedNotificationsStorage(appStorage.join(storageKey))
+  const storage = buildProcessedNotificationsStorage(
+    appStorage.join(storageKey),
+  )
   const date = new Date()
   const dateString = date.toDateString()
 
@@ -27,10 +29,14 @@ const buildNotifications = async (
     return []
   }
 
-  const response = await fetchPtPriceActivity([Date.now(), Date.now() - time.oneDay])
+  const response = await fetchPtPriceActivity([
+    Date.now(),
+    Date.now() - time.oneDay,
+  ])
   const currency = await getCurrencySymbol(appStorage)
   const notificationsConfig = await manager.config.read()
-  const primaryTokenChangeNotificationConfig = notificationsConfig[NotificationTypes.Trigger.PrimaryTokenPriceChanged]
+  const primaryTokenChangeNotificationConfig =
+    notificationsConfig[NotificationTypes.Trigger.PrimaryTokenPriceChanged]
 
   if (isRight(response)) {
     const tickers = response.value.data.tickers
@@ -38,8 +44,13 @@ const buildNotifications = async (
     const open = tickers[1]?.prices[currency] ?? 1
     const changeInPercent = (Math.abs(close - open) / open) * 100
 
-    if (changeInPercent >= primaryTokenChangeNotificationConfig.thresholdInPercent) {
-      const event = createPrimaryTokenPriceChangedNotification({previousPrice: open, nextPrice: close})
+    if (
+      changeInPercent >= primaryTokenChangeNotificationConfig.thresholdInPercent
+    ) {
+      const event = createPrimaryTokenPriceChangedNotification({
+        previousPrice: open,
+        nextPrice: close,
+      })
       notifications.push(event)
       await storage.addValues([dateString])
     }
@@ -48,9 +59,14 @@ const buildNotifications = async (
   return notifications
 }
 
-export const primaryTokenPriceChangedSubject = new Subject<NotificationTypes.PrimaryTokenPriceChangedEvent>()
+export const primaryTokenPriceChangedSubject =
+  new Subject<NotificationTypes.PrimaryTokenPriceChangedEvent>()
 
-export const usePrimaryTokenPriceChangedNotification = ({enabled}: {enabled: boolean}) => {
+export const usePrimaryTokenPriceChangedNotification = ({
+  enabled,
+}: {
+  enabled: boolean
+}) => {
   const {walletManager} = useWalletManager()
   const asyncStorage = useAsyncStorage()
   const manager = useNotificationManager()
@@ -60,7 +76,9 @@ export const usePrimaryTokenPriceChangedNotification = ({enabled}: {enabled: boo
 
     const interval = setInterval(async () => {
       const notifications = await buildNotifications(asyncStorage, manager)
-      notifications.forEach((notification) => primaryTokenPriceChangedSubject.next(notification))
+      notifications.forEach((notification) =>
+        primaryTokenPriceChangedSubject.next(notification),
+      )
     }, refetchIntervalInMilliseconds)
 
     return () => clearInterval(interval)

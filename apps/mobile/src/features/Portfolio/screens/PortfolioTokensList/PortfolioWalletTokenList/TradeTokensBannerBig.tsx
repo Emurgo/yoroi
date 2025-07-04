@@ -21,12 +21,19 @@ export const TradeTokensBannerBig = () => {
 
   return (
     <View style={styles.root}>
-      <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
+      <LinearGradient
+        style={styles.gradientRoot}
+        colors={colors.gradientColor}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+      >
         <Text style={styles.title}>{strings.portfolioSwapTokensTitle}</Text>
 
         <Spacer height={13} />
 
-        <Text style={styles.description}>{strings.portfolioSwapTokensDescription}</Text>
+        <Text style={styles.description}>
+          {strings.portfolioSwapTokensDescription}
+        </Text>
 
         <Spacer height={37} />
 

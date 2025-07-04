@@ -21,7 +21,9 @@ export const AnalyticsNoticeScreen = () => {
   }
 
   const onReadMore = () => {
-    Linking.openURL('https://emurgohelpdesk.zendesk.com/hc/en-us/articles/7594394140303-What-s-user-insights-')
+    Linking.openURL(
+      'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/7594394140303-What-s-user-insights-',
+    )
   }
 
   return (

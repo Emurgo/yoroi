@@ -8,12 +8,19 @@ import {Alert, Linking} from 'react-native'
 import {useModal} from '../../../components/Modal/ModalContext'
 import {useClaimErrorResolver} from '../../../features/Claim/common/useClaimErrorResolver'
 import {useStrings as useStringsClaim} from '../../../features/Claim/common/useStrings'
-import {AskConfirmation, AskConfirmationActions} from '../../../features/Claim/useCases/AskConfirmation'
+import {
+  AskConfirmation,
+  AskConfirmationActions,
+} from '../../../features/Claim/useCases/AskConfirmation'
 import {pastedFormatter} from '../../../wallets/utils/amountUtils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from './useNavigateTo'
 
-export const useTriggerScanAction = ({insideFeature}: {insideFeature: Scan.Feature}) => {
+export const useTriggerScanAction = ({
+  insideFeature,
+}: {
+  insideFeature: Scan.Feature
+}) => {
   const {
     wallet: {portfolioPrimaryTokenInfo},
   } = useSelectedWallet()
@@ -29,7 +36,12 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: Scan.Featu
     memoChanged,
   } = useTransfer()
 
-  const {reset: resetClaimState, scanActionClaimChanged, address, claimInfoChanged} = useClaim()
+  const {
+    reset: resetClaimState,
+    scanActionClaimChanged,
+    address,
+    claimInfoChanged,
+  } = useClaim()
   const claimErrorResolver = useClaimErrorResolver()
   const {claimTokens} = useClaimTokens({
     onSuccess: (claimInfo) => {
@@ -68,7 +80,8 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: Scan.Featu
               ),
             })
           }
-          if ('memo' in scanAction.params) memoChanged(scanAction.params?.memo ?? '')
+          if ('memo' in scanAction.params)
+            memoChanged(scanAction.params?.memo ?? '')
         }
 
         navigateTo.startTransfer()
@@ -96,7 +109,13 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: Scan.Featu
 
         openModal({
           title: stringsClaim.askConfirmationTitle,
-          content: <AskConfirmation address={address} url={scanAction.url} code={scanAction.code} />,
+          content: (
+            <AskConfirmation
+              address={address}
+              url={scanAction.url}
+              code={scanAction.code}
+            />
+          ),
           footer: <AskConfirmationActions onContinue={handleOnContinue} />,
           height: 400,
         })

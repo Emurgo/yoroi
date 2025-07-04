@@ -19,7 +19,11 @@ export const YoroiRecordLink = () => {
       <Divider />
 
       <View style={styles.footer}>
-        <Button title={strings.yoroiRecord} type={ButtonType.Link} onPress={onPress} />
+        <Button
+          title={strings.yoroiRecord}
+          type={ButtonType.Link}
+          onPress={onPress}
+        />
       </View>
     </TouchableOpacity>
   )

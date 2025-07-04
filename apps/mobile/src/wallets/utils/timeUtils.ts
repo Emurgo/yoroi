@@ -1,4 +1,5 @@
-export const delay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
+export const delay = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms))
 
 const sec_in_day = 86400
 const sec_in_hour = 3600

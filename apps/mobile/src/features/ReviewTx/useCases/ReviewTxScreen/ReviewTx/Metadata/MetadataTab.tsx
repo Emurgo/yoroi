@@ -34,7 +34,9 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
       <View style={styles.metadata}>
         <View style={styles.title}>
           <Copiable text={metadataFormatted}>
-            <Text style={styles.metadataLabel}>{strings.metadataJsonLabel}</Text>
+            <Text style={styles.metadataLabel}>
+              {strings.metadataJsonLabel}
+            </Text>
           </Copiable>
         </View>
 

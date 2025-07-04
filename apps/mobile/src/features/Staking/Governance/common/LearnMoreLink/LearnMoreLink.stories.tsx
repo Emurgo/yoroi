@@ -3,4 +3,6 @@ import React from 'react'
 
 import {LearnMoreLink} from './LearnMoreLink'
 
-storiesOf('Governance/LearnMoreLink', module).add('Default', () => <LearnMoreLink />)
+storiesOf('Governance/LearnMoreLink', module).add('Default', () => (
+  <LearnMoreLink />
+))

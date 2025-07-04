@@ -1,14 +1,16 @@
 import {useIsFocused} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import _ from 'lodash'
 import React from 'react'
 import {StyleSheet, TextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
+import {
+  ScrollView,
+  useScrollView,
+} from '../../../../components/ScrollView/ScrollView'
 import {Space} from '../../../../components/Space/Space'
 import {useNextTick} from '../../../../hooks/useNextTick'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
@@ -41,13 +43,24 @@ export const StartMultiTokenTxScreen = () => {
   const hasPendingTx = useHasPendingTx({wallet})
   const isOnline = useIsOnline(wallet)
 
-  const {targets, selectedTargetIndex, memo, memoChanged, receiverResolveChanged} = useTransfer()
+  const {
+    targets,
+    selectedTargetIndex,
+    memo,
+    memoChanged,
+    receiverResolveChanged,
+  } = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
   const receiver = targets[selectedTargetIndex].receiver
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
 
-  const {isWrongBlockchainError, isResolvingAddressess, receiverError, isUnsupportedDomain, isNotResolvedDomain} =
-    useSendReceiver()
+  const {
+    isWrongBlockchainError,
+    isResolvingAddressess,
+    receiverError,
+    isUnsupportedDomain,
+    isNotResolvedDomain,
+  } = useSendReceiver()
   const {isValidatingAddress, addressError, addressValidated} = useSendAddress()
 
   const isLoading = isResolvingAddressess || isValidatingAddress
@@ -84,7 +97,10 @@ export const StartMultiTokenTxScreen = () => {
 
   return (
     <KeyboardAvoidingView style={[styles.flex, styles.root]}>
-      <SafeAreaView edges={['bottom', 'right', 'left']} style={[styles.safeAreaView, styles.flex]}>
+      <SafeAreaView
+        edges={['bottom', 'right', 'left']}
+        style={[styles.safeAreaView, styles.flex]}
+      >
         <ScrollView
           ref={scrollViewRef}
           style={[styles.flex, styles.padding]}
@@ -109,12 +125,21 @@ export const StartMultiTokenTxScreen = () => {
 
           <Space height="lg" />
 
-          <InputMemo value={memo} onChangeText={handleOnChangeMemo} isValid={!hasMemoError} />
+          <InputMemo
+            value={memo}
+            onChangeText={handleOnChangeMemo}
+            isValid={!hasMemoError}
+          />
         </ScrollView>
 
         <Actions style={isScrollBarShown && styles.actionsScroll}>
           <Padding>
-            <NextButton onPress={handleOnNext} title={strings.next} disabled={!canGoNext} testID="nextButton" />
+            <NextButton
+              onPress={handleOnNext}
+              title={strings.next}
+              disabled={!canGoNext}
+              testID="nextButton"
+            />
           </Padding>
         </Actions>
       </SafeAreaView>
@@ -151,15 +176,36 @@ const useReceiverError = ({
 
   // NOTE: order matters
   if (isLoading) return {hasReceiverError: false, receiverErrorMessage: ''}
-  if (isUnsupportedDomain) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}
+  if (isUnsupportedDomain)
+    return {
+      hasReceiverError: true,
+      receiverErrorMessage: strings.helperAddressErrorInvalid,
+    }
   if (isWrongBlockchainError)
-    return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorWrongBlockchain}
+    return {
+      hasReceiverError: true,
+      receiverErrorMessage: strings.helperAddressErrorWrongBlockchain,
+    }
   if (isNotResolvedDomain)
-    return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorDomainNotFound}
-  if (receiverError != null) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}
+    return {
+      hasReceiverError: true,
+      receiverErrorMessage: strings.helperResolverErrorDomainNotFound,
+    }
+  if (receiverError != null)
+    return {
+      hasReceiverError: true,
+      receiverErrorMessage: strings.helperAddressErrorInvalid,
+    }
   if (addressError instanceof AddressErrorWrongNetwork)
-    return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorWrongNetwork}
-  if (addressError != null) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}
+    return {
+      hasReceiverError: true,
+      receiverErrorMessage: strings.helperAddressErrorWrongNetwork,
+    }
+  if (addressError != null)
+    return {
+      hasReceiverError: true,
+      receiverErrorMessage: strings.helperAddressErrorInvalid,
+    }
 
   return {
     hasReceiverError: false,

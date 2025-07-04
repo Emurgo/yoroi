@@ -1,4 +1,8 @@
-import {parseSafe, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {
+  parseSafe,
+  useAsyncStorage,
+  useMutationWithInvalidations,
+} from '@yoroi/common'
 import {UseMutationOptions, useQuery} from 'react-query'
 
 const useReadPrivacyMode = () => {
@@ -6,23 +10,27 @@ const useReadPrivacyMode = () => {
   const query = useQuery<PrivacyMode, Error>({
     queryKey: ['privacyMode'],
     queryFn: async () => {
-      const storedPrivacyMode = await storage.join('appSettings/').getItem('privacyMode', parsePrivacyMode)
+      const storedPrivacyMode = await storage
+        .join('appSettings/')
+        .getItem('privacyMode', parsePrivacyMode)
 
       return storedPrivacyMode ?? defaultPrivacyMode
     },
     suspense: true,
   })
 
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!query.data) throw new Error('Invalid state')
 
   return query.data
 }
 
-const useWritePrivacyMode = ({...options}: UseMutationOptions<void, Error, PrivacyMode> = {}) => {
+const useWritePrivacyMode = ({
+  ...options
+}: UseMutationOptions<void, Error, PrivacyMode> = {}) => {
   const storage = useAsyncStorage()
   const mutation = useMutationWithInvalidations({
-    mutationFn: (privacyMode) => storage.join('appSettings/').setItem('privacyMode', privacyMode),
+    mutationFn: (privacyMode) =>
+      storage.join('appSettings/').setItem('privacyMode', privacyMode),
     invalidateQueries: [['privacyMode']],
     ...options,
   })
@@ -30,12 +38,17 @@ const useWritePrivacyMode = ({...options}: UseMutationOptions<void, Error, Priva
   return mutation.mutate
 }
 
-const useTooglePrivacyMode = ({...options}: UseMutationOptions<void, Error, void> = {}) => {
+const useTooglePrivacyMode = ({
+  ...options
+}: UseMutationOptions<void, Error, void> = {}) => {
   const storage = useAsyncStorage()
   const privacyMode = useReadPrivacyMode()
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: () => storage.join('appSettings/').setItem('privacyMode', privacyMode === 'SHOWN' ? 'HIDDEN' : 'SHOWN'),
+    mutationFn: () =>
+      storage
+        .join('appSettings/')
+        .setItem('privacyMode', privacyMode === 'SHOWN' ? 'HIDDEN' : 'SHOWN'),
     invalidateQueries: [['privacyMode']],
     ...options,
   })
@@ -50,7 +63,8 @@ type PrivacyMode = 'SHOWN' | 'HIDDEN'
 const defaultPrivacyMode: PrivacyMode = 'SHOWN'
 
 const parsePrivacyMode = (data: unknown) => {
-  const isPrivacyMode = (data: unknown): data is PrivacyMode => data === 'SHOWN' || data === 'HIDDEN'
+  const isPrivacyMode = (data: unknown): data is PrivacyMode =>
+    data === 'SHOWN' || data === 'HIDDEN'
   const parsed = parseSafe(data)
 
   return isPrivacyMode(parsed) ? parsed : undefined

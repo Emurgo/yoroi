@@ -1,5 +1,14 @@
 import * as React from 'react'
-import Svg, {ClipPath, Defs, G, Image, Path, Pattern, Rect, Use} from 'react-native-svg'
+import Svg, {
+  ClipPath,
+  Defs,
+  G,
+  Image,
+  Path,
+  Pattern,
+  Rect,
+  Use,
+} from 'react-native-svg'
 
 export const EncryptusLogo = ({size = 48}: {size?: number}) => {
   return (
@@ -9,7 +18,12 @@ export const EncryptusLogo = ({size = 48}: {size?: number}) => {
       </G>
 
       <Defs>
-        <Pattern id="pattern0" patternContentUnits="objectBoundingBox" width={1} height={1}>
+        <Pattern
+          id="pattern0"
+          patternContentUnits="objectBoundingBox"
+          width={1}
+          height={1}
+        >
           <Use xlinkHref="#image0_18378_150013" transform="scale(.002)" />
         </Pattern>
 

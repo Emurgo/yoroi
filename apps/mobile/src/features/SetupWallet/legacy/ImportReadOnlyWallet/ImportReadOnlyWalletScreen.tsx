@@ -12,7 +12,10 @@ import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {isCIP1852AccountPath, isValidPublicKey} from '../../../../wallets/cardano/bip44Validators/bip44Validators'
+import {
+  isCIP1852AccountPath,
+  isValidPublicKey,
+} from '../../../../wallets/cardano/bip44Validators/bip44Validators'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()
@@ -54,7 +57,10 @@ export const ImportReadOnlyWalletScreen = () => {
 
         <Spacer height={16} />
 
-        <BulletPointItem textRow={strings.line2({buttonType: strings.buttonType})} style={styles.paragraph} />
+        <BulletPointItem
+          textRow={strings.line2({buttonType: strings.buttonType})}
+          style={styles.paragraph}
+        />
       </ScrollView>
     </View>
   )
@@ -63,7 +69,8 @@ export const ImportReadOnlyWalletScreen = () => {
 const messages = defineMessages({
   paragraph: {
     id: 'components.walletinit.importreadonlywalletscreen.paragraph',
-    defaultMessage: '!!!To import a read-only wallet from the Yoroi extension, you will need to:',
+    defaultMessage:
+      '!!!To import a read-only wallet from the Yoroi extension, you will need to:',
   },
   line1: {
     id: 'components.walletinit.importreadonlywalletscreen.line1',
@@ -71,7 +78,8 @@ const messages = defineMessages({
   },
   line2: {
     id: 'components.walletinit.importreadonlywalletscreen.line2',
-    defaultMessage: '!!!Look for the {buttonType} for the wallet you want to import in the mobile app.',
+    defaultMessage:
+      '!!!Look for the {buttonType} for the wallet you want to import in the mobile app.',
   },
   buttonType: {
     id: 'components.walletinit.importreadonlywalletscreen.buttonType',
@@ -85,7 +93,8 @@ const useStrings = () => {
   return {
     paragraph: intl.formatMessage(messages.paragraph),
     line1: intl.formatMessage(messages.line1),
-    line2: (options: {buttonType: string}) => intl.formatMessage(messages.line2, options),
+    line2: (options: {buttonType: string}) =>
+      intl.formatMessage(messages.line2, options),
     buttonType: intl.formatMessage(messages.buttonType),
   }
 }
@@ -111,7 +120,9 @@ const styles = StyleSheet.create({
   },
 })
 
-const parseReadOnlyWalletKey = async (text: string): Promise<{publicKeyHex: string; path: number[]}> => {
+const parseReadOnlyWalletKey = async (
+  text: string,
+): Promise<{publicKeyHex: string; path: number[]}> => {
   const dataObj = JSON.parse(text)
   const {publicKeyHex, path} = dataObj
   if (isCIP1852AccountPath(path) && (await isValidPublicKey(publicKeyHex))) {

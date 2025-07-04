@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, TextInput as RNTextInput, View} from 'react-native'
+import {TextInput as RNTextInput, StyleSheet, View} from 'react-native'
 
 import {Button} from '../../../../components/Button/Button'
 import {Spacer} from '../../../../components/Spacer/Spacer'
@@ -24,7 +24,13 @@ type Props = {
   summary?: string
 }
 
-export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPasswordChange, summary}: Props) => {
+export const ConfirmWithSpendingPassword = ({
+  onSubmit,
+  isLoading,
+  error,
+  onPasswordChange,
+  summary,
+}: Props) => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
@@ -36,7 +42,9 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
 
   return (
     <View style={styles.root}>
-      <Text style={styles.modalText}>{summary ?? strings.enterSpendingPassword}</Text>
+      <Text style={styles.modalText}>
+        {summary ?? strings.enterSpendingPassword}
+      </Text>
 
       <TextInput
         secureTextEntry

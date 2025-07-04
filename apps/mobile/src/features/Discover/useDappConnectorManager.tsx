@@ -34,7 +34,8 @@ export const useDappConnectorManager = () => {
 
   const activeTab = tabs[tabActiveIndex]
   const activeTabUrl = activeTab?.url ?? ''
-  const activeTabOrigin = activeTabUrl === '' ? null : new URL(activeTabUrl).origin
+  const activeTabOrigin =
+    activeTabUrl === '' ? null : new URL(activeTabUrl).origin
 
   const confirmConnection = useConfirmConnection()
 
@@ -48,12 +49,17 @@ export const useDappConnectorManager = () => {
         return manager.getDAppList().then(async ({dapps}) => {
           const dappsConnected = await manager.listAllConnections()
           const matchingDappConnection =
-            activeTabOrigin != null ? dappsConnected.find((dapp) => dapp.dappOrigin.includes(activeTabOrigin)) : null
+            activeTabOrigin != null
+              ? dappsConnected.find((dapp) =>
+                  dapp.dappOrigin.includes(activeTabOrigin),
+                )
+              : null
 
           if (matchingDappConnection?.dappOrigin != null) {
-            const isDappRequestingCollateral = dappCollateralRequestUtils.getIsDappRequestingCollateral(
-              matchingDappConnection.dappOrigin,
-            )
+            const isDappRequestingCollateral =
+              dappCollateralRequestUtils.getIsDappRequestingCollateral(
+                matchingDappConnection.dappOrigin,
+              )
 
             if (isDappRequestingCollateral) {
               if (!dappCollateralRequestUtils.hasCollateral()) {
@@ -62,22 +68,35 @@ export const useDappConnectorManager = () => {
                 return
               }
 
-              dappCollateralRequestUtils.removeCollateralRequestedDappsId(matchingDappConnection.dappOrigin)
+              dappCollateralRequestUtils.removeCollateralRequestedDappsId(
+                matchingDappConnection.dappOrigin,
+              )
             }
           }
 
           const matchingDapp =
-            activeTabOrigin != null ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin)) : null
+            activeTabOrigin != null
+              ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin))
+              : null
 
           track.dappPopupSignTransactionPageViewed()
           navigateToTxReview({
             cbor,
             preventSubmit: true,
-            createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
+            createdBy: matchingDapp != null && (
+              <CreatedByInfoItem
+                logo={matchingDapp.logo}
+                url={matchingDapp.uri}
+              />
+            ),
             onSuccess: (args) => {
               shouldResolve = false
               if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
-                reject(new Error('useDappConnectorManager::handleSignTx: invalid state'))
+                reject(
+                  new Error(
+                    'useDappConnectorManager::handleSignTx: invalid state',
+                  ),
+                )
                 return
               }
 
@@ -104,26 +123,51 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [activeTabOrigin, track, navigateToTxReview, dappCollateralRequestUtils, navigateTo],
+    [
+      activeTabOrigin,
+      track,
+      navigateToTxReview,
+      dappCollateralRequestUtils,
+      navigateTo,
+    ],
   )
 
   const handleSignTxWithHW = React.useCallback(
-    ({cbor, partial, manager}: {cbor: string; partial?: boolean; manager: DappConnector}) => {
+    ({
+      cbor,
+      partial,
+      manager,
+    }: {
+      cbor: string
+      partial?: boolean
+      manager: DappConnector
+    }) => {
       track.dappPopupSignTransactionPageViewed()
       return new Promise<Transaction>((resolve, reject) => {
         let shouldResolve = true
         return manager.getDAppList().then(({dapps}) => {
           const matchingDapp =
-            activeTabOrigin != null ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin)) : null
+            activeTabOrigin != null
+              ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin))
+              : null
           navigateToTxReview({
             cbor,
             partial,
             preventSubmit: true,
-            createdBy: matchingDapp != null && <CreatedByInfoItem logo={matchingDapp.logo} url={matchingDapp.uri} />,
+            createdBy: matchingDapp != null && (
+              <CreatedByInfoItem
+                logo={matchingDapp.logo}
+                url={matchingDapp.uri}
+              />
+            ),
             onSuccess: (args) => {
               shouldResolve = false
               if (!args?.tx) {
-                reject(new Error('useDappConnectorManager::handleSignTxWithHW: invalid state'))
+                reject(
+                  new Error(
+                    'useDappConnectorManager::handleSignTxWithHW: invalid state',
+                  ),
+                )
                 return
               }
               resolve(args?.tx)
@@ -131,7 +175,9 @@ export const useDappConnectorManager = () => {
             },
             onError: (error) => {
               shouldResolve = false
-              logger.error('useDappConnectorManager::handleSignTxWithHW', {error})
+              logger.error('useDappConnectorManager::handleSignTxWithHW', {
+                error,
+              })
               reject(error)
             },
             onCancel: () => {
@@ -155,7 +201,11 @@ export const useDappConnectorManager = () => {
     async ({manager}: {manager: DappConnector}) => {
       const dappsConnected = await manager.listAllConnections()
       const matchingDappConnection =
-        activeTabOrigin != null ? dappsConnected.find((dapp) => dapp.dappOrigin.includes(activeTabOrigin)) : null
+        activeTabOrigin != null
+          ? dappsConnected.find((dapp) =>
+              dapp.dappOrigin.includes(activeTabOrigin),
+            )
+          : null
 
       return new Promise<void>((resolve, reject) => {
         if (matchingDappConnection?.dappOrigin == null) {
@@ -163,7 +213,9 @@ export const useDappConnectorManager = () => {
           return
         }
 
-        dappCollateralRequestUtils.addCollateralRequestedDappsId(matchingDappConnection.dappOrigin)
+        dappCollateralRequestUtils.addCollateralRequestedDappsId(
+          matchingDappConnection.dappOrigin,
+        )
         dappCollateralRequestUtils.showCollateralNotFoundAlert()
 
         resolve()
@@ -237,36 +289,43 @@ const useSignDataWithHW = () => {
 
   return React.useCallback(
     (address: string, payload: string) => {
-      return new Promise<{signature: string; key: string}>((resolve, reject) => {
-        let isClosed = false
-        confirmHWConnection({
-          onConfirm: async ({transportType, deviceInfo}) => {
-            try {
-              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
-              const result = await cip30.signData(address, payload, deviceInfo, transportType === 'USB')
-              resolve(result)
-              isClosed = true
-              closeModal()
-            } catch (error) {
-              if (error instanceof BaseLedgerError) {
-                throw error
+      return new Promise<{signature: string; key: string}>(
+        (resolve, reject) => {
+          let isClosed = false
+          confirmHWConnection({
+            onConfirm: async ({transportType, deviceInfo}) => {
+              try {
+                const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+                const result = await cip30.signData(
+                  address,
+                  payload,
+                  deviceInfo,
+                  transportType === 'USB',
+                )
+                resolve(result)
+                isClosed = true
+                closeModal()
+              } catch (error) {
+                if (error instanceof BaseLedgerError) {
+                  throw error
+                }
+                reject(error)
+                isClosed = true
+                closeModal()
               }
-              reject(error)
+            },
+            onCancel: () => {
+              reject(userRejectedError())
               isClosed = true
               closeModal()
-            }
-          },
-          onCancel: () => {
-            reject(userRejectedError())
-            isClosed = true
-            closeModal()
-          },
-          onClose: () => {
-            if (isClosed) return
-            reject(userRejectedError())
-          },
-        })
-      })
+            },
+            onClose: () => {
+              if (isClosed) return
+              reject(userRejectedError())
+            },
+          })
+        },
+      )
     },
     [confirmHWConnection, wallet, meta, closeModal],
   )
@@ -294,17 +353,25 @@ export const useDappCollateralRequestUtils = (wallet: YoroiWallet) => {
     },
   })
 
-  const addCollateralRequestedDappsId = (dappOrigin: DappConnection['dappOrigin']) =>
-    setDappsIds([...dappIds, prepareDappId(dappOrigin)])
-  const removeCollateralRequestedDappsId = (dappOrigin: DappConnection['dappOrigin']) =>
+  const addCollateralRequestedDappsId = (
+    dappOrigin: DappConnection['dappOrigin'],
+  ) => setDappsIds([...dappIds, prepareDappId(dappOrigin)])
+  const removeCollateralRequestedDappsId = (
+    dappOrigin: DappConnection['dappOrigin'],
+  ) =>
     setDappsIds([...dappIds.filter((id) => id !== prepareDappId(dappOrigin))])
-  const getIsDappRequestingCollateral = (dappOrigin: DappConnection['dappOrigin']) =>
-    dappIds.includes(prepareDappId(dappOrigin))
+  const getIsDappRequestingCollateral = (
+    dappOrigin: DappConnection['dappOrigin'],
+  ) => dappIds.includes(prepareDappId(dappOrigin))
   const hasCollateral = () => {
     const collateral = wallet.getCollateralInfo()
-    return !!collateral.utxo && collateral.amount.quantity >= BigInt(getCollateralAmountInLovelace())
+    return (
+      !!collateral.utxo &&
+      collateral.amount.quantity >= BigInt(getCollateralAmountInLovelace())
+    )
   }
-  const prepareDappId = (dappOrigin: DappConnection['dappOrigin']) => `${dappOrigin}-${tabActiveIndex}`
+  const prepareDappId = (dappOrigin: DappConnection['dappOrigin']) =>
+    `${dappOrigin}-${tabActiveIndex}`
 
   return {
     collateralRequestedDappsIds: dappIds,

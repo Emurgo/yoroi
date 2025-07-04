@@ -16,7 +16,13 @@ export const ThemePickerList = () => {
       data={data}
       keyExtractor={({themeName}) => themeName}
       renderItem={({item: {themeName}}) => {
-        return <ThemePickerItem title={themeName} selectTheme={selectThemeName} setLocalTheme={setLocalTheme} />
+        return (
+          <ThemePickerItem
+            title={themeName}
+            selectTheme={selectThemeName}
+            setLocalTheme={setLocalTheme}
+          />
+        )
       }}
     />
   )

@@ -1,5 +1,9 @@
 import {storiesOf} from '@storybook/react-native'
-import {exchangeDefaultState, ExchangeProvider, successManagerMock} from '@yoroi/exchange'
+import {
+  exchangeDefaultState,
+  ExchangeProvider,
+  successManagerMock,
+} from '@yoroi/exchange'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
@@ -9,7 +13,10 @@ import {SelectBuyOrSell} from './SelectBuyOrSell'
 
 const Wrapper = ({children}: ViewProps) => (
   <WalletManagerProviderMock wallet={mocks.wallet}>
-    <ExchangeProvider manager={successManagerMock} initialState={{...exchangeDefaultState, providerId: 'banxa'}}>
+    <ExchangeProvider
+      manager={successManagerMock}
+      initialState={{...exchangeDefaultState, providerId: 'banxa'}}
+    >
       <View style={styles.container}>{children}</View>
     </ExchangeProvider>
   </WalletManagerProviderMock>

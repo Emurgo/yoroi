@@ -19,7 +19,10 @@ export const InfoModalIllustration = () => {
         fill="url(#paint2_linear_26789_33265)"
       />
 
-      <Path d="M94.714 176.236l72.517-36.037-72.296-41.816-.221 77.853z" fill="url(#paint3_linear_26789_33265)" />
+      <Path
+        d="M94.714 176.236l72.517-36.037-72.296-41.816-.221 77.853z"
+        fill="url(#paint3_linear_26789_33265)"
+      />
 
       <Path
         d="M111.643 202.777l12.148-7.074-2.899 6.335-12.138 7.065 2.889-6.326z"
@@ -78,7 +81,10 @@ export const InfoModalIllustration = () => {
         fill="url(#paint13_linear_26789_33265)"
       />
 
-      <Path d="M34.132 118.011l-11.298-6.575 61.8-35.74 7.588 4.493-58.09 37.822z" fill="#16E3BA" />
+      <Path
+        d="M34.132 118.011l-11.298-6.575 61.8-35.74 7.588 4.493-58.09 37.822z"
+        fill="#16E3BA"
+      />
 
       <Path
         d="M31.298 122.923L20 116.348a6.246 6.246 0 012.834-4.91l11.298 6.574a6.216 6.216 0 00-2.834 4.911z"
@@ -90,9 +96,15 @@ export const InfoModalIllustration = () => {
         fill="url(#paint15_linear_26789_33265)"
       />
 
-      <Path d="M94.058 101.703h-3.997v12.789h3.997v-12.789z" fill="url(#paint16_linear_26789_33265)" />
+      <Path
+        d="M94.058 101.703h-3.997v12.789h3.997v-12.789z"
+        fill="url(#paint16_linear_26789_33265)"
+      />
 
-      <Path d="M94.058 159.828h-3.997v12.789h3.997v-12.789z" fill="url(#paint17_linear_26789_33265)" />
+      <Path
+        d="M94.058 159.828h-3.997v12.789h3.997v-12.789z"
+        fill="url(#paint17_linear_26789_33265)"
+      />
 
       <Defs>
         <LinearGradient

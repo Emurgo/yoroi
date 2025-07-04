@@ -78,6 +78,9 @@ const map = {
   },
 } as const
 
-export const loadText = (disclaimer: Disclaimer, languageCode: LanguageCode): string => {
+export const loadText = (
+  disclaimer: Disclaimer,
+  languageCode: LanguageCode,
+): string => {
   return map[disclaimer][languageCode]
 }

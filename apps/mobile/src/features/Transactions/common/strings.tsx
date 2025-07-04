@@ -1,7 +1,10 @@
 import {ReactNode} from 'react'
 import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 
-import globalMessages, {actionMessages, txLabels} from '../../../kernel/i18n/global-messages'
+import globalMessages, {
+  actionMessages,
+  txLabels,
+} from '../../../kernel/i18n/global-messages'
 import {TransactionDirection} from '../../../wallets/types/other'
 import {messages as receiveMessages} from '../../Receive/common/useStrings'
 
@@ -18,17 +21,23 @@ export const useStrings = () => {
     receiveLabel: intl.formatMessage(actionMessages.receive),
     buyLabel: intl.formatMessage(actionMessages.buy),
     buyTitle: intl.formatMessage(actionMessages.buyTitle),
-    buyInfo: (options: BuyInfoFormattingOptions) => intl.formatMessage(actionMessages.buyInfo, options),
+    buyInfo: (options: BuyInfoFormattingOptions) =>
+      intl.formatMessage(actionMessages.buyInfo, options),
     proceed: intl.formatMessage(actionMessages.proceed),
     swapLabel: intl.formatMessage(actionMessages.swap),
     messageBuy: intl.formatMessage(actionMessages.soon),
     exchange: intl.formatMessage(actionMessages.exchange),
     addressCopiedMsg: intl.formatMessage(receiveMessages.addressCopiedMsg),
     lockedDeposit: intl.formatMessage(globalMessages.lockedDeposit),
-    syncErrorBannerTextWithRefresh: intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh),
-    syncErrorBannerTextWithoutRefresh: intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh),
+    syncErrorBannerTextWithRefresh: intl.formatMessage(
+      globalMessages.syncErrorBannerTextWithRefresh,
+    ),
+    syncErrorBannerTextWithoutRefresh: intl.formatMessage(
+      globalMessages.syncErrorBannerTextWithoutRefresh,
+    ),
     noTransactions: intl.formatMessage(messages.noTransactions),
-    direction: (direction: TransactionDirection) => intl.formatMessage(directionMessages[direction]),
+    direction: (direction: TransactionDirection) =>
+      intl.formatMessage(directionMessages[direction]),
     unknownAssetName: intl.formatMessage(messages.unknownAssetName),
     walletAddress: intl.formatMessage(messages.walletAddress),
     BIP32path: intl.formatMessage(messages.BIP32path),
@@ -43,8 +52,10 @@ export const useStrings = () => {
     memo: intl.formatMessage(messages.memo),
     transactionId: intl.formatMessage(messages.transactionId),
     txAssuranceLevel: intl.formatMessage(messages.txAssuranceLevel),
-    confirmations: (cnt: number) => intl.formatMessage(messages.confirmations, {cnt}),
-    omittedCount: (cnt: number) => intl.formatMessage(messages.omittedCount, {cnt}),
+    confirmations: (cnt: number) =>
+      intl.formatMessage(messages.confirmations, {cnt}),
+    omittedCount: (cnt: number) =>
+      intl.formatMessage(messages.omittedCount, {cnt}),
     openInExplorer: intl.formatMessage(messages.openInExplorer),
     SENT: intl.formatMessage(txTypeMessages.SENT),
     RECEIVED: intl.formatMessage(txTypeMessages.RECEIVED),
@@ -55,7 +66,9 @@ export const useStrings = () => {
     collateral: intl.formatMessage(globalMessages.collateral),
     organizeWallet: intl.formatMessage(messages.organizeWallet),
     organizeWalletBanner: intl.formatMessage(messages.organizeWalletBanner),
-    organizeWalletDescription: intl.formatMessage(messages.organizeWalletDescription),
+    organizeWalletDescription: intl.formatMessage(
+      messages.organizeWalletDescription,
+    ),
     organizeWalletWarning: intl.formatMessage(messages.organizeWalletWarning),
     organizeWalletButton: intl.formatMessage(messages.organizeWalletButton),
   }
@@ -119,11 +132,13 @@ export const messages = defineMessages({
   },
   confirmations: {
     id: 'components.txhistory.txdetails.confirmations',
-    defaultMessage: '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
+    defaultMessage:
+      '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
   },
   omittedCount: {
     id: 'components.txhistory.txdetails.omittedCount',
-    defaultMessage: '!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}',
+    defaultMessage:
+      '!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}',
   },
   openInExplorer: {
     id: 'global.openInExplorer',
@@ -139,7 +154,8 @@ export const messages = defineMessages({
   },
   message: {
     id: 'components.txhistory.txhistory.warningbanner.message',
-    defaultMessage: '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
+    defaultMessage:
+      '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
   },
   noTransactions: {
     id: 'components.txhistory.txhistory.noTransactions',
@@ -230,11 +246,15 @@ export const messages = defineMessages({
   },
 })
 
-const directionMessages: Record<TransactionDirection, MessageDescriptor> = Object.freeze({
-  SENT: messages.transactionTypeSent,
-  RECEIVED: messages.transactionTypeReceived,
-  SELF: messages.transactionTypeSelf,
-  MULTI: messages.transactionTypeMulti,
-})
+const directionMessages: Record<TransactionDirection, MessageDescriptor> =
+  Object.freeze({
+    SENT: messages.transactionTypeSent,
+    RECEIVED: messages.transactionTypeReceived,
+    SELF: messages.transactionTypeSelf,
+    MULTI: messages.transactionTypeMulti,
+  })
 
-type BuyInfoFormattingOptions = Record<'b' | 'textComponent', (text: ReactNode[]) => ReactNode>
+type BuyInfoFormattingOptions = Record<
+  'b' | 'textComponent',
+  (text: ReactNode[]) => ReactNode
+>

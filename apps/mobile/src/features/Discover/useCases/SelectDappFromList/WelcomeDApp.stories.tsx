@@ -7,7 +7,11 @@ import {BrowserProvider} from '../../common/BrowserProvider'
 import {WelcomeDAppModal} from './WelcomeDAppModal'
 
 storiesOf('Discover WelcomeDAppModal', module)
-  .addDecorator((story) => <WalletManagerProviderMock wallet={walletMocks.wallet}>{story()}</WalletManagerProviderMock>)
+  .addDecorator((story) => (
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
+      {story()}
+    </WalletManagerProviderMock>
+  ))
   .add('initial', () => <Initial />)
 
 const Initial = () => {

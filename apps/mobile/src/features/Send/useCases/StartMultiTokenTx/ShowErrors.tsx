@@ -16,7 +16,11 @@ export const ShowErrors = () => {
   if (error != null && !isLoading) {
     return (
       <>
-        <ClickableBanner error onPress={() => sync()} text={strings.errorBannerNetworkError} />
+        <ClickableBanner
+          error
+          onPress={() => sync()}
+          text={strings.errorBannerNetworkError}
+        />
 
         <Spacer height={16} />
       </>

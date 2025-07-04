@@ -8,7 +8,10 @@ import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalan
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
+import {
+  formatPriceChange,
+  priceChange,
+} from '../../../common/helpers/priceChange'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {PnlTag} from '../../../ui/PnlTag/PnlTag'
 
@@ -20,7 +23,8 @@ type Props = {
 export const BalanceCardContent = ({amount, headerCard}: Props) => {
   const navigationTo = useNavigateTo()
   const {styles} = useStyles()
-  const {isPrivacyActive, setPrivacyModeOff, setPrivacyModeOn} = usePrivacyMode()
+  const {isPrivacyActive, setPrivacyModeOff, setPrivacyModeOn} =
+    usePrivacyMode()
 
   const {
     ptActivity: {close, open},
@@ -49,14 +53,23 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
         </TouchableOpacity>
 
         <View style={styles.rowBetween}>
-          <TouchableOpacity style={styles.balanceBox} onPress={togglePrivacyMode}>
+          <TouchableOpacity
+            style={styles.balanceBox}
+            onPress={togglePrivacyMode}
+          >
             <PairedBalance amount={amount} textStyle={styles.pairBalance} />
           </TouchableOpacity>
 
           <View style={styles.varyContainer}>
-            <PnlPercentChange variantPnl={variantPnl} changePercent={formatPriceChange(changePercent)} />
+            <PnlPercentChange
+              variantPnl={variantPnl}
+              changePercent={formatPriceChange(changePercent)}
+            />
 
-            <PnlPairedChange variantPnl={variantPnl} changeValue={formatPriceChange(changeValue, config.decimals)} />
+            <PnlPairedChange
+              variantPnl={variantPnl}
+              changeValue={formatPriceChange(changeValue, config.decimals)}
+            />
           </View>
         </View>
       </View>
@@ -81,13 +94,21 @@ const Balance = ({amount}: BalanceProps) => {
     <View style={styles.balanceBox}>
       <Text style={[styles.balanceText, styles.textWhite]}>{balance}</Text>
 
-      <Text style={[styles.symbol, styles.textWhite]}>{amount.info.ticker}</Text>
+      <Text style={[styles.symbol, styles.textWhite]}>
+        {amount.info.ticker}
+      </Text>
     </View>
   )
 }
 
-type PnlPercentChangeProps = {variantPnl: 'danger' | 'success' | 'neutral'; changePercent: string}
-const PnlPercentChange = ({variantPnl, changePercent}: PnlPercentChangeProps) => {
+type PnlPercentChangeProps = {
+  variantPnl: 'danger' | 'success' | 'neutral'
+  changePercent: string
+}
+const PnlPercentChange = ({
+  variantPnl,
+  changePercent,
+}: PnlPercentChangeProps) => {
   return (
     <PnlTag variant={variantPnl} withIcon>
       <Text>{changePercent}%</Text>

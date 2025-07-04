@@ -18,7 +18,10 @@ export const PreparingNetworkScreen = () => {
   useLaunchRouteAfterSyncing({selectedNetwork})
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom', 'top']} style={styles.root}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom', 'top']}
+      style={styles.root}
+    >
       <Text style={styles.title}>{strings.preparingNetwork}</Text>
     </SafeAreaView>
   )
@@ -47,5 +50,8 @@ const ScanStartParamsSchema = z.object({
   selectedNetwork: z.custom<Chain.SupportedNetworks>(),
 })
 
-const isPreparingNetworkParams = createTypeGuardFromSchema<Params>(ScanStartParamsSchema)
-const isParams = (params?: unknown): params is Params => isPreparingNetworkParams(params)
+const isPreparingNetworkParams = createTypeGuardFromSchema<Params>(
+  ScanStartParamsSchema,
+)
+const isParams = (params?: unknown): params is Params =>
+  isPreparingNetworkParams(params)

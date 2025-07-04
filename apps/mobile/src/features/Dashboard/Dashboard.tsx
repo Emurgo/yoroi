@@ -4,7 +4,14 @@ import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewProps,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner} from '../../components/Banner/Banner'
@@ -22,7 +29,12 @@ import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {DashboardRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {isEmptyString} from '../../kernel/utils'
-import {useBalances, useCreateWithdrawTx, useIsOnline, useSync} from '../../wallets/hooks'
+import {
+  useBalances,
+  useCreateWithdrawTx,
+  useIsOnline,
+  useSync,
+} from '../../wallets/hooks'
 import {Amounts} from '../../wallets/utils/utils'
 import {PoolTransitionNotice} from '../Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '../Staking/PoolTransition/usePoolTransition'
@@ -40,15 +52,27 @@ export const Dashboard = () => {
   const governanceStrings = useStrings()
   const {isPoolRetiring} = usePoolTransition()
   const {unsignedTxChanged} = useReviewTx()
-  const {isLoading: isWithdrawLoading, hasRewards, createWithdrawalTx} = useCreateWithdrawTx()
+  const {
+    isLoading: isWithdrawLoading,
+    hasRewards,
+    createWithdrawalTx,
+  } = useCreateWithdrawTx()
   const {wallet, meta} = useSelectedWallet()
   const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
   const {openModal} = useModal()
 
   const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
-  const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
+  const primaryAmount = Amounts.getAmount(
+    balances,
+    wallet.portfolioPrimaryTokenInfo.id,
+  )
+  const {
+    stakingInfo,
+    refetch: refetchStakingInfo,
+    error,
+    isLoading,
+  } = useStakingInfo(wallet)
 
   const isParticipatingInGovernance = useIsParticipatingInGovernance()
   const walletNavigateTo = useWalletNavigation()
@@ -60,7 +84,11 @@ export const Dashboard = () => {
         openModal({
           title: governanceStrings.withdrawWarningTitle,
           content: (
-            <WithdrawGovernanceWarningModal onParticipatePress={() => walletNavigateTo.navigateToGovernanceCentre()} />
+            <WithdrawGovernanceWarningModal
+              onParticipatePress={() =>
+                walletNavigateTo.navigateToGovernanceCentre()
+              }
+            />
           ),
         })
         return
@@ -87,7 +115,9 @@ export const Dashboard = () => {
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
       <View style={styles.container}>
-        {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}
+        {isOnline && error && (
+          <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />
+        )}
 
         <ScrollView
           style={styles.scrollView}
@@ -129,7 +159,11 @@ export const Dashboard = () => {
               <ActivityIndicator size="large" color="black" />
             ) : stakingInfo.status === 'staked' ? (
               <UserSummary
-                totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
+                totalAdaSum={
+                  !isEmptyString(primaryAmount.quantity)
+                    ? new BigNumber(primaryAmount.quantity)
+                    : null
+                }
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
                 ctaProps={{
@@ -139,7 +173,11 @@ export const Dashboard = () => {
               />
             ) : (
               <UserSummary
-                totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
+                totalAdaSum={
+                  !isEmptyString(primaryAmount.quantity)
+                    ? new BigNumber(primaryAmount.quantity)
+                    : null
+                }
                 totalRewards={null}
                 totalDelegated={null}
               />
@@ -179,7 +217,8 @@ export const useNavigateTo = () => {
   const navigation = useNavigation<StackNavigationProp<DashboardRoutes>>()
 
   return {
-    stakingCenter: () => navigation.navigate('staking-center', {screen: 'staking-center-main'}),
+    stakingCenter: () =>
+      navigation.navigate('staking-center', {screen: 'staking-center-main'}),
     submittedTx: () => navigation.navigate('staking-submitted-tx'),
     failedTx: () => navigation.navigate('staking-failed-tx'),
   }

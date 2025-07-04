@@ -12,13 +12,25 @@ export const DashboardTokenSkeletonItem = () => {
     <View style={styles.fullSize}>
       <View style={styles.root}>
         <SkeletonPlaceholder backgroundColor={color.gray_100}>
-          <SkeletonPlaceholder.Item flexDirection="row" gap={12} alignItems="center">
+          <SkeletonPlaceholder.Item
+            flexDirection="row"
+            gap={12}
+            alignItems="center"
+          >
             <SkeletonPlaceholder.Item width={40} height={40} borderRadius={8} />
 
             <SkeletonPlaceholder.Item flexDirection="column" gap={6}>
-              <SkeletonPlaceholder.Item width={39} height={16} borderRadius={8} />
+              <SkeletonPlaceholder.Item
+                width={39}
+                height={16}
+                borderRadius={8}
+              />
 
-              <SkeletonPlaceholder.Item width={53} height={12} borderRadius={8} />
+              <SkeletonPlaceholder.Item
+                width={53}
+                height={12}
+                borderRadius={8}
+              />
             </SkeletonPlaceholder.Item>
           </SkeletonPlaceholder.Item>
         </SkeletonPlaceholder>
@@ -27,11 +39,26 @@ export const DashboardTokenSkeletonItem = () => {
 
         <SkeletonPlaceholder backgroundColor={color.gray_100}>
           <SkeletonPlaceholder.Item>
-            <SkeletonPlaceholder.Item width={64} height={20} borderRadius={8} marginBottom={7} />
+            <SkeletonPlaceholder.Item
+              width={64}
+              height={20}
+              borderRadius={8}
+              marginBottom={7}
+            />
 
-            <SkeletonPlaceholder.Item width={128} height={16} borderRadius={8} marginBottom={7} />
+            <SkeletonPlaceholder.Item
+              width={128}
+              height={16}
+              borderRadius={8}
+              marginBottom={7}
+            />
 
-            <SkeletonPlaceholder.Item width={75} height={12} borderRadius={8} marginVertical={3} />
+            <SkeletonPlaceholder.Item
+              width={75}
+              height={12}
+              borderRadius={8}
+              marginVertical={3}
+            />
           </SkeletonPlaceholder.Item>
         </SkeletonPlaceholder>
       </View>

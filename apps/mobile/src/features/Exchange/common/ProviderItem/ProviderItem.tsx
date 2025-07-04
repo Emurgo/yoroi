@@ -16,7 +16,14 @@ type Props = {
   disabled?: boolean
 }
 
-export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disabled, label}: Props) => {
+export const ProviderItem = ({
+  onPress,
+  fee,
+  rightAdornment,
+  leftAdornment,
+  disabled,
+  label,
+}: Props) => {
   const styles = useStyles()
   const {
     selected: {network},
@@ -33,7 +40,11 @@ export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disab
     <>
       <Space height={isMainnet ? '_2xs' : 'lg'} />
 
-      <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={styles.item}
+        disabled={disabled}
+      >
         {leftAdornment}
 
         <Space width="md" />

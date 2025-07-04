@@ -7,7 +7,11 @@ import {LedgerTransportSwitch} from './LedgerTransportSwitchModal'
 storiesOf('Ledger Transport Switch Modal', module).add('default', () => (
   <WithModalProps>
     {({onPress, ...props}) => (
-      <LedgerTransportSwitch {...props} onSelectUSB={onPress('USB selected')} onSelectBLE={onPress('BLE selected')} />
+      <LedgerTransportSwitch
+        {...props}
+        onSelectUSB={onPress('USB selected')}
+        onSelectBLE={onPress('BLE selected')}
+      />
     )}
   </WithModalProps>
 ))

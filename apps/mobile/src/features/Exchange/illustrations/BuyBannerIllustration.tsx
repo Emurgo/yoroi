@@ -1,5 +1,12 @@
 import * as React from 'react'
-import Svg, {Defs, Ellipse, G, LinearGradient, Path, Stop} from 'react-native-svg'
+import Svg, {
+  Defs,
+  Ellipse,
+  G,
+  LinearGradient,
+  Path,
+  Stop,
+} from 'react-native-svg'
 
 type Props = {
   width: number
@@ -8,7 +15,12 @@ type Props = {
 
 export const BuyBannerIllustration = (props: Props) => {
   return (
-    <Svg height={props.height} width={props.width} viewBox="0 0 341 116" fill="none">
+    <Svg
+      height={props.height}
+      width={props.width}
+      viewBox="0 0 341 116"
+      fill="none"
+    >
       <Path
         d="M146.827 53.432l13.829 8.16M199.262 8.46c.431.254.431.9 0 1.145l-5.268 3.028a.662.662 0 000 1.145l13.189 7.736m60.746 31.927l10.909-6.438m43.89-13.096c1.825 1.077 1.833 2.824.025 3.893l-26.645 15.836c-1.808 1.077-4.753 1.077-6.578 0L262.712 37.8c-1.817-1.077-1.825-2.816-.017-3.893l26.644-15.837c1.809-1.077 4.754-1.077 6.57 0l26.819 15.837zm-153.263-.187c2.92 1.722 2.937 4.52.042 6.243l-42.688 25.37c-2.903 1.722-7.623 1.722-10.543 0L73.299 39.954c-2.912-1.722-2.929-4.512-.034-6.243l42.688-25.37c2.895-1.722 7.615-1.722 10.535 0l42.969 25.37.008.009zm48.546 4.096c33.581.096 60.76 16.298 60.706 36.19-.055 19.89-27.321 35.937-60.902 35.841-33.581-.096-60.76-16.298-60.706-36.19.055-19.89 27.321-35.936 60.902-35.84z"
         stroke="url(#paint0_linear_11524_177406)"

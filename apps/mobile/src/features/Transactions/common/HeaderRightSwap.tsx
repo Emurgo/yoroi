@@ -11,7 +11,10 @@ export const HeaderRightSwap = React.memo(() => {
   const {color} = useTheme()
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('swap-orders')} style={{paddingRight: 8}}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('swap-orders')}
+      style={{paddingRight: 8}}
+    >
       <Icon.TermsOfUse color={color.gray_max} size={24} />
     </TouchableOpacity>
   )

@@ -12,7 +12,12 @@ export const ShowDisclaimer = ({title, children}: ShowDisclaimerProps) => {
   const styles = useStyles()
 
   return (
-    <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={color.bg_gradient_1}>
+    <LinearGradient
+      style={styles.gradient}
+      start={{x: 1, y: 1}}
+      end={{x: 0, y: 0}}
+      colors={color.bg_gradient_1}
+    >
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
 

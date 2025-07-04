@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   GetExtendedPublicKeyRequest,
   GetExtendedPublicKeyResponse,
@@ -9,8 +8,10 @@ import type {
   SignTransactionRequest,
   SignTransactionResponse,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import AppAda, {DeviceStatusCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+import AppAda, {
+  DeviceStatusCodes,
+} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+
 // @ts-ignore
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
@@ -71,7 +72,11 @@ const isConnectionError = (e: Error | any): boolean => {
 // note: e.statusCode === DeviceErrorCodes.ERR_CLA_NOT_SUPPORTED is more probably due
 // to user not having ADA app opened instead of having the wrong app opened
 const isUserError = (e: Error | any): boolean => {
-  if (e && e.code != null && e.code === DeviceStatusCodes.ERR_CLA_NOT_SUPPORTED) {
+  if (
+    e &&
+    e.code != null &&
+    e.code === DeviceStatusCodes.ERR_CLA_NOT_SUPPORTED
+  ) {
     return true
   }
 
@@ -79,7 +84,11 @@ const isUserError = (e: Error | any): boolean => {
 }
 
 const isRejectedError = (e: Error | any): boolean => {
-  if (e && e.code != null && e.code === DeviceStatusCodes.ERR_REJECTED_BY_USER) {
+  if (
+    e &&
+    e.code != null &&
+    e.code === DeviceStatusCodes.ERR_REJECTED_BY_USER
+  ) {
     return true
   }
 
@@ -120,13 +129,17 @@ const getXPubPathRequest = (
   }
 }
 
-export const checkDeviceVersion = (versionResponse: GetVersionResponse): void => {
+export const checkDeviceVersion = (
+  versionResponse: GetVersionResponse,
+): void => {
   if (
     versionResponse.version.major == null ||
     versionResponse.version.minor == null ||
     versionResponse.version.patch == null
   ) {
-    logger.warn('checkDeviceVersion: incomplete version data from device', {versionResponse})
+    logger.warn('checkDeviceVersion: incomplete version data from device', {
+      versionResponse,
+    })
     return
   }
 
@@ -138,7 +151,10 @@ export const checkDeviceVersion = (versionResponse: GetVersionResponse): void =>
   const minVersionArray = MIN_ADA_APP_VERSION.split('.')
 
   if (minVersionArray.length !== deviceVersionArray.length) {
-    logger.warn('checkDeviceVersion: version formats mismatch', {minVersionArray, deviceVersionArray})
+    logger.warn('checkDeviceVersion: version formats mismatch', {
+      minVersionArray,
+      deviceVersionArray,
+    })
     return
   }
 
@@ -204,7 +220,8 @@ export const getHWDeviceInfo = async (
     // assume single account in Yoroi
     const accountPath = getXPubPathRequest(implementation, accountVisual)
     // i.e hdPath = [2147483692, 2147485463, 2147483648]
-    const extendedPublicKeyResp: GetExtendedPublicKeyResponse = await appAda.getExtendedPublicKey(accountPath)
+    const extendedPublicKeyResp: GetExtendedPublicKeyResponse =
+      await appAda.getExtendedPublicKey(accountPath)
     const serial: GetSerialResponse = await appAda.getSerial()
     const hwDeviceInfo = normalizeHWResponse({
       extendedPublicKeyResp,
@@ -223,15 +240,21 @@ const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
   const {extendedPublicKeyResp, deviceId, deviceObj, serialHex} = resp
 
   if (deviceId == null && deviceObj == null) {
-    throw new Error('LedgerUtils::validateHWResponse: a non-null descriptor is required')
+    throw new Error(
+      'LedgerUtils::validateHWResponse: a non-null descriptor is required',
+    )
   }
 
   if (extendedPublicKeyResp == null) {
-    throw new Error('LedgerUtils::validateHWResponse: extended public key is undefined')
+    throw new Error(
+      'LedgerUtils::validateHWResponse: extended public key is undefined',
+    )
   }
 
   if (serialHex == null) {
-    throw new Error('LedgerUtils::validateHWResponse: device serial number is undefined')
+    throw new Error(
+      'LedgerUtils::validateHWResponse: device serial number is undefined',
+    )
   }
 
   return true
@@ -241,7 +264,8 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HW.DeviceInfo => {
   validateHWResponse(resp)
   const {extendedPublicKeyResp, deviceId, deviceObj, serialHex} = resp
   return {
-    bip44AccountPublic: extendedPublicKeyResp.publicKeyHex + extendedPublicKeyResp.chainCodeHex,
+    bip44AccountPublic:
+      extendedPublicKeyResp.publicKeyHex + extendedPublicKeyResp.chainCodeHex,
     hwFeatures: {
       vendor: HARDWARE_WALLETS.LEDGER_NANO.VENDOR,
       model: HARDWARE_WALLETS.LEDGER_NANO.MODEL,
@@ -263,8 +287,15 @@ export const doesCardanoAppVersionSupportCIP1694 = (majorVersion: number) => {
 // ============== transaction logic ==================
 //
 
-export const getCardanoAppMajorVersion = async (hwDeviceInfo: HW.DeviceInfo, useUSB: boolean) => {
-  const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
+export const getCardanoAppMajorVersion = async (
+  hwDeviceInfo: HW.DeviceInfo,
+  useUSB: boolean,
+) => {
+  const appAda = await connectionHandler(
+    hwDeviceInfo.hwFeatures.deviceId,
+    hwDeviceInfo.hwFeatures.deviceObj,
+    useUSB,
+  )
   const {version} = await appAda.getVersion()
   logger.debug('getCardanoAppMajorVersion: version', {version})
   return version.major
@@ -276,8 +307,13 @@ export const signTxWithLedger = async (
   useUSB: boolean,
 ) => {
   try {
-    const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
-    const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(signRequest)
+    const appAda = await connectionHandler(
+      hwDeviceInfo.hwFeatures.deviceId,
+      hwDeviceInfo.hwFeatures.deviceObj,
+      useUSB,
+    )
+    const ledgerSignature: SignTransactionResponse =
+      await appAda.signTransaction(signRequest)
     await appAda.transport.close()
     return ledgerSignature
   } catch (e) {
@@ -291,7 +327,11 @@ export const signMessageWithLedger = async (
   useUSB: boolean,
 ): Promise<SignMessageResponse> => {
   try {
-    const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
+    const appAda = await connectionHandler(
+      hwDeviceInfo.hwFeatures.deviceId,
+      hwDeviceInfo.hwFeatures.deviceObj,
+      useUSB,
+    )
     const ledgerSignature = await appAda.signMessage(signRequest)
     await appAda.transport.close()
     return ledgerSignature

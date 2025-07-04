@@ -39,7 +39,11 @@ export const SubmittedTxScreen = () => {
       <Space fill />
 
       <Actions>
-        <Button onPress={handleOnPress} title={strings.submittedTxScreenButton} style={styles.button} />
+        <Button
+          onPress={handleOnPress}
+          title={strings.submittedTxScreenButton}
+          style={styles.button}
+        />
       </Actions>
     </SafeArea>
   )

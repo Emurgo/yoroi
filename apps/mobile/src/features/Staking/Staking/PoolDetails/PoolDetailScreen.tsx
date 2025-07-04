@@ -8,14 +8,20 @@ import {Button} from '../../../components/Button/Button'
 import {GradientWarning} from '../../../components/ChainWarning/GradientWarning'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {TextInput} from '../../../components/TextInput/TextInput'
-import {isValidPoolIdOrHash, normalizeToPoolHash} from '../../../wallets/cardano/delegationUtils'
+import {
+  isValidPoolIdOrHash,
+  normalizeToPoolHash,
+} from '../../../wallets/cardano/delegationUtils'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void
   disabled?: boolean
 }
 
-export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => {
+export const PoolDetailScreen = ({
+  onPressDelegate,
+  disabled = false,
+}: Props) => {
   const strings = useStrings()
   const styles = useStyles()
   const [poolIdOrHash, setPoolIdOrHash] = React.useState('')
@@ -31,7 +37,10 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
 
   return (
     <>
-      <GradientWarning title={strings.disclaimerTitle} description={strings.disclaimerText} />
+      <GradientWarning
+        title={strings.disclaimerTitle}
+        description={strings.disclaimerText}
+      />
 
       <Spacer height={24} />
 
@@ -59,7 +68,10 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
 }
 
 const useIsValidPoolIdOrHash = (poolIdOrHash: string) => {
-  const queryFn = React.useCallback(() => isValidPoolIdOrHash(poolIdOrHash), [poolIdOrHash])
+  const queryFn = React.useCallback(
+    () => isValidPoolIdOrHash(poolIdOrHash),
+    [poolIdOrHash],
+  )
   return useQuery({queryFn, queryKey: ['isValidPoolIdOrHash', poolIdOrHash]})
 }
 

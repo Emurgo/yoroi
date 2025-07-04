@@ -8,10 +8,17 @@ import {ButtonCard} from './ButtonCard'
 storiesOf('AddWallet ButtonCard', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('with icon', () => (
-    <ButtonCard title="Create new wallet" onPress={() => action('Create new wallet selected')} icon="create" />
+    <ButtonCard
+      title="Create new wallet"
+      onPress={() => action('Create new wallet selected')}
+      icon="create"
+    />
   ))
   .add('without icon', () => (
-    <ButtonCard title="Create new wallet" onPress={() => action('Create new wallet selected')} />
+    <ButtonCard
+      title="Create new wallet"
+      onPress={() => action('Create new wallet selected')}
+    />
   ))
   .add('with subtitle', () => (
     <ButtonCard

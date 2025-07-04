@@ -11,7 +11,11 @@ import {Space} from '../../../components/Space/Space'
 import {formatTimeSpan} from '../../../wallets/utils/timeUtils'
 import {useStrings} from './usePoolTransition'
 
-export const PoolTransitionModal = ({poolTransition}: {poolTransition: PoolTransition}) => {
+export const PoolTransitionModal = ({
+  poolTransition,
+}: {
+  poolTransition: PoolTransition
+}) => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
@@ -19,17 +23,24 @@ export const PoolTransitionModal = ({poolTransition}: {poolTransition: PoolTrans
 
   return (
     <View style={styles.modal}>
-      <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
+      <Text style={styles.details}>
+        {isActive ? strings.warning : strings.finalWarning}
+      </Text>
 
       <Space height="lg" />
 
-      <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
+      <View
+        style={[styles.card, isActive ? styles.border : styles.warningBorder]}
+      >
         <Row>
           <Text style={styles.label}>{strings.currentPool}</Text>
 
           <View style={styles.poolTicker}>
             {poolTransition.current.pic != null && (
-              <Image source={{uri: poolTransition.current.pic}} style={styles.pic} />
+              <Image
+                source={{uri: poolTransition.current.pic}}
+                style={styles.pic}
+              />
             )}
 
             <Text
@@ -41,17 +52,23 @@ export const PoolTransitionModal = ({poolTransition}: {poolTransition: PoolTrans
         <Row>
           <Text style={styles.label}>{strings.estimatedRoa}</Text>
 
-          <Text style={styles.currentValue}>{poolTransition.current.roa} %</Text>
+          <Text style={styles.currentValue}>
+            {poolTransition.current.roa} %
+          </Text>
         </Row>
 
         <Row>
           <Text style={styles.label}>{strings.fee}</Text>
 
-          <Text style={styles.currentValue}>{formatFee(poolTransition.current.taxRatio)} %</Text>
+          <Text style={styles.currentValue}>
+            {formatFee(poolTransition.current.taxRatio)} %
+          </Text>
         </Row>
 
         <Text style={styles.warning}>
-          <Text style={styles.warningText}>{isActive ? strings.poolWillStopRewards : strings.poolNoRewards}</Text>
+          <Text style={styles.warningText}>
+            {isActive ? strings.poolWillStopRewards : strings.poolNoRewards}
+          </Text>
 
           {isActive && (
             <Text style={styles.warningTimer}>
@@ -84,7 +101,10 @@ export const PoolTransitionModal = ({poolTransition}: {poolTransition: PoolTrans
 
           <View style={styles.poolTicker}>
             {poolTransition.suggested.pic != null && (
-              <Image source={{uri: poolTransition.suggested.pic}} style={styles.pic} />
+              <Image
+                source={{uri: poolTransition.suggested.pic}}
+                style={styles.pic}
+              />
             )}
 
             <Text
@@ -96,13 +116,17 @@ export const PoolTransitionModal = ({poolTransition}: {poolTransition: PoolTrans
         <Row>
           <Text style={styles.label}>{strings.estimatedRoa}</Text>
 
-          <Text style={styles.suggestedValue}>{poolTransition.suggested.roa} %</Text>
+          <Text style={styles.suggestedValue}>
+            {poolTransition.suggested.roa} %
+          </Text>
         </Row>
 
         <Row>
           <Text style={styles.label}>{strings.fee}</Text>
 
-          <Text style={styles.suggestedValue}>{formatFee(poolTransition.suggested.taxRatio)} %</Text>
+          <Text style={styles.suggestedValue}>
+            {formatFee(poolTransition.suggested.taxRatio)} %
+          </Text>
         </Row>
 
         <Text style={styles.currentValue}>{strings.poolGeneratesRewards}</Text>
@@ -111,7 +135,11 @@ export const PoolTransitionModal = ({poolTransition}: {poolTransition: PoolTrans
   )
 }
 
-export const PoolTransitionModalActions = ({onContinue}: {onContinue: () => Promise<void> | void}) => {
+export const PoolTransitionModalActions = ({
+  onContinue,
+}: {
+  onContinue: () => Promise<void> | void
+}) => {
   const [isLoading, setIsLoading] = React.useState(false)
   const strings = useStrings()
   const {styles} = useStyles()
@@ -133,9 +161,17 @@ export const PoolTransitionModalActions = ({onContinue}: {onContinue: () => Prom
   }
   return (
     <View style={styles.actions}>
-      <Button type={ButtonType.SecondaryText} title={strings.skipNoRewards} onPress={handleOnSkip} />
+      <Button
+        type={ButtonType.SecondaryText}
+        title={strings.skipNoRewards}
+        onPress={handleOnSkip}
+      />
 
-      <Button title={strings.updateKeepEarning} onPress={handleOnUpdate} disabled={isLoading} />
+      <Button
+        title={strings.updateKeepEarning}
+        onPress={handleOnUpdate}
+        disabled={isLoading}
+      />
     </View>
   )
 }

@@ -1,12 +1,21 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Image, ImageSourcePropType, ImageStyle, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  Image,
+  ImageSourcePropType,
+  ImageStyle,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {AssetLogo} from '../../../ui/AssetLogo/AssetLogo'
 import {IOpenOrders} from '../../../common/hooks/useGetOpenOrders'
 import {useStrings} from '../../../common/hooks/useStrings'
+import {AssetLogo} from '../../../ui/AssetLogo/AssetLogo'
 import {TokenInfoIcon} from '../../../ui/TokenAmountItem/TokenInfoIcon'
 
 type Props = {
@@ -29,20 +38,32 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
       <View style={styles.tokenInfoContainer}>
         <View style={styles.logoContainer}>
           <AssetLogo style={styles.logoFirst}>
-            <TokenInfoIcon info={firstToken.info} size="sm" imageStyle={styles.logoSize} />
+            <TokenInfoIcon
+              info={firstToken.info}
+              size="sm"
+              imageStyle={styles.logoSize}
+            />
           </AssetLogo>
 
           <AssetLogo style={styles.logoSecond}>
-            <TokenInfoIcon info={secondToken.info} size="sm" imageStyle={styles.logoSize} />
+            <TokenInfoIcon
+              info={secondToken.info}
+              size="sm"
+              imageStyle={styles.logoSize}
+            />
           </AssetLogo>
         </View>
 
-        <Text style={styles.symbol}>{`${firstTokenName} ${splitTokenSymbol} ${secondTokenName}`}</Text>
+        <Text
+          style={styles.symbol}
+        >{`${firstTokenName} ${splitTokenSymbol} ${secondTokenName}`}</Text>
       </View>
 
       <InfoGroup label={strings.total}>
         <View>
-          <Text style={styles.valueNumber}>{`${firstTokenBalance} ${firstTokenName}`}</Text>
+          <Text
+            style={styles.valueNumber}
+          >{`${firstTokenBalance} ${firstTokenName}`}</Text>
 
           <PairedBalance amount={firstToken} textStyle={styles.pairedBalance} />
         </View>
@@ -57,11 +78,15 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
       </InfoGroup>
 
       <InfoGroup label={strings.assetPrice}>
-        <Text style={styles.valueNumber}>{`${firstTokenBalance} ${firstTokenName}/${secondTokenName}`}</Text>
+        <Text
+          style={styles.valueNumber}
+        >{`${firstTokenBalance} ${firstTokenName}/${secondTokenName}`}</Text>
       </InfoGroup>
 
       <InfoGroup label={strings.assetAmount}>
-        <Text style={styles.valueNumber}>{`${secondTokenBalance} ${secondTokenName}`}</Text>
+        <Text
+          style={styles.valueNumber}
+        >{`${secondTokenBalance} ${secondTokenName}`}</Text>
       </InfoGroup>
 
       <InfoGroup label={strings.txId}>
@@ -93,7 +118,10 @@ const TxLink = ({onTxPress, txId}: {onTxPress: () => void; txId: string}) => {
 type InfoGroupProps = {
   label: string
 }
-const InfoGroup = ({children, label}: React.PropsWithChildren<InfoGroupProps>) => {
+const InfoGroup = ({
+  children,
+  label,
+}: React.PropsWithChildren<InfoGroupProps>) => {
   const {styles} = useStyles()
 
   return (
@@ -105,8 +133,19 @@ const InfoGroup = ({children, label}: React.PropsWithChildren<InfoGroupProps>) =
   )
 }
 
-const DexLogo = ({source, style}: {source: string | ImageSourcePropType; style: ImageStyle}) => {
-  return <Image source={typeof source === 'string' ? {uri: source} : source} style={[style]} />
+const DexLogo = ({
+  source,
+  style,
+}: {
+  source: string | ImageSourcePropType
+  style: ImageStyle
+}) => {
+  return (
+    <Image
+      source={typeof source === 'string' ? {uri: source} : source}
+      style={[style]}
+    />
+  )
 }
 
 const useStyles = () => {

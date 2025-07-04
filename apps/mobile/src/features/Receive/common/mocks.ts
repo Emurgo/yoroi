@@ -6,7 +6,8 @@ export const mocks = Object.freeze({
   specificAddressAmount:
     'web+cardano:addr_test1qrpycewkttfct7tcxud75etqqz57hgnul7tsh47lt4z53zys36la9r2zgza4456kwnhrkp5dl3t3d7a24ktrzj22en3qwtez5g?amount=500',
   shareFileName: 'Share-address',
-  address: 'addr1qxstpe4lqp9y04s094twu6p63ht2rdhu9sdd40s5n0leppecjfk0ywkc7w8rxrdxp2xvkk9tewfr39n5naexzryg3c7sxmnh0t',
+  address:
+    'addr1qxstpe4lqp9y04s094twu6p63ht2rdhu9sdd40s5n0leppecjfk0ywkc7w8rxrdxp2xvkk9tewfr39n5naexzryg3c7sxmnh0t',
   usedAddressDate: '02/02/2024, 14:32',
   yoroiZendesk: 'Yoroi Zendesk',
   addressList: [{isUsed: true, loading: false}],

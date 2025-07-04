@@ -23,7 +23,10 @@ export const useCanVote = (wallet: YoroiWallet) => {
 }
 
 export function useCatalystCurrentFund(
-  options?: UseQueryOptions<{status: Catalyst.FundStatus; info: Catalyst.FundInfo}, Error>,
+  options?: UseQueryOptions<
+    {status: Catalyst.FundStatus; info: Catalyst.FundInfo},
+    Error
+  >,
 ) {
   const catalyst = useCatalyst()
   const query = useQuery({
@@ -38,7 +41,8 @@ export function useCatalystCurrentFund(
     queryFn: async () => {
       const response = await catalyst.getFundInfo()
 
-      if (response.tag === 'left') throwLoggedError(new Error(response.error.message))
+      if (response.tag === 'left')
+        throwLoggedError(new Error(response.error.message))
       const info = response.value.data
 
       return {
@@ -48,7 +52,8 @@ export function useCatalystCurrentFund(
     },
   })
 
-  if (query.data == null) throw new App.Errors.InvalidState('useCatalystFundStatus: no data')
+  if (query.data == null)
+    throw new App.Errors.InvalidState('useCatalystFundStatus: no data')
 
   return {
     query,

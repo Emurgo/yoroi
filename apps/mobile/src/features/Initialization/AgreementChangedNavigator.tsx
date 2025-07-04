@@ -2,7 +2,10 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
-import {defaultStackNavigationOptions, InititalizationRoutes} from '../../kernel/navigation'
+import {
+  defaultStackNavigationOptions,
+  InititalizationRoutes,
+} from '../../kernel/navigation'
 import {AnalyticsChangedScreen} from './AnalyticsChangedScreen'
 import {useStrings} from './common'
 import {ReadPrivacyPolicyScreen} from './ReadPrivacyPolicyScreen'
@@ -27,7 +30,11 @@ export const AgreementChangedNavigator = () => {
         options={{headerShown: false}}
       />
 
-      <Stack.Screen name="analytics-changed" component={AnalyticsChangedScreen} options={{headerShown: false}} />
+      <Stack.Screen
+        name="analytics-changed"
+        component={AnalyticsChangedScreen}
+        options={{headerShown: false}}
+      />
 
       <Stack.Screen
         name="read-terms-of-service"

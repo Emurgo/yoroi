@@ -3,7 +3,14 @@ import BigNumber from 'bignumber.js'
 
 import {RawUtxo} from '../types/other'
 import {YoroiEntry} from '../types/yoroi'
-import {Amounts, asQuantity, Entries, Quantities, splitStringInto64CharArray, Utxos} from './utils'
+import {
+  Amounts,
+  asQuantity,
+  Entries,
+  Quantities,
+  splitStringInto64CharArray,
+  Utxos,
+} from './utils'
 
 describe('Quantities', () => {
   it('sum', () => {
@@ -55,15 +62,23 @@ describe('Quantities', () => {
     expect(Quantities.integer('123.456', 3)).toBe('123456')
     expect(Quantities.integer('1.08', 10)).toBe('10800000000')
     expect(Quantities.integer('1.0800001', 3)).toBe('1080')
-    expect(Quantities.integer(asQuantity(new BigNumber('0000000000015')), 6)).toBe('15000000')
-    expect(Quantities.integer(asQuantity(new BigNumber(1.5)), 6)).toBe('1500000')
+    expect(
+      Quantities.integer(asQuantity(new BigNumber('0000000000015')), 6),
+    ).toBe('15000000')
+    expect(Quantities.integer(asQuantity(new BigNumber(1.5)), 6)).toBe(
+      '1500000',
+    )
   })
   it('zero & isZero', () => {
-    expect(Quantities.isZero(Quantities.integer(Quantities.zero, 15))).toBe(true)
+    expect(Quantities.isZero(Quantities.integer(Quantities.zero, 15))).toBe(
+      true,
+    )
     expect(Quantities.isZero(Quantities.integer('0', 2))).toBe(true)
     expect(Quantities.isZero(Quantities.integer('-1', 2))).toBe(false)
     expect(Quantities.isZero(Quantities.integer('1', 2))).toBe(false)
-    expect(Quantities.isZero(Quantities.integer('0.00000000000001', 18))).toBe(false)
+    expect(Quantities.isZero(Quantities.integer('0.00000000000001', 18))).toBe(
+      false,
+    )
     expect(Quantities.isZero(Quantities.zero)).toBe(true)
   })
   it('isAtomic', () => {
@@ -108,13 +123,31 @@ describe('Quantities', () => {
 
     expect(Quantities.parseFromText('', 3, italian)).toEqual(['', '0'])
     expect(Quantities.parseFromText('1', 3, italian)).toEqual(['1', '1000'])
-    expect(Quantities.parseFromText('123,55', 3, italian)).toEqual(['123,55', '123550'])
-    expect(Quantities.parseFromText('1234,6666', 3, italian)).toEqual(['1 234,666', '1234666'])
-    expect(Quantities.parseFromText('55,', 3, italian)).toEqual(['55,', '55000'])
-    expect(Quantities.parseFromText('55,0', 3, italian)).toEqual(['55,0', '55000'])
-    expect(Quantities.parseFromText('55,10', 3, italian)).toEqual(['55,10', '55100'])
+    expect(Quantities.parseFromText('123,55', 3, italian)).toEqual([
+      '123,55',
+      '123550',
+    ])
+    expect(Quantities.parseFromText('1234,6666', 3, italian)).toEqual([
+      '1 234,666',
+      '1234666',
+    ])
+    expect(Quantities.parseFromText('55,', 3, italian)).toEqual([
+      '55,',
+      '55000',
+    ])
+    expect(Quantities.parseFromText('55,0', 3, italian)).toEqual([
+      '55,0',
+      '55000',
+    ])
+    expect(Quantities.parseFromText('55,10', 3, italian)).toEqual([
+      '55,10',
+      '55100',
+    ])
 
-    expect(Quantities.parseFromText('ab1.5c,6.5', 3, italian)).toEqual(['15,65', '15650'])
+    expect(Quantities.parseFromText('ab1.5c,6.5', 3, italian)).toEqual([
+      '15,65',
+      '15650',
+    ])
 
     BigNumber.config({
       FORMAT: english,
@@ -122,16 +155,40 @@ describe('Quantities', () => {
 
     expect(Quantities.parseFromText('', 3, english)).toEqual(['', '0'])
     expect(Quantities.parseFromText('1', 3, english)).toEqual(['1', '1000'])
-    expect(Quantities.parseFromText('123.55', 3, english)).toEqual(['123.55', '123550'])
-    expect(Quantities.parseFromText('1234.6666', 3, english)).toEqual(['1,234.666', '1234666'])
-    expect(Quantities.parseFromText('55.', 3, english)).toEqual(['55.', '55000'])
-    expect(Quantities.parseFromText('55.0', 3, english)).toEqual(['55.0', '55000'])
-    expect(Quantities.parseFromText('55.10', 3, english)).toEqual(['55.10', '55100'])
+    expect(Quantities.parseFromText('123.55', 3, english)).toEqual([
+      '123.55',
+      '123550',
+    ])
+    expect(Quantities.parseFromText('1234.6666', 3, english)).toEqual([
+      '1,234.666',
+      '1234666',
+    ])
+    expect(Quantities.parseFromText('55.', 3, english)).toEqual([
+      '55.',
+      '55000',
+    ])
+    expect(Quantities.parseFromText('55.0', 3, english)).toEqual([
+      '55.0',
+      '55000',
+    ])
+    expect(Quantities.parseFromText('55.10', 3, english)).toEqual([
+      '55.10',
+      '55100',
+    ])
 
-    expect(Quantities.parseFromText('ab1.5c,6.5', 3, english)).toEqual(['1.56', '1560'])
+    expect(Quantities.parseFromText('ab1.5c,6.5', 3, english)).toEqual([
+      '1.56',
+      '1560',
+    ])
 
-    expect(Quantities.parseFromText('1.23456', 0, english, 3)).toEqual(['1.234', '1.234'])
-    expect(Quantities.parseFromText('1.23456', 2, english, 3)).toEqual(['1.234', '123.4'])
+    expect(Quantities.parseFromText('1.23456', 0, english, 3)).toEqual([
+      '1.234',
+      '1.234',
+    ])
+    expect(Quantities.parseFromText('1.23456', 2, english, 3)).toEqual([
+      '1.234',
+      '123.4',
+    ])
   })
 })
 
@@ -139,60 +196,60 @@ describe('Amounts', () => {
   it('sums multiple Balance.Amounts into a single Balance.Amounts', () => {
     const amounts1: Balance.Amounts = {
       '.': '1',
-      token123: '2',
-      token567: '-2',
+      'token123': '2',
+      'token567': '-2',
     }
     const amounts2: Balance.Amounts = {
       '.': '3',
-      token456: '4',
+      'token456': '4',
     }
 
     expect(Amounts.sum([amounts1, amounts2])).toEqual({
       '.': '4',
-      token123: '2',
-      token456: '4',
-      token567: '-2',
+      'token123': '2',
+      'token456': '4',
+      'token567': '-2',
     } as Balance.Amounts)
   })
 
   it('diffs 2 Balance.Amounts into a single Balance.Amounts', () => {
     const amounts1: Balance.Amounts = {
       '.': '1',
-      token123: '2',
-      token567: '-2',
+      'token123': '2',
+      'token567': '-2',
     }
     const amounts2: Balance.Amounts = {
       '.': '3',
-      token456: '4',
+      'token456': '4',
     }
 
     expect(Amounts.diff(amounts1, amounts2)).toEqual({
       '.': '-2',
-      token123: '2',
-      token456: '-4',
-      token567: '-2',
+      'token123': '2',
+      'token456': '-4',
+      'token567': '-2',
     } as Balance.Amounts)
   })
 
   it('negate Balance.Amounts', () => {
     const amounts1: Balance.Amounts = {
       '.': '1',
-      token123: '2',
-      token567: '-2',
+      'token123': '2',
+      'token567': '-2',
     }
 
     expect(Amounts.negated(amounts1)).toEqual({
       '.': '-1',
-      token123: '-2',
-      token567: '2',
+      'token123': '-2',
+      'token567': '2',
     } as Balance.Amounts)
   })
 
   it('getAmount', () => {
     const amounts: Balance.Amounts = {
       '.': '1',
-      token123: '2',
-      token567: '-2',
+      'token123': '2',
+      'token567': '-2',
     }
 
     Object.entries(amounts).forEach(([tokenId, quantity]) =>
@@ -206,11 +263,13 @@ describe('Amounts', () => {
   it('includes', () => {
     const amounts: Balance.Amounts = {
       '.': '1',
-      token123: '2',
-      token567: '-2',
+      'token123': '2',
+      'token567': '-2',
     }
 
-    Object.keys(amounts).forEach((tokenId) => expect(Amounts.includes(amounts, tokenId)).toBe(true))
+    Object.keys(amounts).forEach((tokenId) =>
+      expect(Amounts.includes(amounts, tokenId)).toBe(true),
+    )
 
     expect(Amounts.includes(amounts, 'does-not-include')).toBe(false)
   })
@@ -218,21 +277,21 @@ describe('Amounts', () => {
   it('remove', () => {
     const amounts: Balance.Amounts = {
       '.': '123',
-      token123: '456',
-      token567: '-789',
+      'token123': '456',
+      'token567': '-789',
     }
 
     expect(Amounts.remove(amounts, ['token123'])).toEqual({
       '.': '123',
-      token567: '-789',
+      'token567': '-789',
     } as Balance.Amounts)
   })
 
   it('toArray', () => {
     const amounts: Balance.Amounts = {
       '.': '123',
-      token123: '456',
-      token567: '-789',
+      'token123': '456',
+      'token567': '-789',
     }
 
     expect(Amounts.toArray(amounts)).toEqual([
@@ -251,16 +310,16 @@ describe('Amounts', () => {
 
     expect(Amounts.fromArray(amounts)).toEqual({
       '.': '123',
-      SUN: '456',
-      QWE: '789',
+      'SUN': '456',
+      'QWE': '789',
     } as Balance.Amounts)
   })
 
   it('map', () => {
     const amounts: Balance.Amounts = {
       '.': '1',
-      SUN: '4',
-      QWE: '7',
+      'SUN': '4',
+      'QWE': '7',
     }
 
     expect(
@@ -270,8 +329,8 @@ describe('Amounts', () => {
       })),
     ).toEqual({
       '.': '2',
-      SUN: '5',
-      QWE: '8',
+      'SUN': '5',
+      'QWE': '8',
     } as Balance.Amounts)
   })
 
@@ -309,40 +368,66 @@ describe('Amounts', () => {
 
 describe('Entries', () => {
   it('first gets the first entry from YoroiEnrties', () => {
-    const entries: YoroiEntry[] = [{address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}}]
+    const entries: YoroiEntry[] = [
+      {
+        address: 'address1',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
+    ]
 
     expect(Entries.first(entries)).toEqual({
       address: 'address1',
       amounts: {
         '.': '1',
-        token123: '2',
-        token567: '-2',
+        'token123': '2',
+        'token567': '-2',
       },
     } as YoroiEntry)
   })
 
   it('first returns first item multiple entries', () => {
     const entries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}},
-      {address: 'address2', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {
+        address: 'address1',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
+      {
+        address: 'address2',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
     ]
 
     expect(Entries.first(entries)).toEqual({
       address: 'address1',
-      amounts: {'.': '1', token123: '2', token567: '-2'},
+      amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
     })
   })
 
   it('remove', () => {
     const entries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}},
-      {address: 'address2', amounts: {'.': '1', token123: '2', token567: '-2'}},
-      {address: 'address3', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {
+        address: 'address1',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
+      {
+        address: 'address2',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
+      {
+        address: 'address3',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
     ]
 
     const expectedEntries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}},
-      {address: 'address3', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {
+        address: 'address1',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
+      {
+        address: 'address3',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
     ]
 
     expect(Entries.remove(entries, ['address2'])).toEqual(expectedEntries)
@@ -350,25 +435,47 @@ describe('Entries', () => {
 
   it('toAddresses', () => {
     const entries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}},
-      {address: 'address2', amounts: {'.': '1', token123: '2', token567: '-2'}},
-      {address: 'address3', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {
+        address: 'address1',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
+      {
+        address: 'address2',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
+      {
+        address: 'address3',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
     ]
 
-    expect(Entries.toAddresses(entries)).toEqual(['address1', 'address2', 'address3'])
+    expect(Entries.toAddresses(entries)).toEqual([
+      'address1',
+      'address2',
+      'address3',
+    ])
   })
 
   it('toAmounts', () => {
     const entries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}},
-      {address: 'address2', amounts: {'.': '1', token123: '2', token567: '-2'}},
-      {address: 'address3', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {
+        address: 'address1',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
+      {
+        address: 'address2',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
+      {
+        address: 'address3',
+        amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
+      },
     ]
 
     expect(Entries.toAmounts(entries)).toEqual({
       '.': '3',
-      token123: '6',
-      token567: '-6',
+      'token123': '6',
+      'token567': '-6',
     } as Balance.Amounts)
   })
 })
@@ -515,8 +622,12 @@ describe('splitStringInto64CharArray', () => {
   })
 
   it('should split a long string into multiple 64-character elements', () => {
-    const inputString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789023123'
-    const expectedArray = ['ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789023', '123']
+    const inputString =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789023123'
+    const expectedArray = [
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789023',
+      '123',
+    ]
 
     const result = splitStringInto64CharArray(inputString)
 

@@ -1,10 +1,16 @@
-import type {TransactionUnspentOutput, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import type {
+  TransactionUnspentOutput,
+  WasmModuleProxy,
+} from '@emurgo/cross-csl-core'
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {primaryTokenId} from '@yoroi/portfolio'
 import {Balance} from '@yoroi/types'
 import {useQuery, useQueryClient} from 'react-query'
 
-import {toAssetNameHex, toPolicyId} from '../../../../yoroi-wallets/cardano/api/utils'
+import {
+  toAssetNameHex,
+  toPolicyId,
+} from '../../../../yoroi-wallets/cardano/api/utils'
 import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
 import {useWalletEvent} from '../../../../yoroi-wallets/hooks'
 import {RawUtxo} from '../../../../yoroi-wallets/types/other'
@@ -25,7 +31,13 @@ export const useUtxoList = () => {
   const query = useQuery({
     suspense: true,
     queryKey,
-    queryFn: () => getUtxoList({utxos, externalAddresses, internalAddresses, getDerivationPath}),
+    queryFn: () =>
+      getUtxoList({
+        utxos,
+        externalAddresses,
+        internalAddresses,
+        getDerivationPath,
+      }),
   })
 
   return {utxoList: query.data, ...query}
@@ -60,12 +72,15 @@ const getUtxoList = ({
   internalAddresses,
   getDerivationPath,
 }: UtxoListProps): UtxoList => {
-  const items = utxos.reduce((acc, cur) => {
-    const address = cur.receiver
-    acc[address] = acc[address] ?? []
-    acc[address].push(transformUtxo(cur))
-    return acc
-  }, {} as Record<string, Array<Utxo>>)
+  const items = utxos.reduce(
+    (acc, cur) => {
+      const address = cur.receiver
+      acc[address] = acc[address] ?? []
+      acc[address].push(transformUtxo(cur))
+      return acc
+    },
+    {} as Record<string, Array<Utxo>>,
+  )
 
   return Object.keys(items).map((address) => {
     const externalIndex = externalAddresses.findIndex((v) => v === address)
@@ -84,7 +99,8 @@ const getUtxoList = ({
 const transformUtxo = (utxo: RawUtxo): Utxo => {
   const balance: Balance.Amounts = {}
 
-  if (Number(utxo.amount) > 0) balance[primaryTokenId] = utxo.amount as Balance.Quantity
+  if (Number(utxo.amount) > 0)
+    balance[primaryTokenId] = utxo.amount as Balance.Quantity
 
   utxo.assets.forEach((asset) => {
     balance[asset.assetId] = asset.amount as Balance.Quantity
@@ -97,7 +113,8 @@ const transformUtxo = (utxo: RawUtxo): Utxo => {
     balance,
     toTransactionUnspentOutputHex,
   }
-  transformedUtxo.toTransactionUnspentOutputHex = toTransactionUnspentOutputHex.bind(transformedUtxo)
+  transformedUtxo.toTransactionUnspentOutputHex =
+    toTransactionUnspentOutputHex.bind(transformedUtxo)
 
   return transformedUtxo
 }
@@ -116,28 +133,43 @@ type UtxoToCsl = {
   utxo: Utxo
 }
 
-export const utxoToTransactionUnspentOutput = async ({csl, utxo}: UtxoToCsl): Promise<TransactionUnspentOutput> => {
-  const input = await csl.TransactionInput.new(await csl.TransactionHash.fromHex(utxo.txHash), utxo.txIndex)
-  const value = await csl.Value.new(await csl.BigNum.fromStr(utxo.balance[primaryTokenId] ?? '0'))
+export const utxoToTransactionUnspentOutput = async ({
+  csl,
+  utxo,
+}: UtxoToCsl): Promise<TransactionUnspentOutput> => {
+  const input = await csl.TransactionInput.new(
+    await csl.TransactionHash.fromHex(utxo.txHash),
+    utxo.txIndex,
+  )
+  const value = await csl.Value.new(
+    await csl.BigNum.fromStr(utxo.balance[primaryTokenId] ?? '0'),
+  )
 
   const assetIds = Object.keys(utxo.balance).filter((v) => v !== primaryTokenId)
 
   if (assetIds.length > 0) {
     const multiAsset = await csl.MultiAsset.new()
 
-    const groupedByPolicyId = assetIds.reduce((acc, cur) => {
-      const policyId = toPolicyId(cur)
-      acc[policyId] = acc[policyId] ?? []
-      acc[policyId].push(cur)
-      return acc
-    }, {} as Record<string, Array<string>>)
+    const groupedByPolicyId = assetIds.reduce(
+      (acc, cur) => {
+        const policyId = toPolicyId(cur)
+        acc[policyId] = acc[policyId] ?? []
+        acc[policyId].push(cur)
+        return acc
+      },
+      {} as Record<string, Array<string>>,
+    )
 
     for (const policyIdStr of Object.keys(groupedByPolicyId)) {
       const assetGroup = groupedByPolicyId[policyIdStr]
-      const policyId = await csl.ScriptHash.fromBytes(new Uint8Array(Buffer.from(policyIdStr, 'hex')))
+      const policyId = await csl.ScriptHash.fromBytes(
+        new Uint8Array(Buffer.from(policyIdStr, 'hex')),
+      )
       const assets = await csl.Assets.new()
       for (const asset of assetGroup) {
-        const name = await csl.AssetName.new(new Uint8Array(Buffer.from(toAssetNameHex(asset), 'hex')))
+        const name = await csl.AssetName.new(
+          new Uint8Array(Buffer.from(toAssetNameHex(asset), 'hex')),
+        )
         const amount = await csl.BigNum.fromStr(utxo.balance[asset])
         await assets.insert(name, amount)
       }

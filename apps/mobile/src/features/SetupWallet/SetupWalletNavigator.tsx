@@ -3,7 +3,10 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {defaultStackNavigationOptions, WalletInitRoutes} from '../../kernel/navigation'
+import {
+  defaultStackNavigationOptions,
+  WalletInitRoutes,
+} from '../../kernel/navigation'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
@@ -25,7 +28,10 @@ export const SetupWalletNavigator = () => {
   const strings = useStrings()
   const {atoms, color} = useTheme()
 
-  const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
+  const navigationOptions = React.useMemo(
+    () => defaultStackNavigationOptions(atoms, color),
+    [atoms, color],
+  )
 
   return (
     <Stack.Navigator
@@ -193,10 +199,14 @@ const useStrings = () => {
     createWalletTitle: intl.formatMessage(messages.createWalletTitle),
     restoreWalletTitle: intl.formatMessage(messages.restoreWalletTitle),
     importReadOnlyTitle: intl.formatMessage(messages.importReadOnlyTitle),
-    saveReadOnlyWalletTitle: intl.formatMessage(messages.saveReadOnlyWalletTitle),
+    saveReadOnlyWalletTitle: intl.formatMessage(
+      messages.saveReadOnlyWalletTitle,
+    ),
     mnemonicShowTitle: intl.formatMessage(messages.mnemonicShowTitle),
     mnemonicCheckTitle: intl.formatMessage(messages.mnemonicCheckTitle),
-    verifyRestoredWalletTitle: intl.formatMessage(messages.verifyRestoredWalletTitle),
+    verifyRestoredWalletTitle: intl.formatMessage(
+      messages.verifyRestoredWalletTitle,
+    ),
     walletCredentialsTitle: intl.formatMessage(messages.walletCredentialsTitle),
     connectNanoXTitle: intl.formatMessage(messages.connectNanoXTitle),
     checkNanoXTitle: intl.formatMessage(messages.checkNanoXTitle),

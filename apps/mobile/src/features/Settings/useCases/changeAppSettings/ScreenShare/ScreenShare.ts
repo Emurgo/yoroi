@@ -1,4 +1,8 @@
-import {isBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {
+  isBoolean,
+  useAsyncStorage,
+  useMutationWithInvalidations,
+} from '@yoroi/common'
 import {useEffect, useState} from 'react'
 import {NativeModules, Platform} from 'react-native'
 import {useQuery} from 'react-query'
@@ -10,7 +14,9 @@ export const useChangeScreenShareSetting = () => {
 
   const mutation = useMutationWithInvalidations({
     mutationFn: async (screenShareEnabled: boolean) => {
-      await storage.join('appSettings/').setItem('screenShareEnabled', screenShareEnabled)
+      await storage
+        .join('appSettings/')
+        .setItem('screenShareEnabled', screenShareEnabled)
       if (Platform.OS === 'android') {
         changeScreenShareNativeSettingOnAndroid(screenShareEnabled)
       }
@@ -29,7 +35,11 @@ export const useScreenShareSettingEnabled = () => {
 
   return useQuery(['screenShareEnabled'], async () => {
     if (Platform.OS === 'android') {
-      return (await storage.join('appSettings/').getItem<boolean>('screenShareEnabled')) ?? false
+      return (
+        (await storage
+          .join('appSettings/')
+          .getItem<boolean>('screenShareEnabled')) ?? false
+      )
     }
     return true
   })
@@ -52,7 +62,9 @@ export const useInitScreenShare = () => {
   return {initialised}
 }
 
-export const changeScreenShareNativeSettingOnAndroid = (screenShareEnabled: boolean) => {
+export const changeScreenShareNativeSettingOnAndroid = (
+  screenShareEnabled: boolean,
+) => {
   if (screenShareEnabled) {
     FlagSecure.deactivate()
   } else {

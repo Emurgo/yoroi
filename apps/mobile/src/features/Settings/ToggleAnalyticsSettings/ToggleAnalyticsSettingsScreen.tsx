@@ -8,7 +8,9 @@ import {Analytics} from '../../components/Analytics/Analytics'
 export const ToggleAnalyticsSettingsScreen = () => {
   const styles = useStyles()
   const onReadMore = () => {
-    Linking.openURL('https://emurgohelpdesk.zendesk.com/hc/en-us/articles/7594394140303-What-s-user-insights-')
+    Linking.openURL(
+      'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/7594394140303-What-s-user-insights-',
+    )
   }
 
   return (

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import {GovernanceProvider} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
@@ -8,7 +7,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {NetworkTag} from '../../features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '../../features/Staking/Governance/common/helpers'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {DashboardRoutes, defaultStackNavigationOptions} from '../../kernel/navigation'
+import {
+  DashboardRoutes,
+  defaultStackNavigationOptions,
+} from '../../kernel/navigation'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 import {FailedTxScreen} from './ShowFailedTxScreen/FailedTxScreen'

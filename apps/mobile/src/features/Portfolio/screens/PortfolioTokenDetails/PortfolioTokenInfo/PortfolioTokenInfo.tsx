@@ -3,7 +3,10 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {TabPanel, TabPanels} from '../../../../../components/Tabs/Tabs'
-import {PortfolioDetailsTab, usePortfolio} from '../../../context/PortfolioProvider'
+import {
+  PortfolioDetailsTab,
+  usePortfolio,
+} from '../../../context/PortfolioProvider'
 import {Overview} from './Overview/Overview'
 import {Performance} from './Performance'
 

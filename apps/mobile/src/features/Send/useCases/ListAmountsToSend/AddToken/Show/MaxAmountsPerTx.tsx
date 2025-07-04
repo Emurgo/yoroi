@@ -13,7 +13,9 @@ export const MaxAmountsPerTx = () => {
 
   return (
     <ErrorPanel>
-      <Text style={[theme.atoms.body_2_md_regular, {color: theme.color.gray_max}]}>
+      <Text
+        style={[theme.atoms.body_2_md_regular, {color: theme.color.gray_max}]}
+      >
         <Text
           style={theme.atoms.body_2_md_medium}
         >{`${limitOfSecondaryAmountsPerTx} ${strings.assets.toLocaleLowerCase()} `}</Text>
@@ -27,7 +29,8 @@ export const MaxAmountsPerTx = () => {
 const messages = defineMessages({
   maxAmountsPerTx: {
     id: 'components.send.sendscreen.errorBannerMaxTokenLimit',
-    defaultMessage: '!!!is the maximum number allowed to send in one transaction',
+    defaultMessage:
+      '!!!is the maximum number allowed to send in one transaction',
   },
 })
 

@@ -1,4 +1,8 @@
-import {isString, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {
+  isString,
+  useAsyncStorage,
+  useMutationWithInvalidations,
+} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import {useQuery} from 'react-query'
 
@@ -27,7 +31,10 @@ export const useChangeNotificationDisplaySettings = () => {
   const walletManager = useWalletManager()
   const selectedWalletId = walletManager.selected.wallet?.id
   const mutationFn = async (value: boolean) => {
-    if (!isString(selectedWalletId)) throw new Error('useChangeNotificationDisplaySettings: No wallet selected')
+    if (!isString(selectedWalletId))
+      throw new Error(
+        'useChangeNotificationDisplaySettings: No wallet selected',
+      )
     await changeNotificationDisplaySettings(storage, selectedWalletId, value)
   }
   return useMutationWithInvalidations({
@@ -36,13 +43,24 @@ export const useChangeNotificationDisplaySettings = () => {
   })
 }
 
-const getNotificationDisplaySettings = async (storage: App.Storage, walletId: string): Promise<boolean> => {
+const getNotificationDisplaySettings = async (
+  storage: App.Storage,
+  walletId: string,
+): Promise<boolean> => {
   const setting = await storage
     .join(`wallet/${walletId}/`)
-    .getItem('displayNotifications', (value) => (isString(value) ? JSON.parse(value) : null))
+    .getItem('displayNotifications', (value) =>
+      isString(value) ? JSON.parse(value) : null,
+    )
   return setting ?? defaultNotificationsEnabled
 }
 
-const changeNotificationDisplaySettings = async (storage: App.Storage, walletId: string, value: boolean) => {
-  await storage.join(`wallet/${walletId}/`).setItem('displayNotifications', value)
+const changeNotificationDisplaySettings = async (
+  storage: App.Storage,
+  walletId: string,
+  value: boolean,
+) => {
+  await storage
+    .join(`wallet/${walletId}/`)
+    .setItem('displayNotifications', value)
 }

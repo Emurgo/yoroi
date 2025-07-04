@@ -1,9 +1,17 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
-import placeholderLight from '../../../../../assets/img/nft-placeholder.png'
 import placeholderDark from '../../../../../assets/img/nft-placeholder-dark.png'
+import placeholderLight from '../../../../../assets/img/nft-placeholder.png'
 import {Icon} from '../../../../../components/Icon'
 import {MediaPreview} from '../../../../../components/MediaPreview/MediaPreview'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
@@ -34,7 +42,10 @@ export const DashboardNFTsList = () => {
 
       {hasNotNfts ? (
         <View style={styles.container}>
-          <Image source={placeholder} style={[styles.placeholderNft, styles.image]} />
+          <Image
+            source={placeholder}
+            style={[styles.placeholderNft, styles.image]}
+          />
         </View>
       ) : null}
 
@@ -51,7 +62,12 @@ export const DashboardNFTsList = () => {
             style={[styles.nftItemContainer, {width: cardItemWidth}]}
             onPress={() => navigationTo.nftDetails(item.info.id)}
           >
-            <MediaPreview info={item.info} width={cardItemWidth} height={cardItemWidth} style={styles.image} />
+            <MediaPreview
+              info={item.info}
+              width={cardItemWidth}
+              height={cardItemWidth}
+              style={styles.image}
+            />
           </TouchableOpacity>
         )}
       />
@@ -68,7 +84,10 @@ const Heading = ({countNfts, onPress}: HeadingProps) => {
   const strings = useStrings()
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.container, styles.actionsContainer]}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.container, styles.actionsContainer]}
+    >
       <Text style={styles.title}>{strings.nfts(countNfts)}</Text>
 
       <Icon.ArrowRight color={colors.gray_800} size={24} />
@@ -83,7 +102,8 @@ const useStyles = () => {
   const PADDING_RIGHT_SIDE_FOR_ITEMS = 15
   const GAP_ITEMS = 8
   const initCardWidth = SCREEN_WIDTH - PADDING_LEFT_SIDE
-  const cardItemWidth = (initCardWidth - PADDING_RIGHT_SIDE_FOR_ITEMS - GAP_ITEMS) / 2
+  const cardItemWidth =
+    (initCardWidth - PADDING_RIGHT_SIDE_FOR_ITEMS - GAP_ITEMS) / 2
 
   const styles = StyleSheet.create({
     container: {

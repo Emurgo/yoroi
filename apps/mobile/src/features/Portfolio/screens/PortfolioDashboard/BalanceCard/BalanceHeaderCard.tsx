@@ -21,14 +21,18 @@ export const BalanceHeaderCard = ({name, rate, hasDApps}: Props) => {
       {hasDApps ? (
         <Tooltip numberOfLine={3} title={strings.totalPortfolioValueTooltip}>
           <View style={styles.labelContainer}>
-            <Text style={[styles.textWhite, styles.normalText]}>{strings.totalPortfolioValue}</Text>
+            <Text style={[styles.textWhite, styles.normalText]}>
+              {strings.totalPortfolioValue}
+            </Text>
 
             <Icon.InfoCircle color={color.white_static} />
           </View>
         </Tooltip>
       ) : (
         <View style={styles.labelContainer}>
-          <Text style={[styles.textWhite, styles.normalText]}>{strings.totalWalletValue}</Text>
+          <Text style={[styles.textWhite, styles.normalText]}>
+            {strings.totalWalletValue}
+          </Text>
         </View>
       )}
 

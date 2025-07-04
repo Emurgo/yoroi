@@ -3,7 +3,11 @@ import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
 
 import {SafeArea} from '../../../components/SafeArea'
-import {BackButton, defaultStackNavigationOptions, useWalletNavigation} from '../../../kernel/navigation'
+import {
+  BackButton,
+  defaultStackNavigationOptions,
+  useWalletNavigation,
+} from '../../../kernel/navigation'
 import {NetworkTag} from '../../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
@@ -38,7 +42,12 @@ export const GovernanceNavigator = () => {
             component={HomeScreen}
             options={{
               title: strings.governanceCentreTitle,
-              headerLeft: (props) => <BackButton {...props} onPress={() => walletNavigation.navigateToTxHistory()} />,
+              headerLeft: (props) => (
+                <BackButton
+                  {...props}
+                  onPress={() => walletNavigation.navigateToTxHistory()}
+                />
+              ),
             }}
           />
 
@@ -60,9 +69,17 @@ export const GovernanceNavigator = () => {
             options={{title: strings.governanceCentreTitle}}
           />
 
-          <Stack.Screen name="staking-gov-submitted-tx" component={SubmittedTxScreen} options={{headerShown: false}} />
+          <Stack.Screen
+            name="staking-gov-submitted-tx"
+            component={SubmittedTxScreen}
+            options={{headerShown: false}}
+          />
 
-          <Stack.Screen name="staking-gov-failed-tx" component={FailedTxScreen} options={{headerShown: false}} />
+          <Stack.Screen
+            name="staking-gov-failed-tx"
+            component={FailedTxScreen}
+            options={{headerShown: false}}
+          />
         </Stack.Navigator>
       </SafeArea>
     </GovernanceProvider>

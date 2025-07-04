@@ -13,7 +13,9 @@ export const CountDAppsConnected = ({total}: Props) => {
 
   return (
     <View>
-      <Text style={styles.availableText}>{`${strings.totalDAppConnected(total)}`}</Text>
+      <Text
+        style={styles.availableText}
+      >{`${strings.totalDAppConnected(total)}`}</Text>
     </View>
   )
 }

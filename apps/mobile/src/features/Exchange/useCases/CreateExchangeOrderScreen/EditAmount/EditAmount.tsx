@@ -24,26 +24,37 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
   const {wallet} = useSelectedWallet()
   const balance = usePortfolioPrimaryBalance({wallet})
 
-  const {amount, orderType, amountInputChanged, provider, providerId} = useExchange()
-  const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
+  const {amount, orderType, amountInputChanged, provider, providerId} =
+    useExchange()
+  const providers = useExchangeProvidersByOrderType({
+    orderType,
+    providerListByOrderType: provider.list.byOrderType,
+  })
 
   const onChangeAmountQuantity = React.useCallback(
     (text: string) => {
-      const [input, quantity] = Quantities.parseFromText(text, balance.info.decimals, numberLocale)
+      const [input, quantity] = Quantities.parseFromText(
+        text,
+        balance.info.decimals,
+        numberLocale,
+      )
       const newValue = +quantity
       const displayValue = text === '' ? '' : input
 
       let inputErrorMessage = null
 
       if (orderType === 'sell') {
-        const isNotEnoughBalance = new BigNumber(newValue).isGreaterThan(new BigNumber(balance.quantity.toString()))
+        const isNotEnoughBalance = new BigNumber(newValue).isGreaterThan(
+          new BigNumber(balance.quantity.toString()),
+        )
         if (isNotEnoughBalance) inputErrorMessage = strings.notEnoughBalance
       }
 
       if (orderType === 'buy') {
         const providerSelected = Object.fromEntries(providers)[providerId]
         const minAda = providerSelected?.supportedOrders?.buy?.min ?? 0
-        if (newValue > 0 && newValue < minAda && orderType === 'buy') inputErrorMessage = strings.minAdaRequired
+        if (newValue > 0 && newValue < minAda && orderType === 'buy')
+          inputErrorMessage = strings.minAdaRequired
       }
 
       const canExchange = inputErrorMessage == null && displayValue !== ''

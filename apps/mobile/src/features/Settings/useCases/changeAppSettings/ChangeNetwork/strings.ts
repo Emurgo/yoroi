@@ -52,6 +52,7 @@ const messages = defineMessages({
   },
   networkTagModalText: {
     id: 'components.settings.applicationsettingsscreen.network.tag.modal.text',
-    defaultMessage: '!!!Are you sure you want to switch back to the main Cardano Network?',
+    defaultMessage:
+      '!!!Are you sure you want to switch back to the main Cardano Network?',
   },
 })

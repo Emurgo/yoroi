@@ -18,7 +18,14 @@ type SmallAddressCardProps = {
   testID?: string
 }
 
-export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testID}: SmallAddressCardProps) => {
+export const SmallAddressCard = ({
+  address,
+  isUsed,
+  date,
+  onPress,
+  loading,
+  testID,
+}: SmallAddressCardProps) => {
   const strings = useStrings()
   const {copy} = useCopy()
   const {styles, colors} = useStyles()
@@ -39,7 +46,9 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
         <TouchableOpacity
           style={styles.smallAddressCard}
           activeOpacity={0.6}
-          onLongPress={(event) => copy({text: address, feedback: strings.addressCopiedMsg, event})}
+          onLongPress={(event) =>
+            copy({text: address, feedback: strings.addressCopiedMsg, event})
+          }
           onPress={onPress}
           testID={testID}
         >
@@ -56,7 +65,9 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
 
           <View style={styles.footer}>
             <View style={isUsed ? styles.statusUsed : styles.statusUnused}>
-              <Text style={isUsed ? styles.statusUsedText : styles.statusUnusedText}>
+              <Text
+                style={isUsed ? styles.statusUsedText : styles.statusUnusedText}
+              >
                 {isUsed ? strings.usedAddress : strings.unusedAddress}
               </Text>
             </View>

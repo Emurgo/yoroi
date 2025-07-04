@@ -5,12 +5,16 @@ import {messages as manageNotificationDisplayDurationMessages} from './ManageNot
 export const useStrings = () => {
   const intl = useIntl()
   return {
-    manageDisplayDurationScreenTitle: intl.formatMessage(manageNotificationDisplayDurationMessages.displayDuration),
+    manageDisplayDurationScreenTitle: intl.formatMessage(
+      manageNotificationDisplayDurationMessages.displayDuration,
+    ),
     inAppNotifications: intl.formatMessage(messages.inAppNotifications),
     displayDuration: intl.formatMessage(messages.displayDuration),
     pushNotifications: intl.formatMessage(messages.pushNotifications),
     goToSettings: intl.formatMessage(messages.goToSettings),
-    enableNotificationsThroughSettings: intl.formatMessage(messages.enableNotificationsThroughSettings),
+    enableNotificationsThroughSettings: intl.formatMessage(
+      messages.enableNotificationsThroughSettings,
+    ),
     notifications: intl.formatMessage(messages.notifications),
   }
 }
@@ -34,7 +38,8 @@ const messages = defineMessages({
   },
   enableNotificationsThroughSettings: {
     id: 'components.settings.walletsettingscreen.enableNotificationsThroughSettings',
-    defaultMessage: '!!!Enable notifications to get updates about your transactions and assets.',
+    defaultMessage:
+      '!!!Enable notifications to get updates about your transactions and assets.',
   },
   notifications: {
     id: 'components.settings.walletsettingscreen.notifications',

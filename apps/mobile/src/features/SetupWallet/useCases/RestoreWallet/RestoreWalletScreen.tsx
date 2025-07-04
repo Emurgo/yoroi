@@ -3,7 +3,15 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
-import {Dimensions, Keyboard, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  Dimensions,
+  Keyboard,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -35,7 +43,13 @@ export const RestoreWalletScreen = () => {
   const bold = useBold()
   const [mnemonic, setMnemonic] = React.useState('')
   const navigation = useNavigation<SetupWalletRouteNavigation>()
-  const {publicKeyHexChanged, mnemonicChanged, mnemonicType, walletImplementation, accountVisual} = useSetupWallet()
+  const {
+    publicKeyHexChanged,
+    mnemonicChanged,
+    mnemonicType,
+    walletImplementation,
+    accountVisual,
+  } = useSetupWallet()
   const {track} = useMetrics()
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
@@ -46,11 +60,14 @@ export const RestoreWalletScreen = () => {
   if (mnemonicType === null) throw new Error('mnemonicType missing')
 
   const [suggestedWords, setSuggestedWords] = React.useState<Array<string>>([])
-  const [mnemonicSelectedWords, setMnemonicSelectedWords] = React.useState<Array<string>>(
-    Array.from({length: mnemonicType}).map(() => ''),
-  )
-  const [inputErrorsIndexes, setInputErrorsIndexes] = React.useState<Array<number>>([])
-  const hasFocusedInputError = inputErrorsIndexes.find((index) => index === focusedIndex) !== undefined
+  const [mnemonicSelectedWords, setMnemonicSelectedWords] = React.useState<
+    Array<string>
+  >(Array.from({length: mnemonicType}).map(() => ''))
+  const [inputErrorsIndexes, setInputErrorsIndexes] = React.useState<
+    Array<number>
+  >([])
+  const hasFocusedInputError =
+    inputErrorsIndexes.find((index) => index === focusedIndex) !== undefined
 
   const onError = (indexToAdd: number) => {
     const newInputErrors = [...inputErrorsIndexes, indexToAdd]
@@ -58,11 +75,15 @@ export const RestoreWalletScreen = () => {
   }
 
   const onClearError = (indexToRemove: number) => {
-    const newInputErrors = inputErrorsIndexes.filter((index) => index !== indexToRemove)
+    const newInputErrors = inputErrorsIndexes.filter(
+      (index) => index !== indexToRemove,
+    )
     setInputErrorsIndexes(newInputErrors)
   }
 
-  const mnenonicRefs = React.useRef(mnemonicSelectedWords.map(() => React.createRef<MnemonicWordInputRef>())).current
+  const mnenonicRefs = React.useRef(
+    mnemonicSelectedWords.map(() => React.createRef<MnemonicWordInputRef>()),
+  ).current
 
   const onSelect = (index: number, word: string) => {
     const newWords = [...mnemonicSelectedWords]
@@ -71,7 +92,9 @@ export const RestoreWalletScreen = () => {
     mnenonicRefs[index].current?.selectWord(isEmptyString(word) ? '' : word)
 
     const mnemonicWordsComplete = newWords.every(Boolean)
-    const isValid: boolean = mnemonicWordsComplete ? validateMnemonic(newWords.join(' ')) : false
+    const isValid: boolean = mnemonicWordsComplete
+      ? validateMnemonic(newWords.join(' '))
+      : false
 
     if (mnemonicWordsComplete && isValid) {
       Keyboard.dismiss()
@@ -108,14 +131,21 @@ export const RestoreWalletScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       const recoveryPhraseLenght = String(mnemonicType) as '15' | '24'
-      track.restoreWalletEnterPhraseStepViewed({recovery_phrase_lenght: recoveryPhraseLenght})
+      track.restoreWalletEnterPhraseStepViewed({
+        recovery_phrase_lenght: recoveryPhraseLenght,
+      })
     }, [mnemonicType, track]),
   )
 
   const handleOnNext = React.useCallback(async () => {
-    const {accountPubKeyHex} = await walletManager.generateWalletKeys(walletImplementation, mnemonic, accountVisual)
+    const {accountPubKeyHex} = await walletManager.generateWalletKeys(
+      walletImplementation,
+      mnemonic,
+      accountVisual,
+    )
 
-    const duplicatedAccountWalletMeta = walletManager.findWalletMetadataByPublicKeyHex(accountPubKeyHex)
+    const duplicatedAccountWalletMeta =
+      walletManager.findWalletMetadataByPublicKeyHex(accountPubKeyHex)
 
     if (duplicatedAccountWalletMeta) {
       const {plate, seed} = walletManager.checksum(accountPubKeyHex)
@@ -129,7 +159,11 @@ export const RestoreWalletScreen = () => {
             duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
           />
         ),
-        footer: <WalletDuplicatedModalActions duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id} />,
+        footer: (
+          <WalletDuplicatedModalActions
+            duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
+          />
+        ),
       })
 
       return
@@ -154,11 +188,21 @@ export const RestoreWalletScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <KeyboardAvoidingView style={{flex: 1}}>
         <View style={styles.stepper}>
-          <StepperProgress currentStep={1} currentStepTitle={strings.stepRestoreWalletScreen} totalSteps={2} />
+          <StepperProgress
+            currentStep={1}
+            currentStepTitle={strings.stepRestoreWalletScreen}
+            totalSteps={2}
+          />
         </View>
 
-        <ScrollView style={styles.scroll} bounces={false} keyboardShouldPersistTaps="always">
-          <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
+        <ScrollView
+          style={styles.scroll}
+          bounces={false}
+          keyboardShouldPersistTaps="always"
+        >
+          <Text style={styles.title}>
+            {strings.restoreWalletScreenTitle(bold)}
+          </Text>
 
           <Space height="lg" />
 
@@ -181,10 +225,16 @@ export const RestoreWalletScreen = () => {
           />
         </ScrollView>
 
-        {!isEmptyString(mnemonic) && isValidPhrase && <NextButton onPress={handleOnNext} />}
+        {!isEmptyString(mnemonic) && isValidPhrase && (
+          <NextButton onPress={handleOnNext} />
+        )}
 
         {suggestedWords.length > 0 && !hasFocusedInputError && (
-          <WordSuggestionList data={suggestedWords} index={focusedIndex} onSelect={onSelect} />
+          <WordSuggestionList
+            data={suggestedWords}
+            index={focusedIndex}
+            onSelect={onSelect}
+          />
         )}
 
         {suggestedWords.length === 0 && hasFocusedInputError && (
@@ -203,7 +253,12 @@ const NextButton = ({onPress}: {onPress: () => void}) => {
 
   return (
     <View style={styles.padding}>
-      <Button title={strings.next} style={styles.button} onPress={onPress} testID="setup-restore-step1-next-button" />
+      <Button
+        title={strings.next}
+        style={styles.button}
+        onPress={onPress}
+        testID="setup-restore-step1-next-button"
+      />
     </View>
   )
 }
@@ -245,7 +300,13 @@ const WordSuggestionList = ({
   )
 }
 
-const WordSuggestionButton = ({title, onPress}: {title: string; onPress: () => void}) => {
+const WordSuggestionButton = ({
+  title,
+  onPress,
+}: {
+  title: string
+  onPress: () => void
+}) => {
   const {styles} = useStyles()
   return (
     <TouchableOpacity style={styles.suggestion} onPress={onPress}>

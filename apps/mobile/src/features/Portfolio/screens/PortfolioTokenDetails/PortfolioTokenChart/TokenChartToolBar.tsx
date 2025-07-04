@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-raw-text */
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -11,7 +10,11 @@ interface Props {
   onChange: (timeInterval: TokenChartInterval) => void
   disabled?: boolean
 }
-export const TokenChartToolbar = ({timeInterval, disabled, onChange}: Props) => {
+export const TokenChartToolbar = ({
+  timeInterval,
+  disabled,
+  onChange,
+}: Props) => {
   const {styles} = useStyles()
 
   const handleChange = (itv: TokenChartInterval) => {
@@ -24,10 +27,18 @@ export const TokenChartToolbar = ({timeInterval, disabled, onChange}: Props) => 
       {Object.values(TokenChartInterval).map((itv) => (
         <TouchableOpacity
           onPress={() => handleChange(itv)}
-          style={[itv === timeInterval ? styles.chartToolbarItemActive : {}, styles.chartToolbarItem]}
+          style={[
+            itv === timeInterval ? styles.chartToolbarItemActive : {},
+            styles.chartToolbarItem,
+          ]}
           key={itv}
         >
-          <Text style={[styles.chartToolbarItemText, itv === timeInterval ? styles.chartToolbarItemTextActive : {}]}>
+          <Text
+            style={[
+              styles.chartToolbarItemText,
+              itv === timeInterval ? styles.chartToolbarItemTextActive : {},
+            ]}
+          >
             {itv}
           </Text>
         </TouchableOpacity>

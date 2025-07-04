@@ -25,7 +25,10 @@ storiesOf('NFT/No Nfts Screen', module)
       <QueryProvider>
         <WalletManagerProviderMock wallet={mocks.wallet}>
           <SearchProvider>
-            <EmptyGallery message="No NFTs found" heading={<Text>Lorem ipsum</Text>} />
+            <EmptyGallery
+              message="No NFTs found"
+              heading={<Text>Lorem ipsum</Text>}
+            />
           </SearchProvider>
         </WalletManagerProviderMock>
       </QueryProvider>

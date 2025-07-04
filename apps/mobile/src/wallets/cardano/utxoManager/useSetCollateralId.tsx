@@ -9,7 +9,8 @@ export const useSetCollateralId = (
   {...options}: UseMutationOptions<void, Error, RawUtxo['utxo_id']> = {},
 ) => {
   const mutation = useMutationWithInvalidations({
-    mutationFn: (collateralId: RawUtxo['utxo_id']) => wallet.setCollateralId(collateralId),
+    mutationFn: (collateralId: RawUtxo['utxo_id']) =>
+      wallet.setCollateralId(collateralId),
     invalidateQueries: [['useSetCollateralId', wallet.id]],
     ...options,
   })

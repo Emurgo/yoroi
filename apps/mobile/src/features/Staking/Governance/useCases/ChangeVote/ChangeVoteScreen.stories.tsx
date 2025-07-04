@@ -15,7 +15,8 @@ storiesOf('Governance/ChangeVoteScreen', module)
     const manager = {
       ...governanceMocks.governanceManager,
       getLatestGovernanceAction: async () => null,
-      getStakingKeyState: () => Promise.resolve(governanceMocks.votedDrepStakeKeyState),
+      getStakingKeyState: () =>
+        Promise.resolve(governanceMocks.votedDrepStakeKeyState),
     }
 
     return (
@@ -28,7 +29,8 @@ storiesOf('Governance/ChangeVoteScreen', module)
     const manager = {
       ...governanceMocks.governanceManager,
       getLatestGovernanceAction: async () => null,
-      getStakingKeyState: () => Promise.resolve(governanceMocks.votedAbstainStakeKeyState),
+      getStakingKeyState: () =>
+        Promise.resolve(governanceMocks.votedAbstainStakeKeyState),
     }
     return (
       <Wrapper manager={manager} wallet={mocks.wallet}>
@@ -40,7 +42,8 @@ storiesOf('Governance/ChangeVoteScreen', module)
     const manager = {
       ...governanceMocks.governanceManager,
       getLatestGovernanceAction: async () => null,
-      getStakingKeyState: () => Promise.resolve(governanceMocks.votedNoConfidenceStakeKeyState),
+      getStakingKeyState: () =>
+        Promise.resolve(governanceMocks.votedNoConfidenceStakeKeyState),
     }
     return (
       <Wrapper manager={manager} wallet={mocks.wallet}>
