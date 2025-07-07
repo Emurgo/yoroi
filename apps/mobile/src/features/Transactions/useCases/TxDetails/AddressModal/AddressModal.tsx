@@ -1,13 +1,14 @@
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {fromPairs} from 'lodash'
 import React from 'react'
 import {Text, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
-import {Copiable} from '../../../../../components/Clipboard/Copiable'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Copiable} from '../../../../../ui/Copiable/Copiable'
+import {Space} from '../../../../../ui/Space/Space'
 import {useKeyHashes} from '../../../../../wallets/hooks'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '../../../common/strings'
 
 type Path = {
@@ -51,7 +52,7 @@ export const AddressModal = ({address, path}: Props) => {
         />
       </View>
 
-      <Spacer width={4} />
+      <Space.Width.sm />
 
       <View>
         <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
@@ -60,7 +61,7 @@ export const AddressModal = ({address, path}: Props) => {
 
         <Copiable title={address} text={address} />
 
-        <Spacer width={8} />
+        <Space.Width.sm />
 
         {derivationPath !== null && (
           <>
@@ -74,7 +75,7 @@ export const AddressModal = ({address, path}: Props) => {
               </Text>
             </View>
 
-            <Spacer width={8} />
+            <Space.Width.sm />
           </>
         )}
 
@@ -86,7 +87,7 @@ export const AddressModal = ({address, path}: Props) => {
 
             <Copiable title={keyHashes.staking} text={keyHashes.staking} />
 
-            <Spacer width={8} />
+            <Space.Width.sm />
           </>
         )}
 

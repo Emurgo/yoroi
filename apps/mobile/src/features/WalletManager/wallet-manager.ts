@@ -16,7 +16,7 @@ import {
   Subscription,
   switchMap,
 } from 'rxjs'
-import uuid from 'uuid'
+import {v4} from 'uuid'
 
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
@@ -657,7 +657,7 @@ export class WalletManager {
     const network = this.selectedNetwork
 
     const walletFactory = getWalletFactory({network, implementation})
-    const id = uuid.v4()
+    const id = v4()
 
     const {csl, release} = wrappedCsl()
     const {rootKey, accountPubKeyHex} = await walletFactory.makeKeys({
@@ -713,7 +713,7 @@ export class WalletManager {
     const network = this.selectedNetwork
 
     const walletFactory = getWalletFactory({network, implementation})
-    const id = uuid.v4()
+    const id = v4()
 
     const {ImagePart: seed, TextPart: plate} =
       walletFactory.calcChecksum(accountPubKeyHex)
