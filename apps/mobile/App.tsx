@@ -9,6 +9,8 @@ import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
 import {CopyProvider} from './src/features/Copy/context/CopyProvider'
 import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
+import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
+import {walletManager} from './src/features/WalletManager/wallet-manager'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
@@ -88,9 +90,9 @@ function BusinessShell({children}: React.PropsWithChildren) {
       installationIdKeyManager={installationIdStorageKeyManager}
     >
       <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
-        {/* <WalletManagerProvider walletManager={walletManager}> */}
-        {children}
-        {/* </WalletManagerProvider> */}
+        <WalletManagerProvider walletManager={walletManager}>
+          {children}
+        </WalletManagerProvider>
       </PairingProvider>
     </AuthProvider>
   )

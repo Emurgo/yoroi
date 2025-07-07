@@ -1,7 +1,6 @@
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 
-// @ts-ignore
 import {randomBytes} from 'react-native-randombytes'
 
 import {wrappedCsl} from '../wrappedCsl'
