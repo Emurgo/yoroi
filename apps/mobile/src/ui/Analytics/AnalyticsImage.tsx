@@ -1,6 +1,13 @@
-/* eslint-disable react/jsx-newline */
 import * as React from 'react'
-import Svg, {ClipPath, Defs, G, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
+import Svg, {
+  ClipPath,
+  Defs,
+  G,
+  LinearGradient,
+  Path,
+  Stop,
+  SvgProps,
+} from 'react-native-svg'
 
 export const AnalyticsImage = (props: SvgProps) => {
   return (
@@ -84,7 +91,10 @@ export const AnalyticsImage = (props: SvgProps) => {
           d="M72.104 104.61l-1.855 1.095-21.532 12.436-9.345-5.437-1.872-1.094 23.387-13.53 1.196.694 10.02 5.836z"
           opacity={0.7}
         />
-        <Path fill="url(#m)" d="M48.717 118.141v2.171L37.5 113.781v-2.171l1.872 1.094 9.345 5.437z" />
+        <Path
+          fill="url(#m)"
+          d="M48.717 118.141v2.171L37.5 113.781v-2.171l1.872 1.094 9.345 5.437z"
+        />
         <Path
           fill="#171A42"
           d="M193.564 148.537v11.516a16.82 16.82 0 01-.364 3.474v-11.516c.242-1.164.364-2.328.364-3.474z"
@@ -94,7 +104,10 @@ export const AnalyticsImage = (props: SvgProps) => {
           fill="url(#n)"
           d="M193.564 143.708c0 1.164-.122 2.328-.364 3.474l-47.936-3.474-.849-27.929c12.638-.139 25.363 2.588 35.002 8.181 9.431 5.454 14.147 12.61 14.147 19.748z"
         />
-        <Path fill="url(#o)" d="M193.182 147.182v12.767l-3.658-.191-42.526-2.276-1.751-.104v-13.67l47.935 3.474z" />
+        <Path
+          fill="url(#o)"
+          d="M193.182 147.182v12.767l-3.658-.191-42.526-2.276-1.751-.104v-13.67l47.935 3.474z"
+        />
         <Path
           fill="#171A42"
           d="M144.415 115.761l-.018 39.29.85 2.327v-13.67l-.832-27.947zm49.149 27.947v4.847a16.81 16.81 0 01-.364 3.473v-4.846a17.06 17.06 0 00.364-3.474z"
@@ -134,7 +147,14 @@ export const AnalyticsImage = (props: SvgProps) => {
         />
       </G>
       <Defs>
-        <LinearGradient id="b" x1={221.313} x2={221.313} y1={175.054} y2={9.228} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="b"
+          x1={221.313}
+          x2={221.313}
+          y1={175.054}
+          y2={9.228}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#1D45BA" />
           <Stop offset={0.42} stopColor="#1D47BA" />
           <Stop offset={0.572} stopColor="#1D4EB9" />
@@ -145,11 +165,25 @@ export const AnalyticsImage = (props: SvgProps) => {
           <Stop offset={0.966} stopColor="#18BBAD" />
           <Stop offset={1} stopColor="#17D1AA" />
         </LinearGradient>
-        <LinearGradient id="c" x1={177.579} x2={305.101} y1={10.941} y2={98.619} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="c"
+          x1={177.579}
+          x2={305.101}
+          y1={10.941}
+          y2={98.619}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="d" x1={128.511} x2={229.288} y1={37.259} y2={65.072} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="d"
+          x1={128.511}
+          x2={229.288}
+          y1={37.259}
+          y2={65.072}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#17D1AA" />
           <Stop offset={0.066} stopColor="#1AC2AE" />
           <Stop offset={0.265} stopColor="#229BB8" />
@@ -158,11 +192,25 @@ export const AnalyticsImage = (props: SvgProps) => {
           <Stop offset={0.835} stopColor="#3059CA" />
           <Stop offset={1} stopColor="#3154CB" />
         </LinearGradient>
-        <LinearGradient id="e" x1={112.299} x2={121.737} y1={68.005} y2={90.1} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="e"
+          x1={112.299}
+          x2={121.737}
+          y1={68.005}
+          y2={90.1}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="f" x1={92.668} x2={135.196} y1={67.523} y2={73.569} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="f"
+          x1={92.668}
+          x2={135.196}
+          y1={67.523}
+          y2={73.569}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#17D1AA" />
           <Stop offset={0.066} stopColor="#1AC2AE" />
           <Stop offset={0.265} stopColor="#229BB8" />
@@ -171,11 +219,25 @@ export const AnalyticsImage = (props: SvgProps) => {
           <Stop offset={0.835} stopColor="#3059CA" />
           <Stop offset={1} stopColor="#3154CB" />
         </LinearGradient>
-        <LinearGradient id="g" x1={89.778} x2={99.217} y1={85.374} y2={107.469} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="g"
+          x1={89.778}
+          x2={99.217}
+          y1={85.374}
+          y2={107.469}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="h" x1={70.148} x2={112.55} y1={85.398} y2={91.862} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="h"
+          x1={70.148}
+          x2={112.55}
+          y1={85.398}
+          y2={91.862}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#17D1AA" />
           <Stop offset={0.066} stopColor="#1AC2AE" />
           <Stop offset={0.265} stopColor="#229BB8" />
@@ -184,11 +246,25 @@ export const AnalyticsImage = (props: SvgProps) => {
           <Stop offset={0.835} stopColor="#3059CA" />
           <Stop offset={1} stopColor="#3154CB" />
         </LinearGradient>
-        <LinearGradient id="i" x1={67.275} x2={76.714} y1={115.77} y2={137.865} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="i"
+          x1={67.275}
+          x2={76.714}
+          y1={115.77}
+          y2={137.865}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="j" x1={47.645} x2={89.126} y1={117.817} y2={126.711} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="j"
+          x1={47.645}
+          x2={89.126}
+          y1={117.817}
+          y2={126.711}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#17D1AA" />
           <Stop offset={0.066} stopColor="#1AC2AE" />
           <Stop offset={0.265} stopColor="#229BB8" />
@@ -197,19 +273,47 @@ export const AnalyticsImage = (props: SvgProps) => {
           <Stop offset={0.835} stopColor="#3059CA" />
           <Stop offset={1} stopColor="#3154CB" />
         </LinearGradient>
-        <LinearGradient id="k" x1={81.119} x2={124.594} y1={67.423} y2={139.564} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="k"
+          x1={81.119}
+          x2={124.594}
+          y1={67.423}
+          y2={139.564}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="l" x1={109.724} x2={123.89} y1={55.091} y2={87.395} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="l"
+          x1={109.724}
+          x2={123.89}
+          y1={55.091}
+          y2={87.395}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="m" x1={43.108} x2={50.087} y1={111.61} y2={123.793} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="m"
+          x1={43.108}
+          x2={50.087}
+          y1={111.61}
+          y2={123.793}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="n" x1={129.266} x2={194.374} y1={112.115} y2={150.55} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="n"
+          x1={129.266}
+          x2={194.374}
+          y1={112.115}
+          y2={150.55}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#17D1AA" />
           <Stop offset={0.066} stopColor="#1AC2AE" />
           <Stop offset={0.265} stopColor="#229BB8" />
@@ -218,7 +322,14 @@ export const AnalyticsImage = (props: SvgProps) => {
           <Stop offset={0.835} stopColor="#3059CA" />
           <Stop offset={1} stopColor="#3154CB" />
         </LinearGradient>
-        <LinearGradient id="o" x1={130.473} x2={168.701} y1={141.817} y2={184.385} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="o"
+          x1={130.473}
+          x2={168.701}
+          y1={141.817}
+          y2={184.385}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#17D1AA" />
           <Stop offset={0.066} stopColor="#1AC2AE" />
           <Stop offset={0.265} stopColor="#229BB8" />
@@ -227,23 +338,58 @@ export const AnalyticsImage = (props: SvgProps) => {
           <Stop offset={0.835} stopColor="#3059CA" />
           <Stop offset={1} stopColor="#3154CB" />
         </LinearGradient>
-        <LinearGradient id="p" x1={171.971} x2={201.836} y1={152.028} y2={199.997} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="p"
+          x1={171.971}
+          x2={201.836}
+          y1={152.028}
+          y2={199.997}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="q" x1={169.189} x2={187.83} y1={148.554} y2={192.202} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="q"
+          x1={169.189}
+          x2={187.83}
+          y1={148.554}
+          y2={192.202}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="r" x1={103.153} x2={122.177} y1={154.564} y2={165.734} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="r"
+          x1={103.153}
+          x2={122.177}
+          y1={154.564}
+          y2={165.734}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="s" x1={121.634} x2={130.306} y1={148.572} y2={179.467} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="s"
+          x1={121.634}
+          x2={130.306}
+          y1={148.572}
+          y2={179.467}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#0CDDB3" />
           <Stop offset={1} stopColor="#4F6FC6" />
         </LinearGradient>
-        <LinearGradient id="t" x1={95.109} x2={152.222} y1={145.319} y2={178.133} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="t"
+          x1={95.109}
+          x2={152.222}
+          y1={145.319}
+          y2={178.133}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#17D1AA" />
           <Stop offset={0.066} stopColor="#1AC2AE" />
           <Stop offset={0.265} stopColor="#229BB8" />
@@ -252,7 +398,14 @@ export const AnalyticsImage = (props: SvgProps) => {
           <Stop offset={0.835} stopColor="#3059CA" />
           <Stop offset={1} stopColor="#3154CB" />
         </LinearGradient>
-        <LinearGradient id="u" x1={95.109} x2={143.925} y1={163.991} y2={200.397} gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="u"
+          x1={95.109}
+          x2={143.925}
+          y1={163.991}
+          y2={200.397}
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#17D1AA" />
           <Stop offset={0.066} stopColor="#1AC2AE" />
           <Stop offset={0.265} stopColor="#229BB8" />

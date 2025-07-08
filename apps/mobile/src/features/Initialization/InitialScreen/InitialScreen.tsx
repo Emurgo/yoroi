@@ -1,27 +1,22 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BlueCheckbox} from '../../../components/BlueCheckbox/BlueCheckbox'
-import {Button} from '../../../components/Button/Button'
-import {Icon} from '../../../components/Icon'
-import {Spacer} from '../../../components/Spacer/Spacer'
-import {YoroiLogo} from '../../../components/YoroiLogo/YoroiLogo'
-import {useLanguage} from '../../../kernel/i18n'
-import {defaultLanguage} from '../../../kernel/i18n/languages'
+import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
+import {
+  LanguageRecord,
+  supportedLanguages,
+} from '../../../kernel/i18n/localization'
+import {BlueCheckbox} from '../../../ui/BlueCheckbox/BlueCheckbox'
+import {Button} from '../../../ui/Button/Button'
+import {Icon} from '../../../ui/Icon'
+import {SpaceHeight} from '../../../ui/Space/Space'
 import {useNavigateTo, useStrings} from '../common'
 
 export const InitialScreen = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const [tosAccepted, setTosAccepted] = React.useState(false)
 
@@ -38,10 +33,6 @@ export const InitialScreen = () => {
     [setTosAccepted],
   )
 
-  useLanguage({
-    onChange: onLanguageChange,
-  })
-
   const onPressContinue = () => {
     navigateTo.analytics()
   }
@@ -55,58 +46,71 @@ export const InitialScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        bounces={false}
-        contentContainerStyle={styles.scrollableContentContainer}
-      >
-        <YoroiLogo />
+    <SafeAreaView style={[a.flex_1, a.p_lg, ta.bg_color_max]}>
+      <ScrollView bounces={false} contentContainerStyle={a.flex_grow}>
+        <Icon.YoroiWallet size={64} />
 
-        <Spacer height={80} />
+        <SpaceHeight size={80} />
 
-        <Text style={styles.title}>{strings.languagePickerTitle}</Text>
+        <Text style={[a.heading_3_medium, a.text_center, {color: p.gray_900}]}>
+          {strings.languagePickerTitle}
+        </Text>
 
-        <Spacer height={35} />
+        <SpaceHeight size={35} />
 
         <LanguagePickRow onPress={onPressLanguagePick} />
 
-        <Spacer height={30} />
+        <SpaceHeight size={30} />
 
         <BlueCheckbox
           checked={tosAccepted}
           spacing={8}
           onPress={onPressTosCheckbox}
-          style={styles.checkbox}
+          style={a.align_start}
         >
-          <View style={styles.checkboxRow}>
+          <View style={[a.flex, a.flex_row, a.flex_wrap]}>
             <Text
-              style={styles.checkboxText}
+              style={[a.body_1_lg_regular, {color: p.gray_max}]}
             >{`${strings.tosIAgreeWith} `}</Text>
 
             <TouchableOpacity onPress={onTosLinkPress} testID="linkToS">
-              <Text style={[styles.checkboxText, styles.checkboxLink]}>
+              <Text
+                style={[
+                  a.body_1_lg_regular,
+                  {color: p.primary_800, textDecorationLine: 'underline'},
+                ]}
+              >
                 {strings.tosAgreement}
               </Text>
             </TouchableOpacity>
 
-            <Text style={styles.checkboxText}>{` `}</Text>
+            <Text
+              style={[a.body_1_lg_regular, {color: p.gray_max}]}
+            >{` `}</Text>
 
-            <Text style={styles.checkboxText}>{strings.tosAnd}</Text>
+            <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
+              {strings.tosAnd}
+            </Text>
 
-            <Text style={styles.checkboxText}>{` `}</Text>
+            <Text
+              style={[a.body_1_lg_regular, {color: p.gray_max}]}
+            >{` `}</Text>
 
             <TouchableOpacity
               onPress={onPrivacyLinkPress}
               testID="linkPrivacyPolicy"
             >
-              <Text style={[styles.checkboxText, styles.checkboxLink]}>
+              <Text
+                style={[
+                  a.body_1_lg_regular,
+                  {color: p.primary_800, textDecorationLine: 'underline'},
+                ]}
+              >
                 {strings.privacyPolicy}
               </Text>
             </TouchableOpacity>
           </View>
         </BlueCheckbox>
-
-        <Spacer fill />
 
         <Button
           title={strings.continue}
@@ -120,79 +124,36 @@ export const InitialScreen = () => {
 }
 
 const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
-  const {styles, color} = useStyles()
-  const {isDark} = useTheme()
-  const {languageCode, supportedLanguages} = useLanguage()
-  const language =
-    supportedLanguages.find((lang) => lang.code === languageCode) ??
-    defaultLanguage
+  const {isDark, palette: p} = useTheme()
+  const {languageCode} = useLanguage()
+  const language = supportedLanguages.find(
+    (lang) => lang.code === languageCode,
+  ) as LanguageRecord
 
   return (
     <TouchableOpacity onPress={onPress} testID="dropDownLanguagePicker">
       <TextInput
-        style={styles.input}
+        style={[
+          {
+            color: p.gray_600,
+            borderColor: p.gray_400,
+            borderWidth: 1,
+            borderRadius: 8,
+            height: 56,
+          },
+          a.pl_lg,
+          a.body_1_lg_regular,
+          a.justify_center,
+        ]}
         value={language.label}
         pointerEvents="none"
         editable={false}
         keyboardAppearance={isDark ? 'dark' : 'light'}
       />
 
-      <View style={styles.inputIcon}>
-        <Icon.Chevron size={34} direction="down" color={color.el_gray_medium} />
+      <View style={[a.absolute, a.pr_lg, a.pt_sm, {right: 0}]}>
+        <Icon.Chevron size={34} direction="down" color={p.el_gray_medium} />
       </View>
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    scrollableContentContainer: {
-      flexGrow: 1,
-    },
-    container: {
-      flex: 1,
-      ...atoms.p_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    title: {
-      ...atoms.heading_3_medium,
-      textAlign: 'center',
-      color: color.gray_900,
-    },
-    input: {
-      color: color.gray_600,
-      ...atoms.pl_lg,
-      ...atoms.body_1_lg_regular,
-      justifyContent: 'center',
-      borderColor: color.gray_400,
-      borderWidth: 1,
-      borderRadius: 8,
-      height: 56,
-    },
-    inputIcon: {
-      position: 'absolute',
-      right: 0,
-      ...atoms.pr_lg,
-      ...atoms.pt_sm,
-    },
-    checkboxText: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_max,
-    },
-    checkboxLink: {
-      color: color.primary_800,
-      textDecorationLine: 'underline',
-    },
-    checkbox: {
-      alignItems: 'flex-start',
-    },
-    checkboxRow: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-    },
-  })
-
-  return {styles, color}
 }

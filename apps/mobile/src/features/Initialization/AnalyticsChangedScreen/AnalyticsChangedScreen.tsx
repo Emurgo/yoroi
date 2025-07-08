@@ -1,14 +1,14 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Linking, StyleSheet} from 'react-native'
+import {Linking} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Analytics} from '../../../components/Analytics/Analytics'
+import {Analytics} from '../../../ui/Analytics/Analytics'
 import {useAgreeWithLegal} from '../common'
 
 export const AnalyticsChangedScreen = () => {
   const {agree} = useAgreeWithLegal()
-  const styles = useStyles()
+  const {atoms: ta} = useTheme()
 
   const onReadMore = () => {
     Linking.openURL(
@@ -21,21 +21,8 @@ export const AnalyticsChangedScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[a.flex_1, ta.bg_color_max]}>
       <Analytics type="notice" onClose={handleClose} onReadMore={onReadMore} />
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-  })
-
-  return styles
 }

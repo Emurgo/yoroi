@@ -1,23 +1,17 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BlueCheckbox} from '../../../components/BlueCheckbox/BlueCheckbox'
-import {Button} from '../../../components/Button/Button'
-import {Spacer} from '../../../components/Spacer/Spacer'
-import {YoroiLogo} from '../../../components/YoroiLogo/YoroiLogo'
+import {BlueCheckbox} from '../../../ui/BlueCheckbox/BlueCheckbox'
+import {Button} from '../../../ui/Button/Button'
+import {Icon} from '../../../ui/Icon'
+import {SpaceHeight} from '../../../ui/Space/Space'
 import {useNavigateTo, useStrings} from '../common'
 
 export const TermsOfServiceChangedScreen = () => {
   const [accepted, setAccepted] = React.useState(false)
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
 
   const onPressContinue = () => {
@@ -38,55 +32,70 @@ export const TermsOfServiceChangedScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        bounces={false}
-        contentContainerStyle={styles.scrollableContentContainer}
-      >
-        <YoroiLogo />
+    <SafeAreaView style={[a.flex_1, a.p_lg, ta.bg_color_max]}>
+      <ScrollView bounces={false} contentContainerStyle={a.flex_grow}>
+        <Icon.YoroiWallet size={64} />
 
-        <Spacer height={80} />
+        <SpaceHeight size={80} />
 
-        <Text style={styles.title}>{strings.title}</Text>
+        <Text style={[a.heading_3_medium, {color: p.gray_900}, a.text_center]}>
+          {strings.title}
+        </Text>
 
-        <Spacer height={24} />
+        <SpaceHeight size={24} />
 
-        <Text style={styles.description}>{strings.description}</Text>
+        <Text style={[a.body_1_lg_regular, {color: p.gray_800}, a.text_center]}>
+          {strings.description}
+        </Text>
 
-        <Spacer height={24} />
+        <SpaceHeight size={24} />
 
         <BlueCheckbox
           checked={accepted}
           spacing={8}
           onPress={onPressCheckbox}
-          style={styles.checkbox}
+          style={a.align_start}
         >
-          <View style={styles.checkboxRow}>
+          <View style={[a.flex, a.flex_row, a.flex_wrap]}>
             <Text
-              style={styles.checkboxText}
+              style={[a.body_1_lg_regular, {color: p.gray_max}]}
             >{`${strings.tosIAgreeWith} `}</Text>
 
             <TouchableOpacity onPress={onTosLinkPress}>
-              <Text style={[styles.checkboxText, styles.checkboxLink]}>
+              <Text
+                style={[
+                  a.body_1_lg_regular,
+                  {color: p.gray_800, textDecorationLine: 'underline'},
+                ]}
+              >
                 {strings.tosAgreement}
               </Text>
             </TouchableOpacity>
 
-            <Text style={styles.checkboxText}>{` `}</Text>
+            <Text
+              style={[a.body_1_lg_regular, {color: p.gray_max}]}
+            >{` `}</Text>
 
-            <Text style={styles.checkboxText}>{strings.tosAnd}</Text>
+            <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
+              {strings.tosAnd}
+            </Text>
 
-            <Text style={styles.checkboxText}>{` `}</Text>
+            <Text
+              style={[a.body_1_lg_regular, {color: p.gray_max}]}
+            >{` `}</Text>
 
             <TouchableOpacity onPress={onPrivacyLinkPress}>
-              <Text style={[styles.checkboxText, styles.checkboxLink]}>
+              <Text
+                style={[
+                  a.body_1_lg_regular,
+                  {color: p.gray_800, textDecorationLine: 'underline'},
+                ]}
+              >
                 {strings.privacyPolicy}
               </Text>
             </TouchableOpacity>
           </View>
         </BlueCheckbox>
-
-        <Spacer fill />
 
         <Button
           title={strings.continue}
@@ -96,46 +105,4 @@ export const TermsOfServiceChangedScreen = () => {
       </ScrollView>
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    scrollableContentContainer: {
-      flexGrow: 1,
-    },
-    checkbox: {
-      alignItems: 'flex-start',
-    },
-    checkboxRow: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-    },
-    container: {
-      flex: 1,
-      ...atoms.p_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    title: {
-      ...atoms.heading_3_medium,
-      color: color.gray_900,
-      textAlign: 'center',
-    },
-    description: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_800,
-      textAlign: 'center',
-    },
-    checkboxText: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_max,
-    },
-    checkboxLink: {
-      color: color.gray_800,
-      textDecorationLine: 'underline',
-    },
-  })
-
-  return styles
 }
