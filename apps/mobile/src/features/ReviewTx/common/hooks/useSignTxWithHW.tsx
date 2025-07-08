@@ -1,6 +1,6 @@
 import {Transaction} from '@emurgo/cross-csl-core'
+import {useMutation} from '@tanstack/react-query'
 import * as React from 'react'
-import {useMutation} from 'react-query'
 
 import {cip30LedgerExtensionMaker} from '../../../../wallets/cardano/cip30/cip30-ledger'
 import {BaseLedgerError} from '../../../../wallets/hw/hw'

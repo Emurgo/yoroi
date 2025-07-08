@@ -1,10 +1,10 @@
+import {useQuery} from '@tanstack/react-query'
 import {
   isString,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {useQuery} from 'react-query'
 
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 

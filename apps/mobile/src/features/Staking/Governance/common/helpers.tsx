@@ -1,3 +1,4 @@
+import {UseQueryOptions} from '@tanstack/react-query'
 import {useAsyncStorage} from '@yoroi/common'
 import {
   type StakingKeyState,
@@ -7,7 +8,6 @@ import {
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
 import * as React from 'react'
-import {UseQueryOptions} from 'react-query'
 
 import {InfoBanner} from '../../../../components/InfoBanner/InfoBanner'
 import {useWalletNavigation} from '../../../../kernel/navigation'

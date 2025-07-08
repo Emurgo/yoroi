@@ -34,40 +34,49 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
     },
   })
 
-  const checkPin = React.useCallback((pin: string) => {
-    const storedPin = pinStorageKeyManager.read()
-    if (!storedPin) {
-      logger.info('no PIN stored', {origin: 'AuthProvider', type: 'user'})
-      return false
-    }
-    try {
-      decryptData({
-        encryptedData: storedPin,
+  const checkPin = React.useCallback(
+    (pin: string) => {
+      const storedPin = pinStorageKeyManager.read()
+      if (!storedPin) {
+        logger.info('no PIN stored', {origin: 'AuthProvider', type: 'user'})
+        return false
+      }
+      try {
+        decryptData({
+          encryptedData: storedPin,
+          secretKey: hex.fromUtf8(pin),
+        })
+        return true
+      } catch (error) {
+        logger.error('error checking PIN', {
+          origin: 'AuthProvider',
+          type: 'user',
+          error,
+        })
+        return false
+      }
+    },
+    [pinStorageKeyManager],
+  )
+
+  const createPin = React.useCallback(
+    (pin: string) => {
+      const encryptedPin = encryptData({
+        plainData: hex.fromUtf8(installationIdKeyManager.read() ?? ''),
         secretKey: hex.fromUtf8(pin),
       })
-      return true
-    } catch (error) {
-      logger.error('error checking PIN', {
-        origin: 'AuthProvider',
-        type: 'user',
-        error,
-      })
-      return false
-    }
-  }, [])
+      pinStorageKeyManager.save(encryptedPin.value)
+    },
+    [installationIdKeyManager, pinStorageKeyManager],
+  )
 
-  const createPin = React.useCallback((pin: string) => {
-    const encryptedPin = encryptData({
-      plainData: hex.fromUtf8(installationIdKeyManager.read() ?? ''),
-      secretKey: hex.fromUtf8(pin),
-    })
-    pinStorageKeyManager.save(encryptedPin.value)
-  }, [])
-
-  const loginWithPin = React.useCallback((pin: string) => {
-    checkPin(pin)
-    setLoggedState(loggedInState)
-  }, [])
+  const loginWithPin = React.useCallback(
+    (pin: string) => {
+      checkPin(pin)
+      setLoggedState(loggedInState)
+    },
+    [checkPin],
+  )
 
   const loginWithHost = React.useCallback(async () => {
     const ok = await authWithHost()

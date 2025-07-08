@@ -5,7 +5,7 @@ import {View} from 'react-native'
 
 import {features} from '../../../../kernel/features'
 import {Space} from '../../../../ui/Space/Space'
-import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
+import {useAddressMode} from '../../../WalletManager/hooks/useAddressMode'
 import {useUtxoList} from './useUtxoList'
 import {UtxoAddressGroup} from './UtxoAddressGroup'
 import {WarningSingleAddress} from './WarningSingleAddress'
@@ -29,7 +29,7 @@ export const UtxoList = () => {
           ) : null
         }
         renderItem={({item}) => <UtxoAddressGroup item={item} />}
-        ItemSeparatorComponent={() => <SpaceHeight.lg />}
+        ItemSeparatorComponent={() => <Space.Height.lg />}
         keyExtractor={(item) => item.path}
         nestedScrollEnabled={true}
         testID="utxoList"

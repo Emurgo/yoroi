@@ -1,4 +1,4 @@
-import {useQuery} from 'react-query'
+import {useQuery} from '@tanstack/react-query'
 
 import {wrappedCsl} from '../../../../wallets/cardano/wrappedCsl'
 import {YoroiUnsignedTx} from '../../../../wallets/types/yoroi'

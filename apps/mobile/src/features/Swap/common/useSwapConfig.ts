@@ -1,5 +1,5 @@
+import {useQuery} from '@tanstack/react-query'
 import {getSwapConfigApiMaker} from '@yoroi/swap'
-import {useQuery} from 'react-query'
 
 import {undefinedToken} from './constants'
 import {useSwap} from './SwapProvider'

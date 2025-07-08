@@ -1,4 +1,5 @@
 import {CredKind} from '@emurgo/cross-csl-core'
+import {useQuery} from '@tanstack/react-query'
 import {
   parseBoolean,
   useAsyncStorage,
@@ -17,7 +18,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import {useQuery} from 'react-query'
 
 import {Button} from '../../../../../../components/Button/Button'
 import {Copiable} from '../../../../../../components/Clipboard/Copiable'
@@ -705,14 +705,15 @@ const useShowOperationsNotice = (operations: Operations) => {
     const openOperationsNotice = () => {
       clearTimeout(timeout)
 
-      timeout = setTimeout(() => {
-        openModal({
-          title: strings.operationsNoticeTitle,
-          content: <OperationsNotice />,
-          height: 570,
-        }),
-          500
-      })
+      timeout = setTimeout(
+        () =>
+          openModal({
+            title: strings.operationsNoticeTitle,
+            content: <OperationsNotice />,
+            height: 570,
+          }),
+        500,
+      )
     }
 
     if (operations.components.length > 0 && query.data) openOperationsNotice()

@@ -1,3 +1,4 @@
+import {useQuery} from '@tanstack/react-query'
 import {
   isBoolean,
   useAsyncStorage,
@@ -5,7 +6,6 @@ import {
 } from '@yoroi/common'
 import {useEffect, useState} from 'react'
 import {NativeModules, Platform} from 'react-native'
-import {useQuery} from 'react-query'
 
 const {FlagSecure} = NativeModules
 

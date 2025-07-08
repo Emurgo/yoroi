@@ -1,10 +1,10 @@
 import messaging from '@react-native-firebase/messaging'
 import {useNavigation} from '@react-navigation/native'
+import {useQuery} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
-import {useQuery} from 'react-query'
 
 import {Copiable} from '../../../../../components/Clipboard/Copiable'
 import {appInfo} from '../../../../../kernel/appInfo'

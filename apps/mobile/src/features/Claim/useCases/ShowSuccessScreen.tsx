@@ -16,14 +16,13 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
-import {Copiable} from '../../../components/Clipboard/Copiable'
-import {Icon} from '../../../components/Icon'
-
-import {isEmptyString} from '../../../kernel/utils'
+import {Button} from '../../../ui/Button/Button'
+import {Copiable} from '../../../ui/Copiable/Copiable'
+import {Icon} from '../../../ui/Icon'
 import {Space} from '../../../ui/Space/Space'
-import {TokenAmountItem} from '../../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {isEmptyString} from '../../../wallets/utils/string'
+import {TokenAmountItem} from '../../Portfolio/ui/TokenAmountItem/TokenAmountItem'
+import {useSelectedWallet} from '../../WalletManager/hooks/useSelectedWallet'
 import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
@@ -51,7 +50,7 @@ export const ShowSuccessScreen = () => {
           <Status status={status} />
         </Header>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <AmountList amounts={amounts} />
       </View>
@@ -63,7 +62,7 @@ export const ShowSuccessScreen = () => {
           <>
             <TxHash txHash={txHash} />
 
-            <Space height="lg" />
+            <Space.Height.lg />
           </>
         )}
 
@@ -100,7 +99,7 @@ const Status = ({
         {dialog[status].title}
       </Text>
 
-      <Spacer height={16} />
+      <Space.Height.lg />
 
       <Text style={styles.message}>{dialog[status].message}</Text>
     </>
@@ -157,7 +156,7 @@ const AmountList = ({
         primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       })}
       renderItem={({item: amount}) => <TokenAmountItem amount={amount} />}
-      ItemSeparatorComponent={() => <Space height="lg" />}
+      ItemSeparatorComponent={() => <Space.Height.lg />}
       style={styles.list}
       keyExtractor={({info}) => info.id}
     />
