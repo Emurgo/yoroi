@@ -1,7 +1,7 @@
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
-import {useQuery, useQueryClient} from 'react-query'
 
 import {useWalletEvent} from '../../../../yoroi-wallets/hooks'
 import {BannerIds, showBanner} from '../../../Notifications/common/banners'

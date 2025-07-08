@@ -1,4 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {useQuery} from '@tanstack/react-query'
 import {isLeft, isRight} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
@@ -6,7 +7,6 @@ import {Api, Balance, Portfolio, Swap} from '@yoroi/types'
 import {produce} from 'immer'
 import * as React from 'react'
 import {TextInput} from 'react-native'
-import {useQuery} from 'react-query'
 
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useAddressHex, useStakingKey} from '../../../wallets/hooks'

@@ -39,7 +39,6 @@ export const wrappedCsl = (): {csl: WasmModuleProxy; release: VoidFunction} => {
       }
 
       return new Proxy(prop, {
-        // eslint-disable-next-line @typescript-eslint/no-shadow
         get: (target: any, name: string) => {
           if (name === 'prototype') return target[name]
           const isFunc = typeof target[name] === 'function'

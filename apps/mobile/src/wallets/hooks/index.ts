@@ -4,6 +4,14 @@ import {FullPoolInfo, PoolInfoApi} from '@emurgo/yoroi-lib'
 import AsyncStorage, {
   AsyncStorageStatic,
 } from '@react-native-async-storage/async-storage'
+import {
+  onlineManager,
+  useMutation,
+  UseMutationOptions,
+  useQueries,
+  useQuery,
+  UseQueryOptions,
+} from '@tanstack/react-query'
 import {cardanoConfig} from '@yoroi/blockchains'
 import {
   mountMMKVStorage,
@@ -16,14 +24,6 @@ import {App, Balance, HW, Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback} from 'react'
-import {
-  onlineManager,
-  useMutation,
-  UseMutationOptions,
-  useQueries,
-  useQuery,
-  UseQueryOptions,
-} from 'react-query'
 
 import {useSelectedNetwork} from '../../features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../features/WalletManager/hooks/useSelectedWallet'

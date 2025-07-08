@@ -1,7 +1,6 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {Balance} from '@yoroi/types'
-import {Buffer} from 'memfs/lib/internal/buffer'
 
 import {LegacyToken} from '../../types/tokens'
 import {TokenRegistryEntry} from './tokenRegistry'

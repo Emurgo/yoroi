@@ -156,7 +156,7 @@ const wallet: YoroiWallet = {
   createWithdrawalTx: () => {
     throw new Error('not implemented: createWithdrawalTx')
   },
-  getStakingKey: async () => {
+  getStakingKey: () => {
     const pubKeyHex =
       '8e4e2f11b6ac2a269913286e26339779ab8767579d18d173cdd324929d94e2c43e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247'
     const accountPubKey = CardanoMobile.Bip32PublicKey.fromBytes(
@@ -176,7 +176,7 @@ const wallet: YoroiWallet = {
   signRawTx(): Promise<Uint8Array | undefined> {
     throw new Error('not implemented: signRawTx')
   },
-  getAllUtxosForKey: () => Promise.resolve([]),
+  getAllUtxosForKey: () => [],
   fetchPoolInfo: (...args: unknown[]) => {
     action('fetchPoolInfo')(...args)
     return Promise.resolve({
@@ -355,7 +355,7 @@ const fetchNftModerationStatus = {
     },
     loading: async (...args: unknown[]): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
-      return new Promise(() => void 0) as any
+      return new Promise(() => undefined) as any
     },
     random: async (...args: unknown[]): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)

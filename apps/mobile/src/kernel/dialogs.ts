@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import {IntlShape, MessageDescriptor} from 'react-intl'
 import {Alert} from 'react-native'
 

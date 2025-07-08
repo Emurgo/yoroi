@@ -1,4 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {
   parseBoolean,
   useAsyncStorage,
@@ -9,7 +10,6 @@ import * as React from 'react'
 import {Alert, StyleSheet, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, ButtonType} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'

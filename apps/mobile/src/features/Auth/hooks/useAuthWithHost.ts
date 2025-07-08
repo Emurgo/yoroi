@@ -58,7 +58,7 @@ export const useAuthWithHost = () => {
         return false
       }
     },
-    [],
+    [strings.authorize, strings.cancel, strings.usePasscode],
   )
 
   return React.useMemo(

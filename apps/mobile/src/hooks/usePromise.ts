@@ -46,7 +46,7 @@ export function usePromise<T, A extends unknown[] = []>(
           onSettled?.({value, error})
         })
     },
-    [promise, onSuccess, onError, onSettled],
+    [promise, onSuccess, onError, onSettled, value, error],
   )
 
   if (shouldSuspend && isPending && promiseRef.current) {

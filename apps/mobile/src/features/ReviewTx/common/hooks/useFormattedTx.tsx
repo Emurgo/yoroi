@@ -1,9 +1,9 @@
 import {CredKind} from '@emurgo/cross-csl-core'
+import {useQuery} from '@tanstack/react-query'
 import {isNonNullable} from '@yoroi/common'
 import {ApiUtxoData, Portfolio} from '@yoroi/types'
 import {NetworkApi} from '@yoroi/types/lib/typescript/network/manager'
 import _ from 'lodash'
-import {useQuery} from 'react-query'
 
 import {YoroiWallet} from '../../../../wallets/cardano/types'
 import {deriveRewardAddressFromAddress} from '../../../../wallets/cardano/utils'

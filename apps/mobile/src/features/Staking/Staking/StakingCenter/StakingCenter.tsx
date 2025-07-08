@@ -1,11 +1,11 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
-import {useQueryClient} from 'react-query'
 
 import {PleaseWaitModal} from '../../../components/PleaseWaitModal'
 import {Spacer} from '../../../components/Spacer/Spacer'

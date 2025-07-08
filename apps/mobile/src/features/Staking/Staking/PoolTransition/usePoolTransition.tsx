@@ -1,10 +1,10 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {PoolInfoApi} from '@emurgo/yoroi-lib'
+import {useQuery} from '@tanstack/react-query'
 import {Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {useQuery} from 'react-query'
 
 import {useReviewTx} from '../../../features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedNetwork} from '../../../features/WalletManager/common/hooks/useSelectedNetwork'

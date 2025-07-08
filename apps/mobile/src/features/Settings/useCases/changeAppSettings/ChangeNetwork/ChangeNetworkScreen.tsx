@@ -1,4 +1,9 @@
 import {
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from '@tanstack/react-query'
+import {
   isBoolean,
   parseSafe,
   time,
@@ -9,7 +14,6 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 
 import {Boundary} from '../../../../../components/Boundary/Boundary'
 import {Button} from '../../../../../components/Button/Button'

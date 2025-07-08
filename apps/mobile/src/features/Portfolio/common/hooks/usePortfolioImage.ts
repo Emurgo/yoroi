@@ -1,9 +1,9 @@
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {PixelRatio, Platform} from 'react-native'
-import {useMutation, useQuery, useQueryClient} from 'react-query'
 
 import {isDev} from '../../../../kernel/env'
 import {logger} from '../../../../kernel/logger/logger'

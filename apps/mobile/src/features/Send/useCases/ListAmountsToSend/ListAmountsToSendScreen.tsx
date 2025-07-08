@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useMutation} from '@tanstack/react-query'
 import {isNft} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
@@ -9,7 +10,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useMutation} from 'react-query'
 
 import {Boundary} from '../../../../components/Boundary/Boundary'
 import {Button} from '../../../../components/Button/Button'

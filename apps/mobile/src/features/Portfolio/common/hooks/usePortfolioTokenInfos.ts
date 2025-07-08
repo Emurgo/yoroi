@@ -1,6 +1,6 @@
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {createUnknownTokenInfo, isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
-import {useQuery, UseQueryOptions} from 'react-query'
 
 import {YoroiWallet} from '../../../../wallets/cardano/types'
 

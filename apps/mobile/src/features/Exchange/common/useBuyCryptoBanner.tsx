@@ -1,8 +1,8 @@
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
 import * as React from 'react'
-import {useQuery, useQueryClient} from 'react-query'
 
 import {useBalances} from '../../../wallets/hooks'
 import {Amounts, Quantities} from '../../../wallets/utils/utils'
