@@ -1,8 +1,8 @@
+import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
-import {useMutation, UseMutationOptions} from 'react-query'
 
 import {Text} from '../../../components/Text'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../legacy/HW'

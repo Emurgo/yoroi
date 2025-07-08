@@ -1,7 +1,7 @@
+import {useQuery} from '@tanstack/react-query'
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
-import {useQuery} from 'react-query'
 
 import {features} from '../../../../kernel/features'
 import {BannerIds, showBanner} from '../../../Notifications/common/banners'

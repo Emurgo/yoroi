@@ -144,4 +144,4 @@ export const mockMetricsManager = (): MetricsManager => {
   } as const
 }
 
-const e = (_e: never, _o?: never): any => void 0
+const e = (_e: never, _o?: never): any => undefined

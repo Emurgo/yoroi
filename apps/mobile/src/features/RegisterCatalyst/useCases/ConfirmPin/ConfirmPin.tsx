@@ -1,3 +1,4 @@
+import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
@@ -9,7 +10,6 @@ import {
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useMutation, UseMutationOptions} from 'react-query'
 
 import {Button} from '../../../../components/Button/Button'
 import {

@@ -1,3 +1,4 @@
+import {useMutation} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
@@ -14,7 +15,6 @@ import {
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useMutation} from 'react-query'
 
 import {Button, ButtonType} from '../../../../../components/Button/Button'
 import {Copiable} from '../../../../../components/Clipboard/Copiable'
@@ -385,6 +385,5 @@ const useStyles = () => {
     iconColor: color.gray_900,
   }
 
-  return {styles, colors} as const
   return {styles, colors} as const
 }

@@ -1,5 +1,3 @@
-import 'cbor-rn-prereqs'
-
 import {
   AddressType,
   AssetGroup,
@@ -35,7 +33,7 @@ import {
   Withdrawals,
 } from '@emurgo/cross-csl-core'
 import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
-import cborUtils from 'cbor'
+import {decode} from 'cbor2'
 
 function toLedgerTokenBundle(assets?: MultiAsset): Array<AssetGroup> | null {
   if (assets == null) return null
@@ -451,7 +449,7 @@ export async function toLedgerSignRequest(
   }
 
   const txBody = csl.FixedTransaction.fromHex(cbor).body()
-  const parsedCbor = cborUtils.decode(txBody.toBytes())
+  const parsedCbor = decode(txBody.toBytes())
   const outputs: TxOutput[] = []
   const nativeOutputs = txBody.outputs()
   for (let i = 0; i < nativeOutputs.len(); i++) {

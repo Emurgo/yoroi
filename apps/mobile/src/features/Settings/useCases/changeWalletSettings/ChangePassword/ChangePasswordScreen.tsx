@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {MutationOptions, useMutation} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -10,7 +11,6 @@ import {
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {MutationOptions, useMutation} from 'react-query'
 
 import {Button} from '../../../../../components/Button/Button'
 import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'

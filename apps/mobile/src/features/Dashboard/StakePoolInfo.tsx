@@ -1,9 +1,9 @@
 import {PoolInfoApi} from '@emurgo/yoroi-lib'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
-import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, ButtonProps, ButtonType} from '../../components/Button/Button'
 import {Copiable} from '../../components/Clipboard/Copiable'

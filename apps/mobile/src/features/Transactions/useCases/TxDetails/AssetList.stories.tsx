@@ -1,7 +1,7 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {mocks} from '../../../../wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'

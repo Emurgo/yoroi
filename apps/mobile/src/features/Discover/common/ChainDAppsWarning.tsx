@@ -1,7 +1,7 @@
+import {useQuery} from '@tanstack/react-query'
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {useQuery} from 'react-query'
 
 import {GradientWarning} from '../../../components/ChainWarning/GradientWarning'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'

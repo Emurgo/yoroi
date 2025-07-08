@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
-import {useMutation, UseMutationOptions} from 'react-query'
+import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 
 import {LedgerTransportSwitch} from '../../../../components/LedgerTransportSwitch/LedgerTransportSwitch'
 import {Text} from '../../../../components/Text'

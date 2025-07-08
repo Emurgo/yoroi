@@ -24,13 +24,6 @@ describe('stripInvalidCharacters', () => {
   })
 })
 
-describe('stripInvalidCharacters', () => {
-  it('strips all non numeric and non comma/dot chars', () => {
-    expect(stripInvalidCharacters('me1@23')).toBe('123')
-    expect(stripInvalidCharacters('me123,.')).toBe('123,.')
-  })
-})
-
 describe('formatMultilineSeparator', () => {
   it('changes commas into dots', () => {
     expect(formatMultiLangSeparator('132,123,')).toBe('132.123.')

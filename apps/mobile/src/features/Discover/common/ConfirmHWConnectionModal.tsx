@@ -1,9 +1,9 @@
+import {useMutation} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useCallback, useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {useMutation} from 'react-query'
 
 import {LedgerTransportSwitch} from '../../../components/LedgerTransportSwitch/LedgerTransportSwitch'
 import {useModal} from '../../../components/Modal/ModalContext'

@@ -1,10 +1,10 @@
 import {FullPoolInfo} from '@emurgo/yoroi-lib'
+import {useQuery} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
-import {useQuery} from 'react-query'
 
 import {Icon} from '../../../components/Icon'
 import {useModal} from '../../../components/Modal/ModalContext'
