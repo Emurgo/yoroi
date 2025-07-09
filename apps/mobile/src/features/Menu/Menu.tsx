@@ -1,7 +1,7 @@
 import {defineMessage} from '@formatjs/intl'
 import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -9,17 +9,13 @@ import {
   Linking,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../components/Button/Button'
-import {Icon} from '../../components/Icon'
-import {useModal} from '../../components/Modal/ModalContext'
-import {Spacer} from '../../components/Spacer/Spacer'
-import {Text} from '../../components/Text'
 import globalMessages, {
   confirmationMessages,
 } from '../../kernel/i18n/global-messages'
@@ -31,22 +27,26 @@ import {
 } from '../../kernel/navigation'
 import {usePrefetchStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
 import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTransition'
+import {Button} from '../../ui/Button/Button'
+import {Icon} from '../../ui/Icon'
+import {useModal} from '../../ui/Modal/ModalContext'
+import {Space} from '../../ui/Space/Space'
 import {useCanVote} from '../RegisterCatalyst/common/hooks'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
-  const {atoms, color} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
     <MenuStack.Navigator
       initialRouteName="_menu"
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
+        ...defaultStackNavigationOptions(ta, p),
         headerLeft: () => null,
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
@@ -62,7 +62,7 @@ export const MenuNavigator = () => {
 
 export const Menu = () => {
   const strings = useStrings()
-  const {styles, color} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {isPoolRetiring} = usePoolTransition()
   const {track} = useMetrics()
@@ -74,24 +74,24 @@ export const Menu = () => {
   )
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContent}
-        bounces={false}
-      >
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={[ta.bg_color_max, a.flex_1]}
+    >
+      <ScrollView contentContainerStyle={[a.flex_1, a.p_lg]} bounces={false}>
         <AppSettings //
           label={strings.settings}
           onPress={navigateTo.settings}
-          left={<Icon.Gear size={24} color={color.gray_600} />}
+          left={<Icon.Gear size={24} color={p.gray_600} />}
         />
 
         <Staking
           label={strings.stakingCenter}
           onPress={navigateTo.stakingCenter}
-          left={<Icon.TabStaking size={24} color={color.gray_600} />}
+          left={<Icon.TabStaking size={24} color={p.gray_600} />}
           right={
             isPoolRetiring ? (
-              <Icon.Warning size={24} color={color.sys_magenta_500} />
+              <Icon.Warning size={24} color={p.sys_magenta_500} />
             ) : null
           }
         />
@@ -99,7 +99,7 @@ export const Menu = () => {
         <Governance
           label={strings.governanceCentre}
           onPress={navigateTo.governanceCentre}
-          left={<Icon.Governance size={24} color={color.gray_600} />}
+          left={<Icon.Governance size={24} color={p.gray_600} />}
         />
 
         <React.Suspense
@@ -108,25 +108,25 @@ export const Menu = () => {
               disabled
               onPress={() => null}
               label={strings.catalystVoting}
-              left={<Icon.Catalyst size={24} color={color.gray_600} />}
-              right={<ActivityIndicator color={color.gray_600} />}
+              left={<Icon.Catalyst size={24} color={p.gray_600} />}
+              right={<ActivityIndicator color={p.gray_600} />}
             />
           }
         >
           <Catalyst
             label={strings.catalystVoting}
             onPress={navigateTo.catalystVoting}
-            left={<Icon.Catalyst size={24} color={color.gray_600} />}
+            left={<Icon.Catalyst size={24} color={p.gray_600} />}
           />
         </React.Suspense>
 
         <KnowledgeBase //
           label={strings.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
-          left={<Icon.Info size={24} color={color.gray_600} />}
+          left={<Icon.Info size={24} color={p.gray_600} />}
         />
 
-        <Spacer fill />
+        <Space.Height.sm fill />
 
         <SupportLink />
       </ScrollView>
@@ -136,23 +136,26 @@ export const Menu = () => {
 
 const SupportLink = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
 
   return (
-    <View style={styles.support}>
-      <View style={styles.supportTitle}>
-        <Text style={styles.supportTitleText}>{strings.supportTitle}</Text>
+    <View style={a.align_center}>
+      <View style={a.justify_center}>
+        <Text style={{color: p.gray_600}}>{strings.supportTitle}</Text>
       </View>
 
-      <Spacer height={10} />
+      <Space.Height.lg />
 
-      <TouchableOpacity onPress={navigateTo.support} style={styles.supportLink}>
+      <TouchableOpacity
+        onPress={navigateTo.support}
+        style={[a.justify_between, a.align_center, a.flex_row]}
+      >
         <Icon.Support size={24} color="#4B6DDE" />
 
-        <Spacer width={10} />
+        <Space.Width.lg />
 
-        <Text bold style={styles.supportLinkText}>
+        <Text style={[ta.el_primary_medium, a.body_2_md_medium]}>
           {strings.supportLink.toLocaleUpperCase()}
         </Text>
       </TouchableOpacity>
@@ -173,32 +176,36 @@ const Item = ({
   right?: React.ReactElement | null
   onPress: () => void
 }) => {
-  const {styles, color} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        a.py_lg,
+        a.flex_row,
+        a.align_center,
+        a.justify_center,
+        {
+          borderBottomWidth: StyleSheet.hairlineWidth,
+          borderBottomColor: p.gray_200,
+        },
+      ]}
+      disabled={disabled}
+    >
       {left}
 
-      <Spacer width={12} />
+      <Space.Width.lg />
 
-      <Text
-        style={{
-          fontFamily: 'Rubik-Medium',
-          fontSize: 16,
-          lineHeight: 24,
-          color: color.gray_900,
-        }}
-      >
-        {label}
-      </Text>
+      <Text style={[a.body_2_md_regular, ta.el_gray_max]}>{label}</Text>
 
-      <Spacer fill />
+      <Space.Height.sm fill />
 
       {right}
 
-      <Spacer width={8} />
+      <Space.Width.sm />
 
-      <Icon.Chevron direction="right" size={28} color={color.gray_600} />
+      <Icon.Chevron direction="right" size={28} color={p.gray_600} />
     </TouchableOpacity>
   )
 }
@@ -333,45 +340,3 @@ const messages = defineMessage({
     defaultMessage: '!!!Governance centre',
   },
 })
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    item: {
-      ...atoms.py_lg,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: color.gray_200,
-    },
-    scrollViewContent: {
-      flex: 1,
-      ...atoms.p_lg,
-    },
-    support: {
-      alignItems: 'center',
-    },
-    supportTitle: {
-      justifyContent: 'center',
-    },
-    supportTitleText: {
-      color: color.gray_600,
-    },
-    supportLink: {
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      flexDirection: 'row',
-    },
-    supportLinkText: {
-      color: color.primary_500,
-    },
-  })
-
-  return {styles, color}
-}

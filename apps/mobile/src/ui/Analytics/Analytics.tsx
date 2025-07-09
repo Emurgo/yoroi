@@ -1,15 +1,14 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TextStyle, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Spacer} from '../../components/Spacer/Spacer'
-import {Text} from '../../components/Text'
-import {YoroiLogo} from '../../components/YoroiLogo/YoroiLogo'
 import {SettingsSwitch} from '../../features/Settings/common/SettingsSwitch'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {Button, ButtonType} from '../Button/Button'
+import {Space, SpaceHeight} from '../Space/Space'
+import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {
@@ -28,12 +27,18 @@ export const Analytics = ({type, onClose, onReadMore}: Props) => {
 
 const BOTTOM_BUTTON_ROW_HEIGHT = 80
 
-const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () => void}) => {
-  const styles = useStyles()
+const Notice = ({
+  onClose,
+  onReadMore,
+}: {
+  onClose?: () => void
+  onReadMore?: () => void
+}) => {
   const strings = useStrings()
   const metrics = useMetrics()
   const {height: deviceHeight} = useWindowDimensions()
   const [contentHeight, setContentHeight] = React.useState(0)
+  const {atoms: ta, palette: p} = useTheme()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
@@ -46,7 +51,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
   }, [])
 
   return (
-    <View style={styles.container}>
+    <View style={{flex: 1, backgroundColor: p.bg_color_max}}>
       <ScrollView
         bounces={false}
         style={{flex: 1}}
@@ -55,7 +60,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
         showsVerticalScrollIndicator={true}
       >
         <View
-          style={styles.content}
+          style={{alignItems: 'center', paddingHorizontal: 16}}
           onLayout={(event) => {
             const {height} = event.nativeEvent.layout
             setContentHeight(height + BOTTOM_BUTTON_ROW_HEIGHT)
@@ -63,7 +68,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
         >
           <CommonContent onReadMore={onReadMore} showLogo />
 
-          <Button // skip button
+          <Button
             size="S"
             type={ButtonType.Text}
             onPress={() => {
@@ -75,15 +80,24 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
         </View>
       </ScrollView>
 
-      {/* To fill  bottom button space */}
-      <Spacer height={BOTTOM_BUTTON_ROW_HEIGHT} />
+      <SpaceHeight size={BOTTOM_BUTTON_ROW_HEIGHT} />
 
       <View
         style={[
-          styles.buttonRow,
+          {
+            width: '100%',
+            position: 'absolute',
+            bottom: 0,
+            backgroundColor: p.bg_color_max,
+            height: BOTTOM_BUTTON_ROW_HEIGHT,
+            padding: 16,
+          },
           {
             // only show border top if the content is scrollable
-            ...(deviceHeight < contentHeight && styles.borderTop),
+            ...(deviceHeight < contentHeight && {
+              borderTopWidth: 1,
+              borderTopColor: p.gray_500,
+            }),
           },
         ]}
       >
@@ -103,7 +117,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
 const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
@@ -116,19 +130,26 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   }, [])
 
   return (
-    <View style={styles.container}>
-      <ScrollView bounces={false} ref={scrollViewRef} persistentScrollbar={true} showsVerticalScrollIndicator={true}>
-        <View style={styles.content}>
+    <View style={{flex: 1, backgroundColor: p.bg_color_max}}>
+      <ScrollView
+        bounces={false}
+        ref={scrollViewRef}
+        persistentScrollbar={true}
+        showsVerticalScrollIndicator={true}
+      >
+        <View style={{alignItems: 'center', paddingHorizontal: 16}}>
           <CommonContent onReadMore={onReadMore} />
 
-          <View style={styles.toggle}>
-            <Text style={styles.toggle_text}>{strings.toggle}</Text>
-
-            <Spacer fill />
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={{...a.body_1_lg_medium, fontWeight: '500'}}>
+              {strings.toggle}
+            </Text>
 
             <SettingsSwitch
               value={metrics.isEnabled}
-              onValueChange={() => (metrics.isEnabled ? metrics.disable() : metrics.enable())}
+              onValueChange={() =>
+                metrics.isEnabled ? metrics.disable() : metrics.enable()
+              }
             />
           </View>
         </View>
@@ -137,137 +158,101 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   )
 }
 
-const CommonContent = ({onReadMore, showLogo}: {onReadMore?: () => void; showLogo?: boolean}) => {
+const CommonContent = ({
+  onReadMore,
+  showLogo,
+}: {
+  onReadMore?: () => void
+  showLogo?: boolean
+}) => {
   const strings = useStrings()
-  const styles = useStyles()
-  const list = uselist(styles)
+  const {atoms: ta, palette: p} = useTheme()
+
+  const list = [
+    {
+      style: {color: p.primary_700, paddingRight: 8, fontSize: 16},
+      icon: '✓',
+      key: 'anonymous',
+    },
+    {
+      style: {color: p.primary_700, paddingRight: 8, fontSize: 16},
+      icon: '✓',
+      key: 'optout',
+    },
+    {
+      style: {color: p.sys_magenta_500, paddingRight: 8, fontSize: 16},
+      icon: '✕',
+      key: 'private',
+    },
+    {
+      style: {color: p.sys_magenta_500, paddingRight: 8, fontSize: 16},
+      icon: '✕',
+      key: 'noip',
+    },
+    {
+      style: {color: p.sys_magenta_500, paddingRight: 8, fontSize: 16},
+      icon: '✕',
+      key: 'nosell',
+    },
+  ] as const
 
   return (
     <>
-      <Spacer height={12} />
+      <Space.Height.md />
 
       {showLogo && (
         <>
           <YoroiLogo />
 
-          <Spacer height={12} />
+          <Space.Height.md />
         </>
       )}
 
       <AnalyticsImage />
 
-      <Spacer height={12} />
+      <Space.Height.md />
 
-      <Text style={styles.title}>{strings.header}</Text>
+      <Text style={{...a.heading_3_medium, textAlign: 'center'}}>
+        {strings.header}
+      </Text>
 
-      <Spacer height={12} />
+      <Space.Height.md />
 
-      <View style={styles.list}>
+      <View style={{flex: 1, flexGrow: 1, alignSelf: 'flex-start'}}>
         {list.map(({style, icon, key}) => (
-          <View key={key} style={styles.item}>
+          <View
+            key={key}
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'baseline',
+            }}
+          >
             <Text style={style}>{icon}</Text>
 
-            <Text style={styles.text}>{strings[key]}</Text>
+            <Text style={{...a.body_1_lg_regular}}>{strings[key]}</Text>
           </View>
         ))}
       </View>
 
-      <Spacer height={12} />
+      <Space.Height.md />
 
       <TouchableOpacity onPress={onReadMore}>
-        <Text style={styles.link}>{strings.more}</Text>
+        <Text
+          style={{color: p.primary_600, textAlign: 'center', ...a.link_1_lg}}
+        >
+          {strings.more}
+        </Text>
       </TouchableOpacity>
 
-      <Spacer height={12} />
+      <Space.Height.md />
     </>
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    content: {
-      alignItems: 'center',
-      paddingHorizontal: 16,
-    },
-    text: {
-      ...atoms.body_1_lg_regular,
-    },
-    list: {
-      flex: 1,
-      flexGrow: 1,
-      alignSelf: 'flex-start',
-    },
-    item: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'baseline',
-    },
-    link: {
-      color: color.primary_600,
-      textAlign: 'center',
-      ...atoms.link_1_lg,
-    },
-    title: {
-      ...atoms.heading_3_medium,
-      textAlign: 'center',
-    },
-    tick: {
-      color: color.primary_700,
-      paddingRight: 8,
-      fontSize: 16,
-    },
-    cross: {
-      color: color.sys_magenta_500,
-      paddingRight: 8,
-      fontSize: 16,
-    },
-    toggle: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      fontSize: 24,
-    },
-    toggle_text: {
-      ...atoms.body_1_lg_medium,
-      fontWeight: '500',
-    },
-    buttonRow: {
-      width: '100%',
-      position: 'absolute',
-      bottom: 0,
-      backgroundColor: color.bg_color_max,
-      height: BOTTOM_BUTTON_ROW_HEIGHT,
-      padding: 16,
-    },
-    borderTop: {
-      borderTopWidth: 1,
-      borderTopColor: color.gray_500,
-    },
-  })
-
-  return styles
+const bold = {
+  b: (text: ReactNode) => <Text style={a.body_2_md_medium}>{text}</Text>,
 }
-
-type ListStyles = {
-  tick: TextStyle
-  cross: TextStyle
-}
-
-const uselist = (styles: ListStyles) => {
-  return [
-    {style: styles.tick, icon: '✓', key: 'anonymous'},
-    {style: styles.tick, icon: '✓', key: 'optout'},
-    {style: styles.cross, icon: '✕', key: 'private'},
-    {style: styles.cross, icon: '✕', key: 'noip'},
-    {style: styles.cross, icon: '✕', key: 'nosell'},
-  ] as const
-}
-
-const bold = {b: (text: ReactNode) => <Text bold>{text}</Text>}
 
 const useStrings = () => {
   const intl = useIntl()
@@ -293,7 +278,8 @@ const messages = defineMessages({
   },
   description: {
     id: 'analytics.description',
-    defaultMessage: '!!!Share user insights to help us fine tune Yoroi to better serve your needs.',
+    defaultMessage:
+      '!!!Share user insights to help us fine tune Yoroi to better serve your needs.',
   },
   anonymous: {
     id: 'analytics.anonymous',

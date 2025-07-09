@@ -1,17 +1,9 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
 import {Checkbox} from './Checkbox'
-
-const styles = StyleSheet.create({
-  checkbox: {
-    padding: 16,
-    justifyContent: 'center',
-    flex: 1,
-  },
-})
 
 const CheckboxWrapper = () => {
   const [checked, setChecked] = React.useState(false)
@@ -29,5 +21,15 @@ const CheckboxWrapper = () => {
 }
 
 storiesOf('Checkbox', module)
-  .addDecorator((getStory) => <View style={styles.checkbox}>{getStory()}</View>)
+  .addDecorator((getStory) => (
+    <View
+      style={{
+        padding: 16,
+        justifyContent: 'center',
+        flex: 1,
+      }}
+    >
+      {getStory()}
+    </View>
+  ))
   .add('default', () => <CheckboxWrapper />)

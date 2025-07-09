@@ -1,9 +1,8 @@
 import * as React from 'react'
 import {ReactNode} from 'react'
-import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native'
 import {ClipPath, Defs, G, Path, Rect, Svg} from 'react-native-svg'
-
-import {Spacer} from '../Spacer/Spacer'
+import {SpaceWidth} from '../Space/Space'
 
 type BlueCheckboxProps = {
   checked?: boolean
@@ -13,14 +12,34 @@ type BlueCheckboxProps = {
   spacing?: number
 }
 
-export const BlueCheckbox = ({checked, onPress, children, style, spacing = 15}: BlueCheckboxProps) => {
+export const BlueCheckbox = ({
+  checked,
+  onPress,
+  children,
+  style,
+  spacing = 15,
+}: BlueCheckboxProps) => {
   return (
-    <TouchableOpacity style={[styles.checkboxRow, style]} onPress={onPress} testID="checkboxSelect">
+    <TouchableOpacity
+      style={[{flexDirection: 'row', alignItems: 'center'}, style]}
+      onPress={onPress}
+      testID="checkboxSelect"
+    >
       {checked ? <CheckboxChecked /> : <CheckboxNotChecked />}
 
-      <Spacer width={spacing} />
+      <SpaceWidth size={spacing} />
 
-      <View style={styles.textRow}>{children}</View>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          flex: 1,
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
+        }}
+      >
+        {children}
+      </View>
     </TouchableOpacity>
   )
 }
@@ -68,17 +87,3 @@ const CheckboxNotChecked = () => {
     </Svg>
   )
 }
-
-const styles = StyleSheet.create({
-  checkboxRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  textRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  },
-})

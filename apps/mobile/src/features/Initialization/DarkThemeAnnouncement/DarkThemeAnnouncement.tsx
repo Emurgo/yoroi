@@ -5,25 +5,24 @@ import {
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, Pressable, StyleSheet, Switch, View} from 'react-native'
+import {Platform, Pressable, Switch, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
-import {Space} from '../../../components/Space/Space'
-import {Text} from '../../../components/Text'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../kernel/navigation'
+
+import {Button} from '../../../ui/Button/Button'
+import {Space} from '../../../ui/Space/Space'
 import {DarkThemeIlustration} from '../illustrations/DarkThemeIlustration'
 import {LightThemeIlustration} from '../illustrations/LightThemeIlustration'
 
 export const DarkThemeAnnouncement = () => {
-  const {styles} = useStyles()
   const strings = useStrings()
-  const {isDark} = useTheme()
+  const {isDark, atoms: ta, palette: p} = useTheme()
   const {track} = useMetrics()
   const {setScreenShown, isLoading: isSetScreenShownLoading} =
     useSetScreenShown()
@@ -55,7 +54,7 @@ export const DarkThemeAnnouncement = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'top', 'bottom']}
-      style={styles.root}
+      style={[a.flex_1, ta.bg_color_max, a.px_lg]}
     >
       <ScrollView
         bounces={false}
@@ -63,20 +62,39 @@ export const DarkThemeAnnouncement = () => {
         persistentScrollbar={true}
         showsVerticalScrollIndicator={true}
       >
-        <View style={styles.content}>
-          <Space height="_2xl" />
+        <View style={[a.align_center, a.pt_2xl]}>
+          <Space.Height._2xl />
 
           {isDark ? <DarkThemeIlustration /> : <LightThemeIlustration />}
 
-          <Space height="_2xl" />
+          <Space.Height._2xl />
 
-          <Text style={styles.title}>{strings.header}</Text>
+          <Text style={[a.heading_3_medium, a.text_center]}>
+            {strings.header}
+          </Text>
 
-          <Text style={styles.description}>{strings.description}</Text>
+          <Text
+            style={[
+              a.body_1_lg_regular,
+              {color: p.el_gray_medium},
+              a.text_center,
+              a.py_sm,
+            ]}
+          >
+            {strings.description}
+          </Text>
 
           <Toggle />
 
-          <Text style={styles.caption}>{strings.changeTheme}</Text>
+          <Text
+            style={[
+              {color: p.el_gray_medium},
+              a.text_center,
+              a.body_3_sm_regular,
+            ]}
+          >
+            {strings.changeTheme}
+          </Text>
         </View>
       </ScrollView>
 
@@ -86,33 +104,43 @@ export const DarkThemeAnnouncement = () => {
         onPress={navigate}
       />
 
-      {Platform.OS === 'android' && <Space height="lg" />}
+      {Platform.OS === 'android' && <Space.Height.lg />}
     </SafeAreaView>
   )
 }
 
 const Toggle = () => {
-  const {styles, color} = useStyles()
-  const {isLight, isDark, selectThemeName} = useTheme()
+  const {isLight, isDark, selectTheme, atoms: ta, palette: p} = useTheme()
   const {track} = useMetrics()
 
   const handleOnValueChange = () => {
-    selectThemeName(isLight ? 'default-dark' : 'default-light')
+    selectTheme(isLight ? 'default-dark' : 'default-light')
     track.themeSelected({theme: isLight ? 'dark' : 'light'})
   }
 
   return (
-    <View style={styles.toggle}>
+    <View style={[a.pb_2xl, {position: 'relative'}]}>
       <Switch
-        style={styles.switch}
+        style={{transform: [{scaleX: 1.3}, {scaleY: 1.3}]}}
         value={!isLight}
         onValueChange={handleOnValueChange}
-        trackColor={{false: color.gray_100, true: color.gray_100}}
-        thumbColor={isLight ? color.sys_yellow_500 : color.el_primary_medium}
+        trackColor={{false: p.gray_100, true: p.gray_100}}
+        thumbColor={isLight ? p.sys_yellow_500 : p.el_primary_medium}
       />
 
       {isDark && Platform.OS === 'ios' && (
-        <Pressable style={styles.switchCircle} onPress={handleOnValueChange} />
+        <Pressable
+          style={{
+            width: 35,
+            height: 35,
+            top: -2,
+            right: 8,
+            backgroundColor: p.gray_100,
+            position: 'absolute',
+            borderRadius: 9999,
+          }}
+          onPress={handleOnValueChange}
+        />
       )}
     </View>
   )
@@ -159,55 +187,6 @@ const useSetScreenShown = () => {
     ...mutation,
     setScreenShown: mutation.mutate,
   }
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-      ...atoms.px_lg,
-    },
-    content: {
-      alignItems: 'center',
-      ...atoms.pt_2xl,
-      ...atoms.body_1_lg_regular,
-    },
-    title: {
-      ...atoms.heading_3_medium,
-      textAlign: 'center',
-    },
-    description: {
-      ...atoms.body_1_lg_regular,
-      color: color.el_gray_medium,
-      textAlign: 'center',
-      ...atoms.py_sm,
-    },
-    caption: {
-      color: color.el_gray_medium,
-      textAlign: 'center',
-      ...atoms.body_3_sm_regular,
-    },
-    toggle: {
-      ...atoms.pb_2xl,
-      position: 'relative',
-    },
-    switch: {
-      transform: [{scaleX: 1.3}, {scaleY: 1.3}],
-    },
-    switchCircle: {
-      width: 35,
-      height: 35,
-      top: -2,
-      right: 8,
-      backgroundColor: color.gray_100,
-      position: 'absolute',
-      borderRadius: 9999,
-    },
-  })
-
-  return {styles, color}
 }
 
 const useStrings = () => {
