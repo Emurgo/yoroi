@@ -1,27 +1,30 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import {Defs, LinearGradient, Path, Stop, Svg, SvgProps} from 'react-native-svg'
-
-import {Spacer} from '../Spacer/Spacer'
+import {Space} from '../Space/Space'
 
 const YOROI_COMPANY_NAME = 'Yoroi'
 
 export const YoroiLogo = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   return (
-    <View style={styles.yoroiLogo}>
+    <View style={{alignItems: 'center'}}>
       <YoroiLogoSvg />
 
-      <Spacer height={10} />
+      <Space.Height.sm />
 
-      <Text style={styles.yoroiLogoTitle}>{YOROI_COMPANY_NAME}</Text>
+      <Text style={{color: p.primary_600, ...a.heading_1_medium}}>
+        {YOROI_COMPANY_NAME}
+      </Text>
 
-      <Spacer height={10} />
+      <Space.Height.sm />
 
-      <Text style={styles.yoroiLogoText}>{strings.text}</Text>
+      <Text style={{...a.body_2_md_regular, color: p.gray_900}}>
+        {strings.text}
+      </Text>
     </View>
   )
 }
@@ -52,24 +55,6 @@ const YoroiLogoSvg = (props: SvgProps) => {
       </Defs>
     </Svg>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    yoroiLogo: {
-      alignItems: 'center',
-    },
-    yoroiLogoTitle: {
-      color: color.primary_600,
-      ...atoms.heading_1_medium,
-    },
-    yoroiLogoText: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_900,
-    },
-  })
-  return styles
 }
 
 const useStrings = () => {

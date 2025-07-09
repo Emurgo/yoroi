@@ -5,21 +5,21 @@ import {
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Alert, StyleSheet, Text, View} from 'react-native'
+import {Alert, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '../../../components/Button/Button'
-import {Space} from '../../../components/Space/Space'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {useEnableAuthWithOs} from '../../Auth/common/hooks'
+
+import {Button, ButtonType} from '../../../ui/Button/Button'
+import {Space} from '../../../ui/Space/Space'
 import {useStrings} from '../common'
 import {Biometric} from '../illustrations/Biometric'
 
 export const ChooseBiometricLoginScreen = () => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
 
@@ -37,15 +37,17 @@ export const ChooseBiometricLoginScreen = () => {
   })
 
   return (
-    <SafeAreaView style={styles.root}>
-      <View style={styles.content}>
-        <View style={styles.illustration}>
+    <SafeAreaView style={[a.flex_1, a.px_lg, a.pb_lg, ta.bg_color_max]}>
+      <View style={[a.flex_1, a.justify_center]}>
+        <View style={a.align_center}>
           <Biometric />
         </View>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
-        <Text style={styles.biometricDescription}>
+        <Text
+          style={[ta.text_gray_max, a.heading_3_medium, a.text_center, a.px_lg]}
+        >
           {strings.biometricDescription}
         </Text>
       </View>
@@ -60,7 +62,7 @@ export const ChooseBiometricLoginScreen = () => {
           disabled={isLoading}
         />
 
-        <Space height="sm" />
+        <Space.Height.sm />
 
         <Button
           title={strings.enableButton}
@@ -87,33 +89,6 @@ export const ChooseBiometricLoginScreen = () => {
       </View>
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.pb_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    content: {
-      ...atoms.flex_1,
-      ...atoms.justify_center,
-    },
-    illustration: {
-      ...atoms.align_center,
-    },
-    biometricDescription: {
-      color: color.text_gray_max,
-      ...atoms.heading_3_medium,
-      ...atoms.text_center,
-      ...atoms.px_lg,
-    },
-  })
-
-  return {styles} as const
 }
 
 const chooseBiometricLoginScreenShownKey = 'choose-biometric-login-screen-shown'

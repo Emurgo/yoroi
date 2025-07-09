@@ -2,10 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 
-import {
-  defaultStackNavigationOptions,
-  InititalizationRoutes,
-} from '../../kernel/navigation'
+import {InititalizationRoutes} from '../../kernel/navigation'
 import {useAuth} from '../Auth/AuthProvider'
 import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
 import {AnalyticsNoticeScreen} from './AnalyticsNoticeScreen'
@@ -18,12 +15,12 @@ import {ReadTermsOfServiceScreen} from './ReadTermsOfServiceScreen'
 const Stack = createStackNavigator<InititalizationRoutes>()
 export const InitializationNavigator = () => {
   const strings = useStrings()
-  const {atoms, color} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
+        ...defaultStackNavigationOptions(ta, p),
       }}
     >
       <Stack.Screen

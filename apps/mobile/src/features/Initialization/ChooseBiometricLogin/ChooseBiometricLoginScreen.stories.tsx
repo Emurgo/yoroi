@@ -1,16 +1,10 @@
 import {storiesOf} from '@storybook/react-native'
+import {atoms as a} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
 import {ChooseBiometricLoginScreen} from './ChooseBiometricLoginScreen'
 
 storiesOf('AddWallet ChooseBiometricLoginScreen', module)
-  .addDecorator((story) => <View style={styles.container}>{story()}</View>)
+  .addDecorator((story) => <View style={[a.flex_1, a.p_lg]}>{story()}</View>)
   .add('initial', () => <ChooseBiometricLoginScreen />)
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-})
