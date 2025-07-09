@@ -4,7 +4,6 @@ import {ThemeProvider} from '@yoroi/theme'
 import * as Font from 'expo-font'
 import * as React from 'react'
 
-import {Dev} from './Dev'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
 import {CopyProvider} from './src/features/Copy/context/CopyProvider'
@@ -13,6 +12,7 @@ import {WalletManagerProvider} from './src/features/WalletManager/context/Wallet
 import {walletManager} from './src/features/WalletManager/wallet-manager'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
+import {AppNavigator} from './src/kernel/navigation/AppNavigator'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
@@ -79,7 +79,7 @@ function Yoroi() {
     return null
   }
 
-  return <Dev />
+  return <AppNavigator />
 }
 
 function BusinessShell({children}: React.PropsWithChildren) {

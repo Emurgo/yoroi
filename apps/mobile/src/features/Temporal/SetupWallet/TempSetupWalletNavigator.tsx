@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Text} from 'react-native'
 
 const Stack = createStackNavigator<any>()
-export const SetupWalletNavigator = () => {
+export const TempSetupWalletNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="setup-wallet-init">

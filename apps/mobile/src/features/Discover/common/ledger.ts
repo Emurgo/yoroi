@@ -35,7 +35,7 @@ import {
   Withdrawals,
 } from '@emurgo/cross-csl-core'
 import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
-import cborUtils from 'cbor'
+// import cborUtils from 'cbor'
 
 function toLedgerTokenBundle(assets?: MultiAsset): Array<AssetGroup> | null {
   if (assets == null) return null
@@ -451,16 +451,16 @@ export async function toLedgerSignRequest(
   }
 
   const txBody = csl.FixedTransaction.fromHex(cbor).body()
-  const parsedCbor = cborUtils.decode(txBody.toBytes())
+  // const parsedCbor = cborUtils.decode(txBody.toBytes())
   const outputs: TxOutput[] = []
-  const nativeOutputs = txBody.outputs()
-  for (let i = 0; i < nativeOutputs.len(); i++) {
+  // const nativeOutputs = txBody.outputs()
+  /* for (let i = 0; i < nativeOutputs.len(); i++) {
     const o = nativeOutputs.get(i)
     const isPostAlonzoTransactionOutput =
       parsedCbor.get(1)?.constructor?.name === 'Map'
     outputs.push(formatOutput(o, isPostAlonzoTransactionOutput))
   }
-
+ */
   function getRequiredSignerHashHexes(): Array<string> {
     const set = new Set<string>()
     const requiredSigners = txBody.requiredSigners()
