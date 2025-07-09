@@ -27,7 +27,6 @@
     "@emurgo/cip4-js": "^1.0.7",
     "@emurgo/cross-csl-core": "8.0.0-alpha.1",
     "@emurgo/cross-csl-mobile": "8.0.0-alpha.1",
-    "@emurgo/cross-msl-mobile": "^1.0.1",
     "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.5",
     "@emurgo/yoroi-lib": "3.0.0-beta.1",
     "@expo/metro-runtime": "~5.0.4",
@@ -43,6 +42,7 @@
     "@ledgerhq/react-native-hw-transport-ble": "^6.34.2",
     "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-navigation/native": "^7.1.9",
+    "@react-navigation/stack": "^7.4.2",
     "@sentry/react": "^9.22.0",
     "@sentry/react-native": "^6.14.0",
     "@shopify/flash-list": "1.7.6",
@@ -62,7 +62,7 @@
     "@yoroi/setup-wallet": "file:../../packages/setup-wallet",
     "@yoroi/theme": "file:../../packages/theme",
     "@yoroi/types": "file:../../packages/types",
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "bignumber.js": "^9.3.0",
     "bip39": "^3.1.0",
     "cbor2": "^2.0.1",
@@ -142,5 +142,9 @@
     "ts-jest": "^29.3.4",
     "typescript": "~5.8.3"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.5",
+    "axios": "^1.10.0"
+  }
 }
