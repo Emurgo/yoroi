@@ -1,13 +1,13 @@
 import {useQuery} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet} from 'react-native'
+import {View} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
+import {Button} from '../../../../ui/Button/Button'
+import {Space} from '../../../../ui/Space/Space'
+import {TextInput} from '../../../../ui/TextInput/TextInput'
 import {GradientWarning} from '../../../components/ChainWarning/GradientWarning'
-import {Spacer} from '../../../components/Spacer/Spacer'
-import {TextInput} from '../../../components/TextInput/TextInput'
 import {
   isValidPoolIdOrHash,
   normalizeToPoolHash,
@@ -23,7 +23,6 @@ export const PoolDetailScreen = ({
   disabled = false,
 }: Props) => {
   const strings = useStrings()
-  const styles = useStyles()
   const [poolIdOrHash, setPoolIdOrHash] = React.useState('')
 
   const {data: isValid} = useIsValidPoolIdOrHash(poolIdOrHash)
@@ -42,7 +41,7 @@ export const PoolDetailScreen = ({
         description={strings.disclaimerText}
       />
 
-      <Spacer height={24} />
+      <Space.Height.lg />
 
       <TextInput
         label={strings.poolID}
@@ -54,12 +53,12 @@ export const PoolDetailScreen = ({
         errorText={hasError ? strings.invalidPoolID : ''}
       />
 
-      <Spacer fill />
+      <View style={a.flex_1} />
 
       <Button
         onPress={handleOnPress}
         title={strings.next}
-        style={styles.button}
+        style={a.p_sm}
         disabled={disabled || hasError || poolIdOrHash.length === 0}
         testID="nightlyDelegateButton"
       />
@@ -73,16 +72,6 @@ const useIsValidPoolIdOrHash = (poolIdOrHash: string) => {
     [poolIdOrHash],
   )
   return useQuery({queryFn, queryKey: ['isValidPoolIdOrHash', poolIdOrHash]})
-}
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-  const styles = StyleSheet.create({
-    button: {
-      ...atoms.p_sm,
-    },
-  })
-  return styles
 }
 
 const useStrings = () => {

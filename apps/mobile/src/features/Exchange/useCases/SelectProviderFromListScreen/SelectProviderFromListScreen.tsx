@@ -1,19 +1,19 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
-import {FlatList, StyleSheet, View} from 'react-native'
+import {FlatList, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '../../../../components/Icon'
-import {Space} from '../../../../components/Space/Space'
+import {Icon} from '../../../../ui/Icon'
+import {Space} from '../../../../ui/Space/Space'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useStrings} from '../../common/useStrings'
 import {BanxaLogo} from '../../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
 
 export const SelectProviderFromListScreen = () => {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const {
     orderType,
     providerId: selectedProvider,
@@ -38,9 +38,9 @@ export const SelectProviderFromListScreen = () => {
   )
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={a.flex_1}>
       <FlatList
-        style={styles.list}
+        style={a.px_lg}
         data={providers}
         renderItem={({
           item: [providerId, provider],
@@ -52,7 +52,11 @@ export const SelectProviderFromListScreen = () => {
           const ProviderLogo =
             providerId === 'banxa' ? BanxaLogo : EncryptusLogo
           const rightAdornment = selectedProvider === providerId && (
-            <CheckIcon />
+            <View>
+              <Icon.Check size={24} color={p.primary_600} />
+
+              <Space.Height.sm fill />
+            </View>
           )
           const leftAdornment = <ProviderLogo size={40} />
           return (
@@ -65,34 +69,9 @@ export const SelectProviderFromListScreen = () => {
             />
           )
         }}
-        ItemSeparatorComponent={() => <Space height="lg" />}
+        ItemSeparatorComponent={() => <Space.Height.lg />}
         keyExtractor={([providerId]) => providerId}
       />
     </SafeAreaView>
   )
-}
-
-const CheckIcon = () => {
-  const {color} = useTheme()
-  return (
-    <View>
-      <Icon.Check size={24} color={color.primary_600} />
-
-      <Space fill />
-    </View>
-  )
-}
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-    },
-    list: {
-      ...atoms.px_lg,
-    },
-  })
-
-  return styles
 }

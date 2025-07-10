@@ -10,15 +10,14 @@ import {
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {type ReactNode} from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useModal} from '../../../../../components/Modal/ModalContext'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useStakingInfo} from '../../../../../legacy/Dashboard/StakePoolInfos'
+import {useModal} from '../../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../../ui/Space/Space'
 import {
   useCreateGovernanceTx,
   useStakingKey,
@@ -26,7 +25,8 @@ import {
   useWalletEvent,
 } from '../../../../../wallets/hooks'
 import {TransactionInfo} from '../../../../../wallets/types/other'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useStakingInfo} from '../../../../Dashboard/StakePoolInfos'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
 import {formatDrepHashToCIP129Format} from '../../common/drep'
 import {
@@ -124,7 +124,7 @@ const ParticipatingInGovernanceVariant = ({
   isTxPending?: boolean
 }) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
 
   const displayedHash =
@@ -149,26 +149,25 @@ const ParticipatingInGovernanceVariant = ({
   const introduction = isTxPending
     ? strings.actionYouHaveSelectedTxPending(
         selectedActionTitle,
-        formattingOptions(styles),
+        formattingOptions(p),
       )
-    : strings.actionYouHaveSelected(
-        selectedActionTitle,
-        formattingOptions(styles),
-      )
+    : strings.actionYouHaveSelected(selectedActionTitle, formattingOptions(p))
 
   const navigateToChangeVote = () => {
     navigateTo.changeVote()
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[a.px_lg, a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <View>
-        <Text style={styles.description}>{introduction}</Text>
+        <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+          {introduction}
+        </Text>
       </View>
 
-      <Spacer height={24} />
+      <Space.Height.lg />
 
-      <View style={styles.actions}>
+      <View style={[a.flex_1, a.gap_lg]}>
         {isDelegatingToYoroiDrep && (
           <Action
             title={strings.delegatingToYoroiDRep}
@@ -189,9 +188,15 @@ const ParticipatingInGovernanceVariant = ({
             showRightArrow={!isTxPending}
             onPress={navigateToChangeVote}
           >
-            <Text style={styles.drepInfoTitle}>{strings.drepID}</Text>
+            <Text
+              style={[a.body_1_lg_medium, a.font_semibold, ta.text_gray_medium]}
+            >
+              {strings.drepID}
+            </Text>
 
-            <Text style={styles.drepInfoDescription}>{displayedHash}</Text>
+            <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
+              {displayedHash}
+            </Text>
           </Action>
         )}
 
@@ -216,29 +221,41 @@ const ParticipatingInGovernanceVariant = ({
         )}
       </View>
 
-      <Spacer fill />
+      <Space.Height.sm fill />
 
       <LearnMoreLink />
 
-      <Spacer height={24} />
+      <Space.Height.lg />
     </View>
   )
 }
 
-const formattingOptions = (styles: any) => {
+const formattingOptions = (p: any) => {
   return {
     b: (text: ReactNode) => {
-      return <Text style={[styles.description, styles.bold]}>{text}</Text>
+      return (
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            a.font_semibold,
+            {color: p.text_gray_medium},
+          ]}
+        >
+          {text}
+        </Text>
+      )
     },
     textComponent: (text: ReactNode) => (
-      <Text style={styles.description}>{text}</Text>
+      <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+        {text}
+      </Text>
     ),
   }
 }
 
 const NeverParticipatedInGovernanceVariant = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {wallet, meta} = useSelectedWallet()
   const {manager} = useGovernance()
@@ -427,14 +444,16 @@ const NeverParticipatedInGovernanceVariant = () => {
     isCreatingVotingCertificate
 
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView style={[a.px_lg, a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <View>
-        <Text style={styles.description}>{strings.reviewActions}</Text>
+        <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+          {strings.reviewActions}
+        </Text>
       </View>
 
-      <Spacer height={24} />
+      <Space.Height.lg />
 
-      <View style={styles.actions}>
+      <View style={[a.flex_1, a.gap_lg]}>
         <Action
           title={strings.delegateToAYoroiDrep}
           description={strings.delegateToAYoroiDRepDescription}
@@ -467,11 +486,11 @@ const NeverParticipatedInGovernanceVariant = () => {
         />
       </View>
 
-      <Spacer fill />
+      <Space.Height.sm fill />
 
       <LearnMoreLink />
 
-      <Spacer height={24} />
+      <Space.Height.lg />
     </ScrollView>
   )
 }
@@ -481,39 +500,4 @@ const isTxConfirmed = (
   txInfos: Record<string, TransactionInfo>,
 ) => {
   return Object.values(txInfos).some((tx) => tx.id === txId)
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.px_lg,
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-    description: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    bold: {
-      ...atoms.font_semibold,
-      ...atoms.body_1_lg_regular,
-    },
-    actions: {
-      ...atoms.flex_1,
-      ...atoms.gap_lg,
-    },
-    drepInfoTitle: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-    },
-    drepInfoDescription: {
-      color: color.text_gray_low,
-      ...atoms.body_3_sm_regular,
-    },
-  })
-
-  return {styles} as const
 }

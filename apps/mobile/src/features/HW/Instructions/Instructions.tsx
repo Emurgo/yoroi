@@ -1,11 +1,11 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, StyleSheet, Text, View} from 'react-native'
+import {Platform, Text, View} from 'react-native'
 
-import {BulletPointItem} from '../../../components/BulletPointItem'
-import {Space} from '../../../components/Space/Space'
 import {ledgerMessages} from '../../../kernel/i18n/global-messages'
+import {BulletPointItem} from '../../../ui/BulletPointItem'
+import {Space} from '../../../ui/Space/Space'
 
 type Props = {
   useUSB?: boolean
@@ -14,7 +14,7 @@ type Props = {
 
 export const Instructions = ({useUSB, addMargin /* legacy */}: Props) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {atoms: ta} = useTheme()
 
   const rows: Array<string> = []
   if (useUSB) {
@@ -28,13 +28,19 @@ export const Instructions = ({useUSB, addMargin /* legacy */}: Props) => {
   rows.push(strings.enterPin, strings.openApp)
 
   return (
-    <View style={[addMargin === true && styles.blockMargin]}>
-      <Text style={styles.paragraphText}>{strings.beforeConfirm}</Text>
+    <View style={[addMargin === true && {marginVertical: 24}]}>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+        {strings.beforeConfirm}
+      </Text>
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       {rows.map((row, i) => (
-        <BulletPointItem textRow={row} key={i} style={styles.paragraphText} />
+        <BulletPointItem
+          textRow={row}
+          key={i}
+          style={[a.body_1_lg_regular, ta.text_gray_max]}
+        />
       ))}
     </View>
   )
@@ -61,19 +67,3 @@ const messages = defineMessages({
       '!!!Before tapping on confirm, please follow these instructions:',
   },
 })
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    paragraphText: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_regular,
-    },
-    blockMargin: {
-      marginVertical: 24,
-    },
-  })
-
-  return {styles}
-}

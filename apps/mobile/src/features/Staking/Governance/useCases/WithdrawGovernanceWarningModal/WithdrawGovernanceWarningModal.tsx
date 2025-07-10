@@ -1,10 +1,9 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../components/Text'
+import {Button} from '../../../../../ui/Button/Button'
+import {Space} from '../../../../../ui/Space/Space'
 import {useStrings} from '../../common/strings'
 
 type Props = {
@@ -13,40 +12,31 @@ type Props = {
 
 export const WithdrawGovernanceWarningModal = ({onParticipatePress}: Props) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {atoms: ta} = useTheme()
 
   return (
-    <View style={styles.root}>
-      <Spacer height={48} />
+    <View style={[a.flex_1, a.px_lg]}>
+      <Space.Height.lg />
 
-      <Text style={styles.text}>{strings.withdrawWarningDescription}</Text>
+      <Text
+        style={[
+          a.body_1_lg_regular,
+          a.text_center,
+          a.font_normal,
+          ta.text_gray_medium,
+        ]}
+      >
+        {strings.withdrawWarningDescription}
+      </Text>
 
-      <Spacer fill />
+      <Space.Height.sm fill />
 
       <Button
         title={strings.withdrawWarningButton}
         onPress={onParticipatePress}
       />
 
-      <Spacer height={24} />
+      <Space.Height.lg />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    text: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-      ...atoms.font_normal,
-    },
-  })
-
-  return styles
 }

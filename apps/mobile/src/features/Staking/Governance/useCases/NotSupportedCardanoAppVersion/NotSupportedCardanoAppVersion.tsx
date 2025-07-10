@@ -1,94 +1,59 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
-import {SafeArea} from '../../../../../components/SafeArea'
-import {Space} from '../../../../../components/Space/Space'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../components/Text'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
+import {Button} from '../../../../../ui/Button/Button'
+import {Space} from '../../../../../ui/Space/Space'
 import {useStrings} from '../../common/strings'
 import {BrokenImage} from '../../illustrations/BrokenImage'
 
 export const NotSupportedCardanoAppVersion = () => {
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   const handleOnPress = () => {
     resetToTxHistory()
   }
 
   return (
-    <SafeArea style={styles.root}>
-      <Spacer height={200} />
+    <View
+      style={[
+        a.justify_center,
+        a.flex_col,
+        a.flex_1,
+        {backgroundColor: p.bg_color_max},
+      ]}
+    >
+      <Space.Height._2xl />
 
-      <Container>
+      <View style={[a.px_lg, a.align_center]}>
         <BrokenImage />
-      </Container>
+      </View>
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
-      <Container>
-        <Text style={styles.title}>{strings.notSupportedVersionTitle}</Text>
-      </Container>
+      <View style={[a.px_lg, a.align_center]}>
+        <Text style={[a.heading_3_medium, a.text_center, {color: p.gray_max}]}>
+          {strings.notSupportedVersionTitle}
+        </Text>
+      </View>
 
-      <Container>
-        <Text style={styles.description}>
+      <View style={[a.px_lg, a.align_center]}>
+        <Text style={[a.body_2_md_regular, a.text_center, {color: p.gray_600}]}>
           {strings.notSupportedVersionDescription}
         </Text>
-      </Container>
+      </View>
 
-      <Spacer fill />
+      <Space.Height.sm fill />
 
-      <Actions>
+      <View style={a.p_lg}>
         <Button
           title={strings.notSupportedVersionButton}
           onPress={handleOnPress}
         />
-      </Actions>
-    </SafeArea>
+      </View>
+    </View>
   )
-}
-
-const Actions = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.actions}>{children}</View>
-}
-const Container = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.container}>{children}</View>
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.justify_center,
-      ...atoms.flex_col,
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-    title: {
-      ...atoms.heading_3_medium,
-      ...atoms.text_center,
-      color: color.gray_max,
-    },
-    description: {
-      ...atoms.body_2_md_regular,
-      ...atoms.text_center,
-      color: color.gray_600,
-    },
-    actions: {
-      ...atoms.p_lg,
-    },
-    container: {
-      ...atoms.px_lg,
-      ...atoms.align_center,
-    },
-  })
-
-  return {styles} as const
 }

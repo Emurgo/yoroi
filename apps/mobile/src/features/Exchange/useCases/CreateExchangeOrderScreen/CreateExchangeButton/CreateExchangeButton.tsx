@@ -1,10 +1,10 @@
 import {useExchange} from '@yoroi/exchange'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, StyleSheet, View, ViewStyle} from 'react-native'
+import {Linking, View, ViewStyle} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
+import {Button} from '../../../../../ui/Button/Button'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../../common/useStrings'
 
@@ -17,7 +17,6 @@ export const CreateExchangeButton = ({
   disabled: boolean
   onPress: () => void
 }) => {
-  const styles = useStyles()
   const {orderType} = useExchange()
   const strings = useStrings()
   const {
@@ -43,7 +42,7 @@ export const CreateExchangeButton = ({
   }
 
   return (
-    <View style={[styles.actions, style]}>
+    <View style={[a.px_lg, a.pt_lg, style]}>
       <Button
         testID="rampOnOffButton"
         title={title}
@@ -56,15 +55,4 @@ export const CreateExchangeButton = ({
 
 const handleOnPressOnPreprod = () => {
   Linking.openURL('https://docs.cardano.org/cardano-testnets/tools/faucet/')
-}
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-  const styles = StyleSheet.create({
-    actions: {
-      ...atoms.px_lg,
-      ...atoms.pt_lg,
-    },
-  })
-  return styles
 }
