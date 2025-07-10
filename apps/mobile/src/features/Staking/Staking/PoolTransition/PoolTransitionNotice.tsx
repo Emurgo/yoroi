@@ -1,15 +1,14 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View, ViewProps} from 'react-native'
+import {Text, View, ViewProps} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
-import {Icon} from '../../../components/Icon'
-import {Space} from '../../../components/Space/Space'
-import {formatTimeSpan} from '../../../wallets/utils/timeUtils'
+import {Button} from '../../../../ui/Button/Button'
+import {Icon} from '../../../../ui/Icon'
+import {formatTimeSpan} from '../../../../wallets/utils/timeUtils'
 import {usePoolTransition, useStrings} from './usePoolTransition'
 
 export const PoolTransitionNotice = () => {
-  const {styles, color} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {poolTransition, navigateToUpdate} = usePoolTransition()
   if (poolTransition === null) return null
@@ -18,18 +17,24 @@ export const PoolTransitionNotice = () => {
   const isActive = timeSpan > 0
 
   return (
-    <View style={styles.notice}>
+    <View
+      style={[
+        a.flex_1,
+        a.p_lg,
+        {gap: 12, backgroundColor: p.sys_magenta_100, borderRadius: 8},
+      ]}
+    >
       <Row>
-        <Icon.Warning size={20} color={color.sys_magenta_500} />
+        <Icon.Warning size={20} color={p.sys_magenta_500} />
       </Row>
 
-      <Text style={styles.text}>
+      <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
         <Text>
           {isActive ? strings.poolWillStopRewards : strings.poolNoRewards}
         </Text>
 
         {isActive && (
-          <Text style={styles.bold}>
+          <Text style={a.body_2_md_medium}>
             {'\n'}
 
             {formatTimeSpan(timeSpan)}
@@ -37,60 +42,21 @@ export const PoolTransitionNotice = () => {
         )}
       </Text>
 
-      <Actions>
+      <View style={a.flex_row}>
         <Button
-          style={styles.noticeButton}
+          style={[{flexGrow: 0, backgroundColor: p.sys_magenta_500}]}
           onPress={navigateToUpdate}
           title={strings.update}
         />
-
-        <Space fill />
-      </Actions>
+      </View>
     </View>
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    notice: {
-      flex: 1,
-      padding: 16,
-      gap: 12,
-      backgroundColor: color.sys_magenta_100,
-      borderRadius: 8,
-    },
-    text: {
-      color: color.gray_max,
-      ...atoms.body_2_md_regular,
-    },
-    bold: {
-      ...atoms.body_2_md_medium,
-    },
-    noticeButton: {
-      flexGrow: 0,
-      backgroundColor: color.sys_magenta_500,
-      ...atoms.button_2_md,
-    },
-    actions: {
-      flexDirection: 'row',
-    },
-    row: {
-      flexDirection: 'row',
-      gap: 4,
-    },
-  })
-
-  return {styles, color}
-}
-
 const Actions = (props: ViewProps) => {
-  const {styles} = useStyles()
-  return <View {...props} style={styles.actions} />
+  return <View {...props} style={{flexDirection: 'row'}} />
 }
 
 const Row = (props: ViewProps) => {
-  const {styles} = useStyles()
-  return <View {...props} style={styles.row} />
+  return <View {...props} style={{flexDirection: 'row', gap: 4}} />
 }

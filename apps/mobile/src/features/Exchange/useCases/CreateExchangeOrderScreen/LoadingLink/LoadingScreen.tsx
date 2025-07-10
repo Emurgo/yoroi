@@ -1,41 +1,31 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Space} from '../../../../../components/Space/Space'
+import {Space} from '../../../../../ui/Space/Space'
 import {useStrings} from '../../../common/useStrings'
 import {YoroiLogo} from '../../../illustrations/YoroiLogo'
 
 export const LoadingLinkScreen = () => {
-  const {styles} = useStyles()
   const strings = useStrings()
+  const {atoms: ta} = useTheme()
+
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1, a.align_center, a.justify_center]}>
       <YoroiLogo />
 
-      <Space height="xl" />
+      <Space.Height.xl />
 
-      <Text style={styles.text}>{strings.loadingLink}</Text>
+      <Text
+        style={[
+          a.heading_3_medium,
+          a.text_center,
+          ta.text_gray_max,
+          {maxWidth: 340},
+        ]}
+      >
+        {strings.loadingLink}
+      </Text>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-    text: {
-      ...atoms.heading_3_medium,
-      ...atoms.text_center,
-      color: color.text_gray_max,
-      maxWidth: 340,
-    },
-  })
-
-  return {styles} as const
 }

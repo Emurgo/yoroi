@@ -1,26 +1,25 @@
 import TransportHID from '@ledgerhq/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, lightPalette, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import * as React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, FlatList, Image, StyleSheet, Text, View} from 'react-native'
+import {Alert, FlatList, Image, Text, View} from 'react-native'
 import {Observer} from 'rxjs'
 
 import bleImage from '../../../assets/img/bluetooth.png'
 import usbImage from '../../../assets/img/ledger-nano-usb.png'
-import {BulletPointItem} from '../../../components/BulletPointItem'
-import {Button} from '../../../components/Button/Button'
-import {Loading} from '../../../components/Loading/Loading'
-import {Space} from '../../../components/Space/Space'
-import {Spacer} from '../../../components/Spacer/Spacer'
 import globalMessages, {
   confirmationMessages,
   ledgerMessages,
 } from '../../../kernel/i18n/global-messages'
 import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
+import {BulletPointItem} from '../../../ui/BulletPointItem'
+import {Button} from '../../../ui/Button/Button'
+import {Loading} from '../../../ui/Loading/Loading'
+import {Space} from '../../../ui/Space/Space'
 import {
   BluetoothDisabledError,
   RejectedByUserError,
@@ -30,7 +29,6 @@ import {DeviceItem} from './DeviceItem'
 
 type Props = {
   intl: IntlShape
-  styles: ReturnType<typeof useStyles>
   defaultDevices?: Array<Device> | null // for storybook
   onConnectUSB: (deviceObj: HW.DeviceObj) => Promise<void> | void
   onConnectBLE: (deviceId: string) => Promise<void> | void
@@ -217,7 +215,8 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
   ListHeader = () => {
     const {error, waiting, deviceObj} = this.state
-    const {intl, onWaitingMessage, styles} = this.props
+    const {intl, onWaitingMessage} = this.props
+    const {atoms: ta, palette: p} = useTheme()
 
     const ListHeaderWrapper = ({
       msg,
@@ -226,10 +225,16 @@ class LedgerConnectInt extends React.Component<Props, State> {
       msg: string
       err?: string | null
     }) => (
-      <View style={styles.listHeader}>
-        <Text style={[styles.paragraph, styles.paragraphText]}>{msg}</Text>
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={[a.pb_lg, a.body_1_lg_medium, ta.text_gray_medium]}>
+          {msg}
+        </Text>
 
-        {err != null && <Text style={styles.error}>{err}</Text>}
+        {err != null && (
+          <Text style={[a.body_1_lg_medium, {color: p.sys_magenta_500}]}>
+            {err}
+          </Text>
+        )}
       </View>
     )
     let msg, errMsg
@@ -237,8 +242,8 @@ class LedgerConnectInt extends React.Component<Props, State> {
       msg = intl.formatMessage(messages.error)
       if (error instanceof LocalizableError) {
         errMsg = intl.formatMessage({
-          id: error.id,
-          defaultMessage: error.defaultMessage,
+          id: error.name,
+          defaultMessage: error.message,
         })
       } else {
         errMsg = String(error.message)
@@ -255,7 +260,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
   }
 
   render() {
-    const {intl, useUSB, styles} = this.props
+    const {intl, useUSB} = this.props
     const {error, devices, refreshing, deviceId, deviceObj, waiting} =
       this.state
 
@@ -265,43 +270,47 @@ class LedgerConnectInt extends React.Component<Props, State> {
     ]
     return (
       <>
-        <Space height="lg" />
+        <Space.Height.lg />
 
-        <Text style={styles.paragraphText}>
+        <Text style={[a.body_1_lg_medium, {color: lightPalette.gray_500}]}>
           {intl.formatMessage(messages.introline)}
         </Text>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {rows.map((row, index) => (
-          <BulletPointItem textRow={row} key={index} style={styles.item} />
+          <BulletPointItem
+            textRow={row}
+            key={index}
+            style={[a.body_1_lg_regular, {color: lightPalette.gray_500}]}
+          />
         ))}
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
-        <View style={styles.heading}>
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
           <Image source={useUSB === true ? usbImage : bleImage} />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           {!useUSB && (
-            <Text style={styles.caption}>
+            <Text style={[a.body_2_md_regular, {color: lightPalette.gray_500}]}>
               {intl.formatMessage(messages.caption)}
             </Text>
           )}
         </View>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {((!useUSB && devices.length === 0) || waiting) && (
-          <View style={styles.loading}>
+          <View style={[a.align_center, a.justify_center, a.flex_row]}>
             <Loading />
           </View>
         )}
 
         <FlatList
           extraData={[error, deviceId]}
-          style={styles.flatList}
+          style={{flexDirection: 'column'}}
           data={devices}
           renderItem={({item}: {item: Device}) => (
             <DeviceItem
@@ -317,7 +326,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
           showsVerticalScrollIndicator={false}
         />
 
-        <Spacer fill />
+        <Space.Height.sm fill />
 
         {useUSB === true && (
           <Button
@@ -333,7 +342,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
             title={intl.formatMessage(
               confirmationMessages.commonButtons.confirmButton,
             )}
-            style={styles.button}
+            style={{marginHorizontal: 10, marginBottom: 8}}
           />
         )}
       </>
@@ -343,9 +352,8 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
 export const LedgerConnect = (props: Omit<Props, 'intl' | 'styles'>) => {
   const intl = useIntl()
-  const styles = useStyles()
 
-  return <LedgerConnectInt {...props} intl={intl} styles={styles} />
+  return <LedgerConnectInt {...props} intl={intl} />
 }
 
 const messages = defineMessages({
@@ -378,50 +386,3 @@ const deviceAddition =
         : devices.concat(device),
     }
   }
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    heading: {
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    flatList: {
-      flexDirection: 'column',
-    },
-    listHeader: {
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    paragraph: {
-      marginBottom: 16,
-    },
-    error: {
-      ...atoms.body_1_lg_medium,
-      color: color.sys_magenta_500,
-    },
-    paragraphText: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    item: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
-    },
-    button: {
-      marginHorizontal: 10,
-      marginBottom: 8,
-    },
-    caption: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-    loading: {
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.flex_row,
-    },
-  })
-
-  return styles
-}

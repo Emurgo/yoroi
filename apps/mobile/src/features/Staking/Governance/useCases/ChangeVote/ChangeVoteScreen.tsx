@@ -7,18 +7,18 @@ import {
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useModal} from '../../../../../components/Modal/ModalContext'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {useModal} from '../../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../../ui/Space/Space'
 import {
   useCreateGovernanceTx,
   useStakingKey,
 } from '../../../../../wallets/hooks'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 import {Action} from '../../common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,
@@ -33,6 +33,7 @@ export const ChangeVoteScreen = () => {
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const stakingKeyHash = useStakingKey(wallet)
+  const {atoms: ta} = useTheme()
   const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {
     suspense: true,
   })
@@ -48,7 +49,6 @@ export const ChangeVoteScreen = () => {
     | 'delegate-not-yoroi'
     | null
   >(null)
-  const {styles} = useStyles()
   const governanceActions = useGovernanceActions()
 
   const {
@@ -194,14 +194,16 @@ export const ChangeVoteScreen = () => {
     voteKind === 'delegate' && voteHash !== GOVERNANCE_YOROI_DREP_ID_HEX
 
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView style={[a.flex_1, a.px_lg, ta.bg_color_max]}>
       <View>
-        <Text style={styles.description}>{strings.reviewActions}</Text>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+          {strings.reviewActions}
+        </Text>
       </View>
 
-      <Spacer height={24} />
+      <Space.Height.lg />
 
-      <View style={styles.actions}>
+      <View style={[a.flex_1, a.gap_lg]}>
         {(voteKind !== 'delegate' || isDelegatingToDrep) && (
           <Action
             title={strings.delegateToAYoroiDrep}
@@ -251,32 +253,11 @@ export const ChangeVoteScreen = () => {
         )}
       </View>
 
-      <Spacer fill />
+      <Space.Height.sm fill />
 
       <LearnMoreLink />
 
-      <Spacer height={24} />
+      <Space.Height.lg />
     </ScrollView>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    description: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    actions: {
-      ...atoms.flex_1,
-      ...atoms.gap_lg,
-    },
-  })
-
-  return {styles}
 }

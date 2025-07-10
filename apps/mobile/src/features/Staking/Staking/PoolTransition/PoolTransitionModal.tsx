@@ -1,14 +1,14 @@
 import {PoolTransition} from '@emurgo/yoroi-lib'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Image, StyleSheet, Text, View, ViewProps} from 'react-native'
+import {Image, Text, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, ButtonType} from '../../../components/Button/Button'
-import {Icon} from '../../../components/Icon'
-import {useModal} from '../../../components/Modal/ModalContext'
-import {Space} from '../../../components/Space/Space'
-import {formatTimeSpan} from '../../../wallets/utils/timeUtils'
+import {Button, ButtonType} from '../../../../ui/Button/Button'
+import {Icon} from '../../../../ui/Icon'
+import {useModal} from '../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../ui/Space/Space'
+import {formatTimeSpan} from '../../../../wallets/utils/timeUtils'
 import {useStrings} from './usePoolTransition'
 
 export const PoolTransitionModal = ({
@@ -17,62 +17,74 @@ export const PoolTransitionModal = ({
   poolTransition: PoolTransition
 }) => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
   const isActive = timeSpan > 0
 
   return (
-    <View style={styles.modal}>
-      <Text style={styles.details}>
+    <View style={[a.flex_1, a.px_lg]}>
+      <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
         {isActive ? strings.warning : strings.finalWarning}
       </Text>
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <View
-        style={[styles.card, isActive ? styles.border : styles.warningBorder]}
+        style={[
+          {borderRadius: 8, gap: 8},
+          a.p_lg,
+          isActive
+            ? {borderWidth: 1, borderColor: p.gray_300}
+            : {borderWidth: 2, borderColor: p.sys_magenta_500},
+        ]}
       >
         <Row>
-          <Text style={styles.label}>{strings.currentPool}</Text>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
+            {strings.currentPool}
+          </Text>
 
-          <View style={styles.poolTicker}>
+          <View style={[a.align_center, a.flex_row, a.gap_sm]}>
             {poolTransition.current.pic != null && (
               <Image
                 source={{uri: poolTransition.current.pic}}
-                style={styles.pic}
+                style={{width: 24, height: 24, borderRadius: 100}}
               />
             )}
 
-            <Text
-              style={styles.poolTickerText}
-            >{`[${poolTransition.current.ticker}] ${poolTransition.current.name}`}</Text>
+            <Text style={[a.body_1_lg_regular, {color: p.primary_600}]}>
+              {`[${poolTransition.current.ticker}] ${poolTransition.current.name}`}
+            </Text>
           </View>
         </Row>
 
         <Row>
-          <Text style={styles.label}>{strings.estimatedRoa}</Text>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
+            {strings.estimatedRoa}
+          </Text>
 
-          <Text style={styles.currentValue}>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
             {poolTransition.current.roa} %
           </Text>
         </Row>
 
         <Row>
-          <Text style={styles.label}>{strings.fee}</Text>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
+            {strings.fee}
+          </Text>
 
-          <Text style={styles.currentValue}>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
             {formatFee(poolTransition.current.taxRatio)} %
           </Text>
         </Row>
 
-        <Text style={styles.warning}>
-          <Text style={styles.warningText}>
+        <Text style={{color: p.sys_magenta_500}}>
+          <Text style={a.body_1_lg_regular}>
             {isActive ? strings.poolWillStopRewards : strings.poolNoRewards}
           </Text>
 
           {isActive && (
-            <Text style={styles.warningTimer}>
-              {'\n'}
+            <Text style={a.body_1_lg_medium}>
+              {}
 
               {formatTimeSpan(timeSpan)}
             </Text>
@@ -80,56 +92,74 @@ export const PoolTransitionModal = ({
         </Text>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
-      <View style={styles.arrowDown}>
-        <Icon.ArrowDown size={17} color={colors.arrow} />
+      <View style={[a.flex_1, a.align_center]}>
+        <Icon.ArrowDown size={17} color={p.el_gray_medium} />
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
-      <View style={styles.card}>
+      <View style={[{borderRadius: 8, gap: 8}, a.p_lg]}>
         <LinearGradient
-          style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 8}]}
+          style={[
+            {
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              opacity: 1,
+              borderRadius: 8,
+            },
+          ]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0.5}}
-          colors={colors.backgroundGradientCard}
+          colors={p.bg_gradient_1}
         />
 
         <Row>
-          <Text style={styles.label}>{strings.newPool}</Text>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
+            {strings.newPool}
+          </Text>
 
-          <View style={styles.poolTicker}>
+          <View style={[a.align_center, a.flex_row, {gap: 8}]}>
             {poolTransition.suggested.pic != null && (
               <Image
                 source={{uri: poolTransition.suggested.pic}}
-                style={styles.pic}
+                style={{width: 24, height: 24, borderRadius: 100}}
               />
             )}
 
-            <Text
-              style={styles.poolTickerText}
-            >{`[${poolTransition.suggested.ticker}] ${poolTransition.suggested.name}`}</Text>
+            <Text style={[a.body_1_lg_regular, {color: p.primary_600}]}>
+              {`[${poolTransition.suggested.ticker}] ${poolTransition.suggested.name}`}
+            </Text>
           </View>
         </Row>
 
         <Row>
-          <Text style={styles.label}>{strings.estimatedRoa}</Text>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
+            {strings.estimatedRoa}
+          </Text>
 
-          <Text style={styles.suggestedValue}>
+          <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
             {poolTransition.suggested.roa} %
           </Text>
         </Row>
 
         <Row>
-          <Text style={styles.label}>{strings.fee}</Text>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
+            {strings.fee}
+          </Text>
 
-          <Text style={styles.suggestedValue}>
+          <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
             {formatFee(poolTransition.suggested.taxRatio)} %
           </Text>
         </Row>
 
-        <Text style={styles.currentValue}>{strings.poolGeneratesRewards}</Text>
+        <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
+          {strings.poolGeneratesRewards}
+        </Text>
       </View>
     </View>
   )
@@ -142,7 +172,6 @@ export const PoolTransitionModalActions = ({
 }) => {
   const [isLoading, setIsLoading] = React.useState(false)
   const strings = useStrings()
-  const {styles} = useStyles()
 
   const {closeModal} = useModal()
 
@@ -160,7 +189,7 @@ export const PoolTransitionModalActions = ({
     }
   }
   return (
-    <View style={styles.actions}>
+    <View style={[a.px_lg, a.gap_lg]}>
       <Button
         type={ButtonType.SecondaryText}
         title={strings.skipNoRewards}
@@ -176,94 +205,13 @@ export const PoolTransitionModalActions = ({
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    modal: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-
-    card: {
-      borderRadius: 8,
-      gap: 8,
-      ...atoms.p_lg,
-    },
-    border: {
-      borderWidth: 1,
-      borderColor: color.gray_300,
-    },
-    warningBorder: {
-      borderWidth: 2,
-      borderColor: color.sys_magenta_500,
-    },
-    poolTicker: {
-      ...atoms.align_center,
-      ...atoms.flex_row,
-      gap: 8,
-    },
-    poolTickerText: {
-      ...atoms.body_1_lg_regular,
-      color: color.primary_600,
-    },
-    pic: {
-      width: 24,
-      height: 24,
-      borderRadius: 100,
-    },
-    label: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_600,
-    },
-    currentValue: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_max,
-    },
-    suggestedValue: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_max,
-    },
-    warning: {
-      color: color.sys_magenta_500,
-    },
-    warningText: {
-      ...atoms.body_1_lg_regular,
-    },
-    warningTimer: {
-      ...atoms.body_1_lg_medium,
-    },
-    row: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-      height: 24,
-    },
-    actions: {
-      ...atoms.px_lg,
-      gap: 4,
-    },
-    details: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_900,
-    },
-    arrowDown: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-    },
-  })
-
-  const colors = {
-    arrow: color.el_gray_medium,
-    backgroundGradientCard: color.bg_gradient_1,
-  }
-
-  return {styles, colors} as const
-}
-
 const Row = (props: ViewProps) => {
-  const {styles} = useStyles()
-  return <View {...props} style={styles.row} />
+  return (
+    <View
+      {...props}
+      style={[a.flex_row, a.justify_between, a.align_center, {height: 24}]}
+    />
+  )
 }
 
 const formatFee = (fee: string) => Number((Number(fee) * 100).toFixed(2))

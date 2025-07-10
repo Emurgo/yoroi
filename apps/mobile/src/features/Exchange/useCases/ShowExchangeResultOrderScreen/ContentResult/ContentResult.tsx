@@ -1,6 +1,6 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 type ContentResultProps = {
   title: string
@@ -8,30 +8,13 @@ type ContentResultProps = {
 }
 
 export const ContentResult = ({title, children}: ContentResultProps) => {
-  const styles = useStyles()
+  const {atoms: ta} = useTheme()
 
   return (
-    <View style={styles.root}>
-      <Text style={styles.contentLabel}>{title}</Text>
+    <View style={[a.flex_row, a.align_center, a.justify_between, a.w_full]}>
+      <Text style={[ta.text_gray_medium, a.body_2_md_regular]}>{title}</Text>
 
       <View>{children}</View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      width: '100%',
-    },
-    contentLabel: {
-      fontSize: 16,
-      color: color.gray_600,
-    },
-  })
-  return styles
 }

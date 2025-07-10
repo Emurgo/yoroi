@@ -1,57 +1,43 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
-import {useModal} from '../../../../../components/Modal/ModalContext'
-import {Space} from '../../../../../components/Space/Space'
+import {Button} from '../../../../../ui/Button/Button'
+import {useModal} from '../../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../../ui/Space/Space'
 import {useStrings} from '../../../common/useStrings'
 import {ErrorLogo} from '../../../illustrations/ErrorLogo'
 
 export const ErrorScreen = () => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {closeModal} = useModal()
+  const {atoms: ta} = useTheme()
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1, a.align_center, a.justify_center]}>
       <ErrorLogo />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
-      <Text style={styles.text}>{strings.linkError}</Text>
+      <Text
+        style={[
+          a.heading_3_medium,
+          a.text_center,
+          ta.text_gray_max,
+          {maxWidth: 340},
+        ]}
+      >
+        {strings.linkError}
+      </Text>
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Button
         testID="rampOnOffErrorCloseButton"
         title={strings.close}
-        style={styles.button}
+        style={a.px_lg}
         onPress={closeModal}
       />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-    text: {
-      ...atoms.heading_3_medium,
-      ...atoms.text_center,
-      color: color.text_gray_max,
-      maxWidth: 340,
-    },
-    button: {
-      ...atoms.px_lg,
-    },
-  })
-
-  return {styles} as const
 }

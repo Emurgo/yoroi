@@ -1,31 +1,27 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {PleaseWaitModal} from '../../../components/PleaseWaitModal'
-import {Spacer} from '../../../components/Spacer/Spacer'
-import {useReviewTx} from '../../../features/ReviewTx/common/ReviewTxProvider'
-import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../features/WalletManager/context/WalletManagerProvider'
-import {showErrorDialog} from '../../../kernel/dialogs'
-import {useLanguage} from '../../../kernel/i18n'
-import globalMessages from '../../../kernel/i18n/global-messages'
-import {logger} from '../../../kernel/logger/logger'
-import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../kernel/navigation'
-import {useNavigateTo} from '../../Dashboard/Dashboard'
-import {useStakingTx} from '../../Dashboard/StakePoolInfos'
+import {showErrorDialog} from '../../../../kernel/dialogs'
+import globalMessages from '../../../../kernel/i18n/global-messages'
+import {useLanguage} from '../../../../kernel/i18n/LanguageProvider'
+import {logger} from '../../../../kernel/logger/logger'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {Space} from '../../../../ui/Space/Space'
+import {useStakingTx} from '../../../Dashboard/StakePoolInfos'
+import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
 import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {
   const intl = useIntl()
-  const {isDark} = useTheme()
-  const {styles} = useStyles()
+  const {isDark, atoms: ta} = useTheme()
   const queryClient = useQueryClient()
 
   const {languageCode} = useLanguage()
@@ -100,14 +96,17 @@ export const StakingCenter = () => {
   const shouldDisplayPoolList = wallet.isMainnet && url != null
 
   return (
-    <SafeAreaView edges={['right', 'bottom', 'left']} style={styles.root}>
+    <SafeAreaView
+      edges={['right', 'bottom', 'left']}
+      style={[a.flex_1, a.px_lg, ta.bg_color_max]}
+    >
       {shouldDisplayPoolIDInput && (
         <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
       )}
 
       {shouldDisplayPoolList && (
-        <View style={styles.poolList}>
-          <Spacer height={8} />
+        <View style={a.flex_1}>
+          <Space.Height.sm />
 
           <WebView
             style={{opacity: isContentLoaded ? 1 : 0}}
@@ -138,21 +137,6 @@ export const StakingCenter = () => {
       />
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    poolList: {
-      ...atoms.flex_1,
-    },
-  })
-  return {styles}
 }
 
 const noPoolDataDialog = defineMessages({
