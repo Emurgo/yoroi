@@ -92,7 +92,7 @@
     "@yoroi/common": "file:../common",
     "@yoroi/types": "file:../types",
     "@yoroi/portfolio": "file:../portfolio",
-    "axios": "1.9.0",
+    "axios": "^1.10.0",
     "axios-mock-adapter": "^1.22.0",
     "babel-jest": "^29.7.0",
     "bignumber.js": "9.3.0",

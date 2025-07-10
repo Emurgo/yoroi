@@ -44,9 +44,8 @@ describe('useResolverCryptoAddresses', () => {
       expect(getByTestId('showNotice')).toBeDefined()
     })
 
-    expect(getByTestId('showNotice').props.children).toEqual(
-      JSON.stringify(false),
-    )
+    const {findByText} = render(<TestResolver />, {wrapper})
+    await findByText('false')
     expect(mockResolverManager.showNotice.read).toHaveBeenCalled()
   })
 
@@ -55,7 +54,7 @@ describe('useResolverCryptoAddresses', () => {
       const showNotice = useResolverShowNotice()
       return (
         <View>
-          <Text testID="showNotifce">{JSON.stringify(showNotice)}</Text>
+          <Text testID="hasError">{JSON.stringify(showNotice)}</Text>
         </View>
       )
     }
@@ -68,7 +67,8 @@ describe('useResolverCryptoAddresses', () => {
     const {getByTestId} = render(<TestResolver />, {wrapper})
 
     await waitFor(() => {
-      expect(getByTestId('hasError')).toBeDefined()
+      const json = JSON.parse(getByTestId('hasError').props.children as string)
+      expect(json.isError).toBe(true)
     })
   })
 })
