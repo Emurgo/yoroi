@@ -1,9 +1,9 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {Text, TouchableOpacity} from 'react-native'
 
-import {Icon} from '../../../../components/Icon'
-import {Space} from '../../../../components/Space/Space'
+import {Icon} from '../../../../ui/Icon'
+import {Space} from '../../../../ui/Space/Space'
 import {Device} from '../../../../wallets/types/hw'
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 
 export const DeviceItem = ({device, onSelect, disabled}: Props) => {
   const [pending, setPending] = React.useState(false)
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const onPress = async () => {
     setPending(true)
     try {
@@ -28,39 +28,29 @@ export const DeviceItem = ({device, onSelect, disabled}: Props) => {
 
   return (
     <TouchableOpacity
-      style={[styles.deviceItem, isButtonDisabled && styles.disabled]}
+      style={[
+        a.py_lg,
+        a.px_2xl,
+        {
+          borderColor: p.primary_500,
+          borderWidth: 1,
+          borderRadius: 8,
+        },
+        a.align_center,
+        a.flex_row,
+        a.justify_center,
+        isButtonDisabled && {opacity: 0.5},
+      ]}
       onPress={onPress}
       disabled={isButtonDisabled}
     >
       <Icon.Ledger />
 
-      <Space width="sm" />
+      <Space.Width.sm />
 
-      <Text style={styles.deviceName}>{device.name}</Text>
+      <Text style={[a.heading_3_medium, {color: p.primary_500}]}>
+        {device.name}
+      </Text>
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    deviceItem: {
-      ...atoms.py_lg,
-      ...atoms.px_2xl,
-      borderColor: color.primary_500,
-      borderWidth: 1,
-      borderRadius: 8,
-      flexDirection: 'row',
-      alignItems: 'center',
-      ...atoms.justify_center,
-    },
-    deviceName: {
-      ...atoms.heading_3_medium,
-      color: color.primary_500,
-    },
-    disabled: {
-      opacity: 0.5,
-    },
-  })
-  return styles
 }

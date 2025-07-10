@@ -1,13 +1,12 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, Platform, ScrollView, StyleSheet} from 'react-native'
+import {Alert, Platform, ScrollView, Text} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button} from '../../../components/Button/Button'
-import {Space} from '../../../components/Space/Space'
-import {Text} from '../../../components/Text'
 import globalMessages from '../../../kernel/i18n/global-messages'
+import {Button} from '../../../ui/Button/Button'
+import {Space} from '../../../ui/Space/Space'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../wallets/hw/hw'
 
 type Props = {
@@ -33,7 +32,6 @@ export const LedgerTransportSwitchView = ({
   onSelectUSB,
   onSelectBLE,
 }: Props) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
 
@@ -56,14 +54,14 @@ export const LedgerTransportSwitchView = ({
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.heading}>{strings.title}</Text>
+    <ScrollView style={[a.flex_1, a.px_lg]}>
+      <Text style={[a.heading_3_medium, a.text_center]}>{strings.title}</Text>
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
-      <Text style={styles.paragraph}>{strings.usbExplanation}</Text>
+      <Text style={a.body_1_lg_regular}>{strings.usbExplanation}</Text>
 
-      <Space height="md" />
+      <Space.Height.md />
 
       <Button
         onPress={onSelectUSB}
@@ -74,11 +72,11 @@ export const LedgerTransportSwitchView = ({
         testID="connectWithUSBButton"
       />
 
-      <Space height="md" />
+      <Space.Height.md />
 
-      <Text style={styles.paragraph}>{strings.bluetoothExplanation}</Text>
+      <Text style={a.body_1_lg_regular}>{strings.bluetoothExplanation}</Text>
 
-      <Space height="md" />
+      <Space.Height.md />
 
       <Button
         onPress={() => request()}
@@ -143,23 +141,4 @@ const useStrings = () => {
     bluetoothButton: intl.formatMessage(messages.bluetoothButton),
     bluetoothError: intl.formatMessage(messages.bluetoothError),
   }
-}
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      ...atoms.px_lg,
-    },
-    heading: {
-      ...atoms.heading_3_medium,
-      textAlign: 'center',
-    },
-    paragraph: {
-      ...atoms.body_1_lg_regular,
-    },
-  })
-
-  return {styles} as const
 }

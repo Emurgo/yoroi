@@ -1,6 +1,7 @@
 import {OrderType, useExchange} from '@yoroi/exchange'
+import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
 import {ButtonActionGroup} from '../../../common/ButtonActionGroup/ButtonActionGroup'
 import {useStrings} from '../../../common/useStrings'
@@ -20,7 +21,7 @@ export const SelectBuyOrSell = ({disabled}: {disabled?: boolean}) => {
   }
 
   return (
-    <View style={styles.buttonsGroup}>
+    <View style={[a.flex_row, a.justify_between]}>
       <ButtonActionGroup
         disabled={disabled}
         onSelect={(label) => handleSelectAction(label)}
@@ -30,10 +31,3 @@ export const SelectBuyOrSell = ({disabled}: {disabled?: boolean}) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  buttonsGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-})

@@ -3,12 +3,12 @@ import {Chain} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
-import {Space} from '../../../../../components/Space/Space'
-import {useLanguage} from '../../../../../kernel/i18n'
+import {useLanguage} from '../../../../../kernel/i18n/LanguageProvider'
+import {Space} from '../../../../../ui/Space/Space'
 import {Quantities} from '../../../../../wallets/utils/utils'
 import {usePortfolioPrimaryBalance} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 import {AmountCard} from '../../../common/AmountCard/AmountCard'
 import {useStrings} from '../../../common/useStrings'
 
@@ -86,7 +86,7 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
 
   return (
     <>
-      <Space height="xl" />
+      <Space.Height.xl />
 
       <AmountCard
         label={strings.amountTitle}

@@ -1,13 +1,12 @@
 import {isNonNullable} from '@yoroi/common'
 import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Alert, Linking, StyleSheet, View} from 'react-native'
+import {Alert, Linking, Text, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../components/Text'
-import {TextInput} from '../../../../../components/TextInput/TextInput'
+import {Button} from '../../../../../ui/Button/Button'
+import {Space} from '../../../../../ui/Space/Space'
+import {TextInput} from '../../../../../ui/TextInput/TextInput'
 import {CardanoMobile} from '../../../../../wallets/wallets'
 import {useStrings} from '../../common/strings'
 
@@ -23,7 +22,7 @@ const FIND_DREPS_LINK = ''
 
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const [drepId, setDrepId] = React.useState('')
 
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
@@ -45,22 +44,31 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   }
 
   return (
-    <View style={styles.root}>
-      <Spacer height={8} />
+    <View style={[a.flex_1, a.px_lg]}>
+      <Space.Height.sm />
 
-      <Text style={styles.text}>{strings.enterDrepIDInfo}</Text>
+      <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
+        {strings.enterDrepIDInfo}
+      </Text>
 
       {FIND_DREPS_LINK.length > 0 && (
         <>
-          <Spacer height={24} />
+          <Space.Height.lg />
 
-          <Text style={[styles.text, styles.link]} onPress={handleOnLinkPress}>
+          <Text
+            style={[
+              a.text_center,
+              a.body_1_lg_regular,
+              {color: p.primary_500, textDecorationLine: 'underline'},
+            ]}
+            onPress={handleOnLinkPress}
+          >
             {strings.findDRepHere}
           </Text>
         </>
       )}
 
-      <Spacer height={24} />
+      <Space.Height.lg />
 
       <TextInput
         value={drepId}
@@ -71,11 +79,18 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         label={strings.drepID}
         numberOfLines={2}
         focusable
-        style={styles.inputWrapperStyle}
-        renderComponentStyle={styles.inputStyle}
+        containerStyle={{minHeight: 80}}
+        renderComponentStyle={[
+          a.pt_lg,
+          a.pb_lg,
+          a.pl_lg,
+          a.pr_lg,
+          a.body_1_lg_regular,
+          {minHeight: 70},
+        ]}
       />
 
-      <Spacer fill />
+      <Space.Height.sm fill />
 
       <Button
         title={strings.confirm}
@@ -88,39 +103,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         onPress={handleOnPress}
       />
 
-      <Spacer height={24} />
+      <Space.Height.lg />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    text: {
-      color: color.text_gray_medium,
-      ...atoms.text_center,
-      ...atoms.body_1_lg_regular,
-    },
-    link: {
-      color: color.primary_500,
-      textDecorationLine: 'underline',
-    },
-    inputWrapperStyle: {
-      minHeight: 80,
-      ...atoms.body_1_lg_regular,
-    },
-    inputStyle: {
-      minHeight: 70,
-      ...atoms.pt_lg,
-      ...atoms.pb_lg,
-      ...atoms.pl_lg,
-      ...atoms.pr_lg,
-      // padding: 16, does not have effect
-    },
-  })
-  return styles
 }

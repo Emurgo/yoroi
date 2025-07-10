@@ -1,15 +1,12 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import React from 'react'
-import {Linking, StyleSheet, View} from 'react-native'
+import {Linking, Text, View} from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
-import {SafeArea} from '../../../../../components/SafeArea'
-import {Space} from '../../../../../components/Space/Space'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../components/Text'
 import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
+import {Button} from '../../../../../ui/Button/Button'
+import {Space} from '../../../../../ui/Space/Space'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useStrings} from '../../common/strings'
@@ -18,7 +15,7 @@ import {NoFunds} from '../../illustrations/NoFunds'
 export const NoFundsScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {
     selected: {network},
   } = useWalletManager()
@@ -36,49 +33,32 @@ export const NoFundsScreen = () => {
     network === Chain.Network.Mainnet ? strings.buyAda : strings.goToFaucet
 
   return (
-    <SafeArea style={styles.root}>
-      <View style={styles.center}>
-        <Spacer height={120} />
+    <View style={[a.flex_1, a.p_xl, ta.bg_color_max]}>
+      <View style={[a.flex_1, a.align_center, a.justify_center]}>
+        <Space.Height._2xl />
 
         <NoFunds />
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
-        <Text style={styles.title}>{strings.noFunds}</Text>
+        <Text
+          style={[
+            a.heading_3_medium,
+            a.text_center,
+            {maxWidth: 320, color: p.gray_max},
+          ]}
+        >
+          {strings.noFunds}
+        </Text>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Button title={buttonText} onPress={handleOnTryAgain} />
 
-        <Spacer fill />
+        <Space.Height.sm fill />
 
         <LearnMoreLink />
       </View>
-    </SafeArea>
+    </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.p_xl,
-    },
-    center: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-    title: {
-      ...atoms.heading_3_medium,
-      ...atoms.text_center,
-      maxWidth: 320,
-      color: color.gray_max,
-    },
-  })
-
-  return styles
 }

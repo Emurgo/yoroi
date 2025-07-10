@@ -5,23 +5,23 @@ import {
   useExchangeProvidersByOrderType,
 } from '@yoroi/exchange'
 import {linksYoroiModuleMaker} from '@yoroi/links'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain, Exchange} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {Linking, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '../../../../components/Icon'
-import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {banxaTestWallet} from '../../../../kernel/env'
+import {banxaTestWallet} from '../../../../kernel/constants'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
+import {Icon} from '../../../../ui/Icon'
+import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '../../../../ui/Modal/ModalContext'
 import {delay} from '../../../../wallets/utils/timeUtils'
 import {ShowDisclaimer} from '../../../Legal/Disclaimer/ShowDisclaimer'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
@@ -37,8 +37,9 @@ import {ShowPreprodNotice} from './ShowPreprodNotice/ShowPreprodNotice'
 const BOTTOM_ACTION_SECTION = 180
 
 export const CreateExchangeOrderScreen = () => {
+  const {atoms: ta, palette: p} = useTheme()
+
   const strings = useStrings()
-  const styles = useStyles()
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const walletNavigation = useWalletNavigation()
@@ -164,14 +165,17 @@ export const CreateExchangeOrderScreen = () => {
       : `${fee}% ${strings.fee}`
 
   return (
-    <KeyboardAvoidingView style={styles.root}>
+    <KeyboardAvoidingView style={[a.flex_1, ta.bg_color_max]}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={styles.safeAreaView}
+        style={{
+          ...a.flex_1,
+          ...a.py_lg,
+        }}
       >
-        <ScrollView style={styles.scroll}>
+        <ScrollView style={a.px_lg}>
           <View
-            style={styles.container}
+            style={a.flex_1}
             onLayout={(event) => {
               const {height} = event.nativeEvent.layout
               setContentHeight(height + BOTTOM_ACTION_SECTION)
@@ -198,7 +202,10 @@ export const CreateExchangeOrderScreen = () => {
 
         <CreateExchangeButton
           style={{
-            ...(deviceHeight < contentHeight && styles.actionBorder),
+            ...(deviceHeight < contentHeight && {
+              borderTopWidth: 1,
+              borderTopColor: p.gray_200,
+            }),
           }}
           disabled={exchangeDisabled}
           onPress={handleOnExchange}
@@ -210,7 +217,9 @@ export const CreateExchangeOrderScreen = () => {
 
 const useAbortSignal = () => {
   const abortController = React.useMemo(() => new AbortController(), [])
-  const timeoutIdRef = React.useRef<ReturnType<typeof setTimeout> | undefined>()
+  const timeoutIdRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  )
 
   const setupTimeout = (timeoutMs: number) => {
     timeoutIdRef.current = setTimeout(
@@ -232,29 +241,4 @@ const useAbortSignal = () => {
     signal: abortController.signal,
     setupSignalTimeout: setupTimeout,
   }
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-    },
-    safeAreaView: {
-      ...atoms.flex_1,
-      ...atoms.py_lg,
-    },
-    scroll: {
-      ...atoms.px_lg,
-    },
-    container: {
-      ...atoms.flex_1,
-    },
-    actionBorder: {
-      borderTopWidth: 1,
-      borderTopColor: color.gray_200,
-    },
-  })
-  return styles
 }

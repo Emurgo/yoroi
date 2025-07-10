@@ -1,11 +1,11 @@
 import {invalid} from '@yoroi/common'
-import {App} from '@yoroi/types'
+import {App, Numbers} from '@yoroi/types'
 
 import * as React from 'react'
 import {IntlProvider} from 'react-intl'
 import {Text} from 'react-native'
 
-import {LanguageCode, translations} from './localization'
+import {findLocale, LanguageCode, translations} from './localization'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(
   undefined,
@@ -23,16 +23,30 @@ export const LanguageProvider = ({
       return languageCode
     })
 
-  const value = React.useMemo(
-    () => ({
+  const value = React.useMemo(() => {
+    const locale = findLocale(selectedLanguageCode) ?? {
+      digitGroupingSeparator: ' ',
+      decimalSeparator: ',',
+    }
+
+    return {
       languageCode: selectedLanguageCode,
       selectLanguage: (newLanguageCode: LanguageCode) => {
         setSelectedLanguageCode(newLanguageCode)
         storage.save(newLanguageCode)
       },
-    }),
-    [selectedLanguageCode, storage],
-  )
+      numberLocale: {
+        prefix: '',
+        decimalSeparator: locale.decimalSeparator ?? ',',
+        groupSeparator: locale.digitGroupingSeparator ?? ' ',
+        groupSize: 3,
+        secondaryGroupSize: 0,
+        fractionGroupSeparator: ' ',
+        fractionGroupSize: 0,
+        suffix: '',
+      },
+    }
+  }, [selectedLanguageCode, storage])
 
   return (
     <LanguageContext.Provider value={value}>
@@ -53,4 +67,5 @@ export const useLanguage = () =>
 type LanguageContext = {
   languageCode: LanguageCode
   selectLanguage: (languageCode: LanguageCode) => void
+  numberLocale: Numbers.Locale
 }
