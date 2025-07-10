@@ -3,7 +3,7 @@ import {
   UseMutationOptions,
   useMutation,
   useQueryClient,
-} from 'react-query'
+} from '@tanstack/react-query'
 
 // TODO: import later from @yoroi/common utils/hooks
 /* istanbul ignore next */
@@ -22,12 +22,18 @@ export const useMutationWithInvalidations = <
 
   return useMutation<TData, TError, TVariables, TContext>({
     ...options,
-    onMutate: (variables) => {
-      invalidateQueries?.forEach((key) => queryClient.cancelQueries(key))
+    onMutate: async (variables) => {
+      await Promise.all(
+        invalidateQueries?.map((key) =>
+          queryClient.cancelQueries({queryKey: key}),
+        ) ?? [],
+      )
       return options?.onMutate?.(variables)
     },
     onSuccess: (data, variables, context) => {
-      invalidateQueries?.forEach((key) => queryClient.invalidateQueries(key))
+      invalidateQueries?.forEach((key) =>
+        queryClient.invalidateQueries({queryKey: key}),
+      )
       return options?.onSuccess?.(data, variables, context)
     },
   })

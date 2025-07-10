@@ -101,7 +101,7 @@
     "@yoroi/api": "file:../api",
     "@yoroi/common": "file:../common",
     "@yoroi/types": "file:../types",
-    "axios": "1.9.0",
+    "axios": "^1.10.0",
     "axios-mock-adapter": "^1.22.0",
     "babel-jest": "^29.7.0",
     "bignumber.js": "9.3.0",
@@ -129,8 +129,9 @@
     "zod": "3.25.17"
   },
   "dependencies": {
+    "@emurgo/cross-csl-core": "^7.1.1",
+    "@emurgo/cross-csl-nodejs": "^7.1.1",
     "@react-native-async-storage/async-storage": "2.1.2",
-    "@tanstack/react-query": "5.76.2",
     "@yoroi/api": "file:../api",
     "@yoroi/common": "file:../common",
     "bignumber.js": "9.3.0",

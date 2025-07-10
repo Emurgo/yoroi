@@ -24,11 +24,11 @@ describe('useResolverCryptoAddresses', () => {
   const domain = '$test'
 
   it('success', async () => {
-    const TestResolverAddresss = () => {
-      const addresses = useResolverCryptoAddresses({resolve: domain})
+    const TestResolverAddresses = () => {
+      const {data} = useResolverCryptoAddresses({resolve: domain})
       return (
         <View>
-          <Text testID="addresses">{JSON.stringify(addresses.data)}</Text>
+          <Text testID="addresses">{JSON.stringify(data)}</Text>
         </View>
       )
     }
@@ -38,19 +38,20 @@ describe('useResolverCryptoAddresses', () => {
       .mockResolvedValue(
         resolverManagerMocks.getCryptoAddressesResponse.success,
       )
+
     const wrapper = wrapperManagerFixture({
       queryClient,
       resolverManager: mockResolverManager,
     })
-    const {getByTestId} = render(<TestResolverAddresss />, {wrapper})
+
+    const {getByTestId} = render(<TestResolverAddresses />, {wrapper})
 
     await waitFor(() => {
-      expect(getByTestId('addresses')).toBeDefined()
+      expect(getByTestId('addresses').props.children).toEqual(
+        JSON.stringify(resolverManagerMocks.getCryptoAddressesResponse.success),
+      )
     })
 
-    expect(getByTestId('addresses').props.children).toEqual(
-      JSON.stringify(resolverManagerMocks.getCryptoAddressesResponse.success),
-    )
     expect(
       mockResolverManager.crypto.getCardanoAddresses,
     ).toHaveBeenCalledTimes(1)
