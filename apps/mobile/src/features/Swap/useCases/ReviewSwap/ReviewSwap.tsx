@@ -4,22 +4,22 @@ import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Button} from '../../../../ui/Button/Button'
+import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
-import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
+import {ProtocolAvatar} from '../../../../ui/ProtocolAvatar/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
-import {TransactionSummary} from './TransactionSummary'
+import {TransactionSummary} from '../../../../ui/TransactionSummary/TransactionSummary'
 
 const BOTTOM_ACTION_SECTION = 220
 
 export const ReviewSwap = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
-  const styles = useStyles()
+  const {color, atoms} = useTheme()
   const {height: deviceHeight} = useWindowDimensions()
   const strings = useStrings()
   const {track} = useMetrics()
@@ -63,7 +63,7 @@ export const ReviewSwap = () => {
 
   const onSwapTxSuccess = () => {
     trackSwapOrderSubmitted()
-    swapForm.action({type: 'ResetAmounts'})
+    swapForm.action({type: 'ResetForm'})
     navigateTo.submittedTx()
   }
 
@@ -91,10 +91,10 @@ export const ReviewSwap = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <View style={styles.container}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.root, atoms.pt_lg, {backgroundColor: color.bg_color_max}]}>
+      <View style={[styles.container, {backgroundColor: color.bg_color_max}]}>
         <KeyboardAvoidingView keyboardVerticalOffset={120}>
-          <ScrollView style={styles.scroll}>
+          <ScrollView style={[styles.scroll, atoms.px_lg]}>
             <View
               onLayout={(event) => {
                 const {height} = event.nativeEvent.layout
@@ -110,6 +110,7 @@ export const ReviewSwap = () => {
       <Actions
         style={{
           ...(deviceHeight < contentHeight && styles.actionBorder),
+          ...(deviceHeight < contentHeight && {borderTopWidth: 1, borderTopColor: color.gray_200}),
         }}
       >
         <Button testID="swapButton" title={strings.next} onPress={onNext} />
@@ -119,34 +120,19 @@ export const ReviewSwap = () => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
-  return <View style={[styles.actions, style]} {...props} />
+  const {color, atoms} = useTheme()
+  return <View style={[style, atoms.p_lg, {backgroundColor: color.bg_color_max}]} {...props} />
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.pt_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    container: {
-      ...atoms.flex_1,
-      ...atoms.justify_between,
-      backgroundColor: color.bg_color_max,
-    },
-    actions: {
-      ...atoms.p_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    scroll: {
-      ...atoms.px_lg,
-    },
-    actionBorder: {
-      borderTopWidth: 1,
-      borderTopColor: color.gray_200,
-    },
-  })
-  return styles
-}
+const styles = StyleSheet.create({
+  root: {
+    ...a.flex_1,
+  },
+  container: {
+    ...a.flex_1,
+    ...a.justify_between,
+  },
+  actions: {},
+  scroll: {},
+  actionBorder: {},
+})

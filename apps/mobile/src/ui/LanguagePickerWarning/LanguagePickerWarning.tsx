@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -8,7 +8,7 @@ import {Icon} from '../Icon'
 
 export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {color} = useTheme()
   const [dismissed, setDismissed] = useState(false)
 
   if (!enabled) return null
@@ -16,15 +16,20 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
 
   return (
     <View style={styles.dialog}>
-      <View style={styles.dialogSquare}>
+      <View style={[styles.dialogSquare, {backgroundColor: color.bg_color_min}]}>
         <View style={styles.row}>
           <TouchableOpacity onPress={() => setDismissed(true)}>
-            <Icon.Cross size={24} color={colors.icon} />
+            <Icon.Cross size={24} color={color.el_gray_max} />
           </TouchableOpacity>
         </View>
 
         {/* @ts-expect-error old react */}
-        <Markdown style={{text: styles.markdownText, body: styles.markdownText}}>
+        <Markdown
+          style={{
+            text: [styles.markdownText, {color: color.text_gray_medium}],
+            body: [styles.markdownText, {color: color.text_gray_medium}],
+          }}
+        >
           {strings.contributors !== '_' ? `${strings.warning}: **${strings.contributors}**` : `${strings.warning}.`}
         </Markdown>
       </View>
@@ -32,34 +37,23 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    dialog: {
-      ...atoms.p_lg,
-    },
-    dialogSquare: {
-      backgroundColor: color.bg_color_min,
-      borderRadius: 8,
-      ...atoms.p_lg,
-    },
-    row: {
-      ...atoms.flex_row,
-      ...atoms.justify_end,
-      ...atoms.align_center,
-    },
-    markdownText: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
-    },
-  })
-
-  const colors = {
-    icon: color.el_gray_max,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  dialog: {
+    ...a.p_lg,
+  },
+  dialogSquare: {
+    borderRadius: 8,
+    ...a.p_lg,
+  },
+  row: {
+    ...a.flex_row,
+    ...a.justify_end,
+    ...a.align_center,
+  },
+  markdownText: {
+    ...a.body_1_lg_regular,
+  },
+})
 
 const useStrings = () => {
   const intl = useIntl()

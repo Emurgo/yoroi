@@ -1,15 +1,15 @@
 import {useMutation} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useCallback, useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 
-import {LedgerTransportSwitch} from '../../../components/LedgerTransportSwitch/LedgerTransportSwitch'
-import {useModal} from '../../../components/Modal/ModalContext'
-import {ModalError} from '../../../components/ModalError/ModalError'
-import {Text} from '../../../components/Text'
-import {LedgerConnect} from '../../../legacy/HW'
+import {LedgerTransportSwitch} from '../../../ui/LedgerTransportSwitch/LedgerTransportSwitch'
+import {useModal} from '../../../ui/Modal/ModalContext'
+import {ModalError} from '../../../ui/ModalError/ModalError'
+import {Text} from '../../../ui/Text/Text'
+import {LedgerConnect} from '../../../ui/LedgerConnect/LedgerConnect'
 import {withBLE, withUSB} from '../../../wallets/hw/hwWallet'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -63,7 +63,7 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
   const [step, setStep] = useState<Step>('select-transport')
   const {meta} = useSelectedWallet()
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {color} = useTheme()
   const {mutate: handleOnConfirm} = useMutation<void, Error, OnConfirmOptions>({
     mutationFn: onConfirm,
     useErrorBoundary: true,
@@ -109,33 +109,22 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color={colors.spinner} />
+      <ActivityIndicator size="large" color={color.gray_max} />
 
-      <Text style={styles.text}>{strings.continueOnLedger}</Text>
+      <Text style={[styles.text, {color: color.gray_max}]}>{strings.continueOnLedger}</Text>
     </View>
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const colors = {
-    spinner: color.gray_max,
-  }
-
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      gap: 35,
-    },
-    text: {
-      fontSize: 18,
-      color: color.gray_max,
-      ...atoms.text_center,
-    },
-  })
-
-  return {styles, colors}
-}
+const styles = StyleSheet.create({
+  container: {
+    ...a.flex_1,
+    ...a.align_center,
+    ...a.justify_center,
+    gap: 35,
+  },
+  text: {
+    fontSize: 18,
+    ...a.text_center,
+  },
+})

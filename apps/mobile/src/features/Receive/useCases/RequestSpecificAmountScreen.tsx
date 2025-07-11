@@ -4,7 +4,7 @@ import {
   linksCardanoModuleMaker,
   linksYoroiModuleMaker,
 } from '@yoroi/links'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   GestureResponderEvent,
@@ -16,28 +16,28 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
-import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
-import {Icon} from '../../../components/Icon'
-import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '../../../components/Modal/ModalContext'
+import {Button} from '../../../ui/Button/Button'
+import {useCopy} from '../../../kernel/utils/clipboard'
+import {Icon} from '../../../ui/Icon'
+import {KeyboardAvoidingView} from '../../../ui/KeyboardAvoidingView'
+import {useModal} from '../../../ui/Modal/ModalContext'
 import {
   ScrollView,
   useScrollView,
-} from '../../../components/ScrollView/ScrollView'
-import {ShareQRCodeCard} from '../../../components/ShareQRCodeCard/ShareQRCodeCard'
-import {TextInput} from '../../../components/TextInput/TextInput'
+} from '../../../ui/ScrollView/ScrollView'
+import {ShareQRCodeCard} from '../../../ui/ShareQRCodeCard/ShareQRCodeCard'
+import {TextInput} from '../../../ui/TextInput'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {isEmptyString} from '../../../kernel/utils'
+import {isEmptyString}../../../kernel/utils'
 import {editedFormatter} from '../../../wallets/utils/amountUtils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '../common/ReceiveProvider'
-import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
+import {SkeletonAdressDetail} from '../../../ui/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../common/useStrings'
 
 export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()
-  const {colors, styles} = useStyles()
+  const {color} = useTheme()
   const [amount, setAmount] = React.useState('')
   const {wallet} = useSelectedWallet()
 
@@ -85,7 +85,7 @@ export const RequestSpecificAmountScreen = () => {
   )
 
   return (
-    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+    <KeyboardAvoidingView style={[styles.flex, styles.root, {backgroundColor: color.bg_color_max}]}>
       <SafeAreaView
         style={[styles.flex, styles.container]}
         edges={['left', 'right', 'bottom']}
@@ -96,7 +96,7 @@ export const RequestSpecificAmountScreen = () => {
           onScrollBarChange={setIsScrollBarShown}
         >
           <View style={styles.request}>
-            <Text style={styles.textAddressDetails}>
+            <Text style={[styles.textAddressDetails, {color: color.text_gray_medium}]}>
               {strings.specificAmountDescription}
             </Text>
 
@@ -110,11 +110,11 @@ export const RequestSpecificAmountScreen = () => {
             />
 
             <View style={styles.textSection}>
-              <Text style={[styles.textAddressDetails, {color: colors.gray}]}>
+              <Text style={[styles.textAddressDetails, {color: color.gray_600}]}>
                 {strings.address}
               </Text>
 
-              <Text style={styles.textAddressDetails}>{selectedAddress}</Text>
+              <Text style={[styles.textAddressDetails, {color: color.text_gray_medium}]}>{selectedAddress}</Text>
             </View>
           </View>
         </ScrollView>
@@ -124,7 +124,7 @@ export const RequestSpecificAmountScreen = () => {
             styles.actions,
             isScrollBarShown && {
               borderTopWidth: 1,
-              borderTopColor: colors.lightGray,
+              borderTopColor: color.gray_200,
             },
           ]}
         >
@@ -142,8 +142,8 @@ export const RequestSpecificAmountScreen = () => {
 
 const Modal = ({amount, address}: {amount: string; address: string}) => {
   const strings = useStrings()
-  const {styles} = useStyles()
   const {track} = useMetrics()
+  const {color} = useTheme()
 
   const cardanoLinks = linksCardanoModuleMaker()
   const cardanoRequestLink = cardanoLinks.create({
@@ -209,45 +209,33 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-    },
-    container: {
-      ...atoms.p_lg,
-    },
-    modalContainer: {
-      ...atoms.justify_between,
-      ...atoms.gap_lg,
-    },
-    flex: {
-      ...atoms.flex_1,
-    },
-    flex_grow: {
-      ...atoms.flex_grow,
-    },
-    textAddressDetails: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    textSection: {
-      ...atoms.gap_xs,
-    },
-    request: {
-      ...atoms.gap_lg,
-    },
-    actions: {
-      ...atoms.pt_lg,
-    },
-  })
-
-  const colors = {
-    gray: color.gray_600,
-    lightGray: color.gray_200,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+  container: {
+    ...a.p_lg,
+  },
+  modalContainer: {
+    ...a.justify_between,
+    ...a.gap_lg,
+  },
+  flex: {
+    ...a.flex_1,
+  },
+  flex_grow: {
+    ...a.flex_grow,
+  },
+  textAddressDetails: {
+    ...a.body_1_lg_regular,
+  },
+  textSection: {
+    ...a.gap_xs,
+  },
+  request: {
+    ...a.gap_lg,
+  },
+  actions: {
+    ...a.pt_lg,
+  },
+})

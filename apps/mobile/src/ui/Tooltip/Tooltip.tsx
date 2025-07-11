@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Dimensions, LayoutChangeEvent, Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
 import {Portal} from 'react-native-paper'
@@ -52,7 +52,7 @@ export const Tooltip = ({
   mode = 'press',
   ...rest
 }: TooltipProps) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   const [visible, setVisible] = React.useState(false)
 
@@ -162,6 +162,7 @@ export const Tooltip = ({
               onLayout={handleOnLayout}
               style={[
                 styles.tooltip,
+                {backgroundColor: color.gray_max},
                 {
                   ...getTooltipPosition(measurement as Measurement, children),
                   ...(measurement.measured ? styles.visible : styles.hidden),
@@ -170,7 +171,7 @@ export const Tooltip = ({
               testID="tooltip-container"
             >
               <Text
-                style={styles.content}
+                style={[styles.content, {color: color.gray_min}]}
                 accessibilityLiveRegion="polite"
                 numberOfLines={numberOfLine}
                 selectable={false}
@@ -195,30 +196,23 @@ export const Tooltip = ({
 
 Tooltip.displayName = 'Tooltip'
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    tooltip: {
-      alignSelf: 'flex-start',
-      justifyContent: 'center',
-      paddingVertical: 5,
-      paddingHorizontal: 12,
-      backgroundColor: color.gray_max,
-      borderRadius: 4,
-      position: 'absolute',
-    },
-    visible: {
-      opacity: 1,
-    },
-    hidden: {
-      opacity: 0,
-    },
-    content: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_min,
-    },
-    pressContainer: {} as ViewStyle,
-  })
-
-  return {styles}
-}
+const styles = StyleSheet.create({
+  tooltip: {
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    position: 'absolute',
+  },
+  visible: {
+    opacity: 1,
+  },
+  hidden: {
+    opacity: 0,
+  },
+  content: {
+    ...a.body_2_md_regular,
+  },
+  pressContainer: {} as ViewStyle,
+})

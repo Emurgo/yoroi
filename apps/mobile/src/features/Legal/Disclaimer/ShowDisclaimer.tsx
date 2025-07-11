@@ -1,13 +1,13 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 
-import {Button, ButtonType} from '../../../components/Button/Button'
-import {Checkbox} from '../../../components/Checkbox/Checkbox'
-import {useModal} from '../../../components/Modal/ModalContext'
+import {Button, ButtonType} from '../../../ui/Button/Button'
+import {Checkbox} from '../../../ui/Checkbox/Checkbox'
+import {useModal} from '../../../ui/Modal/ModalContext'
 import globalMessages, {
   actionMessages,
   confirmationMessages,
@@ -26,12 +26,12 @@ type Props = {
 export const ShowDisclaimer = ({type, disabled}: Props) => {
   const {languageCode} = useLanguage()
   const {openModal, closeModal} = useModal()
-  const styles = useStyles()
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
   const navigation = useNavigation()
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
+  const {color} = useTheme()
 
   React.useEffect(() => {
     if (!disabled && !accepted && showed === false) {
@@ -40,7 +40,18 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
         content: (
           <View style={styles.container}>
             {/* @ts-expect-error old react */}
-            <Markdown style={styles}>{loadText(type, languageCode)}</Markdown>
+            <Markdown
+              style={{
+                body: [
+                  styles.body,
+                  {color: color.gray_max},
+                  a.body_1_lg_regular,
+                  a.py_sm,
+                ],
+              }}
+            >
+              {loadText(type, languageCode)}
+            </Markdown>
 
             <Check text={strings.accept} />
           </View>
@@ -104,28 +115,19 @@ const Proceed = ({title, onPress}: {title: string; onPress: () => void}) => {
   return <Button title={title} onPress={onPress} disabled={!canContinue} />
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.px_lg,
-      ...atoms.pb_lg,
-    },
+const styles = StyleSheet.create({
+  container: {
+    ...a.px_lg,
+    ...a.pb_lg,
+  },
 
-    body: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.py_sm,
-      color: color.gray_max,
-    },
-    actions: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.gap_lg,
-    },
-  })
-
-  return styles
-}
+  body: {},
+  actions: {
+    ...a.flex,
+    ...a.flex_row,
+    ...a.gap_lg,
+  },
+})
 const useStrings = () => {
   const intl = useIntl()
 

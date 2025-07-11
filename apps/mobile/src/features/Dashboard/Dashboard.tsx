@@ -1,23 +1,16 @@
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {
-  ActivityIndicator,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  View,
-  ViewProps,
-} from 'react-native'
+import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Banner} from '../../components/Banner/Banner'
-import {Button} from '../../components/Button/Button'
-import {useModal} from '../../components/Modal/ModalContext'
-import {Space} from '../../components/Space/Space'
+import {Banner} from '../../ui/Banner/Banner'
+import {Button} from '../../ui/Button/Button'
+import {useModal} from '../../ui/Modal/ModalContext'
+import {Space} from '../../ui/Space/Space'
 import {StakeRewardsWithdrawalOperation} from '../../features/ReviewTx/common/operations'
 import {useReviewTx} from '../../features/ReviewTx/common/ReviewTxProvider'
 import {useIsParticipatingInGovernance} from '../../features/Staking/Governance/common/helpers'
@@ -29,12 +22,7 @@ import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {DashboardRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {isEmptyString} from '../../kernel/utils'
-import {
-  useBalances,
-  useCreateWithdrawTx,
-  useIsOnline,
-  useSync,
-} from '../../wallets/hooks'
+import {useBalances, useCreateWithdrawTx, useIsOnline, useSync} from '../../wallets/hooks'
 import {Amounts} from '../../wallets/utils/utils'
 import {PoolTransitionNotice} from '../Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '../Staking/PoolTransition/usePoolTransition'
@@ -44,80 +32,58 @@ import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
 
 export const Dashboard = () => {
-  const {styles} = useStyles()
   const {track} = useMetrics()
+  const {color} = useTheme()
 
   const intl = useIntl()
   const navigateTo = useNavigateTo()
   const governanceStrings = useStrings()
   const {isPoolRetiring} = usePoolTransition()
   const {unsignedTxChanged} = useReviewTx()
-  const {
-    isLoading: isWithdrawLoading,
-    hasRewards,
-    createWithdrawalTx,
-  } = useCreateWithdrawTx()
+  const {isLoading: isWithdrawLoading, hasRewards, createWithdrawalTx} = useCreateWithdrawTx()
   const {wallet, meta} = useSelectedWallet()
   const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
   const {openModal} = useModal()
 
   const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(
-    balances,
-    wallet.portfolioPrimaryTokenInfo.id,
-  )
-  const {
-    stakingInfo,
-    refetch: refetchStakingInfo,
-    error,
-    isLoading,
-  } = useStakingInfo(wallet)
+  const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
+  const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
 
   const isParticipatingInGovernance = useIsParticipatingInGovernance()
   const walletNavigateTo = useWalletNavigation()
 
-  const createOnWithdraw =
-    ({shouldDeregister}: {shouldDeregister: boolean}) =>
-    () => {
-      if (!isParticipatingInGovernance) {
-        openModal({
-          title: governanceStrings.withdrawWarningTitle,
-          content: (
-            <WithdrawGovernanceWarningModal
-              onParticipatePress={() =>
-                walletNavigateTo.navigateToGovernanceCentre()
-              }
-            />
-          ),
-        })
-        return
-      }
-
-      createWithdrawalTx({
-        shouldDeregister,
-        onError: navigateTo.failedTx,
-        onSuccess: (unsignedTx) => {
-          unsignedTxChanged(unsignedTx)
-          walletNavigateTo.navigateToTxReview({
-            operations: [<StakeRewardsWithdrawalOperation key="0" />],
-            onSuccess: () => {
-              track.claimAdaTransactionSubmitted()
-              navigateTo.submittedTx()
-            },
-            onError: navigateTo.failedTx,
-          })
-          return
-        },
+  const createOnWithdraw = ({shouldDeregister}: {shouldDeregister: boolean}) => () => {
+    if (!isParticipatingInGovernance) {
+      openModal({
+        title: governanceStrings.withdrawWarningTitle,
+        content: <WithdrawGovernanceWarningModal onParticipatePress={() => walletNavigateTo.navigateToGovernanceCentre()} />,
       })
+      return
     }
 
+    createWithdrawalTx({
+      shouldDeregister,
+      onError: navigateTo.failedTx,
+      onSuccess: (unsignedTx) => {
+        unsignedTxChanged(unsignedTx)
+        walletNavigateTo.navigateToTxReview({
+          operations: [<StakeRewardsWithdrawalOperation key="0" />],
+          onSuccess: () => {
+            track.claimAdaTransactionSubmitted()
+            navigateTo.submittedTx()
+          },
+          onError: navigateTo.failedTx,
+        })
+        return
+      },
+    })
+  }
+
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root, {backgroundColor: color.bg_color_max}]}>
       <View style={styles.container}>
-        {isOnline && error && (
-          <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />
-        )}
+        {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}
 
         <ScrollView
           style={styles.scrollView}
@@ -159,11 +125,7 @@ export const Dashboard = () => {
               <ActivityIndicator size="large" color="black" />
             ) : stakingInfo.status === 'staked' ? (
               <UserSummary
-                totalAdaSum={
-                  !isEmptyString(primaryAmount.quantity)
-                    ? new BigNumber(primaryAmount.quantity)
-                    : null
-                }
+                totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
                 ctaProps={{
@@ -173,11 +135,7 @@ export const Dashboard = () => {
               />
             ) : (
               <UserSummary
-                totalAdaSum={
-                  !isEmptyString(primaryAmount.quantity)
-                    ? new BigNumber(primaryAmount.quantity)
-                    : null
-                }
+                totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
                 totalRewards={null}
                 totalDelegated={null}
               />
@@ -217,8 +175,7 @@ export const useNavigateTo = () => {
   const navigation = useNavigation<StackNavigationProp<DashboardRoutes>>()
 
   return {
-    stakingCenter: () =>
-      navigation.navigate('staking-center', {screen: 'staking-center-main'}),
+    stakingCenter: () => navigation.navigate('staking-center', {screen: 'staking-center-main'}),
     submittedTx: () => navigation.navigate('staking-submitted-tx'),
     failedTx: () => navigation.navigate('staking-failed-tx'),
   }
@@ -254,10 +211,7 @@ const EpochInfo = () => {
   const currentTime = useCurrentTime()
   const {networkManager} = useSelectedNetwork()
   const {epoch} = networkManager.epoch.info(new Date(currentTime))
-  const {
-    timeRemaining: {days, hours, minutes, seconds},
-    progress,
-  } = networkManager.epoch.progress(new Date(currentTime))
+  const {timeRemaining: {days, hours, minutes, seconds}, progress} = networkManager.epoch.progress(new Date(currentTime))
 
   const leftPadDate = (num: number) => {
     if (num < 10) return `0${num}`
@@ -285,45 +239,36 @@ const messages = defineMessages({
   },
 })
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-    container: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-    },
-    scrollView: {
-      ...atoms.flex_1,
-    },
-    contentContainer: {
-      ...atoms.pt_lg,
-      ...atoms.px_lg,
-    },
-    row: {
-      ...atoms.flex_1,
-    },
-    actions: {
-      ...atoms.flex_row,
-      ...atoms.p_lg,
-      borderTopWidth: 1,
-      borderTopColor: color.gray_200,
-    },
-  })
-
-  return {styles}
-}
+const styles = StyleSheet.create({
+  root: {
+    ...a.flex_1,
+  },
+  container: {
+    ...a.flex_1,
+    ...a.flex_col,
+  },
+  scrollView: {
+    ...a.flex_1,
+  },
+  contentContainer: {
+    ...a.pt_lg,
+    ...a.px_lg,
+  },
+  row: {
+    ...a.flex_1,
+  },
+  actions: {
+    ...a.flex_row,
+    ...a.p_lg,
+    borderTopWidth: 1,
+  },
+})
 
 const Actions = (props: ViewProps) => {
-  const {styles} = useStyles()
-  return <View {...props} style={styles.actions} />
+  const {color} = useTheme()
+  return <View {...props} style={[styles.actions, {borderTopColor: color.gray_200}]} />
 }
 
 const Row = (props: ViewProps) => {
-  const {styles} = useStyles()
   return <View {...props} style={styles.row} />
 }

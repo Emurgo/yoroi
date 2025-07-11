@@ -1,24 +1,24 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {GestureResponderEvent, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '../../../components/Button/Button'
-import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
-import {Icon} from '../../../components/Icon'
-import {useModal} from '../../../components/Modal/ModalContext'
+import {Button} from '../../../ui/Button/Button'
+import {useCopy} from '../../../kernel/utils/clipboard'
+import {Icon} from '../../../ui/Icon'
+import {useModal} from '../../../ui/Modal/ModalContext'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
 import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
-import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
+import {AddressDetailCard} from '../../../ui/AddressDetailCard/AddressDetailCard'
 import {useReceive} from '../common/ReceiveProvider'
 import {
   SingleOrMultipleAddressesModal,
   singleOrMultipleAddressesModalHeight,
-} from '../common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
-import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
+} from '../../../ui/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
+import {SkeletonAdressDetail} from '../../../ui/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
@@ -26,7 +26,7 @@ import {useStrings} from '../common/useStrings'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {color} = useTheme()
   const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
   const {isSingle, addressMode} = useAddressMode()
@@ -79,7 +79,7 @@ export const DescribeSelectedAddressScreen = () => {
 
   return (
     <SafeAreaView
-      style={[styles.root, styles.flex]}
+      style={[styles.root, styles.flex, {backgroundColor: color.bg_color_max}]}
       edges={['left', 'right', 'bottom']}
     >
       <ScrollView style={styles.flex}>
@@ -112,29 +112,18 @@ export const DescribeSelectedAddressScreen = () => {
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.p_lg,
-    },
-    flex: {
-      ...atoms.flex_1,
-    },
-    address: {
-      ...atoms.align_center,
-    },
-    actions: {
-      ...atoms.flex_col,
-      ...atoms.gap_sm,
-    },
-  })
-
-  const colors = {
-    requestSpecificAmountTextColor: color.text_primary_medium,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  root: {
+    ...a.p_lg,
+  },
+  flex: {
+    ...a.flex_1,
+  },
+  address: {
+    ...a.align_center,
+  },
+  actions: {
+    ...a.flex_col,
+    ...a.gap_sm,
+  },
+})

@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {useTheme, atoms as a} from '@yoroi/theme'
 import React from 'react'
 import {Platform, StyleProp, StyleSheet, Text as RNText, TextProps, TextStyle} from 'react-native'
 
@@ -18,18 +18,19 @@ const androidAdjustsFontSizeToFitFix = (width: number, childrenLength: number) =
 
 export const Text = (props: Props) => {
   const [fontSize, setFontSize] = React.useState(0)
-  const styles = useStyles()
+  const {color} = useTheme()
 
   const {small, secondary, light, bold, monospace, error, style, children, adjustsFontSizeToFit, ...restProps} = props
 
   const textStyle: Array<StyleProp<TextStyle>> = [
     styles.text,
+    {color: color.gray_max},
     Boolean(small) && styles.small,
-    Boolean(secondary) && styles.secondary,
-    Boolean(light) && styles.light,
+    Boolean(secondary) && {color: color.gray_700},
+    Boolean(light) && {color: color.gray_min},
     Boolean(bold) && styles.bold,
     Boolean(monospace) && styles.monospace,
-    Boolean(error) && styles.error,
+    Boolean(error) && {color: color.sys_magenta_500},
     style,
   ]
   if (fontSize > 0) {
@@ -68,34 +69,20 @@ export const Text = (props: Props) => {
   }
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    text: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_max,
-    },
-    secondary: {
-      color: color.gray_700,
-    },
-    small: {
-      ...atoms.body_3_sm_regular,
-    },
-    light: {
-      color: color.gray_min,
-    },
-    error: {
-      color: color.sys_magenta_500,
-    },
-    bold: {
-      fontFamily: 'Rubik-Medium',
-    },
-    monospace: {
-      ...Platform.select({
-        ios: {fontFamily: 'Menlo'},
-        android: {fontFamily: 'monospace'},
-      }),
-    },
-  })
-  return styles
-}
+const styles = StyleSheet.create({
+  text: {
+    ...a.body_2_md_regular,
+  },
+  small: {
+    ...a.body_3_sm_regular,
+  },
+  bold: {
+    fontFamily: 'Rubik-Medium',
+  },
+  monospace: {
+    ...Platform.select({
+      ios: {fontFamily: 'Menlo'},
+      android: {fontFamily: 'monospace'},
+    }),
+  },
+})

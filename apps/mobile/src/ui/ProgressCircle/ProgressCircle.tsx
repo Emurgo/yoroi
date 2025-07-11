@@ -1,21 +1,20 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 
-import {Text} from './Text'
+import {Text} from '../Text/Text'
 
 type ExternalProps = {
   percentage: number
 }
 
 export const ProgressCircle = ({percentage}: ExternalProps) => {
-  const styles = useStyles()
   const {color} = useTheme()
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.text}>{percentage}%</Text>
+      <Text style={[styles.text, {color: color.text_gray_medium}]}>{percentage}%</Text>
 
       <Svg width={56} height={56} viewBox="0 0 36 36" style={styles.chart}>
         <Path
@@ -41,30 +40,23 @@ export const ProgressCircle = ({percentage}: ExternalProps) => {
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    wrapper: {
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.relative,
-      width: 56,
-    },
-    text: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.text_center,
-      ...atoms.absolute,
-      color: color.text_gray_medium,
-    },
-    chart: {
-      ...atoms.absolute,
-      top: -28,
-      bottom: 0,
-      left: 0,
-      right: 0,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  wrapper: {
+    ...a.align_center,
+    ...a.justify_center,
+    ...a.relative,
+    width: 56,
+  },
+  text: {
+    ...a.body_1_lg_medium,
+    ...a.text_center,
+    ...a.absolute,
+  },
+  chart: {
+    ...a.absolute,
+    top: -28,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+})

@@ -2,25 +2,17 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 
-import {Icon} from '../../../../components/Icon'
+import {Icon} from '../Icon'
 
 type RemoveAmountButtonProps = {
   onPress(): void
 }
 
 export const RemoveAmountButton = ({onPress}: RemoveAmountButtonProps) => {
-  const {colors} = useStyles()
+  const {color} = useTheme()
   return (
     <TouchableOpacity onPress={onPress} testID="removeAmountButton">
-      <Icon.Delete size={26} color={colors.gray} />
+      <Icon.Delete size={26} color={color.gray_max} />
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-  const colors = {
-    gray: color.gray_max,
-  }
-  return {colors}
 }

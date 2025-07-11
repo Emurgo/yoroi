@@ -1,13 +1,13 @@
 import {useCatalyst} from '@yoroi/staking'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ScrollView, StyleSheet} from 'react-native'
+import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
-import {Checkbox} from '../../../../components/Checkbox/Checkbox'
-import {Space} from '../../../../components/Space/Space'
-import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Button} from '../../../../ui/Button/Button'
+import {Checkbox} from '../../../../ui/Checkbox/Checkbox'
+import {Space} from '../../../../ui/Space/Space'
+import {Spacer} from '../../../../ui/Space/Space'
 import {useNavigateTo} from '../../CatalystNavigator'
 import {
   Actions,
@@ -20,10 +20,10 @@ import {useStrings} from '../../common/strings'
 
 export const DisplayPin = () => {
   const strings = useStrings()
-  const styles = useStyles()
   const [checked, setChecked] = React.useState(false)
   const {pin} = useCatalyst()
   const navigateTo = useNavigateTo()
+  const {color} = useTheme()
 
   if (pin === null) throw new Error('pin cannot be null')
 
@@ -36,7 +36,7 @@ export const DisplayPin = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[styles.safeAreaView, {backgroundColor: color.bg_color_max}, a.px_lg, a.pb_lg]}
     >
       <Stepper title={strings.step2Title} currentStep={2} totalSteps={3} />
 
@@ -45,7 +45,7 @@ export const DisplayPin = () => {
 
         <Space height="xl" />
 
-        <Row style={{justifyContent: 'center'}}>
+        <Row style={[styles.row, {justifyContent: 'center'}]}>
           <PinBox>{pin0}</PinBox>
 
           <Space width="lg" />
@@ -83,16 +83,9 @@ export const DisplayPin = () => {
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.pb_lg,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
+  row: {},
+})

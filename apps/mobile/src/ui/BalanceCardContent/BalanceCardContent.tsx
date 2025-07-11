@@ -1,19 +1,19 @@
 import {amountBreakdown, amountFormatter} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {Spacer} from '../Space/Space'
+import {useCurrencyPairing} from '../../features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {
   formatPriceChange,
   priceChange,
-} from '../../../common/helpers/priceChange'
-import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
-import {PnlTag} from '../../../ui/PnlTag/PnlTag'
+} from '../../features/Portfolio/common/helpers/priceChange'
+import {useNavigateTo} from '../../features/Portfolio/common/hooks/useNavigateTo'
+import {PnlTag} from '../PnlTag/PnlTag'
+import {PairedBalance} from '../PairedBalance/PairedBalance'
 
 type Props = {
   amount: Portfolio.Token.Amount
@@ -22,7 +22,6 @@ type Props = {
 
 export const BalanceCardContent = ({amount, headerCard}: Props) => {
   const navigationTo = useNavigateTo()
-  const {styles} = useStyles()
   const {isPrivacyActive, setPrivacyModeOff, setPrivacyModeOn} =
     usePrivacyMode()
 
@@ -80,7 +79,7 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
 type BalanceProps = {amount: Portfolio.Token.Amount}
 const Balance = ({amount}: BalanceProps) => {
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   const balance = React.useMemo(
     () =>
@@ -92,9 +91,9 @@ const Balance = ({amount}: BalanceProps) => {
 
   return (
     <View style={styles.balanceBox}>
-      <Text style={[styles.balanceText, styles.textWhite]}>{balance}</Text>
+      <Text style={[styles.balanceText, {color: color.white_static}]}>{balance}</Text>
 
-      <Text style={[styles.symbol, styles.textWhite]}>
+      <Text style={[styles.symbol, {color: color.white_static}]}>
         {amount.info.ticker}
       </Text>
     </View>
@@ -130,50 +129,37 @@ const PnlPairedChange = ({variantPnl, changeValue}: PnlPairedChangeProps) => {
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    textWhite: {
-      color: color.white_static,
-    },
-    rowBetween: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-      ...atoms.w_full,
-    },
-    balanceBox: {
-      ...atoms.flex_row,
-      ...atoms.gap_2xs,
-      ...atoms.align_baseline,
-    },
-    balanceText: {
-      ...atoms.heading_1_medium,
-      ...atoms.font_semibold,
-    },
-    symbol: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-    },
-    balanceContainer: {
-      ...atoms.gap_2xs,
-      ...atoms.flex_col,
-      ...atoms.align_start,
-    },
-    pairBalance: {
-      ...atoms.body_2_md_regular,
-      color: color.white_static,
-    },
-    varyContainer: {
-      ...atoms.flex_row,
-      ...atoms.gap_xs,
-      ...atoms.align_stretch,
-    },
-  })
-
-  const colors = {
-    gradientColor: color.bg_gradient_3,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  rowBetween: {
+    ...a.flex_row,
+    ...a.justify_between,
+    ...a.align_center,
+    ...a.w_full,
+  },
+  balanceBox: {
+    ...a.flex_row,
+    ...a.gap_2xs,
+    ...a.align_baseline,
+  },
+  balanceText: {
+    ...a.heading_1_medium,
+    ...a.font_semibold,
+  },
+  symbol: {
+    ...a.body_1_lg_medium,
+    ...a.font_semibold,
+  },
+  balanceContainer: {
+    ...a.gap_2xs,
+    ...a.flex_col,
+    ...a.align_start,
+  },
+  pairBalance: {
+    ...a.body_2_md_regular,
+  },
+  varyContainer: {
+    ...a.flex_row,
+    ...a.gap_xs,
+    ...a.align_stretch,
+  },
+})

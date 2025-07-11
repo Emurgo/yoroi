@@ -3,11 +3,11 @@ import {PortfolioTokenBalances} from '@yoroi/types/lib/typescript/portfolio/bala
 import * as React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 
-import {Icon} from '../../../components/Icon'
-import {Space} from '../../../components/Space/Space'
+import {Icon} from '../../../ui/Icon'
+import {Space} from '../../../ui/Space/Space'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
-import {TokenInfoIcon} from '../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
-import {BalanceCard} from '../../Portfolio/useCases/PortfolioDashboard/BalanceCard/BalanceCard'
+import {TokenInfoIcon} from '../../../ui/TokenInfoIcon/TokenInfoIcon'
+import {BalanceCard} from '../../../ui/BalanceCard/BalanceCard'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 
@@ -20,12 +20,12 @@ export const WalletBalance = ({
   plate: string
   name: string
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const ftList = balances.fts ?? []
   const nftsList = balances.nfts ?? []
+  const {color} = useTheme()
 
   return (
     <View style={styles.root}>
@@ -40,11 +40,11 @@ export const WalletBalance = ({
       <Space height="sm" />
 
       <Container>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={[styles.name, {color: color.text_gray_medium}]}>{name}</Text>
       </Container>
 
       <Container>
-        <Text style={styles.plate}>{plate}</Text>
+        <Text style={[styles.plate, {color: color.text_gray_low}]}>{plate}</Text>
       </Container>
 
       <Space height="lg" />
@@ -81,27 +81,27 @@ const TokenSquare = ({
   count: number
   list: PortfolioTokenBalances['fts'] | PortfolioTokenBalances['nfts']
 }) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   if (list.length == 0) {
     return (
-      <View style={styles.square}>
-        <Text style={styles.squareTitle}>{title}</Text>
+      <View style={[styles.square, {borderColor: color.gray_200}]}>
+        <Text style={[styles.squareTitle, {color: color.text_gray_medium}]}>{title}</Text>
 
         <Space fill />
 
-        <Text style={styles.squareTitle}>-</Text>
+        <Text style={[styles.squareTitle, {color: color.text_gray_medium}]}>-</Text>
       </View>
     )
   }
 
   return (
-    <View style={styles.square}>
-      <Text style={styles.squareTitle}>{title}</Text>
+    <View style={[styles.square, {borderColor: color.gray_200}]}>
+      <Text style={[styles.squareTitle, {color: color.text_gray_medium}]}>{title}</Text>
 
       <Space fill />
 
-      <Text style={styles.squareCount}>{count}</Text>
+      <Text style={[styles.squareCount, {color: color.text_gray_max}]}>{count}</Text>
 
       <TokenList assetList={list} />
     </View>
@@ -109,13 +109,10 @@ const TokenSquare = ({
 }
 
 const TokenSquares = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-
   return <View style={styles.squares}>{children}</View>
 }
 
 const Container = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
   return <View style={styles.container}>{children}</View>
 }
 
@@ -124,8 +121,6 @@ const TokenList = ({
 }: {
   assetList: PortfolioTokenBalances['fts'] | PortfolioTokenBalances['nfts']
 }) => {
-  const {styles} = useStyles()
-
   return (
     <FlatList
       horizontal
@@ -139,58 +134,43 @@ const TokenList = ({
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-    },
-    container: {
-      ...atoms.align_center,
-    },
-    walletChecksum: {
-      height: 80,
-      width: 80,
-    },
-    name: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    plate: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_low,
-    },
-    squares: {
-      ...atoms.w_full,
-      ...atoms.flex_1,
-      ...atoms.flex_row,
-      ...atoms.px_lg,
-    },
-    square: {
-      ...atoms.rounded_sm,
-      ...atoms.flex_1,
-      ...atoms.border,
-      ...atoms.p_lg,
-      borderColor: color.gray_200,
-      aspectRatio: 1,
-    },
-    squareTitle: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    squareCount: {
-      ...atoms.heading_1_medium,
-      color: color.text_gray_max,
-    },
-    assetList: {
-      maxHeight: 40,
-    },
-  })
-
-  const colors = {
-    copy: color.gray_900,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  root: {
+    ...a.flex_1,
+  },
+  container: {
+    ...a.align_center,
+  },
+  walletChecksum: {
+    height: 80,
+    width: 80,
+  },
+  name: {
+    ...a.body_1_lg_medium,
+  },
+  plate: {
+    ...a.body_2_md_regular,
+  },
+  squares: {
+    ...a.w_full,
+    ...a.flex_1,
+    ...a.flex_row,
+    ...a.px_lg,
+  },
+  square: {
+    ...a.rounded_sm,
+    ...a.flex_1,
+    ...a.border,
+    ...a.p_lg,
+    aspectRatio: 1,
+  },
+  squareTitle: {
+    ...a.body_1_lg_medium,
+  },
+  squareCount: {
+    ...a.heading_1_medium,
+  },
+  assetList: {
+    maxHeight: 40,
+  },
+})

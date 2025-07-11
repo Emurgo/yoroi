@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   Animated,
@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native'
 
-import {Icon} from '../../../components/Icon'
+import {Icon} from '../../../ui/Icon'
 
 export const Accordion = ({
   label,
@@ -18,9 +18,9 @@ export const Accordion = ({
   label: string
   children: React.ReactNode
 }) => {
-  const {styles, colors} = useStyles()
   const [isOpen, setIsOpen] = React.useState(true)
   const animatedHeight = React.useRef(new Animated.Value(1)).current
+  const {color} = useTheme()
 
   const toggleSection = () => {
     setIsOpen(!isOpen)
@@ -39,12 +39,12 @@ export const Accordion = ({
         onPress={toggleSection}
         style={styles.sectionHeader}
       >
-        <Text style={styles.sectionHeaderText}>{label}</Text>
+        <Text style={[styles.sectionHeaderText, {color: color.text_gray_medium}]}>{label}</Text>
 
         <Icon.Chevron
           direction={isOpen ? 'up' : 'down'}
           size={28}
-          color={colors.chevron}
+          color={color.gray_900}
         />
       </TouchableOpacity>
 
@@ -66,25 +66,15 @@ export const Accordion = ({
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    sectionHeader: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    sectionHeaderText: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    childrenContainer: {
-      overflow: 'hidden',
-    },
-  })
-
-  const colors = {
-    chevron: color.gray_900,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  sectionHeader: {
+    ...a.flex_row,
+    ...a.justify_between,
+  },
+  sectionHeaderText: {
+    ...a.body_1_lg_medium,
+  },
+  childrenContainer: {
+    overflow: 'hidden',
+  },
+})

@@ -16,10 +16,10 @@ import globalMessages, {
 } from '../../../kernel/i18n/global-messages'
 import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
-import {BulletPointItem} from '../../../ui/BulletPointItem'
-import {Button} from '../../../ui/Button/Button'
-import {Loading} from '../../../ui/Loading/Loading'
-import {Space} from '../../../ui/Space/Space'
+import {BulletPointItem} from '../BulletPointItem'
+import {Button} from '../Button/Button'
+import {Loading} from '../Loading/Loading'
+import {Space} from '../Space/Space'
 import {
   BluetoothDisabledError,
   RejectedByUserError,
@@ -225,7 +225,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
       msg: string
       err?: string | null
     }) => (
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+      <View style={[a.align_center, a.justify_center]}>
         <Text style={[a.pb_lg, a.body_1_lg_medium, ta.text_gray_medium]}>
           {msg}
         </Text>
@@ -288,7 +288,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
         <Space.Height.lg />
 
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <View style={[a.align_center, a.justify_center]}>
           <Image source={useUSB === true ? usbImage : bleImage} />
 
           <Space.Height.lg />
@@ -342,7 +342,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
             title={intl.formatMessage(
               confirmationMessages.commonButtons.confirmButton,
             )}
-            style={{marginHorizontal: 10, marginBottom: 8}}
+            style={[a.margin_x_md, a.mb_sm]}
           />
         )}
       </>

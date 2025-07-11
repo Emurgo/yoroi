@@ -1,14 +1,14 @@
 import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {useQuery, UseQueryOptions} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 
-import {Button, ButtonProps, ButtonType} from '../../components/Button/Button'
-import {Copiable} from '../../components/Clipboard/Copiable'
-import {Text} from '../../components/Text'
-import {TitledCard} from '../../components/TitledCard'
+import {Button, ButtonProps, ButtonType} from '../../ui/Button/Button'
+import {Copiable} from '../../ui/Copiable'
+import {Text} from '../../ui/Text/Text'
+import {TitledCard} from '../../ui/TitledCard/TitledCard'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isEmptyString} from '../../kernel/utils'
@@ -21,8 +21,7 @@ type StakePoolInfoProps = {
 }
 export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
   const strings = useStrings()
-  const {styles, bold} = useStyles()
-  const {isDark} = useTheme()
+  const {isDark, color} = useTheme()
   const {wallet} = useSelectedWallet()
 
   const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory({
@@ -31,52 +30,32 @@ export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
   })
   const homepage = stakePoolInfoAndHistory?.info?.homepage
 
-  if (isLoading)
-    return <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
+  if (isLoading) return <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
   if (!stakePoolInfoAndHistory?.info) return null
 
   return (
     <View>
-      <TitledCard
-        title={strings.title}
-        variant="poolInfo"
-        testID="stakePoolInfoTitleCard"
-      >
+      <TitledCard title={strings.title} variant="poolInfo" testID="stakePoolInfoTitleCard">
         <View style={styles.container}>
           <Button
             type={ButtonType.Link}
             title={
-              formatStakepoolNameWithTicker(
-                stakePoolInfoAndHistory.info.ticker,
-                stakePoolInfoAndHistory.info.name,
-              ) ?? strings.unknownPool
+              formatStakepoolNameWithTicker(stakePoolInfoAndHistory.info.ticker, stakePoolInfoAndHistory.info.name) ??
+              strings.unknownPool
             }
-            onPress={() =>
-              !isEmptyString(homepage) && Linking.openURL(homepage)
-            }
+            onPress={() => !isEmptyString(homepage) && Linking.openURL(homepage)}
             style={styles.poolName}
-            fontOverride={bold}
+            fontOverride={a.body_1_lg_medium}
           />
 
-          <Copiable
-            title={stakePoolId}
-            text={stakePoolId}
-            feedback={strings.copied}
-          />
+          <Copiable title={stakePoolId} text={stakePoolId} feedback={strings.copied} />
 
-          {ctaProps && (
-            <Button
-              type={ButtonType.Secondary}
-              size="S"
-              title={strings.undelegate}
-              {...ctaProps}
-            />
-          )}
+          {ctaProps && <Button type={ButtonType.Secondary} size="S" title={strings.undelegate} {...ctaProps} />}
         </View>
       </TitledCard>
 
       <View style={styles.warning}>
-        <Text secondary style={styles.warningText}>
+        <Text secondary style={[styles.warningText, {color: color.gray_500}]}>
           {strings.warning}
         </Text>
       </View>
@@ -106,14 +85,12 @@ export const useStakePoolInfoAndHistory = (
         poolIds: [stakePoolId],
       })
 
-      if (stakePoolInfosAndHistories[stakePoolId]?.info?.name != null)
-        return stakePoolInfosAndHistories[stakePoolId]
+      if (stakePoolInfosAndHistories[stakePoolId]?.info?.name != null) return stakePoolInfosAndHistories[stakePoolId]
 
       const history = stakePoolInfosAndHistories[stakePoolId]?.history
       if (history == null) return null
 
-      const explorerPoolInfo =
-        await poolInfoApi.getSingleExplorerPoolInfo(stakePoolId)
+      const explorerPoolInfo = await poolInfoApi.getSingleExplorerPoolInfo(stakePoolId)
 
       return {
         history,
@@ -131,26 +108,21 @@ export const useStakePoolInfoAndHistory = (
   }
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.gap_md,
-    },
-    poolName: {
-      ...atoms.self_start,
-    },
-    warning: {
-      ...atoms.p_sm,
-    },
-    warningText: {
-      color: color.gray_500,
-      ...atoms.italic,
-      ...atoms.body_3_sm_regular,
-    },
-  })
-  return {styles, bold: atoms.body_1_lg_medium}
-}
+const styles = StyleSheet.create({
+  container: {
+    ...a.gap_md,
+  },
+  poolName: {
+    ...a.self_start,
+  },
+  warning: {
+    ...a.p_sm,
+  },
+  warningText: {
+    ...a.italic,
+    ...a.body_3_sm_regular,
+  },
+})
 
 const messages = defineMessages({
   title: {
@@ -195,10 +167,7 @@ const useStrings = () => {
 }
 
 const formatStakepoolNameWithTicker = (ticker?: string, name?: string) => {
-  const nameWithTicker = [
-    !isEmptyString(ticker) && !isEmptyString(name) ? `(${ticker})` : ticker,
-    name,
-  ]
+  const nameWithTicker = [!isEmptyString(ticker) && !isEmptyString(name) ? `(${ticker})` : ticker, name]
     .join(' ')
     .trim()
   if (nameWithTicker.length > 0) return nameWithTicker

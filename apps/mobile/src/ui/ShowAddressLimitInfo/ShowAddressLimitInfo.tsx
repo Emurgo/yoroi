@@ -1,26 +1,26 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
-import {Icon} from '../../../../components/Icon'
-import {YoroiZendeskLink} from '../contants'
-import {useStrings} from '../useStrings'
+import {Icon} from '../Icon'
+import {YoroiZendeskLink} from '../../features/Receive/common/contants'
+import {useStrings} from '../../features/Receive/common/useStrings'
 
 export const ShowAddressLimitInfo = () => {
   const strings = useStrings()
-  const {styles, colors, color} = useStyles()
+  const {color} = useTheme()
 
   return (
     <Animated.View
       layout={Layout}
       entering={FadeInUp}
       exiting={FadeOut}
-      style={styles.smallAddressCard}
+      style={[styles.smallAddressCard, {backgroundColor: color.sys_cyan_100}]}
     >
-      <Icon.Info size={24} color={colors.icon} />
+      <Icon.Info size={24} color={color.primary_500} />
 
-      <Text style={styles.text}>
+      <Text style={[styles.text, {color: color.gray_max}]}>
         {strings.infoAddressLimit}
 
         <TouchableWithoutFeedback
@@ -37,28 +37,16 @@ export const ShowAddressLimitInfo = () => {
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    smallAddressCard: {
-      alignSelf: 'stretch',
-      borderRadius: 8,
-      alignItems: 'flex-start',
-      justifyContent: 'space-between',
-      gap: 12,
-      padding: 16,
-      backgroundColor: color.sys_cyan_100,
-    },
-    text: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_max,
-    },
-  })
-
-  const colors = {
-    icon: color.primary_500,
-  }
-
-  return {styles, colors, color}
-}
+const styles = StyleSheet.create({
+  smallAddressCard: {
+    alignSelf: 'stretch',
+    borderRadius: 8,
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 12,
+    padding: 16,
+  },
+  text: {
+    ...a.body_2_md_regular,
+  },
+})

@@ -1,11 +1,11 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Icon} from '../../../../../components/Icon'
-import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {Rate} from './Rate'
+import {Icon} from '../Icon'
+import {Tooltip} from '../Tooltip/Tooltip'
+import {useStrings} from '../../features/Portfolio/common/hooks/useStrings'
+import {Rate} from '../Rate/Rate'
 
 type Props = {
   rate: number
@@ -13,7 +13,7 @@ type Props = {
   hasDApps: boolean
 }
 export const BalanceHeaderCard = ({name, rate, hasDApps}: Props) => {
-  const {styles, color} = useStyles()
+  const {color} = useTheme()
   const strings = useStrings()
 
   return (
@@ -21,7 +21,7 @@ export const BalanceHeaderCard = ({name, rate, hasDApps}: Props) => {
       {hasDApps ? (
         <Tooltip numberOfLine={3} title={strings.totalPortfolioValueTooltip}>
           <View style={styles.labelContainer}>
-            <Text style={[styles.textWhite, styles.normalText]}>
+            <Text style={[styles.normalText, {color: color.white_static}]}>
               {strings.totalPortfolioValue}
             </Text>
 
@@ -30,7 +30,7 @@ export const BalanceHeaderCard = ({name, rate, hasDApps}: Props) => {
         </Tooltip>
       ) : (
         <View style={styles.labelContainer}>
-          <Text style={[styles.textWhite, styles.normalText]}>
+          <Text style={[styles.normalText, {color: color.white_static}]}>
             {strings.totalWalletValue}
           </Text>
         </View>
@@ -41,26 +41,18 @@ export const BalanceHeaderCard = ({name, rate, hasDApps}: Props) => {
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    textWhite: {
-      color: color.white_static,
-    },
-    normalText: {
-      ...atoms.body_2_md_regular,
-    },
-    rowBetween: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    labelContainer: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_xs,
-    },
-  })
-
-  return {styles, color} as const
-}
+const styles = StyleSheet.create({
+  normalText: {
+    ...a.body_2_md_regular,
+  },
+  rowBetween: {
+    ...a.flex_row,
+    ...a.justify_between,
+    ...a.align_center,
+  },
+  labelContainer: {
+    ...a.flex_row,
+    ...a.align_center,
+    ...a.gap_xs,
+  },
+})

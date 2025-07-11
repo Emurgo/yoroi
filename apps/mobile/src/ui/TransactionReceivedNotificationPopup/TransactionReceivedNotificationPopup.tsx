@@ -1,8 +1,8 @@
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
 
-import {SwipeOutWrapper} from './SwipeOutWrapper'
-import {TransactionReceivedNotification} from './TransactionReceivedNotification'
+import {SwipeOutWrapper} from '../SwipeOutWrapper/SwipeOutWrapper'
+import {TransactionReceivedNotification} from '../../features/Notifications/common/TransactionReceivedNotification'
 
 type Props = {
   event: Notifications.Event

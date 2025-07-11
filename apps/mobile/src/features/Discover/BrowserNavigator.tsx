@@ -11,10 +11,13 @@ import {SearchDappInBrowserScreen} from './useCases/SearchDappInBrowser/SearchDa
 const Tab = createStackNavigator<BrowserRoutes>()
 
 export const BrowserNavigator = () => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   return (
-    <SafeAreaView edges={['left', 'right', 'top']} style={styles.root}>
+    <SafeAreaView
+      edges={['left', 'right', 'top']}
+      style={[styles.root, {backgroundColor: color.bg_color_max}]}
+    >
       <Tab.Navigator
         screenOptions={{animationEnabled: false, headerShown: false}}
       >
@@ -29,15 +32,8 @@ export const BrowserNavigator = () => {
   )
 }
 
-const useStyles = () => {
-  const {color} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+})

@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   StyleSheet,
@@ -7,32 +7,33 @@ import {
   TouchableOpacityProps,
 } from 'react-native'
 
-import {useStrings} from '../useStrings'
+import {useStrings} from '../../features/SetupWallet/common/useStrings'
 
 export const LearnMoreButton = ({
   activeOpacity = 0.5,
   ...props
 }: TouchableOpacityProps) => {
-  const {styles} = useStyles()
   const strings = useStrings()
+  const {color} = useTheme()
 
   return (
     <TouchableOpacity activeOpacity={activeOpacity} {...props}>
-      <Text style={{...styles.text, textDecorationLine: 'none'}}>
+      <Text
+        style={[
+          styles.text,
+          {color: color.primary_500},
+          {textDecorationLine: 'none'},
+        ]}
+      >
         {strings.learnMore}
       </Text>
     </TouchableOpacity>
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    text: {
-      ...atoms.link_1_lg_underline,
-      color: color.primary_500,
-      alignSelf: 'center',
-    },
-  })
-  return {styles}
-}
+const styles = StyleSheet.create({
+  text: {
+    ...a.link_1_lg_underline,
+    alignSelf: 'center',
+  },
+})

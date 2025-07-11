@@ -4,23 +4,23 @@ import {
   isNft,
   isPrimaryToken,
 } from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
-import {Text} from '../../../../components/Text'
-import {features} from '../../../../kernel/features'
-import {useStrings} from '../../../ReviewTx/common/hooks/useStrings'
-import {TokenDetails} from '../../../ReviewTx/common/TokenDetails'
-import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {usePriceImpactRiskTheme} from '../../../Swap/common/helpers'
-import {SwapPriceImpactRisk} from '../../../Swap/common/types'
-import {TokenInfoIcon} from './TokenInfoIcon'
+import {Button, ButtonType} from '../Button/Button'
+import {Icon} from '../Icon'
+import {useModal} from '../Modal/ModalContext'
+import {PairedBalance} from '../PairedBalance/PairedBalance'
+import {Text} from '../Text/Text'
+import {features} from '../../../kernel/features'
+import {useStrings} from '../../ReviewTx/common/hooks/useStrings'
+import {TokenDetails} from '../TokenDetails/TokenDetails'
+import {usePrivacyMode} from '../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePriceImpactRiskTheme} from '../../Swap/common/helpers'
+import {SwapPriceImpactRisk} from '../../Swap/common/types'
+import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
 
 type TokenAmountItemProps = {
   amount: Portfolio.Token.Amount
@@ -43,7 +43,7 @@ export const TokenAmountItem = ({
   const strings = useStrings()
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
-  const {styles, colors} = useStyles()
+  const {color} = useTheme()
   const {privacyPlaceholder, isPrivacyActive} = usePrivacyMode()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(
     priceImpactRisk ?? 'none',
@@ -60,7 +60,7 @@ export const TokenAmountItem = ({
       : privacyPlaceholder
 
   const priceImpactRiskTextColor =
-    orderType === 'market' ? priceImpactRiskTheme.text : colors.text
+    orderType === 'market' ? priceImpactRiskTheme.text : color.gray_900
 
   const handleShowTokenDetails = () => {
     openModal({
@@ -83,7 +83,7 @@ export const TokenAmountItem = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="middle"
-          style={styles.name}
+          style={[styles.name, {color: color.gray_900}]}
           testID="tokenInfoText"
         >
           {name}
@@ -92,7 +92,7 @@ export const TokenAmountItem = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="middle"
-          style={styles.detail}
+          style={[styles.detail, {color: color.gray_600}]}
           testID="tokenFingerprintText"
         >
           {detail}
@@ -144,9 +144,9 @@ export const TokenAmountItem = ({
               <Button
                 type={ButtonType.SecondaryText}
                 fgColorsOverride={{
-                  disabled: colors.info,
-                  idle: colors.info,
-                  pressed: colors.info,
+                  disabled: color.text_gray_low,
+                  idle: color.text_gray_low,
+                  pressed: color.text_gray_low,
                 }}
                 style={styles.info}
                 size="S"
@@ -173,82 +173,66 @@ const Right = ({style, ...props}: ViewProps) => (
 )
 
 export const AmountItemPlaceholder = ({style}: ViewProps) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
   return (
     <View style={[style, styles.skeletonLogo]}>
-      <View style={styles.skeletonTitle} />
+      <View style={[styles.skeletonTitle, {backgroundColor: color.gray_200}]} />
 
-      <View style={styles.skeletonBorder} />
+      <View style={[styles.skeletonBorder, {backgroundColor: color.gray_200}]} />
     </View>
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    name: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_medium,
-    },
-    detail: {
-      color: color.gray_600,
-      maxWidth: 140,
-      ...atoms.body_3_sm_regular,
-    },
-    quantity: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_regular,
-    },
-    quantityWrapper: {
-      width: 150,
-      ...atoms.flex_wrap,
-      ...atoms.flex_row,
-      ...atoms.gap_sm,
-      ...atoms.justify_end,
-    },
-    skeletonLogo: {
-      display: 'flex',
-      flexDirection: 'row',
-      gap: 12,
-      height: 56,
-    },
-    skeletonTitle: {
-      backgroundColor: color.gray_200,
-      borderRadius: 8,
-      flexGrow: 3,
-    },
-    skeletonBorder: {
-      backgroundColor: color.gray_200,
-      borderRadius: 8,
-      flexGrow: 1,
-    },
-    pairedBalance: {
-      textAlign: 'right',
-    },
-    end: {
-      ...atoms.align_end,
-    },
-    row: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_sm,
-    },
-    info: {
-      ...atoms.pr_2xs,
-      ...atoms.pl_2xs,
-    },
-  })
-
-  const colors = {
-    text: color.gray_900,
-    icon: color.secondary_600,
-    info: color.text_gray_low,
-  }
-
-  return {styles, colors}
-}
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  name: {
+    ...a.body_1_lg_medium,
+  },
+  detail: {
+    maxWidth: 140,
+    ...a.body_3_sm_regular,
+  },
+  quantity: {
+    ...a.body_1_lg_regular,
+  },
+  quantityWrapper: {
+    width: 150,
+    ...a.flex_wrap,
+    ...a.flex_row,
+    ...a.gap_sm,
+    ...a.justify_end,
+  },
+  skeletonLogo: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 12,
+    height: 56,
+  },
+  skeletonTitle: {
+    borderRadius: 8,
+    flexGrow: 3,
+  },
+  skeletonBorder: {
+    borderRadius: 8,
+    flexGrow: 1,
+  },
+  pairedBalance: {
+    textAlign: 'right',
+  },
+  end: {
+    ...a.align_end,
+  },
+  row: {
+    ...a.flex,
+    ...a.flex_row,
+    ...a.align_center,
+    ...a.gap_sm,
+  },
+  info: {
+    ...a.pr_2xs,
+    ...a.pl_2xs,
+  },
+})

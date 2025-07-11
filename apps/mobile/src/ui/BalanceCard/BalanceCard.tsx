@@ -9,7 +9,7 @@ import {usePairing} from '../../../../Pairing/context/PairingProvider'
 import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 import {aggregatePrimaryAmount} from '../../../common/helpers/aggregatePrimaryAmount'
 import {usePortfolioTokenActivity} from '../../../context/PortfolioProvider'
-import {BalanceCardContent} from './BalanceCardContent'
+import {BalanceCardContent} from '../BalanceCardContent/BalanceCardContent'
 import {BalanceCardSkeleton} from './BalanceCardSkeleton'
 import {BalanceHeaderCard} from './BalanceHeaderCard'
 

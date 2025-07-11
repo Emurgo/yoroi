@@ -1,14 +1,14 @@
 import {useCatalyst} from '@yoroi/staking'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
-import {Checkbox} from '../../../../components/Checkbox/Checkbox'
-import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
-import {ShareQRCodeCard} from '../../../../components/ShareQRCodeCard/ShareQRCodeCard'
-import {Space} from '../../../../components/Space/Space'
+import {Button} from '../../../../ui/Button/Button'
+import {Checkbox} from '../../../../ui/Checkbox/Checkbox'
+import {useCopy} from '../../../../kernel/utils/clipboard'
+import {ShareQRCodeCard} from '../../../../ui/ShareQRCodeCard/ShareQRCodeCard'
+import {Space} from '../../../../ui/Space/Space'
 import {useAllowScreenshot} from '../../../../hooks/useAllowScreenShot'
 import {useBlockGoBack} from '../../../../kernel/navigation'
 import {useNavigateTo} from '../../CatalystNavigator'
@@ -19,10 +19,10 @@ export const QrCode = () => {
   useBlockGoBack()
   useAllowScreenshot()
   const strings = useStrings()
-  const styles = useStyles()
   const [checked, setChecked] = React.useState(false)
   const {votingKeyEncrypted, reset} = useCatalyst()
   const navigateTo = useNavigateTo()
+  const {color} = useTheme()
 
   if (votingKeyEncrypted === null)
     throw new Error('votingKeyEncrypted cannot be null')
@@ -40,9 +40,9 @@ export const QrCode = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[styles.safeAreaView, {backgroundColor: color.bg_color_max}, a.pb_lg]}
     >
-      <ScrollView bounces={false} contentContainerStyle={styles.padding}>
+      <ScrollView bounces={false} contentContainerStyle={[styles.padding, a.px_lg]}>
         <ShareQRCodeCard
           title={strings.step4QrTitle}
           qrContent={votingKeyEncrypted}
@@ -66,12 +66,12 @@ export const QrCode = () => {
         <Checkbox
           onChange={setChecked}
           checked={checked}
-          style={styles.checkbox}
+          style={[styles.checkbox, a.align_start]}
           text={strings.step4QrCheckbox}
         />
       </ScrollView>
 
-      <Actions style={styles.padding}>
+      <Actions style={[styles.padding, a.px_lg]}>
         <Button
           onPress={onNext}
           title={strings.completeButton}
@@ -82,21 +82,10 @@ export const QrCode = () => {
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.pb_lg,
-    },
-    padding: {
-      ...atoms.px_lg,
-    },
-    checkbox: {
-      ...atoms.align_start,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
+  padding: {},
+  checkbox: {},
+})

@@ -5,27 +5,20 @@ import {StyleSheet, View} from 'react-native'
 import {Space} from '../Space/Space'
 
 export const Divider = ({verticalSpace = 'none'}: {verticalSpace?: SpacingSize}) => {
-  const {styles} = useStyles()
+  const {color, atoms} = useTheme()
   return (
     <>
       <Space height={verticalSpace} />
 
-      <View style={styles.divider} />
+      <View style={[styles.divider, atoms.align_stretch, {backgroundColor: color.gray_200}]} />
 
       <Space height={verticalSpace} />
     </>
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    divider: {
-      height: 1,
-      ...atoms.align_stretch,
-      backgroundColor: color.gray_200,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  divider: {
+    height: 1,
+  },
+})

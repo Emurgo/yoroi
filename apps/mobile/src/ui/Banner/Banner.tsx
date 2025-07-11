@@ -1,8 +1,8 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Text} from '../Text'
+import {Text} from '../Text/Text'
 
 type Props = {
   text?: string
@@ -13,10 +13,17 @@ type Props = {
 }
 
 export const Banner = ({error, text, boldText, label, children}: Props) => {
-  const styles = useStyles()
+  const {color} = useTheme()
+
+  const bannerStyles = [
+    styles.banner,
+    {backgroundColor: color.gray_100},
+    error === true && styles.bannerError,
+    error === true && {backgroundColor: color.bg_color_max},
+  ]
 
   return (
-    <View style={[styles.banner, error === true && styles.bannerError]}>
+    <View style={bannerStyles}>
       {label != null && (
         <Text error={error} small style={styles.label}>
           {label}
@@ -24,7 +31,7 @@ export const Banner = ({error, text, boldText, label, children}: Props) => {
       )}
 
       {text != null && (
-        <Text small={error} bold={boldText} style={[error != null && styles.textError]}>
+        <Text small={error} bold={boldText} style={[error != null && {color: color.sys_magenta_500}]}>
           {text}
         </Text>
       )}
@@ -47,25 +54,16 @@ export const ClickableBanner = ({onPress, ...rest}: ClickableProps) =>
     <Banner {...rest} />
   )
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    banner: {
-      backgroundColor: color.gray_100,
-      ...atoms.p_lg,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    textError: {
-      color: color.sys_magenta_500,
-    },
-    bannerError: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.py_sm,
-    },
-    label: {
-      marginBottom: 6,
-    },
-  })
-  return styles
-}
+const styles = StyleSheet.create({
+  banner: {
+    ...a.p_lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bannerError: {
+    ...a.py_sm,
+  },
+  label: {
+    marginBottom: 6,
+  },
+})

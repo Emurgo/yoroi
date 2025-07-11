@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -8,11 +8,11 @@ import {
   GeneralConnectionError,
   LedgerUserError,
   RejectedByUserError,
-} from '../../wallets/hw/hw'
+} from '../../../wallets/hw/hw'
 import {Button, ButtonType} from '../Button/Button'
 import {Icon} from '../Icon'
 import {Space} from '../Space/Space'
-import {Text} from '../Text'
+import {Text} from '../Text/Text'
 import {useStrings} from './strings'
 
 type Props = {
@@ -23,17 +23,17 @@ type Props = {
 
 export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
   const strings = useStrings()
+  const {color} = useTheme()
   const message = getErrorMessage(error, strings)
-  const {styles, colors} = useStyles()
 
   return (
     <>
       <View style={styles.container}>
         <View>
-          <Icon.Danger color={colors.error} size={42} />
+          <Icon.Danger color={color.sys_magenta_500} size={42} />
         </View>
 
-        <Text style={styles.message}>{message}</Text>
+        <Text style={[styles.message, {color: color.sys_magenta_500}]}>{message}</Text>
       </View>
 
       <View style={styles.buttons}>
@@ -87,31 +87,21 @@ const getErrorMessage = (
   return `${strings.error}: ${error.message}`
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    message: {
-      color: color.sys_magenta_500,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-    },
-    container: {
-      ...atoms.px_lg,
-      ...atoms.flex_grow,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-    buttons: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.p_lg,
-    },
-  })
-
-  const colors = {
-    error: color.sys_magenta_500,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  message: {
+    ...a.body_1_lg_regular,
+    ...a.text_center,
+  },
+  container: {
+    ...a.px_lg,
+    ...a.flex_grow,
+    ...a.align_center,
+    ...a.justify_center,
+  },
+  buttons: {
+    ...a.flex_row,
+    ...a.align_center,
+    ...a.justify_center,
+    ...a.p_lg,
+  },
+})

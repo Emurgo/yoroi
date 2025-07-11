@@ -1,14 +1,14 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Copiable} from '../../../../components/Clipboard/Copiable'
-import {Text} from '../../../../components/Text'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {isEmptyString} from '../../../../kernel/utils'
-import {useStrings} from '../useStrings'
-import {useLastDateAddressUsed} from './useLastDateAddressUsed'
+import {Copiable} from '../Copiable'
+import {Text} from '../Text/Text'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {isEmptyString} from '../../../kernel/utils'
+import {useStrings} from '../../features/Receive/common/useStrings'
+import {useLastDateAddressUsed} from '../../features/Receive/common/useLastDateAddressUsed'
 
 type AddressDetailsProps = {
   address: string
@@ -22,9 +22,10 @@ export const ShareDetailsCard = ({
   stakingHash,
 }: AddressDetailsProps) => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
   const {track} = useMetrics()
   const lastUsed = useLastDateAddressUsed(address)
+  const {color} = useTheme()
+  const screenWidth = useWindowDimensions().width
 
   const hasStakingHash = !isEmptyString(stakingHash)
   const hasSpendingHash = !isEmptyString(spendingHash)
@@ -36,23 +37,23 @@ export const ShareDetailsCard = ({
   }
 
   return (
-    <View style={styles.addressDetails}>
+    <View style={[styles.addressDetails, {width: screenWidth - 34}]}>
       <LinearGradient
         style={[StyleSheet.absoluteFill, {opacity: 1}]}
         start={{x: 0, y: 0}}
         end={{x: 0, y: 1}}
-        colors={colors.backgroundGradientCard}
+        colors={color.bg_gradient_1}
       />
 
-      <Text style={styles.title}>{strings.walletAddress}</Text>
+      <Text style={[styles.title, {color: color.gray_max}]}>{strings.walletAddress}</Text>
 
       <View style={styles.textSection}>
-        <Text style={[styles.textAddress, {color: colors.grayText}]}>
+        <Text style={[styles.textAddress, {color: color.gray_600}]}>
           {strings.address}
         </Text>
 
         <View style={styles.textRow}>
-          <Text style={styles.textAddressDetails}>{address}</Text>
+          <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>{address}</Text>
 
           <Copiable
             text={address}
@@ -64,12 +65,12 @@ export const ShareDetailsCard = ({
 
       {hasStakingHash && (
         <View style={styles.textSection}>
-          <Text style={[styles.textAddress, {color: colors.grayText}]}>
+          <Text style={[styles.textAddress, {color: color.gray_600}]}>
             {strings.stakingKeyHash}
           </Text>
 
           <View style={styles.textRow}>
-            <Text style={styles.textAddressDetails}>{stakingHash}</Text>
+            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>{stakingHash}</Text>
 
             <Copiable text={stakingHash} feedback={strings.addressCopiedMsg} />
           </View>
@@ -78,12 +79,12 @@ export const ShareDetailsCard = ({
 
       {hasSpendingHash && (
         <View style={styles.textSection}>
-          <Text style={[styles.textAddress, {color: colors.grayText}]}>
+          <Text style={[styles.textAddress, {color: color.gray_600}]}>
             {strings.spendingKeyHash}
           </Text>
 
           <View style={styles.textRow}>
-            <Text style={styles.textAddressDetails}>{spendingHash}</Text>
+            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>{spendingHash}</Text>
 
             <Copiable text={spendingHash} feedback={strings.addressCopiedMsg} />
           </View>
@@ -92,12 +93,12 @@ export const ShareDetailsCard = ({
 
       {Boolean(lastUsed) && (
         <View style={styles.textSection}>
-          <Text style={[styles.textAddress, {color: colors.grayText}]}>
+          <Text style={[styles.textAddress, {color: color.gray_600}]}>
             {strings.lastUsed}
           </Text>
 
           <View style={styles.textRow}>
-            <Text style={styles.textAddressDetails}>{lastUsed}</Text>
+            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>{lastUsed}</Text>
           </View>
         </View>
       )}
@@ -105,52 +106,36 @@ export const ShareDetailsCard = ({
   )
 }
 
-const useStyles = () => {
-  const screenWidth = useWindowDimensions().width
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    title: {
-      ...atoms.heading_3_medium,
-      color: color.gray_max,
-    },
-    addressDetails: {
-      borderRadius: 16,
-      width: screenWidth - 34,
-      alignItems: 'center',
-      flex: 1,
-      minHeight: 394,
-      alignSelf: 'center',
-      overflow: 'hidden',
-      ...atoms.px_lg,
-      ...atoms.py_2xl,
-      gap: 16,
-    },
-    textAddressDetails: {
-      ...atoms.body_1_lg_regular,
-      lineHeight: 24,
-      textAlign: 'left',
-      flex: 1,
-      color: color.gray_900,
-    },
-    textAddress: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_600,
-      textAlign: 'left',
-    },
-    textSection: {
-      alignSelf: 'stretch',
-    },
-    textRow: {
-      flexDirection: 'row',
-      gap: 4,
-    },
-  })
-
-  const colors = {
-    grayText: color.gray_600,
-    backgroundGradientCard: color.bg_gradient_1,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  title: {
+    ...a.heading_3_medium,
+  },
+  addressDetails: {
+    borderRadius: 16,
+    alignItems: 'center',
+    flex: 1,
+    minHeight: 394,
+    alignSelf: 'center',
+    overflow: 'hidden',
+    ...a.px_lg,
+    ...a.py_2xl,
+    gap: 16,
+  },
+  textAddressDetails: {
+    ...a.body_1_lg_regular,
+    lineHeight: 24,
+    textAlign: 'left',
+    flex: 1,
+  },
+  textAddress: {
+    ...a.body_2_md_regular,
+    textAlign: 'left',
+  },
+  textSection: {
+    alignSelf: 'stretch',
+  },
+  textRow: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+})

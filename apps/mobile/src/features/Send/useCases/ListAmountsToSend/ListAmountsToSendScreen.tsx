@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {useMutation} from '@tanstack/react-query'
 import {isNft} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -11,27 +11,26 @@ import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '../../../../components/Boundary/Boundary'
-import {Button} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Boundary} from '../../../ui/Boundary/Boundary'
+import {Button} from '../../../ui/Button/Button'
+import {Icon} from '../../../ui/Icon'
+import {Spacer} from '../../../ui/Space/Space'
 import globalMessages from '../../../../kernel/i18n/global-messages'
 import {assetsToSendProperties} from '../../../../kernel/metrics/helpers'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useSaveMemo} from '../../../../wallets/hooks'
 import {YoroiEntry, YoroiSignedTx} from '../../../../wallets/types/yoroi'
-import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {TokenAmountItem} from '../../../ui/TokenAmountItem/TokenAmountItem'
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {useSearch} from '../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
 import {toYoroiEntry} from '../../common/toYoroiEntry'
-import {AddTokenButton} from './AddToken/AddToken'
-import {RemoveAmountButton} from './RemoveAmount'
+import {AddTokenButton} from '../../../ui/AddTokenButton/AddTokenButton'
+import {RemoveAmountButton} from '../../../ui/RemoveAmountButton/RemoveAmountButton'
 
 export const ListAmountsToSendScreen = () => {
-  const {styles} = useStyles()
   const navigateTo = useNavigateTo()
   const {navigateToTxReview} = useWalletNavigation()
   const strings = useStrings()
@@ -40,6 +39,7 @@ export const ListAmountsToSendScreen = () => {
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const {unsignedTxChanged} = useReviewTx()
+  const {color} = useTheme()
 
   useLayoutEffect(() => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
@@ -127,7 +127,7 @@ export const ListAmountsToSendScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.root, {backgroundColor: color.bg_color_max}]}>
       <AmountsList
         data={Object.values(amounts)}
         renderItem={({item: amount}) => (
@@ -144,8 +144,8 @@ export const ListAmountsToSendScreen = () => {
         testID="selectedTokens"
       />
 
-      <Actions>
-        <Row>
+      <Actions style={[styles.actions, {backgroundColor: 'transparent'}]}>
+        <Row style={styles.row}>
           <Spacer fill />
 
           <AddTokenButton onPress={onAdd} />
@@ -174,39 +174,35 @@ const ActionableAmount = ({
   onRemove,
   onEdit,
 }: ActionableAmountProps) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   const handleRemove = () => onRemove(amount.info.id)
   const handleEdit = () => (isNft(amount.info) ? null : onEdit(amount.info.id))
 
   return (
-    <View style={styles.amountItem} testID="amountItem">
-      <Left>
+    <View style={[styles.amountItem, a.flex_row, a.justify_between, a.align_center]} testID="amountItem">
+      <Left style={[styles.flex, {flex: 1}]}>
         <EditAmountButton onPress={handleEdit}>
           <TokenAmountItem amount={amount} ignorePrivacy />
         </EditAmountButton>
       </Left>
 
-      <Right>
+      <Right style={[styles.flex, {paddingLeft: 16}]}>
         <RemoveAmountButton onPress={handleRemove} />
       </Right>
     </View>
   )
 }
 
-const Left = ({style, ...props}: ViewProps) => (
-  <View style={[style, {flex: 1}]} {...props} />
-)
+const Left = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 const Right = ({style, ...props}: ViewProps) => (
-  <View style={[style, {paddingLeft: 16}]} {...props} />
+  <View style={style} {...props} />
 )
 const Actions = ({style, ...props}: ViewProps) => {
-  const {styles} = useStyles()
-  return <View style={[style, styles.actions]} {...props} />
+  return <View style={style} {...props} />
 }
 const Row = ({style, ...props}: ViewProps) => {
-  const {styles} = useStyles()
-  return <View style={[style, styles.row]} {...props} />
+  return <View style={style} {...props} />
 }
 
 // use case: edit amount
@@ -231,11 +227,11 @@ const AmountsList = FlatList
 
 const ListAmountsNavigateBackButton = () => {
   const navigation = useNavigateTo()
-  const {colors} = useStyles()
+  const {color} = useTheme()
 
   return (
     <TouchableOpacity onPress={() => navigation.startTx()}>
-      <Icon.Chevron direction="left" color={colors.icon} />
+      <Icon.Chevron direction="left" color={color.el_gray_max} />
     </TouchableOpacity>
   )
 }
@@ -256,30 +252,14 @@ const messages = defineMessages({
   },
 })
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    row: {
-      ...atoms.flex_row,
-    },
-    actions: {
-      backgroundColor: 'transparent',
-    },
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.pb_lg,
-      ...atoms.gap_xl,
-    },
-    amountItem: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-  })
-  const colors = {
-    icon: color.el_gray_max,
-  }
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  row: {},
+  actions: {},
+  root: {
+    ...a.flex_1,
+    ...a.px_lg,
+    ...a.pb_lg,
+    ...a.gap_xl,
+  },
+  amountItem: {},
+})

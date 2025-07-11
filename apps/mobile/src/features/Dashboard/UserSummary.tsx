@@ -1,14 +1,14 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, ButtonProps, ButtonType} from '../../components/Button/Button'
-import {Icon} from '../../components/Icon'
-import {Space} from '../../components/Space/Space'
-import {Text} from '../../components/Text'
-import {TitledCard} from '../../components/TitledCard'
+import {Button, ButtonProps, ButtonType} from '../../ui/Button/Button'
+import {Icon} from '../../ui/Icon'
+import {Space} from '../../ui/Space/Space'
+import {Text} from '../../ui/Text/Text'
+import {TitledCard} from '../../ui/TitledCard/TitledCard'
 import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
@@ -24,13 +24,7 @@ type Props = {
   ctaProps?: ButtonProps
 }
 
-export const UserSummary = ({
-  totalAdaSum,
-  totalRewards,
-  totalDelegated,
-  ctaProps,
-}: Props) => {
-  const styles = useStyles()
+export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, ctaProps}: Props) => {
   const {color} = useTheme()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
@@ -40,26 +34,19 @@ export const UserSummary = ({
     <TitledCard title={strings.title} testID="userSummaryTitleCard">
       <View style={styles.stats}>
         <View style={styles.row}>
-          <View style={styles.icon}>
+          <View>
             <Icon.TotalAda color={color.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
 
           <View style={styles.amountBlock}>
-            <Text style={styles.label}>{strings.availableFunds}:</Text>
+            <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.availableFunds}:</Text>
 
-            <Text
-              bold
-              style={styles.value}
-              testID="userSummaryAvailableFundsText"
-            >
+            <Text bold style={[styles.value, {color: color.text_gray_medium}]} testID="userSummaryAvailableFundsText">
               {!isPrivacyActive
                 ? totalAdaSum != null
-                  ? formatAdaWithText(
-                      asQuantity(totalAdaSum),
-                      wallet.portfolioPrimaryTokenInfo,
-                    )
+                  ? formatAdaWithText(asQuantity(totalAdaSum), wallet.portfolioPrimaryTokenInfo)
                   : '-'
                 : '******'}
             </Text>
@@ -69,22 +56,19 @@ export const UserSummary = ({
         <Space height="lg" />
 
         <View style={styles.row}>
-          <View style={styles.icon}>
+          <View>
             <Icon.TotalReward color={color.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
 
           <View style={styles.amountBlock}>
-            <Text style={styles.label}>{strings.rewardsLabel}:</Text>
+            <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.rewardsLabel}:</Text>
 
-            <Text bold style={styles.value} testID="userSummaryRewardsText">
+            <Text bold style={[styles.value, {color: color.text_gray_medium}]} testID="userSummaryRewardsText">
               {!isPrivacyActive
                 ? totalRewards != null
-                  ? formatAdaWithText(
-                      asQuantity(totalRewards),
-                      wallet.portfolioPrimaryTokenInfo,
-                    )
+                  ? formatAdaWithText(asQuantity(totalRewards), wallet.portfolioPrimaryTokenInfo)
                   : '-'
                 : '******'}
             </Text>
@@ -94,25 +78,19 @@ export const UserSummary = ({
         <Space height="lg" />
 
         <View style={styles.row}>
-          <View style={styles.icon}>
-            <Icon.TotalDelegated
-              color={color.el_primary_medium}
-              size={ICON_DIM}
-            />
+          <View>
+            <Icon.TotalDelegated color={color.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
 
           <View style={styles.amountBlock}>
-            <Text style={styles.label}>{strings.delegatedLabel}:</Text>
+            <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.delegatedLabel}:</Text>
 
-            <Text bold style={styles.value} testID="userSummaryDelegatedText">
+            <Text bold style={[styles.value, {color: color.text_gray_medium}]} testID="userSummaryDelegatedText">
               {!isPrivacyActive
                 ? totalDelegated != null
-                  ? formatAdaWithText(
-                      asQuantity(totalDelegated),
-                      wallet.portfolioPrimaryTokenInfo,
-                    )
+                  ? formatAdaWithText(asQuantity(totalDelegated), wallet.portfolioPrimaryTokenInfo)
                   : '-'
                 : '******'}
             </Text>
@@ -137,34 +115,26 @@ export const UserSummary = ({
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    stats: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-    },
-    row: {
-      ...atoms.flex_1,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    icon: {},
-    amountBlock: {
-      ...atoms.flex_col,
-    },
-    label: {
-      color: color.text_gray_low,
-      ...atoms.body_3_sm_regular,
-    },
-    value: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_medium,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  stats: {
+    ...a.flex_1,
+    ...a.flex_col,
+  },
+  row: {
+    ...a.flex_1,
+    ...a.flex_row,
+    ...a.align_center,
+  },
+  amountBlock: {
+    ...a.flex_col,
+  },
+  label: {
+    ...a.body_3_sm_regular,
+  },
+  value: {
+    ...a.body_1_lg_medium,
+  },
+})
 
 const useStrings = () => {
   const intl = useIntl()

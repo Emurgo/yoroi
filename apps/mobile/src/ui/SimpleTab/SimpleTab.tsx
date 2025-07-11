@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity} from 'react-native'
 
@@ -9,30 +9,26 @@ type Props = {
 }
 
 export const SimpleTab = ({name, onPress, isActive}: Props) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.container, isActive && styles.containerActive]}>
-      <Text style={styles.text}>{name}</Text>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        styles.container,
+        {borderRadius: 8},
+        isActive && {backgroundColor: color.gray_200},
+      ]}
+    >
+      <Text style={[styles.text, {color: color.gray_max}]}>{name}</Text>
     </TouchableOpacity>
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.p_sm,
-      borderRadius: 8,
-    },
-    text: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_max,
-    },
-    containerActive: {
-      backgroundColor: color.gray_200,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  container: {
+    ...a.p_sm,
+  },
+  text: {
+    ...a.body_1_lg_medium,
+  },
+})

@@ -1,12 +1,12 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Explorers} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../components/Button/Button'
-import {Space} from '../../../components/Space/Space'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {Button, ButtonType} from '../Button/Button'
+import {Space} from '../Space/Space'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 
 export const ExplorerInfoLinks = ({
@@ -16,7 +16,7 @@ export const ExplorerInfoLinks = ({
   value: string
   type: keyof Explorers.Manager
 }) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
   const {wallet} = useSelectedWallet()
   const strings = useStrings()
 
@@ -26,7 +26,7 @@ export const ExplorerInfoLinks = ({
     <View>
       <Space width="sm" />
 
-      <Text style={styles.label}>{strings.details}</Text>
+      <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.details}</Text>
 
       <View style={styles.linkGroup}>
         {Object.entries(Explorers.Explorer).map(([title, explorer]) => (
@@ -47,23 +47,12 @@ export const ExplorerInfoLinks = ({
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    label: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_low,
-    },
-    linkGroup: {
-      ...atoms.flex_row,
-      ...atoms.gap_lg,
-    },
-  })
-
-  const colors = {
-    copy: color.gray_900,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  label: {
+    ...a.body_2_md_regular,
+  },
+  linkGroup: {
+    ...a.flex_row,
+    ...a.gap_lg,
+  },
+})

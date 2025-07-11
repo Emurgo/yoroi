@@ -1,15 +1,15 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
-import {QRs as QRsIllustration} from '../../illustrations/QRs'
-import {useMultipleAddressesInfo} from '../useMultipleAddressesInfo'
-import {useStrings} from '../useStrings'
+import {Button, ButtonType} from '../Button/Button'
+import {useModal} from '../Modal/ModalContext'
+import {Spacer} from '../Space/Space'
+import {useAddressMode} from '../../features/WalletManager/common/hooks/useAddressMode'
+import {QRs} from '../QRsIllustration/QRsIllustration'
+import {useMultipleAddressesInfo} from '../../features/Receive/common/useMultipleAddressesInfo'
+import {useStrings} from '../../features/Receive/common/useStrings'
 
 export const singleOrMultipleAddressesModalHeight = 580
 
@@ -18,13 +18,13 @@ type Props = {
 }
 
 export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {enableMultipleMode, enableSingleMode} = useAddressMode()
 
   const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
 
   const {closeModal} = useModal()
+  const {color} = useTheme()
 
   const handleOnMultiple = () => {
     enableMultipleMode()
@@ -48,9 +48,9 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
 
   return (
     <View style={styles.modal}>
-      <QRsIllustration />
+      <QRs />
 
-      <Text style={styles.details}>{strings.singleOrMultipleDetails}</Text>
+      <Text style={[styles.details, {color: color.text_gray_medium}]}>{strings.singleOrMultipleDetails}</Text>
 
       <Spacer fill height={16} />
 
@@ -67,30 +67,23 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    modal: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-      ...atoms.justify_between,
-      ...atoms.px_lg,
-      ...atoms.py_lg,
-    },
-    actions: {
-      ...atoms.flex_col,
-      ...atoms.gap_sm,
-      ...atoms.w_full,
-      height: 120,
-    },
-    details: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-      ...atoms.justify_center,
-      ...atoms.text_center,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  modal: {
+    ...a.flex_1,
+    ...a.align_center,
+    ...a.justify_between,
+    ...a.px_lg,
+    ...a.py_lg,
+  },
+  actions: {
+    ...a.flex_col,
+    ...a.gap_sm,
+    ...a.w_full,
+    height: 120,
+  },
+  details: {
+    ...a.body_1_lg_regular,
+    ...a.justify_center,
+    ...a.text_center,
+  },
+})

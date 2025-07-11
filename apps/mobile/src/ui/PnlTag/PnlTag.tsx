@@ -1,8 +1,8 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {type ViewProps, StyleSheet, Text, View} from 'react-native'
 
-import {Icon} from '../../../../components/Icon'
+import {Icon} from '../Icon'
 
 interface Props extends ViewProps {
   variant?: 'danger' | 'success' | 'neutral'
@@ -16,7 +16,7 @@ export const PnlTag = ({
   style,
   ...etc
 }: Props) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   const icon =
     variant === 'danger' ? (
@@ -26,74 +26,50 @@ export const PnlTag = ({
     )
 
   const textStyles = React.useMemo(() => {
-    if (variant === 'neutral') return [styles.label, styles.labelNeutral]
-    if (variant === 'success') return [styles.label, styles.labelSuccess]
-    return [styles.label, styles.labelDanger]
+    if (variant === 'neutral') return [styles.label, {color: color.gray_600}]
+    if (variant === 'success') return [styles.label, {color: color.secondary_700}]
+    return [styles.label, {color: color.sys_magenta_700}]
   }, [
     styles.label,
-    styles.labelDanger,
-    styles.labelNeutral,
-    styles.labelSuccess,
     variant,
+    color.gray_600,
+    color.secondary_700,
+    color.sys_magenta_700,
   ])
 
   const variantStyles = React.useMemo(() => {
     if (variant === 'neutral')
-      return [styles.pnlTagContainer, styles.pnlNeutral]
+      return [styles.pnlTagContainer, {backgroundColor: color.gray_100}]
     if (variant === 'success')
-      return [styles.pnlTagContainer, styles.pnlSuccess]
-    return [styles.pnlTagContainer, styles.pnlDanger]
+      return [styles.pnlTagContainer, {backgroundColor: color.secondary_100}]
+    return [styles.pnlTagContainer, {backgroundColor: color.sys_magenta_100}]
   }, [
-    styles.pnlDanger,
-    styles.pnlNeutral,
-    styles.pnlSuccess,
     styles.pnlTagContainer,
     variant,
+    color.gray_100,
+    color.secondary_100,
+    color.sys_magenta_100,
   ])
 
   return (
     <View style={[...variantStyles, style]} {...etc}>
       {withIcon && variant !== 'neutral' && icon}
 
-      <Text style={[styles.label, textStyles]}>{children}</Text>
+      <Text style={textStyles}>{children}</Text>
     </View>
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    pnlTagContainer: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      borderRadius: 999,
-      paddingHorizontal: 6,
-      paddingVertical: 3,
-    },
-    pnlSuccess: {
-      backgroundColor: color.secondary_100,
-    },
-    pnlDanger: {
-      backgroundColor: color.sys_magenta_100,
-    },
-    pnlNeutral: {
-      backgroundColor: color.gray_100,
-    },
-    label: {
-      ...atoms.body_3_sm_medium,
-    },
-    labelSuccess: {
-      color: color.secondary_700,
-    },
-    labelDanger: {
-      color: color.sys_magenta_700,
-    },
-    labelNeutral: {
-      color: color.gray_600,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  pnlTagContainer: {
+    ...a.flex,
+    ...a.flex_row,
+    ...a.align_center,
+    borderRadius: 999,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+  },
+  label: {
+    ...a.body_3_sm_medium,
+  },
+})

@@ -1,25 +1,23 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text} from 'react-native'
 
-import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {useCurrencyPairing} from '../../../../features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
 type Props = {rate: number; name: string}
 export const Rate = ({rate, name}: Props) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
   const {currency, config} = useCurrencyPairing()
 
   return (
-    <Text style={[styles.boxExchange]}>
-      <Text style={[styles.textWhite, styles.normalText]}>1 {name} = </Text>
+    <Text style={styles.boxExchange}>
+      <Text style={[styles.normalText, {color: color.white_static}]}>1 {name} = </Text>
 
-      <Text
-        style={[styles.textWhite, styles.normalText, styles.usdExchangeText]}
-      >
+      <Text style={[styles.normalText, styles.usdExchangeText, {color: color.white_static}]}>
         {rate.toFixed(config.decimals)}
       </Text>
 
-      <Text style={[styles.textWhite, styles.usdExchangeFiat]}>
+      <Text style={[styles.usdExchangeFiat, {color: color.white_static}]}>
         {' '}
         {currency}
       </Text>
@@ -27,27 +25,19 @@ export const Rate = ({rate, name}: Props) => {
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    textWhite: {
-      color: color.white_static,
-    },
-    normalText: {
-      ...atoms.body_2_md_regular,
-    },
-    boxExchange: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    usdExchangeText: {
-      ...atoms.font_semibold,
-      ...atoms.body_2_md_medium,
-    },
-    usdExchangeFiat: {
-      ...atoms.body_3_sm_regular,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  normalText: {
+    ...a.body_2_md_regular,
+  },
+  boxExchange: {
+    ...a.flex_row,
+    ...a.align_center,
+  },
+  usdExchangeText: {
+    ...a.font_semibold,
+    ...a.body_2_md_medium,
+  },
+  usdExchangeFiat: {
+    ...a.body_3_sm_regular,
+  },
+})

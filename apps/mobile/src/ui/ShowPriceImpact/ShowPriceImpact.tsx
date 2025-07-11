@@ -1,14 +1,14 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Icon} from '../../../../components/Icon'
-import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
-import {useStrings} from '../../common/strings'
+import {Icon} from '../Icon'
+import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
+import {useStrings} from '../../features/Swap/common/strings'
 
 export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {color} = useTheme()
 
   const priceImpactRisk = getPriceImpactRisk(priceImpact)
 
@@ -20,7 +20,7 @@ export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
   const formattedPriceImpact = `${Math.ceil(priceImpact * 100) / 100}%`
 
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, a.flex, a.flex_row, a.gap_2xs]}>
       {priceImpactRisk === 'moderate' && (
         <Icon.Info size={20} color={textColor} />
       )}
@@ -29,7 +29,7 @@ export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
         <Icon.Warning size={20} color={textColor} />
       )}
 
-      <Text style={[{color: textColor}, styles.text]}>
+      <Text style={[{color: textColor}, styles.text, a.body_2_md_regular]}>
         <Text>{strings.priceImpact}</Text>
 
         <Text> = </Text>
@@ -40,17 +40,7 @@ export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
   )
 }
 
-const useStyles = () => {
-  const {atoms} = useTheme()
-  const styles = StyleSheet.create({
-    row: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.gap_2xs,
-    },
-    text: {
-      ...atoms.body_2_md_regular,
-    },
-  })
-  return styles
-}
+const styles = StyleSheet.create({
+  row: {},
+  text: {},
+})

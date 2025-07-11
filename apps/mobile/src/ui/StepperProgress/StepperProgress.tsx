@@ -1,16 +1,9 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, ViewStyle} from 'react-native'
+import {StyleSheet, Text, ViewStyle} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
-import {CheckIllustration} from '../../features/SetupWallet/illustrations/Check'
-import {Number1} from './Number1'
-import {Number2} from './Number2'
-import {Number2Empty} from './Number2Empty'
-import {Number3} from './Number3'
-import {Number3Empty} from './Number3Empty'
-import {Number4} from './Number4'
-import {Number4Empty} from './Number4Empty'
+import {CheckIllustration} from '../CheckIllustration/CheckIllustration'
 
 type StepperProgressProps = {
   currentStep: number
@@ -20,21 +13,18 @@ type StepperProgressProps = {
 }
 
 export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, style}: StepperProgressProps) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   if (currentStep > totalSteps) throw new Error("StepperProgress: currentStep can't be greater that totalSteps")
-
-  // 4 non empty icons > 3 empty icons
-  if (4 < totalSteps) throw new Error('StepperProgress: not enough icons to cover total steps')
 
   const stepIndicatorFirstPart: Array<React.ReactNode> = Array.from({length: currentStep}).map((_, index) => {
     if (index <= currentStep - 2) return <CheckIllustration key={index} />
 
     return (
       <Animated.View key={index} style={styles.root}>
-        <Logo step={currentStep} />
+        <Text style={[styles.currentStepTitle, {color: color.el_primary_medium}]}>{currentStep}</Text>
 
-        <Animated.Text layout={Layout} style={styles.currentStepTitle}>
+        <Animated.Text layout={Layout} style={[styles.currentStepTitle, {color: color.text_primary_medium}]}>
           {currentStepTitle}
         </Animated.Text>
       </Animated.View>
@@ -42,7 +32,15 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
   })
 
   const stepIndicatorSecondPart: Array<React.ReactNode> = Array.from({length: totalSteps - currentStep}).map(
-    (_, index) => <Logo key={index + currentStep + 1} step={index + currentStep + 1} empty />,
+    (_, index) => (
+      <Animated.View key={index + currentStep + 1} style={styles.root}>
+        <Text style={[styles.currentStepTitle, {color: color.el_primary_medium}]}>{index + currentStep + 1}</Text>
+
+        <Animated.Text layout={Layout} style={[styles.currentStepTitle, {color: color.text_primary_medium}]}>
+          {currentStepTitle}
+        </Animated.Text>
+      </Animated.View>
+    ),
   )
 
   const stepIndicator = [...stepIndicatorFirstPart, ...stepIndicatorSecondPart]
@@ -54,42 +52,17 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
   )
 }
 
-const Logo = ({empty = false, step}: {empty?: boolean; step: number}) => {
-  const {colors} = useStyles()
-
-  if (empty && step === 2) return <Number2Empty color={colors.blue} />
-  if (empty && step === 3) return <Number3Empty color={colors.blue} />
-  if (empty && step === 4) return <Number4Empty color={colors.blue} />
-
-  if (step === 1) return <Number1 color={colors.blue} />
-  if (step === 2) return <Number2 color={colors.blue} />
-  if (step === 3) return <Number3 color={colors.blue} />
-  if (step === 4) return <Number4 color={colors.blue} />
-
-  return null
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flexDirection: 'row',
-      gap: 8,
-    },
-    bar: {
-      flexDirection: 'row',
-      gap: 16,
-      ...atoms.py_lg,
-    },
-    currentStepTitle: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_primary_medium,
-    },
-  })
-
-  const colors = {
-    blue: color.el_primary_medium,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  root: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  bar: {
+    flexDirection: 'row',
+    gap: 16,
+    ...a.py_lg,
+  },
+  currentStepTitle: {
+    ...a.body_1_lg_medium,
+  },
+})

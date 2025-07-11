@@ -1,8 +1,8 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Text} from '../../../../components/Text'
+import {Text} from '../Text/Text'
 
 type CounterTypes = {
   openingText?: string
@@ -18,25 +18,25 @@ export const Counter = ({
   closingText,
   style,
 }: CounterTypes & ViewProps) => {
-  const styles = useStyles()
+  const {color} = useTheme()
 
   return (
-    <View style={[styles.counter, style]}>
-      <Text style={styles.counterText}>{openingText}</Text>
+    <View style={[styles.counter, {backgroundColor: color.bg_color_max}, style]}>
+      <Text style={[styles.counterText, {color: color.primary_600}]}>{openingText}</Text>
 
       <Text>
-        <Text style={styles.counterTextBold}> {counter} </Text>
+        <Text style={[styles.counterTextBold, {color: color.primary_600}]}> {counter} </Text>
 
         {unitsText !== undefined && (
-          <Text style={styles.counterTextBold}> {unitsText ?? ''} </Text>
+          <Text style={[styles.counterTextBold, {color: color.primary_600}]}> {unitsText ?? ''} </Text>
         )}
 
         {closingText !== undefined && (
           <Text
             style={[
               openingText != undefined
-                ? styles.counterTextBold
-                : styles.counterText,
+                ? [styles.counterTextBold, {color: color.primary_600}]
+                : [styles.counterText, {color: color.primary_600}],
             ]}
           >
             {closingText ?? ''}
@@ -47,25 +47,16 @@ export const Counter = ({
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    counter: {
-      paddingTop: 16,
-      justifyContent: 'center',
-      flexDirection: 'row',
-      backgroundColor: color.bg_color_max,
-    },
-    counterText: {
-      ...atoms.body_2_md_regular,
-      color: color.primary_600,
-    },
-    counterTextBold: {
-      ...atoms.body_2_md_medium,
-      color: color.primary_600,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  counter: {
+    paddingTop: 16,
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  counterText: {
+    ...a.body_2_md_regular,
+  },
+  counterTextBold: {
+    ...a.body_2_md_medium,
+  },
+})

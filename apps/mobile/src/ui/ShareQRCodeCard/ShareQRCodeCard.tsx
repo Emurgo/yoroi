@@ -14,9 +14,9 @@ import QRCode from 'react-native-qrcode-svg'
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
-import {Spacer} from '../Spacer/Spacer'
-import {Text} from '../Text'
-import {CaptureShareQRCodeCard} from './CaptureShareQRCodeCard/CaptureShareQRCodeCard'
+import {Spacer} from '../Space/Space'
+import {Text} from '../Text/Text'
+import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {
   qrContent: string
@@ -37,7 +37,8 @@ export const ShareQRCodeCard = ({
   onShare,
   shareLabel,
 }: ShareQRCodeCardProps) => {
-  const {styles, colors, qrSize} = useStyles()
+  const {color} = useTheme()
+  const screenWidth = useWindowDimensions().width
 
   const [isSharing, setIsSharing] = React.useState(false)
   const ref: React.RefObject<ViewShot> = React.useRef(null)
@@ -76,32 +77,32 @@ export const ShareQRCodeCard = ({
   return (
     <TouchableWithoutFeedback onLongPress={onLongPress}>
       <>
-        <View style={styles.card}>
+        <View style={[styles.card, {width: screenWidth - 32}]}>
           <LinearGradient
             style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 16}]}
             start={{x: 0, y: 0}}
             end={{x: 0, y: 1}}
-            colors={colors.bgCard}
+            colors={color.bg_gradient_1}
           />
 
           <Spacer height={16} />
 
-          <Text style={styles.title} testID={`${testID}-title`}>
+          <Text style={[styles.title, {color: color.gray_max}]} testID={`${testID}-title`}>
             {title}
           </Text>
 
           <View style={styles.addressContainer}>
-            <View style={styles.qrCode} testID={`${testID}-qr`}>
-              <QRCode value={qrContent} size={qrSize} backgroundColor={colors.white} color={colors.black} />
+            <View style={[styles.qrCode, {backgroundColor: color.white_static}]}>
+              <QRCode value={qrContent} size={170} backgroundColor={color.white_static} color={color.black_static} />
             </View>
 
             <Spacer height={16} />
 
-            <Text style={styles.textAddress}>{qrContent}</Text>
+            <Text style={[styles.textAddress, {color: color.gray_max}]}>{qrContent}</Text>
           </View>
 
           <TouchableOpacity activeOpacity={0.5} onPress={handleOnPressShare} onLongPress={onLongPress}>
-            <Text style={styles.textShareAddress}>{shareLabel}</Text>
+            <Text style={[styles.textShareAddress, {color: color.gray_900}]}>{shareLabel}</Text>
           </TouchableOpacity>
         </View>
       </>
@@ -109,56 +110,36 @@ export const ShareQRCodeCard = ({
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const screenWidth = useWindowDimensions().width
-
-  const qrSize = 170
-
-  const styles = StyleSheet.create({
-    qrCode: {
-      backgroundColor: color.white_static,
-      padding: 10,
-      borderRadius: 8,
-    },
-    addressContainer: {
-      alignItems: 'center',
-    },
-    shot: {
-      height: 308,
-    },
-    card: {
-      ...atoms.gap_lg,
-      minHeight: 432,
-      width: screenWidth - 32,
-      ...atoms.align_center,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    title: {
-      ...atoms.heading_3_medium,
-      color: color.gray_max,
-    },
-    textAddress: {
-      textAlign: 'center',
-      ...atoms.body_2_md_medium,
-      color: color.gray_max,
-    },
-    textShareAddress: {
-      height: 32,
-      textAlignVertical: 'center',
-      color: color.gray_900,
-      ...atoms.button_2_md,
-      textTransform: 'uppercase',
-      letterSpacing: 0.5,
-    },
-  })
-
-  const colors = {
-    bgCard: color.bg_gradient_1,
-    white: color.white_static,
-    black: color.black_static,
-  }
-
-  return {styles, colors, qrSize} as const
-}
+const styles = StyleSheet.create({
+  qrCode: {
+    padding: 10,
+    borderRadius: 8,
+  },
+  addressContainer: {
+    alignItems: 'center',
+  },
+  shot: {
+    height: 308,
+  },
+  card: {
+    ...a.gap_lg,
+    minHeight: 432,
+    ...a.align_center,
+    ...a.flex_1,
+    ...a.px_lg,
+  },
+  title: {
+    ...a.heading_3_medium,
+  },
+  textAddress: {
+    textAlign: 'center',
+    ...a.body_2_md_medium,
+  },
+  textShareAddress: {
+    height: 32,
+    textAlignVertical: 'center',
+    ...a.button_2_md,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+})

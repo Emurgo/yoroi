@@ -1,10 +1,10 @@
 import {amountFormatter} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
-import {Space} from '../../../components/Space/Space'
+import {Space} from '../../../ui/Space/Space'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
@@ -17,10 +17,10 @@ const formatter = amountFormatter({
 
 export const InsufficientFundsModal = () => {
   const strings = useStrings()
-  const styles = useStyles()
   const {wallet} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const {fund} = useCatalystCurrentFund()
+  const {color} = useTheme()
 
   const fmtMinPrimaryBalance = formatter({
     info: wallet.portfolioPrimaryTokenInfo,
@@ -30,7 +30,7 @@ export const InsufficientFundsModal = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>
+      <Text style={[styles.text, {color: color.gray_max}]}>
         {strings.insufficientBalance({
           requiredBalance: fmtMinPrimaryBalance,
           currentBalance: fmtPrimaryBalance,
@@ -60,21 +60,14 @@ const useStrings = () => {
   }
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.px_lg,
-      ...atoms.flex_1,
-      ...atoms.gap_lg,
-      ...atoms.justify_between,
-    },
-    text: {
-      color: color.gray_max,
-      ...atoms.body_1_lg_regular,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  container: {
+    ...a.px_lg,
+    ...a.flex_1,
+    ...a.gap_lg,
+    ...a.justify_between,
+  },
+  text: {
+    ...a.body_1_lg_regular,
+  },
+})

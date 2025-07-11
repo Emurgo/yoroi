@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -8,41 +8,38 @@ type Props = {
   category: string
 }
 export const LabelCategoryDApp = ({category}: Props) => {
-  const {styles} = useStyles()
   const mappedStrings = useMappedStrings()
   const text = React.useMemo(
     () => mappedStrings(category) ?? category,
     [mappedStrings, category],
   )
+  const {color} = useTheme()
 
   return (
-    <View style={styles.labelContainer}>
-      <Text style={styles.labelText}>{text}</Text>
+    <View
+      style={[
+        styles.labelContainer,
+        {backgroundColor: color.bg_color_max},
+        {borderColor: color.el_primary_medium},
+      ]}
+    >
+      <Text style={[styles.labelText, {color: color.primary_600}]}>{text}</Text>
     </View>
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    labelContainer: {
-      borderRadius: 20,
-      backgroundColor: color.bg_color_max,
-      paddingVertical: 1,
-      paddingHorizontal: 6,
-      height: 24,
-      borderWidth: 2,
-      borderColor: color.el_primary_medium,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-    labelText: {
-      ...atoms.body_3_sm_medium,
-      color: color.primary_600,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  labelContainer: {
+    borderRadius: 20,
+    paddingVertical: 1,
+    paddingHorizontal: 6,
+    height: 24,
+    borderWidth: 2,
+    ...a.flex_row,
+    ...a.align_center,
+    ...a.justify_center,
+  },
+  labelText: {
+    ...a.body_3_sm_medium,
+  },
+})

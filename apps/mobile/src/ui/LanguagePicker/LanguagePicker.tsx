@@ -1,18 +1,18 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
-import {useLanguage} from '../../kernel/i18n'
+import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
 import {Icon} from '../Icon'
-import {Text} from '../Text'
-import {LanguagePickerWarning} from './LanguagePickerWarning'
+import {Text} from '../Text/Text'
+import {LanguagePickerWarning} from '../LanguagePickerWarning/LanguagePickerWarning'
 
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 
 export const LanguagePicker = () => {
-  const {styles, colors} = useStyles()
+  const {color} = useTheme()
   const language = useLanguage()
   const {languageCode, selectLanguageCode, supportedLanguages} = language
   const strings = useStrings()
@@ -31,16 +31,16 @@ export const LanguagePicker = () => {
     <View style={styles.languagePicker}>
       <FlatList
         data={filteredLanguages}
-        contentContainerStyle={styles.languageList}
+        contentContainerStyle={[styles.languageList, a.p_lg]}
         renderItem={({item: {label, code}}) => (
           <TouchableOpacity
-            style={styles.item}
+            style={[styles.item, a.py_lg]}
             onPress={() => selectLanguageCode(code)}
             testID={`languageSelect_${code}`}
           >
-            <Text style={styles.itemText}>{label}</Text>
+            <Text style={[styles.itemText, {color: color.gray_900}]}>{label}</Text>
 
-            {languageCode === code && <Icon.Check size={24} color={colors.icon} />}
+            {languageCode === code && <Icon.Check size={24} color={color.primary_600} />}
           </TouchableOpacity>
         )}
         ItemSeparatorComponent={() => <HR />}
@@ -53,42 +53,30 @@ export const LanguagePicker = () => {
 }
 
 const HR = (props: ViewProps) => {
-  const {styles} = useStyles()
-  return <View {...props} style={styles.hr} />
+  const {color} = useTheme()
+  return <View {...props} style={[styles.hr, {backgroundColor: color.gray_200}]} />
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    languagePicker: {
-      flex: 1,
-      alignItems: 'stretch',
-    },
-    languageList: {
-      alignItems: 'stretch',
-      ...atoms.p_lg,
-    },
-    hr: {
-      height: 1,
-      backgroundColor: color.gray_200,
-    },
-    item: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      ...atoms.py_lg,
-    },
-    itemText: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_900,
-    },
-  })
-  const colors = {
-    icon: color.primary_600,
-  }
-  return {styles, colors}
-}
+const styles = StyleSheet.create({
+  languagePicker: {
+    flex: 1,
+    alignItems: 'stretch',
+  },
+  languageList: {
+    alignItems: 'stretch',
+  },
+  hr: {
+    height: 1,
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  itemText: {
+    ...a.body_1_lg_medium,
+  },
+})
 
 const useStrings = () => {
   const intl = useIntl()

@@ -1,17 +1,17 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
-import {useCopy} from '../../../../components/Clipboard/ClipboardProvider'
-import {ShareQRCodeCard} from '../../../../components/ShareQRCodeCard/ShareQRCodeCard'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {isEmptyString} from '../../../../kernel/utils'
-import {useKeyHashes} from '../../../../wallets/hooks'
-import {useReceive} from '../ReceiveProvider'
+import {useCopy} from '../../../kernel/utils/clipboard'
+import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
+import {Spacer} from '../Space/Space'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {isEmptyString} from '../../../kernel/utils'
+import {useKeyHashes} from '../../../wallets/hooks'
+import {useReceive} from '../../features/Receive/common/ReceiveProvider'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
-import {useStrings} from '../useStrings'
+import {useStrings} from '../../features/Receive/common/useStrings'
 
 type AddressDetailCardProps = {
   title: string
@@ -33,10 +33,10 @@ type CardItem = {
 )
 
 export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
-  const {styles, colors} = useStyles()
   const {copy} = useCopy()
   const {track} = useMetrics()
   const strings = useStrings()
+  const {color} = useTheme()
 
   const {selectedAddress: address} = useReceive()
   const {spending, staking} = useKeyHashes({address})
@@ -133,7 +133,7 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
               styles.circle,
               {
                 backgroundColor:
-                  index === scrollPosition ? colors.active : colors.inactive,
+                  index === scrollPosition ? color.el_primary_medium : color.gray_300,
               },
             ]}
           />
@@ -143,32 +143,24 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.align_center,
-    },
-    container: {
-      borderRadius: 10,
-      ...atoms.flex_1,
-    },
-    index: {
-      ...atoms.flex_row,
-      gap: 6,
-    },
-    circle: {
-      width: 12,
-      height: 12,
-      borderRadius: 100,
-    },
-    contentContainer: {
-      gap: 10,
-    },
-  })
-  const colors = {
-    active: color.el_primary_medium,
-    inactive: color.gray_300,
-  }
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  root: {
+    ...a.align_center,
+  },
+  container: {
+    borderRadius: 10,
+    ...a.flex_1,
+  },
+  index: {
+    ...a.flex_row,
+    gap: 6,
+  },
+  circle: {
+    width: 12,
+    height: 12,
+    borderRadius: 100,
+  },
+  contentContainer: {
+    gap: 10,
+  },
+})

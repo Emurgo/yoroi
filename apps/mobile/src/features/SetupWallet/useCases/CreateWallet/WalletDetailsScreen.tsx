@@ -2,7 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
@@ -20,13 +20,13 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {Button} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {Space} from '../../../../components/Space/Space'
-import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
-import {TextInput} from '../../../../components/TextInput/TextInput'
+import {Button} from '../../../../ui/Button/Button'
+import {Icon} from '../../../../ui/Icon'
+import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView'
+import {useModal} from '../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../ui/Space/Space'
+import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
+import {TextInput} from '../../../../ui/TextInput'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
@@ -43,11 +43,11 @@ import {
 import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
+import {CardAboutPhrase} from '../../../../ui/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
-import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
+import {LearnMoreButton} from '../../../../ui/LearnMoreButton/LearnMoreButton'
 import {useStrings} from '../../common/useStrings'
-import {Info as InfoIcon} from '../../illustrations/Info'
+import {Info as InfoIcon} from '../../../../ui/InfoIcon/InfoIcon'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -78,7 +78,7 @@ const addressMode: Wallet.AddressMode = 'single'
 export const WalletDetailsScreen = () => {
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {color} = useTheme()
   const {track} = useMetrics()
   const bold = useBold()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
@@ -202,8 +202,8 @@ export const WalletDetailsScreen = () => {
     openModal({
       title: strings.walletDetailsModalTitle,
       content: (
-        <View style={styles.modal}>
-          <View style={styles.modalContent}>
+        <View style={[styles.modal, a.flex_1, a.px_lg, a.pb_lg]}>
+          <View style={[styles.modalContent, a.gap_lg]}>
             <CardAboutPhrase
               title={strings.walletNameModalCardTitle}
               linesOfText={[
@@ -223,7 +223,7 @@ export const WalletDetailsScreen = () => {
         </View>
       ),
       footer: (
-        <View style={styles.modalContent}>
+        <View style={[styles.modalContent, a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)
@@ -255,8 +255,6 @@ export const WalletDetailsScreen = () => {
     strings.walletPasswordModalCardFirstItem,
     strings.walletPasswordModalCardSecondItem,
     strings.walletPasswordModalCardTitle,
-    styles.modal,
-    styles.modalContent,
   ])
 
   React.useEffect(() => {
@@ -268,7 +266,7 @@ export const WalletDetailsScreen = () => {
     openModal({
       title: strings.walletDetailsModalTitle,
       content: (
-        <View style={styles.modal}>
+        <View style={[styles.modal, a.flex_1, a.px_lg, a.pb_lg]}>
           <CardAboutPhrase
             title={strings.walletChecksumModalCardTitle}
             checksumImage={seed}
@@ -282,7 +280,7 @@ export const WalletDetailsScreen = () => {
         </View>
       ),
       footer: (
-        <View style={styles.modalContent}>
+        <View style={[styles.modalContent, a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)
@@ -297,27 +295,27 @@ export const WalletDetailsScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.root}>
+    <KeyboardAvoidingView style={[styles.root, a.flex_1, {backgroundColor: color.bg_color_max}]}>
       <SafeAreaView
         edges={['left', 'right', 'bottom']}
-        style={styles.safeAreaView}
+        style={[styles.safeAreaView, a.flex_1, a.pb_lg]}
       >
         <StepperProgress
-          style={styles.steps}
+          style={[styles.steps, a.px_lg]}
           currentStep={4}
           currentStepTitle={strings.stepWalletDetails}
           totalSteps={4}
         />
 
-        <View style={styles.infoWrapper}>
-          <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
+        <View style={[styles.infoWrapper, {height: 24}, a.px_lg, a.flex_row]}>
+          <Text style={[styles.title, {color: color.text_gray_medium}, a.self_center, a.body_1_lg_regular]}>{strings.walletDetailsTitle(bold)}</Text>
 
           <Info onPress={showModalTipsPassword} />
         </View>
 
         <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={styles.content}
+          style={[styles.scroll, a.px_lg]}
+          contentContainerStyle={[styles.content, a.pt_lg, a.gap_lg]}
         >
           <TextInput
             enablesReturnKeyAutomatically
@@ -370,16 +368,16 @@ export const WalletDetailsScreen = () => {
             textContentType="oneTimeCode"
           />
 
-          <View style={styles.checksum}>
+          <View style={[styles.checksum, a.flex_row, a.align_center, a.justify_center, a.align_center]}>
             <Icon.WalletAvatar
               image={new Blockies({seed}).asBase64()}
-              style={styles.walletChecksum}
+              style={[styles.walletChecksum, {width: 24, height: 24}]}
               size={24}
             />
 
             <Space width="sm" />
 
-            <Text style={styles.plateNumber}>{plate}</Text>
+            <Text style={[styles.plateNumber, {color: color.text_gray_medium}, a.body_1_lg_regular, a.text_center, a.justify_center, a.align_center]}>{plate}</Text>
 
             <Space width="sm" />
 
@@ -387,7 +385,7 @@ export const WalletDetailsScreen = () => {
           </View>
         </ScrollView>
 
-        <Actions>
+        <Actions style={a.px_lg}>
           <Button
             title={strings.next}
             onPress={() => handleCreateWallet()}
@@ -417,80 +415,29 @@ const Info = ({onPress}: {onPress: () => void}) => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => {
-  const {styles} = useStyles()
-  return <View style={[styles.actions, style]} {...props} />
+  return <View style={style} {...props} />
 }
 
 const useBold = () => {
-  const {styles} = useStyles()
+  const {atoms} = useTheme()
 
   return {
-    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+    b: (text: React.ReactNode) => <Text style={atoms.body_1_lg_medium}>{text}</Text>,
   }
 }
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-    },
-    safeAreaView: {
-      ...atoms.flex_1,
-      ...atoms.pb_lg,
-    },
-    infoWrapper: {
-      height: 24,
-      ...atoms.px_lg,
-      ...atoms.flex_row,
-    },
-    modal: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.pb_lg,
-    },
-    modalContent: {
-      ...atoms.gap_lg,
-    },
-    title: {
-      color: color.text_gray_medium,
-      ...atoms.self_center,
-      ...atoms.body_1_lg_regular,
-    },
-    plateNumber: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
-      ...atoms.text_center,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    bolder: {
-      ...atoms.body_1_lg_medium,
-    },
-    checksum: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    walletChecksum: {
-      width: 24,
-      height: 24,
-    },
-    actions: {
-      ...atoms.px_lg,
-    },
-    scroll: {
-      ...atoms.px_lg,
-    },
-    content: {
-      ...atoms.pt_lg,
-      ...atoms.gap_lg,
-    },
-    steps: {
-      ...atoms.px_lg,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  root: {},
+  safeAreaView: {},
+  infoWrapper: {},
+  modal: {},
+  modalContent: {},
+  title: {},
+  plateNumber: {},
+  bolder: {},
+  checksum: {},
+  walletChecksum: {},
+  actions: {},
+  scroll: {},
+  content: {},
+  steps: {},
+})

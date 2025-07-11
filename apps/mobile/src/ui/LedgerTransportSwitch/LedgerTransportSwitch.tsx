@@ -1,13 +1,13 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, StyleSheet, View} from 'react-native'
 
 import {useStrings} from '../../features/Swap/common/strings'
-import {useIsUsbSupported} from '../../legacy/HW'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../wallets/hw/hw'
+import {useIsUsbSupported} from '../../../wallets/hw/hw'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../wallets/hw/hw'
 import {Button, ButtonType} from '../Button/Button'
 import {Spacer} from '../Spacer/Spacer'
-import {Text} from '../Text'
+import {Text} from '../Text/Text'
 
 type Props = {
   onSelectUSB: () => void
@@ -17,7 +17,7 @@ type Props = {
 const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
   const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
-  const styles = useStyles()
+  const {color} = useTheme()
 
   const {request} = useLedgerPermissions({
     onError: () => Alert.alert(strings.error, strings.bluetoothError),
@@ -47,33 +47,27 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
         testID="connectWithUSBButton"
       />
 
-      <Text style={styles.infoText}>{strings.usbConnectionIsBlocked}</Text>
+      <Text style={[styles.infoText, {color: color.gray_600}]}>{strings.usbConnectionIsBlocked}</Text>
     </View>
   )
 }
 
 export const LedgerTransportSwitch = LedgerTransportSwitchView
 
-const useStyles = () => {
-  const {atoms} = useTheme()
-  const styles = StyleSheet.create({
-    paragraph: {
-      marginBottom: 16,
-      fontSize: 14,
-      lineHeight: 22,
-    },
-    content: {
-      flex: 1,
-      marginBottom: 24,
-      ...atoms.px_lg,
-    },
-    infoText: {
-      paddingTop: 16,
-      flex: 1,
-      width: '100%',
-      color: '#6B7384',
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  paragraph: {
+    marginBottom: 16,
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  content: {
+    flex: 1,
+    marginBottom: 24,
+    ...a.px_lg,
+  },
+  infoText: {
+    paddingTop: 16,
+    flex: 1,
+    width: '100%',
+  },
+})

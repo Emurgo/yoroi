@@ -19,13 +19,28 @@ export const SwipeOutWrapper = ({
   onExpired,
   onPress,
 }: Props) => {
-  const {pan, panResponder, fadeIn, opacity, fadeOut, translateY} =
+  const {pan, panResponder, fadeIn, opacity, translateY} =
     usePanAnimation({onRelease: onSwipeOut, onPress})
   const onExpiredRef = React.useRef(onExpired)
   onExpiredRef.current = onExpired
 
-  const fadeOutRef = React.useRef(fadeOut)
-  fadeOutRef.current = fadeOut
+  const fadeOutRef = React.useRef(() => {
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: fadeInTime,
+        useNativeDriver: false,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      Animated.timing(translateY, {
+        toValue: -50,
+        duration: fadeInTime,
+        useNativeDriver: false,
+        easing: Easing.inOut(Easing.ease),
+      }),
+    ]).start()
+  })
+  fadeOutRef.current = fadeOutRef.current
 
   const {data: notificationConfig} = useNotificationsConfig()
   const displayDuration =
@@ -96,23 +111,6 @@ const usePanAnimation = ({
     ]).start()
   }, [opacity, translateY])
 
-  const fadeOut = React.useCallback(() => {
-    Animated.parallel([
-      Animated.timing(opacity, {
-        toValue: 0,
-        duration: fadeInTime,
-        useNativeDriver: false,
-        easing: Easing.inOut(Easing.ease),
-      }),
-      Animated.timing(translateY, {
-        toValue: -50,
-        duration: fadeInTime,
-        useNativeDriver: false,
-        easing: Easing.inOut(Easing.ease),
-      }),
-    ]).start()
-  }, [opacity, translateY])
-
   const panResponder = React.useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
@@ -153,5 +151,5 @@ const usePanAnimation = ({
     }),
   ).current
 
-  return {pan, panResponder, fadeIn, fadeOut, opacity, translateY}
+  return {pan, panResponder, fadeIn, opacity, translateY}
 }

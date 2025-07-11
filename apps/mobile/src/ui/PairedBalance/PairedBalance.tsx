@@ -1,5 +1,5 @@
 import {amountBreakdown, isPrimaryToken} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -38,13 +38,13 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>((props, ref)
 })
 
 const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
-  const styles = useStyles()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {isPrimaryTokenActive} = usePortfolio()
   const {
     selected: {networkManager},
   } = useWalletManager()
   const portfolioPrimaryTokenInfo = networkManager.primaryTokenInfo
+  const {color} = useTheme()
 
   const {
     currency: selectedCurrency,
@@ -89,7 +89,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
   ])
 
   return (
-    <Text style={[styles.pairedBalanceText, textStyle]} testID="pairedTotalText">
+    <Text style={[styles.pairedBalanceText, {color: color.text_gray_medium}, textStyle]} testID="pairedTotalText">
       {price}
     </Text>
   )
@@ -97,10 +97,10 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
 
 export const BalanceError = ({textStyle}: {textStyle?: TextStyle}) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {color} = useTheme()
   const {currency} = useCurrencyPairing()
 
-  return <Text style={[styles.pairedBalanceText, textStyle]}>{strings.pairedBalanceError(currency)}</Text>
+  return <Text style={[styles.pairedBalanceText, {color: color.text_gray_medium}, textStyle]}>{strings.pairedBalanceError(currency)}</Text>
 }
 
 const messages = defineMessages({
@@ -118,14 +118,8 @@ const useStrings = () => {
   }
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    pairedBalanceText: {
-      color: color.text_gray_medium,
-      ...atoms.body_3_sm_regular,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  pairedBalanceText: {
+    ...a.body_3_sm_regular,
+  },
+})

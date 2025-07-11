@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {
@@ -9,8 +9,8 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {Icon} from '../../../../../components/Icon'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Icon} from '../Icon'
+import {Spacer} from '../Space/Space'
 
 type AddTokenButtonProps = {
   onPress(): void
@@ -23,48 +23,44 @@ export const AddTokenButton = ({
   style,
 }: AddTokenButtonProps) => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {color} = useTheme()
 
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled}
       testID="addTokenButton"
-      style={[style, styles.button]}
+      style={[
+        style,
+        styles.button,
+        {borderColor: color.primary_600},
+        {backgroundColor: 'transparent'},
+      ]}
     >
-      <Icon.Plus size={26} color={colors.iconColor} />
+      <Icon.Plus size={26} color={color.primary_600} />
 
       <Spacer width={4} />
 
-      <Text style={styles.label}>{strings.addToken.toLocaleUpperCase()}</Text>
+      <Text style={[styles.label, {color: color.primary_600}]}>{strings.addToken.toLocaleUpperCase()}</Text>
     </TouchableOpacity>
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    label: {
-      color: color.primary_600,
-      ...atoms.button_2_md,
-      textTransform: 'none',
-    },
-    button: {
-      borderColor: color.primary_600,
-      borderRadius: 8,
-      flexDirection: 'row',
-      ...atoms.px_lg,
-      ...atoms.py_xs,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderWidth: 2,
-    },
-  })
-  const colors = {
-    iconColor: color.primary_600,
-  }
-  return {styles, colors}
-}
+const styles = StyleSheet.create({
+  label: {
+    ...a.button_2_md,
+    textTransform: 'none',
+  },
+  button: {
+    borderRadius: 8,
+    flexDirection: 'row',
+    ...a.px_lg,
+    ...a.py_xs,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+  },
+})
 
 const messages = defineMessages({
   addToken: {

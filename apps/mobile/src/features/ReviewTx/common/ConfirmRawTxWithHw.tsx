@@ -1,13 +1,14 @@
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {Text} from '../../../components/Text'
-import {LedgerConnect, LedgerTransportSwitch} from '../../../legacy/HW'
+import {Text} from '../../../ui/Text/Text'
+import {LedgerConnect} from '../../../ui/LedgerConnect/LedgerConnect'
+import {LedgerTransportSwitch} from '../../../ui/LedgerTransportSwitch/LedgerTransportSwitch'
 import {withBLE, withUSB} from '../../../wallets/hw/hwWallet'
-import {ActivityIndicator} from '../../Swap/common/ConfirmRawTx/ActivityIndicator'
+import {ActivityIndicator} from '../../../ui/ActivityIndicator/ActivityIndicator'
 import {useStrings} from '../../Swap/common/strings'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -26,7 +27,7 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
   const [step, setStep] = useState<Step>('select-transport')
   const {meta} = useSelectedWallet()
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {color} = useTheme()
   const {signRawWithHw} = useSignRawTxWithHw({onSuccess})
 
   const onSelectTransport = (transportType: TransportType) => {
@@ -73,33 +74,27 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
     <View style={styles.container}>
       <ActivityIndicator />
 
-      <Text style={styles.text}>{strings.continueOnLedger}</Text>
+      <Text style={[styles.text, {color: color.text_gray_medium}]}>{strings.continueOnLedger}</Text>
     </View>
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.gap_2xl,
-      ...atoms.px_lg,
-    },
-    scroll: {
-      ...atoms.px_lg,
-    },
-    text: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-      color: color.text_gray_medium,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  container: {
+    ...a.flex_1,
+    ...a.align_center,
+    ...a.justify_center,
+    ...a.gap_2xl,
+    ...a.px_lg,
+  },
+  scroll: {
+    ...a.px_lg,
+  },
+  text: {
+    ...a.body_1_lg_regular,
+    ...a.text_center,
+  },
+})
 
 export const useSignRawTxWithHw = (
   options?: UseMutationOptions<

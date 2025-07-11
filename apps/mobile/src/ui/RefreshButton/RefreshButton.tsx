@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, View, ViewStyle} from 'react-native'
 
@@ -9,7 +9,7 @@ export type RefreshButtonProps = Omit<PressableProps, 'style' | 'children'>
 export const RefreshButton = (props: RefreshButtonProps) => {
   const {disabled, onPress, ...rest} = props
 
-  const {styles, iconProps, iconPropsPressed} = useStyles({disabled})
+  const {color} = useTheme()
   const spin = React.useRef(new Animated.Value(0)).current
 
   const handleOnPress = (event: GestureResponderEvent) => {
@@ -31,12 +31,37 @@ export const RefreshButton = (props: RefreshButtonProps) => {
       transform: [{rotate}],
     }
   }
+
+  const backgroundColors: Colors = {idle: 'transparent', pressed: color.gray_100, disabled: 'transparent'}
+
+  const foregroundColors: Colors = {
+    idle: color.text_gray_medium,
+    pressed: color.text_gray_max,
+    disabled: color.text_gray_min,
+  }
+
+  const backgroundColor = disabled ? backgroundColors.disabled : backgroundColors.idle
+  const foregroundColor = disabled ? foregroundColors.disabled : foregroundColors.idle
+
+  const iconProps: IconProps = {
+    size: 20,
+    color: foregroundColor,
+  }
+
+  const iconPropsPressed: IconProps = {
+    size: iconProps.size,
+    color: foregroundColors.pressed,
+  }
+
   return (
     <Pressable
       {...rest}
       disabled={disabled}
       onPress={handleOnPress}
-      style={({pressed}) => [styles.container, pressed && styles.containerPressed]}
+      style={({pressed}) => [
+        styles.container,
+        {backgroundColor: pressed ? backgroundColors.pressed : backgroundColor},
+      ]}
     >
       {({pressed}) => (
         <View style={styles.iconWrapper}>
@@ -55,51 +80,20 @@ type Colors = {
   disabled: string
 }
 
-const useStyles = ({disabled}: Pick<RefreshButtonProps, 'disabled'>) => {
-  const {color, atoms} = useTheme()
-
-  const backgroundColors: Colors = {idle: 'transparent', pressed: color.gray_100, disabled: 'transparent'}
-
-  const foregroundColors: Colors = {
-    idle: color.text_gray_medium,
-    pressed: color.text_gray_max,
-    disabled: color.text_gray_min,
-  }
-
-  const backgroundColor = disabled ? backgroundColors.disabled : backgroundColors.idle
-  const foregroundColor = disabled ? foregroundColors.disabled : foregroundColors.idle
-
-  const shape: ViewStyle = {width: 26, height: 26, ...atoms.align_center, ...atoms.rounded_full}
-
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor,
-      ...atoms.flex,
-      ...atoms.flex_grow,
-      ...atoms.flex_row,
-      ...atoms.align_start,
-      ...atoms.justify_center,
-      ...shape,
-    },
-    containerPressed: {
-      backgroundColor: backgroundColors.pressed,
-    },
-    iconWrapper: {
-      ...atoms.justify_center,
-      height: 22,
-      overflow: 'visible',
-    },
-  })
-
-  const iconProps: IconProps = {
-    size: 20,
-    color: foregroundColor,
-  }
-
-  const iconPropsPressed: IconProps = {
-    size: iconProps.size,
-    color: foregroundColors.pressed,
-  }
-
-  return {styles, iconProps, iconPropsPressed} as const
-}
+const styles = StyleSheet.create({
+  container: {
+    ...a.flex,
+    ...a.flex_grow,
+    ...a.flex_row,
+    ...a.align_start,
+    ...a.justify_center,
+    width: 26,
+    height: 26,
+    ...a.rounded_full,
+  },
+  iconWrapper: {
+    ...a.justify_center,
+    height: 22,
+    overflow: 'visible',
+  },
+})

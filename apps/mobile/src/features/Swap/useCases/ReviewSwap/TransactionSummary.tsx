@@ -3,18 +3,18 @@ import _ from 'lodash'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Divider} from '../../../../components/Divider/Divider'
-import {Icon} from '../../../../components/Icon'
-import {Space} from '../../../../components/Space/Space'
-import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {Divider} from '../../../ui/Divider/Divider'
+import {Icon} from '../../../ui/Icon'
+import {Space} from '../../../ui/Space/Space'
+import {TokenAmountItem} from '../../../ui/TokenAmountItem/TokenAmountItem'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {
   PRICE_IMPACT_HIGH_RISK,
   PRICE_IMPACT_MODERATE_RISK,
   undefinedToken,
 } from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
-import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
+import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {SwapContext} from '../../common/SwapProvider'
 import {Splits} from '../CreateOrder/EstimateSummary'
@@ -22,7 +22,7 @@ import {ShowPriceImpact} from '../CreateOrder/ShowPriceImpact'
 
 export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {color, atoms} = useTheme()
   const {wallet} = useSelectedWallet()
   const {orderType} = swapForm
   const [showSplits, setShowSplits] = React.useState(false)
@@ -59,7 +59,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   )
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const priceImpactRiskTextColor =
-    orderType === 'market' ? priceImpactRiskTheme.text : styles.text.color
+    orderType === 'market' ? priceImpactRiskTheme.text : color.gray_900
 
   const tokenInTicker = tokenInInfo.ticker ?? tokenInInfo.name
   const tokenOutTicker = tokenOutInfo.ticker ?? tokenOutInfo.name
@@ -111,7 +111,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
           ? strings.marketPrice
           : strings.limitPriceWarningTitle,
       value: (
-        <Text style={[styles.text, styles.alignRight]}>{priceInfoValue}</Text>
+        <Text style={[styles.text, styles.alignRight, {color: color.gray_900}]}>{priceInfoValue}</Text>
       ),
     },
     {
@@ -121,17 +121,17 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     },
     {
       label: strings.swapMinAdaTitle,
-      value: <Text style={styles.text}>{minAdaInfoValue}</Text>,
+      value: <Text style={[styles.text, {color: color.gray_900}]}>{minAdaInfoValue}</Text>,
     },
     {
       label: strings.swapFeesTitle,
-      value: <Text style={styles.text}>{totalFee}</Text>,
+      value: <Text style={[styles.text, {color: color.gray_900}]}>{totalFee}</Text>,
     },
     {
       label: strings.swapMinReceivedTitle,
       value: (
         <View style={styles.flex}>
-          <Text style={[styles.text, styles.alignRight]}>
+          <Text style={[styles.text, styles.alignRight, {color: color.gray_900}]}>
             {minReceivedInfoValue}
           </Text>
         </View>
@@ -146,6 +146,10 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
           <View
             style={[
               styles.banner,
+              atoms.py_md,
+              atoms.px_lg,
+              atoms.rounded_sm,
+              atoms.gap_sm,
               {backgroundColor: priceImpactRiskTheme.background},
             ]}
           >
@@ -157,8 +161,8 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
               <Icon.Warning size={24} color={priceImpactRiskTextColor} />
             )}
 
-            <Text style={styles.bannerText}>
-              <Text style={[styles.bannerText, styles.bold]}>
+            <Text style={[styles.bannerText, {color: color.gray_900}]}>
+              <Text style={[styles.bannerText, styles.bold, atoms.body_2_md_medium]}>
                 {strings.priceImpactRiskHigh({
                   riskValue:
                     priceImpactRisk === 'moderate'
@@ -167,7 +171,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
                 })}
               </Text>
 
-              <Text style={styles.bannerText}>
+              <Text style={[styles.bannerText, {color: color.gray_900}]}>
                 {' '}
                 {strings.priceImpactDescription(priceImpactRisk)}
               </Text>
@@ -177,13 +181,13 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
       <Space height="lg" />
 
-      <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
+      <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>{strings.swapFrom}</Text>
 
       <TokenAmountItem amount={amountIn} orderType={orderType} />
 
       <Space height="lg" />
 
-      <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
+      <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>{strings.swapTo}</Text>
 
       <TokenAmountItem
         amount={amountOut}
@@ -193,7 +197,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
       <Divider verticalSpace="lg" />
 
-      <Text style={styles.detailsTitle}>{strings.swapDetailsTitle}</Text>
+      <Text style={[styles.detailsTitle, {color: color.text_gray_medium}]}>{strings.swapDetailsTitle}</Text>
 
       {feesInfo.map((orderInfo) => {
         if (orderInfo?.hidden) {
@@ -204,14 +208,14 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
           <View key={orderInfo.label}>
             <Space height="sm" />
 
-            <View style={styles.flexBetween}>
-              <View style={styles.flex}>
-                <Text style={[styles.text, styles.gray]}>
+            <View style={[styles.flexBetween, atoms.flex_row, atoms.justify_between, atoms.align_start]}>
+              <View style={[styles.flex, atoms.flex_row, atoms.align_center]}>
+                <Text style={[styles.text, styles.gray, {color: color.gray_700}]}>
                   {orderInfo.label}
                 </Text>
               </View>
 
-              <View style={styles.orderValueContainer}>{orderInfo.value}</View>
+              <View style={[styles.orderValueContainer, atoms.flex_row, atoms.align_end, atoms.justify_end, atoms.pl_sm, atoms.flex_1]}>{orderInfo.value}</View>
             </View>
           </View>
         )
@@ -220,64 +224,28 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    alignRight: {
-      ...atoms.text_right,
-    },
-    flexBetween: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_start,
-    },
-    flex: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    text: {
-      ...atoms.text_left,
-      ...atoms.body_1_lg_regular,
-      color: color.gray_900,
-    },
-    gray: {
-      color: color.gray_700,
-    },
-    amountItemLabel: {
-      fontSize: 12,
-      color: color.gray_900,
-      ...atoms.pb_sm,
-    },
-    orderValueContainer: {
-      ...atoms.flex_row,
-      ...atoms.align_end,
-      ...atoms.justify_end,
-      ...atoms.pl_sm,
-      ...atoms.flex_1,
-    },
-    banner: {
-      ...atoms.py_md,
-      ...atoms.px_lg,
-      ...atoms.rounded_sm,
-      ...atoms.gap_sm,
-    },
-    bannerText: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_900,
-    },
-    bold: {
-      ...atoms.body_2_md_medium,
-    },
-    detailsTitle: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-  })
-
-  const colors = {
-    icon: color.gray_max,
-    gradientColor: color.bg_gradient_3,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  alignRight: {
+    ...a.text_right,
+  },
+  flexBetween: {},
+  flex: {},
+  text: {
+    ...a.text_left,
+    ...a.body_1_lg_regular,
+  },
+  gray: {},
+  amountItemLabel: {
+    fontSize: 12,
+    ...a.pb_sm,
+  },
+  orderValueContainer: {},
+  banner: {},
+  bannerText: {
+    ...a.body_2_md_regular,
+  },
+  bold: {},
+  detailsTitle: {
+    ...a.body_1_lg_medium,
+  },
+})

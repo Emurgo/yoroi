@@ -8,9 +8,9 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
-import {useModal} from '../../../components/Modal/ModalContext'
+import {useModal} from '../../../ui/Modal/ModalContext'
 import {useStrings} from './hooks/useStrings'
-import {TokenDetails} from './TokenDetails'
+import {TokenDetails} from '../../../ui/TokenDetails/TokenDetails'
 
 export const TokenItem = ({
   tokenInfo,
@@ -23,10 +23,10 @@ export const TokenItem = ({
   isSent?: boolean
   label: string
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
+  const {color} = useTheme()
 
   const handleShowTokenDetails = () => {
     openModal({
@@ -44,6 +44,7 @@ export const TokenItem = ({
         style={[
           styles.receivedTokenItem,
           !isPrimaryToken && styles.notPrimaryReceivedTokenItem,
+          !isPrimaryToken && {backgroundColor: color.secondary_100},
         ]}
         disabled={isPrimaryToken}
       >
@@ -51,6 +52,7 @@ export const TokenItem = ({
           style={[
             styles.tokenReceivedItemText,
             !isPrimaryToken && styles.notPrimaryReceivedTokenItemText,
+            !isPrimaryToken && {color: color.secondary_700},
           ]}
         >
           {label}
@@ -65,6 +67,7 @@ export const TokenItem = ({
       style={[
         styles.sentTokenItem,
         !isPrimaryToken && styles.notPrimarySentTokenItem,
+        !isPrimaryToken && {backgroundColor: color.primary_100},
       ]}
       disabled={isPrimaryToken}
     >
@@ -72,6 +75,7 @@ export const TokenItem = ({
         style={[
           styles.tokenSentItemText,
           !isPrimaryToken && styles.notPrimarySentTokenItemText,
+          !isPrimaryToken && {color: color.text_primary_medium},
         ]}
       >
         {label}
@@ -80,48 +84,35 @@ export const TokenItem = ({
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    sentTokenItem: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.py_xs,
-      ...atoms.px_md,
-      borderRadius: 8,
-      backgroundColor: color.primary_500,
-    },
-    receivedTokenItem: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.py_xs,
-      ...atoms.px_md,
-      borderRadius: 8,
-      backgroundColor: color.secondary_300,
-    },
-    tokenSentItemText: {
-      ...atoms.body_2_md_regular,
-      color: color.white_static,
-    },
-    tokenReceivedItemText: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_max,
-    },
-    notPrimarySentTokenItem: {
-      backgroundColor: color.primary_100,
-    },
-    notPrimaryReceivedTokenItem: {
-      backgroundColor: color.secondary_100,
-    },
-    notPrimarySentTokenItemText: {
-      color: color.text_primary_medium,
-    },
-    notPrimaryReceivedTokenItemText: {
-      color: color.secondary_700,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  sentTokenItem: {
+    ...a.flex,
+    ...a.flex_row,
+    ...a.align_center,
+    ...a.py_xs,
+    ...a.px_md,
+    borderRadius: 8,
+    backgroundColor: color.primary_500,
+  },
+  receivedTokenItem: {
+    ...a.flex,
+    ...a.flex_row,
+    ...a.align_center,
+    ...a.py_xs,
+    ...a.px_md,
+    borderRadius: 8,
+    backgroundColor: color.secondary_300,
+  },
+  tokenSentItemText: {
+    ...a.body_2_md_regular,
+    color: color.white_static,
+  },
+  tokenReceivedItemText: {
+    ...a.body_2_md_regular,
+    color: color.text_gray_max,
+  },
+  notPrimarySentTokenItem: {},
+  notPrimaryReceivedTokenItem: {},
+  notPrimarySentTokenItemText: {},
+  notPrimaryReceivedTokenItemText: {},
+})

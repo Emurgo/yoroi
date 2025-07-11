@@ -1,5 +1,5 @@
 import {useCatalyst} from '@yoroi/staking'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
@@ -17,23 +17,23 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '../../../../assets/img/app-store-badge.png'
 import playstoreBadge from '../../../../assets/img/google-play-badge.png'
-import {Button} from '../../../../components/Button/Button'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {Space} from '../../../../components/Space/Space'
+import {Button} from '../../../../ui/Button/Button'
+import {useModal} from '../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../ui/Space/Space'
 import {useStakingInfo} from '../../../../legacy/Dashboard/StakePoolInfos'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Row, Stepper} from '../../common/components'
 import {useCatalystCurrentFund} from '../../common/hooks'
 import {useStrings} from '../../common/strings'
-import {CatalystStep1} from '../../illustrations/CatalystStep1'
+import {CatalystStep1} from '../../../ui/CatalystStep1Illustration/CatalystStep1Illustration'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const {openModal, closeModal} = useModal()
-  const styles = useStyles()
+  const {color} = useTheme()
   const {fund} = useCatalystCurrentFund()
   const intl = useIntl()
   const navigateTo = useNavigateTo()
@@ -83,21 +83,21 @@ export const DownloadCatalystAppScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[styles.safeAreaView, {backgroundColor: color.bg_color_max}, a.px_lg, a.pb_lg]}
     >
       <Stepper title={strings.title} currentStep={1} totalSteps={3} />
 
       <ScrollView
         bounces={false}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[styles.contentContainer, a.align_center]}
       >
         <CatalystStep1 />
 
         <Space height="lg" />
 
-        <Text style={styles.subTitle}>{strings.subTitle}</Text>
+        <Text style={[styles.subTitle, {color: color.text_gray_medium}]}>{strings.subTitle}</Text>
 
-        <Text style={styles.tip}>{strings.tip}</Text>
+        <Text style={[styles.tip, {color: color.text_gray_medium}]}>{strings.tip}</Text>
 
         <Space height="lg" />
 
@@ -132,25 +132,25 @@ export const DownloadCatalystAppScreen = () => {
 }
 
 const FundInfo = ({children}: {children: React.ReactNode}) => {
-  const styles = useStyles()
-  return <View style={styles.fundInfo}>{children}</View>
+  const {color} = useTheme()
+  return <View style={[styles.fundInfo, a.self_start]}>{children}</View>
 }
 const FundName = ({children}: {children: React.ReactNode}) => {
-  const styles = useStyles()
-  return <Text style={styles.fundName}>{children}</Text>
+  const {color} = useTheme()
+  return <Text style={[styles.fundName, {color: color.text_gray_medium}]}>{children}</Text>
 }
 const FundText = ({children}: {children: React.ReactNode}) => {
-  const styles = useStyles()
-  return <Text style={styles.fundText}>{children}</Text>
+  const {color} = useTheme()
+  return <Text style={[styles.fundText, {color: color.text_gray_medium}]}>{children}</Text>
 }
 
 const WarningModal = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {color} = useTheme()
 
   return (
-    <View style={styles.modal}>
-      <Text style={styles.text}>{strings.stakingKeyNotRegistered}</Text>
+    <View style={[styles.modal, a.px_lg, a.flex_1]}>
+      <Text style={[styles.text, {color: color.text_gray_medium}]}>{strings.stakingKeyNotRegistered}</Text>
 
       <Space height="md" />
 
@@ -189,48 +189,19 @@ const AppStoreButton = () => {
 
 const createPin = () => cryptoRandomString({length: 4, type: 'numeric'})
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.pb_lg,
-    },
-    modal: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    contentContainer: {
-      ...atoms.align_center,
-    },
-    tip: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-    },
-    fundInfo: {
-      ...atoms.self_start,
-    },
-    fundName: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_medium,
-    },
-    fundText: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    text: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    subTitle: {
-      ...atoms.heading_3_medium,
-      ...atoms.text_center,
-      color: color.text_gray_medium,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  safeAreaView: {},
+  modal: {},
+  contentContainer: {},
+  tip: {},
+  fundInfo: {},
+  fundName: {},
+  fundText: {},
+  text: {
+    ...a.body_1_lg_regular,
+  },
+  subTitle: {
+    ...a.heading_3_medium,
+    ...a.text_center,
+  },
+})

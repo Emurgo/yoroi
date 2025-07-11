@@ -3,10 +3,10 @@ import * as React from 'react'
 import {Linking, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Analytics} from '../../components/Analytics/Analytics'
+import {Analytics} from '../../ui/Analytics/Analytics'
 
 export const ToggleAnalyticsSettingsScreen = () => {
-  const styles = useStyles()
+  const {color} = useTheme()
   const onReadMore = () => {
     Linking.openURL(
       'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/7594394140303-What-s-user-insights-',
@@ -14,20 +14,17 @@ export const ToggleAnalyticsSettingsScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={[styles.container, {backgroundColor: color.bg_color_max}]}
+    >
       <Analytics type="settings" onReadMore={onReadMore} />
     </SafeAreaView>
   )
 }
 
-const useStyles = () => {
-  const {color} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+})

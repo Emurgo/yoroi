@@ -1,46 +1,38 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Space} from '../../../../components/Space/Space'
-import {YoroiLogo} from '../../illustrations/YoroiLogo'
-import {useStrings} from '../useStrings'
+import {Space} from '../Space/Space'
+import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
+import {useStrings} from '../../features/SetupWallet/common/useStrings'
 
 export const LogoBanner = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, {backgroundColor: color.bg_color_max}]}>
       <YoroiLogo />
 
-      <Text style={styles.title}>{strings.logoTitle}</Text>
+      <Text style={[styles.title, {color: color.primary_500}]}>{strings.logoTitle}</Text>
 
       <Space height="sm" />
 
-      <Text style={styles.subtitle}>{strings.logoSubtitle}</Text>
+      <Text style={[styles.subtitle, {color: color.gray_900}]}>{strings.logoSubtitle}</Text>
     </View>
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      alignItems: 'center',
-      backgroundColor: color.bg_color_max,
-    },
-    title: {
-      color: color.primary_500,
-      textAlign: 'center',
-      ...atoms.heading_1_medium,
-    },
-    subtitle: {
-      color: color.gray_900,
-      textAlign: 'center',
-      ...atoms.body_2_md_regular,
-    },
-  })
-
-  return {styles} as const
-}
+const styles = StyleSheet.create({
+  root: {
+    alignItems: 'center',
+  },
+  title: {
+    textAlign: 'center',
+    ...a.heading_1_medium,
+  },
+  subtitle: {
+    textAlign: 'center',
+    ...a.body_2_md_regular,
+  },
+})

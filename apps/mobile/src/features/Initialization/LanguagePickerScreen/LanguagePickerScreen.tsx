@@ -3,29 +3,22 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {LanguagePicker} from '../../../components/LanguagePicker/LanguagePicker'
+import {LanguagePicker} from '../../../ui/LanguagePicker/LanguagePicker'
 
 export const LanguagePickerScreen = () => {
-  const styles = useStyles()
+  const {color} = useTheme()
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[styles.safeAreaView, {backgroundColor: color.bg_color_max}]}
     >
       <LanguagePicker />
     </SafeAreaView>
   )
 }
 
-const useStyles = () => {
-  const {color} = useTheme()
-
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
+})

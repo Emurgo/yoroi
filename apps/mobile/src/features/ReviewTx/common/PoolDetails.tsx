@@ -1,23 +1,23 @@
 import {FullPoolInfo} from '@emurgo/yoroi-lib'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Copiable} from '../../../components/Clipboard/Copiable'
-import {Space} from '../../../components/Space/Space'
+import {Copiable} from '../../../ui/Copiable'
+import {Space} from '../../../ui/Space/Space'
 import {isEmptyString} from '../../../kernel/utils'
 import {formatTokenWithText} from '../../../wallets/utils/format'
 import {asQuantity, Quantities} from '../../../wallets/utils/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {ExplorerInfoLinks} from './ExplorerInfoLinks'
+import {ExplorerInfoLinks} from '../../../ui/ExplorerInfoLinks/ExplorerInfoLinks'
 import {useStrings} from './hooks/useStrings'
 import {generatePoolName} from './operations'
 
 export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
+  const {color} = useTheme()
 
   const {chain, explorer} = poolInfo
 
@@ -31,7 +31,7 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
       <Space height="sm" />
 
       <Row>
-        <Text style={styles.title}>{poolName}</Text>
+        <Text style={[styles.title, {color: color.text_gray_medium}]}>{poolName}</Text>
       </Row>
 
       <Space height="xl" />
@@ -107,8 +107,6 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
 }
 
 const PoolIcon = ({imageUrl}: {imageUrl: string | null | undefined}) => {
-  const {styles} = useStyles()
-
   if (imageUrl == null) return null
 
   return (
@@ -119,40 +117,40 @@ const PoolIcon = ({imageUrl}: {imageUrl: string | null | undefined}) => {
 }
 
 const PoolId = ({poolId}: {poolId: string | undefined}) => {
-  const {styles} = useStyles()
   const strings = useStrings()
+  const {color} = useTheme()
 
   if (isEmptyString(poolId)) return null
 
   return (
     <Row>
-      <Text style={styles.label}>{strings.poolId}</Text>
+      <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.poolId}</Text>
 
       <Space width="lg" />
 
       <View style={styles.copiableText}>
         <Copiable text={poolId}>
-          <Text style={styles.value}>{poolId}</Text>
+          <Text style={[styles.value, {color: color.text_gray_max}]}>{poolId}</Text>
         </Copiable>
       </View>
     </Row>
   )
 }
 const PoolHash = ({poolHash}: {poolHash?: string}) => {
-  const {styles} = useStyles()
   const strings = useStrings()
+  const {color} = useTheme()
 
   if (isEmptyString(poolHash)) return null
 
   return (
     <Row>
-      <Text style={styles.label}>{strings.poolHash}</Text>
+      <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.poolHash}</Text>
 
       <Space width="lg" />
 
       <View style={styles.copiableText}>
         <Copiable text={poolHash}>
-          <Text style={styles.value}>{poolHash}</Text>
+          <Text style={[styles.value, {color: color.text_gray_max}]}>{poolHash}</Text>
         </Copiable>
       </View>
     </Row>
@@ -160,67 +158,53 @@ const PoolHash = ({poolHash}: {poolHash?: string}) => {
 }
 
 const Info = ({label, value}: {label: string; value?: string}) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   if (isEmptyString(value)) return null
 
   return (
     <Row>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, {color: color.text_gray_low}]}>{label}</Text>
 
-      <Text style={styles.value}>{value}</Text>
+      <Text style={[styles.value, {color: color.text_gray_max}]}>{value}</Text>
     </Row>
   )
 }
 
 const Row = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
   return <View style={styles.row}>{children}</View>
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    imageContainer: {
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    image: {
-      width: 80,
-      height: 80,
-    },
-    label: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_low,
-    },
-    value: {
-      ...atoms.flex_1,
-      ...atoms.text_right,
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_max,
-    },
-    copiableText: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-    },
-    row: {
-      ...atoms.flex_row,
-      ...atoms.justify_center,
-    },
-    title: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_medium,
-    },
-  })
-
-  const colors = {
-    copy: color.gray_900,
-  }
-
-  return {styles, colors} as const
-}
+const styles = StyleSheet.create({
+  root: {
+    ...a.flex_1,
+    ...a.px_lg,
+  },
+  imageContainer: {
+    ...a.justify_center,
+    ...a.align_center,
+  },
+  image: {
+    width: 80,
+    height: 80,
+  },
+  label: {
+    ...a.body_2_md_regular,
+  },
+  value: {
+    ...a.flex_1,
+    ...a.text_right,
+    ...a.body_2_md_regular,
+  },
+  copiableText: {
+    ...a.flex_1,
+    ...a.align_center,
+  },
+  row: {
+    ...a.flex_row,
+    ...a.justify_center,
+  },
+  title: {
+    ...a.body_1_lg_medium,
+  },
+})
