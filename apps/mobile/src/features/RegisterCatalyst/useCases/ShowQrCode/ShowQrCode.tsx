@@ -4,13 +4,13 @@ import * as React from 'react'
 import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../ui/Button/Button'
-import {Checkbox} from '../../../../ui/Checkbox/Checkbox'
-import {useCopy} from '../../../../kernel/utils/clipboard'
-import {ShareQRCodeCard} from '../../../../ui/ShareQRCodeCard/ShareQRCodeCard'
-import {Space} from '../../../../ui/Space/Space'
 import {useAllowScreenshot} from '../../../../hooks/useAllowScreenShot'
 import {useBlockGoBack} from '../../../../kernel/navigation'
+import {useCopy} from '../../../../kernel/utils/clipboard'
+import {Button} from '../../../../ui/Button/Button'
+import {Checkbox} from '../../../../ui/Checkbox/Checkbox'
+import {ShareQRCodeCard} from '../../../../ui/ShareQRCodeCard/ShareQRCodeCard'
+import {Space} from '../../../../ui/Space/Space'
 import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description} from '../../common/components'
 import {useStrings} from '../../common/strings'
@@ -40,9 +40,16 @@ export const QrCode = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[styles.safeAreaView, {backgroundColor: color.bg_color_max}, a.pb_lg]}
+      style={[
+        styles.safeAreaView,
+        {backgroundColor: color.bg_color_max},
+        a.pb_lg,
+      ]}
     >
-      <ScrollView bounces={false} contentContainerStyle={[styles.padding, a.px_lg]}>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={[styles.padding, a.px_lg]}
+      >
         <ShareQRCodeCard
           title={strings.step4QrTitle}
           qrContent={votingKeyEncrypted}

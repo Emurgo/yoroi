@@ -4,8 +4,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Button} from '../../../ui/Button/Button'
 import {SafeArea} from '../../../ui/SafeArea/SafeArea'
-import {Space} from '../../../ui/Space/Space'
-import {Spacer} from '../../../ui/Space/Space'
+import {Space, Spacer} from '../../../ui/Space/Space'
 import {SuccessfulTxIcon} from '../../../ui/SuccessfulTxIcon/SuccessfulTxIcon'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
@@ -32,9 +31,13 @@ export const SubmittedTxScreen = () => {
 
       <Space height="lg" />
 
-      <Text style={[styles.title, {color: color.gray_max}]}>{strings.submittedTxScreenTitle}</Text>
+      <Text style={[styles.title, {color: color.gray_max}]}>
+        {strings.submittedTxScreenTitle}
+      </Text>
 
-      <Text style={[styles.text, {color: color.gray_600}]}>{strings.submittedTxScreenText}</Text>
+      <Text style={[styles.text, {color: color.gray_600}]}>
+        {strings.submittedTxScreenText}
+      </Text>
 
       <Space fill />
 
@@ -52,7 +55,11 @@ export const SubmittedTxScreen = () => {
 const Actions = ({children}: {children: React.ReactNode}) => {
   const {color} = useTheme()
 
-  return <View style={[styles.actions, {borderTopColor: color.gray_200}]}>{children}</View>
+  return (
+    <View style={[styles.actions, {borderTopColor: color.gray_200}]}>
+      {children}
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({

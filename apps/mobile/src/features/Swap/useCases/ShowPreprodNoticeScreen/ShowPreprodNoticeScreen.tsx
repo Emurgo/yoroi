@@ -11,12 +11,19 @@ export const ShowPreprodNoticeScreen = () => {
   const {color} = useTheme()
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={[styles.container, {backgroundColor: color.bg_color_max}]}>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[styles.container, {backgroundColor: color.bg_color_max}]}
+    >
       <PreprodNoticeScreenLogo />
 
-      <Text style={[styles.title, {color: color.gray_900}]}>{strings.preprodNoticeTitle}</Text>
+      <Text style={[styles.title, {color: color.gray_900}]}>
+        {strings.preprodNoticeTitle}
+      </Text>
 
-      <Text style={[styles.text, {color: color.text_gray_medium}]}>{strings.preprodNoticeText}</Text>
+      <Text style={[styles.text, {color: color.text_gray_medium}]}>
+        {strings.preprodNoticeText}
+      </Text>
     </SafeAreaView>
   )
 }

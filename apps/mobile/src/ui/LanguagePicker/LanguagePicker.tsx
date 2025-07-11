@@ -1,13 +1,19 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewProps,
+} from 'react-native'
 
-import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
 import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
+import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
 import {Icon} from '../Icon'
-import {Text} from '../Text/Text'
 import {LanguagePickerWarning} from '../LanguagePickerWarning/LanguagePickerWarning'
+import {Text} from '../Text/Text'
 
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 
@@ -38,23 +44,32 @@ export const LanguagePicker = () => {
             onPress={() => selectLanguageCode(code)}
             testID={`languageSelect_${code}`}
           >
-            <Text style={[styles.itemText, {color: color.gray_900}]}>{label}</Text>
+            <Text style={[styles.itemText, {color: color.gray_900}]}>
+              {label}
+            </Text>
 
-            {languageCode === code && <Icon.Check size={24} color={color.primary_600} />}
+            {languageCode === code && (
+              <Icon.Check size={24} color={color.primary_600} />
+            )}
           </TouchableOpacity>
         )}
         ItemSeparatorComponent={() => <HR />}
         keyExtractor={(item) => item.code}
       />
 
-      <LanguagePickerWarning enabled={!INCLUDED_LANGUAGE_CODES.includes(languageCode)} key={languageCode} />
+      <LanguagePickerWarning
+        enabled={!INCLUDED_LANGUAGE_CODES.includes(languageCode)}
+        key={languageCode}
+      />
     </View>
   )
 }
 
 const HR = (props: ViewProps) => {
   const {color} = useTheme()
-  return <View {...props} style={[styles.hr, {backgroundColor: color.gray_200}]} />
+  return (
+    <View {...props} style={[styles.hr, {backgroundColor: color.gray_200}]} />
+  )
 }
 
 const styles = StyleSheet.create({

@@ -1,23 +1,21 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {
   ActivityIndicator,
   Image,
   ImageSourcePropType,
   ScrollView,
-  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {ProgressStep} from '../../../../components/ProgressStep'
-import {TextInput} from '../../../../components/TextInput/TextInput'
+import {defineMessages, useIntl} from 'react-intl'
 import globalMessages from '../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {Button} from '../../../../ui/Button/Button'
+import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {TextInput} from '../../../../ui/TextInput/TextInput'
 import {
   getWalletNameError,
   validateWalletName,
@@ -49,7 +47,7 @@ export const WalletNameForm = ({
   isWaiting = false,
 }: Props) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const [name, setName] = React.useState(defaultWalletName ?? '')
   const {track} = useMetrics()
   const {walletManager} = useWalletManager()
@@ -73,7 +71,7 @@ export const WalletNameForm = ({
   )
 
   return (
-    <View style={styles.root}>
+    <View style={[{flex: 1}, {backgroundColor: p.bg_color_max}]}>
       <KeyboardAvoidingView style={{flex: 1}}>
         {progress != null && (
           <ProgressStep
@@ -84,8 +82,21 @@ export const WalletNameForm = ({
         )}
 
         <ScrollView style={{flex: 1}} bounces={false}>
-          <View style={[styles.container, containerStyle]}>
-            <View style={styles.heading}>
+          <View
+            style={[
+              {paddingVertical: 24, paddingHorizontal: 16, flex: 1},
+              containerStyle,
+            ]}
+          >
+            <View
+              style={[
+                {
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 16,
+                },
+              ]}
+            >
               {image != null && <Image source={image} />}
             </View>
 
@@ -107,7 +118,7 @@ export const WalletNameForm = ({
           </View>
         </ScrollView>
 
-        <View style={styles.buttonContainer}>
+        <View style={[{flexDirection: 'row', marginTop: 12}]}>
           <Button
             onPress={() => onSubmit({name: name.trim()})}
             title={strings.save}
@@ -120,32 +131,6 @@ export const WalletNameForm = ({
       </KeyboardAvoidingView>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    container: {
-      paddingVertical: 24,
-      paddingHorizontal: 16,
-      flex: 1,
-    },
-    heading: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 16,
-    },
-    buttonContainer: {
-      flexDirection: 'row',
-      marginTop: 12,
-    },
-  })
-
-  return styles
 }
 
 const messages = defineMessages({

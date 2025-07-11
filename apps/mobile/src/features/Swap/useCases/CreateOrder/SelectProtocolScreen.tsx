@@ -5,10 +5,10 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {undefinedToken} from '../../common/constants'
 import {Counter} from '../../../ui/Counter/Counter'
 import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {undefinedToken} from '../../common/constants'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 
@@ -42,7 +42,10 @@ export const SelectProtocolScreen = () => {
   const counter = data.length
 
   return (
-    <SafeAreaView style={[styles.root, {backgroundColor: color.bg_color_max}]} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView
+      style={[styles.root, {backgroundColor: color.bg_color_max}]}
+      edges={['left', 'right', 'bottom']}
+    >
       <FlatList
         contentContainerStyle={[styles.list, a.p_lg, a.gap_md]}
         data={data}
@@ -75,16 +78,23 @@ export const SelectProtocolScreen = () => {
                   styles.border,
                 !(item.protocol === swapForm.selectedProtocol.value) &&
                   a.border,
-                !(item.protocol === swapForm.selectedProtocol.value) &&
-                  {borderColor: color.gray_200},
+                !(item.protocol === swapForm.selectedProtocol.value) && {
+                  borderColor: color.gray_200,
+                },
               ]}
             >
-              <View style={[styles.row, a.flex_row, a.justify_between, a.gap_md]}>
+              <View
+                style={[styles.row, a.flex_row, a.justify_between, a.gap_md]}
+              >
                 <ProtocolAvatar protocol={item.protocol} preventOpenLink />
               </View>
 
-              <View style={[styles.row, a.flex_row, a.justify_between, a.gap_md]}>
-                <Text style={[styles.rowLabel, {color: color.text_gray_low}]}>{strings.price}</Text>
+              <View
+                style={[styles.row, a.flex_row, a.justify_between, a.gap_md]}
+              >
+                <Text style={[styles.rowLabel, {color: color.text_gray_low}]}>
+                  {strings.price}
+                </Text>
 
                 <Text
                   style={[styles.rowValue, {color: color.text_gray_medium}]}
@@ -93,8 +103,12 @@ export const SelectProtocolScreen = () => {
                 )} ${tokenOutTicker}`}</Text>
               </View>
 
-              <View style={[styles.row, a.flex_row, a.justify_between, a.gap_md]}>
-                <Text style={[styles.rowLabel, {color: color.text_gray_low}]}>{strings.batcherFee}</Text>
+              <View
+                style={[styles.row, a.flex_row, a.justify_between, a.gap_md]}
+              >
+                <Text style={[styles.rowLabel, {color: color.text_gray_low}]}>
+                  {strings.batcherFee}
+                </Text>
 
                 <Text
                   style={[styles.rowValue, {color: color.text_gray_medium}]}

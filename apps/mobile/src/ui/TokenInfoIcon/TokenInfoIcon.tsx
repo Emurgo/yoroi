@@ -5,8 +5,8 @@ import {Image} from 'expo-image'
 import React from 'react'
 import {ImageStyle, StyleSheet, View} from 'react-native'
 
-import {Icon} from '../Icon'
 import {usePortfolioImage} from '../../Portfolio/common/hooks/usePortfolioImage'
+import {Icon} from '../Icon'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info | undefined | null
@@ -29,7 +29,9 @@ export const TokenInfoIcon = ({
 
   if (!info || isError) {
     return (
-      <View style={[styles.icon, styles[size], {backgroundColor: color.gray_200}]}>
+      <View
+        style={[styles.icon, styles[size], {backgroundColor: color.gray_200}]}
+      >
         <Icon.Coins2
           color={color.gray_600}
           size={{sm: 18, md: 20, lg: 24, xl: 42}[size]}
@@ -40,7 +42,14 @@ export const TokenInfoIcon = ({
 
   if (isPrimaryToken(info))
     return (
-      <View style={[styles.icon, styles[size], {backgroundColor: color.primary_500}, imageStyle]}>
+      <View
+        style={[
+          styles.icon,
+          styles[size],
+          {backgroundColor: color.primary_500},
+          imageStyle,
+        ]}
+      >
         <Icon.Cardano
           color="white"
           size={{sm: 20, md: 28, lg: 35, xl: 70}[size]}

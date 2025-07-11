@@ -11,7 +11,8 @@ export const Line = ({backgroundColor}: Props) => {
     <View
       style={{
         ...styles.container,
-        backgroundColor: backgroundColor != null ? backgroundColor : color.gray_700,
+        backgroundColor:
+          backgroundColor != null ? backgroundColor : color.gray_700,
       }}
     />
   )

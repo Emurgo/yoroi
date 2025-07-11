@@ -41,7 +41,9 @@ export const AddTokenButton = ({
 
       <Spacer width={4} />
 
-      <Text style={[styles.label, {color: color.primary_600}]}>{strings.addToken.toLocaleUpperCase()}</Text>
+      <Text style={[styles.label, {color: color.primary_600}]}>
+        {strings.addToken.toLocaleUpperCase()}
+      </Text>
     </TouchableOpacity>
   )
 }

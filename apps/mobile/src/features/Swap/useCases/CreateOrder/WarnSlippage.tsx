@@ -22,8 +22,12 @@ export const WarnSlippage = ({onConfirm, slippage, ticker}: Props) => {
   const minReceived = `0 ${ticker}`
 
   return (
-    <View style={[styles.container, a.flex_1, a.justify_between, a.px_lg, a.pb_lg]}>
-      <Text style={[styles.description, {color: color.text_gray_medium}]}>{strings.slippageWarningText}</Text>
+    <View
+      style={[styles.container, a.flex_1, a.justify_between, a.px_lg, a.pb_lg]}
+    >
+      <Text style={[styles.description, {color: color.text_gray_medium}]}>
+        {strings.slippageWarningText}
+      </Text>
 
       <Spacer height={16} />
 
@@ -33,23 +37,57 @@ export const WarnSlippage = ({onConfirm, slippage, ticker}: Props) => {
             {strings.slippageWarningYourSlippage}
           </Text>
 
-          <View style={[styles.textWrapper, a.flex_row, a.justify_end, a.align_end, a.flex_1, a.flex_wrap, a.gap_xs]}>
-            <Text style={[styles.value, {color: color.text_gray_max}]}>{slippageTolerance}</Text>
+          <View
+            style={[
+              styles.textWrapper,
+              a.flex_row,
+              a.justify_end,
+              a.align_end,
+              a.flex_1,
+              a.flex_wrap,
+              a.gap_xs,
+            ]}
+          >
+            <Text style={[styles.value, {color: color.text_gray_max}]}>
+              {slippageTolerance}
+            </Text>
           </View>
         </View>
 
         <View style={[styles.row, a.flex_row, a.justify_between, a.gap_md]}>
-          <Text style={[styles.label, {color: color.text_gray_medium}]}>{strings.swapMinReceivedTitle}</Text>
+          <Text style={[styles.label, {color: color.text_gray_medium}]}>
+            {strings.swapMinReceivedTitle}
+          </Text>
 
-          <View style={[styles.textWrapper, a.flex_row, a.justify_end, a.align_end, a.flex_1, a.flex_wrap, a.gap_xs]}>
-            <Text style={[styles.value, {color: color.text_gray_max}]}>{minReceived}</Text>
+          <View
+            style={[
+              styles.textWrapper,
+              a.flex_row,
+              a.justify_end,
+              a.align_end,
+              a.flex_1,
+              a.flex_wrap,
+              a.gap_xs,
+            ]}
+          >
+            <Text style={[styles.value, {color: color.text_gray_max}]}>
+              {minReceived}
+            </Text>
           </View>
         </View>
       </View>
 
       <Spacer fill />
 
-      <View style={[styles.actions, a.align_center, a.justify_between, a.flex_row, a.gap_lg]}>
+      <View
+        style={[
+          styles.actions,
+          a.align_center,
+          a.justify_between,
+          a.flex_row,
+          a.gap_lg,
+        ]}
+      >
         <Button
           testID="swapCancelButton"
           size="S"

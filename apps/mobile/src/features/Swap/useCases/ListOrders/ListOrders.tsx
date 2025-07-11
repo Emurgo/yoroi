@@ -18,24 +18,23 @@ import {Divider} from 'react-native-paper'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {Boundary} from '../../../ui/Boundary/Boundary'
-import {Button, ButtonType} from '../../../ui/Button/Button'
-import {Icon} from '../../../ui/Icon'
-import {useModal} from '../../../ui/Modal/ModalContext'
-import {RefreshButton} from '../../../ui/RefreshButton/RefreshButton'
-import {Space} from '../../../ui/Space/Space'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
-import {TokenAmountItem} from '../../../ui/TokenAmountItem/TokenAmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
+import {Boundary} from '../../../ui/Boundary/Boundary'
+import {Button, ButtonType} from '../../../ui/Button/Button'
 import {Counter} from '../../../ui/Counter/Counter'
 import {EmptyCompletedOrdersIllustration} from '../../../ui/EmptyCompletedOrdersIllustration/EmptyCompletedOrdersIllustration'
 import {EmptyOpenOrdersIllustration} from '../../../ui/EmptyOpenOrdersIllustration/EmptyOpenOrdersIllustration'
-import {useNavigateTo} from '../../common/navigation'
+import {Icon} from '../../../ui/Icon'
+import {useModal} from '../../../ui/Modal/ModalContext'
 import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
+import {RefreshButton} from '../../../ui/RefreshButton/RefreshButton'
 import {ServiceUnavailable} from '../../../ui/ServiceUnavailable/ServiceUnavailable'
+import {Space} from '../../../ui/Space/Space'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
+import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 
@@ -57,8 +56,23 @@ export const ListOrders = () => {
   })
 
   return (
-    <View style={[styles.root, a.p_lg, a.gap_lg, {backgroundColor: color.bg_color_max}]}>
-      <View style={[styles.group, a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
+    <View
+      style={[
+        styles.root,
+        a.p_lg,
+        a.gap_lg,
+        {backgroundColor: color.bg_color_max},
+      ]}
+    >
+      <View
+        style={[
+          styles.group,
+          a.flex_row,
+          a.gap_md,
+          a.justify_center,
+          a.align_center,
+        ]}
+      >
         <View>
           <Button
             onPress={() => setFilter('open')}
@@ -66,7 +80,9 @@ export const ListOrders = () => {
             title={strings.openOrders}
             size="M"
             fontOverride={a.body_1_lg_medium}
-            {...(filter === 'open' && {style: [styles.activeButton, {backgroundColor: color.gray_100}]})}
+            {...(filter === 'open' && {
+              style: [styles.activeButton, {backgroundColor: color.gray_100}],
+            })}
           />
         </View>
 
@@ -77,7 +93,9 @@ export const ListOrders = () => {
             title={strings.completedOrders}
             size="M"
             fontOverride={a.body_1_lg_medium}
-            {...(filter === 'completed' && {style: [styles.activeButton, {backgroundColor: color.gray_100}]})}
+            {...(filter === 'completed' && {
+              style: [styles.activeButton, {backgroundColor: color.gray_100}],
+            })}
           />
         </View>
 
@@ -189,19 +207,40 @@ const Order = ({order}: {order: Swap.Order}) => {
   const shortenedTxHash = `${truncateString({value: lastTxHash, maxLength: 22})}#${order.outputIndex ?? 0}`
 
   return (
-    <View style={[styles.card, a.p_lg, a.border, {borderRadius: 8, borderColor: color.gray_200, backgroundColor: color.bg_color_max}]}>
+    <View
+      style={[
+        styles.card,
+        a.p_lg,
+        a.border,
+        {
+          borderRadius: 8,
+          borderColor: color.gray_200,
+          backgroundColor: color.bg_color_max,
+        },
+      ]}
+    >
       <TouchableOpacity onPress={() => setExpanded(!expanded)}>
-        <View style={[styles.cardHeader, a.flex_row, a.justify_between, a.pb_md]}>
-          <View style={[styles.composedText, a.flex_row, a.align_center, a.gap_sm]}>
+        <View
+          style={[styles.cardHeader, a.flex_row, a.justify_between, a.pb_md]}
+        >
+          <View
+            style={[styles.composedText, a.flex_row, a.align_center, a.gap_sm]}
+          >
             <TokenInfoIcon info={tokenInInfo} size="sm" />
 
-            <Text style={[styles.heading, {color: color.text_gray_medium}]}>{tokenName(tokenInInfo)}</Text>
+            <Text style={[styles.heading, {color: color.text_gray_medium}]}>
+              {tokenName(tokenInInfo)}
+            </Text>
 
-            <Text style={[styles.heading, {color: color.text_gray_medium}]}>/</Text>
+            <Text style={[styles.heading, {color: color.text_gray_medium}]}>
+              /
+            </Text>
 
             <TokenInfoIcon info={tokenOutInfo} size="sm" />
 
-            <Text style={[styles.heading, {color: color.text_gray_medium}]}>{tokenName(tokenOutInfo)}</Text>
+            <Text style={[styles.heading, {color: color.text_gray_medium}]}>
+              {tokenName(tokenOutInfo)}
+            </Text>
           </View>
 
           <Icon.Chevron
@@ -348,7 +387,15 @@ const OrderCancellation = ({
           onPress={closeModal}
         />
       ) : (
-        <View style={[styles.group, a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
+        <View
+          style={[
+            styles.group,
+            a.flex_row,
+            a.gap_md,
+            a.justify_center,
+            a.align_center,
+          ]}
+        >
           <Button
             type={ButtonType.Secondary}
             title={strings.listOrdersSheetBack}
@@ -392,7 +439,9 @@ const OrderCancellationConfirmation = ({
   if (isLeft(response))
     return (
       <View style={styles.root}>
-        <Text style={[styles.errorMessage, {color: color.text_warning}]}>{response.error.message}</Text>
+        <Text style={[styles.errorMessage, {color: color.text_warning}]}>
+          {response.error.message}
+        </Text>
       </View>
     )
 
@@ -401,7 +450,10 @@ const OrderCancellationConfirmation = ({
   return (
     <View style={styles.root}>
       <React.Fragment>
-        <Row label={strings.route} value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />} />
+        <Row
+          label={strings.route}
+          value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />}
+        />
 
         <Row label={strings.listOrdersSheetAssetPrice} value={price} />
 
@@ -436,10 +488,14 @@ const Row = ({
 
   return (
     <View style={[styles.row, a.flex_row, a.justify_between]}>
-      <Text style={[styles.rowLabel, {color: color.text_gray_low}]}>{label}</Text>
+      <Text style={[styles.rowLabel, {color: color.text_gray_low}]}>
+        {label}
+      </Text>
 
       {typeof value === 'string' ? (
-        <Text style={[styles.rowValue, {color: color.text_gray_medium}]}>{value}</Text>
+        <Text style={[styles.rowValue, {color: color.text_gray_medium}]}>
+          {value}
+        </Text>
       ) : (
         value
       )}
@@ -453,10 +509,18 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
   const {color} = useTheme()
 
   return (
-    <View style={[styles.notOrdersYetContainer, a.text_center, a.gap_lg, a.pt_2xl]}>
+    <View
+      style={[styles.notOrdersYetContainer, a.text_center, a.gap_lg, a.pt_2xl]}
+    >
       {filter === 'open' ? (
         <React.Fragment>
-          <EmptyOpenOrdersIllustration style={[styles.illustration, a.flex_1, {alignSelf: 'center', width: 280, height: 224}]} />
+          <EmptyOpenOrdersIllustration
+            style={[
+              styles.illustration,
+              a.flex_1,
+              {alignSelf: 'center', width: 280, height: 224},
+            ]}
+          />
 
           <Text style={[styles.contentText, {color: color.gray_max}]}>
             {isSearching
@@ -472,7 +536,13 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <EmptyCompletedOrdersIllustration style={[styles.illustration, a.flex_1, {alignSelf: 'center', width: 280, height: 224}]} />
+          <EmptyCompletedOrdersIllustration
+            style={[
+              styles.illustration,
+              a.flex_1,
+              {alignSelf: 'center', width: 280, height: 224},
+            ]}
+          />
 
           <Text style={[styles.contentText, {color: color.gray_max}]}>
             {isSearching
@@ -529,7 +599,9 @@ const Details = ({
 
   return (
     <View>
-      <Text style={[styles.amountItemLabel, {color: color.text_gray_medium}]}>{strings.swapFrom}</Text>
+      <Text style={[styles.amountItemLabel, {color: color.text_gray_medium}]}>
+        {strings.swapFrom}
+      </Text>
 
       <View style={[styles.token, a.flex_row, a.align_center]}>
         <Left>
@@ -559,13 +631,17 @@ const Details = ({
         </Middle>
 
         <Right style={styles.end}>
-          <Text style={[styles.quantity, {color: color.gray_900}]}>{amountOutStr}</Text>
+          <Text style={[styles.quantity, {color: color.gray_900}]}>
+            {amountOutStr}
+          </Text>
         </Right>
       </View>
 
       <Space height="lg" />
 
-      <Text style={[styles.amountItemLabel, {color: color.text_gray_medium}]}>{strings.swapTo}</Text>
+      <Text style={[styles.amountItemLabel, {color: color.text_gray_medium}]}>
+        {strings.swapTo}
+      </Text>
 
       <View style={[styles.token, a.flex_row, a.align_center]}>
         <Left>
@@ -595,7 +671,9 @@ const Details = ({
         </Middle>
 
         <Right style={styles.end}>
-          <Text style={[styles.quantity, {color: color.gray_900}]}>{amountInStr}</Text>
+          <Text style={[styles.quantity, {color: color.gray_900}]}>
+            {amountInStr}
+          </Text>
         </Right>
       </View>
 

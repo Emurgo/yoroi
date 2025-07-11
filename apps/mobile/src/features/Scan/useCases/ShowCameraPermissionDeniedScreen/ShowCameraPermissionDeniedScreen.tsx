@@ -1,18 +1,18 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {openSettings} from 'react-native-permissions'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../ui/Button/Button'
-import {Spacer} from '../../../ui/Space/Space'
-import {Text as YoroiText} from '../../../ui/Text/Text'
 import {
   useBlockGoBack,
   useWalletNavigation,
 } from '../../../../kernel/navigation'
-import {useStrings} from '../../common/useStrings'
+import {Button} from '../../../ui/Button/Button'
 import {CameraPermissionDeniedIllustration} from '../../../ui/CameraPermissionDeniedIllustration/CameraPermissionDeniedIllustration'
+import {Spacer} from '../../../ui/Space/Space'
+import {Text as YoroiText} from '../../../ui/Text/Text'
+import {useStrings} from '../../common/useStrings'
 
 export const ShowCameraPermissionDeniedScreen = () => {
   const strings = useStrings()
@@ -25,12 +25,22 @@ export const ShowCameraPermissionDeniedScreen = () => {
       edges={['top', 'left', 'right', 'bottom']}
       style={[styles.container, {backgroundColor: color.bg_color_max}]}
     >
-      <ScrollView contentContainerStyle={[styles.scroll, {flex: 1, alignItems: 'center', justifyContent: 'center'}]} bounces={false}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scroll,
+          {flex: 1, alignItems: 'center', justifyContent: 'center'},
+        ]}
+        bounces={false}
+      >
         <CameraPermissionDeniedIllustration />
 
-        <YoroiText style={[styles.title, {color: color.gray_max}]}>{strings.cameraPermissionDeniedTitle}</YoroiText>
+        <YoroiText style={[styles.title, {color: color.gray_max}]}>
+          {strings.cameraPermissionDeniedTitle}
+        </YoroiText>
 
-        <YoroiText style={[styles.help, {color: color.gray_600}]}>{strings.cameraPermissionDeniedHelp}</YoroiText>
+        <YoroiText style={[styles.help, {color: color.gray_600}]}>
+          {strings.cameraPermissionDeniedHelp}
+        </YoroiText>
       </ScrollView>
 
       <Actions style={[styles.actions, a.py_lg]}>

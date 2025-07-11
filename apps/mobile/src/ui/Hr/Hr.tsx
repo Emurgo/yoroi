@@ -4,7 +4,12 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 
 export const Hr = ({style, ...rest}: ViewProps) => {
   const {color} = useTheme()
-  return <View {...rest} style={[styles.hr, {backgroundColor: color.gray_200}, style]} />
+  return (
+    <View
+      {...rest}
+      style={[styles.hr, {backgroundColor: color.gray_200}, style]}
+    />
+  )
 }
 
 const styles = StyleSheet.create({

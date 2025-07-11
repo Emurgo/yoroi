@@ -2,9 +2,12 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, StyleSheet, View} from 'react-native'
 
+import {
+  HARDWARE_WALLETS,
+  useIsUsbSupported,
+  useLedgerPermissions,
+} from '../../../wallets/hw/hw'
 import {useStrings} from '../../features/Swap/common/strings'
-import {useIsUsbSupported} from '../../../wallets/hw/hw'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../wallets/hw/hw'
 import {Button, ButtonType} from '../Button/Button'
 import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text/Text'
@@ -43,11 +46,15 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
         type={ButtonType.Secondary}
         onPress={onSelectUSB}
         title={strings.usbButton}
-        disabled={!isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
+        disabled={
+          !isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
+        }
         testID="connectWithUSBButton"
       />
 
-      <Text style={[styles.infoText, {color: color.gray_600}]}>{strings.usbConnectionIsBlocked}</Text>
+      <Text style={[styles.infoText, {color: color.gray_600}]}>
+        {strings.usbConnectionIsBlocked}
+      </Text>
     </View>
   )
 }

@@ -20,7 +20,9 @@ export const WarnLimitPrice = ({
   const {color} = useTheme()
 
   return (
-    <View style={[styles.container, a.justify_between, a.flex_1, a.px_lg, a.pb_lg]}>
+    <View
+      style={[styles.container, a.justify_between, a.flex_1, a.px_lg, a.pb_lg]}
+    >
       <View>
         <Text style={[styles.description, {color: color.text_gray_medium}]}>
           {strings.limitPriceWarningDescription}
@@ -34,7 +36,17 @@ export const WarnLimitPrice = ({
               {strings.limitPriceWarningYourPrice}
             </Text>
 
-            <View style={[styles.textWrapper, a.flex_1, a.flex_row, a.justify_end, a.align_end, a.flex_wrap, a.gap_xs]}>
+            <View
+              style={[
+                styles.textWrapper,
+                a.flex_1,
+                a.flex_row,
+                a.justify_end,
+                a.align_end,
+                a.flex_wrap,
+                a.gap_xs,
+              ]}
+            >
               <Text
                 style={[styles.value, {color: color.text_gray_max}]}
               >{`1 ${tokenInTicker} = ${wantedPrice} ${tokenOutTicker}`}</Text>
@@ -46,7 +58,17 @@ export const WarnLimitPrice = ({
               {strings.limitPriceWarningMarketPrice}
             </Text>
 
-            <View style={[styles.textWrapper, a.flex_1, a.flex_row, a.justify_end, a.align_end, a.flex_wrap, a.gap_xs]}>
+            <View
+              style={[
+                styles.textWrapper,
+                a.flex_1,
+                a.flex_row,
+                a.justify_end,
+                a.align_end,
+                a.flex_wrap,
+                a.gap_xs,
+              ]}
+            >
               <Text
                 style={[styles.value, {color: color.text_gray_max}]}
               >{`1 ${tokenInTicker} = ${marketPrice} ${tokenOutTicker}`}</Text>

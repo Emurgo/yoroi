@@ -12,15 +12,15 @@ import {
   View,
 } from 'react-native'
 
+import {isEmptyString} from '../../../kernel/utils'
 import {useCopy} from '../../../kernel/utils/clipboard'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {Copiable} from '../Copiable'
+import {ExplorerInfoLinks} from '../ExplorerInfoLinks/ExplorerInfoLinks'
 import {Icon} from '../Icon'
 import {SimpleTab} from '../SimpleTab/SimpleTab'
 import {Space} from '../Space/Space'
-import {isEmptyString} from '../../../kernel/utils'
 import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {ExplorerInfoLinks} from '../ExplorerInfoLinks/ExplorerInfoLinks'
 import {useStrings} from './hooks/useStrings'
 
 export const TokenDetails = ({
@@ -57,10 +57,16 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
 
       <Space height="sm" />
 
-      {!isEmptyString(title) && <Text style={[styles.headerText, {color: color.text_gray_medium}]}>{title}</Text>}
+      {!isEmptyString(title) && (
+        <Text style={[styles.headerText, {color: color.text_gray_medium}]}>
+          {title}
+        </Text>
+      )}
 
       {!isPrimaryTokenInfo(info) && (
-        <Text style={[styles.headerText, {color: color.text_gray_medium}]}>{`(${assetName})`}</Text>
+        <Text
+          style={[styles.headerText, {color: color.text_gray_medium}]}
+        >{`(${assetName})`}</Text>
       )}
 
       <Space height="xl" />
@@ -97,7 +103,11 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
     )
 
   if (isPrimaryTokenInfo(info))
-    return <Text style={[styles.description, {color: color.text_gray_max}]}>{strings.adaDescription}</Text>
+    return (
+      <Text style={[styles.description, {color: color.text_gray_max}]}>
+        {strings.adaDescription}
+      </Text>
+    )
 
   return (
     <View style={styles.info}>
@@ -158,7 +168,9 @@ const Json = ({
   return (
     <View style={[styles.json, {backgroundColor: color.bg_color_min}]}>
       <View style={styles.jsonHeader}>
-        <Text style={[styles.jsonLabel, {color: color.text_gray_medium}]}>{strings.metadata}</Text>
+        <Text style={[styles.jsonLabel, {color: color.text_gray_medium}]}>
+          {strings.metadata}
+        </Text>
 
         <TouchableOpacity
           onPress={() => copy({text: stringifiedMetadata})}
@@ -171,7 +183,9 @@ const Json = ({
       <Space height="sm" />
 
       <ScrollView bounces={false} style={styles.jsonContent}>
-        <Text style={[styles.metadata, {color: color.text_gray_medium}]}>{stringifiedMetadata}</Text>
+        <Text style={[styles.metadata, {color: color.text_gray_medium}]}>
+          {stringifiedMetadata}
+        </Text>
       </ScrollView>
     </View>
   )
@@ -222,13 +236,17 @@ const PolicyId = ({policyId}: {policyId: string}) => {
 
   return (
     <Row>
-      <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.policyId}</Text>
+      <Text style={[styles.label, {color: color.text_gray_low}]}>
+        {strings.policyId}
+      </Text>
 
       <Space width="lg" />
 
       <View style={styles.copiableText}>
         <Copiable text={policyId}>
-          <Text style={[styles.value, {color: color.text_gray_max}]}>{policyId}</Text>
+          <Text style={[styles.value, {color: color.text_gray_max}]}>
+            {policyId}
+          </Text>
         </Copiable>
       </View>
     </Row>
@@ -243,13 +261,17 @@ const Fingerprint = ({info}: {info: Portfolio.Token.Info}) => {
 
   return (
     <Row>
-      <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.fingerprint}</Text>
+      <Text style={[styles.label, {color: color.text_gray_low}]}>
+        {strings.fingerprint}
+      </Text>
 
       <Space width="lg" />
 
       <View style={styles.copiableText}>
         <Copiable text={info.fingerprint}>
-          <Text style={[styles.value, {color: color.text_gray_max}]}>{info.fingerprint}</Text>
+          <Text style={[styles.value, {color: color.text_gray_max}]}>
+            {info.fingerprint}
+          </Text>
         </Copiable>
       </View>
     </Row>
@@ -264,9 +286,13 @@ const Name = ({info}: {info: Portfolio.Token.Info}) => {
 
   return (
     <Row>
-      <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.name}</Text>
+      <Text style={[styles.label, {color: color.text_gray_low}]}>
+        {strings.name}
+      </Text>
 
-      <Text style={[styles.value, {color: color.text_gray_max}]}>{info.name}</Text>
+      <Text style={[styles.value, {color: color.text_gray_max}]}>
+        {info.name}
+      </Text>
     </Row>
   )
 }
@@ -280,7 +306,9 @@ const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
       <Space width="sm" />
 
       <Row>
-        <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.tokenSupply}</Text>
+        <Text style={[styles.label, {color: color.text_gray_low}]}>
+          {strings.tokenSupply}
+        </Text>
 
         <Text style={[styles.value, {color: color.text_gray_max}]}>
           {isEmptyString(discovery?.supply) ? '-' : discovery?.supply}
@@ -301,9 +329,13 @@ const Symbol = ({info}: {info: Portfolio.Token.Info}) => {
       <Space width="sm" />
 
       <Row>
-        <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.symbol}</Text>
+        <Text style={[styles.label, {color: color.text_gray_low}]}>
+          {strings.symbol}
+        </Text>
 
-        <Text style={[styles.value, {color: color.text_gray_max}]}>{info.ticker}</Text>
+        <Text style={[styles.value, {color: color.text_gray_max}]}>
+          {info.ticker}
+        </Text>
       </Row>
     </View>
   )
@@ -319,9 +351,13 @@ const Description = ({info}: {info: Portfolio.Token.Info}) => {
     <View>
       <Space width="sm" />
 
-      <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.description}</Text>
+      <Text style={[styles.label, {color: color.text_gray_low}]}>
+        {strings.description}
+      </Text>
 
-      <Text style={[styles.description, {color: color.text_gray_max}]}>{info.description}</Text>
+      <Text style={[styles.description, {color: color.text_gray_max}]}>
+        {info.description}
+      </Text>
     </View>
   )
 }

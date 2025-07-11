@@ -32,7 +32,14 @@ export const ProtocolAvatar = ({
     >
       <ProtocolIcon protocol={protocol} size={18} />
 
-      <Text style={[styles.text, {color: color.text_gray_medium}, !preventOpenLink && styles.link, !preventOpenLink && {color: color.text_primary_medium}]}>
+      <Text
+        style={[
+          styles.text,
+          {color: color.text_gray_medium},
+          !preventOpenLink && styles.link,
+          !preventOpenLink && {color: color.text_primary_medium},
+        ]}
+      >
         {formattedName}
       </Text>
     </TouchableOpacity>

@@ -1,13 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  Animated,
-  Easing,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Animated, Easing, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../ui/Icon'
 
@@ -20,7 +13,7 @@ export const Accordion = ({
 }) => {
   const [isOpen, setIsOpen] = React.useState(true)
   const animatedHeight = React.useRef(new Animated.Value(1)).current
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const toggleSection = () => {
     setIsOpen(!isOpen)
@@ -37,20 +30,22 @@ export const Accordion = ({
       <TouchableOpacity
         activeOpacity={0.5}
         onPress={toggleSection}
-        style={styles.sectionHeader}
+        style={[a.flex_row, a.justify_between]}
       >
-        <Text style={[styles.sectionHeaderText, {color: color.text_gray_medium}]}>{label}</Text>
+        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+          {label}
+        </Text>
 
         <Icon.Chevron
           direction={isOpen ? 'up' : 'down'}
           size={28}
-          color={color.gray_900}
+          color={p.gray_900}
         />
       </TouchableOpacity>
 
       <Animated.View
         style={[
-          styles.childrenContainer,
+          {overflow: 'hidden'},
           {
             maxHeight: animatedHeight.interpolate({
               inputRange: [0, 0.9, 1],
@@ -65,16 +60,3 @@ export const Accordion = ({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  sectionHeader: {
-    ...a.flex_row,
-    ...a.justify_between,
-  },
-  sectionHeaderText: {
-    ...a.body_1_lg_medium,
-  },
-  childrenContainer: {
-    overflow: 'hidden',
-  },
-})

@@ -11,24 +11,24 @@ import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '../../../ui/Boundary/Boundary'
-import {Button} from '../../../ui/Button/Button'
-import {Icon} from '../../../ui/Icon'
-import {Spacer} from '../../../ui/Space/Space'
 import globalMessages from '../../../../kernel/i18n/global-messages'
 import {assetsToSendProperties} from '../../../../kernel/metrics/helpers'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useSaveMemo} from '../../../../wallets/hooks'
 import {YoroiEntry, YoroiSignedTx} from '../../../../wallets/types/yoroi'
-import {TokenAmountItem} from '../../../ui/TokenAmountItem/TokenAmountItem'
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
 import {useSearch} from '../../../Search/SearchContext'
+import {AddTokenButton} from '../../../ui/AddTokenButton/AddTokenButton'
+import {Boundary} from '../../../ui/Boundary/Boundary'
+import {Button} from '../../../ui/Button/Button'
+import {Icon} from '../../../ui/Icon'
+import {RemoveAmountButton} from '../../../ui/RemoveAmountButton/RemoveAmountButton'
+import {Spacer} from '../../../ui/Space/Space'
+import {TokenAmountItem} from '../../../ui/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
 import {toYoroiEntry} from '../../common/toYoroiEntry'
-import {AddTokenButton} from '../../../ui/AddTokenButton/AddTokenButton'
-import {RemoveAmountButton} from '../../../ui/RemoveAmountButton/RemoveAmountButton'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -127,7 +127,10 @@ export const ListAmountsToSendScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.root, {backgroundColor: color.bg_color_max}]}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={[styles.root, {backgroundColor: color.bg_color_max}]}
+    >
       <AmountsList
         data={Object.values(amounts)}
         renderItem={({item: amount}) => (
@@ -180,7 +183,10 @@ const ActionableAmount = ({
   const handleEdit = () => (isNft(amount.info) ? null : onEdit(amount.info.id))
 
   return (
-    <View style={[styles.amountItem, a.flex_row, a.justify_between, a.align_center]} testID="amountItem">
+    <View
+      style={[styles.amountItem, a.flex_row, a.justify_between, a.align_center]}
+      testID="amountItem"
+    >
       <Left style={[styles.flex, {flex: 1}]}>
         <EditAmountButton onPress={handleEdit}>
           <TokenAmountItem amount={amount} ignorePrivacy />

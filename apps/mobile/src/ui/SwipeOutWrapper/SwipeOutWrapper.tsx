@@ -19,8 +19,10 @@ export const SwipeOutWrapper = ({
   onExpired,
   onPress,
 }: Props) => {
-  const {pan, panResponder, fadeIn, opacity, translateY} =
-    usePanAnimation({onRelease: onSwipeOut, onPress})
+  const {pan, panResponder, fadeIn, opacity, translateY} = usePanAnimation({
+    onRelease: onSwipeOut,
+    onPress,
+  })
   const onExpiredRef = React.useRef(onExpired)
   onExpiredRef.current = onExpired
 

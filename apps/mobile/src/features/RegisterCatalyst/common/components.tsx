@@ -1,28 +1,26 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TextProps,
-  View,
-  ViewProps,
-} from 'react-native'
+import {Animated, Text, TextProps, View, ViewProps} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {StepperProgress} from '../../../ui/StepperProgress/StepperProgress'
 
 export const Description = ({style, ...props}: TextProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
-  return <Text {...props} style={[styles.description, {color: color.gray_900}, style]} />
+  return (
+    <Text
+      {...props}
+      style={[a.body_1_lg_regular, {color: p.gray_900}, style]}
+    />
+  )
 }
 
 export const Actions = ({style, ...props}: ViewProps) => {
-  return <View {...props} style={[styles.actions, style]} />
+  return <View {...props} style={[a.pt_lg, style]} />
 }
 export const Row = ({style, ...props}: ViewProps) => {
-  return <View {...props} style={[styles.row, style]} />
+  return <View {...props} style={[{flexDirection: 'row'}, style]} />
 }
 
 export const PinBox = ({
@@ -38,18 +36,24 @@ export const PinBox = ({
   error?: boolean
   onPress?: () => void
 }) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
       style={[
-        styles.pinBox,
-        {borderColor: color.gray_900},
-        selected && styles.pinBoxSelected,
-        selected && {borderColor: color.gray_max},
-        error && styles.pinBoxError,
-        error && {borderColor: color.sys_magenta_500},
-        done && styles.pinDone,
+        {
+          borderWidth: 1,
+          height: 60,
+          width: 60,
+          borderRadius: 6,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        {borderColor: p.gray_900},
+        selected && {borderWidth: 2},
+        selected && {borderColor: p.gray_max},
+        error && {borderWidth: 2},
+        error && {borderColor: p.sys_magenta_500},
         done && {backgroundColor: '#66F2D6', borderColor: '#66F2D6'},
       ]}
       onPress={onPress}
@@ -57,10 +61,10 @@ export const PinBox = ({
       {!selected || done ? (
         <PinDigit
           style={[
-            children === undefined && styles.pinDigitUnselected,
-            children === undefined && {color: color.gray_600},
-            done && styles.pinDigitDone,
-            done && {color: color.black_static},
+            children === undefined && {},
+            children === undefined && {color: p.gray_600},
+            done && {},
+            done && {color: p.black_static},
           ]}
         >
           {children === undefined ? '—' : children}
@@ -72,8 +76,13 @@ export const PinBox = ({
   )
 }
 const PinDigit = ({style, ...props}: TextProps) => {
-  const {color} = useTheme()
-  return <Text {...props} style={[styles.pinDigit, {color: color.gray_max}, style]} />
+  const {palette: p} = useTheme()
+  return (
+    <Text
+      {...props}
+      style={[{fontSize: 20, lineHeight: 22}, {color: p.gray_max}, style]}
+    />
+  )
 }
 
 export const Stepper = ({
@@ -86,7 +95,7 @@ export const Stepper = ({
   title: string
 }) => {
   return (
-    <View style={styles.stepper}>
+    <View style={[a.py_lg]}>
       <StepperProgress
         currentStepTitle={title}
         currentStep={currentStep}
@@ -98,7 +107,7 @@ export const Stepper = ({
 
 const BlinkingCursor = () => {
   const [opacity] = React.useState(new Animated.Value(1))
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   React.useEffect(() => {
     const blinkAnimation = Animated.loop(
@@ -124,8 +133,8 @@ const BlinkingCursor = () => {
   return (
     <Animated.View
       style={[
-        styles.cursor,
-        {backgroundColor: color.gray_600},
+        {height: 24, width: 2},
+        {backgroundColor: p.gray_600},
         {
           opacity: opacity,
         },
@@ -133,43 +142,3 @@ const BlinkingCursor = () => {
     />
   )
 }
-
-const styles = StyleSheet.create({
-  description: {
-    ...a.body_1_lg_regular,
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  actions: {
-    ...a.pt_lg,
-  },
-  pinBox: {
-    borderWidth: 1,
-    height: 60,
-    width: 60,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pinDigit: {
-    fontSize: 20,
-    lineHeight: 22,
-  },
-  pinBoxSelected: {
-    borderWidth: 2,
-  },
-  pinBoxError: {
-    borderWidth: 2,
-  },
-  pinDigitUnselected: {},
-  pinDone: {},
-  stepper: {
-    ...a.py_lg,
-  },
-  cursor: {
-    height: 24,
-    width: 2,
-  },
-  pinDigitDone: {},
-})

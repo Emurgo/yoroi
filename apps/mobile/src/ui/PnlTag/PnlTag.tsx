@@ -27,7 +27,8 @@ export const PnlTag = ({
 
   const textStyles = React.useMemo(() => {
     if (variant === 'neutral') return [styles.label, {color: color.gray_600}]
-    if (variant === 'success') return [styles.label, {color: color.secondary_700}]
+    if (variant === 'success')
+      return [styles.label, {color: color.secondary_700}]
     return [styles.label, {color: color.sys_magenta_700}]
   }, [
     styles.label,

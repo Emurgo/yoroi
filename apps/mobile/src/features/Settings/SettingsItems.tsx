@@ -1,14 +1,16 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactElement} from 'react'
-import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
+import {isEmptyString} from '../../kernel/utils'
 import {Hr} from '../../ui/Hr/Hr'
 import {Icon} from '../../ui/Icon'
 import {Spacer} from '../../ui/Spacer/Spacer'
 import {Text} from '../../ui/Text/Text'
-import {isEmptyString} from '../../kernel/utils'
 
-const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
+const Touchable = (props: TouchableOpacityProps) => (
+  <TouchableOpacity {...props} activeOpacity={0.5} />
+)
 
 type SettingsSectionProps = {
   title?: string
@@ -16,17 +18,19 @@ type SettingsSectionProps = {
 }
 
 export const SettingsSection = ({title, children}: SettingsSectionProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <View>
       {title != null && (
         <>
-          <Text style={[styles.sectionText, {color: color.gray_900}]}>{title}</Text>
+          <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
+            {title}
+          </Text>
 
           <Spacer height={5} />
 
-          <Hr style={[styles.separator, {backgroundColor: color.gray_200}]} />
+          <Hr style={[{height: 1}, {backgroundColor: p.gray_200}]} />
         </>
       )}
 
@@ -43,18 +47,39 @@ type SettingsItemProps = {
   info?: string
 }
 
-export const SettingsItem = ({label, children, disabled, icon, info}: SettingsItemProps) => {
-  const {color} = useTheme()
+export const SettingsItem = ({
+  label,
+  children,
+  disabled,
+  icon,
+  info,
+}: SettingsItemProps) => {
+  const {palette: p} = useTheme()
 
   return (
     <View>
-      <View style={styles.itemInner}>
-        <View style={styles.itemMainContent}>
+      <View style={[{paddingVertical: 16}]}>
+        <View
+          style={[
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+          ]}
+        >
           {icon}
 
           {icon && <Spacer width={10} />}
 
-          <Text style={[styles.label, styles.itemText, {color: color.gray_900}, disabled && {color: color.gray_500}]}>
+          <Text
+            style={[
+              {flex: 1},
+              a.body_1_lg_medium,
+              {color: p.gray_900},
+              disabled && {color: p.gray_500},
+            ]}
+          >
             {label}
           </Text>
 
@@ -65,12 +90,14 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
           <>
             <Spacer height={12} />
 
-            <Text style={[styles.itemTextIsNil, {color: color.gray_600}]}>{info}</Text>
+            <Text style={[a.body_3_sm_regular, {color: p.gray_600}]}>
+              {info}
+            </Text>
           </>
         )}
       </View>
 
-      <Hr style={[styles.separator, {backgroundColor: color.gray_200}]} />
+      <Hr style={[{height: 1}, {backgroundColor: p.gray_200}]} />
     </View>
   )
 }
@@ -82,19 +109,27 @@ export type NavigatedSettingsItemProps = {
   selected?: string
 }
 
-export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, selected}: NavigatedSettingsItemProps) => {
-  const {color} = useTheme()
+export const NavigatedSettingsItem = ({
+  label,
+  onNavigate,
+  icon,
+  disabled,
+  selected,
+}: NavigatedSettingsItemProps) => {
+  const {palette: p} = useTheme()
   return (
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
-        <View style={styles.row}>
+        <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
           {!isEmptyString(selected) && (
-            <Text style={[styles.navigationItem, {color: color.gray_500}]}>{selected}</Text>
+            <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
+              {selected}
+            </Text>
           )}
 
           <Spacer width={16} />
 
-          <Icon.Chevron direction="right" size={28} color={color.el_gray_min} />
+          <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
         </View>
       </SettingsItem>
     </Touchable>
@@ -111,33 +146,3 @@ export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
     <Text secondary>{value}</Text>
   </SettingsItem>
 )
-
-const styles = StyleSheet.create({
-  itemInner: {
-    paddingVertical: 16,
-  },
-  itemMainContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  label: {
-    flex: 1,
-  },
-  sectionText: {
-    ...a.body_2_md_regular,
-  },
-  itemText: {
-    ...a.body_1_lg_medium,
-  },
-  itemTextIsNil: {
-    ...a.body_3_sm_regular,
-  },
-  navigationItem: {
-    ...a.body_1_lg_regular,
-  },
-  separator: {
-    height: 1,
-  },
-  row: {flexDirection: 'row', alignItems: 'center'},
-})

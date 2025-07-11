@@ -17,16 +17,16 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '../../../../assets/img/app-store-badge.png'
 import playstoreBadge from '../../../../assets/img/google-play-badge.png'
+import {useStakingInfo} from '../../../../legacy/Dashboard/StakePoolInfos'
 import {Button} from '../../../../ui/Button/Button'
 import {useModal} from '../../../../ui/Modal/ModalContext'
 import {Space} from '../../../../ui/Space/Space'
-import {useStakingInfo} from '../../../../legacy/Dashboard/StakePoolInfos'
+import {CatalystStep1} from '../../../ui/CatalystStep1Illustration/CatalystStep1Illustration'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Row, Stepper} from '../../common/components'
 import {useCatalystCurrentFund} from '../../common/hooks'
 import {useStrings} from '../../common/strings'
-import {CatalystStep1} from '../../../ui/CatalystStep1Illustration/CatalystStep1Illustration'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
@@ -83,7 +83,12 @@ export const DownloadCatalystAppScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[styles.safeAreaView, {backgroundColor: color.bg_color_max}, a.px_lg, a.pb_lg]}
+      style={[
+        styles.safeAreaView,
+        {backgroundColor: color.bg_color_max},
+        a.px_lg,
+        a.pb_lg,
+      ]}
     >
       <Stepper title={strings.title} currentStep={1} totalSteps={3} />
 
@@ -95,9 +100,13 @@ export const DownloadCatalystAppScreen = () => {
 
         <Space height="lg" />
 
-        <Text style={[styles.subTitle, {color: color.text_gray_medium}]}>{strings.subTitle}</Text>
+        <Text style={[styles.subTitle, {color: color.text_gray_medium}]}>
+          {strings.subTitle}
+        </Text>
 
-        <Text style={[styles.tip, {color: color.text_gray_medium}]}>{strings.tip}</Text>
+        <Text style={[styles.tip, {color: color.text_gray_medium}]}>
+          {strings.tip}
+        </Text>
 
         <Space height="lg" />
 
@@ -137,11 +146,19 @@ const FundInfo = ({children}: {children: React.ReactNode}) => {
 }
 const FundName = ({children}: {children: React.ReactNode}) => {
   const {color} = useTheme()
-  return <Text style={[styles.fundName, {color: color.text_gray_medium}]}>{children}</Text>
+  return (
+    <Text style={[styles.fundName, {color: color.text_gray_medium}]}>
+      {children}
+    </Text>
+  )
 }
 const FundText = ({children}: {children: React.ReactNode}) => {
   const {color} = useTheme()
-  return <Text style={[styles.fundText, {color: color.text_gray_medium}]}>{children}</Text>
+  return (
+    <Text style={[styles.fundText, {color: color.text_gray_medium}]}>
+      {children}
+    </Text>
+  )
 }
 
 const WarningModal = () => {
@@ -150,7 +167,9 @@ const WarningModal = () => {
 
   return (
     <View style={[styles.modal, a.px_lg, a.flex_1]}>
-      <Text style={[styles.text, {color: color.text_gray_medium}]}>{strings.stakingKeyNotRegistered}</Text>
+      <Text style={[styles.text, {color: color.text_gray_medium}]}>
+        {strings.stakingKeyNotRegistered}
+      </Text>
 
       <Space height="md" />
 

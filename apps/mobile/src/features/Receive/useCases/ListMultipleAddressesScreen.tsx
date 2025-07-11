@@ -1,26 +1,25 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   InteractionManager,
   LayoutAnimation,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  StyleSheet,
   View,
   ViewToken,
 } from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../ui/Button/Button'
-import {Space} from '../../../ui/Space/Space'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {Button} from '../../../ui/Button/Button'
+import {ShowAddressLimitInfo} from '../../../ui/ShowAddressLimitInfo/ShowAddressLimitInfo'
+import {SmallAddressCard} from '../../../ui/SmallAddressCard/SmallAddressCard'
+import {Space} from '../../../ui/Space/Space'
 import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '../common/ReceiveProvider'
-import {ShowAddressLimitInfo} from '../../../ui/ShowAddressLimitInfo/ShowAddressLimitInfo'
-import {SmallAddressCard} from '../../../ui/SmallAddressCard/SmallAddressCard'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
@@ -100,7 +99,10 @@ export const ListMultipleAddressesScreen = () => {
   }, [hasReachedGapLimit])
 
   return (
-    <SafeAreaView style={[styles.root, {backgroundColor: color.bg_color_max}]} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView
+      style={[styles.root, {backgroundColor: color.bg_color_max}]}
+      edges={['left', 'right', 'bottom']}
+    >
       <View style={styles.content}>
         {showAddressLimitInfo && hasReachedGapLimit && (
           <>
@@ -160,18 +162,3 @@ const toAddressInfos = (addresses: {
 
   return [...unusedAddresses, ...usedAddresses]
 }
-
-const styles = StyleSheet.create({
-  root: {
-    ...a.flex_1,
-    ...a.py_lg,
-  },
-  content: {
-    ...a.flex_1,
-    ...a.px_lg,
-  },
-  footer: {
-    ...a.pt_lg,
-    ...a.px_lg,
-  },
-})

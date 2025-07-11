@@ -17,7 +17,9 @@ export const TitledCard = ({title, children, testID}: ExternalProps) => {
   return (
     <View>
       {title !== undefined && (
-        <Text style={[styles.title, {color: color.text_gray_low}]}>{title}</Text>
+        <Text style={[styles.title, {color: color.text_gray_low}]}>
+          {title}
+        </Text>
       )}
 
       <Space height="sm" />

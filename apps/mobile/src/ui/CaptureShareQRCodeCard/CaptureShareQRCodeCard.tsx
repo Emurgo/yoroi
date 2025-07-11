@@ -4,9 +4,9 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
 
-import {YoroiLogoIllustration} from '../YoroiLogoIllustration/YoroiLogoIllustration'
 import {Spacer} from '../Space/Space'
 import {Text} from '../Text/Text'
+import {YoroiLogoIllustration} from '../YoroiLogoIllustration/YoroiLogoIllustration'
 
 type ShareProps = {
   content: string
@@ -34,12 +34,19 @@ export const CaptureShareQRCodeCard = ({content}: ShareProps) => {
 
         <View style={styles.addressContainer}>
           <View style={[styles.qrCode, {backgroundColor: color.white_static}]}>
-            <QRCode value={content} size={170} backgroundColor={color.white_static} color={color.black_static} />
+            <QRCode
+              value={content}
+              size={170}
+              backgroundColor={color.white_static}
+              color={color.black_static}
+            />
           </View>
 
           <Spacer height={16} />
 
-          <Text style={[styles.content, {color: 'transparent'}]}>{content}</Text>
+          <Text style={[styles.content, {color: 'transparent'}]}>
+            {content}
+          </Text>
         </View>
       </View>
     </View>

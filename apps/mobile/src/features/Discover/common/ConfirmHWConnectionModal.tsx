@@ -3,13 +3,13 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useCallback, useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 
+import {LedgerConnect} from '../../../ui/LedgerConnect/LedgerConnect'
 import {LedgerTransportSwitch} from '../../../ui/LedgerTransportSwitch/LedgerTransportSwitch'
 import {useModal} from '../../../ui/Modal/ModalContext'
 import {ModalError} from '../../../ui/ModalError/ModalError'
 import {Text} from '../../../ui/Text/Text'
-import {LedgerConnect} from '../../../ui/LedgerConnect/LedgerConnect'
 import {withBLE, withUSB} from '../../../wallets/hw/hwWallet'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -63,7 +63,7 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
   const [step, setStep] = useState<Step>('select-transport')
   const {meta} = useSelectedWallet()
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const {mutate: handleOnConfirm} = useMutation<void, Error, OnConfirmOptions>({
     mutationFn: onConfirm,
     useErrorBoundary: true,
@@ -108,23 +108,12 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
   }
 
   return (
-    <View style={styles.container}>
-      <ActivityIndicator size="large" color={color.gray_max} />
+    <View style={[a.flex_1, a.align_center, a.justify_center, {gap: 35}]}>
+      <ActivityIndicator size="large" color={p.gray_max} />
 
-      <Text style={[styles.text, {color: color.gray_max}]}>{strings.continueOnLedger}</Text>
+      <Text style={[{fontSize: 18}, a.text_center, {color: p.gray_max}]}>
+        {strings.continueOnLedger}
+      </Text>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    ...a.flex_1,
-    ...a.align_center,
-    ...a.justify_center,
-    gap: 35,
-  },
-  text: {
-    fontSize: 18,
-    ...a.text_center,
-  },
-})

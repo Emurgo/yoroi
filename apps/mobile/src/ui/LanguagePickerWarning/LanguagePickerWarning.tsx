@@ -16,7 +16,9 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
 
   return (
     <View style={styles.dialog}>
-      <View style={[styles.dialogSquare, {backgroundColor: color.bg_color_min}]}>
+      <View
+        style={[styles.dialogSquare, {backgroundColor: color.bg_color_min}]}
+      >
         <View style={styles.row}>
           <TouchableOpacity onPress={() => setDismissed(true)}>
             <Icon.Cross size={24} color={color.el_gray_max} />
@@ -30,7 +32,9 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
             body: [styles.markdownText, {color: color.text_gray_medium}],
           }}
         >
-          {strings.contributors !== '_' ? `${strings.warning}: **${strings.contributors}**` : `${strings.warning}.`}
+          {strings.contributors !== '_'
+            ? `${strings.warning}: **${strings.contributors}**`
+            : `${strings.warning}.`}
         </Markdown>
       </View>
     </View>

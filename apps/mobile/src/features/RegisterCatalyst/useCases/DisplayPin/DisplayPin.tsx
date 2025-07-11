@@ -1,13 +1,12 @@
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ScrollView, StyleSheet, Text, View} from 'react-native'
+import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../ui/Button/Button'
 import {Checkbox} from '../../../../ui/Checkbox/Checkbox'
-import {Space} from '../../../../ui/Space/Space'
-import {Spacer} from '../../../../ui/Space/Space'
+import {Space, Spacer} from '../../../../ui/Space/Space'
 import {useNavigateTo} from '../../CatalystNavigator'
 import {
   Actions,
@@ -36,7 +35,12 @@ export const DisplayPin = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[styles.safeAreaView, {backgroundColor: color.bg_color_max}, a.px_lg, a.pb_lg]}
+      style={[
+        styles.safeAreaView,
+        {backgroundColor: color.bg_color_max},
+        a.px_lg,
+        a.pb_lg,
+      ]}
     >
       <Stepper title={strings.step2Title} currentStep={2} totalSteps={3} />
 

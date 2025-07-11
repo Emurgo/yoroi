@@ -9,7 +9,7 @@ import {
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
-import {Switch as RNSwitch, StyleSheet, View} from 'react-native'
+import {Switch as RNSwitch, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../ui/Button/Button'
@@ -310,10 +310,3 @@ const Switch = ({
     />
   )
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-})

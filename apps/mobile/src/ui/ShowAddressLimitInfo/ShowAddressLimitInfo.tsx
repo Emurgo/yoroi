@@ -3,9 +3,9 @@ import React from 'react'
 import {Linking, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
-import {Icon} from '../Icon'
 import {YoroiZendeskLink} from '../../features/Receive/common/contants'
 import {useStrings} from '../../features/Receive/common/useStrings'
+import {Icon} from '../Icon'
 
 export const ShowAddressLimitInfo = () => {
   const strings = useStrings()

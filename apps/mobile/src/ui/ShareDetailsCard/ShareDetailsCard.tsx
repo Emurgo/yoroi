@@ -3,12 +3,12 @@ import React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Copiable} from '../Copiable'
-import {Text} from '../Text/Text'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
-import {useStrings} from '../../features/Receive/common/useStrings'
 import {useLastDateAddressUsed} from '../../features/Receive/common/useLastDateAddressUsed'
+import {useStrings} from '../../features/Receive/common/useStrings'
+import {Copiable} from '../Copiable'
+import {Text} from '../Text/Text'
 
 type AddressDetailsProps = {
   address: string
@@ -45,7 +45,9 @@ export const ShareDetailsCard = ({
         colors={color.bg_gradient_1}
       />
 
-      <Text style={[styles.title, {color: color.gray_max}]}>{strings.walletAddress}</Text>
+      <Text style={[styles.title, {color: color.gray_max}]}>
+        {strings.walletAddress}
+      </Text>
 
       <View style={styles.textSection}>
         <Text style={[styles.textAddress, {color: color.gray_600}]}>
@@ -53,7 +55,9 @@ export const ShareDetailsCard = ({
         </Text>
 
         <View style={styles.textRow}>
-          <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>{address}</Text>
+          <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>
+            {address}
+          </Text>
 
           <Copiable
             text={address}
@@ -70,7 +74,9 @@ export const ShareDetailsCard = ({
           </Text>
 
           <View style={styles.textRow}>
-            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>{stakingHash}</Text>
+            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>
+              {stakingHash}
+            </Text>
 
             <Copiable text={stakingHash} feedback={strings.addressCopiedMsg} />
           </View>
@@ -84,7 +90,9 @@ export const ShareDetailsCard = ({
           </Text>
 
           <View style={styles.textRow}>
-            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>{spendingHash}</Text>
+            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>
+              {spendingHash}
+            </Text>
 
             <Copiable text={spendingHash} feedback={strings.addressCopiedMsg} />
           </View>
@@ -98,7 +106,9 @@ export const ShareDetailsCard = ({
           </Text>
 
           <View style={styles.textRow}>
-            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>{lastUsed}</Text>
+            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>
+              {lastUsed}
+            </Text>
           </View>
         </View>
       )}

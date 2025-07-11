@@ -1,6 +1,13 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  Animated,
+  GestureResponderEvent,
+  Pressable,
+  PressableProps,
+  StyleSheet,
+  View,
+} from 'react-native'
 
 import {Icon} from '../Icon'
 import type {IconProps} from '../Icon/type'
@@ -32,7 +39,11 @@ export const RefreshButton = (props: RefreshButtonProps) => {
     }
   }
 
-  const backgroundColors: Colors = {idle: 'transparent', pressed: color.gray_100, disabled: 'transparent'}
+  const backgroundColors: Colors = {
+    idle: 'transparent',
+    pressed: color.gray_100,
+    disabled: 'transparent',
+  }
 
   const foregroundColors: Colors = {
     idle: color.text_gray_medium,
@@ -40,8 +51,12 @@ export const RefreshButton = (props: RefreshButtonProps) => {
     disabled: color.text_gray_min,
   }
 
-  const backgroundColor = disabled ? backgroundColors.disabled : backgroundColors.idle
-  const foregroundColor = disabled ? foregroundColors.disabled : foregroundColors.idle
+  const backgroundColor = disabled
+    ? backgroundColors.disabled
+    : backgroundColors.idle
+  const foregroundColor = disabled
+    ? foregroundColors.disabled
+    : foregroundColors.idle
 
   const iconProps: IconProps = {
     size: 20,

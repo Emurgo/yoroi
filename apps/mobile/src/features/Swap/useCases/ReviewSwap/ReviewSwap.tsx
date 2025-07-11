@@ -4,16 +4,16 @@ import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../ui/Button/Button'
-import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
+import {Button} from '../../../../ui/Button/Button'
+import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView'
+import {ProtocolAvatar} from '../../../../ui/ProtocolAvatar/ProtocolAvatar'
+import {TransactionSummary} from '../../../../ui/TransactionSummary/TransactionSummary'
 import {undefinedToken} from '../../common/constants'
 import {useNavigateTo} from '../../common/navigation'
-import {ProtocolAvatar} from '../../../../ui/ProtocolAvatar/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
-import {TransactionSummary} from '../../../../ui/TransactionSummary/TransactionSummary'
 
 const BOTTOM_ACTION_SECTION = 220
 
@@ -91,7 +91,10 @@ export const ReviewSwap = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.root, atoms.pt_lg, {backgroundColor: color.bg_color_max}]}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={[styles.root, atoms.pt_lg, {backgroundColor: color.bg_color_max}]}
+    >
       <View style={[styles.container, {backgroundColor: color.bg_color_max}]}>
         <KeyboardAvoidingView keyboardVerticalOffset={120}>
           <ScrollView style={[styles.scroll, atoms.px_lg]}>
@@ -110,7 +113,10 @@ export const ReviewSwap = () => {
       <Actions
         style={{
           ...(deviceHeight < contentHeight && styles.actionBorder),
-          ...(deviceHeight < contentHeight && {borderTopWidth: 1, borderTopColor: color.gray_200}),
+          ...(deviceHeight < contentHeight && {
+            borderTopWidth: 1,
+            borderTopColor: color.gray_200,
+          }),
         }}
       >
         <Button testID="swapButton" title={strings.next} onPress={onNext} />
@@ -121,7 +127,12 @@ export const ReviewSwap = () => {
 
 const Actions = ({style, ...props}: ViewProps) => {
   const {color, atoms} = useTheme()
-  return <View style={[style, atoms.p_lg, {backgroundColor: color.bg_color_max}]} {...props} />
+  return (
+    <View
+      style={[style, atoms.p_lg, {backgroundColor: color.bg_color_max}]}
+      {...props}
+    />
+  )
 }
 
 const styles = StyleSheet.create({

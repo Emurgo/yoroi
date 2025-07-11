@@ -1,17 +1,12 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  InteractionManager,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {InteractionManager, useWindowDimensions, View} from 'react-native'
 
 import {Button, ButtonType} from '../../../ui/Button/Button'
 import {useModal} from '../../../ui/Modal/ModalContext'
+import {PhoneBell} from '../../../ui/PhoneBellIllustration/PhoneBellIllustration'
 import {Spacer} from '../../../ui/Space/Space'
 import {Text} from '../../../ui/Text/Text'
-import {PhoneBell} from '../../../ui/PhoneBellIllustration/PhoneBellIllustration'
 import {uiStorage} from './storage'
 import {triggerNotificationsPermissionModal} from './tools'
 import {useStrings} from './useStrings'
@@ -46,7 +41,7 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
 export const GetImportantAlertsModal = () => {
   const strings = useStrings()
   const {closeModal} = useModal()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const handleTurnOnPress = async () => {
     await triggerNotificationsPermissionModal()
@@ -55,12 +50,22 @@ export const GetImportantAlertsModal = () => {
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.illustration}>
+    <View style={[a.px_lg, a.flex_1, a.align_center]}>
+      <View style={[a.py_lg]}>
         <PhoneBell />
       </View>
 
-      <Text style={[styles.text, {color: color.text_gray_medium}]}>{strings.turnOnAlerts}</Text>
+      <Text
+        style={[
+          a.body_1_lg_regular,
+          a.pt_lg,
+          a.pb_sm,
+          a.text_center,
+          {color: p.text_gray_medium},
+        ]}
+      >
+        {strings.turnOnAlerts}
+      </Text>
 
       <Spacer fill />
 
@@ -69,37 +74,15 @@ export const GetImportantAlertsModal = () => {
         title={strings.skip}
         onPress={closeModal}
         type={ButtonType.Text}
-        style={styles.button}
+        style={[a.flex_1, a.self_stretch, {flexGrow: 0}]}
       />
 
       <Button
         size="M"
         title={strings.turnOnNotifications}
         onPress={handleTurnOnPress}
-        style={styles.button}
+        style={[a.flex_1, a.self_stretch, {flexGrow: 0}]}
       />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  root: {
-    ...a.px_lg,
-    ...a.flex_1,
-    ...a.align_center,
-  },
-  illustration: {
-    ...a.py_lg,
-  },
-  button: {
-    ...a.flex_1,
-    ...a.self_stretch,
-    flexGrow: 0,
-  },
-  text: {
-    ...a.body_1_lg_regular,
-    ...a.pt_lg,
-    ...a.pb_sm,
-    ...a.text_center,
-  },
-})

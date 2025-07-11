@@ -5,9 +5,9 @@ import LinearGradient from 'react-native-linear-gradient'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
 import {useCopy} from '../../../kernel/utils/clipboard'
-import {Spacer} from '../Space/Space'
-import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../../features/Receive/common/useStrings'
+import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
+import {Spacer} from '../Space/Space'
 
 type SmallAddressCardProps = {
   address: string
@@ -59,7 +59,9 @@ export const SmallAddressCard = ({
             colors={color.bg_gradient_1}
           />
 
-          <Text style={[styles.textAddress, {color: color.gray_max}]}>{address}</Text>
+          <Text style={[styles.textAddress, {color: color.gray_max}]}>
+            {address}
+          </Text>
 
           <Spacer height={12} />
 
@@ -82,7 +84,9 @@ export const SmallAddressCard = ({
               </Text>
             </View>
 
-            {isUsed && <Text style={[styles.date, {color: color.gray_700}]}>{date}</Text>}
+            {isUsed && (
+              <Text style={[styles.date, {color: color.gray_700}]}>{date}</Text>
+            )}
           </View>
         </TouchableOpacity>
       </Animated.View>

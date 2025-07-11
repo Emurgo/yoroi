@@ -4,9 +4,9 @@ import {Explorers} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, View} from 'react-native'
 
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {Button, ButtonType} from '../Button/Button'
 import {Space} from '../Space/Space'
-import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 
 export const ExplorerInfoLinks = ({
@@ -26,7 +26,9 @@ export const ExplorerInfoLinks = ({
     <View>
       <Space width="sm" />
 
-      <Text style={[styles.label, {color: color.text_gray_low}]}>{strings.details}</Text>
+      <Text style={[styles.label, {color: color.text_gray_low}]}>
+        {strings.details}
+      </Text>
 
       <View style={styles.linkGroup}>
         {Object.entries(Explorers.Explorer).map(([title, explorer]) => (

@@ -1,17 +1,17 @@
 import {useTheme} from '@yoroi/theme'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-import {Icon} from '../../../ui/Icon'
-import {IconProps} from '../../../ui/Icon/type'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../kernel/navigation'
-import {BannerIds} from './banners'
+import {Icon} from '../../../ui/Icon'
+import {IconProps} from '../../../ui/Icon/type'
 import {NotificationItem} from '../../../ui/NotificationItem/NotificationItem'
 import {SwipeOutWrapper} from '../../../ui/SwipeOutWrapper/SwipeOutWrapper'
 import {TransactionReceivedNotificationPopup} from '../../../ui/TransactionReceivedNotificationPopup/TransactionReceivedNotificationPopup'
+import {BannerIds} from './banners'
 import {useStrings} from './useStrings'
 
 type Props = {
@@ -185,13 +185,3 @@ const ColoredIcon = (props: {icon: (p: IconProps) => React.JSX.Element}) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  icon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    ...a.align_center,
-    ...a.justify_center,
-  },
-})

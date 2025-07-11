@@ -3,13 +3,13 @@ import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button, ButtonType} from '../Button/Button'
-import {useModal} from '../Modal/ModalContext'
-import {Spacer} from '../Space/Space'
-import {useAddressMode} from '../../features/WalletManager/common/hooks/useAddressMode'
-import {QRs} from '../QRsIllustration/QRsIllustration'
 import {useMultipleAddressesInfo} from '../../features/Receive/common/useMultipleAddressesInfo'
 import {useStrings} from '../../features/Receive/common/useStrings'
+import {useAddressMode} from '../../features/WalletManager/common/hooks/useAddressMode'
+import {Button, ButtonType} from '../Button/Button'
+import {useModal} from '../Modal/ModalContext'
+import {QRs} from '../QRsIllustration/QRsIllustration'
+import {Spacer} from '../Space/Space'
 
 export const singleOrMultipleAddressesModalHeight = 580
 
@@ -50,7 +50,9 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
     <View style={styles.modal}>
       <QRs />
 
-      <Text style={[styles.details, {color: color.text_gray_medium}]}>{strings.singleOrMultipleDetails}</Text>
+      <Text style={[styles.details, {color: color.text_gray_medium}]}>
+        {strings.singleOrMultipleDetails}
+      </Text>
 
       <Spacer fill height={16} />
 

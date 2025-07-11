@@ -20,13 +20,6 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {Button} from '../../../../ui/Button/Button'
-import {Icon} from '../../../../ui/Icon'
-import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView'
-import {useModal} from '../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../ui/Space/Space'
-import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
-import {TextInput} from '../../../../ui/TextInput'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
@@ -34,6 +27,16 @@ import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
+import {Button} from '../../../../ui/Button/Button'
+import {CardAboutPhrase} from '../../../../ui/CardAboutPhrase/CardAboutPhrase'
+import {Icon} from '../../../../ui/Icon'
+import {Info as InfoIcon} from '../../../../ui/InfoIcon/InfoIcon'
+import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView'
+import {LearnMoreButton} from '../../../../ui/LearnMoreButton/LearnMoreButton'
+import {useModal} from '../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../ui/Space/Space'
+import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
+import {TextInput} from '../../../../ui/TextInput'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
@@ -43,11 +46,8 @@ import {
 import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {CardAboutPhrase} from '../../../../ui/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
-import {LearnMoreButton} from '../../../../ui/LearnMoreButton/LearnMoreButton'
 import {useStrings} from '../../common/useStrings'
-import {Info as InfoIcon} from '../../../../ui/InfoIcon/InfoIcon'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -295,7 +295,9 @@ export const WalletDetailsScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={[styles.root, a.flex_1, {backgroundColor: color.bg_color_max}]}>
+    <KeyboardAvoidingView
+      style={[styles.root, a.flex_1, {backgroundColor: color.bg_color_max}]}
+    >
       <SafeAreaView
         edges={['left', 'right', 'bottom']}
         style={[styles.safeAreaView, a.flex_1, a.pb_lg]}
@@ -308,7 +310,16 @@ export const WalletDetailsScreen = () => {
         />
 
         <View style={[styles.infoWrapper, {height: 24}, a.px_lg, a.flex_row]}>
-          <Text style={[styles.title, {color: color.text_gray_medium}, a.self_center, a.body_1_lg_regular]}>{strings.walletDetailsTitle(bold)}</Text>
+          <Text
+            style={[
+              styles.title,
+              {color: color.text_gray_medium},
+              a.self_center,
+              a.body_1_lg_regular,
+            ]}
+          >
+            {strings.walletDetailsTitle(bold)}
+          </Text>
 
           <Info onPress={showModalTipsPassword} />
         </View>
@@ -368,7 +379,15 @@ export const WalletDetailsScreen = () => {
             textContentType="oneTimeCode"
           />
 
-          <View style={[styles.checksum, a.flex_row, a.align_center, a.justify_center, a.align_center]}>
+          <View
+            style={[
+              styles.checksum,
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              a.align_center,
+            ]}
+          >
             <Icon.WalletAvatar
               image={new Blockies({seed}).asBase64()}
               style={[styles.walletChecksum, {width: 24, height: 24}]}
@@ -377,7 +396,18 @@ export const WalletDetailsScreen = () => {
 
             <Space width="sm" />
 
-            <Text style={[styles.plateNumber, {color: color.text_gray_medium}, a.body_1_lg_regular, a.text_center, a.justify_center, a.align_center]}>{plate}</Text>
+            <Text
+              style={[
+                styles.plateNumber,
+                {color: color.text_gray_medium},
+                a.body_1_lg_regular,
+                a.text_center,
+                a.justify_center,
+                a.align_center,
+              ]}
+            >
+              {plate}
+            </Text>
 
             <Space width="sm" />
 
@@ -422,7 +452,9 @@ const useBold = () => {
   const {atoms} = useTheme()
 
   return {
-    b: (text: React.ReactNode) => <Text style={atoms.body_1_lg_medium}>{text}</Text>,
+    b: (text: React.ReactNode) => (
+      <Text style={atoms.body_1_lg_medium}>{text}</Text>
+    ),
   }
 }
 const styles = StyleSheet.create({

@@ -4,9 +4,9 @@ import * as React from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
+import {useStrings} from '../../features/SetupWallet/common/useStrings'
 import {Icon} from '../Icon'
 import {Space} from '../Space/Space'
-import {useStrings} from '../../features/SetupWallet/common/useStrings'
 
 type CardAboutPhraseProps = {
   linesOfText: string[] | React.ReactNode[]
@@ -65,7 +65,11 @@ export const CardAboutPhrase = ({
             <Text
               style={[
                 styles.bullet,
-                {color: showBackgroundColor ? color.primary_600 : color.gray_900},
+                {
+                  color: showBackgroundColor
+                    ? color.primary_600
+                    : color.gray_900,
+                },
               ]}
             >
               •
@@ -76,7 +80,11 @@ export const CardAboutPhrase = ({
             <Text
               style={[
                 styles.textLine,
-                {color: showBackgroundColor ? color.primary_600 : color.gray_900},
+                {
+                  color: showBackgroundColor
+                    ? color.primary_600
+                    : color.gray_900,
+                },
               ]}
             >
               {handleShowChecksum && (

@@ -8,7 +8,12 @@ type OutlineProps = {
   style?: StyleProp<ViewStyle>
 }
 
-export const Outline = ({activeColor, isFocused, color, style}: OutlineProps) => {
+export const Outline = ({
+  activeColor,
+  isFocused,
+  color,
+  style,
+}: OutlineProps) => {
   return (
     <View
       pointerEvents="none"

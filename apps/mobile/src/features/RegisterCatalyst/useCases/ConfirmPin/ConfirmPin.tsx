@@ -11,14 +11,13 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import {Button} from '../../../../ui/Button/Button'
 import {
   BACKSPACE,
   NumericKeyboard,
 } from '../../../../ui/NumericKeyboard/NumericKeyboard'
-import {Space} from '../../../../ui/Space/Space'
-import {Spacer} from '../../../../ui/Space/Space'
-import {useWalletNavigation} from '../../../../kernel/navigation'
+import {Space, Spacer} from '../../../../ui/Space/Space'
 import {generatePrivateKeyForCatalyst} from '../../../../wallets/cardano/catalyst'
 import {encryptWithPassword} from '../../../../wallets/cardano/catalyst/catalystCipher'
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
@@ -222,7 +221,12 @@ export const ConfirmPin = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[styles.safeAreaView, {backgroundColor: color.bg_color_max}, a.px_lg, a.pb_lg]}
+      style={[
+        styles.safeAreaView,
+        {backgroundColor: color.bg_color_max},
+        a.px_lg,
+        a.pb_lg,
+      ]}
     >
       <Padding style={a.px_lg}>
         <Stepper title={strings.step3Title} currentStep={3} totalSteps={3} />
@@ -295,7 +299,15 @@ export const ConfirmPin = () => {
       <NumericKeyboard onKeyDown={onKeyDown} />
 
       {isLoading && (
-        <View style={[styles.loading, StyleSheet.absoluteFillObject, {backgroundColor: color.bg_color_max}, a.align_center, a.justify_center]}>
+        <View
+          style={[
+            styles.loading,
+            StyleSheet.absoluteFillObject,
+            {backgroundColor: color.bg_color_max},
+            a.align_center,
+            a.justify_center,
+          ]}
+        >
           <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
         </View>
       )}

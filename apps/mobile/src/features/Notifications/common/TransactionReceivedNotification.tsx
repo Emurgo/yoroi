@@ -1,16 +1,16 @@
 import {useTheme} from '@yoroi/theme'
 import {Balance, Notifications, Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
 import {Icon} from '../../../ui/Icon'
+import {NotificationItem} from '../../../ui/NotificationItem/NotificationItem'
 import {YoroiWallet} from '../../../wallets/cardano/types'
 import {useTransactionInfos} from '../../../wallets/hooks'
 import {TransactionInfo} from '../../../wallets/types/other'
 import {Token} from '../../../wallets/types/tokens'
 import {asQuantity, Quantities} from '../../../wallets/utils/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {NotificationItem} from '../../../ui/NotificationItem/NotificationItem'
 import {useStrings} from './useStrings'
 
 export const getTransactionReceivedNotificationTitle = (
@@ -117,9 +117,7 @@ export const TransactionReceivedNotification = ({
 
   return (
     <NotificationItem
-      icon={
-        <IconWrapper event={event} />
-      }
+      icon={<IconWrapper event={event} />}
       title={getTransactionReceivedNotificationTitle(
         event,
         strings,
@@ -131,26 +129,27 @@ export const TransactionReceivedNotification = ({
   )
 }
 const IconWrapper = ({event}: {event: Notifications.Event}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const transactionInfos = useTransactionInfos({wallet})
 
   return (
-    <View style={[styles.icon, {backgroundColor: color.secondary_100}]}>
+    <View
+      style={[
+        {
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        {backgroundColor: p.secondary_100},
+      ]}
+    >
       {getTransactionReceivedNotificationIcon(event, transactionInfos)}
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  icon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    ...a.align_center,
-    ...a.justify_center,
-  },
-})
 
 const sumTokenFromTxData = (
   outputsOutputs: TransactionInfo['outputs'] | TransactionInfo['inputs'],

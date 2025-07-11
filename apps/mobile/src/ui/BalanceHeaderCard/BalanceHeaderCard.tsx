@@ -2,10 +2,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Icon} from '../Icon'
-import {Tooltip} from '../Tooltip/Tooltip'
 import {useStrings} from '../../features/Portfolio/common/hooks/useStrings'
+import {Icon} from '../Icon'
 import {Rate} from '../Rate/Rate'
+import {Tooltip} from '../Tooltip/Tooltip'
 
 type Props = {
   rate: number

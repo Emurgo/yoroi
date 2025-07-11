@@ -33,15 +33,26 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
           <Icon.Danger color={color.sys_magenta_500} size={42} />
         </View>
 
-        <Text style={[styles.message, {color: color.sys_magenta_500}]}>{message}</Text>
+        <Text style={[styles.message, {color: color.sys_magenta_500}]}>
+          {message}
+        </Text>
       </View>
 
       <View style={styles.buttons}>
-        <Button size="S" type={ButtonType.Secondary} onPress={onCancel} title={strings.cancel} />
+        <Button
+          size="S"
+          type={ButtonType.Secondary}
+          onPress={onCancel}
+          title={strings.cancel}
+        />
 
         <Space width="lg" />
 
-        <Button size="S" onPress={resetErrorBoundary} title={strings.tryAgain} />
+        <Button
+          size="S"
+          onPress={resetErrorBoundary}
+          title={strings.tryAgain}
+        />
       </View>
     </>
   )

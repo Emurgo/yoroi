@@ -12,36 +12,58 @@ type StepperProgressProps = {
   style?: ViewStyle
 }
 
-export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, style}: StepperProgressProps) => {
+export const StepperProgress = ({
+  currentStep,
+  currentStepTitle,
+  totalSteps,
+  style,
+}: StepperProgressProps) => {
   const {color} = useTheme()
 
-  if (currentStep > totalSteps) throw new Error("StepperProgress: currentStep can't be greater that totalSteps")
+  if (currentStep > totalSteps)
+    throw new Error(
+      "StepperProgress: currentStep can't be greater that totalSteps",
+    )
 
-  const stepIndicatorFirstPart: Array<React.ReactNode> = Array.from({length: currentStep}).map((_, index) => {
+  const stepIndicatorFirstPart: Array<React.ReactNode> = Array.from({
+    length: currentStep,
+  }).map((_, index) => {
     if (index <= currentStep - 2) return <CheckIllustration key={index} />
 
     return (
       <Animated.View key={index} style={styles.root}>
-        <Text style={[styles.currentStepTitle, {color: color.el_primary_medium}]}>{currentStep}</Text>
+        <Text
+          style={[styles.currentStepTitle, {color: color.el_primary_medium}]}
+        >
+          {currentStep}
+        </Text>
 
-        <Animated.Text layout={Layout} style={[styles.currentStepTitle, {color: color.text_primary_medium}]}>
+        <Animated.Text
+          layout={Layout}
+          style={[styles.currentStepTitle, {color: color.text_primary_medium}]}
+        >
           {currentStepTitle}
         </Animated.Text>
       </Animated.View>
     )
   })
 
-  const stepIndicatorSecondPart: Array<React.ReactNode> = Array.from({length: totalSteps - currentStep}).map(
-    (_, index) => (
-      <Animated.View key={index + currentStep + 1} style={styles.root}>
-        <Text style={[styles.currentStepTitle, {color: color.el_primary_medium}]}>{index + currentStep + 1}</Text>
+  const stepIndicatorSecondPart: Array<React.ReactNode> = Array.from({
+    length: totalSteps - currentStep,
+  }).map((_, index) => (
+    <Animated.View key={index + currentStep + 1} style={styles.root}>
+      <Text style={[styles.currentStepTitle, {color: color.el_primary_medium}]}>
+        {index + currentStep + 1}
+      </Text>
 
-        <Animated.Text layout={Layout} style={[styles.currentStepTitle, {color: color.text_primary_medium}]}>
-          {currentStepTitle}
-        </Animated.Text>
-      </Animated.View>
-    ),
-  )
+      <Animated.Text
+        layout={Layout}
+        style={[styles.currentStepTitle, {color: color.text_primary_medium}]}
+      >
+        {currentStepTitle}
+      </Animated.Text>
+    </Animated.View>
+  ))
 
   const stepIndicator = [...stepIndicatorFirstPart, ...stepIndicatorSecondPart]
 

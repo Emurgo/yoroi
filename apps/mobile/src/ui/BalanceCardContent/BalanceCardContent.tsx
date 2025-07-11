@@ -4,16 +4,16 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '../Space/Space'
-import {useCurrencyPairing} from '../../features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {
   formatPriceChange,
   priceChange,
 } from '../../features/Portfolio/common/helpers/priceChange'
 import {useNavigateTo} from '../../features/Portfolio/common/hooks/useNavigateTo'
-import {PnlTag} from '../PnlTag/PnlTag'
+import {useCurrencyPairing} from '../../features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
+import {PnlTag} from '../PnlTag/PnlTag'
+import {Spacer} from '../Space/Space'
 
 type Props = {
   amount: Portfolio.Token.Amount
@@ -91,7 +91,9 @@ const Balance = ({amount}: BalanceProps) => {
 
   return (
     <View style={styles.balanceBox}>
-      <Text style={[styles.balanceText, {color: color.white_static}]}>{balance}</Text>
+      <Text style={[styles.balanceText, {color: color.white_static}]}>
+        {balance}
+      </Text>
 
       <Text style={[styles.symbol, {color: color.white_static}]}>
         {amount.info.ticker}

@@ -2,18 +2,18 @@ import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 
-import {Button, ButtonType} from '../../../ui/Button/Button'
-import {Checkbox} from '../../../ui/Checkbox/Checkbox'
-import {useModal} from '../../../ui/Modal/ModalContext'
 import globalMessages, {
   actionMessages,
   confirmationMessages,
 } from '../../../kernel/i18n/global-messages'
 import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
 import {useWalletNavigation} from '../../../kernel/navigation'
+import {Button, ButtonType} from '../../../ui/Button/Button'
+import {Checkbox} from '../../../ui/Checkbox/Checkbox'
+import {useModal} from '../../../ui/Modal/ModalContext'
 import {loadText} from './loadText'
 import {Disclaimer} from './types'
 import {useDisclaimerState} from './useDisclaimerState'
@@ -31,23 +31,17 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const navigation = useNavigation()
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   React.useEffect(() => {
     if (!disabled && !accepted && showed === false) {
       openModal({
         title: strings.disclaimer,
         content: (
-          <View style={styles.container}>
-            {/* @ts-expect-error old react */}
+          <View style={[a.px_lg, a.pb_lg]}>
             <Markdown
               style={{
-                body: [
-                  styles.body,
-                  {color: color.gray_max},
-                  a.body_1_lg_regular,
-                  a.py_sm,
-                ],
+                body: [{}, {color: p.gray_max}, a.body_1_lg_regular, a.py_sm],
               }}
             >
               {loadText(type, languageCode)}
@@ -57,7 +51,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
           </View>
         ),
         footer: (
-          <View style={styles.actions}>
+          <View style={[a.flex, a.flex_row, a.gap_lg]}>
             <Button
               type={ButtonType.Secondary}
               title={strings.cancel}
@@ -85,6 +79,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
     languageCode,
     navigation,
     openModal,
+    p.gray_max,
     resetToTxHistory,
     setAccepted,
     showed,
@@ -92,7 +87,6 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
     strings.cancel,
     strings.disclaimer,
     strings.proceed,
-    styles,
     type,
   ])
   return null
@@ -115,19 +109,6 @@ const Proceed = ({title, onPress}: {title: string; onPress: () => void}) => {
   return <Button title={title} onPress={onPress} disabled={!canContinue} />
 }
 
-const styles = StyleSheet.create({
-  container: {
-    ...a.px_lg,
-    ...a.pb_lg,
-  },
-
-  body: {},
-  actions: {
-    ...a.flex,
-    ...a.flex_row,
-    ...a.gap_lg,
-  },
-})
 const useStrings = () => {
   const intl = useIntl()
 

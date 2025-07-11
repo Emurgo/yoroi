@@ -1,6 +1,13 @@
-import {useTheme, atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Platform, StyleProp, StyleSheet, Text as RNText, TextProps, TextStyle} from 'react-native'
+import {
+  Platform,
+  Text as RNText,
+  StyleProp,
+  StyleSheet,
+  TextProps,
+  TextStyle,
+} from 'react-native'
 
 type Props = TextProps & {
   small?: boolean
@@ -12,7 +19,10 @@ type Props = TextProps & {
   adjustsFontSizeToFit?: boolean
 }
 
-const androidAdjustsFontSizeToFitFix = (width: number, childrenLength: number) => {
+const androidAdjustsFontSizeToFitFix = (
+  width: number,
+  childrenLength: number,
+) => {
   return Math.floor(1.4 * (width / childrenLength))
 }
 
@@ -20,7 +30,18 @@ export const Text = (props: Props) => {
   const [fontSize, setFontSize] = React.useState(0)
   const {color} = useTheme()
 
-  const {small, secondary, light, bold, monospace, error, style, children, adjustsFontSizeToFit, ...restProps} = props
+  const {
+    small,
+    secondary,
+    light,
+    bold,
+    monospace,
+    error,
+    style,
+    children,
+    adjustsFontSizeToFit,
+    ...restProps
+  } = props
 
   const textStyle: Array<StyleProp<TextStyle>> = [
     styles.text,
@@ -55,9 +76,15 @@ export const Text = (props: Props) => {
             return
           }
           const {width} = event.nativeEvent.layout
-          const fixedFontSize = androidAdjustsFontSizeToFitFix(width, children.length)
+          const fixedFontSize = androidAdjustsFontSizeToFitFix(
+            width,
+            children.length,
+          )
           const styleFontSize = (style as TextStyle)?.fontSize
-          const fontSize = typeof styleFontSize === 'number' ? Math.min(styleFontSize, fixedFontSize) : fixedFontSize
+          const fontSize =
+            typeof styleFontSize === 'number'
+              ? Math.min(styleFontSize, fixedFontSize)
+              : fixedFontSize
 
           setFontSize(fontSize)
         }}

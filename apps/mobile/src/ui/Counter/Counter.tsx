@@ -21,14 +21,24 @@ export const Counter = ({
   const {color} = useTheme()
 
   return (
-    <View style={[styles.counter, {backgroundColor: color.bg_color_max}, style]}>
-      <Text style={[styles.counterText, {color: color.primary_600}]}>{openingText}</Text>
+    <View
+      style={[styles.counter, {backgroundColor: color.bg_color_max}, style]}
+    >
+      <Text style={[styles.counterText, {color: color.primary_600}]}>
+        {openingText}
+      </Text>
 
       <Text>
-        <Text style={[styles.counterTextBold, {color: color.primary_600}]}> {counter} </Text>
+        <Text style={[styles.counterTextBold, {color: color.primary_600}]}>
+          {' '}
+          {counter}{' '}
+        </Text>
 
         {unitsText !== undefined && (
-          <Text style={[styles.counterTextBold, {color: color.primary_600}]}> {unitsText ?? ''} </Text>
+          <Text style={[styles.counterTextBold, {color: color.primary_600}]}>
+            {' '}
+            {unitsText ?? ''}{' '}
+          </Text>
         )}
 
         {closingText !== undefined && (

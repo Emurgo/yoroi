@@ -1,14 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewProps,
-} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Spacer} from '../../../../ui/Space/Space'
@@ -54,7 +46,9 @@ export const ButtonGroup = <T extends string>({
                 index !== selected && {backgroundColor: color.bg_color_max},
               ]}
             >
-              <Text style={[styles.label, {color: color.primary_600}]}>{label}</Text>
+              <Text style={[styles.label, {color: color.primary_600}]}>
+                {label}
+              </Text>
             </TouchableOpacity>
           </LinearGradient>
         </>

@@ -3,15 +3,15 @@ import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
-import {useCopy} from '../../../kernel/utils/clipboard'
-import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
-import {Spacer} from '../Space/Space'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
+import {useCopy} from '../../../kernel/utils/clipboard'
 import {useKeyHashes} from '../../../wallets/hooks'
 import {useReceive} from '../../features/Receive/common/ReceiveProvider'
-import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {useStrings} from '../../features/Receive/common/useStrings'
+import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
+import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
+import {Spacer} from '../Space/Space'
 
 type AddressDetailCardProps = {
   title: string
@@ -133,7 +133,9 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
               styles.circle,
               {
                 backgroundColor:
-                  index === scrollPosition ? color.el_primary_medium : color.gray_300,
+                  index === scrollPosition
+                    ? color.el_primary_medium
+                    : color.gray_300,
               },
             ]}
           />

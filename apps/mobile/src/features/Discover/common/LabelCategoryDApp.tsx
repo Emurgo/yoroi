@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {useMappedStrings} from './useStrings'
 
@@ -13,33 +13,26 @@ export const LabelCategoryDApp = ({category}: Props) => {
     () => mappedStrings(category) ?? category,
     [mappedStrings, category],
   )
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <View
       style={[
-        styles.labelContainer,
-        {backgroundColor: color.bg_color_max},
-        {borderColor: color.el_primary_medium},
+        {
+          borderRadius: 20,
+          paddingVertical: 1,
+          paddingHorizontal: 6,
+          height: 24,
+          borderWidth: 2,
+        },
+        a.flex_row,
+        a.align_center,
+        a.justify_center,
+        {backgroundColor: p.bg_color_max},
+        {borderColor: p.el_primary_medium},
       ]}
     >
-      <Text style={[styles.labelText, {color: color.primary_600}]}>{text}</Text>
+      <Text style={[a.body_3_sm_medium, {color: p.primary_600}]}>{text}</Text>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  labelContainer: {
-    borderRadius: 20,
-    paddingVertical: 1,
-    paddingHorizontal: 6,
-    height: 24,
-    borderWidth: 2,
-    ...a.flex_row,
-    ...a.align_center,
-    ...a.justify_center,
-  },
-  labelText: {
-    ...a.body_3_sm_medium,
-  },
-})

@@ -11,9 +11,17 @@ export const Rate = ({rate, name}: Props) => {
 
   return (
     <Text style={styles.boxExchange}>
-      <Text style={[styles.normalText, {color: color.white_static}]}>1 {name} = </Text>
+      <Text style={[styles.normalText, {color: color.white_static}]}>
+        1 {name} ={' '}
+      </Text>
 
-      <Text style={[styles.normalText, styles.usdExchangeText, {color: color.white_static}]}>
+      <Text
+        style={[
+          styles.normalText,
+          styles.usdExchangeText,
+          {color: color.white_static},
+        ]}
+      >
         {rate.toFixed(config.decimals)}
       </Text>
 

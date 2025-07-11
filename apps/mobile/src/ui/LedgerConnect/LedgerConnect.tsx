@@ -16,15 +16,15 @@ import globalMessages, {
 } from '../../../kernel/i18n/global-messages'
 import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
-import {BulletPointItem} from '../BulletPointItem'
-import {Button} from '../Button/Button'
-import {Loading} from '../Loading/Loading'
-import {Space} from '../Space/Space'
 import {
   BluetoothDisabledError,
   RejectedByUserError,
 } from '../../../wallets/hw/hw'
 import {Device} from '../../../wallets/types/hw'
+import {BulletPointItem} from '../BulletPointItem'
+import {Button} from '../Button/Button'
+import {Loading} from '../Loading/Loading'
+import {Space} from '../Space/Space'
 import {DeviceItem} from './DeviceItem'
 
 type Props = {

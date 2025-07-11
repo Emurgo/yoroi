@@ -4,9 +4,9 @@ import {StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../ui/Button/Button'
+import {ConectionErrorImage} from '../../../ui/ConectionErrorImage/ConectionErrorImage'
 import {Spacer} from '../../../ui/Space/Space'
 import {useStrings} from '../strings'
-import {ConectionErrorImage} from '../../../ui/ConectionErrorImage/ConectionErrorImage'
 
 type ServiceUnavailableProps = {
   resetErrorBoundary?: () => void
@@ -20,14 +20,26 @@ export const ServiceUnavailable = ({
 
   return (
     <SafeAreaView style={{flex: 1}} edges={['left', 'right', 'bottom']}>
-      <View style={[styles.container, atoms.flex_1, atoms.align_center, atoms.justify_center, {padding: 16}]}>
+      <View
+        style={[
+          styles.container,
+          atoms.flex_1,
+          atoms.align_center,
+          atoms.justify_center,
+          {padding: 16},
+        ]}
+      >
         <ConectionErrorImage />
 
         <Spacer height={20} />
 
-        <Text style={[styles.title, {color: color.gray_max}]}>{strings.serviceUnavailable}</Text>
+        <Text style={[styles.title, {color: color.gray_max}]}>
+          {strings.serviceUnavailable}
+        </Text>
 
-        <Text style={[styles.text, {color: color.gray_600}]}>{strings.serviceUnavailableInfo}</Text>
+        <Text style={[styles.text, {color: color.gray_600}]}>
+          {strings.serviceUnavailableInfo}
+        </Text>
 
         <Spacer height={20} />
 

@@ -6,28 +6,28 @@ import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '../../../ui/Boundary/Boundary'
-import {Spacer} from '../../../ui/Space/Space'
-import {Text} from '../../../ui/Text/Text'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SwapTokenRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {getTokenIdParts} from '../../../Portfolio/common/helpers/get-token-id-parts'
 import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenActivity} from '../../../Portfolio/common/PortfolioTokenActivityProvider'
+import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
+import {Boundary} from '../../../ui/Boundary/Boundary'
+import {Counter} from '../../../ui/Counter/Counter'
+import {NoAssetFoundImage} from '../../../ui/NoAssetFoundImage/NoAssetFoundImage'
+import {ServiceUnavailable} from '../../../ui/ServiceUnavailable/ServiceUnavailable'
+import {Spacer} from '../../../ui/Space/Space'
+import {Text} from '../../../ui/Text/Text'
 import {
   AmountItemPlaceholder,
   TokenAmountItem,
 } from '../../../ui/TokenAmountItem/TokenAmountItem'
-import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
-import {NoAssetFoundImage} from '../../../ui/NoAssetFoundImage/NoAssetFoundImage'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {Counter} from '../../../ui/Counter/Counter'
 import {filterBySearch} from '../../common/filterBySearch'
 import {useNavigateTo} from '../../common/navigation'
-import {ServiceUnavailable} from '../../../ui/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 import {useSwapConfig} from '../../common/useSwapConfig'
@@ -49,7 +49,10 @@ export const SelectTokenScreen = () => {
           }}
         >
           {Array.from({length: 6}).map((_, i) => (
-            <AmountItemPlaceholder key={i} style={[styles.item, {paddingVertical: 8, paddingHorizontal: 16}]} />
+            <AmountItemPlaceholder
+              key={i}
+              style={[styles.item, {paddingVertical: 8, paddingHorizontal: 16}]}
+            />
           ))}
         </View>
       ),
@@ -63,7 +66,10 @@ export const SelectTokenScreen = () => {
   })
 
   return (
-    <SafeAreaView style={[styles.container, {backgroundColor: color.bg_color_max}]} edges={['left', 'right']}>
+    <SafeAreaView
+      style={[a.flex_1, {backgroundColor: color.bg_color_max}]}
+      edges={['left', 'right']}
+    >
       <Boundary loading={loading}>
         <ErrorBoundary
           fallbackRender={({resetErrorBoundary}) => (
@@ -156,11 +162,26 @@ const TokenList = ({direction}: Direction) => {
         data={filteredTokenList}
         renderItem={({item}: {item: Portfolio.Token.Info | string}) =>
           isString(item) ? (
-            <Text style={[styles.sectionHeading, {color: color.text_gray_low}, a.p_lg]}>{item}</Text>
+            <Text
+              style={[
+                styles.sectionHeading,
+                {color: color.text_gray_low},
+                a.p_lg,
+              ]}
+            >
+              {item}
+            </Text>
           ) : (
             <Boundary
               loading={{
-                fallback: <AmountItemPlaceholder style={[styles.item, {paddingVertical: 8, paddingHorizontal: 16}]} />,
+                fallback: (
+                  <AmountItemPlaceholder
+                    style={[
+                      styles.item,
+                      {paddingVertical: 8, paddingHorizontal: 16},
+                    ]}
+                  />
+                ),
               }}
             >
               <SelectableToken
@@ -290,11 +311,21 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
     <View style={[styles.imageContainer, {flex: 1, textAlign: 'center'}]}>
       <Spacer height={50} />
 
-      <NoAssetFoundImage style={[styles.image, {flex: 1, alignSelf: 'center', width: 200, height: 228}]} />
+      <NoAssetFoundImage
+        style={[
+          styles.image,
+          {flex: 1, alignSelf: 'center', width: 200, height: 228},
+        ]}
+      />
 
       <Spacer height={25} />
 
-      <Text style={[styles.contentText, {flex: 1, color: color.gray_max, paddingTop: 4, textAlign: 'center'}]}>
+      <Text
+        style={[
+          styles.contentText,
+          {flex: 1, color: color.gray_max, paddingTop: 4, textAlign: 'center'},
+        ]}
+      >
         {assetSearchTerm === ''
           ? strings.noAssetsFound
           : strings.noAssetsFoundFor(assetSearchTerm)}
@@ -302,16 +333,3 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  item: {},
-  list: {},
-  sectionHeading: {},
-  image: {},
-  imageContainer: {},
-  contentText: {},
-  counter: {},
-})

@@ -1,13 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import {PortfolioTokenBalances} from '@yoroi/types/lib/typescript/portfolio/balances'
 import * as React from 'react'
-import {FlatList, StyleSheet, Text, View} from 'react-native'
+import {FlatList, Text, View} from 'react-native'
 
+import {BalanceCard} from '../../../ui/BalanceCard/BalanceCard'
 import {Icon} from '../../../ui/Icon'
 import {Space} from '../../../ui/Space/Space'
-import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
 import {TokenInfoIcon} from '../../../ui/TokenInfoIcon/TokenInfoIcon'
-import {BalanceCard} from '../../../ui/BalanceCard/BalanceCard'
+import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 
@@ -25,13 +25,13 @@ export const WalletBalance = ({
   const balances = usePortfolioBalances({wallet})
   const ftList = balances.fts ?? []
   const nftsList = balances.nfts ?? []
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1]}>
       <Container>
         <Icon.WalletAvatar
-          style={styles.walletChecksum}
+          style={[{height: 80, width: 80}]}
           image={image}
           size={80}
         />
@@ -40,11 +40,15 @@ export const WalletBalance = ({
       <Space height="sm" />
 
       <Container>
-        <Text style={[styles.name, {color: color.text_gray_medium}]}>{name}</Text>
+        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+          {name}
+        </Text>
       </Container>
 
       <Container>
-        <Text style={[styles.plate, {color: color.text_gray_low}]}>{plate}</Text>
+        <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
+          {plate}
+        </Text>
       </Container>
 
       <Space height="lg" />
@@ -81,27 +85,51 @@ const TokenSquare = ({
   count: number
   list: PortfolioTokenBalances['fts'] | PortfolioTokenBalances['nfts']
 }) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   if (list.length == 0) {
     return (
-      <View style={[styles.square, {borderColor: color.gray_200}]}>
-        <Text style={[styles.squareTitle, {color: color.text_gray_medium}]}>{title}</Text>
+      <View
+        style={[
+          a.rounded_sm,
+          a.flex_1,
+          a.border,
+          a.p_lg,
+          {aspectRatio: 1},
+          {borderColor: p.gray_200},
+        ]}
+      >
+        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+          {title}
+        </Text>
 
         <Space fill />
 
-        <Text style={[styles.squareTitle, {color: color.text_gray_medium}]}>-</Text>
+        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>-</Text>
       </View>
     )
   }
 
   return (
-    <View style={[styles.square, {borderColor: color.gray_200}]}>
-      <Text style={[styles.squareTitle, {color: color.text_gray_medium}]}>{title}</Text>
+    <View
+      style={[
+        a.rounded_sm,
+        a.flex_1,
+        a.border,
+        a.p_lg,
+        {aspectRatio: 1},
+        {borderColor: p.gray_200},
+      ]}
+    >
+      <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+        {title}
+      </Text>
 
       <Space fill />
 
-      <Text style={[styles.squareCount, {color: color.text_gray_max}]}>{count}</Text>
+      <Text style={[a.heading_1_medium, {color: p.text_gray_max}]}>
+        {count}
+      </Text>
 
       <TokenList assetList={list} />
     </View>
@@ -109,11 +137,13 @@ const TokenSquare = ({
 }
 
 const TokenSquares = ({children}: {children: React.ReactNode}) => {
-  return <View style={styles.squares}>{children}</View>
+  return (
+    <View style={[a.w_full, a.flex_1, a.flex_row, a.px_lg]}>{children}</View>
+  )
 }
 
 const Container = ({children}: {children: React.ReactNode}) => {
-  return <View style={styles.container}>{children}</View>
+  return <View style={[a.align_center]}>{children}</View>
 }
 
 const TokenList = ({
@@ -125,7 +155,7 @@ const TokenList = ({
     <FlatList
       horizontal
       data={assetList}
-      style={styles.assetList}
+      style={[{maxHeight: 40}]}
       ItemSeparatorComponent={() => <Space width="sm" />}
       showsHorizontalScrollIndicator={false}
       keyExtractor={(item) => item.info.id}
@@ -133,44 +163,3 @@ const TokenList = ({
     />
   )
 }
-
-const styles = StyleSheet.create({
-  root: {
-    ...a.flex_1,
-  },
-  container: {
-    ...a.align_center,
-  },
-  walletChecksum: {
-    height: 80,
-    width: 80,
-  },
-  name: {
-    ...a.body_1_lg_medium,
-  },
-  plate: {
-    ...a.body_2_md_regular,
-  },
-  squares: {
-    ...a.w_full,
-    ...a.flex_1,
-    ...a.flex_row,
-    ...a.px_lg,
-  },
-  square: {
-    ...a.rounded_sm,
-    ...a.flex_1,
-    ...a.border,
-    ...a.p_lg,
-    aspectRatio: 1,
-  },
-  squareTitle: {
-    ...a.body_1_lg_medium,
-  },
-  squareCount: {
-    ...a.heading_1_medium,
-  },
-  assetList: {
-    maxHeight: 40,
-  },
-})

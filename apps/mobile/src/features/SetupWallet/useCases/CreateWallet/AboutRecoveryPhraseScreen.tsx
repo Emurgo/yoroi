@@ -5,15 +5,14 @@ import {Linking, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {Button} from '../../../../ui/Button/Button'
-import {Space} from '../../../../ui/Space/Space'
-import {Spacer} from '../../../../ui/Space/Space'
-import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {Button} from '../../../../ui/Button/Button'
 import {CardAboutPhrase} from '../../../../ui/CardAboutPhrase/CardAboutPhrase'
-import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../../../ui/LearnMoreButton/LearnMoreButton'
+import {Space, Spacer} from '../../../../ui/Space/Space'
+import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
+import {YoroiZendeskLink} from '../../common/constants'
 import {useStrings} from '../../common/useStrings'
 
 export const AboutRecoveryPhraseScreen = () => {
@@ -35,8 +34,19 @@ export const AboutRecoveryPhraseScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.root, a.flex_1, a.pb_lg, {backgroundColor: color.bg_color_max}]}>
-      <ScrollView bounces={false} contentContainerStyle={[styles.scroll, a.px_lg]}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={[
+        styles.root,
+        a.flex_1,
+        a.pb_lg,
+        {backgroundColor: color.bg_color_max},
+      ]}
+    >
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={[styles.scroll, a.px_lg]}
+      >
         <StepperProgress
           currentStep={1}
           currentStepTitle={strings.stepAboutRecoveryPhrase}
@@ -45,7 +55,13 @@ export const AboutRecoveryPhraseScreen = () => {
 
         <Space height="lg" />
 
-        <Text style={[styles.aboutRecoveryPhraseTitle, {color: color.text_gray_medium}, a.body_1_lg_regular]}>
+        <Text
+          style={[
+            styles.aboutRecoveryPhraseTitle,
+            {color: color.text_gray_medium},
+            a.body_1_lg_regular,
+          ]}
+        >
           {strings.aboutRecoveryPhraseTitle(bold)}
         </Text>
 
@@ -66,7 +82,9 @@ export const AboutRecoveryPhraseScreen = () => {
 
       <Spacer fill />
 
-      <Actions style={[styles.actions, styles.padding, a.pt_lg, a.gap_lg, a.px_lg]}>
+      <Actions
+        style={[styles.actions, styles.padding, a.pt_lg, a.gap_lg, a.px_lg]}
+      >
         <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
 
         <Button
@@ -89,7 +107,9 @@ const useBold = () => {
   const {atoms} = useTheme()
 
   return {
-    b: (text: React.ReactNode) => <Text style={atoms.body_1_lg_medium}>{text}</Text>,
+    b: (text: React.ReactNode) => (
+      <Text style={atoms.body_1_lg_medium}>{text}</Text>
+    ),
   }
 }
 

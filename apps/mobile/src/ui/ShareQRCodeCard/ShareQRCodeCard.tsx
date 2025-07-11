@@ -1,5 +1,4 @@
 import {useTheme} from '@yoroi/theme'
-import _ from 'lodash'
 import * as React from 'react'
 import {
   GestureResponderEvent,
@@ -14,9 +13,9 @@ import QRCode from 'react-native-qrcode-svg'
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
+import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 import {Spacer} from '../Space/Space'
 import {Text} from '../Text/Text'
-import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {
   qrContent: string
@@ -60,7 +59,11 @@ export const ShareQRCodeCard = ({
         })
 
         setIsSharing(false)
-        await Share.open({url: uri, filename: shareLabel, message: shareContent})
+        await Share.open({
+          url: uri,
+          filename: shareLabel,
+          message: shareContent,
+        })
       }
 
       captureAndShare()
@@ -87,22 +90,40 @@ export const ShareQRCodeCard = ({
 
           <Spacer height={16} />
 
-          <Text style={[styles.title, {color: color.gray_max}]} testID={`${testID}-title`}>
+          <Text
+            style={[styles.title, {color: color.gray_max}]}
+            testID={`${testID}-title`}
+          >
             {title}
           </Text>
 
           <View style={styles.addressContainer}>
-            <View style={[styles.qrCode, {backgroundColor: color.white_static}]}>
-              <QRCode value={qrContent} size={170} backgroundColor={color.white_static} color={color.black_static} />
+            <View
+              style={[styles.qrCode, {backgroundColor: color.white_static}]}
+            >
+              <QRCode
+                value={qrContent}
+                size={170}
+                backgroundColor={color.white_static}
+                color={color.black_static}
+              />
             </View>
 
             <Spacer height={16} />
 
-            <Text style={[styles.textAddress, {color: color.gray_max}]}>{qrContent}</Text>
+            <Text style={[styles.textAddress, {color: color.gray_max}]}>
+              {qrContent}
+            </Text>
           </View>
 
-          <TouchableOpacity activeOpacity={0.5} onPress={handleOnPressShare} onLongPress={onLongPress}>
-            <Text style={[styles.textShareAddress, {color: color.gray_900}]}>{shareLabel}</Text>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={handleOnPressShare}
+            onLongPress={onLongPress}
+          >
+            <Text style={[styles.textShareAddress, {color: color.gray_900}]}>
+              {shareLabel}
+            </Text>
           </TouchableOpacity>
         </View>
       </>

@@ -1,7 +1,14 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Dimensions, LayoutChangeEvent, Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
+import {
+  Dimensions,
+  LayoutChangeEvent,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {Portal} from 'react-native-paper'
 
 import {addEventListener, getTooltipPosition, Measurement} from './utils'
@@ -81,19 +88,23 @@ export const Tooltip = ({
   }, [])
 
   React.useEffect(() => {
-    const subscription = addEventListener(Dimensions, 'change', () => setVisible(false))
+    const subscription = addEventListener(Dimensions, 'change', () =>
+      setVisible(false),
+    )
 
     return () => subscription.remove()
   }, [])
 
   const handleOnLayout = ({nativeEvent: {layout}}: LayoutChangeEvent) => {
-    childrenWrapperRef.current.measure((_x, _y, width, height, pageX, pageY) => {
-      setMeasurement({
-        children: {pageX, pageY, height, width},
-        tooltip: {...layout},
-        measured: true,
-      })
-    })
+    childrenWrapperRef.current.measure(
+      (_x, _y, width, height, pageX, pageY) => {
+        setMeasurement({
+          children: {pageX, pageY, height, width},
+          tooltip: {...layout},
+          measured: true,
+        })
+      },
+    )
   }
 
   const handleTouchStart = () => {
@@ -157,7 +168,10 @@ export const Tooltip = ({
       {visible && (
         <Portal>
           {/* Close it when touch on screen */}
-          <Pressable style={{...StyleSheet.absoluteFillObject}} onPress={() => setVisible(false)}>
+          <Pressable
+            style={{...StyleSheet.absoluteFillObject}}
+            onPress={() => setVisible(false)}
+          >
             <View
               onLayout={handleOnLayout}
               style={[
@@ -184,7 +198,11 @@ export const Tooltip = ({
         </Portal>
       )}
 
-      <Pressable ref={childrenWrapperRef} style={styles.pressContainer} {...pressProps}>
+      <Pressable
+        ref={childrenWrapperRef}
+        style={styles.pressContainer}
+        {...pressProps}
+      >
         {React.cloneElement(children, {
           ...rest,
           ...pressProps,

@@ -1,24 +1,23 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Button} from '../../../ui/Button/Button'
-import {SafeArea} from '../../../ui/SafeArea/SafeArea'
-import {Space} from '../../../ui/Space/Space'
-import {Spacer} from '../../../ui/Space/Space'
-import {FailedTxIcon} from '../../../ui/FailedTxIcon/FailedTxIcon'
 import {useBlockGoBack, useWalletNavigation} from '../../../kernel/navigation'
+import {Button} from '../../../ui/Button/Button'
+import {FailedTxIcon} from '../../../ui/FailedTxIcon/FailedTxIcon'
+import {SafeArea} from '../../../ui/SafeArea/SafeArea'
+import {Space, Spacer} from '../../../ui/Space/Space'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
-    <SafeArea style={styles.root}>
+    <SafeArea style={[a.p_lg, a.flex_1, a.align_center, a.justify_center]}>
       <Spacer height={144} />
 
       <FailedTxIcon />
@@ -27,9 +26,20 @@ export const FailedTxScreen = () => {
 
       <Space height="lg" />
 
-      <Text style={[styles.title, {color: color.gray_max}]}>{strings.failedTxTitle}</Text>
+      <Text
+        style={[
+          a.heading_3_medium,
+          a.px_sm,
+          a.text_center,
+          {color: p.gray_max},
+        ]}
+      >
+        {strings.failedTxTitle}
+      </Text>
 
-      <Text style={[styles.text, {color: color.gray_600}]}>{strings.failedTxText}</Text>
+      <Text style={[a.body_1_lg_regular, a.text_center, {color: p.gray_600}]}>
+        {strings.failedTxText}
+      </Text>
 
       <Space fill />
 
@@ -37,7 +47,7 @@ export const FailedTxScreen = () => {
         <Button
           onPress={resetToTxHistory}
           title={strings.failedTxButton}
-          style={styles.button}
+          style={[a.px_lg]}
         />
       </Actions>
     </SafeArea>
@@ -45,35 +55,19 @@ export const FailedTxScreen = () => {
 }
 
 const Actions = ({children}: {children: React.ReactNode}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
-  return <View style={[styles.actions, {borderTopColor: color.gray_200}]}>{children}</View>
+  return (
+    <View
+      style={[
+        {alignSelf: 'stretch', borderTopWidth: 1},
+        {borderTopColor: p.gray_200},
+      ]}
+    >
+      {children}
+    </View>
+  )
 }
-
-const styles = StyleSheet.create({
-  root: {
-    ...a.p_lg,
-    ...a.flex_1,
-    ...a.align_center,
-    ...a.justify_center,
-  },
-  title: {
-    ...a.heading_3_medium,
-    ...a.px_sm,
-    ...a.text_center,
-  },
-  text: {
-    ...a.body_1_lg_regular,
-    ...a.text_center,
-  },
-  button: {
-    ...a.px_lg,
-  },
-  actions: {
-    alignSelf: 'stretch',
-    borderTopWidth: 1,
-  },
-})
 
 const useStrings = () => {
   const intl = useIntl()

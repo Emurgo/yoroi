@@ -34,7 +34,14 @@ export const LimitInput = () => {
           isFocused && {borderColor: color.gray_900},
         ]}
       >
-        <Text style={[styles.label, {backgroundColor: color.bg_color_max, color: color.gray_900}]}>{strings.limitPrice}</Text>
+        <Text
+          style={[
+            styles.label,
+            {backgroundColor: color.bg_color_max, color: color.gray_900},
+          ]}
+        >
+          {strings.limitPrice}
+        </Text>
 
         <View style={styles.content}>
           <TextInput
@@ -58,7 +65,9 @@ export const LimitInput = () => {
           />
 
           <View style={[styles.textWrapper, disabled && styles.disabled]}>
-            <Text style={[styles.text, {color: color.gray_max}]}>{tokenInTicker}</Text>
+            <Text style={[styles.text, {color: color.gray_max}]}>
+              {tokenInTicker}
+            </Text>
           </View>
         </View>
       </View>

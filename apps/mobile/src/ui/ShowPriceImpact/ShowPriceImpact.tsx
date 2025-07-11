@@ -2,9 +2,12 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Icon} from '../Icon'
-import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
+import {
+  getPriceImpactRisk,
+  usePriceImpactRiskTheme,
+} from '../../features/Swap/common/helpers'
 import {useStrings} from '../../features/Swap/common/strings'
+import {Icon} from '../Icon'
 
 export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
   const strings = useStrings()

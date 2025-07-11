@@ -1,11 +1,11 @@
 import {useQuery} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 
-import {Spacer} from '../../../ui/Space/Space'
 import {LanguageCode} from '../../../kernel/i18n/languages'
+import {Spacer} from '../../../ui/Space/Space'
 import {loadTOS} from './loadTos'
 
 const useTos = ({languageCode}: {languageCode: LanguageCode}) => {
@@ -23,7 +23,7 @@ export const TermsOfService = ({
   languageCode: LanguageCode
 }) => {
   const tos = useTos({languageCode})
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return tos != null ? (
     <View>
@@ -32,21 +32,11 @@ export const TermsOfService = ({
       {/* @ts-expect-error old react */}
       <Markdown
         style={{
-          body: [
-            styles.body,
-            {color: color.gray_max},
-            a.body_1_lg_regular,
-            a.py_sm,
-          ],
-          heading2: [
-            styles.heading2,
-            {color: color.gray_max},
-            a.body_1_lg_medium,
-            a.py_sm,
-          ],
+          body: [{}, {color: p.gray_max}, a.body_1_lg_regular, a.py_sm],
+          heading2: [{}, {color: p.gray_max}, a.body_1_lg_medium, a.py_sm],
           heading1: [
-            styles.heading1,
-            {color: color.gray_max},
+            {},
+            {color: p.gray_max},
             {fontFamily: 'Rubik-Bold'},
             {fontSize: 20},
             {lineHeight: 30},
@@ -61,9 +51,3 @@ export const TermsOfService = ({
     <ActivityIndicator size="large" color="black" />
   )
 }
-
-const styles = StyleSheet.create({
-  body: {},
-  heading2: {},
-  heading1: {},
-})

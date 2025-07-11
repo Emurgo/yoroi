@@ -14,7 +14,9 @@ export const ProgressCircle = ({percentage}: ExternalProps) => {
 
   return (
     <View style={styles.wrapper}>
-      <Text style={[styles.text, {color: color.text_gray_medium}]}>{percentage}%</Text>
+      <Text style={[styles.text, {color: color.text_gray_medium}]}>
+        {percentage}%
+      </Text>
 
       <Svg width={56} height={56} viewBox="0 0 36 36" style={styles.chart}>
         <Path

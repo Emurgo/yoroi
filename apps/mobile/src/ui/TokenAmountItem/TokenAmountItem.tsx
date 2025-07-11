@@ -9,17 +9,17 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 
+import {features} from '../../../kernel/features'
+import {useStrings} from '../../ReviewTx/common/hooks/useStrings'
+import {usePrivacyMode} from '../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePriceImpactRiskTheme} from '../../Swap/common/helpers'
+import {SwapPriceImpactRisk} from '../../Swap/common/types'
 import {Button, ButtonType} from '../Button/Button'
 import {Icon} from '../Icon'
 import {useModal} from '../Modal/ModalContext'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
 import {Text} from '../Text/Text'
-import {features} from '../../../kernel/features'
-import {useStrings} from '../../ReviewTx/common/hooks/useStrings'
 import {TokenDetails} from '../TokenDetails/TokenDetails'
-import {usePrivacyMode} from '../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {usePriceImpactRiskTheme} from '../../Swap/common/helpers'
-import {SwapPriceImpactRisk} from '../../Swap/common/types'
 import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
 
 type TokenAmountItemProps = {
@@ -178,7 +178,9 @@ export const AmountItemPlaceholder = ({style}: ViewProps) => {
     <View style={[style, styles.skeletonLogo]}>
       <View style={[styles.skeletonTitle, {backgroundColor: color.gray_200}]} />
 
-      <View style={[styles.skeletonBorder, {backgroundColor: color.gray_200}]} />
+      <View
+        style={[styles.skeletonBorder, {backgroundColor: color.gray_200}]}
+      />
     </View>
   )
 }

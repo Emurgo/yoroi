@@ -31,7 +31,11 @@ export const Banner = ({error, text, boldText, label, children}: Props) => {
       )}
 
       {text != null && (
-        <Text small={error} bold={boldText} style={[error != null && {color: color.sys_magenta_500}]}>
+        <Text
+          small={error}
+          bold={boldText}
+          style={[error != null && {color: color.sys_magenta_500}]}
+        >
           {text}
         </Text>
       )}
@@ -47,7 +51,10 @@ type ClickableProps = {
 
 export const ClickableBanner = ({onPress, ...rest}: ClickableProps) =>
   onPress ? (
-    <TouchableOpacity onPress={onPress} hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}>
+    <TouchableOpacity
+      onPress={onPress}
+      hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+    >
       <Banner {...rest} />
     </TouchableOpacity>
   ) : (

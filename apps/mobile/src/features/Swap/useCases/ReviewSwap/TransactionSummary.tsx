@@ -3,18 +3,18 @@ import _ from 'lodash'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {Divider} from '../../../ui/Divider/Divider'
 import {Icon} from '../../../ui/Icon'
+import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
 import {Space} from '../../../ui/Space/Space'
 import {TokenAmountItem} from '../../../ui/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {
   PRICE_IMPACT_HIGH_RISK,
   PRICE_IMPACT_MODERATE_RISK,
   undefinedToken,
 } from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
-import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
 import {useStrings} from '../../common/strings'
 import {SwapContext} from '../../common/SwapProvider'
 import {Splits} from '../CreateOrder/EstimateSummary'
@@ -111,7 +111,9 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
           ? strings.marketPrice
           : strings.limitPriceWarningTitle,
       value: (
-        <Text style={[styles.text, styles.alignRight, {color: color.gray_900}]}>{priceInfoValue}</Text>
+        <Text style={[styles.text, styles.alignRight, {color: color.gray_900}]}>
+          {priceInfoValue}
+        </Text>
       ),
     },
     {
@@ -121,17 +123,25 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     },
     {
       label: strings.swapMinAdaTitle,
-      value: <Text style={[styles.text, {color: color.gray_900}]}>{minAdaInfoValue}</Text>,
+      value: (
+        <Text style={[styles.text, {color: color.gray_900}]}>
+          {minAdaInfoValue}
+        </Text>
+      ),
     },
     {
       label: strings.swapFeesTitle,
-      value: <Text style={[styles.text, {color: color.gray_900}]}>{totalFee}</Text>,
+      value: (
+        <Text style={[styles.text, {color: color.gray_900}]}>{totalFee}</Text>
+      ),
     },
     {
       label: strings.swapMinReceivedTitle,
       value: (
         <View style={styles.flex}>
-          <Text style={[styles.text, styles.alignRight, {color: color.gray_900}]}>
+          <Text
+            style={[styles.text, styles.alignRight, {color: color.gray_900}]}
+          >
             {minReceivedInfoValue}
           </Text>
         </View>
@@ -162,7 +172,9 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
             )}
 
             <Text style={[styles.bannerText, {color: color.gray_900}]}>
-              <Text style={[styles.bannerText, styles.bold, atoms.body_2_md_medium]}>
+              <Text
+                style={[styles.bannerText, styles.bold, atoms.body_2_md_medium]}
+              >
                 {strings.priceImpactRiskHigh({
                   riskValue:
                     priceImpactRisk === 'moderate'
@@ -181,13 +193,17 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
       <Space height="lg" />
 
-      <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>{strings.swapFrom}</Text>
+      <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>
+        {strings.swapFrom}
+      </Text>
 
       <TokenAmountItem amount={amountIn} orderType={orderType} />
 
       <Space height="lg" />
 
-      <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>{strings.swapTo}</Text>
+      <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>
+        {strings.swapTo}
+      </Text>
 
       <TokenAmountItem
         amount={amountOut}
@@ -197,7 +213,9 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
       <Divider verticalSpace="lg" />
 
-      <Text style={[styles.detailsTitle, {color: color.text_gray_medium}]}>{strings.swapDetailsTitle}</Text>
+      <Text style={[styles.detailsTitle, {color: color.text_gray_medium}]}>
+        {strings.swapDetailsTitle}
+      </Text>
 
       {feesInfo.map((orderInfo) => {
         if (orderInfo?.hidden) {
@@ -208,14 +226,34 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
           <View key={orderInfo.label}>
             <Space height="sm" />
 
-            <View style={[styles.flexBetween, atoms.flex_row, atoms.justify_between, atoms.align_start]}>
+            <View
+              style={[
+                styles.flexBetween,
+                atoms.flex_row,
+                atoms.justify_between,
+                atoms.align_start,
+              ]}
+            >
               <View style={[styles.flex, atoms.flex_row, atoms.align_center]}>
-                <Text style={[styles.text, styles.gray, {color: color.gray_700}]}>
+                <Text
+                  style={[styles.text, styles.gray, {color: color.gray_700}]}
+                >
                   {orderInfo.label}
                 </Text>
               </View>
 
-              <View style={[styles.orderValueContainer, atoms.flex_row, atoms.align_end, atoms.justify_end, atoms.pl_sm, atoms.flex_1]}>{orderInfo.value}</View>
+              <View
+                style={[
+                  styles.orderValueContainer,
+                  atoms.flex_row,
+                  atoms.align_end,
+                  atoms.justify_end,
+                  atoms.pl_sm,
+                  atoms.flex_1,
+                ]}
+              >
+                {orderInfo.value}
+              </View>
             </View>
           </View>
         )

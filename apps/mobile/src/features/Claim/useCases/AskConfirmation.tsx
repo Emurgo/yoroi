@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Platform, StyleSheet, Text, View} from 'react-native'
+import {Platform, Text, View} from 'react-native'
 
 import {useModal} from '../../../ui/Modal/ModalContext'
 
@@ -16,15 +16,31 @@ type Props = {
 export const AskConfirmation = ({address, url, code}: Props) => {
   const strings = useStrings()
   const domain = getDomain(url)
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
-    <View style={styles.root}>
-      <Text style={[styles.warning, {color: color.text_gray_medium}]}>{strings.addressSharingWarning}</Text>
+    <View style={[a.flex_1, a.px_lg]}>
+      <Text
+        style={[
+          a.font_normal,
+          a.text_center,
+          a.body_1_lg_regular,
+          {color: p.text_gray_medium},
+        ]}
+      >
+        {strings.addressSharingWarning}
+      </Text>
 
       <Space.Height.xl />
 
-      <Text style={[styles.monospace, {color: color.text_gray_max}]}>{address}</Text>
+      <Text
+        style={[
+          {fontFamily: Platform.select({ios: 'Menlo', android: 'monospace'})},
+          {color: p.text_gray_max},
+        ]}
+      >
+        {address}
+      </Text>
 
       <Space.Height.lg fill />
 
@@ -40,12 +56,30 @@ export const AskConfirmation = ({address, url, code}: Props) => {
 }
 
 const Item = ({label, value}: {label: string; value: string}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
-    <View style={styles.item}>
-      <Text style={[styles.rowLabel, {color: color.text_gray_medium}]}>{label}</Text>
+    <View style={[a.self_stretch, a.flex_row, a.justify_between]}>
+      <Text
+        style={[
+          a.font_normal,
+          a.pr_sm,
+          a.body_1_lg_regular,
+          {color: p.text_gray_medium},
+        ]}
+      >
+        {label}
+      </Text>
 
-      <Text ellipsizeMode="middle" numberOfLines={1} style={[styles.rowValue, {color: color.text_gray_max}]}>
+      <Text
+        ellipsizeMode="middle"
+        numberOfLines={1}
+        style={[
+          {maxWidth: 240},
+          a.font_normal,
+          a.body_1_lg_regular,
+          {color: p.text_gray_max},
+        ]}
+      >
         {value}
       </Text>
     </View>
@@ -61,7 +95,7 @@ export const AskConfirmationActions = ({
   const {closeModal, isLoading} = useModal()
 
   return (
-    <View style={styles.actions}>
+    <View style={[a.flex_row, a.pb_lg, a.gap_lg]}>
       <Button
         size="S"
         type={ButtonType.Secondary}
@@ -79,44 +113,6 @@ export const AskConfirmationActions = ({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  root: {
-    ...a.flex_1,
-    ...a.px_lg,
-  },
-  actions: {
-    ...a.flex_row,
-    ...a.pb_lg,
-    ...a.gap_lg,
-  },
-  item: {
-    ...a.self_stretch,
-    ...a.flex_row,
-    ...a.justify_between,
-  },
-  warning: {
-    ...a.font_normal,
-    ...a.text_center,
-    ...a.body_1_lg_regular,
-  },
-  rowLabel: {
-    ...a.font_normal,
-    ...a.pr_sm,
-    ...a.body_1_lg_regular,
-  },
-  rowValue: {
-    maxWidth: 240,
-    ...a.font_normal,
-    ...a.body_1_lg_regular,
-  },
-  monospace: {
-    ...Platform.select({
-      ios: {fontFamily: 'Menlo'},
-      android: {fontFamily: 'monospace'},
-    }),
-  },
-})
 
 function getDomain(url: string) {
   try {
