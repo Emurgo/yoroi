@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 import {TempPinLoginScreen} from '../../features/Temporal_To_Remove/Auth/TempPinLoginScreen'
 import {InitialScreenNavigator} from '../../features/Temporal_To_Remove/InitialScreen/InitialScreenNavigatorNavigator'
-import {Modal} from '../../ui/Modal/ModalContext'
+import {Modal} from '../../ui/Modal/ModalScreen'
 
 const Stack = createStackNavigator<any>()
 

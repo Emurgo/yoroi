@@ -1,8 +1,4 @@
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet'
+import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet'
 import * as React from 'react'
 import {Keyboard} from 'react-native'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
@@ -44,7 +40,6 @@ export const ModalProvider = ({
   })
 
   const handlePresentModalPress = React.useCallback(() => {
-    console.log('jdkddk')
     bottomSheetModalRef.current?.present()
   }, [])
   const handleDismissModalPress = React.useCallback(() => {
@@ -81,15 +76,6 @@ export const ModalProvider = ({
         </ModalContext.Provider>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
-  )
-}
-
-export const Modal = () => {
-  const {bottomSheetModalRef, content} = useModal()
-  return (
-    <BottomSheetModal ref={bottomSheetModalRef}>
-      <BottomSheetView style={{flex: 1}}>{content}</BottomSheetView>
-    </BottomSheetModal>
   )
 }
 
