@@ -1,16 +1,11 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-} from 'react-native'
+import {Text, TouchableOpacity, useWindowDimensions} from 'react-native'
 
-import {useModal} from '../../../components/Modal/ModalContext'
+import {useModal} from '../../../ui/Modal/ModalContext'
+import {TokenDetails} from '../../../ui/TokenDetails/TokenDetails'
 import {useStrings} from './hooks/useStrings'
-import {TokenDetails} from './TokenDetails'
 
 export const TokenItem = ({
   tokenInfo,
@@ -23,10 +18,10 @@ export const TokenItem = ({
   isSent?: boolean
   label: string
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
+  const {palette: p} = useTheme()
 
   const handleShowTokenDetails = () => {
     openModal({
@@ -42,15 +37,22 @@ export const TokenItem = ({
         onPress={handleShowTokenDetails}
         activeOpacity={0.5}
         style={[
-          styles.receivedTokenItem,
-          !isPrimaryToken && styles.notPrimaryReceivedTokenItem,
+          a.flex,
+          a.flex_row,
+          a.align_center,
+          a.py_xs,
+          a.px_md,
+          {borderRadius: 8},
+          {backgroundColor: p.secondary_300},
+          !isPrimaryToken && {backgroundColor: p.secondary_100},
         ]}
         disabled={isPrimaryToken}
       >
         <Text
           style={[
-            styles.tokenReceivedItemText,
-            !isPrimaryToken && styles.notPrimaryReceivedTokenItemText,
+            a.body_2_md_regular,
+            {color: p.text_gray_max},
+            !isPrimaryToken && {color: p.secondary_700},
           ]}
         >
           {label}
@@ -63,65 +65,26 @@ export const TokenItem = ({
       onPress={handleShowTokenDetails}
       activeOpacity={0.5}
       style={[
-        styles.sentTokenItem,
-        !isPrimaryToken && styles.notPrimarySentTokenItem,
+        a.flex,
+        a.flex_row,
+        a.align_center,
+        a.py_xs,
+        a.px_md,
+        {borderRadius: 8},
+        {backgroundColor: p.primary_500},
+        !isPrimaryToken && {backgroundColor: p.primary_100},
       ]}
       disabled={isPrimaryToken}
     >
       <Text
         style={[
-          styles.tokenSentItemText,
-          !isPrimaryToken && styles.notPrimarySentTokenItemText,
+          a.body_2_md_regular,
+          {color: p.white_static},
+          !isPrimaryToken && {color: p.text_primary_medium},
         ]}
       >
         {label}
       </Text>
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    sentTokenItem: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.py_xs,
-      ...atoms.px_md,
-      borderRadius: 8,
-      backgroundColor: color.primary_500,
-    },
-    receivedTokenItem: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.py_xs,
-      ...atoms.px_md,
-      borderRadius: 8,
-      backgroundColor: color.secondary_300,
-    },
-    tokenSentItemText: {
-      ...atoms.body_2_md_regular,
-      color: color.white_static,
-    },
-    tokenReceivedItemText: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_max,
-    },
-    notPrimarySentTokenItem: {
-      backgroundColor: color.primary_100,
-    },
-    notPrimaryReceivedTokenItem: {
-      backgroundColor: color.secondary_100,
-    },
-    notPrimarySentTokenItemText: {
-      color: color.text_primary_medium,
-    },
-    notPrimaryReceivedTokenItemText: {
-      color: color.secondary_700,
-    },
-  })
-
-  return {styles} as const
 }

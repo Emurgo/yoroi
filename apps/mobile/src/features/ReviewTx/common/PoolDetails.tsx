@@ -1,23 +1,23 @@
 import {FullPoolInfo} from '@emurgo/yoroi-lib'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Copiable} from '../../../components/Clipboard/Copiable'
-import {Space} from '../../../components/Space/Space'
 import {isEmptyString} from '../../../kernel/utils'
+import {Copiable} from '../../../ui/Copiable'
+import {ExplorerInfoLinks} from '../../../ui/ExplorerInfoLinks/ExplorerInfoLinks'
+import {Space} from '../../../ui/Space/Space'
 import {formatTokenWithText} from '../../../wallets/utils/format'
 import {asQuantity, Quantities} from '../../../wallets/utils/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {ExplorerInfoLinks} from './ExplorerInfoLinks'
 import {useStrings} from './hooks/useStrings'
 import {generatePoolName} from './operations'
 
 export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
+  const {palette: p} = useTheme()
 
   const {chain, explorer} = poolInfo
 
@@ -25,13 +25,15 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
   const poolName = generatePoolName(poolInfo)
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1, a.px_lg]}>
       <PoolIcon imageUrl={explorer?.pic} />
 
       <Space height="sm" />
 
       <Row>
-        <Text style={styles.title}>{poolName}</Text>
+        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+          {poolName}
+        </Text>
       </Row>
 
       <Space height="xl" />
@@ -107,52 +109,72 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
 }
 
 const PoolIcon = ({imageUrl}: {imageUrl: string | null | undefined}) => {
-  const {styles} = useStyles()
-
   if (imageUrl == null) return null
 
   return (
-    <View style={styles.imageContainer}>
-      <Image source={{uri: imageUrl}} style={styles.image} />
+    <View style={[a.justify_center, a.align_center]}>
+      <Image source={{uri: imageUrl}} style={[{width: 80, height: 80}]} />
     </View>
   )
 }
 
 const PoolId = ({poolId}: {poolId: string | undefined}) => {
-  const {styles} = useStyles()
   const strings = useStrings()
+  const {palette: p} = useTheme()
 
   if (isEmptyString(poolId)) return null
 
   return (
     <Row>
-      <Text style={styles.label}>{strings.poolId}</Text>
+      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
+        {strings.poolId}
+      </Text>
 
       <Space width="lg" />
 
-      <View style={styles.copiableText}>
+      <View style={[a.flex_1, a.align_center]}>
         <Copiable text={poolId}>
-          <Text style={styles.value}>{poolId}</Text>
+          <Text
+            style={[
+              a.flex_1,
+              a.text_right,
+              a.body_2_md_regular,
+              {color: p.text_gray_max},
+            ]}
+          >
+            {poolId}
+          </Text>
         </Copiable>
       </View>
     </Row>
   )
 }
 const PoolHash = ({poolHash}: {poolHash?: string}) => {
-  const {styles} = useStyles()
   const strings = useStrings()
+  const {palette: p} = useTheme()
 
   if (isEmptyString(poolHash)) return null
 
   return (
     <Row>
-      <Text style={styles.label}>{strings.poolHash}</Text>
+      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
+        {strings.poolHash}
+      </Text>
 
       <Space width="lg" />
 
-      <View style={styles.copiableText}>
+      <View style={[a.flex_1, a.align_center]}>
         <Copiable text={poolHash}>
-          <Text style={styles.value}>{poolHash}</Text>
+          <Text
+            style={[
+              a.flex_1,
+              a.text_right,
+              a.body_2_md_regular,
+              {color: p.text_gray_max},
+            ]}
+          >
+            {poolHash}
+          </Text>
         </Copiable>
       </View>
     </Row>
@@ -160,67 +182,30 @@ const PoolHash = ({poolHash}: {poolHash?: string}) => {
 }
 
 const Info = ({label, value}: {label: string; value?: string}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   if (isEmptyString(value)) return null
 
   return (
     <Row>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
+        {label}
+      </Text>
 
-      <Text style={styles.value}>{value}</Text>
+      <Text
+        style={[
+          a.flex_1,
+          a.text_right,
+          a.body_2_md_regular,
+          {color: p.text_gray_max},
+        ]}
+      >
+        {value}
+      </Text>
     </Row>
   )
 }
 
 const Row = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.row}>{children}</View>
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    imageContainer: {
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    image: {
-      width: 80,
-      height: 80,
-    },
-    label: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_low,
-    },
-    value: {
-      ...atoms.flex_1,
-      ...atoms.text_right,
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_max,
-    },
-    copiableText: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-    },
-    row: {
-      ...atoms.flex_row,
-      ...atoms.justify_center,
-    },
-    title: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_medium,
-    },
-  })
-
-  const colors = {
-    copy: color.gray_900,
-  }
-
-  return {styles, colors} as const
+  return <View style={[a.flex_row, a.justify_center]}>{children}</View>
 }

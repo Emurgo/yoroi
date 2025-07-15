@@ -3,7 +3,7 @@ import {isBoolean} from '@yoroi/common'
 import {SupportedThemes, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet} from 'react-native'
+import {Platform, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon} from '../../../../components/Icon'
@@ -378,19 +378,3 @@ const messages = defineMessages({
     defaultMessage: '!!!Network',
   },
 })
-
-const useStyles = () => {
-  const {color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    settings: {
-      flex: 1,
-      padding: 16,
-    },
-  })
-
-  return {styles, colors: {icon: color.gray_600}} as const
-}

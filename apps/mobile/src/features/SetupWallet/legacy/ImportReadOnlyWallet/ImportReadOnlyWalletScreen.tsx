@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
+import {ScrollView, StatusBar, View} from 'react-native'
 
 import {BulletPointItem} from '../../../../components/BulletPointItem'
 import {CameraCodeScanner} from '../../../../components/CameraCodeScanner/CameraCodeScanner'
@@ -41,25 +41,39 @@ export const ImportReadOnlyWalletScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[{flex: 1}]}>
       <StatusBar translucent backgroundColor="transparent" />
 
-      <View style={styles.cameraContainer}>
+      <View
+        style={[
+          {
+            flex: 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'black',
+          },
+        ]}
+      >
         <CameraCodeScanner onRead={onRead} />
       </View>
 
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.paragraph}>{strings.paragraph}</Text>
+      <ScrollView style={[{flex: 1, paddingTop: 24, paddingHorizontal: 16}]}>
+        <Text style={[{fontSize: 14, lineHeight: 22}]}>
+          {strings.paragraph}
+        </Text>
 
         <Spacer height={16} />
 
-        <BulletPointItem textRow={strings.line1} style={styles.paragraph} />
+        <BulletPointItem
+          textRow={strings.line1}
+          style={[{fontSize: 14, lineHeight: 22}]}
+        />
 
         <Spacer height={16} />
 
         <BulletPointItem
           textRow={strings.line2({buttonType: strings.buttonType})}
-          style={styles.paragraph}
+          style={[{fontSize: 14, lineHeight: 22}]}
         />
       </ScrollView>
     </View>
@@ -98,27 +112,6 @@ const useStrings = () => {
     buttonType: intl.formatMessage(messages.buttonType),
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  cameraContainer: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black',
-  },
-  scrollView: {
-    flex: 1,
-    paddingTop: 24,
-    paddingHorizontal: 16,
-  },
-  paragraph: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-})
 
 const parseReadOnlyWalletKey = async (
   text: string,

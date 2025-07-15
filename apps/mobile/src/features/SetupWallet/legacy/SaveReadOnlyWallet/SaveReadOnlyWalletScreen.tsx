@@ -6,13 +6,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {Api, Wallet} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {
-  FlatList,
-  InteractionManager,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {FlatList, InteractionManager, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary} from '../../../../components/Boundary/Boundary'
@@ -101,13 +95,13 @@ export const SaveReadOnlyWalletScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.container}
+      style={[{flex: 1, paddingHorizontal: 16}]}
       testID="saveReadOnlyWalletContainer"
     >
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={strings.defaultWalletName}
-        containerStyle={styles.walletFormStyle}
+        containerStyle={[{paddingTop: 0, paddingHorizontal: 0}]}
         bottomContent={
           <Boundary>
             <WalletInfoView
@@ -124,51 +118,6 @@ export const SaveReadOnlyWalletScreen = () => {
 
 const SECTION_MARGIN = 22
 const LABEL_MARGIN = 6
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  scrollView: {
-    paddingRight: 10,
-  },
-  walletInfoContainer: {
-    marginTop: SECTION_MARGIN,
-  },
-  label: {
-    marginBottom: LABEL_MARGIN,
-  },
-  checksumContainer: {
-    marginBottom: SECTION_MARGIN,
-  },
-  checksumView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 12,
-    borderColor: 'red',
-    flexWrap: 'wrap',
-  },
-  checksumText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    paddingLeft: 12,
-  },
-  addressesContainer: {
-    marginBottom: SECTION_MARGIN,
-  },
-  keyAttributesContainer: {
-    marginTop: SECTION_MARGIN,
-  },
-  keyView: {
-    padding: 4,
-    marginBottom: 10,
-  },
-  walletFormStyle: {
-    paddingTop: 0,
-    paddingHorizontal: 0,
-  },
-})
 
 const messages = defineMessages({
   defaultWalletName: {
@@ -206,10 +155,22 @@ const useStrings = () => {
 }
 
 const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => (
-  <View style={styles.checksumView}>
+  <View
+    style={[
+      {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 12,
+        borderColor: 'red',
+        flexWrap: 'wrap',
+      },
+    ]}
+  >
     <Icon.WalletAvatar image={new Blockies({seed: icon}).asBase64()} />
 
-    <Text style={styles.checksumText}>{checksum}</Text>
+    <Text style={[{fontSize: 18, fontWeight: 'bold', paddingLeft: 12}]}>
+      {checksum}
+    </Text>
   </View>
 )
 
@@ -231,9 +192,9 @@ const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
   })
 
   return (
-    <View style={styles.walletInfoContainer}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.checksumContainer}>
+    <View style={[{marginTop: SECTION_MARGIN}]}>
+      <ScrollView style={[{paddingRight: 10}]}>
+        <View style={[{marginBottom: SECTION_MARGIN}]}>
           <Text>{strings.checksumLabel}</Text>
 
           {!isEmptyString(plate.accountPlate.ImagePart) && (
@@ -244,7 +205,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
           )}
         </View>
 
-        <View style={styles.addressesContainer}>
+        <View style={[{marginBottom: SECTION_MARGIN}]}>
           <Text>{strings.walletAddressLabel}</Text>
 
           <FlatList
@@ -256,16 +217,18 @@ const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
 
         <Line />
 
-        <View style={styles.keyAttributesContainer}>
-          <Text style={styles.label}>{strings.key}</Text>
+        <View style={[{marginTop: SECTION_MARGIN}]}>
+          <Text style={[{marginBottom: LABEL_MARGIN}]}>{strings.key}</Text>
 
-          <View style={styles.keyView}>
+          <View style={[{padding: 4, marginBottom: 10}]}>
             <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
               {publicKeyHex}
             </Text>
           </View>
 
-          <Text style={styles.label}>{strings.derivationPath}</Text>
+          <Text style={[{marginBottom: LABEL_MARGIN}]}>
+            {strings.derivationPath}
+          </Text>
 
           <Text secondary monospace>
             {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${normalizedPath[2]}`}

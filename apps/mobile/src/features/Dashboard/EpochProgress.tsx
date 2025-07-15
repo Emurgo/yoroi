@@ -1,13 +1,13 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {ProgressCircle} from '../../components/ProgressCircle'
-import {Space} from '../../components/Space/Space'
-import {Spacer} from '../../components/Spacer/Spacer'
-import {Text} from '../../components/Text'
-import {TitledCard} from '../../components/TitledCard'
+import {ProgressCircle} from '../../ui/ProgressCircle/ProgressCircle'
+import {Space} from '../../ui/Space/Space'
+import {Spacer} from '../../ui/Spacer/Spacer'
+import {Text} from '../../ui/Text/Text'
+import {TitledCard} from '../../ui/TitledCard/TitledCard'
 
 type Props = {
   percentage: number
@@ -22,42 +22,92 @@ type Props = {
 
 export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
   const intl = useIntl()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <TitledCard
       title={intl.formatMessage(messages.epochProgressTitle)}
       testID="epochProgressTitleCard"
     >
-      <View style={styles.wrapper}>
+      <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
         <ProgressCircle percentage={percentage} />
 
         <Spacer width={40} />
 
-        <View style={styles.stats}>
-          <View style={styles.row}>
-            <Text style={styles.label}>
+        <View style={[{flex: 1, flexDirection: 'column', flexWrap: 'wrap'}]}>
+          <View
+            style={[
+              {
+                flex: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+              },
+            ]}
+          >
+            <Text
+              style={[a.pr_sm, a.body_2_md_regular, {color: p.text_gray_low}]}
+            >
               {intl.formatMessage(messages.epochProgressTitle)}:
             </Text>
 
-            <Text style={styles.value}>{currentEpoch}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+              {currentEpoch}
+            </Text>
           </View>
 
           <Space height="sm" />
 
-          <View style={styles.row}>
-            <Text style={styles.label}>
+          <View
+            style={[
+              {
+                flex: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+              },
+            ]}
+          >
+            <Text
+              style={[a.pr_sm, a.body_2_md_regular, {color: p.text_gray_low}]}
+            >
               {intl.formatMessage(messages.endsInLabel)}:
             </Text>
 
-            <View style={styles.timeWrapper}>
+            <View
+              style={[
+                {
+                  flexDirection: 'row',
+                  flexWrap: 'nowrap',
+                  alignItems: 'center',
+                },
+              ]}
+            >
               {endTime.d != null && (
-                <Text style={styles.timeBlock}>{endTime.d}</Text>
+                <Text
+                  style={[
+                    a.body_1_lg_regular,
+                    a.px_2xs,
+                    a.text_center,
+                    {backgroundColor: p.gray_50, color: p.text_gray_medium},
+                  ]}
+                >
+                  {endTime.d}
+                </Text>
               )}
 
               <Space width="xs" />
 
-              <Text style={styles.timeBlock}>{endTime.h}</Text>
+              <Text
+                style={[
+                  a.body_1_lg_regular,
+                  a.px_2xs,
+                  a.text_center,
+                  {backgroundColor: p.gray_50, color: p.text_gray_medium},
+                ]}
+              >
+                {endTime.h}
+              </Text>
 
               <Space width="xs" />
 
@@ -65,7 +115,16 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
 
               <Space width="xs" />
 
-              <Text style={styles.timeBlock}>{endTime.m}</Text>
+              <Text
+                style={[
+                  a.body_1_lg_regular,
+                  a.px_2xs,
+                  a.text_center,
+                  {backgroundColor: p.gray_50, color: p.text_gray_medium},
+                ]}
+              >
+                {endTime.m}
+              </Text>
 
               <Space width="xs" />
 
@@ -73,7 +132,16 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
 
               <Space width="xs" />
 
-              <Text style={styles.timeBlock}>{endTime.s}</Text>
+              <Text
+                style={[
+                  a.body_1_lg_regular,
+                  a.px_2xs,
+                  a.text_center,
+                  {backgroundColor: p.gray_50, color: p.text_gray_medium},
+                ]}
+              >
+                {endTime.s}
+              </Text>
 
               <Space width="xs" />
             </View>
@@ -94,48 +162,3 @@ const messages = defineMessages({
     defaultMessage: '!!!Ends in',
   },
 })
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    wrapper: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    stats: {
-      flex: 1,
-      flexDirection: 'column',
-
-      flexWrap: 'wrap',
-    },
-    row: {
-      flex: 1,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-    },
-    label: {
-      color: color.text_gray_low,
-      ...atoms.pr_sm,
-      ...atoms.body_2_md_regular,
-    },
-    value: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-    timeWrapper: {
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      alignItems: 'center',
-    },
-    timeBlock: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.px_2xs,
-      ...atoms.text_center,
-      backgroundColor: color.gray_50,
-      color: color.text_gray_medium,
-    },
-  })
-
-  return styles
-}

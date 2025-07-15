@@ -1,7 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {BrowserRoutes} from 'src/kernel/navigation'
 
@@ -11,10 +10,13 @@ import {SearchDappInBrowserScreen} from './useCases/SearchDappInBrowser/SearchDa
 const Tab = createStackNavigator<BrowserRoutes>()
 
 export const BrowserNavigator = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
-    <SafeAreaView edges={['left', 'right', 'top']} style={styles.root}>
+    <SafeAreaView
+      edges={['left', 'right', 'top']}
+      style={[{flex: 1}, {backgroundColor: p.bg_color_max}]}
+    >
       <Tab.Navigator
         screenOptions={{animationEnabled: false, headerShown: false}}
       >
@@ -27,17 +29,4 @@ export const BrowserNavigator = () => {
       </Tab.Navigator>
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-  })
-
-  return {styles} as const
 }

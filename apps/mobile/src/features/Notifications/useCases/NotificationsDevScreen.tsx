@@ -6,15 +6,15 @@ import {
   useResetNotificationsConfig,
   useUpdateNotificationsConfig,
 } from '@yoroi/notifications'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
-import {Switch as RNSwitch, StyleSheet, View} from 'react-native'
+import {Switch as RNSwitch, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
-import {ScrollView} from '../../../components/ScrollView/ScrollView'
-import {Text} from '../../../components/Text'
+import {Button} from '../../../ui/Button/Button'
+import {ScrollView} from '../../../ui/ScrollView/ScrollView'
+import {Text} from '../../../ui/Text/Text'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {useNotificationManagerMaker} from '../common/notification-manager'
 import {createTransactionReceivedNotification} from '../common/transaction-received-notification'
@@ -214,12 +214,11 @@ const TransactionReceivedSetting = ({
   value: NotificationTypes.Config['TransactionReceived']
   onChange: (value: NotificationTypes.Config['TransactionReceived']) => void
 }) => {
-  const styles = useStyles()
   return (
     <View>
       <Text>Transaction Received</Text>
 
-      <View style={styles.row}>
+      <View style={[styles.row, a.gap_sm]}>
         <Text>Notify</Text>
 
         <Switch
@@ -238,12 +237,11 @@ const RewardsUpdateSetting = ({
   value: NotificationTypes.Config['RewardsUpdated']
   onChange: (value: NotificationTypes.Config['RewardsUpdated']) => void
 }) => {
-  const styles = useStyles()
   return (
     <View>
       <Text>Rewards Updated</Text>
 
-      <View style={styles.row}>
+      <View style={[styles.row, a.gap_sm]}>
         <Text>Notify</Text>
 
         <Switch
@@ -264,12 +262,11 @@ const PrimaryTokenPriceChangedSetting = ({
     value: NotificationTypes.Config['PrimaryTokenPriceChanged'],
   ) => void
 }) => {
-  const styles = useStyles()
   return (
     <View>
       <Text>Primary Token Price Changed</Text>
 
-      <View style={styles.row}>
+      <View style={[styles.row, a.gap_sm]}>
         <Text>Notify</Text>
 
         <Switch
@@ -278,13 +275,13 @@ const PrimaryTokenPriceChangedSetting = ({
         />
       </View>
 
-      <View style={styles.row}>
+      <View style={[styles.row, a.gap_sm]}>
         <Text>Threshold</Text>
 
         <Text>{value.thresholdInPercent}</Text>
       </View>
 
-      <View style={styles.row}>
+      <View style={[styles.row, a.gap_sm]}>
         <Text>Interval</Text>
 
         <Text>{value.interval}</Text>
@@ -312,16 +309,4 @@ const Switch = ({
       thumbColor={color.white_static}
     />
   )
-}
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-  const styles = StyleSheet.create({
-    row: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      ...atoms.gap_sm,
-    },
-  })
-  return styles
 }

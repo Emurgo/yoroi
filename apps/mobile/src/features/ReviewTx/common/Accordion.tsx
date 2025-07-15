@@ -1,15 +1,8 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  Animated,
-  Easing,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Animated, Easing, Text, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../../../components/Icon'
+import {Icon} from '../../../ui/Icon'
 
 export const Accordion = ({
   label,
@@ -18,9 +11,9 @@ export const Accordion = ({
   label: string
   children: React.ReactNode
 }) => {
-  const {styles, colors} = useStyles()
   const [isOpen, setIsOpen] = React.useState(true)
   const animatedHeight = React.useRef(new Animated.Value(1)).current
+  const {palette: p} = useTheme()
 
   const toggleSection = () => {
     setIsOpen(!isOpen)
@@ -37,20 +30,22 @@ export const Accordion = ({
       <TouchableOpacity
         activeOpacity={0.5}
         onPress={toggleSection}
-        style={styles.sectionHeader}
+        style={[a.flex_row, a.justify_between]}
       >
-        <Text style={styles.sectionHeaderText}>{label}</Text>
+        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+          {label}
+        </Text>
 
         <Icon.Chevron
           direction={isOpen ? 'up' : 'down'}
           size={28}
-          color={colors.chevron}
+          color={p.gray_900}
         />
       </TouchableOpacity>
 
       <Animated.View
         style={[
-          styles.childrenContainer,
+          {overflow: 'hidden'},
           {
             maxHeight: animatedHeight.interpolate({
               inputRange: [0, 0.9, 1],
@@ -64,27 +59,4 @@ export const Accordion = ({
       </Animated.View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    sectionHeader: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    sectionHeaderText: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    childrenContainer: {
-      overflow: 'hidden',
-    },
-  })
-
-  const colors = {
-    chevron: color.gray_900,
-  }
-
-  return {styles, colors} as const
 }

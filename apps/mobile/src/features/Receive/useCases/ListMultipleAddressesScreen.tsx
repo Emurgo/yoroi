@@ -6,21 +6,20 @@ import {
   LayoutAnimation,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  StyleSheet,
   View,
   ViewToken,
 } from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
-import {Space} from '../../../components/Space/Space'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {Button} from '../../../ui/Button/Button'
+import {ShowAddressLimitInfo} from '../../../ui/ShowAddressLimitInfo/ShowAddressLimitInfo'
+import {SmallAddressCard} from '../../../ui/SmallAddressCard/SmallAddressCard'
+import {Space} from '../../../ui/Space/Space'
 import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '../common/ReceiveProvider'
-import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
-import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
@@ -32,7 +31,7 @@ type AddressInfo = {
 
 export const ListMultipleAddressesScreen = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {color} = useTheme()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
@@ -100,7 +99,10 @@ export const ListMultipleAddressesScreen = () => {
   }, [hasReachedGapLimit])
 
   return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView
+      style={[styles.root, {backgroundColor: color.bg_color_max}]}
+      edges={['left', 'right', 'bottom']}
+    >
       <View style={styles.content}>
         {showAddressLimitInfo && hasReachedGapLimit && (
           <>
@@ -125,6 +127,8 @@ export const ListMultipleAddressesScreen = () => {
       <Animated.View
         style={[
           styles.footer,
+          {backgroundColor: color.bg_color_max},
+          {borderColor: color.gray_200},
           {
             display: hasReachedGapLimit ? 'none' : 'flex',
             borderTopWidth: inView.current < addressInfos.length ? 1 : 0,
@@ -157,27 +161,4 @@ const toAddressInfos = (addresses: {
   }))
 
   return [...unusedAddresses, ...usedAddresses]
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.py_lg,
-    },
-    content: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    footer: {
-      backgroundColor: color.bg_color_max,
-      borderColor: color.gray_200,
-      ...atoms.pt_lg,
-      ...atoms.px_lg,
-    },
-  })
-
-  return {styles} as const
 }

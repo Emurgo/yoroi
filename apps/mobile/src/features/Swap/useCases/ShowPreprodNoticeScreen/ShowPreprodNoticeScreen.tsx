@@ -1,48 +1,48 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {PreprodNoticeScreenLogo} from '../../common/Illustrations/PreprodNoticeScreenLogo'
+import {PreprodNoticeScreenLogo} from '../../../ui/PreprodNoticeScreenLogo/PreprodNoticeScreenLogo'
 import {useStrings} from '../../common/strings'
 
 export const ShowPreprodNoticeScreen = () => {
-  const {styles} = useStyles()
   const strings = useStrings()
+  const {color} = useTheme()
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.container}>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[styles.container, {backgroundColor: color.bg_color_max}]}
+    >
       <PreprodNoticeScreenLogo />
 
-      <Text style={styles.title}>{strings.preprodNoticeTitle}</Text>
+      <Text style={[styles.title, {color: color.gray_900}]}>
+        {strings.preprodNoticeTitle}
+      </Text>
 
-      <Text style={styles.text}>{strings.preprodNoticeText}</Text>
+      <Text style={[styles.text, {color: color.text_gray_medium}]}>
+        {strings.preprodNoticeText}
+      </Text>
     </SafeAreaView>
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.p_lg,
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    title: {
-      color: color.gray_900,
-      ...atoms.heading_3_medium,
-      ...atoms.px_sm,
-      textAlign: 'center',
-    },
-    text: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-      textAlign: 'center',
-      maxWidth: 300,
-    },
-  })
-  return {styles}
-}
+const styles = StyleSheet.create({
+  container: {
+    ...a.p_lg,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    ...a.heading_3_medium,
+    ...a.px_sm,
+    textAlign: 'center',
+  },
+  text: {
+    ...a.body_1_lg_regular,
+    textAlign: 'center',
+    maxWidth: 300,
+  },
+})

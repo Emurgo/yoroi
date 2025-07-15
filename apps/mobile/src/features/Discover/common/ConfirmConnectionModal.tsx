@@ -1,15 +1,15 @@
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {Linking, StyleSheet, Text, View} from 'react-native'
+import {Linking, Text, View} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
-import {Icon} from '../../../components/Icon'
-import {useModal} from '../../../components/Modal/ModalContext'
-import {Space} from '../../../components/Space/Space'
-import {Spacer} from '../../../components/Spacer/Spacer'
-import {WarningBanner} from '../../../components/WarningBanner/WarningBanner'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {Button} from '../../../ui/Button/Button'
+import {Icon} from '../../../ui/Icon'
+import {useModal} from '../../../ui/Modal/ModalContext'
+import {Space} from '../../../ui/Space/Space'
+import {Spacer} from '../../../ui/Spacer/Spacer'
+import {WarningBanner} from '../../../ui/WarningBanner/WarningBanner'
 import {getDappFallbackLogo} from './helpers'
 import {useStrings} from './useStrings'
 
@@ -80,34 +80,54 @@ export const ConfirmConnectionModal = ({
   logo,
   showSingleAddressWarning,
 }: Props) => {
-  const {styles, colors} = useStyles()
+  const {atoms: a, palette: p} = useTheme()
   const strings = useStrings()
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 
   return (
-    <View style={styles.root}>
-      <View style={styles.imagesLine}>
+    <View style={[a.flex_1, a.px_lg]}>
+      <View
+        style={[a.flex, a.flex_row, a.align_center, a.justify_center, a.gap_xl]}
+      >
         <Icon.YoroiApp size={48} />
 
-        <Icon.Connection size={20} color={colors.icon} />
+        <Icon.Connection size={20} color={p.el_gray_max} />
 
-        <Image source={{uri: imageUri}} style={styles.image} key={imageUri} />
+        <Image
+          source={{uri: imageUri}}
+          style={[{width: 48, height: 48}]}
+          key={imageUri}
+        />
       </View>
 
       <Space height="sm" />
 
-      <View style={styles.line}>
-        <Text style={styles.text}>
+      <View
+        style={[a.flex, a.flex_row, a.align_center, a.justify_center, a.gap_xs]}
+      >
+        <Text style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}>
           {strings.confirmConnectionModalConnectTo}
         </Text>
 
-        <Text style={styles.bold}>{name}</Text>
+        <Text
+          style={[
+            {color: p.text_gray_medium},
+            a.body_1_lg_medium,
+            a.font_semibold,
+          ]}
+        >
+          {name}
+        </Text>
       </View>
 
       <Space height="sm" />
 
-      <View style={styles.line}>
-        <Text style={styles.text}>{website}</Text>
+      <View
+        style={[a.flex, a.flex_row, a.align_center, a.justify_center, a.gap_xs]}
+      >
+        <Text style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}>
+          {website}
+        </Text>
       </View>
 
       {showSingleAddressWarning && (
@@ -120,17 +140,17 @@ export const ConfirmConnectionModal = ({
 
       <Space height="lg" />
 
-      <Text style={styles.text}>
+      <Text style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}>
         {strings.confirmConnectionModalAllowThisDAppTo}
       </Text>
 
-      <View style={styles.boxDesAllowConnectDApp}>
+      <View style={[a.pl_sm]}>
         <Text
-          style={styles.text}
+          style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}
         >{`\u2022 ${strings.confirmConnectionModalPermission1}`}</Text>
 
         <Text
-          style={styles.text}
+          style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}
         >{`\u2022 ${strings.confirmConnectionModalPermission2}`}</Text>
       </View>
 
@@ -143,7 +163,7 @@ const walletsCompatibilityLink =
   'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/10413017088527-DApps-and-HD-wallets-compatability'
 
 const SingleAddressDAppWarning = () => {
-  const {styles} = useStyles()
+  const {atoms: a, palette: p} = useTheme()
   const strings = useStrings()
 
   const handleOnPress = () => {
@@ -155,11 +175,15 @@ const SingleAddressDAppWarning = () => {
       content={
         <>
           <Text
-            style={styles.warningText}
+            style={[a.body_2_md_regular, {color: p.gray_max}]}
           >{`${strings.singleAddressWarning} `}</Text>
 
           <Text
-            style={[styles.warningText, styles.link]}
+            style={[
+              a.body_2_md_regular,
+              {color: p.gray_max},
+              {color: p.sys_cyan_500},
+            ]}
             onPress={handleOnPress}
           >
             {strings.learnMore}
@@ -169,53 +193,4 @@ const SingleAddressDAppWarning = () => {
       iconSize={20}
     />
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const colors = {icon: color.el_gray_max}
-  const styles = StyleSheet.create({
-    imagesLine: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.gap_xl,
-    },
-    image: {
-      width: 48,
-      height: 48,
-    },
-    line: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.gap_xs,
-    },
-    text: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    bold: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-    },
-    boxDesAllowConnectDApp: {
-      ...atoms.pl_sm,
-    },
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    warningText: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_max,
-    },
-    link: {
-      color: color.sys_cyan_500,
-    },
-  })
-  return {styles, colors} as const
 }

@@ -3,12 +3,12 @@ import {useQuery} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
+import {Text, useWindowDimensions, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Icon} from '../../../components/Icon'
-import {useModal} from '../../../components/Modal/ModalContext'
-import {Space} from '../../../components/Space/Space'
+import {Icon} from '../../../ui/Icon'
+import {useModal} from '../../../ui/Modal/ModalContext'
+import {Space} from '../../../ui/Space/Space'
 import {wrappedCsl} from '../../../wallets/cardano/wrappedCsl'
 import {usePoolInfo} from '../../../wallets/hooks'
 import {formatTokenWithText} from '../../../wallets/utils/format'
@@ -31,9 +31,9 @@ export const StakeRegistrationOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
+  const {color} = useTheme()
 
   return (
     <View style={styles.operation}>
@@ -45,7 +45,13 @@ export const StakeRegistrationOperation = ({
 
       <Space width="lg" />
 
-      <Text style={[styles.operationValue, strike && styles.strike]}>
+      <Text
+        style={[
+          styles.operationValue,
+          {color: color.text_gray_medium},
+          strike && styles.strike,
+        ]}
+      >
         {formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}
       </Text>
     </View>
@@ -59,7 +65,6 @@ export const StakeDeregistrationOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -80,7 +85,6 @@ export const StakeRewardsWithdrawalOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -91,9 +95,7 @@ export const StakeRewardsWithdrawalOperation = ({
         strike={strike}
       />
 
-      <Text style={[styles.operationValue, strike && styles.strike]}>
-        {strings.rewardsWithdrawalText}
-      </Text>
+      <Text style={styles.operationValue}>{strings.rewardsWithdrawalText}</Text>
     </View>
   )
 }
@@ -107,11 +109,11 @@ export const StakeDelegationOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const poolInfo = usePoolInfo({poolId})
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
+  const {color} = useTheme()
 
   const handleShowPoolDetails = () => {
     openModal({
@@ -134,7 +136,13 @@ export const StakeDelegationOperation = ({
       <Space width="lg" />
 
       <TouchableOpacity activeOpacity={0.5} onPress={handleShowPoolDetails}>
-        <Text style={[styles.operationLink, strike && styles.strike]}>
+        <Text
+          style={[
+            styles.operationLink,
+            {color: color.text_primary_medium},
+            strike && styles.strike,
+          ]}
+        >
           {poolName}
         </Text>
       </TouchableOpacity>
@@ -155,7 +163,6 @@ export const AbstainOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -176,7 +183,6 @@ export const NoConfidenceOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -201,8 +207,8 @@ export const VoteDelegationOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
+  const {color} = useTheme()
 
   const CIP129label = formatDrepHashToCIP129Format(hash, type)
   const CIP105label = formatDrepHashToCIP105Format(hash)
@@ -218,7 +224,13 @@ export const VoteDelegationOperation = ({
 
         <Space width="lg" />
 
-        <Text style={[styles.operationValue, strike && styles.strike]}>
+        <Text
+          style={[
+            styles.operationValue,
+            {color: color.text_gray_medium},
+            strike && styles.strike,
+          ]}
+        >
           {CIP129label}
         </Text>
       </View>
@@ -234,7 +246,13 @@ export const VoteDelegationOperation = ({
 
         <Space width="lg" />
 
-        <Text style={[styles.operationValue, strike && styles.strike]}>
+        <Text
+          style={[
+            styles.operationValue,
+            {color: color.text_gray_medium},
+            strike && styles.strike,
+          ]}
+        >
           {CIP105label}
         </Text>
       </View>
@@ -251,9 +269,9 @@ export const DrepRegistrationOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
+  const {color} = useTheme()
 
   return (
     <View style={styles.operation}>
@@ -265,7 +283,13 @@ export const DrepRegistrationOperation = ({
 
       <Space width="lg" />
 
-      <Text style={[styles.operationValue, strike && styles.strike]}>
+      <Text
+        style={[
+          styles.operationValue,
+          {color: color.text_gray_medium},
+          strike && styles.strike,
+        ]}
+      >
         {formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}
       </Text>
     </View>
@@ -279,7 +303,6 @@ export const DrepDeregistrationOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -302,9 +325,9 @@ export const PoolRegistrationOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
+  const {color} = useTheme()
 
   return (
     <View style={styles.operation}>
@@ -316,7 +339,13 @@ export const PoolRegistrationOperation = ({
 
       <Space width="lg" />
 
-      <Text style={[styles.operationValue, strike && styles.strike]}>
+      <Text
+        style={[
+          styles.operationValue,
+          {color: color.text_gray_medium},
+          strike && styles.strike,
+        ]}
+      >
         {formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}
       </Text>
     </View>
@@ -330,7 +359,6 @@ export const PoolRetirementOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -350,7 +378,6 @@ export const DrepUpdateOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -370,7 +397,6 @@ export const MoveInstantaneousRewardsOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -390,7 +416,6 @@ export const CommitteeHotAuthorizationOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -411,7 +436,6 @@ export const CommitteeColdResignOperation = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
 
   return (
@@ -434,16 +458,22 @@ const Label = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {colors, styles} = useStyles()
+  const {color} = useTheme()
   return (
     <View style={styles.operationLabelContainer}>
-      <Text style={[styles.operationLabel, strike && styles.strike]}>
+      <Text
+        style={[
+          styles.operationLabel,
+          {color: color.text_gray_low},
+          strike && styles.strike,
+        ]}
+      >
         {label}
       </Text>
 
       {showWarning && (
         <View style={styles.infoIcon}>
-          <Icon.Info size={24} color={colors.warning} />
+          <Icon.Info size={24} color={color.sys_orange_500} />
         </View>
       )}
     </View>
@@ -818,47 +848,4 @@ export const useDrepBech32Id = (poolId: string) => {
   })
 
   return query?.data ?? null
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    operation: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_start,
-    },
-    operationLabel: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_low,
-    },
-    operationLabelContainer: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    operationValue: {
-      ...atoms.flex_1,
-      ...atoms.text_right,
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-    operationLink: {
-      ...atoms.body_2_md_regular,
-      color: color.text_primary_medium,
-    },
-    strike: {
-      textDecorationLine: 'line-through',
-      textDecorationStyle: 'solid',
-    },
-    infoIcon: {
-      ...atoms.pb_2xs,
-    },
-  })
-
-  const colors = {
-    warning: color.sys_orange_500,
-  }
-
-  return {styles, colors} as const
 }

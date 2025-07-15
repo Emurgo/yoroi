@@ -1,16 +1,16 @@
 import {useTheme} from '@yoroi/theme'
 import {Balance, Notifications, Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {Icon} from '../../../components/Icon'
+import {Icon} from '../../../ui/Icon'
+import {NotificationItem} from '../../../ui/NotificationItem/NotificationItem'
 import {YoroiWallet} from '../../../wallets/cardano/types'
 import {useTransactionInfos} from '../../../wallets/hooks'
 import {TransactionInfo} from '../../../wallets/types/other'
 import {Token} from '../../../wallets/types/tokens'
 import {asQuantity, Quantities} from '../../../wallets/utils/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {NotificationItem} from './NotificationPopupItem'
 import {useStrings} from './useStrings'
 
 export const getTransactionReceivedNotificationTitle = (
@@ -117,11 +117,7 @@ export const TransactionReceivedNotification = ({
 
   return (
     <NotificationItem
-      icon={
-        <IconWrapper>
-          {getTransactionReceivedNotificationIcon(event, transactionInfos)}
-        </IconWrapper>
-      }
+      icon={<IconWrapper event={event} />}
       title={getTransactionReceivedNotificationTitle(
         event,
         strings,
@@ -132,34 +128,27 @@ export const TransactionReceivedNotification = ({
     />
   )
 }
-const IconWrapper = ({children}: {children: React.ReactNode}) => {
-  const {styles, colors} = useStyles()
+const IconWrapper = ({event}: {event: Notifications.Event}) => {
+  const {palette: p} = useTheme()
+  const {wallet} = useSelectedWallet()
+  const transactionInfos = useTransactionInfos({wallet})
+
   return (
-    <View style={[styles.icon, {backgroundColor: colors.iconBackground}]}>
-      {children}
+    <View
+      style={[
+        {
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        {backgroundColor: p.secondary_100},
+      ]}
+    >
+      {getTransactionReceivedNotificationIcon(event, transactionInfos)}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    icon: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-  })
-
-  return {
-    styles,
-    colors: {
-      iconColor: color.secondary_600,
-      iconBackground: color.secondary_100,
-    },
-  }
 }
 
 const sumTokenFromTxData = (

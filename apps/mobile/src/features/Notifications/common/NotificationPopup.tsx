@@ -1,17 +1,17 @@
 import {useTheme} from '@yoroi/theme'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-import {Icon} from '../../../components/Icon'
-import {IconProps} from '../../../components/Icon/type'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../kernel/navigation'
+import {Icon} from '../../../ui/Icon'
+import {IconProps} from '../../../ui/Icon/type'
+import {NotificationItem} from '../../../ui/NotificationItem/NotificationItem'
+import {SwipeOutWrapper} from '../../../ui/SwipeOutWrapper/SwipeOutWrapper'
+import {TransactionReceivedNotificationPopup} from '../../../ui/TransactionReceivedNotificationPopup/TransactionReceivedNotificationPopup'
 import {BannerIds} from './banners'
-import {NotificationItem} from './NotificationPopupItem'
-import {SwipeOutWrapper} from './SwipeOutWrapper'
-import {TransactionReceivedNotificationPopup} from './TransactionReceivedNotificationPopup'
 import {useStrings} from './useStrings'
 
 type Props = {
@@ -141,7 +141,7 @@ export const NotificationPopup = ({
       >
         <NotificationItem
           onPress={handleOnPress}
-          icon={<PushNotificationIcon />}
+          icon={<PushNotificationIcon />} // Assuming PushNotificationIcon is a component that renders an SVG
           title={event.metadata.title}
           description={event.metadata.body}
         />
@@ -177,32 +177,11 @@ const PushNotificationIcon = () => {
 }
 
 const ColoredIcon = (props: {icon: (p: IconProps) => React.JSX.Element}) => {
-  const {styles, colors} = useStyles()
+  const {color} = useTheme()
   const Icon = props.icon
   return (
-    <View style={[styles.icon, {backgroundColor: colors.iconBackground}]}>
-      <Icon color={colors.iconColor} />
+    <View style={[styles.icon, {backgroundColor: color.secondary_100}]}>
+      <Icon color={color.secondary_600} />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    icon: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-  })
-
-  return {
-    styles,
-    colors: {
-      iconColor: color.secondary_600,
-      iconBackground: color.secondary_100,
-    },
-  }
 }

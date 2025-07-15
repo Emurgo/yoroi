@@ -1,17 +1,12 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  InteractionManager,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {InteractionManager, useWindowDimensions, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../components/Button/Button'
-import {useModal} from '../../../components/Modal/ModalContext'
-import {Spacer} from '../../../components/Spacer/Spacer'
-import {Text} from '../../../components/Text'
-import {PhoneBell} from '../illustrations/PhoneBell'
+import {Button, ButtonType} from '../../../ui/Button/Button'
+import {useModal} from '../../../ui/Modal/ModalContext'
+import {PhoneBell} from '../../../ui/PhoneBellIllustration/PhoneBellIllustration'
+import {Spacer} from '../../../ui/Space/Space'
+import {Text} from '../../../ui/Text/Text'
 import {uiStorage} from './storage'
 import {triggerNotificationsPermissionModal} from './tools'
 import {useStrings} from './useStrings'
@@ -44,9 +39,9 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
 }
 
 export const GetImportantAlertsModal = () => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {closeModal} = useModal()
+  const {palette: p} = useTheme()
 
   const handleTurnOnPress = async () => {
     await triggerNotificationsPermissionModal()
@@ -55,12 +50,22 @@ export const GetImportantAlertsModal = () => {
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.illustration}>
+    <View style={[a.px_lg, a.flex_1, a.align_center]}>
+      <View style={[a.py_lg]}>
         <PhoneBell />
       </View>
 
-      <Text style={styles.text}>{strings.turnOnAlerts}</Text>
+      <Text
+        style={[
+          a.body_1_lg_regular,
+          a.pt_lg,
+          a.pb_sm,
+          a.text_center,
+          {color: p.text_gray_medium},
+        ]}
+      >
+        {strings.turnOnAlerts}
+      </Text>
 
       <Spacer fill />
 
@@ -69,42 +74,15 @@ export const GetImportantAlertsModal = () => {
         title={strings.skip}
         onPress={closeModal}
         type={ButtonType.Text}
-        style={styles.button}
+        style={[a.flex_1, a.self_stretch, {flexGrow: 0}]}
       />
 
       <Button
         size="M"
         title={strings.turnOnNotifications}
         onPress={handleTurnOnPress}
-        style={styles.button}
+        style={[a.flex_1, a.self_stretch, {flexGrow: 0}]}
       />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.px_lg,
-      ...atoms.flex_1,
-      ...atoms.align_center,
-    },
-    illustration: {
-      ...atoms.py_lg,
-    },
-    button: {
-      ...atoms.flex_1,
-      ...atoms.self_stretch,
-      flexGrow: 0,
-    },
-    text: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
-      ...atoms.pt_lg,
-      ...atoms.pb_sm,
-      ...atoms.text_center,
-    },
-  })
-  return {styles}
 }

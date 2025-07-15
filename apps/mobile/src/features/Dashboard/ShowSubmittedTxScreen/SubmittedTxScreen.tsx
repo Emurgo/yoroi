@@ -1,23 +1,22 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Button} from '../../../components/Button/Button'
-import {SafeArea} from '../../../components/SafeArea'
-import {Space} from '../../../components/Space/Space'
-import {Spacer} from '../../../components/Spacer/Spacer'
-import {SuccessfulTxIcon} from '../../../features/ReviewTx/illustrations/SuccessfulTxIcon'
 import {useBlockGoBack, useWalletNavigation} from '../../../kernel/navigation'
+import {Button} from '../../../ui/Button/Button'
+import {SafeArea} from '../../../ui/SafeArea/SafeArea'
+import {Space, Spacer} from '../../../ui/Space/Space'
+import {SuccessfulTxIcon} from '../../../ui/SuccessfulTxIcon/SuccessfulTxIcon'
 
 export const SubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
-    <SafeArea style={styles.root}>
+    <SafeArea style={[a.p_lg, a.flex_1, a.align_center, a.justify_center]}>
       <Spacer height={144} />
 
       <SuccessfulTxIcon />
@@ -26,9 +25,27 @@ export const SubmittedTxScreen = () => {
 
       <Space height="lg" />
 
-      <Text style={styles.title}>{strings.submittedTxTitle}</Text>
+      <Text
+        style={[
+          a.heading_3_medium,
+          a.px_sm,
+          a.text_center,
+          {color: p.gray_max},
+        ]}
+      >
+        {strings.submittedTxTitle}
+      </Text>
 
-      <Text style={styles.text}>{strings.submittedTxText}</Text>
+      <Text
+        style={[
+          a.body_1_lg_regular,
+          a.text_center,
+          {maxWidth: 330},
+          {color: p.gray_600},
+        ]}
+      >
+        {strings.submittedTxText}
+      </Text>
 
       <Space fill />
 
@@ -36,7 +53,7 @@ export const SubmittedTxScreen = () => {
         <Button
           onPress={resetToTxHistory}
           title={strings.submittedTxButton}
-          style={styles.button}
+          style={[a.px_lg]}
         />
       </Actions>
     </SafeArea>
@@ -44,41 +61,18 @@ export const SubmittedTxScreen = () => {
 }
 
 const Actions = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
-  return <View style={styles.actions}>{children}</View>
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.p_lg,
-      ...atoms.flex_1,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-    title: {
-      color: color.gray_max,
-      ...atoms.heading_3_medium,
-      ...atoms.px_sm,
-      ...atoms.text_center,
-    },
-    text: {
-      color: color.gray_600,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-      maxWidth: 330,
-    },
-    button: {
-      ...atoms.px_lg,
-    },
-    actions: {
-      alignSelf: 'stretch',
-    },
-  })
-  return {styles} as const
+  return (
+    <View
+      style={[
+        {alignSelf: 'stretch', borderTopWidth: 1},
+        {borderTopColor: p.gray_200},
+      ]}
+    >
+      {children}
+    </View>
+  )
 }
 
 const useStrings = () => {
