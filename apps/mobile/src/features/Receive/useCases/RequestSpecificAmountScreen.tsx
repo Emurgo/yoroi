@@ -4,40 +4,36 @@ import {
   linksCardanoModuleMaker,
   linksYoroiModuleMaker,
 } from '@yoroi/links'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   GestureResponderEvent,
   ScrollView as RNScrollView,
-  StyleSheet,
   Text,
   useWindowDimensions,
   View,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../components/Button/Button'
-import {useCopy} from '../../../components/Clipboard/ClipboardProvider'
-import {Icon} from '../../../components/Icon'
-import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '../../../components/Modal/ModalContext'
-import {
-  ScrollView,
-  useScrollView,
-} from '../../../components/ScrollView/ScrollView'
-import {ShareQRCodeCard} from '../../../components/ShareQRCodeCard/ShareQRCodeCard'
-import {TextInput} from '../../../components/TextInput/TextInput'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
+import {useCopy} from '../../../kernel/utils/clipboard'
+import {Button} from '../../../ui/Button/Button'
+import {Icon} from '../../../ui/Icon'
+import {KeyboardAvoidingView} from '../../../ui/KeyboardAvoidingView'
+import {useModal} from '../../../ui/Modal/ModalContext'
+import {ScrollView, useScrollView} from '../../../ui/ScrollView/ScrollView'
+import {ShareQRCodeCard} from '../../../ui/ShareQRCodeCard/ShareQRCodeCard'
+import {SkeletonAdressDetail} from '../../../ui/SkeletonAddressDetail/SkeletonAddressDetail'
+import {TextInput} from '../../../ui/TextInput'
 import {editedFormatter} from '../../../wallets/utils/amountUtils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '../common/ReceiveProvider'
-import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../common/useStrings'
 
 export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()
-  const {colors, styles} = useStyles()
+  const {palette: p} = useTheme()
   const [amount, setAmount] = React.useState('')
   const {wallet} = useSelectedWallet()
 
@@ -85,18 +81,20 @@ export const RequestSpecificAmountScreen = () => {
   )
 
   return (
-    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+    <KeyboardAvoidingView
+      style={[a.flex_1, {flex: 1}, {backgroundColor: p.bg_color_max}]}
+    >
       <SafeAreaView
-        style={[styles.flex, styles.container]}
+        style={[a.flex_1, a.p_lg]}
         edges={['left', 'right', 'bottom']}
       >
         <ScrollView
           ref={scrollViewRef}
-          style={styles.flex}
+          style={[a.flex_1]}
           onScrollBarChange={setIsScrollBarShown}
         >
-          <View style={styles.request}>
-            <Text style={styles.textAddressDetails}>
+          <View style={[a.gap_lg]}>
+            <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
               {strings.specificAmountDescription}
             </Text>
 
@@ -109,22 +107,24 @@ export const RequestSpecificAmountScreen = () => {
               noHelper
             />
 
-            <View style={styles.textSection}>
-              <Text style={[styles.textAddressDetails, {color: colors.gray}]}>
+            <View style={[a.gap_xs]}>
+              <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
                 {strings.address}
               </Text>
 
-              <Text style={styles.textAddressDetails}>{selectedAddress}</Text>
+              <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+                {selectedAddress}
+              </Text>
             </View>
           </View>
         </ScrollView>
 
         <View
           style={[
-            styles.actions,
+            a.pt_lg,
             isScrollBarShown && {
               borderTopWidth: 1,
-              borderTopColor: colors.lightGray,
+              borderTopColor: p.gray_200,
             },
           ]}
         >
@@ -142,8 +142,8 @@ export const RequestSpecificAmountScreen = () => {
 
 const Modal = ({amount, address}: {amount: string; address: string}) => {
   const strings = useStrings()
-  const {styles} = useStyles()
   const {track} = useMetrics()
+  const {palette: p} = useTheme()
 
   const cardanoLinks = linksCardanoModuleMaker()
   const cardanoRequestLink = cardanoLinks.create({
@@ -171,9 +171,9 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
   const {copy} = useCopy()
 
   return (
-    <View style={[styles.container, styles.flex]}>
+    <View style={[a.p_lg, a.flex_1]}>
       <RNScrollView
-        contentContainerStyle={[styles.flex_grow, styles.modalContainer]}
+        contentContainerStyle={[a.flex_grow, a.justify_between, a.gap_lg]}
       >
         {hasAddress ? (
           <ShareQRCodeCard
@@ -188,13 +188,13 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
             shareLabel={strings.shareLabel}
           />
         ) : (
-          <View style={styles.root}>
+          <View style={[{flex: 1}]}>
             <SkeletonAdressDetail />
           </View>
         )}
       </RNScrollView>
 
-      <View style={styles.actions}>
+      <View style={[a.pt_lg]}>
         <Button
           onPress={(event: GestureResponderEvent) =>
             copy({text: content, feedback: strings.copyLinkMsg, event})
@@ -207,47 +207,4 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-    },
-    container: {
-      ...atoms.p_lg,
-    },
-    modalContainer: {
-      ...atoms.justify_between,
-      ...atoms.gap_lg,
-    },
-    flex: {
-      ...atoms.flex_1,
-    },
-    flex_grow: {
-      ...atoms.flex_grow,
-    },
-    textAddressDetails: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    textSection: {
-      ...atoms.gap_xs,
-    },
-    request: {
-      ...atoms.gap_lg,
-    },
-    actions: {
-      ...atoms.pt_lg,
-    },
-  })
-
-  const colors = {
-    gray: color.gray_600,
-    lightGray: color.gray_200,
-  }
-
-  return {styles, colors} as const
 }

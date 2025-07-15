@@ -1,11 +1,10 @@
 import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet} from 'react-native'
+import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon} from '../../../../components/Icon'
@@ -68,8 +67,11 @@ export const WalletSettingsScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
-      <ScrollView bounces={false} style={styles.settings}>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[{flex: 1, backgroundColor: p.bg_color_max}]}
+    >
+      <ScrollView bounces={false} style={[{flex: 1, padding: 16}]}>
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.WalletStack {...iconProps} />}
@@ -388,19 +390,4 @@ const useStrings = () => {
     displayDuration: intl.formatMessage(messages.displayDuration),
     notifications: intl.formatMessage(messages.notifications),
   }
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    settings: {
-      flex: 1,
-      padding: 16,
-    },
-  })
-  return {styles, colors: {icon: color.gray_500}} as const
 }

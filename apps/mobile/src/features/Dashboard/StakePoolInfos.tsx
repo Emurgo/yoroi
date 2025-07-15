@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import {Balance, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 
 import {ButtonProps} from '../../components/Button/Button'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
@@ -29,17 +29,11 @@ export const StakePoolInfos = ({ctaProps}: {ctaProps?: ButtonProps}) => {
       ))}
     </View>
   ) : isLoading ? (
-    <View style={styles.activityIndicator}>
+    <View style={[{paddingVertical: 32}]}>
       <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
     </View>
   ) : null
 }
-
-const styles = StyleSheet.create({
-  activityIndicator: {
-    paddingVertical: 32,
-  },
-})
 
 export const usePrefetchStakingInfo = (wallet: YoroiWallet) => {
   const queryClient = useQueryClient()

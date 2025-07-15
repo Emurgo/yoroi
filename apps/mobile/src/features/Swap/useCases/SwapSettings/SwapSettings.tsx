@@ -11,13 +11,13 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {TextInput} from '../../../../components/TextInput/TextInput'
 import {useLanguage} from '../../../../kernel/i18n'
 import {NumberLocale} from '../../../../kernel/i18n/languages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {Quantities} from '../../../../wallets/utils/utils'
-import {SettingsSwitch} from '../../../Settings/common/SettingsSwitch'
+import {KeyboardAvoidingView} from '../../../ui/KeyboardAvoidingView'
+import {SettingsSwitch} from '../../../ui/SettingsSwitch/SettingsSwitch'
+import {TextInput} from '../../../ui/TextInput'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 
@@ -47,7 +47,7 @@ const MAX_DECIMALS = 1
 
 export const SwapSettings = () => {
   const {numberLocale} = useLanguage()
-  const {styles, colors} = useStyles()
+  const {color, atoms} = useTheme()
 
   const swapForm = useSwap()
   const [aggregator, setAggregator] = React.useState(
@@ -107,30 +107,50 @@ export const SwapSettings = () => {
     isSelectedChoiceCustom && !validateSlippage(inputValue, numberLocale)
 
   return (
-    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+    <KeyboardAvoidingView
+      style={[styles.flex, styles.root, {backgroundColor: color.bg_color_max}]}
+    >
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={[styles.flex, styles.safeAreaView]}
+        style={[styles.flex, styles.safeAreaView, atoms.p_lg]}
       >
         <ScrollView bounces={false} style={styles.flex}>
-          <Text style={styles.heading}>{strings.slippageTolerance}</Text>
+          <Text style={[styles.heading, {color: color.gray_600}]}>
+            {strings.slippageTolerance}
+          </Text>
 
-          <View style={styles.choicesContainer}>
+          <View
+            style={[
+              styles.choicesContainer,
+              atoms.flex_row,
+              atoms.pb_xl,
+              atoms.flex_wrap,
+            ]}
+          >
             {CHOICES.map((choice, index) => (
               <TouchableOpacity
                 key={index}
                 style={[
                   styles.choiceButton,
+                  atoms.p_sm,
                   selectedChoiceLabel === choice.label &&
                     styles.selectedChoiceButton,
+                  selectedChoiceLabel === choice.label && {
+                    backgroundColor: color.gray_200,
+                    borderRadius: 8,
+                  },
                 ]}
                 onPress={() => handleChoicePress(choice.label)}
               >
                 <Text
                   style={[
                     styles.label,
+                    {color: color.text_gray_max},
                     selectedChoiceLabel === choice.label &&
                       styles.selectedChoiceLabel,
+                    selectedChoiceLabel === choice.label && {
+                      color: color.text_gray_max,
+                    },
                   ]}
                 >
                   {choice.label}
@@ -153,19 +173,38 @@ export const SwapSettings = () => {
               autoFocus={isInputEnabled}
               style={[
                 styles.input,
-                !isSelectedChoiceCustom && {backgroundColor: colors.background},
+                {color: color.text_gray_medium},
+                !isSelectedChoiceCustom && {backgroundColor: color.gray_100},
               ]}
               keyboardType="numeric"
-              selectionColor={colors.selected}
-              cursorColor={colors.cursor}
-              right={<Text style={styles.percentLabel}>%</Text>}
+              selectionColor={color.el_gray_max}
+              cursorColor={color.el_gray_max}
+              right={
+                <Text
+                  style={[styles.percentLabel, {color: color.text_gray_medium}]}
+                >
+                  %
+                </Text>
+              }
               helper={
                 isSelectedChoiceCustom && !hasError ? (
-                  <Text style={[styles.textInfo, styles.bottomText]}>
+                  <Text
+                    style={[
+                      styles.textInfo,
+                      styles.bottomText,
+                      {color: color.text_gray_700},
+                    ]}
+                  >
                     {strings.enterSlippage}
                   </Text>
                 ) : isSelectedChoiceCustom && hasError ? (
-                  <Text style={[styles.bottomText, styles.errorText]}>
+                  <Text
+                    style={[
+                      styles.bottomText,
+                      styles.errorText,
+                      {color: color.sys_magenta_500},
+                    ]}
+                  >
                     {strings.slippageToleranceError}
                   </Text>
                 ) : undefined
@@ -173,11 +212,22 @@ export const SwapSettings = () => {
             />
           )}
 
-          <Text style={styles.heading}>{strings.routingPreferences}</Text>
+          <Text style={[styles.heading, {color: color.gray_600}]}>
+            {strings.routingPreferences}
+          </Text>
 
-          <View style={styles.routing}>
-            <View style={styles.between}>
-              <Text style={styles.label}>{strings.auto}</Text>
+          <View style={[styles.routing, atoms.gap_md]}>
+            <View
+              style={[
+                styles.between,
+                atoms.flex_row,
+                atoms.justify_between,
+                atoms.align_center,
+              ]}
+            >
+              <Text style={[styles.label, {color: color.text_gray_max}]}>
+                {strings.auto}
+              </Text>
 
               <SettingsSwitch
                 value={aggregator === 'auto'}
@@ -193,8 +243,17 @@ export const SwapSettings = () => {
 
             {aggregator !== 'auto' && (
               <>
-                <View style={styles.between}>
-                  <Text style={styles.label}>DexHunter</Text>
+                <View
+                  style={[
+                    styles.between,
+                    atoms.flex_row,
+                    atoms.justify_between,
+                    atoms.align_center,
+                  ]}
+                >
+                  <Text style={[styles.label, {color: color.text_gray_max}]}>
+                    DexHunter
+                  </Text>
 
                   <SettingsSwitch
                     value={aggregator.includes('dexhunter')}
@@ -208,8 +267,17 @@ export const SwapSettings = () => {
                   />
                 </View>
 
-                <View style={styles.between}>
-                  <Text style={styles.label}>MuesliSwap</Text>
+                <View
+                  style={[
+                    styles.between,
+                    atoms.flex_row,
+                    atoms.justify_between,
+                    atoms.align_center,
+                  ]}
+                >
+                  <Text style={[styles.label, {color: color.text_gray_max}]}>
+                    MuesliSwap
+                  </Text>
 
                   <SettingsSwitch
                     value={aggregator.includes('muesliswap')}
@@ -231,85 +299,45 @@ export const SwapSettings = () => {
   )
 }
 
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    flex: {
-      ...atoms.flex_1,
-    },
-    root: {
-      backgroundColor: color.bg_color_max,
-    },
-    between: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    safeAreaView: {
-      ...atoms.p_lg,
-    },
-    textInfo: {
-      ...atoms.body_3_sm_regular,
-      color: color.text_gray_medium,
-    },
-    heading: {
-      ...atoms.py_lg,
-      ...atoms.body_1_lg_regular,
-      color: color.gray_600,
-    },
-    bottomText: {
-      color: color.gray_700,
-      ...atoms.body_3_sm_regular,
-      ...atoms.py_xs,
-    },
-    choicesContainer: {
-      ...atoms.flex_row,
-      ...atoms.pb_xl,
-      ...atoms.flex_wrap,
-    },
-    choiceButton: {
-      ...atoms.p_sm,
-    },
-    routing: {
-      ...atoms.gap_md,
-    },
-    selectedChoiceButton: {
-      backgroundColor: color.gray_200,
-      borderRadius: 8,
-    },
-    label: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_max,
-    },
-    selectedChoiceLabel: {
-      color: color.text_gray_max,
-    },
-    errorText: {
-      color: color.sys_magenta_500,
-      ...atoms.body_3_sm_regular,
-    },
-    input: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    percentLabel: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-      ...atoms.p_lg,
-      ...atoms.absolute,
-      right: 0,
-      top: 0,
-    },
-  })
-
-  const colors = {
-    background: color.gray_100,
-    cursor: color.el_gray_max,
-    selected: color.input_selected,
-  }
-
-  return {styles, colors}
-}
+const styles = StyleSheet.create({
+  flex: {
+    ...a.flex_1,
+  },
+  root: {},
+  between: {},
+  safeAreaView: {},
+  textInfo: {
+    ...a.body_3_sm_regular,
+  },
+  heading: {
+    ...a.py_lg,
+    ...a.body_1_lg_regular,
+  },
+  bottomText: {
+    ...a.body_3_sm_regular,
+    ...a.py_xs,
+  },
+  choicesContainer: {},
+  choiceButton: {},
+  routing: {},
+  selectedChoiceButton: {},
+  label: {
+    ...a.body_1_lg_regular,
+  },
+  selectedChoiceLabel: {},
+  errorText: {
+    ...a.body_3_sm_regular,
+  },
+  input: {
+    ...a.body_1_lg_regular,
+  },
+  percentLabel: {
+    ...a.p_lg,
+    ...a.absolute,
+    right: 0,
+    top: 0,
+  },
+})
 
 const validateSlippage = (text: string, format: NumberLocale) => {
   const slippage = parseNumber(text, format)

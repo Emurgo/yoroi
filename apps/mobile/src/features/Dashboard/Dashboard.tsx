@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -8,16 +8,11 @@ import {
   ActivityIndicator,
   RefreshControl,
   ScrollView,
-  StyleSheet,
   View,
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Banner} from '../../components/Banner/Banner'
-import {Button} from '../../components/Button/Button'
-import {useModal} from '../../components/Modal/ModalContext'
-import {Space} from '../../components/Space/Space'
 import {StakeRewardsWithdrawalOperation} from '../../features/ReviewTx/common/operations'
 import {useReviewTx} from '../../features/ReviewTx/common/ReviewTxProvider'
 import {useIsParticipatingInGovernance} from '../../features/Staking/Governance/common/helpers'
@@ -29,6 +24,10 @@ import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {DashboardRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {isEmptyString} from '../../kernel/utils'
+import {Banner} from '../../ui/Banner/Banner'
+import {Button} from '../../ui/Button/Button'
+import {useModal} from '../../ui/Modal/ModalContext'
+import {Space} from '../../ui/Space/Space'
 import {
   useBalances,
   useCreateWithdrawTx,
@@ -44,8 +43,8 @@ import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
 
 export const Dashboard = () => {
-  const {styles} = useStyles()
   const {track} = useMetrics()
+  const {color} = useTheme()
 
   const intl = useIntl()
   const navigateTo = useNavigateTo()
@@ -113,7 +112,10 @@ export const Dashboard = () => {
     }
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+    <SafeAreaView
+      edges={['bottom', 'left', 'right']}
+      style={[styles.root, {backgroundColor: color.bg_color_max}]}
+    >
       <View style={styles.container}>
         {isOnline && error && (
           <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />
@@ -285,45 +287,20 @@ const messages = defineMessages({
   },
 })
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-    container: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-    },
-    scrollView: {
-      ...atoms.flex_1,
-    },
-    contentContainer: {
-      ...atoms.pt_lg,
-      ...atoms.px_lg,
-    },
-    row: {
-      ...atoms.flex_1,
-    },
-    actions: {
-      ...atoms.flex_row,
-      ...atoms.p_lg,
-      borderTopWidth: 1,
-      borderTopColor: color.gray_200,
-    },
-  })
-
-  return {styles}
-}
-
 const Actions = (props: ViewProps) => {
-  const {styles} = useStyles()
-  return <View {...props} style={styles.actions} />
+  const {palette: p} = useTheme()
+  return (
+    <View
+      {...props}
+      style={[
+        a.flex_row,
+        a.p_lg,
+        {borderTopWidth: 1, borderTopColor: p.gray_200},
+      ]}
+    />
+  )
 }
 
 const Row = (props: ViewProps) => {
-  const {styles} = useStyles()
-  return <View {...props} style={styles.row} />
+  return <View {...props} style={[a.flex_1]} />
 }

@@ -1,17 +1,17 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {Button, ButtonProps, ButtonType} from '../../components/Button/Button'
-import {Icon} from '../../components/Icon'
-import {Space} from '../../components/Space/Space'
-import {Text} from '../../components/Text'
-import {TitledCard} from '../../components/TitledCard'
 import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
+import {Button, ButtonProps, ButtonType} from '../../ui/Button/Button'
+import {Icon} from '../../ui/Icon'
+import {Space} from '../../ui/Space/Space'
+import {Text} from '../../ui/Text/Text'
+import {TitledCard} from '../../ui/TitledCard/TitledCard'
 import {formatAdaWithText} from '../../wallets/utils/format'
 import {asQuantity} from '../../wallets/utils/utils'
 
@@ -30,28 +30,29 @@ export const UserSummary = ({
   totalDelegated,
   ctaProps,
 }: Props) => {
-  const styles = useStyles()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {isPrivacyActive} = usePrivacyMode()
 
   return (
     <TitledCard title={strings.title} testID="userSummaryTitleCard">
-      <View style={styles.stats}>
-        <View style={styles.row}>
-          <View style={styles.icon}>
-            <Icon.TotalAda color={color.el_primary_medium} size={ICON_DIM} />
+      <View style={[a.flex_1, a.flex_col]}>
+        <View style={[a.flex_1, a.flex_row, a.align_center]}>
+          <View>
+            <Icon.TotalAda color={p.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
 
-          <View style={styles.amountBlock}>
-            <Text style={styles.label}>{strings.availableFunds}:</Text>
+          <View style={[a.flex_col]}>
+            <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
+              {strings.availableFunds}:
+            </Text>
 
             <Text
               bold
-              style={styles.value}
+              style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}
               testID="userSummaryAvailableFundsText"
             >
               {!isPrivacyActive
@@ -68,17 +69,23 @@ export const UserSummary = ({
 
         <Space height="lg" />
 
-        <View style={styles.row}>
-          <View style={styles.icon}>
-            <Icon.TotalReward color={color.el_primary_medium} size={ICON_DIM} />
+        <View style={[a.flex_1, a.flex_row, a.align_center]}>
+          <View>
+            <Icon.TotalReward color={p.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
 
-          <View style={styles.amountBlock}>
-            <Text style={styles.label}>{strings.rewardsLabel}:</Text>
+          <View style={[a.flex_col]}>
+            <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
+              {strings.rewardsLabel}:
+            </Text>
 
-            <Text bold style={styles.value} testID="userSummaryRewardsText">
+            <Text
+              bold
+              style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}
+              testID="userSummaryRewardsText"
+            >
               {!isPrivacyActive
                 ? totalRewards != null
                   ? formatAdaWithText(
@@ -93,20 +100,23 @@ export const UserSummary = ({
 
         <Space height="lg" />
 
-        <View style={styles.row}>
-          <View style={styles.icon}>
-            <Icon.TotalDelegated
-              color={color.el_primary_medium}
-              size={ICON_DIM}
-            />
+        <View style={[a.flex_1, a.flex_row, a.align_center]}>
+          <View>
+            <Icon.TotalDelegated color={p.el_primary_medium} size={ICON_DIM} />
           </View>
 
           <Space width="lg" />
 
-          <View style={styles.amountBlock}>
-            <Text style={styles.label}>{strings.delegatedLabel}:</Text>
+          <View style={[a.flex_col]}>
+            <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
+              {strings.delegatedLabel}:
+            </Text>
 
-            <Text bold style={styles.value} testID="userSummaryDelegatedText">
+            <Text
+              bold
+              style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}
+              testID="userSummaryDelegatedText"
+            >
               {!isPrivacyActive
                 ? totalDelegated != null
                   ? formatAdaWithText(
@@ -135,35 +145,6 @@ export const UserSummary = ({
       </View>
     </TitledCard>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    stats: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-    },
-    row: {
-      ...atoms.flex_1,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    icon: {},
-    amountBlock: {
-      ...atoms.flex_col,
-    },
-    label: {
-      color: color.text_gray_low,
-      ...atoms.body_3_sm_regular,
-    },
-    value: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_medium,
-    },
-  })
-
-  return styles
 }
 
 const useStrings = () => {

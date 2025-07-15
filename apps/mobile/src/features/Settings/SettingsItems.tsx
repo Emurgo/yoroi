@@ -1,17 +1,12 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactElement} from 'react'
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-} from 'react-native'
+import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import {Hr} from '../../components/Hr/Hr'
-import {Icon} from '../../components/Icon'
-import {Spacer} from '../../components/Spacer/Spacer'
-import {Text} from '../../components/Text'
 import {isEmptyString} from '../../kernel/utils'
+import {Hr} from '../../ui/Hr/Hr'
+import {Icon} from '../../ui/Icon'
+import {Spacer} from '../../ui/Spacer/Spacer'
+import {Text} from '../../ui/Text/Text'
 
 const Touchable = (props: TouchableOpacityProps) => (
   <TouchableOpacity {...props} activeOpacity={0.5} />
@@ -23,16 +18,19 @@ type SettingsSectionProps = {
 }
 
 export const SettingsSection = ({title, children}: SettingsSectionProps) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
+
   return (
     <View>
       {title != null && (
         <>
-          <Text style={styles.sectionText}>{title}</Text>
+          <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
+            {title}
+          </Text>
 
           <Spacer height={5} />
 
-          <Hr style={styles.separator} />
+          <Hr style={[{height: 1}, {backgroundColor: p.gray_200}]} />
         </>
       )}
 
@@ -56,18 +54,31 @@ export const SettingsItem = ({
   icon,
   info,
 }: SettingsItemProps) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <View>
-      <View style={styles.itemInner}>
-        <View style={styles.itemMainContent}>
+      <View style={[{paddingVertical: 16}]}>
+        <View
+          style={[
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+          ]}
+        >
           {icon}
 
           {icon && <Spacer width={10} />}
 
           <Text
-            style={[styles.label, styles.itemText, disabled && styles.disabled]}
+            style={[
+              {flex: 1},
+              a.body_1_lg_medium,
+              {color: p.gray_900},
+              disabled && {color: p.gray_500},
+            ]}
           >
             {label}
           </Text>
@@ -79,12 +90,14 @@ export const SettingsItem = ({
           <>
             <Spacer height={12} />
 
-            <Text style={styles.itemTextIsNil}>{info}</Text>
+            <Text style={[a.body_3_sm_regular, {color: p.gray_600}]}>
+              {info}
+            </Text>
           </>
         )}
       </View>
 
-      <Hr style={styles.separator} />
+      <Hr style={[{height: 1}, {backgroundColor: p.gray_200}]} />
     </View>
   )
 }
@@ -103,18 +116,20 @@ export const NavigatedSettingsItem = ({
   disabled,
   selected,
 }: NavigatedSettingsItemProps) => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   return (
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
-        <View style={styles.row}>
+        <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
           {!isEmptyString(selected) && (
-            <Text style={styles.navigationItem}>{selected}</Text>
+            <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
+              {selected}
+            </Text>
           )}
 
           <Spacer width={16} />
 
-          <Icon.Chevron direction="right" size={28} color={colors.icon} />
+          <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
         </View>
       </SettingsItem>
     </Touchable>
@@ -131,50 +146,3 @@ export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
     <Text secondary>{value}</Text>
   </SettingsItem>
 )
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    itemInner: {
-      paddingVertical: 16,
-    },
-    itemMainContent: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    label: {
-      flex: 1,
-    },
-    disabled: {
-      color: color.gray_500,
-    },
-    sectionText: {
-      color: color.gray_900,
-      ...atoms.body_2_md_regular,
-    },
-    itemText: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_medium,
-    },
-    itemTextIsNil: {
-      color: color.gray_600,
-      ...atoms.body_3_sm_regular,
-    },
-    navigationItem: {
-      color: color.gray_500,
-      ...atoms.body_1_lg_regular,
-    },
-    separator: {
-      backgroundColor: color.gray_200,
-      height: 1,
-    },
-    row: {flexDirection: 'row', alignItems: 'center'},
-  })
-
-  const colors = {
-    icon: color.el_gray_min,
-  }
-  return {styles, colors, color}
-}

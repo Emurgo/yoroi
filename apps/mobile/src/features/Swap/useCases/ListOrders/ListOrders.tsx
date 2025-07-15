@@ -1,7 +1,7 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
 import {isLeft, truncateString} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Portfolio, Swap} from '@yoroi/types'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
@@ -18,24 +18,23 @@ import {Divider} from 'react-native-paper'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {Boundary} from '../../../../components/Boundary/Boundary'
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {RefreshButton} from '../../../../components/RefreshButton/RefreshButton'
-import {Space} from '../../../../components/Space/Space'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
-import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
+import {Boundary} from '../../../ui/Boundary/Boundary'
+import {Button, ButtonType} from '../../../ui/Button/Button'
+import {Counter} from '../../../ui/Counter/Counter'
+import {EmptyCompletedOrdersIllustration} from '../../../ui/EmptyCompletedOrdersIllustration/EmptyCompletedOrdersIllustration'
+import {EmptyOpenOrdersIllustration} from '../../../ui/EmptyOpenOrdersIllustration/EmptyOpenOrdersIllustration'
+import {Icon} from '../../../ui/Icon'
+import {useModal} from '../../../ui/Modal/ModalContext'
+import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
+import {RefreshButton} from '../../../ui/RefreshButton/RefreshButton'
+import {ServiceUnavailable} from '../../../ui/ServiceUnavailable/ServiceUnavailable'
+import {Space} from '../../../ui/Space/Space'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {Counter} from '../../common/Counter/Counter'
-import {EmptyCompletedOrdersIllustration} from '../../common/Illustrations/EmptyCompletedOrdersIllustration'
-import {EmptyOpenOrdersIllustration} from '../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {useNavigateTo} from '../../common/navigation'
-import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
-import {ServiceUnavailable} from '../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../common/strings'
 import {useSwap} from '../../common/SwapProvider'
 
@@ -47,7 +46,7 @@ export const ListOrders = () => {
   const swapForm = useSwap()
 
   const strings = useStrings()
-  const {styles, color} = useStyles()
+  const {color} = useTheme()
 
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
@@ -57,16 +56,33 @@ export const ListOrders = () => {
   })
 
   return (
-    <View style={styles.root}>
-      <View style={styles.group}>
+    <View
+      style={[
+        styles.root,
+        a.p_lg,
+        a.gap_lg,
+        {backgroundColor: color.bg_color_max},
+      ]}
+    >
+      <View
+        style={[
+          styles.group,
+          a.flex_row,
+          a.gap_md,
+          a.justify_center,
+          a.align_center,
+        ]}
+      >
         <View>
           <Button
             onPress={() => setFilter('open')}
             type={ButtonType.SecondaryText}
             title={strings.openOrders}
             size="M"
-            fontOverride={styles.groupFont}
-            {...(filter === 'open' && {style: styles.activeButton})}
+            fontOverride={a.body_1_lg_medium}
+            {...(filter === 'open' && {
+              style: [styles.activeButton, {backgroundColor: color.gray_100}],
+            })}
           />
         </View>
 
@@ -76,8 +92,10 @@ export const ListOrders = () => {
             type={ButtonType.SecondaryText}
             title={strings.completedOrders}
             size="M"
-            fontOverride={styles.groupFont}
-            {...(filter === 'completed' && {style: styles.activeButton})}
+            fontOverride={a.body_1_lg_medium}
+            {...(filter === 'completed' && {
+              style: [styles.activeButton, {backgroundColor: color.gray_100}],
+            })}
           />
         </View>
 
@@ -87,7 +105,7 @@ export const ListOrders = () => {
       <Boundary
         loading={{
           fallback: (
-            <View style={styles.list}>
+            <View style={[styles.list, a.gap_md]}>
               {[0, 1, 2, 3].map((index) => (
                 <React.Fragment key={index}>
                   <SkeletonPlaceholder
@@ -118,7 +136,6 @@ export const ListOrders = () => {
 
 const Content = ({filter}: {filter: Filter}) => {
   const strings = useStrings()
-  const {styles} = useStyles()
   const {visible: isSearching} = useSearch()
   const swapForm = useSwap()
   const orders = swapForm.orders?.filter(
@@ -126,12 +143,13 @@ const Content = ({filter}: {filter: Filter}) => {
       (status === 'open' && filter === 'open') ||
       (status !== 'open' && status !== 'canceled' && filter === 'completed'),
   )
+  const {color} = useTheme()
 
   return (
     <View style={styles.flex}>
       <View style={styles.flex}>
         <FlatList
-          contentContainerStyle={styles.list}
+          contentContainerStyle={[styles.list, a.gap_md]}
           data={orders}
           renderItem={({item}) => <Order order={item} />}
           keyExtractor={(item) => `${item.txHash}#${item.outputIndex ?? 0}`}
@@ -165,7 +183,7 @@ const Order = ({order}: {order: Swap.Order}) => {
       networkManager: {explorers},
     },
   } = useWalletManager()
-  const {styles, color} = useStyles()
+  const {color} = useTheme()
   const [expanded, setExpanded] = React.useState<boolean>(false)
   const swapForm = useSwap()
   const tokenInInfo = swapForm.tokenInfos.get(order.tokenIn)
@@ -189,19 +207,40 @@ const Order = ({order}: {order: Swap.Order}) => {
   const shortenedTxHash = `${truncateString({value: lastTxHash, maxLength: 22})}#${order.outputIndex ?? 0}`
 
   return (
-    <View style={styles.card}>
+    <View
+      style={[
+        styles.card,
+        a.p_lg,
+        a.border,
+        {
+          borderRadius: 8,
+          borderColor: color.gray_200,
+          backgroundColor: color.bg_color_max,
+        },
+      ]}
+    >
       <TouchableOpacity onPress={() => setExpanded(!expanded)}>
-        <View style={styles.cardHeader}>
-          <View style={styles.composedText}>
+        <View
+          style={[styles.cardHeader, a.flex_row, a.justify_between, a.pb_md]}
+        >
+          <View
+            style={[styles.composedText, a.flex_row, a.align_center, a.gap_sm]}
+          >
             <TokenInfoIcon info={tokenInInfo} size="sm" />
 
-            <Text style={styles.heading}>{tokenName(tokenInInfo)}</Text>
+            <Text style={[styles.heading, {color: color.text_gray_medium}]}>
+              {tokenName(tokenInInfo)}
+            </Text>
 
-            <Text style={styles.heading}>/</Text>
+            <Text style={[styles.heading, {color: color.text_gray_medium}]}>
+              /
+            </Text>
 
             <TokenInfoIcon info={tokenOutInfo} size="sm" />
 
-            <Text style={styles.heading}>{tokenName(tokenOutInfo)}</Text>
+            <Text style={[styles.heading, {color: color.text_gray_medium}]}>
+              {tokenName(tokenOutInfo)}
+            </Text>
           </View>
 
           <Icon.Chevron
@@ -212,7 +251,7 @@ const Order = ({order}: {order: Swap.Order}) => {
         </View>
       </TouchableOpacity>
 
-      <View style={styles.list}>
+      <View style={[styles.list, a.gap_md]}>
         <Row label={strings.listOrdersSheetAssetPrice} value={priceStr} />
 
         <Row label={strings.listOrdersSheetAssetAmount} value={amountOutStr} />
@@ -257,7 +296,7 @@ const Order = ({order}: {order: Swap.Order}) => {
                 value={
                   <Button
                     type={ButtonType.Link}
-                    style={styles.inlineLink}
+                    style={[styles.inlineLink, a.justify_end, {padding: 0}]}
                     onPress={() =>
                       Linking.openURL(explorers.cexplorer.tx(lastTxHash))
                     }
@@ -296,12 +335,12 @@ const OrderCancellation = ({
   amount,
 }: CancellationProps) => {
   const strings = useStrings()
-  const {styles} = useStyles()
   const {openModal, closeModal} = useModal()
   const swapForm = useSwap()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const {navigateToTxReview} = useWalletNavigation()
   const navigateTo = useNavigateTo()
+  const {color} = useTheme()
 
   const onPress = async () => {
     setIsLoading(true)
@@ -348,7 +387,15 @@ const OrderCancellation = ({
           onPress={closeModal}
         />
       ) : (
-        <View style={styles.group}>
+        <View
+          style={[
+            styles.group,
+            a.flex_row,
+            a.gap_md,
+            a.justify_center,
+            a.align_center,
+          ]}
+        >
           <Button
             type={ButtonType.Secondary}
             title={strings.listOrdersSheetBack}
@@ -370,7 +417,7 @@ const OrderCancellation = ({
 
   return (
     <Button
-      style={styles.cancelButton}
+      style={[styles.cancelButton, a.self_start, a.px_0]}
       type={ButtonType.SecondaryText}
       title={strings.listOrdersSheetButtonText}
       isLoading={isLoading}
@@ -387,12 +434,14 @@ const OrderCancellationConfirmation = ({
   response,
 }: CancellationProps & {response: Api.Response<Swap.CancelResponse>}) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   if (isLeft(response))
     return (
       <View style={styles.root}>
-        <Text style={styles.errorMessage}>{response.error.message}</Text>
+        <Text style={[styles.errorMessage, {color: color.text_warning}]}>
+          {response.error.message}
+        </Text>
       </View>
     )
 
@@ -435,14 +484,18 @@ const Row = ({
   label: string
   value: string | React.ReactNode
 }) => {
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   return (
-    <View style={styles.row}>
-      <Text style={styles.rowLabel}>{label}</Text>
+    <View style={[styles.row, a.flex_row, a.justify_between]}>
+      <Text style={[styles.rowLabel, {color: color.text_gray_low}]}>
+        {label}
+      </Text>
 
       {typeof value === 'string' ? (
-        <Text style={styles.rowValue}>{value}</Text>
+        <Text style={[styles.rowValue, {color: color.text_gray_medium}]}>
+          {value}
+        </Text>
       ) : (
         value
       )}
@@ -453,31 +506,45 @@ const Row = ({
 const ListEmptyComponent = ({filter}: {filter: Filter}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {color} = useTheme()
 
   return (
-    <View style={styles.notOrdersYetContainer}>
+    <View
+      style={[styles.notOrdersYetContainer, a.text_center, a.gap_lg, a.pt_2xl]}
+    >
       {filter === 'open' ? (
         <React.Fragment>
-          <EmptyOpenOrdersIllustration style={styles.illustration} />
+          <EmptyOpenOrdersIllustration
+            style={[
+              styles.illustration,
+              a.flex_1,
+              {alignSelf: 'center', width: 280, height: 224},
+            ]}
+          />
 
-          <Text style={styles.contentText}>
+          <Text style={[styles.contentText, {color: color.gray_max}]}>
             {isSearching
               ? `${strings.emptySearchOpenOrders} "${assetSearchTerm}"`
               : strings.emptyOpenOrders}
           </Text>
 
           {!isSearching && (
-            <Text style={styles.contentSubText}>
+            <Text style={[styles.contentSubText, {color: color.text_gray_low}]}>
               {strings.emptyOpenOrdersSub}
             </Text>
           )}
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <EmptyCompletedOrdersIllustration style={styles.illustration} />
+          <EmptyCompletedOrdersIllustration
+            style={[
+              styles.illustration,
+              a.flex_1,
+              {alignSelf: 'center', width: 280, height: 224},
+            ]}
+          />
 
-          <Text style={styles.contentText}>
+          <Text style={[styles.contentText, {color: color.gray_max}]}>
             {isSearching
               ? `${strings.emptySearchCompletedOrders} "${assetSearchTerm}"`
               : strings.emptyCompletedOrders}
@@ -494,7 +561,6 @@ const Details = ({
   amount,
   response,
 }: CancellationProps & {response: Api.Response<Swap.CancelResponse>}) => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
@@ -504,6 +570,7 @@ const Details = ({
   )
   const tokenInInfo = portfolioTokenInfos.tokenInfos?.get(order.tokenIn)
   const tokenOutInfo = portfolioTokenInfos.tokenInfos?.get(order.tokenOut)
+  const {color} = useTheme()
 
   if (tokenInInfo == null)
     throw new Error('Swap Cancellation:: invalid state: tokenInInfo')
@@ -532,9 +599,11 @@ const Details = ({
 
   return (
     <View>
-      <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
+      <Text style={[styles.amountItemLabel, {color: color.text_gray_medium}]}>
+        {strings.swapFrom}
+      </Text>
 
-      <View style={styles.token}>
+      <View style={[styles.token, a.flex_row, a.align_center]}>
         <Left>
           <TokenInfoIcon info={tokenOutInfo} size="md" />
         </Left>
@@ -544,7 +613,7 @@ const Details = ({
             <Text
               numberOfLines={1}
               ellipsizeMode="middle"
-              style={styles.name}
+              style={[styles.name, {color: color.gray_900}]}
               testID="tokenInfoText"
             >
               {fromName}
@@ -554,7 +623,7 @@ const Details = ({
           <Text
             numberOfLines={1}
             ellipsizeMode="middle"
-            style={styles.detail}
+            style={[styles.detail, {color: color.gray_600}]}
             testID="tokenFingerprintText"
           >
             {fromDetail}
@@ -562,15 +631,19 @@ const Details = ({
         </Middle>
 
         <Right style={styles.end}>
-          <Text style={styles.quantity}>{amountOutStr}</Text>
+          <Text style={[styles.quantity, {color: color.gray_900}]}>
+            {amountOutStr}
+          </Text>
         </Right>
       </View>
 
       <Space height="lg" />
 
-      <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
+      <Text style={[styles.amountItemLabel, {color: color.text_gray_medium}]}>
+        {strings.swapTo}
+      </Text>
 
-      <View style={styles.token}>
+      <View style={[styles.token, a.flex_row, a.align_center]}>
         <Left>
           <TokenInfoIcon info={tokenInInfo} size="md" />
         </Left>
@@ -580,7 +653,7 @@ const Details = ({
             <Text
               numberOfLines={1}
               ellipsizeMode="middle"
-              style={styles.name}
+              style={[styles.name, {color: color.gray_900}]}
               testID="tokenInfoText"
             >
               {toName}
@@ -590,7 +663,7 @@ const Details = ({
           <Text
             numberOfLines={1}
             ellipsizeMode="middle"
-            style={styles.detail}
+            style={[styles.detail, {color: color.gray_600}]}
             testID="tokenFingerprintText"
           >
             {toDetail}
@@ -598,7 +671,9 @@ const Details = ({
         </Middle>
 
         <Right style={styles.end}>
-          <Text style={styles.quantity}>{amountInStr}</Text>
+          <Text style={[styles.quantity, {color: color.gray_900}]}>
+            {amountInStr}
+          </Text>
         </Right>
       </View>
 
@@ -630,130 +705,66 @@ const Right = ({style, ...props}: ViewProps) => (
   <View style={style} {...props} />
 )
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    flex: {
-      ...atoms.flex_1,
-    },
-    group: {
-      ...atoms.flex_row,
-      ...atoms.gap_md,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    groupFont: {
-      ...atoms.body_1_lg_medium,
-    },
-    root: {
-      ...atoms.flex_1,
-      ...atoms.p_lg,
-      ...atoms.gap_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    activeButton: {
-      backgroundColor: color.gray_100,
-    },
-    list: {
-      ...atoms.gap_md,
-    },
-    illustration: {
-      ...atoms.flex_1,
-      alignSelf: 'center',
-      width: 280,
-      height: 224,
-    },
-    notOrdersYetContainer: {
-      ...atoms.flex_1,
-      ...atoms.text_center,
-      ...atoms.gap_lg,
-      ...atoms.pt_2xl,
-    },
-    contentText: {
-      ...atoms.flex_1,
-      ...atoms.text_center,
-      ...atoms.heading_3_medium,
-      color: color.gray_max,
-    },
-    contentSubText: {
-      ...atoms.flex_1,
-      ...atoms.text_center,
-      color: color.text_gray_low,
-      ...atoms.body_1_lg_regular,
-    },
-    card: {
-      ...atoms.p_lg,
-      ...atoms.border,
-      borderRadius: 8,
-      borderColor: color.gray_200,
-      backgroundColor: color.bg_color_max,
-    },
-    cardHeader: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.pb_md,
-    },
-    composedText: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_sm,
-    },
-    heading: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    row: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    rowLabel: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_low,
-    },
-    rowValue: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.flex_shrink,
-      ...atoms.text_right,
-      color: color.text_gray_medium,
-    },
-    inlineLink: {
-      padding: 0,
-      ...atoms.justify_end,
-    },
-    cancelButton: {
-      ...atoms.self_start,
-      ...atoms.px_0,
-    },
-    errorMessage: {
-      ...atoms.body_3_sm_regular,
-      color: color.text_warning,
-    },
-    end: {
-      ...atoms.align_end,
-    },
-    name: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_medium,
-    },
-    detail: {
-      color: color.gray_600,
-      maxWidth: 140,
-      ...atoms.body_3_sm_regular,
-    },
-    token: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    amountItemLabel: {
-      fontSize: 12,
-      color: color.text_gray_medium,
-      ...atoms.pb_sm,
-    },
-    quantity: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_regular,
-    },
-  })
-  return {styles, color}
-}
+const styles = StyleSheet.create({
+  flex: {
+    ...a.flex_1,
+  },
+  group: {},
+  root: {},
+  activeButton: {},
+  list: {},
+  illustration: {
+    alignSelf: 'center',
+    width: 280,
+    height: 224,
+  },
+  notOrdersYetContainer: {},
+  contentText: {
+    ...a.flex_1,
+    ...a.text_center,
+    ...a.heading_3_medium,
+  },
+  contentSubText: {
+    ...a.flex_1,
+    ...a.text_center,
+    ...a.body_1_lg_regular,
+  },
+  card: {},
+  cardHeader: {},
+  composedText: {},
+  heading: {
+    ...a.body_1_lg_medium,
+  },
+  row: {},
+  rowLabel: {
+    ...a.body_1_lg_regular,
+  },
+  rowValue: {
+    ...a.body_1_lg_regular,
+    ...a.flex_shrink,
+    ...a.text_right,
+  },
+  inlineLink: {},
+  cancelButton: {},
+  errorMessage: {
+    ...a.body_3_sm_regular,
+  },
+  end: {
+    ...a.align_end,
+  },
+  name: {
+    ...a.body_1_lg_medium,
+  },
+  detail: {
+    maxWidth: 140,
+    ...a.body_3_sm_regular,
+  },
+  token: {},
+  amountItemLabel: {
+    fontSize: 12,
+    ...a.pb_sm,
+  },
+  quantity: {
+    ...a.body_1_lg_regular,
+  },
+})

@@ -1,61 +1,47 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, StyleSheet, View} from 'react-native'
+import {Image, View} from 'react-native'
 
 import NotDelegatedImage from '../../assets/img/testnet/no-transactions-yet.png'
-import {Line} from '../../components/Line'
-import {Text} from '../../components/Text'
+import {Line} from '../../ui/Line/Line'
+import {Text} from '../../ui/Text/Text'
 
 export const NotDelegatedInfo = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.imageWrap} testID="notDelegatedInfo">
+    <View style={[{marginTop: 24, marginHorizontal: 16}]}>
+      <View style={[a.flex_1, a.align_center]} testID="notDelegatedInfo">
         <Image source={NotDelegatedImage} />
       </View>
 
-      <Text style={[styles.text, styles.textFirstLine]}>
+      <Text
+        style={[
+          {textAlign: 'center', lineHeight: 22},
+          a.body_1_lg_regular,
+          {marginBottom: 12},
+          {color: p.gray_900},
+        ]}
+      >
         {strings.firstLine}
       </Text>
 
-      <Text style={[styles.text, styles.textSecondLine]}>
+      <Text
+        style={[
+          {textAlign: 'center', lineHeight: 22},
+          a.body_2_md_regular,
+          {marginBottom: 16},
+          {color: p.gray_900},
+        ]}
+      >
         {strings.secondLine}
       </Text>
 
       <Line />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    wrapper: {
-      marginTop: 24,
-      marginHorizontal: 16,
-    },
-    imageWrap: {
-      flex: 1,
-      alignItems: 'center',
-    },
-    text: {
-      textAlign: 'center',
-      color: color.gray_900,
-      lineHeight: 22,
-    },
-    textFirstLine: {
-      ...atoms.body_1_lg_regular,
-      marginBottom: 12,
-    },
-    textSecondLine: {
-      ...atoms.body_2_md_regular,
-      marginBottom: 16,
-    },
-  })
-  return styles
 }
 
 const useStrings = () => {

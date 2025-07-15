@@ -1,13 +1,14 @@
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useState} from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 
-import {Text} from '../../../components/Text'
-import {LedgerConnect, LedgerTransportSwitch} from '../../../legacy/HW'
+import {ActivityIndicator} from '../../../ui/ActivityIndicator/ActivityIndicator'
+import {LedgerConnect} from '../../../ui/LedgerConnect/LedgerConnect'
+import {LedgerTransportSwitch} from '../../../ui/LedgerTransportSwitch/LedgerTransportSwitch'
+import {Text} from '../../../ui/Text/Text'
 import {withBLE, withUSB} from '../../../wallets/hw/hwWallet'
-import {ActivityIndicator} from '../../Swap/common/ConfirmRawTx/ActivityIndicator'
 import {useStrings} from '../../Swap/common/strings'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -26,7 +27,7 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
   const [step, setStep] = useState<Step>('select-transport')
   const {meta} = useSelectedWallet()
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const {signRawWithHw} = useSignRawTxWithHw({onSuccess})
 
   const onSelectTransport = (transportType: TransportType) => {
@@ -59,7 +60,7 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
 
   if (step === 'connect-transport') {
     return (
-      <ScrollView style={styles.scroll}>
+      <ScrollView style={[a.px_lg]}>
         <LedgerConnect
           useUSB={transportType === 'USB'}
           onConnectBLE={onConnectBLE}
@@ -70,35 +71,43 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[a.flex_1, a.align_center, a.justify_center, a.gap_2xl, a.px_lg]}
+    >
       <ActivityIndicator />
 
-      <Text style={styles.text}>{strings.continueOnLedger}</Text>
+      <Text
+        style={[
+          a.body_1_lg_regular,
+          a.text_center,
+          {color: p.text_gray_medium},
+        ]}
+      >
+        {strings.continueOnLedger}
+      </Text>
     </View>
   )
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.gap_2xl,
-      ...atoms.px_lg,
-    },
-    scroll: {
-      ...atoms.px_lg,
-    },
-    text: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-      color: color.text_gray_medium,
+export const useSignRawTxWithHw = (
+  options?: UseMutationOptions<
+    void,
+    Error,
+    {cbor: string; useUSB: boolean; hwDeviceInfo: HW.DeviceInfo}
+  >,
+) => {
+  const {wallet} = useSelectedWallet()
+  const mutation = useMutation({
+    ...options,
+    useErrorBoundary: true,
+    mutationFn: async ({cbor, useUSB, hwDeviceInfo}) => {
+      await wallet.signRawTxWithLedger(cbor, useUSB, hwDeviceInfo)
     },
   })
-
-  return {styles} as const
+  return {
+    ...mutation,
+    signRawWithHw: mutation.mutate,
+  }
 }
 
 export const useSignRawTxWithHw = (

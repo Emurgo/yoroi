@@ -1,6 +1,6 @@
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {useCatalyst} from '@yoroi/staking'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -11,14 +11,13 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
+import {useWalletNavigation} from '../../../../kernel/navigation'
+import {Button} from '../../../../ui/Button/Button'
 import {
   BACKSPACE,
   NumericKeyboard,
-} from '../../../../components/NumericKeyboard'
-import {Space} from '../../../../components/Space/Space'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useWalletNavigation} from '../../../../kernel/navigation'
+} from '../../../../ui/NumericKeyboard/NumericKeyboard'
+import {Space, Spacer} from '../../../../ui/Space/Space'
 import {generatePrivateKeyForCatalyst} from '../../../../wallets/cardano/catalyst'
 import {encryptWithPassword} from '../../../../wallets/cardano/catalyst/catalystCipher'
 import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
@@ -36,7 +35,7 @@ import {useStrings} from '../../common/strings'
 export const ConfirmPin = () => {
   const strings = useStrings()
   const {isDark} = useTheme()
-  const styles = useStyles()
+  const {color} = useTheme()
   const {pin, votingKeyEncryptedChanged} = useCatalyst()
   const navigateTo = useNavigateTo()
   const [currentActivePin, setCurrentActivePin] = React.useState(1)
@@ -222,9 +221,14 @@ export const ConfirmPin = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[
+        styles.safeAreaView,
+        {backgroundColor: color.bg_color_max},
+        a.px_lg,
+        a.pb_lg,
+      ]}
     >
-      <Padding>
+      <Padding style={a.px_lg}>
         <Stepper title={strings.step3Title} currentStep={3} totalSteps={3} />
       </Padding>
 
@@ -233,7 +237,7 @@ export const ConfirmPin = () => {
 
         <Space height="lg" />
 
-        <Row style={{justifyContent: 'center'}}>
+        <Row style={[styles.row, {justifyContent: 'center'}]}>
           <PinBox
             onPress={() => handleOnPress(1)}
             done={done}
@@ -243,7 +247,7 @@ export const ConfirmPin = () => {
             {pin1Value}
           </PinBox>
 
-          <Space height="lg" />
+          <Space width="lg" />
 
           <PinBox
             onPress={() => handleOnPress(2)}
@@ -280,7 +284,7 @@ export const ConfirmPin = () => {
 
       <Spacer fill />
 
-      <Padding>
+      <Padding style={a.px_lg}>
         <Actions>
           <Button
             onPress={() => onNext()}
@@ -295,7 +299,15 @@ export const ConfirmPin = () => {
       <NumericKeyboard onKeyDown={onKeyDown} />
 
       {isLoading && (
-        <View style={styles.loading}>
+        <View
+          style={[
+            styles.loading,
+            StyleSheet.absoluteFillObject,
+            {backgroundColor: color.bg_color_max},
+            a.align_center,
+            a.justify_center,
+          ]}
+        >
           <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
         </View>
       )}
@@ -343,29 +355,17 @@ const useGenerateVotingKeys = (
 
 // NOTE: keyboard horizontal padding is 0, yet bottom must respect safe-area-view
 const Padding = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
-  return <View {...props} style={[styles.padding, style]} />
+  return <View {...props} style={style} />
 }
 
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-    },
-    padding: {
-      ...atoms.px_lg,
-    },
-    loading: {
-      ...StyleSheet.absoluteFillObject,
-      backgroundColor: color.bg_color_max,
-      left: 0,
-      right: 0,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-  })
-
-  return styles
-}
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
+  padding: {},
+  loading: {
+    left: 0,
+    right: 0,
+  },
+  row: {},
+})

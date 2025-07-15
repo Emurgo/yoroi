@@ -1,17 +1,17 @@
 import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {useQuery, UseQueryOptions} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, Linking, View} from 'react-native'
 
-import {Button, ButtonProps, ButtonType} from '../../components/Button/Button'
-import {Copiable} from '../../components/Clipboard/Copiable'
-import {Text} from '../../components/Text'
-import {TitledCard} from '../../components/TitledCard'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isEmptyString} from '../../kernel/utils'
+import {Button, ButtonProps, ButtonType} from '../../ui/Button/Button'
+import {Copiable} from '../../ui/Copiable'
+import {Text} from '../../ui/Text/Text'
+import {TitledCard} from '../../ui/TitledCard/TitledCard'
 import {YoroiWallet} from '../../wallets/cardano/types'
 import {StakePoolInfoAndHistory} from '../../wallets/types/staking'
 
@@ -21,8 +21,7 @@ type StakePoolInfoProps = {
 }
 export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
   const strings = useStrings()
-  const {styles, bold} = useStyles()
-  const {isDark} = useTheme()
+  const {isDark, palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
 
   const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory({
@@ -42,7 +41,7 @@ export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
         variant="poolInfo"
         testID="stakePoolInfoTitleCard"
       >
-        <View style={styles.container}>
+        <View style={[a.gap_md]}>
           <Button
             type={ButtonType.Link}
             title={
@@ -54,8 +53,8 @@ export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
             onPress={() =>
               !isEmptyString(homepage) && Linking.openURL(homepage)
             }
-            style={styles.poolName}
-            fontOverride={bold}
+            style={[a.self_start]}
+            fontOverride={a.body_1_lg_medium}
           />
 
           <Copiable
@@ -75,8 +74,11 @@ export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
         </View>
       </TitledCard>
 
-      <View style={styles.warning}>
-        <Text secondary style={styles.warningText}>
+      <View style={[a.p_sm]}>
+        <Text
+          secondary
+          style={[a.italic, a.body_3_sm_regular, {color: p.gray_500}]}
+        >
           {strings.warning}
         </Text>
       </View>
@@ -129,27 +131,6 @@ export const useStakePoolInfoAndHistory = (
     stakePoolInfoAndHistory: query.data,
     ...query,
   }
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.gap_md,
-    },
-    poolName: {
-      ...atoms.self_start,
-    },
-    warning: {
-      ...atoms.p_sm,
-    },
-    warningText: {
-      color: color.gray_500,
-      ...atoms.italic,
-      ...atoms.body_3_sm_regular,
-    },
-  })
-  return {styles, bold: atoms.body_1_lg_medium}
 }
 
 const messages = defineMessages({

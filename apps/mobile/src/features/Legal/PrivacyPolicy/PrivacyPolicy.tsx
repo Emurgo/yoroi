@@ -1,11 +1,11 @@
 import {useQuery} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 
-import {Spacer} from '../../../components/Spacer/Spacer'
 import {LanguageCode} from '../../../kernel/i18n/languages'
+import {Spacer} from '../../../ui/Space/Space'
 import {loadPrivacyPolicy} from './loadPrivacyPolicy'
 
 const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
@@ -19,41 +19,31 @@ const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
 
 export const PrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
   const privacyPolicy = usePrivacyPolicy({languageCode})
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
   return privacyPolicy != null ? (
     <View>
       <Spacer height={16} />
 
       {/* @ts-expect-error old react */}
-      <Markdown style={styles}>{privacyPolicy}</Markdown>
+      <Markdown
+        style={{
+          body: [{}, {color: p.gray_max}, a.body_1_lg_regular, a.py_sm],
+          heading2: [{}, {color: p.gray_max}, a.body_1_lg_medium, a.py_sm],
+          heading1: [
+            {},
+            {color: p.gray_max},
+            {fontFamily: 'Rubik-Bold'},
+            {fontSize: 20},
+            {lineHeight: 30},
+            {paddingVertical: 10},
+          ],
+        }}
+      >
+        {privacyPolicy}
+      </Markdown>
     </View>
   ) : (
     <ActivityIndicator size="large" color="black" />
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    body: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.py_sm,
-      color: color.gray_max,
-    },
-    heading2: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.py_sm,
-      color: color.gray_max,
-    },
-    heading1: {
-      fontFamily: 'Rubik-Bold',
-      fontSize: 20,
-      lineHeight: 30,
-      color: color.gray_max,
-      paddingVertical: 10,
-    },
-  })
-
-  return styles
 }
