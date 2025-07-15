@@ -1,6 +1,5 @@
 import {hex} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
@@ -9,6 +8,7 @@ import {Text} from 'react-native'
 import {BleManager, LogLevel} from 'react-native-ble-plx'
 import {SystemBars} from 'react-native-edge-to-edge'
 
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {debugStorage} from 'src/kernel/storage/debug-storage'
 import {useAuth} from './src/features/Auth/context/AuthProvider'
 import {usePairing} from './src/features/Pairing/context/PairingProvider'
