@@ -36,6 +36,7 @@
     "@formatjs/intl-numberformat": "^8.15.4",
     "@formatjs/intl-pluralrules": "^5.4.4",
     "@formatjs/intl-relativetimeformat": "^11.4.11",
+    "@gorhom/bottom-sheet": "^5.1.6",
     "@ledgerhq/hw-transport-web-ble": "^6.29.6",
     "@ledgerhq/hw-transport-webhid": "^6.30.2",
     "@ledgerhq/react-native-hid": "^6.32.6",
@@ -144,7 +145,6 @@
   },
   "private": true,
   "overrides": {
-    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.5",
-    "axios": "^1.10.0"
+    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.5"
   }
 }
