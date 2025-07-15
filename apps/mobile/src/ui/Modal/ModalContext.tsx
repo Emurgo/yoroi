@@ -1,33 +1,20 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native'
-import React from 'react'
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet'
+import * as React from 'react'
 import {Keyboard} from 'react-native'
+import {GestureHandlerRootView} from 'react-native-gesture-handler'
 
 type ModalState = {
-  height: number
   isOpen: boolean
-  title: string
   content: React.ReactNode
-  footer?: React.ReactNode
-  isLoading: boolean
-  full: boolean
-  canContinue?: boolean
-  canDiscard: boolean
+  bottomSheetModalRef: React.RefObject<BottomSheetModal | null> | null
 }
 type ModalActions = {
-  openModal: (args: {
-    height?: number
-    title?: string
-    content: React.ReactNode
-    footer?: React.ReactNode
-    full?: boolean
-    onClose?: () => void
-    canContinue?: boolean
-    canDiscard?: boolean
-  }) => void
+  openModal: (args: {content: React.ReactNode}) => void
   closeModal: () => void
-  setCanContinue: (v: boolean) => void
-  startLoading: () => void
-  stopLoading: () => void
 }
 
 const ModalContext = React.createContext<
@@ -49,47 +36,36 @@ export const ModalProvider = ({
   children: React.ReactNode
   initialState?: Partial<ModalState>
 }) => {
+  const bottomSheetModalRef = React.useRef<BottomSheetModal>(null)
   const [state, dispatch] = React.useReducer(modalReducer, {
     ...defaultState,
     ...initialState,
+    bottomSheetModalRef,
   })
-  const navigation = useNavigation()
-  const onCloseRef = React.useRef<() => void>()
+
+  const handlePresentModalPress = React.useCallback(() => {
+    console.log('jdkddk')
+    bottomSheetModalRef.current?.present()
+  }, [])
+  const handleDismissModalPress = React.useCallback(() => {
+    bottomSheetModalRef.current?.close()
+  }, [])
+
   const actions = React.useRef<ModalActions>({
     closeModal: () => {
-      if (getLastRouteName(navigation) === 'modal') {
-        dispatch({type: 'close'})
-        navigation.goBack()
-        onCloseRef.current?.()
-      }
+      dispatch({
+        type: 'close',
+      })
+      handleDismissModalPress()
     },
-    openModal: ({
-      title = '',
-      content,
-      height,
-      onClose,
-      full = false,
-      footer,
-      canContinue,
-      canDiscard = true,
-    }) => {
+    openModal: ({content}) => {
       Keyboard.dismiss()
       dispatch({
         type: 'open',
-        title,
         content,
-        footer,
-        height,
-        full,
-        canContinue,
-        canDiscard,
       })
-      navigation.navigate('modal')
-      onCloseRef.current = onClose
+      handlePresentModalPress()
     },
-    startLoading: () => dispatch({type: 'startLoading'}),
-    stopLoading: () => dispatch({type: 'stopLoading'}),
-    setCanContinue: (v) => dispatch({type: 'canContinue', canContinue: v}),
   }).current
 
   const context = React.useMemo(
@@ -98,25 +74,31 @@ export const ModalProvider = ({
   )
 
   return (
-    <ModalContext.Provider value={context}>{children}</ModalContext.Provider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <BottomSheetModalProvider>
+        <ModalContext.Provider value={context}>
+          {children}
+        </ModalContext.Provider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
+  )
+}
+
+export const Modal = () => {
+  const {bottomSheetModalRef, content} = useModal()
+  return (
+    <BottomSheetModal ref={bottomSheetModalRef}>
+      <BottomSheetView style={{flex: 1}}>{content}</BottomSheetView>
+    </BottomSheetModal>
   )
 }
 
 type ModalAction =
   | {
       type: 'open'
-      height: ModalState['height'] | undefined
       content: ModalState['content']
-      footer: ModalState['footer']
-      title: ModalState['title']
-      full: ModalState['full']
-      canContinue: ModalState['canContinue']
-      canDiscard: ModalState['canDiscard']
     }
   | {type: 'close'}
-  | {type: 'startLoading'}
-  | {type: 'stopLoading'}
-  | {type: 'canContinue'; canContinue: boolean}
 
 const modalReducer = (state: ModalState, action: ModalAction) => {
   switch (action.type) {
@@ -124,26 +106,14 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       return {
         ...state,
         content: action.content,
-        footer: action.footer,
-        height: action.height ?? defaultState.height,
-        title: action.title,
         isOpen: true,
-        isLoading: false,
-        full: action.full,
-        canDiscard: action.canDiscard,
       }
 
     case 'close':
-      return {...defaultState}
-
-    case 'stopLoading':
-      return {...state, isLoading: false}
-
-    case 'startLoading':
-      return {...state, isLoading: true}
-
-    case 'canContinue':
-      return {...state, canContinue: action.canContinue}
+      return {
+        ...defaultState,
+        bottomSheetModalRef: state.bottomSheetModalRef,
+      }
 
     default:
       throw new Error(`modalReducer invalid action`)
@@ -152,17 +122,6 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
 
 const defaultState: ModalState = Object.freeze({
   content: undefined,
-  footer: undefined,
-  height: 350,
-  title: '',
   isOpen: false,
-  isLoading: false,
-  full: false,
-  canDiscard: true,
+  bottomSheetModalRef: null,
 })
-
-const getLastRouteName = (
-  navigation: NavigationProp<ReactNavigation.RootParamList>,
-) => {
-  return navigation.getState().routes.slice(-1)[0].name
-}

@@ -7,7 +7,6 @@ import {useIntl} from 'react-intl'
 import {Text} from 'react-native'
 import {BleManager, LogLevel} from 'react-native-ble-plx'
 import {SystemBars} from 'react-native-edge-to-edge'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {debugStorage} from 'src/kernel/storage/debug-storage'
 import {useAuth} from './src/features/Auth/context/AuthProvider'
@@ -51,9 +50,7 @@ export function DevMenu({visible}: {visible?: boolean}) {
   }
 
   return (
-    <SafeAreaView
-      style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.flex_row, a.flex_wrap]}
-    >
+    <>
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
       <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
@@ -172,7 +169,7 @@ export function DevMenu({visible}: {visible?: boolean}) {
       <BuggyComponent showCrash={showCrash} />
 
       <LoadingOverlay isLoading={isLoading} />
-    </SafeAreaView>
+    </>
   )
 }
 

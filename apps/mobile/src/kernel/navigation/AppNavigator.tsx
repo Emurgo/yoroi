@@ -1,21 +1,25 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
-import {TempPinLoginScreen} from '../../features/Temporal/Auth/TempPinLoginScreen'
-import {TempSetupWalletNavigator} from '../../features/Temporal/SetupWallet/TempSetupWalletNavigator'
+import {TempPinLoginScreen} from '../../features/Temporal_To_Remove/Auth/TempPinLoginScreen'
+import {InitialScreenNavigator} from '../../features/Temporal_To_Remove/InitialScreen/InitialScreenNavigatorNavigator'
+import {Modal} from '../../ui/Modal/ModalContext'
 
 const Stack = createStackNavigator<any>()
 
 export const AppNavigator = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Group>
-        <Stack.Screen name="Login" component={TempPinLoginScreen} />
-        <Stack.Screen
-          name="setup-wallet"
-          options={{headerShown: false}}
-          component={TempSetupWalletNavigator}
-        />
-      </Stack.Group>
-    </Stack.Navigator>
+    <>
+      <Stack.Navigator>
+        <Stack.Group>
+          <Stack.Screen name="Login" component={TempPinLoginScreen} />
+          <Stack.Screen
+            name="initial"
+            options={{headerShown: false}}
+            component={InitialScreenNavigator}
+          />
+        </Stack.Group>
+      </Stack.Navigator>
+      <Modal />
+    </>
   )
 }
