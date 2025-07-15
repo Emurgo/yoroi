@@ -10,6 +10,7 @@ import {
   makeMetricsManager,
 } from './src/kernel/metrics/metricsManager'
 import {RouterContainer} from './src/kernel/navigation/Router'
+import {ModalProvider} from './src/ui/Modal/ModalContext'
 
 const metricsManager = makeMetricsManager()
 
@@ -19,7 +20,9 @@ export function PlatformShell({children}: React.PropsWithChildren) {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <MetricsProvider metricsManager={metricsManager}>
-        <RouterContainer>{children}</RouterContainer>
+        <RouterContainer>
+          <ModalProvider>{children}</ModalProvider>
+        </RouterContainer>
       </MetricsProvider>
     </SafeAreaProvider>
   )
