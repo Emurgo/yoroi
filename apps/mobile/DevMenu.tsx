@@ -1,5 +1,6 @@
 import {hex} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
@@ -50,7 +51,9 @@ export function DevMenu({visible}: {visible?: boolean}) {
   }
 
   return (
-    <>
+    <SafeAreaView
+      style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.flex_row, a.flex_wrap]}
+    >
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
       <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
@@ -169,7 +172,7 @@ export function DevMenu({visible}: {visible?: boolean}) {
       <BuggyComponent showCrash={showCrash} />
 
       <LoadingOverlay isLoading={isLoading} />
-    </>
+    </SafeAreaView>
   )
 }
 
