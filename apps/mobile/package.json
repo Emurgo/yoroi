@@ -42,6 +42,7 @@
     "@ledgerhq/react-native-hid": "^6.32.6",
     "@ledgerhq/react-native-hw-transport-ble": "^6.34.2",
     "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-native/metro-babel-transformer": "^0.80.1",
     "@react-navigation/material-top-tabs": "^7.3.2",
     "@react-navigation/native": "^7.1.9",
     "@react-navigation/stack": "^7.4.2",
