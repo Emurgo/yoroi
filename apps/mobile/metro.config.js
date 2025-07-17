@@ -71,9 +71,15 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
 }
 
 // Fix axios
-config.resolver.unstable_conditionNames = [ 'browser', 'require', 'react-native', ]
+config.resolver.unstable_conditionNames = ['browser', 'require', 'react-native']
 
 // Add WASM support - treat as asset only
 config.resolver.assetExts.push('wasm')
+
+// Markdown support
+config.resolver.sourceExts.push('md')
+config.transformer.babelTransformerPath = require.resolve(
+  './markdown-transformer.js',
+)
 
 module.exports = config
