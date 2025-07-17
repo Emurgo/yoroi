@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {View} from 'react-native'
-import Markdown from 'react-native-markdown-display'
 
+import Markdown from 'react-native-marked'
 import globalMessages, {
   actionMessages,
   confirmationMessages,
@@ -31,7 +31,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const navigation = useNavigation()
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   React.useEffect(() => {
     if (!disabled && !accepted && showed === false) {
@@ -40,13 +40,17 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
         content: (
           <View style={[a.px_lg, a.pb_lg]}>
             <Markdown
-              style={{
-                body: [{}, {color: p.gray_max}, a.body_1_lg_regular, a.py_sm],
+              value={loadText(type, languageCode)}
+              styles={{
+                text: {...a.body_1_lg_regular, ...ta.text_gray_max, ...a.py_sm},
+                h2: {...a.body_1_lg_medium, ...ta.text_gray_max, ...a.py_sm},
+                h1: {
+                  ...ta.text_gray_max,
+                  ...a.heading_3_medium,
+                  ...a.py_sm,
+                },
               }}
-            >
-              {loadText(type, languageCode)}
-            </Markdown>
-
+            />
             <Check text={strings.accept} />
           </View>
         ),
@@ -79,7 +83,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
     languageCode,
     navigation,
     openModal,
-    p.gray_max,
+    ta.text_gray_max,
     resetToTxHistory,
     setAccepted,
     showed,
