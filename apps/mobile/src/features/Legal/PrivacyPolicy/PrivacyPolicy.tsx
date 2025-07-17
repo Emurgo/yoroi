@@ -28,21 +28,9 @@ export const PrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
       <YoroiMarkdown
         contentUri={privacyPolicy}
         style={{
-          text: {
-            ...a.body_1_lg_regular,
-            ...ta.text_gray_max,
-            ...a.py_sm,
-          },
-          h2: {
-            ...a.body_1_lg_medium,
-            ...ta.text_gray_max,
-            ...a.py_sm,
-          },
-          h1: {
-            ...ta.text_gray_max,
-            ...a.heading_3_medium,
-            paddingVertical: 10,
-          },
+          text: [a.body_1_lg_regular, ta.text_gray_max, a.py_sm],
+          h2: [a.body_1_lg_medium, ta.text_gray_max, a.py_sm],
+          h1: [ta.text_gray_max, a.heading_3_medium, {paddingVertical: 10}],
         }}
       />
     </View>
