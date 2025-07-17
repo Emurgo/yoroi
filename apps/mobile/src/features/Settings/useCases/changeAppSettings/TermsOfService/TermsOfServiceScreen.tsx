@@ -3,7 +3,7 @@ import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLanguage} from '../../../../../kernel/i18n'
+import {useLanguage} from '../../../../../kernel/i18n/LanguageProvider'
 import {TermsOfService} from '../../../../Legal/TermsOfService/TermsOfService'
 
 export const TermsOfServiceScreen = () => {

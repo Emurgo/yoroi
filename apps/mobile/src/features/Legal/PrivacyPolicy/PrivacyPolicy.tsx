@@ -2,10 +2,10 @@ import {useQuery} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import Markdown from 'react-native-markdown-display'
 
-import {LanguageCode} from '../../../kernel/i18n/languages'
-import {Spacer} from '../../../ui/Space/Space'
+import {LanguageCode} from '../../../kernel/i18n/localization'
+import {YoroiMarkdown} from '../../../ui/Markdown/YoroiMarkdown'
+import {Space} from '../../../ui/Space/Space'
 import {loadPrivacyPolicy} from './loadPrivacyPolicy'
 
 const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
@@ -23,25 +23,30 @@ export const PrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
 
   return privacyPolicy != null ? (
     <View>
-      <Spacer height={16} />
+      <Space.Height.lg />
 
-      {/* @ts-expect-error old react */}
-      <Markdown
+      <YoroiMarkdown
+        contentUri={privacyPolicy}
         style={{
-          body: [{}, {color: p.gray_max}, a.body_1_lg_regular, a.py_sm],
-          heading2: [{}, {color: p.gray_max}, a.body_1_lg_medium, a.py_sm],
-          heading1: [
-            {},
-            {color: p.gray_max},
-            {fontFamily: 'Rubik-Bold'},
-            {fontSize: 20},
-            {lineHeight: 30},
-            {paddingVertical: 10},
-          ],
+          text: {
+            ...a.body_1_lg_regular,
+            color: p.gray_max,
+            paddingVertical: a.py_sm.paddingTop, // assuming py_sm has paddingTop property
+          },
+          h2: {
+            ...a.body_1_lg_medium,
+            color: p.gray_max,
+            paddingVertical: a.py_sm.paddingTop,
+          },
+          h1: {
+            color: p.gray_max,
+            fontFamily: 'Rubik-Bold',
+            fontSize: 20,
+            lineHeight: 30,
+            paddingVertical: 10,
+          },
         }}
-      >
-        {privacyPolicy}
-      </Markdown>
+      />
     </View>
   ) : (
     <ActivityIndicator size="large" color="black" />

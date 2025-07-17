@@ -3,7 +3,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {View} from 'react-native'
-import Markdown from 'react-native-markdown-display'
 
 import globalMessages, {
   actionMessages,
@@ -13,6 +12,7 @@ import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {Button, ButtonType} from '../../../ui/Button/Button'
 import {Checkbox} from '../../../ui/Checkbox/Checkbox'
+import {YoroiMarkdown} from '../../../ui/Markdown/YoroiMarkdown'
 import {useModal} from '../../../ui/Modal/ModalContext'
 import {loadText} from './loadText'
 import {Disclaimer} from './types'
@@ -39,13 +39,28 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
         title: strings.disclaimer,
         content: (
           <View style={[a.px_lg, a.pb_lg]}>
-            <Markdown
+            <YoroiMarkdown
+              contentUri={loadText(type, languageCode)}
               style={{
-                body: [{}, {color: p.gray_max}, a.body_1_lg_regular, a.py_sm],
+                text: {
+                  ...a.body_1_lg_regular,
+                  color: p.gray_max,
+                  paddingVertical: a.py_sm.paddingTop, // assuming py_sm has paddingTop property
+                },
+                h2: {
+                  ...a.body_1_lg_medium,
+                  color: p.gray_max,
+                  paddingVertical: a.py_sm.paddingTop,
+                },
+                h1: {
+                  color: p.gray_max,
+                  fontFamily: 'Rubik-Bold',
+                  fontSize: 20,
+                  lineHeight: 30,
+                  paddingVertical: 10,
+                },
               }}
-            >
-              {loadText(type, languageCode)}
-            </Markdown>
+            />
 
             <Check text={strings.accept} />
           </View>
