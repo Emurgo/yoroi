@@ -4,6 +4,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {View} from 'react-native'
 
+import Markdown from 'react-native-marked'
 import globalMessages, {
   actionMessages,
   confirmationMessages,
@@ -12,7 +13,6 @@ import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {Button, ButtonType} from '../../../ui/Button/Button'
 import {Checkbox} from '../../../ui/Checkbox/Checkbox'
-import {YoroiMarkdown} from '../../../ui/Markdown/YoroiMarkdown'
 import {useModal} from '../../../ui/Modal/ModalContext'
 import {loadText} from './loadText'
 import {Disclaimer} from './types'
@@ -39,9 +39,9 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
         title: strings.disclaimer,
         content: (
           <View style={[a.px_lg, a.pb_lg]}>
-            <YoroiMarkdown
-              contentUri={loadText(type, languageCode)}
-              style={{
+            <Markdown
+              value={loadText(type, languageCode)}
+              styles={{
                 text: {...a.body_1_lg_regular, ...ta.text_gray_max, ...a.py_sm},
                 h2: {...a.body_1_lg_medium, ...ta.text_gray_max, ...a.py_sm},
                 h1: {
@@ -51,7 +51,6 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
                 },
               }}
             />
-
             <Check text={strings.accept} />
           </View>
         ),
