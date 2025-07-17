@@ -3,7 +3,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {View} from 'react-native'
-import Markdown from 'react-native-markdown-display'
 
 import globalMessages, {
   actionMessages,
@@ -13,6 +12,7 @@ import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {Button, ButtonType} from '../../../ui/Button/Button'
 import {Checkbox} from '../../../ui/Checkbox/Checkbox'
+import {YoroiMarkdown} from '../../../ui/Markdown/YoroiMarkdown'
 import {useModal} from '../../../ui/Modal/ModalContext'
 import {loadText} from './loadText'
 import {Disclaimer} from './types'
@@ -31,7 +31,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const navigation = useNavigation()
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   React.useEffect(() => {
     if (!disabled && !accepted && showed === false) {
@@ -39,13 +39,18 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
         title: strings.disclaimer,
         content: (
           <View style={[a.px_lg, a.pb_lg]}>
-            <Markdown
+            <YoroiMarkdown
+              contentUri={loadText(type, languageCode)}
               style={{
-                body: [{}, {color: p.gray_max}, a.body_1_lg_regular, a.py_sm],
+                text: {...a.body_1_lg_regular, ...ta.text_gray_max, ...a.py_sm},
+                h2: {...a.body_1_lg_medium, ...ta.text_gray_max, ...a.py_sm},
+                h1: {
+                  ...ta.text_gray_max,
+                  ...a.heading_3_medium,
+                  paddingVertical: 10,
+                },
               }}
-            >
-              {loadText(type, languageCode)}
-            </Markdown>
+            />
 
             <Check text={strings.accept} />
           </View>
@@ -79,7 +84,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
     languageCode,
     navigation,
     openModal,
-    p.gray_max,
+    ta.text_gray_max,
     resetToTxHistory,
     setAccepted,
     showed,
