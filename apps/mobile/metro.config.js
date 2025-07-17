@@ -77,39 +77,8 @@ config.resolver.unstable_conditionNames = ['browser', 'require', 'react-native']
 // Add WASM support - treat as asset only
 config.resolver.assetExts.push('wasm')
 
-// Markdown support - treat as asset only
+// Markdown support
 config.resolver.sourceExts.push('md')
-
-// Using a custom resolver inorder to convert .md files to .js files
-const originalResolveRequest = config.resolver.resolveRequest
-config.resolver.resolveRequest = (context, moduleName, platform) => {
-  if (moduleName.endsWith('.md')) {
-    const resolvedPath = context.resolveRequest(context, moduleName, platform)
-
-    if (resolvedPath && resolvedPath.filePath) {
-      const content = fs.readFileSync(resolvedPath.filePath, 'utf8')
-      const virtualPath = resolvedPath.filePath + '.js'
-
-      const moduleCode = `module.exports = ${JSON.stringify(content)};`
-      const tempDir = path.join(projectRoot, '.metro-cache')
-
-      if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, {recursive: true})
-      }
-
-      const tempFile = path.join(tempDir, path.basename(virtualPath))
-      fs.writeFileSync(tempFile, moduleCode)
-
-      return {
-        filePath: tempFile,
-        type: 'sourceFile',
-      }
-    }
-  }
-
-  return originalResolveRequest
-    ? originalResolveRequest(context, moduleName, platform)
-    : context.resolveRequest(context, moduleName, platform)
-}
+config.transformer.babelTransformerPath = require.resolve('./markdown-transformer.js')
 
 module.exports = config
