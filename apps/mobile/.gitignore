@@ -44,4 +44,3 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
-/.metro-cache/

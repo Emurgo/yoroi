@@ -19,7 +19,7 @@ const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
 
 export const PrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
   const privacyPolicy = usePrivacyPolicy({languageCode})
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return privacyPolicy != null ? (
     <View>
@@ -30,19 +30,17 @@ export const PrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
         style={{
           text: {
             ...a.body_1_lg_regular,
-            color: p.gray_max,
-            paddingVertical: a.py_sm.paddingTop, // assuming py_sm has paddingTop property
+            ...ta.text_gray_max,
+            ...a.py_sm,
           },
           h2: {
             ...a.body_1_lg_medium,
-            color: p.gray_max,
-            paddingVertical: a.py_sm.paddingTop,
+            ...ta.text_gray_max,
+            ...a.py_sm,
           },
           h1: {
-            color: p.gray_max,
-            fontFamily: 'Rubik-Bold',
-            fontSize: 20,
-            lineHeight: 30,
+            ...ta.text_gray_max,
+            ...a.heading_3_medium,
             paddingVertical: 10,
           },
         }}
