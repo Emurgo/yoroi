@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {View} from 'react-native'
 
