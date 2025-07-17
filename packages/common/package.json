@@ -82,7 +82,7 @@
     "@react-native/metro-config": "0.79.2",
     "@react-native/typescript-config": "0.79.2",
     "@release-it/conventional-changelog": "^10.0.1",
-    "@tanstack/react-query": "^5.76.2",
+    "@tanstack/react-query": "5.76.2",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^16.3.0",
     "@testing-library/react-native": "^13.2.0",
@@ -112,7 +112,7 @@
     "react-native": "0.79.0",
     "react-native-builder-bob": "^0.40.11",
     "react-native-mmkv": "^3.2.0",
-    "react-test-renderer": "^19.1.0",
+    "react-test-renderer": "19.1.0",
     "release-it": "^19.0.2",
     "rxjs": "7.8.2",
     "typescript": "^5.3.3",
@@ -120,14 +120,13 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
-    "@tanstack/react-query": "5.76.2",
     "axios": "^1.10.0",
     "bignumber.js": "9.3.0",
     "immer": "10.1.1",
-    "react": ">= 16.8.0 < 20.0.0",
     "react-native-mmkv": "3.2.0",
     "rxjs": "7.8.2",
-    "zod": "3.25.17"
+    "zod": "3.25.17",
+    "@tanstack/react-query": "5.76.2"
   },
   "packageManager": "npm@10.9.0",
   "engines": {

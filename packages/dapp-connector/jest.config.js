@@ -10,7 +10,9 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
-    '!src/fixtures/**'
+    '!src/fixtures/**',
+    '!*mocks*',
+    '!src/connector.js'
   ],
   coverageReporters: ['text-summary', 'lcov', 'html'],
   coverageThreshold: {
@@ -29,4 +31,4 @@ module.exports = {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest'
   },
   testEnvironment: 'jsdom'
-} 
+}

@@ -131,10 +131,14 @@ class Manager implements GovernanceManager {
     const votingDelegation =
       type === 'key'
         ? await DRep.newKeyHash(
-            await Ed25519KeyHash.fromBytes(Buffer.from(hash, 'hex')),
+            await Ed25519KeyHash.fromBytes(
+              new Uint8Array(Buffer.from(hash, 'hex')),
+            ),
           )
         : await DRep.newScriptHash(
-            await ScriptHash.fromBytes(Buffer.from(hash, 'hex')),
+            await ScriptHash.fromBytes(
+              new Uint8Array(Buffer.from(hash, 'hex')),
+            ),
           )
 
     return await Certificate.newVoteDelegation(

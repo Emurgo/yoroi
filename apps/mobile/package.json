@@ -144,7 +144,6 @@
   },
   "private": true,
   "overrides": {
-    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.5",
-    "axios": "^1.10.0"
+    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.5"
   }
 }

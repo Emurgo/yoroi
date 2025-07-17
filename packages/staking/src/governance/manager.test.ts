@@ -131,7 +131,7 @@ describe('createGovernanceManager', () => {
   describe('createDelegationCertificate', () => {
     it('should create delegation certificate', async () => {
       const privateKey = await cardano.Bip32PrivateKey.fromBytes(
-        Buffer.from(privateKeyCBOR, 'hex'),
+        new Uint8Array(Buffer.from(privateKeyCBOR, 'hex')),
       )
       const publicKey = await privateKey.toPublic()
       const stakingKey = await publicKey
