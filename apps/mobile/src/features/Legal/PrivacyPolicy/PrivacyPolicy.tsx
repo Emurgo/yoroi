@@ -1,6 +1,6 @@
 import {useQuery} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
 import Markdown from 'react-native-marked'
