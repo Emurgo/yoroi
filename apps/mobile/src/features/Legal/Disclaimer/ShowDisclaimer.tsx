@@ -47,7 +47,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
                 h1: {
                   ...ta.text_gray_max,
                   ...a.heading_3_medium,
-                  paddingVertical: 10,
+                  ...a.py_sm,
                 },
               }}
             />
