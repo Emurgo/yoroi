@@ -1,12 +1,14 @@
 import {
+  QueryKey,
   useMutation,
   UseMutationOptions,
+  UseMutationResult,
   useQuery,
+  useQueryClient,
   UseQueryOptions,
 } from '@tanstack/react-query'
 import {useGovernance} from './context'
 import {GovernanceAction, VoteKind} from '../../manager'
-import {useMutationWithInvalidations} from '@yoroi/common'
 import {CardanoTypes} from '../../../types'
 import {StakingKeyState} from '../../types'
 
@@ -50,10 +52,23 @@ export const useLatestGovernanceAction = (
   })
 }
 
+type UpdateLatestGovernanceActionResult = UseMutationResult<
+  void,
+  Error,
+  GovernanceAction
+> & {
+  updateLatestGovernanceAction: (
+    action: GovernanceAction,
+    options?: Parameters<
+      ReturnType<typeof useMutationWithInvalidations>['mutate']
+    >[1],
+  ) => void
+}
+
 export const useUpdateLatestGovernanceAction = (
   walletId: string,
   options: UseMutationOptions<void, Error, GovernanceAction> = {},
-) => {
+): UpdateLatestGovernanceActionResult => {
   const {manager} = useGovernance()
   const mutation = useMutationWithInvalidations({
     ...options,
@@ -128,5 +143,37 @@ export const useBech32DRepID = (
     queryKey: ['governanceGetBech32DRepID', hexId],
     queryFn: () => manager.convertHexKeyHashToBech32Format(hexId),
     ...options,
+  })
+}
+
+// TODO: temporary solution. Import from common when monorepo is ready.
+/* istanbul ignore next */
+export const useMutationWithInvalidations = <
+  TData = unknown,
+  TError = unknown,
+  TVariables = void,
+  TContext = unknown,
+>({
+  invalidateQueries,
+  ...options
+}: UseMutationOptions<TData, TError, TVariables, TContext> & {
+  invalidateQueries?: Array<QueryKey>
+}) => {
+  const queryClient = useQueryClient()
+
+  return useMutation<TData, TError, TVariables, TContext>({
+    ...options,
+    onMutate: (variables) => {
+      invalidateQueries?.forEach((key) =>
+        queryClient.cancelQueries({queryKey: key}),
+      )
+      return options?.onMutate?.(variables)
+    },
+    onSuccess: (data, variables, context) => {
+      invalidateQueries?.forEach((key) =>
+        queryClient.invalidateQueries({queryKey: key}),
+      )
+      return options?.onSuccess?.(data, variables, context)
+    },
   })
 }
