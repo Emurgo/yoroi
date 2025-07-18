@@ -25,6 +25,7 @@ describe('useDappList', () => {
   })
 })
 
+// to-do: use common package import when monorepo is ready
 export const queryClientFixture = () =>
   new QueryClient({
     defaultOptions: {
