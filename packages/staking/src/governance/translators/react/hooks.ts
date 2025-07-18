@@ -147,7 +147,6 @@ export const useBech32DRepID = (
 }
 
 // TODO: temporary solution. Import from common when monorepo is ready.
-/* istanbul ignore next */
 export const useMutationWithInvalidations = <
   TData = unknown,
   TError = unknown,
