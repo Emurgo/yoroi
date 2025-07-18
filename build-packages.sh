@@ -24,6 +24,7 @@ for pkg in "${packages[@]}"; do
   (
     cd "./packages/$pkg" \
     && rm -rf node_modules
+    && cd ..
   )
 done
 
