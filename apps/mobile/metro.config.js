@@ -80,7 +80,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
 }
 
 // Fix axios
-config.resolver.unstable_conditionNames = [ 'browser', 'require', 'react-native', ]
+config.resolver.unstable_conditionNames = [ 'browser', 'require', 'react-native']
 
 // Add WASM support - treat as asset only
 config.resolver.assetExts.push('wasm')
