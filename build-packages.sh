@@ -23,7 +23,14 @@ packages=(
 for pkg in "${packages[@]}"; do
   (
     cd "./packages/$pkg" \
-    && rm -rf node_modules \
+    && rm -rf node_modules
+  )
+done
+
+
+for pkg in "${packages[@]}"; do
+  (
+    cd "./packages/$pkg" \
     && npm i \
     && npm run build \
     && cd ..
