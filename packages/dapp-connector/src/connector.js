@@ -177,6 +177,7 @@ const initWallet = ({
       return throwUserRejectedError()
     }
 
+    // eslint-disable-next-line no-undef
     localStorage.setItem('yoroi-session-id', sessionId)
     enabling = false
 
@@ -228,7 +229,9 @@ const initWallet = ({
    * @returns {Promise<boolean>}
    */
   const isEnabled = async () => {
+    // eslint-disable-next-line no-undef
     const previousSessionId = localStorage.getItem('yoroi-session-id')
+    // eslint-disable-next-line no-undef
     localStorage.setItem('yoroi-session-id', sessionId)
     if (previousSessionId && previousSessionId !== sessionId) {
       logMessage('Account Change')
@@ -248,6 +251,7 @@ const initWallet = ({
    */
   const enable = async (...args) => {
     enabling = true
+    // eslint-disable-next-line no-undef
     localStorage.setItem('yoroi-session-id', sessionId)
     try {
       const response = await callExternalMethod('cardano_enable', args)
