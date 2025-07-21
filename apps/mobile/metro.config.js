@@ -16,19 +16,23 @@ config.watchFolders = [workspaceRoot]
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
   path.resolve(workspaceRoot, 'node_modules'),
-  path.resolve(workspaceRoot, 'packages/types/node_modules'),
-  path.resolve(workspaceRoot, 'packages/common/node_modules'),
-  path.resolve(workspaceRoot, 'packages/explorers/node_modules'),
   path.resolve(workspaceRoot, 'packages/api/node_modules'),
   path.resolve(workspaceRoot, 'packages/blockchains/node_modules'),
-  path.resolve(workspaceRoot, 'packages/portfolio/node_modules'),
-  path.resolve(workspaceRoot, 'packages/theme/node_modules'),
-  path.resolve(workspaceRoot, 'packages/identicon/node_modules'),
   path.resolve(workspaceRoot, 'packages/claim/node_modules'),
-  path.resolve(workspaceRoot, 'packages/setup-wallet/node_modules'),
+  path.resolve(workspaceRoot, 'packages/common/node_modules'),
+  path.resolve(workspaceRoot, 'packages/dapp-connector/node_modules'),
   path.resolve(workspaceRoot, 'packages/exchange/node_modules'),
+  path.resolve(workspaceRoot, 'packages/explorers/node_modules'),
+  path.resolve(workspaceRoot, 'packages/identicon/node_modules'),
   path.resolve(workspaceRoot, 'packages/links/node_modules'),
   path.resolve(workspaceRoot, 'packages/notifications/node_modules'),
+  path.resolve(workspaceRoot, 'packages/portfolio/node_modules'),
+  path.resolve(workspaceRoot, 'packages/resolver/node_modules'),
+  path.resolve(workspaceRoot, 'packages/setup-wallet/node_modules'),
+  path.resolve(workspaceRoot, 'packages/swap/node_modules'),
+  path.resolve(workspaceRoot, 'packages/theme/node_modules'),
+  path.resolve(workspaceRoot, 'packages/transfer/node_modules'),
+  path.resolve(workspaceRoot, 'packages/types/node_modules'),
 ]
 
 // NOTE: workaround for the structure now
@@ -36,19 +40,23 @@ config.resolver.disableHierarchicalLookup = true
 config.resolver.enablePackageExports = true
 
 config.resolver.extraNodeModules = {
-  '@yoroi/types': path.resolve(workspaceRoot, 'packages/types'),
-  '@yoroi/common': path.resolve(workspaceRoot, 'packages/common'),
   '@yoroi/api': path.resolve(workspaceRoot, 'packages/api'),
-  '@yoroi/portfolio': path.resolve(workspaceRoot, 'packages/portfolio'),
+  '@yoroi/blockchains': path.resolve(workspaceRoot, 'packages/blockchains'),
+  '@yoroi/claim': path.resolve(workspaceRoot, 'packages/claim'),
+  '@yoroi/common': path.resolve(workspaceRoot, 'packages/common'),
+  '@yoroi/dapp-connector': path.resolve(workspaceRoot, 'packages/dapp-connector'),
+  '@yoroi/exchange': path.resolve(workspaceRoot, 'packages/exchange'),
   '@yoroi/explorers': path.resolve(workspaceRoot, 'packages/explorers'),
   '@yoroi/identicon': path.resolve(workspaceRoot, 'packages/identicon'),
-  '@yoroi/blockchains': path.resolve(workspaceRoot, 'packages/blockchains'),
-  '@yoroi/theme': path.resolve(workspaceRoot, 'packages/theme'),
-  '@yoroi/claim': path.resolve(workspaceRoot, 'packages/claim'),
-  '@yoroi/setup-wallet': path.resolve(workspaceRoot, 'packages/setup-wallet'),
-  '@yoroi/exchange': path.resolve(workspaceRoot, 'packages/exchange'),
   '@yoroi/links': path.resolve(workspaceRoot, 'packages/links'),
   '@yoroi/notifications': path.resolve(workspaceRoot, 'packages/notifications'),
+  '@yoroi/portfolio': path.resolve(workspaceRoot, 'packages/portfolio'),
+  '@yoroi/resolver': path.resolve(workspaceRoot, 'packages/resolver'),
+  '@yoroi/setup-wallet': path.resolve(workspaceRoot, 'packages/setup-wallet'),
+  '@yoroi/swap': path.resolve(workspaceRoot, 'packages/swap'),
+  '@yoroi/theme': path.resolve(workspaceRoot, 'packages/theme'),
+  '@yoroi/transfer': path.resolve(workspaceRoot, 'packages/transfer'),
+  '@yoroi/types': path.resolve(workspaceRoot, 'packages/types'),
 }
 
 config.transformer.minifierConfig = {
