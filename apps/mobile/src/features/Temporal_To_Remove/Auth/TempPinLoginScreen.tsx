@@ -8,7 +8,7 @@ export const TempPinLoginScreen = () => {
 
   const checkPin = (pin: string) => {
     if (pin === '000000') {
-      navigation.navigate('initial')
+      navigation.navigate('wallet-selection')
       return
     }
     Alert.alert('Incorret PIN')

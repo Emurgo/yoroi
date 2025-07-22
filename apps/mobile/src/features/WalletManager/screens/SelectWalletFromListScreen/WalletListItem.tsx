@@ -1,4 +1,4 @@
-import {useFocusEffect} from '@react-navigation/native'
+// import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
@@ -14,7 +14,7 @@ import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '../../../SetupWallet/illustrations/ChevronRight'
-import {useAutomaticWalletOpener} from '../../context/AutomaticWalletOpeningProvider'
+// import {useAutomaticWalletOpener} from '../../context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
 import {useSyncWalletInfo} from '../../hooks/useSyncWalletInfo'
@@ -36,10 +36,10 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
     selected: {meta},
     walletManager,
   } = useWalletManager()
-  const {
+  /* const {
     shouldOpen: shouldAutomaticWalletOpen,
     setShouldOpen: setShouldAutomaticWalletOpen,
-  } = useAutomaticWalletOpener()
+  } = useAutomaticWalletOpener() */
 
   const isSelected = meta?.id === walletMeta.id
 
@@ -47,7 +47,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
   const syncWalletInfo = useSyncWalletInfo(walletMeta.id)
   const hasSyncedLastSelectedNetwork = network === syncWalletInfo?.network
 
-  useFocusEffect(
+  /* useFocusEffect(
     React.useCallback(() => {
       if (
         shouldAutomaticWalletOpen &&
@@ -65,7 +65,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
       shouldAutomaticWalletOpen,
       walletMeta,
     ]),
-  )
+  ) */
 
   // NOTE: dev only - temporary to show Product
   const handleOnDeleteWallet = () => {
