@@ -4,7 +4,7 @@ import {
   useNotificationsConfig,
   useUpdateNotificationsConfig,
 } from '@yoroi/notifications'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   ScrollView,
@@ -184,36 +184,36 @@ const getLabelById = (
 }
 
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     flex: {
-      ...atoms.flex_1,
+      ...a.flex_1,
     },
     root: {
       backgroundColor: color.bg_color_max,
     },
     safeAreaView: {
-      ...atoms.p_lg,
+      ...a.p_lg,
     },
     description: {
-      ...atoms.py_lg,
-      ...atoms.body_1_lg_regular,
+      ...a.py_lg,
+      ...a.body_1_lg_regular,
       color: color.gray_900,
     },
     choicesContainer: {
-      ...atoms.flex_row,
-      ...atoms.pb_xl,
-      ...atoms.flex_wrap,
+      ...a.flex_row,
+      ...a.pb_xl,
+      ...a.flex_wrap,
     },
     choiceButton: {
-      ...atoms.p_sm,
+      ...a.p_sm,
     },
     selectedChoiceButton: {
       backgroundColor: color.el_gray_min,
       borderRadius: 8,
     },
     choiceLabel: {
-      ...atoms.body_1_lg_medium,
+      ...a.body_1_lg_medium,
       color: color.text_gray_max,
     },
     selectedChoiceLabel: {
@@ -221,32 +221,32 @@ const useStyles = () => {
     },
     input: {
       color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
+      ...a.body_1_lg_regular,
     },
     percentLabel: {
       color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-      ...atoms.p_lg,
-      ...atoms.absolute,
+      ...a.body_1_lg_regular,
+      ...a.p_lg,
+      ...a.absolute,
       right: 0,
       top: 0,
     },
     inputContainer: {
-      ...atoms.relative,
+      ...a.relative,
     },
     label: {
       color: color.text_gray_max,
       backgroundColor: color.bg_color_max,
-      ...atoms.z_20,
-      ...atoms.absolute,
-      ...atoms.body_3_sm_regular,
+      ...a.z_20,
+      ...a.absolute,
+      ...a.body_3_sm_regular,
       top: -3,
       left: 11,
       paddingHorizontal: 3,
     },
   })
   const colors = {
-    background: color.gray_100,
+    background: p.gray_100,
     cursor: color.input_selected,
   }
 
