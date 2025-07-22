@@ -107,6 +107,7 @@
     "react-native-keychain": "^10.0.0",
     "react-native-marked": "^7.0.2",
     "react-native-mmkv": "^3.2.0",
+    "react-native-paper": "^5.14.5",
     "react-native-qrcode-svg": "^6.3.15",
     "react-native-quick-base64": "^2.2.0",
     "react-native-quick-crypto": "^0.7.13",
