@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {
@@ -10,19 +10,19 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../components/Button/Button'
-import {Checkbox} from '../../../../../components/Checkbox/Checkbox'
-import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../components/Text'
+import {useWalletNavigation} from '../../../../../kernel/navigation/navigation'
+import {Button} from '../../../../../ui/Button/Button'
+import {Checkbox} from '../../../../../ui/Checkbox/Checkbox'
+import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Space, SpaceHeight} from '../../../../../ui/Space/Space'
+import {Text} from '../../../../../ui/Text/Text'
 import {
   Checkmark,
   TextInput,
   TextInputProps,
-} from '../../../../../components/TextInput/TextInput'
-import {useWalletNavigation} from '../../../../../kernel/navigation'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+} from '../../../../../ui/TextInput/TextInput'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
@@ -63,23 +63,23 @@ export const RemoveWalletScreen = () => {
               </Text>
             )}
 
-            <Spacer height={24} />
+            <Space.Height.xl />
 
             <Text style={styles.description}>
               {strings.descriptionParagraph2}
             </Text>
           </Description>
 
-          <Spacer height={32} />
+          <Space.Height.lg />
 
           <WalletInfo>
             <Text style={styles.walletNameLabel}>{strings.walletName}</Text>
 
-            <Spacer height={10} />
+            <SpaceHeight size={10} />
 
             <Text style={styles.walletName}>{meta.name}</Text>
 
-            <Spacer height={24} />
+            <Space.Height.xl />
 
             <WalletNameInput
               placeholder={strings.walletName}
@@ -95,7 +95,7 @@ export const RemoveWalletScreen = () => {
           </WalletInfo>
         </ScrollView>
 
-        <Spacer fill />
+        <SpaceHeight fill size={'lg'} />
 
         {!meta.isHW && (
           <Checkbox
@@ -190,35 +190,35 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.pt_lg,
+      backgroundColor: p.bg_color_max,
+      ...a.flex_1,
+      ...a.px_lg,
+      ...a.pt_lg,
     },
     descriptionContainer: {
-      backgroundColor: color.bg_color_max,
+      backgroundColor: p.bg_color_max,
     },
     description: {
-      ...atoms.body_1_lg_regular,
+      ...a.body_1_lg_regular,
     },
 
     walletNameLabel: {
-      ...atoms.body_1_lg_medium,
+      ...a.body_1_lg_medium,
     },
     walletName: {
-      ...atoms.body_1_lg_regular,
+      ...a.body_1_lg_regular,
     },
     actions: {
-      ...atoms.py_lg,
+      ...a.py_lg,
     },
     safeAreaView: {
-      ...atoms.flex_1,
+      ...a.flex_1,
     },
     removeButton: {
-      backgroundColor: color.sys_magenta_500,
+      backgroundColor: p.sys_magenta_500,
     },
   })
   return styles

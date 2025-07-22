@@ -2,10 +2,10 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {Button, ButtonType} from '../../../../../components/Button/Button'
 import globalMessages from '../../../../../kernel/i18n/global-messages'
-import {useEnableAuthWithOs} from '../../../../Auth/common/hooks'
-import {OsAuthScreen} from '../../../../Auth/OsAuthScreen/OsAuthScreen'
+import {Button, ButtonType} from '../../../../../ui/Button/Button'
+import {useEnableAuthWithOs} from '../../../../Auth/hooks/useEnableAuthWithOS'
+import {OsAuthScreen} from '../../../../Auth/screens/OsAuthScreen'
 
 export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()

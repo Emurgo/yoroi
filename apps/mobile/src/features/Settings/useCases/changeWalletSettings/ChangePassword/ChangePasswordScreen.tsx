@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {MutationOptions, useMutation} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {
@@ -12,20 +12,17 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {
-  Checkmark,
-  TextInput,
-} from '../../../../../components/TextInput/TextInput'
 import {errorMessages} from '../../../../../kernel/i18n/global-messages'
+import {Button} from '../../../../../ui/Button/Button'
+import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Checkmark, TextInput} from '../../../../../ui/TextInput/TextInput'
 import {YoroiWallet} from '../../../../../wallets/cardano/types'
 import {
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
 } from '../../../../../wallets/utils/validators'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()
@@ -201,23 +198,23 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: ptoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
+      backgroundColor: p.bg_color_max,
+      ...a.flex_1,
     },
     safeAreaView: {
-      ...atoms.flex_1,
+      ...a.flex_1,
     },
     contentContainer: {
-      ...atoms.p_lg,
-      ...atoms.gap_lg,
+      ...a.p_lg,
+      ...a.gap_lg,
     },
     actions: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.p_lg,
+      backgroundColor: p.bg_color_max,
+      ...a.p_lg,
     },
   })
   return styles

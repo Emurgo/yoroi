@@ -1,10 +1,10 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain, Network} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../../../../../components/Icon'
-import {Text} from '../../../../../components/Text'
+import {Icon} from '../../../../../ui/Icon'
+import {Text} from '../../../../../ui/Text/Text'
 
 type Props = {
   name: Readonly<Network.Config['name']>
@@ -61,13 +61,13 @@ const Title = ({children}: {children: React.ReactNode}) => {
 }
 
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
-      borderBottomColor: color.gray_200,
+      borderBottomColor: p.gray_200,
       borderBottomWidth: 1,
-      ...atoms.py_lg,
+      ...a.py_lg,
     },
     flag: {
       alignItems: 'flex-end',
@@ -79,12 +79,12 @@ const useStyles = () => {
       flexDirection: 'column',
     },
     bodyMedium: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_medium,
+      color: p.gray_900,
+      ...a.body_1_lg_medium,
     },
   })
   const colors = {
-    checkIcon: color.primary_600,
+    checkIcon: p.primary_600,
   }
   return {styles, colors}
 }

@@ -15,11 +15,10 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {TextInput} from '../../../../../../components/TextInput/TextInput'
-import {useFormatNumber} from '../../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
+import {Button} from '../../../../../../ui/Button/Button'
+import {KeyboardAvoidingView} from '../../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {TextInput} from '../../../../../../ui/TextInput/TextInput'
 import {useStrings} from './strings'
 
 type ManualChoice = {
@@ -48,7 +47,9 @@ const CHOICES: Readonly<Choice[]> = [
 export const ManageNotificationDisplayDurationScreen = () => {
   const {track} = useMetrics()
   const {styles, colors} = useStyles()
-  const formatNumber = useFormatNumber()
+  const formatNumber = (value: any) => {
+    return `${value}`
+  }
   const config = useConfig()
   const {mutate: updateConfig} = useUpdateNotificationsConfig()
   const navigation = useNavigation()

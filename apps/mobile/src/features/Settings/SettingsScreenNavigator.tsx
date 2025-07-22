@@ -1,13 +1,11 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity} from 'react-native'
 
-import {Boundary} from '../../components/Boundary/Boundary'
-import {Icon} from '../../components/Icon'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {
@@ -15,9 +13,11 @@ import {
   defaultStackNavigationOptions,
   SettingsStackRoutes,
   SettingsTabRoutes,
-} from '../../kernel/navigation'
-import {ChangePinScreen} from '../Auth/ChangePinScreen'
-import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
+} from '../../kernel/navigation/navigation'
+import {Boundary} from '../../ui/Boundary/Boundary'
+import {Icon} from '../../ui/Icon'
+import {ChangePinScreen} from '../Auth/screens/ChangePinScreen'
+import {EnableLoginWithPinScreen} from '../Auth/screens/EnableLoginWithPinScreen'
 import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
 import {About} from './useCases/changeAppSettings/About'
 import {ApplicationSettingsScreen} from './useCases/changeAppSettings/ApplicationSettingsScreen'
@@ -49,7 +49,7 @@ const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   const {track} = useMetrics()
-  const {atoms, color} = useTheme()
+  const {atoms, palette} = useTheme()
   const {handleOpenModal} = useHandleOpenNetworkNoticeModal()
 
   useFocusEffect(
@@ -61,7 +61,7 @@ export const SettingsScreenNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
+        ...defaultStackNavigationOptions(a, palette),
       }}
     >
       <Stack.Screen //
@@ -154,9 +154,9 @@ export const SettingsScreenNavigator = () => {
             <TouchableOpacity
               onPress={handleOpenModal}
               activeOpacity={0.5}
-              style={{...atoms.px_lg}}
+              style={{...a.px_lg}}
             >
-              <Icon.Info size={24} color={color.gray_900} />
+              <Icon.Info size={24} color={palette.gray_900} />
             </TouchableOpacity>
           ),
         }}
@@ -228,13 +228,13 @@ export const SettingsScreenNavigator = () => {
 const Tab = createMaterialTopTabNavigator<SettingsTabRoutes>()
 const SettingsTabNavigator = () => {
   const strings = useStrings()
-  const {color, atoms} = useTheme()
+  const {palette, atoms} = useTheme()
 
   return (
     <Tab.Navigator
-      style={{backgroundColor: color.bg_color_max}}
+      style={{backgroundColor: palette.bg_color_max}}
       screenOptions={({route}) => ({
-        ...defaultMaterialTopTabNavigationOptions(atoms, color),
+        ...defaultMaterialTopTabNavigationOptions(a, palette),
         tabBarLabel:
           route.name === 'wallet-settings'
             ? strings.walletTabTitle
@@ -265,7 +265,7 @@ const ChangePinScreenWrapper = () => {
 const EnableLoginWithPinWrapper = () => {
   const navigation = useNavigation()
 
-  return <EnableLoginWithPin onDone={navigation.goBack} />
+  return <EnableLoginWithPinScreen onDone={navigation.goBack} />
 }
 
 const messages = defineMessages({

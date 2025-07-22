@@ -1,19 +1,19 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {TextInput} from '../../../../../components/TextInput/TextInput'
 import globalMessages from '../../../../../kernel/i18n/global-messages'
-import {isEmptyString} from '../../../../../kernel/utils'
+import {Button} from '../../../../../ui/Button/Button'
+import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {SpaceHeight} from '../../../../../ui/Space/Space'
+import {TextInput} from '../../../../../ui/TextInput/TextInput'
+import {isEmptyString} from '../../../../../wallets/utils/string'
 import {getWalletNameError} from '../../../../../wallets/utils/validators'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const RenameWalletScreen = () => {
   const strings = useStrings()
@@ -68,7 +68,7 @@ export const RenameWalletScreen = () => {
           />
         </ScrollView>
 
-        <Spacer fill />
+        <SpaceHeight fill size={'lg'} />
 
         <View style={styles.actions}>
           <Button
@@ -83,24 +83,24 @@ export const RenameWalletScreen = () => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
+      backgroundColor: p.bg_color_max,
+      ...a.flex_1,
     },
     safeAreaView: {
-      ...atoms.flex_1,
-      ...atoms.pt_lg,
-      ...atoms.pb_lg,
+      ...a.flex_1,
+      ...a.pt_lg,
+      ...a.pb_lg,
     },
     scrollContentContainer: {
-      ...atoms.px_lg,
+      ...a.px_lg,
     },
     actions: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.pt_lg,
-      ...atoms.px_lg,
+      backgroundColor: p.bg_color_max,
+      ...a.pt_lg,
+      ...a.px_lg,
     },
   })
   return styles

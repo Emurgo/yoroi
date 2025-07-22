@@ -1,25 +1,23 @@
-import messaging from '@react-native-firebase/messaging'
 import {useNavigation} from '@react-navigation/native'
-import {useQuery} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
 
-import {Copiable} from '../../../../../components/Clipboard/Copiable'
-import {appInfo} from '../../../../../kernel/appInfo'
-import {commit} from '../../../../../kernel/env'
-import {SettingsRouteNavigation} from '../../../../../kernel/navigation'
+import {commit} from '../../../../../kernel/constants'
+import {SettingsRouteNavigation} from '../../../../../kernel/navigation/navigation'
+import {Copiable} from '../../../../../ui/Copiable/Copiable'
 
 export const About = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigation = useNavigation<SettingsRouteNavigation>()
-  const {data: FCMToken} = useQuery({
-    useErrorBoundary: false,
-    suspense: false,
-    queryFn: () => messaging().getToken(),
-  })
+  const {data: FCMToken} = {
+    data: 'efh848gh4498gh4g904g',
+  }
+  const appInfo = {
+    version: '5.2.2',
+  }
 
   return (
     <View style={styles.about}>
@@ -61,25 +59,25 @@ export const About = () => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     about: {
       flex: 1,
-      backgroundColor: color.bg_color_max,
-      ...atoms.p_lg,
+      backgroundColor: p.bg_color_max,
+      ...a.p_lg,
     },
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      ...atoms.py_lg,
+      ...a.py_lg,
     },
     labelText: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_medium,
+      color: p.gray_900,
+      ...a.body_1_lg_medium,
     },
     valueText: {
-      color: color.gray_500,
-      ...atoms.body_1_lg_regular,
+      color: p.gray_500,
+      ...a.body_1_lg_regular,
     },
   })
 

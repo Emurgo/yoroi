@@ -23,10 +23,10 @@ export const PrivacyPolicyScreen = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.bg_color_max,
+      backgroundColor: p.bg_color_max,
       flex: 1,
     },
     contentContainer: {

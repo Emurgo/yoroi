@@ -1,19 +1,34 @@
 import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
-import {NavigationState, NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
-import {StackNavigationOptions, StackNavigationProp, TransitionPresets} from '@react-navigation/stack'
+import {
+  NavigationState,
+  NavigatorScreenParams,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
+import {
+  StackNavigationOptions,
+  StackNavigationProp,
+  TransitionPresets,
+} from '@react-navigation/stack'
 import {isKeyOf} from '@yoroi/common'
-import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
+import {atoms as a, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Chain, Portfolio, Scan} from '@yoroi/types'
 import React from 'react'
-import {Dimensions, Linking, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {
+  Dimensions,
+  Linking,
+  Platform,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native'
 
-import {Icon} from '../components/Icon'
-import {OnConfirm} from '../features/ReviewTx/common/hooks/useOnConfirm'
-import {ReviewDetailsProps} from '../features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
-import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
-import {useSwap} from '../features/Swap/common/SwapProvider'
-import {useSelectedNetwork} from '../features/WalletManager/common/hooks/useSelectedNetwork'
-import {compareArrays} from '../wallets/utils/utils'
+import {OnConfirm} from '../../features/ReviewTx/common/hooks/useOnConfirm'
+import {ReviewDetailsProps} from '../../features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
+import {Routes as StakingGovernanceRoutes} from '../../features/Staking/Governance/common/navigation'
+import {useSelectedNetwork} from '../../features/WalletManager/hooks/useSelectedNetwork'
+import {Icon} from '../../ui/Icon'
+import {compareArrays} from '../../wallets/utils/utils'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -36,11 +51,11 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 type Guard<Params> = (params: Params | object) => params is Params
 
 export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
-  const {color} = useTheme()
+  const {palette} = useTheme()
 
   return (
     <TouchableOpacity {...props} testID="buttonBack2">
-      <Icon.Chevron direction="left" color={props.color ?? color.gray_max} />
+      <Icon.Chevron direction="left" color={props.color ?? palette.gray_max} />
     </TouchableOpacity>
   )
 }
@@ -48,10 +63,14 @@ export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
 
-export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette): StackNavigationOptions => {
+export const defaultStackNavigationOptions = (
+  atoms: typeof a,
+  color: ThemedPalette,
+): StackNavigationOptions => {
   return {
     ...(Platform.OS === 'android' && {...TransitionPresets.SlideFromRightIOS}),
-    detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+    detachPreviousScreen:
+      false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
     cardStyle: {
       backgroundColor: color.bg_color_max,
     },
@@ -92,11 +111,16 @@ export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette
 
 // NAVIGATOR TOP TABS OPTIONS
 export const defaultMaterialTopTabNavigationOptions = (
-  atoms: Atoms,
+  atoms: typeof a,
   color: ThemedPalette,
 ): MaterialTopTabNavigationOptions => {
   return {
-    tabBarStyle: {backgroundColor: color.bg_color_max, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+    tabBarStyle: {
+      backgroundColor: color.bg_color_max,
+      elevation: 0,
+      shadowOpacity: 0,
+      marginHorizontal: 16,
+    },
     tabBarIndicatorStyle: {backgroundColor: color.primary_600, height: 2},
     tabBarLabelStyle: {
       textTransform: 'none',
@@ -121,10 +145,10 @@ export type WalletStackRoutes = {
   'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
   'review-tx-routes': NavigatorScreenParams<ReviewTxRoutes>
-  settings: NavigatorScreenParams<SettingsStackRoutes>
+  'settings': NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
-  governance: NavigatorScreenParams<StakingGovernanceRoutes>
+  'governance': NavigatorScreenParams<StakingGovernanceRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
 }
 
@@ -212,7 +236,8 @@ type ExchangeRoutes = {
 
 export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
-export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
+export type StakingCenterRouteNavigation =
+  StackNavigationProp<StakingCenterRoutes>
 
 export type SettingsTabRoutes = {
   'wallet-settings': undefined
@@ -221,13 +246,13 @@ export type SettingsTabRoutes = {
 
 export type SettingsStackRoutes = {
   'settings-system-log': undefined
-  about: undefined
+  'about': undefined
   'app-settings': undefined
   'main-settings': undefined
   'change-wallet-name': undefined
   'terms-of-use': undefined
-  support: undefined
-  analytics: undefined
+  'support': undefined
+  'analytics': undefined
   'enable-login-with-os': undefined
   'remove-wallet': undefined
   'change-language': undefined
@@ -291,7 +316,7 @@ export type PortfolioRoutes = {
   'tx-details': {
     id: string
   }
-  history: NavigatorScreenParams<TxHistoryRoutes>
+  'history': NavigatorScreenParams<TxHistoryRoutes>
 }
 
 export type ReviewTxRoutes = {
@@ -329,19 +354,21 @@ export type VotingRegistrationRoutes = {
   'confirm-tx': undefined
   'qr-code': undefined
 }
-export type VotingRegistrationRouteNavigation = StackNavigationProp<VotingRegistrationRoutes>
+export type VotingRegistrationRouteNavigation =
+  StackNavigationProp<VotingRegistrationRoutes>
 
 export type InititalizationRoutes = {
-  initial: undefined
+  'initial': undefined
   'language-pick': undefined
   'enable-login-with-pin': undefined
-  analytics: undefined
+  'analytics': undefined
   'terms-of-service-changed': undefined
   'analytics-changed': undefined
   'read-terms-of-service': undefined
   'read-privacy-policy': undefined
 }
-export type InititalizationNavigation = StackNavigationProp<InititalizationRoutes>
+export type InititalizationNavigation =
+  StackNavigationProp<InititalizationRoutes>
 
 type FirstRunRoutes = {
   'language-pick': undefined
@@ -358,26 +385,26 @@ export type NftRoutes = {
 export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 
 export type MenuRoutes = {
-  _menu: undefined
+  '_menu': undefined
   'voting-registration': undefined
 }
 
 export type AppRoutes = {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
-  developer: undefined
-  storybook: undefined
-  playground: undefined
+  'developer': undefined
+  'storybook': undefined
+  'playground': undefined
   'manage-wallets': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
   'exchange-result': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined
-  modal: undefined
+  'modal': undefined
   'choose-biometric-login': undefined
   'dark-theme-announcement': undefined
   'setup-wallet': undefined
-  notifications: undefined
+  'notifications': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
@@ -405,7 +432,7 @@ export const useBlockGoBack = () => {
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
   const {network} = useSelectedNetwork()
-  const swapForm = useSwap()
+  // const swapForm = useSwap()
 
   return React.useRef({
     navigation,
@@ -607,7 +634,9 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToCollateralSettings: (params?: SettingsStackRoutes['manage-collateral']) => {
+    navigateToCollateralSettings: (
+      params?: SettingsStackRoutes['manage-collateral'],
+    ) => {
       navigation.navigate('manage-wallets', {
         screen: 'settings',
         params: {
@@ -689,12 +718,12 @@ export const useWalletNavigation = () => {
         return
       }
 
-      swapForm.action({type: 'ResetForm'})
-
-      if (tokenOutId !== undefined) {
-        swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
-        swapForm.action({type: 'TokenOutInputTouched'})
-      }
+      // swapForm.action({type: 'ResetForm'})
+      //
+      // if (tokenOutId !== undefined) {
+      //   swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
+      //   swapForm.action({type: 'TokenOutInputTouched'})
+      // }
 
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
@@ -709,7 +738,9 @@ export const useWalletNavigation = () => {
 
     navigateToExchange: () => {
       if (network === Chain.Network.Preprod) {
-        Linking.openURL('https://docs.cardano.org/cardano-testnets/tools/faucet/')
+        Linking.openURL(
+          'https://docs.cardano.org/cardano-testnets/tools/faucet/',
+        )
         return
       }
 
@@ -741,7 +772,10 @@ export const useWalletNavigation = () => {
     navigateToTxDetails: (id: string) => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'tx-details', params: {id}}},
+        params: {
+          screen: 'history',
+          params: {screen: 'tx-details', params: {id}},
+        },
       })
     },
   } as const).current
@@ -758,7 +792,10 @@ export const shouldShowTabBarForRoutes = (state: NavigationState) => {
   }
 
   const [route, subRoute] = routes
-  return isKeyOf(route, routesWithTabBar) && routesWithTabBar[route].includes(subRoute)
+  return (
+    isKeyOf(route, routesWithTabBar) &&
+    routesWithTabBar[route].includes(subRoute)
+  )
 }
 
 const routesWithTabBar: Record<keyof WalletTabRoutes, string[]> = {
@@ -768,7 +805,9 @@ const routesWithTabBar: Record<keyof WalletTabRoutes, string[]> = {
   menu: ['_menu'],
 }
 
-const getFocusedRouteName = (state: Partial<NavigationState> | NavigationState['routes'][0]['state']): string[] => {
+const getFocusedRouteName = (
+  state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
+): string[] => {
   const currentRoute = state?.routes?.[state?.index ?? -1]
   const currentState = currentRoute?.state
   const name = currentRoute?.name ?? null
@@ -781,7 +820,9 @@ const getFocusedRouteName = (state: Partial<NavigationState> | NavigationState['
   return [name]
 }
 
-export const isWalletSelectionRoute = (state: Partial<NavigationState> | NavigationState['routes'][0]['state']) => {
+export const isWalletSelectionRoute = (
+  state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
+) => {
   const routes = getFocusedRouteName(state)
   const manageWalletsRoute: keyof AppRoutes = 'manage-wallets'
   const walletSelectionRoute: keyof WalletStackRoutes = 'wallet-selection'
@@ -792,10 +833,21 @@ export const isWalletSelectionRoute = (state: Partial<NavigationState> | Navigat
   )
 }
 
-export const isTxHistoryRoute = (state: Partial<NavigationState> | NavigationState['routes'][0]['state']) => {
+export const isTxHistoryRoute = (
+  state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
+) => {
   const routes = getFocusedRouteName(state)
-  type RoutePath = keyof AppRoutes | keyof WalletStackRoutes | keyof WalletTabRoutes | keyof TxHistoryRoutes
-  const fullRoutePath: RoutePath[] = ['manage-wallets', 'main-wallet-routes', 'history', 'history-list']
+  type RoutePath =
+    | keyof AppRoutes
+    | keyof WalletStackRoutes
+    | keyof WalletTabRoutes
+    | keyof TxHistoryRoutes
+  const fullRoutePath: RoutePath[] = [
+    'manage-wallets',
+    'main-wallet-routes',
+    'history',
+    'history-list',
+  ]
   const pathToCompare = fullRoutePath.slice(0, routes.length)
   return routes.length > 1 && compareArrays(pathToCompare, routes)
 }

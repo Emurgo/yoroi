@@ -1,6 +1,6 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {StackNavigationOptions} from '@react-navigation/stack'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {produce} from 'immer'
 import React, {
   createContext,
@@ -11,8 +11,8 @@ import React, {
 } from 'react'
 import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
-import {Icon} from '../../components/Icon'
-import {defaultStackNavigationOptions} from '../../kernel/navigation'
+import {defaultStackNavigationOptions} from '../../kernel/navigation/navigation'
+import {Icon} from '../../ui/Icon'
 
 type SearchState = {
   search: string
@@ -133,10 +133,10 @@ export const useSearchOnNavBar = ({
   extraNavigationOptions?: StackNavigationOptions
 }) => {
   const navigation = useNavigation()
-  const {atoms, color} = useTheme()
+  const {palette: p} = useTheme()
   const defaultNavigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(atoms, color),
-    [atoms, color],
+    () => defaultStackNavigationOptions(a, p),
+    [p],
   )
 
   const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
@@ -228,26 +228,26 @@ export const useDisableSearchOnBar = ({
   onBack?: () => void
 }) => {
   const navigation = useNavigation()
-  const {atoms, color} = useTheme()
+  const {palette: p} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
       if (isChild)
         navigation.getParent()?.setOptions({
-          ...defaultStackNavigationOptions(atoms, color),
+          ...defaultStackNavigationOptions(a, p),
           headerLeft: onBack
             ? () => <BackButton onPress={onBack} />
             : undefined,
           headerRight: undefined,
           title,
         })
-    }, [isChild, navigation, atoms, color, onBack, title]),
+    }, [isChild, navigation, p, onBack, title]),
   )
 
   React.useLayoutEffect(() => {
     if (!isChild)
       navigation.setOptions({
-        ...defaultStackNavigationOptions(atoms, color),
+        ...defaultStackNavigationOptions(a, p),
         headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
         headerRight: undefined,
         title,
@@ -260,7 +260,7 @@ type Props = {
 }
 const InputSearch = ({placeholder}: Props) => {
   const {search, searchChanged} = useSearch()
-  const {color, isDark} = useTheme()
+  const {palette: p, isDark} = useTheme()
 
   return (
     <TextInput
@@ -269,40 +269,40 @@ const InputSearch = ({placeholder}: Props) => {
       placeholder={placeholder}
       onChangeText={(search) => searchChanged(search)}
       autoCapitalize="none"
-      style={{flex: 1, color: color.el_gray_max}}
+      style={{flex: 1, color: p.el_gray_max}}
       testID="inputSearch"
-      placeholderTextColor={color.text_gray_medium}
+      placeholderTextColor={p.text_gray_medium}
       keyboardAppearance={isDark ? 'dark' : 'light'}
     />
   )
 }
 
 const SearchButton = (props: TouchableOpacityProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity testID="iconSearch" {...props}>
-      <Icon.Magnify size={26} color={color.text_gray_medium} />
+      <Icon.Magnify size={26} color={p.text_gray_medium} />
     </TouchableOpacity>
   )
 }
 
 const EraseButton = (props: TouchableOpacityProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity {...props}>
-      <Icon.Cross size={20} color={color.el_gray_max} />
+      <Icon.Cross size={20} color={p.el_gray_max} />
     </TouchableOpacity>
   )
 }
 
 const BackButton = (props: TouchableOpacityProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity testID="buttonBack" {...props}>
-      <Icon.Chevron direction="left" color={color.el_gray_max} />
+      <Icon.Chevron direction="left" color={p.el_gray_max} />
     </TouchableOpacity>
   )
 }

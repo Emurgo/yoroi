@@ -1,5 +1,5 @@
 import {useMutation} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -16,20 +16,19 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '../../../../../components/Button/Button'
-import {Copiable} from '../../../../../components/Clipboard/Copiable'
-import {ErrorPanel} from '../../../../../components/ErrorPanel/ErrorPanel'
-import {Icon} from '../../../../../components/Icon'
-import {Info} from '../../../../../components/Icon/Info'
-import {useModal} from '../../../../../components/Modal/ModalContext'
-import {Space} from '../../../../../components/Space/Space'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../components/Text'
 import {
   SettingsStackRoutes,
   useUnsafeParams,
   useWalletNavigation,
-} from '../../../../../kernel/navigation'
+} from '../../../../../kernel/navigation/navigation'
+import {Button, ButtonType} from '../../../../../ui/Button/Button'
+import {Copiable} from '../../../../../ui/Copiable/Copiable'
+import {ErrorPanel} from '../../../../../ui/ErrorPanel/ErrorPanel'
+import {Icon} from '../../../../../ui/Icon'
+import {Info} from '../../../../../ui/Icon/Info'
+import {useModal} from '../../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../../ui/Space/Space'
+import {Text} from '../../../../../ui/Text/Text'
 import {useCollateralInfo} from '../../../../../wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../../../wallets/cardano/utxoManager/useSetCollateralId'
 import {
@@ -44,9 +43,8 @@ import {
   asQuantity,
   Quantities,
 } from '../../../../../wallets/utils/utils'
-import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useReviewTx} from '../../../../ReviewTx/common/ReviewTxProvider'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
@@ -175,7 +173,7 @@ export const ManageCollateralScreen = () => {
       <ScrollView>
         <Text style={styles.heading}>{strings.lockedAsCollateral}</Text>
 
-        <Spacer height={8} />
+        <Space.Height.sm />
 
         <ActionableAmount
           amount={amount}
@@ -184,7 +182,7 @@ export const ManageCollateralScreen = () => {
           disabled={isLoading}
         />
 
-        <Spacer height={16} />
+        <Space.Height.lg />
 
         {hasCollateral && (
           <>
@@ -279,9 +277,9 @@ const ActionableAmount = ({
 
   return (
     <View style={styles.amountItem} testID="amountItem">
-      <Left>
-        <TokenAmountItem amount={amount} />
-      </Left>
+      {/*<Left>*/}
+      {/*  <TokenAmountItem amount={amount} />*/}
+      {/*</Left>*/}
 
       {collateralId !== '' && (
         <Right>
@@ -349,40 +347,40 @@ const Operation = () => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
+      ...a.flex_1,
+      ...a.px_lg,
+      ...a.flex_1,
+      ...a.px_lg,
     },
     amountItem: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
+      ...a.flex_row,
+      ...a.justify_between,
+      ...a.align_center,
+      ...a.flex_row,
+      ...a.justify_between,
+      ...a.align_center,
     },
     heading: {
-      ...atoms.flex_1,
-      ...atoms.flex_1,
+      ...a.flex_1,
+      ...a.flex_1,
       alignSelf: 'center',
     },
     operation: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
+      ...a.flex_row,
+      ...a.align_center,
     },
     operationText: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
+      ...a.body_2_md_regular,
+      color: p.text_gray_medium,
     },
   })
 
   const colors = {
-    iconColor: color.gray_900,
+    iconColor: p.gray_900,
   }
 
   return {styles, colors} as const

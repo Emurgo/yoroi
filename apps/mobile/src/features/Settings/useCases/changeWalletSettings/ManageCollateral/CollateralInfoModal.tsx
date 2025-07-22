@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -19,22 +19,22 @@ export const CollateralInfoModal = () => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     modal: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.align_center,
+      ...a.flex_1,
+      ...a.px_lg,
+      ...a.align_center,
     },
     modalText: {
-      ...atoms.text_center,
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
+      ...a.text_center,
+      ...a.body_1_lg_regular,
+      color: p.text_gray_medium,
     },
   })
 
   const colors = {
-    iconColor: color.gray_900,
+    iconColor: p.gray_900,
   }
 
   return {styles, colors} as const

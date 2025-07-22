@@ -1,9 +1,9 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Icon} from '../Icon'
-import {Spacer} from '../Spacer/Spacer'
+import {SpaceHeight} from '../Space/Space'
 
 export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
   const {styles, colors} = useStyles()
@@ -12,7 +12,7 @@ export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
     <View {...props} style={[style, styles.container]}>
       <Icon.Info color={colors.icon} size={28} />
 
-      <Spacer height={10} />
+      <SpaceHeight size={10} />
 
       <View style={styles.message}>{children}</View>
     </View>
@@ -20,22 +20,22 @@ export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: color.sys_magenta_100,
+      backgroundColor: p.sys_magenta_100,
       borderRadius: 8,
       flexDirection: 'column',
-      ...atoms.pt_md,
-      ...atoms.pb_sm,
-      ...atoms.px_lg,
+      ...a.pt_md,
+      ...a.pb_sm,
+      ...a.px_lg,
     },
     message: {
       flexDirection: 'row',
     },
   })
   const colors = {
-    icon: color.sys_magenta_500,
+    icon: p.sys_magenta_500,
   }
   return {styles, colors}
 }

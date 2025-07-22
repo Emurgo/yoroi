@@ -1,11 +1,11 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import React from 'react'
 import {ScrollView, StyleSheet, TextProps, View} from 'react-native'
 
-import {Space} from '../../../../../components/Space/Space'
-import {Text} from '../../../../../components/Text'
 import {logger} from '../../../../../kernel/logger/logger'
+import {Space} from '../../../../../ui/Space/Space'
+import {Text} from '../../../../../ui/Text/Text'
 
 export const SystemLogScreen = () => {
   const styles = useStyles()
@@ -30,7 +30,7 @@ export const SystemLogScreen = () => {
 
               <ValueText>{entry.message}</ValueText>
 
-              <Space height="lg" />
+              <Space.Height.lg />
             </View>
           )
         })}
@@ -67,20 +67,20 @@ const ValueText = ({style, children, ...props}: TextProps) => {
   )
 }
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.bg_color_max,
-      ...atoms.px_lg,
+      backgroundColor: p.bg_color_max,
+      ...a.px_lg,
     },
     labelText: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_medium,
+      color: p.gray_900,
+      ...a.body_1_lg_medium,
     },
     valueText: {
-      color: color.gray_500,
-      ...atoms.body_1_lg_regular,
+      color: p.gray_500,
+      ...a.body_1_lg_regular,
     },
   })
 

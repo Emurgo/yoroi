@@ -1,11 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 
 import {
   defaultStackNavigationOptions,
   ManageNotificationsRoutes,
-} from '../../../../../kernel/navigation'
+} from '../../../../../kernel/navigation/navigation'
 import {ManageNotificationDisplayDurationScreen} from './ManageNotificationDisplayDuration/ManageNotificationDisplayDurationScreen'
 import {ManageNotificationSettings} from './ManageNotificationSettings/ManageNotificationSettings'
 import {useStrings} from './useStrings'
@@ -13,14 +13,14 @@ import {useStrings} from './useStrings'
 const Stack = createStackNavigator<ManageNotificationsRoutes>()
 
 export const ManageNotificationsNavigator = () => {
-  const {atoms, color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
     <Stack.Navigator
       initialRouteName="manage-notification-settings"
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
+        ...defaultStackNavigationOptions(a, p),
       }}
     >
       <Stack.Screen //
