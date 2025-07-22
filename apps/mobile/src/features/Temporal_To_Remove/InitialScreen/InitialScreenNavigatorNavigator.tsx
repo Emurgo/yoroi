@@ -7,12 +7,15 @@ import {Button, Text, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {DevMenu} from '../../../../DevMenu'
 import {useModal} from '../../../ui/Modal/ModalContext'
+import {SettingsScreenNavigator} from '../../Settings/SettingsScreenNavigator'
 
 const Stack = createStackNavigator<any>()
 export const InitialScreenNavigator = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="root">{() => <InitialScreen />}</Stack.Screen>
+      <Stack.Screen name="root">
+        {() => <SettingsScreenNavigator />}
+      </Stack.Screen>
       <Stack.Screen name="dev">{() => <DevMenu visible={true} />}</Stack.Screen>
     </Stack.Navigator>
   )

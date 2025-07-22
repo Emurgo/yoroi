@@ -4,7 +4,7 @@ import {Chain} from '@yoroi/types'
 import {
   SettingsRouteNavigation,
   useWalletNavigation,
-} from '../../../kernel/navigation'
+} from '../../../kernel/navigation/navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<SettingsRouteNavigation>()

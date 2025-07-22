@@ -1,14 +1,14 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../components/Button/Button'
-import {Text} from '../../../../../components/Text'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {Button} from '../../../../../ui/Button/Button'
+import {Text} from '../../../../../ui/Text/Text'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()
@@ -60,14 +60,14 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.bg_color_max,
+      backgroundColor: p.bg_color_max,
     },
     heading: {
-      ...atoms.body_1_lg_regular,
+      ...a.body_1_lg_regular,
     },
     disableSection: {
       flex: 1,

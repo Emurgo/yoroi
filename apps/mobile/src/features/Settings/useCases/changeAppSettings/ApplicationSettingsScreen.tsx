@@ -1,76 +1,66 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {isBoolean} from '@yoroi/common'
-import {SupportedThemes, useTheme} from '@yoroi/theme'
+import {ThemeName, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '../../../../components/Icon'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {isDev, isNightly} from '../../../../kernel/env'
-import {useLanguage} from '../../../../kernel/i18n'
+import {isDev, isNightly} from '../../../../kernel/constants'
 import {themeNames} from '../../../../kernel/i18n/global-messages'
-import {defaultLanguage} from '../../../../kernel/i18n/languages'
-import {useCrashReports} from '../../../../wallets/hooks'
+import {useLanguage} from '../../../../kernel/i18n/LanguageProvider'
 import {
-  useAuthSetting,
-  useAuthWithOs,
-  useIsAuthOsSupported,
-} from '../../../Auth/common/hooks'
-import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
+  LanguageRecord,
+  supportedLanguages,
+} from '../../../../kernel/i18n/localization'
+import {Icon} from '../../../../ui/Icon'
+import {SettingsSwitch} from '../../../../ui/SettingsSwitch/SettingsSwitch'
+import {Space} from '../../../../ui/Space/Space'
+import {useCrashReports} from '../../../../wallets/hooks'
+import {useSelectedNetwork} from '../../../WalletManager/hooks/useSelectedNetwork'
 import {useNavigateTo} from '../../common/navigation'
-import {SettingsSwitch} from '../../common/SettingsSwitch'
 import {
   NavigatedSettingsItem,
   SettingsItem,
   SettingsSection,
 } from '../../SettingsItems'
-import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
-import {
-  useChangeScreenShareSetting,
-  useScreenShareSettingEnabled,
-} from './ScreenShare'
+import {useChangeScreenShareSetting} from './ScreenShare'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
-  const {name} = useTheme()
-  const {languageCode, supportedLanguages} = useLanguage()
-  const language =
-    supportedLanguages.find((lang) => lang.code === languageCode) ??
-    defaultLanguage
+  const {atoms: a, paletteName: name, palette: p} = useTheme()
+  const {languageCode} = useLanguage()
+  const language = supportedLanguages.find(
+    (lang) => lang.code === languageCode,
+  ) as LanguageRecord
 
   const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
-  const {currency} = useCurrencyPairing()
-  const {enabled: crashReportEnabled} = useCrashReports()
+  const currency = 'USD'
+  const {enabled: crashReportEnabled} = {
+    enabled: true,
+  }
 
-  const authSetting = useAuthSetting()
-  const isAuthOsSupported = useIsAuthOsSupported()
+  const isAuthOsSupported = false
   const navigateTo = useNavigateTo()
-  const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
+
   const {network} = useSelectedNetwork()
 
-  const {data: screenShareEnabled} = useScreenShareSettingEnabled()
+  const screenShareEnabled = false
   const displayScreenShareSetting = Platform.OS === 'android'
 
   const onToggleAuthWithOs = () => {
-    if (authSetting === 'os') {
-      authWithOs()
-    } else {
-      navigateTo.enableLoginWithOs()
-    }
+    navigateTo.enableLoginWithOs()
   }
 
   const iconProps = {
-    color: colors.icon,
+    color: p.icon,
     size: 23,
   }
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
-      <ScrollView bounces={false} style={styles.settings}>
+    <SafeAreaView edges={['bottom', 'right', 'left']} style={{}}>
+      <ScrollView bounces={false} style={{}}>
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
@@ -125,11 +115,11 @@ export const ApplicationSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.securityReporting}>
           <NavigatedSettingsItem
-            disabled={authSetting === 'os'}
+            disabled={false}
             icon={<Icon.Pin {...iconProps} />}
             label={strings.changePin}
             onNavigate={navigateTo.changeCustomPin}
@@ -150,7 +140,7 @@ export const ApplicationSettingsScreen = () => {
             disabled={!isAuthOsSupported}
           >
             <SettingsSwitch
-              value={authSetting === 'os'}
+              value={false}
               onValueChange={onToggleAuthWithOs}
               disabled={!isAuthOsSupported || isTogglePrivacyModeLoading}
             />
@@ -178,7 +168,7 @@ export const ApplicationSettingsScreen = () => {
           )}
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.xl />
       </ScrollView>
     </SafeAreaView>
   )
@@ -290,7 +280,7 @@ const useStrings = () => {
     privacyPolicy: intl.formatMessage(messages.privacyPolicy),
     screenSharing: intl.formatMessage(messages.screenSharing),
     screenSharingInfo: intl.formatMessage(messages.screenSharingInfo),
-    translateThemeName: (theme: SupportedThemes) =>
+    translateThemeName: (theme: ThemeName) =>
       intl.formatMessage(themeNames[theme]),
     network: intl.formatMessage(messages.network),
   }

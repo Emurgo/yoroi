@@ -10,16 +10,15 @@ import {
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '../../../../../components/Boundary/Boundary'
-import {Button} from '../../../../../components/Button/Button'
-import {useModal} from '../../../../../components/Modal/ModalContext'
-import {Space} from '../../../../../components/Space/Space'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Boundary} from '../../../../../ui/Boundary/Boundary'
+import {Button} from '../../../../../ui/Button/Button'
+import {useModal} from '../../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../../ui/Space/Space'
 import {NetworkPickerList} from './NetworkPickerList'
 import {useStrings} from './strings'
 
@@ -71,7 +70,7 @@ export const useHandleOpenNetworkNoticeModal = () => {
         <View style={styles.modal}>
           <Text style={styles.modalText}>{strings.networkNoticeMessage}</Text>
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <Text style={styles.modalTextTitle}>
             {strings.networkNoticeListTitle}
@@ -79,9 +78,9 @@ export const useHandleOpenNetworkNoticeModal = () => {
 
           <Text style={styles.modalText}>{strings.networkNoticeList}</Text>
 
-          <Spacer fill />
+          <Space.Height.sm fill />
 
-          {Platform.OS === 'android' && <Space height="lg" />}
+          {Platform.OS === 'android' && <Space.Height.lg />}
         </View>
       ),
       footer: (
@@ -135,23 +134,23 @@ const useNetworkNoticeShown = (
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.bg_color_max,
+      backgroundColor: p.bg_color_max,
     },
     modal: {
       flex: 1,
-      ...atoms.px_lg,
+      ...a.px_lg,
     },
     modalText: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_900,
+      ...a.body_1_lg_regular,
+      color: p.gray_900,
     },
     modalTextTitle: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_900,
+      ...a.body_1_lg_medium,
+      color: p.gray_900,
     },
   })
 

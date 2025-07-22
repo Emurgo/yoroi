@@ -1,17 +1,16 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../../../../../components/Icon'
-import {Text} from '../../../../../components/Text'
 import {currencyNames} from '../../../../../kernel/i18n/global-messages'
-import {CurrencySymbol} from '../../../../../wallets/types/other'
+import {Icon} from '../../../../../ui/Icon'
+import {Text} from '../../../../../ui/Text/Text'
 
 type Props = {
   nativeName: string
-  symbol: CurrencySymbol
-  selectCurrency: (symbol: CurrencySymbol) => void
+  symbol: string
+  selectCurrency: (symbol: string) => void
   isSelected: boolean
 }
 
@@ -28,7 +27,7 @@ export const CurrencyPickerItem = ({
   const subtitle = `${nativeName} (${symbol})`
 
   const handleSelectCurrency = () => {
-    selectCurrency(symbol)
+    Alert.alert('handleSelectCurrency not implemented')
   }
 
   return (
@@ -70,11 +69,11 @@ const Subtitle = ({children}: {children: React.ReactNode}) => {
 }
 
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
-      borderBottomColor: color.gray_200,
+      borderBottomColor: p.gray_200,
       borderBottomWidth: 1,
       paddingVertical: 8,
     },
@@ -88,16 +87,16 @@ const useStyles = () => {
       flexDirection: 'column',
     },
     bodyMedium: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_medium,
+      color: p.gray_900,
+      ...a.body_1_lg_medium,
     },
     bodyRegular: {
-      color: color.gray_900,
-      ...atoms.body_3_sm_regular,
+      color: p.gray_900,
+      ...a.body_3_sm_regular,
     },
   })
   const colors = {
-    checkIcon: color.primary_600,
+    checkIcon: p.primary_600,
   }
   return {styles, colors}
 }
@@ -106,7 +105,6 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    translatedName: (symbol: CurrencySymbol) =>
-      intl.formatMessage(currencyNames[symbol]),
+    translatedName: (symbol: string) => intl.formatMessage(currencyNames.ADA),
   }
 }

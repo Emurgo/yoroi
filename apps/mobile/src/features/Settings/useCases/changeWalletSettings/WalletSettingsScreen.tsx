@@ -1,30 +1,24 @@
 import {useNavigation} from '@react-navigation/native'
-import {useSetupWallet} from '@yoroi/setup-wallet'
+import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView} from 'react-native'
+import {Alert, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '../../../../components/Icon'
-import {Spacer} from '../../../../components/Spacer/Spacer'
+import {WalletImplementation} from '@yoroi/types/src/wallet/wallet'
 import {
   DIALOG_BUTTONS,
   showConfirmationDialog,
 } from '../../../../kernel/dialogs'
 import {confirmationMessages} from '../../../../kernel/i18n/global-messages'
-import {
-  SettingsRouteNavigation,
-  useWalletNavigation,
-} from '../../../../kernel/navigation'
-import {useResync} from '../../../../wallets/hooks'
-import {useAuth} from '../../../Auth/AuthProvider'
-import {useAuthSetting} from '../../../Auth/common/hooks'
-import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {SettingsRouteNavigation} from '../../../../kernel/navigation/navigation'
+import {Icon} from '../../../../ui/Icon'
+import {SettingsSwitch} from '../../../../ui/SettingsSwitch/SettingsSwitch'
+import {Space} from '../../../../ui/Space/Space'
+import {useAuth} from '../../../Auth/context/AuthProvider'
 import {useNavigateTo} from '../../common/navigation'
-import {SettingsSwitch} from '../../common/SettingsSwitch'
 import {SettingsCollateralItem} from '../../SettingsCollateralItem'
 import {
   NavigatedSettingsItem,
@@ -36,17 +30,26 @@ import {
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {styles, colors} = useStyles()
-  const {resetToWalletSelection, navigateToNotificationSettings} =
-    useWalletNavigation()
-  const authSetting = useAuthSetting()
-  const addressMode = useAddressMode()
+  const {palette: p} = useTheme()
+  const {resetToWalletSelection, navigateToNotificationSettings} = {
+    resetToWalletSelection: () => {},
+    navigateToNotificationSettings: () => {},
+  }
+  const authSetting = 'pin'
+  const addressMode = {isSingle: true}
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {
     meta: {isEasyConfirmationEnabled, isHW, isReadOnly, implementation},
-  } = useSelectedWallet()
+  } = {
+    meta: {
+      isEasyConfirmationEnabled: false,
+      isHW: false,
+      isReadOnly: false,
+      implementation: 'cardano-cip1852' as WalletImplementation,
+    },
+  }
   const navigateTo = useNavigateTo()
 
   const onToggleEasyConfirmation = () => {
@@ -62,7 +65,7 @@ export const WalletSettingsScreen = () => {
   }
 
   const iconProps = {
-    color: colors.icon,
+    color: p.icon,
     size: 23,
   }
 
@@ -92,7 +95,7 @@ export const WalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.security}>
           <NavigatedSettingsItem
@@ -116,7 +119,7 @@ export const WalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.actions}>
           <NavigatedSettingsItem
@@ -142,7 +145,7 @@ export const WalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.notifications}>
           <NavigatedSettingsItem
@@ -152,7 +155,7 @@ export const WalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.about}>
           <SettingsBuildItem
@@ -161,7 +164,7 @@ export const WalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.xl />
       </ScrollView>
     </SafeAreaView>
   )
@@ -177,17 +180,11 @@ const getWalletType = (
 }
 
 const ResyncButton = () => {
+  const {palette: p} = useTheme()
   const strings = useStrings()
-  const {wallet} = useSelectedWallet()
-  const {colors} = useStyles()
   const intl = useIntl()
-  const {walletIdChanged} = useSetupWallet()
-  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
-  const {resync, isLoading} = useResync(wallet, {
-    onMutate: () => {
-      settingsNavigation.navigate('settings-preparing-wallet')
-    },
-  })
+
+  const isLoading = false
 
   const onResync = async () => {
     const selection = await showConfirmationDialog(
@@ -195,13 +192,12 @@ const ResyncButton = () => {
       intl,
     )
     if (selection === DIALOG_BUTTONS.YES) {
-      walletIdChanged(wallet.id)
-      resync()
+      Alert.alert('Resync not implemented')
     }
   }
 
   const iconProps = {
-    color: colors.icon,
+    color: p.icon,
     size: 23,
   }
 
@@ -216,7 +212,14 @@ const ResyncButton = () => {
 }
 
 const AddressModeSwitcher = (props: {isSingle: boolean}) => {
-  const addressMode = useAddressMode()
+  const addressMode = {
+    enableMultipleMode: () => {
+      Alert.alert('enableMultipleMode not implemented')
+    },
+    enableSingleMode: () => {
+      Alert.alert('enableSingleMode not implemented')
+    },
+  }
   const [isSingleLocal, setIsSingleLocal] = React.useState(props.isSingle)
 
   const handleOnSwitchAddressMode = () => {
@@ -240,7 +243,7 @@ const AddressModeSwitcher = (props: {isSingle: boolean}) => {
 }
 
 const useLogout = () => {
-  const {logout} = useAuth()
+  const {loggedOut} = useAuth()
   const intl = useIntl()
 
   return async () => {
@@ -249,7 +252,7 @@ const useLogout = () => {
       intl,
     )
     if (selection === DIALOG_BUTTONS.YES) {
-      logout() // triggers navigation to login
+      loggedOut() // triggers navigation to login
     }
   }
 }

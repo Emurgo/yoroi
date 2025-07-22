@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {
   AppState,
@@ -10,17 +10,14 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '../../../../../../components/Button/Button'
-import {Icon} from '../../../../../../components/Icon'
-import {Spacer} from '../../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../../components/Text'
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../../../../kernel/navigation'
-import {
-  getNotificationsAuthorizationStatus,
-  triggerNotificationsPermissionModal,
-} from '../../../../../Notifications/common/tools'
-import {SettingsSwitch} from '../../../../common/SettingsSwitch'
+import {useWalletNavigation} from '../../../../../../kernel/navigation/navigation'
+import {Button, ButtonType} from '../../../../../../ui/Button/Button'
+import {Icon} from '../../../../../../ui/Icon'
+import {SettingsSwitch} from '../../../../../../ui/SettingsSwitch/SettingsSwitch'
+import {Space} from '../../../../../../ui/Space/Space'
+import {Text} from '../../../../../../ui/Text/Text'
+// import {getNotificationsAuthorizationStatus} from '../../../../../Notifications/common/tools'
 import {SettingsItem, SettingsSection} from '../../../../SettingsItems'
 import {SettingsNotificationDurationItem} from '../../../../SettingsNotificationDurationItem'
 import {
@@ -29,9 +26,14 @@ import {
 } from '../../Notifications/NotificationsDisplaySettings'
 import {useStrings} from '../useStrings'
 
+const getNotificationsAuthorizationStatus = () => {
+  Alert.aler('getNotificationsAuthorizationStatus not implemented')
+}
+
 export const ManageNotificationSettings = () => {
   const strings = useStrings()
   const {navigateToNotificationDisplayDuration} = useWalletNavigation()
+
   const {styles} = useStyles()
 
   return (
@@ -41,7 +43,7 @@ export const ManageNotificationSettings = () => {
           <PushNotificationSettingsItem />
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.inAppNotifications}>
           <SettingsItem
@@ -92,7 +94,7 @@ export function useNotificationPermission() {
     const oldStatus = await getNotificationsAuthorizationStatus()
 
     if (oldStatus === 'not_determined') {
-      await triggerNotificationsPermissionModal()
+      Alert.alert('triggerNotificationsPermissionModal not implemented')
     } else {
       await navigateToAppSettings()
     }
@@ -162,27 +164,27 @@ const InAppNotificationDisplaySwitcher = () => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
+      ...a.flex_1,
+      backgroundColor: p.bg_color_max,
     },
     enableSetting: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.py_sm,
+      ...a.body_1_lg_medium,
+      ...a.py_sm,
     },
     enableSettingButton: {
-      ...atoms.justify_start,
-      ...atoms.p_0,
+      ...a.justify_start,
+      ...a.p_0,
     },
     settings: {
-      ...atoms.flex_1,
-      ...atoms.py_lg,
-      ...atoms.px_lg,
+      ...a.flex_1,
+      ...a.py_lg,
+      ...a.px_lg,
     },
     icon: {
-      color: color.gray_500,
+      color: p.gray_500,
       size: 23,
     },
   })

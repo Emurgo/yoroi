@@ -1,7 +1,7 @@
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
 
-import {useWalletNavigation} from '../../../../../kernel/navigation'
+import {useWalletNavigation} from '../../../../../kernel/navigation/navigation'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 
 export function useLaunchRouteAfterSyncing({

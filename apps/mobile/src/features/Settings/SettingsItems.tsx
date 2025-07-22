@@ -2,11 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactElement} from 'react'
 import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import {isEmptyString} from '../../kernel/utils'
 import {Hr} from '../../ui/Hr/Hr'
 import {Icon} from '../../ui/Icon'
-import {Spacer} from '../../ui/Spacer/Spacer'
+import {Space, SpaceHeight, SpaceWidth} from '../../ui/Space/Space'
 import {Text} from '../../ui/Text/Text'
+import {isEmptyString} from '../../wallets/utils/string'
 
 const Touchable = (props: TouchableOpacityProps) => (
   <TouchableOpacity {...props} activeOpacity={0.5} />
@@ -28,7 +28,7 @@ export const SettingsSection = ({title, children}: SettingsSectionProps) => {
             {title}
           </Text>
 
-          <Spacer height={5} />
+          <SpaceHeight size={5} />
 
           <Hr style={[{height: 1}, {backgroundColor: p.gray_200}]} />
         </>
@@ -70,7 +70,7 @@ export const SettingsItem = ({
         >
           {icon}
 
-          {icon && <Spacer width={10} />}
+          {icon && <SpaceWidth size={10} />}
 
           <Text
             style={[
@@ -88,7 +88,7 @@ export const SettingsItem = ({
 
         {!isEmptyString(info) && (
           <>
-            <Spacer height={12} />
+            <Space.Height.md />
 
             <Text style={[a.body_3_sm_regular, {color: p.gray_600}]}>
               {info}
@@ -127,7 +127,7 @@ export const NavigatedSettingsItem = ({
             </Text>
           )}
 
-          <Spacer width={16} />
+          <Space.Width.lg />
 
           <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
         </View>

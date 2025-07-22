@@ -9,8 +9,12 @@ import {
   ViewProps,
 } from 'react-native'
 
-import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
-import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
+// import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
+import {useLanguage} from '../../kernel/i18n/LanguageProvider'
+import {
+  LanguageRecord,
+  supportedLanguages,
+} from '../../kernel/i18n/localization'
 import {Icon} from '../Icon'
 import {LanguagePickerWarning} from '../LanguagePickerWarning/LanguagePickerWarning'
 import {Text} from '../Text/Text'
@@ -18,20 +22,18 @@ import {Text} from '../Text/Text'
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 
 export const LanguagePicker = () => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const language = useLanguage()
-  const {languageCode, selectLanguageCode, supportedLanguages} = language
+
+  const {languageCode, selectLanguage} = language
   const strings = useStrings()
 
-  useSearchOnNavBar({
-    title: strings.languagePickerTitle,
-    placeholder: strings.languagePickerSearch,
-  })
-
-  const {search} = useSearch()
+  const {search} = {
+    search: '',
+  }
   const filteredLanguages = supportedLanguages.filter(
     (lang) => lang.code.includes(search) || lang.label.includes(search),
-  )
+  ) as LanguageRecord[]
 
   return (
     <View style={styles.languagePicker}>
@@ -41,15 +43,13 @@ export const LanguagePicker = () => {
         renderItem={({item: {label, code}}) => (
           <TouchableOpacity
             style={[styles.item, a.py_lg]}
-            onPress={() => selectLanguageCode(code)}
+            onPress={() => selectLanguage(code)}
             testID={`languageSelect_${code}`}
           >
-            <Text style={[styles.itemText, {color: color.gray_900}]}>
-              {label}
-            </Text>
+            <Text style={[styles.itemText, {color: p.gray_900}]}>{label}</Text>
 
             {languageCode === code && (
-              <Icon.Check size={24} color={color.primary_600} />
+              <Icon.Check size={24} color={p.primary_600} />
             )}
           </TouchableOpacity>
         )}
@@ -66,10 +66,8 @@ export const LanguagePicker = () => {
 }
 
 const HR = (props: ViewProps) => {
-  const {color} = useTheme()
-  return (
-    <View {...props} style={[styles.hr, {backgroundColor: color.gray_200}]} />
-  )
+  const {palette: p} = useTheme()
+  return <View {...props} style={[styles.hr, {backgroundColor: p.gray_200}]} />
 }
 
 const styles = StyleSheet.create({

@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '../../../../../components/Boundary/Boundary'
+import {Boundary} from '../../../../../ui/Boundary/Boundary'
 import {ThemePickerList} from './ThemePickerList'
 
 export const ChangeThemeScreen = () => {
@@ -22,11 +22,11 @@ export const ChangeThemeScreen = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.bg_color_max,
+      backgroundColor: p.bg_color_max,
     },
   })
 

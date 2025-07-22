@@ -1,21 +1,17 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
-import {App} from '@yoroi/types'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {LoadingOverlay} from '../../../../../components/LoadingOverlay/LoadingOverlay'
-import {Text} from '../../../../../components/Text'
-import {TextInput} from '../../../../../components/TextInput/TextInput'
-import {showErrorDialog} from '../../../../../kernel/dialogs'
-import {errorMessages} from '../../../../../kernel/i18n/global-messages'
-import {isEmptyString} from '../../../../../kernel/utils'
-import {useEnableEasyConfirmation} from '../../../../Auth/common/useEnableEasyConfirmation'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {Button} from '../../../../../ui/Button/Button'
+import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {LoadingOverlay} from '../../../../../ui/LoadingOverlay/LoadingOverlay'
+import {Text} from '../../../../../ui/Text/Text'
+import {TextInput} from '../../../../../ui/TextInput/TextInput'
+import {isEmptyString} from '../../../../../wallets/utils/string'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
@@ -26,15 +22,10 @@ export const EnableEasyConfirmationScreen = () => {
   const {
     meta: {id},
   } = useSelectedWallet()
-  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(id, {
-    onSuccess: () => {
-      navigation.goBack()
-    },
-    onError: (error) => {
-      if (!(error instanceof App.Errors.WrongPassword)) throw error
-      showErrorDialog(errorMessages.incorrectPassword, intl)
-    },
-  })
+  const {enableEasyConfirmation, isLoading} = {
+    enableEasyConfirmation: () => {},
+    isLoading: true,
+  }
 
   return (
     <KeyboardAvoidingView style={styles.root}>
@@ -121,28 +112,28 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      ...atoms.flex_1,
+      ...a.flex_1,
     },
     safeAreaView: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
+      backgroundColor: p.bg_color_max,
+      ...a.flex_1,
     },
     content: {
-      ...atoms.p_lg,
-      ...atoms.gap_lg,
+      ...a.p_lg,
+      ...a.gap_lg,
     },
     heading: {
-      ...atoms.body_1_lg_regular,
+      ...a.body_1_lg_regular,
     },
     warning: {
-      color: color.sys_magenta_500,
-      ...atoms.body_2_md_regular,
+      color: p.sys_magenta_500,
+      ...a.body_2_md_regular,
     },
     actions: {
-      ...atoms.p_lg,
+      ...a.p_lg,
     },
   })
 
