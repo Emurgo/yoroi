@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import Svg, {Defs, LinearGradient, Path, Stop} from 'react-native-svg'
 
 import {IconProps} from './type'
