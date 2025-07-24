@@ -198,7 +198,7 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {palette: ptoms} = useTheme()
+  const {palette: p} = useTheme()
 
   const styles = StyleSheet.create({
     root: {

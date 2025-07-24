@@ -7,17 +7,14 @@ import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {commit} from '../../../../../kernel/constants'
 import {SettingsRouteNavigation} from '../../../../../kernel/navigation/navigation'
 import {Copiable} from '../../../../../ui/Copiable/Copiable'
+import {mockAppInfo, mockFirebaseToken} from './AboutMock'
 
 export const About = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigation = useNavigation<SettingsRouteNavigation>()
-  const {data: FCMToken} = {
-    data: 'efh848gh4498gh4g904g',
-  }
-  const appInfo = {
-    version: '5.2.2',
-  }
+  const {data: FCMToken} = mockFirebaseToken
+  const appInfo = mockAppInfo.data
 
   return (
     <View style={styles.about}>

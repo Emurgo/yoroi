@@ -66,7 +66,7 @@ export const SettingsScreenNavigator = () => {
     >
       <Stack.Screen //
         name="app-settings"
-        component={ApplicationSettingsScreen}
+        component={WalletSettingsScreen}
         options={{
           title: strings.appSettingsTitle,
         }}

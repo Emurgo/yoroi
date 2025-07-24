@@ -24,6 +24,13 @@ import {
   SettingsItem,
   SettingsSection,
 } from '../../SettingsItems'
+import {
+  mockIsAuthOsSupported,
+  mockUseAuthSetting,
+  mockUseAuthWithOs,
+  mockUseCurrencyPairing,
+  mockUseScreenShareSettingEnabled,
+} from './ApplicationSettingsScreenMock'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {useChangeScreenShareSetting} from './ScreenShare'
 
@@ -36,21 +43,28 @@ export const ApplicationSettingsScreen = () => {
   ) as LanguageRecord
 
   const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
-  const currency = 'USD'
-  const {enabled: crashReportEnabled} = {
-    enabled: true,
-  }
+  const currency = mockUseCurrencyPairing()
 
-  const isAuthOsSupported = false
+  const {enabled: crashReportEnabled} = useCrashReports()
+
+  const authSetting = mockUseAuthSetting()
+  const isAuthOsSupported = mockIsAuthOsSupported()
   const navigateTo = useNavigateTo()
+  const {authWithOs} = mockUseAuthWithOs({
+    onSuccess: navigateTo.enableLoginWithPin,
+  })
 
   const {network} = useSelectedNetwork()
 
-  const screenShareEnabled = false
+  const {data: screenShareEnabled} = mockUseScreenShareSettingEnabled()
   const displayScreenShareSetting = Platform.OS === 'android'
 
   const onToggleAuthWithOs = () => {
-    navigateTo.enableLoginWithOs()
+    if (authSetting === 'os') {
+      authWithOs()
+    } else {
+      navigateTo.enableLoginWithOs()
+    }
   }
 
   const iconProps = {
@@ -119,7 +133,7 @@ export const ApplicationSettingsScreen = () => {
 
         <SettingsSection title={strings.securityReporting}>
           <NavigatedSettingsItem
-            disabled={false}
+            disabled={authSetting === 'os'}
             icon={<Icon.Pin {...iconProps} />}
             label={strings.changePin}
             onNavigate={navigateTo.changeCustomPin}
@@ -140,7 +154,7 @@ export const ApplicationSettingsScreen = () => {
             disabled={!isAuthOsSupported}
           >
             <SettingsSwitch
-              value={false}
+              value={authSetting === 'os'}
               onValueChange={onToggleAuthWithOs}
               disabled={!isAuthOsSupported || isTogglePrivacyModeLoading}
             />

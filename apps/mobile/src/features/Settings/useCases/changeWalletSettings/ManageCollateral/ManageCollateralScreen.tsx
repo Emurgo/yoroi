@@ -350,9 +350,7 @@ const useStyles = () => {
   const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.bg_color_max,
-      ...a.flex_1,
-      ...a.px_lg,
+      backgroundColor: p.bg_color_max,
       ...a.flex_1,
       ...a.px_lg,
     },
@@ -360,12 +358,8 @@ const useStyles = () => {
       ...a.flex_row,
       ...a.justify_between,
       ...a.align_center,
-      ...a.flex_row,
-      ...a.justify_between,
-      ...a.align_center,
     },
     heading: {
-      ...a.flex_1,
       ...a.flex_1,
       alignSelf: 'center',
     },

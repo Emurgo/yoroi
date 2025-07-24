@@ -19,6 +19,7 @@ import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
 import {Button} from '../../../../../../ui/Button/Button'
 import {KeyboardAvoidingView} from '../../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {TextInput} from '../../../../../../ui/TextInput/TextInput'
+import {mockUseFormatNumber} from './ManageNotificationDisplayDurationScreenMock'
 import {useStrings} from './strings'
 
 type ManualChoice = {
@@ -47,9 +48,7 @@ const CHOICES: Readonly<Choice[]> = [
 export const ManageNotificationDisplayDurationScreen = () => {
   const {track} = useMetrics()
   const {styles, colors} = useStyles()
-  const formatNumber = (value: any) => {
-    return `${value}`
-  }
+  const formatNumber = mockUseFormatNumber
   const config = useConfig()
   const {mutate: updateConfig} = useUpdateNotificationsConfig()
   const navigation = useNavigation()
@@ -190,7 +189,7 @@ const useStyles = () => {
       ...a.flex_1,
     },
     root: {
-      backgroundColor: color.bg_color_max,
+      backgroundColor: p.bg_color_max,
     },
     safeAreaView: {
       ...a.p_lg,
@@ -198,7 +197,7 @@ const useStyles = () => {
     description: {
       ...a.py_lg,
       ...a.body_1_lg_regular,
-      color: color.gray_900,
+      color: p.gray_900,
     },
     choicesContainer: {
       ...a.flex_row,
@@ -209,22 +208,22 @@ const useStyles = () => {
       ...a.p_sm,
     },
     selectedChoiceButton: {
-      backgroundColor: color.el_gray_min,
+      backgroundColor: p.el_gray_min,
       borderRadius: 8,
     },
     choiceLabel: {
       ...a.body_1_lg_medium,
-      color: color.text_gray_max,
+      color: p.text_gray_max,
     },
     selectedChoiceLabel: {
-      color: color.text_gray_max,
+      color: p.text_gray_max,
     },
     input: {
-      color: color.text_gray_medium,
+      color: p.text_gray_medium,
       ...a.body_1_lg_regular,
     },
     percentLabel: {
-      color: color.text_gray_medium,
+      color: p.text_gray_medium,
       ...a.body_1_lg_regular,
       ...a.p_lg,
       ...a.absolute,
@@ -235,8 +234,8 @@ const useStyles = () => {
       ...a.relative,
     },
     label: {
-      color: color.text_gray_max,
-      backgroundColor: color.bg_color_max,
+      color: p.text_gray_max,
+      backgroundColor: p.bg_color_max,
       ...a.z_20,
       ...a.absolute,
       ...a.body_3_sm_regular,
@@ -247,7 +246,7 @@ const useStyles = () => {
   })
   const colors = {
     background: p.gray_100,
-    cursor: color.input_selected,
+    cursor: p.input_selected,
   }
 
   return {styles, colors}

@@ -7,7 +7,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {WalletImplementation} from '@yoroi/types/src/wallet/wallet'
 import {
   DIALOG_BUTTONS,
   showConfirmationDialog,
@@ -26,6 +25,11 @@ import {
   SettingsItem,
   SettingsSection,
 } from '../../SettingsItems'
+import {
+  mockUseAuthSetting,
+  mockUseSelectedWallet,
+  useAddressModeMock,
+} from './WalletSettingsScreenMock'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
@@ -35,21 +39,14 @@ export const WalletSettingsScreen = () => {
     resetToWalletSelection: () => {},
     navigateToNotificationSettings: () => {},
   }
-  const authSetting = 'pin'
-  const addressMode = {isSingle: true}
+  const authSetting = mockUseAuthSetting()
+  const addressMode = useAddressModeMock()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {
     meta: {isEasyConfirmationEnabled, isHW, isReadOnly, implementation},
-  } = {
-    meta: {
-      isEasyConfirmationEnabled: false,
-      isHW: false,
-      isReadOnly: false,
-      implementation: 'cardano-cip1852' as WalletImplementation,
-    },
-  }
+  } = mockUseSelectedWallet()
   const navigateTo = useNavigateTo()
 
   const onToggleEasyConfirmation = () => {
@@ -212,14 +209,7 @@ const ResyncButton = () => {
 }
 
 const AddressModeSwitcher = (props: {isSingle: boolean}) => {
-  const addressMode = {
-    enableMultipleMode: () => {
-      Alert.alert('enableMultipleMode not implemented')
-    },
-    enableSingleMode: () => {
-      Alert.alert('enableSingleMode not implemented')
-    },
-  }
+  const addressMode = useAddressModeMock()
   const [isSingleLocal, setIsSingleLocal] = React.useState(props.isSingle)
 
   const handleOnSwitchAddressMode = () => {
