@@ -64,7 +64,7 @@ const Description = ({children}: {children: React.ReactNode}) => {
     <View
       style={{
         flex: 8,
-        flexDirection: 'column',
+        ...a.flex_col,
       }}
     >
       {children}
