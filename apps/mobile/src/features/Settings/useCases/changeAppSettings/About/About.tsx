@@ -26,7 +26,7 @@ export const About = () => {
     >
       <View
         style={{
-          flexDirection: 'row',
+          ...a.flex_row,
           justifyContent: 'space-between',
           ...a.py_lg,
         }}
