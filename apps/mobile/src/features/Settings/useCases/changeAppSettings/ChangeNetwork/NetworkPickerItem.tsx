@@ -75,8 +75,8 @@ const Selected = ({children}: {children: React.ReactNode}) => {
   return (
     <View
       style={{
-        alignItems: 'flex-end',
-        justifyContent: 'center',
+        ...a.align_end,
+        ...a.justify_center,
         flex: 2,
       }}
     >
