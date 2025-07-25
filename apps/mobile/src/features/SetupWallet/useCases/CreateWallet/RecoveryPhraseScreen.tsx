@@ -14,33 +14,32 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {Button} from '../../../../ui/Button/Button'
 import {CardAboutPhrase} from '../../../../ui/CardAboutPhrase/CardAboutPhrase'
-import {EyeClosed as EyeClosedIllustration} from '../../../../ui/EyeClosedIllustration/EyeClosedIllustration'
-import {EyeOpen as EyeOpenIllustration} from '../../../../ui/EyeOpenIllustration/EyeOpenIllustration'
 import {Info as InfoIcon} from '../../../../ui/InfoIcon/InfoIcon'
 import {LearnMoreButton} from '../../../../ui/LearnMoreButton/LearnMoreButton'
 import {useModal} from '../../../../ui/Modal/ModalContext'
-import {Space, Spacer} from '../../../../ui/Space/Space'
+import {Space, SpaceHeight} from '../../../../ui/Space/Space'
 import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
 import {generateAdaMnemonic} from '../../../../wallets/cardano/mnemonic/mnemonic'
 import {YoroiZendeskLink} from '../../common/constants'
 import {useStrings} from '../../common/useStrings'
+import {EyeClosed} from '../../illustrations/EyeClosed'
+import {EyeOpen} from '../../illustrations/EyeOpen'
 
 export const RecoveryPhraseScreen = () => {
   const bold = useBold()
   const {openModal, closeModal} = useModal()
   const [isBlur, setIsBlur] = React.useState(true)
-  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const navigation = useNavigation<any>()
   const strings = useStrings()
   const {
     mnemonicChanged,
     showCreateWalletInfoModal,
-    showCreateWalletInfoModalChanged,
+    // showCreateWalletInfoModalChanged,
   } = useSetupWallet()
   const {track} = useMetrics()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const mnemonic = React.useMemo(() => generateAdaMnemonic(), [])
 
@@ -52,7 +51,7 @@ export const RecoveryPhraseScreen = () => {
 
   const handleOnShowModal = React.useCallback(() => {
     openModal({
-      title: strings.recoveryPhraseModalTitle,
+      // title: strings.recoveryPhraseModalTitle,
       content: (
         <View style={[styles.modal, a.flex_1, a.px_lg]}>
           <CardAboutPhrase
@@ -66,7 +65,7 @@ export const RecoveryPhraseScreen = () => {
             ]}
           />
 
-          <Spacer fill />
+          <SpaceHeight fill size="lg" />
 
           <LearnMoreButton
             onPress={() => {
@@ -74,10 +73,10 @@ export const RecoveryPhraseScreen = () => {
             }}
           />
 
-          <Space height="xl" />
+          <Space.Height.xl />
         </View>
       ),
-      footer: (
+      /* footer: (
         <Button
           title={strings.continueButton}
           onPress={() => {
@@ -86,21 +85,17 @@ export const RecoveryPhraseScreen = () => {
           }}
           testID="setup-step2-continue-button"
         />
-      ),
-      height: 552,
+      ), */
+      ///height: 552,
     })
   }, [
-    closeModal,
     openModal,
-    showCreateWalletInfoModalChanged,
-    strings.continueButton,
     strings.recoveryPhraseCardFifthItem,
     strings.recoveryPhraseCardFirstItem,
     strings.recoveryPhraseCardFourthItem,
     strings.recoveryPhraseCardSecondItem,
     strings.recoveryPhraseCardThirdItem,
     strings.recoveryPhraseCardTitle,
-    strings.recoveryPhraseModalTitle,
   ])
 
   React.useEffect(() => {
@@ -115,7 +110,7 @@ export const RecoveryPhraseScreen = () => {
         styles.root,
         a.flex_1,
         a.px_lg,
-        {backgroundColor: color.bg_color_max},
+        {backgroundColor: p.bg_color_max},
       ]}
     >
       <View style={[styles.content, a.gap_lg]}>
@@ -125,9 +120,7 @@ export const RecoveryPhraseScreen = () => {
           totalSteps={4}
         />
 
-        <Text
-          style={[styles.title, a.body_1_lg_regular, {color: color.gray_900}]}
-        >
+        <Text style={[styles.title, a.body_1_lg_regular, {color: p.gray_900}]}>
           {strings.recoveryPhraseTitle(bold)}
 
           <Info onPress={handleOnShowModal} testID="step2-info-icon" />
@@ -174,7 +167,7 @@ export const RecoveryPhraseScreen = () => {
                 style={[
                   StyleSheet.absoluteFill,
                   styles.buttonBackground,
-                  {backgroundColor: color.primary_100},
+                  {backgroundColor: p.primary_100},
                 ]}
               />
 
@@ -182,14 +175,14 @@ export const RecoveryPhraseScreen = () => {
                 style={[
                   styles.mnemonicText,
                   a.body_1_lg_regular,
-                  {color: color.primary_600},
+                  {color: p.primary_600},
                 ]}
               >
                 <Text
                   style={[
                     styles.mnemonicText,
                     a.body_1_lg_regular,
-                    {color: color.primary_600},
+                    {color: p.primary_600},
                   ]}
                 >
                   {index + 1}.{' '}
@@ -207,12 +200,12 @@ export const RecoveryPhraseScreen = () => {
           onPress={() => setIsBlur(!isBlur)}
           testID="step2-show_hide-recovery-phrase-button"
         >
-          {isBlur ? <EyeOpenIllustration /> : <EyeClosedIllustration />}
+          {isBlur ? <EyeOpen /> : <EyeClosed />}
 
           <Text
             style={[
               styles.blurTextButton,
-              {color: color.primary_500},
+              {color: p.primary_500},
               a.button_2_md,
               {textTransform: 'none'},
             ]}
@@ -224,7 +217,7 @@ export const RecoveryPhraseScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <Spacer fill />
+      <SpaceHeight fill size="lg" />
 
       <Button
         title={strings.next}
@@ -236,13 +229,13 @@ export const RecoveryPhraseScreen = () => {
         testID="setup-step2-next-button"
       />
 
-      <Space height="lg" />
+      <Space.Height.lg />
     </SafeAreaView>
   )
 }
 
 const Info = ({onPress, testID}: {onPress: () => void; testID?: string}) => {
-  const {color, isDark} = useTheme()
+  const {palette: p, isDark} = useTheme()
   return (
     <TouchableOpacity style={[styles.info, a.relative]} onPress={onPress}>
       <View
@@ -253,21 +246,16 @@ const Info = ({onPress, testID}: {onPress: () => void; testID?: string}) => {
         ]}
         testID={testID}
       >
-        <InfoIcon
-          size={24}
-          color={isDark ? color.white_static : color.black_static}
-        />
+        <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
       </View>
     </TouchableOpacity>
   )
 }
 
 const useBold = () => {
-  const {atoms} = useTheme()
-
   return {
     b: (text: React.ReactNode) => (
-      <Text style={atoms.body_1_lg_medium}>{text}</Text>
+      <Text style={a.body_1_lg_medium}>{text}</Text>
     ),
   }
 }

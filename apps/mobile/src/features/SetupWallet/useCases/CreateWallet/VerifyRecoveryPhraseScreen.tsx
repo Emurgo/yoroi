@@ -15,23 +15,21 @@ import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {Alert as AlertIllustration} from '../../../../ui/AlertIllustration/AlertIllustration'
 import {Button} from '../../../../ui/Button/Button'
 import {Check2 as Check2Illustration} from '../../../../ui/Check2Illustration/Check2Illustration'
 import {Space} from '../../../../ui/Space/Space'
 import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
-import {walletManager} from '../../../WalletManager/wallet-manager'
 import {useStrings} from '../../common/useStrings'
 
 export const VerifyRecoveryPhraseScreen = () => {
   const bold = useBold()
-  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const navigation = useNavigation<any>()
   const strings = useStrings()
   const {mnemonic, publicKeyHexChanged, accountVisual, walletImplementation} =
     useSetupWallet()
   const {track} = useMetrics()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -82,29 +80,20 @@ export const VerifyRecoveryPhraseScreen = () => {
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
       style={[
-        styles.container,
         a.flex_1,
         a.justify_between,
         a.gap_lg,
-        {backgroundColor: color.bg_color_max},
+        {backgroundColor: p.bg_color_max},
       ]}
     >
       <StepperProgress
         currentStep={3}
         currentStepTitle={strings.stepVerifyRecoveryPhrase}
         totalSteps={4}
-        style={[styles.padding, a.px_lg]}
+        style={a.px_lg}
       />
 
-      <Text
-        style={[
-          styles.title,
-          styles.padding,
-          a.body_1_lg_regular,
-          {color: color.text_gray_medium},
-          a.px_lg,
-        ]}
-      >
+      <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}, a.px_lg]}>
         {strings.verifyRecoveryPhraseTitle(bold)}
       </Text>
 
@@ -117,7 +106,7 @@ export const VerifyRecoveryPhraseScreen = () => {
 
       {isPhraseComplete && isLastWordValid() && <SuccessMessage />}
 
-      <ScrollView bounces={false} style={[styles.padding, a.px_lg]}>
+      <ScrollView bounces={false} style={a.px_lg}>
         <WordBadges
           defaultMnemonic={mnemonicDefault}
           mnemonicEntries={mnemonicEntries}
@@ -129,17 +118,17 @@ export const VerifyRecoveryPhraseScreen = () => {
         {!isLastWordValid() && userEntries.length > 0 && <ErrorMessage />}
       </ScrollView>
 
-      <View style={[styles.actions, styles.padding, a.pb_lg, a.px_lg]}>
+      <View style={[a.pb_lg, a.px_lg]}>
         <Button
           title={strings.next}
           disabled={disabled}
           onPress={async () => {
-            const {accountPubKeyHex} = await walletManager.generateWalletKeys(
+            /* const {accountPubKeyHex} = await walletManager.generateWalletKeys(
               walletImplementation,
               mnemonic,
               accountVisual,
             )
-            publicKeyHexChanged(accountPubKeyHex)
+            publicKeyHexChanged(accountPubKeyHex) */
 
             navigation.navigate('setup-wallet-details-form')
           }}
@@ -152,28 +141,14 @@ export const VerifyRecoveryPhraseScreen = () => {
 
 const ErrorMessage = () => {
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
-    <View
-      style={[
-        styles.errorMessageContainer,
-        styles.padding,
-        a.flex_row,
-        a.align_center,
-        a.px_lg,
-      ]}
-    >
+    <View style={[a.flex_row, a.align_center, a.px_lg]}>
       <AlertIllustration />
 
-      <Space width="sm" />
+      <Space.Height.sm />
 
-      <Text
-        style={[
-          styles.errorMessage,
-          {color: color.sys_magenta_500},
-          a.body_2_md_regular,
-        ]}
-      >
+      <Text style={[{color: p.sys_magenta_500}, a.body_2_md_regular]}>
         {strings.verifyRecoveryPhraseErrorMessage}
       </Text>
     </View>
@@ -182,29 +157,14 @@ const ErrorMessage = () => {
 
 const SuccessMessage = () => {
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
-    <View
-      style={[
-        styles.successMessageContainer,
-        styles.padding,
-        a.flex_row,
-        a.align_center,
-        a.justify_start,
-        a.px_lg,
-      ]}
-    >
+    <View style={[a.flex_row, a.align_center, a.justify_start, a.px_lg]}>
       <Check2Illustration />
 
-      <Space width="sm" />
+      <Space.Height.sm />
 
-      <Text
-        style={[
-          styles.successMessage,
-          {color: color.text_gray_max},
-          a.body_1_lg_medium,
-        ]}
-      >
+      <Text style={[{color: p.text_gray_max}, a.body_1_lg_medium]}>
         {strings.verifyRecoveryPhraseSuccessMessage}
       </Text>
     </View>
@@ -222,7 +182,7 @@ const MnemonicInput = ({
   userEntries,
   onPress,
 }: MnemonicInputProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const {mnemonic} = useSetupWallet()
 
@@ -247,34 +207,20 @@ const MnemonicInput = ({
       layout={Layout}
       entering={FadeIn}
       exiting={FadeOut}
-      style={[
-        styles.recoveryPhrase,
-        a.p_2xs,
-        a.overflow_hidden,
-        {minHeight: 182},
-      ]}
+      style={[a.p_2xs, a.overflow_hidden, {minHeight: 182}]}
     >
       <View
-        style={[StyleSheet.absoluteFill, {backgroundColor: color.bg_color_max}]}
+        style={[StyleSheet.absoluteFill, {backgroundColor: p.bg_color_max}]}
       />
 
       <View
         style={[
-          styles.recoveryPhraseBackground,
-          {borderColor: color.primary_200, backgroundColor: color.bg_color_max},
+          {borderColor: p.primary_200, backgroundColor: p.bg_color_max},
           {minHeight: 182},
           a.overflow_hidden,
         ]}
       >
-        <View
-          style={[
-            styles.recoveryPhraseOutline,
-            a.p_sm,
-            a.flex_row,
-            a.flex_wrap,
-            a.gap_sm,
-          ]}
-        >
+        <View style={[a.p_sm, a.flex_row, a.flex_wrap, a.gap_sm]}>
           {userEntries.map((entry, index, array) => {
             const isLast = index === array.length - 1
             const recoveryWordError =
@@ -286,15 +232,13 @@ const MnemonicInput = ({
                 activeOpacity={0.5}
                 onPress={onPress}
                 disabled={!isLast || !recoveryWordError}
-                style={styles.wordBadge}
+                style={{
+                  ...a.flex_row,
+                  ...a.flex_wrap,
+                }}
               >
                 <Animated.View
-                  style={[
-                    styles.wordBadgeView,
-                    a.flex_row,
-                    a.align_center,
-                    a.gap_2xs,
-                  ]}
+                  style={[a.flex_row, a.align_center, a.gap_2xs]}
                   layout={Layout}
                   entering={FadeIn}
                   exiting={FadeOut}
@@ -304,7 +248,7 @@ const MnemonicInput = ({
                     used
                     recoveryWordError={recoveryWordError}
                     defaultMnemonic={defaultMnemonic}
-                    style={[styles.mnemonicNumberWordBadge, a.pr_xs]}
+                    style={a.pr_xs}
                   />
 
                   <Animated.View
@@ -312,13 +256,11 @@ const MnemonicInput = ({
                     entering={FadeIn}
                     exiting={FadeOut}
                     style={[
-                      styles.wordBadgeContainerOutline,
                       a.overflow_hidden,
                       a.px_xs,
                       a.py_xs,
-                      recoveryWordError && styles.errorBadgeBackground,
                       recoveryWordError && {
-                        backgroundColor: color.sys_magenta_100,
+                        backgroundColor: p.sys_magenta_100,
                       },
                     ]}
                   >
@@ -329,8 +271,8 @@ const MnemonicInput = ({
                           {
                             backgroundColor:
                               isPhraseComplete && isValidPhrase
-                                ? color.secondary_300
-                                : color.primary_100,
+                                ? p.secondary_300
+                                : p.primary_100,
                           },
                         ]}
                       />
@@ -341,10 +283,9 @@ const MnemonicInput = ({
                       recoveryWordError={recoveryWordError}
                       defaultMnemonic={defaultMnemonic}
                       style={[
-                        styles.mnemonicInputWordBadge,
                         a.px_sm,
                         isPhraseComplete &&
-                          isValidPhrase && {color: color.black_static},
+                          isValidPhrase && {color: p.black_static},
                       ]}
                     />
                   </Animated.View>
@@ -398,13 +339,10 @@ const WordBadges = ({
     }
   }
 
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
-    <Animated.View
-      layout={Layout}
-      style={[styles.words, a.flex_row, a.flex_wrap, a.gap_sm]}
-    >
+    <Animated.View layout={Layout} style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
       {mnemonicEntries.map((entry) => {
         const isUsed = isWordUsed(entry.id)
 
@@ -427,30 +365,29 @@ const WordBadges = ({
               layout={Layout}
               entering={FadeIn}
               exiting={FadeOut}
-              style={[
-                styles.wordBadgeContainer,
-                a.py_sm,
-                a.overflow_hidden,
-                {borderRadius: 8},
-              ]}
+              style={[a.py_sm, a.overflow_hidden, {borderRadius: 8}]}
             >
               <View
                 style={[
                   StyleSheet.absoluteFill,
                   {
                     backgroundColor: !usedError
-                      ? color.primary_100
-                      : color.sys_magenta_500,
+                      ? p.primary_100
+                      : p.sys_magenta_500,
                   },
                 ]}
               />
 
               {isUsed && (
                 <View
-                  style={[
-                    styles.usedWordBackground,
-                    {backgroundColor: color.bg_color_max},
-                  ]}
+                  style={{
+                    backgroundColor: p.bg_color_max,
+                    borderRadius: 6,
+                    left: 2,
+                    right: 2,
+                    top: 2,
+                    bottom: 2,
+                  }}
                 />
               )}
 
@@ -459,7 +396,9 @@ const WordBadges = ({
                 used={isUsed}
                 usedError={usedError}
                 defaultMnemonic={defaultMnemonic}
-                style={styles.wordBadgeBottom}
+                style={{
+                  ...a.px_lg,
+                }}
               />
             </Animated.View>
           </TouchableOpacity>
@@ -484,25 +423,32 @@ const WordBadge = ({
   recoveryWordError,
   style,
 }: WordBadgeProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <Animated.View
       layout={Layout}
       entering={FadeIn}
       exiting={FadeOut}
-      style={styles.wordBadge}
+      style={{
+        ...a.flex_row,
+        ...a.flex_wrap,
+      }}
     >
       <Animated.Text
         layout={Layout}
         entering={FadeIn}
         exiting={FadeOut}
         style={[
-          styles.wordBadgeText,
-          {color: color.text_primary_medium},
-          used && !usedError && styles.usedWord,
-          used && !usedError && {color: color.primary_400},
-          recoveryWordError && styles.errorBadge,
-          recoveryWordError && {color: color.sys_magenta_500},
+          {color: p.text_primary_medium, ...a.body_1_lg_regular},
+          used &&
+            !usedError && {
+              color: p.primary_400,
+            },
+          used && !usedError && {color: p.primary_400},
+          recoveryWordError && {
+            color: p.sys_magenta_500,
+          },
+          recoveryWordError && {color: p.sys_magenta_500},
           style,
         ]}
       >
@@ -513,45 +459,11 @@ const WordBadge = ({
 }
 
 const useBold = () => {
-  const {atoms} = useTheme()
-
   return {
     b: (text: React.ReactNode) => (
-      <Text style={atoms.body_1_lg_medium}>{text}</Text>
+      <Text style={a.body_1_lg_medium}>{text}</Text>
     ),
   }
 }
 
-const styles = StyleSheet.create({
-  container: {},
-  padding: {},
-  actions: {},
-  title: {},
-  recoveryPhrase: {},
-  recoveryPhraseBackground: {},
-  recoveryPhraseOutline: {},
-  errorMessageContainer: {},
-  errorMessage: {},
-  successMessageContainer: {},
-  successMessage: {},
-  errorBadge: {},
-  errorBadgeBackground: {},
-  words: {},
-  wordBadgeView: {},
-  wordBadgeContainerOutline: {},
-  wordBadgeContainer: {},
-  wordBadge: {},
-  wordBadgeText: {},
-  usedWord: {},
-  usedWordBackground: {
-    borderRadius: 6,
-    left: 2,
-    right: 2,
-    top: 2,
-    bottom: 2,
-  },
-  bolder: {},
-  mnemonicInputWordBadge: {},
-  mnemonicNumberWordBadge: {},
-  wordBadgeBottom: {},
-})
+type Entry = {id: number; word: string}

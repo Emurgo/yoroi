@@ -1,12 +1,11 @@
 import {Blockies} from '@yoroi/identicon'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Alert, Platform, Text, View} from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {Space} from '../../../../components/Space/Space'
-import {useWalletNavigation} from '../../../../kernel/navigation'
+import {Button} from '../../../../ui/Button/Button'
+import {Icon} from '../../../../ui/Icon'
+import {Space, SpaceHeight} from '../../../../ui/Space/Space'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../useStrings'
 
@@ -19,36 +18,51 @@ export const WalletDuplicatedModal = ({
   seed: string
   duplicatedAccountWalletMetaName: string
 }) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.modal}>
-      <Text style={styles.modalText}>
+    <View style={[a.flex_1, a.px_lg]}>
+      <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
         {strings.restoreDuplicatedWalletModalText}
       </Text>
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
-      <View style={styles.checksum}>
+      <View style={[a.flex_row, a.align_center]}>
         <Icon.WalletAvatar
           image={new Blockies({seed}).asBase64()}
-          style={styles.walletChecksum}
           size={38}
+          style={{
+            width: 38,
+            height: 38,
+            borderRadius: 8,
+            position: 'absolute',
+            top: Platform.OS === 'ios' ? -22 : -18,
+          }}
         />
 
-        <Space width="sm" />
+        <Space.Height.sm />
 
         <View>
-          <Text style={styles.plateName}>
+          <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
             {duplicatedAccountWalletMetaName}
           </Text>
 
-          <Text style={styles.plateText}>{plate}</Text>
+          <Text
+            style={[
+              a.body_3_sm_regular,
+              a.text_center,
+              a.justify_center,
+              {color: p.gray_600},
+            ]}
+          >
+            {plate}
+          </Text>
         </View>
       </View>
 
-      <Space fill />
+      <SpaceHeight fill size="lg" />
     </View>
   )
 }
@@ -58,60 +72,21 @@ export const WalletDuplicatedModalActions = ({
 }: {
   duplicatedAccountWalletMetaId: string
 }) => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-
-  const {resetToTxHistory} = useWalletNavigation()
   const {walletManager} = useWalletManager()
+  const {palette: p} = useTheme()
+  const strings = useStrings()
 
   const handleOpenWalletWithDuplicatedName = React.useCallback(() => {
     walletManager.setSelectedWalletId(duplicatedAccountWalletMetaId)
-    resetToTxHistory()
-  }, [walletManager, duplicatedAccountWalletMetaId, resetToTxHistory])
+    Alert.alert('duplicated wallet')
+    // resetToTxHistory()
+  }, [walletManager, duplicatedAccountWalletMetaId])
 
   return (
     <Button
       title={strings.restoreDuplicatedWalletModalButton}
-      style={styles.button}
       onPress={handleOpenWalletWithDuplicatedName}
+      style={{backgroundColor: p.primary_500}}
     />
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    plateName: {
-      ...atoms.body_2_md_medium,
-      color: color.text_gray_medium,
-    },
-    modal: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    walletChecksum: {
-      width: 38,
-      height: 38,
-      borderRadius: 8,
-    },
-    checksum: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      textAlignVertical: 'center',
-    },
-    plateText: {
-      ...atoms.body_3_sm_regular,
-      ...atoms.text_center,
-      ...atoms.justify_center,
-      color: color.gray_600,
-    },
-    button: {
-      backgroundColor: color.primary_500,
-    },
-    modalText: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_low,
-    },
-  })
-  return {styles} as const
 }

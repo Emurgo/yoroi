@@ -1,22 +1,23 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {wordlists} from 'bip39'
 import * as React from 'react'
 import {
+  NativeSyntheticEvent,
   Platform,
   TextInput as RNTextInput,
   ScrollView,
   StyleSheet,
   Text,
+  TextInputKeyPressEventData,
   TouchableOpacity,
   View,
 } from 'react-native'
 
-import {Space} from '../../../../../components/Space/Space'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {isEmptyString} from '../../../../../kernel/utils'
+import {Alert} from '../../../../../ui/AlertIllustration/AlertIllustration'
+import {Check2} from '../../../../../ui/Check2Illustration/Check2Illustration'
+import {Space, SpaceHeight} from '../../../../../ui/Space/Space'
+import {isEmptyString} from '../../../../../wallets/utils/string'
 import {useStrings} from '../../../common/useStrings'
-import {Alert as AlertIllustration} from '../../../illustrations/Alert'
-import {Check2} from '../../../illustrations/Check2'
 import {MnemonicWordInputRef} from '../RestoreWalletScreen'
 import {TextInput} from './TextInput/TextInput'
 
@@ -46,7 +47,7 @@ export const MnemonicInput = ({
   setMnemonicSelectedWords: React.Dispatch<React.SetStateAction<Array<string>>>
   onSelect: (index: number, word: string) => void
   onFocus: (index: number) => void
-  mnenonicRefs: React.RefObject<MnemonicWordInputRef>[]
+  mnenonicRefs: React.RefObject<MnemonicWordInputRef | null>[]
   inputErrorsIndexes: Array<number>
   mnemonic: string
   scrollViewRef: React.MutableRefObject<ScrollView | null>
@@ -76,11 +77,11 @@ export const MnemonicInput = ({
         scrollViewRef={scrollViewRef}
       />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       {!isEmptyString(error) && (
         <View style={styles.textView}>
-          <AlertIllustration />
+          <Alert />
 
           <Text style={styles.errorText}>{error}</Text>
         </View>
@@ -105,7 +106,7 @@ export const MnemonicInput = ({
         />
       )}
 
-      <Spacer height={50} />
+      <SpaceHeight size={50} />
     </View>
   )
 }
@@ -129,7 +130,7 @@ const ClearAllButton = ({
 }
 
 type MnemonicWordsInputProps = {
-  mnenonicRefs: React.RefObject<MnemonicWordInputRef>[]
+  mnenonicRefs: React.RefObject<MnemonicWordInputRef | null>[]
   mnemonicSelectedWords: Array<string>
   isValidPhrase: boolean
   suggestedWords: Array<string>
@@ -155,7 +156,7 @@ const MnemonicWordsInput = ({
   onClearError,
 }: MnemonicWordsInputProps) => {
   const {styles} = useStyles()
-  const rowHeightRef = React.useRef<number | void>()
+  const rowHeightRef = React.useRef<number | null>(null)
 
   useAutoFocus(mnenonicRefs[0])
 
@@ -310,7 +311,13 @@ const MnemonicWordInput = React.forwardRef<
       <TextInput
         ref={inputRef}
         value={word}
-        onFocus={(e) => {
+        onFocus={(e: {
+          currentTarget: {
+            setNativeProps: (arg0: {
+              selection: {start: number; end: number}
+            }) => void
+          }
+        }) => {
           // selectTextOnFocus is buggy on ios
           if (Platform.OS === 'ios') {
             e.currentTarget.setNativeProps({
@@ -335,8 +342,10 @@ const MnemonicWordInput = React.forwardRef<
         style={styles.textInput}
         isValidPhrase={isValidPhrase}
         showErrorOnBlur={false}
-        onKeyPress={({nativeEvent}) => {
-          if (nativeEvent.key === 'Backspace') {
+        onKeyPress={({
+          nativeEvent: {key},
+        }: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
+          if (key === 'Backspace') {
             onKeyPress(word)
           }
         }}
@@ -364,7 +373,7 @@ const getMatchingWords = (targetWord: string) =>
     word.startsWith(normalizeText(targetWord)),
   )
 
-const useAutoFocus = (ref: React.RefObject<MnemonicWordInputRef>) =>
+const useAutoFocus = (ref: React.RefObject<MnemonicWordInputRef | null>) =>
   React.useEffect(() => {
     const timeout = setTimeout(() => ref.current?.focus(), 100)
 
@@ -372,7 +381,7 @@ const useAutoFocus = (ref: React.RefObject<MnemonicWordInputRef>) =>
   }, [ref])
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
 
   const styles = StyleSheet.create({
     mnemonicInputView: {
@@ -385,8 +394,8 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'space-evenly',
       width: '50%',
-      ...atoms.py_2xs,
-      ...atoms.px_xs,
+      ...a.py_2xs,
+      ...a.px_xs,
     },
     textInput: {
       minWidth: 143,
@@ -394,8 +403,8 @@ const useStyles = () => {
       textAlign: 'center',
     },
     mnemonicIndex: {
-      color: color.text_primary_medium,
-      ...atoms.body_1_lg_regular,
+      color: p.text_primary_medium,
+      ...a.body_1_lg_regular,
     },
     textView: {
       flexDirection: 'row',
@@ -403,19 +412,19 @@ const useStyles = () => {
       alignItems: 'center',
     },
     errorText: {
-      ...atoms.body_1_lg_regular,
-      color: color.sys_magenta_500,
+      ...a.body_1_lg_regular,
+      color: p.sys_magenta_500,
     },
     successText: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_max,
+      ...a.body_1_lg_medium,
+      color: p.gray_max,
     },
     clearAll: {
-      ...atoms.button_2_md,
-      ...atoms.pl_sm,
-      color: color.text_primary_medium,
+      ...a.button_2_md,
+      ...a.pl_sm,
+      color: p.text_primary_medium,
       textTransform: 'uppercase',
     },
   })
-  return {styles, colors: color} as const
+  return {styles, colors: p} as const
 }

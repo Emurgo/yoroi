@@ -1,10 +1,8 @@
 import {useExplorers} from '@yoroi/explorers'
 import React from 'react'
-import {Linking, TouchableOpacity, View, ViewStyle} from 'react-native'
-
-import {Copiable} from '../../../../components/Clipboard/Copiable'
-import {Text} from '../../../../components/Text'
-import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
+import {Linking, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {Copiable} from '../../../../ui/Copiable/Copiable'
+import {useSelectedNetwork} from '../../../WalletManager/hooks/useSelectedNetwork'
 
 export const WalletAddress = ({
   addressHash,

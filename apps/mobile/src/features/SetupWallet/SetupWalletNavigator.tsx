@@ -1,13 +1,13 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {useTheme} from '@yoroi/theme'
+// import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {
+/* import {
   defaultStackNavigationOptions,
   WalletInitRoutes,
-} from '../../kernel/navigation'
-import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+} from '../../kernel/navigation' */
+// import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
 import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen'
@@ -17,28 +17,28 @@ import {AboutRecoveryPhraseScreen} from './useCases/CreateWallet/AboutRecoveryPh
 import {RecoveryPhraseScreen} from './useCases/CreateWallet/RecoveryPhraseScreen'
 import {VerifyRecoveryPhraseScreen} from './useCases/CreateWallet/VerifyRecoveryPhraseScreen'
 import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
-import {CheckNanoXScreen} from './useCases/RestoreHwWallet/CheckNanoXScreen'
-import {ConnectNanoXScreen} from './useCases/RestoreHwWallet/ConnectNanoXScreen'
-import {SaveNanoXScreen} from './useCases/RestoreHwWallet/SaveNanoXScreen'
+// import {ConnectNanoXScreen} from './useCases/RestoreHwWallet/ConnectNanoXScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 
-const Stack = createStackNavigator<WalletInitRoutes>()
+const Stack = createStackNavigator<any /* WalletInitRoutes */>()
 export const SetupWalletNavigator = () => {
   const strings = useStrings()
-  const {atoms, color} = useTheme()
+  // const {atoms: ta, palette: p} = useTheme()
 
-  const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(atoms, color),
-    [atoms, color],
+  /* const navigationOptions = React.useMemo(
+    () => defaultStackNavigationOptions(ta, p),
+    [ta, p],
   )
-
+ */
   return (
     <Stack.Navigator
-      screenOptions={{
-        ...navigationOptions,
-        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-      }}
+      screenOptions={
+        {
+          // ...navigationOptions,
+          // headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+        }
+      }
     >
       <Stack.Screen
         name="setup-wallet-choose-setup-type-init"
@@ -61,7 +61,9 @@ export const SetupWalletNavigator = () => {
       <Stack.Screen
         name="setup-wallet-details-form"
         component={WalletDetailsScreen}
-        options={{...navigationOptions, title: strings.createWalletTitle}}
+        options={{
+          /* ...navigationOptions,  */ title: strings.createWalletTitle,
+        }}
       />
 
       <Stack.Screen
@@ -90,26 +92,26 @@ export const SetupWalletNavigator = () => {
         component={SaveReadOnlyWalletScreen}
         options={{title: strings.saveReadOnlyWalletTitle}}
       />
-
+      {/*
       <Stack.Screen //
         name="setup-wallet-check-nano-x"
         component={CheckNanoXScreen}
         options={{title: strings.checkNanoXTitle}}
-      />
+      /> */}
 
-      <Stack.Screen //
+      {/* <Stack.Screen //
         name="setup-wallet-connect-nano-x"
         options={{title: strings.connectNanoXTitle}}
         component={ConnectNanoXScreenWrapper}
-      />
+      /> */}
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="setup-wallet-save-nano-x"
         component={SaveNanoXScreen}
         options={{
           title: strings.saveNanoXTitle,
         }}
-      />
+      /> */}
 
       <Stack.Screen //
         name="setup-wallet-about-recovery-phase"
@@ -138,7 +140,7 @@ export const SetupWalletNavigator = () => {
   )
 }
 
-const ConnectNanoXScreenWrapper = () => <ConnectNanoXScreen />
+/* const ConnectNanoXScreenWrapper = () => <ConnectNanoXScreen /> */
 
 const messages = defineMessages({
   addNewWalletTitle: {
