@@ -27,7 +27,7 @@ export const About = () => {
       <View
         style={{
           ...a.flex_row,
-          justifyContent: 'space-between',
+          ...a.space_between,
           ...a.py_lg,
         }}
       >
