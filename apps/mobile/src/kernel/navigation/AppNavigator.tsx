@@ -3,6 +3,9 @@ import * as React from 'react'
 import {DevMenu} from '../../../DevMenu'
 import {TempPinLoginScreen} from '../../features/Temporal_To_Remove/Auth/TempPinLoginScreen'
 import {InitialScreenNavigator} from '../../features/Temporal_To_Remove/InitialScreen/InitialScreenNavigatorNavigator'
+
+import {SearchProvider} from '../../features/Search/SearchContext'
+import {TempTestSearchScreen} from '../../features/Temporal_To_Remove/Search/TempTestSearchScreen'
 import {SelectWalletFromList} from '../../features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {Modal} from '../../ui/Modal/ModalScreen'
 
@@ -10,7 +13,7 @@ const Stack = createStackNavigator<any>()
 
 export const AppNavigator = () => {
   return (
-    <>
+    <SearchProvider>
       <Stack.Navigator>
         <Stack.Group>
           <Stack.Screen name="Login" component={TempPinLoginScreen} />
@@ -27,9 +30,13 @@ export const AppNavigator = () => {
           <Stack.Screen name="dev">
             {() => <DevMenu visible={true} />}
           </Stack.Screen>
+          <Stack.Screen
+            name="test-list-search"
+            component={TempTestSearchScreen}
+          />
         </Stack.Group>
       </Stack.Navigator>
       <Modal />
-    </>
+    </SearchProvider>
   )
 }

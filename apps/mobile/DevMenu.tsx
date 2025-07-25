@@ -9,6 +9,7 @@ import {BleManager, LogLevel} from 'react-native-ble-plx'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useNavigation} from '@react-navigation/native'
 import {debugStorage} from 'src/kernel/storage/debug-storage'
 import {useAuth} from './src/features/Auth/context/AuthProvider'
 import {usePairing} from './src/features/Pairing/context/PairingProvider'
@@ -45,6 +46,7 @@ export function DevMenu({visible}: {visible?: boolean}) {
   }, [])
   const metrics = useMetrics()
   const {currency, ptActivity} = usePairing()
+  const navigation = useNavigation<any>()
 
   if (!visible) {
     return null
@@ -166,6 +168,15 @@ export function DevMenu({visible}: {visible?: boolean}) {
         }}
         type={ButtonType.Secondary}
         title="Decrypt Data"
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
+
+      <Button
+        onPress={() => {
+          navigation.navigate('test-list-search')
+        }}
+        type={ButtonType.Secondary}
+        title="Test List Search"
         style={[a.pt_md, a.p_md, a.rounded_md]}
       />
 
