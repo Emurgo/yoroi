@@ -56,8 +56,8 @@ export const About = () => {
 
       <View
         style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
+          ...a.flex_row,
+          ...a.space_between,
           ...a.py_lg,
         }}
       >
