@@ -49,9 +49,9 @@ const Row = ({children}: {children: React.ReactNode}) => {
   return (
     <View
       style={{
-        flexDirection: 'row',
+        ...a.flex_row,
         borderBottomColor: p.gray_200,
-        borderBottomWidth: 1,
+        ...a.border_b,
         ...a.py_lg,
       }}
     >

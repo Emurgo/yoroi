@@ -72,7 +72,7 @@ export const useHandleOpenNetworkNoticeModal = () => {
       content: (
         <View
           style={{
-            flex: 1,
+            ...a.flex_1,
             ...a.px_lg,
           }}
         >

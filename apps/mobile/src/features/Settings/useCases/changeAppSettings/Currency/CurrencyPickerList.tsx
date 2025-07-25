@@ -1,5 +1,6 @@
+import {atoms as a} from '@yoroi/theme'
 import React from 'react'
-import {FlatList, StyleSheet} from 'react-native'
+import {FlatList} from 'react-native'
 
 import {CurrencySymbol} from '../../../../../wallets/types/other'
 import {useCurrencyPairing} from './CurrencyContext'
@@ -13,7 +14,7 @@ export const CurrencyPickerList = () => {
 
   return (
     <FlatList
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={{...a.p_lg}}
       data={currencies}
       keyExtractor={({symbol}) => symbol}
       renderItem={({item: {symbol, data}}) => (
@@ -27,9 +28,3 @@ export const CurrencyPickerList = () => {
     />
   )
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    padding: 16,
-  },
-})

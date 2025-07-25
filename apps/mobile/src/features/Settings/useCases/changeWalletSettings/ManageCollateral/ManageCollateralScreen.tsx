@@ -307,13 +307,10 @@ const Left = ({style, ...props}: ViewProps) => (
   <View style={[style, {flex: 1}]} {...props} />
 )
 const Right = ({style, ...props}: ViewProps) => (
-  <View style={[style, {paddingLeft: 16}]} {...props} />
+  <View style={[style, {...a.pl_lg}]} {...props} />
 )
 const Row = ({style, ...props}: ViewProps) => (
-  <View
-    style={[style, {flexDirection: 'row', alignItems: 'center'}]}
-    {...props}
-  />
+  <View style={[style, {...a.flex_row, ...a.align_center}]} {...props} />
 )
 
 const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {

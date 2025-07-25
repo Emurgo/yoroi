@@ -59,9 +59,9 @@ const Row = ({children}: {children: React.ReactNode}) => {
   return (
     <View
       style={{
-        flexDirection: 'row',
+        ...a.flex_row,
         borderBottomColor: p.gray_200,
-        borderBottomWidth: 1,
+        ...a.border_b,
         ...a.py_lg,
       }}
     >
@@ -74,7 +74,7 @@ const Description = ({children}: {children: React.ReactNode}) => {
     <View
       style={{
         flex: 8,
-        flexDirection: 'column',
+        ...a.flex_col,
       }}
     >
       {children}
@@ -85,8 +85,8 @@ const Selected = ({children}: {children: React.ReactNode}) => {
   return (
     <View
       style={{
-        alignItems: 'flex-end',
-        justifyContent: 'center',
+        ...a.align_end,
+        ...a.justify_center,
         flex: 2,
       }}
     >

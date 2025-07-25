@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -15,12 +15,12 @@ export const PrivacyPolicyScreen = () => {
       edges={['left', 'right', 'bottom']}
       style={{
         backgroundColor: p.bg_color_max,
-        flex: 1,
+        ...a.flex_1,
       }}
     >
       <ScrollView
         contentContainerStyle={{
-          padding: 16,
+          ...a.p_lg,
         }}
       >
         <PrivacyPolicy languageCode={languageCode} />

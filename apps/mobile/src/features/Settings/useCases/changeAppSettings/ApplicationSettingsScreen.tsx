@@ -36,7 +36,7 @@ import {useChangeScreenShareSetting} from './ScreenShare'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {atoms: a, paletteName: name, palette: p} = useTheme()
+  const {paletteName: name, palette: p} = useTheme()
   const {languageCode} = useLanguage()
   const language = supportedLanguages.find(
     (lang) => lang.code === languageCode,
@@ -68,7 +68,7 @@ export const ApplicationSettingsScreen = () => {
   }
 
   const iconProps = {
-    color: p.icon,
+    color: p.gray_400,
     size: 23,
   }
 

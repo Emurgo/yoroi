@@ -13,7 +13,7 @@ export const SystemLogScreen = () => {
   return (
     <View
       style={{
-        flex: 1,
+        ...a.flex_1,
         backgroundColor: p.bg_color_max,
         ...a.px_lg,
       }}

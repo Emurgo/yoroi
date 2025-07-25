@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
@@ -62,16 +62,16 @@ export const WalletSettingsScreen = () => {
   }
 
   const iconProps = {
-    color: p.icon,
+    color: p.gray_400,
     size: 23,
   }
 
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[{flex: 1, backgroundColor: p.bg_color_max}]}
+      style={[{...a.flex_row, backgroundColor: p.bg_color_max}]}
     >
-      <ScrollView bounces={false} style={[{flex: 1, padding: 16}]}>
+      <ScrollView bounces={false} style={[a.flex_1, a.p_lg]}>
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.WalletStack {...iconProps} />}
@@ -194,7 +194,7 @@ const ResyncButton = () => {
   }
 
   const iconProps = {
-    color: p.icon,
+    color: p.gray_400,
     size: 23,
   }
 

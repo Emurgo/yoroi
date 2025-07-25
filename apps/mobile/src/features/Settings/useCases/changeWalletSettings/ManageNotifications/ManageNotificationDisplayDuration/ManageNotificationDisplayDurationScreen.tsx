@@ -94,7 +94,6 @@ export const ManageNotificationDisplayDurationScreen = () => {
         edges={['bottom', 'left', 'right']}
         style={{
           ...a.flex_1,
-
           ...a.p_lg,
         }}
       >
@@ -132,7 +131,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
                     },
                     isSelected && {
                       backgroundColor: p.el_gray_min,
-                      borderRadius: 8,
+                      ...a.rounded_sm,
                     },
                   ]}
                   onPress={() => handleChoicePress(choice.id)}

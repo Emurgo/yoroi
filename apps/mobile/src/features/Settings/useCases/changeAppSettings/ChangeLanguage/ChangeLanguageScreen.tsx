@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -10,7 +10,7 @@ export const ChangeLanguageScreen = () => {
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
       style={{
-        flex: 1,
+        ...a.flex_1,
         backgroundColor: p.bg_color_max,
       }}
     >
