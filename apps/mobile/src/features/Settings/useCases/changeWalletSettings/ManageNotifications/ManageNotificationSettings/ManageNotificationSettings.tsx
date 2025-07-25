@@ -6,7 +6,6 @@ import {
   Linking,
   Platform,
   ScrollView,
-  StyleSheet,
   View,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -37,37 +36,37 @@ export const ManageNotificationSettings = () => {
   const {palette: p} = useTheme()
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={{
-      ...a.flex_1,
-      backgroundColor: p.bg_color_max,
-    }}>
-      <ScrollView bounces={false} style={{
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={{
         ...a.flex_1,
-        ...a.py_lg,
-        ...a.px_lg,
-      }}>
+        backgroundColor: p.bg_color_max,
+      }}
+    >
+      <ScrollView
+        bounces={false}
+        style={{
+          ...a.flex_1,
+          ...a.py_lg,
+          ...a.px_lg,
+        }}
+      >
         <SettingsSection title={strings.pushNotifications}>
-          <PushNotificationSettingsItem/>
+          <PushNotificationSettingsItem />
         </SettingsSection>
 
-        <Space.Height.xl/>
+        <Space.Height.xl />
 
         <SettingsSection title={strings.inAppNotifications}>
           <SettingsItem
-            icon={<Icon.Bell {{
-              color: p.gray_500,
-              size: 23,
-            }} />}
+            icon={<Icon.Bell color={p.gray_500} size={23} />}
             label={strings.inAppNotifications}
           >
-            <InAppNotificationDisplaySwitcher/>
+            <InAppNotificationDisplaySwitcher />
           </SettingsItem>
 
           <SettingsNotificationDurationItem
-            icon={<Icon.Time {{
-              color: p.gray_500,
-              size: 23,
-            }} />}
+            icon={<Icon.Time color={p.gray_500} size={23} />}
             onNavigate={() => navigateToNotificationDisplayDuration()}
             label={strings.displayDuration}
           />
@@ -132,10 +131,7 @@ const PushNotificationSettingsItem = () => {
   if (permission === 'authorized' || permission === 'not_determined') {
     return (
       <SettingsItem
-        icon={<Icon.Bell {{
-          color: p.gray_500,
-          size: 23,
-        }} />}
+        icon={<Icon.Bell color={p.gray_500} size={23} />}
         label={strings.pushNotifications}
       >
         <SettingsSwitch
@@ -148,10 +144,12 @@ const PushNotificationSettingsItem = () => {
 
   return (
     <View>
-      <Text style={{
-        ...a.body_1_lg_medium,
-        ...a.py_sm,
-      }}>
+      <Text
+        style={{
+          ...a.body_1_lg_medium,
+          ...a.py_sm,
+        }}
+      >
         {strings.enableNotificationsThroughSettings}
       </Text>
 
@@ -182,9 +180,8 @@ const InAppNotificationDisplaySwitcher = () => {
     track.settingsInAppNotificationsStatusUpdated({status})
   }
 
-  return <SettingsSwitch value={localValue} onValueChange={handleOnToggle}/>
+  return <SettingsSwitch value={localValue} onValueChange={handleOnToggle} />
 }
-
 
 const navigateToAppSettings = async () => {
   if (Platform.OS === 'ios') {
