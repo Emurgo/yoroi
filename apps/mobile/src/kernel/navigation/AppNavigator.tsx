@@ -1,6 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 import {DevMenu} from '../../../DevMenu'
+import {SettingsScreenNavigator} from '../../features/Settings/SettingsScreenNavigator'
 import {TempPinLoginScreen} from '../../features/Temporal_To_Remove/Auth/TempPinLoginScreen'
 import {InitialScreenNavigator} from '../../features/Temporal_To_Remove/InitialScreen/InitialScreenNavigatorNavigator'
 import {SelectWalletFromList} from '../../features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
@@ -23,6 +24,11 @@ export const AppNavigator = () => {
             name="wallet-selection"
             options={{headerShown: false}}
             component={SelectWalletFromList}
+          />
+          <Stack.Screen
+            name="settings"
+            options={{headerShown: false}}
+            component={SettingsScreenNavigator}
           />
           <Stack.Screen name="dev">
             {() => <DevMenu visible={true} />}

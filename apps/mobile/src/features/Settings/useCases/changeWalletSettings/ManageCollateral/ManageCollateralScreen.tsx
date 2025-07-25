@@ -7,7 +7,6 @@ import {
   Alert,
   LayoutAnimation,
   ScrollView,
-  StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
   useWindowDimensions,
@@ -29,7 +28,6 @@ import {Info} from '../../../../../ui/Icon/Info'
 import {useModal} from '../../../../../ui/Modal/ModalContext'
 import {Space} from '../../../../../ui/Space/Space'
 import {Text} from '../../../../../ui/Text/Text'
-import {useCollateralInfo} from '../../../../../wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../../../wallets/cardano/utxoManager/useSetCollateralId'
 import {
   collateralConfig,
@@ -44,20 +42,19 @@ import {
   Quantities,
 } from '../../../../../wallets/utils/utils'
 import {useReviewTx} from '../../../../ReviewTx/common/ReviewTxProvider'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
 import {useStrings} from './strings'
 
 export const ManageCollateralScreen = () => {
-  const {styles} = useStyles()
-  const {
-    wallet,
-    meta: {addressMode},
-  } = useSelectedWallet()
+  const {palette: p} = useTheme()
+
+  const {wallet, meta: addressMode} = useWalletManager().selected!
+  const {amount, collateralId, utxo} = wallet.getCollateralInfo()
   const screenHeight = useWindowDimensions().height
-  const {amount, collateralId, utxo} = useCollateralInfo(wallet)
+
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
   const {openModal, closeModal} = useModal()
@@ -168,10 +165,21 @@ export const ManageCollateralScreen = () => {
   return (
     <SafeAreaView
       edges={['top', 'left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={{
+        backgroundColor: p.bg_color_max,
+        ...a.flex_1,
+        ...a.px_lg,
+      }}
     >
       <ScrollView>
-        <Text style={styles.heading}>{strings.lockedAsCollateral}</Text>
+        <Text
+          style={{
+            ...a.flex_1,
+            alignSelf: 'center',
+          }}
+        >
+          {strings.lockedAsCollateral}
+        </Text>
 
         <Space.Height.sm />
 
@@ -201,7 +209,7 @@ export const ManageCollateralScreen = () => {
               </Copiable>
             </Row>
 
-            <Spacer height={16} />
+            <Space.Height size={16} />
 
             <Text>{strings.removeCollateral}</Text>
           </>
@@ -271,12 +279,17 @@ const ActionableAmount = ({
   collateralId,
   disabled,
 }: ActionableAmountProps) => {
-  const {styles} = useStyles()
-
   const handleRemove = () => onRemove()
 
   return (
-    <View style={styles.amountItem} testID="amountItem">
+    <View
+      style={{
+        ...a.flex_row,
+        ...a.justify_between,
+        ...a.align_center,
+      }}
+      testID="amountItem"
+    >
       {/*<Left>*/}
       {/*  <TokenAmountItem amount={amount} />*/}
       {/*</Left>*/}
@@ -304,7 +317,7 @@ const Row = ({style, ...props}: ViewProps) => (
 )
 
 const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
-  const {colors} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
@@ -313,13 +326,13 @@ const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
       disabled={disabled}
       style={{opacity: disabled ? 0.5 : 1}}
     >
-      <Icon.CrossCircle size={26} color={colors.iconColor} />
+      <Icon.CrossCircle size={26} color={p.gray_900} />
     </TouchableOpacity>
   )
 }
 
 const Operation = () => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {openModal} = useModal()
 
@@ -332,50 +345,26 @@ const Operation = () => {
   }
 
   return (
-    <View style={styles.operation}>
-      <Text style={styles.operationText}>
+    <View
+      style={{
+        ...a.flex_row,
+        ...a.align_center,
+      }}
+    >
+      <Text
+        style={{
+          ...a.body_2_md_regular,
+          color: p.text_gray_medium,
+        }}
+      >
         {strings.collateralInfoModalLabel}
       </Text>
 
       <Space width="xs" />
 
       <TouchableOpacity onPress={handleOnPressInfo}>
-        <Info size={24} color={colors.iconColor} />
+        <Info size={24} color={p.iconColor} />
       </TouchableOpacity>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      backgroundColor: p.bg_color_max,
-      ...a.flex_1,
-      ...a.px_lg,
-    },
-    amountItem: {
-      ...a.flex_row,
-      ...a.justify_between,
-      ...a.align_center,
-    },
-    heading: {
-      ...a.flex_1,
-      alignSelf: 'center',
-    },
-    operation: {
-      ...a.flex_row,
-      ...a.align_center,
-    },
-    operationText: {
-      ...a.body_2_md_regular,
-      color: p.text_gray_medium,
-    },
-  })
-
-  const colors = {
-    iconColor: p.gray_900,
-  }
-
-  return {styles, colors} as const
 }

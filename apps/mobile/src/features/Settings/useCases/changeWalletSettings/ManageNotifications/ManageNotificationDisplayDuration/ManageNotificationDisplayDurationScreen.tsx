@@ -6,13 +6,7 @@ import {
 } from '@yoroi/notifications'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
@@ -47,12 +41,12 @@ const CHOICES: Readonly<Choice[]> = [
 
 export const ManageNotificationDisplayDurationScreen = () => {
   const {track} = useMetrics()
-  const {styles, colors} = useStyles()
   const formatNumber = mockUseFormatNumber
   const config = useConfig()
   const {mutate: updateConfig} = useUpdateNotificationsConfig()
   const navigation = useNavigation()
 
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const savedChoice = getChoiceByValue(config.displayDuration)
   const [selectedChoiceId, setSelectedChoiceId] = React.useState<ChoiceKind>(
@@ -89,30 +83,69 @@ export const ManageNotificationDisplayDurationScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+    <KeyboardAvoidingView
+      style={{
+        ...a.flex_1,
+
+        backgroundColor: p.bg_color_max,
+      }}
+    >
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={[styles.flex, styles.safeAreaView]}
-      >
-        <ScrollView bounces={false} style={styles.flex}>
-          <Text style={styles.description}>{strings.description}</Text>
+        style={{
+          ...a.flex_1,
 
-          <View style={styles.choicesContainer}>
+          ...a.p_lg,
+        }}
+      >
+        <ScrollView
+          bounces={false}
+          style={{
+            ...a.flex_1,
+          }}
+        >
+          <Text
+            style={{
+              ...a.py_lg,
+              ...a.body_1_lg_regular,
+              color: p.gray_900,
+            }}
+          >
+            {strings.description}
+          </Text>
+
+          <View
+            style={{
+              ...a.flex_row,
+              ...a.pb_xl,
+              ...a.flex_wrap,
+            }}
+          >
             {CHOICES.map((choice, index) => {
               const isSelected = selectedChoiceId === choice.id
               return (
                 <TouchableOpacity
                   key={index}
                   style={[
-                    styles.choiceButton,
-                    isSelected && styles.selectedChoiceButton,
+                    {
+                      ...a.p_sm,
+                    },
+                    isSelected && {
+                      backgroundColor: p.el_gray_min,
+                      borderRadius: 8,
+                    },
                   ]}
                   onPress={() => handleChoicePress(choice.id)}
                 >
                   <Text
                     style={[
-                      styles.choiceLabel,
-                      isSelected && styles.selectedChoiceLabel,
+                      {
+                        ...a.body_1_lg_medium,
+                        color: p.text_gray_max,
+                      },
+                      isSelected && {
+                        color: p.text_gray_max,
+                      },
                     ]}
                   >
                     {getLabelById(choice.id, strings)}
@@ -122,8 +155,25 @@ export const ManageNotificationDisplayDurationScreen = () => {
             })}
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>{strings.displayDuration}</Text>
+          <View
+            style={{
+              ...a.relative,
+            }}
+          >
+            <Text
+              style={{
+                color: p.text_gray_max,
+                backgroundColor: p.bg_color_max,
+                ...a.z_20,
+                ...a.absolute,
+                ...a.body_3_sm_regular,
+                top: -3,
+                left: 11,
+                paddingHorizontal: 3,
+              }}
+            >
+              {strings.displayDuration}
+            </Text>
 
             <TextInput
               value={
@@ -137,12 +187,28 @@ export const ManageNotificationDisplayDurationScreen = () => {
               selectTextOnFocus={isInputEnabled}
               autoFocus={isInputEnabled}
               style={[
-                styles.input,
-                !isSelectedChoiceManual && {backgroundColor: colors.background},
+                {
+                  color: p.text_gray_medium,
+                  ...a.body_1_lg_regular,
+                },
+                !isSelectedChoiceManual && {backgroundColor: p.gray_100},
               ]}
               keyboardType="numeric"
-              selectionColor={colors.cursor}
-              right={<Text style={styles.percentLabel}>{strings.seconds}</Text>}
+              selectionColor={p.input_selected}
+              right={
+                <Text
+                  style={{
+                    color: p.text_gray_medium,
+                    ...a.body_1_lg_regular,
+                    ...a.p_lg,
+                    ...a.absolute,
+                    right: 0,
+                    top: 0,
+                  }}
+                >
+                  {strings.seconds}
+                </Text>
+              }
               error={shouldDisplayError}
               errorText={shouldDisplayError ? strings.inputError : undefined}
             />
@@ -180,76 +246,6 @@ const getLabelById = (
     case 'Manual':
       return strings.manual
   }
-}
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    flex: {
-      ...a.flex_1,
-    },
-    root: {
-      backgroundColor: p.bg_color_max,
-    },
-    safeAreaView: {
-      ...a.p_lg,
-    },
-    description: {
-      ...a.py_lg,
-      ...a.body_1_lg_regular,
-      color: p.gray_900,
-    },
-    choicesContainer: {
-      ...a.flex_row,
-      ...a.pb_xl,
-      ...a.flex_wrap,
-    },
-    choiceButton: {
-      ...a.p_sm,
-    },
-    selectedChoiceButton: {
-      backgroundColor: p.el_gray_min,
-      borderRadius: 8,
-    },
-    choiceLabel: {
-      ...a.body_1_lg_medium,
-      color: p.text_gray_max,
-    },
-    selectedChoiceLabel: {
-      color: p.text_gray_max,
-    },
-    input: {
-      color: p.text_gray_medium,
-      ...a.body_1_lg_regular,
-    },
-    percentLabel: {
-      color: p.text_gray_medium,
-      ...a.body_1_lg_regular,
-      ...a.p_lg,
-      ...a.absolute,
-      right: 0,
-      top: 0,
-    },
-    inputContainer: {
-      ...a.relative,
-    },
-    label: {
-      color: p.text_gray_max,
-      backgroundColor: p.bg_color_max,
-      ...a.z_20,
-      ...a.absolute,
-      ...a.body_3_sm_regular,
-      top: -3,
-      left: 11,
-      paddingHorizontal: 3,
-    },
-  })
-  const colors = {
-    background: p.gray_100,
-    cursor: p.input_selected,
-  }
-
-  return {styles, colors}
 }
 
 const getChoiceById = (id: ChoiceKind): Choice => {

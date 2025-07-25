@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {
+  Alert,
   AppState,
   Linking,
   Platform,
@@ -27,34 +28,46 @@ import {
 import {useStrings} from '../useStrings'
 
 const getNotificationsAuthorizationStatus = () => {
-  Alert.aler('getNotificationsAuthorizationStatus not implemented')
+  Alert.alert('getNotificationsAuthorizationStatus not implemented')
 }
 
 export const ManageNotificationSettings = () => {
   const strings = useStrings()
   const {navigateToNotificationDisplayDuration} = useWalletNavigation()
-
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
-      <ScrollView bounces={false} style={styles.settings}>
+    <SafeAreaView edges={['bottom', 'right', 'left']} style={{
+      ...a.flex_1,
+      backgroundColor: p.bg_color_max,
+    }}>
+      <ScrollView bounces={false} style={{
+        ...a.flex_1,
+        ...a.py_lg,
+        ...a.px_lg,
+      }}>
         <SettingsSection title={strings.pushNotifications}>
-          <PushNotificationSettingsItem />
+          <PushNotificationSettingsItem/>
         </SettingsSection>
 
-        <Space.Height.xl />
+        <Space.Height.xl/>
 
         <SettingsSection title={strings.inAppNotifications}>
           <SettingsItem
-            icon={<Icon.Bell {...styles.icon} />}
+            icon={<Icon.Bell {{
+              color: p.gray_500,
+              size: 23,
+            }} />}
             label={strings.inAppNotifications}
           >
-            <InAppNotificationDisplaySwitcher />
+            <InAppNotificationDisplaySwitcher/>
           </SettingsItem>
 
           <SettingsNotificationDurationItem
-            icon={<Icon.Time {...styles.icon} />}
+            icon={<Icon.Time {{
+              color: p.gray_500,
+              size: 23,
+            }} />}
             onNavigate={() => navigateToNotificationDisplayDuration()}
             label={strings.displayDuration}
           />
@@ -111,7 +124,7 @@ export function useNotificationPermission() {
 }
 
 const PushNotificationSettingsItem = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   const {permission, togglePermissions} = useNotificationPermission()
@@ -119,7 +132,10 @@ const PushNotificationSettingsItem = () => {
   if (permission === 'authorized' || permission === 'not_determined') {
     return (
       <SettingsItem
-        icon={<Icon.Bell {...styles.icon} />}
+        icon={<Icon.Bell {{
+          color: p.gray_500,
+          size: 23,
+        }} />}
         label={strings.pushNotifications}
       >
         <SettingsSwitch
@@ -132,12 +148,18 @@ const PushNotificationSettingsItem = () => {
 
   return (
     <View>
-      <Text style={styles.enableSetting}>
+      <Text style={{
+        ...a.body_1_lg_medium,
+        ...a.py_sm,
+      }}>
         {strings.enableNotificationsThroughSettings}
       </Text>
 
       <Button
-        style={styles.enableSettingButton}
+        style={{
+          ...a.justify_start,
+          ...a.p_0,
+        }}
         title={strings.goToSettings}
         onPress={navigateToAppSettings}
         type={ButtonType.Text}
@@ -160,36 +182,9 @@ const InAppNotificationDisplaySwitcher = () => {
     track.settingsInAppNotificationsStatusUpdated({status})
   }
 
-  return <SettingsSwitch value={localValue} onValueChange={handleOnToggle} />
+  return <SettingsSwitch value={localValue} onValueChange={handleOnToggle}/>
 }
 
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...a.flex_1,
-      backgroundColor: p.bg_color_max,
-    },
-    enableSetting: {
-      ...a.body_1_lg_medium,
-      ...a.py_sm,
-    },
-    enableSettingButton: {
-      ...a.justify_start,
-      ...a.p_0,
-    },
-    settings: {
-      ...a.flex_1,
-      ...a.py_lg,
-      ...a.px_lg,
-    },
-    icon: {
-      color: p.gray_500,
-      size: 23,
-    },
-  })
-  return {styles} as const
-}
 
 const navigateToAppSettings = async () => {
   if (Platform.OS === 'ios') {

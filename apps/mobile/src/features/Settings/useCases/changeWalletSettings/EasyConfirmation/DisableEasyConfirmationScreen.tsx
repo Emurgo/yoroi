@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../../ui/Button/Button'
@@ -11,8 +11,8 @@ import {useWalletManager} from '../../../../WalletManager/context/WalletManagerP
 import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const DisableEasyConfirmationScreen = () => {
+  const {palette: p} = useTheme()
   const strings = useStrings()
-  const styles = useStyles()
   const navigation = useNavigation()
   const {wallet} = useSelectedWallet()
   const {walletManager} = useWalletManager()
@@ -23,12 +23,34 @@ export const DisableEasyConfirmationScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.container}>
-      <View style={[styles.disableSection]}>
-        <Text style={styles.heading}>{strings.disableHeading}</Text>
+    <SafeAreaView
+      edges={['bottom']}
+      style={{flex: 1, backgroundColor: p.bg_color_max}}
+    >
+      <View
+        style={[
+          {
+            flex: 1,
+            justifyContent: 'center',
+            padding: 20,
+          },
+        ]}
+      >
+        <Text
+          style={{
+            ...a.body_1_lg_regular,
+          }}
+        >
+          {strings.disableHeading}
+        </Text>
       </View>
 
-      <View style={styles.actions}>
+      <View
+        style={{
+          paddingBottom: 16,
+          paddingHorizontal: 16,
+        }}
+      >
         <Button
           title={strings.disableButton}
           onPress={handleOnDisableConfirmation}
@@ -58,26 +80,3 @@ const messages = defineMessages({
     defaultMessage: '!!!Disable',
   },
 })
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: p.bg_color_max,
-    },
-    heading: {
-      ...a.body_1_lg_regular,
-    },
-    disableSection: {
-      flex: 1,
-      justifyContent: 'center',
-      padding: 20,
-    },
-    actions: {
-      paddingBottom: 16,
-      paddingHorizontal: 16,
-    },
-  })
-  return styles
-}

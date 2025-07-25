@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../../ui/Button/Button'
@@ -16,7 +16,7 @@ import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWall
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
   const {
@@ -28,18 +28,41 @@ export const EnableEasyConfirmationScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.root}>
+    <KeyboardAvoidingView
+      style={{
+        ...a.flex_1,
+      }}
+    >
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={styles.safeAreaView}
+        style={{
+          backgroundColor: p.bg_color_max,
+          ...a.flex_1,
+        }}
       >
         <ScrollView
           keyboardShouldPersistTaps="always"
-          contentContainerStyle={styles.content}
+          contentContainerStyle={{
+            ...a.p_lg,
+            ...a.gap_lg,
+          }}
         >
-          <Text style={styles.heading}>{strings.enableHeading}</Text>
+          <Text
+            style={{
+              ...a.body_1_lg_regular,
+            }}
+          >
+            {strings.enableHeading}
+          </Text>
 
-          <Text style={styles.warning}>{strings.enableWarning}</Text>
+          <Text
+            style={{
+              color: p.sys_magenta_500,
+              ...a.body_2_md_regular,
+            }}
+          >
+            {strings.enableWarning}
+          </Text>
 
           <PasswordInput
             autoFocus
@@ -70,8 +93,15 @@ export const EnableEasyConfirmationScreen = () => {
 const PasswordInput = TextInput
 
 const Actions = ({children}: ViewProps) => {
-  const styles = useStyles()
-  return <View style={styles.actions}>{children}</View>
+  return (
+    <View
+      style={{
+        ...a.p_lg,
+      }}
+    >
+      {children}
+    </View>
+  )
 }
 
 const useStrings = () => {
@@ -110,32 +140,3 @@ const messages = defineMessages({
     defaultMessage: '!!!Enable',
   },
 })
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...a.flex_1,
-    },
-    safeAreaView: {
-      backgroundColor: p.bg_color_max,
-      ...a.flex_1,
-    },
-    content: {
-      ...a.p_lg,
-      ...a.gap_lg,
-    },
-    heading: {
-      ...a.body_1_lg_regular,
-    },
-    warning: {
-      color: p.sys_magenta_500,
-      ...a.body_2_md_regular,
-    },
-    actions: {
-      ...a.p_lg,
-    },
-  })
-
-  return styles
-}

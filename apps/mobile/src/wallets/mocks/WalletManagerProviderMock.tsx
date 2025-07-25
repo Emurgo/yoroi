@@ -5,10 +5,10 @@ import * as React from 'react'
 import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
 import {WalletManagerProvider} from '../../features/WalletManager/context/WalletManagerProvider'
 import {WalletManager} from '../../features/WalletManager/wallet-manager'
+import {walletMocks} from '../../features/WalletManager/wallet.mock'
 import {logger} from '../../kernel/logger/logger'
-import {rootStorage} from '../../kernel/storage/rootStorage'
+import {rootStorage} from '../../kernel/storage/storages'
 import {YoroiWallet} from '../cardano/types'
-import {mocks} from './wallet'
 
 // TODO: should be mocked
 const {tokenManagers} = buildPortfolioTokenManagers()
@@ -18,14 +18,14 @@ export const walletManagerMock = new WalletManager({
   networkManagers,
 })
 
-walletManagerMock.setSelectedWalletId(mocks.wallet.id)
+walletManagerMock.setSelectedWalletId(walletMocks.wallet.id)
 
 // NOTE: for places that are using the selected directly is ok, but for places using manager
 // it needs to be hydrated with the walletManager otherwise it will always return undefined
 export const WalletManagerProviderMock = ({
   children,
-  wallet = mocks.wallet,
-  meta = mocks.walletMeta,
+  wallet = walletMocks.wallet,
+  meta = walletMocks.walletMeta,
   walletManager = walletManagerMock,
 }: {
   children: React.ReactNode

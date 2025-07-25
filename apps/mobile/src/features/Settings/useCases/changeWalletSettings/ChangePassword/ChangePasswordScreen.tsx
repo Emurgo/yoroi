@@ -6,7 +6,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {
   TextInput as RNTextInput,
   ScrollView,
-  StyleSheet,
   View,
   ViewProps,
 } from 'react-native'
@@ -26,7 +25,7 @@ import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWall
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const navigation = useNavigation()
 
   const currentPasswordRef = React.useRef<RNTextInput>(null)
@@ -56,15 +55,25 @@ export const ChangePasswordScreen = () => {
   })
 
   return (
-    <KeyboardAvoidingView style={styles.root}>
+    <KeyboardAvoidingView
+      style={{
+        backgroundColor: p.bg_color_max,
+        ...a.flex_1,
+      }}
+    >
       <SafeAreaView
         edges={['left', 'right', 'bottom']}
-        style={styles.safeAreaView}
+        style={{
+          ...a.flex_1,
+        }}
       >
         <ScrollView
           bounces={false}
           keyboardDismissMode="on-drag"
-          contentContainerStyle={styles.contentContainer}
+          contentContainerStyle={{
+            ...a.p_lg,
+            ...a.gap_lg,
+          }}
         >
           <CurrentPasswordInput
             ref={currentPasswordRef}
@@ -141,8 +150,16 @@ const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
 const Actions = (props: ViewProps) => {
-  const styles = useStyles()
-  return <View {...props} style={styles.actions} />
+  const {palette: p} = useTheme()
+  return (
+    <View
+      {...props}
+      style={{
+        backgroundColor: p.bg_color_max,
+        ...a.p_lg,
+      }}
+    />
+  )
 }
 
 const messages = defineMessages({
@@ -195,29 +212,6 @@ const useStrings = () => {
       errorMessages.incorrectPassword.title,
     ),
   }
-}
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: p.bg_color_max,
-      ...a.flex_1,
-    },
-    safeAreaView: {
-      ...a.flex_1,
-    },
-    contentContainer: {
-      ...a.p_lg,
-      ...a.gap_lg,
-    },
-    actions: {
-      backgroundColor: p.bg_color_max,
-      ...a.p_lg,
-    },
-  })
-  return styles
 }
 
 const useChangePassword = (

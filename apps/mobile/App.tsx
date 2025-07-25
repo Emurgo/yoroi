@@ -4,12 +4,15 @@ import {ThemeProvider} from '@yoroi/theme'
 import * as Font from 'expo-font'
 import * as React from 'react'
 
+import {Chain} from '@yoroi/types'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
 import {CopyProvider} from './src/features/Copy/context/CopyProvider'
 import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
+import {networkManagers} from './src/features/WalletManager/common/constants'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
 import {walletManagerMock} from './src/features/WalletManager/wallet-manager.mock'
+import {walletMocks} from './src/features/WalletManager/wallet.mock'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
 import {AppNavigator} from './src/kernel/navigation/AppNavigator'
@@ -72,6 +75,7 @@ function Yoroi() {
       })
       setFontsLoaded(true)
     }
+
     loadFonts()
   }, [])
 
@@ -90,7 +94,17 @@ function BusinessShell({children}: React.PropsWithChildren) {
       installationIdKeyManager={installationIdStorageKeyManager}
     >
       <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
-        <WalletManagerProvider walletManager={walletManagerMock}>
+        <WalletManagerProvider
+          walletManager={walletManagerMock}
+          initialState={{
+            selected: {
+              network: Chain.Network.Mainnet,
+              wallet: walletMocks.wallet,
+              meta: walletMocks.walletMeta,
+              networkManager: networkManagers[Chain.Network.Mainnet],
+            },
+          }}
+        >
           {children}
         </WalletManagerProvider>
       </PairingProvider>

@@ -1,13 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {
-  InteractionManager,
-  ScrollView,
-  StyleSheet,
-  View,
-  ViewProps,
-} from 'react-native'
+import {InteractionManager, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useWalletNavigation} from '../../../../../kernel/navigation/navigation'
@@ -26,7 +20,7 @@ import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWall
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const {resetToWalletSetupInit, resetToWalletSelection} = useWalletNavigation()
   const {walletManager} = useWalletManager()
   const {meta} = useSelectedWallet()
@@ -50,22 +44,39 @@ export const RemoveWalletScreen = () => {
     (!meta.isHW && !hasMnemonicWrittenDown) || meta.name !== typedWalletName
 
   return (
-    <KeyboardAvoidingView style={styles.root}>
+    <KeyboardAvoidingView
+      style={{
+        backgroundColor: p.bg_color_max,
+        ...a.flex_1,
+        ...a.px_lg,
+        ...a.pt_lg,
+      }}
+    >
       <SafeAreaView
         edges={['left', 'right', 'bottom']}
-        style={styles.safeAreaView}
+        style={{
+          ...a.flex_1,
+        }}
       >
         <ScrollView bounces={false}>
           <Description>
             {!meta.isHW && (
-              <Text style={styles.description}>
+              <Text
+                style={{
+                  ...a.body_1_lg_regular,
+                }}
+              >
                 {strings.descriptionParagraph1}
               </Text>
             )}
 
             <Space.Height.xl />
 
-            <Text style={styles.description}>
+            <Text
+              style={{
+                ...a.body_1_lg_regular,
+              }}
+            >
               {strings.descriptionParagraph2}
             </Text>
           </Description>
@@ -73,16 +84,30 @@ export const RemoveWalletScreen = () => {
           <Space.Height.lg />
 
           <WalletInfo>
-            <Text style={styles.walletNameLabel}>{strings.walletName}</Text>
+            <Text
+              style={{
+                ...a.body_1_lg_medium,
+              }}
+            >
+              {strings.walletName}
+            </Text>
 
             <SpaceHeight size={10} />
 
-            <Text style={styles.walletName}>{meta.name}</Text>
+            <Text
+              style={{
+                ...a.body_1_lg_regular,
+              }}
+            >
+              {meta.name}
+            </Text>
 
             <Space.Height.xl />
 
             <WalletNameInput
-              placeholder={strings.walletName}
+              placeholder={{
+                ...a.body_1_lg_regular,
+              }}
               value={typedWalletName}
               onChangeText={setTypedWalletName}
               right={typedWalletName === meta.name ? <Checkmark /> : undefined}
@@ -109,7 +134,9 @@ export const RemoveWalletScreen = () => {
           <Button
             onPress={handleOnRemoveWallet}
             title={strings.remove}
-            style={styles.removeButton}
+            style={{
+              backgroundColor: p.sys_magenta_500,
+            }}
             disabled={disabled}
           />
         </Actions>
@@ -122,8 +149,15 @@ const Description = (props: ViewProps) => {
   return <View {...props} />
 }
 const WalletInfo = (props: ViewProps) => {
-  const styles = useStyles()
-  return <View {...props} style={styles.descriptionContainer} />
+  const {palette: p} = useTheme()
+  return (
+    <View
+      {...props}
+      style={{
+        backgroundColor: p.bg_color_max,
+      }}
+    />
+  )
 }
 const WalletNameInput = (props: TextInputProps) => {
   return (
@@ -136,8 +170,14 @@ const WalletNameInput = (props: TextInputProps) => {
   )
 }
 const Actions = (props: ViewProps) => {
-  const styles = useStyles()
-  return <View {...props} style={styles.actions} />
+  return (
+    <View
+      {...props}
+      style={{
+        ...a.py_lg,
+      }}
+    />
+  )
 }
 
 const messages = defineMessages({
@@ -187,39 +227,4 @@ const useStrings = () => {
     remove: intl.formatMessage(messages.remove),
     hasWrittenDownMnemonic: intl.formatMessage(messages.hasWrittenDownMnemonic),
   }
-}
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: p.bg_color_max,
-      ...a.flex_1,
-      ...a.px_lg,
-      ...a.pt_lg,
-    },
-    descriptionContainer: {
-      backgroundColor: p.bg_color_max,
-    },
-    description: {
-      ...a.body_1_lg_regular,
-    },
-
-    walletNameLabel: {
-      ...a.body_1_lg_medium,
-    },
-    walletName: {
-      ...a.body_1_lg_regular,
-    },
-    actions: {
-      ...a.py_lg,
-    },
-    safeAreaView: {
-      ...a.flex_1,
-    },
-    removeButton: {
-      backgroundColor: p.sys_magenta_500,
-    },
-  })
-  return styles
 }

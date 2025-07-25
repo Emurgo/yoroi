@@ -1,11 +1,7 @@
 import React from 'react'
 
 import {amountFormatter} from '@yoroi/portfolio'
-import {
-  mockSettingsCollateralItemAmount,
-  mockUseCollateralInfo,
-  mockUseSelectedWallet,
-} from './SettingsCollateralItemMock'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {
   NavigatedSettingsItem,
   NavigatedSettingsItemProps,
@@ -18,32 +14,23 @@ export const SettingsCollateralItem = ({
   icon,
   disabled,
 }: NavigatedSettingsItemProps) => {
-  const {isMockPortfolio, mockFormattedCollateral} =
-    mockSettingsCollateralItemAmount
-  const {wallet} = mockUseSelectedWallet()
-  const {amount} = mockUseCollateralInfo(wallet)
+  const {selected} = useWalletManager()
+  const {amount} = selected.wallet!.getCollateralInfo()
 
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
   const formattedCollateral = React.useMemo(() => {
     const amountCollateral = {
-      info: wallet.portfolioPrimaryTokenInfo,
+      info: selected.wallet!.portfolioPrimaryTokenInfo,
       quantity: BigInt(amount.quantity),
     }
 
-    return isMockPortfolio
-      ? mockFormattedCollateral
-      : !isPrivacyActive
-        ? amountFormatter({template: '{{value}} {{ticker}}'})(amountCollateral)
-        : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(
-            amountCollateral,
-          )
-  }, [
-    amount.quantity,
-    isPrivacyActive,
-    privacyPlaceholder,
-    wallet?.portfolioPrimaryTokenInfo,
-  ])
+    return !isPrivacyActive
+      ? amountFormatter({template: '{{value}} {{ticker}}'})(amountCollateral)
+      : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(
+          amountCollateral,
+        )
+  }, [amount.quantity, isPrivacyActive, privacyPlaceholder, selected.wallet])
 
   return (
     <NavigatedSettingsItem

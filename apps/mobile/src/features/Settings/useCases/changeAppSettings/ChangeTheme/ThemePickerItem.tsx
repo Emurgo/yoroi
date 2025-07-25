@@ -1,7 +1,7 @@
 import {atoms as a, ThemeName, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 
 import {themeNames} from '../../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
@@ -16,7 +16,8 @@ type Props = {
 }
 
 export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
-  const {colors} = useStyles()
+  const {palette: p} = useTheme()
+
   const strings = useStrings()
   const themeStorage = useThemeStorageMaker()
   const {track} = useMetrics()
@@ -45,7 +46,7 @@ export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
 
         <Selected>
           {themeStorage.read() === title && (
-            <Icon.Check size={24} color={colors.checkIcon} />
+            <Icon.Check size={24} color={p.primary_600} />
           )}
         </Selected>
       </Row>
@@ -54,49 +55,57 @@ export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
 }
 
 const Row = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.row}>{children}</View>
+  const {palette: p} = useTheme()
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        borderBottomColor: p.gray_200,
+        borderBottomWidth: 1,
+        ...a.py_lg,
+      }}
+    >
+      {children}
+    </View>
+  )
 }
 const Description = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.description}>{children}</View>
+  return (
+    <View
+      style={{
+        flex: 8,
+        flexDirection: 'column',
+      }}
+    >
+      {children}
+    </View>
+  )
 }
 const Selected = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.flag}>{children}</View>
+  return (
+    <View
+      style={{
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        flex: 2,
+      }}
+    >
+      {children}
+    </View>
+  )
 }
 const Title = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <Text style={styles.bodyMedium}>{children}</Text>
-}
-
-const useStyles = () => {
   const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    row: {
-      flexDirection: 'row',
-      borderBottomColor: p.gray_200,
-      borderBottomWidth: 1,
-      ...a.py_lg,
-    },
-    flag: {
-      alignItems: 'flex-end',
-      justifyContent: 'center',
-      flex: 2,
-    },
-    description: {
-      flex: 8,
-      flexDirection: 'column',
-    },
-    bodyMedium: {
-      color: p.gray_900,
-      ...a.body_1_lg_medium,
-    },
-  })
-  const colors = {
-    checkIcon: p.primary_600,
-  }
-  return {styles, colors}
+  return (
+    <Text
+      style={{
+        color: p.gray_900,
+        ...a.body_1_lg_medium,
+      }}
+    >
+      {children}
+    </Text>
+  )
 }
 
 const useStrings = () => {

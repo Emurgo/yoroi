@@ -3,7 +3,7 @@ import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {freeze} from 'immer'
 import React from 'react'
-import {FlatList, StyleSheet} from 'react-native'
+import {FlatList} from 'react-native'
 
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {availableNetworks} from '../../../../WalletManager/common/constants'
@@ -15,7 +15,6 @@ import {NetworkPickerItem} from './NetworkPickerItem'
 
 export const NetworkPickerList = () => {
   const {walletManager} = useWalletManager()
-  const {styles} = useStyles()
   const navigateTo = useNavigateTo()
   const {network: selectedNetwork} = useSelectedNetwork()
   const {setShouldOpen: setShouldAutomaticWalletOpen} =
@@ -39,7 +38,7 @@ export const NetworkPickerList = () => {
 
   return (
     <FlatList
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={{...a.p_lg}}
       data={networks}
       keyExtractor={(item) => item.network}
       renderItem={({item}) => (
@@ -59,13 +58,3 @@ const networks = freeze(
     availableNetworks.includes(network),
   ),
 )
-
-const useStyles = () => {
-  const styles = StyleSheet.create({
-    contentContainer: {
-      ...a.p_lg,
-    },
-  })
-
-  return {styles}
-}

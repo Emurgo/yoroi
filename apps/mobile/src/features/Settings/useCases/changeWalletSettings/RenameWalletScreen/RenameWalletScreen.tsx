@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import globalMessages from '../../../../../kernel/i18n/global-messages'
@@ -17,8 +17,8 @@ import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWall
 
 export const RenameWalletScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
   const navigation = useNavigation()
+  const {palette: p} = useTheme()
 
   const {
     wallet,
@@ -46,13 +46,24 @@ export const RenameWalletScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.root}>
+    <KeyboardAvoidingView
+      style={{
+        backgroundColor: p.bg_color_max,
+        ...a.flex_1,
+      }}
+    >
       <SafeAreaView
-        style={styles.safeAreaView}
+        style={{
+          ...a.flex_1,
+          ...a.pt_lg,
+          ...a.pb_lg,
+        }}
         edges={['left', 'right', 'bottom']}
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContentContainer}
+          contentContainerStyle={{
+            ...a.px_lg,
+          }}
           bounces={false}
         >
           <WalletNameInput
@@ -70,7 +81,13 @@ export const RenameWalletScreen = () => {
 
         <SpaceHeight fill size={'lg'} />
 
-        <View style={styles.actions}>
+        <View
+          style={{
+            backgroundColor: p.bg_color_max,
+            ...a.pt_lg,
+            ...a.px_lg,
+          }}
+        >
           <Button
             onPress={handleOnRename}
             title={strings.changeButton}
@@ -80,30 +97,6 @@ export const RenameWalletScreen = () => {
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
-}
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: p.bg_color_max,
-      ...a.flex_1,
-    },
-    safeAreaView: {
-      ...a.flex_1,
-      ...a.pt_lg,
-      ...a.pb_lg,
-    },
-    scrollContentContainer: {
-      ...a.px_lg,
-    },
-    actions: {
-      backgroundColor: p.bg_color_max,
-      ...a.pt_lg,
-      ...a.px_lg,
-    },
-  })
-  return styles
 }
 
 const WalletNameInput = TextInput

@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Pressable, StyleSheet, Text, View} from 'react-native'
+import {Pressable, Text, View} from 'react-native'
 
 import {commit} from '../../../../../kernel/constants'
 import {SettingsRouteNavigation} from '../../../../../kernel/navigation/navigation'
@@ -11,37 +11,93 @@ import {mockAppInfo, mockFirebaseToken} from './AboutMock'
 
 export const About = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const navigation = useNavigation<SettingsRouteNavigation>()
   const {data: FCMToken} = mockFirebaseToken
   const appInfo = mockAppInfo.data
 
   return (
-    <View style={styles.about}>
-      <View style={styles.row}>
-        <Text style={styles.labelText}>{strings.currentVersion}</Text>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: p.bg_color_max,
+        ...a.p_lg,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          ...a.py_lg,
+        }}
+      >
+        <Text
+          style={{
+            color: p.gray_900,
+            ...a.body_1_lg_medium,
+          }}
+        >
+          {strings.currentVersion}
+        </Text>
 
         <Pressable
           onLongPress={() => navigation.navigate('settings-system-log')}
         >
-          <Text style={styles.valueText}>{appInfo.version}</Text>
+          <Text
+            style={{
+              color: p.gray_500,
+              ...a.body_1_lg_regular,
+            }}
+          >
+            {appInfo.version}
+          </Text>
         </Pressable>
       </View>
 
-      <View style={styles.row}>
-        <Text style={styles.labelText}>{strings.commit}</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          ...a.py_lg,
+        }}
+      >
+        <Text
+          style={{
+            color: p.gray_900,
+            ...a.body_1_lg_medium,
+          }}
+        >
+          {strings.commit}
+        </Text>
 
-        <Text style={styles.valueText}>{commit}</Text>
+        <Text
+          style={{
+            color: p.gray_500,
+            ...a.body_1_lg_regular,
+          }}
+        >
+          {commit}
+        </Text>
       </View>
 
       {FCMToken !== undefined && (
         <>
-          <Text style={styles.labelText}>{strings.fcmToken}</Text>
+          <Text
+            style={{
+              color: p.gray_900,
+              ...a.body_1_lg_medium,
+            }}
+          >
+            {strings.fcmToken}
+          </Text>
 
           <Copiable text={FCMToken}>
             <View style={{flex: 1}}>
               <Text
-                style={styles.valueText}
+                style={{
+                  color: p.gray_500,
+                  ...a.body_1_lg_regular,
+                }}
                 numberOfLines={1}
                 ellipsizeMode="middle"
               >
@@ -53,32 +109,6 @@ export const About = () => {
       )}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    about: {
-      flex: 1,
-      backgroundColor: p.bg_color_max,
-      ...a.p_lg,
-    },
-    row: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      ...a.py_lg,
-    },
-    labelText: {
-      color: p.gray_900,
-      ...a.body_1_lg_medium,
-    },
-    valueText: {
-      color: p.gray_500,
-      ...a.body_1_lg_regular,
-    },
-  })
-
-  return styles
 }
 
 const useStrings = () => {

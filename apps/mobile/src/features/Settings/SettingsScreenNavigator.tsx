@@ -16,6 +16,7 @@ import {
 } from '../../kernel/navigation/navigation'
 import {Boundary} from '../../ui/Boundary/Boundary'
 import {Icon} from '../../ui/Icon'
+import {WalletManagerProviderMock} from '../../wallets/mocks/WalletManagerProviderMock'
 import {ChangePinScreen} from '../Auth/screens/ChangePinScreen'
 import {EnableLoginWithPinScreen} from '../Auth/screens/EnableLoginWithPinScreen'
 import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
@@ -59,169 +60,171 @@ export const SettingsScreenNavigator = () => {
   )
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultStackNavigationOptions(a, palette),
-      }}
-    >
-      <Stack.Screen //
-        name="app-settings"
-        component={WalletSettingsScreen}
-        options={{
-          title: strings.appSettingsTitle,
+    <WalletManagerProviderMock>
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions(a, palette),
         }}
-      />
+      >
+        <Stack.Screen //
+          name="app-settings"
+          component={WalletSettingsScreen}
+          options={{
+            title: strings.appSettingsTitle,
+          }}
+        />
 
-      <Stack.Screen
-        name="about"
-        component={About}
-        options={{title: strings.aboutTitle}}
-      />
+        <Stack.Screen
+          name="about"
+          component={About}
+          options={{title: strings.aboutTitle}}
+        />
 
-      <Stack.Screen
-        name="settings-system-log"
-        component={SystemLogScreen}
-        options={{title: strings.systemLogTitle}}
-      />
+        <Stack.Screen
+          name="settings-system-log"
+          component={SystemLogScreen}
+          options={{title: strings.systemLogTitle}}
+        />
 
-      <Stack.Screen //
-        name="main-settings"
-        component={SettingsTabNavigator}
-        options={{
-          title: strings.settingsTitle,
-          headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-        }}
-      />
+        <Stack.Screen //
+          name="main-settings"
+          component={SettingsTabNavigator}
+          options={{
+            title: strings.settingsTitle,
+            headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+          }}
+        />
 
-      <Stack.Screen
-        name="change-wallet-name"
-        component={RenameWalletScreen}
-        options={{title: strings.changeWalletNameTitle}}
-      />
+        <Stack.Screen
+          name="change-wallet-name"
+          component={RenameWalletScreen}
+          options={{title: strings.changeWalletNameTitle}}
+        />
 
-      <Stack.Screen
-        name="terms-of-use"
-        component={TermsOfServiceScreen}
-        options={{title: strings.termsOfServiceTitle}}
-      />
+        <Stack.Screen
+          name="terms-of-use"
+          component={TermsOfServiceScreen}
+          options={{title: strings.termsOfServiceTitle}}
+        />
 
-      <Stack.Screen
-        name="privacy-policy"
-        component={PrivacyPolicyScreen}
-        options={{title: strings.privacyPolicyTitle}}
-      />
+        <Stack.Screen
+          name="privacy-policy"
+          component={PrivacyPolicyScreen}
+          options={{title: strings.privacyPolicyTitle}}
+        />
 
-      <Stack.Screen //
-        name="enable-login-with-os"
-        component={EnableLoginWithOsScreenWrapper}
-        options={{headerShown: false}}
-      />
+        <Stack.Screen //
+          name="enable-login-with-os"
+          component={EnableLoginWithOsScreenWrapper}
+          options={{headerShown: false}}
+        />
 
-      <Stack.Screen //
-        name="remove-wallet"
-        component={RemoveWalletScreen}
-        options={{title: strings.removeWalletTitle}}
-      />
+        <Stack.Screen //
+          name="remove-wallet"
+          component={RemoveWalletScreen}
+          options={{title: strings.removeWalletTitle}}
+        />
 
-      <Stack.Screen //
-        name="change-language"
-        component={ChangeLanguageScreen}
-        options={{title: strings.languageTitle}}
-      />
+        <Stack.Screen //
+          name="change-language"
+          component={ChangeLanguageScreen}
+          options={{title: strings.languageTitle}}
+        />
 
-      <Stack.Screen //
-        name="change-currency"
-        component={ChangeCurrencyScreen}
-        options={{
-          title: strings.currency,
-        }}
-      />
+        <Stack.Screen //
+          name="change-currency"
+          component={ChangeCurrencyScreen}
+          options={{
+            title: strings.currency,
+          }}
+        />
 
-      <Stack.Screen //
-        name="change-theme"
-        component={ChangeThemeScreen}
-        options={{
-          title: strings.themeTitle,
-        }}
-      />
+        <Stack.Screen //
+          name="change-theme"
+          component={ChangeThemeScreen}
+          options={{
+            title: strings.themeTitle,
+          }}
+        />
 
-      <Stack.Screen //
-        name="change-network"
-        component={ChangeNetworkScreen}
-        options={{
-          title: strings.networkTitle,
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={handleOpenModal}
-              activeOpacity={0.5}
-              style={{...a.px_lg}}
-            >
-              <Icon.Info size={24} color={palette.gray_900} />
-            </TouchableOpacity>
-          ),
-        }}
-      />
+        <Stack.Screen //
+          name="change-network"
+          component={ChangeNetworkScreen}
+          options={{
+            title: strings.networkTitle,
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={handleOpenModal}
+                activeOpacity={0.5}
+                style={{...a.px_lg}}
+              >
+                <Icon.Info size={24} color={palette.gray_900} />
+              </TouchableOpacity>
+            ),
+          }}
+        />
 
-      <Stack.Screen //
-        name="preparing-network"
-        component={PreparingNetworkScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
+        <Stack.Screen //
+          name="preparing-network"
+          component={PreparingNetworkScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
 
-      <Stack.Screen //
-        name="enable-easy-confirmation"
-        component={EnableEasyConfirmationScreen}
-        options={{title: strings.enableEasyConfirmationTitle}}
-      />
+        <Stack.Screen //
+          name="enable-easy-confirmation"
+          component={EnableEasyConfirmationScreen}
+          options={{title: strings.enableEasyConfirmationTitle}}
+        />
 
-      <Stack.Screen //
-        name="disable-easy-confirmation"
-        component={DisableEasyConfirmationScreen}
-        options={{title: strings.disableEasyConfirmationTitle}}
-      />
+        <Stack.Screen //
+          name="disable-easy-confirmation"
+          component={DisableEasyConfirmationScreen}
+          options={{title: strings.disableEasyConfirmationTitle}}
+        />
 
-      <Stack.Screen //
-        name="change-password"
-        component={ChangePasswordScreen}
-        options={{title: strings.changePasswordTitle}}
-      />
+        <Stack.Screen //
+          name="change-password"
+          component={ChangePasswordScreen}
+          options={{title: strings.changePasswordTitle}}
+        />
 
-      <Stack.Screen //
-        name="change-custom-pin"
-        options={{
-          title: strings.changeCustomPinTitle,
-        }}
-        component={ChangePinScreenWrapper}
-      />
+        <Stack.Screen //
+          name="change-custom-pin"
+          options={{
+            title: strings.changeCustomPinTitle,
+          }}
+          component={ChangePinScreenWrapper}
+        />
 
-      <Stack.Screen //
-        name="manage-collateral"
-        options={{
-          title: strings.collateral,
-        }}
-        component={ManageCollateralScreen}
-      />
+        <Stack.Screen //
+          name="manage-collateral"
+          options={{
+            title: strings.collateral,
+          }}
+          component={ManageCollateralScreen}
+        />
 
-      <Stack.Screen //
-        name="manage-notifications"
-        options={{headerShown: false}}
-        component={ManageNotificationsNavigator}
-      />
+        <Stack.Screen //
+          name="manage-notifications"
+          options={{headerShown: false}}
+          component={ManageNotificationsNavigator}
+        />
 
-      <Stack.Screen
-        name="enable-login-with-pin"
-        options={{title: strings.customPinTitle}}
-        component={EnableLoginWithPinWrapper}
-      />
+        <Stack.Screen
+          name="enable-login-with-pin"
+          options={{title: strings.customPinTitle}}
+          component={EnableLoginWithPinWrapper}
+        />
 
-      <Stack.Screen //
-        name="settings-preparing-wallet"
-        component={PreparingWalletScreen}
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
+        <Stack.Screen //
+          name="settings-preparing-wallet"
+          component={PreparingWalletScreen}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </WalletManagerProviderMock>
   )
 }
 
