@@ -3,7 +3,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Copiable} from '~/ui/Clipboard/Copiable'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Space} from '~/ui/Space/Space'
 import {Accordion} from '~/ui/Accordion/Accordion'

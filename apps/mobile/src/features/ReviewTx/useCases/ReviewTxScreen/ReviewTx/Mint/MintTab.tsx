@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Copiable} from '~/ui/Clipboard/Copiable'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'
 import {useStrings} from '~/features/common/hooks/useStrings'
 import {TokenItem} from '~/features/common/TokenItem'

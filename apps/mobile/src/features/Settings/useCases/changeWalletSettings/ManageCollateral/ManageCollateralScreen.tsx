@@ -23,7 +23,7 @@ import {
   useWalletNavigation,
 } from '~/kernel/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {Copiable} from '~/ui/Clipboard/Copiable'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 import {Icon} from '~/ui/Icon'
 import {Info} from '~/ui/Icon/Info'

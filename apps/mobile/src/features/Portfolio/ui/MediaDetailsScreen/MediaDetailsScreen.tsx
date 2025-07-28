@@ -26,7 +26,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {NftRoutes} from '~/kernel/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
-import {Copiable} from '~/ui/Clipboard/Copiable'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {FadeIn} from '~/ui/FadeIn/FadeIn'
 import {Hr} from '~/ui/Hr/Hr'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'

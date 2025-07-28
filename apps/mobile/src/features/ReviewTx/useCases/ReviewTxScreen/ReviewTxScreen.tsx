@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import {Copiable} from '~/ui/Clipboard/Copiable'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {isDev} from '~/kernel/env'
 import {ReviewTxRoutes, useUnsafeParams} from '~/kernel/navigation'
 import {useFormattedMetadata} from '~/features/common/hooks/useFormattedMetadata'

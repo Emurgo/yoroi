@@ -32,7 +32,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Button} from '~/ui/Button/Button'
-import {Copiable} from '~/ui/Clipboard/Copiable'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Icon} from '~/ui/Icon'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
