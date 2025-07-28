@@ -11,21 +11,17 @@ export const InitialCollateralInfoModal = () => {
   const strings = useStrings()
 
   return (
-    <View
-      style={{
-        ...a.flex_1,
-        ...a.px_lg,
-        ...a.align_center,
-      }}
-    >
+    <View style={[a.flex_1, a.px_lg, a.align_center]}>
       <InfoModalIllustration />
 
       <Text
-        style={{
-          ...a.text_center,
-          ...a.body_1_lg_regular,
-          color: p.text_gray_medium,
-        }}
+        style={[
+          a.text_center,
+          a.body_1_lg_regular,
+          {
+            color: p.text_gray_medium,
+          },
+        ]}
       >
         {strings.collateralInfoModalText}
 
@@ -52,10 +48,12 @@ const Link = () => {
 
   return (
     <Text
-      style={{
-        ...a.link_1_lg_underline,
-        color: p.text_primary_medium,
-      }}
+      style={[
+        a.link_1_lg_underline,
+        {
+          color: p.text_primary_medium,
+        },
+      ]}
       onPress={handleOnPress}
     >
       {strings.learnMore}.

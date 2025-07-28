@@ -58,7 +58,7 @@ export const SettingsItem = ({
 
   return (
     <View>
-      <View style={{...a.py_lg}}>
+      <View style={a.py_lg}>
         <View
           style={{
             ...a.flex_row,

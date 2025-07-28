@@ -28,38 +28,29 @@ export const EnableEasyConfirmationScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{
-        ...a.flex_1,
-      }}
-    >
+    <KeyboardAvoidingView style={a.flex_1}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={{
-          backgroundColor: p.bg_color_max,
-          ...a.flex_1,
-        }}
+        style={[
+          {
+            backgroundColor: p.bg_color_max,
+          },
+          a.flex_1,
+        ]}
       >
         <ScrollView
           keyboardShouldPersistTaps="always"
-          contentContainerStyle={{
-            ...a.p_lg,
-            ...a.gap_lg,
-          }}
+          contentContainerStyle={[a.p_lg, a.gap_lg]}
         >
-          <Text
-            style={{
-              ...a.body_1_lg_regular,
-            }}
-          >
-            {strings.enableHeading}
-          </Text>
+          <Text style={a.body_1_lg_regular}>{strings.enableHeading}</Text>
 
           <Text
-            style={{
-              color: p.sys_magenta_500,
-              ...a.body_2_md_regular,
-            }}
+            style={[
+              {
+                color: p.sys_magenta_500,
+              },
+              a.body_2_md_regular,
+            ]}
           >
             {strings.enableWarning}
           </Text>
@@ -93,15 +84,7 @@ export const EnableEasyConfirmationScreen = () => {
 const PasswordInput = TextInput
 
 const Actions = ({children}: ViewProps) => {
-  return (
-    <View
-      style={{
-        ...a.p_lg,
-      }}
-    >
-      {children}
-    </View>
-  )
+  return <View style={a.p_lg}>{children}</View>
 }
 
 const useStrings = () => {

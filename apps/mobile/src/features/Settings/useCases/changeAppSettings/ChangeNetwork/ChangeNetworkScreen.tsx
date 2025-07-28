@@ -70,38 +70,18 @@ export const useHandleOpenNetworkNoticeModal = () => {
     openModal({
       title: strings.networkNoticeTitle,
       content: (
-        <View
-          style={{
-            ...a.flex_1,
-            ...a.px_lg,
-          }}
-        >
-          <Text
-            style={{
-              ...a.body_1_lg_regular,
-              color: p.gray_900,
-            }}
-          >
+        <View style={[a.flex_1, a.px_lg]}>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
             {strings.networkNoticeMessage}
           </Text>
 
           <Space.Height.lg />
 
-          <Text
-            style={{
-              ...a.body_1_lg_medium,
-              color: p.gray_900,
-            }}
-          >
+          <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
             {strings.networkNoticeListTitle}
           </Text>
 
-          <Text
-            style={{
-              ...a.body_1_lg_regular,
-              color: p.gray_900,
-            }}
-          >
+          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
             {strings.networkNoticeList}
           </Text>
 

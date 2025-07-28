@@ -56,24 +56,18 @@ export const ChangePasswordScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={{
-        backgroundColor: p.bg_color_max,
-        ...a.flex_1,
-      }}
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+        },
+        a.flex_1,
+      ]}
     >
-      <SafeAreaView
-        edges={['left', 'right', 'bottom']}
-        style={{
-          ...a.flex_1,
-        }}
-      >
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={a.flex_1}>
         <ScrollView
           bounces={false}
           keyboardDismissMode="on-drag"
-          contentContainerStyle={{
-            ...a.p_lg,
-            ...a.gap_lg,
-          }}
+          contentContainerStyle={[a.p_lg, a.gap_lg]}
         >
           <CurrentPasswordInput
             ref={currentPasswordRef}
@@ -154,10 +148,12 @@ const Actions = (props: ViewProps) => {
   return (
     <View
       {...props}
-      style={{
-        backgroundColor: p.bg_color_max,
-        ...a.p_lg,
-      }}
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+        },
+        a.p_lg,
+      ]}
     />
   )
 }

@@ -13,16 +13,9 @@ export const TermsOfServiceScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={{
-        backgroundColor: p.bg_color_max,
-        ...a.flex_1,
-      }}
+      style={[{backgroundColor: p.bg_color_max}, a.flex_1]}
     >
-      <ScrollView
-        contentContainerStyle={{
-          ...a.p_lg,
-        }}
-      >
+      <ScrollView contentContainerStyle={[a.p_lg]}>
         <TermsOfService languageCode={languageCode} />
       </ScrollView>
     </SafeAreaView>

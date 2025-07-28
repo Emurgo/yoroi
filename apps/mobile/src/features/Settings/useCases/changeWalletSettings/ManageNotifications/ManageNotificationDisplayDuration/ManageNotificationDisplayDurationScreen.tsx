@@ -9,11 +9,11 @@ import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useFormatNumber} from '../../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
 import {Button} from '../../../../../../ui/Button/Button'
 import {KeyboardAvoidingView} from '../../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {TextInput} from '../../../../../../ui/TextInput/TextInput'
-import {mockUseFormatNumber} from './ManageNotificationDisplayDurationScreenMock'
 import {useStrings} from './strings'
 
 type ManualChoice = {
@@ -41,7 +41,7 @@ const CHOICES: Readonly<Choice[]> = [
 
 export const ManageNotificationDisplayDurationScreen = () => {
   const {track} = useMetrics()
-  const formatNumber = mockUseFormatNumber
+  const formatNumber = useFormatNumber()
   const config = useConfig()
   const {mutate: updateConfig} = useUpdateNotificationsConfig()
   const navigation = useNavigation()
@@ -84,51 +84,38 @@ export const ManageNotificationDisplayDurationScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={{
-        ...a.flex_1,
-
-        backgroundColor: p.bg_color_max,
-      }}
+      style={[
+        a.flex_1,
+        {
+          backgroundColor: p.bg_color_max,
+        },
+      ]}
     >
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={{
-          ...a.flex_1,
-          ...a.p_lg,
-        }}
+        style={[a.flex_1, a.p_lg]}
       >
-        <ScrollView
-          bounces={false}
-          style={{
-            ...a.flex_1,
-          }}
-        >
+        <ScrollView bounces={false} style={a.flex_1}>
           <Text
-            style={{
-              ...a.py_lg,
-              ...a.body_1_lg_regular,
-              color: p.gray_900,
-            }}
+            style={[
+              a.py_lg,
+              a.body_1_lg_regular,
+              {
+                color: p.gray_900,
+              },
+            ]}
           >
             {strings.description}
           </Text>
 
-          <View
-            style={{
-              ...a.flex_row,
-              ...a.pb_xl,
-              ...a.flex_wrap,
-            }}
-          >
+          <View style={[a.flex_row, a.pb_xl, a.flex_wrap]}>
             {CHOICES.map((choice, index) => {
               const isSelected = selectedChoiceId === choice.id
               return (
                 <TouchableOpacity
                   key={index}
                   style={[
-                    {
-                      ...a.p_sm,
-                    },
+                    a.p_sm,
                     isSelected && {
                       backgroundColor: p.el_gray_min,
                       ...a.rounded_sm,
@@ -138,8 +125,8 @@ export const ManageNotificationDisplayDurationScreen = () => {
                 >
                   <Text
                     style={[
+                      a.body_1_lg_medium,
                       {
-                        ...a.body_1_lg_medium,
                         color: p.text_gray_max,
                       },
                       isSelected && {
@@ -154,11 +141,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
             })}
           </View>
 
-          <View
-            style={{
-              ...a.relative,
-            }}
-          >
+          <View style={a.relative}>
             <Text
               style={{
                 color: p.text_gray_max,
@@ -188,8 +171,8 @@ export const ManageNotificationDisplayDurationScreen = () => {
               style={[
                 {
                   color: p.text_gray_medium,
-                  ...a.body_1_lg_regular,
                 },
+                a.body_1_lg_regular,
                 !isSelectedChoiceManual && {backgroundColor: p.gray_100},
               ]}
               keyboardType="numeric"

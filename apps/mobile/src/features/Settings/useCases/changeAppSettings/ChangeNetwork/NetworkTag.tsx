@@ -92,10 +92,10 @@ export const NetworkTag = ({
       style={[
         {
           width,
-          ...a.flex_row,
-          ...a.align_center,
-          ...a.justify_center,
         },
+        a.flex_row,
+        a.align_center,
+        a.justify_center,
         style,
       ]}
     >
@@ -107,9 +107,9 @@ export const NetworkTag = ({
         style={[
           {
             color: p.text_gray_medium,
-            ...a.body_1_lg_medium,
-            ...a.flex_shrink,
           },
+          a.body_1_lg_medium,
+          a.flex_shrink,
           textStyle,
         ]}
       >
@@ -117,12 +117,7 @@ export const NetworkTag = ({
       </Text>
 
       {Tag && (
-        <View
-          style={{
-            ...a.pl_sm,
-            flexShrink: 0,
-          }}
-        >
+        <View style={[a.pl_sm, {flexShrink: 0}]}>
           <Tag
             onPress={onPress}
             disabled={
@@ -153,12 +148,12 @@ const PreprodTag = ({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.5}
-      style={{
-        backgroundColor: p.sys_yellow_500,
-        ...a.rounded_full,
-        ...a.px_sm,
-        ...a.py_xs,
-      }}
+      style={[
+        {backgroundColor: p.sys_yellow_500},
+        a.rounded_full,
+        a.px_sm,
+        a.py_xs,
+      ]}
       disabled={disabled}
     >
       <Text>{name}</Text>
@@ -178,30 +173,21 @@ const MainnetWarningDialog = ({
   const strings = useStrings()
 
   return (
-    <View
-      style={{
-        ...a.px_lg,
-        ...a.flex_1,
-      }}
-    >
+    <View style={[a.px_lg, a.flex_1]}>
       <Text
-        style={{
-          ...a.body_1_lg_regular,
-          color: p.text_gray_medium,
-        }}
+        style={[
+          a.body_1_lg_regular,
+          {
+            color: p.text_gray_medium,
+          },
+        ]}
       >
         {strings.networkTagModalText}
       </Text>
 
       <SpaceHeight fill size={'lg'} />
 
-      <View
-        style={{
-          ...a.pb_lg,
-          ...a.flex_row,
-          ...a.justify_between,
-        }}
-      >
+      <View style={[a.pb_lg, a.flex_row, a.justify_between]}>
         <Button
           size="S"
           type={ButtonType.Secondary}

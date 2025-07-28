@@ -9,10 +9,7 @@ export const ChangeLanguageScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={{
-        ...a.flex_1,
-        backgroundColor: p.bg_color_max,
-      }}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
     >
       <LanguagePicker />
     </SafeAreaView>

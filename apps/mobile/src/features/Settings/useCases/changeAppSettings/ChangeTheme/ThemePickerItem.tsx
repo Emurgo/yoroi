@@ -58,12 +58,7 @@ const Row = ({children}: {children: React.ReactNode}) => {
   const {palette: p} = useTheme()
   return (
     <View
-      style={{
-        ...a.flex_row,
-        borderBottomColor: p.gray_200,
-        ...a.border_b,
-        ...a.py_lg,
-      }}
+      style={[a.flex_row, {borderBottomColor: p.gray_200}, a.border_b, a.py_lg]}
     >
       {children}
     </View>
@@ -72,10 +67,12 @@ const Row = ({children}: {children: React.ReactNode}) => {
 const Description = ({children}: {children: React.ReactNode}) => {
   return (
     <View
-      style={{
-        flex: 8,
-        ...a.flex_col,
-      }}
+      style={[
+        {
+          flex: 8,
+        },
+        a.flex_col,
+      ]}
     >
       {children}
     </View>
@@ -84,11 +81,13 @@ const Description = ({children}: {children: React.ReactNode}) => {
 const Selected = ({children}: {children: React.ReactNode}) => {
   return (
     <View
-      style={{
-        ...a.align_end,
-        ...a.justify_center,
-        flex: 2,
-      }}
+      style={[
+        a.align_end,
+        a.justify_center,
+        {
+          flex: 2,
+        },
+      ]}
     >
       {children}
     </View>
@@ -98,10 +97,12 @@ const Title = ({children}: {children: React.ReactNode}) => {
   const {palette: p} = useTheme()
   return (
     <Text
-      style={{
-        color: p.gray_900,
-        ...a.body_1_lg_medium,
-      }}
+      style={[
+        {
+          color: p.gray_900,
+        },
+        a.body_1_lg_medium,
+      ]}
     >
       {children}
     </Text>

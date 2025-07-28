@@ -38,19 +38,14 @@ export const ManageNotificationSettings = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={{
-        ...a.flex_1,
-        backgroundColor: p.bg_color_max,
-      }}
+      style={[
+        a.flex_1,
+        {
+          backgroundColor: p.bg_color_max,
+        },
+      ]}
     >
-      <ScrollView
-        bounces={false}
-        style={{
-          ...a.flex_1,
-          ...a.py_lg,
-          ...a.px_lg,
-        }}
-      >
+      <ScrollView bounces={false} style={[a.flex_1, a.py_lg, a.px_lg]}>
         <SettingsSection title={strings.pushNotifications}>
           <PushNotificationSettingsItem />
         </SettingsSection>
@@ -144,20 +139,12 @@ const PushNotificationSettingsItem = () => {
 
   return (
     <View>
-      <Text
-        style={{
-          ...a.body_1_lg_medium,
-          ...a.py_sm,
-        }}
-      >
+      <Text style={[a.body_1_lg_medium, a.py_sm]}>
         {strings.enableNotificationsThroughSettings}
       </Text>
 
       <Button
-        style={{
-          ...a.justify_start,
-          ...a.p_0,
-        }}
+        style={[a.justify_start, a.p_0]}
         title={strings.goToSettings}
         onPress={navigateToAppSettings}
         type={ButtonType.Text}

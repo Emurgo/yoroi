@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useQuery} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -7,14 +8,16 @@ import {Pressable, Text, View} from 'react-native'
 import {commit} from '../../../../../kernel/constants'
 import {SettingsRouteNavigation} from '../../../../../kernel/navigation/navigation'
 import {Copiable} from '../../../../../ui/Copiable/Copiable'
-import {mockAppInfo, mockFirebaseToken} from './AboutMock'
 
 export const About = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
   const navigation = useNavigation<SettingsRouteNavigation>()
-  const {data: FCMToken} = mockFirebaseToken
-  const appInfo = mockAppInfo.data
+  const {data: FCMToken} = useQuery({
+    useErrorBoundary: false,
+    suspense: false,
+    queryFn: () => messaging().getToken(),
+  })
 
   return (
     <View

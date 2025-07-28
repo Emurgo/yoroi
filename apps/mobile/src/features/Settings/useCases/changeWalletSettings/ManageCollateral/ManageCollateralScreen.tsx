@@ -165,18 +165,22 @@ export const ManageCollateralScreen = () => {
   return (
     <SafeAreaView
       edges={['top', 'left', 'right', 'bottom']}
-      style={{
-        backgroundColor: p.bg_color_max,
-        ...a.flex_1,
-        ...a.px_lg,
-      }}
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+        },
+        a.flex_1,
+        a.px_lg,
+      ]}
     >
       <ScrollView>
         <Text
-          style={{
-            ...a.flex_1,
-            alignSelf: 'center',
-          }}
+          style={[
+            a.flex_1,
+            {
+              alignSelf: 'center',
+            },
+          ]}
         >
           {strings.lockedAsCollateral}
         </Text>
@@ -283,11 +287,7 @@ const ActionableAmount = ({
 
   return (
     <View
-      style={{
-        ...a.flex_row,
-        ...a.justify_between,
-        ...a.align_center,
-      }}
+      style={[a.flex_row, a.justify_between, a.align_center]}
       testID="amountItem"
     >
       {/*<Left>*/}
@@ -307,10 +307,10 @@ const Left = ({style, ...props}: ViewProps) => (
   <View style={[style, {flex: 1}]} {...props} />
 )
 const Right = ({style, ...props}: ViewProps) => (
-  <View style={[style, {...a.pl_lg}]} {...props} />
+  <View style={[style, a.pl_lg]} {...props} />
 )
 const Row = ({style, ...props}: ViewProps) => (
-  <View style={[style, {...a.flex_row, ...a.align_center}]} {...props} />
+  <View style={[style, a.flex_row, a.align_center]} {...props} />
 )
 
 const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
@@ -342,17 +342,14 @@ const Operation = () => {
   }
 
   return (
-    <View
-      style={{
-        ...a.flex_row,
-        ...a.align_center,
-      }}
-    >
+    <View style={[a.flex_row, a.align_center]}>
       <Text
-        style={{
-          ...a.body_2_md_regular,
-          color: p.text_gray_medium,
-        }}
+        style={[
+          a.body_2_md_regular,
+          {
+            color: p.text_gray_medium,
+          },
+        ]}
       >
         {strings.collateralInfoModalLabel}
       </Text>

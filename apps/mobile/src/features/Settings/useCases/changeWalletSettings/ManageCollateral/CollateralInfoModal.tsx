@@ -10,21 +10,15 @@ export const CollateralInfoModal = () => {
   const strings = useStrings()
 
   return (
-    <View
-      style={{
-        ...a.flex_1,
-        ...a.px_lg,
-        ...a.align_center,
-      }}
-    >
+    <View style={(a.flex_1, a.px_lg, a.align_center)}>
       <InfoModalIllustration />
 
       <Text
-        style={{
-          ...a.text_center,
-          ...a.body_1_lg_regular,
-          color: p.text_gray_medium,
-        }}
+        style={[
+          a.text_center,
+          a.body_1_lg_regular,
+          {color: p.text_gray_medium},
+        ]}
       >
         {strings.collateralInfoModalText}
       </Text>

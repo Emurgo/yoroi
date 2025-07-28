@@ -25,13 +25,13 @@ export const DisableEasyConfirmationScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom']}
-      style={{...a.flex_1, backgroundColor: p.bg_color_max}}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
     >
       <View
         style={[
+          a.flex_1,
+          a.justify_center,
           {
-            ...a.flex_1,
-            ...a.justify_center,
             padding: 20,
           },
         ]}
@@ -45,12 +45,7 @@ export const DisableEasyConfirmationScreen = () => {
         </Text>
       </View>
 
-      <View
-        style={{
-          ...a.pb_lg,
-          ...a.px_lg,
-        }}
-      >
+      <View style={[a.pb_lg, a.px_lg]}>
         <Button
           title={strings.disableButton}
           onPress={handleOnDisableConfirmation}

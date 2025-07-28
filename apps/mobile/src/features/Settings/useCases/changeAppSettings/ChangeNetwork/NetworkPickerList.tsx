@@ -38,7 +38,7 @@ export const NetworkPickerList = () => {
 
   return (
     <FlatList
-      contentContainerStyle={{...a.p_lg}}
+      contentContainerStyle={a.p_lg}
       data={networks}
       keyExtractor={(item) => item.network}
       renderItem={({item}) => (

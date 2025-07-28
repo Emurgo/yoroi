@@ -45,38 +45,27 @@ export const RemoveWalletScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={{
-        backgroundColor: p.bg_color_max,
-        ...a.flex_1,
-        ...a.px_lg,
-        ...a.pt_lg,
-      }}
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+        },
+        a.flex_1,
+        a.px_lg,
+        a.pt_lg,
+      ]}
     >
-      <SafeAreaView
-        edges={['left', 'right', 'bottom']}
-        style={{
-          ...a.flex_1,
-        }}
-      >
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={a.flex_1}>
         <ScrollView bounces={false}>
           <Description>
             {!meta.isHW && (
-              <Text
-                style={{
-                  ...a.body_1_lg_regular,
-                }}
-              >
+              <Text style={a.body_1_lg_regular}>
                 {strings.descriptionParagraph1}
               </Text>
             )}
 
             <Space.Height.xl />
 
-            <Text
-              style={{
-                ...a.body_1_lg_regular,
-              }}
-            >
+            <Text style={a.body_1_lg_regular}>
               {strings.descriptionParagraph2}
             </Text>
           </Description>
@@ -84,30 +73,16 @@ export const RemoveWalletScreen = () => {
           <Space.Height.lg />
 
           <WalletInfo>
-            <Text
-              style={{
-                ...a.body_1_lg_medium,
-              }}
-            >
-              {strings.walletName}
-            </Text>
+            <Text style={a.body_1_lg_medium}>{strings.walletName}</Text>
 
             <SpaceHeight size={10} />
 
-            <Text
-              style={{
-                ...a.body_1_lg_regular,
-              }}
-            >
-              {meta.name}
-            </Text>
+            <Text style={a.body_1_lg_regular}>{meta.name}</Text>
 
             <Space.Height.xl />
 
             <WalletNameInput
-              placeholder={{
-                ...a.body_1_lg_regular,
-              }}
+              placeholder={a.body_1_lg_regular}
               value={typedWalletName}
               onChangeText={setTypedWalletName}
               right={typedWalletName === meta.name ? <Checkmark /> : undefined}
@@ -170,14 +145,7 @@ const WalletNameInput = (props: TextInputProps) => {
   )
 }
 const Actions = (props: ViewProps) => {
-  return (
-    <View
-      {...props}
-      style={{
-        ...a.py_lg,
-      }}
-    />
-  )
+  return <View {...props} style={a.py_lg} />
 }
 
 const messages = defineMessages({

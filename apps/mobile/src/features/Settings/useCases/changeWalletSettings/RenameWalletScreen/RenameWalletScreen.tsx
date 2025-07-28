@@ -47,25 +47,18 @@ export const RenameWalletScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={{
-        backgroundColor: p.bg_color_max,
-        ...a.flex_1,
-      }}
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+        },
+        a.flex_1,
+      ]}
     >
       <SafeAreaView
-        style={{
-          ...a.flex_1,
-          ...a.pt_lg,
-          ...a.pb_lg,
-        }}
+        style={[a.flex_1, a.pt_lg, a.pb_lg]}
         edges={['left', 'right', 'bottom']}
       >
-        <ScrollView
-          contentContainerStyle={{
-            ...a.px_lg,
-          }}
-          bounces={false}
-        >
+        <ScrollView contentContainerStyle={a.px_lg} bounces={false}>
           <WalletNameInput
             returnKeyType="done"
             errorDelay={0}
@@ -82,11 +75,13 @@ export const RenameWalletScreen = () => {
         <SpaceHeight fill size={'lg'} />
 
         <View
-          style={{
-            backgroundColor: p.bg_color_max,
-            ...a.pt_lg,
-            ...a.px_lg,
-          }}
+          style={[
+            {
+              backgroundColor: p.bg_color_max,
+            },
+            a.pt_lg,
+            a.px_lg,
+          ]}
         >
           <Button
             onPress={handleOnRename}

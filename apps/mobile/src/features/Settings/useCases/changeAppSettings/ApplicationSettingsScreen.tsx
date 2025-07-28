@@ -24,15 +24,12 @@ import {
   SettingsItem,
   SettingsSection,
 } from '../../SettingsItems'
-import {
-  mockIsAuthOsSupported,
-  mockUseAuthSetting,
-  mockUseAuthWithOs,
-  mockUseCurrencyPairing,
-  mockUseScreenShareSettingEnabled,
-} from './ApplicationSettingsScreenMock'
+import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
-import {useChangeScreenShareSetting} from './ScreenShare'
+import {
+  useChangeScreenShareSetting,
+  useScreenShareSettingEnabled,
+} from './ScreenShare'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
@@ -43,20 +40,18 @@ export const ApplicationSettingsScreen = () => {
   ) as LanguageRecord
 
   const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
-  const currency = mockUseCurrencyPairing()
-
+  const {currency} = useCurrencyPairing()
   const {enabled: crashReportEnabled} = useCrashReports()
 
-  const authSetting = mockUseAuthSetting()
-  const isAuthOsSupported = mockIsAuthOsSupported()
+  const authSetting = useAuthSetting()
+  const isAuthOsSupported = useIsAuthOsSupported()
   const navigateTo = useNavigateTo()
-  const {authWithOs} = mockUseAuthWithOs({
-    onSuccess: navigateTo.enableLoginWithPin,
-  })
+
+  const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
   const {network} = useSelectedNetwork()
 
-  const {data: screenShareEnabled} = mockUseScreenShareSettingEnabled()
+  const {data: screenShareEnabled} = useScreenShareSettingEnabled()
   const displayScreenShareSetting = Platform.OS === 'android'
 
   const onToggleAuthWithOs = () => {

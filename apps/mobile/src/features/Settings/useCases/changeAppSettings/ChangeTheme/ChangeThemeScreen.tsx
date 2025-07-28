@@ -11,10 +11,12 @@ export const ChangeThemeScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={{
-        ...a.flex_1,
-        backgroundColor: p.bg_color_max,
-      }}
+      style={[
+        a.flex_1,
+        {
+          backgroundColor: p.bg_color_max,
+        },
+      ]}
     >
       <Boundary>
         <ThemePickerList />

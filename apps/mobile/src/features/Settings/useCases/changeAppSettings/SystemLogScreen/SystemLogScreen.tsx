@@ -11,13 +11,7 @@ export const SystemLogScreen = () => {
   const {palette: p} = useTheme()
 
   return (
-    <View
-      style={{
-        ...a.flex_1,
-        backgroundColor: p.bg_color_max,
-        ...a.px_lg,
-      }}
-    >
+    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}, a.px_lg]}>
       <ScrollView>
         {logger.trail.map((entry) => {
           return (
@@ -81,8 +75,8 @@ const ValueText = ({style, children, ...props}: TextProps) => {
       style={[
         {
           color: p.gray_500,
-          ...a.body_1_lg_regular,
         },
+        a.body_1_lg_regular,
         style,
       ]}
     >

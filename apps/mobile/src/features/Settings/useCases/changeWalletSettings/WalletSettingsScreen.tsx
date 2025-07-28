@@ -1,10 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, ScrollView} from 'react-native'
+import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {
@@ -12,11 +13,18 @@ import {
   showConfirmationDialog,
 } from '../../../../kernel/dialogs'
 import {confirmationMessages} from '../../../../kernel/i18n/global-messages'
-import {SettingsRouteNavigation} from '../../../../kernel/navigation/navigation'
+import {
+  SettingsRouteNavigation,
+  useWalletNavigation,
+} from '../../../../kernel/navigation/navigation'
 import {Icon} from '../../../../ui/Icon'
 import {SettingsSwitch} from '../../../../ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '../../../../ui/Space/Space'
+import {useResync} from '../../../../wallets/hooks'
 import {useAuth} from '../../../Auth/context/AuthProvider'
+import {useAuthSetting} from '../../../Auth/hooks'
+import {useAddressMode} from '../../../WalletManager/hooks/useAddressMode'
+import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
 import {SettingsCollateralItem} from '../../SettingsCollateralItem'
 import {
@@ -25,28 +33,21 @@ import {
   SettingsItem,
   SettingsSection,
 } from '../../SettingsItems'
-import {
-  mockUseAuthSetting,
-  mockUseSelectedWallet,
-  useAddressModeMock,
-} from './WalletSettingsScreenMock'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const {palette: p} = useTheme()
-  const {resetToWalletSelection, navigateToNotificationSettings} = {
-    resetToWalletSelection: () => {},
-    navigateToNotificationSettings: () => {},
-  }
-  const authSetting = mockUseAuthSetting()
-  const addressMode = useAddressModeMock()
+  const {resetToWalletSelection, navigateToNotificationSettings} =
+    useWalletNavigation()
+  const authSetting = useAuthSetting()
+  const addressMode = useAddressMode()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {
     meta: {isEasyConfirmationEnabled, isHW, isReadOnly, implementation},
-  } = mockUseSelectedWallet()
+  } = useSelectedWallet()
   const navigateTo = useNavigateTo()
 
   const onToggleEasyConfirmation = () => {
@@ -69,7 +70,7 @@ export const WalletSettingsScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[{...a.flex_row, backgroundColor: p.bg_color_max}]}
+      style={[a.flex_row, {backgroundColor: p.bg_color_max}]}
     >
       <ScrollView bounces={false} style={[a.flex_1, a.p_lg]}>
         <SettingsSection title={strings.general}>
@@ -177,11 +178,18 @@ const getWalletType = (
 }
 
 const ResyncButton = () => {
+  const {wallet} = useSelectedWallet()
   const {palette: p} = useTheme()
   const strings = useStrings()
   const intl = useIntl()
 
-  const isLoading = false
+  const {walletIdChanged} = useSetupWallet()
+  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
+  const {resync, isLoading} = useResync(wallet, {
+    onMutate: () => {
+      settingsNavigation.navigate('settings-preparing-wallet')
+    },
+  })
 
   const onResync = async () => {
     const selection = await showConfirmationDialog(
@@ -189,7 +197,8 @@ const ResyncButton = () => {
       intl,
     )
     if (selection === DIALOG_BUTTONS.YES) {
-      Alert.alert('Resync not implemented')
+      walletIdChanged(wallet.id)
+      resync()
     }
   }
 
@@ -209,7 +218,7 @@ const ResyncButton = () => {
 }
 
 const AddressModeSwitcher = (props: {isSingle: boolean}) => {
-  const addressMode = useAddressModeMock()
+  const addressMode = useAddressMode()
   const [isSingleLocal, setIsSingleLocal] = React.useState(props.isSingle)
 
   const handleOnSwitchAddressMode = () => {

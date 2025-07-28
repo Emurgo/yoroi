@@ -23,19 +23,23 @@ export const PreparingNetworkScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom', 'top']}
-      style={{
-        ...a.flex_1,
-        ...a.align_center,
-        ...a.justify_center,
-        backgroundColor: p.bg_color_max,
-      }}
+      style={[
+        a.flex_1,
+        a.align_center,
+        a.justify_center,
+        {
+          backgroundColor: p.bg_color_max,
+        },
+      ]}
     >
       <Text
-        style={{
-          color: p.primary_500,
-          ...a.text_center,
-          ...a.heading_2_medium,
-        }}
+        style={[
+          {
+            color: p.primary_500,
+          },
+          a.text_center,
+          a.heading_2_medium,
+        ]}
       >
         {strings.preparingNetwork}
       </Text>
