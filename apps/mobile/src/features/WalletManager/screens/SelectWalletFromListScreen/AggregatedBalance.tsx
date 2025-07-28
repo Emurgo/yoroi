@@ -12,7 +12,7 @@ import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggreg
 import {BalanceCardContent} from '~/features/Portfolio/screens/PortfolioDashboard/BalanceCard/BalanceCardContent'
 import {BalanceCardSkeleton} from '~/features/Portfolio/screens/PortfolioDashboard/BalanceCard/BalanceCardSkeleton'
 import {BalanceHeaderCard} from '~/features/Portfolio/screens/PortfolioDashboard/BalanceCard/BalanceHeaderCard'
-import {useSelectedNetwork} from '~/../hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '~/hooks/useSelectedNetwork'
 
 export const AggregatedBalance = () => {
   const {palette: p, atoms: ta} = useTheme()

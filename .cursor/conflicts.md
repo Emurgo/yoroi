@@ -24,9 +24,94 @@ This document tracks all the issues that couldn't be resolved during the migrati
 
 ---
 
+## ✅ Resolved Issues
+
+### 2. ~/types/ Alias Removal - **✅ RESOLVED**
+
+**Issue**: The `~/types/*` alias was conflicting with `@yoroi/types` package
+**Status**: ✅ **RESOLVED**
+
+**Changes Made**:
+
+- ✅ Removed `~/types/*` alias from `tsconfig.json`
+- ✅ Removed `~/types` alias from `metro.config.js`
+- ✅ Fixed 30 files using `~/types/` imports
+- ✅ Replaced all `~/types/` imports with `@yoroi/types`
+- ✅ Removed empty `src/types/` directory
+- ✅ Updated migration guidelines
+
+**Files Fixed**:
+
+```bash
+# All imports changed from:
+import {RawUtxo} from '~/types/other'
+import {StakingStatus} from '~/types/staking'
+import {YoroiEntry} from '~/types/yoroi'
+import {LegacyToken} from '~/types/tokens'
+
+# To:
+import {RawUtxo, StakingStatus, YoroiEntry, LegacyToken} from '@yoroi/types'
+```
+
+**Impact**: No more confusion between local types and package types
+
+---
+
+## ✅ Resolved Issues
+
+### 3. Storybook Cleanup - **✅ RESOLVED**
+
+**Issue**: 140 Storybook files cluttering the codebase
+**Status**: ✅ **RESOLVED**
+
+**Changes Made**:
+
+- ✅ Removed all `*.stories.tsx` and `*.stories.ts` files (140 files)
+- ✅ Cleaned up all `@storybook/*` imports from remaining files
+- ✅ Removed storybook-related comments and error messages
+- ✅ Removed storybook device props and configurations
+- ✅ Updated migration guidelines
+
+**Impact**: Cleaner codebase with 140 fewer files and no Storybook dependencies
+
+---
+
+## ✅ Resolved Issues
+
+### 4. Auth Components Migration - **✅ RESOLVED**
+
+**Issue**: Auth components had incorrect import paths and malformed imports
+**Status**: ✅ **RESOLVED**
+
+**Files Fixed**:
+
+- ✅ `apps/mobile/src/features/Auth/screens/ChangePinScreen.tsx`
+
+  - Fixed import paths to use correct absolute paths
+  - Uses atomic design correctly
+  - Passes ESLint without errors
+
+- ✅ `apps/mobile/src/features/Auth/ui/CheckPinInput/CheckPinInput.tsx`
+
+  - Fixed malformed imports (`~/~/kernel/i18n/global-messages`)
+  - Fixed relative imports (`src/kernel/logger/logger`)
+  - Updated all imports to use absolute paths
+  - Passes ESLint without errors
+
+- ✅ `apps/mobile/src/features/Auth/ui/CreatePinInput/CreatePinInput.tsx`
+  - Fixed malformed imports (`~/~/kernel/i18n/global-messages`)
+  - Fixed relative imports and incorrect paths
+  - Fixed variable shadowing warning
+  - Updated all imports to use absolute paths
+  - Passes ESLint without errors
+
+**Impact**: Auth components now use consistent absolute paths and pass linting
+
+---
+
 ## ⚠️ Import Path Issues
 
-### 2. Inconsistent TokenInfoIcon Imports
+### 3. Inconsistent TokenInfoIcon Imports
 
 **Issue**: Multiple import paths for the same component
 

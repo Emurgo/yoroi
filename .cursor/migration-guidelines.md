@@ -28,7 +28,7 @@ import { useCurrencyPairing } from "~/features/Settings/useCases/changeAppSettin
 - `~/features/*` → `./src/features/*`
 - `~/hooks/*` → `./src/hooks/*`
 - `~/kernel/*` → `./src/kernel/*`
-- `~/types/*` → `./src/types/*`
+- `~/wallets/*` → `./src/wallets/*`
 - `~/wallets/*` → `./src/wallets/*`
 - `~/components/*` → `./src/ui/*` (legacy compatibility)
 
@@ -81,7 +81,45 @@ const { atoms: ta, palette: p } = useTheme();
 <View style={[{ ...ta.p_lg }, { backgroundColor: p.bg_color_max }]} />;
 ```
 
-### 3. Adopt Atomic Design System
+### 3. Use Correct Type Imports
+
+**❌ Avoid `~/types/` imports:** The `~/types/*` alias has been removed to avoid conflicts with `@yoroi/types` package.
+
+**Before:**
+
+```typescript
+import { RawUtxo, YoroiUnsignedTx } from "~/types/other";
+import { StakingStatus } from "~/types/staking";
+import { YoroiEntry } from "~/types/yoroi";
+```
+
+**After:**
+
+```typescript
+import {
+  RawUtxo,
+  YoroiUnsignedTx,
+  StakingStatus,
+  YoroiEntry,
+} from "@yoroi/types";
+```
+
+**Note:** All types should be imported from `@yoroi/types` package, not from local `~/types/` directory.
+
+### 4. Remove Storybook Files
+
+**❌ Avoid Storybook:** All Storybook files have been removed to reduce clutter.
+
+**Removed:**
+
+- All `*.stories.tsx` and `*.stories.ts` files (140 files)
+- All `@storybook/*` imports
+- All storybook-related comments and error messages
+- All storybook device props and configurations
+
+**Impact:** Cleaner codebase with 140 fewer files and no Storybook dependencies.
+
+### 5. Adopt Atomic Design System
 
 **Static Atoms (`a`):** For styles that don't change with theme
 

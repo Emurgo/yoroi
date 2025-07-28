@@ -5,8 +5,8 @@ import {Text, View} from 'react-native'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/../../common/useStrings'
-import {ErrorLogo} from '~/../../illustrations/ErrorLogo'
+import {useStrings} from '~/features/common/useStrings'
+import {ErrorLogo} from '~/illustrations/ErrorLogo'
 
 export const ErrorScreen = () => {
   const strings = useStrings()

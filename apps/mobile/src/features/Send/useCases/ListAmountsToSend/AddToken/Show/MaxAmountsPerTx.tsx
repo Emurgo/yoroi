@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Text} from 'react-native'
 
 import {ErrorPanel} from '~/components/ErrorPanel/ErrorPanel'
-import globalMessages from '~/../../~/kernel/i18n/global-messages'
+import globalMessages from '~/~/kernel/i18n/global-messages'
 import {limitOfSecondaryAmountsPerTx} from '~/~/features/common/constants'
 
 export const MaxAmountsPerTx = () => {

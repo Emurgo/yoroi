@@ -12,10 +12,10 @@ import {LoadingOverlay} from '~/components/LoadingOverlay/LoadingOverlay'
 import {Text} from '~/components/Text'
 import {TextInput} from '~/components/TextInput/TextInput'
 import {showErrorDialog} from '~/~/kernel/dialogs'
-import {errorMessages} from '~/../~/kernel/i18n/global-messages'
-import {isEmptyString} from '~/../../../../kernel/utils'
-import {useEnableEasyConfirmation} from '~/../../../Auth/common/useEnableEasyConfirmation'
-import {useSelectedWallet} from '~/../../../WalletManager/common/hooks/useSelectedWallet'
+import {errorMessages} from '~/~/kernel/i18n/global-messages'
+import {isEmptyString} from '~/kernel/utils'
+import {useEnableEasyConfirmation} from '~/Auth/common/useEnableEasyConfirmation'
+import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()

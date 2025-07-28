@@ -14,10 +14,10 @@ import {errorMessages} from '~/~/kernel/i18n/global-messages'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation'
-import {LedgerConnect} from '~/../../../legacy/HW'
+import {LedgerConnect} from '~/legacy/HW'
 import {getHWDeviceInfo} from '~/wallets/cardano/hw/hw'
 import {Device} from '~/wallets/types/hw'
-import {useWalletManager} from '~/../../WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/features/common/useStrings'
 import {
   WalletDuplicatedModal,
@@ -25,7 +25,6 @@ import {
 } from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 
 type Props = {
-  defaultDevices?: Array<Device> // for storybook
 }
 
 export const ConnectNanoXScreen = ({defaultDevices}: Props) => {

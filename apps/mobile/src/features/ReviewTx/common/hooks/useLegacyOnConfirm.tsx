@@ -5,7 +5,7 @@ import {ConfirmTxWithOsModal} from '~/components/ConfirmTxWithOsModal/ConfirmTxW
 import {ConfirmTxWithSpendingPasswordModal} from '~/components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
 import {useModal} from '~/components/Modal/ModalContext'
 import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from './useNavigateTo'
 import {OnConfirm} from './useOnConfirm'
 import {useStrings} from './useStrings'

@@ -21,7 +21,7 @@ import {Text} from '~/components/Text'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation'
 import {useStrings} from '~/features/common/useStrings'
-import {LedgerCheckIllustration} from '~/../illustrations/LedgerCheckIllustration'
+import {LedgerCheckIllustration} from '~/illustrations/LedgerCheckIllustration'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()

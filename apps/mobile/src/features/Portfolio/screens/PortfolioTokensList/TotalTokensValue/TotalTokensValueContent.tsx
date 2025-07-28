@@ -6,13 +6,13 @@ import {Text, TouchableOpacity, View} from 'react-native'
 import {Icon} from '~/components/Icon'
 import {Space} from '~/components/Space/Space'
 import {Tooltip} from '~/components/Tooltip/Tooltip'
-import {usePrivacyMode} from '~/../../../Settings/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useCurrencyPairing} from '~/../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '~/Settings/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useCurrencyPairing} from '~/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {
   formatPriceChange,
   priceChange,
 } from '~/features/common/helpers/priceChange'
-import {useStrings} from '~/../../common/hooks/useStrings'
+import {useStrings} from '~/features/common/hooks/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,

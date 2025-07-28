@@ -3,7 +3,7 @@ import {Swap} from '@yoroi/types'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {undefinedToken} from '~/features/common/constants'
 import {useNavigateTo} from '~/features/common/navigation'
 import {ProtocolAvatar} from '~/features/common/Protocol/ProtocolAvatar'

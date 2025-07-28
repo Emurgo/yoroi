@@ -2,7 +2,7 @@ import {Balance} from '@yoroi/types'
 
 import {_getRequiredUtxos} from '~/wallets/cardano/cip30/cip30'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
-import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 
 export const useGetInputs = () => {
   const {wallet, meta} = useSelectedWallet()

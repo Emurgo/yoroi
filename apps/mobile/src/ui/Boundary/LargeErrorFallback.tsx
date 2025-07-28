@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import {Text, View} from 'react-native'
 
-import {useTranslatedError} from '~/../hooks/useTranslatedError'
+import {useTranslatedError} from '~/hooks/useTranslatedError'
 import {Button} from '~/Button/Button'
 import {SpaceHeight} from '~/Space/Space'
 import {ErrorFallbackProps} from './types'

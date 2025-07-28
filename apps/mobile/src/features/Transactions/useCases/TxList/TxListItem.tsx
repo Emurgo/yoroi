@@ -23,9 +23,9 @@ import {
   formatTokenInteger,
 } from '~/wallets/utils/format'
 import {asQuantity} from '~/wallets/utils/utils'
-import {useCurrencyPairing} from '~/../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useCurrencyPairing} from '~/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '~/features/common/strings'
 import {useTxFilter} from './TxFilterProvider'
 

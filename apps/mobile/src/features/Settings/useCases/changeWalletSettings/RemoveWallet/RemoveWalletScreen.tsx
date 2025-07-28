@@ -15,8 +15,8 @@ import {
   TextInputProps,
 } from '~/components/TextInput/TextInput'
 import {useWalletNavigation} from '~/kernel/navigation'
-import {useSelectedWallet} from '~/../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '~/../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()

@@ -39,9 +39,9 @@ import {
   validatePassword,
   validateWalletName,
 } from '~/wallets/utils/validators'
-import {parseWalletMeta} from '~/../../WalletManager/common/validators/wallet-meta'
-import {useWalletManager} from '~/../../WalletManager/context/WalletManagerProvider'
-import {useCreateWalletMnemonic} from '~/../../WalletManager/hooks/useCreateWalletMnemonic'
+import {parseWalletMeta} from '~/WalletManager/common/validators/wallet-meta'
+import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
+import {useCreateWalletMnemonic} from '~/WalletManager/hooks/useCreateWalletMnemonic'
 import {useStrings} from '~/features/common/useStrings'
 
 const useSizeModal = () => {

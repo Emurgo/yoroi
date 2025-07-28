@@ -10,7 +10,6 @@
       "~/features/*": ["./src/features/*"],
       "~/hooks/*": ["./src/hooks/*"],
       "~/kernel/*": ["./src/kernel/*"],
-      "~/types/*": ["./src/types/*"],
       "~/wallets/*": ["./src/wallets/*"],
       "~/components/*": ["./src/ui/*"]
     }

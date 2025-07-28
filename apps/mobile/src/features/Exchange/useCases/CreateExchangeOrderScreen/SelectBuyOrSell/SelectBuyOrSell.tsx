@@ -3,8 +3,8 @@ import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {ButtonActionGroup} from '~/../../common/ButtonActionGroup/ButtonActionGroup'
-import {useStrings} from '~/../../common/useStrings'
+import {ButtonActionGroup} from '~/features/common/ButtonActionGroup/ButtonActionGroup'
+import {useStrings} from '~/features/common/useStrings'
 
 export const SelectBuyOrSell = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()

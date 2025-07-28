@@ -29,8 +29,8 @@ import {Space} from '~/components/Space/Space'
 import {WarningBanner} from '~/components/WarningBanner/WarningBanner'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {Quantities} from '~/wallets/utils/utils'
-import {useSelectedWallet} from '~/../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '~/../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {Accordion} from '~/features/common/Accordion'
 import {useStrings} from '~/features/common/hooks/useStrings'
 import {Operations, useOperations} from '~/features/common/operations'
@@ -41,7 +41,7 @@ import {
   FormattedTx,
 } from '~/features/common/types'
 import {WalletBalance} from '~/features/common/WalletBalance'
-import {OperationsNoticeIcon} from '~/../../../illustrations/OperationsNoticeIcon'
+import {OperationsNoticeIcon} from '~/illustrations/OperationsNoticeIcon'
 
 export const OverviewTab = ({
   tx,

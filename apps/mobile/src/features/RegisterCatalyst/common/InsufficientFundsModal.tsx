@@ -7,7 +7,7 @@ import {Platform, Text, View} from 'react-native'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import globalMessages from '~/kernel/i18n/global-messages'
 import {Space} from '~/ui/Space/Space'
-import {usePortfolioPrimaryBalance} from '~/../Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useCatalystCurrentFund} from './hooks'
 
 const formatter = amountFormatter({

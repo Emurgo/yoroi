@@ -10,7 +10,7 @@ import {
 
 import {Icon} from '~/components/Icon'
 import {Spacer} from '~/components/Spacer/Spacer'
-import {useMappedStrings} from '~/../../common/useStrings'
+import {useMappedStrings} from '~/features/common/useStrings'
 
 type Props = {
   types: string[]

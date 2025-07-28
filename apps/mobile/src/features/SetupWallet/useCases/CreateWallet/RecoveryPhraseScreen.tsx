@@ -24,8 +24,8 @@ import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {generateAdaMnemonic} from '~/wallets/cardano/mnemonic/mnemonic'
 import {YoroiZendeskLink} from '~/features/common/constants'
 import {useStrings} from '~/features/common/useStrings'
-import {EyeClosed} from '~/../illustrations/EyeClosed'
-import {EyeOpen} from '~/../illustrations/EyeOpen'
+import {EyeClosed} from '~/illustrations/EyeClosed'
+import {EyeOpen} from '~/illustrations/EyeOpen'
 
 export const RecoveryPhraseScreen = () => {
   const bold = useBold()

@@ -7,8 +7,8 @@ import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {queryInfo} from '~/kernel/query-client'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {isShelley} from '~/wallets/cardano/utils'
-import {usePortfolioPrimaryBalance} from '~/../Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 
 export const useCanVote = (wallet: YoroiWallet) => {
   const {meta} = useSelectedWallet()

@@ -11,8 +11,8 @@ import {Boundary} from '~/ui/Boundary/Boundary'
 import {CardanoTypes} from '~/wallets/cardano/types'
 import {formatTokenAmount} from '~/wallets/utils/format'
 import {asQuantity} from '~/wallets/utils/utils'
-import {usePrivacyMode} from '~/../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '~/features/common/strings'
 
 type AssetListProps = {

@@ -18,14 +18,14 @@ import {
   Checkmark,
   TextInput,
 } from '~/components/TextInput/TextInput'
-import {errorMessages} from '~/../~/kernel/i18n/global-messages'
+import {errorMessages} from '~/~/kernel/i18n/global-messages'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
 } from '~/wallets/utils/validators'
-import {useSelectedWallet} from '~/../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '~/../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()

@@ -62,7 +62,6 @@ config.resolver.extraNodeModules = {
   '~/features': path.resolve(projectRoot, 'src/features'),
   '~/hooks': path.resolve(projectRoot, 'src/hooks'),
   '~/kernel': path.resolve(projectRoot, 'src/kernel'),
-  '~/types': path.resolve(projectRoot, 'src/types'),
   '~/wallets': path.resolve(projectRoot, 'src/wallets'),
   '~/components': path.resolve(projectRoot, 'src/ui'),
 }

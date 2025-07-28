@@ -17,7 +17,7 @@ import {
   formatDrepHashToCIP105Format,
   formatDrepHashToCIP129Format,
 } from '~/features/Staking/Governance/common/drep'
-import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 import {PoolDetails} from './PoolDetails'
 import {CertificateType, FormattedTx} from './types'

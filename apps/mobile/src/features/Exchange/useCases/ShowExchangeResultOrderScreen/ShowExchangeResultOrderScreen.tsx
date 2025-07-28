@@ -18,9 +18,9 @@ import {Text} from '~/components/Text'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {DescribeAction} from '~/features/common/DescribeAction/DescribeAction'
 import {useStrings} from '~/features/common/useStrings'
-import {BanxaLogo} from '~/../illustrations/BanxaLogo'
-import {EncryptusLogo} from '~/../illustrations/EncryptusLogo'
-import {WalletAssetImage} from '~/../illustrations/WalletAssetImage'
+import {BanxaLogo} from '~/illustrations/BanxaLogo'
+import {EncryptusLogo} from '~/illustrations/EncryptusLogo'
+import {WalletAssetImage} from '~/illustrations/WalletAssetImage'
 import {ContentResult} from './ContentResult/ContentResult'
 
 export const ShowExchangeResultOrderScreen = () => {

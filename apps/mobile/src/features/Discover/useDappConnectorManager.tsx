@@ -3,7 +3,7 @@ import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 
-import {useShowCollateralNotFoundAlert} from '~/../hooks/useShowCollateralNotFoundAlert'
+import {useShowCollateralNotFoundAlert} from '~/hooks/useShowCollateralNotFoundAlert'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation'

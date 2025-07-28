@@ -19,19 +19,19 @@ import {useModal} from '~/components/Modal/ModalContext'
 import {Space} from '~/components/Space/Space'
 import {Spacer} from '~/components/Spacer/Spacer'
 import {WarningBanner} from '~/components/WarningBanner/WarningBanner'
-import {useMetrics} from '~/../../../../kernel/metrics/metricsManager'
-import {useBrowser} from '~/../../common/BrowserProvider'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useBrowser} from '~/features/common/BrowserProvider'
 import {
   type DAppItem,
   getDappFallbackLogo,
   isGoogleSearchItem,
 } from '~/features/common/helpers'
-import {LabelCategoryDApp} from '~/../../common/LabelCategoryDApp'
-import {LabelConnected} from '~/../../common/LabelConnected'
-import {LabelSingleAddress} from '~/../../common/LabelSingleAddress'
-import {useDisconnectDapp} from '~/../../common/useDisconnectDapp'
-import {useNavigateTo} from '~/../../common/useNavigateTo'
-import {useStrings} from '~/../../common/useStrings'
+import {LabelCategoryDApp} from '~/features/common/LabelCategoryDApp'
+import {LabelConnected} from '~/features/common/LabelConnected'
+import {LabelSingleAddress} from '~/features/common/LabelSingleAddress'
+import {useDisconnectDapp} from '~/features/common/useDisconnectDapp'
+import {useNavigateTo} from '~/features/common/useNavigateTo'
+import {useStrings} from '~/features/common/useStrings'
 
 const INIT_DIALOG_DAPP_ACTIONS_HEIGHT = 286
 

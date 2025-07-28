@@ -6,7 +6,7 @@ import type {FormatDateOptions, IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
 import {isTokenInfo} from '~/cardano/utils'
-import {DefaultAsset, Token} from '~/types/tokens'
+import {DefaultAsset, Token} from '@yoroi/types'
 
 export const getTokenFingerprint = ({
   policyId,

@@ -9,8 +9,8 @@ import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {ProviderItem} from '~/features/common/ProviderItem/ProviderItem'
 import {useStrings} from '~/features/common/useStrings'
-import {BanxaLogo} from '~/../illustrations/BanxaLogo'
-import {EncryptusLogo} from '~/../illustrations/EncryptusLogo'
+import {BanxaLogo} from '~/illustrations/BanxaLogo'
+import {EncryptusLogo} from '~/illustrations/EncryptusLogo'
 
 export const SelectProviderFromListScreen = () => {
   const {palette: p} = useTheme()

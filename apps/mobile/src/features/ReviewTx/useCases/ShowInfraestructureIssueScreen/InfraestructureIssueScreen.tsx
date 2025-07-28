@@ -12,7 +12,7 @@ import {
   useWalletNavigation,
 } from '~/kernel/navigation'
 import {useStrings} from '~/features/common/hooks/useStrings'
-import {InfraestructureIssueIcon} from '~/../illustrations/InfraestructureIssueIcon'
+import {InfraestructureIssueIcon} from '~/illustrations/InfraestructureIssueIcon'
 
 export const InfraestructureIssueScreen = () => {
   useBlockGoBack()

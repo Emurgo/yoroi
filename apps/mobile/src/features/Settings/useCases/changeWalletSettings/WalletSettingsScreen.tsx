@@ -19,13 +19,13 @@ import {
   useWalletNavigation,
 } from '~/kernel/navigation'
 import {useResync} from '~/wallets/hooks'
-import {useAuth} from '~/../../Auth/AuthProvider'
+import {useAuth} from '~/Auth/AuthProvider'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
-import {useAddressMode} from '~/../../WalletManager/common/hooks/useAddressMode'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useAddressMode} from '~/WalletManager/common/hooks/useAddressMode'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '~/features/common/navigation'
 import {SettingsSwitch} from '~/features/common/SettingsSwitch'
-import {SettingsCollateralItem} from '~/../SettingsCollateralItem'
+import {SettingsCollateralItem} from '~/SettingsCollateralItem'
 import {
   NavigatedSettingsItem,
   SettingsBuildItem,

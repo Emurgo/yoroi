@@ -5,7 +5,7 @@ import {
   TextInput,
   TextInputProps,
 } from '~/components/TextInput/TextInput'
-import {useStrings} from '~/../../common/strings'
+import {useStrings} from '~/features/common/strings'
 import {ShowMemoErrorTooLong} from './ShowMemoErrorTooLong'
 import {ShowMemoInstructions} from './ShowMemoInstructions'
 

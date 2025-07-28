@@ -5,7 +5,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {useIsKeyboardOpen} from '~/kernel/keyboard/useIsKeyboardOpen'
 import {isEmptyString} from '~/kernel/utils'
-import {ShowDisclaimer} from '~/../../Legal/Disclaimer/ShowDisclaimer'
+import {ShowDisclaimer} from '~/Legal/Disclaimer/ShowDisclaimer'
 import {AmountCard} from '~/ui/AmountCard/AmountCard'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {EstimateSummary} from '~/ui/EstimateSummary/EstimateSummary'

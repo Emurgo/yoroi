@@ -11,7 +11,7 @@ import {Buffer} from 'buffer'
 import _ from 'lodash'
 
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
-import {CardanoMobile} from '~/../wallets'
+import {CardanoMobile} from '~/wallets'
 import {YoroiWallet} from '~/types'
 
 export const createSwapCancellationLedgerPayload = (

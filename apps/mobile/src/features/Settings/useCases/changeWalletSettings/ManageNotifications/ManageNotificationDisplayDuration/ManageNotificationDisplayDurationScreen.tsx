@@ -18,8 +18,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '~/components/Button/Button'
 import {KeyboardAvoidingView} from '~/components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {useFormatNumber} from '~/../../../../../kernel/i18n'
-import {useMetrics} from '~/../../../../../kernel/metrics/metricsManager'
+import {useFormatNumber} from '~/kernel/i18n'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useStrings} from './strings'
 
 type ManualChoice = {

@@ -3,7 +3,7 @@ import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
 import {rootStorage} from '~/kernel/storage/rootStorage'
-import {Transaction} from '~/~/types/other'
+import {Transaction} from '@yoroi/types'
 import {ApiHistoryError} from '~/errors'
 import {
   mockedAddressesByChunks,

@@ -13,7 +13,7 @@ import {
   AskConfirmationActions,
 } from '~/features/Claim/useCases/AskConfirmation'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
-import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from './useNavigateTo'
 
 export const useTriggerScanAction = ({

@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 
 import {Spacer} from '~/components/Spacer/Spacer'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {ConfirmWithSpendingPassword} from '~/ConfirmWithSpendingPassword'
 
 type Props = {

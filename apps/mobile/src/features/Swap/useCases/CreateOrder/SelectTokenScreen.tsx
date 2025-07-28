@@ -14,7 +14,7 @@ import {SwapTokenRoutes, useUnsafeParams} from '~/kernel/navigation'
 import {getTokenIdParts} from '~/features/Portfolio/common/helpers/get-token-id-parts'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/common/PortfolioTokenActivityProvider'
-import {useSearch, useSearchOnNavBar} from '~/../../Search/SearchContext'
+import {useSearch, useSearchOnNavBar} from '~/Search/SearchContext'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Counter} from '~/ui/Counter/Counter'
 import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
@@ -25,7 +25,7 @@ import {
   AmountItemPlaceholder,
   TokenAmountItem,
 } from '~/ui/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {filterBySearch} from '~/features/common/filterBySearch'
 import {useNavigateTo} from '~/features/common/navigation'
 import {useStrings} from '~/features/common/strings'

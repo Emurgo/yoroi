@@ -30,7 +30,7 @@ import {Tab, TabPanel, TabPanels, Tabs} from '~/components/Tabs/Tabs'
 import {Text} from '~/components/Text'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {NftRoutes} from '~/kernel/navigation'
-import {useSelectedWallet} from '~/../../WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/hooks/useSelectedWallet'
 import {usePortfolioImageInvalidate} from '~/features/common/hooks/usePortfolioImage'
 import {useNavigateTo} from '~/features/common/navigation'
 

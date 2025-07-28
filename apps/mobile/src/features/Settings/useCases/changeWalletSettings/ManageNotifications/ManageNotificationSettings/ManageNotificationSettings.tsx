@@ -14,15 +14,15 @@ import {Button, ButtonType} from '~/components/Button/Button'
 import {Icon} from '~/components/Icon'
 import {Spacer} from '~/components/Spacer/Spacer'
 import {Text} from '~/components/Text'
-import {useMetrics} from '~/../../../../../kernel/metrics/metricsManager'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/~/kernel/navigation'
 import {
   getNotificationsAuthorizationStatus,
   triggerNotificationsPermissionModal,
-} from '~/../../../../Notifications/common/tools'
+} from '~/features/Notifications/common/tools'
 import {SettingsSwitch} from '~/features/common/SettingsSwitch'
-import {SettingsItem, SettingsSection} from '~/../~/features/Settings/SettingsItems'
-import {SettingsNotificationDurationItem} from '~/../../../SettingsNotificationDurationItem'
+import {SettingsItem, SettingsSection} from '~/~/features/Settings/SettingsItems'
+import {SettingsNotificationDurationItem} from '~/SettingsNotificationDurationItem'
 import {
   useChangeNotificationDisplaySettings,
   useNotificationDisplaySettings,

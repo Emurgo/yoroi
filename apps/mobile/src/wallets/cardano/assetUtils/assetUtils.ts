@@ -2,7 +2,7 @@ import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/address
 import BigNumber from 'bignumber.js'
 
 import {logger} from '~/kernel/logger/logger'
-import {RawUtxo} from '~/~/types/other'
+import {RawUtxo} from '@yoroi/types'
 import {cardanoValueFromRemoteFormat} from '~/utils'
 import {wrappedCsl} from '~/wrappedCsl'
 

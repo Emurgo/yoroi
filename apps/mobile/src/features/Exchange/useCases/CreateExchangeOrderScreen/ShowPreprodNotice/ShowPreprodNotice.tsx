@@ -5,9 +5,9 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {Space} from '~/ui/Space/Space'
-import {useWalletManager} from '~/../../../WalletManager/context/WalletManagerProvider'
-import {useStrings} from '~/../../common/useStrings'
-import {PreprodNoticeIllustration} from '~/../../illustrations/PreprodNoticeIllustration'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useStrings} from '~/features/common/useStrings'
+import {PreprodNoticeIllustration} from '~/illustrations/PreprodNoticeIllustration'
 
 export const ShowPreprodNotice = () => {
   const strings = useStrings()

@@ -13,7 +13,7 @@ import {features} from '~/kernel/features'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {useStakingInfo} from '~/../Dashboard/StakePoolInfos'
+import {useStakingInfo} from '~/Dashboard/StakePoolInfos'
 
 const createDelegationTx = async (
   wallet: YoroiWallet,

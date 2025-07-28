@@ -21,7 +21,7 @@ import {
   getWalletNameError,
   validateWalletName,
 } from '~/wallets/utils/validators'
-import {useWalletManager} from '~/../../WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
 
 type Props = {
   onSubmit: ({name}: {name: string}) => void

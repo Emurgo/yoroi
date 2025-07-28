@@ -8,7 +8,7 @@ import {
   defaultStackNavigationOptions,
   useWalletNavigation,
 } from '~/kernel/navigation'
-import {NetworkTag} from '~/../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {useStrings} from './common/strings'

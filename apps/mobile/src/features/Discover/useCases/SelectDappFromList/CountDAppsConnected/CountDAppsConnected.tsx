@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useStrings} from '~/../../common/useStrings'
+import {useStrings} from '~/features/common/useStrings'
 
 type Props = {
   total: number

@@ -4,10 +4,10 @@ import {View} from 'react-native'
 
 import {Text} from '~/components/Text'
 import {Tooltip} from '~/components/Tooltip/Tooltip'
-import {useCurrencyPairing} from '~/../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {useCurrencyPairing} from '~/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {formatPriceChange} from '~/features/common/helpers/priceChange'
 import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
-import {useStrings} from '~/../../common/hooks/useStrings'
+import {useStrings} from '~/features/common/hooks/useStrings'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 
 type Props = {

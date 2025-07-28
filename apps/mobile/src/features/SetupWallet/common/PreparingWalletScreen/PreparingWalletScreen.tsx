@@ -5,8 +5,8 @@ import {Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {logger} from '~/kernel/logger/logger'
-// import {useLaunchWalletAfterSyncing} from '~/../../WalletManager/common/hooks/useLaunchWalletAfterSyncing'
-// import {useSyncTemporarilyPaused} from '~/../../WalletManager/common/hooks/useSyncTemporarilyPaused'
+// import {useLaunchWalletAfterSyncing} from '~/WalletManager/common/hooks/useLaunchWalletAfterSyncing'
+// import {useSyncTemporarilyPaused} from '~/WalletManager/common/hooks/useSyncTemporarilyPaused'
 import {isEmptyString} from '~/wallets/utils/string'
 import {useStrings} from '~/useStrings'
 

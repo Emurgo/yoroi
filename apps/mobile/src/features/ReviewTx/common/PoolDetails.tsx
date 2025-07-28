@@ -10,7 +10,7 @@ import {ExplorerInfoLinks} from '~/ui/ExplorerInfoLinks/ExplorerInfoLinks'
 import {Space} from '~/ui/Space/Space'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 import {generatePoolName} from './operations'
 

@@ -3,14 +3,14 @@ import {Chain} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
-import {useLanguage} from '~/../../../../kernel/i18n/LanguageProvider'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {Space} from '~/ui/Space/Space'
 import {Quantities} from '~/wallets/utils/utils'
-import {usePortfolioPrimaryBalance} from '~/../../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {useWalletManager} from '~/../../../WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/../../../WalletManager/hooks/useSelectedWallet'
-import {AmountCard} from '~/../../common/AmountCard/AmountCard'
-import {useStrings} from '~/../../common/useStrings'
+import {usePortfolioPrimaryBalance} from '~/Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {AmountCard} from '~/features/common/AmountCard/AmountCard'
+import {useStrings} from '~/features/common/useStrings'
 
 export const EditAmount = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()

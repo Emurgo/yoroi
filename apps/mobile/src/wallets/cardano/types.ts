@@ -21,15 +21,15 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
   WalletState,
-} from '~/types/other'
+} from '@yoroi/types'
 import {
   AccountStates,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-} from '~/types/staking'
-import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '~/types/yoroi'
+} from '@yoroi/types'
+import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '@yoroi/types'
 import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =

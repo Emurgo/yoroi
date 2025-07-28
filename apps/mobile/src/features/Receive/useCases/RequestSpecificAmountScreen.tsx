@@ -27,7 +27,7 @@ import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
 import {TextInput} from '~/ui/TextInput'
 import {editedFormatter} from '~/wallets/utils/amountUtils'
-import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '~/common/ReceiveProvider'
 import {useStrings} from '~/common/useStrings'
 

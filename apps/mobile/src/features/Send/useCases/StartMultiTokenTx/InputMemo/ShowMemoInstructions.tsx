@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {HelperText} from '~/components/TextInput/TextInput'
 import {memoMaxLenght} from '~/features/common/constants'
-import {useStrings} from '~/../../common/strings'
+import {useStrings} from '~/features/common/strings'
 
 export const ShowMemoInstructions = ({memo = ''}: {memo?: string}) => {
   const strings = useStrings()

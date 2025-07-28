@@ -9,8 +9,8 @@ import {PairedBalance} from '~/components/PairedBalance/PairedBalance'
 import {Spacer} from '~/components/Spacer/Spacer'
 import {Icon} from '~/ui/Icon'
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {usePrivacyMode} from '~/../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const {wallet, meta} = useSelectedWallet()

@@ -5,7 +5,7 @@ import * as React from 'react'
 import {useNavigation} from '@react-navigation/native'
 import {Button, Text, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
-import {DevMenu} from '~/../../../DevMenu'
+import {DevMenu} from '~/DevMenu'
 import {useModal} from '~/ui/Modal/ModalContext'
 
 const Stack = createStackNavigator<any>()

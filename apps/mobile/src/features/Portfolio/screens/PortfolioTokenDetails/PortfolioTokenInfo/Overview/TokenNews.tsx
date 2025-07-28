@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import NewsPlaceHolder from '~/../../../../../assets/img/token-news-place-holder.png'
+import NewsPlaceHolder from '~/assets/img/token-news-place-holder.png'
 import {Accordion} from '~/components/Accordion/Accordion'
 import {Space} from '~/components/Space/Space'
 import {useStrings} from '~/features/common/hooks/useStrings'

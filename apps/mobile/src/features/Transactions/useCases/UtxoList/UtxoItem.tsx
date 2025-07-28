@@ -8,7 +8,7 @@ import {useWalletNavigation} from '~/kernel/navigation'
 import {Space} from '~/ui/Space/Space'
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {MiniTokenAmountItem} from '~/features/Portfolio/common/TokenAmountItem/MiniTokenAmountItem'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {UtxoList} from './useUtxoList'
 
 export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {

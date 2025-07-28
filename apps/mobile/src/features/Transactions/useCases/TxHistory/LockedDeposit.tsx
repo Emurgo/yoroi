@@ -6,8 +6,8 @@ import {View} from 'react-native'
 import {Spacer} from '~/components/Spacer/Spacer'
 import {Text} from '~/components/Text'
 import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
-import {usePrivacyMode} from '~/../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '~/features/common/strings'
 
 export const LockedDeposit = ({

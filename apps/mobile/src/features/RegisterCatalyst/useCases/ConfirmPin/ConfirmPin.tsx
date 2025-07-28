@@ -20,9 +20,9 @@ import {
 import {Space, Spacer} from '~/ui/Space/Space'
 import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
 import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
-import {useReviewTx} from '~/../../ReviewTx/common/ReviewTxProvider'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo} from '~/../CatalystNavigator'
+import {useReviewTx} from '~/ReviewTx/common/ReviewTxProvider'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
+import {useNavigateTo} from '~/CatalystNavigator'
 import {
   Actions,
   Description,

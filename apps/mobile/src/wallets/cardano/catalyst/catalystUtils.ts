@@ -1,6 +1,6 @@
 import {mnemonicToEntropy} from 'bip39'
 
-import {CardanoMobile} from '~/../wallets'
+import {CardanoMobile} from '~/wallets'
 import {generateAdaMnemonic} from '~/mnemonic/mnemonic'
 
 export function generatePrivateKeyForCatalyst() {

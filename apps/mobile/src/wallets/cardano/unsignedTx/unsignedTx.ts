@@ -10,9 +10,9 @@ import {
   YoroiMetadata,
   YoroiUnsignedTx,
   YoroiVoting,
-} from '~/~/types/yoroi'
-import {Amounts, asQuantity, Entries, Quantities} from '~/../utils/utils'
-import {Cardano, CardanoMobile} from '~/../wallets'
+} from '@yoroi/types'
+import {Amounts, asQuantity, Entries, Quantities} from '~/wallets/utils/utils'
+import {Cardano, CardanoMobile} from '~/wallets'
 import {CardanoTypes} from '~/types'
 
 export const yoroiUnsignedTx = ({

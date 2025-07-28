@@ -6,7 +6,7 @@ import {Alert, Platform, Text, View} from 'react-native'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
-import {useWalletManager} from '~/../../WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/useStrings'
 
 export const WalletDuplicatedModal = ({

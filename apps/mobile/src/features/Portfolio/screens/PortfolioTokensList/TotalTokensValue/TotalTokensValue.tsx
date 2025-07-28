@@ -3,7 +3,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/../../common/hooks/useStrings'
+import {useStrings} from '~/features/common/hooks/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,

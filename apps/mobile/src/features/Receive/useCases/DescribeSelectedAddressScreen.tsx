@@ -17,7 +17,7 @@ import {
   singleOrMultipleAddressesModalHeight,
 } from '~/ui/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
-import {useAddressMode} from '~/../WalletManager/common/hooks/useAddressMode'
+import {useAddressMode} from '~/WalletManager/common/hooks/useAddressMode'
 import {useReceive} from '~/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '~/common/useMultipleAddressesInfo'
 import {useNavigateTo} from '~/common/useNavigateTo'

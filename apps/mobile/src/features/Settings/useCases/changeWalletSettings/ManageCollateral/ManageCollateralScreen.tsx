@@ -44,9 +44,9 @@ import {
   asQuantity,
   Quantities,
 } from '~/wallets/utils/utils'
-import {TokenAmountItem} from '~/../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useReviewTx} from '~/../../../ReviewTx/common/ReviewTxProvider'
-import {useSelectedWallet} from '~/../../../WalletManager/common/hooks/useSelectedWallet'
+import {TokenAmountItem} from '~/Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {useReviewTx} from '~/ReviewTx/common/ReviewTxProvider'
+import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'

@@ -14,7 +14,7 @@ import {Text} from '~/components/Text'
 import {useLanguage} from '~/kernel/i18n'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {useTransactionInfos} from '~/wallets/hooks'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {triggerNotificationAction} from '~/features/common/tools'
 import {
   getTransactionReceivedNotificationIcon,
@@ -22,7 +22,7 @@ import {
 } from '~/features/Notifications/common/TransactionReceivedNotification'
 import {useStrings} from '~/features/common/useStrings'
 import {useWalletNotifications} from '~/features/common/useWalletNotifications'
-import {EmptyNotificationsIllustration} from '~/../illustrations/EmptyNotifications'
+import {EmptyNotificationsIllustration} from '~/illustrations/EmptyNotifications'
 
 export const ViewNotificationHistoryScreen = () => {
   const {styles} = useStyles()

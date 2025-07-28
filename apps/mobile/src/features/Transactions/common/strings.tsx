@@ -6,7 +6,7 @@ import globalMessages, {
   txLabels,
 } from '~/kernel/i18n/global-messages'
 import {TransactionDirection} from '~/wallets/types/other'
-import {messages as receiveMessages} from '~/../Receive/common/useStrings'
+import {messages as receiveMessages} from '~/Receive/common/useStrings'
 
 export const useStrings = () => {
   const intl = useIntl()

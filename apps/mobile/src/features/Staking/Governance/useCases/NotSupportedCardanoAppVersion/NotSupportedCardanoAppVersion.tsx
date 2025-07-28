@@ -6,7 +6,7 @@ import {useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {useStrings} from '~/features/common/strings'
-import {BrokenImage} from '~/../illustrations/BrokenImage'
+import {BrokenImage} from '~/illustrations/BrokenImage'
 
 export const NotSupportedCardanoAppVersion = () => {
   const strings = useStrings()

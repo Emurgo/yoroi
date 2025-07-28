@@ -10,7 +10,7 @@ import {
   useBlockGoBack,
   useWalletNavigation,
 } from '~/kernel/navigation'
-import {FailedTxIcon} from '~/../../ReviewTx/illustrations/FailedTxIcon'
+import {FailedTxIcon} from '~/ReviewTx/illustrations/FailedTxIcon'
 import {useStrings} from '~/features/common/strings'
 
 export const FailedTxScreen = () => {

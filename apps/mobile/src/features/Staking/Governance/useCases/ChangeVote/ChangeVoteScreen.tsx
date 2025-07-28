@@ -18,7 +18,7 @@ import {
   useCreateGovernanceTx,
   useStakingKey,
 } from '~/wallets/hooks'
-import {useSelectedWallet} from '~/../../../WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Action} from '~/features/common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,

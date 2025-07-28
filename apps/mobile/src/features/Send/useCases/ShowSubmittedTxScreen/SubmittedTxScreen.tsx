@@ -10,7 +10,7 @@ import {
   useBlockGoBack,
   useWalletNavigation,
 } from '~/kernel/navigation'
-import {SuccessfulTxIcon} from '~/../../ReviewTx/illustrations/SuccessfulTxIcon'
+import {SuccessfulTxIcon} from '~/ReviewTx/illustrations/SuccessfulTxIcon'
 import {useStrings} from '~/features/common/strings'
 
 export const SubmittedTxScreen = () => {

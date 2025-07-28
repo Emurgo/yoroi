@@ -1,7 +1,7 @@
 {
   "extends": ["@react-native-community", "prettier"],
-  "plugins": ["prettier", "import"],
   "rules": {
+    "@babel/no-invalid-this": "off",
     "prettier/prettier": [
       "error",
       {
@@ -11,28 +11,16 @@
         "tabWidth": 2,
         "trailingComma": "all",
         "useTabs": false,
-        "semi": false,
-        "importOrder": ["^@yoroi/(.*)$", "^a-zA-Z@", "^./"],
-        "importOrderSeparation": true,
-        "importOrderSortSpecifiers": true
+        "semi": false
       }
-    ],
-    "eqeqeq": "off",
-    "react-native/no-inline-styles": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "off",
-      {
-        "args": "all",
-        "argsIgnorePattern": "^_",
-        "caughtErrors": "all",
-        "caughtErrorsIgnorePattern": "^_",
-        "destructuredArrayIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "ignoreRestSiblings": true
-      }
-    ],
-    "@typescript-eslint/no-shadow": "off",
-    "react/no-unstable-nested-components": "off"
+    ]
   },
-  "root": true
+  "overrides": [
+    {
+      "files": ["metro.config.js"],
+      "parserOptions": {
+        "requireConfigFile": false
+      }
+    }
+  ]
 }

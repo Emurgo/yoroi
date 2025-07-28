@@ -18,7 +18,7 @@ import {
   useAuthWithOs,
   useIsAuthOsSupported,
 } from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
-import {useSelectedNetwork} from '~/../../WalletManager/common/hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '~/WalletManager/common/hooks/useSelectedNetwork'
 import {useNavigateTo} from '~/features/common/navigation'
 import {SettingsSwitch} from '~/features/common/SettingsSwitch'
 import {

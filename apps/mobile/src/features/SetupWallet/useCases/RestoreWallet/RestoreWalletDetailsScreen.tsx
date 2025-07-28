@@ -39,12 +39,12 @@ import {
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
 } from '~/wallets/utils/validators'
-import {parseWalletMeta} from '~/../../WalletManager/common/validators/wallet-meta'
-import {useWalletManager} from '~/../../WalletManager/context/WalletManagerProvider'
-import {useCreateWalletMnemonic} from '~/../../WalletManager/hooks/useCreateWalletMnemonic'
+import {parseWalletMeta} from '~/WalletManager/common/validators/wallet-meta'
+import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
+import {useCreateWalletMnemonic} from '~/WalletManager/hooks/useCreateWalletMnemonic'
 import {YoroiZendeskLink} from '~/features/common/constants'
 import {useStrings} from '~/features/common/useStrings'
-import {Info as InfoIcon} from '~/../illustrations/Info'
+import {Info as InfoIcon} from '~/illustrations/Info'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height

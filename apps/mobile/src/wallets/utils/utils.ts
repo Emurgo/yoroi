@@ -2,8 +2,8 @@ import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {NumberLocale} from '~/kernel/i18n/languages'
-import {RawUtxo} from '~/types/other'
-import {TokenId, YoroiEntry} from '~/types/yoroi'
+import {RawUtxo} from '@yoroi/types'
+import {TokenId, YoroiEntry} from '@yoroi/types'
 
 export const Entries = {
   first: (entries: YoroiEntry[]): YoroiEntry => {

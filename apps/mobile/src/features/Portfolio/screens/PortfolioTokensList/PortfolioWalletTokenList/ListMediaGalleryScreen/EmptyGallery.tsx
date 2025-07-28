@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
 import {Image, Text, View} from 'react-native'
 
-import noNftsImage from '~/../../../../../assets/img/no-nft.png'
+import noNftsImage from '~/assets/img/no-nft.png'
 import {Space} from '~/components/Space/Space'
 
 type Props = {heading?: ReactNode; message: ReactNode}

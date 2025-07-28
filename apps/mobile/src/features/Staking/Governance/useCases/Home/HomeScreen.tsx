@@ -15,7 +15,7 @@ import React, {type ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useMetrics} from '~/../../../../kernel/metrics/metricsManager'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {
@@ -25,8 +25,8 @@ import {
   useWalletEvent,
 } from '~/wallets/hooks'
 import {TransactionInfo} from '~/wallets/types/other'
-import {useStakingInfo} from '~/../../../Dashboard/StakePoolInfos'
-import {useSelectedWallet} from '~/../../../WalletManager/hooks/useSelectedWallet'
+import {useStakingInfo} from '~/Dashboard/StakePoolInfos'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Action} from '~/features/common/Action/Action'
 import {formatDrepHashToCIP129Format} from '~/features/common/drep'
 import {

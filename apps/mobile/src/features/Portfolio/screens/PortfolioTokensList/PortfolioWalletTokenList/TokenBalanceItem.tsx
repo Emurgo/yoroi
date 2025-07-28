@@ -11,14 +11,14 @@ import {Text, TouchableOpacity, View} from 'react-native'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 import {PairedBalance} from '~/components/PairedBalance/PairedBalance'
 import {Space} from '~/components/Space/Space'
-import {useCurrencyPairing} from '~/../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useCurrencyPairing} from '~/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {
   formatPriceChange,
   priceChange,
 } from '~/features/common/helpers/priceChange'
-import {useNavigateTo} from '~/../../common/hooks/useNavigateTo'
-import {usePortfolioTokenActivity} from '~/../../common/PortfolioTokenActivityProvider'
+import {useNavigateTo} from '~/features/common/hooks/useNavigateTo'
+import {usePortfolioTokenActivity} from '~/features/common/PortfolioTokenActivityProvider'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 
 type Props = {

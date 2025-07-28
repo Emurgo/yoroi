@@ -7,8 +7,8 @@ import {BalanceCard} from '~/ui/BalanceCard/BalanceCard'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {usePortfolioBalances} from '~/../Portfolio/common/hooks/usePortfolioBalances'
-import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 
 export const WalletBalance = ({

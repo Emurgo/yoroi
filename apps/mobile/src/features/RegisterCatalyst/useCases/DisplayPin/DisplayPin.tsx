@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {Space} from '~/ui/Space/Space'
-import {useNavigateTo} from '~/../CatalystNavigator'
+import {useNavigateTo} from '~/CatalystNavigator'
 import {
   Actions,
   Description,

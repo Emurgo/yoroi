@@ -7,7 +7,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Icon} from '~/components/Icon'
 
 import {Spacer} from '~/components/Spacer/Spacer'
-import {useStrings} from '~/../../common/strings'
+import {useStrings} from '~/features/common/strings'
 
 export const NotifySupportedNameServers = () => {
   const strings = useStrings()

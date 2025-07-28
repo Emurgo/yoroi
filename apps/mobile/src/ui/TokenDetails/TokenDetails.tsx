@@ -14,7 +14,7 @@ import {
 
 import {isEmptyString} from '~/kernel/utils'
 import {useCopy} from '~/kernel/utils/clipboard'
-import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {Copiable} from '~/Copiable'
 import {ExplorerInfoLinks} from '~/ExplorerInfoLinks/ExplorerInfoLinks'
 import {Icon} from '~/Icon'

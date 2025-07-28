@@ -12,9 +12,9 @@ import {
   TRANSACTION_STATUS,
   Transactions,
   TxHistoryRequest,
-} from '~/~/types/other'
-import {RemoteCertificateMeta} from '~/~/types/staking'
-import {Version, versionCompare} from '~/../utils/versioning'
+} from '@yoroi/types'
+import {RemoteCertificateMeta} from '@yoroi/types'
+import {Version, versionCompare} from '~/utils/versioning'
 import * as yoroiApi from '~/api/api'
 import {ApiHistoryError} from '~/errors'
 

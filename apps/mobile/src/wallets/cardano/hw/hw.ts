@@ -28,7 +28,7 @@ import {
   HARDWARE_WALLETS,
   LedgerUserError,
   RejectedByUserError,
-} from '~/../hw/hw'
+} from '~/wallets/hw/hw'
 
 const MIN_ADA_APP_VERSION = '2.2.1'
 const MIN_ADA_APP_VERSION_SUPPORTING_CIP36 = 6

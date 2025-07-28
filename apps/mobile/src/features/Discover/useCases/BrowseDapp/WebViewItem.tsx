@@ -23,7 +23,7 @@ import {
 import {Icon} from '~/components/Icon'
 import {Spacer} from '~/components/Spacer/Spacer'
 import {isDev} from '~/kernel/env'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {TabItem, useBrowser} from '~/features/common/BrowserProvider'
 import {getDomainFromUrl} from '~/features/common/helpers'
 import {useConnectWalletToWebView} from '~/features/common/hooks'

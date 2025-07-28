@@ -10,7 +10,7 @@ import {useTransactionInfos} from '~/wallets/hooks'
 import {TransactionInfo} from '~/wallets/types/other'
 import {Token} from '~/wallets/types/tokens'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './useStrings'
 
 export const getTransactionReceivedNotificationTitle = (

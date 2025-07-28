@@ -5,7 +5,7 @@ import {freeze} from 'immer'
 
 import {isDev} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
-import {tokenManagers} from '~/../Portfolio/common/constants'
+import {tokenManagers} from '~/features/Portfolio/common/constants'
 
 export const addressModes: ReadonlyArray<Wallet.AddressMode> = freeze([
   'single',

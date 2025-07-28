@@ -11,11 +11,11 @@ import {
 
 import {Icon} from '~/components/Icon'
 import {Space} from '~/components/Space/Space'
-import {useSelectedWallet} from '~/../../../WalletManager/hooks/useSelectedWallet'
-import {useNavigateTo} from '~/../../common/hooks/useNavigateTo'
-import {usePortfolioBalances} from '~/../../common/hooks/usePortfolioBalances'
-import {useStrings} from '~/../../common/hooks/useStrings'
-import {useZeroBalance} from '~/../../common/hooks/useZeroBalance'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useNavigateTo} from '~/features/common/hooks/useNavigateTo'
+import {usePortfolioBalances} from '~/features/common/hooks/usePortfolioBalances'
+import {useStrings} from '~/features/common/hooks/useStrings'
+import {useZeroBalance} from '~/features/common/hooks/useZeroBalance'
 import {DashboardTokenItem} from './DashboardTokenItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 

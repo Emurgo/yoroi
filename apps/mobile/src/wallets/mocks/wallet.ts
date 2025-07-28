@@ -1,4 +1,3 @@
-import {action} from '@storybook/addon-actions'
 import {AppApi} from '@yoroi/api'
 import {
   buildNetworkManagers,
@@ -15,18 +14,18 @@ import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/b
 import {logger} from '~/kernel/logger/logger'
 import {toTokenInfo, utf8ToHex} from '~/cardano/api/utils'
 import {CardanoTypes, YoroiWallet} from '~/cardano/types'
-import {TransactionInfo} from '~/types/other'
+import {TransactionInfo} from '@yoroi/types'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-} from '~/types/staking'
+} from '@yoroi/types'
 import {
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
-} from '~/types/yoroi'
+} from '@yoroi/types'
 import {getTokenFingerprint} from '~/utils/format'
 import {CardanoMobile} from '~/wallets'
 import {mockEncryptedStorage} from './storage'
@@ -300,7 +299,7 @@ const getTransactions = {
 
   error: async (...args: unknown[]) => {
     action('getTransactions')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('getTransactions')(...args)
@@ -325,7 +324,7 @@ const fetchPoolInfo = {
   },
   error: async (...args: unknown[]) => {
     action('fetchPoolInfo')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('fetchPoolInfo')(...args)
@@ -371,7 +370,7 @@ const fetchNftModerationStatus = {
   },
   error: async (...args: unknown[]) => {
     action('fetchNftModerationStatus')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('fetchNftModerationStatus')(...args)
@@ -396,7 +395,7 @@ const getDelegationStatus = {
   },
   error: (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
-    throw new Error('storybook error message')
+    throw new Error('Mock error')
   },
   loading: (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
@@ -417,7 +416,7 @@ const getStakingInfo = {
   },
   error: async (...args: unknown[]) => {
     action('getStakingInfo')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('getStakingInfo')(...args)
@@ -432,7 +431,7 @@ const createUnsignedTx = {
   },
   error: async (...args: unknown[]) => {
     action('createUnsignedTx')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('createUnsignedTx')(...args)
@@ -447,7 +446,7 @@ const createDelegationTx = {
   },
   error: async (...args: unknown[]) => {
     action('createDelegationTx')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('createDelegationTx')(...args)
@@ -462,7 +461,7 @@ const setCollateralId = {
   },
   error: async (...args: unknown[]) => {
     action('setCollateralId')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('setCollateralId')(...args)
@@ -477,7 +476,7 @@ const createWithdrawalTx = {
   },
   error: async (...args: unknown[]) => {
     action('createWithdrawalTx')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('createWithdrawalTx')(...args)
@@ -495,7 +494,7 @@ const createVotingRegTx = {
   },
   error: async (...args: unknown[]) => {
     action('createVotingRegTx')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('createVotingRegTx')(...args)
@@ -510,7 +509,7 @@ const signTx = {
   },
   error: async (...args: unknown[]) => {
     action('signTx')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('signTx')(...args)
@@ -524,7 +523,7 @@ const signTxWithLedger = {
   },
   error: async (...args: unknown[]) => {
     action('signTx')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]): Promise<YoroiSignedTx> => {
     action('signTx')(...args)
@@ -538,7 +537,7 @@ const submitTransaction = {
   },
   error: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    return Promise.reject(new Error('Mock error'))
   },
   loading: async (...args: unknown[]) => {
     action('submitTransaction')(...args)

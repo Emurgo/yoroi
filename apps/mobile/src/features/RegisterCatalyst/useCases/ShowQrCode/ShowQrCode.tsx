@@ -11,7 +11,7 @@ import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {Space} from '~/ui/Space/Space'
-import {useNavigateTo} from '~/../CatalystNavigator'
+import {useNavigateTo} from '~/CatalystNavigator'
 import {Actions, Description} from '~/features/common/components'
 import {useStrings} from '~/features/common/strings'
 

@@ -14,10 +14,10 @@ import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '~/features/SetupWallet/illustrations/ChevronRight'
-// import {useAutomaticWalletOpener} from '~/../context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '~/../context/WalletManagerProvider'
-import {useSelectedNetwork} from '~/../hooks/useSelectedNetwork'
-import {useSyncWalletInfo} from '~/../hooks/useSyncWalletInfo'
+// import {useAutomaticWalletOpener} from '~/context/AutomaticWalletOpeningProvider'
+import {useWalletManager} from '~/context/WalletManagerProvider'
+import {useSelectedNetwork} from '~/hooks/useSelectedNetwork'
+import {useSyncWalletInfo} from '~/hooks/useSyncWalletInfo'
 
 type Props = {
   walletMeta: Wallet.Meta

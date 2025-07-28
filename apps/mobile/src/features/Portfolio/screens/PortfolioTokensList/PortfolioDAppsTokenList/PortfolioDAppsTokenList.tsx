@@ -5,9 +5,9 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '~/components/Spacer/Spacer'
 import {TabPanel} from '~/components/Tabs/Tabs'
-import {useMetrics} from '~/../../../../kernel/metrics/metricsManager'
-import {useSearch} from '~/../../../Search/SearchContext'
-import {useSelectedWallet} from '~/../../../WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useSearch} from '~/Search/SearchContext'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {
   ILiquidityPool,
   useGetLiquidityPool,
@@ -16,7 +16,7 @@ import {
   IOpenOrders,
   useGetOpenOrders,
 } from '~/features/Portfolio/common/hooks/useGetOpenOrders'
-import {usePortfolioPrimaryBalance} from '~/../../common/hooks/usePortfolioPrimaryBalance'
+import {usePortfolioPrimaryBalance} from '~/features/common/hooks/usePortfolioPrimaryBalance'
 import {
   PortfolioDappsTab,
   usePortfolio,

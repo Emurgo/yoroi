@@ -10,8 +10,8 @@ import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {asQuantity} from '~/wallets/utils/utils'
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
-import {useSelectedNetwork} from '~/../../WalletManager/common/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedNetwork} from '~/WalletManager/common/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {
   FormattedCertificate,
   FormattedFee,

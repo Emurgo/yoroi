@@ -33,9 +33,9 @@ import {
   formatTokenWithSymbol,
 } from '~/wallets/utils/format'
 import {asQuantity} from '~/wallets/utils/utils'
-import {usePrivacyMode} from '~/../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useBestBlock} from '~/../../WalletManager/common/hooks/useBestBlock'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useBestBlock} from '~/WalletManager/common/hooks/useBestBlock'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {messages, useStrings} from '~/features/common/strings'
 import AddressModal from './AddressModal/AddressModal'
 import {AssetList} from './AssetList'

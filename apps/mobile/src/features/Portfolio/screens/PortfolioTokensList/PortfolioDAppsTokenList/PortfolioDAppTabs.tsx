@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
-import {useStrings} from '~/../../common/hooks/useStrings'
+import {useStrings} from '~/features/common/hooks/useStrings'
 import {
   PortfolioDappsTab,
   usePortfolio,

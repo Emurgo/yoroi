@@ -29,7 +29,7 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {isDev, isNightly} from '~/kernel/env'
 import {logger} from '~/kernel/logger/logger'
-import {useStakingInfo} from '~/../legacy/Dashboard/StakePoolInfos'
+import {useStakingInfo} from '~/legacy/Dashboard/StakePoolInfos'
 import {deriveAddressFromXPub} from '~/cardano/account-manager/derive-address-from-xpub'
 import {getSpendingKey, getStakingKey} from '~/cardano/addressInfo/addressInfo'
 import {convertBech32ToHex} from '~/cardano/common/signatureUtils'
@@ -38,8 +38,8 @@ import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TxSubmissionStatus,
-} from '~/types/other'
-import {YoroiSignedTx, YoroiUnsignedTx} from '~/types/yoroi'
+} from '@yoroi/types'
+import {YoroiSignedTx, YoroiUnsignedTx} from '@yoroi/types'
 import {delay} from '~/utils/timeUtils'
 import {Quantities, Utxos} from '~/utils/utils'
 

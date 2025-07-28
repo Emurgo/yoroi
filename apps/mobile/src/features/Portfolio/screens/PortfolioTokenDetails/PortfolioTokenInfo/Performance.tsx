@@ -5,10 +5,10 @@ import {Text, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Space} from '~/components/Space/Space'
-import {useSelectedWallet} from '~/../../../WalletManager/hooks/useSelectedWallet'
-import {useGetPortfolioTokenInfo} from '~/../../common/hooks/useGetPortfolioTokenInfo'
-import {usePortfolioTokenDetailParams} from '~/../../common/hooks/useNavigateTo'
-import {useStrings} from '~/../../common/hooks/useStrings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useGetPortfolioTokenInfo} from '~/features/common/hooks/useGetPortfolioTokenInfo'
+import {usePortfolioTokenDetailParams} from '~/features/common/hooks/useNavigateTo'
+import {useStrings} from '~/features/common/hooks/useStrings'
 
 export const Performance = () => {
   const {atoms: ta, palette: p} = useTheme()

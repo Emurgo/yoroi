@@ -11,7 +11,7 @@ import {
   useWalletNavigation,
 } from '~/kernel/navigation'
 import {useStrings} from '~/features/common/hooks/useStrings'
-import {FailedTxIcon} from '~/../illustrations/FailedTxIcon'
+import {FailedTxIcon} from '~/illustrations/FailedTxIcon'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()

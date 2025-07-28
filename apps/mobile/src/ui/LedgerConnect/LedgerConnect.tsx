@@ -8,8 +8,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, FlatList, Image, Text, View} from 'react-native'
 import {Observer} from 'rxjs'
 
-import bleImage from '~/../../assets/img/bluetooth.png'
-import usbImage from '~/../../assets/img/ledger-nano-usb.png'
+import bleImage from '~/assets/img/bluetooth.png'
+import usbImage from '~/assets/img/ledger-nano-usb.png'
 import globalMessages, {
   confirmationMessages,
   ledgerMessages,
@@ -29,7 +29,6 @@ import {DeviceItem} from './DeviceItem'
 
 type Props = {
   intl: IntlShape
-  defaultDevices?: Array<Device> | null // for storybook
   onConnectUSB: (deviceObj: HW.DeviceObj) => Promise<void> | void
   onConnectBLE: (deviceId: string) => Promise<void> | void
   useUSB?: boolean

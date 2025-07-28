@@ -3,7 +3,7 @@
 ## 📊 Overall Progress
 
 - **Total Files**: 1,107
-- **Migrated**: 57 (5%) - Files that pass lint and TypeScript checks (uses atomic design + absolute paths)
+- **Migrated**: 60 (5%) - Files that pass lint and TypeScript checks (uses atomic design + absolute paths)
 - **Pending**: 620 (57%) - Files using StyleSheet.create, relative imports, or wrong import paths
 - **Needs Review**: 363 (33%) - Files without clear migration indicators
 - **Skip**: 67 (6%) - Test files, storybook files, configs
@@ -29,14 +29,14 @@
 - ⏳ `hooks/useEnableAuthWithOS.ts` - **PENDING** (uses relative imports)
 - ⏳ `hooks/useEnableEasyConfirmation.ts` - **PENDING** (uses relative imports)
 - ⏳ `hooks/useStrings.ts` - **PENDING** (uses relative imports)
-- ⏳ `screens/ChangePinScreen.tsx` - **PENDING** (uses atomic design but has relative imports)
+- ✅ `screens/ChangePinScreen.tsx` - **MIGRATED** (uses atomic design and absolute paths)
 - ⏳ `screens/CreatePinScreen.tsx` - **PENDING** (uses atomic design but has relative imports)
 - ⏳ `screens/EnableLoginWithPinScreen.tsx` - **PENDING** (uses relative imports)
 - ⏳ `screens/LoginWithHostScreen.tsx` - **PENDING** (uses atomic design but has relative imports)
 - ⏳ `screens/LoginWithPinScreen.tsx` - **PENDING** (uses atomic design but has relative imports)
 - ⏳ `screens/OsAuthScreen.tsx` - **PENDING** (uses atomic design but has relative imports)
-- ⏳ `ui/CheckPinInput/CheckPinInput.tsx` - **PENDING** (uses relative imports)
-- ⏳ `ui/CreatePinInput/CreatePinInput.tsx` - **PENDING** (uses relative imports)
+- ✅ `ui/CheckPinInput/CheckPinInput.tsx` - **MIGRATED** (uses atomic design and absolute paths)
+- ✅ `ui/CreatePinInput/CreatePinInput.tsx` - **MIGRATED** (uses atomic design and absolute paths)
 - 🔍 `ui/illustrations/Logo.tsx` - **NEEDS REVIEW** (Illustration component)
 - ⏳ `ui/PinInput/PinInput.tsx` - **PENDING** (uses atomic design but has relative imports)
 

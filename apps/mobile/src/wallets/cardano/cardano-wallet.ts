@@ -41,9 +41,9 @@ import type {
   RawUtxo,
   TxStatusRequest,
   TxStatusResponse,
-} from '~/types/other'
-import {StakingInfo} from '~/types/staking'
-import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '~/types/yoroi'
+} from '@yoroi/types'
+import {StakingInfo} from '@yoroi/types'
+import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '@yoroi/types'
 import {Quantities} from '~/utils/utils'
 import {Cardano, CardanoMobile} from '~/wallets'
 import {

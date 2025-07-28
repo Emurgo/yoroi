@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Counter} from '~/ui/Counter/Counter'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
-import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {undefinedToken} from '~/features/common/constants'
 import {useStrings} from '~/features/common/strings'
 import {useSwap} from '~/features/common/SwapProvider'

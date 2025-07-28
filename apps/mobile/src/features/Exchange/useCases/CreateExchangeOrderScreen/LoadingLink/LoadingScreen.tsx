@@ -3,8 +3,8 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/../../common/useStrings'
-import {YoroiLogo} from '~/../../illustrations/YoroiLogo'
+import {useStrings} from '~/features/common/useStrings'
+import {YoroiLogo} from '~/illustrations/YoroiLogo'
 
 export const LoadingLinkScreen = () => {
   const strings = useStrings()

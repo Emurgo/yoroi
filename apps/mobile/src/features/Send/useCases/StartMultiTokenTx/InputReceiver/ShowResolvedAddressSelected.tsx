@@ -5,7 +5,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '~/components/Spacer/Spacer'
-import {useStrings} from '~/../../common/strings'
+import {useStrings} from '~/features/common/strings'
 
 export const ShowResolvedAddressSelected = () => {
   const strings = useStrings()

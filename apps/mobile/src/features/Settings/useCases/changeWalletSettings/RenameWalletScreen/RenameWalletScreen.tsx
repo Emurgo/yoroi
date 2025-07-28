@@ -9,11 +9,11 @@ import {Button} from '~/components/Button/Button'
 import {KeyboardAvoidingView} from '~/components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {Spacer} from '~/components/Spacer/Spacer'
 import {TextInput} from '~/components/TextInput/TextInput'
-import globalMessages from '~/../~/kernel/i18n/global-messages'
-import {isEmptyString} from '~/../../../../kernel/utils'
+import globalMessages from '~/~/kernel/i18n/global-messages'
+import {isEmptyString} from '~/kernel/utils'
 import {getWalletNameError} from '~/wallets/utils/validators'
-import {useSelectedWallet} from '~/../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '~/../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 
 export const RenameWalletScreen = () => {
   const strings = useStrings()
