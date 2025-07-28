@@ -15,8 +15,8 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {Button} from '~/components/Button/Button'
-import {SafeArea} from '~/components/SafeArea'
+import {Button} from '~/ui/Button/Button'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {
   ScrollView,
   useScrollView,

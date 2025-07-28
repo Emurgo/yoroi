@@ -7,13 +7,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '~/components/Icon'
-import {Spacer} from '~/components/Spacer/Spacer'
+import {Icon} from '~/ui/Icon'
+import {Spacer} from '~/ui/Spacer/Spacer'
 import {
   DIALOG_BUTTONS,
   showConfirmationDialog,
 } from '~/kernel/dialogs'
-import {confirmationMessages} from '~/~/kernel/i18n/global-messages'
+import {confirmationMessages} from '~/kernel/i18n/global-messages'
 import {
   SettingsRouteNavigation,
   useWalletNavigation,

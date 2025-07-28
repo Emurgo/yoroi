@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import globalMessages from '~/kernel/i18n/global-messages'
 import {Button, ButtonProps, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'

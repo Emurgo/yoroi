@@ -14,8 +14,8 @@ import {
   ViewProps,
 } from 'react-native'
 
-import {useModal} from '~/components/Modal/ModalContext'
-import {Text} from '~/components/Text'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Text} from '~/ui/Text/Text'
 import {useStrings} from '~/ReviewTx/common/hooks/useStrings'
 import {TokenDetails} from '~/ReviewTx/common/TokenDetails'
 import {TokenInfoIcon} from './TokenInfoIcon'

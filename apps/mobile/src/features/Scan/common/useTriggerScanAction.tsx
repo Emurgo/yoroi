@@ -5,7 +5,7 @@ import {Scan} from '@yoroi/types'
 import * as React from 'react'
 import {Alert, Linking} from 'react-native'
 
-import {useModal} from '~/components/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
 import {useStrings as useStringsClaim} from '~/features/Claim/common/useStrings'
 import {

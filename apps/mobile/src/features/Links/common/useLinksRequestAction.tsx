@@ -6,7 +6,7 @@ import * as React from 'react'
 import {InteractionManager} from 'react-native'
 import uuid from 'uuid'
 
-import {useModal} from '~/components/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useBrowser} from '~/Discover/common/BrowserProvider'

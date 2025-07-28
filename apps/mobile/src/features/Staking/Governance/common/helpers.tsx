@@ -9,7 +9,7 @@ import {
 } from '@yoroi/staking'
 import * as React from 'react'
 
-import {InfoBanner} from '~/components/InfoBanner/InfoBanner'
+import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {useStakingKey, useWalletEvent} from '~/wallets/hooks'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'

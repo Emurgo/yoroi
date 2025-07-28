@@ -4,9 +4,9 @@ import * as React from 'react'
 import {ScrollView, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '~/components/Button/Button'
-import {useModal} from '~/components/Modal/ModalContext'
-import {Spacer} from '~/components/Spacer/Spacer'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Spacer} from '~/ui/Spacer/Spacer'
 import {useStrings} from '~/features/common/useStrings'
 
 export const AskToOpenWalletScreen = () => {

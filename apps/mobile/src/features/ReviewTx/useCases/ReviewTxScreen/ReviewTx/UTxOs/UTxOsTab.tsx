@@ -3,12 +3,10 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Copiable} from '~/components/Clipboard/Copiable'
-import {Divider} from '~/components/Divider/Divider'
-import {Space} from '~/components/Space/Space'
-import {formatTokenWithText} from '~/wallets/utils/format'
-import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
-import {Accordion} from '~/features/common/Accordion'
+import {Copiable} from '~/ui/Clipboard/Copiable'
+import {Divider} from '~/ui/Divider/Divider'
+import {Space} from '~/ui/Space/Space'
+import {Accordion} from '~/ui/Accordion/Accordion'
 import {useStrings} from '~/features/common/hooks/useStrings'
 import {TokenItem} from '~/features/common/TokenItem'
 import {
@@ -18,6 +16,8 @@ import {
   FormattedOutputs,
   FormattedTx,
 } from '~/features/common/types'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {formatTokenWithText} from '~/wallets/utils/format'
 
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()

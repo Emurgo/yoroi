@@ -3,10 +3,10 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '~/components/Button/Button'
-import {SafeArea} from '~/components/SafeArea'
-import {Space} from '~/components/Space/Space'
-import {Spacer} from '~/components/Spacer/Spacer'
+import {Button} from '~/ui/Button/Button'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space} from '~/ui/Space/Space'
+import {Spacer} from '~/ui/Spacer/Spacer'
 import {
   useBlockGoBack,
   useWalletNavigation,

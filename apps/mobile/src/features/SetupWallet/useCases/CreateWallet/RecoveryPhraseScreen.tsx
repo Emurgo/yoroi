@@ -6,7 +6,6 @@ import * as React from 'react'
 import {
   Linking,
   Platform,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -53,7 +52,7 @@ export const RecoveryPhraseScreen = () => {
     openModal({
       // title: strings.recoveryPhraseModalTitle,
       content: (
-        <View style={[styles.modal, a.flex_1, a.px_lg]}>
+        <View style={[a.flex_1, a.px_lg]}>
           <CardAboutPhrase
             title={strings.recoveryPhraseCardTitle}
             linesOfText={[
@@ -104,83 +103,45 @@ export const RecoveryPhraseScreen = () => {
   }, [showCreateWalletInfoModal])
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[
-        styles.root,
-        a.flex_1,
-        a.px_lg,
-        {backgroundColor: p.bg_color_max},
-      ]}
-    >
-      <View style={[styles.content, a.gap_lg]}>
-        <StepperProgress
-          currentStep={2}
-          currentStepTitle={strings.stepRecoveryPhrase}
-          totalSteps={4}
-        />
+    <SafeAreaView style={[a.flex_1, a.px_lg, a.pb_lg]}>
+      <StepperProgress currentStep={2} totalSteps={4} />
 
-        <Text style={[styles.title, a.body_1_lg_regular, {color: p.gray_900}]}>
-          {strings.recoveryPhraseTitle(bold)}
+      <Space.Height.lg />
 
-          <Info onPress={handleOnShowModal} testID="step2-info-icon" />
+      <Text style={[a.heading_3_medium, a.text_center, {color: p.text_gray_max}]}>
+        {strings.recoveryPhraseTitle}
+      </Text>
+
+      <Space.Height.md />
+
+      <Text style={[a.body_1_lg_regular, a.text_center, {color: p.text_gray_medium}]}>
+        {strings.recoveryPhraseDescription}
+      </Text>
+
+      <Space.Height.lg />
+
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
+        <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+          {strings.recoveryPhraseSubtitle}
         </Text>
 
-        <View
-          style={[
-            styles.mnemonicWords,
-            a.flex_row,
-            a.flex_wrap,
-            a.py_sm,
-            a.gap_sm,
-          ]}
-        >
-          <BlurView
-            experimentalBlurMethod={
-              Platform.OS === 'android' ? 'dimezisBlurView' : 'none'
-            }
-            intensity={isBlur ? 14 : 0}
-            style={[
-              styles.blurView,
-              a.z_10,
-              a.absolute,
-              a.p_2xl,
-              {left: -8, right: -8, bottom: 0, top: 0},
-            ]}
-          />
+        <Info onPress={handleOnShowModal} testID="setup-step2-info-button" />
+      </View>
 
-          {mnemonic.split(' ').map((word, index) => (
-            <View
-              key={`mnemonic-${index}`}
-              testID={`mnemonic-${index}`}
-              style={[
-                styles.mnemonicTextContainer,
-                a.overflow_hidden,
-                a.flex_row,
-                a.flex_wrap,
-                a.px_lg,
-                a.py_sm,
-                {borderRadius: 8},
-              ]}
-            >
-              <View
-                style={[
-                  StyleSheet.absoluteFill,
-                  styles.buttonBackground,
-                  {backgroundColor: p.primary_100},
-                ]}
-              />
+      <Space.Height.md />
 
-              <Text
-                style={[
-                  styles.mnemonicText,
-                  a.body_1_lg_regular,
-                  {color: p.primary_600},
-                ]}
-              >
+      <View style={[a.relative, a.flex_1]}>
+        <BlurView
+          intensity={isBlur ? 100 : 0}
+          style={[a.absolute, a.inset_0, {borderRadius: 8}]}
+        />
+
+        <View style={[a.p_lg, {borderRadius: 8}]}>
+          <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+            {mnemonic.split(' ').map((word, index) => (
+              <View key={index} style={[a.flex_row, a.align_center]}>
                 <Text
                   style={[
-                    styles.mnemonicText,
                     a.body_1_lg_regular,
                     {color: p.primary_600},
                   ]}
@@ -190,13 +151,13 @@ export const RecoveryPhraseScreen = () => {
 
                 {word}
               </Text>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
 
         <TouchableOpacity
           activeOpacity={0.5}
-          style={[styles.blurButton, a.flex_row, a.align_center, a.gap_sm]}
+          style={[a.flex_row, a.align_center, a.gap_sm]}
           onPress={() => setIsBlur(!isBlur)}
           testID="step2-show_hide-recovery-phrase-button"
         >
@@ -204,7 +165,6 @@ export const RecoveryPhraseScreen = () => {
 
           <Text
             style={[
-              styles.blurTextButton,
               {color: p.primary_500},
               a.button_2_md,
               {textTransform: 'none'},
@@ -237,10 +197,9 @@ export const RecoveryPhraseScreen = () => {
 const Info = ({onPress, testID}: {onPress: () => void; testID?: string}) => {
   const {palette: p, isDark} = useTheme()
   return (
-    <TouchableOpacity style={[styles.info, a.relative]} onPress={onPress}>
+    <TouchableOpacity style={[a.relative]} onPress={onPress}>
       <View
         style={[
-          styles.infoIcon,
           a.absolute,
           {top: Platform.OS === 'ios' ? -22 : -18, left: 0},
         ]}
@@ -259,20 +218,3 @@ const useBold = () => {
     ),
   }
 }
-
-const styles = StyleSheet.create({
-  root: {},
-  modal: {},
-  title: {},
-  bolder: {},
-  content: {},
-  mnemonicWords: {},
-  mnemonicTextContainer: {},
-  mnemonicText: {},
-  blurView: {},
-  blurButton: {},
-  blurTextButton: {},
-  info: {},
-  infoIcon: {},
-  buttonBackground: {},
-})

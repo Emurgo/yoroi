@@ -4,8 +4,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
-import {LoadingBoundary} from '~/components/Boundary/Boundary'
-import {SomethingWentWrong} from '~/components/SomethingWentWrong/SomethingWentWrong'
+import {LoadingBoundary} from '~/ui/Boundary/Boundary'
+import {SomethingWentWrong} from '~/ui/SomethingWentWrong/SomethingWentWrong'
 import {
   defaultStackNavigationOptions,
   DiscoverRoutes,

@@ -9,7 +9,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {ButtonCard} from '~/features/common/ButtonCard/ButtonCard'
+import {ButtonCard} from '~/ui/ButtonCard/ButtonCard'
 import {useStrings} from '~/features/common/useStrings'
 // import {SelectHwConnectionModal} from '~/RestoreHwWallet/SelectHwConnectionModal'
 

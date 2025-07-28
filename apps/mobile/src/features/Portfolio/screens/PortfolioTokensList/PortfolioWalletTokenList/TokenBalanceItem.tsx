@@ -9,8 +9,8 @@ import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {PairedBalance} from '~/components/PairedBalance/PairedBalance'
-import {Space} from '~/components/Space/Space'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {Space} from '~/ui/Space/Space'
 import {useCurrencyPairing} from '~/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {

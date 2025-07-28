@@ -20,8 +20,8 @@ import {
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes'
 
-import {Icon} from '~/components/Icon'
-import {Spacer} from '~/components/Spacer/Spacer'
+import {Icon} from '~/ui/Icon'
+import {Spacer} from '~/ui/Spacer/Spacer'
 import {isDev} from '~/kernel/env'
 import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {TabItem, useBrowser} from '~/features/common/BrowserProvider'

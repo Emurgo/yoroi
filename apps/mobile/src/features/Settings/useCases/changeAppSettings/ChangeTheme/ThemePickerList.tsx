@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {FlatList, StyleSheet} from 'react-native'
+import {FlatList} from 'react-native'
 
 import {useThemeStorageMaker} from '~/wallets/hooks'
 import {ThemePickerItem} from './ThemePickerItem'
@@ -12,7 +12,7 @@ export const ThemePickerList = () => {
 
   return (
     <FlatList
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={{padding: 16}}
       data={data}
       keyExtractor={({themeName}) => themeName}
       renderItem={({item: {themeName}}) => {
@@ -27,9 +27,3 @@ export const ThemePickerList = () => {
     />
   )
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    padding: 16,
-  },
-})

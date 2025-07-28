@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Tab, TabPanel, Tabs} from '~/components/Tabs/Tabs'
+import {Tab, TabPanel, Tabs} from '~/ui/Tabs/Tabs'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useSearchOnNavBar} from '~/Search/SearchContext'
 import {NetworkTag} from '~/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'

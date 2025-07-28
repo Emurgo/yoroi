@@ -6,7 +6,7 @@ import React, {ReactNode} from 'react'
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Space} from '~/components/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'

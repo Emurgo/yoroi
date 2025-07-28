@@ -5,7 +5,7 @@ import {useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {normalisePtId} from '~/kernel/helpers/normalisePtId'
-import globalMessages, {txLabels} from '~/~/kernel/i18n/global-messages'
+import globalMessages, {txLabels} from '~/kernel/i18n/global-messages'
 import {isEmptyString} from '~/kernel/utils'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {CardanoTypes} from '~/wallets/cardano/types'

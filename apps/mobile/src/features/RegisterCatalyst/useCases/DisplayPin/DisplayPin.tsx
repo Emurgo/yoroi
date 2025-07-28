@@ -14,7 +14,7 @@ import {
   PinBox,
   Row,
   Stepper,
-} from '~/features/common/components'
+} from '~/ui/common/components'
 import {useStrings} from '~/features/common/strings'
 
 export const DisplayPin = () => {

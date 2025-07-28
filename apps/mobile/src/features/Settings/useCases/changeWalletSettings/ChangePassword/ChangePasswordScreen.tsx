@@ -12,20 +12,17 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '~/components/Button/Button'
-import {KeyboardAvoidingView} from '~/components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {
-  Checkmark,
-  TextInput,
-} from '~/components/TextInput/TextInput'
-import {errorMessages} from '~/~/kernel/i18n/global-messages'
+import {Button} from '~/ui/Button/Button'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Checkmark, TextInput} from '~/ui/TextInput/TextInput'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
 } from '~/wallets/utils/validators'
-import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {errorMessages} from '~/kernel/i18n/global-messages'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()

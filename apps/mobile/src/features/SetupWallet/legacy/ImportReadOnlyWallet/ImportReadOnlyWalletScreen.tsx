@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, Text, View} from 'react-native'
 
 import {showErrorDialog} from '~/kernel/dialogs'
-import {errorMessages} from '~/~/kernel/i18n/global-messages'
+import {errorMessages} from '~/kernel/i18n/global-messages'
 import {logger} from '~/kernel/logger/logger'
 import {BulletPointItem} from '~/ui/BulletPointItem'
 import {Space} from '~/ui/Space/Space'

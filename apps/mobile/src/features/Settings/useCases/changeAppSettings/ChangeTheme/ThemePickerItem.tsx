@@ -3,7 +3,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {TouchableOpacity, View} from 'react-native'
 
-import {themeNames} from '~/~/kernel/i18n/global-messages'
+import {themeNames} from '~/kernel/i18n/global-messages'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'

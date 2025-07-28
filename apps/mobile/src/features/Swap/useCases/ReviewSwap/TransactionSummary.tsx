@@ -3,7 +3,7 @@ import _ from 'lodash'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Divider} from '~/ui/Divider/Divider'
 import {Icon} from '~/ui/Icon'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'

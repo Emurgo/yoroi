@@ -5,10 +5,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '~/components/Button/Button'
-import {Text} from '~/components/Text'
-import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+import {Button} from '~/ui/Button/Button'
+import {Text} from '~/ui/Text/Text'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 
 export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()

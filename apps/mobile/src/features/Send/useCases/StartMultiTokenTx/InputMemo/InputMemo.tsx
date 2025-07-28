@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native'
 import {
   TextInput,
   TextInputProps,
-} from '~/components/TextInput/TextInput'
+} from '~/ui/TextInput/TextInput'
 import {useStrings} from '~/features/common/strings'
 import {ShowMemoErrorTooLong} from './ShowMemoErrorTooLong'
 import {ShowMemoInstructions} from './ShowMemoInstructions'

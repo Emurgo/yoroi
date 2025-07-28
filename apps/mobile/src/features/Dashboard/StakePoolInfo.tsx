@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, View} from 'react-native'
 
 import {useSelectedNetwork} from '~/features/WalletManager/common/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {isEmptyString} from '~/kernel/utils'
 import {Button, ButtonProps, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable'

@@ -3,8 +3,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '~/components/Spacer/Spacer'
-import {Text} from '~/components/Text'
+import {Spacer} from '~/ui/Spacer/Spacer'
+import {Text} from '~/ui/Text/Text'
 import {useStrings} from '~/useStrings'
 
 const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'

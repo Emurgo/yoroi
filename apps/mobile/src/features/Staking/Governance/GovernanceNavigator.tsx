@@ -2,7 +2,7 @@ import {GovernanceProvider} from '@yoroi/staking'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
 
-import {SafeArea} from '~/components/SafeArea'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {
   BackButton,
   defaultStackNavigationOptions,

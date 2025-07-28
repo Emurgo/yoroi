@@ -3,7 +3,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {TouchableOpacity, View} from 'react-native'
 
-import {currencyNames} from '~/~/kernel/i18n/global-messages'
+import {currencyNames} from '~/kernel/i18n/global-messages'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
 import {CurrencySymbol} from '~/wallets/types/other'

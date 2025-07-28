@@ -4,7 +4,7 @@ import React, {ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Space} from '~/components/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useGetPortfolioTokenInfo} from '~/features/common/hooks/useGetPortfolioTokenInfo'
 import {usePortfolioTokenDetailParams} from '~/features/common/hooks/useNavigateTo'

@@ -4,8 +4,8 @@ import {FlatList, Image, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import NewsPlaceHolder from '~/assets/img/token-news-place-holder.png'
-import {Accordion} from '~/components/Accordion/Accordion'
-import {Space} from '~/components/Space/Space'
+import {Accordion} from '~/ui/Accordion/Accordion'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from '~/features/common/hooks/useStrings'
 export const TokenNews = () => {
   const {atoms: ta, palette: p} = useTheme()

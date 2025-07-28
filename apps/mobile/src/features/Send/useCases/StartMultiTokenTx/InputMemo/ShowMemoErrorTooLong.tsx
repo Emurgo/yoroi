@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {HelperText} from '~/components/TextInput/TextInput'
+import {HelperText} from '~/ui/TextInput/TextInput'
 import {memoMaxLenght} from '~/features/common/constants'
 import {useStrings} from '~/features/common/strings'
 

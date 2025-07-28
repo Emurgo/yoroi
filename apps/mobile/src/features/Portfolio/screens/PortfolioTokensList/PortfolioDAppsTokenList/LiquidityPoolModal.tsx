@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {PairedBalance} from '~/components/PairedBalance/PairedBalance'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
 import {useStrings} from '~/features/common/hooks/useStrings'
 import {AssetLogo} from '~/ui/AssetLogo/AssetLogo'

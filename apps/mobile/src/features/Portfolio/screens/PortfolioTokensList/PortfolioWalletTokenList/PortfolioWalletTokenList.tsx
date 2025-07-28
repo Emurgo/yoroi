@@ -11,7 +11,7 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {Space} from '~/components/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {makeList} from '~/kernel/utils'
 import {useSearch} from '~/Search/SearchContext'

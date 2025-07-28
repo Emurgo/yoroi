@@ -3,7 +3,7 @@ import React, {ReactNode} from 'react'
 import {Image, Text, View} from 'react-native'
 
 import noNftsImage from '~/assets/img/no-nft.png'
-import {Space} from '~/components/Space/Space'
+import {Space} from '~/ui/Space/Space'
 
 type Props = {heading?: ReactNode; message: ReactNode}
 export function EmptyGallery({heading, message}: Props) {

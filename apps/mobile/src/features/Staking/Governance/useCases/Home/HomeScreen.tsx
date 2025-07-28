@@ -27,7 +27,7 @@ import {
 import {TransactionInfo} from '~/wallets/types/other'
 import {useStakingInfo} from '~/Dashboard/StakePoolInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {Action} from '~/features/common/Action/Action'
+import {Action} from '~/ui/Action/Action'
 import {formatDrepHashToCIP129Format} from '~/features/common/drep'
 import {
   mapStakingKeyStateToGovernanceAction,
@@ -37,7 +37,7 @@ import {LearnMoreLink} from '~/features/common/LearnMoreLink/LearnMoreLink'
 import {useNavigateTo} from '~/features/common/navigation'
 import {useStrings} from '~/features/common/strings'
 import {YoroiRecordLink} from '~/features/common/YoroiRecordLink/YoroiRecordLink'
-import {GovernanceVote} from '~/~/types'
+import {GovernanceVote} from '@yoroi/types'
 import {EnterDrepIdModal} from '~/EnterDrepIdModal/EnterDrepIdModal'
 
 export const HomeScreen = () => {

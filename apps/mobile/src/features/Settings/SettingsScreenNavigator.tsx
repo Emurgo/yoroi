@@ -6,8 +6,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity} from 'react-native'
 
-import {Boundary} from '~/components/Boundary/Boundary'
-import {Icon} from '~/components/Icon'
+import {Boundary} from '~/ui/Boundary/Boundary'
+import {Icon} from '~/ui/Icon'
 import globalMessages from '~/kernel/i18n/global-messages'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {

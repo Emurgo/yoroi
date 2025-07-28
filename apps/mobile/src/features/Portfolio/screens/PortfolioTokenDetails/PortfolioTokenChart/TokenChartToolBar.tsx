@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 
-import {Text} from '~/components/Text'
+import {Text} from '~/ui/Text/Text'
 import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
 
 interface Props {

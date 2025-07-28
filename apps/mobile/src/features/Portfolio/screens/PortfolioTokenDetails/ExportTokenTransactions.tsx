@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {TouchableOpacity} from 'react-native'
 
-import {Icon} from '~/components/Icon'
+import {Icon} from '~/ui/Icon'
 import {features} from '~/kernel/features'
 import {
   PortfolioDetailsTab,

@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {showErrorDialog} from '~/kernel/dialogs'
-import globalMessages from '~/~/kernel/i18n/global-messages'
+import globalMessages from '~/kernel/i18n/global-messages'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'

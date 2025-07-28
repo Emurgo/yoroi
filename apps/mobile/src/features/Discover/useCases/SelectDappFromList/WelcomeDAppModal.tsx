@@ -4,8 +4,8 @@ import {Image, StyleSheet, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import IllustrationDAppImage from '~/assets/img/illustration-dapp.png'
-import {Button} from '~/components/Button/Button'
-import {useModal} from '~/components/Modal/ModalContext'
+import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {useShowWelcomeDApp} from '~/features/common/useShowWelcomeDApp'
 import {useStrings} from '~/features/common/useStrings'
 

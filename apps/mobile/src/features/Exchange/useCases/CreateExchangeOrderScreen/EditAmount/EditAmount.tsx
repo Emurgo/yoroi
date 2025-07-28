@@ -9,7 +9,7 @@ import {Quantities} from '~/wallets/utils/utils'
 import {usePortfolioPrimaryBalance} from '~/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {AmountCard} from '~/features/common/AmountCard/AmountCard'
+import {AmountCard} from '~/ui/AmountCard/AmountCard'
 import {useStrings} from '~/features/common/useStrings'
 
 export const EditAmount = ({disabled}: {disabled?: boolean}) => {

@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
-import {Boundary} from '~/components/Boundary/Boundary'
+import {Boundary} from '~/ui/Boundary/Boundary'
 import {
   defaultStackNavigationOptions,
   PortfolioRoutes,

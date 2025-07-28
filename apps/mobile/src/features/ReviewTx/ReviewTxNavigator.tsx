@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
 
-import {Boundary} from '~/components/Boundary/Boundary'
+import {Boundary} from '~/ui/Boundary/Boundary'
 import {
   defaultStackNavigationOptions,
   ReviewTxRoutes,

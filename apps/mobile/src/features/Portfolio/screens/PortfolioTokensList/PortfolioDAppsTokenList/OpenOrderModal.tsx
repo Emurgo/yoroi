@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {PairedBalance} from '~/components/PairedBalance/PairedBalance'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
 import {useStrings} from '~/features/common/hooks/useStrings'
 import {AssetLogo} from '~/ui/AssetLogo/AssetLogo'

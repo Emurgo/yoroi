@@ -19,14 +19,20 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {useStrings} from '~/features/SetupWallet/common/useStrings'
+import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
-import {errorMessages} from '~/~/kernel/i18n/global-messages'
+import {errorMessages} from '~/kernel/i18n/global-messages'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
+import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
 import {useModal} from '~/ui/Modal/ModalContext'
@@ -39,12 +45,6 @@ import {
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
 } from '~/wallets/utils/validators'
-import {parseWalletMeta} from '~/WalletManager/common/validators/wallet-meta'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
-import {useCreateWalletMnemonic} from '~/WalletManager/hooks/useCreateWalletMnemonic'
-import {YoroiZendeskLink} from '~/features/common/constants'
-import {useStrings} from '~/features/common/useStrings'
-import {Info as InfoIcon} from '~/illustrations/Info'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height

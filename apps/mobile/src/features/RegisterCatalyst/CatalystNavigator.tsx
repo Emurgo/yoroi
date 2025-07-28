@@ -4,7 +4,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {Boundary} from '~/components/Boundary/Boundary'
+import {Boundary} from '~/ui/Boundary/Boundary'
 import globalMessages from '~/kernel/i18n/global-messages'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {

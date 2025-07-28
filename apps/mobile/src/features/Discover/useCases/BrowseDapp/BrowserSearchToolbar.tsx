@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native'
 
-import {Icon} from '~/components/Icon'
+import {Icon} from '~/ui/Icon'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useStrings} from '~/features/common/useStrings'
 

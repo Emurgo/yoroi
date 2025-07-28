@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {useModal} from '~/components/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {useStrings} from '~/Discover/common/useStrings'
 import {ConfirmRawTxWithOs} from '~/Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '~/Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'

@@ -3,9 +3,9 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '~/components/Icon'
-import {Space} from '~/components/Space/Space'
-import {Tooltip} from '~/components/Tooltip/Tooltip'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
+import {Tooltip} from '~/ui/Tooltip/Tooltip'
 import {usePrivacyMode} from '~/Settings/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useCurrencyPairing} from '~/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {

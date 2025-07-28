@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Icon} from '~/components/Icon'
+import {Icon} from '~/ui/Icon'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {getDomainFromUrl} from '~/features/common/helpers'
 import {useNavigateTo} from '~/features/common/useNavigateTo'

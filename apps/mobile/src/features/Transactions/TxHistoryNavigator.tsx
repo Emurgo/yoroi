@@ -22,7 +22,7 @@ import {Resolver} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {Boundary} from '~/components/Boundary/Boundary'
+import {Boundary} from '~/ui/Boundary/Boundary'
 import {unstoppableApiKey} from '~/kernel/env'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {

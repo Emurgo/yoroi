@@ -11,7 +11,7 @@ import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import globalMessages from '~/~/kernel/i18n/global-messages'
+import globalMessages from '~/kernel/i18n/global-messages'
 import {assetsToSendProperties} from '~/kernel/metrics/helpers'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation'

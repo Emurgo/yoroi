@@ -5,13 +5,13 @@ import React from 'react'
 import {StyleSheet, TextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '~/components/Button/Button'
-import {KeyboardAvoidingView} from '~/components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Button} from '~/ui/Button/Button'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {
   ScrollView,
   useScrollView,
 } from '~/ui/ScrollView/ScrollView'
-import {Space} from '~/components/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {useNextTick} from '~/hooks/useNextTick'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useHasPendingTx, useIsOnline} from '~/wallets/hooks'

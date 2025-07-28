@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {Spacer} from '~/components/Spacer/Spacer'
+import {Spacer} from '~/ui/Spacer/Spacer'
 import {isEmptyString} from '~/kernel/utils'
 import {useStrings} from '~/useStrings'
 

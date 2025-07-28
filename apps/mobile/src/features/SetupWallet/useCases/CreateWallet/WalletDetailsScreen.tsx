@@ -18,9 +18,13 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
+import {useStrings} from '~/features/SetupWallet/common/useStrings'
+import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
-import {errorMessages} from '~/~/kernel/i18n/global-messages'
+import {errorMessages} from '~/kernel/i18n/global-messages'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -39,10 +43,6 @@ import {
   validatePassword,
   validateWalletName,
 } from '~/wallets/utils/validators'
-import {parseWalletMeta} from '~/WalletManager/common/validators/wallet-meta'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
-import {useCreateWalletMnemonic} from '~/WalletManager/hooks/useCreateWalletMnemonic'
-import {useStrings} from '~/features/common/useStrings'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height

@@ -19,7 +19,7 @@ import {
   useStakingKey,
 } from '~/wallets/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {Action} from '~/features/common/Action/Action'
+import {Action} from '~/ui/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,
   useGovernanceActions,

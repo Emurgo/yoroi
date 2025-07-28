@@ -5,10 +5,10 @@ import * as React from 'react'
 import {ReactNode} from 'react'
 import {Animated, StyleSheet} from 'react-native'
 
-import {Spacer} from '~/components/Spacer/Spacer'
-import {Text} from '~/components/Text'
-import {WarningBanner} from '~/components/WarningBanner/WarningBanner'
-import {ButtonGroup} from '~/features/common/ButtonGroup/ButtonGroup'
+import {Spacer} from '~/ui/Spacer/Spacer'
+import {Text} from '~/ui/Text/Text'
+import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
+import {ButtonGroup} from '~/ui/ButtonGroup/ButtonGroup'
 import {useStrings} from '~/features/common/strings'
 
 export const SelectNameServer = () => {

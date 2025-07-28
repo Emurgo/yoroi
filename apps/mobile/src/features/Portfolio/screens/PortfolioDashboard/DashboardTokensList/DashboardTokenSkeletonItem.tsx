@@ -3,7 +3,7 @@ import * as React from 'react'
 import {View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Space} from '~/components/Space/Space'
+import {Space} from '~/ui/Space/Space'
 
 export const DashboardTokenSkeletonItem = () => {
   const {atoms: ta, palette: p} = useTheme()

@@ -14,25 +14,25 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import appstoreBadge from '~/assets/img/app-store-badge.png'
-import playstoreBadge from '~/assets/img/google-play-badge.png'
-import {useStakingInfo} from '~/legacy/Dashboard/StakePoolInfos'
+import {useCatalystCurrentFund} from '~/features/common/hooks'
+import {useStakingInfo} from '~/features/Portfolio/common/hooks/useStakingInfo'
+import {useNavigateTo} from '~/features/RegisterCatalyst/common/navigation'
+import {useStrings} from '~/features/RegisterCatalyst/common/useStrings'
+import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
 import {Button} from '~/ui/Button/Button'
+import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustration'
+import {Actions, Row, Stepper} from '~/ui/common/components'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustration'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo} from '~/CatalystNavigator'
-import {Actions, Row, Stepper} from '~/features/common/components'
-import {useCatalystCurrentFund} from '~/features/common/hooks'
-import {useStrings} from '~/features/common/strings'
+import appstoreBadge from '../../../assets/img/app-store-badge.png'
+import playstoreBadge from '../../../assets/img/google-play-badge.png'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const {openModal, closeModal} = useModal()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const {fund} = useCatalystCurrentFund()
   const intl = useIntl()
   const navigateTo = useNavigateTo()
@@ -82,148 +82,103 @@ export const DownloadCatalystAppScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[
-        styles.safeAreaView,
-        {backgroundColor: color.bg_color_max},
-        a.px_lg,
-        a.pb_lg,
-      ]}
+      style={[{backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
     >
       <Stepper title={strings.title} currentStep={1} totalSteps={3} />
 
-      <ScrollView
-        bounces={false}
-        contentContainerStyle={[styles.contentContainer, a.align_center]}
-      >
+      <ScrollView bounces={false} contentContainerStyle={[a.align_center]}>
         <CatalystStep1 />
 
         <Space.Height.lg />
 
-        <Text
-          style={[
-            a.heading_3_medium,
-            a.text_center,
-            {color: color.text_gray_medium},
-          ]}
-        >
-          {strings.subTitle}
+        <Text style={[a.body_1_lg_regular]}>
+          {strings.downloadCatalystAppDescription}
         </Text>
-
-        <Text style={[{color: color.text_gray_medium}]}>{strings.tip}</Text>
 
         <Space.Height.lg />
 
         <Row>
-          <AppStoreButton />
-
-          <Space.Width.lg />
-
           <PlayStoreButton />
+          <Space.Width.md />
+          <AppStoreButton />
         </Row>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
 
         <FundInfo>
           <FundName>{fundName}</FundName>
-
           <FundText>{registrationStart}</FundText>
-
           <FundText>{votingStart}</FundText>
-
           <FundText>{votingEnd}</FundText>
-
           <FundText>{votingResults}</FundText>
         </FundInfo>
-      </ScrollView>
 
-      <Actions>
-        <Button onPress={onNext} title={strings.continueButton} />
-      </Actions>
+        <Space.Height.xl />
+
+        <Actions>
+          <Button title={strings.next} onPress={onNext} />
+        </Actions>
+      </ScrollView>
     </SafeAreaView>
   )
 }
 
 const FundInfo = ({children}: {children: React.ReactNode}) => {
-  const {color} = useTheme()
-  return <View style={[styles.fundInfo, a.self_start]}>{children}</View>
+  return <View style={[a.self_start]}>{children}</View>
 }
+
 const FundName = ({children}: {children: React.ReactNode}) => {
-  const {color} = useTheme()
-  return (
-    <Text style={[styles.fundName, {color: color.text_gray_medium}]}>
-      {children}
-    </Text>
-  )
+  const {palette: p} = useTheme()
+  return <Text style={[{color: p.text_gray_medium}]}>{children}</Text>
 }
+
 const FundText = ({children}: {children: React.ReactNode}) => {
-  const {color} = useTheme()
-  return (
-    <Text style={[styles.fundText, {color: color.text_gray_medium}]}>
-      {children}
-    </Text>
-  )
+  const {palette: p} = useTheme()
+  return <Text style={[{color: p.text_gray_medium}]}>{children}</Text>
 }
 
 const WarningModal = () => {
   const strings = useStrings()
-  const {color} = useTheme()
-
+  const {palette: p} = useTheme()
   return (
-    <View style={[styles.modal, a.px_lg, a.flex_1]}>
-      <Text style={[styles.text, {color: color.text_gray_medium}]}>
-        {strings.stakingKeyNotRegistered}
+    <View style={[a.px_lg, a.flex_1]}>
+      <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+        {strings.catalystWarning}
       </Text>
-
-      <Space.Height.md />
-
-      <View style={[{flex: 1}]} />
-
-      {Platform.OS === 'android' && <Space.Height.lg />}
     </View>
   )
 }
 
 const PlayStoreButton = () => {
-  const {config} = useCatalyst()
   const openPlayStore = async () => {
-    await Linking.openURL(config.apps.android)
+    const url =
+      Platform.OS === 'android'
+        ? 'market://details?id=io.emurgo.catalyst'
+        : 'https://play.google.com/store/apps/details?id=io.emurgo.catalyst'
+    await Linking.openURL(url)
   }
 
   return (
-    <TouchableOpacity onPress={() => openPlayStore()}>
+    <TouchableOpacity onPress={openPlayStore}>
       <Image source={playstoreBadge} />
     </TouchableOpacity>
   )
 }
 
 const AppStoreButton = () => {
-  const {config} = useCatalyst()
   const openAppStore = async () => {
-    await Linking.openURL(config.apps.ios)
+    const url =
+      Platform.OS === 'ios'
+        ? 'https://apps.apple.com/app/catalyst-voting/id1506091890'
+        : 'https://apps.apple.com/app/catalyst-voting/id1506091890'
+    await Linking.openURL(url)
   }
 
   return (
-    <TouchableOpacity onPress={() => openAppStore()}>
+    <TouchableOpacity onPress={openAppStore}>
       <Image source={appstoreBadge} />
     </TouchableOpacity>
   )
 }
 
 const createPin = () => cryptoRandomString({length: 4, type: 'numeric'})
-
-const styles = StyleSheet.create({
-  safeAreaView: {},
-  modal: {},
-  contentContainer: {},
-  tip: {},
-  fundInfo: {},
-  fundName: {},
-  fundText: {},
-  text: {
-    ...a.body_1_lg_regular,
-  },
-  subTitle: {
-    ...a.heading_3_medium,
-    ...a.text_center,
-  },
-})

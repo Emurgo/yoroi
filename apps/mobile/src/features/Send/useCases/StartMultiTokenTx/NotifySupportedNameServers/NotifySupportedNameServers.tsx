@@ -4,9 +4,9 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Icon} from '~/components/Icon'
+import {Icon} from '~/ui/Icon'
 
-import {Spacer} from '~/components/Spacer/Spacer'
+import {Spacer} from '~/ui/Spacer/Spacer'
 import {useStrings} from '~/features/common/strings'
 
 export const NotifySupportedNameServers = () => {

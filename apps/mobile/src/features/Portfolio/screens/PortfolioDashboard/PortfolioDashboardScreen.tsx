@@ -4,7 +4,7 @@ import * as React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Space} from '~/components/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
 import {BalanceCard} from './BalanceCard/BalanceCard'

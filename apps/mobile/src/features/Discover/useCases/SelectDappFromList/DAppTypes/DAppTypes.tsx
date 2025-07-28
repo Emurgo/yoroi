@@ -8,8 +8,8 @@ import {
   View,
 } from 'react-native'
 
-import {Icon} from '~/components/Icon'
-import {Spacer} from '~/components/Spacer/Spacer'
+import {Icon} from '~/ui/Icon'
+import {Spacer} from '~/ui/Spacer/Spacer'
 import {useMappedStrings} from '~/features/common/useStrings'
 
 type Props = {

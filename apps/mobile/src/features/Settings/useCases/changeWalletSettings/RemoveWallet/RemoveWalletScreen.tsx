@@ -4,19 +4,19 @@ import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '~/components/Button/Button'
-import {Checkbox} from '~/components/Checkbox/Checkbox'
-import {KeyboardAvoidingView} from '~/components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Spacer} from '~/components/Spacer/Spacer'
-import {Text} from '~/components/Text'
+import {Button} from '~/ui/Button/Button'
+import {Checkbox} from '~/ui/Checkbox/Checkbox'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Spacer} from '~/ui/Spacer/Spacer'
+import {Text} from '~/ui/Text/Text'
 import {
   Checkmark,
   TextInput,
   TextInputProps,
-} from '~/components/TextInput/TextInput'
-import {useWalletNavigation} from '~/kernel/navigation'
-import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+} from '~/ui/TextInput/TextInput'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useWalletNavigation} from '~/kernel/navigation'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()

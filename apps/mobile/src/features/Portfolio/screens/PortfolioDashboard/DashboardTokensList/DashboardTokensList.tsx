@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native'
 
-import {Icon} from '~/components/Icon'
-import {Space} from '~/components/Space/Space'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useNavigateTo} from '~/features/common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '~/features/common/hooks/usePortfolioBalances'

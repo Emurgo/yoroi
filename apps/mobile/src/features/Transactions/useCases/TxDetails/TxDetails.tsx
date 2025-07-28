@@ -16,9 +16,9 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Banner} from '~/components/Banner/Banner'
-import {FadeIn} from '~/components/FadeIn'
-import {useModal} from '~/components/Modal/ModalContext'
+import {Banner} from '~/ui/Banner/Banner'
+import {FadeIn} from '~/ui/FadeIn/FadeIn'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {isEmptyString} from '~/kernel/utils'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'

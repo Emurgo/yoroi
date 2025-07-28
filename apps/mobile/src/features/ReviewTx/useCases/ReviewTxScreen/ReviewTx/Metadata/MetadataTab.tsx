@@ -2,8 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Copiable} from '~/components/Clipboard/Copiable'
-import {Space} from '~/components/Space/Space'
+import {Copiable} from '~/ui/Clipboard/Copiable'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from '~/features/common/hooks/useStrings'
 import {FormattedMetadata} from '~/features/common/types'
 

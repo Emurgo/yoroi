@@ -1,7 +1,7 @@
 import React from 'react'
 
-import {Banner, ClickableBanner} from '~/components/Banner/Banner'
-import {Spacer} from '~/components/Spacer/Spacer'
+import {Banner, ClickableBanner} from '~/ui/Banner/Banner'
+import {Spacer} from '~/ui/Spacer/Spacer'
 import {useHasPendingTx, useSync} from '~/wallets/hooks'
 import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '~/features/common/strings'

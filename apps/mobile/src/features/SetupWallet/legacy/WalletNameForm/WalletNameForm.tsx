@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 
 import {defineMessages, useIntl} from 'react-intl'
-import globalMessages from '~/~/kernel/i18n/global-messages'
+import globalMessages from '~/kernel/i18n/global-messages'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'

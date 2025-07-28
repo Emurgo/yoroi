@@ -11,7 +11,7 @@ import React, {
 } from 'react'
 import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
-import {Icon} from '~/components/Icon'
+import {Icon} from '~/ui/Icon'
 import {defaultStackNavigationOptions} from '~/kernel/navigation'
 
 type SearchState = {

@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '~/components/Button/Button'
+import {Button} from '~/ui/Button/Button'
 import {useNavigateTo} from '~/features/common/hooks/useNavigateTo'
 import {useStrings} from '~/features/common/hooks/useStrings'
 import {TradeTokensAsset} from './TradeTokensAsset'

@@ -4,7 +4,7 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Space} from '~/components/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
 
 type Props = {

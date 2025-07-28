@@ -3,10 +3,10 @@ import * as React from 'react'
 import {Linking, ScrollView, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Space} from 'src/ui/Space/Space'
-import {Button, ButtonType} from '~/components/Button/Button'
-import {useModal} from '~/components/Modal/ModalContext'
-import {useStrings} from '~/features/common/useStrings'
+import {useStrings} from '~/features/Links/common/useStrings'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 
 export const AskToRedirectScreen = ({link}: {link: string}) => {
   const strings = useStrings()
@@ -29,7 +29,7 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
           {strings.askToRedirectDescription}
         </Text>
 
-        <Space fill />
+        <View style={[{flex: 1}]} />
       </ScrollView>
 
       <Actions style={[a.flex_row, a.justify_between]}>
@@ -40,7 +40,7 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
           title={strings.cancel}
         />
 
-        <Space width={16} />
+        <Space.Width.md />
 
         <Button size="S" onPress={handleOnConfirm} title={strings.ok} />
       </Actions>

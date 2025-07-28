@@ -7,7 +7,7 @@ import {View} from 'react-native'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {GradientWarning} from '~/components/ChainWarning/GradientWarning'
+import {GradientWarning} from '~/ui/ChainWarning/GradientWarning'
 import {
   isValidPoolIdOrHash,
   normalizeToPoolHash,

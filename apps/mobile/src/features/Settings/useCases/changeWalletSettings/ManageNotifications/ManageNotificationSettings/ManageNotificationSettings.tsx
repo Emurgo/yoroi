@@ -10,18 +10,18 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '~/components/Button/Button'
-import {Icon} from '~/components/Icon'
-import {Spacer} from '~/components/Spacer/Spacer'
-import {Text} from '~/components/Text'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {Spacer} from '~/ui/Spacer/Spacer'
+import {Text} from '~/ui/Text/Text'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/~/kernel/navigation'
+import {useWalletNavigation} from '~/kernel/navigation'
 import {
   getNotificationsAuthorizationStatus,
   triggerNotificationsPermissionModal,
 } from '~/features/Notifications/common/tools'
 import {SettingsSwitch} from '~/features/common/SettingsSwitch'
-import {SettingsItem, SettingsSection} from '~/~/features/Settings/SettingsItems'
+import {SettingsItem, SettingsSection} from '~/features/Settings/SettingsItems'
 import {SettingsNotificationDurationItem} from '~/SettingsNotificationDurationItem'
 import {
   useChangeNotificationDisplaySettings,
