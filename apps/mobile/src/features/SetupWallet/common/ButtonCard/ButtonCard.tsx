@@ -1,8 +1,7 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
-
 import {splitInLines} from '../splitInLines'
 
 type ButtonCardProps = {
@@ -20,75 +19,50 @@ export const ButtonCard = ({
   onPress,
   testID,
 }: ButtonCardProps) => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
       activeOpacity={0.5}
-      style={[styles.container, icon !== null && styles.justifySpaceBetween]}
+      style={[
+        {height: 120},
+        a.flex_row,
+        a.align_center,
+        a.overflow_hidden,
+        a.rounded_sm,
+        a.px_lg,
+        icon ? {...a.justify_between} : {...a.justify_center},
+      ]}
       onPress={onPress}
       testID={testID}
     >
       <LinearGradient
-        style={[StyleSheet.absoluteFill, {opacity: 1}]}
+        style={{...StyleSheet.absoluteFillObject, opacity: 1}}
         start={{x: 0, y: 0}}
         end={{x: 0, y: 1}}
-        colors={colors.gradientBlueGreen}
+        colors={p.bg_gradient_1}
       />
 
-      {icon !== null ? (
-        <Text style={styles.title}>{splitInLines(title)}</Text>
+      {icon ? (
+        <Text style={(a.heading_4_medium, {color: p.gray_max})}>
+          {splitInLines(title)}
+        </Text>
       ) : (
-        <View style={styles.textContainer}>
-          <Text style={styles.titleCentre}>{title}</Text>
-
+        <View style={[a.align_center, a.justify_center]}>
+          <Text
+            style={[a.heading_4_medium, a.text_center, {color: p.gray_max}]}
+          >
+            {title}
+          </Text>
           {subTitle !== undefined && (
-            <Text style={styles.subTitle}>{subTitle}</Text>
+            <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+              {subTitle}
+            </Text>
           )}
         </View>
       )}
 
-      {icon !== null && icon}
+      {icon}
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      borderRadius: 8,
-      height: 120,
-      flexDirection: 'row',
-      alignItems: 'center',
-      ...atoms.px_lg,
-      overflow: 'hidden',
-      justifyContent: 'center',
-    },
-    justifySpaceBetween: {
-      justifyContent: 'space-between',
-    },
-    title: {
-      ...atoms.heading_4_medium,
-      color: color.gray_max,
-    },
-    titleCentre: {
-      ...atoms.heading_4_medium,
-      color: color.gray_max,
-      textAlign: 'center',
-    },
-    subTitle: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_900,
-    },
-    textContainer: {
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  })
-
-  const colors = {
-    gradientBlueGreen: color.bg_gradient_1,
-  }
-  return {styles, colors} as const
 }

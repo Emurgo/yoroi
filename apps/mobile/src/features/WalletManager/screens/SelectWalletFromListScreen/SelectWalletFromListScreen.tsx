@@ -11,6 +11,7 @@ import {Button} from '../../../../ui/Button/Button'
 import {ScrollView, useScrollView} from '../../../../ui/ScrollView/ScrollView'
 import {Space} from '../../../../ui/Space/Space'
 // import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useStrings} from '../../hooks/useStrings'
 import {useWalletMetas} from '../../hooks/useWalletMetas'
 import {SupportIllustration} from '../../ui/illustrations/SupportIllustration'
@@ -120,13 +121,17 @@ const SupportTicketLink = () => {
 
 const AddWalletButton = () => {
   const strings = useStrings()
-  // const {reset: resetSetupWalletState} = useSetupWallet()
+  const {reset: resetSetupWalletState} = useSetupWallet()
+  const navigation = useNavigation<any>()
+  const goToSetupWallet = React.useCallback(() => {
+    navigation.navigate('wallet-setup')
+  }, [navigation])
 
   return (
     <Button
       onPress={() => {
-        // resetSetupWalletState()
-        Alert.alert('Create Wallet not implemented')
+        resetSetupWalletState()
+        goToSetupWallet()
       }}
       title={strings.addWalletButton}
     />

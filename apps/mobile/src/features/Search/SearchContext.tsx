@@ -1,6 +1,9 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {StackNavigationOptions} from '@react-navigation/stack'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {
+  StackNavigationOptions,
+  TransitionPresets,
+} from '@react-navigation/stack'
+import {atoms as a, ThemeAtoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {produce} from 'immer'
 import React, {
   createContext,
@@ -9,9 +12,15 @@ import React, {
   useContext,
   useReducer,
 } from 'react'
-import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import {
+  Dimensions,
+  Platform,
+  TextInput,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native'
 
-import {defaultStackNavigationOptions} from '../../kernel/navigation/navigation'
 import {Icon} from '../../ui/Icon'
 
 type SearchState = {
@@ -305,4 +314,66 @@ const BackButton = (props: TouchableOpacityProps) => {
       <Icon.Chevron direction="left" color={p.el_gray_max} />
     </TouchableOpacity>
   )
+}
+
+// TODO: remove code below when the main default options are ready
+export const BackButton2 = (
+  props: TouchableOpacityProps & {color?: string},
+) => {
+  const {palette: p} = useTheme()
+
+  return (
+    <TouchableOpacity {...props} testID="buttonBack2">
+      <Icon.Chevron direction="left" color={props.color ?? p.gray_max} />
+    </TouchableOpacity>
+  )
+}
+
+// OPTIONS
+const WIDTH = Dimensions.get('window').width
+
+export const defaultStackNavigationOptions = (
+  atoms: ThemeAtoms,
+  color: ThemedPalette,
+): StackNavigationOptions => {
+  return {
+    ...(Platform.OS === 'android' && {...TransitionPresets.SlideFromRightIOS}),
+    detachPreviousScreen:
+      false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+    cardStyle: {
+      backgroundColor: color.bg_color_max,
+    },
+    cardOverlay: () => (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: color.bg_color_max,
+        }}
+      />
+    ),
+    headerTintColor: color.gray_max,
+    headerStyle: {
+      elevation: 0,
+      shadowOpacity: 0,
+      backgroundColor: color.bg_color_max,
+    },
+    headerTitleStyle: {
+      ...atoms.body_1_lg_medium,
+      width: WIDTH - 75,
+      textAlign: 'center',
+    },
+    headerTitleAlign: 'center',
+    headerTitleContainerStyle: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headerLeftContainerStyle: {
+      ...atoms.pl_sm,
+    },
+    headerRightContainerStyle: {
+      ...atoms.pr_sm,
+    },
+    headerLeft: (props) => <BackButton2 {...props} />,
+  }
 }

@@ -1,13 +1,13 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text} from 'react-native'
+import {Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {logger} from '../../../../kernel/logger/logger'
+// import {useLaunchWalletAfterSyncing} from '../../../WalletManager/common/hooks/useLaunchWalletAfterSyncing'
+// import {useSyncTemporarilyPaused} from '../../../WalletManager/common/hooks/useSyncTemporarilyPaused'
 import {isEmptyString} from '../../../../wallets/utils/string'
-import {useLaunchWalletAfterSyncing} from '../../../WalletManager/hooks/useLaunchWalletAfterSyncing'
-import {useSyncTemporarilyPaused} from '../../../WalletManager/hooks/useSyncTemporarilyPaused'
 import {useStrings} from '../useStrings'
 
 /**
@@ -16,10 +16,10 @@ import {useStrings} from '../useStrings'
  */
 export const PreparingWalletScreen = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
   const {walletId} = useSetupWallet()
-  const isGlobalSyncPaused = useSyncTemporarilyPaused()
-  useLaunchWalletAfterSyncing({isGlobalSyncPaused, walletId})
+  const {palette: p} = useTheme()
+  // const isGlobalSyncPaused = useSyncTemporarilyPaused()
+  // useLaunchWalletAfterSyncing({isGlobalSyncPaused, walletId})
 
   if (isEmptyString(walletId)) {
     const error = new Error(
@@ -32,27 +32,16 @@ export const PreparingWalletScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom', 'top']}
-      style={styles.root}
+      style={[
+        a.flex_1,
+        a.align_center,
+        a.justify_center,
+        {backgroundColor: p.bg_color_max},
+      ]}
     >
-      <Text style={styles.title}>{strings.preparingWallet}</Text>
+      <Text style={[{color: p.primary_500}, a.text_center, a.heading_2_medium]}>
+        {strings.preparingWallet}
+      </Text>
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...a.flex_1,
-      ...a.align_center,
-      ...a.justify_center,
-      backgroundColor: p.bg_color_max,
-    },
-    title: {
-      color: p.primary_500,
-      ...a.text_center,
-      ...a.heading_2_medium,
-    },
-  })
-  return {styles} as const
 }

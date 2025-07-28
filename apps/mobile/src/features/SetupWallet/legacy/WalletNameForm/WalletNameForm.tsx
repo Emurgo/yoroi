@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -15,6 +15,7 @@ import globalMessages from '../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {Button} from '../../../../ui/Button/Button'
 import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Text} from '../../../../ui/Text/Text'
 import {TextInput} from '../../../../ui/TextInput/TextInput'
 import {
   getWalletNameError,
@@ -160,4 +161,79 @@ const useStrings = () => {
       globalMessages.walletNameErrorMustBeFilled,
     ),
   }
+}
+
+type StepProps = {
+  currentStep: number
+  todoStep: boolean
+  displayStepNumber?: boolean
+}
+const Step = ({currentStep, displayStepNumber, todoStep}: StepProps) => {
+  const {palette: p} = useTheme()
+  return (
+    <View
+      style={[
+        a.align_center,
+        a.justify_center,
+        a.flex_grow,
+        {
+          backgroundColor: p.secondary_400,
+        },
+        todoStep && {
+          backgroundColor: p.secondary_200,
+        },
+        displayStepNumber === true && {
+          backgroundColor: p.secondary_200,
+        },
+      ]}
+    >
+      {displayStepNumber === true && (
+        <Text
+          small
+          style={{
+            fontSize: 7,
+            lineHeight: 10,
+            color: p.gray_min,
+          }}
+        >
+          {currentStep}
+        </Text>
+      )}
+    </View>
+  )
+}
+
+type ProgressStepProps = {
+  currentStep: number
+  totalSteps: number
+  displayStepNumber?: boolean
+}
+export const ProgressStep = ({
+  currentStep,
+  totalSteps,
+  displayStepNumber,
+}: ProgressStepProps) => {
+  const {palette: p} = useTheme()
+  const steps: Array<React.ReactNode> = []
+  for (let i = 0; i < totalSteps; i++) {
+    steps.push(
+      <Step
+        currentStep={i + 1}
+        displayStepNumber={displayStepNumber}
+        todoStep={i + 1 > currentStep}
+        key={i}
+      />,
+    )
+  }
+  return (
+    <View
+      style={{
+        backgroundColor: p.bg_color_max,
+        height: 10,
+        ...a.flex_row,
+      }}
+    >
+      {steps}
+    </View>
+  )
 }
