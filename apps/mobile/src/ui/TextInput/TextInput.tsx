@@ -1,5 +1,5 @@
 import {isString} from '@yoroi/common'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ForwardedRef} from 'react'
 import {
   TextInput as RNTextInput,
@@ -152,13 +152,13 @@ export const TextInput = React.forwardRef(
 
               {right != null ? (
                 <AdornmentContainer
-                  style={{
-                    paddingRight: 16,
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    flexDirection: 'column',
-                    paddingBottom: 16,
-                  }}
+                  style={[
+                    a.pr_lg,
+                    a.pb_lg,
+                    a.align_center,
+                    a.justify_end,
+                    a.flex_col,
+                  ]}
                   p={p}
                 >
                   {right}

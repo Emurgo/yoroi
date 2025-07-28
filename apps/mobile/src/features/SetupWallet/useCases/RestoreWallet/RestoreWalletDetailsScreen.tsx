@@ -261,10 +261,12 @@ export const RestoreWalletDetailsScreen = () => {
 
         <View style={a.flex_row}>
           <Text
-            style={{
-              color: p.text_gray_medium,
-              ...a.body_1_lg_regular,
-            }}
+            style={[
+              {
+                color: p.text_gray_medium,
+              },
+              a.body_1_lg_regular,
+            ]}
           >
             {strings.walletDetailsTitle(bold)}
           </Text>
@@ -331,13 +333,7 @@ export const RestoreWalletDetailsScreen = () => {
 
           <Space.Height.xl />
 
-          <View
-            style={{
-              ...a.flex_row,
-              ...a.align_center,
-              ...a.justify_center,
-            }}
-          >
+          <View style={[a.flex_row, a.align_center, a.justify_center]}>
             <Icon.WalletAvatar
               image={new Blockies({seed: plate.ImagePart}).asBase64()}
               style={{
@@ -350,13 +346,15 @@ export const RestoreWalletDetailsScreen = () => {
             <Space.Height.sm />
 
             <Text
-              style={{
-                color: p.text_gray_medium,
-                ...a.body_1_lg_regular,
-                ...a.text_center,
-                ...a.justify_center,
-                ...a.align_center,
-              }}
+              style={[
+                {
+                  color: p.text_gray_medium,
+                },
+                a.body_1_lg_regular,
+                a.text_center,
+                a.justify_center,
+                a.align_center,
+              ]}
               testID="wallet-plate-number"
             >
               {plate.TextPart}

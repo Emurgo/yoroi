@@ -53,11 +53,7 @@ export const ChooseSetupTypeScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={{
-        flex: 1,
-        ...a.px_lg,
-        backgroundColor: p.bg_color_max,
-      }}
+      style={[{flex: 1, backgroundColor: p.bg_color_max}, a.px_lg]}
     >
       <Space.Height.lg />
 

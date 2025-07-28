@@ -6,7 +6,6 @@ import {
   Platform,
   TextInput as RNTextInput,
   ScrollView,
-  StyleSheet,
   Text,
   TextInputKeyPressEventData,
   TouchableOpacity,
@@ -55,7 +54,7 @@ export const MnemonicInput = ({
   onClearError: (index: number) => void
 }) => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
 
   const isMnemonicCompleted = !isEmptyString(mnemonic)
   const error =
@@ -80,18 +79,22 @@ export const MnemonicInput = ({
       <Space.Height.lg />
 
       {!isEmptyString(error) && (
-        <View style={styles.textView}>
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
           <Alert />
 
-          <Text style={styles.errorText}>{error}</Text>
+          <Text style={[a.body_1_lg_regular, {color: p.sys_magenta_500}]}>
+            {error}
+          </Text>
         </View>
       )}
 
       {isValidPhrase && (
-        <View style={[styles.textView]}>
-          <Check2 color={colors.secondary_600} />
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+          <Check2 color={p.secondary_600} />
 
-          <Text style={styles.successText}>{strings.validChecksum}</Text>
+          <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
+            {strings.validChecksum}
+          </Text>
         </View>
       )}
 
@@ -118,12 +121,21 @@ const ClearAllButton = ({
   onPress: () => void
   testID?: string
 }) => {
-  const {styles} = useStyles()
   const strings = useStrings()
+  const {palette: p} = useTheme()
+
   return (
-    <View style={styles.textView} testID={testID}>
+    <View style={[a.flex_row, a.align_center, a.gap_sm]} testID={testID}>
       <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-        <Text style={styles.clearAll}>{strings.clearAll}</Text>
+        <Text
+          style={[
+            a.button_2_md,
+            a.pl_sm,
+            {color: p.text_primary_medium, textTransform: 'uppercase'},
+          ]}
+        >
+          {strings.clearAll}
+        </Text>
       </TouchableOpacity>
     </View>
   )
@@ -155,26 +167,45 @@ const MnemonicWordsInput = ({
   onError,
   onClearError,
 }: MnemonicWordsInputProps) => {
-  const {styles} = useStyles()
   const rowHeightRef = React.useRef<number | null>(null)
+  const {palette: p} = useTheme()
 
   useAutoFocus(mnenonicRefs[0])
 
   return (
-    <View style={styles.mnemonicInputView} testID="mnemonicInputsView">
+    <View
+      style={[a.flex_row, a.flex_wrap, {justifyContent: 'space-around'}]}
+      testID="mnemonicInputsView"
+    >
       {mnemonicSelectedWords.map((word, index) => {
         const error = inputErrorsIndexes.includes(index)
 
         return (
           <View
             key={index}
-            style={styles.mnemonicInput}
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.align_center,
+              a.py_2xs,
+              a.px_xs,
+              {justifyContent: 'space-evenly', width: '50%'},
+            ]}
             onLayout={({nativeEvent}) =>
               (rowHeightRef.current = nativeEvent.layout.height)
             }
             testID={`mnemonicInput${index}`}
           >
-            <Text style={styles.mnemonicIndex}>{index + 1}.</Text>
+            <Text
+              style={[
+                {
+                  color: p.text_primary_medium,
+                },
+                a.body_1_lg_regular,
+              ]}
+            >
+              {index + 1}.
+            </Text>
 
             <MnemonicWordInput
               selectedWord={word}
@@ -214,7 +245,16 @@ const MnemonicWordsInput = ({
       })}
 
       {mnemonicSelectedWords.length === 15 && (
-        <View style={styles.mnemonicInput} />
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.align_center,
+            a.py_2xs,
+            a.px_xs,
+            {justifyContent: 'space-evenly', width: '50%'},
+          ]}
+        />
       )}
     </View>
   )
@@ -254,9 +294,8 @@ const MnemonicWordInput = React.forwardRef<
     ref,
   ) => {
     const inputRef = React.useRef<RNTextInput>(null)
-    const {styles, colors} = useStyles()
     const [word, setWord] = React.useState(selectedWord)
-    const {isDark} = useTheme()
+    const {isDark, palette: p} = useTheme()
 
     React.useImperativeHandle(
       ref,
@@ -339,7 +378,7 @@ const MnemonicWordInput = React.forwardRef<
         autoCorrect={false}
         spellCheck={false}
         autoComplete="off"
-        style={styles.textInput}
+        style={[{minWidth: 143}, a.flex_1, a.text_center]}
         isValidPhrase={isValidPhrase}
         showErrorOnBlur={false}
         onKeyPress={({
@@ -350,9 +389,9 @@ const MnemonicWordInput = React.forwardRef<
           }
         }}
         onBlur={handleOnBlur}
-        cursorColor={colors.primary_600} // only works for android
+        cursorColor={p.primary_600} // only works for android
         selectionColor={
-          Platform.OS === 'android' ? colors.input_selected : undefined
+          Platform.OS === 'android' ? p.input_selected : undefined
         } // on ios, selectionColor changes cursor and selection
         keyboardType={
           Platform.OS === 'android' ? 'visible-password' : undefined
@@ -379,52 +418,3 @@ const useAutoFocus = (ref: React.RefObject<MnemonicWordInputRef | null>) =>
 
     return () => clearTimeout(timeout)
   }, [ref])
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-
-  const styles = StyleSheet.create({
-    mnemonicInputView: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-around',
-    },
-    mnemonicInput: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-evenly',
-      width: '50%',
-      ...a.py_2xs,
-      ...a.px_xs,
-    },
-    textInput: {
-      minWidth: 143,
-      flex: 1,
-      textAlign: 'center',
-    },
-    mnemonicIndex: {
-      color: p.text_primary_medium,
-      ...a.body_1_lg_regular,
-    },
-    textView: {
-      flexDirection: 'row',
-      gap: 8,
-      alignItems: 'center',
-    },
-    errorText: {
-      ...a.body_1_lg_regular,
-      color: p.sys_magenta_500,
-    },
-    successText: {
-      ...a.body_1_lg_medium,
-      color: p.gray_max,
-    },
-    clearAll: {
-      ...a.button_2_md,
-      ...a.pl_sm,
-      color: p.text_primary_medium,
-      textTransform: 'uppercase',
-    },
-  })
-  return {styles, colors: p} as const
-}

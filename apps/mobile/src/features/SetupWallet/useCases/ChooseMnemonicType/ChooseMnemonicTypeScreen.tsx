@@ -40,11 +40,7 @@ export const ChooseMnemonicTypeScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={{
-        ...a.flex_1,
-        ...a.px_lg,
-        backgroundColor: p.bg_color_max,
-      }}
+      style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}
     >
       <Space.Height.lg />
 
@@ -55,14 +51,7 @@ export const ChooseMnemonicTypeScreen = () => {
       <View>
         <ButtonCard
           title={strings.choose15WordsMnemonicTitle}
-          icon={
-            <Mnemonic15Words
-              style={{
-                ...a.absolute,
-                right: 0,
-              }}
-            />
-          }
+          icon={<Mnemonic15Words style={[a.absolute, {right: 0}]} />}
           onPress={handle15Words}
           testID="mnemonic-15-word"
         />
@@ -71,14 +60,7 @@ export const ChooseMnemonicTypeScreen = () => {
 
         <ButtonCard
           title={strings.choose24WordsMnemonicTitle}
-          icon={
-            <Mnemonic24Words
-              style={{
-                ...a.absolute,
-                right: 0,
-              }}
-            />
-          }
+          icon={<Mnemonic24Words style={[a.absolute, {right: 0}]} />}
           onPress={handle24Words}
           testID="mnemonic-24-word"
         />

@@ -30,8 +30,6 @@ export const CardAboutPhrase = ({
   const strings = useStrings()
   const {palette: p} = useTheme()
 
-  console.log('p.bg_gradient_1', p.bg_gradient_1)
-
   return (
     <View
       style={[
@@ -54,11 +52,11 @@ export const CardAboutPhrase = ({
       {title !== undefined && (
         <>
           <Text
-            style={{
-              ...a.body_1_lg_medium,
-              ...a.text_center,
-              color: showBackgroundColor ? p.primary_600 : p.gray_900,
-            }}
+            style={[
+              a.body_1_lg_medium,
+              a.text_center,
+              {color: showBackgroundColor ? p.primary_600 : p.gray_900},
+            ]}
             testID={testID}
           >
             {title}
@@ -72,12 +70,12 @@ export const CardAboutPhrase = ({
           checksumImage !== undefined && checksumLine === index + 1
 
         return (
-          <View key={`${index}_ITEM_CARD`} style={{flexDirection: 'row'}}>
+          <View key={`${index}_ITEM_CARD`} style={a.flex_row}>
             <Text
-              style={{
-                ...a.body_1_lg_regular,
-                color: showBackgroundColor ? p.primary_600 : p.gray_900,
-              }}
+              style={[
+                a.body_1_lg_regular,
+                {color: showBackgroundColor ? p.primary_600 : p.gray_900},
+              ]}
             >
               •
             </Text>

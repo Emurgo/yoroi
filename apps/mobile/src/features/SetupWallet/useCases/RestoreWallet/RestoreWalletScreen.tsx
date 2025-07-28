@@ -181,11 +181,7 @@ export const RestoreWalletScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={{
-        ...a.flex_1,
-        ...a.justify_between,
-        backgroundColor: p.bg_color_max,
-      }}
+      style={[a.flex_1, a.justify_between, {backgroundColor: p.bg_color_max}]}
     >
       <KeyboardAvoidingView style={a.flex_1}>
         <View style={a.px_lg}>
@@ -201,12 +197,7 @@ export const RestoreWalletScreen = () => {
           bounces={false}
           keyboardShouldPersistTaps="always"
         >
-          <Text
-            style={{
-              ...a.body_1_lg_regular,
-              color: p.gray_900,
-            }}
-          >
+          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
             {strings.restoreWalletScreenTitle(bold)}
           </Text>
 
@@ -249,17 +240,19 @@ export const RestoreWalletScreen = () => {
               backgroundColor: p.bg_color_max,
               borderColor: p.gray_200,
               borderTopWidth: 1,
-              ...a.align_center,
               paddingTop: 30,
               paddingBottom: 30,
+              ...a.align_center,
             }}
           >
             <Text
-              style={{
-                color: p.text_gray_medium,
-                ...a.body_1_lg_regular,
-                ...a.text_center,
-              }}
+              style={[
+                {
+                  color: p.text_gray_medium,
+                },
+                a.body_1_lg_regular,
+                a.text_center,
+              ]}
             >
               {strings.wordNotFound}
             </Text>
@@ -305,15 +298,17 @@ const WordSuggestionList = ({
 
   return (
     <View
-      style={{
-        backgroundColor: p.bg_color_max,
-        borderColor: p.gray_200,
-        borderTopWidth: 1,
-        ...a.flex_row,
-        ...a.align_center,
-        ...a.pt_lg,
-        paddingBottom,
-      }}
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+          borderColor: p.gray_200,
+          borderTopWidth: 1,
+          paddingBottom: paddingBottom,
+        },
+        a.flex_row,
+        a.align_center,
+        a.pt_lg,
+      ]}
     >
       <FlatList
         horizontal
@@ -350,21 +345,25 @@ const WordSuggestionButton = ({
   const {palette: p} = useTheme()
   return (
     <TouchableOpacity
-      style={{
-        ...a.px_lg,
-        ...a.py_sm,
-        borderColor: p.primary_300,
-        borderWidth: 2,
-        borderRadius: 8,
-        backgroundColor: 'transparent',
-      }}
+      style={[
+        a.px_lg,
+        a.py_sm,
+        {
+          borderColor: p.primary_300,
+          borderWidth: 2,
+          borderRadius: 8,
+          backgroundColor: 'transparent',
+        },
+      ]}
       onPress={onPress}
     >
       <Text
-        style={{
-          color: p.text_primary_medium,
-          ...a.body_1_lg_regular,
-        }}
+        style={[
+          {
+            color: p.text_primary_medium,
+          },
+          a.body_1_lg_regular,
+        ]}
       >
         {title}
       </Text>
@@ -375,13 +374,7 @@ const WordSuggestionButton = ({
 const useBold = () => {
   return {
     b: (text: React.ReactNode) => (
-      <Text
-        style={{
-          ...a.body_1_lg_medium,
-        }}
-      >
-        {text}
-      </Text>
+      <Text style={a.body_1_lg_medium}>{text}</Text>
     ),
   }
 }

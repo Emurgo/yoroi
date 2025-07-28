@@ -11,17 +11,13 @@ export const LogoBanner = () => {
 
   return (
     <View style={[a.align_center, {backgroundColor: p.bg_color_max}]}>
-      <Text
-        style={{color: p.primary_500, ...a.text_center, ...a.heading_1_medium}}
-      >
+      <Text style={[{color: p.primary_500}, a.text_center, a.heading_1_medium]}>
         {strings.logoTitle}
       </Text>
 
       <Space.Height.sm />
 
-      <Text
-        style={{...a.text_center, ...a.body_2_md_regular, color: p.gray_900}}
-      >
+      <Text style={[a.text_center, a.body_2_md_regular, {color: p.gray_900}]}>
         {strings.logoSubtitle}
       </Text>
     </View>

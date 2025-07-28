@@ -173,11 +173,11 @@ const Step = ({currentStep, displayStepNumber, todoStep}: StepProps) => {
   return (
     <View
       style={[
+        a.align_center,
+        a.justify_center,
+        a.flex_grow,
         {
           backgroundColor: p.secondary_400,
-          ...a.align_center,
-          ...a.justify_center,
-          ...a.flex_grow,
         },
         todoStep && {
           backgroundColor: p.secondary_200,
