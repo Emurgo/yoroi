@@ -1,8 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Linking, StyleSheet, TouchableOpacity} from 'react-native'
+import {Linking, Text, TouchableOpacity} from 'react-native'
 
-import {Text} from '../../../../../components/Text'
 import {useStrings} from '../strings'
 
 const LEARN_MORE_LINK =
@@ -10,7 +9,7 @@ const LEARN_MORE_LINK =
 
 export const LearnMoreLink = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   const handleOnPress = () => {
     Linking.openURL(LEARN_MORE_LINK)
@@ -19,26 +18,18 @@ export const LearnMoreLink = () => {
   if (LEARN_MORE_LINK.length === 0) return null
 
   return (
-    <TouchableOpacity style={styles.root} onPress={handleOnPress}>
-      <Text style={styles.link}>{strings.learnMoreAboutGovernance}</Text>
+    <TouchableOpacity
+      style={[
+        {display: 'flex'},
+        {flexDirection: 'row'},
+        {alignItems: 'center'},
+        {justifyContent: 'center'},
+      ]}
+      onPress={handleOnPress}
+    >
+      <Text style={[{color: p.primary_600}, {textDecorationLine: 'underline'}]}>
+        {strings.learnMoreAboutGovernance}
+      </Text>
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    link: {
-      color: color.primary_600,
-      textDecorationLine: 'underline',
-    },
-  })
-
-  return styles
 }
