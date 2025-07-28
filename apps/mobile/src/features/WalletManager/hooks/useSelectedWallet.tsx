@@ -4,7 +4,7 @@ import {freeze} from 'immer'
 import * as React from 'react'
 
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
-import {useWalletManager} from '~/context/WalletManagerProvider'
+import {useWalletManager} from '../context/WalletManagerProvider'
 
 export const useSelectedWallet = () => {
   const {

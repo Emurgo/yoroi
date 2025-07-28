@@ -6,8 +6,8 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {useBrowser} from '~/features/common/BrowserProvider'
 import {getGoogleSearchItem, urlWithProtocol} from '~/features/common/helpers'
 import {useNavigateTo} from '~/features/common/useNavigateTo'
-import {BrowserSearchToolbar} from '~/BrowseDapp/BrowserSearchToolbar'
-import {DAppListItem} from '~/SelectDappFromList/DAppListItem/DAppListItem'
+import {BrowserSearchToolbar} from '../BrowseDapp/BrowserSearchToolbar'
+import {DAppListItem} from '../SelectDappFromList/DAppListItem/DAppListItem'
 
 const getUrl = (searchValue: string, isEngineSearch: boolean) => {
   if (isEngineSearch) {

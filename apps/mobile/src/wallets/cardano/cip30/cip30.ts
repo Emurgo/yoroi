@@ -14,30 +14,29 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
+import {RawUtxo, YoroiUnsignedTx} from '@yoroi/types'
 import {logger} from '~/kernel/logger/logger'
-import {RawUtxo} from '@yoroi/types'
-import {YoroiUnsignedTx} from '@yoroi/types'
 import {asQuantity, Utxos} from '~/wallets/utils/utils'
-import {Cardano, CardanoMobile} from '~/wallets'
-import {toAssetNameHex, toPolicyId} from '~/api/utils'
-import * as cip8 from '~/cip8/cip8'
+import {toAssetNameHex, toPolicyId} from '../api/utils'
+import * as cip8 from '../cip8/cip8'
 import {
   getDerivationPathForAddress,
   getTransactionSigners,
-} from '~/common/signatureUtils'
-import {Pagination, YoroiWallet} from '~/types'
+} from '../common/signatureUtils'
+import {Pagination, YoroiWallet} from '../types'
 import {
   copyFromCSL,
   copyMultipleFromCSL,
   createRawTxSigningKey,
   identifierToCardanoAsset,
-} from '~/utils'
+} from '../utils'
 import {
   collateralConfig,
   findCollateralCandidates,
   utxosMaker,
-} from '~/utxoManager/utxos'
-import {wrappedCsl} from '~/wrappedCsl'
+} from '../utxoManager/utxos'
+import {Cardano, CardanoMobile} from '../wallets'
+import {wrappedCsl} from '../wrappedCsl'
 
 export const cip30ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
   return new CIP30Extension(wallet, meta)

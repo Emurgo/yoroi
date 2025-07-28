@@ -3,11 +3,6 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '~/ui/Icon'
-import {Space} from '~/ui/Space/Space'
-import {Tooltip} from '~/ui/Tooltip/Tooltip'
-import {usePrivacyMode} from '~/Settings/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useCurrencyPairing} from '~/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {
   formatPriceChange,
   priceChange,
@@ -17,7 +12,12 @@ import {
   PortfolioListTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
+import {Icon} from '~/ui/Icon'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
+import {Space} from '~/ui/Space/Space'
+import {Tooltip} from '~/ui/Tooltip/Tooltip'
+import {usePrivacyMode} from '../Settings/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useCurrencyPairing} from '../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {SkeletonQuantityChange} from './SkeletonQuantityChange'
 import {TokenValueBalance} from './TokenValueBalance'
 import {TokenValuePairedBalance} from './TokenValuePairedBalance'

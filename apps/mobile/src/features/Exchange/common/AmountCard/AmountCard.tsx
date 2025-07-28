@@ -6,8 +6,8 @@ import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {Spacer} from '~/ui/Spacer/Spacer'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {useStrings} from '~/useStrings'
 import {isEmptyString} from '~/wallets/utils/string'
+import {useStrings} from '../useStrings'
 
 type AmountCardProps = {
   error?: string

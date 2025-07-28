@@ -3,7 +3,7 @@ import * as React from 'react'
 import {filter} from 'rxjs'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {filterBySyncEvent as isSyncEvent} from '~/helpers/filter-by-sync-event'
+import {filterBySyncEvent as isSyncEvent} from '../helpers/filter-by-sync-event'
 
 export const usePortfolioPrimaryBreakdown = ({
   wallet,

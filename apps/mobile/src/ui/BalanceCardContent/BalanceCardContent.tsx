@@ -11,9 +11,9 @@ import {
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {PairedBalance} from '~/PairedBalance/PairedBalance'
-import {PnlTag} from '~/PnlTag/PnlTag'
 import {Spacer} from '~/ui/Space/Space'
+import {PairedBalance} from '../PairedBalance/PairedBalance'
+import {PnlTag} from '../PnlTag/PnlTag'
 
 type Props = {
   amount: Portfolio.Token.Amount

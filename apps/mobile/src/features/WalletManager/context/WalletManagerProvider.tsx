@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {WalletManager} from '~/wallet-manager'
+import {WalletManager} from '../wallet-manager'
 import {
   WalletManagerActions,
   WalletManagerActionType,

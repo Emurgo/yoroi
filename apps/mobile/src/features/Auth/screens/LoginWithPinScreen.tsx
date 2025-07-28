@@ -3,10 +3,10 @@ import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {pinLength} from '~/common/constants'
-import {useAuth} from '~/context/AuthProvider'
 import {useStrings} from '~/hooks/useStrings'
 import {PinInput, PinInputRef} from '~/ui/PinInput/PinInput'
+import {pinLength} from '../common/constants'
+import {useAuth} from '../context/AuthProvider'
 
 export const LoginWithPinScreen = () => {
   const strings = useStrings()

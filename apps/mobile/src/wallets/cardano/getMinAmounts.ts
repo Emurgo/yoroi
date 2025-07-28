@@ -3,8 +3,8 @@ import {Balance, Chain, Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {Address} from '@yoroi/types'
-import {Amounts, asQuantity, Quantities} from '~/utils/utils'
-import {CardanoMobile} from '~/wallets'
+import {Amounts, asQuantity, Quantities} from '../utils/utils'
+import {CardanoMobile} from '../wallets'
 import {cardanoValueFromMultiToken} from './cardanoValueFromMultiToken'
 import {MultiToken} from './MultiToken'
 

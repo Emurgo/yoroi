@@ -20,7 +20,6 @@ import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SwapTokenRoutes, useUnsafeParams} from '~/kernel/navigation'
-import {useSearch, useSearchOnNavBar} from '~/Search/SearchContext'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Counter} from '~/ui/Counter/Counter'
 import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
@@ -31,6 +30,7 @@ import {
   AmountItemPlaceholder,
   TokenAmountItem,
 } from '~/ui/TokenAmountItem/TokenAmountItem'
+import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 
 type Direction = SwapTokenRoutes['swap-select-token']
 

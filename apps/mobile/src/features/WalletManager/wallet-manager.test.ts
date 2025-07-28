@@ -5,7 +5,7 @@ import {hex, parseSafe} from '@yoroi/common'
 import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {logger} from '~/kernel/logger/logger'
 import {rootStorage} from '~/kernel/storage/storages'
-import {buildPortfolioTokenManagers} from '~/Portfolio/common/helpers/build-token-managers'
+import {buildPortfolioTokenManagers} from '../Portfolio/common/helpers/build-token-managers'
 import {WalletManager} from './wallet-manager'
 
 describe('walletManager', () => {

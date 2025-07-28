@@ -7,6 +7,10 @@ import _ from 'lodash'
 
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
+import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
+import {asQuantity} from '~/wallets/utils/utils'
 import {
   FormattedCertificate,
   FormattedFee,
@@ -16,12 +20,8 @@ import {
   TransactionBody,
   TransactionInputs,
   TransactionOutputs,
-} from '~/types'
-import {useSelectedNetwork} from '~/WalletManager/common/hooks/useSelectedNetwork'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
-import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
-import {asQuantity} from '~/wallets/utils/utils'
+} from '../types'
+import {useSelectedNetwork} from '../WalletManager/common/hooks/useSelectedNetwork'
 
 export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   const {wallet} = useSelectedWallet()

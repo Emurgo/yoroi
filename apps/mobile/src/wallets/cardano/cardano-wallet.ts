@@ -20,6 +20,20 @@ import {freeze} from 'immer'
 import {defaultMemoize} from 'reselect'
 import {Observable} from 'rxjs'
 
+import type {
+  AccountStateResponse,
+  FundInfoResponse,
+  PoolInfoRequest,
+  RawUtxo,
+  TxStatusRequest,
+  TxStatusResponse,
+} from '@yoroi/types'
+import {
+  StakingInfo,
+  YoroiEntry,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
+} from '@yoroi/types'
 import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
 import {buildPortfolioBalanceManager} from '~/features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '~/features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
@@ -34,18 +48,8 @@ import {
   makeWalletEncryptedStorage,
   WalletEncryptedStorage,
 } from '~/kernel/storage/EncryptedStorage'
-import type {
-  AccountStateResponse,
-  FundInfoResponse,
-  PoolInfoRequest,
-  RawUtxo,
-  TxStatusRequest,
-  TxStatusResponse,
-} from '@yoroi/types'
-import {StakingInfo} from '@yoroi/types'
-import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '@yoroi/types'
-import {Quantities} from '~/utils/utils'
-import {Cardano, CardanoMobile} from '~/wallets'
+import {Quantities} from '../utils/utils'
+import {Cardano, CardanoMobile} from '../wallets'
 import {
   AccountManager,
   accountManagerMaker,

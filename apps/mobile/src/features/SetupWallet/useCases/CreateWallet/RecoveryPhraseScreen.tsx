@@ -8,8 +8,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {YoroiZendeskLink} from '~/features/common/constants'
 import {useStrings} from '~/features/common/useStrings'
-import {EyeClosed} from '~/illustrations/EyeClosed'
-import {EyeOpen} from '~/illustrations/EyeOpen'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
@@ -19,6 +17,8 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {generateAdaMnemonic} from '~/wallets/cardano/mnemonic/mnemonic'
+import {EyeClosed} from '../illustrations/EyeClosed'
+import {EyeOpen} from '../illustrations/EyeOpen'
 
 export const RecoveryPhraseScreen = () => {
   const bold = useBold()

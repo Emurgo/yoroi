@@ -2,14 +2,14 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
-import {Boundary} from '~/ui/Boundary/Boundary'
 import {
   defaultStackNavigationOptions,
   PortfolioRoutes,
 } from '~/kernel/navigation'
-import {SearchProvider} from '~/Search/SearchContext'
-import {NetworkTag} from '~/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {TxDetails} from '~/Transactions/useCases/TxDetails/TxDetails'
+import {Boundary} from '~/ui/Boundary/Boundary'
+import {SearchProvider} from '../Search/SearchContext'
+import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {TxDetails} from '../Transactions/useCases/TxDetails/TxDetails'
 import {useStrings} from './common/hooks/useStrings'
 import {PortfolioProvider} from './context/PortfolioProvider'
 import {NftsNavigator} from './NftsNavigator'

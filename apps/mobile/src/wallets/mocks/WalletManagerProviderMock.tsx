@@ -7,7 +7,7 @@ import {WalletManagerProvider} from '~/features/WalletManager/context/WalletMana
 import {WalletManager} from '~/features/WalletManager/wallet-manager'
 import {logger} from '~/kernel/logger/logger'
 import {rootStorage} from '~/kernel/storage/rootStorage'
-import {YoroiWallet} from '~/cardano/types'
+import {YoroiWallet} from '../cardano/types'
 import {mocks} from './wallet'
 
 // TODO: should be mocked

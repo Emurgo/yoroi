@@ -4,10 +4,10 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {useStrings} from '~/features/common/strings'
 import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
-import {FailedTxIcon} from '~/ReviewTx/illustrations/FailedTxIcon'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
+import {FailedTxIcon} from '../ReviewTx/illustrations/FailedTxIcon'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()

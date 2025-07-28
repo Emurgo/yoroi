@@ -7,11 +7,11 @@ import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useStrings} from '~/features/Receive/common/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useCopy} from '~/kernel/utils/clipboard'
-import {ShareDetailsCard} from '~/ShareDetailsCard/ShareDetailsCard'
-import {ShareQRCodeCard} from '~/ShareQRCodeCard/ShareQRCodeCard'
 import {Spacer} from '~/ui/Space/Space'
 import {useKeyHashes} from '~/wallets/hooks'
 import {isEmptyString} from '~/wallets/utils/string'
+import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
+import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
 
 type AddressDetailCardProps = {
   title: string

@@ -1,7 +1,7 @@
 import {parseSafe} from '@yoroi/common'
 import {Wallet} from '@yoroi/types'
 
-import {addressModes, implementations} from '~/constants'
+import {addressModes, implementations} from '../constants'
 
 export function isWalletMeta(walletMeta: unknown): walletMeta is Wallet.Meta {
   if (walletMeta == null) return false

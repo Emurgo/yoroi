@@ -5,11 +5,9 @@ import React from 'react'
 import {ActivityIndicator, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useNavigateTo} from '~/CatalystNavigator'
 import {useStrings} from '~/features/RegisterCatalyst/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletNavigation} from '~/kernel/navigation'
-import {useReviewTx} from '~/ReviewTx/common/ReviewTxProvider'
 import {Button} from '~/ui/Button/Button'
 import {
   Actions,
@@ -22,6 +20,8 @@ import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard/NumericKeyboard'
 import {Space} from '~/ui/Space/Space'
 import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
 import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
+import {useNavigateTo} from '../CatalystNavigator'
+import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
 
 export const ConfirmPin = () => {
   const strings = useStrings()

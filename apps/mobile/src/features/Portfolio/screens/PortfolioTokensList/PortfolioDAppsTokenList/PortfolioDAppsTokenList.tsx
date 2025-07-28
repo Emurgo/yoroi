@@ -3,11 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {Spacer} from '~/ui/Spacer/Spacer'
-import {TabPanel} from '~/ui/Tabs/Tabs'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useSearch} from '~/Search/SearchContext'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {usePortfolioPrimaryBalance} from '~/features/common/hooks/usePortfolioPrimaryBalance'
 import {
   ILiquidityPool,
   useGetLiquidityPool,
@@ -16,13 +12,17 @@ import {
   IOpenOrders,
   useGetOpenOrders,
 } from '~/features/Portfolio/common/hooks/useGetOpenOrders'
-import {usePortfolioPrimaryBalance} from '~/features/common/hooks/usePortfolioPrimaryBalance'
 import {
   PortfolioDappsTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Line} from '~/ui/Line'
-import {TotalTokensValue} from '~/TotalTokensValue/TotalTokensValue'
+import {Spacer} from '~/ui/Spacer/Spacer'
+import {TabPanel} from '~/ui/Tabs/Tabs'
+import {useSearch} from '../Search/SearchContext'
+import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {LendAndBorrowTab} from './LendAndBorrowTab'
 import {LiquidityPoolTab} from './LiquidityPoolTab'
 import {OpenOrdersTab} from './OpenOrdersTab'

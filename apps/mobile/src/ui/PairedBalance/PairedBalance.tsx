@@ -11,7 +11,7 @@ import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {CurrencySymbol} from '~/wallets/types/other'
-import {Boundary, ResetError, ResetErrorRef} from '~/Boundary/Boundary'
+import {Boundary, ResetError, ResetErrorRef} from '../Boundary/Boundary'
 
 type Props = {
   amount: Portfolio.Token.Amount

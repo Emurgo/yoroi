@@ -15,8 +15,8 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/common'
-import {Biometric} from '~/illustrations/Biometric'
+import {useStrings} from '../common'
+import {Biometric} from '../illustrations/Biometric'
 
 export const ChooseBiometricLoginScreen = () => {
   const {atoms: ta, palette: p} = useTheme()

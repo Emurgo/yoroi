@@ -5,13 +5,13 @@ import * as React from 'react'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/features/common/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {ButtonCard} from '~/ui/ButtonCard/ButtonCard'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
 import {Space} from '~/ui/Space/Space'
-import {ButtonCard} from '~/ui/ButtonCard/ButtonCard'
-import {useStrings} from '~/features/common/useStrings'
-import {Mnemonic15Words} from '~/illustrations/Mnemonic15Words'
-import {Mnemonic24Words} from '~/illustrations/Mnemonic24Words'
+import {Mnemonic15Words} from '../illustrations/Mnemonic15Words'
+import {Mnemonic24Words} from '../illustrations/Mnemonic24Words'
 
 export const ChooseMnemonicTypeScreen = () => {
   const strings = useStrings()

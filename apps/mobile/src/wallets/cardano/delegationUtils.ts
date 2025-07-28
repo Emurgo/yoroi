@@ -3,7 +3,7 @@ import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/address
 import {sortBy} from 'lodash'
 
 import {StakingStatus} from '@yoroi/types'
-import {CardanoMobile} from '~/wallets'
+import {CardanoMobile} from '../wallets'
 import type {TimestampedCertMeta} from './transactionManager/transactionManager'
 import {CardanoTypes} from './types'
 import {wrappedCsl} from './wrappedCsl'

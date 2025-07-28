@@ -5,10 +5,10 @@ import {Text, View} from 'react-native'
 
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
 import {useStrings} from '~/features/Receive/common/useStrings'
-import {useAddressMode} from '~/features/WalletManager/common/hooks/useAddressMode'
-import {useModal} from '~/Modal/ModalContext'
-import {QRs} from '~/QRsIllustration/QRsIllustration'
+import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {QRs} from '~/ui/QRsIllustration/QRsIllustration'
 
 export const singleOrMultipleAddressesModalHeight = 580
 

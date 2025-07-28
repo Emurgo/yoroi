@@ -13,11 +13,11 @@ import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
-import {useStakingTx} from '~/Dashboard/StakePoolInfos'
-import {useReviewTx} from '~/ReviewTx/common/ReviewTxProvider'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/WalletManager/hooks/useSelectedWallet'
-import {PoolDetailScreen} from '~/PoolDetails'
+import {useStakingTx} from '../Dashboard/StakePoolInfos'
+import {PoolDetailScreen} from '../PoolDetails'
+import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
 
 export const StakingCenter = () => {
   const intl = useIntl()

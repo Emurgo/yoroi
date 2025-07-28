@@ -19,15 +19,6 @@ import {
   View,
 } from 'react-native'
 
-import {Button} from '~/ui/Button/Button'
-import {Copiable} from '~/ui/Clipboard/Copiable'
-import {Divider} from '~/ui/Divider/Divider'
-import {Icon} from '~/ui/Icon'
-import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {Space} from '~/ui/Space/Space'
-import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
-import {Accordion} from '~/ui/Accordion/Accordion'
 import {useStrings} from '~/features/common/hooks/useStrings'
 import {Operations, useOperations} from '~/features/common/operations'
 import {TokenItem} from '~/features/common/TokenItem'
@@ -39,9 +30,18 @@ import {
 import {WalletBalance} from '~/features/common/WalletBalance'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {OperationsNoticeIcon} from '~/illustrations/OperationsNoticeIcon'
+import {Accordion} from '~/ui/Accordion/Accordion'
+import {Button} from '~/ui/Button/Button'
+import {Copiable} from '~/ui/Clipboard/Copiable'
+import {Divider} from '~/ui/Divider/Divider'
+import {Icon} from '~/ui/Icon'
+import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {Quantities} from '~/wallets/utils/utils'
+import {OperationsNoticeIcon} from '../illustrations/OperationsNoticeIcon'
 
 export const OverviewTab = ({
   tx,

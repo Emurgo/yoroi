@@ -13,9 +13,9 @@ import QRCode from 'react-native-qrcode-svg'
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
-import {CaptureShareQRCodeCard} from '~/CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 import {Spacer} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
+import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {
   qrContent: string

@@ -3,8 +3,6 @@ import _ from 'lodash'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Splits} from '~/CreateOrder/EstimateSummary'
-import {ShowPriceImpact} from '~/CreateOrder/ShowPriceImpact'
 import {
   getPriceImpactRisk,
   usePriceImpactRiskTheme,
@@ -22,6 +20,8 @@ import {Icon} from '~/ui/Icon'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
+import {Splits} from '../CreateOrder/EstimateSummary'
+import {ShowPriceImpact} from '../CreateOrder/ShowPriceImpact'
 
 export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const strings = useStrings()

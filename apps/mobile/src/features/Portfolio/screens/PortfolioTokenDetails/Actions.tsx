@@ -4,14 +4,14 @@ import {Chain, Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {Button, ButtonType} from '~/ui/Button/Button'
-import {Icon} from '~/ui/Icon'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useSwap} from '~/Swap/common/SwapProvider'
-import {useSelectedNetwork} from '~/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/WalletManager/hooks/useSelectedWallet'
 import {useNavigateTo} from '~/features/common/hooks/useNavigateTo'
 import {useStrings} from '~/features/common/hooks/useStrings'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {useSwap} from '../Swap/common/SwapProvider'
+import {useSelectedNetwork} from '../WalletManager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
 
 type Props = {
   tokenInfo: Portfolio.Token.Info

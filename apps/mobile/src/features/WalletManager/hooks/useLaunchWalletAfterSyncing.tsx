@@ -2,10 +2,10 @@ import {time} from '@yoroi/common'
 
 import * as React from 'react'
 
-import {useWalletNavigation} from '~/kernel/navigation'
 import {logger} from '~/kernel/logger/logger'
+import {useWalletNavigation} from '~/kernel/navigation'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {useWalletManager} from '~/context/WalletManagerProvider'
+import {useWalletManager} from '../context/WalletManagerProvider'
 
 /**
  * Custom hook to launch a new wallet first time or when a previous sync is required, it will follow these steps:

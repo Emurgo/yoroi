@@ -8,7 +8,7 @@ import {SettingsSwitch} from '~/features/Settings/common/SettingsSwitch'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
-import {YoroiLogo} from '~/YoroiLogo/YoroiLogo'
+import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {

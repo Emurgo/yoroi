@@ -6,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '~/ui/Button/Button'
 import {ConectionErrorImage} from '~/ui/ConectionErrorImage/ConectionErrorImage'
 import {Spacer} from '~/ui/Space/Space'
-import {useStrings} from '~/strings'
+import {useStrings} from '../strings'
 
 type ServiceUnavailableProps = {
   resetErrorBoundary?: () => void

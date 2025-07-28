@@ -17,13 +17,13 @@ import {
 
 import {useStrings} from '~/features/common/hooks/useStrings'
 import {FormattedMetadata, FormattedTx} from '~/features/common/types'
-import {MetadataTab} from '~/ReviewTx/Metadata/MetadataTab'
-import {OverviewTab} from '~/ReviewTx/Overview/OverviewTab'
-import {UTxOsTab} from '~/ReviewTx/UTxOs/UTxOsTab'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {isEmptyString} from '~/wallets/utils/string'
+import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
+import {OverviewTab} from '../ReviewTx/Overview/OverviewTab'
+import {UTxOsTab} from '../ReviewTx/UTxOs/UTxOsTab'
 import {MintTab} from './Mint/MintTab'
 import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
 

@@ -9,12 +9,12 @@ import {cardanoConfig} from '@yoroi/blockchains'
 import {HW, Wallet} from '@yoroi/types'
 
 import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
-import {buildCoseSign1FromSignature, makeCip8Key} from '~/cip8/cip8'
-import {assertHasAllSigners} from '~/common/signatureUtils'
-import {signMessageWithLedger, signTxWithLedger} from '~/hw/hw'
-import {YoroiWallet} from '~/types'
-import {getAddressedUtxos, getHexAddressingMap} from '~/utils'
-import {wrappedCsl} from '~/wrappedCsl'
+import {buildCoseSign1FromSignature, makeCip8Key} from '../cip8/cip8'
+import {assertHasAllSigners} from '../common/signatureUtils'
+import {signMessageWithLedger, signTxWithLedger} from '../hw/hw'
+import {YoroiWallet} from '../types'
+import {getAddressedUtxos, getHexAddressingMap} from '../utils'
+import {wrappedCsl} from '../wrappedCsl'
 
 export const cip30LedgerExtensionMaker = (
   wallet: YoroiWallet,

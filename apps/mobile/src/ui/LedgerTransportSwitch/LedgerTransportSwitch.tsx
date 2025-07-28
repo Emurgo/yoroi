@@ -3,7 +3,6 @@ import React from 'react'
 import {Alert, StyleSheet, View} from 'react-native'
 
 import {useStrings} from '~/features/Swap/common/strings'
-import {Spacer} from '~/Spacer/Spacer'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Text} from '~/ui/Text/Text'
 import {
@@ -11,6 +10,7 @@ import {
   useIsUsbSupported,
   useLedgerPermissions,
 } from '~/wallets/hw/hw'
+import {Spacer} from '../Spacer/Spacer'
 
 type Props = {
   onSelectUSB: () => void

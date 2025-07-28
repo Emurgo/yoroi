@@ -5,10 +5,10 @@ import {Chain, Notifications} from '@yoroi/types'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {BannerIds, showBanner} from '~/Notifications/common/banners'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
 import {useBalances} from '~/wallets/hooks'
 import {Amounts, Quantities} from '~/wallets/utils/utils'
+import {BannerIds, showBanner} from '../Notifications/common/banners'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {useStrings} from './useStrings'
 
 export const useBuyCryptoBanner = () => {

@@ -2,13 +2,16 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Tab, TabPanel, Tabs} from '~/ui/Tabs/Tabs'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useSearchOnNavBar} from '~/Search/SearchContext'
-import {NetworkTag} from '~/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGetDAppsPortfolioBalance} from '~/features/common/hooks/useGetDAppsPortfolioBalance'
 import {useStrings} from '~/features/common/hooks/useStrings'
-import {PortfolioListTab, usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
+import {
+  PortfolioListTab,
+  usePortfolio,
+} from '~/features/Portfolio/context/PortfolioProvider'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Tab, TabPanel, Tabs} from '~/ui/Tabs/Tabs'
+import {useSearchOnNavBar} from '../Search/SearchContext'
+import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
 import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'
 

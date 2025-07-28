@@ -4,7 +4,6 @@ import * as React from 'react'
 import {InteractionManager, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useNavigateTo} from '~/CatalystNavigator'
 import {useStrings} from '~/features/RegisterCatalyst/common/strings'
 import {useAllowScreenshot} from '~/hooks/useAllowScreenShot'
 import {useBlockGoBack} from '~/kernel/navigation'
@@ -14,6 +13,7 @@ import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {Actions, Description} from '~/ui/common/components'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {Space} from '~/ui/Space/Space'
+import {useNavigateTo} from '../CatalystNavigator'
 
 export const QrCode = () => {
   useBlockGoBack()

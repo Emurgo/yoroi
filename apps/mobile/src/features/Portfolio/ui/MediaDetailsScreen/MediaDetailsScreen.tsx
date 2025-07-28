@@ -20,6 +20,10 @@ import {
   View,
 } from 'react-native'
 
+import {usePortfolioImageInvalidate} from '~/features/common/hooks/usePortfolioImage'
+import {useNavigateTo} from '~/features/common/navigation'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {NftRoutes} from '~/kernel/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Copiable} from '~/ui/Clipboard/Copiable'
 import {FadeIn} from '~/ui/FadeIn/FadeIn'
@@ -28,11 +32,7 @@ import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
 import {Spacer} from '~/ui/Spacer/Spacer'
 import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs/Tabs'
 import {Text} from '~/ui/Text/Text'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {NftRoutes} from '~/kernel/navigation'
-import {useSelectedWallet} from '~/WalletManager/hooks/useSelectedWallet'
-import {usePortfolioImageInvalidate} from '~/features/common/hooks/usePortfolioImage'
-import {useNavigateTo} from '~/features/common/navigation'
+import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
 
 export const MediaDetailsScreen = () => {
   const styles = useStyles()

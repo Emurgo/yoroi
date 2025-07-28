@@ -4,15 +4,12 @@ import {useNotificationManager} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
 
-import {
-  isTxHistoryRoute,
-  isWalletSelectionRoute,
-} from '~/kernel/navigation'
 import {useNotificationDisplaySettings} from '~/features/Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
-import {pushNotificationsManager} from '~/common/notification-manager'
-import {NotificationPopup} from '~/common/NotificationPopup'
-import {NotificationStack} from '~/common/NotificationStack'
+import {isTxHistoryRoute, isWalletSelectionRoute} from '~/kernel/navigation'
+import {pushNotificationsManager} from '../common/notification-manager'
+import {NotificationPopup} from '../common/NotificationPopup'
+import {NotificationStack} from '../common/NotificationStack'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 
 const displayLimit = 3
 

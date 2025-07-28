@@ -12,7 +12,7 @@ import type {
   TxStatusResponse,
 } from '@yoroi/types'
 import {StakePoolInfosAndHistories} from '@yoroi/types'
-import {ServerStatus} from '~/types'
+import {ServerStatus} from '../types'
 import {handleError} from './errors'
 import {fetchDefault} from './fetch'
 

@@ -16,6 +16,12 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {
+  SettingsStackRoutes,
+  useUnsafeParams,
+  useWalletNavigation,
+} from '~/kernel/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Clipboard/Copiable'
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
@@ -25,14 +31,6 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Spacer} from '~/ui/Spacer/Spacer'
 import {Text} from '~/ui/Text/Text'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {
-  SettingsStackRoutes,
-  useUnsafeParams,
-  useWalletNavigation,
-} from '~/kernel/navigation'
-import {TokenAmountItem} from '~/Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useReviewTx} from '~/ReviewTx/common/ReviewTxProvider'
 import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
@@ -40,6 +38,8 @@ import {useBalances} from '~/wallets/hooks'
 import {RawUtxo} from '~/wallets/types/other'
 import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
 import {Amounts, asQuantity, Quantities} from '~/wallets/utils/utils'
+import {TokenAmountItem} from '../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'

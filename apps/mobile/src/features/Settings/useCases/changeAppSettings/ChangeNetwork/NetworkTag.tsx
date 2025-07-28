@@ -17,8 +17,8 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Spacer} from '~/ui/Spacer/Spacer'
-import {availableNetworks} from '~/WalletManager/common/constants'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
+import {availableNetworks} from '../WalletManager/common/constants'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {useStrings} from './strings'
 
 export const NetworkTag = ({

@@ -2,16 +2,13 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {useStrings} from '~/features/common/hooks/useStrings'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Spacer} from '~/ui/Spacer/Spacer'
-import {
-  useBlockGoBack,
-  useWalletNavigation,
-} from '~/kernel/navigation'
-import {useStrings} from '~/features/common/hooks/useStrings'
-import {FailedTxIcon} from '~/illustrations/FailedTxIcon'
+import {FailedTxIcon} from '../illustrations/FailedTxIcon'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()

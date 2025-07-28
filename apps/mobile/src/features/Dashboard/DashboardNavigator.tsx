@@ -11,7 +11,7 @@ import {
   DashboardRoutes,
   defaultStackNavigationOptions,
 } from '~/kernel/navigation'
-import {StakingCenter} from '~/Staking/StakingCenter'
+import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 import {FailedTxScreen} from './ShowFailedTxScreen/FailedTxScreen'
 import {SubmittedTxScreen} from './ShowSubmittedTxScreen/SubmittedTxScreen'

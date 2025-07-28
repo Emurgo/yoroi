@@ -2,13 +2,13 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 
+import {formatPriceChange} from '~/features/common/helpers/priceChange'
+import {useStrings} from '~/features/common/hooks/useStrings'
+import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
+import {PnlTag} from '~/ui/PnlTag/PnlTag'
 import {Text} from '~/ui/Text/Text'
 import {Tooltip} from '~/ui/Tooltip/Tooltip'
-import {useCurrencyPairing} from '~/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {formatPriceChange} from '~/features/common/helpers/priceChange'
-import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
-import {useStrings} from '~/features/common/hooks/useStrings'
-import {PnlTag} from '~/ui/PnlTag/PnlTag'
+import {useCurrencyPairing} from '../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
 type Props = {
   tokenPerformance?: {

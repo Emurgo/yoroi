@@ -12,17 +12,17 @@ import {
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useReceive} from '~/common/ReceiveProvider'
-import {useNavigateTo} from '~/common/useNavigateTo'
-import {useReceiveAddressesStatus} from '~/common/useReceiveAddressesStatus'
-import {useStrings} from '~/common/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {ShowAddressLimitInfo} from '~/ui/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '~/ui/SmallAddressCard/SmallAddressCard'
 import {Space} from '~/ui/Space/Space'
-import {useAddressMode} from '~/WalletManager/common/hooks/useAddressMode'
+import {useReceive} from '../common/ReceiveProvider'
+import {useNavigateTo} from '../common/useNavigateTo'
+import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
+import {useStrings} from '../common/useStrings'
+import {useAddressMode} from '../WalletManager/common/hooks/useAddressMode'
 
 type AddressInfo = {
   isUsed?: boolean

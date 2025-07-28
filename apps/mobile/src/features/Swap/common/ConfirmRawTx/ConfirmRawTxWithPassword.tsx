@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 
-import {ConfirmWithSpendingPassword} from '~/ConfirmWithSpendingPassword'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Spacer} from '~/ui/Spacer/Spacer'
+import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
 type Props = {
   onConfirm?: (rootKey: string) => void

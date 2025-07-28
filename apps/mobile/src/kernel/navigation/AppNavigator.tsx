@@ -5,7 +5,7 @@ import {TempPinLoginScreen} from '~/features/Temporal_To_Remove/Auth/TempPinLogi
 import {InitialScreenNavigator} from '~/features/Temporal_To_Remove/InitialScreen/InitialScreenNavigatorNavigator'
 import {SelectWalletFromList} from '~/features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {Modal} from '~/ui/Modal/ModalScreen'
-import {DevMenu} from '~/DevMenu'
+import {DevMenu} from '../DevMenu'
 
 const Stack = createStackNavigator<any>()
 

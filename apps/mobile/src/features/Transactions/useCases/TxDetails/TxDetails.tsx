@@ -16,8 +16,6 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useBestBlock} from '~/WalletManager/common/hooks/useBestBlock'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {messages, useStrings} from '~/features/common/strings'
 import {Banner} from '~/ui/Banner/Banner'
@@ -34,6 +32,8 @@ import {TransactionInfo} from '~/wallets/types/other'
 import {formatDateAndTime, formatTokenWithSymbol} from '~/wallets/utils/format'
 import {isEmptyString} from '~/wallets/utils/string'
 import {asQuantity} from '~/wallets/utils/utils'
+import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useBestBlock} from '../WalletManager/common/hooks/useBestBlock'
 import AddressModal from './AddressModal/AddressModal'
 import {AssetList} from './AssetList'
 

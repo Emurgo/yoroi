@@ -1,5 +1,5 @@
-import {TokenEntryPlain} from '~/cardano/MultiToken'
-import {CardanoTypes} from '~/cardano/types'
+import {TokenEntryPlain} from '../cardano/MultiToken'
+import {CardanoTypes} from '../cardano/types'
 import {RemoteAccountState, RemoteCertificateMeta} from './staking'
 import {Token} from './tokens'
 

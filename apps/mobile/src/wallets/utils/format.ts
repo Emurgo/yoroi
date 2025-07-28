@@ -5,8 +5,8 @@ import {BigNumber} from 'bignumber.js'
 import type {FormatDateOptions, IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
-import {isTokenInfo} from '~/cardano/utils'
 import {DefaultAsset, Token} from '@yoroi/types'
+import {isTokenInfo} from '../cardano/utils'
 
 export const getTokenFingerprint = ({
   policyId,

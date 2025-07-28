@@ -5,19 +5,19 @@ import {BigNumber} from 'bignumber.js'
 import {
   BaseAsset,
   CERTIFICATE_KIND,
+  Token,
   Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
   TransactionInfo,
 } from '@yoroi/types'
-import {Token} from '@yoroi/types'
 import {
   getDefaultNetworkTokenEntry,
   MultiToken,
   strToDefaultMultiAsset,
-} from '~/MultiToken'
-import {multiTokenFromRemote} from '~/utils'
+} from '../MultiToken'
+import {multiTokenFromRemote} from '../utils'
 
 const ASSURANCE_LEVELS = {
   LOW: 3,

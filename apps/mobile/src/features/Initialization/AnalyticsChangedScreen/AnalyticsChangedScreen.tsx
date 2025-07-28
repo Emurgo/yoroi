@@ -4,7 +4,7 @@ import {Linking} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Analytics} from '~/ui/Analytics/Analytics'
-import {useAgreeWithLegal} from '~/common'
+import {useAgreeWithLegal} from '../common'
 
 export const AnalyticsChangedScreen = () => {
   const {agree} = useAgreeWithLegal()

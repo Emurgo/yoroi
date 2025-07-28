@@ -2,7 +2,7 @@ import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {YoroiEntry, YoroiMetadata} from '@yoroi/types'
-import {CardanoTypes} from '~/types'
+import {CardanoTypes} from '../types'
 import {
   toAmounts,
   toDisplayAddress,

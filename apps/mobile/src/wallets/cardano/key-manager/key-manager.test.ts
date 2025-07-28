@@ -1,4 +1,4 @@
-import {wrappedCsl} from '~/wrappedCsl'
+import {wrappedCsl} from '../wrappedCsl'
 import {keyManager} from './key-manager'
 
 describe('makeKeys', () => {

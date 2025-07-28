@@ -1,8 +1,8 @@
 import * as React from 'react'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {SyncWalletInfo} from '~/common/types'
-import {useWalletManager} from '~/context/WalletManagerProvider'
+import {SyncWalletInfo} from '../common/types'
+import {useWalletManager} from '../context/WalletManagerProvider'
 
 export const useSyncWalletInfo = (walledId: YoroiWallet['id']) => {
   const {walletManager} = useWalletManager()

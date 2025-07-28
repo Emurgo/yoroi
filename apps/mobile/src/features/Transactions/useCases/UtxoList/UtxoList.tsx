@@ -5,7 +5,7 @@ import {View} from 'react-native'
 
 import {features} from '~/kernel/features'
 import {Space} from '~/ui/Space/Space'
-import {useAddressMode} from '~/WalletManager/hooks/useAddressMode'
+import {useAddressMode} from '../WalletManager/hooks/useAddressMode'
 import {useUtxoList} from './useUtxoList'
 import {UtxoAddressGroup} from './UtxoAddressGroup'
 import {WarningSingleAddress} from './WarningSingleAddress'

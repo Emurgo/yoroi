@@ -6,9 +6,9 @@ import {View} from 'react-native'
 
 import {usePromise} from '~/hooks/usePromise'
 import {Button} from '~/ui/Button/Button'
-import {SpaceHeight} from '~/ui/Space/Space'
-import {useAuth} from '~/context/AuthProvider'
 import {Logo} from '~/ui/illustrations/Logo'
+import {SpaceHeight} from '~/ui/Space/Space'
+import {useAuth} from '../context/AuthProvider'
 
 export const LoginWithHostScreen = () => {
   const strings = useStrings()

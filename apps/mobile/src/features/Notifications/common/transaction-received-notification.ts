@@ -5,9 +5,9 @@ import {Subject} from 'rxjs'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {TRANSACTION_DIRECTION} from '~/wallets/types/other'
-import {SyncWalletInfo} from '~/WalletManager/common/types'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
-import {walletManager} from '~/WalletManager/wallet-manager'
+import {SyncWalletInfo} from '../WalletManager/common/types'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
+import {walletManager} from '../WalletManager/wallet-manager'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './processed-notifications-storage'
 

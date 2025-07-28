@@ -5,19 +5,19 @@ import * as React from 'react'
 import {Alert, Animated, Text, TouchableOpacity, View} from 'react-native'
 import {Swipeable} from 'react-native-gesture-handler'
 
+import {
+  ChevronRightDarkIllustration,
+  ChevronRightGrayIllustration,
+} from '~/features/SetupWallet/illustrations/ChevronRight'
 import {features} from '~/kernel/features'
 import {Icon} from '~/ui/Icon'
 import {Loading} from '~/ui/Loading/Loading'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
 import {isByron, isShelley} from '~/wallets/cardano/utils'
-import {
-  ChevronRightDarkIllustration,
-  ChevronRightGrayIllustration,
-} from '~/features/SetupWallet/illustrations/ChevronRight'
-// import {useAutomaticWalletOpener} from '~/context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '~/context/WalletManagerProvider'
+// import {useAutomaticWalletOpener} from '../context/AutomaticWalletOpeningProvider'
 import {useSelectedNetwork} from '~/hooks/useSelectedNetwork'
 import {useSyncWalletInfo} from '~/hooks/useSyncWalletInfo'
+import {useWalletManager} from '../context/WalletManagerProvider'
 
 type Props = {
   walletMeta: Wallet.Meta

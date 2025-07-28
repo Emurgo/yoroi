@@ -11,8 +11,6 @@ import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useReviewTx} from '~/ReviewTx/common/ReviewTxProvider'
-import {useSearch} from '~/Search/SearchContext'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useNavigateTo} from '~/features/common/navigation'
 import {toYoroiEntry} from '~/features/common/toYoroiEntry'
@@ -29,6 +27,8 @@ import {Spacer} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {useSaveMemo} from '~/wallets/hooks'
 import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
+import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
+import {useSearch} from '../Search/SearchContext'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()

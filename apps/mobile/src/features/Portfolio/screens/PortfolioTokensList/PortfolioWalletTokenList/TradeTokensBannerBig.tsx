@@ -4,11 +4,11 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
+import {useStrings} from '~/features/common/hooks/useStrings'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation'
-import {useStrings} from '~/features/common/hooks/useStrings'
-import {TradeTokensAsset} from '~/PortfolioDashboard/DashboardTokensList/TradeTokensAsset'
+import {TradeTokensAsset} from '../PortfolioDashboard/DashboardTokensList/TradeTokensAsset'
 
 export const TradeTokensBannerBig = () => {
   const {atoms: ta, palette: p} = useTheme()

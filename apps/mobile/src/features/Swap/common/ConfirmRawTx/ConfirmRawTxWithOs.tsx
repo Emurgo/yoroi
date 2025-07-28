@@ -2,10 +2,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {useEffect} from 'react'
 import {Text, View} from 'react-native'
 
-import {getErrorMessage} from '~/errors'
 import {useAuthOsWithEasyConfirmation} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/strings'
+import {getErrorMessage} from '../errors'
+import {useStrings} from '../strings'
 import {ActivityIndicator} from './ActivityIndicator'
 
 export const ConfirmRawTxWithOs = ({

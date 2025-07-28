@@ -6,8 +6,6 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity} from 'react-native'
 
-import {Boundary} from '~/ui/Boundary/Boundary'
-import {Icon} from '~/ui/Icon'
 import globalMessages from '~/kernel/i18n/global-messages'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
@@ -16,9 +14,11 @@ import {
   SettingsStackRoutes,
   SettingsTabRoutes,
 } from '~/kernel/navigation'
-import {ChangePinScreen} from '~/Auth/ChangePinScreen'
-import {EnableLoginWithPin} from '~/Auth/EnableLoginWithPin'
-import {PreparingWalletScreen} from '~/SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
+import {Boundary} from '~/ui/Boundary/Boundary'
+import {Icon} from '~/ui/Icon'
+import {ChangePinScreen} from '../Auth/ChangePinScreen'
+import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
+import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
 import {About} from './useCases/changeAppSettings/About'
 import {ApplicationSettingsScreen} from './useCases/changeAppSettings/ApplicationSettingsScreen'
 import {ChangeLanguageScreen} from './useCases/changeAppSettings/ChangeLanguage'

@@ -12,15 +12,15 @@ import {
   View,
 } from 'react-native'
 
-import {Copiable} from '~/Copiable'
-import {ExplorerInfoLinks} from '~/ExplorerInfoLinks/ExplorerInfoLinks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useCopy} from '~/kernel/utils/clipboard'
-import {SimpleTab} from '~/SimpleTab/SimpleTab'
-import {TokenInfoIcon} from '~/TokenInfoIcon/TokenInfoIcon'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
+import {Copiable} from '../Copiable'
+import {ExplorerInfoLinks} from '../ExplorerInfoLinks/ExplorerInfoLinks'
+import {SimpleTab} from '../SimpleTab/SimpleTab'
+import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
 import {useStrings} from './hooks/useStrings'
 
 export const TokenDetails = ({

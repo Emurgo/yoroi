@@ -5,7 +5,7 @@ import * as React from 'react'
 
 import {useAppState} from '~/hooks/useAppState'
 import {logger} from '~/kernel/logger/logger'
-import {AuthWithHostConfig} from '~/common/types'
+import {AuthWithHostConfig} from '../common/types'
 import {useStrings} from './useStrings'
 
 export const useAuthWithHost = () => {

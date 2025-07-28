@@ -1,6 +1,6 @@
 import {Balance} from '@yoroi/types'
 
-import {nft} from '~/mocks/wallet'
+import {nft} from '../mocks/wallet'
 import {utf8ToHex} from './api/utils'
 import {convertNft, getNftFilenameMediaType} from './nfts'
 

@@ -2,8 +2,8 @@ import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
 import {useModal} from '~/ui/Modal/ModalContext'
-import {AskToRedirectScreen} from '~/useCases/AskToRedirect/AskToRedirectScreen'
 import {isEmptyString} from '~/wallets/utils/string'
+import {AskToRedirectScreen} from '../useCases/AskToRedirect/AskToRedirectScreen'
 import {useStrings} from './useStrings'
 
 const heightBreakpoint = 367

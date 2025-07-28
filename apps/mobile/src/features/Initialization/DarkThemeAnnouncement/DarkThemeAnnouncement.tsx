@@ -17,8 +17,8 @@ import {useWalletNavigation} from '~/kernel/navigation'
 
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {DarkThemeIlustration} from '~/illustrations/DarkThemeIlustration'
-import {LightThemeIlustration} from '~/illustrations/LightThemeIlustration'
+import {DarkThemeIlustration} from '../illustrations/DarkThemeIlustration'
+import {LightThemeIlustration} from '../illustrations/LightThemeIlustration'
 
 export const DarkThemeAnnouncement = () => {
   const strings = useStrings()

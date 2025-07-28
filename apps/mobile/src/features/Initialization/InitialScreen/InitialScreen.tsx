@@ -4,15 +4,12 @@ import {ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
-import {
-  LanguageRecord,
-  supportedLanguages,
-} from '~/kernel/i18n/localization'
+import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
 import {BlueCheckbox} from '~/ui/BlueCheckbox/BlueCheckbox'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SpaceHeight} from '~/ui/Space/Space'
-import {useNavigateTo, useStrings} from '~/common'
+import {useNavigateTo, useStrings} from '../common'
 
 export const InitialScreen = () => {
   const strings = useStrings()

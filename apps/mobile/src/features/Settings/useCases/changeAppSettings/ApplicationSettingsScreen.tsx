@@ -6,19 +6,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '~/ui/Icon'
-import {Spacer} from '~/ui/Spacer/Spacer'
-import {isDev, isNightly} from '~/kernel/env'
-import {useLanguage} from '~/kernel/i18n'
-import {themeNames} from '~/kernel/i18n/global-messages'
-import {defaultLanguage} from '~/kernel/i18n/languages'
-import {useCrashReports} from '~/wallets/hooks'
 import {
   useAuthSetting,
   useAuthWithOs,
   useIsAuthOsSupported,
 } from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
-import {useSelectedNetwork} from '~/WalletManager/common/hooks/useSelectedNetwork'
 import {useNavigateTo} from '~/features/common/navigation'
 import {SettingsSwitch} from '~/features/common/SettingsSwitch'
 import {
@@ -26,6 +18,14 @@ import {
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/SettingsItems'
+import {isDev, isNightly} from '~/kernel/env'
+import {useLanguage} from '~/kernel/i18n'
+import {themeNames} from '~/kernel/i18n/global-messages'
+import {defaultLanguage} from '~/kernel/i18n/languages'
+import {Icon} from '~/ui/Icon'
+import {Spacer} from '~/ui/Spacer/Spacer'
+import {useCrashReports} from '~/wallets/hooks'
+import {useSelectedNetwork} from '../WalletManager/common/hooks/useSelectedNetwork'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {

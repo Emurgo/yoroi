@@ -24,7 +24,6 @@ import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortf
 import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletNavigation} from '~/kernel/navigation'
-import {useSearch, useSearchOnNavBar} from '~/Search/SearchContext'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Counter} from '~/ui/Counter/Counter'
@@ -36,7 +35,8 @@ import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {ServiceUnavailable} from '~/ui/ServiceUnavailable/ServiceUnavailable'
 import {Space} from '~/ui/Space/Space'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
+import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 
 type Filter = 'open' | 'completed'
 

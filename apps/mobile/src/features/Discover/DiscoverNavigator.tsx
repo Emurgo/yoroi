@@ -4,13 +4,13 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
-import {LoadingBoundary} from '~/ui/Boundary/Boundary'
-import {SomethingWentWrong} from '~/ui/SomethingWentWrong/SomethingWentWrong'
 import {
   defaultStackNavigationOptions,
   DiscoverRoutes,
 } from '~/kernel/navigation'
-import {NetworkTag} from '~/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {LoadingBoundary} from '~/ui/Boundary/Boundary'
+import {SomethingWentWrong} from '~/ui/SomethingWentWrong/SomethingWentWrong'
+import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {BrowserNavigator} from './BrowserNavigator'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'

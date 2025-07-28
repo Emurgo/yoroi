@@ -3,12 +3,12 @@ import React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Copiable} from '~/Copiable'
 import {useLastDateAddressUsed} from '~/features/Receive/common/useLastDateAddressUsed'
 import {useStrings} from '~/features/Receive/common/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Text} from '~/ui/Text/Text'
 import {isEmptyString} from '~/wallets/utils/string'
+import {Copiable} from '../Copiable'
 
 type AddressDetailsProps = {
   address: string

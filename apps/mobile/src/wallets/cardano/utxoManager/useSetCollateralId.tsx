@@ -2,7 +2,7 @@ import {UseMutationOptions} from '@tanstack/react-query'
 import {useMutationWithInvalidations} from '@yoroi/common'
 
 import {RawUtxo} from '@yoroi/types'
-import {YoroiWallet} from '~/types'
+import {YoroiWallet} from '../types'
 
 export const useSetCollateralId = (
   wallet: YoroiWallet,

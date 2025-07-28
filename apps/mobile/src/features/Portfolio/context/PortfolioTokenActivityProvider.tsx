@@ -8,8 +8,8 @@ import * as React from 'react'
 import {merge, switchMap} from 'rxjs'
 
 import {logger} from '~/kernel/logger/logger'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '~/WalletManager/hooks/useSelectedNetwork'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '../WalletManager/hooks/useSelectedNetwork'
 
 const queryKey = ['portfolioTokenActivity']
 const defaultPortfolioTokenActivityState: PortfolioTokenActivityState = freeze(

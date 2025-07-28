@@ -2,14 +2,14 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {TextInput as RNTextInput, StyleSheet, View} from 'react-native'
 
+import {useStrings} from '~/features/common/strings'
+import {debugWalletInfo, features} from '~/kernel/features'
 import {Button} from '~/ui/Button/Button'
 import {Spacer} from '~/ui/Spacer/Spacer'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {debugWalletInfo, features} from '~/kernel/features'
-import {useStrings} from '~/features/common/strings'
-import {ActivityIndicator} from '~/ConfirmRawTx/ActivityIndicator'
-import {getErrorMessage} from '~/errors'
+import {ActivityIndicator} from '../ConfirmRawTx/ActivityIndicator'
+import {getErrorMessage} from '../errors'
 
 export type ErrorData = {
   errorMessage: string

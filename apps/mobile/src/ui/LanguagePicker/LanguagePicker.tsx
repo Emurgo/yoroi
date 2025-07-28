@@ -5,9 +5,9 @@ import {FlatList, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
-import {LanguagePickerWarning} from '~/LanguagePickerWarning/LanguagePickerWarning'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
+import {LanguagePickerWarning} from '../LanguagePickerWarning/LanguagePickerWarning'
 
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 

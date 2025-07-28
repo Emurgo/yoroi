@@ -22,10 +22,10 @@ import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {isEmptyString} from '~/wallets/utils/string'
-import {useSelectedWallet} from '~/WalletManager/hooks/useSelectedWallet'
-import {useDialogs} from '~/common/useDialogs'
-import {useNavigateTo} from '~/common/useNavigateTo'
-import {useStrings} from '~/common/useStrings'
+import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
+import {useDialogs} from '../common/useDialogs'
+import {useNavigateTo} from '../common/useNavigateTo'
+import {useStrings} from '../common/useStrings'
 
 export const ShowSuccessScreen = () => {
   const strings = useStrings()

@@ -2,14 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Image, Text, View} from 'react-native'
 
+import {useStrings} from '~/features/common/strings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import OrganizeWalletImage from '~/assets/img/organize-wallet-utxos.png'
-import {
-  ScrollView,
-  useScrollView,
-} from '~/ui/ScrollView/ScrollView'
-import {useStrings} from '~/features/common/strings'
+import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import OrganizeWalletImage from '../assets/img/organize-wallet-utxos.png'
 
 export const UtxoConsolidation = () => {
   const strings = useStrings()

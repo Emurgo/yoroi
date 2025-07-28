@@ -10,24 +10,24 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '~/ui/Button/Button'
-import {Icon} from '~/ui/Icon'
-import {Spacer} from '~/ui/Spacer/Spacer'
-import {Text} from '~/ui/Text/Text'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation'
+import {SettingsSwitch} from '~/features/common/SettingsSwitch'
 import {
   getNotificationsAuthorizationStatus,
   triggerNotificationsPermissionModal,
 } from '~/features/Notifications/common/tools'
-import {SettingsSwitch} from '~/features/common/SettingsSwitch'
-import {SettingsItem, SettingsSection} from '~/features/Settings/SettingsItems'
-import {SettingsNotificationDurationItem} from '~/SettingsNotificationDurationItem'
 import {
   useChangeNotificationDisplaySettings,
   useNotificationDisplaySettings,
 } from '~/features/Notifications/NotificationsDisplaySettings'
-import {useStrings} from '~/useStrings'
+import {SettingsItem, SettingsSection} from '~/features/Settings/SettingsItems'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {Spacer} from '~/ui/Spacer/Spacer'
+import {Text} from '~/ui/Text/Text'
+import {SettingsNotificationDurationItem} from '../SettingsNotificationDurationItem'
+import {useStrings} from '../useStrings'
 
 export const ManageNotificationSettings = () => {
   const strings = useStrings()

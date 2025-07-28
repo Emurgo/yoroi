@@ -6,8 +6,8 @@ import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
 import {useStrings} from '~/features/Receive/common/useStrings'
 import {useCopy} from '~/kernel/utils/clipboard'
-import {SkeletonSmallCardAddress} from '~/SkeletonAddressDetail/SkeletonAddressDetail'
 import {Spacer} from '~/ui/Space/Space'
+import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
 
 type SmallAddressCardProps = {
   address: string

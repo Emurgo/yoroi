@@ -6,7 +6,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useEnableEasyConfirmation} from '~/Auth/common/useEnableEasyConfirmation'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/global-messages'
@@ -16,6 +15,7 @@ import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
+import {useEnableEasyConfirmation} from '../Auth/common/useEnableEasyConfirmation'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()

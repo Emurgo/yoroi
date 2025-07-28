@@ -25,23 +25,24 @@ import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback} from 'react'
 
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {isDev, isNightly} from '~/kernel/env'
-import {logger} from '~/kernel/logger/logger'
-import {useStakingInfo} from '~/legacy/Dashboard/StakePoolInfos'
-import {deriveAddressFromXPub} from '~/cardano/account-manager/derive-address-from-xpub'
-import {getSpendingKey, getStakingKey} from '~/cardano/addressInfo/addressInfo'
-import {convertBech32ToHex} from '~/cardano/common/signatureUtils'
-import {WalletEvent, YoroiWallet} from '~/cardano/types'
 import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TxSubmissionStatus,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
 } from '@yoroi/types'
-import {YoroiSignedTx, YoroiUnsignedTx} from '@yoroi/types'
-import {delay} from '~/utils/timeUtils'
-import {Quantities, Utxos} from '~/utils/utils'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {isDev, isNightly} from '~/kernel/env'
+import {logger} from '~/kernel/logger/logger'
+import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
+import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
+import {convertBech32ToHex} from '../cardano/common/signatureUtils'
+import {WalletEvent, YoroiWallet} from '../cardano/types'
+import {useStakingInfo} from '../legacy/Dashboard/StakePoolInfos'
+import {delay} from '../utils/timeUtils'
+import {Quantities, Utxos} from '../utils/utils'
 
 const crashReportsStorageKey = 'sendCrashReports'
 

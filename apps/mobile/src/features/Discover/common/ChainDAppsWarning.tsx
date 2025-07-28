@@ -5,7 +5,7 @@ import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {GradientWarning} from '~/ui/ChainWarning/GradientWarning'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {useStrings} from './useStrings'
 
 export const ChainDAppsWarning = () => {

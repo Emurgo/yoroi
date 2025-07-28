@@ -1,10 +1,10 @@
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import BigNumber from 'bignumber.js'
 
-import {logger} from '~/kernel/logger/logger'
 import {RawUtxo} from '@yoroi/types'
-import {cardanoValueFromRemoteFormat} from '~/utils'
-import {wrappedCsl} from '~/wrappedCsl'
+import {logger} from '~/kernel/logger/logger'
+import {cardanoValueFromRemoteFormat} from '../utils'
+import {wrappedCsl} from '../wrappedCsl'
 
 const addressPlaceholder =
   'addr1qx8nuj8a7gy8kes4pedpfdscrlxr6p8gkzyzmhdmsf4209xssydveuc8xyx4zh27fwcmr62mraeezjwf24hzkyejwfmqmpfpy5'

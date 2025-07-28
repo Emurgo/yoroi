@@ -1,4 +1,4 @@
-import {CardanoMobile} from '~/wallets'
+import {CardanoMobile} from '../wallets'
 import {MultiToken} from './MultiToken'
 import {identifierToCardanoAsset} from './utils'
 

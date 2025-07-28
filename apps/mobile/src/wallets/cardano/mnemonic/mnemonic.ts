@@ -3,7 +3,7 @@ import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 
 import {randomBytes} from 'react-native-randombytes'
 
-import {wrappedCsl} from '~/wrappedCsl'
+import {wrappedCsl} from '../wrappedCsl'
 
 const mnemonicStrengh = 160
 

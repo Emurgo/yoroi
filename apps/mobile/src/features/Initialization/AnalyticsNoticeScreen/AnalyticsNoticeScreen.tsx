@@ -5,7 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Analytics} from '~/ui/Analytics/Analytics'
-import {useAgreeWithLegal, useNavigateTo} from '~/common'
+import {useAgreeWithLegal, useNavigateTo} from '../common'
 
 export const AnalyticsNoticeScreen = () => {
   const navigateTo = useNavigateTo()

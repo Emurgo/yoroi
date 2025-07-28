@@ -1,7 +1,7 @@
 import {Datum} from '@emurgo/yoroi-lib'
 import {Balance} from '@yoroi/types'
 
-import {CardanoTypes} from '~/cardano/types'
+import {CardanoTypes} from '../cardano/types'
 
 export type YoroiUnsignedTx = YoroiTxInfo & {
   unsignedTx: CardanoTypes.UnsignedTx

@@ -3,8 +3,8 @@ import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
 import {useModal} from '~/ui/Modal/ModalContext'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
-import {AskToOpenWalletScreen} from '~/useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
+import {AskToOpenWalletScreen} from '../useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
 import {useStrings} from './useStrings'
 
 const heightBreakpoint = 367

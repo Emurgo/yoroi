@@ -76,8 +76,8 @@ These are likely translation or string constant files:
    git mv apps/wallet-mobile/src/components/ComponentName apps/mobile/src/ui/ComponentName
    ```
 
-2. Update imports in the moved component files
-3. Update any imports in other files that reference the moved component
+2. Fix any broken relative imports in the moved component files
+3. Update any remaining relative imports in other files that reference the moved component
 4. Run linting and TypeScript checks to ensure no issues
 
 ### For Individual Files:
@@ -89,7 +89,8 @@ These are likely translation or string constant files:
    ```
 
 2. Create the directory structure if it doesn't exist
-3. Update imports and references
+3. Fix any broken relative imports in the moved file
+4. Update any remaining relative imports that reference the moved component
 
 ### For Story Files:
 
@@ -103,6 +104,7 @@ Storybook story files have been removed from the project and should not be migra
 
 - Always use `git mv` to preserve file history
 - Test components after migration to ensure they work correctly
-- Update any import paths that reference the old locations
+- Focus on fixing broken relative imports that reference moved components
+- Most absolute path imports have already been converted, so focus on remaining relative imports
 - Consider the new mobile structure's organization when placing components
 - Some components may need to be refactored to use the new theme system (@yoroi/theme)

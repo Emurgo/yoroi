@@ -2,16 +2,13 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {useStrings} from '~/features/common/strings'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Spacer} from '~/ui/Spacer/Spacer'
-import {
-  useBlockGoBack,
-  useWalletNavigation,
-} from '~/kernel/navigation'
-import {SuccessfulTxIcon} from '~/ReviewTx/illustrations/SuccessfulTxIcon'
-import {useStrings} from '~/features/common/strings'
+import {SuccessfulTxIcon} from '../ReviewTx/illustrations/SuccessfulTxIcon'
 
 export const SubmittedTxScreen = () => {
   useBlockGoBack()

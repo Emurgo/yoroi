@@ -5,7 +5,7 @@ import {Linking, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '~/ui/Spacer/Spacer'
 import {Text} from '~/ui/Text/Text'
-import {useStrings} from '~/useStrings'
+import {useStrings} from '../useStrings'
 
 const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
 

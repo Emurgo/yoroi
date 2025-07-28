@@ -3,12 +3,12 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {View} from 'react-native'
 
-import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/features/common/strings'
 import {Spacer} from '~/ui/Spacer/Spacer'
 import {Text} from '~/ui/Text/Text'
+import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 export const LockedDeposit = ({
   ignorePrivacy = false,

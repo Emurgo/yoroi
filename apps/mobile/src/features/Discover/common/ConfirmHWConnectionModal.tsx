@@ -11,8 +11,8 @@ import {LedgerTransportSwitch} from '~/ui/LedgerTransportSwitch/LedgerTransportS
 import {useModal} from '~/ui/Modal/ModalContext'
 import {ModalError} from '~/ui/ModalError/ModalError'
 import {Text} from '~/ui/Text/Text'
-import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
 import {withBLE, withUSB} from '~/wallets/hw/hwWallet'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {useStrings} from './useStrings'
 
 type TransportType = 'USB' | 'BLE'
