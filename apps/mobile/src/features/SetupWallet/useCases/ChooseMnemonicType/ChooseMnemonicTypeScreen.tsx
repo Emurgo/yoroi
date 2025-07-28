@@ -1,26 +1,25 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {LogoBanner} from '../../../../ui/LogoBanner/LogoBanner'
+import {Space} from '../../../../ui/Space/Space'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
-import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
 import {Mnemonic15Words} from '../../illustrations/Mnemonic15Words'
 import {Mnemonic24Words} from '../../illustrations/Mnemonic24Words'
 
 export const ChooseMnemonicTypeScreen = () => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {mnemonicTypeChanged} = useSetupWallet()
   const {track} = useMetrics()
+  const {palette: p} = useTheme()
 
-  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const navigation = useNavigation<any>()
 
   const handle15Words = () => {
     mnemonicTypeChanged(15)
@@ -39,49 +38,35 @@ export const ChooseMnemonicTypeScreen = () => {
   )
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <Space height="lg" />
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}
+    >
+      <Space.Height.lg />
 
       <LogoBanner />
 
-      <Space height="xl" />
+      <Space.Height.xl />
 
       <View>
         <ButtonCard
           title={strings.choose15WordsMnemonicTitle}
-          icon={<Mnemonic15Words style={styles.icon} />}
+          icon={<Mnemonic15Words style={[a.absolute, {right: 0}]} />}
           onPress={handle15Words}
           testID="mnemonic-15-word"
         />
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <ButtonCard
           title={strings.choose24WordsMnemonicTitle}
-          icon={<Mnemonic24Words style={styles.icon} />}
+          icon={<Mnemonic24Words style={[a.absolute, {right: 0}]} />}
           onPress={handle24Words}
           testID="mnemonic-24-word"
         />
 
-        <Space height="lg" />
+        <Space.Height.lg />
       </View>
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      ...atoms.px_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    icon: {
-      position: 'absolute',
-      right: 0,
-    },
-  })
-
-  return {styles} as const
 }

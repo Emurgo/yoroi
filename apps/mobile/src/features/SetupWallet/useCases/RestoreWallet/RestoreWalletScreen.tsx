@@ -1,35 +1,30 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
 import {
-  Dimensions,
   Keyboard,
   Platform,
-  StyleSheet,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {useScrollView} from '../../../../components/ScrollView/ScrollView'
-import {Space} from '../../../../components/Space/Space'
-import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {isEmptyString} from '../../../../kernel/utils'
+import {Button} from '../../../../ui/Button/Button'
+import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '../../../../ui/Modal/ModalContext'
+import {useScrollView} from '../../../../ui/ScrollView/ScrollView'
+import {Space} from '../../../../ui/Space/Space'
+import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
+import {isEmptyString} from '../../../../wallets/utils/string'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/useStrings'
-import {
-  WalletDuplicatedModal,
-  WalletDuplicatedModalActions,
-} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
+import {WalletDuplicatedModal} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {MnemonicInput} from './MnemonicInput/MnemonicInput'
 
 export type MnemonicWordInputRef = {
@@ -38,11 +33,10 @@ export type MnemonicWordInputRef = {
 }
 
 export const RestoreWalletScreen = () => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const bold = useBold()
   const [mnemonic, setMnemonic] = React.useState('')
-  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const navigation = useNavigation<any>()
   const {
     publicKeyHexChanged,
     mnemonicChanged,
@@ -56,6 +50,7 @@ export const RestoreWalletScreen = () => {
   const [focusedIndex, setFocusedIndex] = React.useState<number>(0)
   const [isValidPhrase, setIsValidPhrase] = React.useState(false)
   const {scrollViewRef} = useScrollView()
+  const {palette: p} = useTheme()
 
   if (mnemonicType === null) throw new Error('mnemonicType missing')
 
@@ -151,7 +146,7 @@ export const RestoreWalletScreen = () => {
       const {plate, seed} = walletManager.checksum(accountPubKeyHex)
 
       openModal({
-        title: strings.restoreDuplicatedWalletModalTitle,
+        // title: strings.restoreDuplicatedWalletModalTitle,
         content: (
           <WalletDuplicatedModal
             plate={plate}
@@ -159,11 +154,11 @@ export const RestoreWalletScreen = () => {
             duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
           />
         ),
-        footer: (
+        /* footer: (
           <WalletDuplicatedModalActions
             duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
           />
-        ),
+        ), */
       })
 
       return
@@ -179,15 +174,17 @@ export const RestoreWalletScreen = () => {
     navigation,
     openModal,
     publicKeyHexChanged,
-    strings.restoreDuplicatedWalletModalTitle,
     walletImplementation,
     walletManager,
   ])
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <View style={styles.stepper}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={[a.flex_1, a.justify_between, {backgroundColor: p.bg_color_max}]}
+    >
+      <KeyboardAvoidingView style={a.flex_1}>
+        <View style={a.px_lg}>
           <StepperProgress
             currentStep={1}
             currentStepTitle={strings.stepRestoreWalletScreen}
@@ -196,15 +193,15 @@ export const RestoreWalletScreen = () => {
         </View>
 
         <ScrollView
-          style={styles.scroll}
+          style={a.p_lg}
           bounces={false}
           keyboardShouldPersistTaps="always"
         >
-          <Text style={styles.title}>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
             {strings.restoreWalletScreenTitle(bold)}
           </Text>
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <MnemonicInput
             isValidPhrase={isValidPhrase}
@@ -238,8 +235,27 @@ export const RestoreWalletScreen = () => {
         )}
 
         {suggestedWords.length === 0 && hasFocusedInputError && (
-          <View style={styles.suggestionArea}>
-            <Text style={styles.suggestionMessage}>{strings.wordNotFound}</Text>
+          <View
+            style={{
+              backgroundColor: p.bg_color_max,
+              borderColor: p.gray_200,
+              borderTopWidth: 1,
+              paddingTop: 30,
+              paddingBottom: 30,
+              ...a.align_center,
+            }}
+          >
+            <Text
+              style={[
+                {
+                  color: p.text_gray_medium,
+                },
+                a.body_1_lg_regular,
+                a.text_center,
+              ]}
+            >
+              {strings.wordNotFound}
+            </Text>
           </View>
         )}
       </KeyboardAvoidingView>
@@ -248,14 +264,14 @@ export const RestoreWalletScreen = () => {
 }
 
 const NextButton = ({onPress}: {onPress: () => void}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.padding}>
+    <View style={a.p_lg}>
       <Button
         title={strings.next}
-        style={styles.button}
+        style={{backgroundColor: p.primary_500}}
         onPress={onPress}
         testID="setup-restore-step1-next-button"
       />
@@ -272,9 +288,28 @@ const WordSuggestionList = ({
   index: number
   onSelect: (index: number, word: string) => void
 }) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
+  const {height: screenHeight} = useWindowDimensions()
+
+  const paddingBottom = React.useMemo(() => {
+    if (Platform.OS !== 'ios') return 16
+    return screenHeight < 700 ? screenHeight * 0.01 : screenHeight * 0.05
+  }, [screenHeight])
+
   return (
-    <View style={styles.suggestions}>
+    <View
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+          borderColor: p.gray_200,
+          borderTopWidth: 1,
+          paddingBottom: paddingBottom,
+        },
+        a.flex_row,
+        a.align_center,
+        a.pt_lg,
+      ]}
+    >
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -282,7 +317,7 @@ const WordSuggestionList = ({
         keyboardShouldPersistTaps="always"
         renderItem={({item: word, index: wordIndex}) => (
           <>
-            {wordIndex === 0 && <Space width="lg" />}
+            {wordIndex === 0 && <Space.Width.lg />}
 
             <WordSuggestionButton
               onPress={() => {
@@ -291,10 +326,10 @@ const WordSuggestionList = ({
               title={word}
             />
 
-            {wordIndex === data.length - 1 && <Space width="lg" />}
+            {wordIndex === data.length - 1 && <Space.Width.lg />}
           </>
         )}
-        ItemSeparatorComponent={() => <Space width="sm" />}
+        ItemSeparatorComponent={() => <Space.Width.sm />}
       />
     </View>
   )
@@ -307,96 +342,39 @@ const WordSuggestionButton = ({
   title: string
   onPress: () => void
 }) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   return (
-    <TouchableOpacity style={styles.suggestion} onPress={onPress}>
-      <Text style={styles.suggestionText}>{title}</Text>
+    <TouchableOpacity
+      style={[
+        a.px_lg,
+        a.py_sm,
+        {
+          borderColor: p.primary_300,
+          borderWidth: 2,
+          borderRadius: 8,
+          backgroundColor: 'transparent',
+        },
+      ]}
+      onPress={onPress}
+    >
+      <Text
+        style={[
+          {
+            color: p.text_primary_medium,
+          },
+          a.body_1_lg_regular,
+        ]}
+      >
+        {title}
+      </Text>
     </TouchableOpacity>
   )
 }
 
 const useBold = () => {
-  const {styles} = useStyles()
-
   return {
-    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+    b: (text: React.ReactNode) => (
+      <Text style={a.body_1_lg_medium}>{text}</Text>
+    ),
   }
-}
-
-const useStyles = () => {
-  const {height: screenHeight} = Dimensions.get('window')
-
-  const isSmallScreen = screenHeight < 700
-  const dynamicPaddingBottom =
-    Platform.OS === 'ios'
-      ? isSmallScreen
-        ? screenHeight * 0.01 // Smaller padding for small screens
-        : screenHeight * 0.05 // Regular padding for larger screens
-      : 16 // Default padding for Android
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      justifyContent: 'space-between',
-      backgroundColor: color.bg_color_max,
-    },
-    title: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_900,
-    },
-    button: {backgroundColor: color.primary_500},
-    bolder: {
-      ...atoms.body_1_lg_medium,
-    },
-    stepper: {
-      ...atoms.px_lg,
-    },
-    scroll: {
-      ...atoms.p_lg,
-    },
-    padding: {
-      ...atoms.p_lg,
-    },
-    suggestions: {
-      backgroundColor: color.bg_color_max,
-      borderColor: color.gray_200,
-      borderTopWidth: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingTop: 16,
-      paddingBottom: dynamicPaddingBottom,
-    },
-    suggestion: {
-      ...atoms.px_lg,
-      ...atoms.py_sm,
-      borderColor: color.primary_300,
-      borderWidth: 2,
-      borderRadius: 8,
-      backgroundColor: 'transparent',
-    },
-    suggestionText: {
-      color: color.text_primary_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    suggestionArea: {
-      backgroundColor: color.bg_color_max,
-      borderColor: color.gray_200,
-      borderTopWidth: 1,
-      alignItems: 'center',
-      paddingTop: 30,
-      paddingBottom: 30,
-    },
-    suggestionMessage: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-    },
-  })
-
-  const colors = {
-    gray900: color.gray_900,
-    gradientBlueGreen: color.bg_gradient_1,
-  }
-
-  return {styles, colors} as const
 }

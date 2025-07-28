@@ -1,24 +1,20 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {LogoBanner} from '../../../../ui/LogoBanner/LogoBanner'
+import {useModal} from '../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../ui/Space/Space'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
-import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
-import {CreateWallet} from '../../illustrations/CreateWallet'
-import {HardwareWallet} from '../../illustrations/HardwareWallet'
-import {RestoreWallet} from '../../illustrations/RestoreWallet'
-import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
+// import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
 
 export const ChooseSetupTypeScreen = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {walletImplementationChanged, setupTypeChanged} = useSetupWallet()
   const {openModal} = useModal()
@@ -30,7 +26,7 @@ export const ChooseSetupTypeScreen = () => {
     }, [track]),
   )
 
-  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const navigation = useNavigation<any>()
 
   const handleCreate = () => {
     walletImplementationChanged('cardano-cip1852')
@@ -46,69 +42,55 @@ export const ChooseSetupTypeScreen = () => {
     navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
   }
 
-  const handleHw = () => {
+  /* const handleHw = () => {
     openModal({
-      title: strings.hwModalTitle,
+      // title: strings.hwModalTitle,
       content: <SelectHwConnectionModal />,
-      height: 305,
+      // height: 305,
     })
-  }
+  } */
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <Space height="lg" />
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={[{flex: 1, backgroundColor: p.bg_color_max}, a.px_lg]}
+    >
+      <Space.Height.lg />
 
       <LogoBanner />
 
-      <Space height="xl" />
+      <Space.Height.xl />
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <ButtonCard
             title={strings.createWalletButtonCard}
-            icon={<CreateWallet style={styles.icon} />}
+            // icon={<CreateWallet style={position: 'absolute', right: 0} />}
             onPress={handleCreate}
             testID="setup-create-new-wallet-button"
           />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <ButtonCard
             title={strings.restoreWalletButtonCard}
-            icon={<RestoreWallet style={styles.icon} />}
+            // icon={<RestoreWallet style={position: 'absolute', right: 0} />}
             onPress={handleRestore}
             testID="setup-restore-wallet-button"
           />
 
-          <Space height="lg" />
-
+          <Space.Height.lg />
+          {/*
           <ButtonCard
             title={strings.connectWalletButtonCard}
-            icon={<HardwareWallet style={styles.icon} />}
+            // icon={<HardwareWallet style={position: 'absolute', right: 0} />}
             onPress={handleHw}
             testID="setup-connect-HW-wallet-button"
-          />
+          /> */}
 
-          <Space height="lg" />
+          <Space.Height.lg />
         </View>
       </ScrollView>
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      ...atoms.px_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    icon: {
-      position: 'absolute',
-      right: 0,
-    },
-  })
-
-  return {styles} as const
 }

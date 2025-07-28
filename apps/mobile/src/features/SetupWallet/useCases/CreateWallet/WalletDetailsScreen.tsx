@@ -8,10 +8,8 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
   InteractionManager,
-  Linking,
   TextInput as RNTextInput,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
@@ -25,28 +23,25 @@ import {debugWalletInfo, features} from '../../../../kernel/features'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {isEmptyString} from '../../../../kernel/utils'
 import {Button} from '../../../../ui/Button/Button'
 import {CardAboutPhrase} from '../../../../ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '../../../../ui/Icon'
 import {Info as InfoIcon} from '../../../../ui/InfoIcon/InfoIcon'
-import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView'
-import {LearnMoreButton} from '../../../../ui/LearnMoreButton/LearnMoreButton'
+import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '../../../../ui/Modal/ModalContext'
 import {Space} from '../../../../ui/Space/Space'
 import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
-import {TextInput} from '../../../../ui/TextInput'
+import {TextInput} from '../../../../ui/TextInput/TextInput'
+import {isEmptyString} from '../../../../wallets/utils/string'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
   validateWalletName,
 } from '../../../../wallets/utils/validators'
-import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {YoroiZendeskLink} from '../../common/constants'
+import {useCreateWalletMnemonic} from '../../../WalletManager/hooks/useCreateWalletMnemonic'
 import {useStrings} from '../../common/useStrings'
 
 const useSizeModal = () => {
@@ -76,9 +71,9 @@ const useSizeModal = () => {
 // when restoring, later will be part of the onboarding
 const addressMode: Wallet.AddressMode = 'single'
 export const WalletDetailsScreen = () => {
-  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const navigation = useNavigation<any>()
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const {track} = useMetrics()
   const bold = useBold()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
@@ -121,7 +116,7 @@ export const WalletDetailsScreen = () => {
 
   const {
     createWallet,
-    isLoading,
+    isPending,
     isSuccess: isCreateWalletSuccess,
   } = useCreateWalletMnemonic({
     onSuccess: async (wallet) => {
@@ -153,13 +148,13 @@ export const WalletDetailsScreen = () => {
   })
 
   const passwordErrorText =
-    passwordErrors.passwordIsWeak && !isLoading
+    passwordErrors.passwordIsWeak && !isPending
       ? strings.passwordStrengthRequirement({
           requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
         })
       : undefined
   const passwordConfirmationErrorText =
-    passwordErrors.matchesConfirmation && !isLoading
+    passwordErrors.matchesConfirmation && !isPending
       ? strings.repeatPasswordInputError
       : undefined
 
@@ -200,10 +195,10 @@ export const WalletDetailsScreen = () => {
 
   const showModalTipsPassword = React.useCallback(() => {
     openModal({
-      title: strings.walletDetailsModalTitle,
+      // title: strings.walletDetailsModalTitle,
       content: (
-        <View style={[styles.modal, a.flex_1, a.px_lg, a.pb_lg]}>
-          <View style={[styles.modalContent, a.gap_lg]}>
+        <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
+          <View style={[a.gap_lg]}>
             <CardAboutPhrase
               title={strings.walletNameModalCardTitle}
               linesOfText={[
@@ -222,7 +217,7 @@ export const WalletDetailsScreen = () => {
           </View>
         </View>
       ),
-      footer: (
+      /* footer: (
         <View style={[styles.modalContent, a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
@@ -240,15 +235,10 @@ export const WalletDetailsScreen = () => {
           />
         </View>
       ),
-      height: HEIGHT_MODAL_NAME_PASSWORD,
+      height: HEIGHT_MODAL_NAME_PASSWORD, */
     })
   }, [
-    HEIGHT_MODAL_NAME_PASSWORD,
-    closeModal,
     openModal,
-    showRestoreWalletInfoModalChanged,
-    strings.continueButton,
-    strings.walletDetailsModalTitle,
     strings.walletNameModalCardFirstItem,
     strings.walletNameModalCardSecondItem,
     strings.walletNameModalCardTitle,
@@ -264,9 +254,9 @@ export const WalletDetailsScreen = () => {
 
   const showModalTipsPlateNumber = () => {
     openModal({
-      title: strings.walletDetailsModalTitle,
+      // title: strings.walletDetailsModalTitle,
       content: (
-        <View style={[styles.modal, a.flex_1, a.px_lg, a.pb_lg]}>
+        <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
           <CardAboutPhrase
             title={strings.walletChecksumModalCardTitle}
             checksumImage={seed}
@@ -279,7 +269,7 @@ export const WalletDetailsScreen = () => {
           />
         </View>
       ),
-      footer: (
+      /* footer: (
         <View style={[styles.modalContent, a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
@@ -289,31 +279,28 @@ export const WalletDetailsScreen = () => {
 
           <Button title={strings.continueButton} onPress={closeModal} />
         </View>
-      ),
-      height: HEIGHT_MODAL_CHECKSUM,
+      ), */
+      // height: HEIGHT_MODAL_CHECKSUM,
     })
   }
 
   return (
-    <KeyboardAvoidingView
-      style={[styles.root, a.flex_1, {backgroundColor: color.bg_color_max}]}
-    >
+    <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <SafeAreaView
         edges={['left', 'right', 'bottom']}
-        style={[styles.safeAreaView, a.flex_1, a.pb_lg]}
+        style={[a.flex_1, a.pb_lg]}
       >
         <StepperProgress
-          style={[styles.steps, a.px_lg]}
+          style={[a.px_lg]}
           currentStep={4}
           currentStepTitle={strings.stepWalletDetails}
           totalSteps={4}
         />
 
-        <View style={[styles.infoWrapper, {height: 24}, a.px_lg, a.flex_row]}>
+        <View style={[{height: 24}, a.px_lg, a.flex_row]}>
           <Text
             style={[
-              styles.title,
-              {color: color.text_gray_medium},
+              {color: p.text_gray_medium},
               a.self_center,
               a.body_1_lg_regular,
             ]}
@@ -324,10 +311,7 @@ export const WalletDetailsScreen = () => {
           <Info onPress={showModalTipsPassword} />
         </View>
 
-        <ScrollView
-          style={[styles.scroll, a.px_lg]}
-          contentContainerStyle={[styles.content, a.pt_lg, a.gap_lg]}
-        >
+        <ScrollView style={a.px_lg} contentContainerStyle={[a.pt_lg, a.gap_lg]}>
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus={!showRestoreWalletInfoModal}
@@ -335,7 +319,7 @@ export const WalletDetailsScreen = () => {
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
-              !isEmptyString(walletNameErrorText) && !isLoading
+              !isEmptyString(walletNameErrorText) && !isPending
                 ? walletNameErrorText
                 : undefined
             }
@@ -381,7 +365,6 @@ export const WalletDetailsScreen = () => {
 
           <View
             style={[
-              styles.checksum,
               a.flex_row,
               a.align_center,
               a.justify_center,
@@ -390,16 +373,15 @@ export const WalletDetailsScreen = () => {
           >
             <Icon.WalletAvatar
               image={new Blockies({seed}).asBase64()}
-              style={[styles.walletChecksum, {width: 24, height: 24}]}
+              style={{width: 24, height: 24}}
               size={24}
             />
 
-            <Space width="sm" />
+            <Space.Width.sm />
 
             <Text
               style={[
-                styles.plateNumber,
-                {color: color.text_gray_medium},
+                {color: p.text_gray_medium},
                 a.body_1_lg_regular,
                 a.text_center,
                 a.justify_center,
@@ -409,7 +391,7 @@ export const WalletDetailsScreen = () => {
               {plate}
             </Text>
 
-            <Space width="sm" />
+            <Space.Width.sm />
 
             <Info onPress={showModalTipsPlateNumber} />
           </View>
@@ -420,7 +402,7 @@ export const WalletDetailsScreen = () => {
             title={strings.next}
             onPress={() => handleCreateWallet()}
             disabled={
-              isLoading ||
+              isPending ||
               Object.keys(passwordErrors).length > 0 ||
               Object.keys(nameErrors).length > 0
             }
@@ -433,13 +415,10 @@ export const WalletDetailsScreen = () => {
 }
 
 const Info = ({onPress}: {onPress: () => void}) => {
-  const {color, isDark} = useTheme()
+  const {palette: p, isDark} = useTheme()
   return (
     <TouchableOpacity onPress={onPress}>
-      <InfoIcon
-        size={24}
-        color={isDark ? color.white_static : color.black_static}
-      />
+      <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
     </TouchableOpacity>
   )
 }
@@ -449,27 +428,9 @@ const Actions = ({style, ...props}: ViewProps) => {
 }
 
 const useBold = () => {
-  const {atoms} = useTheme()
-
   return {
     b: (text: React.ReactNode) => (
-      <Text style={atoms.body_1_lg_medium}>{text}</Text>
+      <Text style={a.body_1_lg_medium}>{text}</Text>
     ),
   }
 }
-const styles = StyleSheet.create({
-  root: {},
-  safeAreaView: {},
-  infoWrapper: {},
-  modal: {},
-  modalContent: {},
-  title: {},
-  plateNumber: {},
-  bolder: {},
-  checksum: {},
-  walletChecksum: {},
-  actions: {},
-  scroll: {},
-  content: {},
-  steps: {},
-})

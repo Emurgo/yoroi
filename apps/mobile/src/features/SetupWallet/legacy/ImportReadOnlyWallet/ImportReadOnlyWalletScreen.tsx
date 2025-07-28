@@ -2,16 +2,13 @@ import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StatusBar, View} from 'react-native'
+import {ScrollView, StatusBar, Text, View} from 'react-native'
 
-import {BulletPointItem} from '../../../../components/BulletPointItem'
-import {CameraCodeScanner} from '../../../../components/CameraCodeScanner/CameraCodeScanner'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {Text} from '../../../../components/Text'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {BulletPointItem} from '../../../../ui/BulletPointItem'
+import {Space} from '../../../../ui/Space/Space'
 import {
   isCIP1852AccountPath,
   isValidPublicKey,
@@ -20,7 +17,7 @@ import {
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const navigation = useNavigation<any>()
   const {publicKeyHexChanged, pathChanged} = useSetupWallet()
 
   const onRead = async (event: {data: string}): Promise<boolean> => {
@@ -54,7 +51,7 @@ export const ImportReadOnlyWalletScreen = () => {
           },
         ]}
       >
-        <CameraCodeScanner onRead={onRead} />
+        {/* <CameraCodeScanner onRead={onRead} /> */}
       </View>
 
       <ScrollView style={[{flex: 1, paddingTop: 24, paddingHorizontal: 16}]}>
@@ -62,14 +59,14 @@ export const ImportReadOnlyWalletScreen = () => {
           {strings.paragraph}
         </Text>
 
-        <Spacer height={16} />
+        <Space.Height.lg />
 
         <BulletPointItem
           textRow={strings.line1}
           style={[{fontSize: 14, lineHeight: 22}]}
         />
 
-        <Spacer height={16} />
+        <Space.Height.lg />
 
         <BulletPointItem
           textRow={strings.line2({buttonType: strings.buttonType})}

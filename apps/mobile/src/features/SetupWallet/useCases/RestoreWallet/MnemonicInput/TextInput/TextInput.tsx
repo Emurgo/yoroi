@@ -4,7 +4,6 @@ import * as React from 'react'
 import {
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
-  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
@@ -12,8 +11,7 @@ import {
   HelperText as HelperTextRNP,
   TextInput as RNPTextInput,
 } from 'react-native-paper'
-
-import {isEmptyString} from '../../../../../../kernel/utils'
+import {isEmptyString} from '../../../../../../wallets/utils/string'
 
 type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
@@ -21,31 +19,25 @@ type TextInputProps = RNTextInputProps &
     renderComponentStyle?: ViewStyle
     helper?: React.ReactNode
     errorText?: string
-    disabled?: boolean
     errorOnMount?: boolean
     errorDelay?: number
     noHelper?: boolean
-    dense?: boolean
     faded?: boolean
     showErrorOnBlur?: boolean
     selectTextOnAutoFocus?: boolean
     isValidPhrase: boolean
   }
 
-const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
+const useDebounced = (cb: VoidFunction, v: unknown, d = 1_000) => {
   const first = React.useRef(true)
   React.useEffect(() => {
     if (first.current) {
       first.current = false
-      return () => {
-        return
-      }
+      return
     }
-
-    const handler = setTimeout(() => callback(), delay)
-
-    return () => clearTimeout(handler)
-  }, [callback, delay, value])
+    const t = setTimeout(cb, d)
+    return () => clearTimeout(t)
+  }, [cb, d, v])
 }
 
 export const TextInput = React.forwardRef(
@@ -72,32 +64,63 @@ export const TextInput = React.forwardRef(
       isValidPhrase = false,
       cursorColor,
       selectionColor,
-      ...restProps
+      ...rest
     } = props
+
+    const {palette: p, isDark} = useTheme()
 
     const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
     const [isValidWord, setIsValidWord] = React.useState(false)
-    const {colors} = useStyles()
-    const {isDark} = useTheme()
 
-    useDebounced(
-      React.useCallback(() => setErrorTextEnabled(true), []),
-      value,
-      errorDelay,
-    )
+    useDebounced(() => setErrorTextEnabled(true), value, errorDelay)
+
     const showError = errorTextEnabled && !isEmptyString(errorText)
     const showHelperComponent = helper != null && !isString(helper)
 
-    const helperToShow = showError ? (
-      <HelperText type="error" visible>
+    const helperNode = showError ? (
+      <HelperTextRNP
+        theme={{
+          roundness: 8,
+          colors: {
+            background: p.gray_min,
+            placeholder: p.primary_300,
+            primary: p.primary_300,
+            error: p.text_error,
+            text: p.text_error,
+          },
+        }}
+        type="error"
+        visible
+      >
         {errorText}
-      </HelperText>
+      </HelperTextRNP>
     ) : showHelperComponent ? (
       helper
     ) : (
-      <HelperText type="info" visible>
+      <HelperTextRNP
+        theme={{
+          roundness: 8,
+          colors: {
+            background: p.gray_min,
+            placeholder: faded
+              ? isDark
+                ? p.primary_700
+                : p.primary_500
+              : p.primary_300,
+            primary: faded
+              ? isDark
+                ? p.primary_700
+                : p.primary_500
+              : p.gray_max,
+            error: p.text_error,
+            text: p.gray_700,
+          },
+        }}
+        type="info"
+        visible
+      >
         {helper}
-      </HelperText>
+      </HelperTextRNP>
     )
 
     React.useEffect(() => {
@@ -108,75 +131,53 @@ export const TextInput = React.forwardRef(
       <View style={containerStyle}>
         <RNPTextInput
           ref={ref}
-          style={{textAlign}}
           value={value}
-          onChange={(e) => {
-            setErrorTextEnabled(false)
-            setIsValidWord(false)
-
-            onChange?.(e)
-          }}
-          onChangeText={(e) => {
-            setErrorTextEnabled(false)
-            setIsValidWord(false)
-
-            onChangeText?.(e)
-          }}
+          style={{textAlign}}
           autoCorrect={false}
           autoComplete={autoComplete}
           autoCapitalize="none"
           autoFocus={selectTextOnAutoFocus || autoFocus}
-          onFocus={(event) => {
-            // selectTextOnFocus + autoFocus doesn't work as expected
-            // also there is a bug on ios for selectTextOnFocus: https://github.com/facebook/react-native/issues/30585
-            // note: selectTextOnFocus is not equal to selectTextOnAutoFocus
-            if (selectTextOnAutoFocus)
-              event.currentTarget.setSelection(0, value?.length)
-
-            if (onFocus) onFocus(event)
-          }}
+          mode="outlined"
+          error={showError}
           theme={{
             roundness: 8,
             colors: {
               background: isValidPhrase
-                ? colors.positiveGreen
+                ? p.el_secondary
                 : isValidWord && isEmptyString(errorText)
-                  ? colors.positiveGray
-                  : colors.none,
+                  ? p.primary_100
+                  : 'transparent',
               placeholder: faded
-                ? colors.focusInput
+                ? isDark
+                  ? p.primary_700
+                  : p.primary_500
                 : isValidWord && isEmptyString(errorText)
-                  ? colors.none
-                  : colors.input,
-              primary: faded ? colors.input : colors.focusInput,
-              error: colors.textError,
+                  ? 'transparent'
+                  : p.primary_300,
+              primary: faded
+                ? p.primary_300
+                : isDark
+                  ? p.primary_700
+                  : p.primary_500,
+              error: p.text_error,
             },
           }}
-          mode="outlined"
-          error={errorTextEnabled && !isEmptyString(errorText)}
-          render={({style, ...inputProps}) => (
-            <InputContainer>
-              <RNTextInput
-                {...inputProps}
-                cursorColor={cursorColor}
-                selectionColor={selectionColor}
-                keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
-                style={[
-                  style,
-                  renderComponentStyle,
-                  {
-                    color: isValidPhrase
-                      ? colors.successText
-                      : errorTextEnabled && !isEmptyString(errorText)
-                        ? colors.textError
-                        : colors.text,
-                    flex: 1,
-                  },
-                ]}
-              />
-            </InputContainer>
-          )}
-          onBlur={(e) => {
+          onChange={(e) => {
+            setErrorTextEnabled(false)
+            setIsValidWord(false)
+            onChange?.(e)
+          }}
+          onChangeText={(txt) => {
+            setErrorTextEnabled(false)
+            setIsValidWord(false)
+            onChangeText?.(txt)
+          }}
+          onFocus={(event) => {
+            if (selectTextOnAutoFocus)
+              event.currentTarget.setSelection(0, value?.length)
+            onFocus?.(event)
+          }}
+          onBlur={(event) => {
             if (!isEmptyString(errorText)) {
               if (showErrorOnBlur && !errorTextEnabled)
                 setErrorTextEnabled(true)
@@ -187,81 +188,34 @@ export const TextInput = React.forwardRef(
             } else {
               setIsValidWord(true)
             }
-
-            onBlur?.(e)
+            onBlur?.(event)
           }}
-          {...restProps}
+          render={({style, ...inputProps}) => (
+            <View style={{flexDirection: 'row', flex: 1, overflow: 'hidden'}}>
+              <RNTextInput
+                {...inputProps}
+                cursorColor={cursorColor}
+                selectionColor={selectionColor}
+                keyboardAppearance={isDark ? 'dark' : 'light'}
+                style={[
+                  style,
+                  renderComponentStyle,
+                  {
+                    flex: 1,
+                    color: isValidPhrase
+                      ? p.black_static
+                      : showError
+                        ? p.text_error
+                        : p.text_primary_medium,
+                  },
+                ]}
+              />
+            </View>
+          )}
+          {...rest}
         />
-
-        {!noHelper && helperToShow}
+        {!noHelper && helperNode}
       </View>
     )
   },
 )
-
-const HelperText = ({
-  children,
-  type = 'info',
-  faded = false,
-  visible = true,
-}: {
-  children: React.ReactNode
-  type?: 'info' | 'error'
-  faded?: boolean
-  visible?: boolean
-}) => {
-  const {colors} = useStyles()
-
-  return (
-    <HelperTextRNP
-      theme={{
-        roundness: 8,
-        colors: {
-          background: colors.background,
-          placeholder: faded ? colors.focusInput : colors.input,
-          primary: faded ? colors.focusInput : colors.black,
-          error: colors.textError,
-          text: colors.infoGray,
-        },
-      }}
-      type={type}
-      visible={visible}
-    >
-      {children}
-    </HelperTextRNP>
-  )
-}
-
-const InputContainer = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-
-  return <View style={styles.inputContainer}>{children}</View>
-}
-
-const useStyles = () => {
-  const {color, isDark} = useTheme()
-  const styles = StyleSheet.create({
-    inputContainer: {
-      flexDirection: 'row',
-      flex: 1,
-      overflow: 'hidden',
-    },
-  })
-
-  const colors = {
-    background: color.gray_min,
-    focusInput: isDark ? color.primary_700 : color.primary_500,
-    input: color.primary_300,
-    actionGray: color.gray_500,
-    black: color.gray_max,
-    text: color.text_primary_medium,
-    textError: color.text_error,
-    infoGray: color.gray_700,
-    positiveGreen: color.el_secondary,
-    positiveGray: color.primary_100,
-    none: 'transparent',
-    successText: color.black_static,
-  }
-
-  return {styles, colors}
-}

@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import {derivationConfig} from '@yoroi/blockchains'
+import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
@@ -9,20 +9,21 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '../../../../components/Boundary/Boundary'
-import {Icon} from '../../../../components/Icon'
-import {Line} from '../../../../components/Line'
-import {Text} from '../../../../components/Text'
+import {walletChecksum} from '@emurgo/cip4-js'
+import {useSuspenseQuery} from '@tanstack/react-query'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {isEmptyString} from '../../../../kernel/utils'
-import {usePlate} from '../../../../wallets/hooks'
-import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
-import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
+import {Boundary} from '../../../../ui/Boundary/Boundary'
+import {Icon} from '../../../../ui/Icon'
+import {Line} from '../../../../ui/Line/Line'
+import {Text} from '../../../../ui/Text/Text'
+import {deriveAddressFromXPub} from '../../../../wallets/cardano/account-manager/derive-address-from-xpub'
+import {isEmptyString} from '../../../../wallets/utils/string'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
+import {useCreateWalletXPub} from '../../../WalletManager/hooks/useCreateWalletXPub'
+import {useSelectedNetwork} from '../../../WalletManager/hooks/useSelectedNetwork'
 import {WalletAddress} from '../WalletAddress/WalletAddress'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
@@ -32,7 +33,7 @@ export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const storage = useAsyncStorage()
-  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const navigation = useNavigation<any>()
   const {track} = useMetrics()
 
   const {
@@ -48,7 +49,7 @@ export const SaveReadOnlyWalletScreen = () => {
     return i
   })
 
-  const {createWallet, isLoading} = useCreateWalletXPub({
+  const {createWallet, isPending} = useCreateWalletXPub({
     onSuccess: async (wallet) => {
       walletIdChanged(wallet.id)
       const walletStorage = storage.join('wallet/')
@@ -101,7 +102,7 @@ export const SaveReadOnlyWalletScreen = () => {
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={strings.defaultWalletName}
-        containerStyle={[{paddingTop: 0, paddingHorizontal: 0}]}
+        // containerStyle={[{paddingTop: 0, paddingHorizontal: 0}]}
         bottomContent={
           <Boundary>
             <WalletInfoView
@@ -110,7 +111,7 @@ export const SaveReadOnlyWalletScreen = () => {
             />
           </Boundary>
         }
-        isWaiting={isLoading}
+        isWaiting={isPending}
       />
     </SafeAreaView>
   )
@@ -237,4 +238,36 @@ const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
       </ScrollView>
     </View>
   )
+}
+
+// TODO: use the hook usePlate from hooks when is ready
+export const usePlate = ({
+  chainId,
+  publicKeyHex,
+  implementation,
+}: {
+  chainId: number
+  publicKeyHex: string
+  implementation: Wallet.Implementation
+}) => {
+  const implCfg = cardanoConfig.implementations[implementation]
+
+  const {data} = useSuspenseQuery({
+    queryKey: ['plate', chainId, publicKeyHex],
+    queryFn: async () => {
+      const addresses = await deriveAddressFromXPub({
+        accountPubKeyHex: publicKeyHex,
+        chainId,
+        count: 1,
+        implementation,
+        role: implCfg.derivations.base.roles.external,
+      })
+      return {
+        addresses,
+        accountPlate: walletChecksum(publicKeyHex),
+      }
+    },
+  })
+
+  return data
 }

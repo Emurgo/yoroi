@@ -4,12 +4,13 @@ import {ThemeProvider} from '@yoroi/theme'
 import * as Font from 'expo-font'
 import * as React from 'react'
 
+import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
 import {CopyProvider} from './src/features/Copy/context/CopyProvider'
 import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
-import {walletManagerMock} from './src/features/WalletManager/wallet-manager.mock'
+import {walletManager} from './src/features/WalletManager/wallet-manager'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
 import {AppNavigator} from './src/kernel/navigation/AppNavigator'
@@ -90,8 +91,8 @@ function BusinessShell({children}: React.PropsWithChildren) {
       installationIdKeyManager={installationIdStorageKeyManager}
     >
       <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
-        <WalletManagerProvider walletManager={walletManagerMock}>
-          {children}
+        <WalletManagerProvider walletManager={walletManager}>
+          <SetupWalletProvider>{children}</SetupWalletProvider>
         </WalletManagerProvider>
       </PairingProvider>
     </AuthProvider>

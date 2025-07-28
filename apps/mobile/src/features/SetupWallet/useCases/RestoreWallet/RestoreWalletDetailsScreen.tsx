@@ -3,7 +3,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
@@ -12,39 +12,37 @@ import {
   Linking,
   TextInput as RNTextInput,
   ScrollView,
-  StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {Space} from '../../../../components/Space/Space'
-import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
-import {TextInput} from '../../../../components/TextInput/TextInput'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {isEmptyString} from '../../../../kernel/utils'
+import {Button} from '../../../../ui/Button/Button'
+import {CardAboutPhrase} from '../../../../ui/CardAboutPhrase/CardAboutPhrase'
+import {Icon} from '../../../../ui/Icon'
+import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {LearnMoreButton} from '../../../../ui/LearnMoreButton/LearnMoreButton'
+import {useModal} from '../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../ui/Space/Space'
+import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
+import {TextInput} from '../../../../ui/TextInput/TextInput'
+import {isEmptyString} from '../../../../wallets/utils/string'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
 } from '../../../../wallets/utils/validators'
-import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
+import {useCreateWalletMnemonic} from '../../../WalletManager/hooks/useCreateWalletMnemonic'
 import {YoroiZendeskLink} from '../../common/constants'
-import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {useStrings} from '../../common/useStrings'
 import {Info as InfoIcon} from '../../illustrations/Info'
 
@@ -75,12 +73,12 @@ const useSizeModal = () => {
 // when restoring, later will be part of the onboarding
 const addressMode: Wallet.AddressMode = 'single'
 export const RestoreWalletDetailsScreen = () => {
-  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const navigation = useNavigation<any>()
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const {track} = useMetrics()
   const bold = useBold()
-  const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
+  // const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const {walletManager} = useWalletManager()
   const [name, setName] = React.useState(
@@ -110,7 +108,7 @@ export const RestoreWalletDetailsScreen = () => {
   const intl = useIntl()
   const {
     createWallet,
-    isLoading,
+    isPending,
     isSuccess: isCreateWalletSuccess,
   } = useCreateWalletMnemonic({
     onSuccess: async (wallet) => {
@@ -142,13 +140,13 @@ export const RestoreWalletDetailsScreen = () => {
   })
 
   const passwordErrorText =
-    passwordErrors.passwordIsWeak && !isLoading
+    passwordErrors.passwordIsWeak && !isPending
       ? strings.passwordStrengthRequirement({
           requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
         })
       : undefined
   const passwordConfirmationErrorText =
-    passwordErrors.matchesConfirmation && !isLoading
+    passwordErrors.matchesConfirmation && !isPending
       ? strings.repeatPasswordInputError
       : undefined
 
@@ -171,15 +169,15 @@ export const RestoreWalletDetailsScreen = () => {
   )
 
   const disabled =
-    isLoading ||
+    isPending ||
     Object.keys(nameErrors ?? {}).length > 0 ||
     Object.keys(passwordErrors).length > 0
 
   const showModalTipsPassword = () => {
     openModal({
-      title: strings.walletDetailsModalTitle,
+      // title: strings.walletDetailsModalTitle,
       content: (
-        <View style={[styles.flex, styles.modal]}>
+        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
             title={strings.walletNameModalCardTitle}
             linesOfText={[
@@ -188,7 +186,7 @@ export const RestoreWalletDetailsScreen = () => {
             ]}
           />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <CardAboutPhrase
             title={strings.walletPasswordModalCardTitle}
@@ -198,7 +196,7 @@ export const RestoreWalletDetailsScreen = () => {
             ]}
           />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <LearnMoreButton
             onPress={() => {
@@ -207,16 +205,16 @@ export const RestoreWalletDetailsScreen = () => {
           />
         </View>
       ),
-      footer: <Button title={strings.continueButton} onPress={closeModal} />,
-      height: HEIGHT_MODAL_NAME_PASSWORD,
+      // footer: <Button title={strings.continueButton} onPress={closeModal} />,
+      // height: HEIGHT_MODAL_NAME_PASSWORD,
     })
   }
 
   const showModalTipsPlateNumber = () => {
     openModal({
-      title: strings.walletDetailsModalTitle,
+      // title: strings.walletDetailsModalTitle,
       content: (
-        <View style={[styles.flex, styles.modal]}>
+        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
             title={strings.walletChecksumModalCardTitle}
             checksumImage={plate.ImagePart}
@@ -228,7 +226,7 @@ export const RestoreWalletDetailsScreen = () => {
             ]}
           />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <LearnMoreButton
             onPress={() => {
@@ -237,16 +235,23 @@ export const RestoreWalletDetailsScreen = () => {
           />
         </View>
       ),
-      footer: <Button title={strings.continueButton} onPress={closeModal} />,
-      height: HEIGHT_MODAL_CHECKSUM,
+      // footer: <Button title={strings.continueButton} onPress={closeModal} />,
+      // height: HEIGHT_MODAL_CHECKSUM,
     })
   }
 
   return (
-    <KeyboardAvoidingView style={[styles.root, styles.flex]}>
+    <KeyboardAvoidingView
+      style={[
+        {backgroundColor: p.bg_color_max},
+        a.justify_between,
+        a.px_lg,
+        a.flex_1,
+      ]}
+    >
       <SafeAreaView
         edges={['left', 'right', 'bottom']}
-        style={[styles.safeAreaView, styles.flex]}
+        style={[a.pb_lg, a.flex_1]}
       >
         <StepperProgress
           currentStep={2}
@@ -254,15 +259,24 @@ export const RestoreWalletDetailsScreen = () => {
           totalSteps={2}
         />
 
-        <View style={styles.info}>
-          <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
+        <View style={a.flex_row}>
+          <Text
+            style={[
+              {
+                color: p.text_gray_medium,
+              },
+              a.body_1_lg_regular,
+            ]}
+          >
+            {strings.walletDetailsTitle(bold)}
+          </Text>
 
           <Info onPress={showModalTipsPassword} />
         </View>
 
-        <Space height="xl" />
+        <Space.Height.xl />
 
-        <ScrollView style={styles.flex}>
+        <ScrollView style={a.flex_1}>
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus
@@ -270,7 +284,7 @@ export const RestoreWalletDetailsScreen = () => {
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
-              !isEmptyString(walletNameErrorText) && !isLoading
+              !isEmptyString(walletNameErrorText) && !isPending
                 ? walletNameErrorText
                 : undefined
             }
@@ -282,7 +296,7 @@ export const RestoreWalletDetailsScreen = () => {
             showErrorOnBlur
           />
 
-          <Space height="xl" />
+          <Space.Height.xl />
 
           <TextInput
             enablesReturnKeyAutomatically
@@ -301,7 +315,7 @@ export const RestoreWalletDetailsScreen = () => {
             textContentType="oneTimeCode"
           />
 
-          <Space height="xl" />
+          <Space.Height.xl />
 
           <TextInput
             enablesReturnKeyAutomatically
@@ -317,22 +331,36 @@ export const RestoreWalletDetailsScreen = () => {
             textContentType="oneTimeCode"
           />
 
-          <Space height="xl" />
+          <Space.Height.xl />
 
-          <View style={styles.checksum}>
+          <View style={[a.flex_row, a.align_center, a.justify_center]}>
             <Icon.WalletAvatar
               image={new Blockies({seed: plate.ImagePart}).asBase64()}
-              style={styles.walletChecksum}
+              style={{
+                width: 24,
+                height: 24,
+              }}
               size={24}
             />
 
-            <Space width="sm" />
+            <Space.Height.sm />
 
-            <Text style={styles.plateNumber} testID="wallet-plate-number">
+            <Text
+              style={[
+                {
+                  color: p.text_gray_medium,
+                },
+                a.body_1_lg_regular,
+                a.text_center,
+                a.justify_center,
+                a.align_center,
+              ]}
+              testID="wallet-plate-number"
+            >
               {plate.TextPart}
             </Text>
 
-            <Space width="sm" />
+            <Space.Height.sm />
 
             <Info onPress={showModalTipsPlateNumber} />
           </View>
@@ -361,71 +389,18 @@ export const RestoreWalletDetailsScreen = () => {
 }
 
 const Info = ({onPress}: {onPress: () => void}) => {
-  const {color, isDark} = useTheme()
+  const {palette: p, isDark} = useTheme()
   return (
     <TouchableOpacity onPress={onPress}>
-      <InfoIcon
-        size={24}
-        color={isDark ? color.white_static : color.black_static}
-      />
+      <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
     </TouchableOpacity>
   )
 }
 
 const useBold = () => {
-  const {styles} = useStyles()
-
   return {
-    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+    b: (text: React.ReactNode) => (
+      <Text style={a.body_1_lg_medium}>{text}</Text>
+    ),
   }
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    flex: {
-      ...atoms.flex_1,
-    },
-    modal: {
-      ...atoms.pb_lg,
-      ...atoms.px_lg,
-    },
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.justify_between,
-      ...atoms.px_lg,
-    },
-    safeAreaView: {
-      ...atoms.pb_lg,
-    },
-    info: {
-      flexDirection: 'row',
-    },
-    title: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    plateNumber: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    bolder: {
-      ...atoms.body_1_lg_medium,
-    },
-    checksum: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      textAlignVertical: 'center',
-    },
-    walletChecksum: {
-      width: 24,
-      height: 24,
-    },
-  })
-
-  return {styles} as const
 }

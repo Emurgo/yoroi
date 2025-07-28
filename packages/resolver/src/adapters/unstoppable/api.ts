@@ -118,6 +118,7 @@ export const unstoppableSupportedTlds = [
   '.888',
   '.wallet',
   '.binanceus',
+  '.brave',
   '.hi',
   '.klever',
   '.kresus',

@@ -1,15 +1,12 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {Linking, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {Button} from '../../../ui/Button/Button'
 import {Icon} from '../../../ui/Icon'
 import {useModal} from '../../../ui/Modal/ModalContext'
 import {Space} from '../../../ui/Space/Space'
-import {Spacer} from '../../../ui/Spacer/Spacer'
-import {WarningBanner} from '../../../ui/WarningBanner/WarningBanner'
 import {getDappFallbackLogo} from './helpers'
 import {useStrings} from './useStrings'
 
@@ -40,7 +37,7 @@ export const useOpenConfirmConnectionModal = () => {
         : confirmConnectionModalHeight
 
       openModal({
-        title: strings.confirmConnectionModalTitle,
+        // title: strings.confirmConnectionModalTitle,
         content: (
           <ConfirmConnectionModal
             name={props.name}
@@ -49,7 +46,7 @@ export const useOpenConfirmConnectionModal = () => {
             showSingleAddressWarning={props.showSingleAddressWarning}
           />
         ),
-        footer: (
+        /* footer: (
           <Button
             title={strings.confirmConnectionModalConnect}
             onPress={() => {
@@ -58,18 +55,12 @@ export const useOpenConfirmConnectionModal = () => {
               closeModal()
             }}
           />
-        ),
-        height: modalHeight,
-        onClose: props.onClose,
+        ), */
+        // height: modalHeight,
+        // onClose: props.onClose,
       })
     },
-    [
-      openModal,
-      strings.confirmConnectionModalTitle,
-      strings.confirmConnectionModalConnect,
-      track,
-      closeModal,
-    ],
+    [openModal],
   )
   return {openConfirmConnectionModal: open, closeModal}
 }
@@ -80,7 +71,7 @@ export const ConfirmConnectionModal = ({
   logo,
   showSingleAddressWarning,
 }: Props) => {
-  const {atoms: a, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 
@@ -100,7 +91,7 @@ export const ConfirmConnectionModal = ({
         />
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <View
         style={[a.flex, a.flex_row, a.align_center, a.justify_center, a.gap_xs]}
@@ -120,7 +111,7 @@ export const ConfirmConnectionModal = ({
         </Text>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <View
         style={[a.flex, a.flex_row, a.align_center, a.justify_center, a.gap_xs]}
@@ -132,13 +123,13 @@ export const ConfirmConnectionModal = ({
 
       {showSingleAddressWarning && (
         <>
-          <Space height="lg" />
+          <Space.Height.lg />
 
-          <SingleAddressDAppWarning />
+          {/* <SingleAddressDAppWarning /> */}
         </>
       )}
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Text style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}>
         {strings.confirmConnectionModalAllowThisDAppTo}
@@ -153,8 +144,6 @@ export const ConfirmConnectionModal = ({
           style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}
         >{`\u2022 ${strings.confirmConnectionModalPermission2}`}</Text>
       </View>
-
-      <Spacer height={46} />
     </View>
   )
 }
@@ -162,7 +151,7 @@ export const ConfirmConnectionModal = ({
 const walletsCompatibilityLink =
   'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/10413017088527-DApps-and-HD-wallets-compatability'
 
-const SingleAddressDAppWarning = () => {
+/* const SingleAddressDAppWarning = () => {
   const {atoms: a, palette: p} = useTheme()
   const strings = useStrings()
 
@@ -193,4 +182,4 @@ const SingleAddressDAppWarning = () => {
       iconSize={20}
     />
   )
-}
+} */
