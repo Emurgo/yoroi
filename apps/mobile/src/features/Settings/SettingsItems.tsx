@@ -59,13 +59,7 @@ export const SettingsItem = ({
   return (
     <View>
       <View style={a.py_lg}>
-        <View
-          style={{
-            ...a.flex_row,
-            ...a.justify_between,
-            ...a.align_center,
-          }}
-        >
+        <View style={[a.flex_row, a.justify_between, a.align_center]}>
           {icon}
 
           {icon && <SpaceWidth size={10} />}
@@ -74,8 +68,7 @@ export const SettingsItem = ({
             style={[
               a.flex_1,
               a.body_1_lg_medium,
-              {color: p.gray_900},
-              disabled && {color: p.gray_500},
+              {color: disabled ? p.gray_500 : p.gray_900},
             ]}
           >
             {label}

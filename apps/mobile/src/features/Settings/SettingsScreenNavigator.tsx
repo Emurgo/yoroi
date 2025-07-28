@@ -49,7 +49,7 @@ const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   const {track} = useMetrics()
-  const {atoms, palette} = useTheme()
+  const {palette: p} = useTheme()
   const {handleOpenModal} = useHandleOpenNetworkNoticeModal()
 
   useFocusEffect(
@@ -61,7 +61,7 @@ export const SettingsScreenNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(a, palette),
+        ...defaultStackNavigationOptions(a, p),
       }}
     >
       <Stack.Screen //
@@ -156,7 +156,7 @@ export const SettingsScreenNavigator = () => {
               activeOpacity={0.5}
               style={{...a.px_lg}}
             >
-              <Icon.Info size={24} color={palette.gray_900} />
+              <Icon.Info size={24} color={p.gray_900} />
             </TouchableOpacity>
           ),
         }}
@@ -228,13 +228,13 @@ export const SettingsScreenNavigator = () => {
 const Tab = createMaterialTopTabNavigator<SettingsTabRoutes>()
 const SettingsTabNavigator = () => {
   const strings = useStrings()
-  const {palette, atoms} = useTheme()
+  const {palette: p, atoms} = useTheme()
 
   return (
     <Tab.Navigator
-      style={{backgroundColor: palette.bg_color_max}}
+      style={{backgroundColor: p.bg_color_max}}
       screenOptions={({route}) => ({
-        ...defaultMaterialTopTabNavigationOptions(a, palette),
+        ...defaultMaterialTopTabNavigationOptions(a, p),
         tabBarLabel:
           route.name === 'wallet-settings'
             ? strings.walletTabTitle
