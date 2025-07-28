@@ -1,20 +1,21 @@
-import {AsyncStorageProvider} from '@yoroi/common'
-import {ThemeProvider} from '@yoroi/theme'
+import { AsyncStorageProvider } from '@yoroi/common'
+import { ThemeProvider } from '@yoroi/theme'
 
 import * as Font from 'expo-font'
 import * as React from 'react'
 
-import {SetupWalletProvider} from '@yoroi/setup-wallet'
-import {PlatformShell} from './PlatformShell'
-import {AuthProvider} from './src/features/Auth/context/AuthProvider'
-import {CopyProvider} from './src/features/Copy/context/CopyProvider'
-import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
-import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
-import {walletManager} from './src/features/WalletManager/wallet-manager'
-import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
-import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
-import {AppNavigator} from './src/kernel/navigation/AppNavigator'
-import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
+import { SetupWalletProvider } from '@yoroi/setup-wallet'
+import { SearchProvider } from 'src/features/Search/SearchContext'
+import { PlatformShell } from './PlatformShell'
+import { AuthProvider } from './src/features/Auth/context/AuthProvider'
+import { CopyProvider } from './src/features/Copy/context/CopyProvider'
+import { PairingProvider } from './src/features/Pairing/context/PairingProvider'
+import { WalletManagerProvider } from './src/features/WalletManager/context/WalletManagerProvider'
+import { walletManager } from './src/features/WalletManager/wallet-manager'
+import { ConnectionProvider } from './src/kernel/connection/ConnectionProvider'
+import { LanguageProvider } from './src/kernel/i18n/LanguageProvider'
+import { AppNavigator } from './src/kernel/navigation/AppNavigator'
+import { useMigrations } from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
   currencyStorageKeyManager,
@@ -24,8 +25,8 @@ import {
   rootStorage,
   themeStorageKeyManager,
 } from './src/kernel/storage/storages'
-import {CrashBoundary} from './src/ui/CrashBoundary/CrashBoundary'
-import {LoadingOverlayProvider} from './src/ui/LoadingOverlay/context'
+import { CrashBoundary } from './src/ui/CrashBoundary/CrashBoundary'
+import { LoadingOverlayProvider } from './src/ui/LoadingOverlay/context'
 
 function AppShell({children}: React.PropsWithChildren) {
   const isMigrated = useMigrations(rootStorage)
@@ -39,7 +40,9 @@ function AppShell({children}: React.PropsWithChildren) {
           <LanguageProvider storage={languageStorageKeyManager}>
             <CopyProvider>
               <CrashBoundary>
-                <LoadingOverlayProvider>{children}</LoadingOverlayProvider>
+                <LoadingOverlayProvider>
+                  <SearchProvider>{children}</SearchProvider>
+                </LoadingOverlayProvider>
               </CrashBoundary>
             </CopyProvider>
           </LanguageProvider>

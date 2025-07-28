@@ -14,7 +14,7 @@ const Stack = createStackNavigator<any>()
 
 export const AppNavigator = () => {
   return (
-    <SearchProvider>
+    <>
       <Stack.Navigator>
         <Stack.Group>
           <Stack.Screen name="Login" component={TempPinLoginScreen} />
@@ -43,6 +43,6 @@ export const AppNavigator = () => {
         </Stack.Group>
       </Stack.Navigator>
       <Modal />
-    </SearchProvider>
+    </>
   )
 }
