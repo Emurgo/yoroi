@@ -4,10 +4,10 @@ import _ from 'lodash'
 import React from 'react'
 import {View} from 'react-native'
 
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
 import {useTransactionInfos} from '~/wallets/hooks'
 import {TransactionInfo} from '~/wallets/types/other'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'
 

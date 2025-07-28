@@ -3,7 +3,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 
 import {PortfolioRoutes, useParams} from '~/kernel/navigation'
-import {isEmptyString} from '~/kernel/utils'
+import {isEmptyString} from '~/wallets/utils/string'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<NavigationProp<PortfolioRoutes>>()

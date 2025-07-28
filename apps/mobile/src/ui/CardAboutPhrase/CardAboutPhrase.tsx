@@ -5,8 +5,8 @@ import * as React from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
 import {useStrings} from '~/features/SetupWallet/common/useStrings'
-import {Space} from '~/Space/Space'
 import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 
 type CardAboutPhraseProps = {
   linesOfText: string[] | React.ReactNode[]

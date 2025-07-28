@@ -3,8 +3,8 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleProp, Text, TouchableOpacity, ViewStyle} from 'react-native'
 
-import {Spacer} from '~/Space/Space'
 import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 
 type AddTokenButtonProps = {
   onPress(): void
@@ -41,7 +41,7 @@ export const AddTokenButton = ({
     >
       <Icon.Plus size={26} color={p.primary_600} />
 
-      <Spacer width={4} />
+      <Space.Width.xs />
 
       <Text
         style={[a.button_2_md, {color: p.primary_600, textTransform: 'none'}]}

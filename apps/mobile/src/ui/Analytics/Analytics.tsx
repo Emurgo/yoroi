@@ -6,8 +6,8 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {SettingsSwitch} from '~/features/Settings/common/SettingsSwitch'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {Button, ButtonType} from '~/Button/Button'
-import {Space, SpaceHeight} from '~/Space/Space'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Space, SpaceHeight} from '~/ui/Space/Space'
 import {YoroiLogo} from '~/YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
 

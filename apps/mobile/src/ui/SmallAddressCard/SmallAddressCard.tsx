@@ -4,10 +4,10 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
-import {useCopy} from '~/kernel/utils/clipboard'
 import {useStrings} from '~/features/Receive/common/useStrings'
+import {useCopy} from '~/kernel/utils/clipboard'
 import {SkeletonSmallCardAddress} from '~/SkeletonAddressDetail/SkeletonAddressDetail'
-import {Spacer} from '~/Space/Space'
+import {Spacer} from '~/ui/Space/Space'
 
 type SmallAddressCardProps = {
   address: string

@@ -13,7 +13,7 @@ import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {PairedBalance} from '~/PairedBalance/PairedBalance'
 import {PnlTag} from '~/PnlTag/PnlTag'
-import {Spacer} from '~/Space/Space'
+import {Spacer} from '~/ui/Space/Space'
 
 type Props = {
   amount: Portfolio.Token.Amount

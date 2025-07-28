@@ -2,15 +2,15 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, StyleSheet, View} from 'react-native'
 
+import {useStrings} from '~/features/Swap/common/strings'
+import {Spacer} from '~/Spacer/Spacer'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Text} from '~/ui/Text/Text'
 import {
   HARDWARE_WALLETS,
   useIsUsbSupported,
   useLedgerPermissions,
 } from '~/wallets/hw/hw'
-import {useStrings} from '~/features/Swap/common/strings'
-import {Button, ButtonType} from '~/Button/Button'
-import {Spacer} from '~/Spacer/Spacer'
-import {Text} from '~/Text/Text'
 
 type Props = {
   onSelectUSB: () => void

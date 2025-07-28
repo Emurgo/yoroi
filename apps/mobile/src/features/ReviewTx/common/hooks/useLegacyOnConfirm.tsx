@@ -1,11 +1,11 @@
 import * as React from 'react'
 
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ConfirmTxWithHwModal} from '~/ui/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
 import {ConfirmTxWithOsModal} from '~/ui/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
 import {ConfirmTxWithSpendingPasswordModal} from '~/ui/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from './useNavigateTo'
 import {OnConfirm} from './useOnConfirm'
 import {useStrings} from './useStrings'

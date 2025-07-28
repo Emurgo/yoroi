@@ -7,15 +7,15 @@ import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useEnableEasyConfirmation} from '~/Auth/common/useEnableEasyConfirmation'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {showErrorDialog} from '~/kernel/dialogs'
+import {errorMessages} from '~/kernel/i18n/global-messages'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {isEmptyString} from '~/kernel/utils'
-import {showErrorDialog} from '~/kernel/dialogs'
-import {errorMessages} from '~/kernel/i18n/global-messages'
+import {isEmptyString} from '~/wallets/utils/string'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()

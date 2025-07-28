@@ -3,15 +3,15 @@ import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {isEmptyString} from '~/kernel/utils'
-import {useCopy} from '~/kernel/utils/clipboard'
-import {useKeyHashes} from '~/wallets/hooks'
 import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useStrings} from '~/features/Receive/common/useStrings'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useCopy} from '~/kernel/utils/clipboard'
 import {ShareDetailsCard} from '~/ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '~/ShareQRCodeCard/ShareQRCodeCard'
-import {Spacer} from '~/Space/Space'
+import {Spacer} from '~/ui/Space/Space'
+import {useKeyHashes} from '~/wallets/hooks'
+import {isEmptyString} from '~/wallets/utils/string'
 
 type AddressDetailCardProps = {
   title: string

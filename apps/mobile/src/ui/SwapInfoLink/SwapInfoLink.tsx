@@ -2,7 +2,7 @@ import React from 'react'
 import {Linking} from 'react-native'
 
 import {useStrings} from '~/features/Swap/common/strings'
-import {Button, ButtonType} from '~/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 
 const SWAP_ZENDESK_LINK =
   'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8154256843407-Swap'

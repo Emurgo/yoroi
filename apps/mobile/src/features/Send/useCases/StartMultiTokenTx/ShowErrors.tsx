@@ -1,10 +1,10 @@
 import React from 'react'
 
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/features/common/strings'
 import {Banner, ClickableBanner} from '~/ui/Banner/Banner'
 import {Spacer} from '~/ui/Spacer/Spacer'
 import {useHasPendingTx, useSync} from '~/wallets/hooks'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
-import {useStrings} from '~/features/common/strings'
 
 export const ShowErrors = () => {
   const strings = useStrings()

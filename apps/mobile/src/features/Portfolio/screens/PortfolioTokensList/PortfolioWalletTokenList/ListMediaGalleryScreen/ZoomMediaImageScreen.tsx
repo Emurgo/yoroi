@@ -5,12 +5,12 @@ import {useWindowDimensions, View} from 'react-native'
 // @ts-ignore
 import ViewTransformer from 'react-native-easy-view-transformer'
 
-import {FadeIn} from '~/ui/FadeIn/FadeIn'
-import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {NftRoutes, useParams} from '~/kernel/navigation'
-import {isEmptyString} from '~/kernel/utils'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {FadeIn} from '~/ui/FadeIn/FadeIn'
+import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
+import {isEmptyString} from '~/wallets/utils/string'
 
 type Params = NftRoutes['nft-details']
 

@@ -8,7 +8,7 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {useStakingInfo} from '~/Dashboard/StakePoolInfos'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
-import {useSelectedNetwork} from '~/features/WalletManager/common/hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {useWalletNavigation} from '~/kernel/navigation'

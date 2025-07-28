@@ -15,8 +15,10 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useReceive} from '~/common/ReceiveProvider'
+import {useStrings} from '~/common/useStrings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {isEmptyString} from '~/kernel/utils'
 import {useCopy} from '~/kernel/utils/clipboard'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -27,9 +29,7 @@ import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
 import {TextInput} from '~/ui/TextInput'
 import {editedFormatter} from '~/wallets/utils/amountUtils'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
-import {useReceive} from '~/common/ReceiveProvider'
-import {useStrings} from '~/common/useStrings'
+import {isEmptyString} from '~/wallets/utils/string'
 
 export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()

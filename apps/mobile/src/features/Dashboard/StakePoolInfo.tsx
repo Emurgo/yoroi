@@ -5,15 +5,15 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, View} from 'react-native'
 
-import {useSelectedNetwork} from '~/features/WalletManager/common/hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {isEmptyString} from '~/kernel/utils'
 import {Button, ButtonProps, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable'
 import {Text} from '~/ui/Text/Text'
 import {TitledCard} from '~/ui/TitledCard/TitledCard'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {StakePoolInfoAndHistory} from '~/wallets/types/staking'
+import {isEmptyString} from '~/wallets/utils/string'
 
 type StakePoolInfoProps = {
   stakePoolId: string

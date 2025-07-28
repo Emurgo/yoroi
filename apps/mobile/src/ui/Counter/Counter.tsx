@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Text} from '~/Text/Text'
+import {Text} from '~/ui/Text/Text'
 
 type CounterTypes = {
   openingText?: string

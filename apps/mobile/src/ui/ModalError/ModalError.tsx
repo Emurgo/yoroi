@@ -2,10 +2,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, ButtonType} from '~/Button/Button'
-import {Space} from '~/Space/Space'
-import {Text} from '~/Text/Text'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
 import {
   AdaAppClosedError,
   BluetoothDisabledError,

@@ -7,31 +7,25 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '~/ui/Icon'
-import {Spacer} from '~/ui/Spacer/Spacer'
-import {
-  DIALOG_BUTTONS,
-  showConfirmationDialog,
-} from '~/kernel/dialogs'
-import {confirmationMessages} from '~/kernel/i18n/global-messages'
-import {
-  SettingsRouteNavigation,
-  useWalletNavigation,
-} from '~/kernel/navigation'
-import {useResync} from '~/wallets/hooks'
 import {useAuth} from '~/Auth/AuthProvider'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
-import {useAddressMode} from '~/WalletManager/common/hooks/useAddressMode'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '~/features/common/navigation'
 import {SettingsSwitch} from '~/features/common/SettingsSwitch'
-import {SettingsCollateralItem} from '~/SettingsCollateralItem'
 import {
   NavigatedSettingsItem,
   SettingsBuildItem,
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/SettingsItems'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
+import {confirmationMessages} from '~/kernel/i18n/global-messages'
+import {SettingsRouteNavigation, useWalletNavigation} from '~/kernel/navigation'
+import {SettingsCollateralItem} from '~/SettingsCollateralItem'
+import {Icon} from '~/ui/Icon'
+import {Spacer} from '~/ui/Spacer/Spacer'
+import {useAddressMode} from '~/WalletManager/common/hooks/useAddressMode'
+import {useResync} from '~/wallets/hooks'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()

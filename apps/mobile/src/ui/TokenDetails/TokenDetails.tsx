@@ -14,13 +14,13 @@ import {
 
 import {Copiable} from '~/Copiable'
 import {ExplorerInfoLinks} from '~/ExplorerInfoLinks/ExplorerInfoLinks'
-import {isEmptyString} from '~/kernel/utils'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useCopy} from '~/kernel/utils/clipboard'
 import {SimpleTab} from '~/SimpleTab/SimpleTab'
-import {Space} from '~/Space/Space'
 import {TokenInfoIcon} from '~/TokenInfoIcon/TokenInfoIcon'
 import {Icon} from '~/ui/Icon'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
+import {Space} from '~/ui/Space/Space'
+import {isEmptyString} from '~/wallets/utils/string'
 import {useStrings} from './hooks/useStrings'
 
 export const TokenDetails = ({

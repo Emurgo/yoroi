@@ -6,6 +6,11 @@ import * as React from 'react'
 import {Text, useWindowDimensions, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
+import {
+  formatDrepHashToCIP105Format,
+  formatDrepHashToCIP129Format,
+} from '~/features/Staking/Governance/common/drep'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
@@ -13,11 +18,6 @@ import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {usePoolInfo} from '~/wallets/hooks'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {
-  formatDrepHashToCIP105Format,
-  formatDrepHashToCIP129Format,
-} from '~/features/Staking/Governance/common/drep'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 import {PoolDetails} from './PoolDetails'
 import {CertificateType, FormattedTx} from './types'

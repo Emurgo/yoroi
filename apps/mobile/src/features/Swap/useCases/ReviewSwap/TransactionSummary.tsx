@@ -3,22 +3,25 @@ import _ from 'lodash'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {Splits} from '~/CreateOrder/EstimateSummary'
+import {ShowPriceImpact} from '~/CreateOrder/ShowPriceImpact'
+import {
+  getPriceImpactRisk,
+  usePriceImpactRiskTheme,
+} from '~/features/common/helpers'
+import {useStrings} from '~/features/common/strings'
+import {
+  PRICE_IMPACT_HIGH_RISK,
+  PRICE_IMPACT_MODERATE_RISK,
+  undefinedToken,
+} from '~/features/Swap/common/constants'
+import {SwapContext} from '~/features/Swap/common/SwapProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Divider} from '~/ui/Divider/Divider'
 import {Icon} from '~/ui/Icon'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {
-  PRICE_IMPACT_HIGH_RISK,
-  PRICE_IMPACT_MODERATE_RISK,
-  undefinedToken,
-} from '~/features/common/constants'
-import {getPriceImpactRisk, usePriceImpactRiskTheme} from '~/features/common/helpers'
-import {useStrings} from '~/features/common/strings'
-import {SwapContext} from '~/features/common/SwapProvider'
-import {Splits} from '~/CreateOrder/EstimateSummary'
-import {ShowPriceImpact} from '~/CreateOrder/ShowPriceImpact'
 
 export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const strings = useStrings()

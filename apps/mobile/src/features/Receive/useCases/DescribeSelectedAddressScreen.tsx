@@ -5,8 +5,12 @@ import * as React from 'react'
 import {GestureResponderEvent, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useReceive} from '~/common/ReceiveProvider'
+import {useMultipleAddressesInfo} from '~/common/useMultipleAddressesInfo'
+import {useNavigateTo} from '~/common/useNavigateTo'
+import {useReceiveAddressesStatus} from '~/common/useReceiveAddressesStatus'
+import {useStrings} from '~/common/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {isEmptyString} from '~/kernel/utils'
 import {useCopy} from '~/kernel/utils/clipboard'
 import {AddressDetailCard} from '~/ui/AddressDetailCard/AddressDetailCard'
 import {Button} from '~/ui/Button/Button'
@@ -18,11 +22,7 @@ import {
 } from '~/ui/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useAddressMode} from '~/WalletManager/common/hooks/useAddressMode'
-import {useReceive} from '~/common/ReceiveProvider'
-import {useMultipleAddressesInfo} from '~/common/useMultipleAddressesInfo'
-import {useNavigateTo} from '~/common/useNavigateTo'
-import {useReceiveAddressesStatus} from '~/common/useReceiveAddressesStatus'
-import {useStrings} from '~/common/useStrings'
+import {isEmptyString} from '~/wallets/utils/string'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()

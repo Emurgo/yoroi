@@ -2,8 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Space} from '~/Space/Space'
-import {Text} from '~/Text/Text'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
 
 type ExternalProps = {
   title?: string

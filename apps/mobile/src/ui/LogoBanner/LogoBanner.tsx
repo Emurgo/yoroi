@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/features/SetupWallet/common/useStrings'
-import {Space} from '~/Space/Space'
+import {Space} from '~/ui/Space/Space'
 
 export const LogoBanner = () => {
   const strings = useStrings()

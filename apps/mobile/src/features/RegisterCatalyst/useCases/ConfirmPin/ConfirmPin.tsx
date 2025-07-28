@@ -7,6 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useNavigateTo} from '~/CatalystNavigator'
 import {useStrings} from '~/features/RegisterCatalyst/common/strings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {useReviewTx} from '~/ReviewTx/common/ReviewTxProvider'
 import {Button} from '~/ui/Button/Button'
@@ -19,7 +20,6 @@ import {
 } from '~/ui/common/components'
 import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard/NumericKeyboard'
 import {Space} from '~/ui/Space/Space'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
 import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
 

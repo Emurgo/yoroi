@@ -5,13 +5,8 @@ import {ApiUtxoData, Portfolio} from '@yoroi/types'
 import {NetworkApi} from '@yoroi/types/lib/typescript/network/manager'
 import _ from 'lodash'
 
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
-import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
-import {asQuantity} from '~/wallets/utils/utils'
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
-import {useSelectedNetwork} from '~/WalletManager/common/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {
   FormattedCertificate,
   FormattedFee,
@@ -22,6 +17,11 @@ import {
   TransactionInputs,
   TransactionOutputs,
 } from '~/types'
+import {useSelectedNetwork} from '~/WalletManager/common/hooks/useSelectedNetwork'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
+import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
+import {asQuantity} from '~/wallets/utils/utils'
 
 export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   const {wallet} = useSelectedWallet()

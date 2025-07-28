@@ -9,7 +9,6 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 
-import {Button, ButtonType} from '~/Button/Button'
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {features} from '~/kernel/features'
 import {useModal} from '~/Modal/ModalContext'
@@ -17,10 +16,11 @@ import {PairedBalance} from '~/PairedBalance/PairedBalance'
 import {useStrings} from '~/ReviewTx/common/hooks/useStrings'
 import {usePriceImpactRiskTheme} from '~/Swap/common/helpers'
 import {SwapPriceImpactRisk} from '~/Swap/common/types'
-import {Text} from '~/Text/Text'
 import {TokenDetails} from '~/TokenDetails/TokenDetails'
 import {TokenInfoIcon} from '~/TokenInfoIcon/TokenInfoIcon'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {Text} from '~/ui/Text/Text'
 
 type TokenAmountItemProps = {
   amount: Portfolio.Token.Amount

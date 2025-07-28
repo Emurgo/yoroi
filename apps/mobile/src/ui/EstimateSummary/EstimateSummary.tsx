@@ -1,19 +1,18 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 import * as React from 'react'
-import {View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Button, ButtonType} from '~/Button/Button'
-import {undefinedToken} from '~/features/common/constants'
 import {useNavigateTo} from '~/features/common/navigation'
-import {ProtocolAvatar} from '~/features/common/Protocol/ProtocolAvatar'
 import {useStrings} from '~/features/common/strings'
-import {useSwap} from '~/features/common/SwapProvider'
-import {useModal} from '~/Modal/ModalContext'
-import {Text} from '~/Text/Text'
-import {Icon} from '~/ui/Icon/Icon'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
-import {SwapInfoLink} from './SwapInfoLink'
+import {undefinedToken} from '~/features/Swap/common/constants'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {SwapInfoLink} from '~/ui/SwapInfoLink/SwapInfoLink'
 
 export const EstimateSummary = () => {
   const strings = useStrings()

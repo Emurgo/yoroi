@@ -5,15 +5,15 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import globalMessages from '~/kernel/i18n/global-messages'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {Spacer} from '~/ui/Spacer/Spacer'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {isEmptyString} from '~/kernel/utils'
+import {isEmptyString} from '~/wallets/utils/string'
 import {getWalletNameError} from '~/wallets/utils/validators'
-import globalMessages from '~/kernel/i18n/global-messages'
 
 export const RenameWalletScreen = () => {
   const strings = useStrings()

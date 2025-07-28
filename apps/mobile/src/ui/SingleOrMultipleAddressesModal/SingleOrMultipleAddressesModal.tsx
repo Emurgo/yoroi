@@ -3,12 +3,12 @@ import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {Button, ButtonType} from '~/Button/Button'
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
 import {useStrings} from '~/features/Receive/common/useStrings'
 import {useAddressMode} from '~/features/WalletManager/common/hooks/useAddressMode'
 import {useModal} from '~/Modal/ModalContext'
 import {QRs} from '~/QRsIllustration/QRsIllustration'
+import {Button, ButtonType} from '~/ui/Button/Button'
 
 export const singleOrMultipleAddressesModalHeight = 580
 

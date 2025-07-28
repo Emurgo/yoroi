@@ -2,7 +2,7 @@ import {SpacingSize, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {Space} from '~/Space/Space'
+import {Space} from '~/ui/Space/Space'
 
 export const Divider = ({
   verticalSpace = 'none',

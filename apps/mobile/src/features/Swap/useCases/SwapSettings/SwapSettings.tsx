@@ -11,15 +11,15 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/features/common/strings'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useLanguage} from '~/kernel/i18n'
 import {NumberLocale} from '~/kernel/i18n/languages'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {Quantities} from '~/wallets/utils/utils'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {TextInput} from '~/ui/TextInput'
-import {useStrings} from '~/features/common/strings'
-import {useSwap} from '~/features/common/SwapProvider'
+import {Quantities} from '~/wallets/utils/utils'
 
 type CustomChoice = {
   label: 'Custom'

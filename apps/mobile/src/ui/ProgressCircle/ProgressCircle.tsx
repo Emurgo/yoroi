@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 
-import {Text} from '~/Text/Text'
+import {Text} from '~/ui/Text/Text'
 
 type ExternalProps = {
   percentage: number

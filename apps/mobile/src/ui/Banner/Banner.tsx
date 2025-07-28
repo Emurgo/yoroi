@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 
-import {Text} from '~/Text/Text'
+import {Text} from '~/ui/Text/Text'
 
 type Props = {
   text?: string
@@ -17,10 +17,10 @@ export const Banner = ({error, text, boldText, label, children}: Props) => {
 
   const bannerStyles = [
     a.p_lg,
-    {alignItems: 'center', justifyContent: 'center'},
+    {alignItems: 'center' as const, justifyContent: 'center' as const},
     {backgroundColor: p.gray_100},
-    error === true && a.py_sm,
-    error === true && {backgroundColor: p.bg_color_max},
+    ...(error === true ? [a.py_sm] : []),
+    ...(error === true ? [{backgroundColor: p.bg_color_max}] : []),
   ]
 
   return (

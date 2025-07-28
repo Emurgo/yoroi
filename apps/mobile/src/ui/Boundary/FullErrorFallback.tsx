@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useTranslatedError} from '~/hooks/useTranslatedError'
-import {Button} from '~/Button/Button'
+import {Button} from '~/ui/Button/Button'
 import {ErrorFallbackProps} from './types'
 import {useStrings} from './useStrings'
 

@@ -3,9 +3,9 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
-import {Rate} from '~/Rate/Rate'
-import {Tooltip} from '~/Tooltip/Tooltip'
 import {Icon} from '~/ui/Icon'
+import {Rate} from '~/ui/Rate/Rate'
+import {Tooltip} from '~/ui/Tooltip/Tooltip'
 
 type Props = {
   rate: number

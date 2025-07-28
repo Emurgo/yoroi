@@ -2,11 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactElement} from 'react'
 import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import {isEmptyString} from '~/kernel/utils'
 import {Hr} from '~/ui/Hr/Hr'
 import {Icon} from '~/ui/Icon'
 import {Spacer} from '~/ui/Spacer/Spacer'
 import {Text} from '~/ui/Text/Text'
+import {isEmptyString} from '~/wallets/utils/string'
 
 const Touchable = (props: TouchableOpacityProps) => (
   <TouchableOpacity {...props} activeOpacity={0.5} />

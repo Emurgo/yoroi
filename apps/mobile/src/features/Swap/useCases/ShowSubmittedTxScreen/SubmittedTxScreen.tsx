@@ -2,13 +2,13 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {useNavigateTo} from '~/features/common/navigation'
+import {useStrings} from '~/features/common/strings'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space, Spacer} from '~/ui/Space/Space'
 import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
-import {useNavigateTo} from '~/features/common/navigation'
-import {useStrings} from '~/features/common/strings'
-import {useSwap} from '~/features/common/SwapProvider'
 
 export const SubmittedTxScreen = () => {
   const strings = useStrings()

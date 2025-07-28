@@ -5,10 +5,8 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 
-import {Button, ButtonType} from '~/ui/Button/Button'
-import {useCopy} from '~/ui/Clipboard/ClipboardProvider'
-import {Icon} from '~/ui/Icon'
-import {Text} from '~/ui/Text/Text'
+import {useStrings} from '~/features/common/strings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {useReceive} from '~/Receive/common/ReceiveProvider'
@@ -16,10 +14,12 @@ import {useMultipleAddressesInfo} from '~/Receive/common/useMultipleAddressesInf
 import {useReceiveAddressesStatus} from '~/Receive/common/useReceiveAddressesStatus'
 import {useSwap} from '~/Swap/common/SwapProvider'
 import {useSwapConfig} from '~/Swap/common/useSwapConfig'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {useCopy} from '~/ui/Clipboard/ClipboardProvider'
+import {Icon} from '~/ui/Icon'
+import {Text} from '~/ui/Text/Text'
 import {useAddressMode} from '~/WalletManager/common/hooks/useAddressMode'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '~/WalletManager/context/WalletManagerProvider'
-import {useStrings} from '~/features/common/strings'
 
 export const ActionsBanner = (props: {disabled: boolean}) => {
   const strings = useStrings()

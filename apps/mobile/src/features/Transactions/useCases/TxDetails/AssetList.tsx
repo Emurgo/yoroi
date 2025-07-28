@@ -4,16 +4,16 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
+import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/features/common/strings'
 import {normalisePtId} from '~/kernel/helpers/normalisePtId'
 import globalMessages, {txLabels} from '~/kernel/i18n/global-messages'
-import {isEmptyString} from '~/kernel/utils'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {CardanoTypes} from '~/wallets/cardano/types'
 import {formatTokenAmount} from '~/wallets/utils/format'
+import {isEmptyString} from '~/wallets/utils/string'
 import {asQuantity} from '~/wallets/utils/utils'
-import {usePrivacyMode} from '~/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
-import {useStrings} from '~/features/common/strings'
 
 type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>

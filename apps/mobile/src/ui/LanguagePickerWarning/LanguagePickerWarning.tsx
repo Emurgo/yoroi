@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity, View} from 'react-native'
-import Markdown from 'react-native-markdown-display'
+import Markdown from 'react-native-marked'
 
 import {Icon} from '~/ui/Icon'
 

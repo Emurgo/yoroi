@@ -10,21 +10,18 @@ import {Observer} from 'rxjs'
 
 import bleImage from '~/assets/img/bluetooth.png'
 import usbImage from '~/assets/img/ledger-nano-usb.png'
+import {BulletPointItem} from '~/BulletPointItem'
 import globalMessages, {
   confirmationMessages,
   ledgerMessages,
 } from '~/kernel/i18n/global-messages'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {logger} from '~/kernel/logger/logger'
-import {
-  BluetoothDisabledError,
-  RejectedByUserError,
-} from '~/wallets/hw/hw'
-import {Device} from '~/wallets/types/hw'
-import {BulletPointItem} from '~/BulletPointItem'
-import {Button} from '~/Button/Button'
 import {Loading} from '~/Loading/Loading'
-import {Space} from '~/Space/Space'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {BluetoothDisabledError, RejectedByUserError} from '~/wallets/hw/hw'
+import {Device} from '~/wallets/types/hw'
 import {DeviceItem} from './DeviceItem'
 
 type Props = {

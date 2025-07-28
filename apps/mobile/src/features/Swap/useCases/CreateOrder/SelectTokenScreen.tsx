@@ -9,11 +9,17 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {SwapTokenRoutes, useUnsafeParams} from '~/kernel/navigation'
+import {filterBySearch} from '~/features/common/filterBySearch'
+import {useNavigateTo} from '~/features/common/navigation'
+import {useStrings} from '~/features/common/strings'
+import {useSwapConfig} from '~/features/common/useSwapConfig'
 import {getTokenIdParts} from '~/features/Portfolio/common/helpers/get-token-id-parts'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/common/PortfolioTokenActivityProvider'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {SwapTokenRoutes, useUnsafeParams} from '~/kernel/navigation'
 import {useSearch, useSearchOnNavBar} from '~/Search/SearchContext'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Counter} from '~/ui/Counter/Counter'
@@ -25,12 +31,6 @@ import {
   AmountItemPlaceholder,
   TokenAmountItem,
 } from '~/ui/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
-import {filterBySearch} from '~/features/common/filterBySearch'
-import {useNavigateTo} from '~/features/common/navigation'
-import {useStrings} from '~/features/common/strings'
-import {useSwap} from '~/features/common/SwapProvider'
-import {useSwapConfig} from '~/features/common/useSwapConfig'
 
 type Direction = SwapTokenRoutes['swap-select-token']
 
