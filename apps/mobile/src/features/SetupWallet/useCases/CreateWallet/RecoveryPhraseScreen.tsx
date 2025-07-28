@@ -3,15 +3,13 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
-import {
-  Linking,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Linking, Platform, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {YoroiZendeskLink} from '~/features/common/constants'
+import {useStrings} from '~/features/common/useStrings'
+import {EyeClosed} from '~/illustrations/EyeClosed'
+import {EyeOpen} from '~/illustrations/EyeOpen'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
@@ -21,10 +19,6 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {generateAdaMnemonic} from '~/wallets/cardano/mnemonic/mnemonic'
-import {YoroiZendeskLink} from '~/features/common/constants'
-import {useStrings} from '~/features/common/useStrings'
-import {EyeClosed} from '~/illustrations/EyeClosed'
-import {EyeOpen} from '~/illustrations/EyeOpen'
 
 export const RecoveryPhraseScreen = () => {
   const bold = useBold()
@@ -108,13 +102,21 @@ export const RecoveryPhraseScreen = () => {
 
       <Space.Height.lg />
 
-      <Text style={[a.heading_3_medium, a.text_center, {color: p.text_gray_max}]}>
+      <Text
+        style={[a.heading_3_medium, a.text_center, {color: p.text_gray_max}]}
+      >
         {strings.recoveryPhraseTitle}
       </Text>
 
       <Space.Height.md />
 
-      <Text style={[a.body_1_lg_regular, a.text_center, {color: p.text_gray_medium}]}>
+      <Text
+        style={[
+          a.body_1_lg_regular,
+          a.text_center,
+          {color: p.text_gray_medium},
+        ]}
+      >
         {strings.recoveryPhraseDescription}
       </Text>
 
@@ -140,17 +142,12 @@ export const RecoveryPhraseScreen = () => {
           <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
             {mnemonic.split(' ').map((word, index) => (
               <View key={index} style={[a.flex_row, a.align_center]}>
-                <Text
-                  style={[
-                    a.body_1_lg_regular,
-                    {color: p.primary_600},
-                  ]}
-                >
+                <Text style={[a.body_1_lg_regular, {color: p.primary_600}]}>
                   {index + 1}.{' '}
                 </Text>
 
-                {word}
-              </Text>
+                <Text>{word}</Text>
+              </View>
             ))}
           </View>
         </View>
@@ -199,10 +196,7 @@ const Info = ({onPress, testID}: {onPress: () => void; testID?: string}) => {
   return (
     <TouchableOpacity style={[a.relative]} onPress={onPress}>
       <View
-        style={[
-          a.absolute,
-          {top: Platform.OS === 'ios' ? -22 : -18, left: 0},
-        ]}
+        style={[a.absolute, {top: Platform.OS === 'ios' ? -22 : -18, left: 0}]}
         testID={testID}
       >
         <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />

@@ -5,7 +5,6 @@ import React from 'react'
 import {
   Linking,
   Platform,
-  StyleSheet,
   TouchableOpacity,
   View,
   ViewProps,
@@ -13,15 +12,15 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/features/common/useStrings'
+import {LedgerCheckIllustration} from '~/illustrations/LedgerCheckIllustration'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation'
 import {BulletPointItem} from '~/ui/BulletPointItem/BulletPointItem'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {Text} from '~/ui/Text/Text'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '~/kernel/navigation'
-import {useStrings} from '~/features/common/useStrings'
-import {LedgerCheckIllustration} from '~/illustrations/LedgerCheckIllustration'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
@@ -64,17 +63,17 @@ export const CheckNanoXScreen = () => {
       />
 
       <ScrollView style={styles.scroll} bounces={false}>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Text style={styles.introline}>{strings.hwCheckIntroline}</Text>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {(useUSB ? usbRequirements : bleRequirements).map((item) => (
           <BulletPointItem key={item} style={styles.item} textRow={item} />
         ))}
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Illustration />
 
@@ -122,43 +121,49 @@ const Actions = (props: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
+  const {palette: p} = useTheme()
+  const styles = {
     safeAreaView: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
+      flex: 1,
+      backgroundColor: p.bg_color_max,
     },
     introline: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
+      fontSize: 16,
+      lineHeight: 24,
+      fontWeight: '500' as const,
+      color: p.text_gray_medium,
     },
     scroll: {
-      ...atoms.px_lg,
+      paddingHorizontal: 16,
     },
     linkText: {
-      color: color.primary_500,
+      color: p.primary_500,
     },
     link: {
-      ...atoms.link_1_lg,
-      ...atoms.flex_row,
-      ...atoms.justify_center,
-      ...atoms.align_center,
+      fontSize: 16,
+      lineHeight: 24,
+      fontWeight: '400' as const,
+      flexDirection: 'row' as const,
+      justifyContent: 'center' as const,
+      alignItems: 'center' as const,
     },
     illustration: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
+      flex: 1,
+      alignItems: 'center' as const,
     },
     item: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
+      fontSize: 16,
+      lineHeight: 24,
+      fontWeight: '400' as const,
+      color: p.text_gray_medium,
     },
     actions: {
-      ...atoms.p_lg,
+      padding: 16,
     },
     stepper: {
-      ...atoms.px_lg,
+      paddingHorizontal: 16,
     },
-  })
+  }
 
   return styles
 }

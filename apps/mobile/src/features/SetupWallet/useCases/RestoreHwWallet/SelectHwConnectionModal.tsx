@@ -2,15 +2,15 @@ import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Alert, Platform, StyleSheet, Text, View} from 'react-native'
+import {Alert, Platform, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
+import {useStrings} from '~/features/common/useStrings'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
-import {SetupWalletRouteNavigation} from '~/kernel/navigation'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
-import {useStrings} from '~/features/common/useStrings'
 
 const useIsAndroidUsbSupported = () => {
   const [isAndroidUsbSupported, setIsAndroidUsbSupported] =
@@ -68,7 +68,7 @@ const SelectBluetoothSection = () => {
 
   return (
     <>
-      <Space.Height.xl" />
+      <Space.Height.xl />
 
       <Button
         type={ButtonType.Secondary}
@@ -101,7 +101,7 @@ const SelectUsbSection = () => {
   if (Platform.OS === 'ios')
     return (
       <>
-        <Space.Height.lg" />
+        <Space.Height.lg />
 
         <Text style={styles.iosWarning}>{strings.hwModalIosWarning}</Text>
       </>
@@ -112,7 +112,7 @@ const SelectUsbSection = () => {
 
   return (
     <>
-      <Space.Height.xl" />
+      <Space.Height.xl />
 
       <Button
         type={ButtonType.Secondary}
@@ -128,24 +128,28 @@ const SelectUsbSection = () => {
 }
 
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {palette: p} = useTheme()
 
-  const styles = StyleSheet.create({
+  const styles = {
     modal: {
-      ...atoms.px_lg,
+      paddingHorizontal: 16,
     },
     modalText: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
+      fontSize: 16,
+      lineHeight: 24,
+      fontWeight: '400' as const,
+      color: p.text_gray_medium,
     },
     iosWarning: {
-      color: color.text_gray_low,
-      ...atoms.body_2_md_regular,
+      color: p.text_gray_low,
+      fontSize: 14,
+      lineHeight: 20,
+      fontWeight: '400' as const,
     },
-  })
+  }
 
   const colors = {
-    blue: color.el_primary_medium,
+    blue: p.el_primary_medium,
   }
   return {styles, colors} as const
 }

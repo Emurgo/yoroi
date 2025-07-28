@@ -2,16 +2,12 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {useStrings} from '~/features/common/strings'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
+import {FailedTxIcon} from '~/ReviewTx/illustrations/FailedTxIcon'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
-import {
-  useBlockGoBack,
-  useWalletNavigation,
-} from '~/kernel/navigation'
-import {FailedTxIcon} from '~/ReviewTx/illustrations/FailedTxIcon'
-import {useStrings} from '~/features/common/strings'
+import {Space, SpaceHeight} from '~/ui/Space/Space'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()
@@ -21,19 +17,19 @@ export const FailedTxScreen = () => {
 
   return (
     <SafeArea style={styles.root}>
-      <Spacer height={144} />
+      <SpaceHeight size={144} />
 
       <FailedTxIcon />
 
-      <Space.Height._2xl" />
+      <Space.Height._2xl />
 
-      <Space.Height.lg" />
+      <Space.Height.lg />
 
       <Text style={styles.title}>{strings.failedTxTitle}</Text>
 
       <Text style={styles.text}>{strings.failedTxText}</Text>
 
-      <Space fill />
+      <View style={{flex: 1}} />
 
       <Actions>
         <Button
@@ -53,28 +49,31 @@ const Actions = ({children}: {children: React.ReactNode}) => {
 }
 
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.p_lg,
-      ...atoms.flex_1,
-      ...atoms.align_center,
-      ...atoms.justify_center,
+      backgroundColor: p.bg_color_max,
+      padding: 16,
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     title: {
-      color: color.gray_max,
-      ...atoms.heading_3_medium,
-      ...atoms.px_sm,
-      ...atoms.text_center,
+      color: p.gray_max,
+      fontSize: 24,
+      fontWeight: '600',
+      paddingHorizontal: 8,
+      textAlign: 'center',
     },
     text: {
-      color: color.gray_600,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
+      color: p.gray_600,
+      fontSize: 16,
+      lineHeight: 24,
+      fontWeight: '400',
+      textAlign: 'center',
     },
     button: {
-      ...atoms.px_lg,
+      paddingHorizontal: 16,
     },
     actions: {
       alignSelf: 'stretch',

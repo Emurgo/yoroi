@@ -4,7 +4,44 @@ This document tracks all the issues that couldn't be resolved during the migrati
 
 ## 🚨 Critical Missing Files
 
-### 1. CurrencyContext.tsx - **✅ RESOLVED**
+### 1. TypeScript Path Mapping Issues - **⏳ PENDING**
+
+**Issue**: TypeScript path mapping (`~/ui/*`, `~/features/*`, etc.) is not working properly
+**Status**: ⏳ **PENDING**
+
+**Affected Files**:
+
+- `apps/mobile/src/features/Links/useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen.tsx`
+  - Cannot find module '~/ui/Button/Button'
+  - Cannot find module '~/ui/Modal/ModalContext'
+  - Cannot find module '~/ui/Space/Space'
+- `apps/mobile/src/features/Send/useCases/ShowFailedTxScreen/FailedTxScreen.tsx`
+  - Cannot find module '~/features/common/strings'
+  - Cannot find module '~/kernel/navigation'
+  - Cannot find module '~/ReviewTx/illustrations/FailedTxIcon'
+  - Cannot find module '~/ui/Spacer/Spacer'
+  - ✅ **FIXED**: Theme usage (color → palette, atoms → inline styles)
+  - ✅ **FIXED**: Space.fill → View style={{flex: 1}}
+- `apps/mobile/src/features/SetupWallet/useCases/RestoreHwWallet/SelectHwConnectionModal.tsx`
+  - Cannot find module '~/features/common/useStrings'
+  - Cannot find module '~/kernel/navigation'
+  - ✅ **FIXED**: StyleSheet.create → inline styles
+  - ✅ **FIXED**: Theme usage (color → palette, atoms → inline styles)
+- `apps/mobile/src/features/SetupWallet/useCases/RestoreHwWallet/CheckNanoXScreen.tsx`
+  - Cannot find module '~/features/common/useStrings'
+  - Cannot find module '~/illustrations/LedgerCheckIllustration'
+  - Cannot find module '~/kernel/navigation'
+  - Cannot find module '~/ui/BulletPointItem/BulletPointItem'
+  - ✅ **FIXED**: StyleSheet.create → inline styles
+  - ✅ **FIXED**: Theme usage (color → palette, atoms → inline styles)
+  - ✅ **FIXED**: Space usage (Space height="lg" → Space.Height.lg)
+
+**Root Cause**: TypeScript path mapping configuration issue
+**Solution Needed**: Fix tsconfig.json path mapping or use relative imports
+
+---
+
+### 2. CurrencyContext.tsx - **✅ RESOLVED**
 
 **Location**: `apps/mobile/src/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext.tsx`
 **Status**: ✅ **MIGRATED**
@@ -315,11 +352,73 @@ import {RawUtxo, StakingStatus, YoroiEntry, LegacyToken} from '@yoroi/types'
   - Used atomic design tokens for layout
 
 - ✅ `apps/mobile/src/ui/StepperProgress/StepperProgress.tsx`
+
   - Removed `StyleSheet.create` block
   - Inlined all styles using atomic design
   - Fixed `useTheme().color` to `useTheme().palette: p`
   - Used atomic design tokens for layout and text styles
   - Handled complex Animated.View components
+
+- ✅ `apps/mobile/src/ui/Line/Line.tsx`
+
+  - Removed `StyleSheet.create` block
+  - Inlined simple styles using atomic design
+  - Fixed `useTheme().color` to `useTheme().palette: p`
+  - Replaced `StyleSheet.hairlineWidth` with `1`
+
+- ✅ `apps/mobile/src/ui/Rate/Rate.tsx`
+
+  - Removed `StyleSheet.create` block
+  - Inlined all styles using atomic design
+  - Fixed `useTheme().color` to `useTheme().palette: p`
+  - Used atomic design tokens for layout and text styles
+  - Handled complex Text component nesting
+
+- ✅ `apps/mobile/src/ui/SimpleTab/SimpleTab.tsx`
+
+  - Removed `StyleSheet.create` block
+  - Inlined simple styles using atomic design
+  - Fixed `useTheme().color` to `useTheme().palette: p`
+  - Used atomic design tokens for layout and text styles
+
+- ✅ `apps/mobile/src/ui/Tooltip/Tooltip.tsx`
+
+  - Removed `StyleSheet.create` block
+  - Inlined all styles using atomic design
+  - Fixed `useTheme().color` to `useTheme().palette: p`
+  - Used atomic design tokens for layout and text styles
+  - Handled complex Portal and Pressable components
+  - Replaced `StyleSheet.absoluteFillObject` with inline styles
+
+- ✅ `apps/mobile/src/ui/Outline/Outline.tsx`
+
+  - Removed `StyleSheet.create` block
+  - Inlined simple styles using atomic design
+  - Used atomic design tokens for layout
+  - Handled complex positioning styles
+
+- ✅ `apps/mobile/src/ui/PnlTag/PnlTag.tsx`
+
+  - Removed `StyleSheet.create` block
+  - Inlined all styles using atomic design
+  - Fixed `useTheme().color` to `useTheme().palette: p`
+  - Used atomic design tokens for layout and text styles
+  - Handled complex conditional styling logic
+
+- ✅ `apps/mobile/src/ui/RefreshButton/RefreshButton.tsx`
+
+  - Removed `StyleSheet.create` block
+  - Inlined all styles using atomic design
+  - Fixed `useTheme().color` to `useTheme().palette: p`
+  - Used atomic design tokens for layout
+  - Handled complex Animated.View components
+
+- ✅ `apps/mobile/src/ui/Banner/Banner.tsx`
+  - Removed `StyleSheet.create` block
+  - Inlined all styles using atomic design
+  - Fixed `useTheme().color` to `useTheme().palette: p`
+  - Used atomic design tokens for layout and text styles
+  - Handled complex conditional styling logic
 
 **Pattern Established**:
 
@@ -330,7 +429,7 @@ import {RawUtxo, StakingStatus, YoroiEntry, LegacyToken} from '@yoroi/types'
 - Replace `Spacer` components with `Space.Height.*` or `<View style={[{flex: 1}]} />`
 - Fix malformed Space components (e.g., `Space.Height.lg"` to `Space.Height.lg`)
 
-**Remaining**: 99 more files with `StyleSheet.create` need conversion
+**Remaining**: 94 more files with `StyleSheet.create` need conversion
 
 ---
 

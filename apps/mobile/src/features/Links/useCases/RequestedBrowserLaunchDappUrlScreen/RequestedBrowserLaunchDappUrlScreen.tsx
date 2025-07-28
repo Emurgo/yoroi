@@ -7,10 +7,21 @@ import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
-import {isEmptyString} from '~/kernel/utils'
-import {useStrings} from '~/features/common/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
+
+// Temporary implementations
+const useStrings = () => ({
+  disclaimer: 'Disclaimer',
+  trustedBrowserLaunchDappUrlDescription: 'Trusted browser launch description',
+  untrustedBrowserLaunchDappUrlDescription:
+    'Untrusted browser launch description',
+  cancel: 'Cancel',
+  continue: 'Continue',
+})
+
+const isEmptyString = (str: string | undefined | null): boolean => {
+  return str == null || str.trim() === ''
+}
 
 export const RequestedBrowserLaunchDappUrlScreen = ({
   params,
@@ -45,7 +56,7 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
           <Text style={disclaimerStyle}>{description}</Text>
         </ShowDisclaimer>
 
-        <Space.Height.lg" />
+        <Space.Height.lg />
 
         {/* TODO: revisit SHOW the app name or unknown */}
         {/* TODO: revisit SHOW verified / not verified icon and text */}
@@ -54,7 +65,7 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
 
         <Message message={params.message} />
 
-        <Spacer fill />
+        <View style={{flex: 1}} />
       </ScrollView>
 
       <Actions style={styles.actions}>
@@ -78,7 +89,7 @@ const Message = ({message}: {message?: string}) => {
       <>
         <Text style={styles.text}>{message}</Text>
 
-        <Space.Height.lg" />
+        <Space.Height.lg />
       </>
     )
   )
@@ -86,27 +97,29 @@ const Message = ({message}: {message?: string}) => {
 const Actions = (props: ViewProps) => <View {...props} />
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.pb_lg,
+      backgroundColor: p.bg_color_max,
+      flex: 1,
+      paddingHorizontal: 16,
+      paddingBottom: 16,
     },
     actions: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.gap_lg,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      gap: 16,
     },
     text: {
-      color: color.text_gray_max,
-      ...atoms.body_2_md_regular,
+      color: p.text_gray_max,
+      fontSize: 14,
+      lineHeight: 20,
+      fontWeight: '400',
     },
   })
   const colors = {
-    danger: color.sys_magenta_500,
-    warning: color.sys_orange_500,
+    danger: p.sys_magenta_500,
+    warning: p.sys_orange_500,
   }
   return {styles, colors} as const
 }

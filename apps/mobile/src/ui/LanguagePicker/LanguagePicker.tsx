@@ -4,10 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
-import {Icon} from '~/Icon'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguagePickerWarning} from '~/LanguagePickerWarning/LanguagePickerWarning'
 import {Text} from '~/Text/Text'
+import {Icon} from '~/ui/Icon'
 
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 

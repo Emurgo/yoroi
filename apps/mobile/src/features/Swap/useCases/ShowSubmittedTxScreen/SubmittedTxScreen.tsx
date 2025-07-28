@@ -27,9 +27,9 @@ export const SubmittedTxScreen = () => {
 
       <SuccessfulTxIcon />
 
-      <Space.Height._2xl" />
+      <Space.Height._2xl />
 
-      <Space.Height.lg" />
+      <Space.Height.lg />
 
       <Text style={[styles.title, {color: color.gray_max}]}>
         {strings.submittedTxScreenTitle}

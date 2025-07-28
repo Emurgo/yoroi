@@ -163,7 +163,7 @@ export const SaveNanoXScreen = () => {
             ]}
           />
 
-          <Space.Height.lg" />
+          <Space.Height.lg />
 
           <CardAboutPhrase
             title={strings.walletPasswordModalCardTitle}
@@ -173,7 +173,7 @@ export const SaveNanoXScreen = () => {
             ]}
           />
 
-          <Space.Height.lg" />
+          <Space.Height.lg />
 
           <LearnMoreButton
             onPress={() => {
@@ -203,7 +203,7 @@ export const SaveNanoXScreen = () => {
             ]}
           />
 
-          <Space.Height.lg" />
+          <Space.Height.lg />
 
           <LearnMoreButton
             onPress={() => {
@@ -229,17 +229,17 @@ export const SaveNanoXScreen = () => {
           totalSteps={2}
         />
 
-        <Space.Height.xl" />
+        <Space.Height.xl />
 
         <View style={styles.info}>
           <Text style={styles.title}>{strings.hwWalletDetailsTitle(bold)}</Text>
 
-          <Space.Width.xs" />
+          <Space.Width.xs />
 
           <Info onPress={showModalTipsPassword} />
         </View>
 
-        <Space.Height.xl" />
+        <Space.Height.xl />
 
         <ScrollView style={styles.flex}>
           <TextInput
@@ -260,7 +260,7 @@ export const SaveNanoXScreen = () => {
             showErrorOnBlur
           />
 
-          <Space.Height.lg" />
+          <Space.Height.lg />
 
           <View style={styles.checksum}>
             <Icon.WalletAvatar
@@ -269,13 +269,13 @@ export const SaveNanoXScreen = () => {
               size={24}
             />
 
-            <Space.Width.sm" />
+            <Space.Width.sm />
 
             <Text style={styles.plateNumber} testID="wallet-plate-number">
               {plate}
             </Text>
 
-            <Space.Width.sm" />
+            <Space.Width.sm />
 
             <Info onPress={showModalTipsPlateNumber} />
           </View>

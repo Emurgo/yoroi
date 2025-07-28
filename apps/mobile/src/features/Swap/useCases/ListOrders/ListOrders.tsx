@@ -637,7 +637,7 @@ const Details = ({
         </Right>
       </View>
 
-      <Space.Height.lg" />
+      <Space.Height.lg />
 
       <Text style={[styles.amountItemLabel, {color: color.text_gray_medium}]}>
         {strings.swapTo}
@@ -677,11 +677,11 @@ const Details = ({
         </Right>
       </View>
 
-      <Space.Height.lg" />
+      <Space.Height.lg />
 
       <Divider />
 
-      <Space.Height.lg" />
+      <Space.Height.lg />
 
       <OrderCancellationConfirmation
         order={order}

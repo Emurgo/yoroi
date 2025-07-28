@@ -3,9 +3,9 @@ import * as React from 'react'
 import {Platform, Pressable, Text, TextInput, View} from 'react-native'
 
 import {useSwap} from '~/features/Swap/common/SwapProvider'
-import {Icon} from '~/Icon'
 import {PairedBalance} from '~/PairedBalance/PairedBalance'
 import {TokenInfoIcon} from '~/TokenInfoIcon/TokenInfoIcon'
+import {Icon} from '~/ui/Icon'
 
 export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const {atoms: ta, palette: p} = useTheme()

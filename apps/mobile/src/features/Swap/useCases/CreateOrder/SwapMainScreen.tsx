@@ -104,7 +104,7 @@ export const SwapMainScreen = () => {
       <ScrollView style={[styles.padding, atoms.px_lg]}>
         <ShowDisclaimer type="swap" />
 
-        <Space.Height.lg" />
+        <Space.Height.lg />
 
         <View
           onLayout={(event) => {

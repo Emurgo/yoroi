@@ -6,7 +6,7 @@ import React from 'react'
 import {ImageStyle, View} from 'react-native'
 
 import {usePortfolioImage} from '~/features/Portfolio/common/hooks/usePortfolioImage'
-import {Icon} from '~/Icon'
+import {Icon} from '~/ui/Icon'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info | undefined | null

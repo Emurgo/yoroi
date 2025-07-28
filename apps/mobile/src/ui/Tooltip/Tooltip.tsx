@@ -4,7 +4,6 @@ import {
   Dimensions,
   LayoutChangeEvent,
   Pressable,
-  StyleSheet,
   Text,
   View,
   ViewStyle,
@@ -59,7 +58,7 @@ export const Tooltip = ({
   mode = 'press',
   ...rest
 }: TooltipProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const [visible, setVisible] = React.useState(false)
 
@@ -169,23 +168,30 @@ export const Tooltip = ({
         <Portal>
           {/* Close it when touch on screen */}
           <Pressable
-            style={{...StyleSheet.absoluteFillObject}}
+            style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}
             onPress={() => setVisible(false)}
           >
             <View
               onLayout={handleOnLayout}
               style={[
-                styles.tooltip,
-                {backgroundColor: color.gray_max},
+                {
+                  alignSelf: 'flex-start',
+                  justifyContent: 'center',
+                  paddingVertical: 5,
+                  paddingHorizontal: 12,
+                  borderRadius: 4,
+                  position: 'absolute',
+                  backgroundColor: p.gray_max,
+                },
                 {
                   ...getTooltipPosition(measurement as Measurement, children),
-                  ...(measurement.measured ? styles.visible : styles.hidden),
+                  ...(measurement.measured ? {opacity: 1} : {opacity: 0}),
                 },
               ]}
               testID="tooltip-container"
             >
               <Text
-                style={[styles.content, {color: color.gray_min}]}
+                style={[a.body_2_md_regular, {color: p.gray_min}]}
                 accessibilityLiveRegion="polite"
                 numberOfLines={numberOfLine}
                 selectable={false}
@@ -200,7 +206,7 @@ export const Tooltip = ({
 
       <Pressable
         ref={childrenWrapperRef}
-        style={styles.pressContainer}
+        style={{} as ViewStyle}
         {...pressProps}
       >
         {React.cloneElement(children, {
@@ -213,24 +219,3 @@ export const Tooltip = ({
 }
 
 Tooltip.displayName = 'Tooltip'
-
-const styles = StyleSheet.create({
-  tooltip: {
-    alignSelf: 'flex-start',
-    justifyContent: 'center',
-    paddingVertical: 5,
-    paddingHorizontal: 12,
-    borderRadius: 4,
-    position: 'absolute',
-  },
-  visible: {
-    opacity: 1,
-  },
-  hidden: {
-    opacity: 0,
-  },
-  content: {
-    ...a.body_2_md_regular,
-  },
-  pressContainer: {} as ViewStyle,
-})

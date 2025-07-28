@@ -97,7 +97,7 @@ export const TxHistory = () => {
       >
         <UtxoListButton />
 
-        <Space.Height.lg" />
+        <Space.Height.lg />
 
         <Text
           style={[a.body_1_lg_medium, {color: p.gray_900, textAlign: 'center'}]}
@@ -105,11 +105,11 @@ export const TxHistory = () => {
           {strings.title}
         </Text>
 
-        <Space.Height.xl" />
+        <Space.Height.xl />
 
         <LockedDeposit />
 
-        <Space.Height.md" />
+        <Space.Height.md />
 
         {meta.implementation === 'cardano-bip44' && showWarning && (
           <WarningBanner

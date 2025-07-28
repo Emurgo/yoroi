@@ -49,7 +49,7 @@ export const TxList = (props: Props) => {
         data={loadedTxs}
         contentContainerStyle={[a.pt_lg, a.px_lg]}
         renderItem={({item}) => <TxListItem transaction={item} />}
-        ItemSeparatorComponent={() => <Space.Height.lg" />}
+        ItemSeparatorComponent={() => <Space.Height.lg />}
         keyExtractor={(_, index) => index.toString()}
         nestedScrollEnabled={true}
         testID="txHistoryList"

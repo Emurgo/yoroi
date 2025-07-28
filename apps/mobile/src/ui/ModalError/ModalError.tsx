@@ -2,6 +2,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
+import {Button, ButtonType} from '~/Button/Button'
+import {Space} from '~/Space/Space'
+import {Text} from '~/Text/Text'
+import {Icon} from '~/ui/Icon'
 import {
   AdaAppClosedError,
   BluetoothDisabledError,
@@ -9,10 +13,6 @@ import {
   LedgerUserError,
   RejectedByUserError,
 } from '~/wallets/hw/hw'
-import {Button, ButtonType} from '~/Button/Button'
-import {Icon} from '~/Icon'
-import {Space} from '~/Space/Space'
-import {Text} from '~/Text/Text'
 import {useStrings} from './strings'
 
 type Props = {

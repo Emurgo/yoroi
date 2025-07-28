@@ -191,7 +191,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
           </View>
         )}
 
-      <Space.Height.lg" />
+      <Space.Height.lg />
 
       <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>
         {strings.swapFrom}
@@ -199,7 +199,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
       <TokenAmountItem amount={amountIn} orderType={orderType} />
 
-      <Space.Height.lg" />
+      <Space.Height.lg />
 
       <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>
         {strings.swapTo}
@@ -224,7 +224,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
         return (
           <View key={orderInfo.label}>
-            <Space.Height.sm" />
+            <Space.Height.sm />
 
             <View
               style={[
