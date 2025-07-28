@@ -12,6 +12,7 @@ import {
   WalletDuplicatedModal,
   WalletDuplicatedModalActions,
 } from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/global-messages'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
@@ -21,7 +22,6 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {getHWDeviceInfo} from '~/wallets/cardano/hw/hw'
 import {LedgerConnect} from '../legacy/HW'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 
 type Props = {}
 

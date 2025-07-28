@@ -16,6 +16,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/features/common/useStrings'
 import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
@@ -24,7 +25,6 @@ import {useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {isEmptyString} from '~/wallets/utils/string'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {MnemonicInput} from './MnemonicInput/MnemonicInput'
 
 export type MnemonicWordInputRef = {

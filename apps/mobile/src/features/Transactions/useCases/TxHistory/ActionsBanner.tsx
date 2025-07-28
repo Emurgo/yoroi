@@ -6,6 +6,8 @@ import * as React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 
 import {useStrings} from '~/features/common/strings'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation'
@@ -18,8 +20,6 @@ import {useMultipleAddressesInfo} from '../Receive/common/useMultipleAddressesIn
 import {useReceiveAddressesStatus} from '../Receive/common/useReceiveAddressesStatus'
 import {useSwap} from '../Swap/common/SwapProvider'
 import {useSwapConfig} from '../Swap/common/useSwapConfig'
-import {useAddressMode} from '../WalletManager/common/hooks/useAddressMode'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 
 export const ActionsBanner = (props: {disabled: boolean}) => {
   const strings = useStrings()

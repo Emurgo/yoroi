@@ -22,6 +22,7 @@ import {
 
 import {usePortfolioImageInvalidate} from '~/features/common/hooks/usePortfolioImage'
 import {useNavigateTo} from '~/features/common/navigation'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {NftRoutes} from '~/kernel/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -32,7 +33,6 @@ import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
 import {Space} from '~/ui/Space/Space'
 import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs/Tabs'
 import {Text} from '~/ui/Text/Text'
-import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
 
 export const MediaDetailsScreen = () => {
   const styles = useStyles()

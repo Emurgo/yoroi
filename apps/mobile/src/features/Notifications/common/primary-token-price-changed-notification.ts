@@ -5,8 +5,8 @@ import * as React from 'react'
 import {Subject} from 'rxjs'
 
 import {getCurrencySymbol} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {fetchPtPriceActivity} from '~/wallets/cardano/usePrimaryTokenActivity'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './processed-notifications-storage'
 

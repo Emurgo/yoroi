@@ -7,6 +7,8 @@ import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {showErrorDialog} from '~/kernel/dialogs'
 import globalMessages from '~/kernel/i18n/global-messages'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
@@ -16,8 +18,6 @@ import {Space} from '~/ui/Space/Space'
 import {useStakingTx} from '../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
 import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
 
 export const StakingCenter = () => {
   const intl = useIntl()

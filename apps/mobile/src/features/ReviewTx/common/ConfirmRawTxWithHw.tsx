@@ -4,6 +4,7 @@ import {HW} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {LedgerConnect} from '~/ui/LedgerConnect/LedgerConnect'
@@ -11,7 +12,6 @@ import {LedgerTransportSwitch} from '~/ui/LedgerTransportSwitch/LedgerTransportS
 import {Text} from '~/ui/Text/Text'
 import {withBLE, withUSB} from '~/wallets/hw/hwWallet'
 import {useStrings} from '../Swap/common/strings'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'

@@ -3,10 +3,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Alert, Platform, Text, View} from 'react-native'
 
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {Space, SpaceHeight} from '~/ui/Space/Space'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from '../useStrings'
 
 export const WalletDuplicatedModal = ({

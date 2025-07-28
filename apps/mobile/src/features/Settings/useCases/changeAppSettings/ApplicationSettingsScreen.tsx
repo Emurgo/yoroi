@@ -18,6 +18,7 @@ import {
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/SettingsItems'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {isDev, isNightly} from '~/kernel/env'
 import {useLanguage} from '~/kernel/i18n'
 import {themeNames} from '~/kernel/i18n/global-messages'
@@ -25,7 +26,6 @@ import {defaultLanguage} from '~/kernel/i18n/languages'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {useCrashReports} from '~/wallets/hooks'
-import {useSelectedNetwork} from '../WalletManager/common/hooks/useSelectedNetwork'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {

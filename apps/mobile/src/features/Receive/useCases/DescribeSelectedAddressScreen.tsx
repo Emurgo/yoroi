@@ -5,10 +5,11 @@ import * as React from 'react'
 import {GestureResponderEvent, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useCopy} from '~/features/Copy/context/CopyProvider'
+import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useCopy} from '~/kernel/utils/clipboard'
 import {AddressDetailCard} from '~/ui/AddressDetailCard/AddressDetailCard'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {
@@ -22,7 +23,6 @@ import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
-import {useAddressMode} from '../WalletManager/common/hooks/useAddressMode'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()

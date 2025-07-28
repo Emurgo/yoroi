@@ -12,8 +12,8 @@ import {
   View,
 } from 'react-native'
 
+import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useCopy} from '~/kernel/utils/clipboard'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'

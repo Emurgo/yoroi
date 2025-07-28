@@ -4,8 +4,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
+import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useStrings} from '~/features/Receive/common/useStrings'
-import {useCopy} from '~/kernel/utils/clipboard'
 import {Space} from '~/ui/Space/Space'
 import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
 

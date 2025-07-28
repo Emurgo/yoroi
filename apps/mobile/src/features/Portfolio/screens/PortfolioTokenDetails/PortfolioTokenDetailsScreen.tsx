@@ -10,6 +10,7 @@ import {
   PortfolioDetailsTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -18,7 +19,6 @@ import {Space} from '~/ui/Space/Space'
 import {Tab, Tabs} from '~/ui/Tabs/Tabs'
 import {TxFilter} from '../Transactions/useCases/TxList/TxFilterProvider'
 import {TxList} from '../Transactions/useCases/TxList/TxList'
-import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
 import {Actions} from './Actions'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'

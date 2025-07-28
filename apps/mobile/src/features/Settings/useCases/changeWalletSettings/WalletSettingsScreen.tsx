@@ -16,6 +16,7 @@ import {
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/SettingsItems'
+import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
 import {confirmationMessages} from '~/kernel/i18n/global-messages'
@@ -25,7 +26,6 @@ import {Space} from '~/ui/Space/Space'
 import {useResync} from '~/wallets/hooks'
 import {useAuth} from '../Auth/AuthProvider'
 import {SettingsCollateralItem} from '../SettingsCollateralItem'
-import {useAddressMode} from '../WalletManager/common/hooks/useAddressMode'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()

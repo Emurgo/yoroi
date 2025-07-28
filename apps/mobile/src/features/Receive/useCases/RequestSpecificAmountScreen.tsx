@@ -15,9 +15,9 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useCopy} from '~/kernel/utils/clipboard'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView'

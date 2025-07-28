@@ -4,8 +4,8 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {Space} from '~/ui/Space/Space'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 
 type Props = {
   fee: string

@@ -16,6 +16,7 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import globalMessages, {
   confirmationMessages,
 } from '~/kernel/i18n/global-messages'
@@ -34,7 +35,6 @@ import {useCanVote} from '../RegisterCatalyst/common/hooks'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
-import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
 

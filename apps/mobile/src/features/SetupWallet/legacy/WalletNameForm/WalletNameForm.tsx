@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 
 import {defineMessages, useIntl} from 'react-intl'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import globalMessages from '~/kernel/i18n/global-messages'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -21,7 +22,6 @@ import {
   getWalletNameError,
   validateWalletName,
 } from '~/wallets/utils/validators'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 
 type Props = {
   onSubmit: ({name}: {name: string}) => void
