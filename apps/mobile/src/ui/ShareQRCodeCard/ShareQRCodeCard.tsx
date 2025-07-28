@@ -13,7 +13,7 @@ import QRCode from 'react-native-qrcode-svg'
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
-import {Spacer} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
@@ -88,7 +88,7 @@ export const ShareQRCodeCard = ({
             colors={color.bg_gradient_1}
           />
 
-          <Spacer height={16} />
+          <Space.Height.md />
 
           <Text
             style={[styles.title, {color: color.gray_max}]}
@@ -109,7 +109,7 @@ export const ShareQRCodeCard = ({
               />
             </View>
 
-            <Spacer height={16} />
+            <Space.Height.md />
 
             <Text style={[styles.textAddress, {color: color.gray_max}]}>
               {qrContent}

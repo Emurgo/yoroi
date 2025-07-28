@@ -3,7 +3,7 @@ import React from 'react'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/features/common/strings'
 import {Banner, ClickableBanner} from '~/ui/Banner/Banner'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {useHasPendingTx, useSync} from '~/wallets/hooks'
 
 export const ShowErrors = () => {
@@ -22,7 +22,7 @@ export const ShowErrors = () => {
           text={strings.errorBannerNetworkError}
         />
 
-        <Spacer height={16} />
+        <Space.Height.md />
       </>
     )
   } else if (hasPendingTx) {
@@ -30,7 +30,7 @@ export const ShowErrors = () => {
       <>
         <Banner error text={strings.errorBannerPendingOutgoingTransaction} />
 
-        <Spacer height={16} />
+        <Space.Height.md />
       </>
     )
   }

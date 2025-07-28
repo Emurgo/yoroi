@@ -5,7 +5,7 @@ import * as React from 'react'
 import {ReactNode} from 'react'
 import {Animated, StyleSheet} from 'react-native'
 
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 import {ButtonGroup} from '~/ui/ButtonGroup/ButtonGroup'
@@ -52,7 +52,7 @@ export const SelectNameServer = () => {
 
   return (
     <Animated.View style={{opacity: animatedValue}}>
-      {shouldShow && <Spacer height={16} />}
+      {shouldShow && <Space.Height.md />}
 
       {(waitAnimation || shouldShow) && (
         <>
@@ -60,7 +60,7 @@ export const SelectNameServer = () => {
 
           {receiver.selectedNameServer === undefined && shouldShow && (
             <>
-              <Spacer height={16} />
+              <Space.Height.md />
 
               <WarningBanner
                 content={String(strings.manyNameServersWarning(bold))}

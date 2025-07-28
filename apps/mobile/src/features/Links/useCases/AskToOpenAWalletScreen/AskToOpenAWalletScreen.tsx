@@ -6,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from '~/features/common/useStrings'
 
 export const AskToOpenWalletScreen = () => {
@@ -31,7 +31,7 @@ export const AskToOpenWalletScreen = () => {
           {strings.askToOpenAWalletDescription}
         </Text>
 
-        <Spacer fill />
+        <Space.Height._2xs fill />
       </ScrollView>
 
       <Actions style={[a.flex_row, a.justify_between]}>
@@ -42,7 +42,7 @@ export const AskToOpenWalletScreen = () => {
           title={strings.cancel}
         />
 
-        <Spacer width={16} />
+        <Space.Width.md />
 
         <Button size="S" onPress={closeModal} title={strings.ok} />
       </Actions>

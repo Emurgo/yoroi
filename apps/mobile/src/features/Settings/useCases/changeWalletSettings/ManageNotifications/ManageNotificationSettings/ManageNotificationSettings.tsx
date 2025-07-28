@@ -24,7 +24,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {SettingsNotificationDurationItem} from '../SettingsNotificationDurationItem'
 import {useStrings} from '../useStrings'
@@ -41,7 +41,7 @@ export const ManageNotificationSettings = () => {
           <PushNotificationSettingsItem />
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.lg />
 
         <SettingsSection title={strings.inAppNotifications}>
           <SettingsItem

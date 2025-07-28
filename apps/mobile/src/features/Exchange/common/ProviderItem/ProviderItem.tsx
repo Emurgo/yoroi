@@ -38,7 +38,7 @@ export const ProviderItem = ({
 
   return (
     <>
-      <Space height={isMainnet ? '_2xs' : 'lg'} />
+      <Space.Height._2xs />
 
       <TouchableOpacity
         onPress={onPress}
@@ -47,7 +47,7 @@ export const ProviderItem = ({
       >
         {leftAdornment}
 
-        <Space width="md" />
+        <Space.Width.md />
 
         <View style={styles.labels}>
           <Text style={styles.label}>{label}</Text>

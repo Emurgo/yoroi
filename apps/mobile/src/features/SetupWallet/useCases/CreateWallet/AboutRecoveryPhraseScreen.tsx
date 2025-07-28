@@ -65,7 +65,7 @@ export const AboutRecoveryPhraseScreen = () => {
         />
       </ScrollView>
 
-      <SpaceHeight size="lg" fill />
+      <Space.Height.lg fill />
 
       <Actions style={[a.pt_lg, a.gap_lg, a.px_lg]}>
         <LearnMoreButton onPress={handleOnLearMoreButtonPress} />

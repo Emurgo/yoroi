@@ -7,7 +7,7 @@ import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {SuccessfulTxIcon} from '../ReviewTx/illustrations/SuccessfulTxIcon'
 
 export const SubmittedTxScreen = () => {
@@ -18,19 +18,19 @@ export const SubmittedTxScreen = () => {
 
   return (
     <SafeArea style={styles.root}>
-      <Spacer height={144} />
+      <Space.Height._2xl />
 
       <SuccessfulTxIcon />
 
-      <Space height="_2xl" />
+      <Space.Height._2xl />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Text style={styles.title}>{strings.submittedTxTitle}</Text>
 
       <Text style={styles.text}>{strings.submittedTxText}</Text>
 
-      <Space fill />
+      <Space.Height._2xs fill />
 
       <Actions>
         <Button

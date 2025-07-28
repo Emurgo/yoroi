@@ -31,11 +31,11 @@ export const PortfolioDashboardScreen = () => {
       <ScrollView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
         <BalanceCard />
 
-        <Space height={16} />
+        <Space.Height.md />
 
         <DashboardTokensList />
 
-        <Space height={16} />
+        <Space.Height.md />
 
         <DashboardNFTsList />
       </ScrollView>

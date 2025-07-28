@@ -17,19 +17,19 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
 
   return (
     <View style={styles.root}>
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <View style={styles.title}>
         <Text style={styles.label}>{strings.metadataHash}</Text>
 
-        <Space width="lg" />
+        <Space.Width.lg />
 
         <Copiable style={styles.hashContainer} text={hash}>
           <Text style={styles.text}>{hash}</Text>
         </Copiable>
       </View>
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <View style={styles.metadata}>
         <View style={styles.title}>
@@ -40,7 +40,7 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
           </Copiable>
         </View>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Text style={styles.metadataText}>{metadataFormatted}</Text>
       </View>

@@ -81,7 +81,7 @@ export const ListMediaGalleryScreen = () => {
               <View>
                 <NftCount count={0} />
 
-                <Space height="lg" />
+                <Space.Height.lg />
               </View>
             }
           />
@@ -97,7 +97,7 @@ export const ListMediaGalleryScreen = () => {
           <>
             <NftCount count={filteredAmounts.length} />
 
-            <Space height="lg" />
+            <Space.Height.lg />
           </>
         )}
 
@@ -120,7 +120,7 @@ const Wrapper = ({children}: {children: ReactNode}) => {
       style={styles.safeAreaView}
     >
       <View style={styles.container}>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {children}
       </View>

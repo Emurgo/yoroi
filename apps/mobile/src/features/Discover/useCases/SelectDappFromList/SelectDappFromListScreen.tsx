@@ -10,7 +10,7 @@ import {useShowWelcomeDApp} from '~/features/common/useShowWelcomeDApp'
 import {useStrings} from '~/features/common/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SimpleTab} from '~/ui/SimpleTab/SimpleTab'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {ShowDisclaimer} from '../Legal/Disclaimer/ShowDisclaimer'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
@@ -111,8 +111,8 @@ export const SelectDappFromListScreen = () => {
               connected={isDappConnected(entry.origins)}
             />
           )}
-          ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
-          ListFooterComponent={() => <Spacer style={styles.dAppsBox} />}
+          ItemSeparatorComponent={() => <Space.Height._2xs style={styles.dAppsBox} />}
+          ListFooterComponent={() => <Space.Height._2xs style={styles.dAppsBox} />}
         />
       </View>
     </>
@@ -167,7 +167,7 @@ const HeaderControl = ({
   const {data: list} = useDappList({suspense: true})
   const filters = Object.keys(list?.filters ?? {})
 
-  if (visible) return <Spacer height={16} />
+  if (visible) return <Space.Height.md />
 
   return (
     <>
@@ -191,7 +191,7 @@ const HeaderControl = ({
         <View>
           <CountDAppsConnected total={connectedOrigins.length} />
 
-          <Spacer style={styles.dAppsBox} />
+          <Space.Height._2xs style={styles.dAppsBox} />
         </View>
       )}
 
@@ -205,7 +205,7 @@ const HeaderControl = ({
 
           <CountDAppsAvailable total={count} />
 
-          <Spacer style={styles.dAppsBox} />
+          <Space.Height._2xs style={styles.dAppsBox} />
         </View>
       )}
     </>

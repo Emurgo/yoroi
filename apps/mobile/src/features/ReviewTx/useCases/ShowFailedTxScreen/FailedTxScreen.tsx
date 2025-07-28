@@ -7,7 +7,7 @@ import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {FailedTxIcon} from '../illustrations/FailedTxIcon'
 
 export const FailedTxScreen = () => {
@@ -18,17 +18,17 @@ export const FailedTxScreen = () => {
 
   return (
     <SafeArea style={styles.root}>
-      <Spacer height={144} />
+      <Space.Height._2xl />
 
       <FailedTxIcon />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Text style={styles.title}>{strings.failedTxTitle}</Text>
 
       <Text style={styles.text}>{strings.failedTxText}</Text>
 
-      <Space fill />
+      <Space.Height._2xs fill />
 
       <Actions>
         <Button

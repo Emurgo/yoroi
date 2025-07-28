@@ -128,15 +128,15 @@ export const PortfolioTokenDetailsScreen = () => {
               <Animated.View
                 style={[{overflow: 'hidden', height: HEADER_HEIGHT}]}
               >
-                <Space height={16} />
+                <Space.Height.md />
 
                 <PortfolioTokenBalance />
 
-                <Space height={16} />
+                <Space.Height.md />
 
                 <PortfolioTokenChart />
 
-                <Space height={16} />
+                <Space.Height.md />
               </Animated.View>
 
               <Animated.View>{renderTabs}</Animated.View>

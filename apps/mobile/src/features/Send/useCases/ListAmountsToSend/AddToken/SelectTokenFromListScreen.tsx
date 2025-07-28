@@ -13,7 +13,7 @@ import {useStrings} from '~/features/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
 import {MediaGallery} from '../Portfolio/common/MediaGallery/MediaGallery'
@@ -220,7 +220,7 @@ const ListSpendables = ({
       contentContainerStyle={styles.spendableAmountsContent}
       keyExtractor={(_, index) => index.toString()}
       testID="assetList"
-      ItemSeparatorComponent={() => <Spacer height={16} />}
+      ItemSeparatorComponent={() => <Space.Height.md />}
       estimatedItemSize={78}
       ListEmptyComponent={
         <EmptyStatuses
@@ -343,11 +343,11 @@ const NoSpendableAmount = ({text}: {text: string}) => {
   const {styles} = useStyles()
   return (
     <View style={styles.imageContainer}>
-      <Spacer height={160} />
+      <Space.Height._2xl />
 
       <NoAssetFoundImage style={styles.image} />
 
-      <Spacer height={25} />
+      <Space.Height.lg />
 
       <Text style={styles.contentText}>{text}</Text>
     </View>
@@ -359,11 +359,11 @@ const EmptySearchResult = () => {
   const strings = useStrings()
   return (
     <View style={styles.imageContainer}>
-      <Spacer height={160} />
+      <Space.Height._2xl />
 
       <NoAssetFoundImage style={styles.image} />
 
-      <Spacer height={25} />
+      <Space.Height.lg />
 
       <Text style={styles.contentText}>{strings.noAssets}</Text>
     </View>

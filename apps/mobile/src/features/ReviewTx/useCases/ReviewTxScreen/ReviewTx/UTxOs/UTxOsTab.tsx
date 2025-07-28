@@ -26,7 +26,7 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
 
   return (
     <View style={styles.root}>
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Accordion label={`${strings.utxosInputsLabel} (${tx.inputs.length})`}>
         <Inputs inputs={tx.inputs} />
@@ -43,7 +43,7 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
         <Outputs outputs={tx.outputs} />
       </Accordion>
 
-      <Space height="lg" />
+      <Space.Height.lg />
     </View>
   )
 }
@@ -60,30 +60,30 @@ const Input = ({input}: {input: FormattedInput}) => {
   return (
     <View>
       <View>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <UtxoTitle isInput isOwnAdddress={input.ownAddress} />
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Copiable text={input.address ?? '-'}>
           <Text style={styles.addressText}>{input.address ?? '-'}</Text>
         </Copiable>
 
-        <Space height="sm" />
+        <Space.Height.sm />
 
         <Copiable text={input.txHash}>
           <Text style={styles.addressText}>{input.txHash}</Text>
 
-          <Space width="sm" />
+          <Space.Width.sm />
 
           <Text style={styles.index}>{`#${input.txIndex}`}</Text>
 
-          <Space width="sm" />
+          <Space.Width.sm />
         </Copiable>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <View style={styles.tokenItems}>
         {input.assets.map((asset, index) => {
@@ -116,18 +116,18 @@ const Output = ({output}: {output: FormattedOutput}) => {
   return (
     <View>
       <View>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <UtxoTitle isInput={false} isOwnAdddress={output.ownAddress} />
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Copiable text={output.address ?? '-'}>
           <Text style={styles.addressText}>{output.address ?? '-'}</Text>
         </Copiable>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <View style={styles.tokenItems}>
         {output.assets.map((asset, index) => {
@@ -194,7 +194,7 @@ const UtxoTitle = ({
         ]}
       />
 
-      <Space width="sm" />
+      <Space.Width.sm />
 
       <Text style={styles.utxoTitleText}>{label}</Text>
     </View>

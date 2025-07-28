@@ -16,7 +16,7 @@ import {useWalletNavigation} from '~/kernel/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {availableNetworks} from '../WalletManager/common/constants'
 import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {useStrings} from './strings'
@@ -167,7 +167,7 @@ const MainnetWarningDialog = ({
         {strings.networkTagModalText}
       </Text>
 
-      <Spacer fill />
+      <Space.Height._2xs fill />
 
       <View style={[a.pb_lg, a.flex_row, a.justify_between]}>
         <Button
@@ -177,7 +177,7 @@ const MainnetWarningDialog = ({
           onPress={onCancel}
         />
 
-        <Space width="lg" />
+        <Space.Width.lg />
 
         <Button size="S" title="Switch" onPress={onOk} />
       </View>

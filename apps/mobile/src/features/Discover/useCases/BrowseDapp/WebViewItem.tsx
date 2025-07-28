@@ -27,7 +27,7 @@ import {useConnectWalletToWebView} from '~/features/common/hooks'
 import {useNavigateTo} from '~/features/common/useNavigateTo'
 import {isDev} from '~/kernel/env'
 import {Icon} from '~/ui/Icon'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {BrowserTabBar} from './BrowserTabBar'
 import {BrowserToolbar} from './BrowserToolbar'
 
@@ -190,7 +190,7 @@ export const WebViewItem = ({tab, index}: Props) => {
 
         {tabsOpen && (
           <>
-            <Spacer height={4} />
+            <Space.Height._2xs />
 
             <Text style={styles.domainText}>{domainName}</Text>
           </>

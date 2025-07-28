@@ -46,7 +46,7 @@ export const DashboardTokenSkeletonItem = () => {
           </SkeletonPlaceholder.Item>
         </SkeletonPlaceholder>
 
-        <Space fill />
+        <Space.Height._2xs fill />
 
         <SkeletonPlaceholder backgroundColor={p.gray_100}>
           <SkeletonPlaceholder.Item>

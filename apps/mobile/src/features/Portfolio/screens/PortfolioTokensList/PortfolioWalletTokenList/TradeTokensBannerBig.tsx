@@ -43,13 +43,13 @@ export const TradeTokensBannerBig = () => {
           {strings.portfolioSwapTokensTitle}
         </Text>
 
-        <Space height={13} />
+        <Space.Height.sm />
 
         <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
           {strings.portfolioSwapTokensDescription}
         </Text>
 
-        <Space height={37} />
+        <Space.Height.xl />
 
         <Button title={strings.startSwapping} onPress={handleSwap} />
 

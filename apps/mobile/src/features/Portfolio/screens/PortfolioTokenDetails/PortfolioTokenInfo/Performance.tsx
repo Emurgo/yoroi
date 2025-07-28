@@ -27,7 +27,7 @@ export const Performance = () => {
 
   return (
     <View style={[a.flex_1]}>
-      <Space height={8} />
+      <Space.Height.sm />
 
       <View style={[a.flex_1, a.flex_col, a.gap_sm]}>
         {/* <TextGroup loading={isFetching} value={`${value?.user?.pnl ?? '-/-'} %`}>
@@ -38,7 +38,7 @@ export const Performance = () => {
             </View>
           </TextGroup>
 
-          <Spacer height={2} />
+          <Space.Height._2xs />
 
           <TextGroup loading={isFetching} value={`${value?.user?.invested ?? '-/-'} USD`}>
             <View style={styles.labelGroup}>
@@ -48,7 +48,7 @@ export const Performance = () => {
             </View>
           </TextGroup>
 
-        <Spacer height={16} /> */}
+        <Space.Height.md /> */}
 
         <TextGroup
           loading={isFetching}
@@ -75,13 +75,13 @@ export const Performance = () => {
         />
       </View>
 
-      <Space height={24} />
+      <Space.Height.lg />
 
       <Text style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_800}]}>
         {strings.marketData}
       </Text>
 
-      <Space height={16} />
+      <Space.Height.md />
 
       <View style={[a.flex_1, a.flex_col, a.gap_sm]}>
         <TextGroup
@@ -114,7 +114,7 @@ export const Performance = () => {
           label={strings.rank}
         />
 
-        <Space height={16} />
+        <Space.Height.md />
 
         <TextGroup
           loading={isFetching}

@@ -22,7 +22,7 @@ export const TitledCard = ({title, children, testID}: ExternalProps) => {
         </Text>
       )}
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <View
         style={[styles.content, {borderColor: color.gray_200}]}

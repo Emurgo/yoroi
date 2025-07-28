@@ -23,7 +23,7 @@ import {useLanguage} from '~/kernel/i18n'
 import {themeNames} from '~/kernel/i18n/global-messages'
 import {defaultLanguage} from '~/kernel/i18n/languages'
 import {Icon} from '~/ui/Icon'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {useCrashReports} from '~/wallets/hooks'
 import {useSelectedNetwork} from '../WalletManager/common/hooks/useSelectedNetwork'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
@@ -125,7 +125,7 @@ export const ApplicationSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.lg />
 
         <SettingsSection title={strings.securityReporting}>
           <NavigatedSettingsItem
@@ -178,7 +178,7 @@ export const ApplicationSettingsScreen = () => {
           )}
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.lg />
       </ScrollView>
     </SafeAreaView>
   )

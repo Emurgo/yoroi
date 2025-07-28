@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {useStrings} from '../useStrings'
 
@@ -35,7 +35,7 @@ export const DescribeAction = () => {
         {strings.descriptionBuySellADATransaction}
       </Text>
 
-      <Spacer height={24} />
+      <Space.Height.lg />
 
       <View style={[a.flex_row, a.align_center, {flexWrap: 'wrap'}]}>
         <Text style={[{fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'}]}>

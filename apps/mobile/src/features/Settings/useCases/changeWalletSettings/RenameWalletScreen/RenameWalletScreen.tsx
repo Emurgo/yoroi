@@ -10,7 +10,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import globalMessages from '~/kernel/i18n/global-messages'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
 import {getWalletNameError} from '~/wallets/utils/validators'
@@ -65,7 +65,7 @@ export const RenameWalletScreen = () => {
           />
         </ScrollView>
 
-        <Spacer fill />
+        <Space.Height._2xs fill />
 
         <View style={[{backgroundColor: p.bg_color_max}, a.pt_lg, a.px_lg]}>
           <Button

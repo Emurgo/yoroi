@@ -58,7 +58,7 @@ export const RecoveryPhraseScreen = () => {
             ]}
           />
 
-          <SpaceHeight fill size="lg" />
+          <Space.Height.lg fill />
 
           <LearnMoreButton
             onPress={() => {
@@ -174,7 +174,7 @@ export const RecoveryPhraseScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <SpaceHeight fill size="lg" />
+      <Space.Height.lg fill />
 
       <Button
         title={strings.next}

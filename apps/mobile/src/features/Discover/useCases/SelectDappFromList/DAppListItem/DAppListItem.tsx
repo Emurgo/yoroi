@@ -17,7 +17,7 @@ import {Icon} from '~/ui/Icon'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useBrowser} from '~/features/common/BrowserProvider'
@@ -119,21 +119,21 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
             <Text style={styles.dAppName}>{dApp.name}</Text>
           </View>
 
-          <Spacer height={16} />
+          <Space.Height.md />
 
           {dApp.isSingleAddress && (
             <>
-              <Space height="lg" />
+              <Space.Height.lg />
 
               <SingleAddressDAppWarning />
             </>
           )}
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <InfoBanner iconSize={20} content={strings.disconnectWarning} />
 
-          <Space height="lg" />
+          <Space.Height.lg />
         </View>
       ),
       footer: (
@@ -192,7 +192,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
             </Text>
           )}
 
-          <Spacer height={8} />
+          <Space.Height.sm />
 
           <View style={styles.labelBox}>
             {connected && <LabelConnected />}

@@ -21,7 +21,7 @@ import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
 import {confirmationMessages} from '~/kernel/i18n/global-messages'
 import {SettingsRouteNavigation, useWalletNavigation} from '~/kernel/navigation'
 import {Icon} from '~/ui/Icon'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {useResync} from '~/wallets/hooks'
 import {useAuth} from '../Auth/AuthProvider'
 import {SettingsCollateralItem} from '../SettingsCollateralItem'
@@ -86,7 +86,7 @@ export const WalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.lg />
 
         <SettingsSection title={strings.security}>
           <NavigatedSettingsItem
@@ -110,7 +110,7 @@ export const WalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.lg />
 
         <SettingsSection title={strings.actions}>
           <NavigatedSettingsItem
@@ -136,7 +136,7 @@ export const WalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.lg />
 
         <SettingsSection title={strings.notifications}>
           <NavigatedSettingsItem
@@ -146,7 +146,7 @@ export const WalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.lg />
 
         <SettingsSection title={strings.about}>
           <SettingsBuildItem
@@ -155,7 +155,7 @@ export const WalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Spacer height={24} />
+        <Space.Height.lg />
       </ScrollView>
     </SafeAreaView>
   )

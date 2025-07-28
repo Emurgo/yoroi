@@ -10,7 +10,7 @@ import {
 } from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {CameraPermissionDeniedIllustration} from '~/ui/CameraPermissionDeniedIllustration/CameraPermissionDeniedIllustration'
-import {Spacer} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {Text as YoroiText} from '~/ui/Text/Text'
 import {useStrings} from '~/features/common/useStrings'
 
@@ -62,7 +62,7 @@ export const ShowCameraPermissionDeniedScreen = () => {
           type={ButtonType.Secondary}
         />
 
-        <Spacer height={16} />
+        <Space.Height.md />
 
         <Button
           onPress={() => openSettings()}

@@ -23,7 +23,7 @@ import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
-import {Spacer} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {useSaveMemo} from '~/wallets/hooks'
 import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
@@ -149,12 +149,12 @@ export const ListAmountsToSendScreen = () => {
 
       <Actions style={[styles.actions, {backgroundColor: 'transparent'}]}>
         <Row style={styles.row}>
-          <Spacer fill />
+          <Space.Height._2xs fill />
 
           <AddTokenButton onPress={onAdd} />
         </Row>
 
-        <Spacer height={33} />
+        <Space.Height.xl />
 
         <NextButton
           onPress={onNext}

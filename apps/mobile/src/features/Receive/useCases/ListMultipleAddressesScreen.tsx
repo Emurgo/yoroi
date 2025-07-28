@@ -108,7 +108,7 @@ export const ListMultipleAddressesScreen = () => {
           <>
             <ShowAddressLimitInfo />
 
-            <Space height="lg" />
+            <Space.Height.lg />
           </>
         )}
 

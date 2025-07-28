@@ -57,9 +57,9 @@ export const DashboardNFTsList = () => {
       <FlatList
         horizontal
         data={nftsList}
-        ListHeaderComponent={<Space width={16} />}
-        ListFooterComponent={<Space width={16} />}
-        ItemSeparatorComponent={() => <Space width={8} />}
+        ListHeaderComponent={<Space.Width.md />}
+        ListFooterComponent={<Space.Width.md />}
+        ItemSeparatorComponent={() => <Space.Width.sm />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.info.id}
         renderItem={({item}) => (

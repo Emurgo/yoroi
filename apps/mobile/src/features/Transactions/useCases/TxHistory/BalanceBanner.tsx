@@ -9,7 +9,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {ResetErrorRef} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
@@ -19,7 +19,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 
   return (
     <View>
-      <Spacer height={14} />
+      <Space.Height.sm />
 
       <CenteredRow>
         <Icon.WalletAvatar
@@ -29,7 +29,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
         />
       </CenteredRow>
 
-      <Spacer height={10} />
+      <Space.Height.sm />
 
       <TouchableOpacity
         onPress={() => togglePrivacyMode()}

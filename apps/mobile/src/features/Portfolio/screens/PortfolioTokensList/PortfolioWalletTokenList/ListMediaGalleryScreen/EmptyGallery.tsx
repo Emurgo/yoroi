@@ -12,7 +12,7 @@ export function EmptyGallery({heading, message}: Props) {
     <View style={[a.flex_1]}>
       <View>{heading}</View>
 
-      <Space height={75} />
+      <Space.Height._2xl />
 
       <View style={[a.flex_1]}>
         <Image
@@ -20,7 +20,7 @@ export function EmptyGallery({heading, message}: Props) {
           style={[{width: 200, height: 228}, a.flex_1, a.self_center]}
         />
 
-        <Space height={20} />
+        <Space.Height.lg />
 
         <Text
           style={[

@@ -78,7 +78,7 @@ export const OverviewTab = ({
 
   return (
     <View style={styles.root}>
-      <Space height="lg" />
+      <Space.Height.lg />
 
       {operationsComponentsDuplicated && (
         <>
@@ -87,7 +87,7 @@ export const OverviewTab = ({
             content={strings.operationsLogWarningText}
           />
 
-          <Space height="lg" />
+          <Space.Height.lg />
         </>
       )}
 
@@ -163,7 +163,7 @@ const WalletInfoSection = ({
             size={24}
           />
 
-          <Space width="sm" />
+          <Space.Width.sm />
 
           <TouchableOpacity
             activeOpacity={0.5}
@@ -176,13 +176,13 @@ const WalletInfoSection = ({
         </View>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       {createdBy != null && (
         <>
           {createdBy}
 
-          <Space height="sm" />
+          <Space.Height.sm />
         </>
       )}
 
@@ -228,7 +228,7 @@ const MyWalletSection = ({
 
   return (
     <Accordion label={strings.myWalletLabel}>
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Copiable text={address}>
         <Text
@@ -241,14 +241,14 @@ const MyWalletSection = ({
 
         {ownedOutputs[0]?.addressKind === CredKind.Script && (
           <>
-            <Space width="xs" />
+            <Space.Width.xs />
 
             <Icon.DigitalAsset size={24} color={colors.icon} />
           </>
         )}
       </Copiable>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <MyWalletTokens
         tx={tx}
@@ -311,7 +311,7 @@ const MyWalletTokens = ({
       <View style={styles.tokenItems}>
         <MyWalletSectionLabel />
 
-        <Space fill />
+        <Space.Height._2xs fill />
 
         <TokenItem
           tokenInfo={wallet.portfolioPrimaryTokenInfo}
@@ -339,7 +339,7 @@ const MyWalletSectionLabel = () => {
     <View style={styles.tokensSectionLabel}>
       <Icon.Send size={30} color={colors.send} />
 
-      <Space width="_2xs" />
+      <Space.Width._2xs />
 
       <Text style={styles.tokenSectionLabel}>{strings.sendLabel}</Text>
     </View>
@@ -359,7 +359,7 @@ const OneExternalPartySection = ({
 
   return (
     <>
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <View style={styles.externalPartyAddress}>
         <Text style={styles.externalPartyAddressText}>
@@ -378,7 +378,7 @@ const OneExternalPartySection = ({
 
             {output?.addressKind === CredKind.Script && (
               <>
-                <Space width="xs" />
+                <Space.Width.xs />
 
                 <Icon.DigitalAsset size={24} color={colors.icon} />
               </>
@@ -415,7 +415,7 @@ const MultiExternalPartiesSection = ({
 
     return (
       <View key={index}>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Copiable text={address}>
           <Text
@@ -428,20 +428,20 @@ const MultiExternalPartiesSection = ({
 
           {output?.addressKind === CredKind.Script && (
             <>
-              <Space width="xs" />
+              <Space.Width.xs />
 
               <Icon.DigitalAsset size={24} color={colors.icon} />
             </>
           )}
         </Copiable>
 
-        <Space height="sm" />
+        <Space.Height.sm />
 
         <View style={styles.tokensSection}>
           <View style={styles.tokenItems}>
             <ExternalPartiesSectionLabel />
 
-            <Space fill />
+            <Space.Height._2xs fill />
 
             <TokenItem
               tokenInfo={wallet.portfolioPrimaryTokenInfo}
@@ -469,7 +469,7 @@ const MultiExternalPartiesSection = ({
       <Divider verticalSpace="lg" />
 
       <Accordion label={strings.multiExternalPartiesSectionLabel}>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <InfoBanner content={strings.multiExternalPartiesSectionNotice} />
 
@@ -487,7 +487,7 @@ const ExternalPartiesSectionLabel = () => {
     <View style={styles.tokensSectionLabel}>
       <Icon.Received size={30} color={colors.received} />
 
-      <Space width="_2xs" />
+      <Space.Width._2xs />
 
       <Text style={styles.tokenSectionLabel}>{strings.receiveLabel}</Text>
     </View>
@@ -519,17 +519,17 @@ const OperationsSection = ({
       <Divider verticalSpace="lg" />
 
       <Accordion label={strings.operationsLabel}>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {operationsNotice != null && (
           <>
-            <Space height="lg" />
+            <Space.Height.lg />
 
             {operationsNotice}
           </>
         )}
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {[...componentsNotDuplicated, ...(extraOperations ?? [])].map(
           (operation, index) => {
@@ -537,7 +537,7 @@ const OperationsSection = ({
 
             return (
               <React.Fragment key={index}>
-                <Space height="sm" />
+                <Space.Height.sm />
 
                 {operation}
               </React.Fragment>
@@ -570,14 +570,14 @@ const OperationsModal = ({operations}: {operations: Operations}) => {
       />
 
       <Accordion label={strings.operationsLabel}>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {components.map((operation, index) => {
           if (index === 0) return operation
 
           return (
             <>
-              <Space height="sm" />
+              <Space.Height.sm />
 
               {operation}
             </>
@@ -610,7 +610,7 @@ const Details = ({details}: {details?: ReviewDetailsProps}) => {
 
   return (
     <View>
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <View style={styles.detailsRow}>
         <TouchableOpacity onPress={handleOnPress} activeOpacity={0.5}>
@@ -638,7 +638,7 @@ export const CreatedByInfoItem = ({
       <View style={styles.plate}>
         {logo != null && <Image source={{uri: logo}} style={styles.logo} />}
 
-        <Space width="sm" />
+        <Space.Width.sm />
 
         <TouchableOpacity onPress={() => Linking.openURL(url)}>
           <Text style={styles.link}>
@@ -663,15 +663,15 @@ export const OperationsNotice = () => {
 
   return (
     <View style={styles.modal}>
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <OperationsNoticeIcon />
 
-      <Space height="_2xl" />
+      <Space.Height._2xl />
 
       <Text style={styles.modalText}>{strings.operationsNoticeText}</Text>
 
-      <Space fill />
+      <Space.Height._2xs fill />
 
       <View style={styles.actions}>
         <Button

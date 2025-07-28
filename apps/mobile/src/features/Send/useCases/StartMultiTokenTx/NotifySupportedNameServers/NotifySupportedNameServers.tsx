@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon} from '~/ui/Icon'
 
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from '~/features/common/strings'
 
 export const NotifySupportedNameServers = () => {
@@ -41,7 +41,7 @@ export const NotifySupportedNameServers = () => {
           </TouchableOpacity>
         </View>
 
-        <Spacer height={10} />
+        <Space.Height.sm />
 
         <Text style={styles.text}>{strings.resolverNoticeText}:</Text>
 
@@ -52,7 +52,7 @@ export const NotifySupportedNameServers = () => {
         <NameServer text="Cardano Name Service (CNS)" />
       </LinearGradient>
 
-      <Spacer height={16} />
+      <Space.Height.md />
     </View>
   )
 }
@@ -61,11 +61,11 @@ const NameServer = ({text}: {text: string}) => {
   const {styles} = useStyles()
   return (
     <View style={styles.nameServerRoot}>
-      <Spacer width={8} />
+      <Space.Width.sm />
 
       <Text style={styles.nameServerText}>·</Text>
 
-      <Spacer width={8} />
+      <Space.Width.sm />
 
       <Text style={styles.nameServerText}>{text}</Text>
     </View>

@@ -29,7 +29,7 @@ import {Icon} from '~/ui/Icon'
 import {Info} from '~/ui/Icon/Info'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
@@ -168,7 +168,7 @@ export const ManageCollateralScreen = () => {
       <ScrollView>
         <Text style={styles.heading}>{strings.lockedAsCollateral}</Text>
 
-        <Spacer height={8} />
+        <Space.Height.sm />
 
         <ActionableAmount
           amount={amount}
@@ -177,7 +177,7 @@ export const ManageCollateralScreen = () => {
           disabled={isLoading}
         />
 
-        <Spacer height={16} />
+        <Space.Height.md />
 
         {hasCollateral && (
           <>
@@ -196,7 +196,7 @@ export const ManageCollateralScreen = () => {
               </Copiable>
             </Row>
 
-            <Spacer height={16} />
+            <Space.Height.md />
 
             <Text>{strings.removeCollateral}</Text>
           </>
@@ -224,7 +224,7 @@ export const ManageCollateralScreen = () => {
         />
       )}
 
-      <Space height="lg" />
+      <Space.Height.lg />
     </SafeAreaView>
   )
 }
@@ -332,7 +332,7 @@ const Operation = () => {
         {strings.collateralInfoModalLabel}
       </Text>
 
-      <Space width="xs" />
+      <Space.Width.xs />
 
       <TouchableOpacity onPress={handleOnPressInfo}>
         <Info size={24} color={colors.iconColor} />

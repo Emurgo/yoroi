@@ -27,7 +27,7 @@ export const BlueCheckbox = ({
     >
       {checked ? <CheckboxChecked /> : <CheckboxNotChecked />}
 
-      <SpaceWidth size={spacing} />
+      <Space.Width.sm />
 
       <View
         style={{

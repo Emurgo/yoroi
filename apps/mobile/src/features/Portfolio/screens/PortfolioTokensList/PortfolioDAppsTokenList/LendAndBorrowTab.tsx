@@ -12,7 +12,7 @@ export const LendAndBorrowTab = () => {
 
   return (
     <View style={[a.flex_1]}>
-      <Space height={16} />
+      <Space.Height.md />
 
       <TokenEmptyList emptyText={strings.availableSoon} />
     </View>

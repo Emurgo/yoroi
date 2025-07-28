@@ -86,8 +86,8 @@ export const DashboardTokensList = () => {
       <FlatList
         horizontal
         data={tokensList}
-        ListHeaderComponent={<Space width={16} />}
-        ItemSeparatorComponent={() => <Space width={8} />}
+        ListHeaderComponent={<Space.Width.md />}
+        ItemSeparatorComponent={() => <Space.Width.sm />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.info?.id}
         renderItem={({item}) => (

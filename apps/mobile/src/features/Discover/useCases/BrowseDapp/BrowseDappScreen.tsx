@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useBrowser} from '~/features/common/BrowserProvider'
 import {BrowserTabsBar} from './BrowserTabsBar'
@@ -29,9 +29,9 @@ export const BrowseDappScreen = () => {
         contentContainerStyle={styles.listContainer}
         data={tabs}
         pagingEnabled={false}
-        ListHeaderComponent={() => tabsOpen && <Spacer height={16} />}
-        ListFooterComponent={() => tabsOpen && <Spacer height={16} />}
-        ItemSeparatorComponent={() => tabsOpen && <Spacer height={16} />}
+        ListHeaderComponent={() => tabsOpen && <Space.Height.md />}
+        ListFooterComponent={() => tabsOpen && <Space.Height.md />}
+        ItemSeparatorComponent={() => tabsOpen && <Space.Height.md />}
         keyExtractor={(item) => item.id}
         renderItem={function ({item: tab, index}) {
           return <WebViewItem tab={tab} index={index} />

@@ -66,7 +66,7 @@ export const TokenBalanceItem = ({amount}: Props) => {
       <View style={[a.flex_row, a.align_center, a.justify_start, a.flex_1]}>
         <TokenInfoIcon info={info} size="lg" />
 
-        <Space width={12} />
+        <Space.Width.md />
 
         <View style={[a.flex_col, a.align_start, {flex: 1}]}>
           <Text

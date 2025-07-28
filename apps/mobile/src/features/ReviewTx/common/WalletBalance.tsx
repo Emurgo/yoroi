@@ -37,7 +37,7 @@ export const WalletBalance = ({
         />
       </Container>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <Container>
         <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
@@ -51,11 +51,11 @@ export const WalletBalance = ({
         </Text>
       </Container>
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <BalanceCard />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <TokenSquares>
         <TokenSquare
@@ -64,7 +64,7 @@ export const WalletBalance = ({
           title={strings.walletBalanceTokensTitle}
         />
 
-        <Space width="lg" />
+        <Space.Width.lg />
 
         <TokenSquare
           count={nftsList.length}
@@ -103,7 +103,7 @@ const TokenSquare = ({
           {title}
         </Text>
 
-        <Space fill />
+        <Space.Height._2xs fill />
 
         <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>-</Text>
       </View>
@@ -125,7 +125,7 @@ const TokenSquare = ({
         {title}
       </Text>
 
-      <Space fill />
+      <Space.Height._2xs fill />
 
       <Text style={[a.heading_1_medium, {color: p.text_gray_max}]}>
         {count}
@@ -156,7 +156,7 @@ const TokenList = ({
       horizontal
       data={assetList}
       style={[{maxHeight: 40}]}
-      ItemSeparatorComponent={() => <Space width="sm" />}
+      ItemSeparatorComponent={() => <Space.Width.sm />}
       showsHorizontalScrollIndicator={false}
       keyExtractor={(item) => item.info.id}
       renderItem={({item}) => <TokenInfoIcon info={item.info} size="lg" />}

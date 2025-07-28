@@ -7,7 +7,7 @@ import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useStrings} from '~/features/Receive/common/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useCopy} from '~/kernel/utils/clipboard'
-import {Spacer} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {useKeyHashes} from '~/wallets/hooks'
 import {isEmptyString} from '~/wallets/utils/string'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
@@ -123,7 +123,7 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
         />
       </View>
 
-      <Spacer height={12} />
+      <Space.Height.sm />
 
       <View style={styles.index}>
         {cardIndicators.map((index) => (

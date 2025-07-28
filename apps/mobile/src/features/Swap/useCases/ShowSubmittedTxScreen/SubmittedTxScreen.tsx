@@ -7,7 +7,7 @@ import {useStrings} from '~/features/common/strings'
 import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {Space, Spacer} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 
 export const SubmittedTxScreen = () => {
@@ -23,7 +23,7 @@ export const SubmittedTxScreen = () => {
 
   return (
     <SafeArea style={[styles.root, {backgroundColor: color.bg_color_max}]}>
-      <Spacer height={144} />
+      <Space.Height._2xl />
 
       <SuccessfulTxIcon />
 
@@ -39,7 +39,7 @@ export const SubmittedTxScreen = () => {
         {strings.submittedTxScreenText}
       </Text>
 
-      <Space fill />
+      <Space.Height._2xs fill />
 
       <Actions>
         <Button

@@ -34,7 +34,7 @@ export const TokenDetails = ({
     <View style={styles.root}>
       <Header info={tokenInfo} />
 
-      <Space width="lg" />
+      <Space.Width.lg />
 
       <Info info={tokenInfo} />
     </View>
@@ -55,7 +55,7 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
     <View style={styles.header}>
       <TokenInfoIcon info={info} size="xl" />
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       {!isEmptyString(title) && (
         <Text style={[styles.headerText, {color: color.text_gray_medium}]}>
@@ -69,11 +69,11 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
         >{`(${assetName})`}</Text>
       )}
 
-      <Space height="xl" />
+      <Space.Height.xl />
 
       <PolicyId policyId={policyId} />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Fingerprint info={info} />
     </View>
@@ -125,7 +125,7 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
         />
       </View>
 
-      <Space width="lg" />
+      <Space.Width.lg />
 
       {/* ↓↓↓ TABS CONTENT ↓↓↓ */}
 
@@ -180,7 +180,7 @@ const Json = ({
         </TouchableOpacity>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <ScrollView bounces={false} style={styles.jsonContent}>
         <Text style={[styles.metadata, {color: color.text_gray_medium}]}>
@@ -240,7 +240,7 @@ const PolicyId = ({policyId}: {policyId: string}) => {
         {strings.policyId}
       </Text>
 
-      <Space width="lg" />
+      <Space.Width.lg />
 
       <View style={styles.copiableText}>
         <Copiable text={policyId}>
@@ -265,7 +265,7 @@ const Fingerprint = ({info}: {info: Portfolio.Token.Info}) => {
         {strings.fingerprint}
       </Text>
 
-      <Space width="lg" />
+      <Space.Width.lg />
 
       <View style={styles.copiableText}>
         <Copiable text={info.fingerprint}>
@@ -303,7 +303,7 @@ const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
 
   return (
     <View>
-      <Space width="sm" />
+      <Space.Width.sm />
 
       <Row>
         <Text style={[styles.label, {color: color.text_gray_low}]}>
@@ -326,7 +326,7 @@ const Symbol = ({info}: {info: Portfolio.Token.Info}) => {
 
   return (
     <View>
-      <Space width="sm" />
+      <Space.Width.sm />
 
       <Row>
         <Text style={[styles.label, {color: color.text_gray_low}]}>
@@ -349,7 +349,7 @@ const Description = ({info}: {info: Portfolio.Token.Info}) => {
 
   return (
     <View>
-      <Space width="sm" />
+      <Space.Width.sm />
 
       <Text style={[styles.label, {color: color.text_gray_low}]}>
         {strings.description}

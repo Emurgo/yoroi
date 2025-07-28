@@ -79,7 +79,7 @@ const ErrorView = ({state, debug}: {state: State; debug?: boolean}) => {
         debug && {borderWidth: 2, borderColor: 'red'},
       ]}
     >
-      <SpaceHeight size={70} />
+      <Space.Height.xl />
 
       <ScrollView style={[a.w_full]}>
         <View style={[a.gap_lg]}>

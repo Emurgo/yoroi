@@ -46,7 +46,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
     <View>
       {headerCard}
 
-      <Space height={6} />
+      <Space.Height.xs />
 
       <View style={[a.gap_2xs]}>
         <View style={[a.flex_row, a.gap_2xs, a.align_end]}>

@@ -19,14 +19,14 @@ export const MintTab = ({mintData}: {mintData: FormattedTx['mint']}) => {
 
         return (
           <View key={index}>
-            <Space height="lg" />
+            <Space.Height.lg />
 
             <View style={styles.policyId}>
               <Text
                 style={styles.policyIdLabel}
               >{`${strings.policyIdLabel}:`}</Text>
 
-              <Space width="sm" />
+              <Space.Width.sm />
 
               <Copiable text={policyId} style={styles.policyIdTextContainer}>
                 <Text style={styles.policyIdText}>{policyId}</Text>

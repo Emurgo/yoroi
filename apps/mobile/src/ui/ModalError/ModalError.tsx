@@ -46,7 +46,7 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
           title={strings.cancel}
         />
 
-        <Space width="lg" />
+        <Space.Width.lg />
 
         <Button
           size="S"

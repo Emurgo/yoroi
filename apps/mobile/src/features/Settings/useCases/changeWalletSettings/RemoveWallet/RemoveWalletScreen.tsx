@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {
   Checkmark,
@@ -56,23 +56,23 @@ export const RemoveWalletScreen = () => {
               </Text>
             )}
 
-            <Spacer height={24} />
+            <Space.Height.lg />
 
             <Text style={[a.body_1_lg_regular]}>
               {strings.descriptionParagraph2}
             </Text>
           </Description>
 
-          <Spacer height={32} />
+          <Space.Height.xl />
 
           <WalletInfo>
             <Text style={[a.body_1_lg_medium]}>{strings.walletName}</Text>
 
-            <Spacer height={10} />
+            <Space.Height.sm />
 
             <Text style={[a.body_1_lg_regular]}>{meta.name}</Text>
 
-            <Spacer height={24} />
+            <Space.Height.lg />
 
             <WalletNameInput
               placeholder={strings.walletName}
@@ -88,7 +88,7 @@ export const RemoveWalletScreen = () => {
           </WalletInfo>
         </ScrollView>
 
-        <Spacer fill />
+        <Space.Height._2xs fill />
 
         {!meta.isHW && (
           <Checkbox

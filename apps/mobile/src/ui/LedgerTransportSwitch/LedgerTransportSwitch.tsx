@@ -10,7 +10,7 @@ import {
   useIsUsbSupported,
   useLedgerPermissions,
 } from '~/wallets/hw/hw'
-import {Spacer} from '../Spacer/Spacer'
+import {Space} from '../Space/Space'
 
 type Props = {
   onSelectUSB: () => void
@@ -38,7 +38,7 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
         testID="connectWithBLEButton"
       />
 
-      <Spacer height={16} />
+      <Space.Height.md />
 
       <Text style={styles.paragraph}>{strings.usbExplanation}</Text>
 

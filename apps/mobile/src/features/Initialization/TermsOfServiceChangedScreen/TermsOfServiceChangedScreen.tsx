@@ -36,19 +36,19 @@ export const TermsOfServiceChangedScreen = () => {
       <ScrollView bounces={false} contentContainerStyle={a.flex_grow}>
         <Icon.YoroiWallet size={64} />
 
-        <SpaceHeight size={80} />
+        <Space.Height.xl />
 
         <Text style={[a.heading_3_medium, {color: p.gray_900}, a.text_center]}>
           {strings.title}
         </Text>
 
-        <SpaceHeight size={24} />
+        <Space.Height.lg />
 
         <Text style={[a.body_1_lg_regular, {color: p.gray_800}, a.text_center]}>
           {strings.description}
         </Text>
 
-        <SpaceHeight size={24} />
+        <Space.Height.lg />
 
         <BlueCheckbox
           checked={accepted}

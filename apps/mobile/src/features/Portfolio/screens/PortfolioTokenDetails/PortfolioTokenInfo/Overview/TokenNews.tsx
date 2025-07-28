@@ -22,7 +22,7 @@ export const TokenNews = () => {
       <FlatList
         horizontal
         data={Array.from({length: 10}).map((_, i) => i)}
-        ItemSeparatorComponent={() => <Space width={8} />}
+        ItemSeparatorComponent={() => <Space.Width.sm />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.toString()}
         renderItem={({item}) => <NewsCard key={item} />}

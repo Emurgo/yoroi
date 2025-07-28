@@ -17,7 +17,7 @@ export const FailedTxScreen = () => {
 
   return (
     <SafeArea style={styles.root}>
-      <SpaceHeight size={144} />
+      <Space.Height._2xl />
 
       <FailedTxIcon />
 

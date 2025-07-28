@@ -191,7 +191,7 @@ const Chevron = ({pressed}: {pressed: boolean}) => {
         <ChevronRightGrayIllustration />
       )}
 
-      <SpaceHeight fill size="sm" />
+      <Space.Height.sm fill />
     </View>
   )
 }

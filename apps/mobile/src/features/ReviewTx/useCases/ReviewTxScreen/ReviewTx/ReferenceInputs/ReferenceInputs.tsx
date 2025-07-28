@@ -18,7 +18,7 @@ export const ReferenceInputsTab = ({
 
   return (
     <View style={styles.root}>
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Accordion
         label={`${strings.utxosInputsLabel} (${referenceInputs.length})`}

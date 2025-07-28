@@ -16,7 +16,7 @@ import {useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {BanxaLogo} from '../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../illustrations/EncryptusLogo'
@@ -64,14 +64,14 @@ export const ShowExchangeResultOrderScreen = () => {
         <View style={styles.flex}>
           <WalletAssetImage style={styles.image} />
 
-          <Spacer height={25} />
+          <Space.Height.lg />
 
           <Text style={styles.congratsText}>
             {strings.congrats}
 
             {showOrderDetails && (
               <>
-                <Spacer width={4} />
+                <Space.Width.xs />
 
                 <TouchableOpacity
                   style={{transform: [{translateY: 3}]}}
@@ -83,7 +83,7 @@ export const ShowExchangeResultOrderScreen = () => {
             )}
           </Text>
 
-          <Spacer height={16} />
+          <Space.Height.md />
 
           {showOrderDetails && (
             <>
@@ -93,7 +93,7 @@ export const ShowExchangeResultOrderScreen = () => {
                 >{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
               </ContentResult>
 
-              <Spacer height={16} />
+              <Space.Height.md />
 
               <ContentResult title={strings.fiatAmountYouGet}>
                 <Text
@@ -105,13 +105,13 @@ export const ShowExchangeResultOrderScreen = () => {
 
           {showProviderDetails && (
             <>
-              <Spacer height={16} />
+              <Space.Height.md />
 
               <ContentResult title={strings.provider}>
                 <View style={styles.boxProvider}>
                   <Logo size={24} />
 
-                  <Spacer width={4} />
+                  <Space.Width.xs />
 
                   <Text style={styles.contentValueText}>{name}</Text>
                 </View>

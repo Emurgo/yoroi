@@ -120,7 +120,7 @@ export const StartMultiTokenTxScreen = () => {
 
           <SelectNameServer />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <InputMemo
             value={memo}

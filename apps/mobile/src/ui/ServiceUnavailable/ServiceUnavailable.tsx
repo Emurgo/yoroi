@@ -5,7 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '~/ui/Button/Button'
 import {ConectionErrorImage} from '~/ui/ConectionErrorImage/ConectionErrorImage'
-import {Spacer} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from '../strings'
 
 type ServiceUnavailableProps = {
@@ -31,7 +31,7 @@ export const ServiceUnavailable = ({
       >
         <ConectionErrorImage />
 
-        <Spacer height={20} />
+        <Space.Height.lg />
 
         <Text style={[styles.title, {color: color.gray_max}]}>
           {strings.serviceUnavailable}
@@ -41,7 +41,7 @@ export const ServiceUnavailable = ({
           {strings.serviceUnavailableInfo}
         </Text>
 
-        <Spacer height={20} />
+        <Space.Height.lg />
 
         <Button
           onPress={resetErrorBoundary}

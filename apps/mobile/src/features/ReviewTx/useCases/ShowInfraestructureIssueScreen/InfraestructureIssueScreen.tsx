@@ -8,7 +8,7 @@ import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {InfraestructureIssueIcon} from '../illustrations/InfraestructureIssueIcon'
 
 export const InfraestructureIssueScreen = () => {
@@ -24,17 +24,17 @@ export const InfraestructureIssueScreen = () => {
 
   return (
     <SafeArea style={styles.root}>
-      <Spacer height={144} />
+      <Space.Height._2xl />
 
       <InfraestructureIssueIcon />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Text style={styles.title}>{strings.infraestructureIssueTitle}</Text>
 
       <Text style={styles.text}>{strings.infraestructureIssueText}</Text>
 
-      <Space fill />
+      <Space.Height._2xs fill />
 
       <Actions>
         <Button

@@ -6,7 +6,7 @@ import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
 import {useStrings} from '~/features/Receive/common/useStrings'
 import {useCopy} from '~/kernel/utils/clipboard'
-import {Spacer} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
 
 type SmallAddressCardProps = {
@@ -35,7 +35,7 @@ export const SmallAddressCard = ({
       <View>
         <SkeletonSmallCardAddress />
 
-        <Spacer height={16} />
+        <Space.Height.md />
       </View>
     )
   }
@@ -63,7 +63,7 @@ export const SmallAddressCard = ({
             {address}
           </Text>
 
-          <Spacer height={12} />
+          <Space.Height.sm />
 
           <View style={styles.footer}>
             <View
@@ -91,7 +91,7 @@ export const SmallAddressCard = ({
         </TouchableOpacity>
       </Animated.View>
 
-      <Spacer height={16} />
+      <Space.Height.md />
     </>
   )
 }

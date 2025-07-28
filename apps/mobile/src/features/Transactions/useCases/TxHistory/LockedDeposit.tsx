@@ -6,7 +6,7 @@ import {View} from 'react-native'
 import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/features/common/strings'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
@@ -48,7 +48,7 @@ const FormattedAmount = ({amount}: {amount: string}) => {
     <Row>
       <Label />
 
-      <Spacer width={4} />
+      <Space.Width.xs />
 
       <Text style={[{color: p.gray_600}, a.body_2_md_regular]}>{amount}</Text>
     </Row>

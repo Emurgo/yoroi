@@ -62,7 +62,7 @@ export const WalletDuplicatedModal = ({
         </View>
       </View>
 
-      <SpaceHeight fill size="lg" />
+      <Space.Height.lg fill />
     </View>
   )
 }

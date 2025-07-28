@@ -43,7 +43,7 @@ export const UserSummary = ({
             <Icon.TotalAda color={p.el_primary_medium} size={ICON_DIM} />
           </View>
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <View style={[a.flex_col]}>
             <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
@@ -67,14 +67,14 @@ export const UserSummary = ({
           </View>
         </View>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <View style={[a.flex_1, a.flex_row, a.align_center]}>
           <View>
             <Icon.TotalReward color={p.el_primary_medium} size={ICON_DIM} />
           </View>
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <View style={[a.flex_col]}>
             <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
@@ -98,14 +98,14 @@ export const UserSummary = ({
           </View>
         </View>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <View style={[a.flex_1, a.flex_row, a.align_center]}>
           <View>
             <Icon.TotalDelegated color={p.el_primary_medium} size={ICON_DIM} />
           </View>
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <View style={[a.flex_col]}>
             <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
@@ -131,7 +131,7 @@ export const UserSummary = ({
 
         {ctaProps && (
           <>
-            <Space height="lg" />
+            <Space.Height.lg />
 
             <Button
               type={ButtonType.Secondary}

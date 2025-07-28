@@ -50,7 +50,7 @@ export const LargeErrorFallback = ({
         />
       )}
 
-      <SpaceHeight fill size="lg" />
+      <Space.Height.lg fill />
     </View>
   )
 }

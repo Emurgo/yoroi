@@ -10,7 +10,7 @@ import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImp
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {useSync} from '~/wallets/hooks'
 import infoIcon from '../assets/img/icon/info-light-green.png'
 import {useBuyCryptoBanner} from '../Exchange/common/useBuyCryptoBanner'
@@ -76,7 +76,7 @@ export const TxHistory = () => {
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={{flex: 1}}
     >
-      <Spacer height={headerHeight} />
+      <Space.Height._2xs height={headerHeight} />
 
       <CollapsibleHeader expanded={expanded}>
         <BalanceBanner />

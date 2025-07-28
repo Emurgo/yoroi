@@ -79,7 +79,7 @@ const Message = ({message}: {message?: string}) => {
       <>
         <Text style={styles.text}>{message}</Text>
 
-        <Space height="lg" />
+        <Space.Height.lg />
       </>
     )
   )

@@ -47,17 +47,17 @@ export const InitialScreen = () => {
       <ScrollView bounces={false} contentContainerStyle={a.flex_grow}>
         <Icon.YoroiWallet size={64} />
 
-        <SpaceHeight size={80} />
+        <Space.Height.xl />
 
         <Text style={[a.heading_3_medium, a.text_center, {color: p.gray_900}]}>
           {strings.languagePickerTitle}
         </Text>
 
-        <SpaceHeight size={35} />
+        <Space.Height.lg />
 
         <LanguagePickRow onPress={onPressLanguagePick} />
 
-        <SpaceHeight size={30} />
+        <Space.Height.lg />
 
         <BlueCheckbox
           checked={tosAccepted}

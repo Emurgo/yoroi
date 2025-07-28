@@ -8,7 +8,7 @@ import {
 } from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {Space, Spacer} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 import {useStrings} from '~/features/common/hooks/useStrings'
 
@@ -20,11 +20,11 @@ export const SubmittedTxScreen = () => {
 
   return (
     <SafeArea style={[styles.root, {backgroundColor: color.bg_color_max}]}>
-      <Spacer height={144} />
+      <Space.Height._2xl />
 
       <SuccessfulTxIcon />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Text style={[styles.title, {color: color.gray_max}]}>
         {strings.submittedTxTitle}
@@ -34,7 +34,7 @@ export const SubmittedTxScreen = () => {
         {strings.submittedTxText}
       </Text>
 
-      <Space fill />
+      <Space.Height._2xs fill />
 
       <Actions>
         <Button

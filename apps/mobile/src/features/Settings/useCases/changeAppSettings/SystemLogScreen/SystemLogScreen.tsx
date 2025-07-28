@@ -30,7 +30,7 @@ export const SystemLogScreen = () => {
 
               <ValueText>{entry.message}</ValueText>
 
-              <Space height="lg" />
+              <Space.Height.lg />
             </View>
           )
         })}

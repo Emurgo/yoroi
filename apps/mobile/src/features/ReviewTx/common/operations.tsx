@@ -43,7 +43,7 @@ export const StakeRegistrationOperation = ({
         strike={strike}
       />
 
-      <Space width="lg" />
+      <Space.Width.lg />
 
       <Text
         style={[
@@ -133,7 +133,7 @@ export const StakeDelegationOperation = ({
         strike={strike}
       />
 
-      <Space width="lg" />
+      <Space.Width.lg />
 
       <TouchableOpacity activeOpacity={0.5} onPress={handleShowPoolDetails}>
         <Text
@@ -222,7 +222,7 @@ export const VoteDelegationOperation = ({
           strike={strike}
         />
 
-        <Space width="lg" />
+        <Space.Width.lg />
 
         <Text
           style={[
@@ -235,7 +235,7 @@ export const VoteDelegationOperation = ({
         </Text>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <View style={styles.operation}>
         <Label
@@ -244,7 +244,7 @@ export const VoteDelegationOperation = ({
           strike={strike}
         />
 
-        <Space width="lg" />
+        <Space.Width.lg />
 
         <Text
           style={[
@@ -281,7 +281,7 @@ export const DrepRegistrationOperation = ({
         strike={strike}
       />
 
-      <Space width="lg" />
+      <Space.Width.lg />
 
       <Text
         style={[
@@ -337,7 +337,7 @@ export const PoolRegistrationOperation = ({
         strike={strike}
       />
 
-      <Space width="lg" />
+      <Space.Width.lg />
 
       <Text
         style={[

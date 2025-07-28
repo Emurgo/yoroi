@@ -11,7 +11,7 @@ import {
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {Spacer} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
 import {PnlTag} from '../PnlTag/PnlTag'
 
@@ -44,7 +44,7 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
     <TouchableOpacity onPress={navigationTo.tokensList}>
       {headerCard}
 
-      <Spacer height={6} />
+      <Space.Height.xs />
 
       <View style={styles.balanceContainer}>
         <TouchableOpacity onPress={togglePrivacyMode}>

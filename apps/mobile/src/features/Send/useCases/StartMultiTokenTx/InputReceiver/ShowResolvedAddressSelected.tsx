@@ -4,7 +4,7 @@ import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from '~/features/common/strings'
 
 export const ShowResolvedAddressSelected = () => {
@@ -24,7 +24,7 @@ export const ShowResolvedAddressSelected = () => {
 
   return (
     <View>
-      <Spacer height={4} />
+      <Space.Height._2xs />
 
       <View style={styles.row}>
         <Text style={styles.serverName} numberOfLines={1}>

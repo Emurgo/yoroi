@@ -24,7 +24,7 @@ import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {Quantities} from '~/wallets/utils/utils'
 import {TokenAmountItem} from '../Portfolio/common/TokenAmountItem/TokenAmountItem'
@@ -145,7 +145,7 @@ export const EditAmountScreen = () => {
             ignorePrivacy
           />
 
-          <Spacer height={46} />
+          <Space.Height.xl />
 
           <AmountInput
             onChange={handleOnChangeQuantity}

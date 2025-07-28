@@ -472,7 +472,7 @@ const OrderCancellationConfirmation = ({
         )}
       </React.Fragment>
 
-      <Space fill />
+      <Space.Height._2xs fill />
     </View>
   )
 }

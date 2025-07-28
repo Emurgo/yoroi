@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 
 import {Icon} from '~/ui/Icon'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {useMappedStrings} from '~/features/common/useStrings'
 
 type Props = {
@@ -50,7 +50,7 @@ export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
         )
       })}
 
-      <Spacer width={8} />
+      <Space.Width.sm />
     </ScrollView>
   )
 }

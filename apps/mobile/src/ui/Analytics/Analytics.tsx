@@ -80,7 +80,7 @@ const Notice = ({
         </View>
       </ScrollView>
 
-      <SpaceHeight size={BOTTOM_BUTTON_ROW_HEIGHT} />
+      <Space.Height._2xl />
 
       <View
         style={[

@@ -4,7 +4,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 import {isEmptyString} from '~/wallets/utils/string'
 import {useStrings} from '../useStrings'
@@ -88,18 +88,18 @@ export const AmountCard: React.FC<AmountCardProps> = ({
             />
           </Pressable>
 
-          <Spacer width={7} />
+          <Space.Width.sm />
 
           <View style={styles.rightSection}>
             <View style={styles.sectionContainer}>
               <TokenInfoIcon info={amount.info} size="sm" />
 
-              <Spacer width={8} />
+              <Space.Width.sm />
 
               <Text style={styles.coinName}>{amount.info.name}</Text>
             </View>
 
-            <Spacer width={8} />
+            <Space.Width.sm />
 
             <View style={styles.sectionContainer}>
               <Text
@@ -113,12 +113,12 @@ export const AmountCard: React.FC<AmountCardProps> = ({
 
       {!isEmptyString(error) ? (
         <View>
-          <Spacer height={4} />
+          <Space.Height._2xs />
 
           <Text style={styles.errorText}>{error}</Text>
         </View>
       ) : (
-        <Spacer height={22} />
+        <Space.Height.lg />
       )}
     </View>
   )

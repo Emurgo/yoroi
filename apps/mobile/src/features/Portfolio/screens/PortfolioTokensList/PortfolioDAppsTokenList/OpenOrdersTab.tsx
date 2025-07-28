@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {makeList} from '~/kernel/utils'
 import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
 import {useShowOpenOrderModal} from '~/features/common/hooks/useShowOpenOrderModal'
@@ -30,7 +30,7 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
 
   const renderHeaderList = () => {
     if (hasEmpty) return null
-    if (isFetching) return <Spacer height={16} />
+    if (isFetching) return <Space.Height.md />
 
     if (isSearching)
       return (
@@ -39,7 +39,7 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
             {strings.countOpenOrders(tokensList.length)}
           </Text>
 
-          <Spacer height={16} />
+          <Space.Height.md />
         </View>
       )
 
@@ -61,14 +61,14 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
 
   return (
     <View style={styles.root}>
-      <Spacer height={16} />
+      <Space.Height.md />
 
       <FlatList
         scrollEnabled={false}
         data={tokensList}
         ListHeaderComponent={renderHeaderList()}
         ListFooterComponent={renderFooterList()}
-        ItemSeparatorComponent={() => <Spacer width={8} />}
+        ItemSeparatorComponent={() => <Space.Width.sm />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (

@@ -29,7 +29,7 @@ import {Copiable} from '~/ui/Clipboard/Copiable'
 import {FadeIn} from '~/ui/FadeIn/FadeIn'
 import {Hr} from '~/ui/Hr/Hr'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs/Tabs'
 import {Text} from '~/ui/Text/Text'
 import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
@@ -188,7 +188,7 @@ const MetadataRow = ({
     <View style={styles.rowContainer}>
       <Text style={styles.title}>{title}</Text>
 
-      <Spacer height={4} />
+      <Space.Height._2xs />
 
       {children}
     </View>
@@ -244,7 +244,7 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
             style={{flex: 2}}
           >
             <View style={styles.linkContent}>
-              <Spacer width={2} />
+              <Space.Width._2xs />
 
               <Text style={styles.linkText}>Cardanoscan</Text>
             </View>
@@ -257,7 +257,7 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
             style={{flex: 4}}
           >
             <View style={styles.linkContent}>
-              <Spacer width={2} />
+              <Space.Width._2xs />
 
               <Text style={styles.linkText}>Cexplorer</Text>
             </View>
@@ -267,7 +267,7 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
 
       <Hr />
 
-      <Spacer height={24} />
+      <Space.Height.lg />
     </View>
   )
 }
@@ -318,7 +318,7 @@ const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
     <View>
       <Copiable title={strings.copyMetadata} text={stringifiedMetadata} />
 
-      <Spacer height={14} />
+      <Space.Height.sm />
 
       <Text>{stringifiedMetadata}</Text>
     </View>

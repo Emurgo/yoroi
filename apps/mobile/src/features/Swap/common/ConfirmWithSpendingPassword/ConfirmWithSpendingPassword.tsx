@@ -5,7 +5,7 @@ import {TextInput as RNTextInput, StyleSheet, View} from 'react-native'
 import {useStrings} from '~/features/common/strings'
 import {debugWalletInfo, features} from '~/kernel/features'
 import {Button} from '~/ui/Button/Button'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {ActivityIndicator} from '../ConfirmRawTx/ActivityIndicator'
@@ -61,7 +61,7 @@ export const ConfirmWithSpendingPassword = ({
         autoComplete="off"
       />
 
-      <Spacer fill />
+      <Space.Height._2xs fill />
 
       <Button
         testID="swapButton"

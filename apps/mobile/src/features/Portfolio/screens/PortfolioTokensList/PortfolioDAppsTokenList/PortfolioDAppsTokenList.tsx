@@ -19,7 +19,7 @@ import {
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Line} from '~/ui/Line'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {TabPanel} from '~/ui/Tabs/Tabs'
 import {useSearch} from '../Search/SearchContext'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
@@ -101,7 +101,7 @@ export const PortfolioDAppsTokenList = () => {
         </View>
       ) : null}
 
-      <Spacer height={16} />
+      <Space.Height.md />
 
       <PortfolioDAppTabs />
 

@@ -28,7 +28,7 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
     <View style={[a.flex_1, a.px_lg]}>
       <PoolIcon imageUrl={explorer?.pic} />
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <Row>
         <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
@@ -36,15 +36,15 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
         </Text>
       </Row>
 
-      <Space height="xl" />
+      <Space.Height.xl />
 
       <PoolId poolId={explorer?.id} />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <PoolHash poolHash={explorer?.hash} />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Info
         label={strings.poolSize}
@@ -54,22 +54,22 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
         )}
       />
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <Info label={strings.poolRoa} value={`${explorer?.roa ?? '-'}%`} />
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <Info label={strings.poolShare} value={`${explorer?.share ?? '-'}%`} />
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <Info
         label={strings.poolSaturation}
         value={`${explorer?.saturation ?? '-'}%`}
       />
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <Info
         label={strings.poolTaxFix}
@@ -79,14 +79,14 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
         )}
       />
 
-      <Space width="sm" />
+      <Space.Width.sm />
 
       <Info
         label={strings.poolTaxRatio}
         value={`${explorer?.taxRatio ?? '-'}%`}
       />
 
-      <Space width="sm" />
+      <Space.Width.sm />
 
       <Info
         label={strings.poolPledge}
@@ -99,7 +99,7 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
         )}
       />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       {poolInfo.explorer && !isEmptyString(poolInfo.explorer.id) && (
         <ExplorerInfoLinks value={poolInfo.explorer.id} type="pool" />
@@ -130,7 +130,7 @@ const PoolId = ({poolId}: {poolId: string | undefined}) => {
         {strings.poolId}
       </Text>
 
-      <Space width="lg" />
+      <Space.Width.lg />
 
       <View style={[a.flex_1, a.align_center]}>
         <Copiable text={poolId}>
@@ -161,7 +161,7 @@ const PoolHash = ({poolHash}: {poolHash?: string}) => {
         {strings.poolHash}
       </Text>
 
-      <Space width="lg" />
+      <Space.Width.lg />
 
       <View style={[a.flex_1, a.align_center]}>
         <Copiable text={poolHash}>

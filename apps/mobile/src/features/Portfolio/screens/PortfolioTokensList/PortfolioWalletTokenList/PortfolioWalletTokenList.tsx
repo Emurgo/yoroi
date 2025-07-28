@@ -109,7 +109,7 @@ export const PortfolioWalletTokenList = () => {
     if (isLoading) {
       return (
         <View>
-          <Space height={16} />
+          <Space.Height.md />
 
           {makeList(6).map((_, index) => (
             <SkeletonItem key={index} />
@@ -121,7 +121,7 @@ export const PortfolioWalletTokenList = () => {
     if (isJustPt)
       return (
         <View>
-          <Space height={16} />
+          <Space.Height.md />
 
           <TradeTokensBannerBig />
         </View>
@@ -143,7 +143,7 @@ export const PortfolioWalletTokenList = () => {
           />
         }
         ListFooterComponent={renderFooterList}
-        ItemSeparatorComponent={() => <Space height={16} />}
+        ItemSeparatorComponent={() => <Space.Height.md />}
         renderItem={({item}) => <TokenBalanceItem amount={item} />}
         contentContainerStyle={[a.px_lg, a.flex_grow]}
         ListEmptyComponent={() => <TokenEmptyList />}
@@ -178,13 +178,13 @@ const HeadingList = ({
         </View>
       ) : null}
 
-      <Space height={16} />
+      <Space.Height.md />
 
       <Text style={[{color: p.gray_700}, a.body_2_md_regular]}>
         {strings.tokensAvailable(isFirstUser ? 0 : countTokensList)}
       </Text>
 
-      <Space height={8} />
+      <Space.Height.sm />
     </View>
   )
 }
@@ -194,7 +194,7 @@ const SkeletonItem = () => {
     <View>
       <TokenBalanceSkeletonItem />
 
-      <Space height={16} />
+      <Space.Height.md />
     </View>
   )
 }

@@ -23,12 +23,12 @@ export const InitialCollateralInfoModal = () => {
       >
         {strings.collateralInfoModalText}
 
-        <Space width="_2xs" />
+        <Space.Width._2xs />
 
         <Link />
       </Text>
 
-      <Space fill />
+      <Space.Height._2xs fill />
     </View>
   )
 }

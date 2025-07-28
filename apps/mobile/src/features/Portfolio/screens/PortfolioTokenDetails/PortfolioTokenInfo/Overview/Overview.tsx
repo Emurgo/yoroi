@@ -32,7 +32,7 @@ export const Overview = () => {
 
   return (
     <View style={[a.flex_1]}>
-      <Space height={8} />
+      <Space.Height.sm />
 
       <Accordion
         label={strings.info}
@@ -58,7 +58,7 @@ export const Overview = () => {
           {tokenInfo.description}
         </Text>
 
-        <Space height={24} />
+        <Space.Height.lg />
 
         <View>
           <Text
@@ -67,7 +67,7 @@ export const Overview = () => {
             {strings.website}
           </Text>
 
-          <Space height={4} />
+          <Space.Height._2xs />
 
           {!isEmptyString(tokenInfo.website) ? (
             <TouchableOpacity
@@ -88,7 +88,7 @@ export const Overview = () => {
           )}
         </View>
 
-        <Space height={24} />
+        <Space.Height.lg />
 
         {!isPrimaryToken(tokenInfo) && (
           <>
@@ -103,7 +103,7 @@ export const Overview = () => {
                 {strings.policyID}
               </Text>
 
-              <Space height={4} />
+              <Space.Height._2xs />
 
               <View
                 style={[a.flex_row, a.gap_sm, a.justify_between, a.align_start]}
@@ -122,7 +122,7 @@ export const Overview = () => {
               </View>
             </View>
 
-            <Space height={24} />
+            <Space.Height.lg />
 
             <View>
               <Text
@@ -135,7 +135,7 @@ export const Overview = () => {
                 {strings.fingerprint}
               </Text>
 
-              <Space height={4} />
+              <Space.Height._2xs />
 
               <Copiable text={tokenInfo.fingerprint ?? ''}>
                 <Text
@@ -150,20 +150,20 @@ export const Overview = () => {
               </Copiable>
             </View>
 
-            <Space height={24} />
+            <Space.Height.lg />
           </>
         )}
 
         <ExplorerInfoLinks type="token" value={tokenInfo.id} />
       </Accordion>
 
-      <Space height={16} />
+      <Space.Height.md />
 
       {features.portfolioNews && (
         <>
           <TokenNews />
 
-          <Space height={16} />
+          <Space.Height.md />
         </>
       )}
     </View>

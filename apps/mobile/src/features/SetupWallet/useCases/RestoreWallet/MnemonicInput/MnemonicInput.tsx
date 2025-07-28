@@ -109,7 +109,7 @@ export const MnemonicInput = ({
         />
       )}
 
-      <SpaceHeight size={50} />
+      <Space.Height.lg />
     </View>
   )
 }

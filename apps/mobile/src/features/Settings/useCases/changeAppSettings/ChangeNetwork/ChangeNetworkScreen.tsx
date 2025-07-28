@@ -19,7 +19,7 @@ import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {Spacer} from '~/ui/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {NetworkPickerList} from './NetworkPickerList'
 import {useStrings} from './strings'
 
@@ -71,7 +71,7 @@ export const useHandleOpenNetworkNoticeModal = () => {
         <View style={styles.modal}>
           <Text style={styles.modalText}>{strings.networkNoticeMessage}</Text>
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <Text style={styles.modalTextTitle}>
             {strings.networkNoticeListTitle}
@@ -79,9 +79,9 @@ export const useHandleOpenNetworkNoticeModal = () => {
 
           <Text style={styles.modalText}>{strings.networkNoticeList}</Text>
 
-          <Spacer fill />
+          <Space.Height._2xs fill />
 
-          {Platform.OS === 'android' && <Space height="lg" />}
+          {Platform.OS === 'android' && <Space.Height.lg />}
         </View>
       ),
       footer: (
