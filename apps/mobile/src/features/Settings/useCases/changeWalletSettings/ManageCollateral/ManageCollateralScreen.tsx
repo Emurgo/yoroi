@@ -49,7 +49,7 @@ import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
 import {useStrings} from './strings'
 
 export const ManageCollateralScreen = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const {wallet, meta: addressMode} = useWalletManager().selected!
   const {amount, collateralId, utxo} = wallet.getCollateralInfo()
@@ -165,13 +165,7 @@ export const ManageCollateralScreen = () => {
   return (
     <SafeAreaView
       edges={['top', 'left', 'right', 'bottom']}
-      style={[
-        {
-          backgroundColor: p.bg_color_max,
-        },
-        a.flex_1,
-        a.px_lg,
-      ]}
+      style={[ta.bg_color_max, a.flex_1, a.px_lg]}
     >
       <ScrollView>
         <Text

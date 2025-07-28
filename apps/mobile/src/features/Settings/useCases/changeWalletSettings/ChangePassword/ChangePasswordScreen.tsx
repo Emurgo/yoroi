@@ -25,7 +25,7 @@ import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWall
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const navigation = useNavigation()
 
   const currentPasswordRef = React.useRef<RNTextInput>(null)
@@ -55,14 +55,7 @@ export const ChangePasswordScreen = () => {
   })
 
   return (
-    <KeyboardAvoidingView
-      style={[
-        {
-          backgroundColor: p.bg_color_max,
-        },
-        a.flex_1,
-      ]}
-    >
+    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]}>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={a.flex_1}>
         <ScrollView
           bounces={false}
@@ -145,17 +138,7 @@ const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
 const Actions = (props: ViewProps) => {
   const {palette: p} = useTheme()
-  return (
-    <View
-      {...props}
-      style={[
-        {
-          backgroundColor: p.bg_color_max,
-        },
-        a.p_lg,
-      ]}
-    />
-  )
+  return <View {...props} style={[ta.bg_color_max, a.p_lg]} />
 }
 
 const messages = defineMessages({

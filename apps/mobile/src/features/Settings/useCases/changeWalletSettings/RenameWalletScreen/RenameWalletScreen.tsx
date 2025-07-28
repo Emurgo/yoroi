@@ -18,7 +18,7 @@ import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWall
 export const RenameWalletScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   const {
     wallet,
@@ -46,14 +46,7 @@ export const RenameWalletScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={[
-        {
-          backgroundColor: p.bg_color_max,
-        },
-        a.flex_1,
-      ]}
-    >
+    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]}>
       <SafeAreaView
         style={[a.flex_1, a.pt_lg, a.pb_lg]}
         edges={['left', 'right', 'bottom']}
@@ -74,15 +67,7 @@ export const RenameWalletScreen = () => {
 
         <SpaceHeight fill size={'lg'} />
 
-        <View
-          style={[
-            {
-              backgroundColor: p.bg_color_max,
-            },
-            a.pt_lg,
-            a.px_lg,
-          ]}
-        >
+        <View style={[ta.bg_color_max, a.pt_lg, a.px_lg]}>
           <Button
             onPress={handleOnRename}
             title={strings.changeButton}

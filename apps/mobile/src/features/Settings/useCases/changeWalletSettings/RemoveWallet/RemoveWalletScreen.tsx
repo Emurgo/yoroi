@@ -20,7 +20,7 @@ import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWall
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {resetToWalletSetupInit, resetToWalletSelection} = useWalletNavigation()
   const {walletManager} = useWalletManager()
   const {meta} = useSelectedWallet()
@@ -44,16 +44,7 @@ export const RemoveWalletScreen = () => {
     (!meta.isHW && !hasMnemonicWrittenDown) || meta.name !== typedWalletName
 
   return (
-    <KeyboardAvoidingView
-      style={[
-        {
-          backgroundColor: p.bg_color_max,
-        },
-        a.flex_1,
-        a.px_lg,
-        a.pt_lg,
-      ]}
-    >
+    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1, a.px_lg, a.pt_lg]}>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={a.flex_1}>
         <ScrollView bounces={false}>
           <Description>
@@ -124,15 +115,8 @@ const Description = (props: ViewProps) => {
   return <View {...props} />
 }
 const WalletInfo = (props: ViewProps) => {
-  const {palette: p} = useTheme()
-  return (
-    <View
-      {...props}
-      style={{
-        backgroundColor: p.bg_color_max,
-      }}
-    />
-  )
+  const {atoms: ta} = useTheme()
+  return <View {...props} style={ta.bg_color_max} />
 }
 const WalletNameInput = (props: TextInputProps) => {
   return (

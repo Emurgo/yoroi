@@ -16,7 +16,7 @@ import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWall
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
   const {
@@ -31,12 +31,7 @@ export const EnableEasyConfirmationScreen = () => {
     <KeyboardAvoidingView style={a.flex_1}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={[
-          {
-            backgroundColor: p.bg_color_max,
-          },
-          a.flex_1,
-        ]}
+        style={[ta.bg_color_max, a.flex_1]}
       >
         <ScrollView
           keyboardShouldPersistTaps="always"

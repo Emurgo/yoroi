@@ -23,7 +23,7 @@ import {NetworkPickerList} from './NetworkPickerList'
 import {useStrings} from './strings'
 
 export const ChangeNetworkScreen = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {networkNoticeShown} = useNetworkNoticeShown()
 
   const {handleOpenModal} = useHandleOpenNetworkNoticeModal()
@@ -39,10 +39,12 @@ export const ChangeNetworkScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={{
-        flex: 1,
-        backgroundColor: p.bg_color_max,
-      }}
+      style={[
+        {
+          flex: 1,
+        },
+        ta.bg_color_max,
+      ]}
     >
       <Boundary>
         <NetworkPickerList />

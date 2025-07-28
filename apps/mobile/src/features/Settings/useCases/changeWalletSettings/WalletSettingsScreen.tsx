@@ -37,7 +37,7 @@ import {
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {resetToWalletSelection, navigateToNotificationSettings} =
     useWalletNavigation()
   const authSetting = useAuthSetting()
@@ -70,7 +70,7 @@ export const WalletSettingsScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[a.flex_row, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_row, ta.bg_color_max]}
     >
       <ScrollView bounces={false} style={[a.flex_1, a.p_lg]}>
         <SettingsSection title={strings.general}>

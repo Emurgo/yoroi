@@ -46,7 +46,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
   const {mutate: updateConfig} = useUpdateNotificationsConfig()
   const navigation = useNavigation()
 
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const savedChoice = getChoiceByValue(config.displayDuration)
   const [selectedChoiceId, setSelectedChoiceId] = React.useState<ChoiceKind>(
@@ -83,14 +83,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={[
-        a.flex_1,
-        {
-          backgroundColor: p.bg_color_max,
-        },
-      ]}
-    >
+    <KeyboardAvoidingView style={[a.flex_1, ta.bg_color_max]}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
         style={[a.flex_1, a.p_lg]}
@@ -145,7 +138,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
             <Text
               style={{
                 color: p.text_gray_max,
-                backgroundColor: p.bg_color_max,
+                ...ta.bg_color_max,
                 ...a.z_20,
                 ...a.absolute,
                 ...a.body_3_sm_regular,

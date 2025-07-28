@@ -7,18 +7,13 @@ import {useLanguage} from '../../../../../kernel/i18n/LanguageProvider'
 import {PrivacyPolicy} from '../../../../Legal/PrivacyPolicy/PrivacyPolicy'
 
 export const PrivacyPolicyScreen = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {languageCode} = useLanguage()
 
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[
-        {
-          backgroundColor: p.bg_color_max,
-        },
-        a.flex_1,
-      ]}
+      style={[ta.bg_color_max, a.flex_1]}
     >
       <ScrollView contentContainerStyle={[a.p_lg]}>
         <PrivacyPolicy languageCode={languageCode} />

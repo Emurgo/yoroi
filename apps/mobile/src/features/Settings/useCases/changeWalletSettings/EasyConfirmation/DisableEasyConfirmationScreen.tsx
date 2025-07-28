@@ -11,7 +11,7 @@ import {useWalletManager} from '../../../../WalletManager/context/WalletManagerP
 import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const DisableEasyConfirmationScreen = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
   const navigation = useNavigation()
   const {wallet} = useSelectedWallet()
@@ -23,10 +23,7 @@ export const DisableEasyConfirmationScreen = () => {
   }
 
   return (
-    <SafeAreaView
-      edges={['bottom']}
-      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-    >
+    <SafeAreaView edges={['bottom']} style={[a.flex_1, ta.bg_color_max]}>
       <View
         style={[
           a.flex_1,

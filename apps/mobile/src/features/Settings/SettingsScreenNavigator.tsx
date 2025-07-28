@@ -154,7 +154,7 @@ export const SettingsScreenNavigator = () => {
             <TouchableOpacity
               onPress={handleOpenModal}
               activeOpacity={0.5}
-              style={{...a.px_lg}}
+              style={a.px_lg}
             >
               <Icon.Info size={24} color={p.gray_900} />
             </TouchableOpacity>
@@ -228,11 +228,11 @@ export const SettingsScreenNavigator = () => {
 const Tab = createMaterialTopTabNavigator<SettingsTabRoutes>()
 const SettingsTabNavigator = () => {
   const strings = useStrings()
-  const {palette: p, atoms} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
     <Tab.Navigator
-      style={{backgroundColor: p.bg_color_max}}
+      style={ta.bg_color_max}
       screenOptions={({route}) => ({
         ...defaultMaterialTopTabNavigationOptions(a, p),
         tabBarLabel:

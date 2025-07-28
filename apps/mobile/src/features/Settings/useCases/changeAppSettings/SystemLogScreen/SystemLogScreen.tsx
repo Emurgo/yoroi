@@ -8,10 +8,10 @@ import {Space} from '../../../../../ui/Space/Space'
 import {Text} from '../../../../../ui/Text/Text'
 
 export const SystemLogScreen = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
-    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}, a.px_lg]}>
+    <View style={[a.flex_1, ta.bg_color_max, a.px_lg]}>
       <ScrollView>
         {logger.trail.map((entry) => {
           return (

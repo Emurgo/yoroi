@@ -6,17 +6,12 @@ import {Boundary} from '../../../../../ui/Boundary/Boundary'
 import {ThemePickerList} from './ThemePickerList'
 
 export const ChangeThemeScreen = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[
-        a.flex_1,
-        {
-          backgroundColor: p.bg_color_max,
-        },
-      ]}
+      style={[a.flex_1, ta.bg_color_max]}
     >
       <Boundary>
         <ThemePickerList />

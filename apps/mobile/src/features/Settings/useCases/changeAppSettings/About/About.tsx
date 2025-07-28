@@ -11,7 +11,7 @@ import {Copiable} from '../../../../../ui/Copiable/Copiable'
 
 export const About = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation<SettingsRouteNavigation>()
   const {data: FCMToken} = useQuery({
     useErrorBoundary: false,
@@ -20,25 +20,15 @@ export const About = () => {
   })
 
   return (
-    <View
-      style={{
-        ...a.flex_1,
-        backgroundColor: p.bg_color_max,
-        ...a.p_lg,
-      }}
-    >
-      <View
-        style={{
-          ...a.flex_row,
-          ...a.justify_between,
-          ...a.py_lg,
-        }}
-      >
+    <View style={[a.flex_1, ta.bg_color_max, a.p_lg]}>
+      <View style={[a.flex_row, a.justify_between, a.py_lg]}>
         <Text
-          style={{
-            color: p.gray_900,
-            ...a.body_1_lg_medium,
-          }}
+          style={[
+            {
+              color: p.gray_900,
+            },
+            a.body_1_lg_medium,
+          ]}
         >
           {strings.currentVersion}
         </Text>
@@ -47,37 +37,37 @@ export const About = () => {
           onLongPress={() => navigation.navigate('settings-system-log')}
         >
           <Text
-            style={{
-              color: p.gray_500,
-              ...a.body_1_lg_regular,
-            }}
+            style={[
+              {
+                color: p.gray_500,
+              },
+              a.body_1_lg_regular,
+            ]}
           >
             {appInfo.version}
           </Text>
         </Pressable>
       </View>
 
-      <View
-        style={{
-          ...a.flex_row,
-          ...a.justify_between,
-          ...a.py_lg,
-        }}
-      >
+      <View style={[a.flex_row, a.justify_between, a.py_lg]}>
         <Text
-          style={{
-            color: p.gray_900,
-            ...a.body_1_lg_medium,
-          }}
+          style={[
+            {
+              color: p.gray_900,
+            },
+            a.body_1_lg_medium,
+          ]}
         >
           {strings.commit}
         </Text>
 
         <Text
-          style={{
-            color: p.gray_500,
-            ...a.body_1_lg_regular,
-          }}
+          style={[
+            {
+              color: p.gray_500,
+            },
+            a.body_1_lg_regular,
+          ]}
         >
           {commit}
         </Text>
@@ -86,10 +76,12 @@ export const About = () => {
       {FCMToken !== undefined && (
         <>
           <Text
-            style={{
-              color: p.gray_900,
-              ...a.body_1_lg_medium,
-            }}
+            style={[
+              {
+                color: p.gray_900,
+              },
+              a.body_1_lg_medium,
+            ]}
           >
             {strings.fcmToken}
           </Text>
@@ -97,10 +89,12 @@ export const About = () => {
           <Copiable text={FCMToken}>
             <View style={{flex: 1}}>
               <Text
-                style={{
-                  color: p.gray_500,
-                  ...a.body_1_lg_regular,
-                }}
+                style={[
+                  {
+                    color: p.gray_500,
+                  },
+                  a.body_1_lg_regular,
+                ]}
                 numberOfLines={1}
                 ellipsizeMode="middle"
               >

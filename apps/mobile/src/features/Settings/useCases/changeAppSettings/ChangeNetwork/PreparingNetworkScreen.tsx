@@ -15,7 +15,7 @@ import {useLaunchRouteAfterSyncing} from './useLaunchRouteAfterSyncing'
 
 export const PreparingNetworkScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {selectedNetwork} = useParams<Params>(isParams)
 
   useLaunchRouteAfterSyncing({selectedNetwork})
@@ -23,14 +23,7 @@ export const PreparingNetworkScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom', 'top']}
-      style={[
-        a.flex_1,
-        a.align_center,
-        a.justify_center,
-        {
-          backgroundColor: p.bg_color_max,
-        },
-      ]}
+      style={[a.flex_1, a.align_center, a.justify_center, ta.bg_color_max]}
     >
       <Text
         style={[

@@ -7,13 +7,13 @@ import {useLanguage} from '../../../../../kernel/i18n/LanguageProvider'
 import {TermsOfService} from '../../../../Legal/TermsOfService/TermsOfService'
 
 export const TermsOfServiceScreen = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {languageCode} = useLanguage()
 
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[{backgroundColor: p.bg_color_max}, a.flex_1]}
+      style={[ta.bg_color_max, a.flex_1]}
     >
       <ScrollView contentContainerStyle={[a.p_lg]}>
         <TermsOfService languageCode={languageCode} />

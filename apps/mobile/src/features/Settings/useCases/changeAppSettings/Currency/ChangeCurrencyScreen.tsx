@@ -5,17 +5,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Boundary} from '../../../../../ui/Boundary/Boundary'
 
 export const ChangeCurrencyScreen = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[
-        a.flex_1,
-        {
-          backgroundColor: p.bg_color_max,
-        },
-      ]}
+      style={[a.flex_1, ta.bg_color_max]}
     >
       <Boundary>{/*<CurrencyPickerList />*/}</Boundary>
     </SafeAreaView>

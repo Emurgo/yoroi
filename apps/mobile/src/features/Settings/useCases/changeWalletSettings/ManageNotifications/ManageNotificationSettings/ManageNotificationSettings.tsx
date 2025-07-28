@@ -33,17 +33,12 @@ const getNotificationsAuthorizationStatus = () => {
 export const ManageNotificationSettings = () => {
   const strings = useStrings()
   const {navigateToNotificationDisplayDuration} = useWalletNavigation()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[
-        a.flex_1,
-        {
-          backgroundColor: p.bg_color_max,
-        },
-      ]}
+      style={[a.flex_1, ta.bg_color_max]}
     >
       <ScrollView bounces={false} style={[a.flex_1, a.py_lg, a.px_lg]}>
         <SettingsSection title={strings.pushNotifications}>
