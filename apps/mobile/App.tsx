@@ -1,14 +1,15 @@
 import {AsyncStorageProvider} from '@yoroi/common'
+import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {ThemeProvider} from '@yoroi/theme'
 
 import * as Font from 'expo-font'
 import * as React from 'react'
 
-import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
 import {CopyProvider} from './src/features/Copy/context/CopyProvider'
 import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
+import {SearchProvider} from './src/features/Search/SearchContext'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './src/features/WalletManager/wallet-manager'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
@@ -90,11 +91,13 @@ function BusinessShell({children}: React.PropsWithChildren) {
       pinStorageKeyManager={pinStorageKeyManager}
       installationIdKeyManager={installationIdStorageKeyManager}
     >
-      <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
-        <WalletManagerProvider walletManager={walletManager}>
-          <SetupWalletProvider>{children}</SetupWalletProvider>
-        </WalletManagerProvider>
-      </PairingProvider>
+      <SearchProvider>
+        <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
+          <WalletManagerProvider walletManager={walletManager}>
+            <SetupWalletProvider>{children}</SetupWalletProvider>
+          </WalletManagerProvider>
+        </PairingProvider>
+      </SearchProvider>
     </AuthProvider>
   )
 }
