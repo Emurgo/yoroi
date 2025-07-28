@@ -8,7 +8,6 @@ import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Space} from '~/ui/Space/Space'
 import {InfraestructureIssueIcon} from '../illustrations/InfraestructureIssueIcon'
 
 export const InfraestructureIssueScreen = () => {

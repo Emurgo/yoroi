@@ -19,7 +19,6 @@ import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {Space} from '~/ui/Space/Space'
 import {NetworkPickerList} from './NetworkPickerList'
 import {useStrings} from './strings'
 

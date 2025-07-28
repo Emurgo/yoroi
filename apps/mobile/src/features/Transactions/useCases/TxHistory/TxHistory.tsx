@@ -10,7 +10,6 @@ import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImp
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
-import {Space} from '~/ui/Space/Space'
 import {useSync} from '~/wallets/hooks'
 import infoIcon from '../assets/img/icon/info-light-green.png'
 import {useBuyCryptoBanner} from '../Exchange/common/useBuyCryptoBanner'

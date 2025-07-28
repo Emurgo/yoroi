@@ -5,7 +5,6 @@ import {View} from 'react-native'
 
 import {ProgressCircle} from '~/ui/ProgressCircle/ProgressCircle'
 import {Space} from '~/ui/Space/Space'
-import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TitledCard} from '~/ui/TitledCard/TitledCard'
 
