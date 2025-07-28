@@ -1,4 +1,4 @@
-import {rootStorage} from '../storages'
+import {rootStorage} from '~/storages'
 
 import {OLD_OS_AUTH_KEY, migrateAuthSetting} from './4_9_0'
 

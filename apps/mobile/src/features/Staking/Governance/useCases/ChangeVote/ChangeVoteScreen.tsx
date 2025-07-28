@@ -12,22 +12,22 @@ import React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useModal} from '../../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../../ui/Space/Space'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 import {
   useCreateGovernanceTx,
   useStakingKey,
-} from '../../../../../wallets/hooks'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
-import {Action} from '../../common/Action/Action'
+} from '~/wallets/hooks'
+import {useSelectedWallet} from '~/../../../WalletManager/hooks/useSelectedWallet'
+import {Action} from '~/features/common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,
   useGovernanceActions,
-} from '../../common/helpers'
-import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
-import {useStrings} from '../../common/strings'
-import {YoroiRecordLink} from '../../common/YoroiRecordLink/YoroiRecordLink'
-import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
+} from '~/features/common/helpers'
+import {LearnMoreLink} from '~/features/common/LearnMoreLink/LearnMoreLink'
+import {useStrings} from '~/features/common/strings'
+import {YoroiRecordLink} from '~/features/common/YoroiRecordLink/YoroiRecordLink'
+import {EnterDrepIdModal} from '~/EnterDrepIdModal/EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()

@@ -4,11 +4,11 @@ import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
 import * as React from 'react'
 
-import {useBalances} from '../../../wallets/hooks'
-import {Amounts, Quantities} from '../../../wallets/utils/utils'
-import {BannerIds, showBanner} from '../../Notifications/common/banners'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {useBalances} from '~/wallets/hooks'
+import {Amounts, Quantities} from '~/wallets/utils/utils'
+import {BannerIds, showBanner} from '~/../Notifications/common/banners'
+import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '~/../WalletManager/context/WalletManagerProvider'
 import {useStrings} from './useStrings'
 
 export const useBuyCryptoBanner = () => {

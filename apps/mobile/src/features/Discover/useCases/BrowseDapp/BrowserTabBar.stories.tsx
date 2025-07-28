@@ -2,9 +2,9 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import WebView from 'react-native-webview'
 
-import {mocks as walletMocks} from '../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'
-import {BrowserProvider} from '../../common/BrowserProvider'
+import {mocks as walletMocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
+import {BrowserProvider} from '~/features/common/BrowserProvider'
 import {BrowserTabBar} from './BrowserTabBar'
 
 storiesOf('Discover BrowserTabBar', module)

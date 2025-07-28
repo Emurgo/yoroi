@@ -1,6 +1,6 @@
 import {App, HW, Wallet} from '@yoroi/types'
 
-import {logger} from '../../kernel/logger/logger'
+import {logger} from '~/kernel/logger/logger'
 
 export const withUSB = (meta: Wallet.Meta, deviceObj: HW.DeviceObj) => {
   if (!meta.hwDeviceInfo) {

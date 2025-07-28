@@ -3,30 +3,30 @@ import {
   infoExtractName,
   isPrimaryToken,
 } from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {PortfolioTokenAmount} from '@yoroi/types/lib/typescript/portfolio/amount'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Text, TouchableOpacity, View} from 'react-native'
 
-import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {
   formatPriceChange,
   priceChange,
-} from '../../../common/helpers/priceChange'
-import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
-import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
-import {PnlTag} from '../../../ui/PnlTag/PnlTag'
-import {TokenInfoIcon} from '../../../ui/TokenAmountItem/TokenInfoIcon'
+} from '~/features/Portfolio/common/helpers/priceChange'
+import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
+import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {PnlTag} from '~/ui/PnlTag/PnlTag'
+import {Space} from '~/ui/Space/Space'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 
 type Props = {
   tokenInfo: PortfolioTokenAmount
 }
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const navigationTo = useNavigateTo()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const formattedQuantity =
@@ -55,14 +55,25 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
   return (
     <TouchableOpacity
       onPress={() => navigationTo.tokenDetail({id: info.id})}
-      style={styles.root}
+      style={[a.h_full]}
     >
-      <View style={styles.container}>
+      <View
+        style={[
+          a.p_lg,
+          a.rounded_sm,
+          a.flex_col,
+          a.align_start,
+          a.border,
+          a.flex_1,
+          {borderColor: p.gray_300},
+          a.h_full,
+        ]}
+      >
         <TokenInfo info={info} />
 
-        <Spacer fill />
+        <Space.Height.lg fill />
 
-        <View style={styles.quantityContainer}>
+        <View style={[a.flex_col, a.align_start]}>
           <PnlTag withIcon variant={variantPnl}>
             <Text>
               {isMissingPrices ? '— ' : formatPriceChange(changePercent)}%
@@ -72,13 +83,13 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
           <Text
             ellipsizeMode="tail"
             numberOfLines={1}
-            style={styles.tokenValue}
+            style={[a.heading_4_medium, a.font_semibold, {color: p.gray_max}]}
           >
             {formattedQuantity}
           </Text>
 
           <PairedBalance
-            textStyle={styles.pairedTokenValue}
+            textStyle={{...a.body_3_sm_regular, color: p.gray_600}}
             amount={tokenInfo}
           />
         </View>
@@ -88,77 +99,36 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 }
 
 const TokenInfo = ({info}: {info: Portfolio.Token.Info}) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const name = infoExtractName(info)
   const isPrimary = isPrimaryToken(info)
   const detail = isPrimary ? info.description : info.fingerprint
 
   return (
-    <View style={styles.tokenInfoContainer}>
+    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
       <TokenInfoIcon info={info} size="lg" />
 
-      <View style={styles.flexFull}>
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.symbol}>
+      <View style={[a.flex_1]}>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="middle"
+          style={[
+            a.body_2_md_medium,
+            a.font_semibold,
+            {color: p.gray_max, textTransform: 'uppercase'},
+          ]}
+        >
           {name}
         </Text>
 
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="middle"
+          style={[a.body_3_sm_regular, {color: p.gray_600}]}
+        >
           {detail}
         </Text>
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.h_full,
-    },
-    container: {
-      ...atoms.p_lg,
-      ...atoms.rounded_sm,
-      ...atoms.flex_col,
-      ...atoms.align_start,
-      ...atoms.border,
-      ...atoms.flex_1,
-      borderColor: color.gray_300,
-      ...atoms.h_full,
-    },
-    symbol: {
-      ...atoms.body_2_md_medium,
-      ...atoms.font_semibold,
-      color: color.gray_max,
-      textTransform: 'uppercase',
-    },
-    name: {
-      ...atoms.body_3_sm_regular,
-      color: color.gray_600,
-    },
-    tokenValue: {
-      ...atoms.heading_4_medium,
-      ...atoms.font_semibold,
-      color: color.gray_max,
-    },
-    pairedTokenValue: {
-      ...atoms.body_3_sm_regular,
-      color: color.gray_600,
-    },
-    tokenInfoContainer: {
-      ...atoms.flex_1,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_sm,
-    },
-    flexFull: {
-      ...atoms.flex_1,
-    },
-    quantityContainer: {
-      ...atoms.flex_col,
-      ...atoms.align_start,
-    },
-  })
-
-  return {styles} as const
 }

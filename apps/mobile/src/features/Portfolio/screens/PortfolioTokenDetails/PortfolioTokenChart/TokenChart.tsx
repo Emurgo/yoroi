@@ -1,7 +1,7 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as shape from 'd3-shape'
 import React, {memo, useEffect, useMemo, useState} from 'react'
-import {Dimensions, PanResponder, StyleSheet, View} from 'react-native'
+import {Dimensions, PanResponder, View} from 'react-native'
 import {Circle, G, Line, Rect, Text as SvgText} from 'react-native-svg'
 import {LineChart as SvgLineChart} from 'react-native-svg-charts'
 
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
-  const {colors, styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   const {labelList, valueList, dataSize} = useMemo(() => {
     const dataChart = dataSources.reduce(
@@ -129,13 +129,13 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
           <Line
             y1={centerY}
             y2={maxY - 5}
-            stroke={colors.stroke}
+            stroke={p.primary_500}
             strokeWidth={2}
             strokeDasharray={[6, 3]}
           />
 
           {/* Dot Circle or tooltip */}
-          <Circle cy={centerY} r={8} fill={colors.stroke} />
+          <Circle cy={centerY} r={8} fill={p.primary_500} />
         </G>
 
         {/* Tooltip content */}
@@ -146,14 +146,14 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
             ry={ttRadius}
             width={ttWidth}
             height={ttHeight}
-            fill={colors.tooltip}
+            fill={p.primary_500}
           />
 
           <SvgText
             x={6}
             y={ttHeight / 2 + 4}
             fontSize={12}
-            fill={colors.tooltipText}
+            fill={p.white_static}
           >
             {labelList[positionX]}
           </SvgText>
@@ -167,12 +167,12 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
   }, [dataSize, onValueSelected])
 
   return (
-    <View style={styles.root}>
-      <View style={styles.fill} {...panResponder.panHandlers}>
+    <View style={[{height: 144}]}>
+      <View style={[a.flex_1]} {...panResponder.panHandlers}>
         <SvgLineChart
-          style={styles.fill}
+          style={[a.flex_1]}
           data={valueList}
-          svg={{stroke: colors.stroke, strokeWidth: 2}}
+          svg={{stroke: p.primary_500, strokeWidth: 2}}
           contentInset={{top: 16, bottom: 16}}
           curve={shape.curveNatural}
           animate={true}
@@ -183,26 +183,6 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      height: 144,
-    },
-    fill: {
-      ...atoms.flex_1,
-    },
-  })
-
-  const colors = {
-    stroke: color.primary_500,
-    tooltip: color.primary_500,
-    tooltipText: color.white_static,
-  }
-
-  return {styles, colors} as const
 }
 
 export const TokenChart = memo(TokenChartComponent)

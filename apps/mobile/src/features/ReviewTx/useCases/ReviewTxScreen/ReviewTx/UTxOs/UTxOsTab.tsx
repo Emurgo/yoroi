@@ -3,21 +3,21 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Copiable} from '../../../../../../components/Clipboard/Copiable'
-import {Divider} from '../../../../../../components/Divider/Divider'
-import {Space} from '../../../../../../components/Space/Space'
-import {formatTokenWithText} from '../../../../../../wallets/utils/format'
-import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
-import {Accordion} from '../../../../common/Accordion'
-import {useStrings} from '../../../../common/hooks/useStrings'
-import {TokenItem} from '../../../../common/TokenItem'
+import {Copiable} from '~/components/Clipboard/Copiable'
+import {Divider} from '~/components/Divider/Divider'
+import {Space} from '~/components/Space/Space'
+import {formatTokenWithText} from '~/wallets/utils/format'
+import {useSelectedWallet} from '~/../../../../WalletManager/common/hooks/useSelectedWallet'
+import {Accordion} from '~/features/common/Accordion'
+import {useStrings} from '~/features/common/hooks/useStrings'
+import {TokenItem} from '~/features/common/TokenItem'
 import {
   FormattedInput,
   FormattedInputs,
   FormattedOutput,
   FormattedOutputs,
   FormattedTx,
-} from '../../../../common/types'
+} from '~/features/common/types'
 
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()

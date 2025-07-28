@@ -9,11 +9,11 @@ import {
   ViewProps,
 } from 'react-native'
 
-import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
-import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
-import {Icon} from '../Icon'
-import {LanguagePickerWarning} from '../LanguagePickerWarning/LanguagePickerWarning'
-import {Text} from '../Text/Text'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
+import {Icon} from '~/Icon'
+import {LanguagePickerWarning} from '~/LanguagePickerWarning/LanguagePickerWarning'
+import {Text} from '~/Text/Text'
 
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 

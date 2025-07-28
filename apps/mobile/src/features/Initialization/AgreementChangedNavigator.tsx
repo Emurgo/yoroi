@@ -5,7 +5,7 @@ import * as React from 'react'
 import {
   defaultStackNavigationOptions,
   InititalizationRoutes,
-} from '../../kernel/navigation'
+} from '~/kernel/navigation'
 import {AnalyticsChangedScreen} from './AnalyticsChangedScreen'
 import {useStrings} from './common'
 import {ReadPrivacyPolicyScreen} from './ReadPrivacyPolicyScreen'

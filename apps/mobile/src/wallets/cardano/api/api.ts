@@ -10,9 +10,9 @@ import type {
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '../../types/other'
-import {StakePoolInfosAndHistories} from '../../types/staking'
-import {ServerStatus} from '../types'
+} from '~/~/types/other'
+import {StakePoolInfosAndHistories} from '~/~/types/staking'
+import {ServerStatus} from '~/types'
 import {handleError} from './errors'
 import {fetchDefault} from './fetch'
 

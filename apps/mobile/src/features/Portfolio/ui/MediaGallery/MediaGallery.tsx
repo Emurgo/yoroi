@@ -10,8 +10,8 @@ import {
   View,
 } from 'react-native'
 
-import {MediaPreview} from '../../../../components/MediaPreview/MediaPreview'
-import {Spacer} from '../../../../components/Spacer/Spacer'
+import {MediaPreview} from '~/components/MediaPreview/MediaPreview'
+import {Spacer} from '~/components/Spacer/Spacer'
 
 type Props = {
   amounts: ReadonlyArray<Portfolio.Token.Amount>

@@ -8,9 +8,9 @@ import {
   View,
 } from 'react-native'
 
-import {Icon} from '../../../../../components/Icon'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useMappedStrings} from '../../../common/useStrings'
+import {Icon} from '~/components/Icon'
+import {Spacer} from '~/components/Spacer/Spacer'
+import {useMappedStrings} from '~/../../common/useStrings'
 
 type Props = {
   types: string[]

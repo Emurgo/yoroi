@@ -3,7 +3,7 @@ import * as React from 'react'
 import {useObservableValue} from '@yoroi/common'
 import {Wallet} from '@yoroi/types'
 
-import {useWalletManager} from '../context/WalletManagerProvider'
+import {useWalletManager} from '~/context/WalletManagerProvider'
 
 export const useWalletMetas = () => {
   const {walletManager} = useWalletManager()

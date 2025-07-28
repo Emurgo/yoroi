@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View} from 'react-native'
-import {Icon} from '../../../ui/Icon'
+import {Icon} from '~/ui/Icon'
 
 type Props = {
   headings: Array<string>

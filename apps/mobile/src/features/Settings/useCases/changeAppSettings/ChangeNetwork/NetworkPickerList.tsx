@@ -5,12 +5,12 @@ import {freeze} from 'immer'
 import React from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {availableNetworks} from '../../../../WalletManager/common/constants'
-import {useSelectedNetwork} from '../../../../WalletManager/common/hooks/useSelectedNetwork'
-import {useAutomaticWalletOpener} from '../../../../WalletManager/context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {useNavigateTo} from '../../../common/navigation'
+import {useMetrics} from '~/../../../../kernel/metrics/metricsManager'
+import {availableNetworks} from '~/../../../WalletManager/common/constants'
+import {useSelectedNetwork} from '~/../../../WalletManager/common/hooks/useSelectedNetwork'
+import {useAutomaticWalletOpener} from '~/../../../WalletManager/context/AutomaticWalletOpeningProvider'
+import {useWalletManager} from '~/../../../WalletManager/context/WalletManagerProvider'
+import {useNavigateTo} from '~/../../common/navigation'
 import {NetworkPickerItem} from './NetworkPickerItem'
 
 export const NetworkPickerList = () => {

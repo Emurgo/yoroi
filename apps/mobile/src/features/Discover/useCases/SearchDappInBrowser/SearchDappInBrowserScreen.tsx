@@ -3,11 +3,11 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {useBrowser} from '../../common/BrowserProvider'
-import {getGoogleSearchItem, urlWithProtocol} from '../../common/helpers'
-import {useNavigateTo} from '../../common/useNavigateTo'
-import {BrowserSearchToolbar} from '../BrowseDapp/BrowserSearchToolbar'
-import {DAppListItem} from '../SelectDappFromList/DAppListItem/DAppListItem'
+import {useBrowser} from '~/features/common/BrowserProvider'
+import {getGoogleSearchItem, urlWithProtocol} from '~/features/common/helpers'
+import {useNavigateTo} from '~/features/common/useNavigateTo'
+import {BrowserSearchToolbar} from '~/BrowseDapp/BrowserSearchToolbar'
+import {DAppListItem} from '~/SelectDappFromList/DAppListItem/DAppListItem'
 
 const getUrl = (searchValue: string, isEngineSearch: boolean) => {
   if (isEngineSearch) {

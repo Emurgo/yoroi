@@ -5,12 +5,12 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
-import {ButtonProps} from '../../components/Button/Button'
-import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {YoroiWallet} from '../../wallets/cardano/types'
-import {StakingInfo} from '../../wallets/types/staking'
-import {YoroiUnsignedTx} from '../../wallets/types/yoroi'
-import {Quantities} from '../../wallets/utils/utils'
+import {ButtonProps} from '~/components/Button/Button'
+import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {StakingInfo} from '~/wallets/types/staking'
+import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
+import {Quantities} from '~/wallets/utils/utils'
 import {StakePoolInfo} from './StakePoolInfo'
 
 export const StakePoolInfos = ({ctaProps}: {ctaProps?: ButtonProps}) => {

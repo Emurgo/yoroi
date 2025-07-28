@@ -1,9 +1,9 @@
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
-import {mocks as walletMocks} from '../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'
-import {BrowserProvider} from '../../common/BrowserProvider'
+import {mocks as walletMocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
+import {BrowserProvider} from '~/features/common/BrowserProvider'
 import {WelcomeDAppModal} from './WelcomeDAppModal'
 
 storiesOf('Discover WelcomeDAppModal', module)

@@ -3,7 +3,7 @@ import {Chain} from '@yoroi/types'
 
 import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
-import {persistPrefixKeyword} from '../../../kernel/connection/ConnectionProvider'
+import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
 import {useSelectedNetwork} from './useSelectedNetwork'
 
 export const useBestBlock = ({

@@ -1,8 +1,8 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
 
-import {RawTransaction, TRANSACTION_DIRECTION} from '../../types/other'
-import {MultiToken} from '../MultiToken'
-import {toCachedTx} from '../transactionManager/transactionManager'
+import {RawTransaction, TRANSACTION_DIRECTION} from '~/~/types/other'
+import {MultiToken} from '~/MultiToken'
+import {toCachedTx} from '~/transactionManager/transactionManager'
 import {processTxHistoryData} from './processTransactions'
 
 //

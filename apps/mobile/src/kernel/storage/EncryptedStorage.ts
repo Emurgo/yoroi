@@ -2,9 +2,9 @@ import {hex, parseString} from '@yoroi/common'
 
 import {freeze} from 'immer'
 
-import {decryptData} from '../crypto/decrypt-data'
-import {encryptData} from '../crypto/encrypt-data'
-import {rootStorage} from './storages'
+import {decryptData} from '~/kernel/crypto/decrypt-data'
+import {encryptData} from '~/kernel/crypto/encrypt-data'
+import {rootStorage} from '~/kernel/storage/storages'
 
 type StorageKey = `${string}-MASTER_PASSWORD` | string
 export const EncryptedStorageKeys = {

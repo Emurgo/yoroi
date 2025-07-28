@@ -5,11 +5,11 @@ import {buildNetworkManagers} from '@yoroi/blockchains'
 import {Api} from '@yoroi/types'
 import React from 'react'
 
-import {logger} from '../../../../kernel/logger/logger'
-import {rootStorage} from '../../../../kernel/storage/rootStorage'
-import {buildPortfolioTokenManagers} from '../../../Portfolio/common/helpers/build-token-managers'
-import {WalletManagerProvider} from '../../../WalletManager/context/WalletManagerProvider'
-import {WalletManager} from '../../../WalletManager/wallet-manager'
+import {logger} from '~/kernel/logger/logger'
+import {rootStorage} from '~/kernel/storage/rootStorage'
+import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/build-token-managers'
+import {WalletManagerProvider} from '~/../../WalletManager/context/WalletManagerProvider'
+import {WalletManager} from '~/../../WalletManager/wallet-manager'
 import {SaveNanoXScreen} from './SaveNanoXScreen'
 
 // TODO: should be mocked

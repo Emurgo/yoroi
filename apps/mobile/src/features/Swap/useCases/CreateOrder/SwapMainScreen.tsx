@@ -3,23 +3,23 @@ import * as React from 'react'
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useIsKeyboardOpen} from '../../../../kernel/keyboard/useIsKeyboardOpen'
-import {isEmptyString} from '../../../../kernel/utils'
-import {ShowDisclaimer} from '../../../Legal/Disclaimer/ShowDisclaimer'
-import {AmountCard} from '../../../ui/AmountCard/AmountCard'
-import {Button, ButtonType} from '../../../ui/Button/Button'
-import {EstimateSummary} from '../../../ui/EstimateSummary/EstimateSummary'
-import {Icon} from '../../../ui/Icon'
-import {useModal} from '../../../ui/Modal/ModalContext'
-import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
-import {RefreshButton} from '../../../ui/RefreshButton/RefreshButton'
-import {ShowPriceImpact} from '../../../ui/ShowPriceImpact/ShowPriceImpact'
-import {Space} from '../../../ui/Space/Space'
-import {WarnLimitPrice} from '../../../ui/WarnLimitPrice/WarnLimitPrice'
-import {undefinedToken} from '../../common/constants'
-import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapProvider'
+import {useIsKeyboardOpen} from '~/kernel/keyboard/useIsKeyboardOpen'
+import {isEmptyString} from '~/kernel/utils'
+import {ShowDisclaimer} from '~/../../Legal/Disclaimer/ShowDisclaimer'
+import {AmountCard} from '~/ui/AmountCard/AmountCard'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {EstimateSummary} from '~/ui/EstimateSummary/EstimateSummary'
+import {Icon} from '~/ui/Icon'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
+import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
+import {Space} from '~/ui/Space/Space'
+import {WarnLimitPrice} from '~/ui/WarnLimitPrice/WarnLimitPrice'
+import {undefinedToken} from '~/features/common/constants'
+import {useNavigateTo} from '~/features/common/navigation'
+import {useStrings} from '~/features/common/strings'
+import {useSwap} from '~/features/common/SwapProvider'
 import {LimitInput} from './LimitInput'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
@@ -104,7 +104,7 @@ export const SwapMainScreen = () => {
       <ScrollView style={[styles.padding, atoms.px_lg]}>
         <ShowDisclaimer type="swap" />
 
-        <Space height="lg" />
+        <Space.Height.lg" />
 
         <View
           onLayout={(event) => {

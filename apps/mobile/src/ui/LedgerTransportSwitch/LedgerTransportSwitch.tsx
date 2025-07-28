@@ -6,11 +6,11 @@ import {
   HARDWARE_WALLETS,
   useIsUsbSupported,
   useLedgerPermissions,
-} from '../../../wallets/hw/hw'
-import {useStrings} from '../../features/Swap/common/strings'
-import {Button, ButtonType} from '../Button/Button'
-import {Spacer} from '../Spacer/Spacer'
-import {Text} from '../Text/Text'
+} from '~/wallets/hw/hw'
+import {useStrings} from '~/features/Swap/common/strings'
+import {Button, ButtonType} from '~/Button/Button'
+import {Spacer} from '~/Spacer/Spacer'
+import {Text} from '~/Text/Text'
 
 type Props = {
   onSelectUSB: () => void

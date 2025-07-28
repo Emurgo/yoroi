@@ -3,7 +3,7 @@ import {WalletChecksum} from '@emurgo/cip4-js'
 import {Blockies} from '@yoroi/identicon'
 import {App, HW, Wallet} from '@yoroi/types'
 
-import {makeWalletEncryptedStorage} from '../EncryptedStorage'
+import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
 const migrateWalletMeta = async (rootStorage: App.Storage) => {
   const walletsRootStorage = rootStorage.join('wallet/')

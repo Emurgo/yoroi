@@ -1,7 +1,7 @@
 import React from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 
-import {CurrencySymbol} from '../../../../../wallets/types/other'
+import {CurrencySymbol} from '~/wallets/types/other'
 import {useCurrencyPairing} from './CurrencyContext'
 import {CurrencyPickerItem} from './CurrencyPickerItem'
 

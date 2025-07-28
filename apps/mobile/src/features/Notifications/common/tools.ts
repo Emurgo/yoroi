@@ -4,7 +4,7 @@ import {Portfolio, Notifications as YoroiNotifications} from '@yoroi/types'
 import {Linking, PermissionsAndroid, Platform} from 'react-native'
 import {Notifications} from 'react-native-notifications'
 
-import {WalletNavigation} from '../../../kernel/navigation'
+import {WalletNavigation} from '~/kernel/navigation'
 import {BannerIds} from './banners'
 import {uiStorage} from './storage'
 

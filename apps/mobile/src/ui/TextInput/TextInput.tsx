@@ -14,8 +14,8 @@ import {
   TextInput as RNPTextInput,
 } from 'react-native-paper'
 
-import {isEmptyString} from '../../wallets/utils/string'
-import {Icon} from '../Icon'
+import {isEmptyString} from '~/wallets/utils/string'
+import {Icon} from '~/Icon'
 
 export type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {

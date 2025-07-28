@@ -4,9 +4,9 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, View, ViewStyle} from 'react-native'
 
-import {Button} from '../../../../../ui/Button/Button'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {useStrings} from '../../../common/useStrings'
+import {Button} from '~/ui/Button/Button'
+import {useWalletManager} from '~/../../../WalletManager/context/WalletManagerProvider'
+import {useStrings} from '~/../../common/useStrings'
 
 export const CreateExchangeButton = ({
   style,

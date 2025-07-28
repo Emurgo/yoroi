@@ -1,8 +1,8 @@
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
-import {RawUtxo} from '../types/other'
-import {YoroiEntry} from '../types/yoroi'
+import {RawUtxo} from '~/types/other'
+import {YoroiEntry} from '~/types/yoroi'
 import {
   Amounts,
   asQuantity,

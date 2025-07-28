@@ -3,9 +3,9 @@ import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {YoroiWallet} from '../../../../../wallets/cardano/types'
-import {mocks} from '../../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../wallets/mocks/WalletManagerProviderMock'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {mocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
 import {ManageCollateralScreen} from './ManageCollateralScreen'
 
 const styles = StyleSheet.create({

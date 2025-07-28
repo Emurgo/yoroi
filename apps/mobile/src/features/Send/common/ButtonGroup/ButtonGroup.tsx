@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Spacer} from '../../../../ui/Space/Space'
+import {Spacer} from '~/ui/Space/Space'
 
 type ButtonGroupProps<T> = {
   labels: T[]

@@ -1,7 +1,7 @@
 import {protocolParamsPlaceholder} from '@yoroi/blockchains'
 import {Balance} from '@yoroi/types'
 
-import {mocks as walletMocks} from '../mocks/wallet'
+import {mocks as walletMocks} from '~/mocks/wallet'
 import {getMinAmounts, withMinAmounts, withPrimaryToken} from './getMinAmounts'
 
 describe('withMinAmounts()', () => {

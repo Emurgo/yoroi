@@ -1,6 +1,6 @@
 import {Claim} from '@yoroi/types'
 
-import {useApiErrorResolver} from '../../../hooks/useApiErrorResolver'
+import {useApiErrorResolver} from '~/hooks/useApiErrorResolver'
 import {useDialogs} from './useDialogs'
 
 export const useClaimErrorResolver = () => {

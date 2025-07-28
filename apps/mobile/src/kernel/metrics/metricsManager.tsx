@@ -4,12 +4,12 @@ import {App} from '@yoroi/types'
 import {freeze} from 'immer'
 import * as React from 'react'
 
-import {buildVariant} from '../constants'
-import {logger} from '../logger/logger'
+import {buildVariant} from '~/kernel/constants'
+import {logger} from '~/kernel/logger/logger'
 import {
   metricsConsentRequestedStorageKeyManager,
   metricsEnabledStorageKeyManager,
-} from '../storage/storages'
+} from '~/kernel/storage/storages'
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
 

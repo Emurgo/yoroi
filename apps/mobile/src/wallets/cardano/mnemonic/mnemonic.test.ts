@@ -1,4 +1,4 @@
-import {wrappedCsl} from '../wrappedCsl'
+import {wrappedCsl} from '~/wrappedCsl'
 import {generateAdaMnemonic, generateWalletRootKey} from './mnemonic'
 
 const mnemonic = [

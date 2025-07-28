@@ -3,7 +3,7 @@ import {useSyncStorageToState} from '@yoroi/common'
 import * as ScreenCapture from 'expo-screen-capture'
 import * as React from 'react'
 
-import {screenShareStorageKeyManager} from '../../kernel/storage/storages'
+import {screenShareStorageKeyManager} from '~/kernel/storage/storages'
 
 export const useScreenCapture = () => {
   const [isActive] = useSyncStorageToState(screenShareStorageKeyManager)

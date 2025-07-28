@@ -4,7 +4,7 @@ import {Chain, Portfolio} from '@yoroi/types'
 
 import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
-import {persistPrefixKeyword} from '../../../kernel/connection/ConnectionProvider'
+import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
 
 export const usePrimaryTokenActivity = ({
   to,

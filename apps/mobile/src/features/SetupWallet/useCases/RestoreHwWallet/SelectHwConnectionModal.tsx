@@ -5,12 +5,12 @@ import * as React from 'react'
 import {Alert, Platform, StyleSheet, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {Space} from '../../../../components/Space/Space'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../wallets/hw/hw'
-import {useStrings} from '../../common/useStrings'
+import {Button, ButtonType} from '~/components/Button/Button'
+import {Icon} from '~/components/Icon'
+import {Space} from '~/components/Space/Space'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
+import {useStrings} from '~/features/common/useStrings'
 
 const useIsAndroidUsbSupported = () => {
   const [isAndroidUsbSupported, setIsAndroidUsbSupported] =
@@ -68,7 +68,7 @@ const SelectBluetoothSection = () => {
 
   return (
     <>
-      <Space height="xl" />
+      <Space.Height.xl" />
 
       <Button
         type={ButtonType.Secondary}
@@ -101,7 +101,7 @@ const SelectUsbSection = () => {
   if (Platform.OS === 'ios')
     return (
       <>
-        <Space height="lg" />
+        <Space.Height.lg" />
 
         <Text style={styles.iosWarning}>{strings.hwModalIosWarning}</Text>
       </>
@@ -112,7 +112,7 @@ const SelectUsbSection = () => {
 
   return (
     <>
-      <Space height="xl" />
+      <Space.Height.xl" />
 
       <Button
         type={ButtonType.Secondary}

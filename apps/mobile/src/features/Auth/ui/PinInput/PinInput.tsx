@@ -3,8 +3,8 @@ import {atoms as a, space as s, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {BACKSPACE, NumericKeyboard} from '../../../../ui/NumericKeyboard'
-import {Space} from '../../../../ui/Space/Space'
+import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard'
+import {Space} from '~/ui/Space/Space'
 
 type Props = {
   title?: string

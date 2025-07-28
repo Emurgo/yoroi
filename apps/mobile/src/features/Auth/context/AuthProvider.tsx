@@ -4,12 +4,12 @@ import {App} from '@yoroi/types'
 import {freeze} from 'immer'
 import * as React from 'react'
 
-import {useBackgroundTimer} from '../../../hooks/useBackgroundTimer'
-import {decryptData} from '../../../kernel/crypto/decrypt-data'
-import {encryptData} from '../../../kernel/crypto/encrypt-data'
-import {logger} from '../../../kernel/logger/logger'
-import {AuthSetting, AuthWithHostConfig} from '../common/types'
-import {useAuthWithHost} from '../hooks/useAuthWithHost'
+import {useBackgroundTimer} from '~/hooks/useBackgroundTimer'
+import {decryptData} from '~/kernel/crypto/decrypt-data'
+import {encryptData} from '~/kernel/crypto/encrypt-data'
+import {logger} from '~/kernel/logger/logger'
+import {AuthSetting, AuthWithHostConfig} from '~/common/types'
+import {useAuthWithHost} from '~/hooks/useAuthWithHost'
 
 export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,

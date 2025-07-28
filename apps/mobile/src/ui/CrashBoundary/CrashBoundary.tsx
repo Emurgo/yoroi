@@ -3,12 +3,12 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {BackHandler, Platform, ScrollView, Text, View} from 'react-native'
 
-import {useTranslatedError} from '../../hooks/useTranslatedError'
-import {LocalizableError} from '../../kernel/i18n/LocalizableError'
-import {logger} from '../../kernel/logger/logger'
-import {Button} from '../Button/Button'
-import {Copiable} from '../Copiable/Copiable'
-import {SpaceHeight} from '../Space/Space'
+import {useTranslatedError} from '~/../hooks/useTranslatedError'
+import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {logger} from '~/kernel/logger/logger'
+import {Button} from '~/Button/Button'
+import {Copiable} from '~/Copiable/Copiable'
+import {SpaceHeight} from '~/Space/Space'
 import {ExpandableItem} from './ExpandableItem'
 
 // TODO: Add error image

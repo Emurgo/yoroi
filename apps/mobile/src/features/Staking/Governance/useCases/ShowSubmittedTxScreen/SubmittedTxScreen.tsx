@@ -2,11 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useWalletNavigation} from '../../../../../kernel/navigation'
-import {Button} from '../../../../../ui/Button/Button'
-import {Space} from '../../../../../ui/Space/Space'
-import {SuccessfulTxIcon} from '../../../../ReviewTx/illustrations/SuccessfulTxIcon'
-import {useStrings} from '../../common/strings'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {SuccessfulTxIcon} from '~/../../../ReviewTx/illustrations/SuccessfulTxIcon'
+import {useStrings} from '~/features/common/strings'
 
 export const SubmittedTxScreen = () => {
   const strings = useStrings()

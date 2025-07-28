@@ -2,12 +2,12 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../ui/Button/Button'
-import {FailedTxIcon} from '../../../ui/FailedTxIcon/FailedTxIcon'
-import {SafeArea} from '../../../ui/SafeArea/SafeArea'
-import {Space, Spacer} from '../../../ui/Space/Space'
-import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
+import {Button} from '~/ui/Button/Button'
+import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space, Spacer} from '~/ui/Space/Space'
+import {useNavigateTo} from '~/features/common/navigation'
+import {useStrings} from '~/features/common/strings'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()
@@ -20,9 +20,9 @@ export const FailedTxScreen = () => {
 
       <FailedTxIcon />
 
-      <Space height="_2xl" />
+      <Space.Height._2xl" />
 
-      <Space height="lg" />
+      <Space.Height.lg" />
 
       <Text style={[styles.title, {color: color.gray_max}]}>
         {strings.failedTxTitle}

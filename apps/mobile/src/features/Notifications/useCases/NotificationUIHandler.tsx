@@ -7,12 +7,12 @@ import * as React from 'react'
 import {
   isTxHistoryRoute,
   isWalletSelectionRoute,
-} from '../../../kernel/navigation'
-import {useNotificationDisplaySettings} from '../../Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
-import {pushNotificationsManager} from '../common/notification-manager'
-import {NotificationPopup} from '../common/NotificationPopup'
-import {NotificationStack} from '../common/NotificationStack'
+} from '~/kernel/navigation'
+import {useNotificationDisplaySettings} from '~/../Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
+import {useWalletManager} from '~/../WalletManager/context/WalletManagerProvider'
+import {pushNotificationsManager} from '~/common/notification-manager'
+import {NotificationPopup} from '~/common/NotificationPopup'
+import {NotificationStack} from '~/common/NotificationStack'
 
 const displayLimit = 3
 

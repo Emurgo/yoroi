@@ -10,11 +10,11 @@ import {TransferProvider} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 
-import {QueryProvider} from '../../../../../../.storybook/decorators'
-import {Boundary} from '../../../../../components/Boundary/Boundary'
-import {YoroiWallet} from '../../../../../wallets/cardano/types'
-import {mocks as walletMocks} from '../../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../wallets/mocks/WalletManagerProviderMock'
+import {QueryProvider} from '~/../../../../../.storybook/decorators'
+import {Boundary} from '~/components/Boundary/Boundary'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {mocks as walletMocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
 import {InputReceiver} from './InputReceiver'
 
 storiesOf('Send InputReceiver', module)

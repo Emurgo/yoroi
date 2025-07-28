@@ -8,25 +8,24 @@ import {
   Linking,
   Platform,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import appstoreBadge from '../../../../assets/img/app-store-badge.png'
-import playstoreBadge from '../../../../assets/img/google-play-badge.png'
-import {useStakingInfo} from '../../../../legacy/Dashboard/StakePoolInfos'
-import {Button} from '../../../../ui/Button/Button'
-import {useModal} from '../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../ui/Space/Space'
-import {CatalystStep1} from '../../../ui/CatalystStep1Illustration/CatalystStep1Illustration'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo} from '../../CatalystNavigator'
-import {Actions, Row, Stepper} from '../../common/components'
-import {useCatalystCurrentFund} from '../../common/hooks'
-import {useStrings} from '../../common/strings'
+import appstoreBadge from '~/assets/img/app-store-badge.png'
+import playstoreBadge from '~/assets/img/google-play-badge.png'
+import {useStakingInfo} from '~/../../../legacy/Dashboard/StakePoolInfos'
+import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustration'
+import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useNavigateTo} from '~/../CatalystNavigator'
+import {Actions, Row, Stepper} from '~/features/common/components'
+import {useCatalystCurrentFund} from '~/features/common/hooks'
+import {useStrings} from '~/features/common/strings'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
@@ -98,27 +97,31 @@ export const DownloadCatalystAppScreen = () => {
       >
         <CatalystStep1 />
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
-        <Text style={[styles.subTitle, {color: color.text_gray_medium}]}>
+        <Text
+          style={[
+            a.heading_3_medium,
+            a.text_center,
+            {color: color.text_gray_medium},
+          ]}
+        >
           {strings.subTitle}
         </Text>
 
-        <Text style={[styles.tip, {color: color.text_gray_medium}]}>
-          {strings.tip}
-        </Text>
+        <Text style={[{color: color.text_gray_medium}]}>{strings.tip}</Text>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Row>
           <AppStoreButton />
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <PlayStoreButton />
         </Row>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <FundInfo>
           <FundName>{fundName}</FundName>
@@ -171,11 +174,11 @@ const WarningModal = () => {
         {strings.stakingKeyNotRegistered}
       </Text>
 
-      <Space height="md" />
+      <Space.Height.md />
 
-      <Space fill />
+      <View style={[{flex: 1}]} />
 
-      {Platform.OS === 'android' && <Space height="lg" />}
+      {Platform.OS === 'android' && <Space.Height.lg />}
     </View>
   )
 }

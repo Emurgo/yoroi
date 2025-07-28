@@ -1,13 +1,13 @@
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 
-import {showErrorDialog} from '../../../../kernel/dialogs'
-import {errorMessages} from '../../../../kernel/i18n/global-messages'
-import {logger} from '../../../../kernel/logger/logger'
-import {pinLength} from '../../common/constants'
-import {useAuth} from '../../context/AuthProvider'
-import {useStrings} from '../../hooks/useStrings'
-import {PinInput, PinInputRef} from '../PinInput/PinInput'
+import {showErrorDialog} from '~/kernel/dialogs'
+import {errorMessages} from '~/~/kernel/i18n/global-messages'
+import {logger} from '~/kernel/logger/logger'
+import {pinLength} from '~/features/common/constants'
+import {useAuth} from '~/../context/AuthProvider'
+import {useStrings} from '~/../hooks/useStrings'
+import {PinInput, PinInputRef} from '~/PinInput/PinInput'
 
 export const CreatePinInput = ({onDone}: Props) => {
   const pinInputRef = React.useRef<null | PinInputRef>(null)

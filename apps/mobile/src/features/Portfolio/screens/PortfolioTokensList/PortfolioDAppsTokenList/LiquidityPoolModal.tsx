@@ -10,11 +10,11 @@ import {
   View,
 } from 'react-native'
 
-import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {ILiquidityPool} from '../../../common/hooks/useGetLiquidityPool'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {AssetLogo} from '../../../ui/AssetLogo/AssetLogo'
-import {TokenInfoIcon} from '../../../ui/TokenAmountItem/TokenInfoIcon'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
+import {PairedBalance} from '~/components/PairedBalance/PairedBalance'
+import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
+import {useStrings} from '~/../../common/hooks/useStrings'
+import {AssetLogo} from '~/ui/AssetLogo/AssetLogo'
 
 type Props = {
   tokenInfo: ILiquidityPool

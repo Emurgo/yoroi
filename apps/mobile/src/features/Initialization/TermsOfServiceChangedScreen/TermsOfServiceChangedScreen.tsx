@@ -3,11 +3,11 @@ import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BlueCheckbox} from '../../../ui/BlueCheckbox/BlueCheckbox'
-import {Button} from '../../../ui/Button/Button'
-import {Icon} from '../../../ui/Icon'
-import {SpaceHeight} from '../../../ui/Space/Space'
-import {useNavigateTo, useStrings} from '../common'
+import {BlueCheckbox} from '~/ui/BlueCheckbox/BlueCheckbox'
+import {Button} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {SpaceHeight} from '~/ui/Space/Space'
+import {useNavigateTo, useStrings} from '~/common'
 
 export const TermsOfServiceChangedScreen = () => {
   const [accepted, setAccepted] = React.useState(false)

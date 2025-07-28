@@ -15,30 +15,30 @@ import React, {type ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useModal} from '../../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../../ui/Space/Space'
+import {useMetrics} from '~/../../../../kernel/metrics/metricsManager'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 import {
   useCreateGovernanceTx,
   useStakingKey,
   useTransactionInfos,
   useWalletEvent,
-} from '../../../../../wallets/hooks'
-import {TransactionInfo} from '../../../../../wallets/types/other'
-import {useStakingInfo} from '../../../../Dashboard/StakePoolInfos'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
-import {Action} from '../../common/Action/Action'
-import {formatDrepHashToCIP129Format} from '../../common/drep'
+} from '~/wallets/hooks'
+import {TransactionInfo} from '~/wallets/types/other'
+import {useStakingInfo} from '~/../../../Dashboard/StakePoolInfos'
+import {useSelectedWallet} from '~/../../../WalletManager/hooks/useSelectedWallet'
+import {Action} from '~/features/common/Action/Action'
+import {formatDrepHashToCIP129Format} from '~/features/common/drep'
 import {
   mapStakingKeyStateToGovernanceAction,
   useGovernanceActions,
-} from '../../common/helpers'
-import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
-import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
-import {YoroiRecordLink} from '../../common/YoroiRecordLink/YoroiRecordLink'
-import {GovernanceVote} from '../../types'
-import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
+} from '~/features/common/helpers'
+import {LearnMoreLink} from '~/features/common/LearnMoreLink/LearnMoreLink'
+import {useNavigateTo} from '~/features/common/navigation'
+import {useStrings} from '~/features/common/strings'
+import {YoroiRecordLink} from '~/features/common/YoroiRecordLink/YoroiRecordLink'
+import {GovernanceVote} from '~/~/types'
+import {EnterDrepIdModal} from '~/EnterDrepIdModal/EnterDrepIdModal'
 
 export const HomeScreen = () => {
   const {wallet} = useSelectedWallet()

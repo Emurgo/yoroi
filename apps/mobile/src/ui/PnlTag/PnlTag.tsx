@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {type ViewProps, StyleSheet, Text, View} from 'react-native'
 
-import {Icon} from '../Icon'
+import {Icon} from '~/Icon'
 
 interface Props extends ViewProps {
   variant?: 'danger' | 'success' | 'neutral'

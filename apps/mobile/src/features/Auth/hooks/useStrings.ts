@@ -1,7 +1,7 @@
 import {freeze} from 'immer'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages from '../../../kernel/i18n/global-messages'
+import globalMessages from '~/kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const {formatMessage: f} = useIntl()

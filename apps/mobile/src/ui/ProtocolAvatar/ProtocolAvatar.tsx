@@ -4,7 +4,7 @@ import {Swap} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity} from 'react-native'
 
-import {ProtocolIcon} from '../ProtocolIcon/ProtocolIcon'
+import {ProtocolIcon} from '~/ProtocolIcon/ProtocolIcon'
 
 type Props = {
   protocol: Swap.Protocol

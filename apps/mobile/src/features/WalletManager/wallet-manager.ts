@@ -18,18 +18,18 @@ import {
 } from 'rxjs'
 import {v4} from 'uuid'
 
-import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
-import {logger} from '../../kernel/logger/logger'
-import {makeWalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
-import {Keychain, KeychainManager} from '../../kernel/storage/Keychain'
-import {rootStorage} from '../../kernel/storage/storages'
-import {keyManager} from '../../wallets/cardano/key-manager/key-manager'
-import {WalletEvent, YoroiWallet} from '../../wallets/cardano/types'
-import {wrappedCsl} from '../../wallets/cardano/wrappedCsl'
+import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
+import {logger} from '~/kernel/logger/logger'
+import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
+import {Keychain, KeychainManager} from '~/kernel/storage/Keychain'
+import {rootStorage} from '~/kernel/storage/storages'
+import {keyManager} from '~/wallets/cardano/key-manager/key-manager'
+import {WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
+import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {
   validatePassword,
   validateWalletName,
-} from '../../wallets/utils/validators'
+} from '~/wallets/utils/validators'
 import {networkManagers} from './common/constants'
 import {
   SyncWalletInfo,

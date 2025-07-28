@@ -3,9 +3,9 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {Button} from '../../../ui/Button/Button'
-import {useModal} from '../../../ui/Modal/ModalContext'
-import {Space} from '../../../ui/Space/Space'
+import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from './useStrings'
 
 export const useOpenUnverifiedDappModal = () => {

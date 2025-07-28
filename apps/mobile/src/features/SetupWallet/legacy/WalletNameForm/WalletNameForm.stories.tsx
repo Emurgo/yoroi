@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import image from '../../../../assets/img/ledger_2.png'
+import image from '~/assets/img/ledger_2.png'
 import {WalletNameForm} from './WalletNameForm'
 
 storiesOf('WalletNameForm', module)

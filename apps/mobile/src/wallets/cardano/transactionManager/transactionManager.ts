@@ -4,7 +4,7 @@ import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {logger} from '../../../kernel/logger/logger'
+import {logger} from '~/kernel/logger/logger'
 import {
   CERTIFICATE_KIND,
   RawTransaction,
@@ -12,11 +12,11 @@ import {
   TRANSACTION_STATUS,
   Transactions,
   TxHistoryRequest,
-} from '../../types/other'
-import {RemoteCertificateMeta} from '../../types/staking'
-import {Version, versionCompare} from '../../utils/versioning'
-import * as yoroiApi from '../api/api'
-import {ApiHistoryError} from '../errors'
+} from '~/~/types/other'
+import {RemoteCertificateMeta} from '~/~/types/staking'
+import {Version, versionCompare} from '~/../utils/versioning'
+import * as yoroiApi from '~/api/api'
+import {ApiHistoryError} from '~/errors'
 
 type TransactionManagerState = {
   transactions: Transactions

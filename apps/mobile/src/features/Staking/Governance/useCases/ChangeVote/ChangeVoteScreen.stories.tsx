@@ -2,11 +2,11 @@ import {storiesOf} from '@storybook/react-native'
 import {GovernanceManager, GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
-import {SafeArea} from '../../../../../components/SafeArea'
-import {YoroiWallet} from '../../../../../wallets/cardano/types'
-import {mocks} from '../../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../wallets/mocks/WalletManagerProviderMock'
-import {mocks as governanceMocks} from '../../common/mocks'
+import {SafeArea} from '~/components/SafeArea'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {mocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
+import {mocks as governanceMocks} from '~/features/common/mocks'
 import {ChangeVoteScreen} from './ChangeVoteScreen'
 
 storiesOf('Governance/ChangeVoteScreen', module)

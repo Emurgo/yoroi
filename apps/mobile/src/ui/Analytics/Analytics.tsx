@@ -4,11 +4,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {SettingsSwitch} from '../../features/Settings/common/SettingsSwitch'
-import {useMetrics} from '../../kernel/metrics/metricsManager'
-import {Button, ButtonType} from '../Button/Button'
-import {Space, SpaceHeight} from '../Space/Space'
-import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
+import {SettingsSwitch} from '~/features/Settings/common/SettingsSwitch'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button, ButtonType} from '~/Button/Button'
+import {Space, SpaceHeight} from '~/Space/Space'
+import {YoroiLogo} from '~/YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {

@@ -5,9 +5,9 @@ import {StyleSheet, Text, View} from 'react-native'
 import {
   getPriceImpactRisk,
   usePriceImpactRiskTheme,
-} from '../../features/Swap/common/helpers'
-import {useStrings} from '../../features/Swap/common/strings'
-import {Icon} from '../Icon'
+} from '~/features/Swap/common/helpers'
+import {useStrings} from '~/features/Swap/common/strings'
+import {Icon} from '~/Icon'
 
 export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
   const strings = useStrings()

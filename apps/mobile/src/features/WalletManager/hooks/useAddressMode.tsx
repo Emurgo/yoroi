@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {useWalletManager} from '../context/WalletManagerProvider'
+import {useWalletManager} from '~/context/WalletManagerProvider'
 import {useSelectedWallet} from './useSelectedWallet'
 
 export const useAddressMode = () => {

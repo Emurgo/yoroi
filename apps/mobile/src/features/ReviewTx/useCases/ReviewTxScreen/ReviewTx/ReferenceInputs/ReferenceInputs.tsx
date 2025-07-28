@@ -2,11 +2,11 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Space} from '../../../../../../components/Space/Space'
-import {Accordion} from '../../../../common/Accordion'
-import {useStrings} from '../../../../common/hooks/useStrings'
-import {FormattedTx} from '../../../../common/types'
-import {Inputs} from '../UTxOs/UTxOsTab'
+import {Space} from '~/components/Space/Space'
+import {Accordion} from '~/features/common/Accordion'
+import {useStrings} from '~/features/common/hooks/useStrings'
+import {FormattedTx} from '~/features/common/types'
+import {Inputs} from '~/UTxOs/UTxOsTab'
 
 export const ReferenceInputsTab = ({
   referenceInputs,

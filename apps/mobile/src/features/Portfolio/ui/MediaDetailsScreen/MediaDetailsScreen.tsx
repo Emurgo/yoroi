@@ -20,19 +20,19 @@ import {
   View,
 } from 'react-native'
 
-import {Boundary} from '../../../../components/Boundary/Boundary'
-import {Copiable} from '../../../../components/Clipboard/Copiable'
-import {FadeIn} from '../../../../components/FadeIn'
-import {Hr} from '../../../../components/Hr/Hr'
-import {MediaPreview} from '../../../../components/MediaPreview/MediaPreview'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs/Tabs'
-import {Text} from '../../../../components/Text'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {NftRoutes} from '../../../../kernel/navigation'
-import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
-import {usePortfolioImageInvalidate} from '../../common/hooks/usePortfolioImage'
-import {useNavigateTo} from '../../common/navigation'
+import {Boundary} from '~/components/Boundary/Boundary'
+import {Copiable} from '~/components/Clipboard/Copiable'
+import {FadeIn} from '~/components/FadeIn'
+import {Hr} from '~/components/Hr/Hr'
+import {MediaPreview} from '~/components/MediaPreview/MediaPreview'
+import {Spacer} from '~/components/Spacer/Spacer'
+import {Tab, TabPanel, TabPanels, Tabs} from '~/components/Tabs/Tabs'
+import {Text} from '~/components/Text'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {NftRoutes} from '~/kernel/navigation'
+import {useSelectedWallet} from '~/../../WalletManager/hooks/useSelectedWallet'
+import {usePortfolioImageInvalidate} from '~/features/common/hooks/usePortfolioImage'
+import {useNavigateTo} from '~/features/common/navigation'
 
 export const MediaDetailsScreen = () => {
   const styles = useStyles()

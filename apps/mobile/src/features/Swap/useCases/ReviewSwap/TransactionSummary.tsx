@@ -3,22 +3,22 @@ import _ from 'lodash'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
-import {Divider} from '../../../ui/Divider/Divider'
-import {Icon} from '../../../ui/Icon'
-import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
-import {Space} from '../../../ui/Space/Space'
-import {TokenAmountItem} from '../../../ui/TokenAmountItem/TokenAmountItem'
+import {useSelectedWallet} from '~/features/WalletManager/common/hooks/useSelectedWallet'
+import {Divider} from '~/ui/Divider/Divider'
+import {Icon} from '~/ui/Icon'
+import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {Space} from '~/ui/Space/Space'
+import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {
   PRICE_IMPACT_HIGH_RISK,
   PRICE_IMPACT_MODERATE_RISK,
   undefinedToken,
-} from '../../common/constants'
-import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
-import {useStrings} from '../../common/strings'
-import {SwapContext} from '../../common/SwapProvider'
-import {Splits} from '../CreateOrder/EstimateSummary'
-import {ShowPriceImpact} from '../CreateOrder/ShowPriceImpact'
+} from '~/features/common/constants'
+import {getPriceImpactRisk, usePriceImpactRiskTheme} from '~/features/common/helpers'
+import {useStrings} from '~/features/common/strings'
+import {SwapContext} from '~/features/common/SwapProvider'
+import {Splits} from '~/CreateOrder/EstimateSummary'
+import {ShowPriceImpact} from '~/CreateOrder/ShowPriceImpact'
 
 export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const strings = useStrings()
@@ -191,7 +191,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
           </View>
         )}
 
-      <Space height="lg" />
+      <Space.Height.lg" />
 
       <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>
         {strings.swapFrom}
@@ -199,7 +199,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
       <TokenAmountItem amount={amountIn} orderType={orderType} />
 
-      <Space height="lg" />
+      <Space.Height.lg" />
 
       <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>
         {strings.swapTo}
@@ -224,7 +224,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
         return (
           <View key={orderInfo.label}>
-            <Space height="sm" />
+            <Space.Height.sm" />
 
             <View
               style={[

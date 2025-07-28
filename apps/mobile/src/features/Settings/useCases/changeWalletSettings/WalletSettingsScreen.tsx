@@ -7,31 +7,31 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '../../../../components/Icon'
-import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Icon} from '~/components/Icon'
+import {Spacer} from '~/components/Spacer/Spacer'
 import {
   DIALOG_BUTTONS,
   showConfirmationDialog,
-} from '../../../../kernel/dialogs'
-import {confirmationMessages} from '../../../../kernel/i18n/global-messages'
+} from '~/kernel/dialogs'
+import {confirmationMessages} from '~/~/kernel/i18n/global-messages'
 import {
   SettingsRouteNavigation,
   useWalletNavigation,
-} from '../../../../kernel/navigation'
-import {useResync} from '../../../../wallets/hooks'
-import {useAuth} from '../../../Auth/AuthProvider'
-import {useAuthSetting} from '../../../Auth/common/hooks'
-import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo} from '../../common/navigation'
-import {SettingsSwitch} from '../../common/SettingsSwitch'
-import {SettingsCollateralItem} from '../../SettingsCollateralItem'
+} from '~/kernel/navigation'
+import {useResync} from '~/wallets/hooks'
+import {useAuth} from '~/../../Auth/AuthProvider'
+import {useAuthSetting} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
+import {useAddressMode} from '~/../../WalletManager/common/hooks/useAddressMode'
+import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useNavigateTo} from '~/features/common/navigation'
+import {SettingsSwitch} from '~/features/common/SettingsSwitch'
+import {SettingsCollateralItem} from '~/../SettingsCollateralItem'
 import {
   NavigatedSettingsItem,
   SettingsBuildItem,
   SettingsItem,
   SettingsSection,
-} from '../../SettingsItems'
+} from '~/features/Settings/SettingsItems'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()

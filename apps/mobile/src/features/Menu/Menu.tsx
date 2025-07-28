@@ -18,23 +18,23 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import globalMessages, {
   confirmationMessages,
-} from '../../kernel/i18n/global-messages'
-import {useMetrics} from '../../kernel/metrics/metricsManager'
+} from '~/kernel/i18n/global-messages'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
   MenuRoutes,
   useWalletNavigation,
-} from '../../kernel/navigation'
-import {Button} from '../../ui/Button/Button'
-import {Icon} from '../../ui/Icon'
-import {useModal} from '../../ui/Modal/ModalContext'
-import {Space} from '../../ui/Space/Space'
-import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
-import {useCanVote} from '../RegisterCatalyst/common/hooks'
-import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
-import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
-import {useSelectedWallet} from '../WalletManager/hooks/useSelectedWallet'
+} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {usePrefetchStakingInfo} from '~/Dashboard/StakePoolInfos'
+import {useCanVote} from '~/RegisterCatalyst/common/hooks'
+import {InsufficientFundsModal} from '~/RegisterCatalyst/common/InsufficientFundsModal'
+import {NetworkTag} from '~/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {usePoolTransition} from '~/Staking/Staking/PoolTransition/usePoolTransition'
+import {useSelectedWallet} from '~/WalletManager/hooks/useSelectedWallet'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
 

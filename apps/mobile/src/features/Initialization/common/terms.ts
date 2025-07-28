@@ -2,7 +2,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {useAsyncStorage} from '@yoroi/common'
 import {useCallback} from 'react'
 
-import {agreementDate} from '../../../kernel/config'
+import {agreementDate} from '~/kernel/config'
 
 export type LegalAgreement = {
   latestAcceptedAgreementsDate: number

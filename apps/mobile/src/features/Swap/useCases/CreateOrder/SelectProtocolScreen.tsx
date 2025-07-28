@@ -5,12 +5,12 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Counter} from '../../../ui/Counter/Counter'
-import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {undefinedToken} from '../../common/constants'
-import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapProvider'
+import {Counter} from '~/ui/Counter/Counter'
+import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {undefinedToken} from '~/features/common/constants'
+import {useStrings} from '~/features/common/strings'
+import {useSwap} from '~/features/common/SwapProvider'
 
 export const SelectProtocolScreen = () => {
   const navigation = useNavigation()

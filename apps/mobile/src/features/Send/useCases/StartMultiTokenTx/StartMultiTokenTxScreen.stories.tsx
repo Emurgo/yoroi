@@ -2,12 +2,12 @@ import {storiesOf} from '@storybook/react-native'
 import {TransferProvider} from '@yoroi/transfer'
 import * as React from 'react'
 
-import {QueryProvider} from '../../../../../.storybook/decorators'
-import {Boundary} from '../../../../components/Boundary/Boundary'
-import {YoroiWallet} from '../../../../wallets/cardano/types'
-import {mocks as walletMocks} from '../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'
-import {mocks as sendMocks} from '../../common/mocks'
+import {QueryProvider} from '~/../../../../.storybook/decorators'
+import {Boundary} from '~/components/Boundary/Boundary'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {mocks as walletMocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
+import {mocks as sendMocks} from '~/features/common/mocks'
 import {StartMultiTokenTxScreen} from './StartMultiTokenTxScreen'
 
 storiesOf('Start MultiToken Tx', module)

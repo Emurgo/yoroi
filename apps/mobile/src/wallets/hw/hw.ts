@@ -1,8 +1,8 @@
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
 
-import {ledgerMessages} from '../../kernel/i18n/global-messages'
-import {LocalizableError} from '../../kernel/i18n/LocalizableError'
+import {ledgerMessages} from '~/kernel/i18n/global-messages'
+import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 
 const requestLedgerPermissions = async () => {
   if (Platform.OS !== 'android') return Promise.resolve()

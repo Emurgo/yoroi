@@ -10,11 +10,11 @@ import {Balance} from '@yoroi/types'
 import {
   toAssetNameHex,
   toPolicyId,
-} from '../../../../yoroi-wallets/cardano/api/utils'
-import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
-import {useWalletEvent} from '../../../../yoroi-wallets/hooks'
-import {RawUtxo} from '../../../../yoroi-wallets/types/other'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+} from '~/../../../yoroi-wallets/cardano/api/utils'
+import {wrappedCsl} from '~/../../../yoroi-wallets/cardano/wrappedCsl'
+import {useWalletEvent} from '~/../../../yoroi-wallets/hooks'
+import {RawUtxo} from '~/../../../yoroi-wallets/types/other'
+import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
 
 export const useUtxoList = () => {
   const {

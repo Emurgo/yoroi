@@ -1,4 +1,4 @@
-import {authWithOs} from '../common/constants'
+import {authWithOs} from '~/common/constants'
 
 export const useEnableAuthWithOs = (
   options?: UseMutationOptions<void, Error>,

@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Text} from '../Text/Text'
+import {Text} from '~/Text/Text'
 
 type Props = {
   text?: string

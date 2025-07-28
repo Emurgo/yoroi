@@ -2,10 +2,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../ui/Button/Button'
-import {useModal} from '../../../../ui/Modal/ModalContext'
-import {Spacer} from '../../../../ui/Space/Space'
-import {useStrings} from '../../common/strings'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Spacer} from '~/ui/Space/Space'
+import {useStrings} from '~/features/common/strings'
 
 interface Props {
   onConfirm: () => void

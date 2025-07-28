@@ -8,9 +8,9 @@ import {
 } from '@yoroi/claim'
 import * as React from 'react'
 
-import {queryClientFixture} from '../../../kernel/fixtures/fixtures'
-import {mocks as walletMocks} from '../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../wallets/mocks/WalletManagerProviderMock'
+import {queryClientFixture} from '~/kernel/fixtures/fixtures'
+import {mocks as walletMocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
 import {ShowSuccessScreen} from './ShowSuccessScreen'
 
 const AppDecorator: DecoratorFunction<React.ReactNode> = (story) => {

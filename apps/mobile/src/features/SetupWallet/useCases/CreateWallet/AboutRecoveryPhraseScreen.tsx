@@ -5,14 +5,14 @@ import {Linking, ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {Button} from '../../../../ui/Button/Button'
-import {CardAboutPhrase} from '../../../../ui/CardAboutPhrase/CardAboutPhrase'
-import {LearnMoreButton} from '../../../../ui/LearnMoreButton/LearnMoreButton'
-import {Space, SpaceHeight} from '../../../../ui/Space/Space'
-import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
-import {YoroiZendeskLink} from '../../common/constants'
-import {useStrings} from '../../common/useStrings'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button} from '~/ui/Button/Button'
+import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
+import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
+import {Space, SpaceHeight} from '~/ui/Space/Space'
+import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
+import {YoroiZendeskLink} from '~/features/common/constants'
+import {useStrings} from '~/features/common/useStrings'
 
 export const AboutRecoveryPhraseScreen = () => {
   const bold = useBold()

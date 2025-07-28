@@ -4,12 +4,12 @@ import {Links} from '@yoroi/types'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {Space} from '../../../../components/Space/Space'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {isEmptyString} from '../../../../kernel/utils'
-import {useStrings} from '../../common/useStrings'
+import {Button, ButtonType} from '~/components/Button/Button'
+import {useModal} from '~/components/Modal/ModalContext'
+import {Space} from '~/components/Space/Space'
+import {Spacer} from '~/components/Spacer/Spacer'
+import {isEmptyString} from '~/kernel/utils'
+import {useStrings} from '~/features/common/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
 export const RequestedBrowserLaunchDappUrlScreen = ({
@@ -45,7 +45,7 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
           <Text style={disclaimerStyle}>{description}</Text>
         </ShowDisclaimer>
 
-        <Space height="lg" />
+        <Space.Height.lg" />
 
         {/* TODO: revisit SHOW the app name or unknown */}
         {/* TODO: revisit SHOW verified / not verified icon and text */}
@@ -78,7 +78,7 @@ const Message = ({message}: {message?: string}) => {
       <>
         <Text style={styles.text}>{message}</Text>
 
-        <Space height="lg" />
+        <Space.Height.lg" />
       </>
     )
   )

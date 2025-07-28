@@ -5,7 +5,7 @@ import React from 'react'
 import {
   defaultStackNavigationOptions,
   ManageNotificationsRoutes,
-} from '../../../../../kernel/navigation'
+} from '~/kernel/navigation'
 import {ManageNotificationDisplayDurationScreen} from './ManageNotificationDisplayDuration/ManageNotificationDisplayDurationScreen'
 import {ManageNotificationSettings} from './ManageNotificationSettings/ManageNotificationSettings'
 import {useStrings} from './useStrings'

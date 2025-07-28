@@ -8,7 +8,7 @@ import {isString, parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import {parseInt} from 'lodash'
 
-import {RawUtxo} from '../../types/other'
+import {RawUtxo} from '~/~/types/other'
 
 export const makeUtxoManager = async ({
   storage,

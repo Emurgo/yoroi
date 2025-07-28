@@ -1,29 +1,17 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {LanguagePicker} from '../../../../../components/LanguagePicker/LanguagePicker'
+import {LanguagePicker} from '~/ui/LanguagePicker/LanguagePicker'
 
 export const ChangeLanguageScreen = () => {
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
     >
       <LanguagePicker />
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-  })
-  return styles
 }

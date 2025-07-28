@@ -1,23 +1,23 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {TextInput} from '../../../../../components/TextInput/TextInput'
-import globalMessages from '../../../../../kernel/i18n/global-messages'
-import {isEmptyString} from '../../../../../kernel/utils'
-import {getWalletNameError} from '../../../../../wallets/utils/validators'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {Button} from '~/components/Button/Button'
+import {KeyboardAvoidingView} from '~/components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Spacer} from '~/components/Spacer/Spacer'
+import {TextInput} from '~/components/TextInput/TextInput'
+import globalMessages from '~/../~/kernel/i18n/global-messages'
+import {isEmptyString} from '~/../../../../kernel/utils'
+import {getWalletNameError} from '~/wallets/utils/validators'
+import {useSelectedWallet} from '~/../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '~/../../../WalletManager/context/WalletManagerProvider'
 
 export const RenameWalletScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation()
 
   const {
@@ -46,15 +46,12 @@ export const RenameWalletScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.root}>
+    <KeyboardAvoidingView style={[{backgroundColor: p.bg_color_max}, a.flex_1]}>
       <SafeAreaView
-        style={styles.safeAreaView}
+        style={[a.flex_1, a.pt_lg, a.pb_lg]}
         edges={['left', 'right', 'bottom']}
       >
-        <ScrollView
-          contentContainerStyle={styles.scrollContentContainer}
-          bounces={false}
-        >
+        <ScrollView contentContainerStyle={[a.px_lg]} bounces={false}>
           <WalletNameInput
             returnKeyType="done"
             errorDelay={0}
@@ -70,7 +67,7 @@ export const RenameWalletScreen = () => {
 
         <Spacer fill />
 
-        <View style={styles.actions}>
+        <View style={[{backgroundColor: p.bg_color_max}, a.pt_lg, a.px_lg]}>
           <Button
             onPress={handleOnRename}
             title={strings.changeButton}
@@ -80,30 +77,6 @@ export const RenameWalletScreen = () => {
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-    },
-    safeAreaView: {
-      ...atoms.flex_1,
-      ...atoms.pt_lg,
-      ...atoms.pb_lg,
-    },
-    scrollContentContainer: {
-      ...atoms.px_lg,
-    },
-    actions: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.pt_lg,
-      ...atoms.px_lg,
-    },
-  })
-  return styles
 }
 
 const WalletNameInput = TextInput

@@ -2,9 +2,9 @@ import {storiesOf} from '@storybook/react-native'
 import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
-import {QueryProvider} from '../../../../../.storybook/decorators'
-import {mocks} from '../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'
+import {QueryProvider} from '~/../../../../.storybook/decorators'
+import {mocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
 import {TxHistory} from './TxHistory'
 
 storiesOf('V2/TxHistory', module)

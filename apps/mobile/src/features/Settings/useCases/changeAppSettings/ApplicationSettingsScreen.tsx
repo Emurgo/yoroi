@@ -6,26 +6,26 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '../../../../components/Icon'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {isDev, isNightly} from '../../../../kernel/env'
-import {useLanguage} from '../../../../kernel/i18n'
-import {themeNames} from '../../../../kernel/i18n/global-messages'
-import {defaultLanguage} from '../../../../kernel/i18n/languages'
-import {useCrashReports} from '../../../../wallets/hooks'
+import {Icon} from '~/components/Icon'
+import {Spacer} from '~/components/Spacer/Spacer'
+import {isDev, isNightly} from '~/kernel/env'
+import {useLanguage} from '~/kernel/i18n'
+import {themeNames} from '~/~/kernel/i18n/global-messages'
+import {defaultLanguage} from '~/kernel/i18n/languages'
+import {useCrashReports} from '~/wallets/hooks'
 import {
   useAuthSetting,
   useAuthWithOs,
   useIsAuthOsSupported,
-} from '../../../Auth/common/hooks'
-import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
-import {useNavigateTo} from '../../common/navigation'
-import {SettingsSwitch} from '../../common/SettingsSwitch'
+} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
+import {useSelectedNetwork} from '~/../../WalletManager/common/hooks/useSelectedNetwork'
+import {useNavigateTo} from '~/features/common/navigation'
+import {SettingsSwitch} from '~/features/common/SettingsSwitch'
 import {
   NavigatedSettingsItem,
   SettingsItem,
   SettingsSection,
-} from '../../SettingsItems'
+} from '~/features/Settings/SettingsItems'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {

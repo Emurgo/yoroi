@@ -9,7 +9,7 @@ import {
 } from 'react-error-boundary'
 import {ActivityIndicator, StyleProp, View, ViewStyle} from 'react-native'
 
-import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
+import {LoadingOverlay} from '~/LoadingOverlay/LoadingOverlay'
 import {FullErrorFallback} from './FullErrorFallback'
 import {InlineErrorFallback} from './InlineErrorFallback'
 import {LargeErrorFallback} from './LargeErrorFallback'

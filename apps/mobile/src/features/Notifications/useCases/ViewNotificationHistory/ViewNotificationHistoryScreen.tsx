@@ -8,21 +8,21 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {ScrollView} from '../../../../components/ScrollView/ScrollView'
-import {Text} from '../../../../components/Text'
-import {useLanguage} from '../../../../kernel/i18n'
-import {useWalletNavigation} from '../../../../kernel/navigation'
-import {useTransactionInfos} from '../../../../wallets/hooks'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {triggerNotificationAction} from '../../common/tools'
+import {Button, ButtonType} from '~/components/Button/Button'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {Text} from '~/components/Text'
+import {useLanguage} from '~/kernel/i18n'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {useTransactionInfos} from '~/wallets/hooks'
+import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {triggerNotificationAction} from '~/features/common/tools'
 import {
   getTransactionReceivedNotificationIcon,
   getTransactionReceivedNotificationTitle,
-} from '../../common/TransactionReceivedNotification'
-import {useStrings} from '../../common/useStrings'
-import {useWalletNotifications} from '../../common/useWalletNotifications'
-import {EmptyNotificationsIllustration} from '../../illustrations/EmptyNotifications'
+} from '~/features/Notifications/common/TransactionReceivedNotification'
+import {useStrings} from '~/features/common/useStrings'
+import {useWalletNotifications} from '~/features/common/useWalletNotifications'
+import {EmptyNotificationsIllustration} from '~/../illustrations/EmptyNotifications'
 
 export const ViewNotificationHistoryScreen = () => {
   const {styles} = useStyles()

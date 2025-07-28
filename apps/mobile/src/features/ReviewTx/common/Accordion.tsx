@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Animated, Easing, Text, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../../../ui/Icon'
+import {Icon} from '~/ui/Icon'
 
 export const Accordion = ({
   label,

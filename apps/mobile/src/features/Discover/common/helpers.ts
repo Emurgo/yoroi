@@ -9,13 +9,13 @@ import {
 import {App, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
-import {cip30ExtensionMaker} from '../../../wallets/cardano/cip30/cip30'
+import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
 import {
   cip95ExtensionMaker,
   supportsCIP95,
-} from '../../../wallets/cardano/cip95/cip95'
-import {YoroiWallet} from '../../../wallets/cardano/types'
-import {collateralConfig} from '../../../wallets/cardano/utxoManager/utxos'
+} from '~/wallets/cardano/cip95/cip95'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
 
 function hasProtocol(url: string) {
   return /^[a-z]*:\/\//i.test(url)

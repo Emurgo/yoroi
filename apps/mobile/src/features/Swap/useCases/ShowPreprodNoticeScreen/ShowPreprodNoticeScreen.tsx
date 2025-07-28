@@ -3,8 +3,8 @@ import * as React from 'react'
 import {StyleSheet, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {PreprodNoticeScreenLogo} from '../../../ui/PreprodNoticeScreenLogo/PreprodNoticeScreenLogo'
-import {useStrings} from '../../common/strings'
+import {PreprodNoticeScreenLogo} from '~/ui/PreprodNoticeScreenLogo/PreprodNoticeScreenLogo'
+import {useStrings} from '~/features/common/strings'
 
 export const ShowPreprodNoticeScreen = () => {
   const strings = useStrings()

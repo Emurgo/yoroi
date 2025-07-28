@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {mocks} from '../mocks'
-import {ReceiveProvider} from '../ReceiveProvider'
+import {mocks} from '~/mocks'
+import {ReceiveProvider} from '~/ReceiveProvider'
 import {AddressDetailCard} from './AddressDetailCard'
 
 storiesOf('Receive AddressDetailCard', module)

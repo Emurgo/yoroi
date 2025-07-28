@@ -4,8 +4,8 @@ import globalMessages, {
   confirmationMessages,
   errorMessages,
   txLabels,
-} from '../../../kernel/i18n/global-messages'
-import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
+} from '~/kernel/i18n/global-messages'
+import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 
 export const useStrings = () => {
   const intl = useIntl()

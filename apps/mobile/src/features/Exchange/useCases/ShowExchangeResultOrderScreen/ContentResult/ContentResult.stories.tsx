@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
-import banxaLogo from '../../../../../assets/img/banxa.png'
+import banxaLogo from '~/../../../../assets/img/banxa.png'
 import {ContentResult} from './ContentResult'
 
 storiesOf('Exchange ShowContentResult', module)

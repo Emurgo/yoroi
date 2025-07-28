@@ -11,7 +11,7 @@ import {
   HelperText as HelperTextRNP,
   TextInput as RNPTextInput,
 } from 'react-native-paper'
-import {isEmptyString} from '../../../../../../wallets/utils/string'
+import {isEmptyString} from '~/wallets/utils/string'
 
 type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {

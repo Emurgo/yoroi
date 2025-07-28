@@ -7,8 +7,8 @@ import {
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {mocks} from '../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'
+import {mocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
 import {SelectProviderFromListScreen} from './SelectProviderFromListScreen'
 
 storiesOf('Exchange SelectProviderFromListScreen', module).add(

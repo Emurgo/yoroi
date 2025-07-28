@@ -5,13 +5,13 @@ import * as React from 'react'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {LogoBanner} from '../../../../ui/LogoBanner/LogoBanner'
-import {useModal} from '../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../ui/Space/Space'
-import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
-import {useStrings} from '../../common/useStrings'
-// import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {ButtonCard} from '~/features/common/ButtonCard/ButtonCard'
+import {useStrings} from '~/features/common/useStrings'
+// import {SelectHwConnectionModal} from '~/RestoreHwWallet/SelectHwConnectionModal'
 
 export const ChooseSetupTypeScreen = () => {
   const {palette: p} = useTheme()

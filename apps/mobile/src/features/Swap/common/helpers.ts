@@ -2,7 +2,7 @@ import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {z} from 'zod'
 
-import {normalisePtId} from '../../../kernel/helpers/normalisePtId'
+import {normalisePtId} from '~/kernel/helpers/normalisePtId'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
 import {SwapPriceImpactRisk} from './types'
 

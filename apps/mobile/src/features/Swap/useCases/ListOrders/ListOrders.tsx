@@ -18,25 +18,25 @@ import {Divider} from 'react-native-paper'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {useWalletNavigation} from '../../../../kernel/navigation'
-import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
-import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
-import {Boundary} from '../../../ui/Boundary/Boundary'
-import {Button, ButtonType} from '../../../ui/Button/Button'
-import {Counter} from '../../../ui/Counter/Counter'
-import {EmptyCompletedOrdersIllustration} from '../../../ui/EmptyCompletedOrdersIllustration/EmptyCompletedOrdersIllustration'
-import {EmptyOpenOrdersIllustration} from '../../../ui/EmptyOpenOrdersIllustration/EmptyOpenOrdersIllustration'
-import {Icon} from '../../../ui/Icon'
-import {useModal} from '../../../ui/Modal/ModalContext'
-import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
-import {RefreshButton} from '../../../ui/RefreshButton/RefreshButton'
-import {ServiceUnavailable} from '../../../ui/ServiceUnavailable/ServiceUnavailable'
-import {Space} from '../../../ui/Space/Space'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapProvider'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {useSearch, useSearchOnNavBar} from '~/../../Search/SearchContext'
+import {Boundary} from '~/ui/Boundary/Boundary'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Counter} from '~/ui/Counter/Counter'
+import {EmptyCompletedOrdersIllustration} from '~/ui/EmptyCompletedOrdersIllustration/EmptyCompletedOrdersIllustration'
+import {EmptyOpenOrdersIllustration} from '~/ui/EmptyOpenOrdersIllustration/EmptyOpenOrdersIllustration'
+import {Icon} from '~/ui/Icon'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
+import {ServiceUnavailable} from '~/ui/ServiceUnavailable/ServiceUnavailable'
+import {Space} from '~/ui/Space/Space'
+import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '~/../../WalletManager/context/WalletManagerProvider'
+import {useNavigateTo} from '~/features/common/navigation'
+import {useStrings} from '~/features/common/strings'
+import {useSwap} from '~/features/common/SwapProvider'
 
 type Filter = 'open' | 'completed'
 
@@ -637,7 +637,7 @@ const Details = ({
         </Right>
       </View>
 
-      <Space height="lg" />
+      <Space.Height.lg" />
 
       <Text style={[styles.amountItemLabel, {color: color.text_gray_medium}]}>
         {strings.swapTo}
@@ -677,11 +677,11 @@ const Details = ({
         </Right>
       </View>
 
-      <Space height="lg" />
+      <Space.Height.lg" />
 
       <Divider />
 
-      <Space height="lg" />
+      <Space.Height.lg" />
 
       <OrderCancellationConfirmation
         order={order}

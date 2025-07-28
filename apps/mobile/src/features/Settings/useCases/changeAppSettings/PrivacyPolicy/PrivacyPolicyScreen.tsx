@@ -1,38 +1,23 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ScrollView, StyleSheet} from 'react-native'
+import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLanguage} from '../../../../../kernel/i18n/LanguageProvider'
-import {PrivacyPolicy} from '../../../../Legal/PrivacyPolicy/PrivacyPolicy'
+import {useLanguage} from '~/../../../../kernel/i18n/LanguageProvider'
+import {PrivacyPolicy} from '~/../../../Legal/PrivacyPolicy/PrivacyPolicy'
 
 export const PrivacyPolicyScreen = () => {
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {languageCode} = useLanguage()
 
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[{backgroundColor: p.bg_color_max}, a.flex_1]}
     >
-      <ScrollView contentContainerStyle={styles.contentContainer}>
+      <ScrollView contentContainerStyle={[{padding: 16}]}>
         <PrivacyPolicy languageCode={languageCode} />
       </ScrollView>
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      backgroundColor: color.bg_color_max,
-      flex: 1,
-    },
-    contentContainer: {
-      padding: 16,
-    },
-  })
-
-  return styles
 }

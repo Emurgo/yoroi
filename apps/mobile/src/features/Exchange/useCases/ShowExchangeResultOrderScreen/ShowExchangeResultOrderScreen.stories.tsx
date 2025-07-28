@@ -7,9 +7,9 @@ import {
 import {LinksProvider} from '@yoroi/links'
 import React from 'react'
 
-import {ModalProvider} from '../../../../components/Modal/ModalContext'
-import {mocks as walletMocks} from '../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'
+import {ModalProvider} from '~/components/Modal/ModalContext'
+import {mocks as walletMocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
 import {ShowExchangeResultOrderScreen} from './ShowExchangeResultOrderScreen'
 
 storiesOf('Exchange ShowExchangeResultOrderScreen', module).add(

@@ -4,16 +4,16 @@ import * as React from 'react'
 import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAllowScreenshot} from '../../../../hooks/useAllowScreenShot'
-import {useBlockGoBack} from '../../../../kernel/navigation'
-import {useCopy} from '../../../../kernel/utils/clipboard'
-import {Button} from '../../../../ui/Button/Button'
-import {Checkbox} from '../../../../ui/Checkbox/Checkbox'
-import {ShareQRCodeCard} from '../../../../ui/ShareQRCodeCard/ShareQRCodeCard'
-import {Space} from '../../../../ui/Space/Space'
-import {useNavigateTo} from '../../CatalystNavigator'
-import {Actions, Description} from '../../common/components'
-import {useStrings} from '../../common/strings'
+import {useAllowScreenshot} from '~/hooks/useAllowScreenShot'
+import {useBlockGoBack} from '~/kernel/navigation'
+import {useCopy} from '~/kernel/utils/clipboard'
+import {Button} from '~/ui/Button/Button'
+import {Checkbox} from '~/ui/Checkbox/Checkbox'
+import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
+import {Space} from '~/ui/Space/Space'
+import {useNavigateTo} from '~/../CatalystNavigator'
+import {Actions, Description} from '~/features/common/components'
+import {useStrings} from '~/features/common/strings'
 
 export const QrCode = () => {
   useBlockGoBack()
@@ -64,11 +64,11 @@ export const QrCode = () => {
           shareLabel={strings.step4QrShareLabel}
         />
 
-        <Space height="lg" />
+        <Space.Height.lg" />
 
         <Description>{strings.step4Description}</Description>
 
-        <Space height="lg" />
+        <Space.Height.lg" />
 
         <Checkbox
           onChange={setChecked}

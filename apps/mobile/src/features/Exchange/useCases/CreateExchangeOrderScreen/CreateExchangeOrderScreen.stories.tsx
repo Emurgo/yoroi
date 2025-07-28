@@ -7,8 +7,8 @@ import {
 import {produce} from 'immer'
 import React from 'react'
 
-import {mocks as walletMocks} from '../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../wallets/mocks/WalletManagerProviderMock'
+import {mocks as walletMocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
 import {CreateExchangeOrderScreen} from './CreateExchangeOrderScreen'
 
 storiesOf('Exchange CreateExchangeOrderScreen', module) //

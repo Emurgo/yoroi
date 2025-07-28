@@ -4,10 +4,10 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {isEmptyString} from '../../../../kernel/utils'
-import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
-import {useStrings} from '../useStrings'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
+import {Spacer} from '~/components/Spacer/Spacer'
+import {isEmptyString} from '~/kernel/utils'
+import {useStrings} from '~/useStrings'
 
 type AmountCardProps = {
   error?: string

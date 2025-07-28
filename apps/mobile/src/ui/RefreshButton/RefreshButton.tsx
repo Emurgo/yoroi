@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native'
 
-import {Icon} from '../Icon'
-import type {IconProps} from '../Icon/type'
+import {Icon} from '~/Icon'
+import type {IconProps} from '~/Icon/type'
 
 export type RefreshButtonProps = Omit<PressableProps, 'style' | 'children'>
 export const RefreshButton = (props: RefreshButtonProps) => {

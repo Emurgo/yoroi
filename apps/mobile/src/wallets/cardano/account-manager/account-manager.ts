@@ -4,10 +4,10 @@ import {App, Wallet} from '@yoroi/types'
 
 import {defaultMemoize} from 'reselect'
 
-import {logger} from '../../../kernel/logger/logger'
-import {CardanoMobile} from '../../wallets'
-import * as legacyApi from '../api/api'
-import {CardanoTypes} from '../types'
+import {logger} from '~/kernel/logger/logger'
+import {CardanoMobile} from '~/../wallets'
+import * as legacyApi from '~/api/api'
+import {CardanoTypes} from '~/types'
 
 // NOTE: needs full refactor
 export class AddressGenerator {

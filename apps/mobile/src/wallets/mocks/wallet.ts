@@ -11,24 +11,24 @@ import BigNumber from 'bignumber.js'
 import {noop} from 'lodash'
 import {Observable} from 'rxjs'
 
-import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
-import {logger} from '../../kernel/logger/logger'
-import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
-import {CardanoTypes, YoroiWallet} from '../cardano/types'
-import {TransactionInfo} from '../types/other'
+import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/build-token-managers'
+import {logger} from '~/kernel/logger/logger'
+import {toTokenInfo, utf8ToHex} from '~/cardano/api/utils'
+import {CardanoTypes, YoroiWallet} from '~/cardano/types'
+import {TransactionInfo} from '~/types/other'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-} from '../types/staking'
+} from '~/types/staking'
 import {
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
-} from '../types/yoroi'
-import {getTokenFingerprint} from '../utils/format'
-import {CardanoMobile} from '../wallets'
+} from '~/types/yoroi'
+import {getTokenFingerprint} from '~/utils/format'
+import {CardanoMobile} from '~/wallets'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'

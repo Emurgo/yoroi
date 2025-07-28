@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {LanguagePicker} from '../../../ui/LanguagePicker/LanguagePicker'
+import {LanguagePicker} from '~/ui/LanguagePicker/LanguagePicker'
 
 export const LanguagePickerScreen = () => {
   const {palette: p} = useTheme()

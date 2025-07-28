@@ -2,8 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../ui/Space/Space'
-import {useStrings} from '../../common/strings'
+import {Spacer} from '~/ui/Space/Space'
+import {useStrings} from '~/features/common/strings'
 
 export const WarnLimitPrice = ({
   wantedPrice,

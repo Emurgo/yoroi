@@ -5,12 +5,11 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {Space} from '../../../../components/Space/Space'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {isEmptyString} from '../../../../kernel/utils'
-import {useStrings} from '../../common/useStrings'
+import {isEmptyString} from '~/kernel/utils'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {useStrings} from '~/features/common/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
 export const RequestedAdaPaymentWithLinkScreen = ({
@@ -45,7 +44,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
           <Text style={disclaimerStyle}>{description}</Text>
         </ShowDisclaimer>
 
-        <Spacer height={16} />
+        <Space.Height.md />
 
         {/* TODO: revisit SHOW the app name or unknown */}
         {/* TODO: revisit SHOW verified / not verified icon and text */}
@@ -54,7 +53,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
 
         <Message message={params.message} />
 
-        <Spacer fill />
+        <View style={[{flex: 1}]} />
       </ScrollView>
 
       <Actions style={styles.actions}>
@@ -65,7 +64,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
           title={strings.cancel}
         />
 
-        <Spacer width={16} />
+        <Space.Width.md />
 
         <Button size="S" onPress={onContinue} title={strings.continue} />
       </Actions>

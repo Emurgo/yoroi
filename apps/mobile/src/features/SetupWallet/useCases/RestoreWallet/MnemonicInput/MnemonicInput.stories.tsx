@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {View} from 'react-native'
 
-import {useScrollView} from '../../../../../components/ScrollView/ScrollView'
-import {MnemonicWordInputRef} from '../RestoreWalletScreen'
+import {useScrollView} from '~/ui/ScrollView/ScrollView'
+import {MnemonicWordInputRef} from '~/RestoreWalletScreen'
 import {MnemonicInput} from './MnemonicInput'
 
 storiesOf('MnemonicInput', module)

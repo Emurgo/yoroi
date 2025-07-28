@@ -7,9 +7,9 @@ import {
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {mocks} from '../../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../wallets/mocks/WalletManagerProviderMock'
-import {SearchProvider} from '../../../../Search/SearchContext'
+import {mocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
+import {SearchProvider} from '~/../../../Search/SearchContext'
 import {EditAmount} from './EditAmount'
 
 storiesOf('Exchange Edit Amount', module).add('initial - message', () => {

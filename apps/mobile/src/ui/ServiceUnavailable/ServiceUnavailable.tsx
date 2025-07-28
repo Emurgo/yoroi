@@ -3,10 +3,10 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../ui/Button/Button'
-import {ConectionErrorImage} from '../../../ui/ConectionErrorImage/ConectionErrorImage'
-import {Spacer} from '../../../ui/Space/Space'
-import {useStrings} from '../strings'
+import {Button} from '~/ui/Button/Button'
+import {ConectionErrorImage} from '~/ui/ConectionErrorImage/ConectionErrorImage'
+import {Spacer} from '~/ui/Space/Space'
+import {useStrings} from '~/strings'
 
 type ServiceUnavailableProps = {
   resetErrorBoundary?: () => void

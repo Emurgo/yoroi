@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {WithModalProps} from '../../../../.storybook/decorators'
+import {WithModalProps} from '~/../../../.storybook/decorators'
 import {LedgerTransportSwitch} from './LedgerTransportSwitchModal'
 
 storiesOf('Ledger Transport Switch Modal', module).add('default', () => (

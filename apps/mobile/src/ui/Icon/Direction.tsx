@@ -3,9 +3,9 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
 
-import {Received} from '../Icon/Received'
-import {Send} from '../Icon/Send'
-import {Transaction} from '../Icon/Transaction'
+import {Received} from '~/Icon/Received'
+import {Send} from '~/Icon/Send'
+import {Transaction} from '~/Icon/Transaction'
 import {MultiParty} from './MultiParty'
 import {IconProps} from './type'
 

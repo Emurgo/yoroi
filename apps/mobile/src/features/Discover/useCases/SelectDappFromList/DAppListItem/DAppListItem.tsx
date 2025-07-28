@@ -12,26 +12,26 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
-import {Button, ButtonType} from '../../../../../components/Button/Button'
-import {Icon} from '../../../../../components/Icon'
-import {InfoBanner} from '../../../../../components/InfoBanner/InfoBanner'
-import {useModal} from '../../../../../components/Modal/ModalContext'
-import {Space} from '../../../../../components/Space/Space'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {WarningBanner} from '../../../../../components/WarningBanner/WarningBanner'
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useBrowser} from '../../../common/BrowserProvider'
+import {Button, ButtonType} from '~/components/Button/Button'
+import {Icon} from '~/components/Icon'
+import {InfoBanner} from '~/components/InfoBanner/InfoBanner'
+import {useModal} from '~/components/Modal/ModalContext'
+import {Space} from '~/components/Space/Space'
+import {Spacer} from '~/components/Spacer/Spacer'
+import {WarningBanner} from '~/components/WarningBanner/WarningBanner'
+import {useMetrics} from '~/../../../../kernel/metrics/metricsManager'
+import {useBrowser} from '~/../../common/BrowserProvider'
 import {
   type DAppItem,
   getDappFallbackLogo,
   isGoogleSearchItem,
-} from '../../../common/helpers'
-import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
-import {LabelConnected} from '../../../common/LabelConnected'
-import {LabelSingleAddress} from '../../../common/LabelSingleAddress'
-import {useDisconnectDapp} from '../../../common/useDisconnectDapp'
-import {useNavigateTo} from '../../../common/useNavigateTo'
-import {useStrings} from '../../../common/useStrings'
+} from '~/features/common/helpers'
+import {LabelCategoryDApp} from '~/../../common/LabelCategoryDApp'
+import {LabelConnected} from '~/../../common/LabelConnected'
+import {LabelSingleAddress} from '~/../../common/LabelSingleAddress'
+import {useDisconnectDapp} from '~/../../common/useDisconnectDapp'
+import {useNavigateTo} from '~/../../common/useNavigateTo'
+import {useStrings} from '~/../../common/useStrings'
 
 const INIT_DIALOG_DAPP_ACTIONS_HEIGHT = 286
 

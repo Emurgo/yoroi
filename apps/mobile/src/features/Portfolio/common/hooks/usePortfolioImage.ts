@@ -5,9 +5,9 @@ import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {PixelRatio, Platform} from 'react-native'
 
-import {isDev} from '../../../../kernel/env'
-import {logger} from '../../../../kernel/logger/logger'
-import {useSelectedNetwork} from '../../../WalletManager/hooks/useSelectedNetwork'
+import {isDev} from '~/kernel/env'
+import {logger} from '~/kernel/logger/logger'
+import {useSelectedNetwork} from '~/../../WalletManager/hooks/useSelectedNetwork'
 
 export const usePortfolioImageInvalidate = () => {
   const {

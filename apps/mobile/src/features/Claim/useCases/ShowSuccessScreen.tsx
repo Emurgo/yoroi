@@ -15,17 +15,17 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../ui/Button/Button'
-import {ClaimSuccessIllustration} from '../../../ui/ClaimSuccessIllustration/ClaimSuccessIllustration'
-import {Copiable} from '../../../ui/Copiable'
-import {Icon} from '../../../ui/Icon'
-import {Space} from '../../../ui/Space/Space'
-import {TokenAmountItem} from '../../../ui/TokenAmountItem/TokenAmountItem'
-import {isEmptyString} from '../../../wallets/utils/string'
-import {useSelectedWallet} from '../../WalletManager/hooks/useSelectedWallet'
-import {useDialogs} from '../common/useDialogs'
-import {useNavigateTo} from '../common/useNavigateTo'
-import {useStrings} from '../common/useStrings'
+import {Button} from '~/ui/Button/Button'
+import {ClaimSuccessIllustration} from '~/ui/ClaimSuccessIllustration/ClaimSuccessIllustration'
+import {Copiable} from '~/ui/Copiable'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
+import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
+import {isEmptyString} from '~/wallets/utils/string'
+import {useSelectedWallet} from '~/../WalletManager/hooks/useSelectedWallet'
+import {useDialogs} from '~/common/useDialogs'
+import {useNavigateTo} from '~/common/useNavigateTo'
+import {useStrings} from '~/common/useStrings'
 
 export const ShowSuccessScreen = () => {
   const strings = useStrings()

@@ -3,16 +3,16 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
-import {SafeArea} from '../../../../components/SafeArea'
-import {Space} from '../../../../components/Space/Space'
-import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Button} from '~/components/Button/Button'
+import {SafeArea} from '~/components/SafeArea'
+import {Space} from '~/components/Space/Space'
+import {Spacer} from '~/components/Spacer/Spacer'
 import {
   useBlockGoBack,
   useWalletNavigation,
-} from '../../../../kernel/navigation'
-import {useStrings} from '../../common/hooks/useStrings'
-import {InfraestructureIssueIcon} from '../../illustrations/InfraestructureIssueIcon'
+} from '~/kernel/navigation'
+import {useStrings} from '~/features/common/hooks/useStrings'
+import {InfraestructureIssueIcon} from '~/../illustrations/InfraestructureIssueIcon'
 
 export const InfraestructureIssueScreen = () => {
   useBlockGoBack()

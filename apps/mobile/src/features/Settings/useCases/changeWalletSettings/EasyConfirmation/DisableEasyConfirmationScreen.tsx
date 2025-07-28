@@ -1,18 +1,18 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../components/Button/Button'
-import {Text} from '../../../../../components/Text'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {Button} from '~/components/Button/Button'
+import {Text} from '~/components/Text'
+import {useSelectedWallet} from '~/../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '~/../../../WalletManager/context/WalletManagerProvider'
 
 export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation()
   const {wallet} = useSelectedWallet()
   const {walletManager} = useWalletManager()
@@ -23,12 +23,15 @@ export const DisableEasyConfirmationScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.container}>
-      <View style={[styles.disableSection]}>
-        <Text style={styles.heading}>{strings.disableHeading}</Text>
+    <SafeAreaView
+      edges={['bottom']}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+    >
+      <View style={[a.flex_1, a.justify_center, {padding: 20}]}>
+        <Text style={[a.body_1_lg_regular]}>{strings.disableHeading}</Text>
       </View>
 
-      <View style={styles.actions}>
+      <View style={[{paddingBottom: 16, paddingHorizontal: 16}]}>
         <Button
           title={strings.disableButton}
           onPress={handleOnDisableConfirmation}
@@ -58,26 +61,3 @@ const messages = defineMessages({
     defaultMessage: '!!!Disable',
   },
 })
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    heading: {
-      ...atoms.body_1_lg_regular,
-    },
-    disableSection: {
-      flex: 1,
-      justifyContent: 'center',
-      padding: 20,
-    },
-    actions: {
-      paddingBottom: 16,
-      paddingHorizontal: 16,
-    },
-  })
-  return styles
-}

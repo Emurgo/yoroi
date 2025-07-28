@@ -10,14 +10,14 @@ import {
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
   TransactionInfo,
-} from '../../types/other'
-import {Token} from '../../types/tokens'
+} from '~/~/types/other'
+import {Token} from '~/~/types/tokens'
 import {
   getDefaultNetworkTokenEntry,
   MultiToken,
   strToDefaultMultiAsset,
-} from '../MultiToken'
-import {multiTokenFromRemote} from '../utils'
+} from '~/MultiToken'
+import {multiTokenFromRemote} from '~/utils'
 
 const ASSURANCE_LEVELS = {
   LOW: 3,

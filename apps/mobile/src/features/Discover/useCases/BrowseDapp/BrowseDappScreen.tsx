@@ -3,9 +3,9 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useBrowser} from '../../common/BrowserProvider'
+import {Spacer} from '~/components/Spacer/Spacer'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useBrowser} from '~/features/common/BrowserProvider'
 import {BrowserTabsBar} from './BrowserTabsBar'
 import {WebViewItem} from './WebViewItem'
 

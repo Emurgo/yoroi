@@ -9,8 +9,8 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {Icon} from '../Icon'
-import {Spacer} from '../Space/Space'
+import {Icon} from '~/Icon'
+import {Spacer} from '~/Space/Space'
 
 type AddTokenButtonProps = {
   onPress(): void

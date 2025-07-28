@@ -6,8 +6,8 @@ import {defineMessages, useIntl} from 'react-intl'
 /* import {
   defaultStackNavigationOptions,
   WalletInitRoutes,
-} from '../../kernel/navigation' */
-// import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+} from '~/kernel/navigation' */
+// import {NetworkTag} from '~/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
 import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen'

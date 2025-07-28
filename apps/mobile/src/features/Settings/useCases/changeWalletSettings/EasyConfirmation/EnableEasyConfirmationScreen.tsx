@@ -1,26 +1,26 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {LoadingOverlay} from '../../../../../components/LoadingOverlay/LoadingOverlay'
-import {Text} from '../../../../../components/Text'
-import {TextInput} from '../../../../../components/TextInput/TextInput'
-import {showErrorDialog} from '../../../../../kernel/dialogs'
-import {errorMessages} from '../../../../../kernel/i18n/global-messages'
-import {isEmptyString} from '../../../../../kernel/utils'
-import {useEnableEasyConfirmation} from '../../../../Auth/common/useEnableEasyConfirmation'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {Button} from '~/components/Button/Button'
+import {KeyboardAvoidingView} from '~/components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {LoadingOverlay} from '~/components/LoadingOverlay/LoadingOverlay'
+import {Text} from '~/components/Text'
+import {TextInput} from '~/components/TextInput/TextInput'
+import {showErrorDialog} from '~/~/kernel/dialogs'
+import {errorMessages} from '~/../~/kernel/i18n/global-messages'
+import {isEmptyString} from '~/../../../../kernel/utils'
+import {useEnableEasyConfirmation} from '~/../../../Auth/common/useEnableEasyConfirmation'
+import {useSelectedWallet} from '~/../../../WalletManager/common/hooks/useSelectedWallet'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
   const {
@@ -37,18 +37,20 @@ export const EnableEasyConfirmationScreen = () => {
   })
 
   return (
-    <KeyboardAvoidingView style={styles.root}>
+    <KeyboardAvoidingView style={[a.flex_1]}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={styles.safeAreaView}
+        style={[{backgroundColor: p.bg_color_max}, a.flex_1]}
       >
         <ScrollView
           keyboardShouldPersistTaps="always"
-          contentContainerStyle={styles.content}
+          contentContainerStyle={[a.p_lg, a.gap_lg]}
         >
-          <Text style={styles.heading}>{strings.enableHeading}</Text>
+          <Text style={[a.body_1_lg_regular]}>{strings.enableHeading}</Text>
 
-          <Text style={styles.warning}>{strings.enableWarning}</Text>
+          <Text style={[a.body_2_md_regular, {color: p.sys_magenta_500}]}>
+            {strings.enableWarning}
+          </Text>
 
           <PasswordInput
             autoFocus
@@ -79,8 +81,8 @@ export const EnableEasyConfirmationScreen = () => {
 const PasswordInput = TextInput
 
 const Actions = ({children}: ViewProps) => {
-  const styles = useStyles()
-  return <View style={styles.actions}>{children}</View>
+  const {atoms: ta, palette: p} = useTheme()
+  return <View style={[a.p_lg]}>{children}</View>
 }
 
 const useStrings = () => {
@@ -119,32 +121,3 @@ const messages = defineMessages({
     defaultMessage: '!!!Enable',
   },
 })
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-    },
-    safeAreaView: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-    },
-    content: {
-      ...atoms.p_lg,
-      ...atoms.gap_lg,
-    },
-    heading: {
-      ...atoms.body_1_lg_regular,
-    },
-    warning: {
-      color: color.sys_magenta_500,
-      ...atoms.body_2_md_regular,
-    },
-    actions: {
-      ...atoms.p_lg,
-    },
-  })
-
-  return styles
-}

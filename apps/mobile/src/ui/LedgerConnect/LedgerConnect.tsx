@@ -8,23 +8,23 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, FlatList, Image, Text, View} from 'react-native'
 import {Observer} from 'rxjs'
 
-import bleImage from '../../../assets/img/bluetooth.png'
-import usbImage from '../../../assets/img/ledger-nano-usb.png'
+import bleImage from '~/../../assets/img/bluetooth.png'
+import usbImage from '~/../../assets/img/ledger-nano-usb.png'
 import globalMessages, {
   confirmationMessages,
   ledgerMessages,
-} from '../../../kernel/i18n/global-messages'
-import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
-import {logger} from '../../../kernel/logger/logger'
+} from '~/kernel/i18n/global-messages'
+import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {logger} from '~/kernel/logger/logger'
 import {
   BluetoothDisabledError,
   RejectedByUserError,
-} from '../../../wallets/hw/hw'
-import {Device} from '../../../wallets/types/hw'
-import {BulletPointItem} from '../BulletPointItem'
-import {Button} from '../Button/Button'
-import {Loading} from '../Loading/Loading'
-import {Space} from '../Space/Space'
+} from '~/wallets/hw/hw'
+import {Device} from '~/wallets/types/hw'
+import {BulletPointItem} from '~/BulletPointItem'
+import {Button} from '~/Button/Button'
+import {Loading} from '~/Loading/Loading'
+import {Space} from '~/Space/Space'
 import {DeviceItem} from './DeviceItem'
 
 type Props = {

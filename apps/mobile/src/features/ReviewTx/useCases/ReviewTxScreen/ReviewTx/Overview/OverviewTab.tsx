@@ -19,29 +19,29 @@ import {
   View,
 } from 'react-native'
 
-import {Button} from '../../../../../../components/Button/Button'
-import {Copiable} from '../../../../../../components/Clipboard/Copiable'
-import {Divider} from '../../../../../../components/Divider/Divider'
-import {Icon} from '../../../../../../components/Icon'
-import {InfoBanner} from '../../../../../../components/InfoBanner/InfoBanner'
-import {useModal} from '../../../../../../components/Modal/ModalContext'
-import {Space} from '../../../../../../components/Space/Space'
-import {WarningBanner} from '../../../../../../components/WarningBanner/WarningBanner'
-import {formatTokenWithText} from '../../../../../../wallets/utils/format'
-import {Quantities} from '../../../../../../wallets/utils/utils'
-import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../../../WalletManager/context/WalletManagerProvider'
-import {Accordion} from '../../../../common/Accordion'
-import {useStrings} from '../../../../common/hooks/useStrings'
-import {Operations, useOperations} from '../../../../common/operations'
-import {TokenItem} from '../../../../common/TokenItem'
+import {Button} from '~/components/Button/Button'
+import {Copiable} from '~/components/Clipboard/Copiable'
+import {Divider} from '~/components/Divider/Divider'
+import {Icon} from '~/components/Icon'
+import {InfoBanner} from '~/components/InfoBanner/InfoBanner'
+import {useModal} from '~/components/Modal/ModalContext'
+import {Space} from '~/components/Space/Space'
+import {WarningBanner} from '~/components/WarningBanner/WarningBanner'
+import {formatTokenWithText} from '~/wallets/utils/format'
+import {Quantities} from '~/wallets/utils/utils'
+import {useSelectedWallet} from '~/../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '~/../../../../WalletManager/context/WalletManagerProvider'
+import {Accordion} from '~/features/common/Accordion'
+import {useStrings} from '~/features/common/hooks/useStrings'
+import {Operations, useOperations} from '~/features/common/operations'
+import {TokenItem} from '~/features/common/TokenItem'
 import {
   FormattedOutput,
   FormattedOutputs,
   FormattedTx,
-} from '../../../../common/types'
-import {WalletBalance} from '../../../../common/WalletBalance'
-import {OperationsNoticeIcon} from '../../../../illustrations/OperationsNoticeIcon'
+} from '~/features/common/types'
+import {WalletBalance} from '~/features/common/WalletBalance'
+import {OperationsNoticeIcon} from '~/../../../illustrations/OperationsNoticeIcon'
 
 export const OverviewTab = ({
   tx,

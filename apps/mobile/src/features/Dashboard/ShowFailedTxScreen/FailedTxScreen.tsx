@@ -3,11 +3,11 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 
-import {useBlockGoBack, useWalletNavigation} from '../../../kernel/navigation'
-import {Button} from '../../../ui/Button/Button'
-import {FailedTxIcon} from '../../../ui/FailedTxIcon/FailedTxIcon'
-import {SafeArea} from '../../../ui/SafeArea/SafeArea'
-import {Space, Spacer} from '../../../ui/Space/Space'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
+import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space, Spacer} from '~/ui/Space/Space'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()

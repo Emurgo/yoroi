@@ -3,12 +3,12 @@ import {PortfolioTokenBalances} from '@yoroi/types/lib/typescript/portfolio/bala
 import * as React from 'react'
 import {FlatList, Text, View} from 'react-native'
 
-import {BalanceCard} from '../../../ui/BalanceCard/BalanceCard'
-import {Icon} from '../../../ui/Icon'
-import {Space} from '../../../ui/Space/Space'
-import {TokenInfoIcon} from '../../../ui/TokenInfoIcon/TokenInfoIcon'
-import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {BalanceCard} from '~/ui/BalanceCard/BalanceCard'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
+import {usePortfolioBalances} from '~/../Portfolio/common/hooks/usePortfolioBalances'
+import {useSelectedWallet} from '~/../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './hooks/useStrings'
 
 export const WalletBalance = ({

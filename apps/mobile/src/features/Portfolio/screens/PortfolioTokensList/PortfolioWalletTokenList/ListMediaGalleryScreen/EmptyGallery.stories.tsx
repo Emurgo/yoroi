@@ -2,10 +2,10 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Text} from 'react-native'
 
-import {QueryProvider} from '../../../../../../../.storybook/decorators'
-import {mocks} from '../../../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../../wallets/mocks/WalletManagerProviderMock'
-import {SearchProvider} from '../../../../../Search/SearchContext'
+import {QueryProvider} from '~/.storybook/decorators'
+import {mocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
+import {SearchProvider} from '~/../../../../Search/SearchContext'
 import {EmptyGallery} from './EmptyGallery'
 
 storiesOf('NFT/No Nfts Screen', module)

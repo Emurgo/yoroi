@@ -1,8 +1,8 @@
 import {amountFormatter} from '@yoroi/portfolio'
 import React from 'react'
 
-import {useCollateralInfo} from '../../wallets/cardano/utxoManager/useCollateralInfo'
-import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
+import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
+import {useSelectedWallet} from '~/WalletManager/common/hooks/useSelectedWallet'
 import {
   NavigatedSettingsItem,
   NavigatedSettingsItemProps,

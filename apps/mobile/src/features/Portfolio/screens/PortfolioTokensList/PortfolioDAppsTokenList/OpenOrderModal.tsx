@@ -12,11 +12,11 @@ import {
   View,
 } from 'react-native'
 
-import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {IOpenOrders} from '../../../common/hooks/useGetOpenOrders'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {AssetLogo} from '../../../ui/AssetLogo/AssetLogo'
-import {TokenInfoIcon} from '../../../ui/TokenAmountItem/TokenInfoIcon'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
+import {PairedBalance} from '~/components/PairedBalance/PairedBalance'
+import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
+import {useStrings} from '~/../../common/hooks/useStrings'
+import {AssetLogo} from '~/ui/AssetLogo/AssetLogo'
 
 type Props = {
   tokenInfo: IOpenOrders

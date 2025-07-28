@@ -13,7 +13,7 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import type {IconProps} from '../Icon/type'
+import type {IconProps} from '~/Icon/type'
 
 export const ButtonType = {
   Primary: 'Primary',

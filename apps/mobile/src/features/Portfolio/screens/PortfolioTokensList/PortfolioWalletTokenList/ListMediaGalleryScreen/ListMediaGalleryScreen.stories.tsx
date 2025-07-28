@@ -2,11 +2,11 @@ import {storiesOf} from '@storybook/react-native'
 import {tokenBalanceMocks} from '@yoroi/portfolio'
 import * as React from 'react'
 
-import {QueryProvider} from '../../../../../../../.storybook/decorators'
-import {YoroiWallet} from '../../../../../../wallets/cardano/types'
-import {mocks} from '../../../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../../wallets/mocks/WalletManagerProviderMock'
-import {SearchProvider} from '../../../../../Search/SearchContext'
+import {QueryProvider} from '~/.storybook/decorators'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {mocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
+import {SearchProvider} from '~/../../../../Search/SearchContext'
 import {ListMediaGalleryScreen} from './ListMediaGalleryScreen'
 
 storiesOf('NFT/Gallery', module)

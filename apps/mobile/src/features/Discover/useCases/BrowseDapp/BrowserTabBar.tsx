@@ -11,9 +11,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import WebView from 'react-native-webview'
 
-import {Icon} from '../../../../components/Icon'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useBrowser} from '../../common/BrowserProvider'
+import {Icon} from '~/components/Icon'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useBrowser} from '~/features/common/BrowserProvider'
 import {WebViewState} from './WebViewItem'
 
 type Props = {

@@ -4,9 +4,9 @@ import React, {ReactNode} from 'react'
 import {ActivityIndicator, Pressable, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Icon} from '../../../../ui/Icon'
-import {Space} from '../../../../ui/Space'
-import {Text} from '../../../../ui/Text/Text'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space'
+import {Text} from '~/ui/Text/Text'
 
 type Props = {
   title: string

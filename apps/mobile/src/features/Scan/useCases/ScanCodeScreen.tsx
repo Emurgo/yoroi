@@ -7,14 +7,14 @@ import {z} from 'zod'
 import {
   CameraCodeScanner,
   CameraCodeScannerMethods,
-} from '../../../components/CameraCodeScanner/CameraCodeScanner'
-import * as feedback from '../../../kernel/haptics/feedback'
-import {ScanRoutes, useParams} from '../../../kernel/navigation'
-import {parseScanAction} from '../common/parsers'
-import {useNavigateTo} from '../common/useNavigateTo'
-import {useScanErrorResolver} from '../common/useScanErrorResolver'
-import {useStrings} from '../common/useStrings'
-import {useTriggerScanAction} from '../common/useTriggerScanAction'
+} from '~/ui/CameraCodeScanner/CameraCodeScanner'
+import * as feedback from '~/kernel/haptics/feedback'
+import {ScanRoutes, useParams} from '~/kernel/navigation'
+import {parseScanAction} from '~/common/parsers'
+import {useNavigateTo} from '~/common/useNavigateTo'
+import {useScanErrorResolver} from '~/common/useScanErrorResolver'
+import {useStrings} from '~/common/useStrings'
+import {useTriggerScanAction} from '~/common/useTriggerScanAction'
 
 export const ScanCodeScreen = () => {
   const navigateTo = useNavigateTo()

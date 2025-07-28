@@ -2,11 +2,11 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Copiable} from '../../../../../../components/Clipboard/Copiable'
-import {Space} from '../../../../../../components/Space/Space'
-import {useStrings} from '../../../../common/hooks/useStrings'
-import {TokenItem} from '../../../../common/TokenItem'
-import {FormattedTx} from '../../../../common/types'
+import {Copiable} from '~/components/Clipboard/Copiable'
+import {Space} from '~/components/Space/Space'
+import {useStrings} from '~/features/common/hooks/useStrings'
+import {TokenItem} from '~/features/common/TokenItem'
+import {FormattedTx} from '~/features/common/types'
 
 export const MintTab = ({mintData}: {mintData: FormattedTx['mint']}) => {
   const {styles} = useStyles()

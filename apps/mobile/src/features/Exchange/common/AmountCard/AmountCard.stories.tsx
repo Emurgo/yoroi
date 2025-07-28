@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {mocks} from '../../../../wallets/mocks/wallet'
+import {mocks} from '~/wallets/mocks/wallet'
 import {AmountCard} from './AmountCard'
 
 storiesOf('Exchange AmountCard', module)

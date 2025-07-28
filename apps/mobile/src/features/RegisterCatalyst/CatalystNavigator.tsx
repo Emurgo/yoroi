@@ -4,16 +4,16 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {Boundary} from '../../components/Boundary/Boundary'
-import globalMessages from '../../kernel/i18n/global-messages'
-import {useMetrics} from '../../kernel/metrics/metricsManager'
+import {Boundary} from '~/components/Boundary/Boundary'
+import globalMessages from '~/kernel/i18n/global-messages'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
   useWalletNavigation,
   VotingRegistrationRouteNavigation,
   VotingRegistrationRoutes,
-} from '../../kernel/navigation'
-import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+} from '~/kernel/navigation'
+import {NetworkTag} from '~/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {ConfirmPin} from './useCases/ConfirmPin/ConfirmPin'
 import {DisplayPin} from './useCases/DisplayPin/DisplayPin'
 import {DownloadCatalystAppScreen} from './useCases/DownloadCatalystAppScreen/DownloadCatalystAppScreen'

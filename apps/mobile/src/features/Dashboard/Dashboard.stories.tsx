@@ -1,10 +1,10 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {QueryProvider} from '../../../.storybook/decorators'
-import {YoroiWallet} from '../../wallets/cardano/types'
-import {mocks} from '../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../wallets/mocks/WalletManagerProviderMock'
+import {QueryProvider} from '~/../../.storybook/decorators'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {mocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
 import {Dashboard} from './Dashboard'
 
 storiesOf('Dashboard', module)

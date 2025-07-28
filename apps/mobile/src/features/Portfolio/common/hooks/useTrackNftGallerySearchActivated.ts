@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 
 export const useTrackNftGallerySearchActivated = (
   searchTerm: string,

@@ -1,11 +1,11 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {useCallback, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
 import {
   TokenChartInterval,
   useGetPortfolioTokenChart,
-} from '../../../common/hooks/useGetPortfolioTokenChart'
+} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
 import {ChartPlaceholder} from './ChartPlaceholder'
 import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'
@@ -13,7 +13,7 @@ import {TokenChartToolbar} from './TokenChartToolBar'
 import {TokenPerformance} from './TokenPerformance'
 
 export const PortfolioTokenChart = () => {
-  const {styles} = useStyles()
+  const {atoms: ta} = useTheme()
 
   const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -30,7 +30,7 @@ export const PortfolioTokenChart = () => {
   }, [])
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1, a.flex_col]}>
       {isFetching ? (
         <PortfolioTokenChartSkeleton />
       ) : (
@@ -60,17 +60,4 @@ export const PortfolioTokenChart = () => {
       />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-    },
-  })
-
-  return {styles} as const
 }

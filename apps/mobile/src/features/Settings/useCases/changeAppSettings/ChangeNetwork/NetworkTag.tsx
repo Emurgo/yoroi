@@ -1,9 +1,8 @@
 import {networkConfigs} from '@yoroi/blockchains'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {
-  StyleSheet,
   Text,
   TextStyle,
   TouchableOpacity,
@@ -12,14 +11,14 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {Button, ButtonType} from '../../../../../components/Button/Button'
-import {useModal} from '../../../../../components/Modal/ModalContext'
-import {Space} from '../../../../../components/Space/Space'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../../../kernel/navigation'
-import {availableNetworks} from '../../../../WalletManager/common/constants'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {Spacer} from '~/ui/Spacer/Spacer'
+import {availableNetworks} from '~/../../WalletManager/common/constants'
+import {useWalletManager} from '~/../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from './strings'
 
 export const NetworkTag = ({
@@ -40,10 +39,11 @@ export const NetworkTag = ({
     walletManager,
   } = useWalletManager()
   const {navigateToChangeNetwork} = useWalletNavigation()
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const {track} = useMetrics()
+  const width = useWindowDimensions().width - 120
 
   const Tag = selectedNetwork === Chain.Network.Preprod ? PreprodTag : null
 
@@ -89,19 +89,26 @@ export const NetworkTag = ({
   }
 
   return (
-    <View style={[styles.headerTitleContainerStyle, style]}>
+    <View
+      style={[{width}, a.flex_row, a.align_center, a.justify_center, style]}
+    >
       <Text
         numberOfLines={1}
         accessibilityRole="header"
         aria-level="1"
         ellipsizeMode="tail"
-        style={[styles.headerTitleStyle, textStyle]}
+        style={[
+          a.body_1_lg_medium,
+          a.flex_shrink,
+          {color: p.text_gray_medium},
+          textStyle,
+        ]}
       >
         {children}
       </Text>
 
       {Tag && (
-        <View style={styles.tagContainer}>
+        <View style={[a.pl_sm, {flexShrink: 0}]}>
           <Tag
             onPress={onPress}
             disabled={
@@ -124,14 +131,19 @@ const PreprodTag = ({
   onPress: () => void
   disabled: boolean
 }) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {name} = networkConfigs[Chain.Network.Preprod]
 
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.5}
-      style={styles.preprodTag}
+      style={[
+        {backgroundColor: p.sys_yellow_500},
+        a.rounded_full,
+        a.px_sm,
+        a.py_xs,
+      ]}
       disabled={disabled}
     >
       <Text>{name}</Text>
@@ -146,16 +158,18 @@ const MainnetWarningDialog = ({
   onCancel: () => void
   onOk: () => void
 }) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.warningModal}>
-      <Text style={styles.warningModalText}>{strings.networkTagModalText}</Text>
+    <View style={[a.px_lg, a.flex_1]}>
+      <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+        {strings.networkTagModalText}
+      </Text>
 
       <Spacer fill />
 
-      <View style={styles.warningModalActions}>
+      <View style={[a.pb_lg, a.flex_row, a.justify_between]}>
         <Button
           size="S"
           type={ButtonType.Secondary}
@@ -169,48 +183,4 @@ const MainnetWarningDialog = ({
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const width = useWindowDimensions().width - 120
-
-  const styles = StyleSheet.create({
-    headerTitleStyle: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_medium,
-      ...atoms.flex_shrink,
-    },
-    headerTitleContainerStyle: {
-      width,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-    tagContainer: {
-      ...atoms.pl_sm,
-      flexShrink: 0,
-    },
-    preprodTag: {
-      backgroundColor: color.sys_yellow_500,
-      ...atoms.rounded_full,
-      ...atoms.px_sm,
-      ...atoms.py_xs,
-    },
-    warningModal: {
-      ...atoms.px_lg,
-      ...atoms.flex_1,
-    },
-    warningModalText: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
-    },
-    warningModalActions: {
-      ...atoms.pb_lg,
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-  })
-
-  return {styles} as const
 }

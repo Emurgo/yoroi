@@ -2,10 +2,10 @@ import {useTheme} from '@yoroi/theme'
 import React, {useEffect} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {getErrorMessage} from '../errors'
-import {useStrings} from '../strings'
+import {useAuthOsWithEasyConfirmation} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {getErrorMessage} from '~/errors'
+import {useStrings} from '~/strings'
 import {ActivityIndicator} from './ActivityIndicator'
 
 export const ConfirmRawTxWithOs = ({

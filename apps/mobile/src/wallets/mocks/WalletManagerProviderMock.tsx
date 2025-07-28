@@ -2,12 +2,12 @@ import {buildNetworkManagers} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 
-import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
-import {WalletManagerProvider} from '../../features/WalletManager/context/WalletManagerProvider'
-import {WalletManager} from '../../features/WalletManager/wallet-manager'
-import {logger} from '../../kernel/logger/logger'
-import {rootStorage} from '../../kernel/storage/rootStorage'
-import {YoroiWallet} from '../cardano/types'
+import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/build-token-managers'
+import {WalletManagerProvider} from '~/features/WalletManager/context/WalletManagerProvider'
+import {WalletManager} from '~/features/WalletManager/wallet-manager'
+import {logger} from '~/kernel/logger/logger'
+import {rootStorage} from '~/kernel/storage/rootStorage'
+import {YoroiWallet} from '~/cardano/types'
 import {mocks} from './wallet'
 
 // TODO: should be mocked

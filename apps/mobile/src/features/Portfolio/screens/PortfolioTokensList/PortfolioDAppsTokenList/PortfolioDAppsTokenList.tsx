@@ -3,26 +3,26 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {TabPanel} from '../../../../../components/Tabs/Tabs'
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useSearch} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
+import {Spacer} from '~/components/Spacer/Spacer'
+import {TabPanel} from '~/components/Tabs/Tabs'
+import {useMetrics} from '~/../../../../kernel/metrics/metricsManager'
+import {useSearch} from '~/../../../Search/SearchContext'
+import {useSelectedWallet} from '~/../../../WalletManager/hooks/useSelectedWallet'
 import {
   ILiquidityPool,
   useGetLiquidityPool,
-} from '../../../common/hooks/useGetLiquidityPool'
+} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
 import {
   IOpenOrders,
   useGetOpenOrders,
-} from '../../../common/hooks/useGetOpenOrders'
-import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
+} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
+import {usePortfolioPrimaryBalance} from '~/../../common/hooks/usePortfolioPrimaryBalance'
 import {
   PortfolioDappsTab,
   usePortfolio,
-} from '../../../context/PortfolioProvider'
-import {Line} from '../../../ui/Line'
-import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
+} from '~/features/Portfolio/context/PortfolioProvider'
+import {Line} from '~/ui/Line'
+import {TotalTokensValue} from '~/TotalTokensValue/TotalTokensValue'
 import {LendAndBorrowTab} from './LendAndBorrowTab'
 import {LiquidityPoolTab} from './LiquidityPoolTab'
 import {OpenOrdersTab} from './OpenOrdersTab'

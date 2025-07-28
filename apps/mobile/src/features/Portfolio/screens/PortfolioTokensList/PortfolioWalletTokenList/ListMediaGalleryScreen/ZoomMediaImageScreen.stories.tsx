@@ -2,10 +2,10 @@ import {storiesOf} from '@storybook/react-native'
 import {tokenBalanceMocks} from '@yoroi/portfolio'
 import React from 'react'
 
-import {QueryProvider, RouteProvider} from '../../../../../../../.storybook'
-import {YoroiWallet} from '../../../../../../wallets/cardano/types'
-import {mocks} from '../../../../../../wallets/mocks/wallet'
-import {WalletManagerProviderMock} from '../../../../../../wallets/mocks/WalletManagerProviderMock'
+import {QueryProvider, RouteProvider} from '~/../../../../../../.storybook'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {mocks} from '~/wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '~/wallets/mocks/WalletManagerProviderMock'
 import {ZoomMediaImageScreen} from './ZoomMediaImageScreen'
 
 storiesOf('NFT/Details Image', module).add('Default', () => {

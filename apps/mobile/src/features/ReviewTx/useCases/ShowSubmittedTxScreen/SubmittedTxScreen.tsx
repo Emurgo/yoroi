@@ -5,12 +5,12 @@ import {StyleSheet, Text, View} from 'react-native'
 import {
   useBlockGoBack,
   useWalletNavigation,
-} from '../../../../kernel/navigation'
-import {Button} from '../../../ui/Button/Button'
-import {SafeArea} from '../../../ui/SafeArea/SafeArea'
-import {Space, Spacer} from '../../../ui/Space/Space'
-import {SuccessfulTxIcon} from '../../../ui/SuccessfulTxIcon/SuccessfulTxIcon'
-import {useStrings} from '../../common/hooks/useStrings'
+} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space, Spacer} from '~/ui/Space/Space'
+import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
+import {useStrings} from '~/features/common/hooks/useStrings'
 
 export const SubmittedTxScreen = () => {
   useBlockGoBack()

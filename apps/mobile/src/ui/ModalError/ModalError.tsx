@@ -8,11 +8,11 @@ import {
   GeneralConnectionError,
   LedgerUserError,
   RejectedByUserError,
-} from '../../../wallets/hw/hw'
-import {Button, ButtonType} from '../Button/Button'
-import {Icon} from '../Icon'
-import {Space} from '../Space/Space'
-import {Text} from '../Text/Text'
+} from '~/wallets/hw/hw'
+import {Button, ButtonType} from '~/Button/Button'
+import {Icon} from '~/Icon'
+import {Space} from '~/Space/Space'
+import {Text} from '~/Text/Text'
 import {useStrings} from './strings'
 
 type Props = {

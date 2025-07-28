@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleProp, StyleSheet, Text, ViewStyle} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
-import {CheckIllustration} from '../CheckIllustration/CheckIllustration'
+import {CheckIllustration} from '~/CheckIllustration/CheckIllustration'
 
 type StepperProgressProps = {
   currentStep: number

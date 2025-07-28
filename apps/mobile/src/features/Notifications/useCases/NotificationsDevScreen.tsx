@@ -12,12 +12,12 @@ import * as React from 'react'
 import {Switch as RNSwitch, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../ui/Button/Button'
-import {ScrollView} from '../../../ui/ScrollView/ScrollView'
-import {Text} from '../../../ui/Text/Text'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
-import {useNotificationManagerMaker} from '../common/notification-manager'
-import {createTransactionReceivedNotification} from '../common/transaction-received-notification'
+import {Button} from '~/ui/Button/Button'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {Text} from '~/ui/Text/Text'
+import {useWalletManager} from '~/../WalletManager/context/WalletManagerProvider'
+import {useNotificationManagerMaker} from '~/common/notification-manager'
+import {createTransactionReceivedNotification} from '~/common/transaction-received-notification'
 
 export const NotificationsDevScreen = () => {
   const manager = useNotificationManagerMaker()

@@ -25,8 +25,8 @@ import {freeze} from 'immer'
 import * as React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 
-import {isWeb} from '../constants'
-import {logger} from '../logger/logger'
+import {isWeb} from '~/kernel/constants'
+import {logger} from '~/kernel/logger/logger'
 import {ConnectionStatus} from './types'
 
 // IMPORTANT:

@@ -8,8 +8,8 @@ import {
 import React from 'react'
 import {Notifications} from 'react-native-notifications'
 
-import {logger} from '../../../kernel/logger/logger'
-import {useWalletNavigation, WalletNavigation} from '../../../kernel/navigation'
+import {logger} from '~/kernel/logger/logger'
+import {useWalletNavigation, WalletNavigation} from '~/kernel/navigation'
 import {pushNotificationsManager} from './notification-manager'
 import {parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'

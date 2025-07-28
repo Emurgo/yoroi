@@ -11,26 +11,26 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useWalletNavigation} from '../../../../kernel/navigation'
-import {Button} from '../../../../ui/Button/Button'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
 import {
   BACKSPACE,
   NumericKeyboard,
-} from '../../../../ui/NumericKeyboard/NumericKeyboard'
-import {Space, Spacer} from '../../../../ui/Space/Space'
-import {generatePrivateKeyForCatalyst} from '../../../../wallets/cardano/catalyst'
-import {encryptWithPassword} from '../../../../wallets/cardano/catalyst/catalystCipher'
-import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo} from '../../CatalystNavigator'
+} from '~/ui/NumericKeyboard/NumericKeyboard'
+import {Space, Spacer} from '~/ui/Space/Space'
+import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
+import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
+import {useReviewTx} from '~/../../ReviewTx/common/ReviewTxProvider'
+import {useSelectedWallet} from '~/../../WalletManager/common/hooks/useSelectedWallet'
+import {useNavigateTo} from '~/../CatalystNavigator'
 import {
   Actions,
   Description,
   PinBox,
   Row,
   Stepper,
-} from '../../common/components'
-import {useStrings} from '../../common/strings'
+} from '~/features/common/components'
+import {useStrings} from '~/features/common/strings'
 
 export const ConfirmPin = () => {
   const strings = useStrings()
@@ -235,7 +235,7 @@ export const ConfirmPin = () => {
       <ScrollView bounces={false} contentContainerStyle={styles.padding}>
         <Description>{strings.step3Description}</Description>
 
-        <Space height="lg" />
+        <Space.Height.lg" />
 
         <Row style={[styles.row, {justifyContent: 'center'}]}>
           <PinBox
@@ -247,7 +247,7 @@ export const ConfirmPin = () => {
             {pin1Value}
           </PinBox>
 
-          <Space width="lg" />
+          <Space.Width.lg" />
 
           <PinBox
             onPress={() => handleOnPress(2)}
@@ -294,7 +294,7 @@ export const ConfirmPin = () => {
         </Actions>
       </Padding>
 
-      <Space height="lg" />
+      <Space.Height.lg" />
 
       <NumericKeyboard onKeyDown={onKeyDown} />
 

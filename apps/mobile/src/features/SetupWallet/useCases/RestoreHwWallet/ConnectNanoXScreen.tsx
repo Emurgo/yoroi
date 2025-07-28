@@ -7,22 +7,22 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
-import {showErrorDialog} from '../../../../kernel/dialogs'
-import {errorMessages} from '../../../../kernel/i18n/global-messages'
-import {LocalizableError} from '../../../../kernel/i18n/LocalizableError'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {LedgerConnect} from '../../../../legacy/HW'
-import {getHWDeviceInfo} from '../../../../wallets/cardano/hw/hw'
-import {Device} from '../../../../wallets/types/hw'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {useStrings} from '../../common/useStrings'
+import {useModal} from '~/components/Modal/ModalContext'
+import {StepperProgress} from '~/components/StepperProgress/StepperProgress'
+import {showErrorDialog} from '~/kernel/dialogs'
+import {errorMessages} from '~/~/kernel/i18n/global-messages'
+import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation'
+import {LedgerConnect} from '~/../../../legacy/HW'
+import {getHWDeviceInfo} from '~/wallets/cardano/hw/hw'
+import {Device} from '~/wallets/types/hw'
+import {useWalletManager} from '~/../../WalletManager/context/WalletManagerProvider'
+import {useStrings} from '~/features/common/useStrings'
 import {
   WalletDuplicatedModal,
   WalletDuplicatedModalActions,
-} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
+} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 
 type Props = {
   defaultDevices?: Array<Device> // for storybook
@@ -31,7 +31,7 @@ type Props = {
 export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {atoms: a, palette: p} = useTheme()
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
   const {track} = useMetrics()
@@ -111,16 +111,16 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[{...a.flex_1}, {backgroundColor: p.bg_color_max}]}
     >
       <StepperProgress
-        style={styles.stepper}
+        style={[{...a.p_lg}]}
         currentStepTitle="Connect"
         currentStep={2}
         totalSteps={3}
       />
 
-      <View style={styles.content}>
+      <View style={[{...a.flex_1}, {...a.px_lg}]}>
         <LedgerConnect
           onConnectBLE={onConnectBLE}
           onConnectUSB={onConnectUSB}

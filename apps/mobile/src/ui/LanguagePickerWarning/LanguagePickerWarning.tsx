@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 
-import {Icon} from '../Icon'
+import {Icon} from '~/Icon'
 
 export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
   const strings = useStrings()

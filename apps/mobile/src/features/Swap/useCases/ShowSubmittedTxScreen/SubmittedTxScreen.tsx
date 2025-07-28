@@ -2,13 +2,13 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button} from '../../../ui/Button/Button'
-import {SafeArea} from '../../../ui/SafeArea/SafeArea'
-import {Space, Spacer} from '../../../ui/Space/Space'
-import {SuccessfulTxIcon} from '../../../ui/SuccessfulTxIcon/SuccessfulTxIcon'
-import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapProvider'
+import {Button} from '~/ui/Button/Button'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space, Spacer} from '~/ui/Space/Space'
+import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
+import {useNavigateTo} from '~/features/common/navigation'
+import {useStrings} from '~/features/common/strings'
+import {useSwap} from '~/features/common/SwapProvider'
 
 export const SubmittedTxScreen = () => {
   const strings = useStrings()
@@ -27,9 +27,9 @@ export const SubmittedTxScreen = () => {
 
       <SuccessfulTxIcon />
 
-      <Space height="_2xl" />
+      <Space.Height._2xl" />
 
-      <Space height="lg" />
+      <Space.Height.lg" />
 
       <Text style={[styles.title, {color: color.gray_max}]}>
         {strings.submittedTxScreenTitle}

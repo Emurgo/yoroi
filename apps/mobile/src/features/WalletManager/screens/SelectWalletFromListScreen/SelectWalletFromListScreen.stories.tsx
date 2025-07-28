@@ -1,8 +1,8 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {WalletManagerProvider} from '../../context/WalletManagerProvider'
-import {mockWalletManager, WalletManager} from '../../wallet-manager'
+import {WalletManagerProvider} from '~/../context/WalletManagerProvider'
+import {mockWalletManager, WalletManager} from '~/../wallet-manager'
 import {SelectWalletFromList} from './SelectWalletFromListScreen'
 
 storiesOf('SelectWalletFromList', module)

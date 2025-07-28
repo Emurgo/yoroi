@@ -4,11 +4,11 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
-import {usePromise} from '../../../hooks/usePromise'
-import {Button} from '../../../ui/Button/Button'
-import {SpaceHeight} from '../../../ui/Space/Space'
-import {useAuth} from '../context/AuthProvider'
-import {Logo} from '../ui/illustrations/Logo'
+import {usePromise} from '~/hooks/usePromise'
+import {Button} from '~/ui/Button/Button'
+import {SpaceHeight} from '~/ui/Space/Space'
+import {useAuth} from '~/context/AuthProvider'
+import {Logo} from '~/ui/illustrations/Logo'
 
 export const LoginWithHostScreen = () => {
   const strings = useStrings()
