@@ -171,9 +171,7 @@ export const ManageCollateralScreen = () => {
         <Text
           style={[
             a.flex_1,
-            {
-              alignSelf: 'center',
-            },
+            a.self_center,
           ]}
         >
           {strings.lockedAsCollateral}
