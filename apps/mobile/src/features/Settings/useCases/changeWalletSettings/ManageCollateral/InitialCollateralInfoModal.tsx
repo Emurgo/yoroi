@@ -50,9 +50,7 @@ const Link = () => {
     <Text
       style={[
         a.link_1_lg_underline,
-        {
-          color: p.text_primary_medium,
-        },
+        ta.text_primary_medium,
       ]}
       onPress={handleOnPress}
     >
