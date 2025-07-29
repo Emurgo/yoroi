@@ -168,14 +168,13 @@ export const ManageNotificationDisplayDurationScreen = () => {
               selectionColor={p.input_selected}
               right={
                 <Text
-                  style={{
-                    ...ta.text_gray_medium,
-                    ...a.body_1_lg_regular,
-                    ...a.p_lg,
-                    ...a.absolute,
-                    right: 0,
-                    top: 0,
-                  }}
+                  style={[
+                    ta.text_gray_medium,
+                    a.body_1_lg_regular,
+                    a.p_lg,
+                    a.absolute,
+                    {right: 0, top: 0},
+                  ]}
                 >
                   {strings.seconds}
                 </Text>
