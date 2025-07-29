@@ -22,7 +22,7 @@ export const InitialCollateralInfoModal = () => {
         <Link />
       </Text>
 
-      <SpaceHeight fill size={'lg'} />
+      <Space.Height.lg fill />
     </View>
   )
 }
@@ -32,7 +32,7 @@ const learnMoreLink =
 
 const Link = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   const handleOnPress = () => {
     Linking.openURL(learnMoreLink)
@@ -42,9 +42,7 @@ const Link = () => {
     <Text
       style={[
         a.link_1_lg_underline,
-        {
-          color: p.text_primary_medium,
-        },
+        ta.text_primary_medium,
       ]}
       onPress={handleOnPress}
     >
