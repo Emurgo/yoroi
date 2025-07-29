@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, useWindowDimensions, View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
@@ -36,7 +36,7 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
   const {copy} = useCopy()
   const {track} = useMetrics()
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const {selectedAddress: address} = useReceive()
   const {spending, staking} = useKeyHashes({address})
@@ -106,8 +106,8 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.container}>
+    <View style={[a.align_center]}>
+      <View style={[{borderRadius: 10}, a.flex_1]}>
         <Animated.FlatList
           layout={Layout}
           horizontal={true}
@@ -119,23 +119,23 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
           snapToInterval={itemsPerPage * screenWidth}
           decelerationRate="fast"
           renderItem={renderItem}
-          contentContainerStyle={styles.contentContainer}
+          contentContainerStyle={{gap: 10}}
         />
       </View>
 
       <Space.Height.sm />
 
-      <View style={styles.index}>
+      <View style={[a.flex_row, {gap: 6}]}>
         {cardIndicators.map((index) => (
           <View
             key={index + '-indicator'}
             style={[
-              styles.circle,
               {
+                width: 12,
+                height: 12,
+                borderRadius: 100,
                 backgroundColor:
-                  index === scrollPosition
-                    ? color.el_primary_medium
-                    : color.gray_300,
+                  index === scrollPosition ? p.el_primary_medium : p.gray_300,
               },
             ]}
           />
@@ -144,25 +144,3 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  root: {
-    ...a.align_center,
-  },
-  container: {
-    borderRadius: 10,
-    ...a.flex_1,
-  },
-  index: {
-    ...a.flex_row,
-    gap: 6,
-  },
-  circle: {
-    width: 12,
-    height: 12,
-    borderRadius: 100,
-  },
-  contentContainer: {
-    gap: 10,
-  },
-})

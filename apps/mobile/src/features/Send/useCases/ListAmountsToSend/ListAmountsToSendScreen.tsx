@@ -7,7 +7,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -39,7 +39,7 @@ export const ListAmountsToSendScreen = () => {
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const {unsignedTxChanged} = useReviewTx()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   useLayoutEffect(() => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
@@ -129,7 +129,13 @@ export const ListAmountsToSendScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[styles.root, {backgroundColor: color.bg_color_max}]}
+      style={[
+        a.flex_1,
+        a.px_lg,
+        a.pb_lg,
+        a.gap_xl,
+        {backgroundColor: p.bg_color_max},
+      ]}
     >
       <AmountsList
         data={Object.values(amounts)}
@@ -147,8 +153,8 @@ export const ListAmountsToSendScreen = () => {
         testID="selectedTokens"
       />
 
-      <Actions style={[styles.actions, {backgroundColor: 'transparent'}]}>
-        <Row style={styles.row}>
+      <Actions style={[{backgroundColor: 'transparent'}]}>
+        <Row>
           <Space.Height._2xs fill />
 
           <AddTokenButton onPress={onAdd} />
@@ -177,23 +183,23 @@ const ActionableAmount = ({
   onRemove,
   onEdit,
 }: ActionableAmountProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const handleRemove = () => onRemove(amount.info.id)
   const handleEdit = () => (isNft(amount.info) ? null : onEdit(amount.info.id))
 
   return (
     <View
-      style={[styles.amountItem, a.flex_row, a.justify_between, a.align_center]}
+      style={[a.flex_row, a.justify_between, a.align_center]}
       testID="amountItem"
     >
-      <Left style={[styles.flex, {flex: 1}]}>
+      <Left style={[{flex: 1}]}>
         <EditAmountButton onPress={handleEdit}>
           <TokenAmountItem amount={amount} ignorePrivacy />
         </EditAmountButton>
       </Left>
 
-      <Right style={[styles.flex, {paddingLeft: 16}]}>
+      <Right style={[{paddingLeft: 16}]}>
         <RemoveAmountButton onPress={handleRemove} />
       </Right>
     </View>
@@ -233,11 +239,11 @@ const AmountsList = FlatList
 
 const ListAmountsNavigateBackButton = () => {
   const navigation = useNavigateTo()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity onPress={() => navigation.startTx()}>
-      <Icon.Chevron direction="left" color={color.el_gray_max} />
+      <Icon.Chevron direction="left" color={p.el_gray_max} />
     </TouchableOpacity>
   )
 }
@@ -256,16 +262,4 @@ const messages = defineMessages({
     id: 'components.send.addToken',
     defaultMessage: '!!!Add token',
   },
-})
-
-const styles = StyleSheet.create({
-  row: {},
-  actions: {},
-  root: {
-    ...a.flex_1,
-    ...a.px_lg,
-    ...a.pb_lg,
-    ...a.gap_xl,
-  },
-  amountItem: {},
 })

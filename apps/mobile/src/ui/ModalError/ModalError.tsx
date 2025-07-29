@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -23,22 +23,28 @@ type Props = {
 
 export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const message = getErrorMessage(error, strings)
 
   return (
     <>
-      <View style={styles.container}>
+      <View style={[a.px_lg, a.flex_grow, a.align_center, a.justify_center]}>
         <View>
-          <Icon.Danger color={color.sys_magenta_500} size={42} />
+          <Icon.Danger color={p.sys_magenta_500} size={42} />
         </View>
 
-        <Text style={[styles.message, {color: color.sys_magenta_500}]}>
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            a.text_center,
+            {color: p.sys_magenta_500},
+          ]}
+        >
           {message}
         </Text>
       </View>
 
-      <View style={styles.buttons}>
+      <View style={[a.flex_row, a.align_center, a.justify_center, a.p_lg]}>
         <Button
           size="S"
           type={ButtonType.Secondary}
@@ -97,22 +103,3 @@ const getErrorMessage = (
 
   return `${strings.error}: ${error.message}`
 }
-
-const styles = StyleSheet.create({
-  message: {
-    ...a.body_1_lg_regular,
-    ...a.text_center,
-  },
-  container: {
-    ...a.px_lg,
-    ...a.flex_grow,
-    ...a.align_center,
-    ...a.justify_center,
-  },
-  buttons: {
-    ...a.flex_row,
-    ...a.align_center,
-    ...a.justify_center,
-    ...a.p_lg,
-  },
-})

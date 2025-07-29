@@ -1,12 +1,5 @@
 import * as React from 'react'
-import {
-  FlatList,
-  ListRenderItem,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import {FlatList, ListRenderItem, SafeAreaView, Text, View} from 'react-native'
 import {useSearch, useSearchOnNavBar} from '../../Search/SearchContext'
 
 interface WordItem {
@@ -63,47 +56,29 @@ export const TempTestSearchScreen = () => {
   }, [search])
 
   const renderItem: ListRenderItem<WordItem> = ({item}) => (
-    <View style={styles.item}>
-      <Text style={styles.word}>{item.word}</Text>
+    <View
+      style={[
+        {
+          padding: 16,
+          marginHorizontal: 16,
+          marginVertical: 8,
+          backgroundColor: '#f9f9f9',
+          borderRadius: 8,
+        },
+      ]}
+    >
+      <Text style={{fontSize: 16}}>{item.word}</Text>
     </View>
   )
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <FlatList
         data={filteredData}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={{paddingBottom: 16}}
       />
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  search: {
-    margin: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  list: {
-    paddingBottom: 16,
-  },
-  item: {
-    padding: 16,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-  },
-  word: {
-    fontSize: 16,
-  },
-})

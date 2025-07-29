@@ -6,7 +6,6 @@ import * as React from 'react'
 import {
   ActivityIndicator,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -31,7 +30,7 @@ export const TokenDetails = ({
   if (tokenInfo == null) return null
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1, a.px_lg]}>
       <Header info={tokenInfo} />
 
       <Space.Width.lg />
@@ -42,7 +41,7 @@ export const TokenDetails = ({
 }
 
 const Header = ({info}: {info: Portfolio.Token.Info}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const [policy, assetName] = info?.id.split('.') ?? ['', '']
 
   const title = !isEmptyString(info.ticker)
@@ -52,26 +51,36 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
       : ''
 
   return (
-    <View style={styles.header}>
+    <View style={[a.align_center]}>
       <TokenInfoIcon info={info} size="xl" />
 
       <Space.Height.sm />
 
       {!isEmptyString(title) && (
-        <Text style={[styles.headerText, {color: color.text_gray_medium}]}>
+        <Text
+          style={[
+            a.body_1_lg_medium,
+            a.text_center,
+            {color: p.text_gray_medium, maxWidth: 300},
+          ]}
+        >
           {title}
         </Text>
       )}
 
       {!isPrimaryTokenInfo(info) && (
         <Text
-          style={[styles.headerText, {color: color.text_gray_medium}]}
+          style={[
+            a.body_1_lg_medium,
+            a.text_center,
+            {color: p.text_gray_medium, maxWidth: 300},
+          ]}
         >{`(${assetName})`}</Text>
       )}
 
       <Space.Height.xl />
 
-      <PolicyId policyId={policyId} />
+      <PolicyId policyId={policy} />
 
       <Space.Height.lg />
 
@@ -81,7 +90,7 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
 }
 
 const Info = ({info}: {info: Portfolio.Token.Info}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const [activeTab, setActiveTab] = React.useState<'overview' | 'json'>(
@@ -104,14 +113,14 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
 
   if (isPrimaryTokenInfo(info))
     return (
-      <Text style={[styles.description, {color: color.text_gray_max}]}>
+      <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
         {strings.adaDescription}
       </Text>
     )
 
   return (
-    <View style={styles.info}>
-      <View style={styles.tabs}>
+    <View style={[a.flex_1]}>
+      <View style={[a.flex_row]}>
         <SimpleTab
           name={strings.overview}
           onPress={() => setActiveTab('overview')}
@@ -127,10 +136,9 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
 
       <Space.Width.lg />
 
-      {/* ↓↓↓ TABS CONTENT ↓↓↓ */}
-
+      {/* TABS CONTENT */}
       {isDiscoveryLoading ? (
-        <ActivityIndicator size={22} color={color.gray_300} />
+        <ActivityIndicator size={22} color={p.gray_300} />
       ) : (
         <>
           <Overview
@@ -153,7 +161,7 @@ const Json = ({
   discovery?: Portfolio.Token.Discovery
   isActive: boolean
 }) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {copy} = useCopy()
 
@@ -166,9 +174,15 @@ const Json = ({
   )
 
   return (
-    <View style={[styles.json, {backgroundColor: color.bg_color_min}]}>
-      <View style={styles.jsonHeader}>
-        <Text style={[styles.jsonLabel, {color: color.text_gray_medium}]}>
+    <View
+      style={[
+        a.flex_1,
+        a.pt_lg,
+        {borderRadius: 8, backgroundColor: p.bg_color_min},
+      ]}
+    >
+      <View style={[a.px_lg, a.flex_row, a.justify_between]}>
+        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
           {strings.metadata}
         </Text>
 
@@ -176,14 +190,14 @@ const Json = ({
           onPress={() => copy({text: stringifiedMetadata})}
           activeOpacity={0.5}
         >
-          <Icon.Copy size={24} color={color.gray_900} />
+          <Icon.Copy size={24} color={p.gray_900} />
         </TouchableOpacity>
       </View>
 
       <Space.Height.sm />
 
-      <ScrollView bounces={false} style={styles.jsonContent}>
-        <Text style={[styles.metadata, {color: color.text_gray_medium}]}>
+      <ScrollView bounces={false} style={[a.px_lg]}>
+        <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
           {stringifiedMetadata}
         </Text>
       </ScrollView>
@@ -229,22 +243,29 @@ const Overview = ({
 }
 
 const PolicyId = ({policyId}: {policyId: string}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   if (isEmptyString(policyId)) return null
 
   return (
     <Row>
-      <Text style={[styles.label, {color: color.text_gray_low}]}>
+      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
         {strings.policyId}
       </Text>
 
       <Space.Width.lg />
 
-      <View style={styles.copiableText}>
+      <View style={[a.flex_1, a.align_center]}>
         <Copiable text={policyId}>
-          <Text style={[styles.value, {color: color.text_gray_max}]}>
+          <Text
+            style={[
+              a.flex_1,
+              a.text_right,
+              a.body_2_md_regular,
+              {color: p.text_gray_max},
+            ]}
+          >
             {policyId}
           </Text>
         </Copiable>
@@ -254,22 +275,29 @@ const PolicyId = ({policyId}: {policyId: string}) => {
 }
 
 const Fingerprint = ({info}: {info: Portfolio.Token.Info}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   if (isEmptyString(info.fingerprint)) return null
 
   return (
     <Row>
-      <Text style={[styles.label, {color: color.text_gray_low}]}>
+      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
         {strings.fingerprint}
       </Text>
 
       <Space.Width.lg />
 
-      <View style={styles.copiableText}>
+      <View style={[a.flex_1, a.align_center]}>
         <Copiable text={info.fingerprint}>
-          <Text style={[styles.value, {color: color.text_gray_max}]}>
+          <Text
+            style={[
+              a.flex_1,
+              a.text_right,
+              a.body_2_md_regular,
+              {color: p.text_gray_max},
+            ]}
+          >
             {info.fingerprint}
           </Text>
         </Copiable>
@@ -279,18 +307,25 @@ const Fingerprint = ({info}: {info: Portfolio.Token.Info}) => {
 }
 
 const Name = ({info}: {info: Portfolio.Token.Info}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   if (isEmptyString(info.name)) return null
 
   return (
     <Row>
-      <Text style={[styles.label, {color: color.text_gray_low}]}>
+      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
         {strings.name}
       </Text>
 
-      <Text style={[styles.value, {color: color.text_gray_max}]}>
+      <Text
+        style={[
+          a.flex_1,
+          a.text_right,
+          a.body_2_md_regular,
+          {color: p.text_gray_max},
+        ]}
+      >
         {info.name}
       </Text>
     </Row>
@@ -298,7 +333,7 @@ const Name = ({info}: {info: Portfolio.Token.Info}) => {
 }
 
 const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
@@ -306,11 +341,18 @@ const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
       <Space.Width.sm />
 
       <Row>
-        <Text style={[styles.label, {color: color.text_gray_low}]}>
+        <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
           {strings.tokenSupply}
         </Text>
 
-        <Text style={[styles.value, {color: color.text_gray_max}]}>
+        <Text
+          style={[
+            a.flex_1,
+            a.text_right,
+            a.body_2_md_regular,
+            {color: p.text_gray_max},
+          ]}
+        >
           {isEmptyString(discovery?.supply) ? '-' : discovery?.supply}
         </Text>
       </Row>
@@ -319,7 +361,7 @@ const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
 }
 
 const Symbol = ({info}: {info: Portfolio.Token.Info}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   if (isEmptyString(info.ticker)) return null
@@ -329,11 +371,18 @@ const Symbol = ({info}: {info: Portfolio.Token.Info}) => {
       <Space.Width.sm />
 
       <Row>
-        <Text style={[styles.label, {color: color.text_gray_low}]}>
+        <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
           {strings.symbol}
         </Text>
 
-        <Text style={[styles.value, {color: color.text_gray_max}]}>
+        <Text
+          style={[
+            a.flex_1,
+            a.text_right,
+            a.body_2_md_regular,
+            {color: p.text_gray_max},
+          ]}
+        >
           {info.ticker}
         </Text>
       </Row>
@@ -342,7 +391,7 @@ const Symbol = ({info}: {info: Portfolio.Token.Info}) => {
 }
 
 const Description = ({info}: {info: Portfolio.Token.Info}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   if (isEmptyString(info.description)) return null
@@ -351,11 +400,11 @@ const Description = ({info}: {info: Portfolio.Token.Info}) => {
     <View>
       <Space.Width.sm />
 
-      <Text style={[styles.label, {color: color.text_gray_low}]}>
+      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
         {strings.description}
       </Text>
 
-      <Text style={[styles.description, {color: color.text_gray_max}]}>
+      <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
         {info.description}
       </Text>
     </View>
@@ -363,64 +412,5 @@ const Description = ({info}: {info: Portfolio.Token.Info}) => {
 }
 
 const Row = ({children}: {children: React.ReactNode}) => {
-  return <View style={styles.row}>{children}</View>
+  return <View style={[a.flex_row, a.justify_between]}>{children}</View>
 }
-
-const styles = StyleSheet.create({
-  root: {
-    ...a.flex_1,
-    ...a.px_lg,
-  },
-  header: {
-    ...a.align_center,
-  },
-  headerText: {
-    ...a.body_1_lg_medium,
-    ...a.text_center,
-    maxWidth: 300,
-  },
-  row: {
-    ...a.flex_row,
-    ...a.justify_between,
-  },
-  label: {
-    ...a.body_2_md_regular,
-  },
-  value: {
-    ...a.flex_1,
-    ...a.text_right,
-    ...a.body_2_md_regular,
-  },
-  description: {
-    ...a.body_2_md_regular,
-  },
-  tabs: {
-    ...a.flex_row,
-  },
-  copiableText: {
-    ...a.flex_1,
-    ...a.align_center,
-  },
-  json: {
-    ...a.flex_1,
-    ...a.pt_lg,
-    borderRadius: 8,
-  },
-  jsonHeader: {
-    ...a.px_lg,
-    ...a.flex_row,
-    ...a.justify_between,
-  },
-  jsonLabel: {
-    ...a.body_1_lg_medium,
-  },
-  jsonContent: {
-    ...a.px_lg,
-  },
-  info: {
-    ...a.flex_1,
-  },
-  metadata: {
-    ...a.body_2_md_regular,
-  },
-})

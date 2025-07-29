@@ -3,13 +3,13 @@ import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {ReactNode} from 'react'
-import {Animated, StyleSheet} from 'react-native'
+import {Animated} from 'react-native'
 
+import {useStrings} from '~/features/Send/common/useStrings'
+import {ButtonGroup} from '~/ui/ButtonGroup/ButtonGroup'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
-import {ButtonGroup} from '~/ui/ButtonGroup/ButtonGroup'
-import {useStrings} from '~/features/Send/common/useStrings'
 
 export const SelectNameServer = () => {
   const strings = useStrings()
@@ -86,11 +86,8 @@ const toAddressRecordsEntries = (
     [] as [Resolver.NameServer, string][],
   )
 
-const bold = {b: (text: ReactNode) => <Text style={styles.bold}>{text}</Text>}
-
-const styles = StyleSheet.create({
-  bold: {
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-  },
-})
+const bold = {
+  b: (text: ReactNode) => (
+    <Text style={{fontWeight: '500', fontFamily: 'Rubik-Medium'}}>{text}</Text>
+  ),
+}

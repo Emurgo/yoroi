@@ -1,6 +1,6 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useStrings} from '~/features/Swap/common/useStrings'
@@ -12,7 +12,7 @@ import {useNavigateTo} from '../../common/navigation'
 
 export const SubmittedTxScreen = () => {
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const swapForm = useSwap()
 
@@ -22,7 +22,15 @@ export const SubmittedTxScreen = () => {
   }
 
   return (
-    <SafeArea style={[styles.root, {backgroundColor: color.bg_color_max}]}>
+    <SafeArea
+      style={[
+        a.p_lg,
+        a.flex_1,
+        a.align_center,
+        a.justify_center,
+        {backgroundColor: p.bg_color_max},
+      ]}
+    >
       <Space.Height._2xl />
 
       <SuccessfulTxIcon />
@@ -31,11 +39,24 @@ export const SubmittedTxScreen = () => {
 
       <Space.Height.lg />
 
-      <Text style={[styles.title, {color: color.gray_max}]}>
+      <Text
+        style={[
+          a.heading_3_medium,
+          a.px_sm,
+          a.text_center,
+          {color: p.gray_max},
+        ]}
+      >
         {strings.submittedTxScreenTitle}
       </Text>
 
-      <Text style={[styles.text, {color: color.gray_600}]}>
+      <Text
+        style={[
+          a.body_1_lg_regular,
+          a.text_center,
+          {color: p.gray_600, maxWidth: 330},
+        ]}
+      >
         {strings.submittedTxScreenText}
       </Text>
 
@@ -45,7 +66,7 @@ export const SubmittedTxScreen = () => {
         <Button
           onPress={handleOnPress}
           title={strings.submittedTxScreenButton}
-          style={styles.button}
+          style={[a.px_lg]}
         />
       </Actions>
     </SafeArea>
@@ -53,37 +74,15 @@ export const SubmittedTxScreen = () => {
 }
 
 const Actions = ({children}: {children: React.ReactNode}) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
-    <View style={[styles.actions, {borderTopColor: color.gray_200}]}>
+    <View
+      style={[
+        {alignSelf: 'stretch', borderTopWidth: 1, borderTopColor: p.gray_200},
+      ]}
+    >
       {children}
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  root: {
-    ...a.p_lg,
-    ...a.flex_1,
-    ...a.align_center,
-    ...a.justify_center,
-  },
-  title: {
-    ...a.heading_3_medium,
-    ...a.px_sm,
-    ...a.text_center,
-  },
-  text: {
-    ...a.body_1_lg_regular,
-    ...a.text_center,
-    maxWidth: 330,
-  },
-  button: {
-    ...a.px_lg,
-  },
-  actions: {
-    alignSelf: 'stretch',
-    borderTopWidth: 1,
-  },
-})
