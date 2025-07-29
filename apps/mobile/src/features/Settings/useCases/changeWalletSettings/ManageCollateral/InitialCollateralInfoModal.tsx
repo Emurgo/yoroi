@@ -7,22 +7,14 @@ import {InfoModalIllustration} from './illustrations/InfoModalIllustration'
 import {useStrings} from './strings'
 
 export const InitialCollateralInfoModal = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
     <View style={[a.flex_1, a.px_lg, a.align_center]}>
       <InfoModalIllustration />
 
-      <Text
-        style={[
-          a.text_center,
-          a.body_1_lg_regular,
-          {
-            color: p.text_gray_medium,
-          },
-        ]}
-      >
+      <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.collateralInfoModalText}
 
         <Space.Width._2xs />

@@ -39,7 +39,7 @@ export const NetworkTag = ({
     walletManager,
   } = useWalletManager()
   const {navigateToChangeNetwork} = useWalletNavigation()
-  const {palette: p, atoms} = useTheme()
+  const {atoms: ta, atoms} = useTheme()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const {track} = useMetrics()
@@ -105,9 +105,7 @@ export const NetworkTag = ({
         aria-level="1"
         ellipsizeMode="tail"
         style={[
-          {
-            color: p.text_gray_medium,
-          },
+          ta.text_gray_medium,
           a.body_1_lg_medium,
           a.flex_shrink,
           textStyle,
@@ -168,20 +166,13 @@ const MainnetWarningDialog = ({
   onCancel: () => void
   onOk: () => void
 }) => {
-  const {palette: p, atoms} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const strings = useStrings()
 
   return (
     <View style={[a.px_lg, a.flex_1]}>
-      <Text
-        style={[
-          a.body_1_lg_regular,
-          {
-            color: p.text_gray_medium,
-          },
-        ]}
-      >
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.networkTagModalText}
       </Text>
 

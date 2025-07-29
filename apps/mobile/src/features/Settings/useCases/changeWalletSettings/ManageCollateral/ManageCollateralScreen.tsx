@@ -323,7 +323,7 @@ const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
 }
 
 const Operation = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const {openModal} = useModal()
 
@@ -337,14 +337,7 @@ const Operation = () => {
 
   return (
     <View style={[a.flex_row, a.align_center]}>
-      <Text
-        style={[
-          a.body_2_md_regular,
-          {
-            color: p.text_gray_medium,
-          },
-        ]}
-      >
+      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
         {strings.collateralInfoModalLabel}
       </Text>
 

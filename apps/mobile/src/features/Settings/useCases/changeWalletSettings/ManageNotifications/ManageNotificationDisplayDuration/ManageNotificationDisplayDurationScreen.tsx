@@ -162,9 +162,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
               selectTextOnFocus={isInputEnabled}
               autoFocus={isInputEnabled}
               style={[
-                {
-                  color: p.text_gray_medium,
-                },
+                ta.text_gray_medium,
                 a.body_1_lg_regular,
                 !isSelectedChoiceManual && {backgroundColor: p.gray_100},
               ]}
@@ -173,7 +171,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
               right={
                 <Text
                   style={{
-                    color: p.text_gray_medium,
+                    ...ta.text_gray_medium,
                     ...a.body_1_lg_regular,
                     ...a.p_lg,
                     ...a.absolute,
