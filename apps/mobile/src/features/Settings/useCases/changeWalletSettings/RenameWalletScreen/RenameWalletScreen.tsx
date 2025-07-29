@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import globalMessages from '../../../../../kernel/i18n/global-messages'
 import {Button} from '../../../../../ui/Button/Button'
 import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {SpaceHeight} from '../../../../../ui/Space/Space'
+import {Space} from '../../../../../ui/Space/Space'
 import {TextInput} from '../../../../../ui/TextInput/TextInput'
 import {isEmptyString} from '../../../../../wallets/utils/string'
 import {getWalletNameError} from '../../../../../wallets/utils/validators'
@@ -65,7 +65,7 @@ export const RenameWalletScreen = () => {
           />
         </ScrollView>
 
-        <SpaceHeight fill size={'lg'} />
+        <Space.Height.lg fill />
 
         <View style={[ta.bg_color_max, a.pt_lg, a.px_lg]}>
           <Button

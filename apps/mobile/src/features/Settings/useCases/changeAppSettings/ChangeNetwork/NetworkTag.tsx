@@ -15,7 +15,7 @@ import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation/navigation'
 import {Button, ButtonType} from '../../../../../ui/Button/Button'
 import {useModal} from '../../../../../ui/Modal/ModalContext'
-import {Space, SpaceHeight} from '../../../../../ui/Space/Space'
+import {Space} from '../../../../../ui/Space/Space'
 import {availableNetworks} from '../../../../WalletManager/common/constants'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from './strings'
@@ -176,7 +176,7 @@ const MainnetWarningDialog = ({
         {strings.networkTagModalText}
       </Text>
 
-      <SpaceHeight fill size={'lg'} />
+      <Space.Height.lg fill />
 
       <View style={[a.pb_lg, a.flex_row, a.justify_between]}>
         <Button

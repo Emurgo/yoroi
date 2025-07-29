@@ -86,7 +86,7 @@ export const RemoveWalletScreen = () => {
           </WalletInfo>
         </ScrollView>
 
-        <SpaceHeight fill size={'lg'} />
+        <Space.Height.lg fill />
 
         {!meta.isHW && (
           <Checkbox
