@@ -205,7 +205,7 @@ export const ManageCollateralScreen = () => {
               </Copiable>
             </Row>
 
-            <Space.Height size={16} />
+            <Space.Height.lg />
 
             <Text>{strings.removeCollateral}</Text>
           </>
