@@ -136,16 +136,14 @@ export const ManageNotificationDisplayDurationScreen = () => {
 
           <View style={a.relative}>
             <Text
-              style={{
-                color: p.text_gray_max,
-                ...ta.bg_color_max,
-                ...a.z_20,
-                ...a.absolute,
-                ...a.body_3_sm_regular,
-                top: -3,
-                left: 11,
-                paddingHorizontal: 3,
-              }}
+              style={[
+                ta.text_gray_max,
+                ta.bg_color_max,
+                a.z_20,
+                a.absolute,
+                a.body_3_sm_regular,
+                {top: -3, left: 11, paddingHorizontal: 3},
+              ]}
             >
               {strings.displayDuration}
             </Text>
