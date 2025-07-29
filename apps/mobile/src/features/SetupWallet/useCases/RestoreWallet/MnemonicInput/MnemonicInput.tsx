@@ -16,7 +16,7 @@ import {Alert} from '~/ui/AlertIllustration/AlertIllustration'
 import {Check2} from '~/ui/Check2Illustration/Check2Illustration'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '../../../common/useStrings'
 import {MnemonicWordInputRef} from '../RestoreWalletScreen'
 import {TextInput} from './TextInput/TextInput'
 

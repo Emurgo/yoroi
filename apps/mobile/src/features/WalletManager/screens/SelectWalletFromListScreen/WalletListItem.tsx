@@ -15,9 +15,9 @@ import {Loading} from '~/ui/Loading/Loading'
 import {Space} from '~/ui/Space/Space'
 import {isByron, isShelley} from '~/wallets/cardano/utils'
 // import {useAutomaticWalletOpener} from '../context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '../context/WalletManagerProvider'
-import {useSelectedNetwork} from '../hooks/useSelectedNetwork'
-import {useSyncWalletInfo} from '../hooks/useSyncWalletInfo'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
 
 type Props = {
   walletMeta: Wallet.Meta

@@ -17,8 +17,8 @@ import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {generateAdaMnemonic} from '~/wallets/cardano/mnemonic/mnemonic'
 import {useStrings} from '../../common/useStrings'
-import {EyeClosed} from '../illustrations/EyeClosed'
-import {EyeOpen} from '../illustrations/EyeOpen'
+import {EyeClosed} from '../../illustrations/EyeClosed'
+import {EyeOpen} from '../../illustrations/EyeOpen'
 
 export const RecoveryPhraseScreen = () => {
   const bold = useBold()
@@ -98,14 +98,14 @@ export const RecoveryPhraseScreen = () => {
 
   return (
     <SafeAreaView style={[a.flex_1, a.px_lg, a.pb_lg]}>
-      <StepperProgress currentStep={2} totalSteps={4} />
+      <StepperProgress currentStep={2} totalSteps={4} currentStepTitle={''} />
 
       <Space.Height.lg />
 
       <Text
         style={[a.heading_3_medium, a.text_center, {color: p.text_gray_max}]}
       >
-        {strings.recoveryPhraseTitle}
+        {strings.recoveryPhraseTitle({b: bold.b})}
       </Text>
 
       <Space.Height.md />
@@ -117,14 +117,14 @@ export const RecoveryPhraseScreen = () => {
           {color: p.text_gray_medium},
         ]}
       >
-        {strings.recoveryPhraseDescription}
+        Write down your recovery phrase in a safe place
       </Text>
 
       <Space.Height.lg />
 
       <View style={[a.flex_row, a.justify_between, a.align_center]}>
         <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-          {strings.recoveryPhraseSubtitle}
+          Recovery phrase
         </Text>
 
         <Info onPress={handleOnShowModal} testID="setup-step2-info-button" />
