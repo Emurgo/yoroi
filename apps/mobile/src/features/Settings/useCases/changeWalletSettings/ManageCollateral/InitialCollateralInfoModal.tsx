@@ -30,7 +30,7 @@ export const InitialCollateralInfoModal = () => {
         <Link />
       </Text>
 
-      <SpaceHeight fill size={'lg'} />
+      <Space.Height.lg fill />
     </View>
   )
 }
