@@ -34,9 +34,9 @@ export const DisableEasyConfirmationScreen = () => {
         ]}
       >
         <Text
-          style={{
-            ...a.body_1_lg_regular,
-          }}
+          style={[
+            a.body_1_lg_regular,
+          ]}
         >
           {strings.disableHeading}
         </Text>
