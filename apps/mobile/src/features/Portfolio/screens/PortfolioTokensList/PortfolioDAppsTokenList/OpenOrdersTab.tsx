@@ -1,12 +1,12 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, StyleSheet, Text, View} from 'react-native'
+import {FlatList, Text, View} from 'react-native'
 
-import {Space} from '~/ui/Space/Space'
-import {makeList} from '~/kernel/utils'
 import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
 import {useShowOpenOrderModal} from '~/features/Portfolio/common/hooks/useShowOpenOrderModal'
 import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {makeList} from '~/kernel/utils'
+import {Space} from '~/ui/Space/Space'
 import {TokenEmptyList} from '~/ui/TokenEmptyList/TokenEmptyList'
 import {DAppTokenItem} from './DAppTokenItem/DAppTokenItem'
 import {DAppTokenItemSkeleton} from './DAppTokenItem/DAppTokenItemSkeleton'
@@ -18,7 +18,7 @@ type Props = {
 }
 export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const hasEmpty = tokensList.length === 0
 
   const {onShow} = useShowOpenOrderModal()
@@ -35,7 +35,7 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
     if (isSearching)
       return (
         <View>
-          <Text style={styles.textAvailable}>
+          <Text style={[a.body_2_md_regular, {color: p.gray_700}]}>
             {strings.countOpenOrders(tokensList.length)}
           </Text>
 
@@ -49,7 +49,7 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
   const renderFooterList = () => {
     if (isFetching)
       return (
-        <View style={styles.containerLoading}>
+        <View style={[a.gap_lg]}>
           {makeList(3).map((_, index) => (
             <DAppTokenItemSkeleton key={index} />
           ))}
@@ -60,7 +60,7 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1]}>
       <Space.Height.md />
 
       <FlatList
@@ -83,30 +83,8 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
             <TokenEmptyList emptyText={strings.noDataFound} />
           ) : undefined
         }
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle={[a.flex_1, a.flex_grow]}
       />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-    },
-    listContainer: {
-      ...atoms.flex_1,
-      ...atoms.flex_grow,
-    },
-    containerLoading: {
-      ...atoms.gap_lg,
-    },
-    textAvailable: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_700,
-    },
-  })
-
-  return {styles} as const
 }

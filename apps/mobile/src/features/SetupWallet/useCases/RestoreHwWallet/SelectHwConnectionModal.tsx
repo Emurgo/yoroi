@@ -28,12 +28,23 @@ const useIsAndroidUsbSupported = () => {
 }
 
 export const SelectHwConnectionModal = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.modal}>
-      <Text style={styles.modalText}>{strings.hwModalText}</Text>
+    <View style={[{paddingHorizontal: 16}]}>
+      <Text
+        style={[
+          {
+            fontSize: 16,
+            lineHeight: 24,
+            fontWeight: '400',
+            color: p.text_gray_medium,
+          },
+        ]}
+      >
+        {strings.hwModalText}
+      </Text>
 
       <SelectBluetoothSection />
 
@@ -81,7 +92,7 @@ const SelectBluetoothSection = () => {
 }
 
 const SelectUsbSection = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const isAndroidUsbSupported = useIsAndroidUsbSupported()
   const {
@@ -103,7 +114,18 @@ const SelectUsbSection = () => {
       <>
         <Space.Height.lg />
 
-        <Text style={styles.iosWarning}>{strings.hwModalIosWarning}</Text>
+        <Text
+          style={[
+            {
+              color: p.text_gray_low,
+              fontSize: 14,
+              lineHeight: 20,
+              fontWeight: '400',
+            },
+          ]}
+        >
+          {strings.hwModalIosWarning}
+        </Text>
       </>
     )
   if (!isAndroidUsbSupported) {
@@ -125,31 +147,4 @@ const SelectUsbSection = () => {
       />
     </>
   )
-}
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-
-  const styles = {
-    modal: {
-      paddingHorizontal: 16,
-    },
-    modalText: {
-      fontSize: 16,
-      lineHeight: 24,
-      fontWeight: '400' as const,
-      color: p.text_gray_medium,
-    },
-    iosWarning: {
-      color: p.text_gray_low,
-      fontSize: 14,
-      lineHeight: 20,
-      fontWeight: '400' as const,
-    },
-  }
-
-  const colors = {
-    blue: p.el_primary_medium,
-  }
-  return {styles, colors} as const
 }

@@ -24,7 +24,7 @@ import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustrati
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const {track} = useMetrics()
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()
@@ -53,24 +53,46 @@ export const CheckNanoXScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[{flex: 1, backgroundColor: p.bg_color_max}]}
     >
       <StepperProgress
-        style={styles.stepper}
+        style={[{paddingHorizontal: 16}]}
         currentStepTitle="Intro"
         currentStep={1}
         totalSteps={3}
       />
 
-      <ScrollView style={styles.scroll} bounces={false}>
+      <ScrollView style={[{paddingHorizontal: 16}]} bounces={false}>
         <Space.Height.lg />
 
-        <Text style={styles.introline}>{strings.hwCheckIntroline}</Text>
+        <Text
+          style={[
+            {
+              fontSize: 16,
+              lineHeight: 24,
+              fontWeight: '500',
+              color: p.text_gray_medium,
+            },
+          ]}
+        >
+          {strings.hwCheckIntroline}
+        </Text>
 
         <Space.Height.lg />
 
         {(useUSB ? usbRequirements : bleRequirements).map((item) => (
-          <BulletPointItem key={item} style={styles.item} textRow={item} />
+          <BulletPointItem
+            key={item}
+            style={[
+              {
+                fontSize: 16,
+                lineHeight: 24,
+                fontWeight: '400',
+                color: p.text_gray_medium,
+              },
+            ]}
+            textRow={item}
+          />
         ))}
 
         <Space.Height.lg />
@@ -97,73 +119,35 @@ const ledgerSupport =
 const LedgerSupportLink = () => {
   const onPress = () => Linking.openURL(ledgerSupport)
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
   return (
-    <TouchableOpacity style={styles.link} onPress={onPress}>
-      <Text style={styles.linkText}>{strings.ledgerSupportLink}</Text>
+    <TouchableOpacity
+      style={[
+        {
+          fontSize: 16,
+          lineHeight: 24,
+          fontWeight: '400',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      ]}
+      onPress={onPress}
+    >
+      <Text style={[{color: p.primary_500}]}>{strings.ledgerSupportLink}</Text>
     </TouchableOpacity>
   )
 }
 
 const Illustration = () => {
-  const styles = useStyles()
   return (
-    <View style={styles.illustration}>
+    <View style={[{flex: 1, alignItems: 'center'}]}>
       <LedgerCheckIllustration />
     </View>
   )
 }
 
 const Actions = (props: ViewProps) => {
-  const styles = useStyles()
-  return <View {...props} style={styles.actions} />
-}
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = {
-    safeAreaView: {
-      flex: 1,
-      backgroundColor: p.bg_color_max,
-    },
-    introline: {
-      fontSize: 16,
-      lineHeight: 24,
-      fontWeight: '500' as const,
-      color: p.text_gray_medium,
-    },
-    scroll: {
-      paddingHorizontal: 16,
-    },
-    linkText: {
-      color: p.primary_500,
-    },
-    link: {
-      fontSize: 16,
-      lineHeight: 24,
-      fontWeight: '400' as const,
-      flexDirection: 'row' as const,
-      justifyContent: 'center' as const,
-      alignItems: 'center' as const,
-    },
-    illustration: {
-      flex: 1,
-      alignItems: 'center' as const,
-    },
-    item: {
-      fontSize: 16,
-      lineHeight: 24,
-      fontWeight: '400' as const,
-      color: p.text_gray_medium,
-    },
-    actions: {
-      padding: 16,
-    },
-    stepper: {
-      paddingHorizontal: 16,
-    },
-  }
-
-  return styles
+  return <View {...props} style={[{padding: 16}]} />
 }

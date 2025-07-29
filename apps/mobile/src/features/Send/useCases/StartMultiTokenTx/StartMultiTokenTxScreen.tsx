@@ -1,8 +1,8 @@
 import {useIsFocused} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
-import {StyleSheet, TextInput, View, ViewProps} from 'react-native'
+import {TextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {AddressErrorWrongNetwork} from '~/features/Send/common/errors'
@@ -27,7 +27,7 @@ import {ShowErrors} from './ShowErrors'
 
 export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
@@ -93,14 +93,14 @@ export const StartMultiTokenTxScreen = () => {
   useNextTick(focusOnReceiver)
 
   return (
-    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+    <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <SafeAreaView
         edges={['bottom', 'right', 'left']}
-        style={[styles.safeAreaView, styles.flex]}
+        style={[a.gap_lg, a.py_lg, a.flex_1]}
       >
         <ScrollView
           ref={scrollViewRef}
-          style={[styles.flex, styles.padding]}
+          style={[a.flex_1, a.px_lg]}
           bounces={false}
           onScrollBarChange={setIsScrollBarShown}
         >
@@ -129,7 +129,9 @@ export const StartMultiTokenTxScreen = () => {
           />
         </ScrollView>
 
-        <Actions style={isScrollBarShown && styles.actionsScroll}>
+        <Actions
+          style={isScrollBarShown && [a.border_t, {borderTopColor: p.gray_200}]}
+        >
           <Padding>
             <NextButton
               onPress={handleOnNext}
@@ -150,8 +152,7 @@ const Actions = ({style, ...props}: ViewProps) => {
 
 // NOTE: just to display the scrollable line on top of action
 const Padding = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
-  return <View style={[styles.padding, style]} {...props} />
+  return <View style={[a.px_lg, style]} {...props} />
 }
 
 const useReceiverError = ({
@@ -208,29 +209,6 @@ const useReceiverError = ({
     hasReceiverError: false,
     receiverErrorMessage: '',
   }
-}
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-    },
-    safeAreaView: {
-      ...atoms.gap_lg,
-      ...atoms.py_lg,
-    },
-    flex: {
-      ...atoms.flex_1,
-    },
-    padding: {
-      ...atoms.px_lg,
-    },
-    actionsScroll: {
-      ...atoms.border_t,
-      borderTopColor: color.gray_200,
-    },
-  })
-  return styles
 }
 
 const NextButton = Button

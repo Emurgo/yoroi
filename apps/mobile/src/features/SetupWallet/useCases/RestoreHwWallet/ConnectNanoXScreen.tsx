@@ -1,10 +1,10 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {
@@ -28,7 +28,7 @@ type Props = {}
 export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
-  const {atoms: a, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
   const {track} = useMetrics()
@@ -108,16 +108,16 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[{...a.flex_1}, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
     >
       <StepperProgress
-        style={[{...a.p_lg}]}
+        style={[a.p_lg]}
         currentStepTitle="Connect"
         currentStep={2}
         totalSteps={3}
       />
 
-      <View style={[{...a.flex_1}, {...a.px_lg}]}>
+      <View style={[a.flex_1, a.px_lg]}>
         <LedgerConnect
           onConnectBLE={onConnectBLE}
           onConnectUSB={onConnectUSB}
@@ -128,22 +128,4 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
       </View>
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-    stepper: {
-      ...atoms.p_lg,
-    },
-    content: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-  })
-  return {styles} as const
 }

@@ -4,10 +4,10 @@ import {
   ExchangeProvider,
 } from '@yoroi/exchange'
 import {useLinks} from '@yoroi/links'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {DescribeAction} from '~/features/Exchange/common/DescribeAction/DescribeAction'
@@ -25,7 +25,7 @@ import {ContentResult} from './ContentResult/ContentResult'
 
 export const ShowExchangeResultOrderScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const {openModal} = useModal()
   const {resetToWalletSelection} = useWalletNavigation()
   const {action, actionFinished} = useLinks()
@@ -60,13 +60,36 @@ export const ShowExchangeResultOrderScreen = () => {
 
   return (
     <ExchangeProvider manager={exchangeManager}>
-      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-        <View style={styles.flex}>
-          <WalletAssetImage style={styles.image} />
+      <SafeAreaView
+        edges={['bottom', 'left', 'right']}
+        style={[{flex: 1, backgroundColor: p.bg_color_max}]}
+      >
+        <View
+          style={[
+            {
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 16,
+            },
+          ]}
+        >
+          <WalletAssetImage style={[{flex: 1, width: 200, height: 228}]} />
 
           <Space.Height.lg />
 
-          <Text style={styles.congratsText}>
+          <Text
+            style={[
+              a.heading_3_medium,
+              {
+                color: p.gray_900,
+                fontWeight: '500',
+                textAlign: 'center',
+                textAlignVertical: 'center',
+              },
+            ]}
+          >
             {strings.congrats}
 
             {showOrderDetails && (
@@ -89,7 +112,7 @@ export const ShowExchangeResultOrderScreen = () => {
             <>
               <ContentResult title={strings.cryptoAmountYouGet}>
                 <Text
-                  style={styles.contentValueText}
+                  style={[a.body_1_lg_regular, {color: p.gray_max}]}
                 >{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
               </ContentResult>
 
@@ -97,7 +120,7 @@ export const ShowExchangeResultOrderScreen = () => {
 
               <ContentResult title={strings.fiatAmountYouGet}>
                 <Text
-                  style={styles.contentValueText}
+                  style={[a.body_1_lg_regular, {color: p.gray_max}]}
                 >{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
               </ContentResult>
             </>
@@ -108,20 +131,24 @@ export const ShowExchangeResultOrderScreen = () => {
               <Space.Height.md />
 
               <ContentResult title={strings.provider}>
-                <View style={styles.boxProvider}>
+                <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
                   <Logo size={24} />
 
                   <Space.Width.xs />
 
-                  <Text style={styles.contentValueText}>{name}</Text>
+                  <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
+                    {' '}
+                    {name}{' '}
+                  </Text>
                 </View>
               </ContentResult>
             </>
           )}
         </View>
 
-        <View style={styles.actions}>
-          <Button onPress={handleOnClose} title={strings.close} />
+        <View style={[{padding: 16}]}>
+          {' '}
+          <Button onPress={handleOnClose} title={strings.close} />{' '}
         </View>
       </SafeAreaView>
     </ExchangeProvider>
@@ -150,45 +177,4 @@ const sanitizeParams = (params: Links.ExchangeShowCreateResultParams) => {
   const showProviderDetails = Logo != null && name != null
 
   return {showOrderDetails, Logo, name, showProviderDetails}
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    flex: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: 16,
-    },
-    image: {
-      flex: 1,
-      width: 200,
-      height: 228,
-    },
-    congratsText: {
-      ...atoms.heading_3_medium,
-      color: color.gray_900,
-      fontWeight: '500',
-      textAlign: 'center',
-      textAlignVertical: 'center',
-    },
-    contentValueText: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_max,
-    },
-    boxProvider: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    actions: {
-      padding: 16,
-    },
-  })
-  return styles
 }

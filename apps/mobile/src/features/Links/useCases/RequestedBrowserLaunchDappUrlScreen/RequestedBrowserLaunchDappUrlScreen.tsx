@@ -2,7 +2,7 @@ import {useLinks} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
+import {ScrollView, Text, View, ViewProps} from 'react-native'
 
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
@@ -33,12 +33,11 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
   onContinue: () => void
 }) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const {actionFinished} = useLinks()
   const {closeModal} = useModal()
 
   // TODO: revisit check with product
-  const disclaimerStyle = isTrusted ? styles.text : styles.text
   const description = isTrusted
     ? strings.trustedBrowserLaunchDappUrlDescription
     : strings.untrustedBrowserLaunchDappUrlDescription
@@ -50,10 +49,30 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
 
   // NOTE: modal content therefore no need to use SafeAreaView
   return (
-    <View style={styles.root}>
+    <View
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+          flex: 1,
+          paddingHorizontal: 16,
+          paddingBottom: 16,
+        },
+      ]}
+    >
       <ScrollView bounces={false}>
         <ShowDisclaimer title={strings.disclaimer}>
-          <Text style={disclaimerStyle}>{description}</Text>
+          <Text
+            style={[
+              {
+                color: p.text_gray_max,
+                fontSize: 14,
+                lineHeight: 20,
+                fontWeight: '400',
+              },
+            ]}
+          >
+            {description}
+          </Text>
         </ShowDisclaimer>
 
         <Space.Height.lg />
@@ -68,7 +87,11 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
         <View style={{flex: 1}} />
       </ScrollView>
 
-      <Actions style={styles.actions}>
+      <Actions
+        style={[
+          {flexDirection: 'row', justifyContent: 'space-between', gap: 16},
+        ]}
+      >
         <Button
           size="S"
           type={ButtonType.Secondary}
@@ -83,11 +106,22 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
 }
 
 const Message = ({message}: {message?: string}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   return (
     !isEmptyString(message) && (
       <>
-        <Text style={styles.text}>{message}</Text>
+        <Text
+          style={[
+            {
+              color: p.text_gray_max,
+              fontSize: 14,
+              lineHeight: 20,
+              fontWeight: '400',
+            },
+          ]}
+        >
+          {message}
+        </Text>
 
         <Space.Height.lg />
       </>
@@ -95,31 +129,3 @@ const Message = ({message}: {message?: string}) => {
   )
 }
 const Actions = (props: ViewProps) => <View {...props} />
-
-const useStyles = () => {
-  const {palette: p} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: p.bg_color_max,
-      flex: 1,
-      paddingHorizontal: 16,
-      paddingBottom: 16,
-    },
-    actions: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      gap: 16,
-    },
-    text: {
-      color: p.text_gray_max,
-      fontSize: 14,
-      lineHeight: 20,
-      fontWeight: '400',
-    },
-  })
-  const colors = {
-    danger: p.sys_magenta_500,
-    warning: p.sys_orange_500,
-  }
-  return {styles, colors} as const
-}

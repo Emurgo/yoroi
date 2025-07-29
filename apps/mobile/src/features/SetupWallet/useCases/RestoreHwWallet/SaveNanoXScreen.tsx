@@ -2,7 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -10,7 +10,6 @@ import {
   InteractionManager,
   Linking,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
@@ -71,7 +70,7 @@ const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p, isDark} = useTheme()
   const storage = useAsyncStorage()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
@@ -154,7 +153,7 @@ export const SaveNanoXScreen = () => {
     openModal({
       title: strings.walletDetailsModalTitle,
       content: (
-        <View style={[styles.flex, styles.modal]}>
+        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
             title={strings.walletNameModalCardTitle}
             linesOfText={[
@@ -191,7 +190,7 @@ export const SaveNanoXScreen = () => {
     openModal({
       title: strings.walletDetailsModalTitle,
       content: (
-        <View style={[styles.flex, styles.modal]}>
+        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
             title={strings.walletChecksumModalCardTitle}
             checksumImage={seed}
@@ -218,10 +217,17 @@ export const SaveNanoXScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={[styles.root, styles.flex]}>
+    <KeyboardAvoidingView
+      style={[
+        {backgroundColor: p.bg_color_max},
+        a.justify_between,
+        a.px_lg,
+        a.flex_1,
+      ]}
+    >
       <SafeAreaView
         edges={['left', 'right', 'bottom']}
-        style={[styles.safeAreaView, styles.flex]}
+        style={[a.pb_lg, a.flex_1]}
       >
         <StepperProgress
           currentStep={2}
@@ -231,8 +237,10 @@ export const SaveNanoXScreen = () => {
 
         <Space.Height.xl />
 
-        <View style={styles.info}>
-          <Text style={styles.title}>{strings.hwWalletDetailsTitle(bold)}</Text>
+        <View style={[a.flex_row]}>
+          <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+            {strings.hwWalletDetailsTitle(bold)}
+          </Text>
 
           <Space.Width.xs />
 
@@ -241,7 +249,7 @@ export const SaveNanoXScreen = () => {
 
         <Space.Height.xl />
 
-        <ScrollView style={styles.flex}>
+        <ScrollView style={[a.flex_1]}>
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus
@@ -262,16 +270,32 @@ export const SaveNanoXScreen = () => {
 
           <Space.Height.lg />
 
-          <View style={styles.checksum}>
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              {textAlignVertical: 'center'},
+            ]}
+          >
             <Icon.WalletAvatar
               image={new Blockies({seed}).asBase64()}
-              style={styles.walletChecksum}
+              style={[{width: 24, height: 24}]}
               size={24}
             />
 
             <Space.Width.sm />
 
-            <Text style={styles.plateNumber} testID="wallet-plate-number">
+            <Text
+              style={[
+                a.body_1_lg_regular,
+                a.text_center,
+                a.justify_center,
+                a.align_center,
+                {color: p.text_gray_medium},
+              ]}
+              testID="wallet-plate-number"
+            >
               {plate}
             </Text>
 
@@ -295,71 +319,18 @@ export const SaveNanoXScreen = () => {
 }
 
 const Info = ({onPress}: {onPress: () => void}) => {
-  const {color, isDark} = useTheme()
+  const {palette: p, isDark} = useTheme()
   return (
     <TouchableOpacity onPress={onPress}>
-      <InfoIcon
-        size={24}
-        color={isDark ? color.white_static : color.black_static}
-      />
+      <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
     </TouchableOpacity>
   )
 }
 
 const useBold = () => {
-  const {styles} = useStyles()
-
   return {
-    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+    b: (text: React.ReactNode) => (
+      <Text style={[a.body_1_lg_medium]}>{text}</Text>
+    ),
   }
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    flex: {
-      ...atoms.flex_1,
-    },
-    modal: {
-      ...atoms.pb_lg,
-      ...atoms.px_lg,
-    },
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.justify_between,
-      ...atoms.px_lg,
-    },
-    safeAreaView: {
-      ...atoms.pb_lg,
-    },
-    info: {
-      ...atoms.flex_row,
-    },
-    title: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    plateNumber: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    bolder: {
-      ...atoms.body_1_lg_medium,
-    },
-    checksum: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      textAlignVertical: 'center',
-    },
-    walletChecksum: {
-      width: 24,
-      height: 24,
-    },
-  })
-
-  return {styles} as const
 }

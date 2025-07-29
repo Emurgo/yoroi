@@ -1,9 +1,8 @@
 import {infoExtractName} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 
-import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {
   ILiquidityPool,
   useGetLiquidityPool,
@@ -12,6 +11,7 @@ import {
   IOpenOrders,
   useGetOpenOrders,
 } from '~/features/Portfolio/common/hooks/useGetOpenOrders'
+import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {
   PortfolioDappsTab,
   usePortfolio,
@@ -29,7 +29,7 @@ import {OpenOrdersTab} from './OpenOrdersTab'
 import {PortfolioDAppTabs} from './PortfolioDAppTabs'
 
 export const PortfolioDAppsTokenList = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const {search, isSearching} = useSearch()
   const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
@@ -92,7 +92,10 @@ export const PortfolioDAppsTokenList = () => {
   }, [isSearching, search, track])
 
   return (
-    <ScrollView style={styles.root} contentContainerStyle={styles.container}>
+    <ScrollView
+      style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}
+      contentContainerStyle={[a.flex_grow]}
+    >
       {!isSearching ? (
         <View>
           <TotalTokensValue amount={primaryBalance} />
@@ -126,20 +129,4 @@ export const PortfolioDAppsTokenList = () => {
       </TabPanel>
     </ScrollView>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    container: {
-      ...atoms.flex_grow,
-    },
-  })
-
-  return {styles} as const
 }

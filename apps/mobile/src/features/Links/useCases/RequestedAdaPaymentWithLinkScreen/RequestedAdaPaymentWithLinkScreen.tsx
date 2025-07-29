@@ -1,8 +1,8 @@
 import {useLinks} from '@yoroi/links'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
+import {ScrollView, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -22,12 +22,11 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   onContinue: () => void
 }) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const {actionFinished} = useLinks()
   const {closeModal} = useModal()
 
   // TODO: revisit check with product
-  const disclaimerStyle = isTrusted ? styles.text : styles.text
   const description = isTrusted
     ? strings.trustedPaymentRequestedDescription
     : strings.untrustedPaymentRequestedDescription
@@ -38,10 +37,15 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   }
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+    <SafeAreaView
+      edges={['bottom', 'left', 'right']}
+      style={[{backgroundColor: p.bg_color_max}, a.flex_1, a.px_lg]}
+    >
       <ScrollView bounces={false}>
         <ShowDisclaimer title={strings.disclaimer}>
-          <Text style={disclaimerStyle}>{description}</Text>
+          <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
+            {description}
+          </Text>
         </ShowDisclaimer>
 
         <Space.Height.md />
@@ -56,7 +60,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
         <View style={[{flex: 1}]} />
       </ScrollView>
 
-      <Actions style={styles.actions}>
+      <Actions style={[a.flex_row, a.justify_between]}>
         <Button
           size="S"
           type={ButtonType.Secondary}
@@ -73,11 +77,13 @@ export const RequestedAdaPaymentWithLinkScreen = ({
 }
 
 const Message = ({message}: {message?: string}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   return (
     !isEmptyString(message) && (
       <>
-        <Text style={styles.text}>{message}</Text>
+        <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
+          {message}
+        </Text>
 
         <Space.Height.lg />
       </>
@@ -85,27 +91,3 @@ const Message = ({message}: {message?: string}) => {
   )
 }
 const Actions = (props: ViewProps) => <View {...props} />
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    actions: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    text: {
-      color: color.text_gray_max,
-      ...atoms.body_2_md_regular,
-    },
-  })
-  const colors = {
-    danger: color.sys_magenta_500,
-    warning: color.sys_orange_500,
-  }
-  return {styles, colors} as const
-}

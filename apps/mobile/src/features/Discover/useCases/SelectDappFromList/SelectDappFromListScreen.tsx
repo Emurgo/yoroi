@@ -1,7 +1,7 @@
 import {useDappList} from '@yoroi/dapp-connector'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, StyleSheet, View} from 'react-native'
+import {FlatList, View} from 'react-native'
 
 import {ChainDAppsWarning} from '~/features/Discover/common/ChainDAppsWarning'
 import {getGoogleSearchItem} from '~/features/Discover/common/helpers'
@@ -9,7 +9,7 @@ import {useDAppsConnected} from '~/features/Discover/common/useDAppsConnected'
 import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
 import {useStrings} from '~/features/Discover/common/useStrings'
 import {ShowDisclaimer} from '~/features/Legal/Disclaimer/ShowDisclaimer'
-import {useSearchOnNavBar} from '~/features/Search/SearchContext'
+import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SimpleTab} from '~/ui/SimpleTab/SimpleTab'
@@ -29,7 +29,7 @@ type Category = 'Investment' | 'Media' | 'Trading' | 'NFT' | 'Community'
 
 export const SelectDappFromListScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const [currentTab, setCurrentTab] = React.useState<TDAppTabs>('connected')
   const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>(
     [],
@@ -49,7 +49,7 @@ export const SelectDappFromListScreen = () => {
     noBack: true,
     extraNavigationOptions: {
       headerTitle: ({children}) => (
-        <NetworkTag style={styles.networkTag}>{children}</NetworkTag>
+        <NetworkTag style={{width: 200}}>{children}</NetworkTag>
       ),
     },
   })
@@ -89,7 +89,9 @@ export const SelectDappFromListScreen = () => {
 
       <ShowDisclaimer type="dapps" disabled={!isShowedWelcomeDApp} />
 
-      <View style={[styles.root]}>
+      <View
+        style={[{flex: 1, backgroundColor: p.bg_color_max}, a.px_lg, a.gap_lg]}
+      >
         <ChainDAppsWarning />
 
         <FlatList
@@ -105,47 +107,17 @@ export const SelectDappFromListScreen = () => {
               onCategoryToggle={handleToggleCategory}
             />
           }
-          renderItem={({item: entry}) => (
+          renderItem={({item}) => (
             <DAppListItem
-              dApp={entry}
-              connected={isDappConnected(entry.origins)}
+              dApp={item}
+              connected={isDappConnected(item.origins)}
             />
           )}
-          ItemSeparatorComponent={() => (
-            <Space.Height._2xs style={styles.dAppsBox} />
-          )}
-          ListFooterComponent={() => (
-            <Space.Height._2xs style={styles.dAppsBox} />
-          )}
+          ItemSeparatorComponent={() => <Space.Height.md />}
         />
       </View>
     </>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-      ...atoms.px_lg,
-      ...atoms.gap_lg,
-    },
-    dAppsBox: {
-      height: 16,
-    },
-    tabsContainer: {
-      flexDirection: 'row',
-      gap: 8,
-      paddingBottom: 16,
-    },
-    networkTag: {
-      width: 200,
-    },
-  })
-
-  return styles
 }
 
 const HeaderControl = ({
@@ -162,7 +134,6 @@ const HeaderControl = ({
   onCategoryToggle: (category: string) => void
 }) => {
   const {visible} = useSearch()
-  const styles = useStyles()
   const strings = useStrings()
   const {data: connectedOrigins = []} = useDAppsConnected({
     refetchOnMount: true,
@@ -176,7 +147,7 @@ const HeaderControl = ({
   return (
     <>
       {hasConnectedDapps && (
-        <View style={styles.tabsContainer}>
+        <View style={[{flexDirection: 'row', gap: 8, paddingBottom: 16}]}>
           <SimpleTab
             name={strings.connected}
             isActive={currentTab === DAppTabs.connected}
@@ -195,7 +166,7 @@ const HeaderControl = ({
         <View>
           <CountDAppsConnected total={connectedOrigins.length} />
 
-          <Space.Height._2xs style={styles.dAppsBox} />
+          <Space.Height._2xs style={{height: 16}} />
         </View>
       )}
 
@@ -209,7 +180,7 @@ const HeaderControl = ({
 
           <CountDAppsAvailable total={count} />
 
-          <Space.Height._2xs style={styles.dAppsBox} />
+          <Space.Height._2xs style={{height: 16}} />
         </View>
       )}
     </>

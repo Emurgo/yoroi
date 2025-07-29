@@ -1,16 +1,16 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, StyleSheet, View} from 'react-native'
+import {FlatList, View} from 'react-native'
 
-import {Space} from '~/ui/Space/Space'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Space} from '~/ui/Space/Space'
 import {BrowserTabsBar} from './BrowserTabsBar'
 import {WebViewItem} from './WebViewItem'
 
 export const BrowseDappScreen = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const flatListRef = React.useRef<FlatList>(null)
   const {tabs, tabsOpen} = useBrowser()
   const {track} = useMetrics()
@@ -22,11 +22,11 @@ export const BrowseDappScreen = () => {
   )
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <FlatList
         ref={flatListRef}
-        style={styles.root}
-        contentContainerStyle={styles.listContainer}
+        style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+        contentContainerStyle={[a.flex_grow]}
         data={tabs}
         pagingEnabled={false}
         ListHeaderComponent={() => tabsOpen && <Space.Height.md />}
@@ -44,20 +44,4 @@ export const BrowseDappScreen = () => {
       {tabsOpen && <BrowserTabsBar />}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-    listContainer: {
-      ...atoms.flex_grow,
-    },
-  })
-
-  return {styles} as const
 }
