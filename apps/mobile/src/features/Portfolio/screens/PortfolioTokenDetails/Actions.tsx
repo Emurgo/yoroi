@@ -1,23 +1,23 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useSwap} from '../../../Swap/common/SwapProvider'
-import {useSelectedNetwork} from '../../../WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
-import {useNavigateTo} from '../../common/hooks/useNavigateTo'
-import {useStrings} from '../../common/hooks/useStrings'
+import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {useSwap} from '../Swap/common/SwapProvider'
 
 type Props = {
   tokenInfo: Portfolio.Token.Info
 }
 export const Actions = ({tokenInfo}: Props) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const swapForm = useSwap()
@@ -62,8 +62,8 @@ export const Actions = ({tokenInfo}: Props) => {
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.container}>
+    <View style={[a.border_t, {borderTopColor: p.gray_200}]}>
+      <View style={[a.flex_row, a.gap_lg, a.p_lg]}>
         <Button
           type={ButtonType.Secondary}
           title={strings.send}
@@ -75,26 +75,4 @@ export const Actions = ({tokenInfo}: Props) => {
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      borderTopColor: color.gray_200,
-      ...atoms.border_t,
-    },
-    container: {
-      ...atoms.flex_row,
-      ...atoms.gap_lg,
-      ...atoms.p_lg,
-    },
-  })
-
-  const colors = {
-    white: color.white_static,
-    primary: color.el_primary_medium,
-  } as const
-
-  return {styles, colors} as const
 }

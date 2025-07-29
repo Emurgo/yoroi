@@ -1,20 +1,22 @@
-// import {useMutation, UseMutationOptions} from '@tanstack/react-query'
+import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 
-// import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 
-// export const useDisableAllEasyConfirmation = (options?: UseMutationOptions<void, Error>) => {
-//   const {walletManager} = useWalletManager()
-//   const mutation = useMutation({
-//     mutationFn: async () => {
-//       for (const id of walletManager.walletMetas.keys()) {
-//         await walletManager.disableEasyConfirmation(id)
-//       }
-//     },
-//     ...options,
-//   })
+export const useDisableAllEasyConfirmation = (
+  options?: UseMutationOptions<void, Error>,
+) => {
+  const {walletManager} = useWalletManager()
+  const mutation = useMutation({
+    mutationFn: async () => {
+      for (const id of walletManager.walletMetas.keys()) {
+        await walletManager.disableEasyConfirmation(id)
+      }
+    },
+    ...options,
+  })
 
-//   return {
-//     ...mutation,
-//     disableAllEasyConfirmation: mutation.mutate,
-//   }
-// }
+  return {
+    ...mutation,
+    disableAllEasyConfirmation: mutation.mutate,
+  }
+}

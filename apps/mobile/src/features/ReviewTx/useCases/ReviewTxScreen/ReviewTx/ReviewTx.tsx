@@ -2,12 +2,11 @@ import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
 } from '@react-navigation/material-top-tabs'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   FlatList,
   StyleProp,
-  StyleSheet,
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -15,15 +14,12 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {Button} from '../../../../../components/Button/Button'
-import {SafeArea} from '../../../../../components/SafeArea'
-import {
-  ScrollView,
-  useScrollView,
-} from '../../../../../components/ScrollView/ScrollView'
-import {isEmptyString} from '../../../../../kernel/utils'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {FormattedMetadata, FormattedTx} from '../../../common/types'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
+import {Button} from '~/ui/Button/Button'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {isEmptyString} from '~/wallets/utils/string'
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
 import {OverviewTab} from '../ReviewTx/Overview/OverviewTab'
 import {UTxOsTab} from '../ReviewTx/UTxOs/UTxOsTab'
@@ -52,7 +48,7 @@ export const ReviewTx = ({
   createdBy?: React.ReactNode
   onConfirm: () => void
 }) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   const tabsData: Array<[string, Tabs]> = [
@@ -102,7 +98,7 @@ export const ReviewTx = ({
     (isReferenceInputsScrollBarShown && activeTab === 'reference_inputs')
 
   return (
-    <SafeArea style={styles.root}>
+    <SafeArea style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <MaterialTab.Navigator
         tabBar={(props) => {
           setActiveTab(tabsData[props.state.index][1])
@@ -112,7 +108,7 @@ export const ReviewTx = ({
         <MaterialTab.Screen name="overview">
           {() => (
             <ScrollView
-              style={styles.root}
+              style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
               onScrollBarChange={setOverviewIsScrollBarShown}
             >
               <OverviewTab
@@ -130,7 +126,7 @@ export const ReviewTx = ({
         <MaterialTab.Screen name="utxos">
           {() => (
             <ScrollView
-              style={styles.root}
+              style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
               onScrollBarChange={setUtxosIsScrollBarShown}
             >
               <UTxOsTab tx={formattedTx} />
@@ -142,7 +138,7 @@ export const ReviewTx = ({
           <MaterialTab.Screen name="metadata">
             {() => (
               <ScrollView
-                style={styles.root}
+                style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
                 onScrollBarChange={setMetadataIsScrollBarShown}
               >
                 <MetadataTab
@@ -158,7 +154,7 @@ export const ReviewTx = ({
           <MaterialTab.Screen name="mint">
             {() => (
               <ScrollView
-                style={styles.root}
+                style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
                 onScrollBarChange={setMintIsScrollBarShown}
               >
                 <MintTab mintData={formattedTx.mint} />
@@ -171,7 +167,7 @@ export const ReviewTx = ({
           <MaterialTab.Screen name="reference_inputs">
             {() => (
               <ScrollView
-                style={styles.root}
+                style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
                 onScrollBarChange={setReferenceInputsIsScrollBarShown}
               >
                 <ReferenceInputsTab
@@ -183,7 +179,9 @@ export const ReviewTx = ({
         )}
       </MaterialTab.Navigator>
 
-      <Actions style={scrollbarActive && styles.actionsScroll}>
+      <Actions
+        style={scrollbarActive && [a.border_t, {borderTopColor: p.gray_200}]}
+      >
         <Button title={strings.confirm} onPress={onConfirm} />
       </Actions>
     </SafeArea>
@@ -195,7 +193,7 @@ const TabBar = ({
   state,
   tabsData,
 }: MaterialTopTabBarProps & {tabsData: Array<Array<string>>}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <FlatList
@@ -208,7 +206,14 @@ const TabBar = ({
           onPress={() => navigation.navigate(key)}
         />
       )}
-      style={styles.tabBar}
+      style={[
+        {
+          marginHorizontal: 16,
+          maxHeight: 50,
+          borderBottomWidth: 1,
+          borderBottomColor: p.gray_200,
+        },
+      ]}
       showsHorizontalScrollIndicator={false}
       bounces={false}
       horizontal
@@ -223,26 +228,38 @@ export const Tab = ({
   testID,
   style,
 }: TouchableOpacityProps & {active: boolean; label: string}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
-      style={[styles.tab, style]}
+      style={[a.align_center, a.justify_center, a.py_md, style]}
       onPress={onPress}
       testID={testID}
     >
-      <View style={styles.tabContainer}>
+      <View style={[a.align_center, a.justify_center, a.px_lg]}>
         <Text
           style={[
-            styles.tabText,
-            active ? styles.tabTextActive : styles.tabTextInactive,
+            a.body_1_lg_medium,
+            active ? {color: p.primary_600} : {color: p.gray_600},
           ]}
         >
           {label}
         </Text>
       </View>
 
-      {active && <View style={styles.indicator} />}
+      {active && (
+        <View
+          style={[
+            a.absolute,
+            {
+              bottom: -2,
+              height: 2.5,
+              width: '100%',
+              backgroundColor: p.el_primary_medium,
+            },
+          ]}
+        />
+      )}
     </TouchableOpacity>
   )
 }
@@ -254,60 +271,5 @@ const Actions = ({
   children: React.ReactNode
   style?: StyleProp<ViewStyle>
 }) => {
-  const {styles} = useStyles()
-  return <View style={[styles.actions, style]}>{children}</View>
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-    actions: {
-      ...atoms.p_lg,
-    },
-    tabBar: {
-      marginHorizontal: 16, // to include the border
-      maxHeight: 50,
-      borderBottomWidth: 1,
-      borderBottomColor: color.gray_200,
-    },
-    tab: {
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.py_md,
-    },
-    tabContainer: {
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.px_lg,
-    },
-    tabText: {
-      ...atoms.body_1_lg_medium,
-    },
-    tabTextActive: {
-      color: color.primary_600,
-    },
-    tabTextInactive: {
-      color: color.gray_600,
-    },
-    indicator: {
-      ...atoms.absolute,
-      bottom: -2,
-      height: 2.5,
-      width: '100%',
-      backgroundColor: color.el_primary_medium,
-    },
-    actionsScroll: {
-      ...atoms.border_t,
-      borderTopColor: color.gray_200,
-    },
-  })
-
-  const colors = {
-    lightGray: color.gray_200,
-  }
-  return {styles, colors} as const
+  return <View style={[a.p_lg, style]}>{children}</View>
 }

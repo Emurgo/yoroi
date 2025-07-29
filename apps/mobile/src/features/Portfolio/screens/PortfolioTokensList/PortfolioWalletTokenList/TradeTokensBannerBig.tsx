@@ -1,17 +1,17 @@
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '../../../../../components/Button/Button'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {TradeTokensAsset} from '../../PortfolioDashboard/DashboardTokensList/TradeTokensAsset'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {TradeTokensAsset} from '../PortfolioDashboard/DashboardTokensList/TradeTokensAsset'
 
 export const TradeTokensBannerBig = () => {
-  const {styles, colors} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
 
   const navigation = useNavigation<TxHistoryRouteNavigation>()
@@ -20,72 +20,51 @@ export const TradeTokensBannerBig = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1]}>
       <LinearGradient
-        style={styles.gradientRoot}
-        colors={colors.gradientColor}
+        style={[
+          a.p_lg,
+          a.flex_col,
+          a.align_start,
+          a.rounded_sm,
+          a.h_full,
+          a.justify_between,
+          a.relative,
+          a.overflow_hidden,
+          {backgroundColor: p.bg_color_max},
+        ]}
+        colors={p.bg_gradient_1}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
       >
-        <Text style={styles.title}>{strings.portfolioSwapTokensTitle}</Text>
+        <Text
+          style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_max}]}
+        >
+          {strings.portfolioSwapTokensTitle}
+        </Text>
 
-        <Spacer height={13} />
+        <Space.Height.sm />
 
-        <Text style={styles.description}>
+        <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
           {strings.portfolioSwapTokensDescription}
         </Text>
 
-        <Spacer height={37} />
+        <Space.Height.xl />
 
         <Button title={strings.startSwapping} onPress={handleSwap} />
 
-        <View style={styles.assetBox}>
+        <View
+          style={[
+            a.absolute,
+            a.flex_col,
+            a.justify_center,
+            a.align_center,
+            {bottom: 6.21, right: 1.43},
+          ]}
+        >
           <TradeTokensAsset />
         </View>
       </LinearGradient>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-    },
-    gradientRoot: {
-      ...atoms.p_lg,
-      ...atoms.flex_col,
-      ...atoms.align_start,
-      ...atoms.rounded_sm,
-      ...atoms.h_full,
-      ...atoms.justify_between,
-      ...atoms.relative,
-      ...atoms.overflow_hidden,
-      backgroundColor: color.bg_color_max,
-    },
-    title: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.gray_max,
-    },
-    assetBox: {
-      ...atoms.absolute,
-      ...atoms.flex_col,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-      bottom: 6.21,
-      right: 1.43,
-    },
-    description: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_max,
-    },
-  })
-
-  const colors = {
-    gradientColor: color.bg_gradient_1,
-  }
-
-  return {styles, colors} as const
 }

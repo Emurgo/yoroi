@@ -3,7 +3,7 @@ import React from 'react'
 import {Animated, Text, TextProps, View, ViewProps} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {StepperProgress} from '../../../ui/StepperProgress/StepperProgress'
+import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 
 export const Description = ({style, ...props}: TextProps) => {
   const {palette: p} = useTheme()

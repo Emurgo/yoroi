@@ -1,9 +1,9 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Spacer} from '../../../../ui/Space/Space'
-import {useStrings} from '../../common/strings'
+import {useStrings} from '~/features/Swap/common/strings'
+import {Space} from '~/ui/Space/Space'
 
 export const WarnLimitPrice = ({
   wantedPrice,
@@ -17,28 +17,25 @@ export const WarnLimitPrice = ({
   tokenOutTicker: string
 }) => {
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
-    <View
-      style={[styles.container, a.justify_between, a.flex_1, a.px_lg, a.pb_lg]}
-    >
+    <View style={[a.justify_between, a.flex_1, a.px_lg, a.pb_lg]}>
       <View>
-        <Text style={[styles.description, {color: color.text_gray_medium}]}>
+        <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
           {strings.limitPriceWarningDescription}
         </Text>
 
-        <Spacer height={16} />
+        <Space.Height.md />
 
-        <View style={[styles.table, a.flex_col, a.gap_sm]}>
-          <View style={[styles.row, a.flex_row, a.justify_between, a.gap_md]}>
-            <Text style={[styles.label, {color: color.text_gray_medium}]}>
+        <View style={[a.flex_col, a.gap_sm]}>
+          <View style={[a.flex_row, a.justify_between, a.gap_md]}>
+            <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
               {strings.limitPriceWarningYourPrice}
             </Text>
 
             <View
               style={[
-                styles.textWrapper,
                 a.flex_1,
                 a.flex_row,
                 a.justify_end,
@@ -48,19 +45,18 @@ export const WarnLimitPrice = ({
               ]}
             >
               <Text
-                style={[styles.value, {color: color.text_gray_max}]}
+                style={[a.body_1_lg_regular, {color: p.text_gray_max}]}
               >{`1 ${tokenInTicker} = ${wantedPrice} ${tokenOutTicker}`}</Text>
             </View>
           </View>
 
-          <View style={[styles.row, a.flex_row, a.justify_between, a.gap_md]}>
-            <Text style={[styles.label, {color: color.text_gray_medium}]}>
+          <View style={[a.flex_row, a.justify_between, a.gap_md]}>
+            <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
               {strings.limitPriceWarningMarketPrice}
             </Text>
 
             <View
               style={[
-                styles.textWrapper,
                 a.flex_1,
                 a.flex_row,
                 a.justify_end,
@@ -70,30 +66,14 @@ export const WarnLimitPrice = ({
               ]}
             >
               <Text
-                style={[styles.value, {color: color.text_gray_max}]}
+                style={[a.body_1_lg_regular, {color: p.text_gray_max}]}
               >{`1 ${tokenInTicker} = ${marketPrice} ${tokenOutTicker}`}</Text>
             </View>
           </View>
         </View>
       </View>
 
-      <Spacer fill />
+      <View style={[{flex: 1}]} />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {},
-  label: {
-    ...a.body_1_lg_regular,
-  },
-  value: {
-    ...a.body_1_lg_regular,
-  },
-  textWrapper: {},
-  table: {},
-  row: {},
-  description: {
-    ...a.body_1_lg_regular,
-  },
-})

@@ -3,8 +3,8 @@ import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
-import {walletManager} from '../../WalletManager/wallet-manager'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {walletManager} from '~/features/WalletManager/wallet-manager'
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './processed-notifications-storage'
 

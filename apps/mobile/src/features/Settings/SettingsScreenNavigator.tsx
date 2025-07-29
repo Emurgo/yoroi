@@ -6,16 +6,16 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity} from 'react-native'
 
-import globalMessages from '../../kernel/i18n/global-messages'
-import {useMetrics} from '../../kernel/metrics/metricsManager'
+import globalMessages from '~/kernel/i18n/global-messages'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   defaultMaterialTopTabNavigationOptions,
   defaultStackNavigationOptions,
   SettingsStackRoutes,
   SettingsTabRoutes,
-} from '../../kernel/navigation/navigation'
-import {Boundary} from '../../ui/Boundary/Boundary'
-import {Icon} from '../../ui/Icon'
+} from '~/kernel/navigation/navigation'
+import {Boundary} from '~/ui/Boundary/Boundary'
+import {Icon} from '~/ui/Icon'
 import {ChangePinScreen} from '../Auth/screens/ChangePinScreen'
 import {EnableLoginWithPinScreen} from '../Auth/screens/EnableLoginWithPinScreen'
 import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'

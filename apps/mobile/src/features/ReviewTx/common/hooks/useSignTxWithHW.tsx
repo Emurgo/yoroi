@@ -2,10 +2,10 @@ import {Transaction} from '@emurgo/cross-csl-core'
 import {useMutation} from '@tanstack/react-query'
 import * as React from 'react'
 
-import {cip30LedgerExtensionMaker} from '../../../../wallets/cardano/cip30/cip30-ledger'
-import {BaseLedgerError} from '../../../../wallets/hw/hw'
-import {useConfirmHWConnectionModal} from '../../../Discover/common/ConfirmHWConnectionModal'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
+import {BaseLedgerError} from '~/wallets/hw/hw'
+import {useConfirmHWConnectionModal} from '../Discover/common/ConfirmHWConnectionModal'
 
 export type SignTxWithHW = {
   cbor: string

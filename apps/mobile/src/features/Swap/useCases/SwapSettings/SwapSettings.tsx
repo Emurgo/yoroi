@@ -1,25 +1,19 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLanguage} from '../../../../kernel/i18n'
-import {NumberLocale} from '../../../../kernel/i18n/languages'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {Quantities} from '../../../../wallets/utils/utils'
-import {KeyboardAvoidingView} from '../../../ui/KeyboardAvoidingView'
-import {SettingsSwitch} from '../../../ui/SettingsSwitch/SettingsSwitch'
-import {TextInput} from '../../../ui/TextInput'
-import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapProvider'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useStrings} from '~/features/Swap/common/useStrings'
+import {useLanguage} from '~/kernel/i18n'
+import {NumberLocale} from '~/kernel/i18n/languages'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView'
+import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
+import {TextInput} from '~/ui/TextInput'
+import {Quantities} from '~/wallets/utils/utils'
 
 type CustomChoice = {
   label: 'Custom'
@@ -47,7 +41,7 @@ const MAX_DECIMALS = 1
 
 export const SwapSettings = () => {
   const {numberLocale} = useLanguage()
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
 
   const swapForm = useSwap()
   const [aggregator, setAggregator] = React.useState(
@@ -107,36 +101,24 @@ export const SwapSettings = () => {
     isSelectedChoiceCustom && !validateSlippage(inputValue, numberLocale)
 
   return (
-    <KeyboardAvoidingView
-      style={[styles.flex, styles.root, {backgroundColor: color.bg_color_max}]}
-    >
+    <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={[styles.flex, styles.safeAreaView, atoms.p_lg]}
+        style={[a.flex_1, a.p_lg]}
       >
-        <ScrollView bounces={false} style={styles.flex}>
-          <Text style={[styles.heading, {color: color.gray_600}]}>
+        <ScrollView bounces={false} style={[a.flex_1]}>
+          <Text style={[a.py_lg, a.body_1_lg_regular, {color: p.gray_600}]}>
             {strings.slippageTolerance}
           </Text>
 
-          <View
-            style={[
-              styles.choicesContainer,
-              atoms.flex_row,
-              atoms.pb_xl,
-              atoms.flex_wrap,
-            ]}
-          >
+          <View style={[a.flex_row, a.pb_xl, a.flex_wrap]}>
             {CHOICES.map((choice, index) => (
               <TouchableOpacity
                 key={index}
                 style={[
-                  styles.choiceButton,
-                  atoms.p_sm,
-                  selectedChoiceLabel === choice.label &&
-                    styles.selectedChoiceButton,
+                  a.p_sm,
                   selectedChoiceLabel === choice.label && {
-                    backgroundColor: color.gray_200,
+                    backgroundColor: p.gray_200,
                     borderRadius: 8,
                   },
                 ]}
@@ -144,12 +126,10 @@ export const SwapSettings = () => {
               >
                 <Text
                   style={[
-                    styles.label,
-                    {color: color.text_gray_max},
-                    selectedChoiceLabel === choice.label &&
-                      styles.selectedChoiceLabel,
+                    a.body_1_lg_regular,
+                    {color: p.text_gray_max},
                     selectedChoiceLabel === choice.label && {
-                      color: color.text_gray_max,
+                      color: p.text_gray_max,
                     },
                   ]}
                 >
@@ -172,16 +152,20 @@ export const SwapSettings = () => {
               selectTextOnFocus={isInputEnabled}
               autoFocus={isInputEnabled}
               style={[
-                styles.input,
-                {color: color.text_gray_medium},
-                !isSelectedChoiceCustom && {backgroundColor: color.gray_100},
+                a.body_1_lg_regular,
+                {color: p.text_gray_medium},
+                !isSelectedChoiceCustom && {backgroundColor: p.gray_100},
               ]}
               keyboardType="numeric"
-              selectionColor={color.el_gray_max}
-              cursorColor={color.el_gray_max}
+              selectionColor={p.el_gray_max}
+              cursorColor={p.el_gray_max}
               right={
                 <Text
-                  style={[styles.percentLabel, {color: color.text_gray_medium}]}
+                  style={[
+                    a.p_lg,
+                    a.absolute,
+                    {right: 0, top: 0, color: p.text_gray_medium},
+                  ]}
                 >
                   %
                 </Text>
@@ -190,9 +174,9 @@ export const SwapSettings = () => {
                 isSelectedChoiceCustom && !hasError ? (
                   <Text
                     style={[
-                      styles.textInfo,
-                      styles.bottomText,
-                      {color: color.text_gray_700},
+                      a.body_3_sm_regular,
+                      a.py_xs,
+                      {color: p.text_gray_700},
                     ]}
                   >
                     {strings.enterSlippage}
@@ -200,9 +184,9 @@ export const SwapSettings = () => {
                 ) : isSelectedChoiceCustom && hasError ? (
                   <Text
                     style={[
-                      styles.bottomText,
-                      styles.errorText,
-                      {color: color.sys_magenta_500},
+                      a.py_xs,
+                      a.body_3_sm_regular,
+                      {color: p.sys_magenta_500},
                     ]}
                   >
                     {strings.slippageToleranceError}
@@ -212,20 +196,13 @@ export const SwapSettings = () => {
             />
           )}
 
-          <Text style={[styles.heading, {color: color.gray_600}]}>
+          <Text style={[a.py_lg, a.body_1_lg_regular, {color: p.gray_600}]}>
             {strings.routingPreferences}
           </Text>
 
-          <View style={[styles.routing, atoms.gap_md]}>
-            <View
-              style={[
-                styles.between,
-                atoms.flex_row,
-                atoms.justify_between,
-                atoms.align_center,
-              ]}
-            >
-              <Text style={[styles.label, {color: color.text_gray_max}]}>
+          <View style={[a.gap_md]}>
+            <View style={[a.flex_row, a.justify_between, a.align_center]}>
+              <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
                 {strings.auto}
               </Text>
 
@@ -243,15 +220,8 @@ export const SwapSettings = () => {
 
             {aggregator !== 'auto' && (
               <>
-                <View
-                  style={[
-                    styles.between,
-                    atoms.flex_row,
-                    atoms.justify_between,
-                    atoms.align_center,
-                  ]}
-                >
-                  <Text style={[styles.label, {color: color.text_gray_max}]}>
+                <View style={[a.flex_row, a.justify_between, a.align_center]}>
+                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
                     DexHunter
                   </Text>
 
@@ -267,15 +237,8 @@ export const SwapSettings = () => {
                   />
                 </View>
 
-                <View
-                  style={[
-                    styles.between,
-                    atoms.flex_row,
-                    atoms.justify_between,
-                    atoms.align_center,
-                  ]}
-                >
-                  <Text style={[styles.label, {color: color.text_gray_max}]}>
+                <View style={[a.flex_row, a.justify_between, a.align_center]}>
+                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
                     MuesliSwap
                   </Text>
 
@@ -298,46 +261,6 @@ export const SwapSettings = () => {
     </KeyboardAvoidingView>
   )
 }
-
-const styles = StyleSheet.create({
-  flex: {
-    ...a.flex_1,
-  },
-  root: {},
-  between: {},
-  safeAreaView: {},
-  textInfo: {
-    ...a.body_3_sm_regular,
-  },
-  heading: {
-    ...a.py_lg,
-    ...a.body_1_lg_regular,
-  },
-  bottomText: {
-    ...a.body_3_sm_regular,
-    ...a.py_xs,
-  },
-  choicesContainer: {},
-  choiceButton: {},
-  routing: {},
-  selectedChoiceButton: {},
-  label: {
-    ...a.body_1_lg_regular,
-  },
-  selectedChoiceLabel: {},
-  errorText: {
-    ...a.body_3_sm_regular,
-  },
-  input: {
-    ...a.body_1_lg_regular,
-  },
-  percentLabel: {
-    ...a.p_lg,
-    ...a.absolute,
-    right: 0,
-    top: 0,
-  },
-})
 
 const validateSlippage = (text: string, format: NumberLocale) => {
   const slippage = parseNumber(text, format)

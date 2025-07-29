@@ -1,9 +1,9 @@
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {HelperText} from '../../../../../components/TextInput/TextInput'
-import {memoMaxLenght} from '../../../common/constants'
-import {useStrings} from '../../../common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
+import {memoMaxLenght} from '~/features/SetupWallet/common/constants'
+import {HelperText} from '~/ui/TextInput/TextInput'
 
 export const ShowMemoInstructions = ({memo = ''}: {memo?: string}) => {
   const strings = useStrings()
@@ -11,17 +11,10 @@ export const ShowMemoInstructions = ({memo = ''}: {memo?: string}) => {
   const lenghtInfo = `${memo.length}/${memoMaxLenght}`
 
   return (
-    <View style={styles.row}>
+    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
       <HelperText type="info">{strings.helperMemoInstructions}</HelperText>
 
       <HelperText type="info">{lenghtInfo}</HelperText>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-})

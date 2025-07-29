@@ -3,13 +3,13 @@ import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {ReactNode} from 'react'
-import {Animated, StyleSheet} from 'react-native'
+import {Animated} from 'react-native'
 
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../components/Text'
-import {WarningBanner} from '../../../../../components/WarningBanner/WarningBanner'
-import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
-import {useStrings} from '../../../common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
+import {ButtonGroup} from '~/ui/ButtonGroup/ButtonGroup'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
+import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 
 export const SelectNameServer = () => {
   const strings = useStrings()
@@ -52,7 +52,7 @@ export const SelectNameServer = () => {
 
   return (
     <Animated.View style={{opacity: animatedValue}}>
-      {shouldShow && <Spacer height={16} />}
+      {shouldShow && <Space.Height.md />}
 
       {(waitAnimation || shouldShow) && (
         <>
@@ -60,7 +60,7 @@ export const SelectNameServer = () => {
 
           {receiver.selectedNameServer === undefined && shouldShow && (
             <>
-              <Spacer height={16} />
+              <Space.Height.md />
 
               <WarningBanner
                 content={String(strings.manyNameServersWarning(bold))}
@@ -86,11 +86,8 @@ const toAddressRecordsEntries = (
     [] as [Resolver.NameServer, string][],
   )
 
-const bold = {b: (text: ReactNode) => <Text style={styles.bold}>{text}</Text>}
-
-const styles = StyleSheet.create({
-  bold: {
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-  },
-})
+const bold = {
+  b: (text: ReactNode) => (
+    <Text style={{fontWeight: '500', fontFamily: 'Rubik-Medium'}}>{text}</Text>
+  ),
+}

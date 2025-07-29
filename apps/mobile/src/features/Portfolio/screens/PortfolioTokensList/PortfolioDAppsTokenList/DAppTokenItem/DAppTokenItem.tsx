@@ -1,12 +1,12 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Text, TouchableOpacity, View} from 'react-native'
 
-import {PairedBalance} from '../../../../../../components/PairedBalance/PairedBalance'
-import {ILiquidityPool} from '../../../../common/hooks/useGetLiquidityPool'
-import {AssetLogo} from '../../../../ui/AssetLogo/AssetLogo'
-import {TokenInfoIcon} from '../../../../ui/TokenAmountItem/TokenInfoIcon'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
+import {AssetLogo} from '~/ui/AssetLogo/AssetLogo'
 
 type Props = {
   tokenInfo: ILiquidityPool
@@ -19,7 +19,7 @@ export const DAppTokenItem = ({
   splitTokenSymbol,
   onPress,
 }: Props) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   const [firstToken, secondToken] = tokenInfo.assets
   const firstTokenBalance = amountBreakdown(firstToken).bn.toFormat(2)
@@ -27,98 +27,59 @@ export const DAppTokenItem = ({
   const secondTokenName = infoExtractName(secondToken.info)
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.root}>
-      <View style={styles.tokenInfoContainer}>
-        <View style={styles.logoContainer}>
-          <AssetLogo style={styles.logoFirst}>
+    <TouchableOpacity onPress={onPress} style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.gap_md]}>
+        <View style={[a.relative, {width: 40, height: 40}]}>
+          <AssetLogo
+            style={[
+              a.rounded_sm,
+              a.absolute,
+              {top: 0, left: 0, width: 26, height: 26},
+            ]}
+          >
             <TokenInfoIcon
               info={firstToken.info}
               size="sm"
-              imageStyle={styles.logoSize}
+              imageStyle={[{width: 26, height: 26}]}
             />
           </AssetLogo>
 
-          <AssetLogo style={styles.logoSecond}>
+          <AssetLogo
+            style={[
+              a.rounded_sm,
+              a.absolute,
+              {bottom: 0, right: 0, width: 26, height: 26},
+            ]}
+          >
             <TokenInfoIcon
               info={secondToken.info}
               size="sm"
-              imageStyle={styles.logoSize}
+              imageStyle={[{width: 26, height: 26}]}
             />
           </AssetLogo>
         </View>
 
         <View>
           <Text
-            style={styles.symbol}
+            style={[{color: p.gray_900}, a.body_1_lg_medium]}
           >{`${firstTokenName} ${splitTokenSymbol} ${secondTokenName}`}</Text>
 
-          <Text style={styles.dexName}>{tokenInfo.dex.name}</Text>
+          <Text style={[a.body_3_sm_regular, {color: p.gray_600}]}>
+            {tokenInfo.dex.name}
+          </Text>
         </View>
       </View>
 
       <View>
         <Text
-          style={styles.sumBalance}
+          style={[{color: p.gray_max}, a.body_1_lg_regular, a.text_right]}
         >{`${firstTokenBalance} ${firstTokenName}`}</Text>
 
-        <PairedBalance amount={firstToken} textStyle={styles.pairedBalance} />
+        <PairedBalance
+          amount={firstToken}
+          textStyle={[{color: p.gray_600}, a.body_3_sm_regular, a.text_right]}
+        />
       </View>
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    symbol: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_medium,
-    },
-    logoSize: {width: 26, height: 26},
-    logoFirst: {
-      ...atoms.rounded_sm,
-      ...atoms.absolute,
-      top: 0,
-      left: 0,
-      width: 26,
-      height: 26,
-    },
-    logoSecond: {
-      ...atoms.rounded_sm,
-      ...atoms.absolute,
-      bottom: 0,
-      right: 0,
-      width: 26,
-      height: 26,
-    },
-    logoContainer: {
-      ...atoms.relative,
-      width: 40,
-      height: 40,
-    },
-    tokenInfoContainer: {
-      ...atoms.flex_row,
-      ...atoms.gap_md,
-    },
-    dexName: {
-      ...atoms.body_3_sm_regular,
-      color: color.gray_600,
-    },
-    sumBalance: {
-      color: color.gray_max,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_right,
-    },
-    pairedBalance: {
-      color: color.gray_600,
-      ...atoms.body_3_sm_regular,
-      ...atoms.text_right,
-    },
-  })
-
-  return {styles} as const
 }

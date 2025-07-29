@@ -34,6 +34,7 @@ import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-f
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {convertBech32ToHex} from '../cardano/common/signatureUtils'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
+
 import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
@@ -339,7 +340,7 @@ export const useSignWithPasswordAndSubmitTx = (
 
   return {
     signAndSubmitTx: signTx.mutate,
-    isLoading: signTx.isLoading || submitTx.isLoading,
+    isLoading: signTx.isPending || submitTx.isPending,
     error: signTx.error || submitTx.error,
 
     signTx,
@@ -377,7 +378,7 @@ export const useSignWithHwAndSubmitTx = (
 
   return {
     signAndSubmitTx: signTx.mutate,
-    isLoading: signTx.isLoading || submitTx.isLoading,
+    isLoading: signTx.isPending || submitTx.isPending,
     error: signTx.error || submitTx.error,
 
     signTx,
@@ -415,7 +416,7 @@ export const useSignAndSubmitTx = (
 
   return {
     signAndSubmitTx: signTx.mutate,
-    isLoading: signTx.isLoading || submitTx.isLoading,
+    isLoading: signTx.isPending || submitTx.isPending,
     error: signTx.error || submitTx.error,
 
     signTx,

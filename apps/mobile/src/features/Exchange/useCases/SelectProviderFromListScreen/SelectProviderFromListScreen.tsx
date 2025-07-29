@@ -5,12 +5,12 @@ import * as React from 'react'
 import {FlatList, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '../../../../ui/Icon'
-import {Space} from '../../../../ui/Space/Space'
-import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
+import {ProviderItem} from '~/features/Exchange/common/ProviderItem/ProviderItem'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from '../../common/useStrings'
-import {BanxaLogo} from '../../illustrations/BanxaLogo'
-import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
+import {BanxaLogo} from '../illustrations/BanxaLogo'
+import {EncryptusLogo} from '../illustrations/EncryptusLogo'
 
 export const SelectProviderFromListScreen = () => {
   const {palette: p} = useTheme()

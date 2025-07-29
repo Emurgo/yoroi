@@ -5,15 +5,15 @@ import {Scan} from '@yoroi/types'
 import * as React from 'react'
 import {Alert, Linking} from 'react-native'
 
-import {useModal} from '../../../components/Modal/ModalContext'
-import {useClaimErrorResolver} from '../../../features/Claim/common/useClaimErrorResolver'
-import {useStrings as useStringsClaim} from '../../../features/Claim/common/useStrings'
+import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
+import {useStrings as useStringsClaim} from '~/features/Claim/common/useStrings'
 import {
   AskConfirmation,
   AskConfirmationActions,
-} from '../../../features/Claim/useCases/AskConfirmation'
-import {pastedFormatter} from '../../../wallets/utils/amountUtils'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+} from '~/features/Claim/useCases/AskConfirmation'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {pastedFormatter} from '~/wallets/utils/amountUtils'
 import {useNavigateTo} from './useNavigateTo'
 
 export const useTriggerScanAction = ({

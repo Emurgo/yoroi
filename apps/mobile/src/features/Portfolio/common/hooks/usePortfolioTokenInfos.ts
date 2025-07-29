@@ -2,7 +2,7 @@ import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {createUnknownTokenInfo, isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
 
-import {YoroiWallet} from '../../../../wallets/cardano/types'
+import {YoroiWallet} from '~/wallets/cardano/types'
 
 export const usePortfolioTokenInfos = (
   {

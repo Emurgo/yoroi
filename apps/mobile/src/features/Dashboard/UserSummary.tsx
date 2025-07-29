@@ -4,16 +4,16 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
-import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import globalMessages from '../../kernel/i18n/global-messages'
-import {Button, ButtonProps, ButtonType} from '../../ui/Button/Button'
-import {Icon} from '../../ui/Icon'
-import {Space} from '../../ui/Space/Space'
-import {Text} from '../../ui/Text/Text'
-import {TitledCard} from '../../ui/TitledCard/TitledCard'
-import {formatAdaWithText} from '../../wallets/utils/format'
-import {asQuantity} from '../../wallets/utils/utils'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import globalMessages from '~/kernel/i18n/global-messages'
+import {Button, ButtonProps, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
+import {TitledCard} from '~/ui/TitledCard/TitledCard'
+import {formatAdaWithText} from '~/wallets/utils/format'
+import {asQuantity} from '~/wallets/utils/utils'
 
 const ICON_DIM = 44
 
@@ -43,7 +43,7 @@ export const UserSummary = ({
             <Icon.TotalAda color={p.el_primary_medium} size={ICON_DIM} />
           </View>
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <View style={[a.flex_col]}>
             <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
@@ -67,14 +67,14 @@ export const UserSummary = ({
           </View>
         </View>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <View style={[a.flex_1, a.flex_row, a.align_center]}>
           <View>
             <Icon.TotalReward color={p.el_primary_medium} size={ICON_DIM} />
           </View>
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <View style={[a.flex_col]}>
             <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
@@ -98,14 +98,14 @@ export const UserSummary = ({
           </View>
         </View>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <View style={[a.flex_1, a.flex_row, a.align_center]}>
           <View>
             <Icon.TotalDelegated color={p.el_primary_medium} size={ICON_DIM} />
           </View>
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <View style={[a.flex_col]}>
             <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
@@ -131,7 +131,7 @@ export const UserSummary = ({
 
         {ctaProps && (
           <>
-            <Space height="lg" />
+            <Space.Height.lg />
 
             <Button
               type={ButtonType.Secondary}

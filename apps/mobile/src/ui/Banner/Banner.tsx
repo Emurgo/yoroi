@@ -1,8 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 
-import {Text} from '../Text/Text'
+import {Text} from '~/ui/Text/Text'
 
 type Props = {
   text?: string
@@ -13,19 +13,20 @@ type Props = {
 }
 
 export const Banner = ({error, text, boldText, label, children}: Props) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const bannerStyles = [
-    styles.banner,
-    {backgroundColor: color.gray_100},
-    error === true && styles.bannerError,
-    error === true && {backgroundColor: color.bg_color_max},
+    a.p_lg,
+    {alignItems: 'center' as const, justifyContent: 'center' as const},
+    {backgroundColor: p.gray_100},
+    ...(error === true ? [a.py_sm] : []),
+    ...(error === true ? [{backgroundColor: p.bg_color_max}] : []),
   ]
 
   return (
     <View style={bannerStyles}>
       {label != null && (
-        <Text error={error} small style={styles.label}>
+        <Text error={error} small style={{marginBottom: 6}}>
           {label}
         </Text>
       )}
@@ -34,7 +35,7 @@ export const Banner = ({error, text, boldText, label, children}: Props) => {
         <Text
           small={error}
           bold={boldText}
-          style={[error != null && {color: color.sys_magenta_500}]}
+          style={[error != null && {color: p.sys_magenta_500}]}
         >
           {text}
         </Text>
@@ -60,17 +61,3 @@ export const ClickableBanner = ({onPress, ...rest}: ClickableProps) =>
   ) : (
     <Banner {...rest} />
   )
-
-const styles = StyleSheet.create({
-  banner: {
-    ...a.p_lg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bannerError: {
-    ...a.py_sm,
-  },
-  label: {
-    marginBottom: 6,
-  },
-})

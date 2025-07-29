@@ -2,8 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Pressable, Text, TextProps, View, ViewStyle} from 'react-native'
 
-import {Icon} from '../../ui/Icon'
-import {Space} from '../Space/Space'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 type Props = {
   checked: boolean
   text: string

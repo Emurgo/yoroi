@@ -1,7 +1,7 @@
 import {useQuery} from '@tanstack/react-query'
 
-import {wrappedCsl} from '../../../../wallets/cardano/wrappedCsl'
-import {YoroiUnsignedTx} from '../../../../wallets/types/yoroi'
+import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
+import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {TransactionBody} from '../types'
 
 export const useTxBody = ({

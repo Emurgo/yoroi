@@ -22,14 +22,15 @@ import {Resolver} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {Boundary} from '../../components/Boundary/Boundary'
-import {unstoppableApiKey} from '../../kernel/env'
-import {useMetrics} from '../../kernel/metrics/metricsManager'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {unstoppableApiKey} from '~/kernel/env'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   BackButton,
   defaultStackNavigationOptions,
   TxHistoryRoutes,
-} from '../../kernel/navigation'
+} from '~/kernel/navigation'
+import {Boundary} from '~/ui/Boundary/Boundary'
 import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '../Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '../Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
@@ -58,7 +59,6 @@ import {FailedTxScreen as SwapFailedTxScreen} from '../Swap/useCases/ShowFailedT
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
 import {SubmittedTxScreen as SwapSubmittedTxScreen} from '../Swap/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {SwapSettings} from '../Swap/useCases/SwapSettings/SwapSettings'
-import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {HeaderRightSwap} from './common/HeaderRightSwap'
 import {TxDetails} from './useCases/TxDetails/TxDetails'

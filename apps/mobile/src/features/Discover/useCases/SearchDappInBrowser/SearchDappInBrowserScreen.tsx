@@ -1,9 +1,9 @@
 import {useIsFocused} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 
-import {useBrowser} from '../../common/BrowserProvider'
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {getGoogleSearchItem, urlWithProtocol} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {BrowserSearchToolbar} from '../BrowseDapp/BrowserSearchToolbar'
@@ -18,7 +18,7 @@ const getUrl = (searchValue: string, isEngineSearch: boolean) => {
 }
 
 export const SearchDappInBrowserScreen = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {updateTab, tabs, tabActiveIndex} = useBrowser()
   const tabActive = tabs[tabActiveIndex]
@@ -58,7 +58,7 @@ export const SearchDappInBrowserScreen = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[{flex: 1, backgroundColor: p.bg_color_max}]}>
       <BrowserSearchToolbar
         onBack={handleGoBack}
         searchValue={searchValue}
@@ -66,7 +66,7 @@ export const SearchDappInBrowserScreen = () => {
         onSearchSubmit={() => handleSubmit(false)}
       />
 
-      <ScrollView style={styles.dAppContainer}>
+      <ScrollView style={[a.p_lg]}>
         {searchValue !== '' && (
           <DAppListItem
             key={googleItem.id}
@@ -78,20 +78,4 @@ export const SearchDappInBrowserScreen = () => {
       </ScrollView>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    dAppContainer: {
-      ...atoms.p_lg,
-    },
-  })
-
-  return {styles} as const
 }

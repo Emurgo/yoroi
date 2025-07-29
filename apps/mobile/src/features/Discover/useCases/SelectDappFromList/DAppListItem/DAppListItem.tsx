@@ -1,10 +1,9 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {
   Alert,
   Linking,
-  StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View,
@@ -12,26 +11,24 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
-import {Button, ButtonType} from '../../../../../components/Button/Button'
-import {Icon} from '../../../../../components/Icon'
-import {InfoBanner} from '../../../../../components/InfoBanner/InfoBanner'
-import {useModal} from '../../../../../components/Modal/ModalContext'
-import {Space} from '../../../../../components/Space/Space'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {WarningBanner} from '../../../../../components/WarningBanner/WarningBanner'
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useBrowser} from '../../../common/BrowserProvider'
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
+import {LabelCategoryDApp} from '~/features/Discover/common/LabelCategoryDApp'
+import {LabelConnected} from '~/features/Discover/common/LabelConnected'
+import {LabelSingleAddress} from '~/features/Discover/common/LabelSingleAddress'
+import {useDisconnectDapp} from '~/features/Discover/common/useDisconnectDapp'
+import {useNavigateTo} from '~/features/Discover/common/useNavigateTo'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 import {
   type DAppItem,
   getDappFallbackLogo,
   isGoogleSearchItem,
 } from '../../../common/helpers'
-import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
-import {LabelConnected} from '../../../common/LabelConnected'
-import {LabelSingleAddress} from '../../../common/LabelSingleAddress'
-import {useDisconnectDapp} from '../../../common/useDisconnectDapp'
-import {useNavigateTo} from '../../../common/useNavigateTo'
-import {useStrings} from '../../../common/useStrings'
 
 const INIT_DIALOG_DAPP_ACTIONS_HEIGHT = 286
 
@@ -41,7 +38,7 @@ type Props = {
   onPress?: () => void
 }
 export const DAppListItem = ({dApp, connected, onPress}: Props) => {
-  const {styles, atoms} = useStyles()
+  const {palette: p} = useTheme()
   const {addTab, setTabActive, tabs} = useBrowser()
   const navigateTo = useNavigateTo()
   const {openModal, closeModal} = useModal()
@@ -112,36 +109,38 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     openModal({
       title: strings.dAppActions,
       content: (
-        <View style={styles.rootDialog}>
-          <View style={styles.dAppInfo}>
-            <Image source={{uri: logo}} style={styles.dAppLogoDialog} />
+        <View style={[a.flex_col, a.px_lg]}>
+          <View style={[{alignItems: 'center', gap: 8}]}>
+            <Image source={{uri: logo}} style={[{width: 48, height: 48}]} />
 
-            <Text style={styles.dAppName}>{dApp.name}</Text>
+            <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
+              {dApp.name}
+            </Text>
           </View>
 
-          <Spacer height={16} />
+          <Space.Height.md />
 
           {dApp.isSingleAddress && (
             <>
-              <Space height="lg" />
+              <Space.Height.lg />
 
               <SingleAddressDAppWarning />
             </>
           )}
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <InfoBanner iconSize={20} content={strings.disconnectWarning} />
 
-          <Space height="lg" />
+          <Space.Height.lg />
         </View>
       ),
       footer: (
-        <View style={styles.actions}>
+        <View style={[a.align_start, a.gap_lg, a.pb_lg]}>
           <Button
             type={ButtonType.SecondaryText}
-            fontOverride={atoms.body_1_lg_medium}
-            style={styles.button}
+            fontOverride={a.body_1_lg_medium}
+            style={[a.gap_lg]}
             onPress={handleOpenDApp}
             icon={Icon.DApp}
             title={strings.openDApp}
@@ -150,8 +149,8 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
           <Button
             type={ButtonType.SecondaryText}
-            fontOverride={atoms.body_1_lg_medium}
-            style={styles.button}
+            fontOverride={a.body_1_lg_medium}
+            style={[a.gap_lg]}
             onPress={() => handleConfirmDisconnect(dApp)}
             icon={Icon.Disconnect}
             title={strings.disconnectWalletFromDApp}
@@ -169,32 +168,39 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
       onPressOut={() => handlePressing(false)}
       onPress={handlePress}
     >
-      <View style={styles.dAppItemContainer}>
+      <View style={[{flexDirection: 'row', gap: 12}]}>
         {isGoogleSearchItem(dApp) ? (
           <Icon.Google />
         ) : (
-          <Image source={{uri: logo}} style={styles.dAppLogo} />
+          <Image
+            source={{uri: logo}}
+            style={[{width: 40, height: 40, contentFit: 'contain'}]}
+          />
         )}
 
-        <View style={styles.flexFull}>
-          <Text numberOfLines={1} style={styles.nameText}>
+        <View style={[{flex: 1}]}>
+          <Text
+            numberOfLines={1}
+            style={[a.body_1_lg_medium, {color: p.gray_900, fontWeight: '500'}]}
+          >
             {dApp.name}
           </Text>
 
           {dApp?.description !== undefined && (
             <Text
               style={[
-                styles.descriptionText,
-                isPressed && styles.descriptionTextActive,
+                a.body_3_sm_regular,
+                {color: p.gray_600},
+                isPressed && {color: p.gray_max},
               ]}
             >
               {dApp.description}
             </Text>
           )}
 
-          <Spacer height={8} />
+          <Space.Height.sm />
 
-          <View style={styles.labelBox}>
+          <View style={[{flexDirection: 'row', gap: 8, flexWrap: 'wrap'}]}>
             {connected && <LabelConnected />}
 
             {dApp.isSingleAddress && <LabelSingleAddress />}
@@ -213,7 +219,7 @@ const walletsCompatibilityLink =
   'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/10413017088527-DApps-and-HD-wallets-compatability'
 
 const SingleAddressDAppWarning = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   const handleOnPress = () => {
@@ -225,11 +231,11 @@ const SingleAddressDAppWarning = () => {
       content={
         <>
           <Text
-            style={styles.warningText}
+            style={[a.body_2_md_regular, {color: p.text_gray_max}]}
           >{`${strings.singleAddressWarning} `}</Text>
 
           <Text
-            style={[styles.warningText, styles.link]}
+            style={[a.body_2_md_regular, {color: p.sys_cyan_500}]}
             onPress={handleOnPress}
           >
             {strings.learnMore}
@@ -239,73 +245,4 @@ const SingleAddressDAppWarning = () => {
       iconSize={20}
     />
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    rootDialog: {
-      ...atoms.flex_col,
-      ...atoms.px_lg,
-    },
-    dAppItemContainer: {
-      flexDirection: 'row',
-      gap: 12,
-    },
-    nameText: {
-      color: color.gray_900,
-      fontWeight: '500',
-      ...atoms.body_1_lg_medium,
-    },
-    descriptionText: {
-      color: color.gray_600,
-      ...atoms.body_3_sm_regular,
-    },
-    descriptionTextActive: {
-      color: color.gray_max,
-    },
-    flexFull: {
-      flex: 1,
-    },
-    labelBox: {
-      flexDirection: 'row',
-      gap: 8,
-      flexWrap: 'wrap',
-    },
-    dAppLogo: {
-      width: 40,
-      height: 40,
-      contentFit: 'contain',
-    },
-    dAppLogoDialog: {
-      width: 48,
-      height: 48,
-    },
-    dAppName: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_900,
-    },
-    dAppInfo: {
-      alignItems: 'center',
-      gap: 8,
-    },
-    actions: {
-      ...atoms.align_start,
-      ...atoms.gap_lg,
-      ...atoms.pb_lg,
-    },
-    button: {
-      ...atoms.gap_lg,
-    },
-    warningText: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_max,
-    },
-    link: {
-      color: color.sys_cyan_500,
-    },
-  })
-
-  return {styles, atoms} as const
 }

@@ -5,11 +5,11 @@ import React from 'react'
 import {Text, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
-import {Copiable} from '../../../../../ui/Copiable/Copiable'
-import {Space} from '../../../../../ui/Space/Space'
-import {useKeyHashes} from '../../../../../wallets/hooks'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '../../../common/strings'
+import {Copiable} from '~/ui/Copiable/Copiable'
+import {Space} from '~/ui/Space/Space'
+import {useKeyHashes} from '~/wallets/hooks'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/features/Transactions/common/useStrings'
 
 type Path = {
   account: number

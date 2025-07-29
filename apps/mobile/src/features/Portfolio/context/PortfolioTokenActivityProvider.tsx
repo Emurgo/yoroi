@@ -7,9 +7,9 @@ import {freeze, produce} from 'immer'
 import * as React from 'react'
 import {merge, switchMap} from 'rxjs'
 
-import {logger} from '../../../kernel/logger/logger'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '../../WalletManager/hooks/useSelectedNetwork'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {logger} from '~/kernel/logger/logger'
 
 const queryKey = ['portfolioTokenActivity']
 const defaultPortfolioTokenActivityState: PortfolioTokenActivityState = freeze(

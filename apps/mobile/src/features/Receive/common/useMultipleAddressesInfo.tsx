@@ -10,7 +10,7 @@ import {
   useMutationWithInvalidations,
 } from '@yoroi/common'
 
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 
 const isShowingMultipleAddressInfoKey = 'isShowingMultipleAddressesModal'
 

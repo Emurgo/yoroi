@@ -1,8 +1,8 @@
 import {first} from '@yoroi/common'
 import BigNumber from 'bignumber.js'
 
-import {RawUtxo} from '../../types/other'
-import {asQuantity} from '../../utils/utils'
+import {RawUtxo} from '@yoroi/types'
+import {asQuantity} from '~/wallets/utils/utils'
 import {CollateralConfig} from './types'
 
 export const collateralConfig: CollateralConfig = {

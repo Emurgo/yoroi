@@ -5,13 +5,13 @@ import {ApiUtxoData, Portfolio} from '@yoroi/types'
 import {NetworkApi} from '@yoroi/types/lib/typescript/network/manager'
 import _ from 'lodash'
 
-import {YoroiWallet} from '../../../../wallets/cardano/types'
-import {deriveRewardAddressFromAddress} from '../../../../wallets/cardano/utils'
-import {wrappedCsl} from '../../../../wallets/cardano/wrappedCsl'
-import {asQuantity} from '../../../../wallets/utils/utils'
-import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
-import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
+import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
+import {asQuantity} from '~/wallets/utils/utils'
 import {
   FormattedCertificate,
   FormattedFee,

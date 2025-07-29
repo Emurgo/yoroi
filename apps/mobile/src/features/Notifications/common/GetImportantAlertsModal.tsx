@@ -2,11 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {InteractionManager, useWindowDimensions, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../ui/Button/Button'
-import {useModal} from '../../../ui/Modal/ModalContext'
-import {PhoneBell} from '../../../ui/PhoneBellIllustration/PhoneBellIllustration'
-import {Spacer} from '../../../ui/Space/Space'
-import {Text} from '../../../ui/Text/Text'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {PhoneBell} from '~/ui/PhoneBellIllustration/PhoneBellIllustration'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
 import {uiStorage} from './storage'
 import {triggerNotificationsPermissionModal} from './tools'
 import {useStrings} from './useStrings'
@@ -67,7 +67,7 @@ export const GetImportantAlertsModal = () => {
         {strings.turnOnAlerts}
       </Text>
 
-      <Spacer fill />
+      <Space.Height._2xs fill />
 
       <Button
         size="M"

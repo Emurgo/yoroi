@@ -1,17 +1,17 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Linking, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {Text} from '../../../../components/Text'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
 import {useStrings} from '../useStrings'
 
 const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
 
 export const DescribeAction = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {orderType, providerId, provider} = useExchange()
   const providers = useExchangeProvidersByOrderType({
     orderType,
@@ -30,56 +30,48 @@ export const DescribeAction = () => {
   }
 
   return (
-    <View style={styles.modalContent}>
-      <Text style={styles.description}>
+    <View style={[a.flex_1, a.px_lg]}>
+      <Text style={[{fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'}]}>
         {strings.descriptionBuySellADATransaction}
       </Text>
 
-      <Spacer height={24} />
+      <Space.Height.lg />
 
-      <View style={[styles.decorationText]}>
-        <Text style={[styles.description]}>{strings.contact} </Text>
+      <View style={[a.flex_row, a.align_center, {flexWrap: 'wrap'}]}>
+        <Text style={[{fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'}]}>
+          {strings.contact}{' '}
+        </Text>
 
         <TouchableOpacity onPress={handleOnContactProvider}>
-          <Text style={[styles.description, styles.linkText]}>{name} </Text>
+          <Text
+            style={[
+              {fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'},
+              {color: '#4B6DDE', textDecorationLine: 'underline'},
+            ]}
+          >
+            {name}{' '}
+          </Text>
         </TouchableOpacity>
 
-        <Text style={styles.description}>{strings.and} </Text>
+        <Text style={[{fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'}]}>
+          {strings.and}{' '}
+        </Text>
 
         <TouchableOpacity onPress={handleOnContactYoroi}>
-          <Text style={[styles.description, styles.linkText]}>
+          <Text
+            style={[
+              {fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'},
+              {color: '#4B6DDE', textDecorationLine: 'underline'},
+            ]}
+          >
             {strings.customerSupport}
           </Text>
         </TouchableOpacity>
 
-        <Text style={styles.description}>{strings.significant}</Text>
+        <Text style={[{fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'}]}>
+          {strings.significant}
+        </Text>
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    modalContent: {
-      flex: 1,
-      ...atoms.px_lg,
-    },
-    description: {
-      fontSize: 16,
-      lineHeight: 22,
-      fontFamily: 'Rubik',
-    },
-    decorationText: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      flexWrap: 'wrap',
-    },
-    linkText: {
-      color: '#4B6DDE',
-      textDecorationLine: 'underline',
-    },
-  })
-  return styles
 }

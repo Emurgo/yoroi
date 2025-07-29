@@ -3,7 +3,7 @@ import {
   RawTransaction,
   TipStatusResponse,
   Transaction,
-} from '../../types/other'
+} from '@yoroi/types'
 
 export const mockedBackendConfig: BackendConfig = {
   API_ROOT: 'https://fakeapiroot.com',

@@ -5,7 +5,7 @@ import {
   usePortfolioTokenDiscovery,
   usePortfolioTokenTraits,
 } from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Explorers, Network, Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -14,28 +14,27 @@ import {
   RefreshControl,
   SafeAreaView,
   ScrollView,
-  StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native'
 
-import {Boundary} from '../../../../components/Boundary/Boundary'
-import {Copiable} from '../../../../components/Clipboard/Copiable'
-import {FadeIn} from '../../../../components/FadeIn'
-import {Hr} from '../../../../components/Hr/Hr'
-import {MediaPreview} from '../../../../components/MediaPreview/MediaPreview'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs/Tabs'
-import {Text} from '../../../../components/Text'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {NftRoutes} from '../../../../kernel/navigation'
-import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
-import {usePortfolioImageInvalidate} from '../../common/hooks/usePortfolioImage'
+import {usePortfolioImageInvalidate} from '~/features/Portfolio/common/hooks/usePortfolioImage'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {NftRoutes} from '~/kernel/navigation'
+import {Boundary} from '~/ui/Boundary/Boundary'
+import {Copiable} from '~/ui/Copiable/Copiable'
+import {FadeIn} from '~/ui/FadeIn/FadeIn'
+import {Hr} from '~/ui/Hr/Hr'
+import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
+import {Space} from '~/ui/Space/Space'
+import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs/Tabs'
+import {Text} from '~/ui/Text/Text'
 import {useNavigateTo} from '../../common/navigation'
 
 export const MediaDetailsScreen = () => {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
   const {invalidate, isLoading} = usePortfolioImageInvalidate()
@@ -56,10 +55,10 @@ export const MediaDetailsScreen = () => {
   const onRefresh = () => invalidate([amount.info.id])
 
   return (
-    <FadeIn style={styles.container}>
+    <FadeIn style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <SafeAreaView>
         <ScrollView
-          contentContainerStyle={styles.contentContainer}
+          contentContainerStyle={[{paddingHorizontal: imagePadding}]}
           refreshControl={
             <RefreshControl onRefresh={onRefresh} refreshing={isLoading} />
           }
@@ -155,7 +154,7 @@ const imagePadding = 16
 const horizontalPadding = imagePadding * 2 // left and right
 
 const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const dimensions = useWindowDimensions()
   const imageWidth = dimensions.width - horizontalPadding
@@ -163,11 +162,11 @@ const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
   return (
     <TouchableOpacity
       onPress={() => navigateTo.nftZoom(info.id)}
-      style={styles.imageWrapper}
+      style={[{display: 'flex', flexDirection: 'row'}]}
     >
       <MediaPreview
         info={info}
-        style={styles.image}
+        style={[{flexGrow: 1, backgroundColor: p.gray_100}]}
         height={imageHeight}
         width={imageWidth}
         contentFit="contain"
@@ -183,12 +182,14 @@ const MetadataRow = ({
   title: string
   children: ReactNode
 }) => {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   return (
-    <View style={styles.rowContainer}>
-      <Text style={styles.title}>{title}</Text>
+    <View style={[{paddingVertical: imagePadding}]}>
+      <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+        {title}
+      </Text>
 
-      <Spacer height={4} />
+      <Space.Height._2xs />
 
       {children}
     </View>
@@ -201,7 +202,7 @@ type NftOverviewProps = {
   explorers: Record<Explorers.Explorer, Explorers.Manager>
 }
 const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   const [policyId] = info.id.split('.')
@@ -209,11 +210,13 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
   return (
     <View>
       <MetadataRow title={strings.nftName}>
-        <Text style={styles.name}>{info.name}</Text>
+        <Text style={[a.body_2_md_regular, {color: p.gray_600}, a.flex_1]}>
+          {info.name}
+        </Text>
       </MetadataRow>
 
       <MetadataRow title={strings.description}>
-        <Text style={styles.name}>
+        <Text style={[a.body_2_md_regular, {color: p.gray_600}, a.flex_1]}>
           {normalizeMetadataString(info.description)}
         </Text>
       </MetadataRow>
@@ -243,10 +246,26 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
             }
             style={{flex: 2}}
           >
-            <View style={styles.linkContent}>
-              <Spacer width={2} />
+            <View
+              style={[
+                {
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  flexDirection: 'row',
+                },
+              ]}
+            >
+              <Space.Width._2xs />
 
-              <Text style={styles.linkText}>Cardanoscan</Text>
+              <Text
+                style={[
+                  a.link_1_lg_underline,
+                  a.flex_1,
+                  {color: p.primary_500},
+                ]}
+              >
+                Cardanoscan
+              </Text>
             </View>
           </TouchableOpacity>
 
@@ -256,10 +275,26 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
             }
             style={{flex: 4}}
           >
-            <View style={styles.linkContent}>
-              <Spacer width={2} />
+            <View
+              style={[
+                {
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  flexDirection: 'row',
+                },
+              ]}
+            >
+              <Space.Width._2xs />
 
-              <Text style={styles.linkText}>Cexplorer</Text>
+              <Text
+                style={[
+                  a.link_1_lg_underline,
+                  a.flex_1,
+                  {color: p.primary_500},
+                ]}
+              >
+                Cexplorer
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -267,7 +302,7 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
 
       <Hr />
 
-      <Spacer height={24} />
+      <Space.Height.lg />
     </View>
   )
 }
@@ -277,7 +312,7 @@ const normalizeMetadataString = (content?: unknown): string => {
 }
 
 const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const expandedTraitValue = traitValueExpander(trait.value)
   const isOpenableLink =
     expandedTraitValue.type === 'link' &&
@@ -285,22 +320,45 @@ const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
 
   return (
     <MetadataRow title={trait.type}>
-      <View style={styles.rowBetween}>
+      <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_lg]}>
         {isOpenableLink && expandedTraitValue.type === 'link' ? (
-          <View style={[styles.linkContent, styles.flex]}>
+          <View
+            style={[
+              {display: 'flex', alignItems: 'flex-start', flexDirection: 'row'},
+              a.flex_1,
+            ]}
+          >
             <TouchableOpacity
               onPress={() =>
                 Linking.openURL(expandedTraitValue.transformedValue)
               }
             >
-              <Text style={styles.linkText}>{trait.value}</Text>
+              <Text
+                style={[
+                  a.link_1_lg_underline,
+                  a.flex_1,
+                  {color: p.primary_500},
+                ]}
+              >
+                {trait.value}
+              </Text>
             </TouchableOpacity>
           </View>
         ) : (
-          <Text style={styles.name}>{trait.value}</Text>
+          <Text style={[a.body_2_md_regular, {color: p.gray_600}, a.flex_1]}>
+            {trait.value}
+          </Text>
         )}
 
-        <Text style={styles.rarity}>{trait.rarity}</Text>
+        <Text
+          style={[
+            a.body_2_md_regular,
+            a.text_right,
+            {minWidth: 60, color: p.gray_600},
+          ]}
+        >
+          {trait.rarity}
+        </Text>
       </View>
     </MetadataRow>
   )
@@ -318,7 +376,7 @@ const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
     <View>
       <Copiable title={strings.copyMetadata} text={stringifiedMetadata} />
 
-      <Spacer height={14} />
+      <Space.Height.sm />
 
       <Text>{stringifiedMetadata}</Text>
     </View>
@@ -329,65 +387,6 @@ const isSupportedUrl = (url: string) =>
   url.toLocaleLowerCase().startsWith('https')
 
 type ActiveTab = 'overview' | 'metadata'
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    flex: {
-      ...atoms.flex_1,
-    },
-    linkContent: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      flexDirection: 'row',
-    },
-    linkText: {
-      color: color.primary_500,
-      ...atoms.link_1_lg_underline,
-      ...atoms.flex_1,
-    },
-    container: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    image: {
-      flexGrow: 1,
-      backgroundColor: color.gray_100,
-    },
-    contentContainer: {
-      paddingHorizontal: imagePadding,
-    },
-    rowContainer: {
-      paddingVertical: imagePadding,
-    },
-    rowBetween: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_between,
-      ...atoms.gap_lg,
-    },
-    imageWrapper: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    title: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    name: {
-      color: color.gray_600,
-      ...atoms.body_2_md_regular,
-      ...atoms.flex_1,
-    },
-    rarity: {
-      minWidth: 60,
-      color: color.gray_600,
-      ...atoms.body_2_md_regular,
-      ...atoms.text_right,
-    },
-  })
-  return styles
-}
 
 const messages = defineMessages({
   title: {

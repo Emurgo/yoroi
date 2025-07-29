@@ -3,8 +3,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 
-import {Copiable} from '../../../../ui/Copiable/Copiable'
-import {Space} from '../../../../ui/Space/Space'
+import {Copiable} from '~/ui/Copiable/Copiable'
+import {Space} from '~/ui/Space/Space'
 import {UtxoList} from './useUtxoList'
 import {UtxoItem} from './UtxoItem'
 export const UtxoAddressGroup = ({item}: {item: UtxoList[number]}) => {

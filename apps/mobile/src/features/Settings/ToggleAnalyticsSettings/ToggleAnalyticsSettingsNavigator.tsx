@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {
   defaultStackNavigationOptions,
   ToggleAnalyticsSettingsRoutes,
-} from '../../kernel/navigation'
+} from '~/kernel/navigation'
 import {ToggleAnalyticsSettingsScreen} from './ToggleAnalyticsSettingsScreen'
 
 const Stack = createStackNavigator<ToggleAnalyticsSettingsRoutes>()

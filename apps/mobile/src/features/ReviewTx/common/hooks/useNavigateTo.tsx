@@ -1,7 +1,7 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import {ReviewTxRoutes} from '../../../../kernel/navigation'
+import {ReviewTxRoutes} from '~/kernel/navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<NavigationProp<ReviewTxRoutes>>()

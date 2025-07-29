@@ -4,10 +4,10 @@ import * as React from 'react'
 import {Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {logger} from '../../../../kernel/logger/logger'
-// import {useLaunchWalletAfterSyncing} from '../../../WalletManager/common/hooks/useLaunchWalletAfterSyncing'
-// import {useSyncTemporarilyPaused} from '../../../WalletManager/common/hooks/useSyncTemporarilyPaused'
-import {isEmptyString} from '../../../../wallets/utils/string'
+import {logger} from '~/kernel/logger/logger'
+// import {useLaunchWalletAfterSyncing} from '~/features/WalletManager/hooks/useLaunchWalletAfterSyncing'
+// import {useSyncTemporarilyPaused} from '~/features/WalletManager/hooks/useSyncTemporarilyPaused'
+import {isEmptyString} from '~/wallets/utils/string'
 import {useStrings} from '../useStrings'
 
 /**

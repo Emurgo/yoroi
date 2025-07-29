@@ -1,17 +1,28 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 
 export const DashboardTokenSkeletonItem = () => {
-  const {color, styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
-    <View style={styles.fullSize}>
-      <View style={styles.root}>
-        <SkeletonPlaceholder backgroundColor={color.gray_100}>
+    <View style={[a.w_full, a.h_full]}>
+      <View
+        style={[
+          a.p_lg,
+          a.rounded_sm,
+          a.flex_col,
+          a.align_start,
+          a.border,
+          a.w_full,
+          a.h_full,
+          {borderColor: p.gray_300},
+        ]}
+      >
+        <SkeletonPlaceholder backgroundColor={p.gray_100}>
           <SkeletonPlaceholder.Item
             flexDirection="row"
             gap={12}
@@ -35,9 +46,9 @@ export const DashboardTokenSkeletonItem = () => {
           </SkeletonPlaceholder.Item>
         </SkeletonPlaceholder>
 
-        <Spacer fill />
+        <Space.Height._2xs fill />
 
-        <SkeletonPlaceholder backgroundColor={color.gray_100}>
+        <SkeletonPlaceholder backgroundColor={p.gray_100}>
           <SkeletonPlaceholder.Item>
             <SkeletonPlaceholder.Item
               width={64}
@@ -64,25 +75,4 @@ export const DashboardTokenSkeletonItem = () => {
       </View>
     </View>
   )
-}
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.p_lg,
-      ...atoms.rounded_sm,
-      ...atoms.flex_col,
-      ...atoms.align_start,
-      ...atoms.border,
-      ...atoms.w_full,
-      ...atoms.h_full,
-      borderColor: color.gray_300,
-    },
-    fullSize: {
-      ...atoms.w_full,
-      ...atoms.h_full,
-    },
-  })
-
-  return {styles, color} as const
 }

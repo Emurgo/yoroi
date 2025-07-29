@@ -4,10 +4,10 @@ import _ from 'lodash'
 import React from 'react'
 import {View} from 'react-native'
 
-import {Space} from '../../../../components/Space/Space'
-import {useTransactionInfos} from '../../../../wallets/hooks'
-import {TransactionInfo} from '../../../../wallets/types/other'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Space} from '~/ui/Space/Space'
+import {useTransactionInfos} from '~/wallets/hooks'
+import {TransactionInfo} from '~/wallets/types/other'
 import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'
 
@@ -49,7 +49,7 @@ export const TxList = (props: Props) => {
         data={loadedTxs}
         contentContainerStyle={[a.pt_lg, a.px_lg]}
         renderItem={({item}) => <TxListItem transaction={item} />}
-        ItemSeparatorComponent={() => <Space height="lg" />}
+        ItemSeparatorComponent={() => <Space.Height.lg />}
         keyExtractor={(_, index) => index.toString()}
         nestedScrollEnabled={true}
         testID="txHistoryList"

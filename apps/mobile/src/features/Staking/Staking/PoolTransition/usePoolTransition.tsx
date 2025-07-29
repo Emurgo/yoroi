@@ -6,14 +6,14 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {useReviewTx} from '../../../features/ReviewTx/common/ReviewTxProvider'
-import {useSelectedNetwork} from '../../../features/WalletManager/common/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
-import {features} from '../../../kernel/features'
-import {useWalletNavigation} from '../../../kernel/navigation'
-import {YoroiWallet} from '../../../wallets/cardano/types'
-import {asQuantity, Quantities} from '../../../wallets/utils/utils'
-import {useStakingInfo} from '../../Dashboard/StakePoolInfos'
+import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {features} from '~/kernel/features'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {YoroiWallet} from '~/wallets/cardano/types'
+import {asQuantity, Quantities} from '~/wallets/utils/utils'
+import {useStakingInfo} from '../Dashboard/StakePoolInfos'
 
 const createDelegationTx = async (
   wallet: YoroiWallet,

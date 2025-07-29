@@ -3,29 +3,29 @@ import {
   infoExtractName,
   isPrimaryToken,
 } from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Text, TouchableOpacity, View} from 'react-native'
 
-import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {
   formatPriceChange,
   priceChange,
-} from '../../../common/helpers/priceChange'
-import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
-import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
-import {PnlTag} from '../../../ui/PnlTag/PnlTag'
-import {TokenInfoIcon} from '../../../ui/TokenAmountItem/TokenInfoIcon'
+} from '~/features/Portfolio/common/helpers/priceChange'
+import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {usePortfolioTokenActivity} from '~/features/Portfolio/common/PortfolioTokenActivityProvider'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {PnlTag} from '~/ui/PnlTag/PnlTag'
+import {Space} from '~/ui/Space/Space'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
+import {useCurrencyPairing} from '../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 type Props = {
   amount: Portfolio.Token.Amount
 }
 export const TokenBalanceItem = ({amount}: Props) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const navigationTo = useNavigateTo()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
@@ -55,15 +55,25 @@ export const TokenBalanceItem = ({amount}: Props) => {
   return (
     <TouchableOpacity
       onPress={() => navigationTo.tokenDetail({id: info.id})}
-      style={styles.root}
+      style={[
+        {backgroundColor: p.bg_color_max},
+        a.flex_row,
+        a.align_center,
+        a.justify_between,
+        a.gap_lg,
+      ]}
     >
-      <View style={[styles.rowCenter, styles.tokenInfoContainer]}>
+      <View style={[a.flex_row, a.align_center, a.justify_start, a.flex_1]}>
         <TokenInfoIcon info={info} size="lg" />
 
-        <Spacer width={12} />
+        <Space.Width.md />
 
-        <View style={styles.nameAndPnlContainer}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.symbol}>
+        <View style={[a.flex_col, a.align_start, {flex: 1}]}>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="middle"
+            style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_900}]}
+          >
             {name}
           </Text>
 
@@ -77,58 +87,15 @@ export const TokenBalanceItem = ({amount}: Props) => {
 
       <View>
         <Text
-          style={styles.tokenBalance}
+          style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
         >{`${balanceFormatted} ${symbol}`}</Text>
 
         <PairedBalance
           hidePrimaryPair
           amount={amount}
-          textStyle={styles.pairedBalance}
+          textStyle={[a.body_3_sm_regular, a.text_right, {color: p.gray_600}]}
         />
       </View>
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_between,
-      ...atoms.gap_lg,
-    },
-    rowCenter: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_start,
-    },
-    tokenInfoContainer: {
-      ...atoms.flex_1,
-    },
-    symbol: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.gray_900,
-    },
-    tokenBalance: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_right,
-      color: color.gray_900,
-    },
-    pairedBalance: {
-      ...atoms.body_3_sm_regular,
-      ...atoms.text_right,
-      color: color.gray_600,
-    },
-    nameAndPnlContainer: {
-      ...atoms.flex_col,
-      ...atoms.align_start,
-      flex: 1,
-    },
-  })
-
-  return {styles} as const
 }

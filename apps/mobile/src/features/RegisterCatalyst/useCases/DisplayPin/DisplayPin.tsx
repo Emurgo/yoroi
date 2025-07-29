@@ -1,28 +1,28 @@
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ScrollView, StyleSheet} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../ui/Button/Button'
-import {Checkbox} from '../../../../ui/Checkbox/Checkbox'
-import {Space, Spacer} from '../../../../ui/Space/Space'
-import {useNavigateTo} from '../../CatalystNavigator'
+import {useStrings} from '~/features/RegisterCatalyst/common/useStrings'
+import {Button} from '~/ui/Button/Button'
+import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {
   Actions,
   Description,
   PinBox,
   Row,
   Stepper,
-} from '../../common/components'
-import {useStrings} from '../../common/strings'
+} from '~/ui/common/components'
+import {Space} from '~/ui/Space/Space'
+import {useNavigateTo} from '../CatalystNavigator'
 
 export const DisplayPin = () => {
   const strings = useStrings()
   const [checked, setChecked] = React.useState(false)
   const {pin} = useCatalyst()
   const navigateTo = useNavigateTo()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   if (pin === null) throw new Error('pin cannot be null')
 
@@ -35,37 +35,32 @@ export const DisplayPin = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[
-        styles.safeAreaView,
-        {backgroundColor: color.bg_color_max},
-        a.px_lg,
-        a.pb_lg,
-      ]}
+      style={[{flex: 1}, {backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
     >
       <Stepper title={strings.step2Title} currentStep={2} totalSteps={3} />
 
       <ScrollView bounces={false}>
         <Description>{strings.step2Description}</Description>
 
-        <Space height="xl" />
+        <Space.Height.xl />
 
-        <Row style={[styles.row, {justifyContent: 'center'}]}>
+        <Row style={[{justifyContent: 'center'}]}>
           <PinBox>{pin0}</PinBox>
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <PinBox>{pin1}</PinBox>
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <PinBox>{pin2}</PinBox>
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <PinBox>{pin3}</PinBox>
         </Row>
 
-        <Space height="xl" />
+        <Space.Height.xl />
 
         <Checkbox
           text={strings.checkbox}
@@ -74,7 +69,7 @@ export const DisplayPin = () => {
         />
       </ScrollView>
 
-      <Spacer fill />
+      <View style={[a.flex_1]} />
 
       <Actions>
         <Button
@@ -86,10 +81,3 @@ export const DisplayPin = () => {
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-  },
-  row: {},
-})

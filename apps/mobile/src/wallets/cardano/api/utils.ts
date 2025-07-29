@@ -2,7 +2,7 @@ import AssetFingerprint from '@emurgo/cip14-js'
 import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {Balance} from '@yoroi/types'
 
-import {LegacyToken} from '../../types/tokens'
+import {LegacyToken} from '@yoroi/types'
 import {TokenRegistryEntry} from './tokenRegistry'
 
 export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {

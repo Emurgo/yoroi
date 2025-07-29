@@ -1,8 +1,7 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   Dimensions,
-  StyleSheet,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -20,13 +19,12 @@ import {
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes'
 
-import {Icon} from '../../../../components/Icon'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {isDev} from '../../../../kernel/env'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {TabItem, useBrowser} from '../../common/BrowserProvider'
+import {TabItem, useBrowser} from '~/features/Discover/common/BrowserProvider'
+import {useConnectWalletToWebView} from '~/features/Discover/common/hooks'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 import {getDomainFromUrl} from '../../common/helpers'
-import {useConnectWalletToWebView} from '../../common/hooks'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {BrowserTabBar} from './BrowserTabBar'
 import {BrowserToolbar} from './BrowserToolbar'
@@ -41,7 +39,7 @@ type Props = {
   index: number
 }
 export const WebViewItem = ({tab, index}: Props) => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const webViewRef = React.useRef<WebView>(null)
   const {
     tabs,
@@ -127,18 +125,23 @@ export const WebViewItem = ({tab, index}: Props) => {
         style={[
           containerStyleAnimated,
           {width: SCREEN_WIDTH},
-          tabsOpen ? styles.heightAuto : {height: isTabActive ? '100%' : 0},
+          tabsOpen ? {height: 'auto'} : {height: isTabActive ? '100%' : 0},
         ]}
       >
         <Animated.View
           style={
             tabsOpen
               ? [
-                  styles.switchTabRoot,
-                  styles.roundedContainer,
-                  isTabActive && styles.switchTabRootActive,
+                  {
+                    borderWidth: 2,
+                    borderColor: p.gray_200,
+                    height: 160,
+                    overflow: 'hidden',
+                    borderRadius: 8,
+                  },
+                  isTabActive && {borderColor: p.primary_500},
                 ]
-              : styles.webViewContainer
+              : {height: '100%'}
           }
         >
           {!tabsOpen && isTabActive && <BrowserToolbar uri={tab.url} />}
@@ -157,15 +160,15 @@ export const WebViewItem = ({tab, index}: Props) => {
             setSupportMultipleWindows={false}
             injectedJavaScriptBeforeContentLoaded={initScript}
             onMessage={handleEvent}
-            style={[styles.roundedInsideContainer]}
+            style={[{borderRadius: 6}]}
             allowsFullscreenVideo={isTabActive}
           />
 
           {tabsOpen && (
             <LinearGradient
               style={[
-                StyleSheet.absoluteFillObject,
-                styles.roundedInsideContainer,
+                {position: 'absolute', top: 0, left: 0, right: 0, bottom: 0},
+                {borderRadius: 6},
               ]}
               colors={['#000000A1', '#00000000']}
             />
@@ -173,10 +176,10 @@ export const WebViewItem = ({tab, index}: Props) => {
 
           {tabsOpen && (
             <TouchableOpacity
-              style={styles.closeTabPosition}
+              style={[{position: 'absolute', top: 8, right: 8}]}
               onPress={handleCloseTab}
             >
-              <Icon.Close size={20} color={colors.whiteStatic} />
+              <Icon.Close size={20} color={p.white_static} />
             </TouchableOpacity>
           )}
 
@@ -190,55 +193,14 @@ export const WebViewItem = ({tab, index}: Props) => {
 
         {tabsOpen && (
           <>
-            <Spacer height={4} />
+            <Space.Height._2xs />
 
-            <Text style={styles.domainText}>{domainName}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+              {domainName}
+            </Text>
           </>
         )}
       </Animated.View>
     </TouchableWithoutFeedback>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    switchTabRoot: {
-      borderWidth: 2,
-      borderColor: color.gray_200,
-      height: 160,
-      overflow: 'hidden',
-    },
-    switchTabRootActive: {
-      borderColor: color.primary_500,
-    },
-    roundedContainer: {
-      borderRadius: 8,
-    },
-    roundedInsideContainer: {
-      borderRadius: 8 - 2,
-    },
-    webViewContainer: {
-      height: '100%',
-    },
-    domainText: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-    closeTabPosition: {
-      position: 'absolute',
-      top: 8,
-      right: 8,
-    },
-    heightAuto: {
-      height: 'auto',
-    },
-  })
-
-  const colors = {
-    whiteStatic: color.white_static,
-  }
-
-  return {styles, colors} as const
 }

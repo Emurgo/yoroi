@@ -1,14 +1,14 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, useWindowDimensions, View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {isEmptyString} from '../../../kernel/utils'
-import {useLastDateAddressUsed} from '../../features/Receive/common/useLastDateAddressUsed'
-import {useStrings} from '../../features/Receive/common/useStrings'
+import {useLastDateAddressUsed} from '~/features/Receive/common/useLastDateAddressUsed'
+import {useStrings} from '~/features/Receive/common/useStrings'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Text} from '~/ui/Text/Text'
+import {isEmptyString} from '~/wallets/utils/string'
 import {Copiable} from '../Copiable'
-import {Text} from '../Text/Text'
 
 type AddressDetailsProps = {
   address: string
@@ -24,7 +24,7 @@ export const ShareDetailsCard = ({
   const strings = useStrings()
   const {track} = useMetrics()
   const lastUsed = useLastDateAddressUsed(address)
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const screenWidth = useWindowDimensions().width
 
   const hasStakingHash = !isEmptyString(stakingHash)
@@ -37,25 +37,56 @@ export const ShareDetailsCard = ({
   }
 
   return (
-    <View style={[styles.addressDetails, {width: screenWidth - 34}]}>
+    <View
+      style={[
+        {
+          borderRadius: 16,
+          alignItems: 'center',
+          flex: 1,
+          minHeight: 394,
+          alignSelf: 'center',
+          overflow: 'hidden',
+          width: screenWidth - 34,
+        },
+        a.px_lg,
+        a.py_2xl,
+        {gap: 16},
+      ]}
+    >
       <LinearGradient
-        style={[StyleSheet.absoluteFill, {opacity: 1}]}
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            opacity: 1,
+          },
+        ]}
         start={{x: 0, y: 0}}
         end={{x: 0, y: 1}}
-        colors={color.bg_gradient_1}
+        colors={p.bg_gradient_1}
       />
 
-      <Text style={[styles.title, {color: color.gray_max}]}>
+      <Text style={[a.heading_3_medium, {color: p.gray_max}]}>
         {strings.walletAddress}
       </Text>
 
-      <View style={styles.textSection}>
-        <Text style={[styles.textAddress, {color: color.gray_600}]}>
+      <View style={{alignSelf: 'stretch'}}>
+        <Text
+          style={[a.body_2_md_regular, {color: p.gray_600, textAlign: 'left'}]}
+        >
           {strings.address}
         </Text>
 
-        <View style={styles.textRow}>
-          <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>
+        <View style={[a.flex_row, {gap: 4}]}>
+          <Text
+            style={[
+              a.body_1_lg_regular,
+              {color: p.gray_900, lineHeight: 24, textAlign: 'left', flex: 1},
+            ]}
+          >
             {address}
           </Text>
 
@@ -68,13 +99,23 @@ export const ShareDetailsCard = ({
       </View>
 
       {hasStakingHash && (
-        <View style={styles.textSection}>
-          <Text style={[styles.textAddress, {color: color.gray_600}]}>
+        <View style={{alignSelf: 'stretch'}}>
+          <Text
+            style={[
+              a.body_2_md_regular,
+              {color: p.gray_600, textAlign: 'left'},
+            ]}
+          >
             {strings.stakingKeyHash}
           </Text>
 
-          <View style={styles.textRow}>
-            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>
+          <View style={[a.flex_row, {gap: 4}]}>
+            <Text
+              style={[
+                a.body_1_lg_regular,
+                {color: p.gray_900, lineHeight: 24, textAlign: 'left', flex: 1},
+              ]}
+            >
               {stakingHash}
             </Text>
 
@@ -84,13 +125,23 @@ export const ShareDetailsCard = ({
       )}
 
       {hasSpendingHash && (
-        <View style={styles.textSection}>
-          <Text style={[styles.textAddress, {color: color.gray_600}]}>
+        <View style={{alignSelf: 'stretch'}}>
+          <Text
+            style={[
+              a.body_2_md_regular,
+              {color: p.gray_600, textAlign: 'left'},
+            ]}
+          >
             {strings.spendingKeyHash}
           </Text>
 
-          <View style={styles.textRow}>
-            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>
+          <View style={[a.flex_row, {gap: 4}]}>
+            <Text
+              style={[
+                a.body_1_lg_regular,
+                {color: p.gray_900, lineHeight: 24, textAlign: 'left', flex: 1},
+              ]}
+            >
               {spendingHash}
             </Text>
 
@@ -100,13 +151,23 @@ export const ShareDetailsCard = ({
       )}
 
       {Boolean(lastUsed) && (
-        <View style={styles.textSection}>
-          <Text style={[styles.textAddress, {color: color.gray_600}]}>
+        <View style={{alignSelf: 'stretch'}}>
+          <Text
+            style={[
+              a.body_2_md_regular,
+              {color: p.gray_600, textAlign: 'left'},
+            ]}
+          >
             {strings.lastUsed}
           </Text>
 
-          <View style={styles.textRow}>
-            <Text style={[styles.textAddressDetails, {color: color.gray_900}]}>
+          <View style={[a.flex_row, {gap: 4}]}>
+            <Text
+              style={[
+                a.body_1_lg_regular,
+                {color: p.gray_900, lineHeight: 24, textAlign: 'left', flex: 1},
+              ]}
+            >
               {lastUsed}
             </Text>
           </View>
@@ -115,37 +176,3 @@ export const ShareDetailsCard = ({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  title: {
-    ...a.heading_3_medium,
-  },
-  addressDetails: {
-    borderRadius: 16,
-    alignItems: 'center',
-    flex: 1,
-    minHeight: 394,
-    alignSelf: 'center',
-    overflow: 'hidden',
-    ...a.px_lg,
-    ...a.py_2xl,
-    gap: 16,
-  },
-  textAddressDetails: {
-    ...a.body_1_lg_regular,
-    lineHeight: 24,
-    textAlign: 'left',
-    flex: 1,
-  },
-  textAddress: {
-    ...a.body_2_md_regular,
-    textAlign: 'left',
-  },
-  textSection: {
-    alignSelf: 'stretch',
-  },
-  textRow: {
-    flexDirection: 'row',
-    gap: 4,
-  },
-})

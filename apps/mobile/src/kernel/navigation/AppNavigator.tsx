@@ -1,20 +1,21 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
-import {DevMenu} from '../../../DevMenu'
-import {SetupWalletNavigator} from '../../features/SetupWallet/SetupWalletNavigator'
-import {SettingsScreenNavigator} from '../../features/Settings/SettingsScreenNavigator'
-import {TempPinLoginScreen} from '../../features/Temporal_To_Remove/Auth/TempPinLoginScreen'
-import {InitialScreenNavigator} from '../../features/Temporal_To_Remove/InitialScreen/InitialScreenNavigatorNavigator'
-import {SearchProvider} from '../../features/Search/SearchContext'
-import {TempTestSearchScreen} from '../../features/Temporal_To_Remove/Search/TempTestSearchScreen'
-import {SelectWalletFromList} from '../../features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
-import {Modal} from '../../ui/Modal/ModalScreen'
+
+import {DevMenu} from '~/features/DevMenu'
+import {SearchProvider} from '~/features/Search/SearchContext'
+import {SettingsScreenNavigator} from '~/features/Settings/SettingsScreenNavigator'
+import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
+import {TempPinLoginScreen} from '~/features/Temporal_To_Remove/Auth/TempPinLoginScreen'
+import {InitialScreenNavigator} from '~/features/Temporal_To_Remove/InitialScreen/InitialScreenNavigatorNavigator'
+import {TempTestSearchScreen} from '~/features/Temporal_To_Remove/Search/TempTestSearchScreen'
+import {SelectWalletFromList} from '~/features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
+import {Modal} from '~/ui/Modal/ModalScreen'
 
 const Stack = createStackNavigator<any>()
 
 export const AppNavigator = () => {
   return (
-    <>
+    <SearchProvider>
       <Stack.Navigator>
         <Stack.Group>
           <Stack.Screen name="Login" component={TempPinLoginScreen} />
@@ -48,6 +49,6 @@ export const AppNavigator = () => {
         </Stack.Group>
       </Stack.Navigator>
       <Modal />
-    </>
+    </SearchProvider>
   )
 }

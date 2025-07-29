@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
-import {useModal} from '../../../components/Modal/ModalContext'
-import {isEmptyString} from '../../../kernel/utils'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {isEmptyString} from '~/wallets/utils/string'
 import {AskToRedirectScreen} from '../useCases/AskToRedirect/AskToRedirectScreen'
 import {useStrings} from './useStrings'
 

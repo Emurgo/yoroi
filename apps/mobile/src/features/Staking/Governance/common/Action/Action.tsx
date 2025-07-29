@@ -1,12 +1,12 @@
 import {isNonNullable} from '@yoroi/common'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
-import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, Pressable, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Icon} from '../../../../../components/Icon'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../components/Text'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space'
+import {Text} from '~/ui/Text/Text'
 
 type Props = {
   title: string
@@ -27,7 +27,7 @@ export const Action = ({
   showRightArrow,
   showGradient,
 }: Props) => {
-  const {styles, colors} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
     <Pressable onPress={onPress} disabled={pending}>
@@ -37,35 +37,59 @@ export const Action = ({
           end={{x: 0, y: 0}}
           colors={
             pending
-              ? colors.pending
+              ? [p.bg_color_min, p.bg_color_min]
               : pressed
-                ? colors.pressedGradient
+                ? p.bg_gradient_2
                 : showGradient
-                  ? colors.gradient
-                  : colors.transparent
+                  ? p.bg_gradient_1
+                  : ['transparent', 'transparent']
           }
-          style={[styles.gradient, !showGradient && styles.border]}
+          style={[
+            a.relative,
+            a.rounded_sm,
+            !showGradient && [a.border, {borderColor: p.gray_200}],
+          ]}
         >
           {pending && (
-            <View style={styles.icon}>
-              <ActivityIndicator color={colors.icon} size="small" />
+            <View
+              style={[
+                a.absolute,
+                {right: a.px_lg.paddingRight},
+                {top: a.py_lg.paddingTop},
+              ]}
+            >
+              <ActivityIndicator color={p.gray_max} size="small" />
             </View>
           )}
 
           {showRightArrow && (
-            <View style={styles.icon}>
-              <Icon.ArrowRight size={24} color={colors.icon} />
+            <View
+              style={[
+                a.absolute,
+                {right: a.px_lg.paddingRight},
+                {top: a.py_lg.paddingTop},
+              ]}
+            >
+              <Icon.ArrowRight size={24} color={p.gray_max} />
             </View>
           )}
 
-          <View style={styles.root}>
-            <Text style={styles.title}>{title}</Text>
+          <View style={[a.py_lg, a.px_lg, {minHeight: 134}]}>
+            <Text
+              style={[a.font_semibold, a.heading_4_medium, {color: p.gray_max}]}
+            >
+              {title}
+            </Text>
 
-            <Text style={styles.description}>{description}</Text>
+            <Text
+              style={[a.font_normal, a.body_1_lg_regular, {color: p.gray_max}]}
+            >
+              {description}
+            </Text>
 
             {isNonNullable(children) && (
               <>
-                <Spacer height={16} />
+                <Space.Height.md />
 
                 {children}
               </>
@@ -75,48 +99,4 @@ export const Action = ({
       )}
     </Pressable>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    icon: {
-      ...atoms.absolute,
-      right: atoms.px_lg.paddingRight,
-      top: atoms.py_lg.paddingTop,
-    },
-    gradient: {
-      ...atoms.relative,
-      ...atoms.rounded_sm,
-    },
-    root: {
-      ...atoms.py_lg,
-      ...atoms.px_lg,
-      minHeight: 134,
-    },
-    title: {
-      color: color.gray_max,
-      ...atoms.font_semibold,
-      ...atoms.heading_4_medium,
-    },
-    description: {
-      color: color.gray_max,
-      ...atoms.font_normal,
-      ...atoms.body_1_lg_regular,
-    },
-    border: {
-      ...atoms.border,
-      borderColor: color.gray_200,
-    },
-  })
-
-  const colors = {
-    gradient: color.bg_gradient_1,
-    icon: color.gray_max,
-    pressedGradient: color.bg_gradient_2,
-    pending: [color.bg_color_min, color.bg_color_min],
-    transparent: ['transparent', 'transparent'],
-  }
-
-  return {styles, colors}
 }

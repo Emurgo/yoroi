@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 
 type OutlineProps = {
   activeColor: string
@@ -18,8 +18,12 @@ export const Outline = ({
     <View
       pointerEvents="none"
       style={[
-        styles.outline,
         {
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
           borderWidth: isFocused ? 2 : 1,
           borderColor: isFocused ? activeColor : color,
         },
@@ -28,13 +32,3 @@ export const Outline = ({
     />
   )
 }
-
-const styles = StyleSheet.create({
-  outline: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-  },
-})

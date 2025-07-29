@@ -1,21 +1,21 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {TabPanel, TabPanels} from '../../../../../components/Tabs/Tabs'
+import {TabPanel, TabPanels} from '~/ui/Tabs/Tabs'
 import {
   PortfolioDetailsTab,
   usePortfolio,
-} from '../../../context/PortfolioProvider'
+} from '~/features/Portfolio/context/PortfolioProvider'
 import {Overview} from './Overview/Overview'
 import {Performance} from './Performance'
 
 export const PortfolioTokenInfo = () => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {detailsTab} = usePortfolio()
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <TabPanels>
         <TabPanel active={detailsTab === PortfolioDetailsTab.Performance}>
           <Performance />
@@ -27,16 +27,4 @@ export const PortfolioTokenInfo = () => {
       </TabPanels>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-  })
-
-  return {styles} as const
 }

@@ -1,35 +1,31 @@
 import {usePortfolioTokenInfo} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import * as React from 'react'
-import {
-  Animated,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  StyleSheet,
-} from 'react-native'
+import {Animated, NativeScrollEvent, NativeSyntheticEvent} from 'react-native'
 
-import {SafeArea} from '../../../../components/SafeArea'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {Tab, Tabs} from '../../../../components/Tabs/Tabs'
-import {features} from '../../../../kernel/features'
-import {throwLoggedError} from '../../../../kernel/logger/helpers/throw-logged-error'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {TxFilter} from '../../../Transactions/useCases/TxList/TxFilterProvider'
-import {TxList} from '../../../Transactions/useCases/TxList/TxList'
-import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
-import {usePortfolioTokenDetailParams} from '../../common/hooks/useNavigateTo'
-import {useStrings} from '../../common/hooks/useStrings'
+import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {
   PortfolioDetailsTab,
   usePortfolio,
-} from '../../context/PortfolioProvider'
+} from '~/features/Portfolio/context/PortfolioProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {features} from '~/kernel/features'
+import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space} from '~/ui/Space/Space'
+import {Tab, Tabs} from '~/ui/Tabs/Tabs'
+import {TxFilter} from '../Transactions/useCases/TxList/TxFilterProvider'
+import {TxList} from '../Transactions/useCases/TxList/TxList'
 import {Actions} from './Actions'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
 export const PortfolioTokenDetailsScreen = () => {
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const {detailsTab, setDetailsTab} = usePortfolio()
   const {track} = useMetrics()
@@ -47,7 +43,6 @@ export const PortfolioTokenDetailsScreen = () => {
   )
 
   const HEADER_HEIGHT = 304
-  const {styles} = useStyles(HEADER_HEIGHT)
 
   if (!tokenInfo)
     throwLoggedError(
@@ -65,10 +60,17 @@ export const PortfolioTokenDetailsScreen = () => {
 
   const renderTabs = React.useMemo(() => {
     return (
-      <Tabs style={styles.tabs}>
+      <Tabs
+        style={[
+          a.justify_between,
+          a.px_lg,
+          a.gap_lg,
+          {backgroundColor: p.bg_color_max},
+        ]}
+      >
         {features.portfolioPerformance && (
           <Tab
-            style={styles.tab}
+            style={[{flex: 1}]}
             active={detailsTab === PortfolioDetailsTab.Performance}
             onPress={() => setDetailsTab(PortfolioDetailsTab.Performance)}
             label={strings.performance}
@@ -76,14 +78,14 @@ export const PortfolioTokenDetailsScreen = () => {
         )}
 
         <Tab
-          style={styles.tab}
+          style={[{flex: 1}]}
           active={detailsTab === PortfolioDetailsTab.Overview}
           onPress={() => setDetailsTab(PortfolioDetailsTab.Overview)}
           label={strings.overview}
         />
 
         <Tab
-          style={styles.tab}
+          style={[{flex: 1}]}
           active={detailsTab === PortfolioDetailsTab.Transactions}
           onPress={() => setDetailsTab(PortfolioDetailsTab.Transactions)}
           label={strings.transactions}
@@ -96,8 +98,6 @@ export const PortfolioTokenDetailsScreen = () => {
     strings.overview,
     strings.performance,
     strings.transactions,
-    styles.tab,
-    styles.tabs,
   ])
 
   return (
@@ -105,8 +105,17 @@ export const PortfolioTokenDetailsScreen = () => {
       <TxFilter tokenId={tokenId}>
         <Animated.View
           style={[
-            styles.tabsSticky,
-            isStickyTab ? styles.tabsStickyActive : styles.tabsStickyInactive,
+            {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              width: '100%',
+              zIndex: 10,
+            },
+            isStickyTab
+              ? {opacity: 1, display: 'flex'}
+              : {opacity: 0, display: 'none'},
           ]}
         >
           {renderTabs}
@@ -116,16 +125,18 @@ export const PortfolioTokenDetailsScreen = () => {
           onScroll={onScroll}
           ListHeaderComponent={
             <>
-              <Animated.View style={styles.header}>
-                <Spacer height={16} />
+              <Animated.View
+                style={[{overflow: 'hidden', height: HEADER_HEIGHT}]}
+              >
+                <Space.Height.md />
 
                 <PortfolioTokenBalance />
 
-                <Spacer height={16} />
+                <Space.Height.md />
 
                 <PortfolioTokenChart />
 
-                <Spacer height={16} />
+                <Space.Height.md />
               </Animated.View>
 
               <Animated.View>{renderTabs}</Animated.View>
@@ -140,41 +151,4 @@ export const PortfolioTokenDetailsScreen = () => {
       </TxFilter>
     </SafeArea>
   )
-}
-
-const useStyles = (height: number) => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    header: {
-      overflow: 'hidden',
-      height,
-    },
-    tabsSticky: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      width: '100%',
-      zIndex: 10,
-    },
-    tabsStickyActive: {
-      opacity: 1,
-      display: 'flex',
-    },
-    tabsStickyInactive: {
-      opacity: 0,
-      display: 'none',
-    },
-    tabs: {
-      ...atoms.justify_between,
-      ...atoms.px_lg,
-      ...atoms.gap_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    tab: {
-      flex: 1,
-    },
-  })
-
-  return {styles} as const
 }

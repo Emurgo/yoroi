@@ -4,12 +4,12 @@ import * as React from 'react'
 import {Alert, AlertButton} from 'react-native'
 import {z} from 'zod'
 
+import * as feedback from '~/kernel/haptics/feedback'
+import {ScanRoutes, useParams} from '~/kernel/navigation'
 import {
   CameraCodeScanner,
   CameraCodeScannerMethods,
-} from '../../../components/CameraCodeScanner/CameraCodeScanner'
-import * as feedback from '../../../kernel/haptics/feedback'
-import {ScanRoutes, useParams} from '../../../kernel/navigation'
+} from '~/ui/CameraCodeScanner/CameraCodeScanner'
 import {parseScanAction} from '../common/parsers'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useScanErrorResolver} from '../common/useScanErrorResolver'

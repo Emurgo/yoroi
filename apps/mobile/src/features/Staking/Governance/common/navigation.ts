@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/stack'
 import {useRef} from 'react'
 
-import {WalletStackRoutes} from '../../../../kernel/navigation'
+import {WalletStackRoutes} from '~/kernel/navigation'
 
 export type Routes = {
   'staking-gov-home': undefined

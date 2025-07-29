@@ -7,14 +7,11 @@ import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {primaryTokenId} from '@yoroi/portfolio'
 import {Balance} from '@yoroi/types'
 
-import {
-  toAssetNameHex,
-  toPolicyId,
-} from '../../../../yoroi-wallets/cardano/api/utils'
-import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
-import {useWalletEvent} from '../../../../yoroi-wallets/hooks'
-import {RawUtxo} from '../../../../yoroi-wallets/types/other'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {toAssetNameHex, toPolicyId} from '~/wallets/cardano/api/utils'
+import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
+import {useWalletEvent} from '~/wallets/hooks'
+import {RawUtxo} from '~/wallets/types/other'
 
 export const useUtxoList = () => {
   const {

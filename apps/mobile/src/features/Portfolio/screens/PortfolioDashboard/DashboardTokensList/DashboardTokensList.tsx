@@ -1,27 +1,38 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   FlatList,
-  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native'
 
-import {Icon} from '../../../../../components/Icon'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
-import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
-import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {useZeroBalance} from '../../../common/hooks/useZeroBalance'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useZeroBalance} from '~/features/Portfolio/common/hooks/useZeroBalance'
 import {DashboardTokenItem} from './DashboardTokenItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 
 export const DashboardTokensList = () => {
-  const {styles, cardItemWidth, cardItemWidthForJustAda} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
+  const {width: SCREEN_WIDTH} = useWindowDimensions()
+  const PADDING_LEFT_SIDE = 16
+  const PADDING_RIGHT_SIDE_FOR_ITEMS = 15
+  const PADDING_RIGHT_SIDE_FOR_JUST_ADA = 16
+  const GAP_ITEMS = 8
+  const GAP_FOR_JUST_ADA = 16
+  const initCardWidth = SCREEN_WIDTH - PADDING_LEFT_SIDE
+  const cardItemWidth =
+    (initCardWidth - PADDING_RIGHT_SIDE_FOR_ITEMS - GAP_ITEMS) / 2
+  const cardItemWidthForJustAda =
+    (initCardWidth - PADDING_RIGHT_SIDE_FOR_JUST_ADA - GAP_FOR_JUST_ADA) / 2
+
   const navigationTo = useNavigateTo()
   const isZeroADABalance = useZeroBalance()
   const {wallet} = useSelectedWallet()
@@ -45,21 +56,25 @@ export const DashboardTokensList = () => {
   const renderTokensList = () => {
     if (isJustADA) {
       return (
-        <View style={styles.justAdaContainer}>
+        <View
+          style={[
+            a.flex_row,
+            a.gap_lg,
+            a.overflow_hidden,
+            a.w_full,
+            a.pl_lg,
+            {paddingRight: 15},
+            a.align_start,
+          ]}
+        >
           <View
-            style={[
-              styles.tokenItemContainer,
-              {width: cardItemWidthForJustAda},
-            ]}
+            style={[{aspectRatio: 195 / 186, width: cardItemWidthForJustAda}]}
           >
             <DashboardTokenItem tokenInfo={tokensList[0]} />
           </View>
 
           <View
-            style={[
-              styles.tokenItemContainer,
-              {width: cardItemWidthForJustAda},
-            ]}
+            style={[{aspectRatio: 195 / 186, width: cardItemWidthForJustAda}]}
           >
             <TradeTokensBanner />
           </View>
@@ -71,12 +86,12 @@ export const DashboardTokensList = () => {
       <FlatList
         horizontal
         data={tokensList}
-        ListHeaderComponent={<Spacer width={16} />}
-        ItemSeparatorComponent={() => <Spacer width={8} />}
+        ListHeaderComponent={<Space.Width.md />}
+        ItemSeparatorComponent={() => <Space.Width.sm />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.info?.id}
         renderItem={({item}) => (
-          <View style={[styles.tokenItemContainer, {width: cardItemWidth}]}>
+          <View style={[{aspectRatio: 195 / 186, width: cardItemWidth}]}>
             <DashboardTokenItem tokenInfo={item} />
           </View>
         )}
@@ -85,7 +100,7 @@ export const DashboardTokensList = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_col, a.gap_lg]}>
       <Heading
         countTokens={tokensList.length}
         onPress={handleDirectTokensList}
@@ -103,71 +118,19 @@ type HeadingProps = {
   onPress: () => void
 }
 const Heading = ({countTokens, onPress, isFirstUser}: HeadingProps) => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.container, styles.actionsContainer]}
+      style={[a.px_lg, a.flex_row, a.justify_between, a.align_center]}
     >
-      <Text style={styles.title}>
+      <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
         {strings.tokens(isFirstUser ? 0 : countTokens)}
       </Text>
 
-      <Icon.ArrowRight color={colors.gray_800} size={24} />
+      <Icon.ArrowRight color={p.gray_800} size={24} />
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const {width: SCREEN_WIDTH} = useWindowDimensions()
-  const PADDING_LEFT_SIDE = 16
-  const PADDING_RIGHT_SIDE_FOR_ITEMS = 15
-  const PADDING_RIGHT_SIDE_FOR_JUST_ADA = 16
-  const GAP_ITEMS = 8
-  const GAP_FOR_JUST_ADA = 16
-  const initCardWidth = SCREEN_WIDTH - PADDING_LEFT_SIDE
-  const cardItemWidth =
-    (initCardWidth - PADDING_RIGHT_SIDE_FOR_ITEMS - GAP_ITEMS) / 2
-  const cardItemWidthForJustAda =
-    (initCardWidth - PADDING_RIGHT_SIDE_FOR_JUST_ADA - GAP_FOR_JUST_ADA) / 2
-
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.px_lg,
-    },
-    root: {
-      ...atoms.flex_col,
-      ...atoms.gap_lg,
-    },
-    actionsContainer: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    title: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_900,
-    },
-    justAdaContainer: {
-      ...atoms.flex_row,
-      ...atoms.gap_lg,
-      ...atoms.overflow_hidden,
-      ...atoms.w_full,
-      ...atoms.pl_lg,
-      paddingRight: 15,
-      ...atoms.align_start,
-    },
-    tokenItemContainer: {
-      aspectRatio: 195 / 186,
-    },
-  })
-
-  const colors = {
-    gray_800: color.gray_800,
-  }
-
-  return {styles, colors, cardItemWidth, cardItemWidthForJustAda} as const
 }

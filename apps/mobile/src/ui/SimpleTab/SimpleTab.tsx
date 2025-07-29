@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {Text, TouchableOpacity} from 'react-native'
 
 type Props = {
   name: string
@@ -9,26 +9,17 @@ type Props = {
 }
 
 export const SimpleTab = ({name, onPress, isActive}: Props) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[
-        styles.container,
+        a.p_sm,
         {borderRadius: 8},
-        isActive && {backgroundColor: color.gray_200},
+        isActive && {backgroundColor: p.gray_200},
       ]}
     >
-      <Text style={[styles.text, {color: color.gray_max}]}>{name}</Text>
+      <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>{name}</Text>
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    ...a.p_sm,
-  },
-  text: {
-    ...a.body_1_lg_medium,
-  },
-})

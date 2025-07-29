@@ -1,14 +1,14 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Copiable} from '../../../../../../components/Clipboard/Copiable'
-import {Space} from '../../../../../../components/Space/Space'
-import {useStrings} from '../../../../common/hooks/useStrings'
-import {FormattedMetadata} from '../../../../common/types'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {FormattedMetadata} from '~/features/ReviewTx/common/types'
+import {Copiable} from '~/ui/Copiable/Copiable'
+import {Space} from '~/ui/Space/Space'
 
 export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   if (hash == null || metadata == null) return null
@@ -16,77 +16,47 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
   const metadataFormatted = JSON.stringify(metadata, null, 2)
 
   return (
-    <View style={styles.root}>
-      <Space height="lg" />
+    <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
+      <Space.Height.lg />
 
-      <View style={styles.title}>
-        <Text style={styles.label}>{strings.metadataHash}</Text>
+      <View style={[a.flex_row, a.justify_between]}>
+        <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
+          {strings.metadataHash}
+        </Text>
 
-        <Space width="lg" />
+        <Space.Width.lg />
 
-        <Copiable style={styles.hashContainer} text={hash}>
-          <Text style={styles.text}>{hash}</Text>
+        <Copiable style={[a.flex_1]} text={hash}>
+          <Text
+            style={[
+              a.text_right,
+              a.flex_1,
+              a.body_2_md_regular,
+              {color: p.text_gray_medium},
+            ]}
+          >
+            {hash}
+          </Text>
         </Copiable>
       </View>
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
-      <View style={styles.metadata}>
-        <View style={styles.title}>
+      <View style={[{backgroundColor: p.bg_color_min}, a.rounded_sm, a.p_lg]}>
+        <View style={[a.flex_row, a.justify_between]}>
           <Copiable text={metadataFormatted}>
-            <Text style={styles.metadataLabel}>
+            <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
               {strings.metadataJsonLabel}
             </Text>
           </Copiable>
         </View>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
-        <Text style={styles.metadataText}>{metadataFormatted}</Text>
+        <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+          {metadataFormatted}
+        </Text>
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    title: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    label: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_low,
-    },
-    text: {
-      ...atoms.text_right,
-      ...atoms.flex_1,
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-    hashContainer: {
-      ...atoms.flex_1,
-    },
-    metadata: {
-      backgroundColor: color.bg_color_min,
-      ...atoms.rounded_sm,
-      ...atoms.p_lg,
-    },
-    metadataLabel: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    metadataText: {
-      color: color.text_gray_medium,
-      ...atoms.body_2_md_regular,
-    },
-  })
-
-  return {styles} as const
 }

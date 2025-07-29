@@ -1,4 +1,4 @@
-import {RawUtxo} from '../types/other'
+import {RawUtxo} from '@yoroi/types'
 
 export const utxos: RawUtxo[] = [
   {

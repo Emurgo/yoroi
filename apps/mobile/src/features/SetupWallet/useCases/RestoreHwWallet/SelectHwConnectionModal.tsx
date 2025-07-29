@@ -2,14 +2,14 @@ import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Alert, Platform, StyleSheet, Text, View} from 'react-native'
+import {Alert, Platform, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {Space} from '../../../../components/Space/Space'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../wallets/hw/hw'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
 import {useStrings} from '../../common/useStrings'
 
 const useIsAndroidUsbSupported = () => {
@@ -28,12 +28,23 @@ const useIsAndroidUsbSupported = () => {
 }
 
 export const SelectHwConnectionModal = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.modal}>
-      <Text style={styles.modalText}>{strings.hwModalText}</Text>
+    <View style={[{paddingHorizontal: 16}]}>
+      <Text
+        style={[
+          {
+            fontSize: 16,
+            lineHeight: 24,
+            fontWeight: '400',
+            color: p.text_gray_medium,
+          },
+        ]}
+      >
+        {strings.hwModalText}
+      </Text>
 
       <SelectBluetoothSection />
 
@@ -68,7 +79,7 @@ const SelectBluetoothSection = () => {
 
   return (
     <>
-      <Space height="xl" />
+      <Space.Height.xl />
 
       <Button
         type={ButtonType.Secondary}
@@ -81,7 +92,7 @@ const SelectBluetoothSection = () => {
 }
 
 const SelectUsbSection = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const isAndroidUsbSupported = useIsAndroidUsbSupported()
   const {
@@ -101,9 +112,20 @@ const SelectUsbSection = () => {
   if (Platform.OS === 'ios')
     return (
       <>
-        <Space height="lg" />
+        <Space.Height.lg />
 
-        <Text style={styles.iosWarning}>{strings.hwModalIosWarning}</Text>
+        <Text
+          style={[
+            {
+              color: p.text_gray_low,
+              fontSize: 14,
+              lineHeight: 20,
+              fontWeight: '400',
+            },
+          ]}
+        >
+          {strings.hwModalIosWarning}
+        </Text>
       </>
     )
   if (!isAndroidUsbSupported) {
@@ -112,7 +134,7 @@ const SelectUsbSection = () => {
 
   return (
     <>
-      <Space height="xl" />
+      <Space.Height.xl />
 
       <Button
         type={ButtonType.Secondary}
@@ -125,27 +147,4 @@ const SelectUsbSection = () => {
       />
     </>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    modal: {
-      ...atoms.px_lg,
-    },
-    modalText: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
-    },
-    iosWarning: {
-      color: color.text_gray_low,
-      ...atoms.body_2_md_regular,
-    },
-  })
-
-  const colors = {
-    blue: color.el_primary_medium,
-  }
-  return {styles, colors} as const
 }

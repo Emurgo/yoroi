@@ -18,14 +18,14 @@ import {MMKV} from 'react-native-mmkv'
 import {of} from 'rxjs'
 import * as uuid from 'uuid'
 
-import {AuthSetting} from '../../features/Auth/common/types'
-import {defaultCurrency} from '../constants'
+import {AuthSetting} from '~/features/Auth/common/types'
+import {defaultCurrency} from '~/kernel/constants'
 import {
   LanguageCode,
   isLanguageCode,
   systemLanguageCode,
-} from '../i18n/localization'
-import {debugStorage} from './debug-storage'
+} from '~/kernel/i18n/localization'
+import {debugStorage} from '~/kernel/storage/debug-storage'
 
 export const rootMMKV = new MMKV({id: 'default.mmkv'})
 export const rootSyncStorage = observableStorageMaker<false, string>(

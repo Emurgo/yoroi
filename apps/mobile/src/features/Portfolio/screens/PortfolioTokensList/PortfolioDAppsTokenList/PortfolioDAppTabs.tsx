@@ -1,18 +1,13 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native'
+import {Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
-import {useStrings} from '../../../common/hooks/useStrings'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {
   PortfolioDappsTab,
   usePortfolio,
-} from '../../../context/PortfolioProvider'
-import {TabsGradient} from '../../../ui/TabsGradient/Tabs'
+} from '~/features/Portfolio/context/PortfolioProvider'
+import {TabsGradient} from '~/ui/TabsGradient/Tabs'
 
 export const PortfolioDAppTabs = () => {
   const strings = useStrings()
@@ -52,34 +47,21 @@ type TabProps = {
   active: boolean
 }
 const Tab = ({onPress, label, active}: TouchableOpacityProps & TabProps) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   return (
     <TouchableOpacity
-      style={[styles.tab, active && styles.tabActive]}
+      style={[a.p_sm, a.rounded_sm, active && {backgroundColor: p.gray_200}]}
       onPress={onPress}
     >
-      <Text style={styles.tabText}>{label}</Text>
+      <Text
+        style={[
+          {color: active ? p.gray_max : p.el_gray_medium},
+          a.body_1_lg_medium,
+          a.font_semibold,
+        ]}
+      >
+        {label}
+      </Text>
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    tab: {
-      ...atoms.p_sm,
-      ...atoms.rounded_sm,
-    },
-    tabActive: {
-      color: color.gray_max,
-      backgroundColor: color.gray_200,
-    },
-    tabText: {
-      color: color.el_gray_medium,
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-    },
-  })
-
-  return {styles} as const
 }

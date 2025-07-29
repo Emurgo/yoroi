@@ -1,4 +1,4 @@
-import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {usePortfolioPrimaryBalance} from './usePortfolioPrimaryBalance'
 
 export const useZeroBalance = () => {

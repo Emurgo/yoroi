@@ -1,28 +1,28 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
-import {Divider} from '../../../ui/Divider/Divider'
-import {Icon} from '../../../ui/Icon'
-import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
-import {Space} from '../../../ui/Space/Space'
-import {TokenAmountItem} from '../../../ui/TokenAmountItem/TokenAmountItem'
 import {
   PRICE_IMPACT_HIGH_RISK,
   PRICE_IMPACT_MODERATE_RISK,
   undefinedToken,
-} from '../../common/constants'
+} from '~/features/Swap/common/constants'
+import {SwapContext} from '~/features/Swap/common/SwapProvider'
+import {useStrings} from '~/features/Swap/common/useStrings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Divider} from '~/ui/Divider/Divider'
+import {Icon} from '~/ui/Icon'
+import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {Space} from '~/ui/Space/Space'
+import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
-import {useStrings} from '../../common/strings'
-import {SwapContext} from '../../common/SwapProvider'
 import {Splits} from '../CreateOrder/EstimateSummary'
 import {ShowPriceImpact} from '../CreateOrder/ShowPriceImpact'
 
 export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   const strings = useStrings()
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {orderType} = swapForm
   const [showSplits, setShowSplits] = React.useState(false)
@@ -59,7 +59,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
   )
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const priceImpactRiskTextColor =
-    orderType === 'market' ? priceImpactRiskTheme.text : color.gray_900
+    orderType === 'market' ? priceImpactRiskTheme.text : p.gray_900
 
   const tokenInTicker = tokenInInfo.ticker ?? tokenInInfo.name
   const tokenOutTicker = tokenOutInfo.ticker ?? tokenOutInfo.name
@@ -111,7 +111,14 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
           ? strings.marketPrice
           : strings.limitPriceWarningTitle,
       value: (
-        <Text style={[styles.text, styles.alignRight, {color: color.gray_900}]}>
+        <Text
+          style={[
+            a.text_left,
+            a.body_1_lg_regular,
+            a.text_right,
+            {color: p.gray_900},
+          ]}
+        >
           {priceInfoValue}
         </Text>
       ),
@@ -124,7 +131,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     {
       label: strings.swapMinAdaTitle,
       value: (
-        <Text style={[styles.text, {color: color.gray_900}]}>
+        <Text style={[a.text_left, a.body_1_lg_regular, {color: p.gray_900}]}>
           {minAdaInfoValue}
         </Text>
       ),
@@ -132,15 +139,22 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     {
       label: strings.swapFeesTitle,
       value: (
-        <Text style={[styles.text, {color: color.gray_900}]}>{totalFee}</Text>
+        <Text style={[a.text_left, a.body_1_lg_regular, {color: p.gray_900}]}>
+          {totalFee}
+        </Text>
       ),
     },
     {
       label: strings.swapMinReceivedTitle,
       value: (
-        <View style={styles.flex}>
+        <View>
           <Text
-            style={[styles.text, styles.alignRight, {color: color.gray_900}]}
+            style={[
+              a.text_left,
+              a.body_1_lg_regular,
+              a.text_right,
+              {color: p.gray_900},
+            ]}
           >
             {minReceivedInfoValue}
           </Text>
@@ -155,11 +169,10 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
         orderType === 'market' && (
           <View
             style={[
-              styles.banner,
-              atoms.py_md,
-              atoms.px_lg,
-              atoms.rounded_sm,
-              atoms.gap_sm,
+              a.py_md,
+              a.px_lg,
+              a.rounded_sm,
+              a.gap_sm,
               {backgroundColor: priceImpactRiskTheme.background},
             ]}
           >
@@ -171,10 +184,8 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
               <Icon.Warning size={24} color={priceImpactRiskTextColor} />
             )}
 
-            <Text style={[styles.bannerText, {color: color.gray_900}]}>
-              <Text
-                style={[styles.bannerText, styles.bold, atoms.body_2_md_medium]}
-              >
+            <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
+              <Text style={[a.body_2_md_regular, a.body_2_md_medium]}>
                 {strings.priceImpactRiskHigh({
                   riskValue:
                     priceImpactRisk === 'moderate'
@@ -183,7 +194,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
                 })}
               </Text>
 
-              <Text style={[styles.bannerText, {color: color.gray_900}]}>
+              <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
                 {' '}
                 {strings.priceImpactDescription(priceImpactRisk)}
               </Text>
@@ -191,17 +202,17 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
           </View>
         )}
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
-      <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>
+      <Text style={[{fontSize: 12}, a.pb_sm, {color: p.gray_900}]}>
         {strings.swapFrom}
       </Text>
 
       <TokenAmountItem amount={amountIn} orderType={orderType} />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
-      <Text style={[styles.amountItemLabel, {color: color.gray_900}]}>
+      <Text style={[{fontSize: 12}, a.pb_sm, {color: p.gray_900}]}>
         {strings.swapTo}
       </Text>
 
@@ -213,7 +224,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
       <Divider verticalSpace="lg" />
 
-      <Text style={[styles.detailsTitle, {color: color.text_gray_medium}]}>
+      <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
         {strings.swapDetailsTitle}
       </Text>
 
@@ -224,19 +235,16 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
         return (
           <View key={orderInfo.label}>
-            <Space height="sm" />
+            <Space.Height.sm />
 
-            <View
-              style={[
-                styles.flexBetween,
-                atoms.flex_row,
-                atoms.justify_between,
-                atoms.align_start,
-              ]}
-            >
-              <View style={[styles.flex, atoms.flex_row, atoms.align_center]}>
+            <View style={[a.flex_row, a.justify_between, a.align_start]}>
+              <View style={[a.flex_row, a.align_center]}>
                 <Text
-                  style={[styles.text, styles.gray, {color: color.gray_700}]}
+                  style={[
+                    a.text_left,
+                    a.body_1_lg_regular,
+                    {color: p.gray_700},
+                  ]}
                 >
                   {orderInfo.label}
                 </Text>
@@ -244,12 +252,11 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
               <View
                 style={[
-                  styles.orderValueContainer,
-                  atoms.flex_row,
-                  atoms.align_end,
-                  atoms.justify_end,
-                  atoms.pl_sm,
-                  atoms.flex_1,
+                  a.flex_row,
+                  a.align_end,
+                  a.justify_end,
+                  a.pl_sm,
+                  a.flex_1,
                 ]}
               >
                 {orderInfo.value}
@@ -261,29 +268,3 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  alignRight: {
-    ...a.text_right,
-  },
-  flexBetween: {},
-  flex: {},
-  text: {
-    ...a.text_left,
-    ...a.body_1_lg_regular,
-  },
-  gray: {},
-  amountItemLabel: {
-    fontSize: 12,
-    ...a.pb_sm,
-  },
-  orderValueContainer: {},
-  banner: {},
-  bannerText: {
-    ...a.body_2_md_regular,
-  },
-  bold: {},
-  detailsTitle: {
-    ...a.body_1_lg_medium,
-  },
-})

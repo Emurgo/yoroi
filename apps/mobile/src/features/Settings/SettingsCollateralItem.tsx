@@ -1,7 +1,7 @@
+import {amountFormatter} from '@yoroi/portfolio'
 import React from 'react'
 
-import {amountFormatter} from '@yoroi/portfolio'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {
   NavigatedSettingsItem,
   NavigatedSettingsItemProps,

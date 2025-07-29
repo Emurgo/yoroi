@@ -3,8 +3,8 @@ import * as AuthHost from 'expo-local-authentication'
 import {freeze} from 'immer'
 import * as React from 'react'
 
-import {useAppState} from '../../../hooks/useAppState'
-import {logger} from '../../../kernel/logger/logger'
+import {useAppState} from '~/hooks/useAppState'
+import {logger} from '~/kernel/logger/logger'
 import {AuthWithHostConfig} from '../common/types'
 import {useStrings} from './useStrings'
 

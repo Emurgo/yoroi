@@ -6,42 +6,41 @@ import {
   useMutationWithInvalidations,
 } from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {
   Linking,
-  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native'
 
-import {Button} from '../../../../../../components/Button/Button'
-import {Copiable} from '../../../../../../components/Clipboard/Copiable'
-import {Divider} from '../../../../../../components/Divider/Divider'
-import {Icon} from '../../../../../../components/Icon'
-import {InfoBanner} from '../../../../../../components/InfoBanner/InfoBanner'
-import {useModal} from '../../../../../../components/Modal/ModalContext'
-import {Space} from '../../../../../../components/Space/Space'
-import {WarningBanner} from '../../../../../../components/WarningBanner/WarningBanner'
-import {formatTokenWithText} from '../../../../../../wallets/utils/format'
-import {Quantities} from '../../../../../../wallets/utils/utils'
-import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../../../WalletManager/context/WalletManagerProvider'
-import {Accordion} from '../../../../common/Accordion'
-import {useStrings} from '../../../../common/hooks/useStrings'
-import {Operations, useOperations} from '../../../../common/operations'
-import {TokenItem} from '../../../../common/TokenItem'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
+import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
 import {
   FormattedOutput,
   FormattedOutputs,
   FormattedTx,
-} from '../../../../common/types'
-import {WalletBalance} from '../../../../common/WalletBalance'
-import {OperationsNoticeIcon} from '../../../../illustrations/OperationsNoticeIcon'
+} from '~/features/ReviewTx/common/types'
+import {WalletBalance} from '~/features/ReviewTx/common/WalletBalance'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Accordion} from '~/ui/Accordion/Accordion'
+import {Button} from '~/ui/Button/Button'
+import {Copiable} from '~/ui/Copiable/Copiable'
+import {Divider} from '~/ui/Divider/Divider'
+import {Icon} from '~/ui/Icon'
+import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
+import {formatTokenWithText} from '~/wallets/utils/format'
+import {Quantities} from '~/wallets/utils/utils'
+import {OperationsNoticeIcon} from '../illustrations/OperationsNoticeIcon'
 
 export const OverviewTab = ({
   tx,
@@ -58,7 +57,7 @@ export const OverviewTab = ({
   details?: {title: string; component: React.ReactNode}
   createdBy?: React.ReactNode
 }) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const operations = useOperations(tx.certificates)
   const strings = useStrings()
   useShowOperationsNotice(operations)
@@ -77,8 +76,8 @@ export const OverviewTab = ({
   )
 
   return (
-    <View style={styles.root}>
-      <Space height="lg" />
+    <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
+      <Space.Height.lg />
 
       {operationsComponentsDuplicated && (
         <>
@@ -87,7 +86,7 @@ export const OverviewTab = ({
             content={strings.operationsLogWarningText}
           />
 
-          <Space height="lg" />
+          <Space.Height.lg />
         </>
       )}
 
@@ -132,7 +131,7 @@ const WalletInfoSection = ({
   tx: FormattedTx
   createdBy?: React.ReactNode
 }) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
@@ -153,36 +152,38 @@ const WalletInfoSection = ({
 
   return (
     <>
-      <View style={styles.infoItem}>
-        <Text style={styles.infoLabel}>{strings.walletLabel}</Text>
+      <View style={[a.flex_row, a.justify_between]}>
+        <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+          {strings.walletLabel}
+        </Text>
 
-        <View style={styles.plate}>
+        <View style={[a.flex_row, a.align_center]}>
           <Icon.WalletAvatar
             image={seedImage}
-            style={styles.walletChecksum}
+            style={{width: 24, height: 24}}
             size={24}
           />
 
-          <Space width="sm" />
+          <Space.Width.sm />
 
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={handleShowWalletBalance}
           >
             <Text
-              style={styles.walletInfoText}
+              style={[a.body_2_md_medium, {color: p.text_primary_medium}]}
             >{`${plate} | ${meta.name}`}</Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       {createdBy != null && (
         <>
           {createdBy}
 
-          <Space height="sm" />
+          <Space.Height.sm />
         </>
       )}
 
@@ -197,14 +198,18 @@ const WalletInfoSection = ({
 }
 
 const FeeInfoItem = ({fee}: {fee: string}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.infoItem}>
-      <Text style={styles.infoLabel}>{strings.feeLabel}</Text>
+    <View style={[a.flex_row, a.justify_between]}>
+      <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+        {strings.feeLabel}
+      </Text>
 
-      <Text style={styles.fee}>{`-${fee}`}</Text>
+      <Text
+        style={[{color: p.gray_900}, a.body_2_md_regular]}
+      >{`-${fee}`}</Text>
     </View>
   )
 }
@@ -222,17 +227,17 @@ const MyWalletSection = ({
   operationsFee: Balance.Quantity
 }) => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const address =
     ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address ?? '-'
 
   return (
     <Accordion label={strings.myWalletLabel}>
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Copiable text={address}>
         <Text
-          style={styles.addressText}
+          style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
           numberOfLines={1}
           ellipsizeMode="middle"
         >
@@ -241,14 +246,14 @@ const MyWalletSection = ({
 
         {ownedOutputs[0]?.addressKind === CredKind.Script && (
           <>
-            <Space width="xs" />
+            <Space.Width.xs />
 
-            <Icon.DigitalAsset size={24} color={colors.icon} />
+            <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
           </>
         )}
       </Copiable>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <MyWalletTokens
         tx={tx}
@@ -268,7 +273,7 @@ const MyWalletTokens = ({
   notOwnedOutputs: FormattedOutputs
   operationsFee: Balance.Quantity
 }) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
 
   const totalPrimaryTokenSent = React.useMemo(
@@ -307,11 +312,13 @@ const MyWalletTokens = ({
   )
 
   return (
-    <View style={styles.tokensSection}>
-      <View style={styles.tokenItems}>
+    <View style={[a.flex_row, a.justify_between]}>
+      <View
+        style={[a.flex_wrap, a.flex_row, a.justify_end, a.flex_1, a.gap_sm]}
+      >
         <MyWalletSectionLabel />
 
-        <Space fill />
+        <Space.Height._2xs fill />
 
         <TokenItem
           tokenInfo={wallet.portfolioPrimaryTokenInfo}
@@ -332,16 +339,18 @@ const MyWalletTokens = ({
 }
 
 const MyWalletSectionLabel = () => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.tokensSectionLabel}>
-      <Icon.Send size={30} color={colors.send} />
+    <View style={[a.flex_row, a.align_center]}>
+      <Icon.Send size={30} color={p.el_primary_medium} />
 
-      <Space width="_2xs" />
+      <Space.Width._2xs />
 
-      <Text style={styles.tokenSectionLabel}>{strings.sendLabel}</Text>
+      <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+        {strings.sendLabel}
+      </Text>
     </View>
   )
 }
@@ -354,22 +363,26 @@ const OneExternalPartySection = ({
   receiverCustomTitle?: React.ReactNode
 }) => {
   const address = output?.rewardAddress ?? output?.address ?? '-'
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
     <>
-      <Space height="sm" />
+      <Space.Height.sm />
 
-      <View style={styles.externalPartyAddress}>
-        <Text style={styles.externalPartyAddressText}>
+      <View style={[a.flex_row, a.align_center, a.flex_row, a.justify_between]}>
+        <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.receiveToLabel}:
         </Text>
 
         {receiverCustomTitle ?? (
           <Copiable text={address}>
             <Text
-              style={[styles.addressText, styles.externalPartiesSectionAddress]}
+              style={[
+                a.flex_1,
+                a.body_2_md_regular,
+                {color: p.text_gray_medium, maxWidth: 260},
+              ]}
               numberOfLines={1}
               ellipsizeMode="middle"
             >
@@ -378,9 +391,9 @@ const OneExternalPartySection = ({
 
             {output?.addressKind === CredKind.Script && (
               <>
-                <Space width="xs" />
+                <Space.Width.xs />
 
-                <Icon.DigitalAsset size={24} color={colors.icon} />
+                <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
               </>
             )}
           </Copiable>
@@ -395,7 +408,7 @@ const MultiExternalPartiesSection = ({
 }: {
   outputs: FormattedOutputs
 }) => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const strings = useStrings()
 
@@ -415,11 +428,11 @@ const MultiExternalPartiesSection = ({
 
     return (
       <View key={index}>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Copiable text={address}>
           <Text
-            style={styles.addressText}
+            style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
             numberOfLines={1}
             ellipsizeMode="middle"
           >
@@ -428,20 +441,22 @@ const MultiExternalPartiesSection = ({
 
           {output?.addressKind === CredKind.Script && (
             <>
-              <Space width="xs" />
+              <Space.Width.xs />
 
-              <Icon.DigitalAsset size={24} color={colors.icon} />
+              <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
             </>
           )}
         </Copiable>
 
-        <Space height="sm" />
+        <Space.Height.sm />
 
-        <View style={styles.tokensSection}>
-          <View style={styles.tokenItems}>
+        <View style={[a.flex_row, a.justify_between]}>
+          <View
+            style={[a.flex_wrap, a.flex_row, a.justify_end, a.flex_1, a.gap_sm]}
+          >
             <ExternalPartiesSectionLabel />
 
-            <Space fill />
+            <Space.Height._2xs fill />
 
             <TokenItem
               tokenInfo={wallet.portfolioPrimaryTokenInfo}
@@ -469,7 +484,7 @@ const MultiExternalPartiesSection = ({
       <Divider verticalSpace="lg" />
 
       <Accordion label={strings.multiExternalPartiesSectionLabel}>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <InfoBanner content={strings.multiExternalPartiesSectionNotice} />
 
@@ -480,16 +495,18 @@ const MultiExternalPartiesSection = ({
 }
 
 const ExternalPartiesSectionLabel = () => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.tokensSectionLabel}>
-      <Icon.Received size={30} color={colors.received} />
+    <View style={[a.flex_row, a.align_center]}>
+      <Icon.Received size={30} color={p.green_static} />
 
-      <Space width="_2xs" />
+      <Space.Width._2xs />
 
-      <Text style={styles.tokenSectionLabel}>{strings.receiveLabel}</Text>
+      <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+        {strings.receiveLabel}
+      </Text>
     </View>
   )
 }
@@ -519,17 +536,17 @@ const OperationsSection = ({
       <Divider verticalSpace="lg" />
 
       <Accordion label={strings.operationsLabel}>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {operationsNotice != null && (
           <>
-            <Space height="lg" />
+            <Space.Height.lg />
 
             {operationsNotice}
           </>
         )}
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {[...componentsNotDuplicated, ...(extraOperations ?? [])].map(
           (operation, index) => {
@@ -537,7 +554,7 @@ const OperationsSection = ({
 
             return (
               <React.Fragment key={index}>
-                <Space height="sm" />
+                <Space.Height.sm />
 
                 {operation}
               </React.Fragment>
@@ -570,14 +587,14 @@ const OperationsModal = ({operations}: {operations: Operations}) => {
       />
 
       <Accordion label={strings.operationsLabel}>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {components.map((operation, index) => {
           if (index === 0) return operation
 
           return (
             <>
-              <Space height="sm" />
+              <Space.Height.sm />
 
               {operation}
             </>
@@ -596,25 +613,27 @@ export type ReviewDetailsProps = {
 
 const Details = ({details}: {details?: ReviewDetailsProps}) => {
   const {openModal} = useModal()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   if (details == null) return null
 
   const handleOnPress = () => {
     openModal({
       title: details.title ?? '',
-      content: <View style={styles.details}>{details.component}</View>,
+      content: <View style={[a.px_lg]}>{details.component}</View>,
       height: details.height ?? 400,
     })
   }
 
   return (
     <View>
-      <Space height="lg" />
+      <Space.Height.lg />
 
-      <View style={styles.detailsRow}>
+      <View style={[a.flex_row, a.justify_end]}>
         <TouchableOpacity onPress={handleOnPress} activeOpacity={0.5}>
-          <Text style={styles.detailsButton}>{details?.title}</Text>
+          <Text style={[a.body_2_md_medium, {color: p.text_primary_medium}]}>
+            {details?.title}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -628,20 +647,24 @@ export const CreatedByInfoItem = ({
   logo?: string
   url: string
 }) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.infoItem}>
-      <Text style={styles.infoLabel}>{strings.createdBy}</Text>
+    <View style={[a.flex_row, a.justify_between]}>
+      <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+        {strings.createdBy}
+      </Text>
 
-      <View style={styles.plate}>
-        {logo != null && <Image source={{uri: logo}} style={styles.logo} />}
+      <View style={[a.flex_row, a.align_center]}>
+        {logo != null && (
+          <Image source={{uri: logo}} style={{width: 24, height: 24}} />
+        )}
 
-        <Space width="sm" />
+        <Space.Width.sm />
 
         <TouchableOpacity onPress={() => Linking.openURL(url)}>
-          <Text style={styles.link}>
+          <Text style={[{color: p.text_primary_medium}, a.body_2_md_medium]}>
             {url.replace(/^https?:\/\//, '').replace(/\/+$/, '')}
           </Text>
         </TouchableOpacity>
@@ -651,7 +674,7 @@ export const CreatedByInfoItem = ({
 }
 
 export const OperationsNotice = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {closeModal} = useModal()
   const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
@@ -662,18 +685,26 @@ export const OperationsNotice = () => {
   }
 
   return (
-    <View style={styles.modal}>
-      <Space height="lg" />
+    <View style={[a.flex_1, a.px_lg, a.align_center]}>
+      <Space.Height.lg />
 
       <OperationsNoticeIcon />
 
-      <Space height="_2xl" />
+      <Space.Height._2xl />
 
-      <Text style={styles.modalText}>{strings.operationsNoticeText}</Text>
+      <Text
+        style={[
+          a.text_center,
+          a.body_1_lg_regular,
+          {color: p.text_gray_medium},
+        ]}
+      >
+        {strings.operationsNoticeText}
+      </Text>
 
-      <Space fill />
+      <Space.Height._2xs fill />
 
-      <View style={styles.actions}>
+      <View style={{alignSelf: 'stretch'}}>
         <Button
           title={strings.operationsNoticeButton}
           onPress={handleOnpress}
@@ -736,116 +767,4 @@ const useSetOperationsNoticeShown = () => {
     ...mutation,
     setOperationsNoticeShown: mutation.mutate,
   }
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    infoItem: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    infoLabel: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_600,
-    },
-    walletInfoText: {
-      ...atoms.body_2_md_medium,
-      color: color.text_primary_medium,
-    },
-    plate: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    fee: {
-      color: color.gray_900,
-      ...atoms.body_2_md_regular,
-    },
-    externalPartyAddress: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    externalPartyAddressText: {
-      ...atoms.body_2_md_medium,
-      color: color.text_gray_medium,
-    },
-    tokenSectionLabel: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    tokenItems: {
-      ...atoms.flex_wrap,
-      ...atoms.flex_row,
-      ...atoms.justify_end,
-      ...atoms.flex_1,
-      ...atoms.gap_sm,
-    },
-    tokensSection: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    tokensSectionLabel: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    walletChecksum: {
-      width: 24,
-      height: 24,
-    },
-    externalPartiesSectionAddress: {
-      maxWidth: 260,
-    },
-    addressText: {
-      ...atoms.flex_1,
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-    detailsRow: {
-      ...atoms.flex_row,
-      ...atoms.justify_end,
-    },
-    details: {
-      ...atoms.px_lg,
-    },
-    detailsButton: {
-      ...atoms.body_2_md_medium,
-      color: color.text_primary_medium,
-    },
-    link: {
-      color: color.text_primary_medium,
-      ...atoms.body_2_md_medium,
-    },
-    logo: {
-      width: 24,
-      height: 24,
-    },
-    modal: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.align_center,
-    },
-    modalText: {
-      ...atoms.text_center,
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
-    },
-    actions: {
-      alignSelf: 'stretch',
-    },
-  })
-
-  const colors = {
-    send: color.el_primary_medium,
-    received: color.green_static,
-    icon: color.el_gray_medium,
-  }
-
-  return {styles, colors} as const
 }

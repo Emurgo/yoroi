@@ -1,9 +1,9 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 
-import {Text} from '../../../../../components/Text'
-import {TokenChartInterval} from '../../../common/hooks/useGetPortfolioTokenChart'
+import {Text} from '~/ui/Text/Text'
+import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
 
 interface Props {
   timeInterval: TokenChartInterval
@@ -15,7 +15,7 @@ export const TokenChartToolbar = ({
   disabled,
   onChange,
 }: Props) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   const handleChange = (itv: TokenChartInterval) => {
     if (disabled) return
@@ -23,20 +23,23 @@ export const TokenChartToolbar = ({
   }
 
   return (
-    <View style={styles.chartToolbar}>
+    <View style={[a.flex_row, a.justify_between, a.align_center, {height: 30}]}>
       {Object.values(TokenChartInterval).map((itv) => (
         <TouchableOpacity
           onPress={() => handleChange(itv)}
           style={[
-            itv === timeInterval ? styles.chartToolbarItemActive : {},
-            styles.chartToolbarItem,
+            a.rounded_sm,
+            {padding: 6},
+            itv === timeInterval ? {backgroundColor: p.primary_500} : {},
           ]}
           key={itv}
         >
           <Text
             style={[
-              styles.chartToolbarItemText,
-              itv === timeInterval ? styles.chartToolbarItemTextActive : {},
+              a.body_3_sm_medium,
+              a.font_semibold,
+              {color: p.gray_600, textTransform: 'uppercase'},
+              itv === timeInterval ? {color: p.gray_min} : {},
             ]}
           >
             {itv}
@@ -45,34 +48,4 @@ export const TokenChartToolbar = ({
       ))}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    chartToolbar: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-      height: 30,
-    },
-    chartToolbarItem: {
-      ...atoms.rounded_sm,
-      padding: 6,
-    },
-    chartToolbarItemText: {
-      ...atoms.body_3_sm_medium,
-      ...atoms.font_semibold,
-      color: color.gray_600,
-      textTransform: 'uppercase',
-    },
-    chartToolbarItemActive: {
-      backgroundColor: color.primary_500,
-    },
-    chartToolbarItemTextActive: {
-      color: color.gray_min,
-    },
-  })
-
-  return {styles} as const
 }

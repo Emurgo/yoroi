@@ -1,17 +1,17 @@
 import {infoExtractName} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
-import {useGetPortfolioTokenInfo} from '../../../common/hooks/useGetPortfolioTokenInfo'
-import {usePortfolioTokenDetailParams} from '../../../common/hooks/useNavigateTo'
-import {useStrings} from '../../../common/hooks/useStrings'
+import {Space} from '~/ui/Space/Space'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useGetPortfolioTokenInfo} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenInfo'
+import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 
 export const Performance = () => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const {
     wallet: {balances},
@@ -26,10 +26,10 @@ export const Performance = () => {
   const value = data?.info?.performance
 
   return (
-    <View style={styles.scrollView}>
-      <Spacer height={8} />
+    <View style={[a.flex_1]}>
+      <Space.Height.sm />
 
-      <View style={styles.container}>
+      <View style={[a.flex_1, a.flex_col, a.gap_sm]}>
         {/* <TextGroup loading={isFetching} value={`${value?.user?.pnl ?? '-/-'} %`}>
             <View style={styles.labelGroup}>
               <Text style={styles.label}>PnL</Text>
@@ -38,7 +38,7 @@ export const Performance = () => {
             </View>
           </TextGroup>
 
-          <Spacer height={2} />
+          <Space.Height._2xs />
 
           <TextGroup loading={isFetching} value={`${value?.user?.invested ?? '-/-'} USD`}>
             <View style={styles.labelGroup}>
@@ -48,7 +48,7 @@ export const Performance = () => {
             </View>
           </TextGroup>
 
-        <Spacer height={16} /> */}
+        <Space.Height.md /> */}
 
         <TextGroup
           loading={isFetching}
@@ -75,13 +75,15 @@ export const Performance = () => {
         />
       </View>
 
-      <Spacer height={24} />
+      <Space.Height.lg />
 
-      <Text style={styles.title}>{strings.marketData}</Text>
+      <Text style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_800}]}>
+        {strings.marketData}
+      </Text>
 
-      <Spacer height={16} />
+      <Space.Height.md />
 
-      <View style={styles.container}>
+      <View style={[a.flex_1, a.flex_col, a.gap_sm]}>
         <TextGroup
           loading={isFetching}
           value={`${value?.market?.change ?? '-/-'} %`}
@@ -112,7 +114,7 @@ export const Performance = () => {
           label={strings.rank}
         />
 
-        <Spacer height={16} />
+        <Space.Height.md />
 
         <TextGroup
           loading={isFetching}
@@ -155,76 +157,31 @@ interface TextGroupProps {
   loading?: boolean
 }
 const TextGroup = ({label, loading, value, children}: TextGroupProps) => {
-  const {styles, colors} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
-    <View style={styles.group}>
+    <View style={[a.flex_1, a.flex_row, a.justify_between, a.align_center]}>
       {children !== undefined ? (
         children
       ) : (
         <View>
-          <Text style={styles.label}>{label}</Text>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
+            {label}
+          </Text>
         </View>
       )}
 
       {loading ? (
-        <SkeletonPlaceholder
-          borderRadius={20}
-          backgroundColor={colors.skeleton}
-        >
+        <SkeletonPlaceholder borderRadius={20} backgroundColor={p.gray_100}>
           <SkeletonPlaceholder.Item width={64} height={16} />
         </SkeletonPlaceholder>
       ) : (
         <View>
-          <Text style={styles.textValue}>{value}</Text>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
+            {value}
+          </Text>
         </View>
       )}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    scrollView: {
-      ...atoms.flex_1,
-    },
-    container: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-      ...atoms.gap_sm,
-    },
-    group: {
-      ...atoms.flex_1,
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    // labelGroup: {
-    //   ...atoms.flex_1,
-    //   ...atoms.flex_row,
-    //   ...atoms.align_center,
-    //   gap: 3,
-    // },
-    label: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_600,
-    },
-    textValue: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_max,
-    },
-    title: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.gray_800,
-    },
-  })
-
-  const colors = {
-    label: color.gray_600,
-    skeleton: color.gray_100,
-  }
-
-  return {styles, colors} as const
 }

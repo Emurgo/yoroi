@@ -1,25 +1,25 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
+import {Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useIsKeyboardOpen} from '../../../../kernel/keyboard/useIsKeyboardOpen'
-import {isEmptyString} from '../../../../kernel/utils'
-import {ShowDisclaimer} from '../../../Legal/Disclaimer/ShowDisclaimer'
-import {AmountCard} from '../../../ui/AmountCard/AmountCard'
-import {Button, ButtonType} from '../../../ui/Button/Button'
-import {EstimateSummary} from '../../../ui/EstimateSummary/EstimateSummary'
-import {Icon} from '../../../ui/Icon'
-import {useModal} from '../../../ui/Modal/ModalContext'
-import {ProtocolAvatar} from '../../../ui/ProtocolAvatar/ProtocolAvatar'
-import {RefreshButton} from '../../../ui/RefreshButton/RefreshButton'
-import {ShowPriceImpact} from '../../../ui/ShowPriceImpact/ShowPriceImpact'
-import {Space} from '../../../ui/Space/Space'
-import {WarnLimitPrice} from '../../../ui/WarnLimitPrice/WarnLimitPrice'
-import {undefinedToken} from '../../common/constants'
+import {undefinedToken} from '~/features/Swap/common/constants'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useStrings} from '~/features/Swap/common/useStrings'
+import {useIsKeyboardOpen} from '~/kernel/keyboard/useIsKeyboardOpen'
+import {AmountCard} from '~/ui/AmountCard/AmountCard'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {EstimateSummary} from '~/ui/EstimateSummary/EstimateSummary'
+import {Icon} from '~/ui/Icon'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
+import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
+import {Space} from '~/ui/Space/Space'
+import {WarnLimitPrice} from '~/ui/WarnLimitPrice/WarnLimitPrice'
+import {isEmptyString} from '~/wallets/utils/string'
 import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapProvider'
+import {ShowDisclaimer} from '../Legal/Disclaimer/ShowDisclaimer'
 import {LimitInput} from './LimitInput'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
@@ -28,7 +28,7 @@ const BOTTOM_ACTION_SECTION = 180
 export const SwapMainScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
-  const {styles, color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   const {height: deviceHeight} = useWindowDimensions()
   const isKeyboardOpen = useIsKeyboardOpen()
   const swapForm = useSwap()
@@ -64,13 +64,7 @@ export const SwapMainScreen = () => {
         ),
         footer: (
           <View
-            style={[
-              styles.buttonsWrapper,
-              atoms.align_center,
-              atoms.justify_between,
-              atoms.flex_row,
-              atoms.gap_lg,
-            ]}
+            style={[a.align_center, a.justify_between, a.flex_row, a.gap_lg]}
           >
             <Button
               size="S"
@@ -93,18 +87,11 @@ export const SwapMainScreen = () => {
   }
 
   return (
-    <View
-      style={[
-        styles.root,
-        styles.flex,
-        atoms.pb_lg,
-        {backgroundColor: color.bg_color_max},
-      ]}
-    >
-      <ScrollView style={[styles.padding, atoms.px_lg]}>
+    <View style={[a.flex_1, a.pb_lg, {backgroundColor: p.bg_color_max}]}>
+      <ScrollView style={[a.px_lg]}>
         <ShowDisclaimer type="swap" />
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <View
           onLayout={(event) => {
@@ -112,18 +99,9 @@ export const SwapMainScreen = () => {
             setContentHeight(height + BOTTOM_ACTION_SECTION)
           }}
         >
-          <View style={[styles.container, atoms.gap_lg]}>
-            <View
-              style={[styles.between, atoms.flex_row, atoms.justify_between]}
-            >
-              <View
-                style={[
-                  styles.group,
-                  atoms.flex_row,
-                  atoms.align_center,
-                  atoms.gap_2xs,
-                ]}
-              >
+          <View style={[a.gap_lg]}>
+            <View style={[a.flex_row, a.justify_between]}>
+              <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
                 <Button
                   onPress={() =>
                     swapForm.action({type: 'ChangeOrderType', value: 'market'})
@@ -131,12 +109,9 @@ export const SwapMainScreen = () => {
                   type={ButtonType.SecondaryText}
                   title={strings.marketButton}
                   size="M"
-                  fontOverride={atoms.body_1_lg_medium}
+                  fontOverride={a.body_1_lg_medium}
                   {...(swapForm.orderType === 'market' && {
-                    style: [
-                      styles.activeButton,
-                      {backgroundColor: color.gray_100},
-                    ],
+                    style: [{backgroundColor: p.gray_100}],
                   })}
                 />
 
@@ -147,24 +122,14 @@ export const SwapMainScreen = () => {
                   type={ButtonType.SecondaryText}
                   title={strings.limitButton}
                   size="M"
-                  fontOverride={atoms.body_1_lg_medium}
+                  fontOverride={a.body_1_lg_medium}
                   {...(swapForm.orderType === 'limit' && {
-                    style: [
-                      styles.activeButton,
-                      {backgroundColor: color.gray_100},
-                    ],
+                    style: [{backgroundColor: p.gray_100}],
                   })}
                 />
               </View>
 
-              <View
-                style={[
-                  styles.group,
-                  atoms.flex_row,
-                  atoms.align_center,
-                  atoms.gap_2xs,
-                ]}
-              >
+              <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
                 <RefreshButton
                   onPress={() => swapForm.action({type: 'Refresh'})}
                   disabled={
@@ -176,40 +141,39 @@ export const SwapMainScreen = () => {
                 <Button
                   type={ButtonType.SecondaryText}
                   icon={Icon.Gear}
-                  style={[styles.gear, atoms.px_sm, atoms.rounded_full]}
+                  style={[a.px_sm, a.rounded_full]}
                   onPress={navigateTo.swapSettings}
                 />
               </View>
             </View>
 
-            <View style={[styles.cards, atoms.gap_sm]}>
+            <View style={[a.gap_sm]}>
               <AmountCard direction="in" />
 
-              <View style={[styles.relative, atoms.relative]}>
+              <View style={[a.relative]}>
                 <Button
                   style={[
-                    styles.switch,
                     {
                       top: -28,
                       borderWidth: 2,
-                      borderColor: color.bg_color_max,
+                      borderColor: p.bg_color_max,
                       width: 48,
                       height: 48,
-                      ...atoms.rounded_full,
-                      ...atoms.absolute,
-                      ...atoms.z_10,
-                      ...atoms.self_center,
                     },
+                    a.rounded_full,
+                    a.absolute,
+                    a.z_10,
+                    a.self_center,
                   ]}
                   fgColorsOverride={{
-                    idle: color.text_primary_medium,
-                    pressed: color.text_primary_max,
-                    disabled: color.text_primary_min,
+                    idle: p.text_primary_medium,
+                    pressed: p.text_primary_max,
+                    disabled: p.text_primary_min,
                   }}
                   bgColorsOverride={{
-                    idle: color.bg_color_min,
-                    pressed: color.bg_color_min,
-                    disabled: color.bg_color_max,
+                    idle: p.bg_color_min,
+                    pressed: p.bg_color_min,
+                    disabled: p.bg_color_max,
                   }}
                   type={ButtonType.Circle}
                   icon={Icon.Switch}
@@ -220,22 +184,11 @@ export const SwapMainScreen = () => {
               </View>
 
               {!isEmptyString(swapForm.tokenOutInput.error) && (
-                <View
-                  style={[
-                    styles.group,
-                    atoms.flex_row,
-                    atoms.align_center,
-                    atoms.gap_2xs,
-                  ]}
-                >
-                  <Icon.Warning size={15} color={color.sys_magenta_500} />
+                <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
+                  <Icon.Warning size={15} color={p.sys_magenta_500} />
 
                   <Text
-                    style={[
-                      styles.errorText,
-                      atoms.body_3_sm_regular,
-                      {color: color.sys_magenta_500},
-                    ]}
+                    style={[a.body_3_sm_regular, {color: p.sys_magenta_500}]}
                   >
                     {swapForm.tokenOutInput.error}
                   </Text>
@@ -252,20 +205,8 @@ export const SwapMainScreen = () => {
             {swapForm.orderType === 'limit' &&
               swapForm.selectedProtocol.value !== undefined &&
               swapForm.estimate === undefined && (
-                <View
-                  style={[
-                    styles.between,
-                    atoms.flex_row,
-                    atoms.justify_between,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.label,
-                      atoms.body_1_lg_regular,
-                      {color: color.text_gray_low},
-                    ]}
-                  >
+                <View style={[a.flex_row, a.justify_between]}>
+                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
                     {strings.route}
                   </Text>
 
@@ -283,13 +224,10 @@ export const SwapMainScreen = () => {
 
       <View
         style={[
-          styles.actions,
-          atoms.p_lg,
-          (deviceHeight < contentHeight || isKeyboardOpen) &&
-            styles.actionBorder,
-          (deviceHeight < contentHeight || isKeyboardOpen) && atoms.border_t,
+          a.p_lg,
+          (deviceHeight < contentHeight || isKeyboardOpen) && a.border_t,
           (deviceHeight < contentHeight || isKeyboardOpen) && {
-            borderTopColor: color.gray_200,
+            borderTopColor: p.gray_200,
           },
         ]}
       >
@@ -308,23 +246,3 @@ export const SwapMainScreen = () => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  cards: {},
-  relative: {},
-  switch: {},
-  root: {},
-  container: {},
-  flex: {
-    ...a.flex_1,
-  },
-  padding: {},
-  actions: {},
-  actionBorder: {},
-  activeButton: {},
-  between: {},
-  group: {},
-  gear: {},
-  errorText: {},
-  label: {},
-})

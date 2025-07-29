@@ -4,11 +4,11 @@ import * as React from 'react'
 import {Image, Text, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, ButtonType} from '../../../../ui/Button/Button'
-import {Icon} from '../../../../ui/Icon'
-import {useModal} from '../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../ui/Space/Space'
-import {formatTimeSpan} from '../../../../wallets/utils/timeUtils'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {formatTimeSpan} from '~/wallets/utils/timeUtils'
 import {useStrings} from './usePoolTransition'
 
 export const PoolTransitionModal = ({

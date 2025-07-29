@@ -1,6 +1,6 @@
 import {defineMessages, useIntl} from 'react-intl'
 
-import {txLabels} from '../../../../kernel/i18n/global-messages'
+import {txLabels} from '~/kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()

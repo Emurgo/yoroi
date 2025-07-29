@@ -4,8 +4,8 @@ import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
 import Markdown from 'react-native-marked'
-import {LanguageCode} from '../../../kernel/i18n/localization'
-import {Space} from '../../../ui/Space/Space'
+import {LanguageCode} from '~/kernel/i18n/localization'
+import {Space} from '~/ui/Space/Space'
 import {loadPrivacyPolicy} from './loadPrivacyPolicy'
 
 const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {

@@ -1,10 +1,10 @@
 import React from 'react'
 
-import {Banner, ClickableBanner} from '../../../../components/Banner/Banner'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useHasPendingTx, useSync} from '../../../../wallets/hooks'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useStrings} from '../../common/strings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/features/Send/common/useStrings'
+import {Banner, ClickableBanner} from '~/ui/Banner/Banner'
+import {Space} from '~/ui/Space/Space'
+import {useHasPendingTx, useSync} from '~/wallets/hooks'
 
 export const ShowErrors = () => {
   const strings = useStrings()
@@ -22,7 +22,7 @@ export const ShowErrors = () => {
           text={strings.errorBannerNetworkError}
         />
 
-        <Spacer height={16} />
+        <Space.Height.md />
       </>
     )
   } else if (hasPendingTx) {
@@ -30,7 +30,7 @@ export const ShowErrors = () => {
       <>
         <Banner error text={strings.errorBannerPendingOutgoingTransaction} />
 
-        <Spacer height={16} />
+        <Space.Height.md />
       </>
     )
   }

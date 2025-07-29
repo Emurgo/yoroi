@@ -1,13 +1,13 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {useStrings} from '../../../common/hooks/useStrings'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,
-} from '../../../context/PortfolioProvider'
+} from '~/features/Portfolio/context/PortfolioProvider'
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 
 export const TotalTokensValue = ({amount}: Props) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {listTab} = usePortfolio()
   const title =
     listTab === PortfolioListTab.Wallet
@@ -24,25 +24,15 @@ export const TotalTokensValue = ({amount}: Props) => {
       : strings.totalDAppValue
 
   return (
-    <View style={styles.root}>
+    <View style={[a.py_lg]}>
       <TotalTokensValueContent
         amount={amount}
-        headerCard={<Text style={[styles.normalText]}>{title}</Text>}
+        headerCard={
+          <Text style={[a.body_3_sm_regular, {color: p.gray_600}]}>
+            {title}
+          </Text>
+        }
       />
     </View>
   )
-}
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.py_lg,
-    },
-    normalText: {
-      ...atoms.body_3_sm_regular,
-      color: color.gray_600,
-    },
-  })
-
-  return {styles} as const
 }

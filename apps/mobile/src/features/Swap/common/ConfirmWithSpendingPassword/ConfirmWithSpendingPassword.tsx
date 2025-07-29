@@ -1,13 +1,13 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {TextInput as RNTextInput, StyleSheet, View} from 'react-native'
+import {TextInput as RNTextInput, View} from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {Text} from '../../../../components/Text'
-import {TextInput} from '../../../../components/TextInput/TextInput'
-import {debugWalletInfo, features} from '../../../../kernel/features'
-import {useStrings} from '../../common/strings'
+import {useStrings} from '~/features/Swap/common/useStrings'
+import {debugWalletInfo, features} from '~/kernel/features'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
+import {TextInput} from '~/ui/TextInput/TextInput'
 import {ActivityIndicator} from '../ConfirmRawTx/ActivityIndicator'
 import {getErrorMessage} from '../errors'
 
@@ -36,13 +36,19 @@ export const ConfirmWithSpendingPassword = ({
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
   const errorMessage = error ? getErrorMessage(error, strings) : null
 
   return (
-    <View style={styles.root}>
-      <Text style={styles.modalText}>
+    <View style={[a.flex_1, a.px_lg]}>
+      <Text
+        style={[
+          {paddingHorizontal: 70},
+          a.text_center,
+          {paddingBottom: 8, color: p.gray_900},
+        ]}
+      >
         {summary ?? strings.enterSpendingPassword}
       </Text>
 
@@ -61,7 +67,7 @@ export const ConfirmWithSpendingPassword = ({
         autoComplete="off"
       />
 
-      <Spacer fill />
+      <Space.Height._2xs fill />
 
       <Button
         testID="swapButton"
@@ -71,37 +77,17 @@ export const ConfirmWithSpendingPassword = ({
       />
 
       {isLoading && (
-        <View style={styles.loading}>
+        <View
+          style={[
+            a.absolute,
+            {height: '100%', left: 0, right: 0},
+            a.align_center,
+            a.justify_center,
+          ]}
+        >
           <ActivityIndicator />
         </View>
       )}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    modalText: {
-      paddingHorizontal: 70,
-      ...atoms.text_center,
-      paddingBottom: 8,
-      color: color.gray_900,
-    },
-    loading: {
-      ...atoms.absolute,
-      height: '100%',
-      left: 0,
-      right: 0,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-  })
-
-  return styles
 }

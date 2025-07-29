@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {Chain} from '@yoroi/types'
 
-import {getWalletFactory} from '../../features/WalletManager/network-manager/get-wallet-factory'
+import {getWalletFactory} from '~/features/WalletManager/network-manager/get-wallet-factory'
 import {keyManager} from './key-manager/key-manager'
 import {wrappedCsl} from './wrappedCsl'
 

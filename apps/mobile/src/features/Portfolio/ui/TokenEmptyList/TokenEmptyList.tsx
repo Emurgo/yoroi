@@ -1,8 +1,8 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {useStrings} from '../../common/hooks/useStrings'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {AssetTokenImage} from '../illustrations/AssetTokenImage/AssetTokenImage'
 
 type Props = {
@@ -11,42 +11,28 @@ type Props = {
 
 export const TokenEmptyList = ({emptyText}: Props) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
-    <View style={styles.containerAssetToken}>
-      <View style={styles.boxAssetToken}>
+    <View
+      style={[
+        a.flex_col,
+        a.justify_center,
+        a.align_center,
+        a.w_full,
+        a.gap_lg,
+        a.flex_1,
+      ]}
+    >
+      <View
+        style={[{width: 280, height: 280}, a.justify_center, a.align_center]}
+      >
         <AssetTokenImage />
       </View>
 
-      <Text style={styles.textEmpty}>{emptyText ?? strings.noTokensFound}</Text>
+      <Text style={[{color: p.gray_max}, a.heading_3_medium, a.font_semibold]}>
+        {emptyText ?? strings.noTokensFound}
+      </Text>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    boxAssetToken: {
-      width: 280,
-      height: 280,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    containerAssetToken: {
-      ...atoms.flex_col,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-      ...atoms.w_full,
-      ...atoms.gap_lg,
-      ...atoms.flex_1,
-    },
-    textEmpty: {
-      color: color.gray_max,
-      ...atoms.heading_3_medium,
-      ...atoms.font_semibold,
-    },
-  })
-
-  return {styles} as const
 }

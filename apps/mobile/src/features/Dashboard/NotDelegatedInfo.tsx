@@ -3,9 +3,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, View} from 'react-native'
 
-import NotDelegatedImage from '../../assets/img/testnet/no-transactions-yet.png'
-import {Line} from '../../ui/Line/Line'
-import {Text} from '../../ui/Text/Text'
+import {Line} from '~/ui/Line/Line'
+import {Text} from '~/ui/Text/Text'
+import NotDelegatedImage from '../assets/img/testnet/no-transactions-yet.png'
 
 export const NotDelegatedInfo = () => {
   const strings = useStrings()

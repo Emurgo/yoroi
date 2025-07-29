@@ -4,12 +4,9 @@ import {useNotificationManager} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
 
-import {
-  isTxHistoryRoute,
-  isWalletSelectionRoute,
-} from '../../../kernel/navigation'
-import {useNotificationDisplaySettings} from '../../Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {useNotificationDisplaySettings} from '~/features/Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {isTxHistoryRoute, isWalletSelectionRoute} from '~/kernel/navigation'
 import {pushNotificationsManager} from '../common/notification-manager'
 import {NotificationPopup} from '../common/NotificationPopup'
 import {NotificationStack} from '../common/NotificationStack'

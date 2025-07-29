@@ -3,12 +3,12 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {View} from 'react-native'
 
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {Text} from '../../../../components/Text'
-import {usePortfolioPrimaryBreakdown} from '../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
-import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useStrings} from '../../common/strings'
+import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/features/Transactions/common/useStrings'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
+import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 export const LockedDeposit = ({
   ignorePrivacy = false,
@@ -48,7 +48,7 @@ const FormattedAmount = ({amount}: {amount: string}) => {
     <Row>
       <Label />
 
-      <Spacer width={4} />
+      <Space.Width.xs />
 
       <Text style={[{color: p.gray_600}, a.body_2_md_regular]}>{amount}</Text>
     </Row>

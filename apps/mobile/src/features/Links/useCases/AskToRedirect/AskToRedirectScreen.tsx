@@ -1,23 +1,16 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  Linking,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  ViewProps,
-} from 'react-native'
+import {Linking, ScrollView, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/features/Links/common/useStrings'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 
 export const AskToRedirectScreen = ({link}: {link: string}) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {closeModal} = useModal()
 
   const handleOnConfirm = () => {
@@ -27,14 +20,19 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
 
   // TODO: revisit check with product size and copy
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+    <SafeAreaView
+      edges={['bottom', 'left', 'right']}
+      style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}
+    >
       <ScrollView bounces={false}>
-        <Text style={styles.text}>{strings.askToRedirectDescription}</Text>
+        <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
+          {strings.askToRedirectDescription}
+        </Text>
 
-        <Spacer fill />
+        <View style={[{flex: 1}]} />
       </ScrollView>
 
-      <Actions style={styles.actions}>
+      <Actions style={[a.flex_row, a.justify_between]}>
         <Button
           size="S"
           type={ButtonType.Secondary}
@@ -42,7 +40,7 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
           title={strings.cancel}
         />
 
-        <Spacer width={16} />
+        <Space.Width.md />
 
         <Button size="S" onPress={handleOnConfirm} title={strings.ok} />
       </Actions>
@@ -51,27 +49,3 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
 }
 
 const Actions = (props: ViewProps) => <View {...props} />
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-      ...atoms.px_lg,
-    },
-    actions: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    text: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_max,
-    },
-  })
-  const colors = {
-    danger: color.sys_magenta_500,
-    warning: color.sys_orange_500,
-  }
-  return {styles, colors}
-}

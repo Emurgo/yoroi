@@ -5,19 +5,19 @@ import * as React from 'react'
 import {Alert, Animated, Text, TouchableOpacity, View} from 'react-native'
 import {Swipeable} from 'react-native-gesture-handler'
 
-import {features} from '../../../../kernel/features'
-import {Icon} from '../../../../ui/Icon'
-import {Loading} from '../../../../ui/Loading/Loading'
-import {Space, SpaceHeight} from '../../../../ui/Space/Space'
-import {isByron, isShelley} from '../../../../wallets/cardano/utils'
 import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
-} from '../../../SetupWallet/illustrations/ChevronRight'
-// import {useAutomaticWalletOpener} from '../../context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '../../context/WalletManagerProvider'
-import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
-import {useSyncWalletInfo} from '../../hooks/useSyncWalletInfo'
+} from '~/features/SetupWallet/illustrations/ChevronRight'
+import {features} from '~/kernel/features'
+import {Icon} from '~/ui/Icon'
+import {Loading} from '~/ui/Loading/Loading'
+import {Space} from '~/ui/Space/Space'
+import {isByron, isShelley} from '~/wallets/cardano/utils'
+// import {useAutomaticWalletOpener} from '../context/AutomaticWalletOpeningProvider'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
 
 type Props = {
   walletMeta: Wallet.Meta
@@ -191,7 +191,7 @@ const Chevron = ({pressed}: {pressed: boolean}) => {
         <ChevronRightGrayIllustration />
       )}
 
-      <SpaceHeight fill size="sm" />
+      <Space.Height.sm fill />
     </View>
   )
 }

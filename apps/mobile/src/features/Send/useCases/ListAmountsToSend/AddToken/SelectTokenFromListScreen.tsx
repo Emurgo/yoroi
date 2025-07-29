@@ -1,29 +1,29 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {infoFilterByName, isPrimaryToken} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
 import React from 'react'
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Text} from '../../../../../components/Text'
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
-import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
-import {MediaGallery} from '../../../../Portfolio/common/MediaGallery/MediaGallery'
-import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {limitOfSecondaryAmountsPerTx} from '../../../common/constants'
-import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
-import {useStrings} from '../../../common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
+import {limitOfSecondaryAmountsPerTx} from '~/features/SetupWallet/common/constants'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation'
+import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
+import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
+import {MediaGallery} from '../Portfolio/common/MediaGallery/MediaGallery'
+import {TokenAmountItem} from '../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const {targets, selectedTargetIndex, allocated} = useTransfer()
 
   const {wallet} = useSelectedWallet()
@@ -93,8 +93,8 @@ export const SelectTokenFromListScreen = () => {
   )
 
   return (
-    <View style={styles.root}>
-      <View style={styles.subheader}>
+    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+      <View style={[a.px_lg]}>
         {isSearchOpened === false && (
           <Tabs>
             <Tab
@@ -125,7 +125,7 @@ export const SelectTokenFromListScreen = () => {
         {canAddAmount === false && <WarningPanelMaxAmountsReached />}
       </View>
 
-      <View style={[styles.list, isPending && styles.inTransition]}>
+      <View style={[a.flex_1, isPending && {opacity: 0.5}]}>
         {shouldShowNfts ? (
           <ListSpendableNfts
             canAddAmount={canAddAmount}
@@ -205,8 +205,6 @@ const ListSpendables = ({
   isSearching,
   isSearchOpened,
 }: ListSpendableBalancesProps) => {
-  const {styles} = useStyles()
-
   return (
     <FlashList
       data={spendableAmounts}
@@ -217,10 +215,10 @@ const ListSpendables = ({
         />
       )}
       bounces={false}
-      contentContainerStyle={styles.spendableAmountsContent}
+      contentContainerStyle={[a.px_lg]}
       keyExtractor={(_, index) => index.toString()}
       testID="assetList"
-      ItemSeparatorComponent={() => <Spacer height={16} />}
+      ItemSeparatorComponent={() => <Space.Height.md />}
       estimatedItemSize={78}
       ListEmptyComponent={
         <EmptyStatuses
@@ -233,9 +231,8 @@ const ListSpendables = ({
 }
 
 const WarningPanelMaxAmountsReached = () => {
-  const {styles} = useStyles()
   return (
-    <View style={styles.panel}>
+    <View style={[a.py_lg]}>
       <MaxAmountsPerTx />
     </View>
   )
@@ -248,23 +245,29 @@ type TabProps<T> = {
   label: string
 }
 const Tab = <T,>({onPress, active, tab, label}: TabProps<T>) => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const isActive = active === tab
-  const color = isActive ? colors.active : colors.inactive
+  const color = isActive ? p.primary_600 : p.gray_600
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.tabContainer, isActive && styles.tabContainerActive]}
+      style={[
+        a.flex_1,
+        isActive && {borderBottomColor: p.primary_600, borderBottomWidth: 2},
+      ]}
     >
-      <Text style={[styles.tab, {color}]}>{label}</Text>
+      <Text
+        style={[{textAlign: 'center'}, a.py_md, a.body_1_lg_medium, {color}]}
+      >
+        {label}
+      </Text>
     </TouchableOpacity>
   )
 }
 
 const Tabs = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.tabs}>{children}</View>
+  return <View style={{flexDirection: 'row'}}>{children}</View>
 }
 
 type SelectAmountProps = {
@@ -272,7 +275,7 @@ type SelectAmountProps = {
   amount: Portfolio.Token.Amount
 }
 const SelectAmount = ({amount, disabled}: SelectAmountProps) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {closeSearch} = useSearch()
   const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} =
@@ -310,7 +313,10 @@ const SelectAmount = ({amount, disabled}: SelectAmountProps) => {
 
   return (
     <TouchableOpacity
-      style={[styles.item, isPrimary && styles.borderBottom]}
+      style={[
+        a.py_md,
+        isPrimary && {borderBottomColor: p.gray_200, borderBottomWidth: 1},
+      ]}
       onPress={handleOnSelect}
       testID="selectTokenButton"
       disabled={disabled}
@@ -340,32 +346,48 @@ const EmptyStatuses = ({
 }
 
 const NoSpendableAmount = ({text}: {text: string}) => {
-  const {styles} = useStyles()
   return (
-    <View style={styles.imageContainer}>
-      <Spacer height={160} />
+    <View style={[a.flex_1, {textAlign: 'center'}]}>
+      <Space.Height._2xl />
 
-      <NoAssetFoundImage style={styles.image} />
+      <NoAssetFoundImage
+        style={[a.flex_1, {alignSelf: 'center', width: 200, height: 228}]}
+      />
 
-      <Spacer height={25} />
+      <Space.Height.lg />
 
-      <Text style={styles.contentText}>{text}</Text>
+      <Text
+        style={[
+          a.heading_3_medium,
+          {color: p.gray_max, flex: 1, textAlign: 'center'},
+        ]}
+      >
+        {text}
+      </Text>
     </View>
   )
 }
 
 const EmptySearchResult = () => {
-  const {styles} = useStyles()
   const strings = useStrings()
   return (
-    <View style={styles.imageContainer}>
-      <Spacer height={160} />
+    <View style={[a.flex_1, {textAlign: 'center'}]}>
+      <Space.Height._2xl />
 
-      <NoAssetFoundImage style={styles.image} />
+      <NoAssetFoundImage
+        style={[a.flex_1, {alignSelf: 'center', width: 200, height: 228}]}
+      />
 
-      <Spacer height={25} />
+      <Space.Height.lg />
 
-      <Text style={styles.contentText}>{strings.noAssets}</Text>
+      <Text
+        style={[
+          a.heading_3_medium,
+          {color: p.gray_max, flex: 1, textAlign: 'center'},
+        ]}
+      >
+        {strings.noAssets}
+      </Text>
     </View>
   )
 }
@@ -382,15 +404,17 @@ const Counter = <T,>({
   isSearchOpened: boolean
 }) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   if (!isSearchOpened && fungibilityFilter === 'all') {
     return (
-      <View style={styles.counter}>
-        <Text style={styles.counterText}>{strings.youHave}</Text>
+      <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
+        <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
+          {strings.youHave}
+        </Text>
 
         <Text
-          style={styles.counterTextBold}
+          style={[{color: p.primary_600}, a.body_2_md_medium]}
         >{` ${counter} ${strings.assets(counter)}`}</Text>
       </View>
     )
@@ -398,11 +422,13 @@ const Counter = <T,>({
 
   if (!isSearchOpened && fungibilityFilter === 'fts') {
     return (
-      <View style={styles.counter}>
-        <Text style={styles.counterText}>{strings.youHave}</Text>
+      <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
+        <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
+          {strings.youHave}
+        </Text>
 
         <Text
-          style={styles.counterTextBold}
+          style={[{color: p.primary_600}, a.body_2_md_medium]}
         >{` ${counter} ${strings.tokens(counter)}`}</Text>
       </View>
     )
@@ -410,11 +436,13 @@ const Counter = <T,>({
 
   if (!isSearchOpened && fungibilityFilter === 'nfts') {
     return (
-      <View style={styles.counter}>
-        <Text style={styles.counterText}>{strings.youHave}</Text>
+      <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
+        <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
+          {strings.youHave}
+        </Text>
 
         <Text
-          style={styles.counterTextBold}
+          style={[{color: p.primary_600}, a.body_2_md_medium]}
         >{` ${counter} ${strings.nfts(counter)}`}</Text>
       </View>
     )
@@ -422,12 +450,14 @@ const Counter = <T,>({
 
   if (isSearching) {
     return (
-      <View style={styles.counter}>
+      <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
         <Text
-          style={styles.counterTextBold}
+          style={[{color: p.primary_600}, a.body_2_md_medium]}
         >{`${counter} ${strings.assets(counter)} `}</Text>
 
-        <Text style={styles.counterText}>{strings.found}</Text>
+        <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
+          {strings.found}
+        </Text>
       </View>
     )
   }
@@ -451,86 +481,3 @@ const amountFilterByType =
   (type: Portfolio.Token.Type) =>
   (amount: Portfolio.Token.Amount): boolean =>
     amount.info.type === type
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    subheader: {
-      ...atoms.px_lg,
-    },
-    item: {
-      ...atoms.py_md,
-    },
-    borderBottom: {
-      borderBottomColor: color.gray_200,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-    },
-    panel: {
-      ...atoms.py_lg,
-    },
-    tabs: {
-      flexDirection: 'row',
-    },
-    tabContainer: {
-      flex: 1,
-    },
-    tabContainerActive: {
-      borderBottomColor: color.primary_600,
-      borderBottomWidth: 2,
-    },
-    tab: {
-      textAlign: 'center',
-      ...atoms.py_md,
-      ...atoms.body_1_lg_medium,
-    },
-    list: {
-      flex: 1,
-    },
-    spendableAmountsContent: {
-      ...atoms.px_lg,
-    },
-    inTransition: {
-      opacity: 0.5,
-    },
-    image: {
-      flex: 1,
-      alignSelf: 'center',
-      width: 200,
-      height: 228,
-    },
-    imageContainer: {
-      flex: 1,
-      textAlign: 'center',
-    },
-    contentText: {
-      ...atoms.heading_3_medium,
-      color: color.gray_max,
-      flex: 1,
-      textAlign: 'center',
-    },
-    counter: {
-      ...atoms.p_lg,
-      justifyContent: 'center',
-      flexDirection: 'row',
-    },
-    counterText: {
-      color: color.primary_600,
-      ...atoms.body_2_md_regular,
-    },
-    counterTextBold: {
-      color: color.primary_600,
-      ...atoms.body_2_md_medium,
-    },
-  })
-
-  const colors = {
-    active: color.primary_600,
-    inactive: color.gray_600,
-  }
-
-  return {styles, colors}
-}

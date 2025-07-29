@@ -4,13 +4,13 @@ import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
-import {ResetErrorRef} from '../../../../components/Boundary/Boundary'
-import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {Icon} from '../../../../ui/Icon'
-import {usePortfolioPrimaryBalance} from '../../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {usePrivacyMode} from '../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {ResetErrorRef} from '~/ui/Boundary/Boundary'
+import {Icon} from '~/ui/Icon'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {Space} from '~/ui/Space/Space'
+import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const {wallet, meta} = useSelectedWallet()
@@ -19,7 +19,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 
   return (
     <View>
-      <Spacer height={14} />
+      <Space.Height.sm />
 
       <CenteredRow>
         <Icon.WalletAvatar
@@ -29,7 +29,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
         />
       </CenteredRow>
 
-      <Spacer height={10} />
+      <Space.Height.sm />
 
       <TouchableOpacity
         onPress={() => togglePrivacyMode()}

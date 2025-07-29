@@ -4,11 +4,11 @@ import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
 import * as React from 'react'
 
-import {useBalances} from '../../../wallets/hooks'
-import {Amounts, Quantities} from '../../../wallets/utils/utils'
-import {BannerIds, showBanner} from '../../Notifications/common/banners'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useBalances} from '~/wallets/hooks'
+import {Amounts, Quantities} from '~/wallets/utils/utils'
+import {BannerIds, showBanner} from '../Notifications/common/banners'
 import {useStrings} from './useStrings'
 
 export const useBuyCryptoBanner = () => {
@@ -21,7 +21,10 @@ export const useBuyCryptoBanner = () => {
   const strings = useStrings()
 
   const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
+  const primaryAmount = Amounts.getAmount(
+    balances,
+    wallet.portfolioPrimaryTokenInfo.id,
+  )
   const hasZeroPt = Quantities.isZero(primaryAmount.quantity)
 
   const queryKey = ['buyCryptoBanner', wallet?.id, network]
@@ -40,16 +43,23 @@ export const useBuyCryptoBanner = () => {
     queryFn: async () => {
       if (hasZeroPt) {
         const last = (await manager.events.read()).find(
-          (ev) => ev.trigger === Notifications.Trigger.Banner && ev.id === BannerIds.BuyCrypto,
+          (ev) =>
+            ev.trigger === Notifications.Trigger.Banner &&
+            ev.id === BannerIds.BuyCrypto,
         )
 
         const lastPreprod = (await manager.events.read()).find(
-          (ev) => ev.trigger === Notifications.Trigger.Banner && ev.id === BannerIds.TestAda,
+          (ev) =>
+            ev.trigger === Notifications.Trigger.Banner &&
+            ev.id === BannerIds.TestAda,
         )
 
         if (network === Chain.Network.Preprod) {
           manager.events.remove(BannerIds.BuyCrypto)
-          if (!lastPreprod || new Date(lastPreprod.date).getTime() + time.oneMonth < Date.now()) {
+          if (
+            !lastPreprod ||
+            new Date(lastPreprod.date).getTime() + time.oneMonth < Date.now()
+          ) {
             showBanner({
               id: BannerIds.TestAda,
               title: strings.preprodFaucetBannerTitle,
@@ -59,7 +69,10 @@ export const useBuyCryptoBanner = () => {
           }
         } else {
           manager.events.remove(BannerIds.TestAda)
-          if (!last || new Date(last.date).getTime() + time.oneMonth < Date.now()) {
+          if (
+            !last ||
+            new Date(last.date).getTime() + time.oneMonth < Date.now()
+          ) {
             showBanner({
               id: BannerIds.BuyCrypto,
               title: strings.needMoreCrypto,

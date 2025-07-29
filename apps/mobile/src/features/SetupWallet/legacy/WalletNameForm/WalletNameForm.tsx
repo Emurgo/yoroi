@@ -11,17 +11,17 @@ import {
 } from 'react-native'
 
 import {defineMessages, useIntl} from 'react-intl'
-import globalMessages from '../../../../kernel/i18n/global-messages'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {Button} from '../../../../ui/Button/Button'
-import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Text} from '../../../../ui/Text/Text'
-import {TextInput} from '../../../../ui/TextInput/TextInput'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import globalMessages from '~/kernel/i18n/global-messages'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button} from '~/ui/Button/Button'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Text} from '~/ui/Text/Text'
+import {TextInput} from '~/ui/TextInput/TextInput'
 import {
   getWalletNameError,
   validateWalletName,
-} from '../../../../wallets/utils/validators'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
+} from '~/wallets/utils/validators'
 
 type Props = {
   onSubmit: ({name}: {name: string}) => void

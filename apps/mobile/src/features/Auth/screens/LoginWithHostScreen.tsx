@@ -4,9 +4,9 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
-import {usePromise} from '../../../hooks/usePromise'
-import {Button} from '../../../ui/Button/Button'
-import {SpaceHeight} from '../../../ui/Space/Space'
+import {usePromise} from '~/hooks/usePromise'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
 import {useAuth} from '../context/AuthProvider'
 import {Logo} from '../ui/illustrations/Logo'
 
@@ -17,7 +17,7 @@ export const LoginWithHostScreen = () => {
 
   return (
     <View style={[a.flex_1, a.flex_col, a.justify_between]}>
-      <SpaceHeight fill size="lg" />
+      <Space.Height.lg fill />
 
       <MiddleSection>
         <Logo />

@@ -2,11 +2,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
-import {Boundary} from '../../components/Boundary/Boundary'
 import {
   defaultStackNavigationOptions,
   PortfolioRoutes,
-} from '../../kernel/navigation'
+} from '~/kernel/navigation'
+import {Boundary} from '~/ui/Boundary/Boundary'
 import {SearchProvider} from '../Search/SearchContext'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {TxDetails} from '../Transactions/useCases/TxDetails/TxDetails'

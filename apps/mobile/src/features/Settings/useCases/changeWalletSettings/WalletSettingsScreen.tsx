@@ -7,24 +7,20 @@ import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-
-import {
-  DIALOG_BUTTONS,
-  showConfirmationDialog,
-} from '../../../../kernel/dialogs'
-import {confirmationMessages} from '../../../../kernel/i18n/global-messages'
+import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {useAuthSetting} from '~/features/Auth/hooks'
+import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
+import {confirmationMessages} from '~/kernel/i18n/global-messages'
 import {
   SettingsRouteNavigation,
   useWalletNavigation,
-} from '../../../../kernel/navigation/navigation'
-import {Icon} from '../../../../ui/Icon'
-import {SettingsSwitch} from '../../../../ui/SettingsSwitch/SettingsSwitch'
-import {Space} from '../../../../ui/Space/Space'
-import {useResync} from '../../../../wallets/hooks'
-import {useAuth} from '../../../Auth/context/AuthProvider'
-import {useAuthSetting} from '../../../Auth/hooks'
-import {useAddressMode} from '../../../WalletManager/hooks/useAddressMode'
-import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
+} from '~/kernel/navigation/navigation'
+import {Icon} from '~/ui/Icon'
+import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
+import {Space} from '~/ui/Space/Space'
+import {useResync} from '~/wallets/hooks'
 import {useNavigateTo} from '../../common/navigation'
 import {SettingsCollateralItem} from '../../SettingsCollateralItem'
 import {
@@ -185,7 +181,7 @@ const ResyncButton = () => {
 
   const {walletIdChanged} = useSetupWallet()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
-  const {resync, isLoading} = useResync(wallet, {
+  const {resync, isPending} = useResync(wallet, {
     onMutate: () => {
       settingsNavigation.navigate('settings-preparing-wallet')
     },
@@ -193,7 +189,11 @@ const ResyncButton = () => {
 
   const onResync = async () => {
     const selection = await showConfirmationDialog(
-      confirmationMessages.resync,
+      {
+        title: confirmationMessages.resync.title,
+        message: confirmationMessages.resync.message,
+        btnYesLabel: confirmationMessages.resync.yesButton,
+      },
       intl,
     )
     if (selection === DIALOG_BUTTONS.YES) {
@@ -212,7 +212,7 @@ const ResyncButton = () => {
       icon={<Icon.Resync {...iconProps} />}
       label={strings.resync}
       onNavigate={onResync}
-      disabled={isLoading}
+      disabled={isPending}
     />
   )
 }
@@ -247,7 +247,11 @@ const useLogout = () => {
 
   return async () => {
     const selection = await showConfirmationDialog(
-      confirmationMessages.logout,
+      {
+        title: confirmationMessages.logout.title,
+        message: confirmationMessages.logout.message,
+        btnYesLabel: confirmationMessages.logout.yesButton,
+      },
       intl,
     )
     if (selection === DIALOG_BUTTONS.YES) {

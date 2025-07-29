@@ -1,15 +1,17 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Tab, TabPanel, Tabs} from '../../../../components/Tabs/Tabs'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useSearchOnNavBar} from '../../../Search/SearchContext'
-import {NetworkTag} from '../../../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {useGetDAppsPortfolioBalance} from '../../common/hooks/useGetDAppsPortfolioBalance'
-import {useStrings} from '../../common/hooks/useStrings'
-import {PortfolioListTab, usePortfolio} from '../../context/PortfolioProvider'
+import {useGetDAppsPortfolioBalance} from '~/features/Portfolio/common/hooks/useGetDAppsPortfolioBalance'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {
+  PortfolioListTab,
+  usePortfolio,
+} from '~/features/Portfolio/context/PortfolioProvider'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Tab, TabPanel, Tabs} from '~/ui/Tabs/Tabs'
+import {useSearchOnNavBar} from '../Search/SearchContext'
+import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
 import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'
 
@@ -19,7 +21,7 @@ const tabs = {
 } as const
 
 export const PortfolioTokenListScreen = () => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
   const {listTab, setListTab} = usePortfolio()
@@ -41,7 +43,10 @@ export const PortfolioTokenListScreen = () => {
   })
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+    <SafeAreaView
+      edges={['bottom', 'left', 'right']}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+    >
       {hasDApps && (
         <Tabs>
           <Tab
@@ -67,16 +72,4 @@ export const PortfolioTokenListScreen = () => {
       </TabPanel>
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-  })
-
-  return {styles, atoms, color} as const
 }

@@ -1,7 +1,7 @@
 import {OrderType} from '@yoroi/exchange'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Text, TouchableOpacity, View} from 'react-native'
 
 type ButtonActionGroupProps = {
   onSelect: (orderType: OrderType) => void
@@ -17,49 +17,26 @@ export const ButtonActionGroup = ({
   disabled,
 }: ButtonActionGroupProps) => {
   const handleOnPress = (orderType: OrderType) => onSelect(orderType)
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
-    <View style={styles.container}>
+    <View style={[a.flex_row]}>
       {labels.map((labelItem) => (
-        <View key={labelItem.value} style={styles.buttonWrapper}>
+        <View key={labelItem.value} style={[{paddingRight: 8}]}>
           <TouchableOpacity
             disabled={disabled}
             onPress={() => handleOnPress(labelItem.value)}
             style={[
-              styles.button,
-              labelItem.value === selected && styles.selected,
+              {paddingHorizontal: 8, paddingVertical: 8, borderRadius: 8},
+              labelItem.value === selected && {backgroundColor: p.gray_200},
             ]}
           >
-            <Text style={styles.label}>{labelItem.label}</Text>
+            <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
+              {labelItem.label}
+            </Text>
           </TouchableOpacity>
         </View>
       ))}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-    },
-    buttonWrapper: {
-      paddingRight: 8,
-    },
-    button: {
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      borderRadius: 8,
-    },
-    selected: {
-      backgroundColor: color.gray_200,
-    },
-    label: {
-      color: color.gray_max,
-      ...atoms.body_1_lg_medium,
-    },
-  })
-  return styles
 }

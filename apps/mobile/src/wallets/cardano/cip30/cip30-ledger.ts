@@ -8,7 +8,7 @@ import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/address
 import {cardanoConfig} from '@yoroi/blockchains'
 import {HW, Wallet} from '@yoroi/types'
 
-import {toLedgerSignRequest} from '../../../features/Discover/common/ledger'
+import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
 import {buildCoseSign1FromSignature, makeCip8Key} from '../cip8/cip8'
 import {assertHasAllSigners} from '../common/signatureUtils'
 import {signMessageWithLedger, signTxWithLedger} from '../hw/hw'

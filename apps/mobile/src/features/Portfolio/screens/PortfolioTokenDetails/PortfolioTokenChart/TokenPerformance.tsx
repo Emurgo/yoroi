@@ -1,14 +1,14 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {Text} from '../../../../../components/Text'
-import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
-import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {formatPriceChange} from '../../../common/helpers/priceChange'
-import {TokenChartInterval} from '../../../common/hooks/useGetPortfolioTokenChart'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {PnlTag} from '../../../ui/PnlTag/PnlTag'
+import {formatPriceChange} from '~/features/Portfolio/common/helpers/priceChange'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
+import {PnlTag} from '~/ui/PnlTag/PnlTag'
+import {Text} from '~/ui/Text/Text'
+import {Tooltip} from '~/ui/Tooltip/Tooltip'
+import {useCurrencyPairing} from '../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
 type Props = {
   tokenPerformance?: {
@@ -20,7 +20,7 @@ type Props = {
 }
 
 export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const {currency, config} = useCurrencyPairing()
 
@@ -52,7 +52,7 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
   }, [strings, timeInterval])
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_row, a.justify_between, a.align_center]}>
       <Tooltip
         numberOfLine={3}
         title={
@@ -61,7 +61,7 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
             : strings.tokenPriceChangeTooltip(intervalLabel)
         }
       >
-        <View style={styles.tokenChangeWrapper}>
+        <View style={[a.flex, a.flex_row, a.align_center, {gap: 2}]}>
           <PnlTag withIcon={variant !== 'neutral'} variant={variant}>
             {!tokenPerformance
               ? '—'
@@ -77,53 +77,23 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
         </View>
       </Tooltip>
 
-      <View style={styles.tokenWrapper}>
+      <View style={[a.flex_row, a.gap_2xs, a.align_baseline]}>
         {!tokenPerformance ? (
-          <Text style={styles.tokenPriceSymbol}>—</Text>
+          <Text style={[a.body_3_sm_regular, {color: p.gray_max}]}>—</Text>
         ) : (
           <>
-            <Text style={styles.tokenPrice}>
+            <Text
+              style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_max}]}
+            >
               {formatPriceChange(tokenPerformance.value, config.decimals)}
             </Text>
 
-            <Text style={styles.tokenPriceSymbol}>{currency}</Text>
+            <Text style={[a.body_3_sm_regular, {color: p.gray_max}]}>
+              {currency}
+            </Text>
           </>
         )}
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    tokenWrapper: {
-      ...atoms.flex_row,
-      ...atoms.gap_2xs,
-      ...atoms.align_baseline,
-    },
-
-    tokenChangeWrapper: {
-      ...atoms.flex,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      gap: 2,
-    },
-    tokenPrice: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.gray_max,
-    },
-    tokenPriceSymbol: {
-      ...atoms.body_3_sm_regular,
-      color: color.gray_max,
-    },
-  })
-
-  return {styles} as const
 }

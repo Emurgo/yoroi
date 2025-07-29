@@ -1,16 +1,16 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, TouchableOpacity} from 'react-native'
+import {TouchableOpacity} from 'react-native'
 
-import {Icon} from '../../../../components/Icon'
-import {features} from '../../../../kernel/features'
+import {Icon} from '~/ui/Icon'
+import {features} from '~/kernel/features'
 import {
   PortfolioDetailsTab,
   usePortfolio,
-} from '../../context/PortfolioProvider'
+} from '~/features/Portfolio/context/PortfolioProvider'
 
 const ExportTokenTransactions = () => {
-  const {styles, colors} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {detailsTab} = usePortfolio()
 
   if (
@@ -20,27 +20,12 @@ const ExportTokenTransactions = () => {
     return null
 
   return (
-    <TouchableOpacity style={styles.button}>
-      <Icon.Export size={32} color={colors.primary} />
+    <TouchableOpacity
+      style={[a.flex_row, a.justify_between, a.align_center, {minHeight: 24}]}
+    >
+      <Icon.Export size={32} color={p.primary_500} />
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    button: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-      minHeight: 24,
-    },
-  })
-  const colors = {
-    gray: color.gray_800,
-    primary: color.primary_500,
-  }
-  return {styles, colors} as const
 }
 
 export default ExportTokenTransactions

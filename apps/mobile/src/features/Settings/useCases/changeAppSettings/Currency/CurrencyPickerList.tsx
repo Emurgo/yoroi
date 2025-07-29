@@ -2,7 +2,7 @@ import {atoms as a} from '@yoroi/theme'
 import React from 'react'
 import {FlatList} from 'react-native'
 
-import {CurrencySymbol} from '../../../../../wallets/types/other'
+import {CurrencySymbol} from '~/wallets/types/other'
 import {useCurrencyPairing} from './CurrencyContext'
 import {CurrencyPickerItem} from './CurrencyPickerItem'
 

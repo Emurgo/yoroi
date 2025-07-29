@@ -92,3 +92,6 @@ apps/test/
 artifacts/
 html-report/
 
+#build
+.expo/
+.metro-cache/

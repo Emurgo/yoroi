@@ -2,12 +2,11 @@ import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Explorers} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, StyleSheet, Text, View} from 'react-native'
+import {Linking, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {Button, ButtonType} from '../Button/Button'
-import {Space} from '../Space/Space'
-import {useStrings} from './hooks/useStrings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
 
 export const ExplorerInfoLinks = ({
   value,
@@ -16,21 +15,21 @@ export const ExplorerInfoLinks = ({
   value: string
   type: keyof Explorers.Manager
 }) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
-  const strings = useStrings()
+  const strings = {details: 'Details on'}
 
   if (type === 'token' && isPrimaryToken(value)) return null
 
   return (
     <View>
-      <Space width="sm" />
+      <Space.Width.sm />
 
-      <Text style={[styles.label, {color: color.text_gray_low}]}>
+      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
         {strings.details}
       </Text>
 
-      <View style={styles.linkGroup}>
+      <View style={[a.flex_row, a.gap_lg]}>
         {Object.entries(Explorers.Explorer).map(([title, explorer]) => (
           <View key={explorer}>
             <Button
@@ -48,13 +47,3 @@ export const ExplorerInfoLinks = ({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  label: {
-    ...a.body_2_md_regular,
-  },
-  linkGroup: {
-    ...a.flex_row,
-    ...a.gap_lg,
-  },
-})

@@ -7,7 +7,7 @@ import {
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
+import {useWindowDimensions, View, ViewProps} from 'react-native'
 
 import {useStrings} from '../../features/ReviewTx/common/hooks/useStrings'
 import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
@@ -18,7 +18,6 @@ import {Button, ButtonType} from '../Button/Button'
 import {Icon} from '../Icon'
 import {useModal} from '../Modal/ModalContext'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
-import {Text} from '../Text/Text'
 import {TokenDetails} from '../TokenDetails/TokenDetails'
 import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
 
@@ -71,7 +70,10 @@ export const TokenAmountItem = ({
   }
 
   return (
-    <View style={[style, styles.container]} testID="assetItem">
+    <View
+      style={[style, {flexDirection: 'row', alignItems: 'center'}]}
+      testID="assetItem"
+    >
       <Left>
         <TokenInfoIcon
           info={amount.info}
@@ -83,7 +85,7 @@ export const TokenAmountItem = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="middle"
-          style={[styles.name, {color: p.gray_900}]}
+          style={[a.body_1_lg_medium, {color: p.gray_900}]}
           testID="tokenInfoText"
         >
           {name}
@@ -92,16 +94,25 @@ export const TokenAmountItem = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="middle"
-          style={[styles.detail, {color: p.gray_600}]}
+          style={[{maxWidth: 140}, a.body_3_sm_regular, {color: p.gray_600}]}
           testID="tokenFingerprintText"
         >
           {detail}
         </Text>
       </Middle>
 
-      <Right style={styles.end}>
+      <Right style={[a.align_end]}>
         {!isNft(info) && variant !== 'swap' && (
-          <View testID="tokenAmountText" style={styles.quantityWrapper}>
+          <View
+            testID="tokenAmountText"
+            style={[
+              {width: 150},
+              a.flex_wrap,
+              a.flex_row,
+              a.gap_sm,
+              a.justify_end,
+            ]}
+          >
             {priceImpactRisk === 'moderate' && (
               <Icon.Info size={24} color={priceImpactRiskTextColor} />
             )}
@@ -110,7 +121,9 @@ export const TokenAmountItem = ({
               <Icon.Warning size={24} color={priceImpactRiskTextColor} />
             )}
 
-            <Text style={[styles.quantity, {color: priceImpactRiskTextColor}]}>
+            <Text
+              style={[a.body_1_lg_regular, {color: priceImpactRiskTextColor}]}
+            >
               {formattedQuantity}
             </Text>
           </View>
@@ -118,22 +131,22 @@ export const TokenAmountItem = ({
 
         {variant !== 'swap' && (
           <PairedBalance
-            textStyle={styles.pairedBalance}
+            textStyle={[{textAlign: 'right'}]}
             amount={amount}
             ignorePrivacy={ignorePrivacy}
           />
         )}
 
         {variant === 'swap' && (
-          <View style={styles.row}>
+          <View style={[a.flex, a.flex_row, a.align_center, a.gap_sm]}>
             {amount.quantity > 0n && (
               <View>
-                <Text style={[styles.quantity, {textAlign: 'right'}]}>
+                <Text style={[a.body_1_lg_regular, {textAlign: 'right'}]}>
                   {formattedQuantity}
                 </Text>
 
                 <PairedBalance
-                  textStyle={styles.pairedBalance}
+                  textStyle={[{textAlign: 'right'}]}
                   amount={amount}
                   ignorePrivacy={ignorePrivacy}
                 />
@@ -148,7 +161,7 @@ export const TokenAmountItem = ({
                   idle: p.text_gray_low,
                   pressed: p.text_gray_low,
                 }}
-                style={styles.info}
+                style={[a.pr_2xs, a.pl_2xs]}
                 size="S"
                 icon={Icon.InfoCircle}
                 onPress={handleShowTokenDetails}
@@ -175,64 +188,18 @@ const Right = ({style, ...props}: ViewProps) => (
 export const AmountItemPlaceholder = ({style}: ViewProps) => {
   const {palette: p} = useTheme()
   return (
-    <View style={[style, styles.skeletonLogo]}>
-      <View style={[styles.skeletonTitle, {backgroundColor: p.gray_200}]} />
-
-      <View style={[styles.skeletonBorder, {backgroundColor: p.gray_200}]} />
+    <View
+      style={[
+        style,
+        {display: 'flex', flexDirection: 'row', gap: 12, height: 56},
+      ]}
+    >
+      <View
+        style={[{borderRadius: 8, flexGrow: 3, backgroundColor: p.gray_200}]}
+      />
+      <View
+        style={[{borderRadius: 8, flexGrow: 1, backgroundColor: p.gray_200}]}
+      />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  name: {
-    ...a.body_1_lg_medium,
-  },
-  detail: {
-    maxWidth: 140,
-    ...a.body_3_sm_regular,
-  },
-  quantity: {
-    ...a.body_1_lg_regular,
-  },
-  quantityWrapper: {
-    width: 150,
-    ...a.flex_wrap,
-    ...a.flex_row,
-    ...a.gap_sm,
-    ...a.justify_end,
-  },
-  skeletonLogo: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 12,
-    height: 56,
-  },
-  skeletonTitle: {
-    borderRadius: 8,
-    flexGrow: 3,
-  },
-  skeletonBorder: {
-    borderRadius: 8,
-    flexGrow: 1,
-  },
-  pairedBalance: {
-    textAlign: 'right',
-  },
-  end: {
-    ...a.align_end,
-  },
-  row: {
-    ...a.flex,
-    ...a.flex_row,
-    ...a.align_center,
-    ...a.gap_sm,
-  },
-  info: {
-    ...a.pr_2xs,
-    ...a.pl_2xs,
-  },
-})

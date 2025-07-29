@@ -1,10 +1,10 @@
 import * as React from 'react'
 
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {useStrings} from '../../../Discover/common/useStrings'
-import {ConfirmRawTxWithOs} from '../../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
-import {ConfirmRawTxWithPassword} from '../../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {useStrings} from '../Discover/common/useStrings'
+import {ConfirmRawTxWithOs} from '../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
+import {ConfirmRawTxWithPassword} from '../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
 
 type PromptRootKeyOptions = {
   onSuccess: (rootKey: string) => void

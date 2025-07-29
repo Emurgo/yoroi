@@ -5,13 +5,13 @@ import {Linking, ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {Button} from '../../../../ui/Button/Button'
-import {CardAboutPhrase} from '../../../../ui/CardAboutPhrase/CardAboutPhrase'
-import {LearnMoreButton} from '../../../../ui/LearnMoreButton/LearnMoreButton'
-import {Space, SpaceHeight} from '../../../../ui/Space/Space'
-import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
-import {YoroiZendeskLink} from '../../common/constants'
+import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button} from '~/ui/Button/Button'
+import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
+import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
+import {Space} from '~/ui/Space/Space'
+import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 
 export const AboutRecoveryPhraseScreen = () => {
@@ -65,7 +65,7 @@ export const AboutRecoveryPhraseScreen = () => {
         />
       </ScrollView>
 
-      <SpaceHeight size="lg" fill />
+      <Space.Height.lg fill />
 
       <Actions style={[a.pt_lg, a.gap_lg, a.px_lg]}>
         <LearnMoreButton onPress={handleOnLearMoreButtonPress} />

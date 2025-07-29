@@ -3,9 +3,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 
-import {TxHistoryRouteNavigation} from '../../../kernel/navigation'
-import {Icon} from '../../../ui/Icon'
-import {useWalletNotifications} from '../../Notifications/common/useWalletNotifications'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation'
+import {Icon} from '~/ui/Icon'
+import {useWalletNotifications} from '../Notifications/common/useWalletNotifications'
 
 export const HeaderRightHistory = React.memo(() => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()

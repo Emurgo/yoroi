@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Space} from '~/ui/Space/Space'
 import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
 type Props = {
@@ -76,7 +76,7 @@ const PasswordInput = ({
         summary={summary}
       />
 
-      <Spacer height={10} />
+      <Space.Height.sm />
     </>
   )
 }

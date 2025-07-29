@@ -1,22 +1,22 @@
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
-import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Linking, Text, TouchableOpacity, View} from 'react-native'
 
-import {Accordion} from '../../../../../../components/Accordion/Accordion'
-import {Copiable} from '../../../../../../components/Clipboard/Copiable'
-import {Spacer} from '../../../../../../components/Spacer/Spacer'
-import {features} from '../../../../../../kernel/features'
-import {isEmptyString} from '../../../../../../kernel/utils'
-import {ExplorerInfoLinks} from '../../../../../ReviewTx/common/ExplorerInfoLinks'
-import {useSelectedWallet} from '../../../../../WalletManager/hooks/useSelectedWallet'
-import {usePortfolioTokenDetailParams} from '../../../../common/hooks/useNavigateTo'
-import {useStrings} from '../../../../common/hooks/useStrings'
-import {TokenInfoIcon} from '../../../../ui/TokenAmountItem/TokenInfoIcon'
+import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {Accordion} from '~/features/ReviewTx/common/Accordion'
+import {ExplorerInfoLinks} from '~/features/ReviewTx/common/ExplorerInfoLinks'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {features} from '~/kernel/features'
+import {Copiable} from '~/ui/Copiable/Copiable'
+import {Space} from '~/ui/Space/Space'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
+import {isEmptyString} from '~/wallets/utils/utils'
 import {TokenNews} from './TokenNews'
 
 export const Overview = () => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const [expanded, setExpanded] = useState(true)
   const {id: tokenId} = usePortfolioTokenDetailParams()
@@ -31,150 +31,141 @@ export const Overview = () => {
   const [policyId] = tokenInfo.id.split('.')
 
   return (
-    <View style={styles.scrollView}>
-      <Spacer height={8} />
+    <View style={[a.flex_1]}>
+      <Space.Height.sm />
 
       <Accordion
         label={strings.info}
         expanded={expanded}
         onChange={setExpanded}
-        wrapperStyle={styles.container}
+        wrapperStyle={[a.flex_col, a.gap_xs]}
       >
-        <View style={styles.tokenInfoContainer}>
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
           <TokenInfoIcon
             size="sm"
             info={tokenInfo}
-            imageStyle={styles.tokenLogo}
+            imageStyle={[{width: 32, height: 32}, a.rounded_sm]}
           />
 
-          <Text style={styles.tokenName}>{tokenSymbol}</Text>
+          <Text
+            style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_900}]}
+          >
+            {tokenSymbol}
+          </Text>
         </View>
 
-        <Text style={styles.textBody}>{tokenInfo.description}</Text>
+        <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+          {tokenInfo.description}
+        </Text>
 
-        <Spacer height={24} />
+        <Space.Height.lg />
 
         <View>
-          <Text style={styles.title}>{strings.website}</Text>
+          <Text
+            style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_900}]}
+          >
+            {strings.website}
+          </Text>
 
-          <Spacer height={4} />
+          <Space.Height._2xs />
 
           {!isEmptyString(tokenInfo.website) ? (
             <TouchableOpacity
               onPress={() => Linking.openURL(tokenInfo.website)}
             >
-              <Text style={styles.linkText}>{tokenInfo.website}</Text>
+              <Text
+                style={[
+                  {color: p.primary_500},
+                  a.link_1_lg_underline,
+                  a.flex_1,
+                ]}
+              >
+                {tokenInfo.website}
+              </Text>
             </TouchableOpacity>
           ) : (
-            <Text style={styles.textBody}>-</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>-</Text>
           )}
         </View>
 
-        <Spacer height={24} />
+        <Space.Height.lg />
 
         {!isPrimaryToken(tokenInfo) && (
           <>
             <View>
-              <Text style={styles.title}>{strings.policyID}</Text>
+              <Text
+                style={[
+                  a.body_1_lg_medium,
+                  a.font_semibold,
+                  {color: p.gray_900},
+                ]}
+              >
+                {strings.policyID}
+              </Text>
 
-              <Spacer height={4} />
+              <Space.Height._2xs />
 
-              <View style={styles.row}>
+              <View
+                style={[a.flex_row, a.gap_sm, a.justify_between, a.align_start]}
+              >
                 <Copiable text={policyId ?? ''}>
-                  <Text style={styles.value}>{policyId ?? '--'}</Text>
+                  <Text
+                    style={[
+                      a.body_2_md_regular,
+                      {color: p.text_gray_max},
+                      a.flex_shrink,
+                    ]}
+                  >
+                    {policyId ?? '--'}
+                  </Text>
                 </Copiable>
               </View>
             </View>
 
-            <Spacer height={24} />
+            <Space.Height.lg />
 
             <View>
-              <Text style={styles.title}>{strings.fingerprint}</Text>
+              <Text
+                style={[
+                  a.body_1_lg_medium,
+                  a.font_semibold,
+                  {color: p.gray_900},
+                ]}
+              >
+                {strings.fingerprint}
+              </Text>
 
-              <Spacer height={4} />
+              <Space.Height._2xs />
 
               <Copiable text={tokenInfo.fingerprint ?? ''}>
-                <Text style={styles.value}>
+                <Text
+                  style={[
+                    a.body_2_md_regular,
+                    {color: p.text_gray_max},
+                    a.flex_shrink,
+                  ]}
+                >
                   {tokenInfo.fingerprint ?? '--'}
                 </Text>
               </Copiable>
             </View>
 
-            <Spacer height={24} />
+            <Space.Height.lg />
           </>
         )}
 
         <ExplorerInfoLinks type="token" value={tokenInfo.id} />
       </Accordion>
 
-      <Spacer height={16} />
+      <Space.Height.md />
 
       {features.portfolioNews && (
         <>
           <TokenNews />
 
-          <Spacer height={16} />
+          <Space.Height.md />
         </>
       )}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    scrollView: {
-      ...atoms.flex_1,
-    },
-    container: {
-      ...atoms.flex_col,
-      ...atoms.gap_xs,
-    },
-    tokenInfoContainer: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_sm,
-    },
-    tokenName: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.gray_900,
-    },
-    tokenLogo: {
-      width: 32,
-      height: 32,
-      ...atoms.rounded_sm,
-    },
-    textBody: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_600,
-    },
-    linkText: {
-      color: color.primary_500,
-      ...atoms.link_1_lg_underline,
-      ...atoms.flex_1,
-    },
-    title: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.gray_900,
-    },
-    value: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_max,
-      ...atoms.flex_shrink,
-    },
-    row: {
-      ...atoms.flex_row,
-      ...atoms.gap_sm,
-      ...atoms.justify_between,
-      ...atoms.align_start,
-    },
-  })
-
-  const colors = {
-    label: color.gray_600,
-  }
-
-  return {styles, colors} as const
 }

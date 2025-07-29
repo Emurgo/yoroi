@@ -2,9 +2,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Text, TouchableOpacity} from 'react-native'
 
-import {Icon} from '../../../../ui/Icon'
-import {Space} from '../../../../ui/Space/Space'
-import {Device} from '../../../../wallets/types/hw'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
+import {Device} from '~/wallets/types/hw'
 
 type Props = {
   device: Device

@@ -1,16 +1,16 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {LoadingBoundary} from '../../../../../components/Boundary/Boundary'
-import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
-import {usePortfolioTokenDetailParams} from '../../../common/hooks/useNavigateTo'
+import {LoadingBoundary} from '~/ui/Boundary/Boundary'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {PortfolioTokenDetailBalanceSkeleton} from './PortfolioTokenDetailBalanceSkeleton'
 
 export const PortfolioTokenBalance = () => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {
     wallet: {balances},
   } = useSelectedWallet()
@@ -25,47 +25,30 @@ export const PortfolioTokenBalance = () => {
   return (
     <LoadingBoundary fallback={<PortfolioTokenDetailBalanceSkeleton />}>
       <View>
-        <View style={styles.tokenWrapper}>
-          <Text style={styles.tokenBalance}>
+        <View style={[a.flex_row, a.gap_2xs, a.align_baseline]}>
+          <Text
+            style={[a.heading_1_medium, a.font_semibold, {color: p.gray_900}]}
+          >
             {amountBreakdown(tokenInfo).bn.toFormat(2)}
           </Text>
 
-          <Text style={styles.symbol}>{tokenName}</Text>
+          <Text
+            style={[
+              a.body_1_lg_medium,
+              a.font_semibold,
+              {color: p.text_gray_medium},
+            ]}
+          >
+            {tokenName}
+          </Text>
         </View>
 
         <PairedBalance
-          textStyle={styles.usdLabel}
+          textStyle={[a.body_2_md_regular, {color: p.gray_600}]}
           ignorePrivacy
           amount={tokenInfo}
         />
       </View>
     </LoadingBoundary>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    tokenWrapper: {
-      ...atoms.flex_row,
-      ...atoms.gap_2xs,
-      ...atoms.align_baseline,
-    },
-    tokenBalance: {
-      ...atoms.heading_1_medium,
-      ...atoms.font_semibold,
-      color: color.gray_900,
-    },
-    symbol: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.text_gray_medium,
-    },
-    usdLabel: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_600,
-    },
-  })
-
-  return {styles} as const
 }

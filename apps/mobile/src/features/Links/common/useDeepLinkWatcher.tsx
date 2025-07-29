@@ -2,7 +2,7 @@ import {linksYoroiParser, useLinks} from '@yoroi/links'
 import * as React from 'react'
 import {Linking} from 'react-native'
 
-import {logger} from '../../../kernel/logger/logger'
+import {logger} from '~/kernel/logger/logger'
 
 export const useDeepLinkWatcher = () => {
   const {actionStarted} = useLinks()

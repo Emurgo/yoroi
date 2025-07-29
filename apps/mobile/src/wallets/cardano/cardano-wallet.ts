@@ -20,20 +20,6 @@ import {freeze} from 'immer'
 import {defaultMemoize} from 'reselect'
 import {Observable} from 'rxjs'
 
-import {toLedgerSignRequest} from '../../features/Discover/common/ledger'
-import {buildPortfolioBalanceManager} from '../../features/Portfolio/common/helpers/build-balance-manager'
-import {toBalanceManagerSyncArgs} from '../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
-import {
-  makeMemosManager,
-  MemosManager,
-} from '../../features/Transactions/common/memos/memosManager'
-import {LocalizableError} from '../../kernel/i18n/LocalizableError'
-import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
-import {logger} from '../../kernel/logger/logger'
-import {
-  makeWalletEncryptedStorage,
-  WalletEncryptedStorage,
-} from '../../kernel/storage/EncryptedStorage'
 import type {
   AccountStateResponse,
   FundInfoResponse,
@@ -41,9 +27,27 @@ import type {
   RawUtxo,
   TxStatusRequest,
   TxStatusResponse,
-} from '../types/other'
-import {StakingInfo} from '../types/staking'
-import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
+} from '@yoroi/types'
+import {
+  StakingInfo,
+  YoroiEntry,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
+} from '@yoroi/types'
+import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
+import {buildPortfolioBalanceManager} from '~/features/Portfolio/common/helpers/build-balance-manager'
+import {toBalanceManagerSyncArgs} from '~/features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
+import {
+  makeMemosManager,
+  MemosManager,
+} from '~/features/Transactions/common/memos/memosManager'
+import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
+import {logger} from '~/kernel/logger/logger'
+import {
+  makeWalletEncryptedStorage,
+  WalletEncryptedStorage,
+} from '~/kernel/storage/EncryptedStorage'
 import {Quantities} from '../utils/utils'
 import {Cardano, CardanoMobile} from '../wallets'
 import {

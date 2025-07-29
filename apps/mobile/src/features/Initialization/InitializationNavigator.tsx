@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 
-import {InititalizationRoutes} from '../../kernel/navigation'
+import {InititalizationRoutes} from '~/kernel/navigation'
 import {useAuth} from '../Auth/AuthProvider'
 import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
 import {AnalyticsNoticeScreen} from './AnalyticsNoticeScreen'

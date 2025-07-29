@@ -1,20 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {
-  ActivityIndicator,
-  TextInput as RNTextInput,
-  StyleSheet,
-  Text,
-} from 'react-native'
+import {ActivityIndicator, TextInput as RNTextInput, Text} from 'react-native'
 
-import {Icon} from '../../../../../components/Icon'
-import {
-  TextInput,
-  TextInputProps,
-} from '../../../../../components/TextInput/TextInput'
-import {useNavigateTo} from '../../../common/navigation'
-import {ScannerButton} from '../../../common/ScannerButton'
-import {useStrings} from '../../../common/strings'
+import {ScannerButton} from '~/features/Send/common/ScannerButton'
+import {useStrings} from '~/features/Send/common/useStrings'
+import {Icon} from '~/ui/Icon'
+import {TextInput, TextInputProps} from '~/ui/TextInput/TextInput'
+import {useNavigateTo} from '../../common/navigation'
 import {ShowResolvedAddressSelected} from './ShowResolvedAddressSelected'
 
 export const InputReceiver = React.forwardRef(
@@ -27,12 +19,12 @@ export const InputReceiver = React.forwardRef(
     ref: React.ForwardedRef<RNTextInput>,
   ) => {
     const strings = useStrings()
-    const {styles, colors} = useStyles()
+    const {palette: p} = useTheme()
     const navigateTo = useNavigateTo()
     const rightAdornment = isLoading ? (
-      <ActivityIndicator size={25} color={colors.indicatorColor} />
+      <ActivityIndicator size={25} color={p.primary_600} />
     ) : isValid ? (
-      <Icon.Check size={25} color={colors.iconColor} />
+      <Icon.Check size={25} color={p.secondary_500} />
     ) : (
       <ScannerButton onPress={navigateTo.reader} />
     )
@@ -40,7 +32,7 @@ export const InputReceiver = React.forwardRef(
     return (
       <TextInput
         right={rightAdornment}
-        label={<Text style={styles.label}>{strings.addressInputLabel}</Text>}
+        label={<Text style={{fontSize: 15}}>{strings.addressInputLabel}</Text>}
         testID="receiverInput"
         autoCorrect={false}
         focusable
@@ -58,17 +50,3 @@ export const InputReceiver = React.forwardRef(
     )
   },
 )
-
-const useStyles = () => {
-  const {color} = useTheme()
-  const styles = StyleSheet.create({
-    label: {
-      fontSize: 15,
-    },
-  })
-  const colors = {
-    indicatorColor: color.primary_600,
-    iconColor: color.secondary_500,
-  }
-  return {styles, colors}
-}

@@ -4,10 +4,10 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, Text, View} from 'react-native'
 
-import globalMessages from '../../../kernel/i18n/global-messages'
-import {Space} from '../../../ui/Space/Space'
-import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import globalMessages from '~/kernel/i18n/global-messages'
+import {Space} from '~/ui/Space/Space'
+import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useCatalystCurrentFund} from './hooks'
 
 const formatter = amountFormatter({
@@ -37,7 +37,7 @@ export const InsufficientFundsModal = () => {
         })}
       </Text>
 
-      {Platform.OS === 'android' && <Space height="lg" />}
+      {Platform.OS === 'android' && <Space.Height.lg />}
     </View>
   )
 }

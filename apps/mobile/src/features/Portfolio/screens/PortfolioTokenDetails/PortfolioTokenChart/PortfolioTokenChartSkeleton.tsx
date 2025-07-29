@@ -1,20 +1,25 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {ChartPlaceholder} from './ChartPlaceholder'
 
 export const PortfolioTokenChartSkeleton = () => {
-  const {color, styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   return (
-    <View style={styles.root}>
-      <View style={styles.container}>
-        <View style={styles.group}>
-          <SkeletonPlaceholder
-            borderRadius={20}
-            backgroundColor={color.gray_100}
-          >
+    <View style={[a.flex_col]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
+        <View
+          style={[
+            {width: 128},
+            a.flex_row,
+            a.justify_start,
+            a.align_center,
+            a.gap_2xs,
+          ]}
+        >
+          <SkeletonPlaceholder borderRadius={20} backgroundColor={p.gray_100}>
             <SkeletonPlaceholder.Item
               flexDirection="row"
               alignItems="center"
@@ -27,7 +32,7 @@ export const PortfolioTokenChartSkeleton = () => {
           </SkeletonPlaceholder>
         </View>
 
-        <SkeletonPlaceholder borderRadius={20} backgroundColor={color.gray_100}>
+        <SkeletonPlaceholder borderRadius={20} backgroundColor={p.gray_100}>
           <SkeletonPlaceholder.Item width={64} height={16} />
         </SkeletonPlaceholder>
       </View>
@@ -35,26 +40,4 @@ export const PortfolioTokenChartSkeleton = () => {
       <ChartPlaceholder />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_col,
-    },
-    container: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    group: {
-      width: 128,
-      ...atoms.flex_row,
-      ...atoms.justify_start,
-      ...atoms.align_center,
-      ...atoms.gap_2xs,
-    },
-  })
-  return {styles, color} as const
 }

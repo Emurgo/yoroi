@@ -2,11 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {Button} from '../../../../../ui/Button/Button'
-import {useModal} from '../../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../../ui/Space/Space'
+import {ErrorLogo} from '~/features/Exchange/illustrations/ErrorLogo'
+import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from '../../../common/useStrings'
-import {ErrorLogo} from '../../../illustrations/ErrorLogo'
 
 export const ErrorScreen = () => {
   const strings = useStrings()

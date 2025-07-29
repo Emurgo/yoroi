@@ -2,11 +2,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
 
-import {Boundary} from '../../components/Boundary/Boundary'
+import {Boundary} from '~/ui/Boundary/Boundary'
 import {
   defaultStackNavigationOptions,
   ReviewTxRoutes,
-} from '../../kernel/navigation'
+} from '~/kernel/navigation'
 import {useStrings} from './common/hooks/useStrings'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'

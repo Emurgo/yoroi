@@ -1,22 +1,21 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   Image,
   ImageSourcePropType,
   ImageStyle,
   Linking,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
 
-import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {IOpenOrders} from '../../../common/hooks/useGetOpenOrders'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {AssetLogo} from '../../../ui/AssetLogo/AssetLogo'
-import {TokenInfoIcon} from '../../../ui/TokenAmountItem/TokenInfoIcon'
+import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {AssetLogo} from '~/ui/AssetLogo/AssetLogo'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 
 type Props = {
   tokenInfo: IOpenOrders
@@ -25,7 +24,7 @@ type Props = {
 
 export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   const [firstToken, secondToken] = tokenInfo.assets
   const firstTokenBalance = amountBreakdown(firstToken).bn.toFormat(2)
@@ -34,58 +33,84 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
   const secondTokenName = infoExtractName(secondToken.info)
 
   return (
-    <View style={styles.root}>
-      <View style={styles.tokenInfoContainer}>
-        <View style={styles.logoContainer}>
-          <AssetLogo style={styles.logoFirst}>
+    <View style={[a.flex_col, a.gap_sm, {paddingVertical: 14}, a.pl_lg]}>
+      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+        <View style={[a.relative, {width: 40, height: 40}]}>
+          <AssetLogo
+            style={[
+              a.rounded_sm,
+              a.absolute,
+              {top: 0, left: 0, width: 26, height: 26},
+            ]}
+          >
             <TokenInfoIcon
               info={firstToken.info}
               size="sm"
-              imageStyle={styles.logoSize}
+              imageStyle={{width: 26, height: 26}}
             />
           </AssetLogo>
 
-          <AssetLogo style={styles.logoSecond}>
+          <AssetLogo
+            style={[
+              a.rounded_sm,
+              a.absolute,
+              {bottom: 0, right: 0, width: 26, height: 26},
+            ]}
+          >
             <TokenInfoIcon
               info={secondToken.info}
               size="sm"
-              imageStyle={styles.logoSize}
+              imageStyle={{width: 26, height: 26}}
             />
           </AssetLogo>
         </View>
 
         <Text
-          style={styles.symbol}
+          style={[a.body_1_lg_medium, {color: p.gray_900}]}
         >{`${firstTokenName} ${splitTokenSymbol} ${secondTokenName}`}</Text>
       </View>
 
       <InfoGroup label={strings.total}>
         <View>
           <Text
-            style={styles.valueNumber}
+            style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
           >{`${firstTokenBalance} ${firstTokenName}`}</Text>
 
-          <PairedBalance amount={firstToken} textStyle={styles.pairedBalance} />
+          <PairedBalance
+            amount={firstToken}
+            textStyle={[a.body_3_sm_regular, a.text_right, {color: p.gray_600}]}
+          />
         </View>
       </InfoGroup>
 
       <InfoGroup label={strings.dex}>
-        <View style={styles.dexContainer}>
-          <DexLogo source={tokenInfo.dex.logo} style={styles.dexLogo} />
+        <View style={[a.flex_row, a.align_center, a.justify_end, a.gap_xs]}>
+          <DexLogo
+            source={tokenInfo.dex.logo}
+            style={{width: 32, height: 32}}
+          />
 
-          <Text style={styles.dexName}>{tokenInfo.dex.name}</Text>
+          <Text
+            style={[
+              a.body_1_lg_medium,
+              a.font_semibold,
+              {color: p.primary_500},
+            ]}
+          >
+            {tokenInfo.dex.name}
+          </Text>
         </View>
       </InfoGroup>
 
       <InfoGroup label={strings.assetPrice}>
         <Text
-          style={styles.valueNumber}
+          style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
         >{`${firstTokenBalance} ${firstTokenName}/${secondTokenName}`}</Text>
       </InfoGroup>
 
       <InfoGroup label={strings.assetAmount}>
         <Text
-          style={styles.valueNumber}
+          style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
         >{`${secondTokenBalance} ${secondTokenName}`}</Text>
       </InfoGroup>
 
@@ -107,10 +132,12 @@ const shortenString = (text: string) => {
 }
 
 const TxLink = ({onTxPress, txId}: {onTxPress: () => void; txId: string}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   return (
     <TouchableOpacity onPress={onTxPress}>
-      <Text style={styles.transaction}>{txId}</Text>
+      <Text style={[{color: p.primary_500}, a.link_2_md_underline]}>
+        {txId}
+      </Text>
     </TouchableOpacity>
   )
 }
@@ -122,11 +149,11 @@ const InfoGroup = ({
   children,
   label,
 }: React.PropsWithChildren<InfoGroupProps>) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
-    <View style={styles.rowBetween}>
-      <Text style={styles.label}>{label}</Text>
+    <View style={[a.flex_row, a.justify_between, a.align_center]}>
+      <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>{label}</Text>
 
       <View>{children}</View>
     </View>
@@ -146,88 +173,4 @@ const DexLogo = ({
       style={[style]}
     />
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_col,
-      ...atoms.gap_sm,
-      paddingVertical: 14,
-      ...atoms.pl_lg,
-    },
-    logoSize: {width: 26, height: 26},
-    logoFirst: {
-      ...atoms.rounded_sm,
-      ...atoms.absolute,
-      top: 0,
-      left: 0,
-      width: 26,
-      height: 26,
-    },
-    logoSecond: {
-      ...atoms.rounded_sm,
-      ...atoms.absolute,
-      bottom: 0,
-      right: 0,
-      width: 26,
-      height: 26,
-    },
-    logoContainer: {
-      ...atoms.relative,
-      width: 40,
-      height: 40,
-    },
-    tokenInfoContainer: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_md,
-    },
-    symbol: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_900,
-    },
-    rowBetween: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    label: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_600,
-    },
-    valueNumber: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_right,
-      color: color.gray_900,
-    },
-    pairedBalance: {
-      ...atoms.body_3_sm_regular,
-      ...atoms.text_right,
-      color: color.gray_600,
-    },
-    dexLogo: {
-      width: 32,
-      height: 32,
-    },
-    dexName: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.primary_500,
-    },
-    dexContainer: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_end,
-      ...atoms.gap_xs,
-    },
-    transaction: {
-      color: color.primary_500,
-      ...atoms.link_2_md_underline,
-    },
-  })
-
-  return {styles} as const
 }

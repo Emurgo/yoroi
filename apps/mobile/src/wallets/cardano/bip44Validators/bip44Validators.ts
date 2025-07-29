@@ -1,6 +1,5 @@
 import {cardanoConfig} from '@yoroi/blockchains'
-
-import {CardanoMobile} from '../../wallets'
+import {CardanoMobile} from '~/wallets/wallets'
 
 const isString = (s: unknown) => typeof s === 'string' || s instanceof String
 

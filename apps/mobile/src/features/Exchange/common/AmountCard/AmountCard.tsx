@@ -1,12 +1,12 @@
 import {amountFormatter} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
+import {Pressable, Text, TextInput, View} from 'react-native'
 
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {isEmptyString} from '../../../../kernel/utils'
-import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
+import {Space} from '~/ui/Space/Space'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
+import {isEmptyString} from '~/wallets/utils/string'
 import {useStrings} from '../useStrings'
 
 type AmountCardProps = {
@@ -42,9 +42,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
     }
   }
 
-  const {styles, colors} = useStyles()
-
-  const {isDark} = useTheme()
+  const {palette: p, isDark} = useTheme()
 
   const strings = useStrings()
 
@@ -52,31 +50,77 @@ export const AmountCard: React.FC<AmountCardProps> = ({
     <View>
       <View
         style={[
-          styles.container,
-          isFocused && styles.active,
-          !isEmptyString(error) && styles.borderError,
+          {
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: p.gray_400,
+            paddingTop: 16,
+            paddingBottom: 16,
+            paddingLeft: 16,
+            paddingRight: 16,
+            padding: 10,
+            height: 86,
+          },
+          isFocused && {
+            borderWidth: 2,
+            borderColor: p.gray_900,
+          },
+          !isEmptyString(error) && {
+            borderColor: p.sys_magenta_500,
+            borderWidth: 2,
+          },
         ]}
       >
         {label != null && (
           <Text
-            style={[styles.label, !isEmptyString(error) && styles.labelError]}
+            style={[
+              {
+                position: 'absolute',
+                top: -7,
+                left: 10,
+                backgroundColor: p.bg_color_max,
+                paddingHorizontal: 5,
+                fontSize: 12,
+                color: p.gray_900,
+              },
+              !isEmptyString(error) && {color: p.sys_magenta_500},
+            ]}
           >
             {label}
           </Text>
         )}
 
-        <View style={styles.content}>
-          <Pressable style={styles.amountWrapper} onPress={() => focusInput()}>
+        <View
+          style={[
+            {
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              height: 64,
+            },
+          ]}
+        >
+          <Pressable style={[{flex: 1}]} onPress={() => focusInput()}>
             <TextInput
               keyboardType="numeric"
               autoComplete="off"
               value={value}
               placeholder="0"
-              placeholderTextColor={colors.placeholder}
+              placeholderTextColor={p.gray_600}
               onChangeText={onChange}
               allowFontScaling
-              selectionColor={isFocused ? colors.focused : colors.blur}
-              style={[styles.amountInput, value === '0' && styles.grayText]}
+              selectionColor={isFocused ? p.input_selected : p.gray_900}
+              style={[
+                {
+                  paddingVertical: 0,
+                  minWidth: 120,
+                  maxWidth: 200,
+                  height: 34,
+                  fontSize: 16,
+                  color: p.gray_max,
+                },
+                value === '0' && {color: p.gray_600},
+              ]}
               underlineColorAndroid="transparent"
               ref={inputRef}
               editable={inputEditable && touched}
@@ -88,23 +132,48 @@ export const AmountCard: React.FC<AmountCardProps> = ({
             />
           </Pressable>
 
-          <Spacer width={7} />
+          <Space.Width.sm />
 
-          <View style={styles.rightSection}>
-            <View style={styles.sectionContainer}>
+          <View
+            style={[{flexDirection: 'column', justifyContent: 'flex-start'}]}
+          >
+            <View
+              style={[
+                {
+                  flexDirection: 'row',
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                },
+              ]}
+            >
               <TokenInfoIcon info={amount.info} size="sm" />
 
-              <Spacer width={8} />
+              <Space.Width.sm />
 
-              <Text style={styles.coinName}>{amount.info.name}</Text>
+              <Text
+                style={[
+                  a.body_1_lg_regular,
+                  {fontWeight: '400', color: p.gray_max},
+                ]}
+              >
+                {amount.info.name}
+              </Text>
             </View>
 
-            <Spacer width={8} />
+            <Space.Width.sm />
 
-            <View style={styles.sectionContainer}>
+            <View
+              style={[
+                {
+                  flexDirection: 'row',
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                },
+              ]}
+            >
               <Text
                 ellipsizeMode="middle"
-                style={styles.balanceText}
+                style={[a.body_3_sm_regular, {color: p.gray_600}]}
               >{`${strings.currentBalance}: ${formattedAmount}`}</Text>
             </View>
           </View>
@@ -113,98 +182,15 @@ export const AmountCard: React.FC<AmountCardProps> = ({
 
       {!isEmptyString(error) ? (
         <View>
-          <Spacer height={4} />
+          <Space.Height._2xs />
 
-          <Text style={styles.errorText}>{error}</Text>
+          <Text style={[{color: p.sys_magenta_500}, a.body_3_sm_regular]}>
+            {error}
+          </Text>
         </View>
       ) : (
-        <Spacer height={22} />
+        <Space.Height.lg />
       )}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: color.gray_400,
-      paddingTop: 16,
-      paddingBottom: 16,
-      paddingLeft: 16,
-      paddingRight: 16,
-      padding: 10,
-      height: 86,
-    },
-    active: {
-      borderWidth: 2,
-      borderColor: color.gray_900,
-    },
-    borderError: {
-      borderColor: color.sys_magenta_500,
-      borderWidth: 2,
-    },
-    label: {
-      position: 'absolute',
-      top: -7,
-      left: 10,
-      backgroundColor: color.bg_color_max,
-      paddingHorizontal: 5,
-      fontSize: 12,
-      color: color.gray_900,
-    },
-    labelError: {
-      color: color.sys_magenta_500,
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      height: 64,
-    },
-    amountWrapper: {
-      flex: 1,
-    },
-    amountInput: {
-      paddingVertical: 0,
-      minWidth: 120,
-      maxWidth: 200,
-      height: 34,
-      fontSize: 16,
-      color: color.gray_max,
-    },
-    grayText: {
-      color: color.gray_600,
-    },
-    rightSection: {
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
-    },
-    sectionContainer: {
-      flexDirection: 'row',
-      alignSelf: 'flex-end',
-      alignItems: 'center',
-    },
-    coinName: {
-      ...atoms.body_1_lg_regular,
-      fontWeight: '400',
-      color: color.gray_max,
-    },
-    balanceText: {
-      ...atoms.body_3_sm_regular,
-      color: color.gray_600,
-    },
-    errorText: {
-      color: color.sys_magenta_500,
-      ...atoms.body_3_sm_regular,
-    },
-  })
-  const colors = {
-    placeholder: color.gray_600,
-    focused: color.input_selected,
-    blur: color.gray_900,
-  }
-  return {styles, colors} as const
 }

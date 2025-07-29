@@ -3,8 +3,8 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text, TouchableOpacity, useWindowDimensions} from 'react-native'
 
-import {useModal} from '../../../ui/Modal/ModalContext'
-import {TokenDetails} from '../../../ui/TokenDetails/TokenDetails'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {TokenDetails} from '~/ui/TokenDetails/TokenDetails'
 import {useStrings} from './hooks/useStrings'
 
 export const TokenItem = ({

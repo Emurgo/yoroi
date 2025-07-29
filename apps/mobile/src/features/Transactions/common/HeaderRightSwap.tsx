@@ -3,8 +3,8 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {TouchableOpacity} from 'react-native'
 
-import {Icon} from '../../../components/Icon'
-import {TxHistoryRouteNavigation} from '../../../kernel/navigation'
+import {Icon} from '~/ui/Icon'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 
 export const HeaderRightSwap = React.memo(() => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()

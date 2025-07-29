@@ -1,16 +1,10 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native'
+import {StyleProp, Text, TouchableOpacity, ViewStyle} from 'react-native'
 
-import {Icon} from '../Icon'
-import {Spacer} from '../Space/Space'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 
 type AddTokenButtonProps = {
   onPress(): void
@@ -23,7 +17,7 @@ export const AddTokenButton = ({
   style,
 }: AddTokenButtonProps) => {
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
@@ -32,37 +26,31 @@ export const AddTokenButton = ({
       testID="addTokenButton"
       style={[
         style,
-        styles.button,
-        {borderColor: color.primary_600},
-        {backgroundColor: 'transparent'},
+        {
+          borderRadius: 8,
+          flexDirection: 'row',
+          ...a.px_lg,
+          ...a.py_xs,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderWidth: 2,
+          borderColor: p.primary_600,
+          backgroundColor: 'transparent',
+        },
       ]}
     >
-      <Icon.Plus size={26} color={color.primary_600} />
+      <Icon.Plus size={26} color={p.primary_600} />
 
-      <Spacer width={4} />
+      <Space.Width.xs />
 
-      <Text style={[styles.label, {color: color.primary_600}]}>
+      <Text
+        style={[a.button_2_md, {color: p.primary_600, textTransform: 'none'}]}
+      >
         {strings.addToken.toLocaleUpperCase()}
       </Text>
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  label: {
-    ...a.button_2_md,
-    textTransform: 'none',
-  },
-  button: {
-    borderRadius: 8,
-    flexDirection: 'row',
-    ...a.px_lg,
-    ...a.py_xs,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-  },
-})
 
 const messages = defineMessages({
   addToken: {

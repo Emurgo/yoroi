@@ -5,7 +5,6 @@ import React from 'react'
 import {
   Linking,
   Platform,
-  StyleSheet,
   TouchableOpacity,
   View,
   ViewProps,
@@ -13,19 +12,19 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BulletPointItem} from '../../../../components/BulletPointItem'
-import {Button} from '../../../../components/Button/Button'
-import {Space} from '../../../../components/Space/Space'
-import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
-import {Text} from '../../../../components/Text'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation'
+import {BulletPointItem} from '~/ui/BulletPointItem'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
+import {Text} from '~/ui/Text/Text'
 import {useStrings} from '../../common/useStrings'
 import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustration'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const {track} = useMetrics()
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()
@@ -54,27 +53,49 @@ export const CheckNanoXScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[{flex: 1, backgroundColor: p.bg_color_max}]}
     >
       <StepperProgress
-        style={styles.stepper}
+        style={[{paddingHorizontal: 16}]}
         currentStepTitle="Intro"
         currentStep={1}
         totalSteps={3}
       />
 
-      <ScrollView style={styles.scroll} bounces={false}>
-        <Space height="lg" />
+      <ScrollView style={[{paddingHorizontal: 16}]} bounces={false}>
+        <Space.Height.lg />
 
-        <Text style={styles.introline}>{strings.hwCheckIntroline}</Text>
+        <Text
+          style={[
+            {
+              fontSize: 16,
+              lineHeight: 24,
+              fontWeight: '500',
+              color: p.text_gray_medium,
+            },
+          ]}
+        >
+          {strings.hwCheckIntroline}
+        </Text>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         {(useUSB ? usbRequirements : bleRequirements).map((item) => (
-          <BulletPointItem key={item} style={styles.item} textRow={item} />
+          <BulletPointItem
+            key={item}
+            style={[
+              {
+                fontSize: 16,
+                lineHeight: 24,
+                fontWeight: '400',
+                color: p.text_gray_medium,
+              },
+            ]}
+            textRow={item}
+          />
         ))}
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Illustration />
 
@@ -98,67 +119,35 @@ const ledgerSupport =
 const LedgerSupportLink = () => {
   const onPress = () => Linking.openURL(ledgerSupport)
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
   return (
-    <TouchableOpacity style={styles.link} onPress={onPress}>
-      <Text style={styles.linkText}>{strings.ledgerSupportLink}</Text>
+    <TouchableOpacity
+      style={[
+        {
+          fontSize: 16,
+          lineHeight: 24,
+          fontWeight: '400',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      ]}
+      onPress={onPress}
+    >
+      <Text style={[{color: p.primary_500}]}>{strings.ledgerSupportLink}</Text>
     </TouchableOpacity>
   )
 }
 
 const Illustration = () => {
-  const styles = useStyles()
   return (
-    <View style={styles.illustration}>
+    <View style={[{flex: 1, alignItems: 'center'}]}>
       <LedgerCheckIllustration />
     </View>
   )
 }
 
 const Actions = (props: ViewProps) => {
-  const styles = useStyles()
-  return <View {...props} style={styles.actions} />
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-    introline: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    scroll: {
-      ...atoms.px_lg,
-    },
-    linkText: {
-      color: color.primary_500,
-    },
-    link: {
-      ...atoms.link_1_lg,
-      ...atoms.flex_row,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    illustration: {
-      ...atoms.flex_1,
-      ...atoms.align_center,
-    },
-    item: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_medium,
-    },
-    actions: {
-      ...atoms.p_lg,
-    },
-    stepper: {
-      ...atoms.px_lg,
-    },
-  })
-
-  return styles
+  return <View {...props} style={[{padding: 16}]} />
 }

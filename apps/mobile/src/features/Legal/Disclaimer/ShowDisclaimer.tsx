@@ -8,12 +8,12 @@ import Markdown from 'react-native-marked'
 import globalMessages, {
   actionMessages,
   confirmationMessages,
-} from '../../../kernel/i18n/global-messages'
-import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
-import {useWalletNavigation} from '../../../kernel/navigation'
-import {Button, ButtonType} from '../../../ui/Button/Button'
-import {Checkbox} from '../../../ui/Checkbox/Checkbox'
-import {useModal} from '../../../ui/Modal/ModalContext'
+} from '~/kernel/i18n/global-messages'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Checkbox} from '~/ui/Checkbox/Checkbox'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {loadText} from './loadText'
 import {Disclaimer} from './types'
 import {useDisclaimerState} from './useDisclaimerState'

@@ -3,14 +3,14 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Text, TextStyle} from 'react-native'
+import {Text, TextStyle} from 'react-native'
 
-import {usePortfolio} from '../../features/Portfolio/common/PortfolioProvider'
-import {usePortfolioTokenActivity} from '../../features/Portfolio/common/PortfolioTokenActivityProvider'
-import {useCurrencyPairing} from '../../features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
-import {CurrencySymbol} from '../../wallets/types/other'
+import {usePortfolio} from '~/features/Portfolio/common/PortfolioProvider'
+import {usePortfolioTokenActivity} from '~/features/Portfolio/common/PortfolioTokenActivityProvider'
+import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {CurrencySymbol} from '~/wallets/types/other'
 import {Boundary, ResetError, ResetErrorRef} from '../Boundary/Boundary'
 
 type Props = {
@@ -19,6 +19,7 @@ type Props = {
   textStyle?: TextStyle
   hidePrimaryPair?: boolean
 }
+
 export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
   (props, ref) => {
     return (
@@ -46,7 +47,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
     selected: {networkManager},
   } = useWalletManager()
   const portfolioPrimaryTokenInfo = networkManager.primaryTokenInfo
-  const {color} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   const {
     currency: selectedCurrency,
@@ -100,11 +101,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
 
   return (
     <Text
-      style={[
-        styles.pairedBalanceText,
-        {color: color.text_gray_medium},
-        textStyle,
-      ]}
+      style={[a.body_3_sm_regular, {color: p.text_gray_medium}, textStyle]}
       testID="pairedTotalText"
     >
       {price}
@@ -114,17 +111,11 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
 
 export const BalanceError = ({textStyle}: {textStyle?: TextStyle}) => {
   const strings = useStrings()
-  const {color} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {currency} = useCurrencyPairing()
 
   return (
-    <Text
-      style={[
-        styles.pairedBalanceText,
-        {color: color.text_gray_medium},
-        textStyle,
-      ]}
-    >
+    <Text style={[a.body_3_sm_regular, {color: p.text_gray_medium}, textStyle]}>
       {strings.pairedBalanceError(currency)}
     </Text>
   )
@@ -145,9 +136,3 @@ const useStrings = () => {
       intl.formatMessage(messages.pairedBalanceError, {currency}),
   }
 }
-
-const styles = StyleSheet.create({
-  pairedBalanceText: {
-    ...a.body_3_sm_regular,
-  },
-})

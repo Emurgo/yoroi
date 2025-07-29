@@ -1,34 +1,24 @@
-import {SpacingSize, useTheme} from '@yoroi/theme'
+import {atoms as a, SpacingSize, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {Space} from '../Space/Space'
+import {Space} from '~/ui/Space/Space'
 
 export const Divider = ({
   verticalSpace = 'none',
 }: {
   verticalSpace?: SpacingSize
 }) => {
-  const {color, atoms} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <>
-      <Space height={verticalSpace} />
+      <Space.Height.xs />
 
       <View
-        style={[
-          styles.divider,
-          atoms.align_stretch,
-          {backgroundColor: color.gray_200},
-        ]}
+        style={[{height: 1}, a.align_stretch, {backgroundColor: p.gray_200}]}
       />
 
-      <Space height={verticalSpace} />
+      <Space.Height.xs />
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  divider: {
-    height: 1,
-  },
-})

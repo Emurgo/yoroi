@@ -2,9 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {buildNetworkManagers} from '@yoroi/blockchains'
 import {hex, parseSafe} from '@yoroi/common'
 
-import {decryptData} from '../../kernel/crypto/decrypt-data'
-import {logger} from '../../kernel/logger/logger'
-import {rootStorage} from '../../kernel/storage/storages'
+import {decryptData} from '~/kernel/crypto/decrypt-data'
+import {logger} from '~/kernel/logger/logger'
+import {rootStorage} from '~/kernel/storage/storages'
 import {buildPortfolioTokenManagers} from '../Portfolio/common/helpers/build-token-managers'
 import {WalletManager} from './wallet-manager'
 

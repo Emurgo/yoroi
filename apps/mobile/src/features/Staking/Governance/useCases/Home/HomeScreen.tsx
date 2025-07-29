@@ -15,29 +15,29 @@ import React, {type ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useModal} from '../../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../../ui/Space/Space'
+import {GovernanceVote} from '@yoroi/types'
+import {useStrings} from '~/features/Staking/common/useStrings'
+import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common/drep'
+import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
+import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Action} from '~/ui/Action/Action'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 import {
   useCreateGovernanceTx,
   useStakingKey,
   useTransactionInfos,
   useWalletEvent,
-} from '../../../../../wallets/hooks'
-import {TransactionInfo} from '../../../../../wallets/types/other'
-import {useStakingInfo} from '../../../../Dashboard/StakePoolInfos'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
-import {Action} from '../../common/Action/Action'
-import {formatDrepHashToCIP129Format} from '../../common/drep'
+} from '~/wallets/hooks'
+import {TransactionInfo} from '~/wallets/types/other'
 import {
   mapStakingKeyStateToGovernanceAction,
   useGovernanceActions,
 } from '../../common/helpers'
-import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
 import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
-import {YoroiRecordLink} from '../../common/YoroiRecordLink/YoroiRecordLink'
-import {GovernanceVote} from '../../types'
+import {useStakingInfo} from '../Dashboard/StakePoolInfos'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const HomeScreen = () => {

@@ -1,31 +1,31 @@
 import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {ScrollView} from '../../../../components/ScrollView/ScrollView'
-import {Text} from '../../../../components/Text'
-import {useLanguage} from '../../../../kernel/i18n'
-import {useWalletNavigation} from '../../../../kernel/navigation'
-import {useTransactionInfos} from '../../../../wallets/hooks'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {triggerNotificationAction} from '../../common/tools'
+import {triggerNotificationAction} from '~/features/Notifications/common/tools'
 import {
   getTransactionReceivedNotificationIcon,
   getTransactionReceivedNotificationTitle,
-} from '../../common/TransactionReceivedNotification'
+} from '~/features/Notifications/common/TransactionReceivedNotification'
+import {useWalletNotifications} from '~/features/Notifications/common/useWalletNotifications'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useLanguage} from '~/kernel/i18n'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {Text} from '~/ui/Text/Text'
+import {useTransactionInfos} from '~/wallets/hooks'
 import {useStrings} from '../../common/useStrings'
-import {useWalletNotifications} from '../../common/useWalletNotifications'
-import {EmptyNotificationsIllustration} from '../../illustrations/EmptyNotifications'
+import {EmptyNotificationsIllustration} from '../illustrations/EmptyNotifications'
 
 export const ViewNotificationHistoryScreen = () => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {data: walletNotifications, refetch} = useWalletNotifications()
   const manager = useNotificationManager()
@@ -48,23 +48,29 @@ export const ViewNotificationHistoryScreen = () => {
 
   if (walletNotifications.length === 0) {
     return (
-      <View style={styles.center}>
+      <View
+        style={[
+          a.flex,
+          a.justify_center,
+          a.align_center,
+          a.gap_sm,
+          a.flex_grow,
+        ]}
+      >
         <EmptyNotificationsIllustration />
 
-        <Text style={styles.noNotificationsTitle}>
-          {strings.noNotifications}
-        </Text>
+        <Text style={[a.heading_3_medium]}>{strings.noNotifications}</Text>
       </View>
     )
   }
 
   return (
     <SafeAreaView
-      style={[styles.root, {flex: 1, position: 'relative'}]}
+      style={[a.px_lg, a.flex, {flex: 1, position: 'relative'}]}
       edges={['right', 'left', 'bottom']}
     >
       <ScrollView contentContainerStyle={{paddingBottom: 60}}>
-        <View style={styles.scrollContainer}>
+        <View style={[a.gap_lg, a.flex]}>
           {walletNotifications.map((notification) => (
             <NotificationItem
               key={notification.id}
@@ -75,9 +81,17 @@ export const ViewNotificationHistoryScreen = () => {
         </View>
       </ScrollView>
 
-      <View style={styles.bottomBar}>
+      <View
+        style={[
+          a.absolute,
+          {bottom: 0, left: 0, right: 0, height: 60},
+          a.align_center,
+          a.justify_center,
+          {zIndex: 10, backgroundColor: p.bg_color_max},
+        ]}
+      >
         <Button
-          style={styles.button}
+          style={[a.flex, a.justify_center, a.align_center]}
           title={strings.markAllAsRead}
           onPress={handleMarkAllAsRead}
           type={ButtonType.Text}
@@ -89,7 +103,7 @@ export const ViewNotificationHistoryScreen = () => {
 
 const NotificationItem = React.memo(
   ({event, onPress}: {event: Notifications.Event; onPress?: () => void}) => {
-    const {styles} = useStyles()
+    const {palette: p} = useTheme()
     const {languageCode} = useLanguage()
     const {wallet} = useSelectedWallet()
     const strings = useStrings()
@@ -128,27 +142,74 @@ const NotificationItem = React.memo(
       )
 
     return (
-      <TouchableOpacity style={styles.item} onPress={onPress}>
-        <View style={[styles.item, {flexGrow: 1}]}>
-          <View style={styles.icon}>{icon}</View>
+      <TouchableOpacity style={[a.gap_sm, a.flex_row]} onPress={onPress}>
+        <View style={[a.gap_sm, a.flex_row, {flexGrow: 1}]}>
+          <View style={[{width: 40, height: 40}, a.rounded_full]}>{icon}</View>
 
-          <View style={styles.textArea}>
-            <View style={[styles.line, styles.titleLine]}>
-              <Text style={styles.title}>{title}</Text>
+          <View style={[a.flex_col, a.flex_grow]}>
+            <View
+              style={[
+                a.flex_1,
+                a.flex_row,
+                a.justify_between,
+                a.align_center,
+                a.gap_sm,
+              ]}
+            >
+              <Text
+                style={[
+                  a.body_2_md_medium,
+                  a.flex_1,
+                  {color: p.text_gray_medium},
+                ]}
+              >
+                {title}
+              </Text>
 
-              <View style={styles.unreadIndicator}>
-                {isUnread && <View style={styles.redDot} />}
+              <View
+                style={[
+                  {width: 8, height: 8},
+                  a.flex_row,
+                  a.justify_center,
+                  a.align_center,
+                ]}
+              >
+                {isUnread && (
+                  <View
+                    style={[
+                      {backgroundColor: p.red_static},
+                      a.rounded_full,
+                      {width: 8, height: 8},
+                    ]}
+                  />
+                )}
               </View>
             </View>
 
             {isString(description) && (
-              <View style={styles.line}>
-                <Text style={styles.description}>{description}</Text>
+              <View style={[a.flex_1, a.flex_row]}>
+                <Text
+                  style={[
+                    a.body_3_sm_regular,
+                    a.flex_1,
+                    {color: p.text_gray_medium},
+                  ]}
+                >
+                  {description}
+                </Text>
               </View>
             )}
 
-            <View style={styles.line}>
-              <Text style={styles.time}>{time}</Text>
+            <View style={[a.flex_1, a.flex_row]}>
+              <Text
+                style={[
+                  a.body_3_sm_regular,
+                  a.flex_1,
+                  {color: p.text_gray_low},
+                ]}
+              >
+                {time}
+              </Text>
             </View>
           </View>
         </View>
@@ -165,97 +226,6 @@ const formatDate = (date: string, languageCode: string) => {
     hour: '2-digit',
     minute: '2-digit',
   })
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    bottomBar: {
-      ...atoms.absolute,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: 60,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      zIndex: 10,
-      backgroundColor: color.bg_color_max,
-    },
-    line: {
-      ...atoms.flex_1,
-      ...atoms.flex_row,
-    },
-    titleLine: {
-      ...atoms.justify_between,
-      ...atoms.align_center,
-      ...atoms.gap_sm,
-    },
-    root: {
-      ...atoms.px_lg,
-      ...atoms.flex,
-    },
-    icon: {
-      width: 40,
-      height: 40,
-      ...atoms.rounded_full,
-    },
-    scrollContainer: {
-      ...atoms.gap_lg,
-      ...atoms.flex,
-    },
-    item: {
-      ...atoms.gap_sm,
-      ...atoms.flex_row,
-    },
-    title: {
-      ...atoms.body_2_md_medium,
-      ...atoms.flex_1,
-      color: color.text_gray_medium,
-    },
-    description: {
-      ...atoms.body_3_sm_regular,
-      ...atoms.flex_1,
-      color: color.text_gray_medium,
-    },
-    time: {
-      ...atoms.body_3_sm_regular,
-      ...atoms.flex_1,
-      color: color.text_gray_low,
-    },
-    textArea: {
-      ...atoms.flex_col,
-      ...atoms.flex_grow,
-    },
-    unreadIndicator: {
-      width: 8,
-      height: 8,
-      ...atoms.flex_row,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    redDot: {
-      backgroundColor: color.red_static,
-      ...atoms.rounded_full,
-      width: 8,
-      height: 8,
-    },
-    center: {
-      ...atoms.flex,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-      ...atoms.gap_sm,
-      ...atoms.flex_grow,
-    },
-    noNotificationsTitle: {
-      ...atoms.heading_3_medium,
-    },
-    button: {
-      ...atoms.flex,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-  })
-  return {styles}
 }
 
 const IconPlaceholder = () => {

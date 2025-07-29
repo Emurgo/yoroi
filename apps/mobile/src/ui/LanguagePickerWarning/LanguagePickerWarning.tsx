@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Markdown from 'react-native-marked'
 
-import {Icon} from '../Icon'
+import {Icon} from '~/ui/Icon'
 
 export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
   const strings = useStrings()
@@ -37,24 +37,6 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  dialog: {
-    ...a.p_lg,
-  },
-  dialogSquare: {
-    borderRadius: 8,
-    ...a.p_lg,
-  },
-  row: {
-    ...a.flex_row,
-    ...a.justify_end,
-    ...a.align_center,
-  },
-  markdownText: {
-    ...a.body_1_lg_regular,
-  },
-})
 
 const useStrings = () => {
   const intl = useIntl()

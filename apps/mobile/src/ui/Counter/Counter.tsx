@@ -1,8 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {View, ViewProps} from 'react-native'
 
-import {Text} from '../Text/Text'
+import {Text} from '~/ui/Text/Text'
 
 type CounterTypes = {
   openingText?: string
@@ -18,24 +18,33 @@ export const Counter = ({
   closingText,
   style,
 }: CounterTypes & ViewProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <View
-      style={[styles.counter, {backgroundColor: color.bg_color_max}, style]}
+      style={[
+        {
+          paddingTop: 16,
+          justifyContent: 'center',
+          flexDirection: 'row',
+          backgroundColor: p.bg_color_max,
+        },
+        style,
+      ]}
     >
-      <Text style={[styles.counterText, {color: color.primary_600}]}>
+      <Text style={[a.body_2_md_regular, {color: p.primary_600}]}>
+        {' '}
         {openingText}
       </Text>
 
       <Text>
-        <Text style={[styles.counterTextBold, {color: color.primary_600}]}>
+        <Text style={[a.body_2_md_medium, {color: p.primary_600}]}>
           {' '}
           {counter}{' '}
         </Text>
 
         {unitsText !== undefined && (
-          <Text style={[styles.counterTextBold, {color: color.primary_600}]}>
+          <Text style={[a.body_2_md_medium, {color: p.primary_600}]}>
             {' '}
             {unitsText ?? ''}{' '}
           </Text>
@@ -45,8 +54,8 @@ export const Counter = ({
           <Text
             style={[
               openingText != undefined
-                ? [styles.counterTextBold, {color: color.primary_600}]
-                : [styles.counterText, {color: color.primary_600}],
+                ? [a.body_2_md_medium, {color: p.primary_600}]
+                : [a.body_2_md_regular, {color: p.primary_600}],
             ]}
           >
             {closingText ?? ''}
@@ -56,17 +65,3 @@ export const Counter = ({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  counter: {
-    paddingTop: 16,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  counterText: {
-    ...a.body_2_md_regular,
-  },
-  counterTextBold: {
-    ...a.body_2_md_medium,
-  },
-})

@@ -3,8 +3,8 @@ import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
 
-import {CardanoMobile} from '../../../wallets/wallets'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {CardanoMobile} from '~/wallets/wallets'
 import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
 
 export const useSendAddress = () => {

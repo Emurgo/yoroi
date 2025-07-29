@@ -14,12 +14,12 @@ import {ScrollView} from 'react-native-gesture-handler'
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {Alert as AlertIllustration} from '../../../../ui/AlertIllustration/AlertIllustration'
-import {Button} from '../../../../ui/Button/Button'
-import {Check2 as Check2Illustration} from '../../../../ui/Check2Illustration/Check2Illustration'
-import {Space} from '../../../../ui/Space/Space'
-import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Alert as AlertIllustration} from '~/ui/AlertIllustration/AlertIllustration'
+import {Button} from '~/ui/Button/Button'
+import {Check2 as Check2Illustration} from '~/ui/Check2Illustration/Check2Illustration'
+import {Space} from '~/ui/Space/Space'
+import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 
 export const VerifyRecoveryPhraseScreen = () => {

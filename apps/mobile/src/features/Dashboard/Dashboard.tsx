@@ -13,30 +13,31 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StakeRewardsWithdrawalOperation} from '../../features/ReviewTx/common/operations'
-import {useReviewTx} from '../../features/ReviewTx/common/ReviewTxProvider'
-import {useIsParticipatingInGovernance} from '../../features/Staking/Governance/common/helpers'
-import {useStrings} from '../../features/Staking/Governance/common/strings'
-import {WithdrawGovernanceWarningModal} from '../../features/Staking/Governance/useCases/WithdrawGovernanceWarningModal/WithdrawGovernanceWarningModal'
-import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import globalMessages from '../../kernel/i18n/global-messages'
-import {useMetrics} from '../../kernel/metrics/metricsManager'
-import {DashboardRoutes, useWalletNavigation} from '../../kernel/navigation'
-import {isEmptyString} from '../../kernel/utils'
-import {Banner} from '../../ui/Banner/Banner'
-import {Button} from '../../ui/Button/Button'
-import {useModal} from '../../ui/Modal/ModalContext'
-import {Space} from '../../ui/Space/Space'
+import {StakeRewardsWithdrawalOperation} from '~/features/ReviewTx/common/operations'
+import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {useIsParticipatingInGovernance} from '~/features/Staking/Governance/common/helpers'
+import {useStrings} from '~/features/Staking/Governance/common/strings'
+import {WithdrawGovernanceWarningModal} from '~/features/Staking/Governance/useCases/WithdrawGovernanceWarningModal/WithdrawGovernanceWarningModal'
+import {PoolTransitionNotice} from '~/features/Staking/Staking/PoolTransition/PoolTransitionNotice'
+import {usePoolTransition} from '~/features/Staking/Staking/PoolTransition/usePoolTransition'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import globalMessages from '~/kernel/i18n/global-messages'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {DashboardRoutes, useWalletNavigation} from '~/kernel/navigation'
+
+import {Banner} from '~/ui/Banner/Banner'
+import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 import {
   useBalances,
   useCreateWithdrawTx,
   useIsOnline,
   useSync,
-} from '../../wallets/hooks'
-import {Amounts} from '../../wallets/utils/utils'
-import {PoolTransitionNotice} from '../Staking/PoolTransition/PoolTransitionNotice'
-import {usePoolTransition} from '../Staking/PoolTransition/usePoolTransition'
+} from '~/wallets/hooks'
+import {isEmptyString} from '~/wallets/utils/string'
+import {Amounts} from '~/wallets/utils/utils'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
@@ -138,7 +139,7 @@ export const Dashboard = () => {
             <>
               <NotDelegatedInfo />
 
-              <Space height="xl" />
+              <Space.Height.xl />
             </>
           )}
 
@@ -146,14 +147,14 @@ export const Dashboard = () => {
             <Row>
               <PoolTransitionNotice />
 
-              <Space height="xl" />
+              <Space.Height.xl />
             </Row>
           )}
 
           <Row>
             <EpochInfo />
 
-            <Space height="xl" />
+            <Space.Height.xl />
           </Row>
 
           <Row>
@@ -185,7 +186,7 @@ export const Dashboard = () => {
               />
             )}
 
-            <Space height="xl" />
+            <Space.Height.xl />
           </Row>
 
           {stakingInfo?.status === 'staked' && (
@@ -197,7 +198,7 @@ export const Dashboard = () => {
                 }}
               />
 
-              <Space height="xl" />
+              <Space.Height.xl />
             </Row>
           )}
         </ScrollView>

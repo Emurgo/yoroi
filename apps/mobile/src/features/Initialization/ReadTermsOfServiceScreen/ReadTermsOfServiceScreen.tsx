@@ -3,8 +3,8 @@ import React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
-import {TermsOfService} from '../../Legal/TermsOfService/TermsOfService'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {TermsOfService} from '../Legal/TermsOfService/TermsOfService'
 
 export const ReadTermsOfServiceScreen = () => {
   const {atoms: ta} = useTheme()

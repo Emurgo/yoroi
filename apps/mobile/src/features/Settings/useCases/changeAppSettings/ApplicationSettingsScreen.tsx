@@ -1,29 +1,30 @@
 import {networkConfigs} from '@yoroi/blockchains'
-import {isBoolean} from '@yoroi/common'
 import {ThemeName, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {isDev, isNightly} from '../../../../kernel/constants'
-import {themeNames} from '../../../../kernel/i18n/global-messages'
-import {useLanguage} from '../../../../kernel/i18n/LanguageProvider'
 import {
-  LanguageRecord,
-  supportedLanguages,
-} from '../../../../kernel/i18n/localization'
-import {Icon} from '../../../../ui/Icon'
-import {SettingsSwitch} from '../../../../ui/SettingsSwitch/SettingsSwitch'
-import {Space} from '../../../../ui/Space/Space'
-import {useCrashReports} from '../../../../wallets/hooks'
-import {useSelectedNetwork} from '../../../WalletManager/hooks/useSelectedNetwork'
-import {useNavigateTo} from '../../common/navigation'
+  useAuthSetting,
+  useAuthWithOs,
+  useIsAuthOsSupported,
+} from '~/features/Auth/hooks'
+import {useNavigateTo} from '~/features/Settings/common/navigation'
 import {
   NavigatedSettingsItem,
   SettingsItem,
   SettingsSection,
-} from '../../SettingsItems'
+} from '~/features/Settings/SettingsItems'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {isDev, isNightly} from '~/kernel/constants'
+import {themeNames} from '~/kernel/i18n/global-messages'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
+import {Icon} from '~/ui/Icon'
+import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
+import {Space} from '~/ui/Space/Space'
+import {useCrashReports} from '~/wallets/hooks'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {
@@ -160,7 +161,9 @@ export const ApplicationSettingsScreen = () => {
             label={strings.crashReporting}
             info={strings.crashReportingInfo}
           >
-            <CrashReportsSwitch crashReportEnabled={crashReportEnabled} />
+            <CrashReportsSwitch
+              crashReportEnabled={Boolean(crashReportEnabled)}
+            />
           </SettingsItem>
 
           {displayScreenShareSetting && (
@@ -170,8 +173,8 @@ export const ApplicationSettingsScreen = () => {
               info={strings.screenSharingInfo}
             >
               <ScreenSharingSwitch
-                screenSharingEnabled={screenShareEnabled ?? false}
-                disabled={!isBoolean(screenShareEnabled)}
+                screenSharingEnabled={Boolean(screenShareEnabled)}
+                disabled={!Boolean(screenShareEnabled)}
               />
             </SettingsItem>
           )}
@@ -217,15 +220,15 @@ const CrashReportsSwitch = ({
 }: {
   crashReportEnabled: boolean
 }) => {
-  const {enable, disable} = useCrashReports()
+  const crashReports = useCrashReports()
   const [isLocalEnabled, setIsLocalEnabled] = React.useState(crashReportEnabled)
 
   const onToggleCrashReports = () => {
     setIsLocalEnabled((prevState) => {
       if (prevState) {
-        disable()
+        crashReports.disable()
       } else {
-        enable()
+        crashReports.enable()
       }
 
       return !prevState

@@ -2,13 +2,13 @@ import {GovernanceProvider} from '@yoroi/staking'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
 
-import {SafeArea} from '../../../components/SafeArea'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {
   BackButton,
   defaultStackNavigationOptions,
   useWalletNavigation,
-} from '../../../kernel/navigation'
-import {NetworkTag} from '../../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+} from '~/kernel/navigation'
+import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {useStrings} from './common/strings'

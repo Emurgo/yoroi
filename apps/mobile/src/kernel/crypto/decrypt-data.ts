@@ -1,7 +1,7 @@
 import {Hex, hex} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
-import {logger} from '../logger/logger'
+import {logger} from '~/kernel/logger/logger'
 import {decrypt_with_password} from './csl'
 
 export const decryptData = ({

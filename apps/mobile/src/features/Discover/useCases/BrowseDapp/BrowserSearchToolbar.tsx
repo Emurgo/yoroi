@@ -1,15 +1,14 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
 } from 'react-native'
 
-import {Icon} from '../../../../components/Icon'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Icon} from '~/ui/Icon'
 import {useStrings} from '../../common/useStrings'
 
 type Props = {
@@ -24,10 +23,9 @@ export const BrowserSearchToolbar = ({
   onSearchSubmit,
   searchValue,
 }: Props) => {
-  const {styles, colors} = useStyles()
+  const {palette: p, isDark} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
-  const {isDark} = useTheme()
 
   React.useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined
@@ -46,8 +44,8 @@ export const BrowserSearchToolbar = ({
   }, [searchValue, track])
 
   return (
-    <View style={styles.root}>
-      <View style={styles.boxURI}>
+    <View style={[a.px_md]}>
+      <View style={[a.flex_row, a.align_center, a.gap_lg, {minHeight: 64}]}>
         <BackButton onPress={onBack} />
 
         <TextInput
@@ -55,10 +53,15 @@ export const BrowserSearchToolbar = ({
           selectTextOnFocus
           value={searchValue}
           placeholder={strings.searchDApps}
-          placeholderTextColor={colors.placeholder}
+          placeholderTextColor={p.text_gray_low}
           onChangeText={(search) => onSearchChange(search)}
           autoCapitalize="none"
-          style={styles.searchInputStyle}
+          style={[
+            {color: p.text_gray_max, minHeight: 36},
+            a.body_1_lg_regular,
+            a.flex_1,
+            a.pb_md,
+          ]}
           onSubmitEditing={onSearchSubmit}
           enablesReturnKeyAutomatically={searchValue.length === 0}
           keyboardAppearance={isDark ? 'dark' : 'light'}
@@ -69,35 +72,11 @@ export const BrowserSearchToolbar = ({
 }
 
 const BackButton = (props: TouchableOpacityProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity testID="buttonBack" {...props}>
-      <Icon.Chevron direction="left" size={24} color={color.gray_max} />
+      <Icon.Chevron direction="left" size={24} color={p.gray_max} />
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.px_md,
-    },
-    boxURI: {
-      minHeight: 64,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_lg,
-    },
-    searchInputStyle: {
-      color: color.text_gray_max,
-      minHeight: 36,
-      ...atoms.body_1_lg_regular,
-      ...atoms.flex_1,
-      ...atoms.pb_md,
-    },
-  })
-
-  return {styles, colors: {placeholder: color.text_gray_low}} as const
 }

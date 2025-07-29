@@ -12,11 +12,11 @@ import {Platform, Pressable, Switch, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../kernel/navigation'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useWalletNavigation} from '~/kernel/navigation'
 
-import {Button} from '../../../ui/Button/Button'
-import {Space} from '../../../ui/Space/Space'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
 import {DarkThemeIlustration} from '../illustrations/DarkThemeIlustration'
 import {LightThemeIlustration} from '../illustrations/LightThemeIlustration'
 

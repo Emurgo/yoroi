@@ -4,15 +4,15 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, Text, View} from 'react-native'
 
-import {showErrorDialog} from '../../../../kernel/dialogs'
-import {errorMessages} from '../../../../kernel/i18n/global-messages'
-import {logger} from '../../../../kernel/logger/logger'
-import {BulletPointItem} from '../../../../ui/BulletPointItem'
-import {Space} from '../../../../ui/Space/Space'
+import {showErrorDialog} from '~/kernel/dialogs'
+import {errorMessages} from '~/kernel/i18n/global-messages'
+import {logger} from '~/kernel/logger/logger'
+import {BulletPointItem} from '~/ui/BulletPointItem'
+import {Space} from '~/ui/Space/Space'
 import {
   isCIP1852AccountPath,
   isValidPublicKey,
-} from '../../../../wallets/cardano/bip44Validators/bip44Validators'
+} from '~/wallets/cardano/bip44Validators/bip44Validators'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()

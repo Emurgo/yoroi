@@ -1,11 +1,7 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
 
-import {
-  TextInput,
-  TextInputProps,
-} from '../../../../../components/TextInput/TextInput'
-import {useStrings} from '../../../common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
+import {TextInput, TextInputProps} from '~/ui/TextInput/TextInput'
 import {ShowMemoErrorTooLong} from './ShowMemoErrorTooLong'
 import {ShowMemoInstructions} from './ShowMemoInstructions'
 
@@ -23,7 +19,7 @@ export const InputMemo = ({
       autoComplete="off"
       testID="memoFieldInput"
       error={isValid ? undefined : true}
-      renderComponentStyle={styles.input}
+      renderComponentStyle={{maxHeight: 80}}
       multiline
       focusable
       helper={
@@ -37,9 +33,3 @@ export const InputMemo = ({
     />
   )
 }
-
-const styles = StyleSheet.create({
-  input: {
-    maxHeight: 80,
-  },
-})

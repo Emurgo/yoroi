@@ -2,7 +2,7 @@ import * as React from 'react'
 import {ReactNode} from 'react'
 import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native'
 import {ClipPath, Defs, G, Path, Rect, Svg} from 'react-native-svg'
-import {SpaceWidth} from '../Space/Space'
+import {SpaceWidth} from '~/ui/Space/Space'
 
 type BlueCheckboxProps = {
   checked?: boolean
@@ -27,7 +27,7 @@ export const BlueCheckbox = ({
     >
       {checked ? <CheckboxChecked /> : <CheckboxNotChecked />}
 
-      <SpaceWidth size={spacing} />
+      <Space.Width.sm />
 
       <View
         style={{

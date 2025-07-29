@@ -2,9 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-
-import {useLanguage} from '../../../../../kernel/i18n/LanguageProvider'
-import {PrivacyPolicy} from '../../../../Legal/PrivacyPolicy/PrivacyPolicy'
+import {PrivacyPolicy} from '~/features/Legal/PrivacyPolicy/PrivacyPolicy'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 
 export const PrivacyPolicyScreen = () => {
   const {atoms: ta} = useTheme()

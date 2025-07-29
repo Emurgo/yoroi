@@ -1,13 +1,12 @@
 import {useIsFocused} from '@react-navigation/native'
 import {atomicBreakdown} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
 import {
   InteractionManager,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -15,27 +14,26 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {Space} from '../../../../../components/Space/Space'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {TextInput} from '../../../../../components/TextInput/TextInput'
-import {useLanguage} from '../../../../../kernel/i18n'
-import {logger} from '../../../../../kernel/logger/logger'
-import {Quantities} from '../../../../../wallets/utils/utils'
-import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
-import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
-import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo} from '../../../common/navigation'
-import {useStrings} from '../../../common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useLanguage} from '~/kernel/i18n'
+import {logger} from '~/kernel/logger/logger'
+import {Button} from '~/ui/Button/Button'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {Space} from '~/ui/Space/Space'
+import {TextInput} from '~/ui/TextInput/TextInput'
+import {Quantities} from '~/wallets/utils/utils'
+import {useNavigateTo} from '../../common/navigation'
+import {TokenAmountItem} from '../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioPrimaryBreakdown} from '../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
 
 export const EditAmountScreen = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
 
@@ -131,12 +129,12 @@ export const EditAmountScreen = () => {
   }, [amount.info, amountChanged, navigateTo, quantity])
 
   return (
-    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+    <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={[styles.flex, styles.safeAreaView]}
+        style={[a.flex_1, a.gap_lg, a.py_lg]}
       >
-        <ScrollView style={styles.scrollView} bounces={false}>
+        <ScrollView style={[a.px_lg]} bounces={false}>
           <TokenAmountItem
             amount={{
               info: amount.info,
@@ -145,7 +143,7 @@ export const EditAmountScreen = () => {
             ignorePrivacy
           />
 
-          <Spacer height={46} />
+          <Space.Height.xl />
 
           <AmountInput
             onChange={handleOnChangeQuantity}
@@ -191,21 +189,21 @@ export const EditAmountScreen = () => {
 }
 
 const Center = ({style, ...props}: ViewProps) => {
-  const {styles} = useStyles()
-  return <View style={[style, styles.center]} {...props} />
+  return <View style={[style, a.align_center]} {...props} />
 }
 const Actions = ({style, ...props}: ViewProps) => {
-  const {styles} = useStyles()
-  return <View style={[style, styles.actions]} {...props} />
+  return <View style={[style, a.px_lg]} {...props} />
 }
 
 const MaxBalanceButton = ({onPress}: {onPress(): void}) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <Text style={styles.maxBalance}>{strings.max.toLocaleUpperCase()}</Text>
+      <Text style={[{color: p.primary_600}, a.body_1_lg_medium]}>
+        {strings.max.toLocaleUpperCase()}
+      </Text>
     </TouchableOpacity>
   )
 }
@@ -216,7 +214,7 @@ type AmountInputProps = {
   ticker: string | undefined
 }
 const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <TextInput
@@ -229,72 +227,33 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
       selectTextOnAutoFocus
       allowFontScaling
       right={<Ticker ticker={ticker} />}
-      style={styles.amount}
+      style={[
+        {backgroundColor: p.bg_color_max},
+        a.heading_2_regular,
+        a.border_0,
+        a.text_right,
+      ]}
       underlineColor="transparent"
       underlineColorAndroid="transparent"
       activeUnderlineColor="transparent"
-      selectionColor={colors.selected}
-      cursorColor={colors.cursor}
+      selectionColor={p.input_selected}
+      cursorColor={p.el_gray_max}
       noHelper
     />
   )
 }
 const Ticker = ({ticker}: {ticker?: string}) => {
-  const {styles} = useStyles()
-  return <Text style={styles.ticker}>{ticker}</Text>
+  const {palette: p} = useTheme()
+  return (
+    <Text style={[{color: p.text_gray_max}, a.heading_2_regular]}>
+      {ticker}
+    </Text>
+  )
 }
 
 const HR = () => {
-  const {styles} = useStyles()
-  return <View style={styles.hr} />
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-    },
-    safeAreaView: {
-      ...atoms.gap_lg,
-      ...atoms.py_lg,
-    },
-    scrollView: {
-      ...atoms.px_lg,
-    },
-    center: {
-      ...atoms.align_center,
-    },
-    flex: {
-      ...atoms.flex_1,
-    },
-    hr: {
-      height: StyleSheet.hairlineWidth,
-      backgroundColor: color.gray_200,
-    },
-    actions: {
-      ...atoms.px_lg,
-    },
-    maxBalance: {
-      color: color.primary_600,
-      ...atoms.body_1_lg_medium,
-    },
-    amount: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.heading_2_regular,
-      ...atoms.border_0,
-      ...atoms.text_right,
-    },
-    ticker: {
-      color: color.text_gray_max,
-      ...atoms.heading_2_regular,
-    },
-  })
-  const colors = {
-    cursor: color.el_gray_max,
-    selected: color.input_selected,
-  }
-  return {styles, colors} as const
+  const {palette: p} = useTheme()
+  return <View style={{height: 1, backgroundColor: p.gray_200}} />
 }
 
 const ApplyButton = Button

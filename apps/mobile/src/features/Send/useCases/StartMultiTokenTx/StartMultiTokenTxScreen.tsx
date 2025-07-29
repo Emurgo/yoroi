@@ -1,27 +1,24 @@
 import {useIsFocused} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
-import {StyleSheet, TextInput, View, ViewProps} from 'react-native'
+import {TextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
-import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {
-  ScrollView,
-  useScrollView,
-} from '../../../../components/ScrollView/ScrollView'
-import {Space} from '../../../../components/Space/Space'
-import {useNextTick} from '../../../../hooks/useNextTick'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useHasPendingTx, useIsOnline} from '../../../../wallets/hooks'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {memoMaxLenght} from '../../common/constants'
-import {AddressErrorWrongNetwork} from '../../common/errors'
+import {AddressErrorWrongNetwork} from '~/features/Send/common/errors'
+import {useSendAddress} from '~/features/Send/common/useSendAddress'
+import {useSendReceiver} from '~/features/Send/common/useSendReceiver'
+import {useStrings} from '~/features/Send/common/useStrings'
+import {memoMaxLenght} from '~/features/SetupWallet/common/constants'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button} from '~/ui/Button/Button'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {Space} from '~/ui/Space/Space'
+import {useHasPendingTx, useIsOnline} from '~/wallets/hooks'
 import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
-import {useSendAddress} from '../../common/useSendAddress'
-import {useSendReceiver} from '../../common/useSendReceiver'
+import {useNextTick} from '../hooks/useNextTick'
 import {InputMemo} from './InputMemo/InputMemo'
 import {InputReceiver} from './InputReceiver/InputReceiver'
 import {NotifySupportedNameServers} from './NotifySupportedNameServers/NotifySupportedNameServers'
@@ -30,7 +27,7 @@ import {ShowErrors} from './ShowErrors'
 
 export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
@@ -96,14 +93,14 @@ export const StartMultiTokenTxScreen = () => {
   useNextTick(focusOnReceiver)
 
   return (
-    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+    <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <SafeAreaView
         edges={['bottom', 'right', 'left']}
-        style={[styles.safeAreaView, styles.flex]}
+        style={[a.gap_lg, a.py_lg, a.flex_1]}
       >
         <ScrollView
           ref={scrollViewRef}
-          style={[styles.flex, styles.padding]}
+          style={[a.flex_1, a.px_lg]}
           bounces={false}
           onScrollBarChange={setIsScrollBarShown}
         >
@@ -123,7 +120,7 @@ export const StartMultiTokenTxScreen = () => {
 
           <SelectNameServer />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <InputMemo
             value={memo}
@@ -132,7 +129,9 @@ export const StartMultiTokenTxScreen = () => {
           />
         </ScrollView>
 
-        <Actions style={isScrollBarShown && styles.actionsScroll}>
+        <Actions
+          style={isScrollBarShown && [a.border_t, {borderTopColor: p.gray_200}]}
+        >
           <Padding>
             <NextButton
               onPress={handleOnNext}
@@ -153,8 +152,7 @@ const Actions = ({style, ...props}: ViewProps) => {
 
 // NOTE: just to display the scrollable line on top of action
 const Padding = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
-  return <View style={[styles.padding, style]} {...props} />
+  return <View style={[a.px_lg, style]} {...props} />
 }
 
 const useReceiverError = ({
@@ -211,29 +209,6 @@ const useReceiverError = ({
     hasReceiverError: false,
     receiverErrorMessage: '',
   }
-}
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-    },
-    safeAreaView: {
-      ...atoms.gap_lg,
-      ...atoms.py_lg,
-    },
-    flex: {
-      ...atoms.flex_1,
-    },
-    padding: {
-      ...atoms.px_lg,
-    },
-    actionsScroll: {
-      ...atoms.border_t,
-      borderTopColor: color.gray_200,
-    },
-  })
-  return styles
 }
 
 const NextButton = Button

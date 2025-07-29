@@ -21,7 +21,7 @@ import {
   View,
 } from 'react-native'
 
-import {Icon} from '../../ui/Icon'
+import {Icon} from '~/ui/Icon'
 
 type SearchState = {
   search: string

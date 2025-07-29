@@ -4,7 +4,7 @@ import globalMessages, {
   actionMessages,
   errorMessages,
   ledgerMessages,
-} from '../../../kernel/i18n/global-messages'
+} from '~/kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()

@@ -1,16 +1,10 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import {ScrollView, Text, TouchableWithoutFeedback, View} from 'react-native'
+import {useMappedStrings} from '~/features/Discover/common/useStrings'
 
-import {Icon} from '../../../../../components/Icon'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useMappedStrings} from '../../../common/useStrings'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 
 type Props = {
   types: string[]
@@ -18,7 +12,7 @@ type Props = {
   selectedTypes: string[]
 }
 export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const scrollViewRef = React.useRef<ScrollView | null>(null)
   const sorted = React.useMemo(
     () => sortTypes(types, selectedTypes),
@@ -30,7 +24,7 @@ export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
       ref={scrollViewRef}
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={[a.pb_lg]}
     >
       {sorted.map((type) => {
         const isSelected = selectedTypes.includes(type)
@@ -50,7 +44,7 @@ export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
         )
       })}
 
-      <Spacer width={8} />
+      <Space.Width.sm />
     </ScrollView>
   )
 }
@@ -78,7 +72,7 @@ const TypeItem = ({
   disabled = false,
   isLimited = false,
 }: TypeItemProps) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   const [isPressed, setIsPressed] = React.useState(false)
   const mappedStrings = useMappedStrings()
@@ -88,111 +82,64 @@ const TypeItem = ({
   )
 
   const getBoxChipStyle = React.useMemo(() => {
-    if (disabled) return styles.boxDisabledStyle
-    if (isLimited) return styles.boxLimitedStyle
+    if (disabled)
+      return {borderWidth: 2, borderRadius: 4, borderColor: p.el_primary_min}
+    if (isLimited) return {backgroundColor: p.el_secondary}
 
-    if (isActive && isPressed) return styles.boxActivePressedStyle
-    if (isActive && !isPressed) return styles.boxActiveNonPressedStyle
+    if (isActive && isPressed) return {backgroundColor: p.primary_600}
+    if (isActive && !isPressed) return {backgroundColor: p.primary_500}
 
-    if (isPressed) return styles.boxPressedStyle
+    if (isPressed)
+      return {
+        borderWidth: 2,
+        borderColor: p.el_primary_max,
+        backgroundColor: p.primary_100,
+      }
 
-    return styles.boxIdleStyle
-  }, [styles, disabled, isActive, isLimited, isPressed])
+    return {borderWidth: 2, borderColor: p.el_primary_medium}
+  }, [p, disabled, isActive, isLimited, isPressed])
 
   const getTextChipStyle = React.useMemo(() => {
-    if (disabled) return styles.textDisabledStyle
-    if (isLimited) return styles.textLimitedStyle
-    if (isActive) return styles.textActiveStyle
+    if (disabled) return {color: p.primary_300}
+    if (isLimited) return {color: p.black_static}
+    if (isActive) return {color: p.white_static}
 
-    if (isPressed) return styles.textPressedStyle
+    if (isPressed) return {color: p.text_primary_max}
 
-    return styles.textIdleStyle
-  }, [disabled, isActive, isLimited, isPressed, styles])
+    return {color: p.text_primary_medium}
+  }, [p, disabled, isActive, isLimited, isPressed])
 
   const handlePress = (isPressIn: boolean) => {
     setIsPressed(isPressIn)
   }
 
   return (
-    <View style={styles.chip}>
+    <View style={[{marginRight: 8}]}>
       <TouchableWithoutFeedback
         onPressIn={() => handlePress(true)}
         onPress={onToggle}
         onPressOut={() => handlePress(false)}
       >
-        <View style={[styles.chipContentBox, getBoxChipStyle]}>
+        <View
+          style={[
+            {
+              borderRadius: 8,
+              height: 40,
+              paddingHorizontal: 14,
+              backgroundColor: p.bg_color_max,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+            },
+            a.p_2xs,
+            getBoxChipStyle,
+          ]}
+        >
           {isActive && <Icon.CheckFilled2 color={getTextChipStyle.color} />}
 
-          <Text style={[styles.chipText, getTextChipStyle]}>{text}</Text>
+          <Text style={[a.body_1_lg_regular, getTextChipStyle]}>{text}</Text>
         </View>
       </TouchableWithoutFeedback>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    chip: {
-      marginRight: 8,
-    },
-    chipContentBox: {
-      borderRadius: 8,
-      ...atoms.p_2xs,
-      height: 40,
-      paddingHorizontal: 14,
-      backgroundColor: color.bg_color_max,
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
-    },
-    chipText: {
-      color: color.primary_600,
-      ...atoms.body_1_lg_regular,
-    },
-    contentContainer: {
-      ...atoms.pb_lg,
-    },
-    boxDisabledStyle: {
-      borderWidth: 2,
-      ...atoms.rounded_sm,
-      borderColor: color.el_primary_min,
-    },
-    textDisabledStyle: {
-      color: color.primary_300,
-    },
-    boxIdleStyle: {
-      borderWidth: 2,
-      borderColor: color.el_primary_medium,
-    },
-    textIdleStyle: {
-      color: color.text_primary_medium,
-    },
-    boxLimitedStyle: {
-      backgroundColor: color.el_secondary,
-    },
-    textLimitedStyle: {
-      color: color.black_static,
-    },
-    boxActivePressedStyle: {
-      backgroundColor: color.primary_600,
-    },
-    boxActiveNonPressedStyle: {
-      backgroundColor: color.primary_500,
-    },
-    textActiveStyle: {
-      color: color.white_static,
-    },
-    boxPressedStyle: {
-      borderWidth: 2,
-      borderColor: color.el_primary_max,
-      backgroundColor: color.primary_100,
-    },
-    textPressedStyle: {
-      color: color.text_primary_max,
-    },
-  })
-
-  return {styles} as const
 }

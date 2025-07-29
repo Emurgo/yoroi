@@ -2,11 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {useWalletNavigation} from '../../../../../kernel/navigation'
-import {Button} from '../../../../../ui/Button/Button'
-import {Space} from '../../../../../ui/Space/Space'
-import {useStrings} from '../../common/strings'
-import {BrokenImage} from '../../illustrations/BrokenImage'
+import {useStrings} from '~/features/Staking/common/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {BrokenImage} from '../illustrations/BrokenImage'
 
 export const NotSupportedCardanoAppVersion = () => {
   const strings = useStrings()

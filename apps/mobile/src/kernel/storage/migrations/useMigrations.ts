@@ -3,13 +3,13 @@ import {App} from '@yoroi/types'
 
 import * as React from 'react'
 
-import {logger} from '../../logger/logger'
+import {logger} from '~/kernel/logger/logger'
 import {to4_26_0} from './4_26_0'
 import {to4_28_0} from './4_28_0'
 import {to4_9_0} from './4_9_0'
 import {ErrorMigrationVersion} from './errors'
 
-import {initInstallationId} from '../storages'
+import {initInstallationId} from '~/kernel/storage/storages'
 
 const currentVersion = 3
 const keyStorageVersion = 'storageVersion'

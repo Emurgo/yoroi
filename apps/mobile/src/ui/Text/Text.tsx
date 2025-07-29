@@ -4,7 +4,6 @@ import {
   Platform,
   Text as RNText,
   StyleProp,
-  StyleSheet,
   TextProps,
   TextStyle,
 } from 'react-native'
@@ -44,14 +43,18 @@ export const Text = (props: Props) => {
   } = props
 
   const textStyle: Array<StyleProp<TextStyle>> = [
-    styles.text,
-    {color: color.gray_max},
-    Boolean(small) && styles.small,
-    Boolean(secondary) && {color: color.gray_700},
-    Boolean(light) && {color: color.gray_min},
-    Boolean(bold) && styles.bold,
-    Boolean(monospace) && styles.monospace,
-    Boolean(error) && {color: color.sys_magenta_500},
+    a.body_2_md_regular,
+    {color: p.gray_max},
+    Boolean(small) && a.body_3_sm_regular,
+    Boolean(secondary) && {color: p.gray_700},
+    Boolean(light) && {color: p.gray_min},
+    Boolean(bold) && {fontFamily: 'Rubik-Medium'},
+    Boolean(monospace) &&
+      Platform.select({
+        ios: {fontFamily: 'Menlo'},
+        android: {fontFamily: 'monospace'},
+      }),
+    Boolean(error) && {color: p.sys_magenta_500},
     style,
   ]
   if (fontSize > 0) {
@@ -95,21 +98,3 @@ export const Text = (props: Props) => {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  text: {
-    ...a.body_2_md_regular,
-  },
-  small: {
-    ...a.body_3_sm_regular,
-  },
-  bold: {
-    fontFamily: 'Rubik-Medium',
-  },
-  monospace: {
-    ...Platform.select({
-      ios: {fontFamily: 'Menlo'},
-      android: {fontFamily: 'monospace'},
-    }),
-  },
-})

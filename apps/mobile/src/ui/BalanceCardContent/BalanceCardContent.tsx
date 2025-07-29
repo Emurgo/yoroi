@@ -2,18 +2,18 @@ import {amountBreakdown, amountFormatter} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Text, TouchableOpacity, View} from 'react-native'
 
 import {
   formatPriceChange,
   priceChange,
-} from '../../features/Portfolio/common/helpers/priceChange'
-import {useNavigateTo} from '../../features/Portfolio/common/hooks/useNavigateTo'
-import {useCurrencyPairing} from '../../features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+} from '~/features/Portfolio/common/helpers/priceChange'
+import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {Space} from '~/ui/Space/Space'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
 import {PnlTag} from '../PnlTag/PnlTag'
-import {Spacer} from '../Space/Space'
 
 type Props = {
   amount: Portfolio.Token.Amount
@@ -44,22 +44,22 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
     <TouchableOpacity onPress={navigationTo.tokensList}>
       {headerCard}
 
-      <Spacer height={6} />
+      <Space.Height.xs />
 
-      <View style={styles.balanceContainer}>
+      <View style={[a.gap_2xs, a.flex_col, a.align_start]}>
         <TouchableOpacity onPress={togglePrivacyMode}>
           <Balance amount={amount} />
         </TouchableOpacity>
 
-        <View style={styles.rowBetween}>
+        <View style={[a.flex_row, a.justify_between, a.align_center, a.w_full]}>
           <TouchableOpacity
-            style={styles.balanceBox}
+            style={[a.flex_row, a.gap_2xs, a.align_baseline]}
             onPress={togglePrivacyMode}
           >
-            <PairedBalance amount={amount} textStyle={styles.pairBalance} />
+            <PairedBalance amount={amount} textStyle={[a.body_2_md_regular]} />
           </TouchableOpacity>
 
-          <View style={styles.varyContainer}>
+          <View style={[a.flex_row, a.gap_xs, a.align_stretch]}>
             <PnlPercentChange
               variantPnl={variantPnl}
               changePercent={formatPriceChange(changePercent)}
@@ -79,7 +79,7 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
 type BalanceProps = {amount: Portfolio.Token.Amount}
 const Balance = ({amount}: BalanceProps) => {
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const balance = React.useMemo(
     () =>
@@ -90,12 +90,16 @@ const Balance = ({amount}: BalanceProps) => {
   )
 
   return (
-    <View style={styles.balanceBox}>
-      <Text style={[styles.balanceText, {color: color.white_static}]}>
+    <View style={[a.flex_row, a.gap_2xs, a.align_baseline]}>
+      <Text
+        style={[a.heading_1_medium, a.font_semibold, {color: p.white_static}]}
+      >
         {balance}
       </Text>
 
-      <Text style={[styles.symbol, {color: color.white_static}]}>
+      <Text
+        style={[a.body_1_lg_medium, a.font_semibold, {color: p.white_static}]}
+      >
         {amount.info.ticker}
       </Text>
     </View>
@@ -130,38 +134,3 @@ const PnlPairedChange = ({variantPnl, changeValue}: PnlPairedChangeProps) => {
     </PnlTag>
   )
 }
-
-const styles = StyleSheet.create({
-  rowBetween: {
-    ...a.flex_row,
-    ...a.justify_between,
-    ...a.align_center,
-    ...a.w_full,
-  },
-  balanceBox: {
-    ...a.flex_row,
-    ...a.gap_2xs,
-    ...a.align_baseline,
-  },
-  balanceText: {
-    ...a.heading_1_medium,
-    ...a.font_semibold,
-  },
-  symbol: {
-    ...a.body_1_lg_medium,
-    ...a.font_semibold,
-  },
-  balanceContainer: {
-    ...a.gap_2xs,
-    ...a.flex_col,
-    ...a.align_start,
-  },
-  pairBalance: {
-    ...a.body_2_md_regular,
-  },
-  varyContainer: {
-    ...a.flex_row,
-    ...a.gap_xs,
-    ...a.align_stretch,
-  },
-})

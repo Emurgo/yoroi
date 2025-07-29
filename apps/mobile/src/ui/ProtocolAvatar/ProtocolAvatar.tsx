@@ -2,7 +2,7 @@ import {getDexUrlByProtocol} from '@yoroi/swap'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {Linking, Text, TouchableOpacity} from 'react-native'
 
 import {ProtocolIcon} from '../ProtocolIcon/ProtocolIcon'
 
@@ -19,7 +19,7 @@ export const ProtocolAvatar = ({
   onPress,
   preventOpenLink = false,
 }: Props) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const formattedName = `${protocol.charAt(0).toUpperCase()}${protocol.slice(1).replace(/-/, ' ')}${append}`
 
   return (
@@ -27,17 +27,17 @@ export const ProtocolAvatar = ({
       onPress={
         onPress ?? (() => Linking.openURL(getDexUrlByProtocol(protocol)))
       }
-      style={styles.container}
+      style={[a.flex_row, a.align_center, a.gap_sm]}
       disabled={preventOpenLink}
     >
       <ProtocolIcon protocol={protocol} size={18} />
 
       <Text
         style={[
-          styles.text,
-          {color: color.text_gray_medium},
-          !preventOpenLink && styles.link,
-          !preventOpenLink && {color: color.text_primary_medium},
+          a.body_1_lg_regular,
+          {color: p.text_gray_medium},
+          !preventOpenLink && a.body_1_lg_medium,
+          !preventOpenLink && {color: p.text_primary_medium},
         ]}
       >
         {formattedName}
@@ -45,17 +45,3 @@ export const ProtocolAvatar = ({
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  text: {
-    ...a.body_1_lg_regular,
-  },
-  link: {
-    ...a.body_1_lg_medium,
-  },
-  container: {
-    ...a.flex_row,
-    ...a.align_center,
-    ...a.gap_sm,
-  },
-})

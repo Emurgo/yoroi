@@ -2,7 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -10,7 +10,6 @@ import {
   InteractionManager,
   Linking,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
@@ -18,29 +17,29 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {Space} from '../../../../components/Space/Space'
-import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
-import {TextInput} from '../../../../components/TextInput/TextInput'
-import {showErrorDialog} from '../../../../kernel/dialogs'
-import {debugWalletInfo, features} from '../../../../kernel/features'
-import {errorMessages} from '../../../../kernel/i18n/global-messages'
-import {logger} from '../../../../kernel/logger/logger'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {isEmptyString} from '../../../../kernel/utils'
-import {getWalletNameError} from '../../../../wallets/utils/validators'
-import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
-import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
-import {YoroiZendeskLink} from '../../common/constants'
-import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
-import {useStrings} from '../../common/useStrings'
-import {Info as InfoIcon} from '../../illustrations/Info'
+import {CardAboutPhrase} from '~/features/SetupWallet/common/CardAboutPhrase/CardAboutPhrase'
+import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {LearnMoreButton} from '~/features/SetupWallet/common/LearnMoreButton/LearnMoreButton'
+import {useStrings} from '~/features/SetupWallet/common/useStrings'
+import {Info as InfoIcon} from '~/features/SetupWallet/illustrations/Info'
+import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useCreateWalletXPub} from '~/features/WalletManager/hooks/useCreateWalletXPub'
+import {showErrorDialog} from '~/kernel/dialogs'
+import {debugWalletInfo, features} from '~/kernel/features'
+import {errorMessages} from '~/kernel/i18n/global-messages'
+import {logger} from '~/kernel/logger/logger'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
+import {TextInput} from '~/ui/TextInput/TextInput'
+import {isEmptyString} from '~/wallets/utils/string'
+import {getWalletNameError} from '~/wallets/utils/validators'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -71,7 +70,7 @@ const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p, isDark} = useTheme()
   const storage = useAsyncStorage()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
@@ -154,7 +153,7 @@ export const SaveNanoXScreen = () => {
     openModal({
       title: strings.walletDetailsModalTitle,
       content: (
-        <View style={[styles.flex, styles.modal]}>
+        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
             title={strings.walletNameModalCardTitle}
             linesOfText={[
@@ -163,7 +162,7 @@ export const SaveNanoXScreen = () => {
             ]}
           />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <CardAboutPhrase
             title={strings.walletPasswordModalCardTitle}
@@ -173,7 +172,7 @@ export const SaveNanoXScreen = () => {
             ]}
           />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <LearnMoreButton
             onPress={() => {
@@ -191,7 +190,7 @@ export const SaveNanoXScreen = () => {
     openModal({
       title: strings.walletDetailsModalTitle,
       content: (
-        <View style={[styles.flex, styles.modal]}>
+        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
             title={strings.walletChecksumModalCardTitle}
             checksumImage={seed}
@@ -203,7 +202,7 @@ export const SaveNanoXScreen = () => {
             ]}
           />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
           <LearnMoreButton
             onPress={() => {
@@ -218,10 +217,17 @@ export const SaveNanoXScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={[styles.root, styles.flex]}>
+    <KeyboardAvoidingView
+      style={[
+        {backgroundColor: p.bg_color_max},
+        a.justify_between,
+        a.px_lg,
+        a.flex_1,
+      ]}
+    >
       <SafeAreaView
         edges={['left', 'right', 'bottom']}
-        style={[styles.safeAreaView, styles.flex]}
+        style={[a.pb_lg, a.flex_1]}
       >
         <StepperProgress
           currentStep={2}
@@ -229,19 +235,21 @@ export const SaveNanoXScreen = () => {
           totalSteps={2}
         />
 
-        <Space height="xl" />
+        <Space.Height.xl />
 
-        <View style={styles.info}>
-          <Text style={styles.title}>{strings.hwWalletDetailsTitle(bold)}</Text>
+        <View style={[a.flex_row]}>
+          <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+            {strings.hwWalletDetailsTitle(bold)}
+          </Text>
 
-          <Space width="xs" />
+          <Space.Width.xs />
 
           <Info onPress={showModalTipsPassword} />
         </View>
 
-        <Space height="xl" />
+        <Space.Height.xl />
 
-        <ScrollView style={styles.flex}>
+        <ScrollView style={[a.flex_1]}>
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus
@@ -260,22 +268,38 @@ export const SaveNanoXScreen = () => {
             showErrorOnBlur
           />
 
-          <Space height="lg" />
+          <Space.Height.lg />
 
-          <View style={styles.checksum}>
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              {textAlignVertical: 'center'},
+            ]}
+          >
             <Icon.WalletAvatar
               image={new Blockies({seed}).asBase64()}
-              style={styles.walletChecksum}
+              style={[{width: 24, height: 24}]}
               size={24}
             />
 
-            <Space width="sm" />
+            <Space.Width.sm />
 
-            <Text style={styles.plateNumber} testID="wallet-plate-number">
+            <Text
+              style={[
+                a.body_1_lg_regular,
+                a.text_center,
+                a.justify_center,
+                a.align_center,
+                {color: p.text_gray_medium},
+              ]}
+              testID="wallet-plate-number"
+            >
               {plate}
             </Text>
 
-            <Space width="sm" />
+            <Space.Width.sm />
 
             <Info onPress={showModalTipsPlateNumber} />
           </View>
@@ -295,71 +319,18 @@ export const SaveNanoXScreen = () => {
 }
 
 const Info = ({onPress}: {onPress: () => void}) => {
-  const {color, isDark} = useTheme()
+  const {palette: p, isDark} = useTheme()
   return (
     <TouchableOpacity onPress={onPress}>
-      <InfoIcon
-        size={24}
-        color={isDark ? color.white_static : color.black_static}
-      />
+      <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
     </TouchableOpacity>
   )
 }
 
 const useBold = () => {
-  const {styles} = useStyles()
-
   return {
-    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+    b: (text: React.ReactNode) => (
+      <Text style={[a.body_1_lg_medium]}>{text}</Text>
+    ),
   }
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    flex: {
-      ...atoms.flex_1,
-    },
-    modal: {
-      ...atoms.pb_lg,
-      ...atoms.px_lg,
-    },
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.justify_between,
-      ...atoms.px_lg,
-    },
-    safeAreaView: {
-      ...atoms.pb_lg,
-    },
-    info: {
-      ...atoms.flex_row,
-    },
-    title: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-    },
-    plateNumber: {
-      color: color.text_gray_medium,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    bolder: {
-      ...atoms.body_1_lg_medium,
-    },
-    checksum: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      textAlignVertical: 'center',
-    },
-    walletChecksum: {
-      width: 24,
-      height: 24,
-    },
-  })
-
-  return {styles} as const
 }

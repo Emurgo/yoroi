@@ -2,7 +2,6 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   GestureResponderEvent,
-  StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
   useWindowDimensions,
@@ -13,9 +12,9 @@ import QRCode from 'react-native-qrcode-svg'
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
 import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
-import {Spacer} from '../Space/Space'
-import {Text} from '../Text/Text'
 
 type ShareQRCodeCardProps = {
   qrContent: string
@@ -36,7 +35,7 @@ export const ShareQRCodeCard = ({
   onShare,
   shareLabel,
 }: ShareQRCodeCardProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const screenWidth = useWindowDimensions().width
 
   const [isSharing, setIsSharing] = React.useState(false)
@@ -72,7 +71,7 @@ export const ShareQRCodeCard = ({
 
   if (isSharing)
     return (
-      <ViewShot style={styles.shot} ref={ref}>
+      <ViewShot style={{height: 308}} ref={ref}>
         <CaptureShareQRCodeCard content={qrContent} />
       </ViewShot>
     )
@@ -80,38 +79,72 @@ export const ShareQRCodeCard = ({
   return (
     <TouchableWithoutFeedback onLongPress={onLongPress}>
       <>
-        <View style={[styles.card, {width: screenWidth - 32}]}>
+        <View
+          style={[
+            a.gap_lg,
+            a.align_center,
+            a.flex_1,
+            a.px_lg,
+            {
+              minHeight: 432,
+              borderRadius: 16,
+              alignItems: 'center',
+              width: screenWidth - 32,
+              overflow: 'hidden',
+            },
+          ]}
+        >
           <LinearGradient
-            style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 16}]}
+            style={[
+              {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                opacity: 1,
+                borderRadius: 16,
+              },
+            ]}
             start={{x: 0, y: 0}}
             end={{x: 0, y: 1}}
-            colors={color.bg_gradient_1}
+            colors={p.bg_gradient_1}
           />
 
-          <Spacer height={16} />
+          <Space.Height.md />
 
           <Text
-            style={[styles.title, {color: color.gray_max}]}
+            style={[a.heading_3_medium, {color: p.gray_max}]}
             testID={`${testID}-title`}
           >
             {title}
           </Text>
 
-          <View style={styles.addressContainer}>
+          <View style={{alignItems: 'center'}}>
             <View
-              style={[styles.qrCode, {backgroundColor: color.white_static}]}
+              style={{
+                padding: 10,
+                borderRadius: 8,
+                backgroundColor: p.white_static,
+              }}
             >
               <QRCode
                 value={qrContent}
                 size={170}
-                backgroundColor={color.white_static}
-                color={color.black_static}
+                backgroundColor={p.white_static}
+                color={p.black_static}
               />
             </View>
 
-            <Spacer height={16} />
+            <Space.Height.md />
 
-            <Text style={[styles.textAddress, {color: color.gray_max}]}>
+            <Text
+              style={[
+                {textAlign: 'center'},
+                a.body_2_md_medium,
+                {color: p.gray_max},
+              ]}
+            >
               {qrContent}
             </Text>
           </View>
@@ -121,7 +154,18 @@ export const ShareQRCodeCard = ({
             onPress={handleOnPressShare}
             onLongPress={onLongPress}
           >
-            <Text style={[styles.textShareAddress, {color: color.gray_900}]}>
+            <Text
+              style={[
+                {
+                  height: 32,
+                  textAlignVertical: 'center',
+                  textTransform: 'uppercase',
+                  letterSpacing: 0.5,
+                },
+                a.button_2_md,
+                {color: p.gray_900},
+              ]}
+            >
               {shareLabel}
             </Text>
           </TouchableOpacity>
@@ -130,37 +174,3 @@ export const ShareQRCodeCard = ({
     </TouchableWithoutFeedback>
   )
 }
-
-const styles = StyleSheet.create({
-  qrCode: {
-    padding: 10,
-    borderRadius: 8,
-  },
-  addressContainer: {
-    alignItems: 'center',
-  },
-  shot: {
-    height: 308,
-  },
-  card: {
-    ...a.gap_lg,
-    minHeight: 432,
-    ...a.align_center,
-    ...a.flex_1,
-    ...a.px_lg,
-  },
-  title: {
-    ...a.heading_3_medium,
-  },
-  textAddress: {
-    textAlign: 'center',
-    ...a.body_2_md_medium,
-  },
-  textShareAddress: {
-    height: 32,
-    textAlignVertical: 'center',
-    ...a.button_2_md,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-})

@@ -1,4 +1,4 @@
-import {CardanoMobile} from '../../wallets'
+import {CardanoMobile} from '../wallets'
 import {getSpendingKey, getStakingKey, toWasmAddress} from './addressInfo'
 
 // base

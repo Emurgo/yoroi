@@ -1,11 +1,11 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useCurrencyPairing} from '../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {SkeletonPrimaryToken} from './SkeletonPrimaryToken'
 
 type Props = {
@@ -20,17 +20,23 @@ export const TokenValueBalance = ({
   isPrimaryTokenActive,
   rate,
 }: Props) => {
+  const {atoms: ta, palette: p} = useTheme()
   const {currency, config} = useCurrencyPairing()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
-  const {styles} = useStyles()
   const name = infoExtractName(amount.info)
 
   return (
-    <View style={styles.balanceBox}>
+    <View style={[a.flex_row, a.gap_2xs, a.align_baseline]}>
       {isFetching || rate === undefined ? (
         <SkeletonPrimaryToken />
       ) : (
-        <Text style={[styles.balanceText]}>
+        <Text
+          style={[
+            a.heading_1_medium,
+            a.font_semibold,
+            {color: p.text_gray_medium},
+          ]}
+        >
           {isPrivacyActive
             ? privacyPlaceholder
             : isPrimaryTokenActive
@@ -41,32 +47,15 @@ export const TokenValueBalance = ({
         </Text>
       )}
 
-      <Text style={styles.symbol}>
+      <Text
+        style={[
+          a.body_1_lg_medium,
+          a.font_semibold,
+          {color: p.text_gray_medium},
+        ]}
+      >
         {isPrimaryTokenActive ? name : currency}
       </Text>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    balanceBox: {
-      ...atoms.flex_row,
-      ...atoms.gap_2xs,
-      ...atoms.align_baseline,
-    },
-    balanceText: {
-      ...atoms.heading_1_medium,
-      ...atoms.font_semibold,
-      color: color.text_gray_medium,
-    },
-    symbol: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.text_gray_medium,
-    },
-  })
-
-  return {styles} as const
 }

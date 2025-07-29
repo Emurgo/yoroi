@@ -3,9 +3,9 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Text} from 'react-native'
 
-import {ErrorPanel} from '../../../../../../components/ErrorPanel/ErrorPanel'
-import globalMessages from '../../../../../../kernel/i18n/global-messages'
-import {limitOfSecondaryAmountsPerTx} from '../../../../common/constants'
+import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
+import globalMessages from '~/kernel/i18n/global-messages'
+import {limitOfSecondaryAmountsPerTx} from '~/features/SetupWallet/common/constants'
 
 export const MaxAmountsPerTx = () => {
   const strings = useStrings()

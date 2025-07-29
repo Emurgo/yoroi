@@ -1,19 +1,13 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-} from 'react-native'
+import {Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import WebView from 'react-native-webview'
 
-import {Icon} from '../../../../components/Icon'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useBrowser} from '../../common/BrowserProvider'
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Icon} from '~/ui/Icon'
 import {WebViewState} from './WebViewItem'
 
 type Props = {
@@ -21,18 +15,16 @@ type Props = {
   webViewState: WebViewState
 }
 export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
-  const {styles, color, colors} = useStyles()
+  const {palette: p} = useTheme()
   const {tabs, openTabs} = useBrowser()
   const insets = useSafeAreaInsets()
   const {track} = useMetrics()
 
   const totalTabs = Math.min(tabs.length, 99)
 
-  const colorBackward = webViewState.canGoBack ? color.gray_800 : color.gray_500
-  const colorForward = webViewState.canGoForward
-    ? color.gray_800
-    : color.gray_500
-  const colorRefresh = !webViewState.loading ? color.gray_800 : color.gray_500
+  const colorBackward = webViewState.canGoBack ? p.gray_800 : p.gray_500
+  const colorForward = webViewState.canGoForward ? p.gray_800 : p.gray_500
+  const colorRefresh = !webViewState.loading ? p.gray_800 : p.gray_500
 
   const handleRefresh = () => {
     if (!webViewRef.current) return
@@ -72,7 +64,27 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
 
   return (
     <View
-      style={[styles.root, styles.shadow, {paddingBottom: insets.bottom + 12}]}
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.justify_between,
+        a.gap_md,
+        a.px_lg,
+        a.pt_md,
+        {backgroundColor: p.bg_color_max},
+        {
+          shadowColor: '#054037',
+          shadowOffset: {
+            width: 0,
+            height: 8,
+          },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 14,
+          zIndex: 1,
+          paddingBottom: insets.bottom + 12,
+        },
+      ]}
     >
       <Touch disabled={!webViewState.canGoBack} onPress={handleBackward}>
         <Icon.Backward color={colorBackward} />
@@ -83,7 +95,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
       </Touch>
 
       <Touch onPress={handleShare}>
-        <Icon.Share2 color={colors.iconNormal} />
+        <Icon.Share2 color={p.gray_800} />
       </Touch>
 
       <Touch onPress={handleRefresh} disabled={webViewState.loading}>
@@ -108,68 +120,38 @@ type TabItemProps = {
   total: number
 }
 const TabItem = ({total = 1}: TabItemProps) => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
-    <View style={styles.tabViewContainer}>
-      <Icon.Square color={colors.iconNormal} />
+    <View style={[{position: 'relative'}]}>
+      <Icon.Square color={p.gray_800} />
 
-      <View style={styles.tabBox}>
-        <Text style={styles.tabNumber}>{total}</Text>
+      <View
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+        ]}
+      >
+        <Text
+          style={[
+            {
+              color: p.gray_800,
+              fontWeight: '500',
+              fontSize: 10,
+              lineHeight: 18,
+            },
+          ]}
+        >
+          {total}
+        </Text>
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: 16,
-      ...atoms.px_lg,
-      ...atoms.pt_md,
-      backgroundColor: color.bg_color_max,
-    },
-    shadow: {
-      shadowColor: '#054037',
-      shadowOffset: {
-        width: 0,
-        height: 8,
-      },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-
-      elevation: 14,
-
-      zIndex: 1,
-    },
-    tabViewContainer: {
-      position: 'relative',
-    },
-    tabBox: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    tabNumber: {
-      color: color.gray_800,
-      fontWeight: '500',
-      fontSize: 10,
-      lineHeight: 18,
-    },
-  })
-
-  const colors = {
-    iconNormal: color.gray_800,
-  }
-
-  return {styles, color, colors} as const
 }

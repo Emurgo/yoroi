@@ -1,13 +1,13 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, StyleSheet, Text, View} from 'react-native'
+import {FlatList, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {makeList} from '../../../../../kernel/utils'
-import {ILiquidityPool} from '../../../common/hooks/useGetLiquidityPool'
-import {useShowLiquidityPoolModal} from '../../../common/hooks/useShowLiquidityPoolModal'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {TokenEmptyList} from '../../../ui/TokenEmptyList/TokenEmptyList'
+import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
+import {useShowLiquidityPoolModal} from '~/features/Portfolio/common/hooks/useShowLiquidityPoolModal'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {makeList} from '~/kernel/utils'
+import {Space} from '~/ui/Space/Space'
+import {TokenEmptyList} from '~/ui/TokenEmptyList/TokenEmptyList'
 import {DAppTokenItem} from './DAppTokenItem/DAppTokenItem'
 import {DAppTokenItemSkeleton} from './DAppTokenItem/DAppTokenItemSkeleton'
 
@@ -22,7 +22,7 @@ export const LiquidityPoolTab = ({
   isSearching,
 }: Props) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const hasEmpty = tokensList.length === 0
 
   const {onShow} = useShowLiquidityPoolModal()
@@ -34,16 +34,16 @@ export const LiquidityPoolTab = ({
 
   const renderHeaderList = () => {
     if (hasEmpty) return null
-    if (isFetching) return <Spacer height={16} />
+    if (isFetching) return <Space.Height.md />
 
     if (isSearching)
       return (
         <View>
-          <Text style={styles.textAvailable}>
+          <Text style={[a.body_2_md_regular, {color: p.gray_700}]}>
             {strings.countLiquidityPoolsAvailable(tokensList.length)}
           </Text>
 
-          <Spacer height={16} />
+          <Space.Height.md />
         </View>
       )
 
@@ -54,9 +54,9 @@ export const LiquidityPoolTab = ({
     if (isFetching)
       return (
         <>
-          {tokensList.length !== 0 && <Spacer height={16} />}
+          {tokensList.length !== 0 && <Space.Height.md />}
 
-          <View style={styles.containerLoading}>
+          <View style={[a.gap_lg]}>
             {makeList(3).map((_, index) => (
               <DAppTokenItemSkeleton key={index} />
             ))}
@@ -68,15 +68,15 @@ export const LiquidityPoolTab = ({
   }
 
   return (
-    <View style={styles.root}>
-      <Spacer height={16} />
+    <View style={[a.flex_1]}>
+      <Space.Height.md />
 
       <FlatList
         scrollEnabled={false}
         data={tokensList}
         ListHeaderComponent={renderHeaderList()}
         ListFooterComponent={renderFooterList()}
-        ItemSeparatorComponent={() => <Spacer width={8} />}
+        ItemSeparatorComponent={() => <Space.Width.sm />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (
@@ -91,30 +91,8 @@ export const LiquidityPoolTab = ({
             <TokenEmptyList emptyText={strings.noDataFound} />
           ) : undefined
         }
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle={[a.flex_1, a.flex_grow]}
       />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-    },
-    listContainer: {
-      ...atoms.flex_1,
-      ...atoms.flex_grow,
-    },
-    containerLoading: {
-      ...atoms.gap_lg,
-    },
-    textAvailable: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_700,
-    },
-  })
-
-  return {styles} as const
 }

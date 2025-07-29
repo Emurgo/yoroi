@@ -2,9 +2,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {Button} from '../../../../../ui/Button/Button'
-import {Space} from '../../../../../ui/Space/Space'
-import {useStrings} from '../../common/strings'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {useStrings} from '~/features/Staking/common/useStrings'
 
 type Props = {
   onParticipatePress: () => void

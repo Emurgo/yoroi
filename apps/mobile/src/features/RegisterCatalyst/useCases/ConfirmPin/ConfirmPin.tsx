@@ -2,40 +2,31 @@ import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  View,
-  ViewProps,
-} from 'react-native'
+import {ActivityIndicator, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useWalletNavigation} from '../../../../kernel/navigation'
-import {Button} from '../../../../ui/Button/Button'
-import {
-  BACKSPACE,
-  NumericKeyboard,
-} from '../../../../ui/NumericKeyboard/NumericKeyboard'
-import {Space, Spacer} from '../../../../ui/Space/Space'
-import {generatePrivateKeyForCatalyst} from '../../../../wallets/cardano/catalyst'
-import {encryptWithPassword} from '../../../../wallets/cardano/catalyst/catalystCipher'
-import {useReviewTx} from '../../../ReviewTx/common/ReviewTxProvider'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo} from '../../CatalystNavigator'
+import {useStrings} from '~/features/RegisterCatalyst/common/strings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
 import {
   Actions,
   Description,
   PinBox,
   Row,
   Stepper,
-} from '../../common/components'
-import {useStrings} from '../../common/strings'
+} from '~/ui/common/components'
+import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard/NumericKeyboard'
+import {Space} from '~/ui/Space/Space'
+import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
+import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
+import {useNavigateTo} from '../CatalystNavigator'
+import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
 
 export const ConfirmPin = () => {
   const strings = useStrings()
   const {isDark} = useTheme()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const {pin, votingKeyEncryptedChanged} = useCatalyst()
   const navigateTo = useNavigateTo()
   const [currentActivePin, setCurrentActivePin] = React.useState(1)
@@ -221,23 +212,18 @@ export const ConfirmPin = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[
-        styles.safeAreaView,
-        {backgroundColor: color.bg_color_max},
-        a.px_lg,
-        a.pb_lg,
-      ]}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
     >
       <Padding style={a.px_lg}>
         <Stepper title={strings.step3Title} currentStep={3} totalSteps={3} />
       </Padding>
 
-      <ScrollView bounces={false} contentContainerStyle={styles.padding}>
+      <ScrollView bounces={false} contentContainerStyle={[]}>
         <Description>{strings.step3Description}</Description>
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
-        <Row style={[styles.row, {justifyContent: 'center'}]}>
+        <Row style={[{justifyContent: 'center'}]}>
           <PinBox
             onPress={() => handleOnPress(1)}
             done={done}
@@ -247,7 +233,7 @@ export const ConfirmPin = () => {
             {pin1Value}
           </PinBox>
 
-          <Space width="lg" />
+          <Space.Width.lg />
 
           <PinBox
             onPress={() => handleOnPress(2)}
@@ -258,7 +244,7 @@ export const ConfirmPin = () => {
             {pin2Value}
           </PinBox>
 
-          <Spacer width={16} />
+          <Space.Width.md />
 
           <PinBox
             onPress={() => handleOnPress(3)}
@@ -269,7 +255,7 @@ export const ConfirmPin = () => {
             {pin3Value}
           </PinBox>
 
-          <Spacer width={16} />
+          <Space.Width.md />
 
           <PinBox
             onPress={() => handleOnPress(4)}
@@ -282,7 +268,7 @@ export const ConfirmPin = () => {
         </Row>
       </ScrollView>
 
-      <Spacer fill />
+      <View style={[{flex: 1}]} />
 
       <Padding style={a.px_lg}>
         <Actions>
@@ -294,16 +280,21 @@ export const ConfirmPin = () => {
         </Actions>
       </Padding>
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <NumericKeyboard onKeyDown={onKeyDown} />
 
       {isLoading && (
         <View
           style={[
-            styles.loading,
-            StyleSheet.absoluteFillObject,
-            {backgroundColor: color.bg_color_max},
+            {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: p.bg_color_max,
+            },
             a.align_center,
             a.justify_center,
           ]}
@@ -357,15 +348,3 @@ const useGenerateVotingKeys = (
 const Padding = ({style, ...props}: ViewProps) => {
   return <View {...props} style={style} />
 }
-
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-  },
-  padding: {},
-  loading: {
-    left: 0,
-    right: 0,
-  },
-  row: {},
-})

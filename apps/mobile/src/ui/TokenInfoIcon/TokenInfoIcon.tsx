@@ -3,22 +3,30 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import React from 'react'
-import {ImageStyle, StyleSheet, View} from 'react-native'
+import {ImageStyle, View} from 'react-native'
 
-import {usePortfolioImage} from '../../Portfolio/common/hooks/usePortfolioImage'
-import {Icon} from '../Icon'
+import {usePortfolioImage} from '~/features/Portfolio/common/hooks/usePortfolioImage'
+import {Icon} from '~/ui/Icon'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info | undefined | null
   size?: 'sm' | 'md' | 'lg' | 'xl'
   imageStyle?: ImageStyle
 }
+
+const sizeStyles = {
+  xl: {width: 80, height: 80},
+  lg: {width: 40, height: 40},
+  md: {width: 32, height: 32},
+  sm: {width: 24, height: 24},
+} as const
+
 export const TokenInfoIcon = ({
   info,
   size = 'lg',
   imageStyle,
 }: TokenInfoIconProps) => {
-  const {color} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const [policy, name] = !info ? '.' : info.id.split('.')
   const {uri, headers, onError, onLoad, isError} = usePortfolioImage({
     policy,
@@ -30,10 +38,18 @@ export const TokenInfoIcon = ({
   if (!info || isError) {
     return (
       <View
-        style={[styles.icon, styles[size], {backgroundColor: color.gray_200}]}
+        style={[
+          {backgroundColor: 'transparent'},
+          {borderRadius: 8},
+          a.align_center,
+          a.justify_center,
+          a.overflow_hidden,
+          sizeStyles[size],
+          {backgroundColor: p.gray_200},
+        ]}
       >
         <Icon.Coins2
-          color={color.gray_600}
+          color={p.gray_600}
           size={{sm: 18, md: 20, lg: 24, xl: 42}[size]}
         />
       </View>
@@ -44,9 +60,13 @@ export const TokenInfoIcon = ({
     return (
       <View
         style={[
-          styles.icon,
-          styles[size],
-          {backgroundColor: color.primary_500},
+          {backgroundColor: 'transparent'},
+          {borderRadius: 8},
+          a.align_center,
+          a.justify_center,
+          a.overflow_hidden,
+          sizeStyles[size],
+          {backgroundColor: p.primary_500},
           imageStyle,
         ]}
       >
@@ -62,7 +82,15 @@ export const TokenInfoIcon = ({
       recyclingKey={info.id}
       source={{uri, headers}}
       contentFit="cover"
-      style={[styles.icon, styles[size], imageStyle]}
+      style={[
+        {backgroundColor: 'transparent'},
+        {borderRadius: 8},
+        a.align_center,
+        a.justify_center,
+        a.overflow_hidden,
+        sizeStyles[size],
+        imageStyle,
+      ]}
       placeholder={blurhash}
       cachePolicy="memory-disk"
       onError={onError}
@@ -73,29 +101,3 @@ export const TokenInfoIcon = ({
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
-
-const styles = StyleSheet.create({
-  icon: {
-    backgroundColor: 'transparent',
-    borderRadius: 8,
-    ...a.align_center,
-    ...a.justify_center,
-    ...a.overflow_hidden,
-  },
-  xl: {
-    width: 80,
-    height: 80,
-  },
-  lg: {
-    width: 40,
-    height: 40,
-  },
-  md: {
-    width: 32,
-    height: 32,
-  },
-  sm: {
-    width: 24,
-    height: 24,
-  },
-} as const)

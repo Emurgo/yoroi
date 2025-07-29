@@ -3,9 +3,9 @@ import * as React from 'react'
 
 import {Text, View} from 'react-native'
 
-import {useTranslatedError} from '../../hooks/useTranslatedError'
-import {Button} from '../Button/Button'
-import {SpaceHeight} from '../Space/Space'
+import {useTranslatedError} from '~/hooks/useTranslatedError'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
 import {ErrorFallbackProps} from './types'
 import {useStrings} from './useStrings'
 
@@ -50,7 +50,7 @@ export const LargeErrorFallback = ({
         />
       )}
 
-      <SpaceHeight fill size="lg" />
+      <Space.Height.lg fill />
     </View>
   )
 }

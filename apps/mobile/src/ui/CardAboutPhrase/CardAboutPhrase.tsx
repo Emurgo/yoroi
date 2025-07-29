@@ -4,9 +4,9 @@ import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
-import {useStrings} from '../../features/SetupWallet/common/useStrings'
-import {Icon} from '../Icon'
-import {Space} from '../Space/Space'
+import {useStrings} from '~/features/SetupWallet/common/useStrings'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 
 type CardAboutPhraseProps = {
   linesOfText: string[] | React.ReactNode[]

@@ -5,18 +5,17 @@ import {
   GestureResponderEvent,
   Pressable,
   PressableProps,
-  StyleSheet,
   View,
 } from 'react-native'
 
-import {Icon} from '../Icon'
-import type {IconProps} from '../Icon/type'
+import {Icon} from '~/ui/Icon'
+import type {IconProps} from '~/ui/Icon/type'
 
 export type RefreshButtonProps = Omit<PressableProps, 'style' | 'children'>
 export const RefreshButton = (props: RefreshButtonProps) => {
   const {disabled, onPress, ...rest} = props
 
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const spin = React.useRef(new Animated.Value(0)).current
 
   const handleOnPress = (event: GestureResponderEvent) => {
@@ -41,14 +40,14 @@ export const RefreshButton = (props: RefreshButtonProps) => {
 
   const backgroundColors: Colors = {
     idle: 'transparent',
-    pressed: color.gray_100,
+    pressed: p.gray_100,
     disabled: 'transparent',
   }
 
   const foregroundColors: Colors = {
-    idle: color.text_gray_medium,
-    pressed: color.text_gray_max,
-    disabled: color.text_gray_min,
+    idle: p.text_gray_medium,
+    pressed: p.text_gray_max,
+    disabled: p.text_gray_min,
   }
 
   const backgroundColor = disabled
@@ -74,12 +73,18 @@ export const RefreshButton = (props: RefreshButtonProps) => {
       disabled={disabled}
       onPress={handleOnPress}
       style={({pressed}) => [
-        styles.container,
+        a.flex,
+        a.flex_grow,
+        a.flex_row,
+        a.align_start,
+        a.justify_center,
+        {width: 26, height: 26},
+        a.rounded_full,
         {backgroundColor: pressed ? backgroundColors.pressed : backgroundColor},
       ]}
     >
       {({pressed}) => (
-        <View style={styles.iconWrapper}>
+        <View style={[a.justify_center, {height: 22, overflow: 'visible'}]}>
           <Animated.View style={getRotationStyle()}>
             <Icon.Reload {...(pressed ? iconPropsPressed : iconProps)} />
           </Animated.View>
@@ -94,21 +99,3 @@ type Colors = {
   pressed: string
   disabled: string
 }
-
-const styles = StyleSheet.create({
-  container: {
-    ...a.flex,
-    ...a.flex_grow,
-    ...a.flex_row,
-    ...a.align_start,
-    ...a.justify_center,
-    width: 26,
-    height: 26,
-    ...a.rounded_full,
-  },
-  iconWrapper: {
-    ...a.justify_center,
-    height: 22,
-    overflow: 'visible',
-  },
-})

@@ -3,8 +3,8 @@ import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {CheckPinInput} from '../ui/CheckPinInput/CheckPinInput'
-import {CreatePinInput} from '../ui/CreatePinInput/CreatePinInput'
+import {CheckPinInput} from '~/features/Auth/ui/CheckPinInput/CheckPinInput'
+import {CreatePinInput} from '~/features/Auth/ui/CreatePinInput/CreatePinInput'
 
 export const ChangePinScreen: React.FC<Props> = ({onDone}) => {
   const [step, setStep] = React.useState<ChangePinStep>('checkPin')

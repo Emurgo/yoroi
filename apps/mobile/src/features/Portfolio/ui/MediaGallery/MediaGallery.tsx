@@ -1,17 +1,11 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
-import {MediaPreview} from '../../../../components/MediaPreview/MediaPreview'
-import {Spacer} from '../../../../components/Spacer/Spacer'
+import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
+import {Space} from '~/ui/Space/Space'
 
 type Props = {
   amounts: ReadonlyArray<Portfolio.Token.Amount>
@@ -67,21 +61,28 @@ function Media({
   info: Portfolio.Token.Info
   imageSize: number
 }) {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   return (
     <View>
-      <View style={styles.imageWrapper}>
+      <View style={[{position: 'relative', overflow: 'hidden'}, a.rounded_sm]}>
         <MediaPreview
           info={info}
           width={imageSize}
           height={imageSize}
-          style={styles.image}
+          style={[a.rounded_sm, {backgroundColor: p.gray_100}]}
         />
       </View>
 
-      <Spacer height={imagePadding} />
+      <Space.Height.sm />
 
-      <Text style={[styles.text, {width: imageSize}]}>{info.name}</Text>
+      <Text
+        style={[
+          a.body_3_sm_medium,
+          {width: imageSize, color: p.gray_600, lineHeight: textHeight},
+        ]}
+      >
+        {info.name}
+      </Text>
     </View>
   )
 }
@@ -142,7 +143,7 @@ function GalleryList({
         >
           <View>{renderMedia(item)}</View>
 
-          <Spacer height={rowSpacing} />
+          <Space.Height.sm />
         </View>
       )}
       contentContainerStyle={{
@@ -156,25 +157,4 @@ function GalleryList({
       onEndReachedThreshold={0.5}
     />
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    imageWrapper: {
-      position: 'relative',
-      overflow: 'hidden',
-      ...atoms.rounded_sm,
-    },
-    image: {
-      ...atoms.rounded_sm,
-      backgroundColor: color.gray_100,
-    },
-    text: {
-      ...atoms.body_3_sm_medium,
-      color: color.gray_600,
-      lineHeight: textHeight,
-    },
-  })
-  return styles
 }

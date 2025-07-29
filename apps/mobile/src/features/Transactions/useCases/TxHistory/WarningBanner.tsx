@@ -10,8 +10,8 @@ import {
 } from 'react-native'
 
 import {atoms as a} from '@yoroi/theme'
-import {Button} from '../../../../ui/Button/Button'
-import {Icon} from '../../../../ui/Icon'
+import {Button} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
 
 type Props = {
   title: string

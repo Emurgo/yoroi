@@ -1,27 +1,27 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {infoFilterByName} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React, {ReactNode} from 'react'
-import {ScrollView, StyleSheet, Text, View} from 'react-native'
+import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Space} from '../../../../../../components/Space/Space'
-import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
-import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
-import {NetworkTag} from '../../../../../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {useSelectedWallet} from '../../../../../WalletManager/hooks/useSelectedWallet'
-import {usePortfolioBalances} from '../../../../common/hooks/usePortfolioBalances'
-import {useStrings} from '../../../../common/hooks/useStrings'
-import {useTrackNftGallerySearchActivated} from '../../../../common/hooks/useTrackNftGallerySearchActivated'
-import {useNavigateTo} from '../../../../common/navigation'
-import {MediaGallery} from '../../../../ui/MediaGallery/MediaGallery'
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {useTrackNftGallerySearchActivated} from '~/features/Portfolio/common/hooks/useTrackNftGallerySearchActivated'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
+import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {MediaGallery} from '~/ui/MediaGallery/MediaGallery'
+import {Space} from '~/ui/Space/Space'
+import {useNavigateTo} from '../../common/navigation'
 import {EmptyGallery} from './EmptyGallery'
 
 export const ListMediaGalleryScreen = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const {track} = useMetrics()
 
   const {wallet} = useSelectedWallet()
@@ -59,8 +59,8 @@ export const ListMediaGalleryScreen = () => {
     return (
       <Wrapper>
         <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollViewError}
+          style={[a.flex_1, a.flex_grow]}
+          contentContainerStyle={[a.flex_1]}
         >
           <EmptyGallery message={strings.noNftsFound} />
         </ScrollView>
@@ -72,8 +72,8 @@ export const ListMediaGalleryScreen = () => {
     return (
       <Wrapper>
         <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollViewError}
+          style={[a.flex_1, a.flex_grow]}
+          contentContainerStyle={[a.flex_1]}
         >
           <EmptyGallery
             message={strings.noNftsInWallet}
@@ -81,7 +81,7 @@ export const ListMediaGalleryScreen = () => {
               <View>
                 <NftCount count={0} />
 
-                <Space height="lg" />
+                <Space.Height.lg />
               </View>
             }
           />
@@ -92,12 +92,12 @@ export const ListMediaGalleryScreen = () => {
 
   return (
     <Wrapper>
-      <View style={styles.galleryContainer}>
+      <View style={[a.flex_1, a.flex_grow]}>
         {isSearching && (
           <>
             <NftCount count={filteredAmounts.length} />
 
-            <Space height="lg" />
+            <Space.Height.lg />
           </>
         )}
 
@@ -113,14 +113,14 @@ export const ListMediaGalleryScreen = () => {
 }
 
 const Wrapper = ({children}: {children: ReactNode}) => {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[{backgroundColor: p.bg_color_max}, a.flex_1]}
     >
-      <View style={styles.container}>
-        <Space height="lg" />
+      <View style={[a.flex_col, a.flex_1]}>
+        <Space.Height.lg />
 
         {children}
       </View>
@@ -130,46 +130,13 @@ const Wrapper = ({children}: {children: ReactNode}) => {
 
 const NftCount = ({count}: {count?: number | string}) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
   return (
-    <View style={styles.countBar} testID="txtNftCount">
-      <Text style={styles.count}>{`${strings.nftCount}: ${count ?? '-'}`}</Text>
+    <View style={{height: 22}} testID="txtNftCount">
+      <Text
+        style={[{color: p.text_gray_medium}, a.flex_1, a.text_center]}
+      >{`${strings.nftCount}: ${count ?? '-'}`}</Text>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-    },
-    container: {
-      ...atoms.flex_col,
-      ...atoms.flex_1,
-    },
-    scrollView: {
-      ...atoms.flex_1,
-      ...atoms.flex_grow,
-    },
-    scrollViewError: {
-      ...atoms.flex_1,
-    },
-    countBar: {
-      height: 22,
-    },
-    count: {
-      color: color.text_gray_medium,
-      ...atoms.flex_1,
-      ...atoms.text_center,
-    },
-    galleryContainer: {
-      ...atoms.flex_1,
-      ...atoms.flex_grow,
-    },
-  })
-
-  return styles
 }

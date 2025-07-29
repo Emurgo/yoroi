@@ -3,11 +3,11 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 
-import {useBlockGoBack, useWalletNavigation} from '../../../kernel/navigation'
-import {Button} from '../../../ui/Button/Button'
-import {FailedTxIcon} from '../../../ui/FailedTxIcon/FailedTxIcon'
-import {SafeArea} from '../../../ui/SafeArea/SafeArea'
-import {Space, Spacer} from '../../../ui/Space/Space'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
+import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space} from '~/ui/Space/Space'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()
@@ -18,13 +18,13 @@ export const FailedTxScreen = () => {
 
   return (
     <SafeArea style={[a.p_lg, a.flex_1, a.align_center, a.justify_center]}>
-      <Spacer height={144} />
+      <Space.Height._2xl />
 
       <FailedTxIcon />
 
-      <Space height="_2xl" />
+      <Space.Height._2xl />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
       <Text
         style={[
@@ -41,7 +41,7 @@ export const FailedTxScreen = () => {
         {strings.failedTxText}
       </Text>
 
-      <Space fill />
+      <Space.Height._2xs fill />
 
       <Actions>
         <Button

@@ -1,4 +1,4 @@
-import {CardanoMobile} from '../../wallets'
+import {CardanoMobile} from '~/wallets/wallets'
 import {CardanoTypes} from '../types'
 
 /**

@@ -1,17 +1,18 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Icon} from '../../../../components/Icon'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Icon} from '~/ui/Icon'
 import {getDomainFromUrl} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
+
 type Props = {
   uri: string
 }
 export const BrowserToolbar = ({uri}: Props) => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
 
@@ -27,55 +28,44 @@ export const BrowserToolbar = ({uri}: Props) => {
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.boxURI}>
-        <TouchableOpacity onPress={handleEditUrl} style={styles.urlContainer}>
-          {isSecure && <Icon.LockFilled color={colors.iconColor} />}
+    <View
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+          paddingVertical: 10,
+          paddingHorizontal: 16,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 16,
+        },
+      ]}
+    >
+      <View
+        style={[
+          {
+            borderRadius: 8,
+            backgroundColor: p.gray_50,
+            paddingVertical: 13,
+            paddingHorizontal: 12,
+            flex: 1,
+          },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={handleEditUrl}
+          style={[{flexDirection: 'row', alignItems: 'center', gap: 8}]}
+        >
+          {isSecure && <Icon.LockFilled color={p.el_gray_medium} />}
 
-          <Text style={styles.uriText}>{domainName}</Text>
+          <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+            {domainName}
+          </Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity onPress={handleCloseBrowser}>
-        <Icon.Close size={24} color={colors.iconColor} />
+        <Icon.Close size={24} color={p.el_gray_medium} />
       </TouchableOpacity>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      paddingVertical: 10,
-      paddingHorizontal: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 16,
-    },
-    boxURI: {
-      borderRadius: 8,
-      backgroundColor: color.gray_50,
-      paddingVertical: 13,
-      paddingHorizontal: 12,
-      flex: 1,
-    },
-    uriText: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-    urlContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
-    },
-  })
-
-  const colors = {
-    iconColor: color.el_gray_medium,
-  }
-
-  return {styles, colors} as const
 }

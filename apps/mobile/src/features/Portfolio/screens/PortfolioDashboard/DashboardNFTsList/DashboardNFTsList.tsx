@@ -1,29 +1,34 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   FlatList,
   Image,
-  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native'
 
-import placeholderDark from '../../../../../assets/img/nft-placeholder-dark.png'
-import placeholderLight from '../../../../../assets/img/nft-placeholder.png'
-import {Icon} from '../../../../../components/Icon'
-import {MediaPreview} from '../../../../../components/MediaPreview/MediaPreview'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
-import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
-import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
-import {useStrings} from '../../../common/hooks/useStrings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {Icon} from '~/ui/Icon'
+import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
+import {Space} from '~/ui/Space/Space'
+import placeholderDark from '../assets/img/nft-placeholder-dark.png'
+import placeholderLight from '../assets/img/nft-placeholder.png'
 
 export const DashboardNFTsList = () => {
-  const {styles, cardItemWidth} = useStyles()
+  const {atoms: ta, palette: p, isDark} = useTheme()
   const navigationTo = useNavigateTo()
-  const {isDark} = useTheme()
+  const {width: SCREEN_WIDTH} = useWindowDimensions()
+  const PADDING_LEFT_SIDE = 16
+  const PADDING_RIGHT_SIDE_FOR_ITEMS = 15
+  const GAP_ITEMS = 8
+  const initCardWidth = SCREEN_WIDTH - PADDING_LEFT_SIDE
+  const cardItemWidth =
+    (initCardWidth - PADDING_RIGHT_SIDE_FOR_ITEMS - GAP_ITEMS) / 2
 
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
@@ -37,14 +42,14 @@ export const DashboardNFTsList = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_col, a.gap_lg]}>
       <Heading countNfts={nftsList.length} onPress={handleDirectNFTsList} />
 
       {hasNotNfts ? (
-        <View style={styles.container}>
+        <View style={[a.px_lg]}>
           <Image
             source={placeholder}
-            style={[styles.placeholderNft, styles.image]}
+            style={[{width: 164, height: 164}, a.rounded_sm]}
           />
         </View>
       ) : null}
@@ -52,21 +57,25 @@ export const DashboardNFTsList = () => {
       <FlatList
         horizontal
         data={nftsList}
-        ListHeaderComponent={<Spacer width={16} />}
-        ListFooterComponent={<Spacer width={16} />}
-        ItemSeparatorComponent={() => <Spacer width={8} />}
+        ListHeaderComponent={<Space.Width.md />}
+        ListFooterComponent={<Space.Width.md />}
+        ItemSeparatorComponent={() => <Space.Width.sm />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.info.id}
         renderItem={({item}) => (
           <TouchableOpacity
-            style={[styles.nftItemContainer, {width: cardItemWidth}]}
+            style={[
+              {aspectRatio: 1 / 1, width: cardItemWidth},
+              a.rounded_sm,
+              {overflow: 'hidden'},
+            ]}
             onPress={() => navigationTo.nftDetails(item.info.id)}
           >
             <MediaPreview
               info={item.info}
               width={cardItemWidth}
               height={cardItemWidth}
-              style={styles.image}
+              style={a.rounded_sm}
             />
           </TouchableOpacity>
         )}
@@ -80,64 +89,18 @@ type HeadingProps = {
   onPress: () => void
 }
 const Heading = ({countNfts, onPress}: HeadingProps) => {
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.container, styles.actionsContainer]}
+      style={[a.px_lg, a.flex_row, a.justify_between, a.align_center]}
     >
-      <Text style={styles.title}>{strings.nfts(countNfts)}</Text>
-
-      <Icon.ArrowRight color={colors.gray_800} size={24} />
+      <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
+        {strings.nfts(countNfts)}
+      </Text>
+      <Icon.ArrowRight color={p.gray_800} size={24} />
     </TouchableOpacity>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const {width: SCREEN_WIDTH} = useWindowDimensions()
-  const PADDING_LEFT_SIDE = 16
-  const PADDING_RIGHT_SIDE_FOR_ITEMS = 15
-  const GAP_ITEMS = 8
-  const initCardWidth = SCREEN_WIDTH - PADDING_LEFT_SIDE
-  const cardItemWidth =
-    (initCardWidth - PADDING_RIGHT_SIDE_FOR_ITEMS - GAP_ITEMS) / 2
-
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.px_lg,
-    },
-    root: {
-      ...atoms.flex_col,
-      ...atoms.gap_lg,
-    },
-    actionsContainer: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    title: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_900,
-    },
-    image: {
-      ...atoms.rounded_sm,
-    },
-    placeholderNft: {
-      width: 164,
-      height: 164,
-    },
-    nftItemContainer: {
-      aspectRatio: 1 / 1,
-      ...atoms.rounded_sm,
-      overflow: 'hidden',
-    },
-  })
-  const colors = {
-    gray_800: color.gray_800,
-  }
-
-  return {styles, colors, cardItemWidth} as const
 }

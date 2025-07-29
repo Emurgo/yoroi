@@ -2,11 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {Button} from '../../../../../ui/Button/Button'
-import {Space} from '../../../../../ui/Space/Space'
-import {FailedTxIcon} from '../../../../ReviewTx/illustrations/FailedTxIcon'
+import {useStrings} from '~/features/Staking/common/useStrings'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
 import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
+import {FailedTxIcon} from '../ReviewTx/illustrations/FailedTxIcon'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()

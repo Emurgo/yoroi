@@ -1,6 +1,6 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 type ShowDisclaimerProps = {
@@ -8,41 +8,28 @@ type ShowDisclaimerProps = {
   children: React.ReactNode
 }
 export const ShowDisclaimer = ({title, children}: ShowDisclaimerProps) => {
-  const {color} = useTheme()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <LinearGradient
-      style={styles.gradient}
+      style={[{opacity: 1, borderRadius: 8}]}
       start={{x: 1, y: 1}}
       end={{x: 0, y: 0}}
-      colors={color.bg_gradient_1}
+      colors={p.bg_gradient_1}
     >
-      <View style={styles.container}>
-        <Text style={styles.title}>{title}</Text>
+      <View style={[a.px_lg, a.py_md]}>
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            a.font_semibold,
+            {color: p.text_gray_max},
+          ]}
+        >
+          {title}
+        </Text>
 
         {children}
       </View>
     </LinearGradient>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      ...atoms.px_lg,
-      ...atoms.py_md,
-    },
-    gradient: {
-      opacity: 1,
-      borderRadius: 8,
-    },
-    title: {
-      color: color.text_gray_max,
-      ...atoms.body_1_lg_regular,
-      ...atoms.font_semibold,
-    },
-  })
-  return styles
 }

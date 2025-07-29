@@ -1,11 +1,11 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, useWindowDimensions, View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
 
-import {Spacer} from '../Space/Space'
-import {Text} from '../Text/Text'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
 import {YoroiLogoIllustration} from '../YoroiLogoIllustration/YoroiLogoIllustration'
 
 type ShareProps = {
@@ -13,38 +13,72 @@ type ShareProps = {
 }
 
 export const CaptureShareQRCodeCard = ({content}: ShareProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const screenWidth = useWindowDimensions().width
 
   return (
-    <View style={[styles.touchableCard, {width: screenWidth - 34}]}>
+    <View
+      style={[
+        {
+          borderRadius: 10,
+          alignItems: 'center',
+          maxHeight: 308,
+          flex: 1,
+          minHeight: 308,
+          alignSelf: 'center',
+          overflow: 'hidden',
+          paddingVertical: 16,
+          gap: 32,
+          width: screenWidth - 34,
+        },
+      ]}
+    >
       <LinearGradient
-        style={[StyleSheet.absoluteFill, {opacity: 1}]}
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            opacity: 1,
+          },
+        ]}
         start={{x: 0, y: 0}}
         end={{x: 0, y: 1}}
-        colors={color.bg_gradient_1}
+        colors={p.bg_gradient_1}
       />
 
-      <Spacer height={16} />
+      <Space.Height.lg />
 
-      <View style={styles.wrapper}>
+      <View style={[a.justify_center, a.align_center]}>
         <YoroiLogoIllustration height={37} width={35} />
 
-        <Spacer height={16} />
+        <Space.Height.lg />
 
-        <View style={styles.addressContainer}>
-          <View style={[styles.qrCode, {backgroundColor: color.white_static}]}>
+        <View style={[{alignItems: 'center'}]}>
+          <View
+            style={[
+              {padding: 10, borderRadius: 8, backgroundColor: p.white_static},
+            ]}
+          >
             <QRCode
               value={content}
               size={170}
-              backgroundColor={color.white_static}
-              color={color.black_static}
+              backgroundColor={p.white_static}
+              color={p.black_static}
             />
           </View>
 
-          <Spacer height={16} />
+          <Space.Height.lg />
 
-          <Text style={[styles.content, {color: 'transparent'}]}>
+          <Text
+            style={[
+              {textAlign: 'center', maxWidth: 300},
+              a.body_1_lg_regular,
+              {color: 'transparent'},
+            ]}
+          >
             {content}
           </Text>
         </View>
@@ -52,33 +86,3 @@ export const CaptureShareQRCodeCard = ({content}: ShareProps) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  qrCode: {
-    padding: 10,
-    borderRadius: 8,
-  },
-  addressContainer: {
-    alignItems: 'center',
-  },
-  wrapper: {
-    ...a.justify_center,
-    ...a.align_center,
-  },
-  touchableCard: {
-    borderRadius: 10,
-    alignItems: 'center',
-    maxHeight: 308,
-    flex: 1,
-    minHeight: 308,
-    alignSelf: 'center',
-    overflow: 'hidden',
-    paddingVertical: 16,
-    gap: 32,
-  },
-  content: {
-    textAlign: 'center',
-    maxWidth: 300,
-    ...a.body_1_lg_regular,
-  },
-})

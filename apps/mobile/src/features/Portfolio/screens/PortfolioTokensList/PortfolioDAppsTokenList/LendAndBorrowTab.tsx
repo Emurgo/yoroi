@@ -1,31 +1,20 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {TokenEmptyList} from '../../../ui/TokenEmptyList/TokenEmptyList'
+import {Space} from '~/ui/Space/Space'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {TokenEmptyList} from '~/ui/TokenEmptyList/TokenEmptyList'
 
 export const LendAndBorrowTab = () => {
-  const {styles} = useStyles()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.root}>
-      <Spacer height={16} />
+    <View style={[a.flex_1]}>
+      <Space.Height.md />
 
       <TokenEmptyList emptyText={strings.availableSoon} />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-    },
-  })
-
-  return {styles} as const
 }

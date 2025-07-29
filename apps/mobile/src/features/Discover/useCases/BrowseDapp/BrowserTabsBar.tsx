@@ -1,18 +1,18 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
-import {Icon} from '../../../../components/Icon'
-import {useBrowser} from '../../common/BrowserProvider'
-import {useNavigateTo} from '../../common/useNavigateTo'
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
+import {useNavigateTo} from '~/features/Discover/common/useNavigateTo'
+import {Icon} from '~/ui/Icon'
 import {useStrings} from '../../common/useStrings'
 
 export const BrowserTabsBar = () => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {tabs, openTabs, addTab, setTabActive} = useBrowser()
   const totalTabs = tabs.length
@@ -32,69 +32,48 @@ export const BrowserTabsBar = () => {
 
   return (
     <View
-      style={[styles.root, styles.shadow, {paddingBottom: insets.bottom + 12}]}
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+          paddingVertical: 12,
+          paddingHorizontal: 16,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 16,
+          justifyContent: 'space-between',
+        },
+        {
+          shadowColor: '#054037',
+          shadowOffset: {
+            width: 0,
+            height: 5,
+          },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 14,
+          paddingBottom: insets.bottom + 12,
+        },
+      ]}
     >
-      <View style={styles.fullFlex}>
+      <View style={[{flexDirection: 'row', flex: 1}]}>
         <TouchableOpacity onPress={handleCreateTab}>
-          <Icon.Plus size={24} color={colors.iconColor} />
+          <Icon.Plus size={24} color={p.el_gray_medium} />
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.totalTabsText}>{`${totalTabs} tab(s)`}</Text>
+      <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+        {`${totalTabs} tab(s)`}
+      </Text>
 
-      <View style={[styles.fullFlex, styles.flexEnd]}>
+      <View
+        style={[{flexDirection: 'row', flex: 1, justifyContent: 'flex-end'}]}
+      >
         <TouchableOpacity onPress={handleCancelChangeTab}>
-          <Text style={styles.doneText}>{strings.done}</Text>
+          <Text style={[a.body_2_md_medium, {color: p.el_gray_medium}]}>
+            {strings.done}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    flexEnd: {
-      justifyContent: 'flex-end',
-    },
-    fullFlex: {
-      flexDirection: 'row',
-      flex: 1,
-    },
-    root: {
-      backgroundColor: color.bg_color_max,
-      paddingVertical: 12,
-      paddingHorizontal: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 16,
-      justifyContent: 'space-between',
-    },
-    shadow: {
-      shadowColor: '#054037',
-      shadowOffset: {
-        width: 0,
-        height: 5,
-      },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-
-      elevation: 14,
-    },
-    totalTabsText: {
-      color: color.text_gray_medium,
-      ...atoms.body_2_md_medium,
-    },
-    doneText: {
-      color: color.el_gray_medium,
-      ...atoms.body_2_md_medium,
-    },
-  })
-
-  const colors = {
-    iconColor: color.el_gray_medium,
-  }
-
-  return {styles, colors} as const
 }

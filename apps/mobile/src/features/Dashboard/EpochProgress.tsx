@@ -3,11 +3,10 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
-import {ProgressCircle} from '../../ui/ProgressCircle/ProgressCircle'
-import {Space} from '../../ui/Space/Space'
-import {Spacer} from '../../ui/Spacer/Spacer'
-import {Text} from '../../ui/Text/Text'
-import {TitledCard} from '../../ui/TitledCard/TitledCard'
+import {ProgressCircle} from '~/ui/ProgressCircle/ProgressCircle'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
+import {TitledCard} from '~/ui/TitledCard/TitledCard'
 
 type Props = {
   percentage: number
@@ -32,7 +31,7 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
       <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
         <ProgressCircle percentage={percentage} />
 
-        <Spacer width={40} />
+        <Space.Width.xl />
 
         <View style={[{flex: 1, flexDirection: 'column', flexWrap: 'wrap'}]}>
           <View
@@ -56,7 +55,7 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
             </Text>
           </View>
 
-          <Space height="sm" />
+          <Space.Height.sm />
 
           <View
             style={[
@@ -96,7 +95,7 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
                 </Text>
               )}
 
-              <Space width="xs" />
+              <Space.Width.xs />
 
               <Text
                 style={[
@@ -109,11 +108,11 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
                 {endTime.h}
               </Text>
 
-              <Space width="xs" />
+              <Space.Width.xs />
 
               <Text>:</Text>
 
-              <Space width="xs" />
+              <Space.Width.xs />
 
               <Text
                 style={[
@@ -126,11 +125,11 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
                 {endTime.m}
               </Text>
 
-              <Space width="xs" />
+              <Space.Width.xs />
 
               <Text>:</Text>
 
-              <Space width="xs" />
+              <Space.Width.xs />
 
               <Text
                 style={[
@@ -143,7 +142,7 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
                 {endTime.s}
               </Text>
 
-              <Space width="xs" />
+              <Space.Width.xs />
             </View>
           </View>
         </View>

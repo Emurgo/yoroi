@@ -4,10 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, Platform, ScrollView, Text} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import globalMessages from '../../../kernel/i18n/global-messages'
-import {Button} from '../../../ui/Button/Button'
-import {Space} from '../../../ui/Space/Space'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../wallets/hw/hw'
+import globalMessages from '~/kernel/i18n/global-messages'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
 
 type Props = {
   onSelectUSB: () => void

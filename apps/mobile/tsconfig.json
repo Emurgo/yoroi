@@ -3,13 +3,16 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
+    "jsx": "react-native",
     "paths": {
-      "react-native-mmkv": [
-        "./node_modules/react-native-mmkv"
-      ],
-      "rxjs": [
-        "./node_modules/rxjs"
-      ]
+      "react-native-mmkv": ["./node_modules/react-native-mmkv"],
+      "rxjs": ["./node_modules/rxjs"],
+      "~/ui/*": ["./src/ui/*"],
+      "~/features/*": ["./src/features/*"],
+      "~/hooks/*": ["./src/hooks/*"],
+      "~/kernel/*": ["./src/kernel/*"],
+      "~/wallets/*": ["./src/wallets/*"],
+      "~/components/*": ["./src/ui/*"]
     }
   }
 }

@@ -5,31 +5,31 @@ import {
   infoExtractName,
   isPrimaryToken,
 } from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {makeList} from '../../../../../kernel/utils'
-import {useSearch} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
-import {aggregatePrimaryAmount} from '../../../common/helpers/aggregatePrimaryAmount'
-import {useStrings} from '../../../common/hooks/useStrings'
-import {useZeroBalance} from '../../../common/hooks/useZeroBalance'
-import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
-import {usePortfolio} from '../../../context/PortfolioProvider'
-import {Line} from '../../../ui/Line'
-import {TokenEmptyList} from '../../../ui/TokenEmptyList/TokenEmptyList'
+import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useZeroBalance} from '~/features/Portfolio/common/hooks/useZeroBalance'
+import {usePortfolioTokenActivity} from '~/features/Portfolio/common/PortfolioTokenActivityProvider'
+import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {makeList} from '~/kernel/utils'
+import {Line} from '~/ui/Line'
+import {Space} from '~/ui/Space/Space'
+import {TokenEmptyList} from '~/ui/TokenEmptyList/TokenEmptyList'
+import {useSearch} from '../Search/SearchContext'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {TokenBalanceItem} from './TokenBalanceItem'
 import {TokenBalanceSkeletonItem} from './TokenBalanceSkeletonItem'
 import {TradeTokensBannerBig} from './TradeTokensBannerBig'
 
 export const PortfolioWalletTokenList = () => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {search, isSearching} = useSearch()
   const isZeroADABalance = useZeroBalance()
   const {resetTabs} = usePortfolio()
@@ -109,7 +109,7 @@ export const PortfolioWalletTokenList = () => {
     if (isLoading) {
       return (
         <View>
-          <Spacer height={16} />
+          <Space.Height.md />
 
           {makeList(6).map((_, index) => (
             <SkeletonItem key={index} />
@@ -121,7 +121,7 @@ export const PortfolioWalletTokenList = () => {
     if (isJustPt)
       return (
         <View>
-          <Spacer height={16} />
+          <Space.Height.md />
 
           <TradeTokensBannerBig />
         </View>
@@ -131,7 +131,7 @@ export const PortfolioWalletTokenList = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[{backgroundColor: p.bg_color_max}, a.flex_1]}>
       <FlashList
         data={filteredTokens}
         ListHeaderComponent={
@@ -143,9 +143,9 @@ export const PortfolioWalletTokenList = () => {
           />
         }
         ListFooterComponent={renderFooterList}
-        ItemSeparatorComponent={() => <Spacer height={16} />}
+        ItemSeparatorComponent={() => <Space.Height.md />}
         renderItem={({item}) => <TokenBalanceItem amount={item} />}
-        contentContainerStyle={styles.container}
+        contentContainerStyle={[a.px_lg, a.flex_grow]}
         ListEmptyComponent={() => <TokenEmptyList />}
         estimatedItemSize={72}
       />
@@ -165,8 +165,8 @@ const HeadingList = ({
   countTokensList,
   amount,
 }: HeadingListProps) => {
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
-  const {styles} = useStyles()
 
   return (
     <View>
@@ -178,13 +178,13 @@ const HeadingList = ({
         </View>
       ) : null}
 
-      <Spacer height={16} />
+      <Space.Height.md />
 
-      <Text style={styles.textAvailable}>
+      <Text style={[{color: p.gray_700}, a.body_2_md_regular]}>
         {strings.tokensAvailable(isFirstUser ? 0 : countTokensList)}
       </Text>
 
-      <Spacer height={8} />
+      <Space.Height.sm />
     </View>
   )
 }
@@ -194,27 +194,7 @@ const SkeletonItem = () => {
     <View>
       <TokenBalanceSkeletonItem />
 
-      <Spacer height={16} />
+      <Space.Height.md />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-    },
-    textAvailable: {
-      color: color.gray_700,
-      ...atoms.body_2_md_regular,
-    },
-    container: {
-      ...atoms.px_lg,
-      ...atoms.flex_grow,
-    },
-  })
-
-  return {styles} as const
 }

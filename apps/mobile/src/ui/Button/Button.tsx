@@ -6,14 +6,13 @@ import {
   Pressable,
   PressableProps,
   StyleProp,
-  StyleSheet,
   Text,
   TextStyle,
   View,
   ViewStyle,
 } from 'react-native'
 
-import type {IconProps} from '../Icon/type'
+import type {IconProps} from '~/ui/Icon/type'
 
 export const ButtonType = {
   Primary: 'Primary',
@@ -56,73 +55,6 @@ export const Button = (props: ButtonProps) => {
     ...rest
   } = props
 
-  const {styles, iconProps, iconPropsPressed} = useStyles({
-    type,
-    size,
-    rightIcon,
-    disabled,
-    fontOverride,
-    bgColorsOverride,
-    fgColorsOverride,
-  })
-
-  return (
-    <Pressable
-      disabled={isLoading || disabled}
-      style={({pressed}) => [
-        styles.container,
-        pressed && styles.containerPressed,
-        style,
-      ]}
-      {...rest}
-    >
-      {isLoading ? (
-        <ActivityIndicator {...iconProps} />
-      ) : (
-        ({pressed}) => (
-          <>
-            {Icon && (
-              <View style={styles.iconWrapper}>
-                <Icon {...(pressed ? iconPropsPressed : iconProps)} />
-              </View>
-            )}
-
-            {title != null && type !== ButtonType.Circle && (
-              <Text style={[styles.text, pressed && styles.textPressed]}>
-                {title}
-              </Text>
-            )}
-          </>
-        )
-      )}
-    </Pressable>
-  )
-}
-
-type Colors = {
-  idle: string
-  pressed: string
-  disabled: string
-}
-
-const useStyles = ({
-  type = ButtonType.Primary,
-  size = 'M',
-  rightIcon,
-  disabled,
-  fontOverride,
-  bgColorsOverride,
-  fgColorsOverride,
-}: Pick<
-  ButtonProps,
-  | 'type'
-  | 'size'
-  | 'rightIcon'
-  | 'disabled'
-  | 'fontOverride'
-  | 'bgColorsOverride'
-  | 'fgColorsOverride'
->) => {
   const {palette: p} = useTheme()
 
   const backgroundColors: Colors =
@@ -163,7 +95,7 @@ const useStyles = ({
         pressed: 'transparent',
         disabled: 'transparent',
       },
-    }[type]
+    }[type ?? ButtonType.Primary]
 
   const foregroundColors: Colors =
     fgColorsOverride ??
@@ -203,7 +135,7 @@ const useStyles = ({
         pressed: p.text_primary_max,
         disabled: p.text_primary_min,
       },
-    }[type]
+    }[type ?? ButtonType.Primary]
 
   const backgroundColor = disabled
     ? backgroundColors.disabled
@@ -257,42 +189,6 @@ const useStyles = ({
         ? a.button_1_lg
         : a.button_2_md)
 
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor,
-      ...a.flex,
-      ...a.flex_grow,
-      ...a.flex_row,
-      ...a.align_start,
-      ...a.justify_center,
-      ...shape,
-      ...(rightIcon && a.flex_row_reverse),
-      ...(type === ButtonType.Secondary && {
-        borderWidth: 2,
-        borderColor: foregroundColor,
-      }),
-    },
-    containerPressed: {
-      backgroundColor: backgroundColors.pressed,
-      ...(type === ButtonType.Secondary && {
-        borderColor: foregroundColors.pressed,
-      }),
-    },
-    iconWrapper: {
-      ...a.justify_center,
-      height: font.lineHeight ?? 22,
-      overflow: 'visible',
-    },
-    text: {
-      ...a.flex_shrink,
-      color: foregroundColor,
-      ...font,
-    },
-    textPressed: {
-      color: foregroundColors.pressed,
-    },
-  })
-
   const iconProps: IconProps = {
     size:
       type === ButtonType.Text || type === ButtonType.SecondaryText
@@ -310,5 +206,72 @@ const useStyles = ({
     color: foregroundColors.pressed,
   }
 
-  return {styles, iconProps, iconPropsPressed} as const
+  return (
+    <Pressable
+      disabled={isLoading || disabled}
+      style={({pressed}) => [
+        {
+          backgroundColor,
+          ...a.flex,
+          ...a.flex_grow,
+          ...a.flex_row,
+          ...a.align_start,
+          ...a.justify_center,
+          ...shape,
+          ...(rightIcon && a.flex_row_reverse),
+          ...(type === ButtonType.Secondary && {
+            borderWidth: 2,
+            borderColor: foregroundColor,
+          }),
+        },
+        pressed && {
+          backgroundColor: backgroundColors.pressed,
+          ...(type === ButtonType.Secondary && {
+            borderColor: foregroundColors.pressed,
+          }),
+        },
+        style,
+      ]}
+      {...rest}
+    >
+      {isLoading ? (
+        <ActivityIndicator {...iconProps} />
+      ) : (
+        ({pressed}) => (
+          <>
+            {Icon && (
+              <View
+                style={[
+                  {
+                    ...a.justify_center,
+                    height: font.lineHeight ?? 22,
+                    overflow: 'visible',
+                  },
+                ]}
+              >
+                <Icon {...(pressed ? iconPropsPressed : iconProps)} />
+              </View>
+            )}
+
+            {title != null && type !== ButtonType.Circle && (
+              <Text
+                style={[
+                  {...a.flex_shrink, color: foregroundColor, ...font},
+                  pressed && {color: foregroundColors.pressed},
+                ]}
+              >
+                {title}
+              </Text>
+            )}
+          </>
+        )
+      )}
+    </Pressable>
+  )
+}
+
+type Colors = {
+  idle: string
+  pressed: string
+  disabled: string
 }

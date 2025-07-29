@@ -1,9 +1,9 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {Space} from '../Space/Space'
-import {Text} from '../Text/Text'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
 
 type ExternalProps = {
   title?: string
@@ -13,19 +13,28 @@ type ExternalProps = {
 }
 
 export const TitledCard = ({title, children, testID}: ExternalProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <View>
       {title !== undefined && (
-        <Text style={[styles.title, {color: color.text_gray_low}]}>
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            a.justify_center,
+            {color: p.text_gray_low},
+          ]}
+        >
           {title}
         </Text>
       )}
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <View
-        style={[styles.content, {borderColor: color.gray_200}]}
+        style={[
+          a.p_lg,
+          {borderWidth: 1, borderRadius: 8, borderColor: p.gray_200},
+        ]}
         testID={testID}
       >
         {children}
@@ -33,15 +42,3 @@ export const TitledCard = ({title, children, testID}: ExternalProps) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  title: {
-    ...a.body_1_lg_regular,
-    ...a.justify_center,
-  },
-  content: {
-    ...a.p_lg,
-    borderWidth: 1,
-    borderRadius: 8,
-  },
-})

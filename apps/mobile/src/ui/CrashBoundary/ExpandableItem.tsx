@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../Icon'
+import {Icon} from '~/ui/Icon'
 
 type Props = {
   label: string

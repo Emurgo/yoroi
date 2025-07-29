@@ -7,12 +7,12 @@ import {
   loggerLevel,
   release,
   sentryDsn,
-} from '../../constants'
-import {crashReportsStorageKeyManager} from '../../storage/storages'
-import {devAdapter} from '../adapters/dev-transporter'
-import {Sentry} from '../adapters/sentry'
-import {sentryAdapter} from '../adapters/sentry-transporter'
-import {logger} from '../logger'
+} from '~/kernel/constants'
+import {devAdapter} from '~/kernel/logger/adapters/dev-transporter'
+import {Sentry} from '~/kernel/logger/adapters/sentry'
+import {sentryAdapter} from '~/kernel/logger/adapters/sentry-transporter'
+import {logger} from '~/kernel/logger/logger'
+import {crashReportsStorageKeyManager} from '~/kernel/storage/storages'
 
 const isEnabled = crashReportsStorageKeyManager.read() || isDev
 

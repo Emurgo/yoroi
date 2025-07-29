@@ -3,15 +3,12 @@ import * as React from 'react'
 import {ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
-import {
-  LanguageRecord,
-  supportedLanguages,
-} from '../../../kernel/i18n/localization'
-import {BlueCheckbox} from '../../../ui/BlueCheckbox/BlueCheckbox'
-import {Button} from '../../../ui/Button/Button'
-import {Icon} from '../../../ui/Icon'
-import {SpaceHeight} from '../../../ui/Space/Space'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
+import {BlueCheckbox} from '~/ui/BlueCheckbox/BlueCheckbox'
+import {Button} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {SpaceHeight} from '~/ui/Space/Space'
 import {useNavigateTo, useStrings} from '../common'
 
 export const InitialScreen = () => {
@@ -50,17 +47,17 @@ export const InitialScreen = () => {
       <ScrollView bounces={false} contentContainerStyle={a.flex_grow}>
         <Icon.YoroiWallet size={64} />
 
-        <SpaceHeight size={80} />
+        <Space.Height.xl />
 
         <Text style={[a.heading_3_medium, a.text_center, {color: p.gray_900}]}>
           {strings.languagePickerTitle}
         </Text>
 
-        <SpaceHeight size={35} />
+        <Space.Height.lg />
 
         <LanguagePickRow onPress={onPressLanguagePick} />
 
-        <SpaceHeight size={30} />
+        <Space.Height.lg />
 
         <BlueCheckbox
           checked={tosAccepted}

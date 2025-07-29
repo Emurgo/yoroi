@@ -4,11 +4,11 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native'
 
-import {useWalletNavigation} from '../../../../kernel/navigation'
-import {Space} from '../../../../ui/Space/Space'
-import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
-import {MiniTokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/MiniTokenAmountItem'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {MiniTokenAmountItem} from '~/features/Portfolio/common/TokenAmountItem/MiniTokenAmountItem'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useWalletNavigation} from '~/kernel/navigation'
+import {Space} from '~/ui/Space/Space'
 import {UtxoList} from './useUtxoList'
 
 export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {

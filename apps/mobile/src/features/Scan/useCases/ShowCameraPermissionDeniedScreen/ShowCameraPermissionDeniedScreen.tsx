@@ -1,17 +1,14 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, View, ViewProps} from 'react-native'
 import {openSettings} from 'react-native-permissions'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {
-  useBlockGoBack,
-  useWalletNavigation,
-} from '../../../../kernel/navigation'
-import {Button} from '../../../ui/Button/Button'
-import {CameraPermissionDeniedIllustration} from '../../../ui/CameraPermissionDeniedIllustration/CameraPermissionDeniedIllustration'
-import {Spacer} from '../../../ui/Space/Space'
-import {Text as YoroiText} from '../../../ui/Text/Text'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
+import {CameraPermissionDeniedIllustration} from '~/ui/CameraPermissionDeniedIllustration/CameraPermissionDeniedIllustration'
+import {Space} from '~/ui/Space/Space'
+import {Text as YoroiText} from '~/ui/Text/Text'
 import {useStrings} from '../../common/useStrings'
 
 export const ShowCameraPermissionDeniedScreen = () => {
@@ -23,7 +20,7 @@ export const ShowCameraPermissionDeniedScreen = () => {
   return (
     <SafeAreaView
       edges={['top', 'left', 'right', 'bottom']}
-      style={[styles.container, {backgroundColor: color.bg_color_max}]}
+      style={[{flex: 1}, a.px_lg, {backgroundColor: color.bg_color_max}]}
     >
       <ScrollView
         contentContainerStyle={[
@@ -34,11 +31,22 @@ export const ShowCameraPermissionDeniedScreen = () => {
       >
         <CameraPermissionDeniedIllustration />
 
-        <YoroiText style={[styles.title, {color: color.gray_max}]}>
+        <YoroiText
+          style={[
+            a.heading_3_medium,
+            a.px_sm,
+            {textAlign: 'center', color: color.gray_max},
+          ]}
+        >
           {strings.cameraPermissionDeniedTitle}
         </YoroiText>
 
-        <YoroiText style={[styles.help, {color: color.gray_600}]}>
+        <YoroiText
+          style={[
+            a.body_2_md_regular,
+            {textAlign: 'center', maxWidth: 330, color: color.gray_600},
+          ]}
+        >
           {strings.cameraPermissionDeniedHelp}
         </YoroiText>
       </ScrollView>
@@ -51,7 +59,7 @@ export const ShowCameraPermissionDeniedScreen = () => {
           type={ButtonType.Secondary}
         />
 
-        <Spacer height={16} />
+        <Space.Height.md />
 
         <Button
           onPress={() => openSettings()}
@@ -66,22 +74,3 @@ export const ShowCameraPermissionDeniedScreen = () => {
 const Actions = ({style, ...props}: ViewProps) => {
   return <View style={style} {...props} />
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    ...a.px_lg,
-  },
-  scroll: {},
-  title: {
-    ...a.heading_3_medium,
-    ...a.px_sm,
-    textAlign: 'center',
-  },
-  help: {
-    ...a.body_2_md_regular,
-    textAlign: 'center',
-    maxWidth: 330,
-  },
-  actions: {},
-})

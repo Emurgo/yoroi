@@ -1,6 +1,6 @@
 import {FallbackProps} from 'react-error-boundary'
 
-import {LocalizableError} from '../../kernel/i18n/LocalizableError'
+import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 
 export type ErrorFallbackProps = {
   error: FallbackProps['error'] | LocalizableError

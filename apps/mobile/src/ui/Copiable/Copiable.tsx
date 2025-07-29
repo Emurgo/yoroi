@@ -2,8 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {useCopy} from '../../features/Copy/context/CopyProvider'
-import {Icon} from '../Icon'
+import {useCopy} from '~/features/Copy/context/CopyProvider'
+import {Icon} from '~/ui/Icon'
 
 type CopiableProps = {
   text: string

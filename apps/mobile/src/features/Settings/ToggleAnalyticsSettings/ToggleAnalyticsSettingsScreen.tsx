@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Linking} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Analytics} from '../../../ui/Analytics/Analytics'
+import {Analytics} from '~/ui/Analytics/Analytics'
 
 export const ToggleAnalyticsSettingsScreen = () => {
   const {atoms: ta} = useTheme()

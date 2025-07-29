@@ -1,45 +1,75 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Button} from '../../../../components/Button/Button'
-import {SafeArea} from '../../../../components/SafeArea'
-import {Space} from '../../../../components/Space/Space'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {
-  useBlockGoBack,
-  useWalletNavigation,
-} from '../../../../kernel/navigation'
-import {FailedTxIcon} from '../../../ReviewTx/illustrations/FailedTxIcon'
-import {useStrings} from '../../common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
+import {Button} from '~/ui/Button/Button'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space} from '~/ui/Space/Space'
+import {FailedTxIcon} from '../ReviewTx/illustrations/FailedTxIcon'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const {resetToStartTransfer} = useWalletNavigation()
 
   return (
-    <SafeArea style={styles.root}>
-      <Spacer height={144} />
+    <SafeArea
+      style={[
+        {
+          backgroundColor: p.bg_color_max,
+          padding: 16,
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+      ]}
+    >
+      <Space.Height._2xl />
 
       <FailedTxIcon />
 
-      <Space height="_2xl" />
+      <Space.Height._2xl />
 
-      <Space height="lg" />
+      <Space.Height.lg />
 
-      <Text style={styles.title}>{strings.failedTxTitle}</Text>
+      <Text
+        style={[
+          {
+            color: p.gray_max,
+            fontSize: 24,
+            fontWeight: '600',
+            paddingHorizontal: 8,
+            textAlign: 'center',
+          },
+        ]}
+      >
+        {strings.failedTxTitle}
+      </Text>
 
-      <Text style={styles.text}>{strings.failedTxText}</Text>
+      <Text
+        style={[
+          {
+            color: p.gray_600,
+            fontSize: 16,
+            lineHeight: 24,
+            fontWeight: '400',
+            textAlign: 'center',
+          },
+        ]}
+      >
+        {strings.failedTxText}
+      </Text>
 
-      <Space fill />
+      <View style={{flex: 1}} />
 
       <Actions>
         <Button
           onPress={resetToStartTransfer}
           title={strings.failedTxButton}
-          style={styles.button}
+          style={[{paddingHorizontal: 16}]}
         />
       </Actions>
     </SafeArea>
@@ -47,38 +77,5 @@ export const FailedTxScreen = () => {
 }
 
 const Actions = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-
-  return <View style={styles.actions}>{children}</View>
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.p_lg,
-      ...atoms.flex_1,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-    },
-    title: {
-      color: color.gray_max,
-      ...atoms.heading_3_medium,
-      ...atoms.px_sm,
-      ...atoms.text_center,
-    },
-    text: {
-      color: color.gray_600,
-      ...atoms.body_1_lg_regular,
-      ...atoms.text_center,
-    },
-    button: {
-      ...atoms.px_lg,
-    },
-    actions: {
-      alignSelf: 'stretch',
-    },
-  })
-  return {styles} as const
+  return <View style={{alignSelf: 'stretch'}}>{children}</View>
 }

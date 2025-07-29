@@ -18,31 +18,31 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {showErrorDialog} from '../../../../kernel/dialogs'
-import {debugWalletInfo, features} from '../../../../kernel/features'
-import {errorMessages} from '../../../../kernel/i18n/global-messages'
-import {logger} from '../../../../kernel/logger/logger'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {Button} from '../../../../ui/Button/Button'
-import {CardAboutPhrase} from '../../../../ui/CardAboutPhrase/CardAboutPhrase'
-import {Icon} from '../../../../ui/Icon'
-import {Info as InfoIcon} from '../../../../ui/InfoIcon/InfoIcon'
-import {KeyboardAvoidingView} from '../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../ui/Space/Space'
-import {StepperProgress} from '../../../../ui/StepperProgress/StepperProgress'
-import {TextInput} from '../../../../ui/TextInput/TextInput'
-import {isEmptyString} from '../../../../wallets/utils/string'
+import {useStrings} from '~/features/SetupWallet/common/useStrings'
+import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
+import {showErrorDialog} from '~/kernel/dialogs'
+import {debugWalletInfo, features} from '~/kernel/features'
+import {errorMessages} from '~/kernel/i18n/global-messages'
+import {logger} from '~/kernel/logger/logger'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button} from '~/ui/Button/Button'
+import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
+import {Icon} from '~/ui/Icon'
+import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
+import {TextInput} from '~/ui/TextInput/TextInput'
+import {isEmptyString} from '~/wallets/utils/string'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
   validateWalletName,
-} from '../../../../wallets/utils/validators'
-import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {useCreateWalletMnemonic} from '../../../WalletManager/hooks/useCreateWalletMnemonic'
-import {useStrings} from '../../common/useStrings'
+} from '~/wallets/utils/validators'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height

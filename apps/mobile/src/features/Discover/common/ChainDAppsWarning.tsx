@@ -3,9 +3,9 @@ import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
 
-import {GradientWarning} from '../../../components/ChainWarning/GradientWarning'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {GradientWarning} from '~/ui/ChainWarning/GradientWarning'
 import {useStrings} from './useStrings'
 
 export const ChainDAppsWarning = () => {

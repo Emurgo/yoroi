@@ -1,11 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {useStrings} from '../../features/Portfolio/common/hooks/useStrings'
-import {Icon} from '../Icon'
-import {Rate} from '../Rate/Rate'
-import {Tooltip} from '../Tooltip/Tooltip'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {Icon} from '~/ui/Icon'
+import {Rate} from '~/ui/Rate/Rate'
+import {Tooltip} from '~/ui/Tooltip/Tooltip'
 
 type Props = {
   rate: number
@@ -13,24 +13,24 @@ type Props = {
   hasDApps: boolean
 }
 export const BalanceHeaderCard = ({name, rate, hasDApps}: Props) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.rowBetween}>
+    <View style={[a.flex_row, a.justify_between, a.align_center]}>
       {hasDApps ? (
         <Tooltip numberOfLine={3} title={strings.totalPortfolioValueTooltip}>
-          <View style={styles.labelContainer}>
-            <Text style={[styles.normalText, {color: color.white_static}]}>
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <Text style={[a.body_2_md_regular, {color: p.white_static}]}>
               {strings.totalPortfolioValue}
             </Text>
 
-            <Icon.InfoCircle color={color.white_static} />
+            <Icon.InfoCircle color={p.white_static} />
           </View>
         </Tooltip>
       ) : (
-        <View style={styles.labelContainer}>
-          <Text style={[styles.normalText, {color: color.white_static}]}>
+        <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+          <Text style={[a.body_2_md_regular, {color: p.white_static}]}>
             {strings.totalWalletValue}
           </Text>
         </View>
@@ -40,19 +40,3 @@ export const BalanceHeaderCard = ({name, rate, hasDApps}: Props) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  normalText: {
-    ...a.body_2_md_regular,
-  },
-  rowBetween: {
-    ...a.flex_row,
-    ...a.justify_between,
-    ...a.align_center,
-  },
-  labelContainer: {
-    ...a.flex_row,
-    ...a.align_center,
-    ...a.gap_xs,
-  },
-})

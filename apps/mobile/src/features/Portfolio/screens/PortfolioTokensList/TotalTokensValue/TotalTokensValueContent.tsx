@@ -1,23 +1,23 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Text, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../../../../../components/Icon'
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
-import {useCurrencyPairing} from '../../../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../../../../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {
   formatPriceChange,
   priceChange,
-} from '../../../common/helpers/priceChange'
-import {useStrings} from '../../../common/hooks/useStrings'
+} from '~/features/Portfolio/common/helpers/priceChange'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,
-} from '../../../context/PortfolioProvider'
-import {PnlTag} from '../../../ui/PnlTag/PnlTag'
+} from '~/features/Portfolio/context/PortfolioProvider'
+import {Icon} from '~/ui/Icon'
+import {PnlTag} from '~/ui/PnlTag/PnlTag'
+import {Space} from '~/ui/Space/Space'
+import {Tooltip} from '~/ui/Tooltip/Tooltip'
+import {usePrivacyMode} from '../Settings/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useCurrencyPairing} from '../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {SkeletonQuantityChange} from './SkeletonQuantityChange'
 import {TokenValueBalance} from './TokenValueBalance'
 import {TokenValuePairedBalance} from './TokenValuePairedBalance'
@@ -28,8 +28,8 @@ type Props = {
 }
 
 export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
-  const {styles, color} = useStyles()
   const {
     currency,
     config,
@@ -46,12 +46,12 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
     <View>
       {headerCard}
 
-      <Spacer height={6} />
+      <Space.Height.xs />
 
-      <View style={styles.balanceContainer}>
-        <View style={styles.balanceBox}>
+      <View style={[a.gap_2xs]}>
+        <View style={[a.flex_row, a.gap_2xs, a.align_end]}>
           <TouchableOpacity
-            style={styles.balanceBox}
+            style={[a.flex_row, a.gap_2xs, a.align_end]}
             onPress={() => togglePrivacyMode()}
           >
             <TokenValueBalance
@@ -63,14 +63,14 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.button}
+            style={[a.p_sm]}
             onPress={() => setIsPrimaryTokenActive(!isPrimaryTokenActive)}
           >
-            <Icon.Change color={color.el_gray_max} />
+            <Icon.Change color={p.el_gray_max} />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.rowBetween}>
+        <View style={[a.flex_row, a.justify_between, a.align_center]}>
           <TokenValuePairedBalance
             amount={amount}
             isFetching={isLoading}
@@ -84,7 +84,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
                 : strings.totalWalletValueTooltip
             }
           >
-            <View style={styles.varyContainer}>
+            <View style={[a.flex_row, a.gap_xs, a.align_stretch]}>
               {isLoading ? (
                 <SkeletonQuantityChange />
               ) : (
@@ -109,33 +109,4 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    rowBetween: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    balanceBox: {
-      ...atoms.flex_row,
-      ...atoms.gap_2xs,
-      ...atoms.align_end,
-    },
-    balanceContainer: {
-      ...atoms.gap_2xs,
-    },
-    button: {
-      ...atoms.p_sm,
-    },
-    varyContainer: {
-      ...atoms.flex_row,
-      ...atoms.gap_xs,
-      ...atoms.align_stretch,
-    },
-  })
-
-  return {styles, color} as const
 }

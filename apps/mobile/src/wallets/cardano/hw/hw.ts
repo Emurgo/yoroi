@@ -18,9 +18,9 @@ import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {HW, Wallet} from '@yoroi/types'
 import {BleError} from 'react-native-ble-plx'
 
-import {ledgerMessages} from '../../../kernel/i18n/global-messages'
-import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
-import {logger} from '../../../kernel/logger/logger'
+import {ledgerMessages} from '~/kernel/i18n/global-messages'
+import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {logger} from '~/kernel/logger/logger'
 import {
   AdaAppClosedError,
   BaseLedgerError,
@@ -28,7 +28,7 @@ import {
   HARDWARE_WALLETS,
   LedgerUserError,
   RejectedByUserError,
-} from '../../hw/hw'
+} from '~/wallets/hw/hw'
 
 const MIN_ADA_APP_VERSION = '2.2.1'
 const MIN_ADA_APP_VERSION_SUPPORTING_CIP36 = 6

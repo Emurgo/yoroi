@@ -3,7 +3,7 @@ import {DappConnection, useDappConnector} from '@yoroi/dapp-connector'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
 
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 
 export const useDAppsConnected = (
   options?: UseQueryOptions<

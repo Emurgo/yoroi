@@ -1,16 +1,16 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Alert, StyleSheet, View} from 'react-native'
+import {Alert, View} from 'react-native'
 
+import {useStrings} from '~/features/Swap/common/strings'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Text} from '~/ui/Text/Text'
 import {
   HARDWARE_WALLETS,
   useIsUsbSupported,
   useLedgerPermissions,
-} from '../../../wallets/hw/hw'
-import {useStrings} from '../../features/Swap/common/strings'
-import {Button, ButtonType} from '../Button/Button'
-import {Spacer} from '../Spacer/Spacer'
-import {Text} from '../Text/Text'
+} from '~/wallets/hw/hw'
+import {Space} from '../Space/Space'
 
 type Props = {
   onSelectUSB: () => void
@@ -20,7 +20,7 @@ type Props = {
 const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
   const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const {request} = useLedgerPermissions({
     onError: () => Alert.alert(strings.error, strings.bluetoothError),
@@ -28,8 +28,10 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
   })
 
   return (
-    <View style={styles.content}>
-      <Text style={styles.paragraph}>{strings.bluetoothExplanation}</Text>
+    <View style={[a.flex_1, {marginBottom: 24}, a.px_lg]}>
+      <Text style={{marginBottom: 16, fontSize: 14, lineHeight: 22}}>
+        {strings.bluetoothExplanation}
+      </Text>
 
       <Button
         type={ButtonType.Secondary}
@@ -38,9 +40,11 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
         testID="connectWithBLEButton"
       />
 
-      <Spacer height={16} />
+      <Space.Height.md />
 
-      <Text style={styles.paragraph}>{strings.usbExplanation}</Text>
+      <Text style={{marginBottom: 16, fontSize: 14, lineHeight: 22}}>
+        {strings.usbExplanation}
+      </Text>
 
       <Button
         type={ButtonType.Secondary}
@@ -52,7 +56,9 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
         testID="connectWithUSBButton"
       />
 
-      <Text style={[styles.infoText, {color: color.gray_600}]}>
+      <Text
+        style={[{paddingTop: 16, flex: 1, width: '100%'}, {color: p.gray_600}]}
+      >
         {strings.usbConnectionIsBlocked}
       </Text>
     </View>
@@ -60,21 +66,3 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
 }
 
 export const LedgerTransportSwitch = LedgerTransportSwitchView
-
-const styles = StyleSheet.create({
-  paragraph: {
-    marginBottom: 16,
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  content: {
-    flex: 1,
-    marginBottom: 24,
-    ...a.px_lg,
-  },
-  infoText: {
-    paddingTop: 16,
-    flex: 1,
-    width: '100%',
-  },
-})

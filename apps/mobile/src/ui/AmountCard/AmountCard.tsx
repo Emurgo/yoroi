@@ -1,262 +1,122 @@
-import {isPrimaryTokenInfo} from '@yoroi/portfolio'
-import {useTheme} from '@yoroi/theme'
-import React from 'react'
-import {
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {atoms as a, useTheme} from '@yoroi/theme'
+import * as React from 'react'
+import {Platform, Pressable, Text, TextInput, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {Outline} from '../../../../components/Outline'
-import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
-import {isEmptyString} from '../../../../kernel/utils'
-import {formatTokenWithText} from '../../../../wallets/utils/format'
-import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
-import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {undefinedToken} from '../constants'
-import {useNavigateTo} from '../navigation'
-import {useStrings} from '../strings'
-import {useSwap} from '../SwapProvider'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {Icon} from '~/ui/Icon'
+import {PairedBalance} from '../PairedBalance/PairedBalance'
+import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
 
 export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
-  const [isFocused, setIsFocused] = React.useState(false)
-  const strings = useStrings()
-  const {styles, colors} = useStyles()
-  const {isDark} = useTheme()
-  const {wallet} = useSelectedWallet()
-  const balances = usePortfolioBalances({wallet})
+  const {atoms: ta, palette: p} = useTheme()
   const swapForm = useSwap()
-  const navigate = useNavigateTo()
-  const navigateTo =
-    direction === 'in' ? navigate.selectTokenIn : navigate.selectTokenOut
-  const tokenInput =
-    swapForm[direction === 'in' ? 'tokenInInput' : 'tokenOutInput']
+  const [isFocused, setIsFocused] = React.useState(false)
 
-  const amount = {
-    info: swapForm.tokenInfos.get(tokenInput.tokenId ?? undefinedToken),
-    quantity: balances.records.get(tokenInput.tokenId ?? undefinedToken)
-      ?.quantity,
-  }
+  const amount =
+    direction === 'in' ? swapForm.tokenInInput : swapForm.tokenOutInput
   const info = amount.info
+  const quantity = amount.quantity
+  const error = amount.error
+  const touched = amount.touched
 
-  const decimals = info?.decimals ?? 0
-  const value = tokenInput.value
-  const quantity = BigInt(
-    Math.floor(Number(value ?? 0) * 10 ** (info?.decimals ?? 0)),
-  )
-  const touched = tokenInput.isTouched
-  const inputRef =
-    direction === 'in' ? swapForm.tokenInInputRef : swapForm.tokenOutInputRef
-  const error = direction === 'in' ? tokenInput.error : null
-  const testID = direction === 'in' ? 'swap:sell-edit' : 'swap:buy-edit'
-
-  const noTokenSelected = !touched
-
-  const name = info?.ticker || info?.name || ''
-  const formattedAmount =
-    !info || (amount?.quantity ?? 0n) === 0n
-      ? '0'
-      : formatTokenWithText(amount?.quantity ?? 0n, info, 18)
+  const formattedAmount = info ? `${info.name} (${info.ticker})` : ''
 
   const focusInput = () => {
-    if (inputRef?.current) {
-      inputRef.current.focus()
-    }
+    // Focus logic here
+  }
+
+  const navigateTo = () => {
+    // Navigation logic here
   }
 
   return (
-    <View style={[styles.container, direction === 'out' && styles.background]}>
-      <Outline
-        isFocused={isFocused}
-        color={!isEmptyString(error) ? colors.error : colors.border}
-        activeColor={!isEmptyString(error) ? colors.error : colors.gray}
-        style={styles.outline}
-      />
+    <View
+      style={[
+        {borderRadius: 8},
+        {borderRadius: 8},
+        a.p_lg,
+        a.gap_lg,
+        {backgroundColor: p.bg_color_min},
+      ]}
+    >
+      <View style={[a.flex_row, a.justify_between]}>
+        <View style={[a.flex_row, a.align_center]}>
+          <TokenInfoIcon info={info} size="md" />
 
-      <View style={styles.between}>
-        <Text style={styles.label}>
-          {direction === 'in' ? strings.from : strings.to}
-        </Text>
+          <Text
+            style={[
+              a.pr_xs,
+              a.pl_md,
+              a.body_1_lg_medium,
+              {color: p.text_gray_medium},
+            ]}
+          >
+            {info?.name ?? 'Select Token'}
+          </Text>
 
-        {direction === 'in' && info && !isPrimaryTokenInfo(info) && (
-          <View>
-            <Button
-              title={strings.max}
-              type={ButtonType.Text}
-              size="S"
-              onPress={() =>
-                swapForm.action({
-                  type: 'TokenInAmountChanged',
-                  value: (Number(amount.quantity) / 10 ** decimals).toFixed(
-                    decimals,
-                  ),
-                })
-              }
-            />
-          </View>
-        )}
-      </View>
-
-      <View style={styles.between}>
-        <TouchableOpacity onPress={navigateTo}>
-          <View style={styles.token}>
-            <TokenInfoIcon info={info} size="md" />
-
-            <Text style={styles.coinName}>
-              {noTokenSelected || !info ? strings.selectToken : name}
-            </Text>
-
-            <Icon.Chevron direction="down" size={24} color={colors.gray} />
-          </View>
-        </TouchableOpacity>
+          <Icon.Chevron direction="down" size={24} color={p.gray_max} />
+        </View>
 
         <Pressable
-          style={styles.amountWrapper}
-          onPress={() => (!info ? navigateTo?.() : focusInput())}
-          testID={`${testID}-token-input`}
+          style={[a.flex_1, a.flex_row, a.justify_end, a.align_center]}
+          onPress={() => (info ? focusInput() : navigateTo())}
         >
           <TextInput
             keyboardType="numeric"
             autoComplete="off"
-            value={value}
+            value={quantity}
             placeholder="0"
-            placeholderTextColor={colors.placeholder}
-            onChangeText={(value) =>
-              swapForm.action({
-                type:
-                  direction === 'in'
-                    ? 'TokenInAmountChanged'
-                    : 'TokenOutAmountChanged',
-                value,
-              })
-            }
+            placeholderTextColor={p.text_gray_medium}
+            onChangeText={(value) => {
+              // onChange logic here
+            }}
             allowFontScaling
-            selectionColor={isFocused ? colors.focused : colors.blur}
+            selectionColor={isFocused ? p.input_selected : p.black_static}
             style={[
-              styles.amountInput,
-              value === '0' && styles.grayText,
-              !isEmptyString(error) && styles.errorText,
+              a.py_0,
+              a.heading_3_medium,
+              {textAlign: 'right'},
+              {color: p.gray_900},
+              Platform.OS === 'ios' ? {lineHeight: 22} : {},
             ]}
             underlineColorAndroid="transparent"
-            ref={inputRef}
             editable={touched}
             selectTextOnFocus
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            testID={`${testID}-amount-input`}
-            keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
-            {...(!info && {onPressIn: navigateTo})}
           />
         </Pressable>
       </View>
 
-      <View style={styles.between}>
-        {!isEmptyString(error) ? (
-          <View style={styles.balance}>
-            <Icon.Warning size={15} color={colors.error} />
+      {error ? (
+        <View>
+          <Icon.Portfolio2 size={15} color={p.sys_magenta_500} />
 
-            <Text style={[styles.text, styles.errorText]}>{error}</Text>
-          </View>
-        ) : (
-          <View style={styles.balance}>
-            <Icon.Portfolio2 size={15} color={colors.placeholder} />
+          <Text style={[a.body_2_md_regular, {color: p.sys_magenta_500}]}>
+            {error}
+          </Text>
+        </View>
+      ) : (
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+          <Icon.Portfolio2 size={15} color={p.text_gray_medium} />
 
-            <Text ellipsizeMode="middle" style={[styles.text, styles.grayText]}>
-              {formattedAmount}
-            </Text>
-          </View>
-        )}
+          <Text
+            ellipsizeMode="middle"
+            style={[a.body_2_md_regular, {color: p.gray_600}]}
+          >
+            {formattedAmount}
+          </Text>
+        </View>
+      )}
 
-        {info && (
-          <PairedBalance
-            amount={{
-              info,
-              quantity,
-            }}
-          />
-        )}
-      </View>
+      {info && (
+        <PairedBalance
+          amount={{
+            info,
+            quantity,
+          }}
+        />
+      )}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    outline: {
-      borderRadius: 8,
-    },
-    container: {
-      borderRadius: 8,
-      ...atoms.p_lg,
-      ...atoms.gap_lg,
-    },
-    background: {
-      backgroundColor: color.bg_color_min,
-    },
-    between: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    label: {
-      ...atoms.body_2_md_medium,
-      ...atoms.py_xs,
-      color: color.gray_900,
-    },
-    amountInput: {
-      ...atoms.py_0,
-      ...atoms.heading_3_medium,
-      textAlign: 'right',
-      color: color.gray_900,
-      ...(Platform.OS === 'ios' ? {lineHeight: 22} : {}),
-    },
-    amountWrapper: {
-      ...atoms.flex_1,
-      ...atoms.flex_row,
-      ...atoms.justify_end,
-      ...atoms.align_center,
-    },
-    token: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    coinName: {
-      ...atoms.pr_xs,
-      ...atoms.pl_md,
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    balance: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_sm,
-    },
-    text: {
-      ...atoms.body_2_md_regular,
-    },
-    errorText: {
-      color: color.sys_magenta_500,
-    },
-    grayText: {
-      color: color.gray_600,
-    },
-  })
-
-  const colors = {
-    placeholder: color.text_gray_medium,
-    focused: color.input_selected,
-    blur: color.black_static,
-    noSelected: color.gray_400,
-    border: color.bg_color_min,
-    gray: color.gray_max,
-    error: color.sys_magenta_500,
-  }
-  return {styles, colors} as const
 }

@@ -57,6 +57,13 @@ config.resolver.extraNodeModules = {
   '@yoroi/theme': path.resolve(workspaceRoot, 'packages/theme'),
   '@yoroi/transfer': path.resolve(workspaceRoot, 'packages/transfer'),
   '@yoroi/types': path.resolve(workspaceRoot, 'packages/types'),
+  // Add absolute path aliases
+  '~/ui': path.resolve(projectRoot, 'src/ui'),
+  '~/features': path.resolve(projectRoot, 'src/features'),
+  '~/hooks': path.resolve(projectRoot, 'src/hooks'),
+  '~/kernel': path.resolve(projectRoot, 'src/kernel'),
+  '~/wallets': path.resolve(projectRoot, 'src/wallets'),
+  '~/components': path.resolve(projectRoot, 'src/ui'),
 }
 
 config.transformer.minifierConfig = {

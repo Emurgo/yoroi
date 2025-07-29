@@ -5,17 +5,16 @@ import * as React from 'react'
 import {LayoutAnimation, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import infoIcon from '../../../../assets/img/icon/info-light-green.png'
-import {Space} from '../../../../components/Space/Space'
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {usePoolTransitionModal} from '../../../../legacy/Staking/PoolTransition/usePoolTransitionModal'
-import {useSync} from '../../../../wallets/hooks'
-import {useBuyCryptoBanner} from '../../../Exchange/common/useBuyCryptoBanner'
-import {useGetImportantAlertsModal} from '../../../Notifications/common/GetImportantAlertsModal'
-import {useGovernanceBanner} from '../../../Staking/Governance/useCases/useGovernanceBanner'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useStrings} from '../../common/strings'
+import {useStrings} from '~/features/Transactions/common/useStrings'
+import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Space} from '~/ui/Space/Space'
+import {useSync} from '~/wallets/hooks'
+import infoIcon from '../assets/img/icon/info-light-green.png'
+import {useBuyCryptoBanner} from '../Exchange/common/useBuyCryptoBanner'
+import {usePoolTransitionModal} from '../legacy/Staking/PoolTransition/usePoolTransitionModal'
+import {useGovernanceBanner} from '../Staking/Governance/useCases/useGovernanceBanner'
 import {TxList} from '../TxList/TxList'
 import {useUtxoConsolidationBanner} from '../UtxoConsolidation/useUtxoConsolidationBanner'
 import {UtxoListButton} from '../UtxoList/UtxoListButton'
@@ -76,7 +75,7 @@ export const TxHistory = () => {
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={{flex: 1}}
     >
-      <Spacer height={headerHeight} />
+      <Space.Height._2xs height={headerHeight} />
 
       <CollapsibleHeader expanded={expanded}>
         <BalanceBanner />
@@ -97,7 +96,7 @@ export const TxHistory = () => {
       >
         <UtxoListButton />
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Text
           style={[a.body_1_lg_medium, {color: p.gray_900, textAlign: 'center'}]}
@@ -105,11 +104,11 @@ export const TxHistory = () => {
           {strings.title}
         </Text>
 
-        <Space height="xl" />
+        <Space.Height.xl />
 
         <LockedDeposit />
 
-        <Space height="md" />
+        <Space.Height.md />
 
         {meta.implementation === 'cardano-bip44' && showWarning && (
           <WarningBanner

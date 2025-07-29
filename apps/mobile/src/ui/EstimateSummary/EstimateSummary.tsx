@@ -1,22 +1,22 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Button, ButtonType} from '../../../../components/Button/Button'
-import {Icon} from '../../../../components/Icon'
-import {useModal} from '../../../../components/Modal/ModalContext'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {undefinedToken} from '../../common/constants'
-import {useNavigateTo} from '../../common/navigation'
-import {ProtocolAvatar} from '../../common/Protocol/ProtocolAvatar'
-import {useStrings} from '../../common/strings'
-import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
-import {useSwap} from '../../common/SwapProvider'
+import {useNavigateTo} from '~/features/Transactions/common/navigation'
+import {useStrings} from '~/features/Swap/common/useStrings'
+import {undefinedToken} from '~/features/Swap/common/constants'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {SwapInfoLink} from '~/ui/SwapInfoLink/SwapInfoLink'
 
 export const EstimateSummary = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const swapForm = useSwap()
   const {openModal} = useModal()
@@ -44,23 +44,22 @@ export const EstimateSummary = () => {
 
   const expand = () =>
     openModal({
-      title: strings.route,
-      height: 400,
       content: (
-        <View style={styles.container}>
+        <View style={[a.p_lg]}>
           <Splits data={swapForm.estimate?.splits ?? []} />
         </View>
       ),
+      footer: <SwapInfoLink />,
     })
 
   return (
-    <View style={styles.list}>
+    <View style={[a.p_lg]}>
       <Row
         label={strings.route}
         description={strings.routeDescription}
         value={
           protocol !== undefined && (
-            <View style={styles.composedText}>
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <ProtocolAvatar
                 protocol={protocol}
                 onPress={
@@ -96,16 +95,14 @@ export const EstimateSummary = () => {
       <Row
         label={strings.swapMinReceivedTitle}
         description={strings.swapMinReceived}
-        value={`${swapForm.estimate?.totalOutput} ${tokenOutTicker}`}
+        value={`${swapForm.estimate?.minOutput} ${tokenOutTicker}`}
       />
 
-      {swapForm.orderType === 'market' && (
-        <Row
-          label={strings.slippageTolerance}
-          description={strings.slippageToleranceInfo}
-          value={`${swapForm.slippageInput.value} %`}
-        />
-      )}
+      <Row
+        label={strings.swapSlippageTitle}
+        description={strings.swapSlippage}
+        value={`${swapForm.estimate?.slippage}%`}
+      />
     </View>
   )
 }
@@ -119,22 +116,25 @@ const Row = ({
   description?: string
   value: number | string | React.ReactNode
 }) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {openModal} = useModal()
 
   return (
-    <View style={styles.row}>
-      <View style={styles.composedText}>
-        <Text style={styles.rowLabel}>{label}</Text>
+    <View style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+        <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
+          {label}
+        </Text>
 
         {description !== undefined && (
           <Button
-            style={styles.reducedPadding}
+            style={[a.pl_2xs, a.pr_2xs, a.pt_2xs, a.pb_2xs]}
             onPress={() =>
               openModal({
-                title: label,
                 content: (
-                  <Text style={[styles.container, styles.description]}>
+                  <Text
+                    style={[a.p_lg, a.body_1_lg_regular, {color: p.gray_900}]}
+                  >
                     {description}
                   </Text>
                 ),
@@ -149,7 +149,15 @@ const Row = ({
       </View>
 
       {typeof value === 'string' || typeof value === 'number' ? (
-        <Text style={styles.rowValue}>{value}</Text>
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            a.self_center,
+            {color: p.text_gray_medium},
+          ]}
+        >
+          {value}
+        </Text>
       ) : (
         value
       )}
@@ -158,7 +166,7 @@ const Row = ({
 }
 
 export const Splits = ({data}: {data: Swap.Split[]}) => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
 
   const total = data.reduce(
     (acc, curr) => (acc += curr.expectedOutputWithoutSlippage),
@@ -166,17 +174,26 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
   )
 
   return (
-    <View style={styles.list}>
+    <View style={[a.gap_md]}>
       {[...data]
         .sort(
           (a, b) =>
             b.expectedOutputWithoutSlippage - a.expectedOutputWithoutSlippage,
         )
         .map((split, index) => (
-          <View key={index} style={[styles.composedText, styles.between]}>
+          <View
+            key={index}
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.gap_xs,
+              a.flex_row,
+              a.justify_between,
+            ]}
+          >
             <ProtocolAvatar protocol={split.protocol} preventOpenLink />
 
-            <Text style={styles.textValue}>
+            <Text style={[a.body_1_lg_regular, {color: p.el_gray_min}]}>
               {(
                 (100 * (split.expectedOutputWithoutSlippage ?? 0)) /
                 total
@@ -187,55 +204,4 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
         ))}
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    between: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.gap_xs,
-    },
-    list: {
-      ...atoms.gap_md,
-    },
-    container: {
-      ...atoms.p_lg,
-    },
-    row: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    rowLabel: {
-      ...atoms.body_1_lg_regular,
-      color: color.text_gray_low,
-    },
-    rowValue: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.self_center,
-      color: color.text_gray_medium,
-    },
-    composedText: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      ...atoms.gap_xs,
-    },
-    description: {
-      color: color.gray_900,
-      ...atoms.body_1_lg_regular,
-    },
-    textValue: {
-      color: color.el_gray_min,
-      ...atoms.body_1_lg_regular,
-    },
-    reducedPadding: {
-      ...atoms.pl_2xs,
-      ...atoms.pr_2xs,
-      ...atoms.pt_2xs,
-      ...atoms.pb_2xs,
-    },
-  })
-
-  return {styles, color}
 }

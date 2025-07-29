@@ -4,14 +4,14 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
-import {Button} from '../../../../ui/Button/Button'
-import {Space} from '../../../../ui/Space/Space'
-import {TextInput} from '../../../../ui/TextInput/TextInput'
-import {GradientWarning} from '../../../components/ChainWarning/GradientWarning'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {TextInput} from '~/ui/TextInput/TextInput'
+import {GradientWarning} from '~/ui/ChainWarning/GradientWarning'
 import {
   isValidPoolIdOrHash,
   normalizeToPoolHash,
-} from '../../../wallets/cardano/delegationUtils'
+} from '~/wallets/cardano/delegationUtils'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void

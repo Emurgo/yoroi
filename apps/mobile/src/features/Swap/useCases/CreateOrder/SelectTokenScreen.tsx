@@ -9,28 +9,28 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SwapTokenRoutes, useUnsafeParams} from '../../../../kernel/navigation'
-import {getTokenIdParts} from '../../../Portfolio/common/helpers/get-token-id-parts'
-import {usePortfolioBalances} from '../../../Portfolio/common/hooks/usePortfolioBalances'
-import {usePortfolioTokenActivity} from '../../../Portfolio/common/PortfolioTokenActivityProvider'
-import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
-import {Boundary} from '../../../ui/Boundary/Boundary'
-import {Counter} from '../../../ui/Counter/Counter'
-import {NoAssetFoundImage} from '../../../ui/NoAssetFoundImage/NoAssetFoundImage'
-import {ServiceUnavailable} from '../../../ui/ServiceUnavailable/ServiceUnavailable'
-import {Spacer} from '../../../ui/Space/Space'
-import {Text} from '../../../ui/Text/Text'
+import {getTokenIdParts} from '~/features/Portfolio/common/helpers/get-token-id-parts'
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioTokenActivity} from '~/features/Portfolio/common/PortfolioTokenActivityProvider'
+import {filterBySearch} from '~/features/Swap/common/filterBySearch'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useStrings} from '~/features/Swap/common/useStrings'
+import {useSwapConfig} from '~/features/Swap/common/useSwapConfig'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {SwapTokenRoutes, useUnsafeParams} from '~/kernel/navigation'
+import {Boundary} from '~/ui/Boundary/Boundary'
+import {Counter} from '~/ui/Counter/Counter'
+import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
+import {ServiceUnavailable} from '~/ui/ServiceUnavailable/ServiceUnavailable'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
 import {
   AmountItemPlaceholder,
   TokenAmountItem,
-} from '../../../ui/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {filterBySearch} from '../../common/filterBySearch'
+} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapProvider'
-import {useSwapConfig} from '../../common/useSwapConfig'
+import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 
 type Direction = SwapTokenRoutes['swap-select-token']
 
@@ -201,7 +201,7 @@ const TokenList = ({direction}: Direction) => {
         ListEmptyComponent={<EmptyList />} // Assuming EmptyList is a component that renders an empty list message
       />
 
-      <Spacer height={16} />
+      <Space.Height.md />
 
       <Counter
         counter={filteredTokenList.length}
@@ -309,7 +309,7 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   const {color} = useTheme()
   return (
     <View style={[styles.imageContainer, {flex: 1, textAlign: 'center'}]}>
-      <Spacer height={50} />
+      <Space.Height.xl />
 
       <NoAssetFoundImage
         style={[
@@ -318,7 +318,7 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
         ]}
       />
 
-      <Spacer height={25} />
+      <Space.Height.lg />
 
       <Text
         style={[

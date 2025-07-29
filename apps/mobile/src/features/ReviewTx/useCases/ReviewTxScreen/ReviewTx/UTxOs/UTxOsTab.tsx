@@ -1,32 +1,32 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {Copiable} from '../../../../../../components/Clipboard/Copiable'
-import {Divider} from '../../../../../../components/Divider/Divider'
-import {Space} from '../../../../../../components/Space/Space'
-import {formatTokenWithText} from '../../../../../../wallets/utils/format'
-import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
-import {Accordion} from '../../../../common/Accordion'
-import {useStrings} from '../../../../common/hooks/useStrings'
-import {TokenItem} from '../../../../common/TokenItem'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
 import {
   FormattedInput,
   FormattedInputs,
   FormattedOutput,
   FormattedOutputs,
   FormattedTx,
-} from '../../../../common/types'
+} from '~/features/ReviewTx/common/types'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Accordion} from '~/ui/Accordion/Accordion'
+import {Copiable} from '~/ui/Copiable/Copiable'
+import {Divider} from '~/ui/Divider/Divider'
+import {Space} from '~/ui/Space/Space'
+import {formatTokenWithText} from '~/wallets/utils/format'
 
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
   return (
-    <View style={styles.root}>
-      <Space height="lg" />
+    <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
+      <Space.Height.lg />
 
       <Accordion label={`${strings.utxosInputsLabel} (${tx.inputs.length})`}>
         <Inputs inputs={tx.inputs} />
@@ -43,7 +43,7 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
         <Outputs outputs={tx.outputs} />
       </Accordion>
 
-      <Space height="lg" />
+      <Space.Height.lg />
     </View>
   )
 }
@@ -55,37 +55,47 @@ export const Inputs = ({inputs}: {inputs: FormattedInputs}) => {
 }
 
 const Input = ({input}: {input: FormattedInput}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <View>
       <View>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <UtxoTitle isInput isOwnAdddress={input.ownAddress} />
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Copiable text={input.address ?? '-'}>
-          <Text style={styles.addressText}>{input.address ?? '-'}</Text>
+          <Text
+            style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
+          >
+            {input.address ?? '-'}
+          </Text>
         </Copiable>
 
-        <Space height="sm" />
+        <Space.Height.sm />
 
         <Copiable text={input.txHash}>
-          <Text style={styles.addressText}>{input.txHash}</Text>
+          <Text
+            style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
+          >
+            {input.txHash}
+          </Text>
 
-          <Space width="sm" />
+          <Space.Width.sm />
 
-          <Text style={styles.index}>{`#${input.txIndex}`}</Text>
+          <Text
+            style={[a.body_2_md_medium, {color: p.text_gray_medium}]}
+          >{`#${input.txIndex}`}</Text>
 
-          <Space width="sm" />
+          <Space.Width.sm />
         </Copiable>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
-      <View style={styles.tokenItems}>
+      <View style={[a.flex_row, a.justify_end, a.flex_wrap, a.gap_sm]}>
         {input.assets.map((asset, index) => {
           const isPrimary =
             asset.tokenInfo.nature === Portfolio.Token.Nature.Primary
@@ -111,25 +121,29 @@ const Outputs = ({outputs}: {outputs: FormattedOutputs}) => {
 }
 
 const Output = ({output}: {output: FormattedOutput}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <View>
       <View>
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <UtxoTitle isInput={false} isOwnAdddress={output.ownAddress} />
 
-        <Space height="lg" />
+        <Space.Height.lg />
 
         <Copiable text={output.address ?? '-'}>
-          <Text style={styles.addressText}>{output.address ?? '-'}</Text>
+          <Text
+            style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
+          >
+            {output.address ?? '-'}
+          </Text>
         </Copiable>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
-      <View style={styles.tokenItems}>
+      <View style={[a.flex_row, a.justify_end, a.flex_wrap, a.gap_sm]}>
         {output.assets.map((asset, index) => {
           const isPrimary =
             asset.tokenInfo.nature === Portfolio.Token.Nature.Primary
@@ -151,17 +165,21 @@ const Output = ({output}: {output: FormattedOutput}) => {
 }
 
 const Fee = ({fee}: {fee: string}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
     <View>
       <Divider verticalSpace="lg" />
 
-      <View style={styles.fee}>
-        <Text style={styles.feeLabel}>{strings.feeLabel}</Text>
+      <View style={[a.flex_row, a.justify_between]}>
+        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+          {strings.feeLabel}
+        </Text>
 
-        <Text style={styles.feeValue}>{`-${fee}`}</Text>
+        <Text
+          style={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+        >{`-${fee}`}</Text>
       </View>
 
       <Divider verticalSpace="lg" />
@@ -176,7 +194,7 @@ const UtxoTitle = ({
   isOwnAdddress: boolean | null
   isInput: boolean
 }) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   const label =
@@ -187,76 +205,23 @@ const UtxoTitle = ({
       : '-'
 
   return (
-    <View style={styles.utxoTitle}>
+    <View style={[a.flex_row, a.align_center]}>
       <View
         style={[
-          isInput ? styles.utxoTitleCircleInput : styles.utxoTitleCircleOutput,
+          {
+            width: 12,
+            height: 12,
+            backgroundColor: isInput ? p.el_primary_medium : p.green_static,
+          },
+          a.rounded_full,
         ]}
       />
 
-      <Space width="sm" />
+      <Space.Width.sm />
 
-      <Text style={styles.utxoTitleText}>{label}</Text>
+      <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+        {label}
+      </Text>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      backgroundColor: color.bg_color_max,
-    },
-    utxoTitle: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    utxoTitleCircleInput: {
-      width: 12,
-      height: 12,
-      backgroundColor: color.el_primary_medium,
-      ...atoms.rounded_full,
-    },
-    utxoTitleCircleOutput: {
-      width: 12,
-      height: 12,
-      backgroundColor: color.green_static,
-      ...atoms.rounded_full,
-    },
-    utxoTitleText: {
-      ...atoms.body_2_md_medium,
-      color: color.text_gray_medium,
-    },
-    tokenItems: {
-      ...atoms.flex_row,
-      ...atoms.justify_end,
-      ...atoms.flex_wrap,
-      ...atoms.gap_sm,
-    },
-    fee: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-    },
-    feeLabel: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_medium,
-    },
-    feeValue: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-    addressText: {
-      ...atoms.flex_1,
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-    index: {
-      ...atoms.body_2_md_medium,
-      color: color.text_gray_medium,
-    },
-  })
-
-  return {styles} as const
 }

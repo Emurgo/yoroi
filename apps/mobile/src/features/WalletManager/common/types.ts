@@ -2,12 +2,12 @@
 // import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {App, Chain, HW, Network, Portfolio} from '@yoroi/types'
 
-import {KeychainManager} from '../../../kernel/storage/Keychain'
+import {KeychainManager} from '~/kernel/storage/Keychain'
 import {
   CardanoTypes,
   WalletEvent,
   YoroiWallet,
-} from '../../../wallets/cardano/types'
+} from '~/wallets/cardano/types'
 
 export type NetworkTokenManagers = Readonly<
   Record<Chain.SupportedNetworks, Portfolio.Manager.Token>

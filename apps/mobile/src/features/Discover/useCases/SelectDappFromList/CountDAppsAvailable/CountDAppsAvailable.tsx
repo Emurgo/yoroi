@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {useStrings} from '../../../common/useStrings'
 
@@ -8,29 +8,14 @@ type Props = {
   total: number
 }
 export const CountDAppsAvailable = ({total}: Props) => {
-  const {styles} = useStyles()
+  const {atoms: a, palette: p} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={styles.countAvailableBox}>
+    <View style={[a.px_lg]}>
       <Text
-        style={styles.availableText}
+        style={[a.body_2_md_regular, {color: p.gray_700}]}
       >{`${strings.totalDAppAvailable(total)}`}</Text>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-
-  const styles = StyleSheet.create({
-    availableText: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_700,
-    },
-    countAvailableBox: {
-      ...atoms.px_lg,
-    },
-  })
-  return {styles} as const
 }

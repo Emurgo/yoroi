@@ -1,9 +1,9 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {useEffect} from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useAuthOsWithEasyConfirmation} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {getErrorMessage} from '../errors'
 import {useStrings} from '../strings'
 import {ActivityIndicator} from './ActivityIndicator'
@@ -17,7 +17,7 @@ export const ConfirmRawTxWithOs = ({
 }) => {
   const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
   const {authWithOs, error} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
@@ -38,8 +38,11 @@ export const ConfirmRawTxWithOs = ({
     }
 
     return (
-      <View style={styles.center}>
-        <Text style={styles.errorMessage} numberOfLines={3}>
+      <View style={[a.align_center, a.justify_center, a.px_lg]}>
+        <Text
+          style={[{color: p.sys_magenta_500, textAlign: 'center'}]}
+          numberOfLines={3}
+        >
           {errorMessage}
         </Text>
       </View>
@@ -47,26 +50,8 @@ export const ConfirmRawTxWithOs = ({
   }
 
   return (
-    <View style={styles.center}>
+    <View style={[a.align_center, a.justify_center, a.px_lg]}>
       <ActivityIndicator />
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    center: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...atoms.px_lg,
-    },
-    errorMessage: {
-      color: color.sys_magenta_500,
-      textAlign: 'center',
-    },
-  })
-
-  return styles
 }

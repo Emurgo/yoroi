@@ -1,18 +1,18 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet} from 'react-native'
+import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Spacer} from '../../../../components/Spacer/Spacer'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {usePortfolio} from '../../context/PortfolioProvider'
+import {Space} from '~/ui/Space/Space'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
 import {BalanceCard} from './BalanceCard/BalanceCard'
 import {DashboardNFTsList} from './DashboardNFTsList/DashboardNFTsList'
 import {DashboardTokensList} from './DashboardTokensList/DashboardTokensList'
 
 export const PortfolioDashboardScreen = () => {
-  const {styles} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {track} = useMetrics()
   const {resetTabs} = usePortfolio()
 
@@ -24,30 +24,21 @@ export const PortfolioDashboardScreen = () => {
   )
 
   return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <ScrollView style={styles.root}>
+    <SafeAreaView
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+      edges={['left', 'right', 'bottom']}
+    >
+      <ScrollView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
         <BalanceCard />
 
-        <Spacer height={16} />
+        <Space.Height.md />
 
         <DashboardTokensList />
 
-        <Spacer height={16} />
+        <Space.Height.md />
 
         <DashboardNFTsList />
       </ScrollView>
     </SafeAreaView>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_max,
-    },
-  })
-
-  return {styles} as const
 }

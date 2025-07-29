@@ -2,11 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactElement} from 'react'
 import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import {Hr} from '../../ui/Hr/Hr'
-import {Icon} from '../../ui/Icon'
-import {Space, SpaceHeight, SpaceWidth} from '../../ui/Space/Space'
-import {Text} from '../../ui/Text/Text'
-import {isEmptyString} from '../../wallets/utils/string'
+import {Hr} from '~/ui/Hr/Hr'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
+import {isEmptyString} from '~/wallets/utils/string'
 
 const Touchable = (props: TouchableOpacityProps) => (
   <TouchableOpacity {...props} activeOpacity={0.5} />
@@ -28,7 +28,7 @@ export const SettingsSection = ({title, children}: SettingsSectionProps) => {
             {title}
           </Text>
 
-          <SpaceHeight size={5} />
+          <Space.Height.xs />
 
           <Hr style={[{height: 1}, {backgroundColor: p.gray_200}]} />
         </>
@@ -62,7 +62,7 @@ export const SettingsItem = ({
         <View style={[a.flex_row, a.justify_between, a.align_center]}>
           {icon}
 
-          {icon && <SpaceWidth size={10} />}
+          {icon && <Space.Width.sm />}
 
           <Text
             style={[
@@ -79,7 +79,7 @@ export const SettingsItem = ({
 
         {!isEmptyString(info) && (
           <>
-            <Space.Height.md />
+            <Space.Height.sm />
 
             <Text style={[a.body_3_sm_regular, {color: p.gray_600}]}>
               {info}
@@ -118,7 +118,7 @@ export const NavigatedSettingsItem = ({
             </Text>
           )}
 
-          <Space.Width.lg />
+          <Space.Width.md />
 
           <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
         </View>

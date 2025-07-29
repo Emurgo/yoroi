@@ -3,7 +3,7 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 import {Defs, LinearGradient, Path, Stop, Svg, SvgProps} from 'react-native-svg'
-import {Space} from '../Space/Space'
+import {Space} from '~/ui/Space/Space'
 
 const YOROI_COMPANY_NAME = 'Yoroi'
 

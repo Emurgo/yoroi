@@ -1,8 +1,8 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 
-import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
 import {
   DAppCountConnectedSkeleton,
   DAppItemSkeleton,
@@ -10,36 +10,24 @@ import {
 } from './DAppListItem/DAppItemSkeleton'
 
 export const ListSkeleton = () => {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView style={[a.p_lg, a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <DAppTabSkeleton />
 
-      <Spacer height={16} />
+      <Space.Height.md />
 
       <DAppCountConnectedSkeleton />
 
-      <Spacer height={16} />
+      <Space.Height.md />
 
       {Array.from({length: 7}).map((_, index) => (
         <View key={index}>
           <DAppItemSkeleton />
 
-          <Spacer height={16} />
+          <Space.Height.md />
         </View>
       ))}
     </ScrollView>
   )
-}
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.p_lg,
-      ...atoms.flex_1,
-    },
-  })
-
-  return styles
 }

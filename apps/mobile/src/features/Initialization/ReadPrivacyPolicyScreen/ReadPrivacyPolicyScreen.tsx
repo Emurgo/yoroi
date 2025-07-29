@@ -3,8 +3,8 @@ import React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLanguage} from '../../../kernel/i18n/LanguageProvider'
-import {PrivacyPolicy} from '../../Legal/PrivacyPolicy/PrivacyPolicy'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {PrivacyPolicy} from '../Legal/PrivacyPolicy/PrivacyPolicy'
 
 export const ReadPrivacyPolicyScreen = () => {
   const {atoms: ta} = useTheme()

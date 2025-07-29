@@ -1,8 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 
-import {Text} from '../Text/Text'
+import {Text} from '~/ui/Text/Text'
 
 type Props = {
   onPress?: () => void
@@ -17,50 +17,34 @@ export const NotificationItem = ({
   title,
   description,
 }: Props) => {
-  const {color, isLight} = useTheme()
+  const {palette: p, isLight} = useTheme()
   return (
     <TouchableOpacity
       style={[
-        styles.container,
-        {backgroundColor: isLight ? color.bg_color_max : color.gray_100},
-        {borderColor: color.gray_50},
-        {shadowColor: isLight ? '#8A92A31A' : '#24283833'},
+        {
+          flex: 1,
+          borderRadius: 6,
+          shadowOffset: {width: -1, height: 8},
+          shadowOpacity: 1,
+          shadowRadius: 20,
+          backgroundColor: isLight ? p.bg_color_max : p.gray_100,
+          borderColor: p.gray_50,
+          shadowColor: isLight ? '#8A92A31A' : '#24283833',
+        },
+        a.p_lg,
+        a.gap_lg,
+        a.flex_row,
+        a.border,
       ]}
       onPress={onPress}
     >
       {icon}
 
-      <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
+      <View style={[a.flex_1, a.flex_col, a.gap_xs]}>
+        <Text style={[a.body_2_md_medium, a.font_semibold]}>{title}</Text>
 
-        <Text style={styles.description}>{description}</Text>
+        <Text style={[a.link_2_md]}>{description}</Text>
       </View>
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    borderRadius: 6,
-    ...a.p_lg,
-    ...a.gap_lg,
-    ...a.flex_row,
-    ...a.border,
-    shadowOffset: {width: -1, height: 8},
-    shadowOpacity: 1,
-    shadowRadius: 20,
-  },
-  content: {
-    ...a.flex_1,
-    ...a.flex_col,
-    ...a.gap_xs,
-  },
-  title: {
-    ...a.body_2_md_medium,
-    ...a.font_semibold,
-  },
-  description: {
-    ...a.link_2_md,
-  },
-})

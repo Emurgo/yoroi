@@ -2,8 +2,8 @@ import {MetadataJsonSchema} from '@emurgo/cross-csl-core'
 import {useQuery} from '@tanstack/react-query'
 import {isString} from '@yoroi/common'
 
-import {wrappedCsl} from '../../../../wallets/cardano/wrappedCsl'
-import {YoroiUnsignedTx} from '../../../../wallets/types/yoroi'
+import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
+import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {FormattedMetadata, TransactionBody} from '../types'
 
 export const formatMetadata = async (

@@ -8,28 +8,24 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, FlatList, Image, Text, View} from 'react-native'
 import {Observer} from 'rxjs'
 
-import bleImage from '../../../assets/img/bluetooth.png'
-import usbImage from '../../../assets/img/ledger-nano-usb.png'
 import globalMessages, {
   confirmationMessages,
   ledgerMessages,
-} from '../../../kernel/i18n/global-messages'
-import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
-import {logger} from '../../../kernel/logger/logger'
-import {
-  BluetoothDisabledError,
-  RejectedByUserError,
-} from '../../../wallets/hw/hw'
-import {Device} from '../../../wallets/types/hw'
+} from '~/kernel/i18n/global-messages'
+import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {logger} from '~/kernel/logger/logger'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {BluetoothDisabledError, RejectedByUserError} from '~/wallets/hw/hw'
+import {Device} from '~/wallets/types/hw'
+import bleImage from '../assets/img/bluetooth.png'
+import usbImage from '../assets/img/ledger-nano-usb.png'
 import {BulletPointItem} from '../BulletPointItem'
-import {Button} from '../Button/Button'
 import {Loading} from '../Loading/Loading'
-import {Space} from '../Space/Space'
 import {DeviceItem} from './DeviceItem'
 
 type Props = {
   intl: IntlShape
-  defaultDevices?: Array<Device> | null // for storybook
   onConnectUSB: (deviceObj: HW.DeviceObj) => Promise<void> | void
   onConnectBLE: (deviceId: string) => Promise<void> | void
   useUSB?: boolean

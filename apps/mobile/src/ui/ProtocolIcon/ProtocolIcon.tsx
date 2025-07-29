@@ -2,7 +2,7 @@ import {getDexByProtocol} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import * as React from 'react'
 
-import {Icon} from '../Icon'
+import {Icon} from '~/ui/Icon'
 
 type Props = {
   protocol: Swap.Protocol

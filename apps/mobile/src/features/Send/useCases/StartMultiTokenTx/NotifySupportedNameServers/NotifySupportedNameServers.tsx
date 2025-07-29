@@ -1,17 +1,17 @@
 import {useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Icon} from '../../../../../components/Icon'
+import {Icon} from '~/ui/Icon'
 
-import {Spacer} from '../../../../../components/Spacer/Spacer'
-import {useStrings} from '../../../common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
+import {Space} from '~/ui/Space/Space'
 
 export const NotifySupportedNameServers = () => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {palette: p} = useTheme()
   const {showNotice, refetch} = useResolverShowNotice()
 
   const {setShowNotice} = useResolverSetShowNotice({
@@ -26,24 +26,34 @@ export const NotifySupportedNameServers = () => {
   return (
     <View>
       <LinearGradient
-        style={styles.gradient}
+        style={[{borderRadius: 8}, a.p_md]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 1}}
-        colors={[colors.lightGreen, colors.lightBlue]}
+        colors={[p.secondary_200, p.primary_100]}
       >
-        <View style={styles.header}>
-          <Text style={styles.title}>
+        <View
+          style={[
+            {
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            },
+          ]}
+        >
+          <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
             {`${strings.resolverNoticeTitle} `}😇
           </Text>
 
           <TouchableOpacity onPress={handleOnClose}>
-            <Icon.CrossCircle size={24} color={colors.iconColor} />
+            <Icon.CrossCircle size={24} color={p.gray_max} />
           </TouchableOpacity>
         </View>
 
-        <Spacer height={10} />
+        <Space.Height.sm />
 
-        <Text style={styles.text}>{strings.resolverNoticeText}:</Text>
+        <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
+          {strings.resolverNoticeText}:
+        </Text>
 
         <NameServer text="ADA Handle" />
 
@@ -52,63 +62,31 @@ export const NotifySupportedNameServers = () => {
         <NameServer text="Cardano Name Service (CNS)" />
       </LinearGradient>
 
-      <Spacer height={16} />
+      <Space.Height.md />
     </View>
   )
 }
 
 const NameServer = ({text}: {text: string}) => {
-  const {styles} = useStyles()
+  const {palette: p} = useTheme()
   return (
-    <View style={styles.nameServerRoot}>
-      <Spacer width={8} />
+    <View
+      style={[
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          lineHeight: 22,
+          color: p.gray_max,
+        },
+      ]}
+    >
+      <Space.Width.sm />
 
-      <Text style={styles.nameServerText}>·</Text>
+      <Text style={[a.body_2_md_medium, {color: p.gray_max}]}>·</Text>
 
-      <Spacer width={8} />
+      <Space.Width.sm />
 
-      <Text style={styles.nameServerText}>{text}</Text>
+      <Text style={[a.body_2_md_medium, {color: p.gray_max}]}>{text}</Text>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    gradient: {
-      borderRadius: 8,
-      ...atoms.p_md,
-    },
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    nameServerRoot: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      lineHeight: 22,
-      color: color.gray_max,
-    },
-    nameServerText: {
-      ...atoms.body_2_md_medium,
-      color: color.gray_max,
-    },
-    title: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_max,
-    },
-    text: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_max,
-    },
-  })
-
-  const colors = {
-    lightGreen: color.secondary_200,
-    lightBlue: color.primary_100,
-    iconColor: color.gray_max,
-  }
-
-  return {styles, colors}
 }

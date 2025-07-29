@@ -1,52 +1,38 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
-import {Image, StyleSheet, Text, View} from 'react-native'
+import {Image, Text, View} from 'react-native'
 
-import noNftsImage from '../../../../../../assets/img/no-nft.png'
-import {Spacer} from '../../../../../../components/Spacer/Spacer'
+import {Space} from '~/ui/Space/Space'
+import noNftsImage from '../assets/img/no-nft.png'
 
 type Props = {heading?: ReactNode; message: ReactNode}
 export function EmptyGallery({heading, message}: Props) {
-  const styles = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   return (
-    <View style={styles.root}>
+    <View style={[a.flex_1]}>
       <View>{heading}</View>
 
-      <Spacer height={75} />
+      <Space.Height._2xl />
 
-      <View style={styles.imageContainer}>
-        <Image source={noNftsImage} style={styles.image} />
+      <View style={[a.flex_1]}>
+        <Image
+          source={noNftsImage}
+          style={[{width: 200, height: 228}, a.flex_1, a.self_center]}
+        />
 
-        <Spacer height={20} />
+        <Space.Height.lg />
 
-        <Text style={styles.contentText}>{message}</Text>
+        <Text
+          style={[
+            {color: p.text_gray_max},
+            a.flex_1,
+            a.text_center,
+            a.heading_3_medium,
+          ]}
+        >
+          {message}
+        </Text>
       </View>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-    },
-    contentText: {
-      color: color.text_gray_max,
-      ...atoms.flex_1,
-      ...atoms.text_center,
-      ...atoms.heading_3_medium,
-    },
-    image: {
-      width: 200,
-      height: 228,
-      ...atoms.flex_1,
-      ...atoms.self_center,
-    },
-    imageContainer: {
-      ...atoms.flex_1,
-      ...atoms.text_center,
-    },
-  })
-  return styles
 }

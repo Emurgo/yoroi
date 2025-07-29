@@ -1,27 +1,16 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TextProps} from 'react-native'
+import {Text, TextProps} from 'react-native'
 
-import {useStrings} from '../../../../common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
 
 export const UnableToSpend = ({style, ...props}: TextProps) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {palette: p} = useTheme()
 
   return (
-    <Text style={[style, styles.overSpendable]} {...props}>
+    <Text style={[style, {color: p.gray_600, textAlign: 'center'}]} {...props}>
       {strings.minPrimaryBalanceForTokens}
     </Text>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-  const styles = StyleSheet.create({
-    overSpendable: {
-      color: color.gray_600,
-      textAlign: 'center',
-    },
-  })
-  return styles
 }

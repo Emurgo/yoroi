@@ -1,8 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {type ViewProps, StyleSheet, Text, View} from 'react-native'
+import {type ViewProps, Text, View} from 'react-native'
 
-import {Icon} from '../Icon'
+import {Icon} from '~/ui/Icon'
 
 interface Props extends ViewProps {
   variant?: 'danger' | 'success' | 'neutral'
@@ -16,7 +16,7 @@ export const PnlTag = ({
   style,
   ...etc
 }: Props) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const icon =
     variant === 'danger' ? (
@@ -26,31 +26,37 @@ export const PnlTag = ({
     )
 
   const textStyles = React.useMemo(() => {
-    if (variant === 'neutral') return [styles.label, {color: color.gray_600}]
+    if (variant === 'neutral') return [a.body_3_sm_medium, {color: p.gray_600}]
     if (variant === 'success')
-      return [styles.label, {color: color.secondary_700}]
-    return [styles.label, {color: color.sys_magenta_700}]
-  }, [
-    styles.label,
-    variant,
-    color.gray_600,
-    color.secondary_700,
-    color.sys_magenta_700,
-  ])
+      return [a.body_3_sm_medium, {color: p.secondary_700}]
+    return [a.body_3_sm_medium, {color: p.sys_magenta_700}]
+  }, [variant, p.gray_600, p.secondary_700, p.sys_magenta_700])
 
   const variantStyles = React.useMemo(() => {
     if (variant === 'neutral')
-      return [styles.pnlTagContainer, {backgroundColor: color.gray_100}]
+      return [
+        a.flex,
+        a.flex_row,
+        a.align_center,
+        {borderRadius: 999, paddingHorizontal: 6, paddingVertical: 3},
+        {backgroundColor: p.gray_100},
+      ]
     if (variant === 'success')
-      return [styles.pnlTagContainer, {backgroundColor: color.secondary_100}]
-    return [styles.pnlTagContainer, {backgroundColor: color.sys_magenta_100}]
-  }, [
-    styles.pnlTagContainer,
-    variant,
-    color.gray_100,
-    color.secondary_100,
-    color.sys_magenta_100,
-  ])
+      return [
+        a.flex,
+        a.flex_row,
+        a.align_center,
+        {borderRadius: 999, paddingHorizontal: 6, paddingVertical: 3},
+        {backgroundColor: p.secondary_100},
+      ]
+    return [
+      a.flex,
+      a.flex_row,
+      a.align_center,
+      {borderRadius: 999, paddingHorizontal: 6, paddingVertical: 3},
+      {backgroundColor: p.sys_magenta_100},
+    ]
+  }, [variant, p.gray_100, p.secondary_100, p.sys_magenta_100])
 
   return (
     <View style={[...variantStyles, style]} {...etc}>
@@ -60,17 +66,3 @@ export const PnlTag = ({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  pnlTagContainer: {
-    ...a.flex,
-    ...a.flex_row,
-    ...a.align_center,
-    borderRadius: 999,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-  },
-  label: {
-    ...a.body_3_sm_medium,
-  },
-})

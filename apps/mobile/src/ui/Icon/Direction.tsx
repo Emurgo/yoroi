@@ -1,11 +1,11 @@
 import {ThemedPalette, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {StyleSheet, View, ViewStyle} from 'react-native'
+import {View, ViewStyle} from 'react-native'
 
-import {Received} from '../Icon/Received'
-import {Send} from '../Icon/Send'
-import {Transaction} from '../Icon/Transaction'
+import {Received} from '~/ui/Icon/Received'
+import {Send} from '~/ui/Icon/Send'
+import {Transaction} from '~/ui/Icon/Transaction'
 import {MultiParty} from './MultiParty'
 import {IconProps} from './type'
 
@@ -25,7 +25,14 @@ export const Direction = ({
   return (
     <View
       style={[
-        styles.icon,
+        {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 40,
+          width: 40,
+          borderRadius: 20,
+        },
         {backgroundColor: iconStyles?.background},
         containerStyle,
       ]}
@@ -77,14 +84,3 @@ export const styleMap: (
 })
 
 type ThemeStatus = 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
-
-const styles = StyleSheet.create({
-  icon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-  },
-})

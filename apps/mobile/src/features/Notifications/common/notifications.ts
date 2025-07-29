@@ -5,7 +5,7 @@ import {Notification, Notifications} from 'react-native-notifications'
 import {
   formatCurrency,
   getCurrencySymbol,
-} from '../../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
 export const generateNotificationId = (): number => {
   return generateRandomInteger(0, Number.MAX_SAFE_INTEGER)

@@ -3,9 +3,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, Text, View} from 'react-native'
 
-import {ledgerMessages} from '../../../kernel/i18n/global-messages'
-import {BulletPointItem} from '../../../ui/BulletPointItem'
-import {Space} from '../../../ui/Space/Space'
+import {ledgerMessages} from '~/kernel/i18n/global-messages'
+import {BulletPointItem} from '~/ui/BulletPointItem'
+import {Space} from '~/ui/Space/Space'
 
 type Props = {
   useUSB?: boolean

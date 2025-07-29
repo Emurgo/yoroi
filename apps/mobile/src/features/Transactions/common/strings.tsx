@@ -4,9 +4,9 @@ import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 import globalMessages, {
   actionMessages,
   txLabels,
-} from '../../../kernel/i18n/global-messages'
-import {TransactionDirection} from '../../../wallets/types/other'
-import {messages as receiveMessages} from '../../Receive/common/useStrings'
+} from '~/kernel/i18n/global-messages'
+import {TransactionDirection} from '~/wallets/types/other'
+import {messages as receiveMessages} from '../Receive/common/useStrings'
 
 export const useStrings = () => {
   const intl = useIntl()

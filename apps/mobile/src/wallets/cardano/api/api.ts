@@ -10,8 +10,8 @@ import type {
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '../../types/other'
-import {StakePoolInfosAndHistories} from '../../types/staking'
+} from '@yoroi/types'
+import {StakePoolInfosAndHistories} from '@yoroi/types'
 import {ServerStatus} from '../types'
 import {handleError} from './errors'
 import {fetchDefault} from './fetch'

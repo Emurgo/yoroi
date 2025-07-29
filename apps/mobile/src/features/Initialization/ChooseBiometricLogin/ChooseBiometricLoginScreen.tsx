@@ -11,10 +11,10 @@ import {Alert, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 
-import {Button, ButtonType} from '../../../ui/Button/Button'
-import {Space} from '../../../ui/Space/Space'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from '../common'
 import {Biometric} from '../illustrations/Biometric'
 
