@@ -138,7 +138,7 @@ const PreprodTag = ({
   onPress: () => void
   disabled: boolean
 }) => {
-  const {palette: p, atoms} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   const {name} = networkConfigs[Chain.Network.Preprod]
 
