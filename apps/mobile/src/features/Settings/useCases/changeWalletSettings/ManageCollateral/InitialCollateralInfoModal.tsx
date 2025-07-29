@@ -40,7 +40,7 @@ const learnMoreLink =
 
 const Link = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   const handleOnPress = () => {
     Linking.openURL(learnMoreLink)
