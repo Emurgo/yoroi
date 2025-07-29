@@ -34,22 +34,13 @@ import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-f
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {convertBech32ToHex} from '../cardano/common/signatureUtils'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
+
 import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TxSubmissionStatus,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '@yoroi/types'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {isDev, isNightly} from '~/kernel/env'
-import {logger} from '~/kernel/logger/logger'
-import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
-import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
-import {convertBech32ToHex} from '../cardano/common/signatureUtils'
-import {WalletEvent, YoroiWallet} from '../cardano/types'
-import {useStakingInfo} from '../legacy/Dashboard/StakePoolInfos'
+} from '../types/other'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {delay} from '../utils/timeUtils'
 import {Quantities, Utxos} from '../utils/utils'
 
@@ -349,7 +340,7 @@ export const useSignWithPasswordAndSubmitTx = (
 
   return {
     signAndSubmitTx: signTx.mutate,
-    isLoading: signTx.isLoading || submitTx.isLoading,
+    isLoading: signTx.isPending || submitTx.isPending,
     error: signTx.error || submitTx.error,
 
     signTx,
@@ -387,7 +378,7 @@ export const useSignWithHwAndSubmitTx = (
 
   return {
     signAndSubmitTx: signTx.mutate,
-    isLoading: signTx.isLoading || submitTx.isLoading,
+    isLoading: signTx.isPending || submitTx.isPending,
     error: signTx.error || submitTx.error,
 
     signTx,
@@ -425,7 +416,7 @@ export const useSignAndSubmitTx = (
 
   return {
     signAndSubmitTx: signTx.mutate,
-    isLoading: signTx.isLoading || submitTx.isLoading,
+    isLoading: signTx.isPending || submitTx.isPending,
     error: signTx.error || submitTx.error,
 
     signTx,

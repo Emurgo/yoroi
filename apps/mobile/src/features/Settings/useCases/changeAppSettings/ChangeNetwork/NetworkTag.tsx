@@ -11,13 +11,13 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../../../kernel/navigation/navigation'
-import {Button, ButtonType} from '../../../../../ui/Button/Button'
-import {useModal} from '../../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../../ui/Space/Space'
-import {availableNetworks} from '../../../../WalletManager/common/constants'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {availableNetworks} from '~/features/WalletManager/common/constants'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useWalletNavigation} from '~/kernel/navigation/navigation'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 import {useStrings} from './strings'
 
 export const NetworkTag = ({
@@ -33,7 +33,6 @@ export const NetworkTag = ({
   disabled?: boolean
   textStyle?: TextStyle
 }) => {
-  const width = useWindowDimensions().width - 120
   const {
     selected: {network: selectedNetwork},
     walletManager,
@@ -57,7 +56,7 @@ export const NetworkTag = ({
 
       if (nextNetwork === Chain.Network.Mainnet) {
         openModal({
-          title: strings.networkTagModalTitle,
+          // title: strings.networkTagModalTitle,
           content: (
             <MainnetWarningDialog
               onCancel={closeModal}
@@ -71,7 +70,7 @@ export const NetworkTag = ({
               }}
             />
           ),
-          height: 280,
+          // height: 280,
         })
 
         return

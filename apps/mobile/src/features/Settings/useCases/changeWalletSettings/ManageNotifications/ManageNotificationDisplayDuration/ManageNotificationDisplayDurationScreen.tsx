@@ -9,11 +9,10 @@ import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useFormatNumber} from '../../../../../../kernel/i18n'
-import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
-import {Button} from '../../../../../../ui/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {TextInput} from '../../../../../../ui/TextInput/TextInput'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button} from '~/ui/Button/Button'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {TextInput} from '~/ui/TextInput/TextInput'
 import {useStrings} from './strings'
 
 type ManualChoice = {
@@ -41,7 +40,6 @@ const CHOICES: Readonly<Choice[]> = [
 
 export const ManageNotificationDisplayDurationScreen = () => {
   const {track} = useMetrics()
-  const formatNumber = useFormatNumber()
   const config = useConfig()
   const {mutate: updateConfig} = useUpdateNotificationsConfig()
   const navigation = useNavigation()
@@ -60,7 +58,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
   const isSelectedChoiceManual = selectedChoiceId === 'Manual'
   const isInputEnabled = isSelectedChoiceManual
   const isInputEmpty = inputValue === ''
-  const hasError = isSelectedChoiceManual && !isInputValid(inputValue)
+  const hasError = isSelectedChoiceManual && !isInputValid(inputValue ?? '')
   const isButtonDisabled = hasError || (isSelectedChoiceManual && isInputEmpty)
   const shouldDisplayError = !isInputEmpty && hasError
 
@@ -242,4 +240,8 @@ const useConfig = () => {
     throw new Error('Config not found')
   }
   return config
+}
+function formatNumber(displayDuration: number): string {
+  // TODO: Implement this
+  return '0'
 }
