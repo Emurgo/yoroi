@@ -56,8 +56,8 @@ const LabelText = ({style, children, ...props}: TextProps) => {
       style={[
         {
           color: p.gray_900,
-          ...a.body_1_lg_medium,
         },
+        a.body_1_lg_medium,
         style,
       ]}
     >
