@@ -19,15 +19,15 @@ import {
   View,
 } from 'react-native'
 
-import {useStrings} from '~/features/common/hooks/useStrings'
-import {Operations, useOperations} from '~/features/common/operations'
-import {TokenItem} from '~/features/common/TokenItem'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
+import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
 import {
   FormattedOutput,
   FormattedOutputs,
   FormattedTx,
-} from '~/features/common/types'
-import {WalletBalance} from '~/features/common/WalletBalance'
+} from '~/features/ReviewTx/common/types'
+import {WalletBalance} from '~/features/ReviewTx/common/WalletBalance'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Accordion} from '~/ui/Accordion/Accordion'

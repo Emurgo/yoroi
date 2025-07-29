@@ -3,7 +3,7 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/features/common/hooks/useStrings'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {TokenEmptyList} from '~/ui/TokenEmptyList/TokenEmptyList'
 
 export const LendAndBorrowTab = () => {

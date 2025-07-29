@@ -5,11 +5,11 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStrings} from '~/features/common/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
+import {useStrings} from '../../common/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
 export const RequestedAdaPaymentWithLinkScreen = ({

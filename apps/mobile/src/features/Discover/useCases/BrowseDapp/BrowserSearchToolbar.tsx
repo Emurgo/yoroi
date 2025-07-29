@@ -8,9 +8,9 @@ import {
   View,
 } from 'react-native'
 
-import {Icon} from '~/ui/Icon'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useStrings} from '~/features/common/useStrings'
+import {Icon} from '~/ui/Icon'
+import {useStrings} from '../../common/useStrings'
 
 type Props = {
   searchValue: string

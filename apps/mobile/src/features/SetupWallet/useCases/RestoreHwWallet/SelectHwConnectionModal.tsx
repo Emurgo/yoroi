@@ -5,12 +5,12 @@ import * as React from 'react'
 import {Alert, Platform, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {useStrings} from '~/features/common/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
+import {useStrings} from '../../common/useStrings'
 
 const useIsAndroidUsbSupported = () => {
   const [isAndroidUsbSupported, setIsAndroidUsbSupported] =

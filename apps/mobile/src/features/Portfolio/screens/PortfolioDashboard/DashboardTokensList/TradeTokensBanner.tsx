@@ -4,8 +4,8 @@ import {Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Button} from '~/ui/Button/Button'
-import {useNavigateTo} from '~/features/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/common/hooks/useStrings'
+import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {TradeTokensAsset} from './TradeTokensAsset'
 
 export const TradeTokensBanner = () => {

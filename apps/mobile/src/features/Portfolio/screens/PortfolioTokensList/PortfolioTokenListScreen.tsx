@@ -2,8 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useGetDAppsPortfolioBalance} from '~/features/common/hooks/useGetDAppsPortfolioBalance'
-import {useStrings} from '~/features/common/hooks/useStrings'
+import {useGetDAppsPortfolioBalance} from '~/features/Portfolio/common/hooks/useGetDAppsPortfolioBalance'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,

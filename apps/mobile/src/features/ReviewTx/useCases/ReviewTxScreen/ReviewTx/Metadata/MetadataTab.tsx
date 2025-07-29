@@ -4,8 +4,8 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/features/common/hooks/useStrings'
-import {FormattedMetadata} from '~/features/common/types'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {FormattedMetadata} from '~/features/ReviewTx/common/types'
 
 export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
   const {styles} = useStyles()

@@ -15,7 +15,7 @@ import {
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
-import {useStrings} from '~/features/common/hooks/useStrings'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {AssetLogo} from '~/ui/AssetLogo/AssetLogo'
 
 type Props = {

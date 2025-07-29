@@ -20,7 +20,7 @@ import {Button} from '~/ui/Button/Button'
 import {Check2 as Check2Illustration} from '~/ui/Check2Illustration/Check2Illustration'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
-import {useStrings} from '~/features/common/useStrings'
+import {useStrings} from '../../common/useStrings'
 
 export const VerifyRecoveryPhraseScreen = () => {
   const bold = useBold()

@@ -7,15 +7,15 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Space} from '~/ui/Space/Space'
 import {Accordion} from '~/ui/Accordion/Accordion'
-import {useStrings} from '~/features/common/hooks/useStrings'
-import {TokenItem} from '~/features/common/TokenItem'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
 import {
   FormattedInput,
   FormattedInputs,
   FormattedOutput,
   FormattedOutputs,
   FormattedTx,
-} from '~/features/common/types'
+} from '~/features/ReviewTx/common/types'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {formatTokenWithText} from '~/wallets/utils/format'
 

@@ -6,8 +6,8 @@ import {Text, TouchableOpacity, View} from 'react-native'
 import {
   formatPriceChange,
   priceChange,
-} from '~/features/common/helpers/priceChange'
-import {useStrings} from '~/features/common/hooks/useStrings'
+} from '~/features/Portfolio/common/helpers/priceChange'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,

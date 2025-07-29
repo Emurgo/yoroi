@@ -8,8 +8,7 @@ import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
-import {useNavigateTo} from '~/features/common/navigation'
-import {SettingsSwitch} from '~/features/common/SettingsSwitch'
+import {SettingsSwitch} from '~/features/Settings/common/SettingsSwitch'
 import {
   NavigatedSettingsItem,
   SettingsBuildItem,
@@ -24,6 +23,7 @@ import {SettingsRouteNavigation, useWalletNavigation} from '~/kernel/navigation'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {useResync} from '~/wallets/hooks'
+import {useNavigateTo} from '../../common/navigation'
 import {useAuth} from '../Auth/AuthProvider'
 import {SettingsCollateralItem} from '../SettingsCollateralItem'
 

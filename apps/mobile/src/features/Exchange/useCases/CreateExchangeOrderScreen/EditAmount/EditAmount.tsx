@@ -3,13 +3,13 @@ import {Chain} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
-import {useStrings} from '~/features/common/useStrings'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {AmountCard} from '~/ui/AmountCard/AmountCard'
 import {Space} from '~/ui/Space/Space'
 import {Quantities} from '~/wallets/utils/utils'
+import {useStrings} from '../../common/useStrings'
 import {usePortfolioPrimaryBalance} from '../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 
 export const EditAmount = ({disabled}: {disabled?: boolean}) => {

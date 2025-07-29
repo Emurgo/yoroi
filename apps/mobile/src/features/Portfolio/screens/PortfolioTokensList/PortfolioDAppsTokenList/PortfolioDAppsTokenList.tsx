@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {usePortfolioPrimaryBalance} from '~/features/common/hooks/usePortfolioPrimaryBalance'
+import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {
   ILiquidityPool,
   useGetLiquidityPool,

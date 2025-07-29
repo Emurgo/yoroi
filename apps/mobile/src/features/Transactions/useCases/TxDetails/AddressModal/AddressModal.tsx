@@ -9,7 +9,7 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'
 import {useKeyHashes} from '~/wallets/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Transactions/common/useStrings'
 
 type Path = {
   account: number

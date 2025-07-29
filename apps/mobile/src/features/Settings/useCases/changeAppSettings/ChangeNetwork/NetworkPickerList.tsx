@@ -9,8 +9,8 @@ import {availableNetworks} from '~/features/WalletManager/common/constants'
 import {useAutomaticWalletOpener} from '~/features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useNavigateTo} from '~/features/common/navigation'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useNavigateTo} from '../../common/navigation'
 import {NetworkPickerItem} from './NetworkPickerItem'
 
 export const NetworkPickerList = () => {

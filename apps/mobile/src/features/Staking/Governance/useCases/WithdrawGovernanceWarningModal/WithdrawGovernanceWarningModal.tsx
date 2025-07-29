@@ -4,7 +4,7 @@ import {Text, View} from 'react-native'
 
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Staking/common/useStrings'
 
 type Props = {
   onParticipatePress: () => void

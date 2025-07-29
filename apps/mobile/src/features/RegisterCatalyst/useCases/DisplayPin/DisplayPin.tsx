@@ -4,7 +4,7 @@ import React from 'react'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/RegisterCatalyst/common/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {

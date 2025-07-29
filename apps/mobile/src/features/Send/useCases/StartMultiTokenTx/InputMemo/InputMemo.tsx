@@ -5,7 +5,7 @@ import {
   TextInput,
   TextInputProps,
 } from '~/ui/TextInput/TextInput'
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
 import {ShowMemoErrorTooLong} from './ShowMemoErrorTooLong'
 import {ShowMemoInstructions} from './ShowMemoInstructions'
 

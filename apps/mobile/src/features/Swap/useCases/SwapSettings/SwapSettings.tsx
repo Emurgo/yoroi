@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Swap/common/useStrings'
 import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useLanguage} from '~/kernel/i18n'
 import {NumberLocale} from '~/kernel/i18n/languages'

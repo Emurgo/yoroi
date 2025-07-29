@@ -7,7 +7,6 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStrings} from '~/features/common/useStrings'
 import {
   WalletDuplicatedModal,
   WalletDuplicatedModalActions,
@@ -21,6 +20,7 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {getHWDeviceInfo} from '~/wallets/cardano/hw/hw'
+import {useStrings} from '../../common/useStrings'
 import {LedgerConnect} from '../legacy/HW'
 
 type Props = {}

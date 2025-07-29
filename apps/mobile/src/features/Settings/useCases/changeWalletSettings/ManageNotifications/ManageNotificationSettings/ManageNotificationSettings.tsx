@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {SettingsSwitch} from '~/features/common/SettingsSwitch'
+import {SettingsSwitch} from '~/features/Settings/common/SettingsSwitch'
 import {
   getNotificationsAuthorizationStatus,
   triggerNotificationsPermissionModal,

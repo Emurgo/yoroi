@@ -4,7 +4,6 @@ import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useShowCollateralNotFoundAlert} from '~/hooks/useShowCollateralNotFoundAlert'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation'

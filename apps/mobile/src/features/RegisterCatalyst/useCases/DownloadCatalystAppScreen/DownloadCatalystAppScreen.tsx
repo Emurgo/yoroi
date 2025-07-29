@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useCatalystCurrentFund} from '~/features/common/hooks'
+import {useCatalystCurrentFund} from '~/features/Discover/common/hooks'
 import {useStakingInfo} from '~/features/Portfolio/common/hooks/useStakingInfo'
 import {useNavigateTo} from '~/features/RegisterCatalyst/common/navigation'
 import {useStrings} from '~/features/RegisterCatalyst/common/useStrings'

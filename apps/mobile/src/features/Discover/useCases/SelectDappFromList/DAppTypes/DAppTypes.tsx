@@ -7,10 +7,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import {useMappedStrings} from '~/features/Discover/common/useStrings'
 
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
-import {useMappedStrings} from '~/features/common/useStrings'
 
 type Props = {
   types: string[]

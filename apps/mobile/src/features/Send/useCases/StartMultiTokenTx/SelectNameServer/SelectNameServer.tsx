@@ -9,7 +9,7 @@ import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 import {ButtonGroup} from '~/ui/ButtonGroup/ButtonGroup'
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
 
 export const SelectNameServer = () => {
   const strings = useStrings()

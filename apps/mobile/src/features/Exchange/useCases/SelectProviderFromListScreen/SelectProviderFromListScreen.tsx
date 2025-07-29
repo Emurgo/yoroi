@@ -5,10 +5,10 @@ import * as React from 'react'
 import {FlatList, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {ProviderItem} from '~/features/common/ProviderItem/ProviderItem'
-import {useStrings} from '~/features/common/useStrings'
+import {ProviderItem} from '~/features/Exchange/common/ProviderItem/ProviderItem'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
+import {useStrings} from '../../common/useStrings'
 import {BanxaLogo} from '../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../illustrations/EncryptusLogo'
 

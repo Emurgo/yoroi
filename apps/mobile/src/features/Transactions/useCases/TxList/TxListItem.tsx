@@ -9,7 +9,7 @@ import {useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Transactions/common/useStrings'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'

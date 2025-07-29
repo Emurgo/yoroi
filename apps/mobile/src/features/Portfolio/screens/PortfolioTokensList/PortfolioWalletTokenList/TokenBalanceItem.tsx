@@ -11,9 +11,9 @@ import {Text, TouchableOpacity, View} from 'react-native'
 import {
   formatPriceChange,
   priceChange,
-} from '~/features/common/helpers/priceChange'
-import {useNavigateTo} from '~/features/common/hooks/useNavigateTo'
-import {usePortfolioTokenActivity} from '~/features/common/PortfolioTokenActivityProvider'
+} from '~/features/Portfolio/common/helpers/priceChange'
+import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {usePortfolioTokenActivity} from '~/features/Portfolio/common/PortfolioTokenActivityProvider'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 import {Space} from '~/ui/Space/Space'

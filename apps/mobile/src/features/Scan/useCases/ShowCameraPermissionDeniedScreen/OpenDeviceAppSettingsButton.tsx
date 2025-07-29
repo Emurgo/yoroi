@@ -2,7 +2,7 @@ import * as React from 'react'
 import {openSettings} from 'react-native-permissions'
 
 import {Button, ButtonProps} from '~/ui/Button/Button'
-import {useStrings} from '~/features/common/useStrings'
+import {useStrings} from '../../common/useStrings'
 
 export const OpenDeviceAppSettingsButton = (
   props: Omit<ButtonProps, 'title' | 'onPress'>,

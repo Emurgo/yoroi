@@ -5,7 +5,7 @@ import {View} from 'react-native'
 
 import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Transactions/common/useStrings'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'

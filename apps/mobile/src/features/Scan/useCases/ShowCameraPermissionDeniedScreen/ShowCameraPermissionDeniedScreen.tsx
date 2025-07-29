@@ -4,15 +4,12 @@ import {ScrollView, View, ViewProps} from 'react-native'
 import {openSettings} from 'react-native-permissions'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {
-  useBlockGoBack,
-  useWalletNavigation,
-} from '~/kernel/navigation'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {CameraPermissionDeniedIllustration} from '~/ui/CameraPermissionDeniedIllustration/CameraPermissionDeniedIllustration'
 import {Space} from '~/ui/Space/Space'
 import {Text as YoroiText} from '~/ui/Text/Text'
-import {useStrings} from '~/features/common/useStrings'
+import {useStrings} from '../../common/useStrings'
 
 export const ShowCameraPermissionDeniedScreen = () => {
   const strings = useStrings()

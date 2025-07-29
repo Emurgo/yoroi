@@ -6,9 +6,9 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Space} from '~/ui/Space/Space'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useGetPortfolioTokenInfo} from '~/features/common/hooks/useGetPortfolioTokenInfo'
-import {usePortfolioTokenDetailParams} from '~/features/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/common/hooks/useStrings'
+import {useGetPortfolioTokenInfo} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenInfo'
+import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 
 export const Performance = () => {
   const {atoms: ta, palette: p} = useTheme()

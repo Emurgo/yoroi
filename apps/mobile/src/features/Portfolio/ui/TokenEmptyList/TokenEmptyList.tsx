@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useStrings} from '~/features/common/hooks/useStrings'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {AssetTokenImage} from '../illustrations/AssetTokenImage/AssetTokenImage'
 
 type Props = {

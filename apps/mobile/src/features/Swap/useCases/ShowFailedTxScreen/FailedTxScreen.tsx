@@ -2,12 +2,12 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useNavigateTo} from '~/features/common/navigation'
 import {useStrings} from '~/features/Swap/common/strings'
 import {Button} from '~/ui/Button/Button'
 import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
+import {useNavigateTo} from '../../common/navigation'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()

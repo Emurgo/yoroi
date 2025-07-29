@@ -4,8 +4,8 @@ import {App} from '@yoroi/types'
 import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent} from 'react-native'
 
-import {usePortfolioTokenDetailParams} from '~/features/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/common/hooks/useStrings'
+import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {
   PortfolioDetailsTab,
   usePortfolio,

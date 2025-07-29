@@ -5,7 +5,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
 
 export const ShowResolvedAddressSelected = () => {
   const strings = useStrings()

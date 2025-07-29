@@ -16,15 +16,10 @@ import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {GovernanceVote} from '@yoroi/types'
-import {formatDrepHashToCIP129Format} from '~/features/common/drep'
-import {
-  mapStakingKeyStateToGovernanceAction,
-  useGovernanceActions,
-} from '~/features/common/helpers'
-import {LearnMoreLink} from '~/features/common/LearnMoreLink/LearnMoreLink'
-import {useNavigateTo} from '~/features/common/navigation'
-import {useStrings} from '~/features/common/strings'
-import {YoroiRecordLink} from '~/features/common/YoroiRecordLink/YoroiRecordLink'
+import {useStrings} from '~/features/Staking/common/useStrings'
+import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common/drep'
+import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
+import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Action} from '~/ui/Action/Action'
@@ -37,6 +32,11 @@ import {
   useWalletEvent,
 } from '~/wallets/hooks'
 import {TransactionInfo} from '~/wallets/types/other'
+import {
+  mapStakingKeyStateToGovernanceAction,
+  useGovernanceActions,
+} from '../../common/helpers'
+import {useNavigateTo} from '../../common/navigation'
 import {useStakingInfo} from '../Dashboard/StakePoolInfos'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 

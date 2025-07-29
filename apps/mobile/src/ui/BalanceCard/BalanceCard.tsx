@@ -5,7 +5,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {aggregatePrimaryAmount} from '~/features/common/helpers/aggregatePrimaryAmount'
+import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {BalanceCardContent} from '../BalanceCardContent/BalanceCardContent'

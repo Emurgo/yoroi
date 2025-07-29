@@ -4,16 +4,16 @@ import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useNavigateTo} from '~/features/common/navigation'
-import {useStrings} from '~/features/common/strings'
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useStrings} from '~/features/Swap/common/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {TransactionSummary} from '~/ui/TransactionSummary/TransactionSummary'
+import {useNavigateTo} from '../../common/navigation'
 
 const BOTTOM_ACTION_SECTION = 220
 

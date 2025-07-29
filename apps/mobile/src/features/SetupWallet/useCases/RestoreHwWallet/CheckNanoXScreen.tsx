@@ -12,7 +12,6 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStrings} from '~/features/common/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation'
 import {BulletPointItem} from '~/ui/BulletPointItem'
@@ -20,6 +19,7 @@ import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {Text} from '~/ui/Text/Text'
+import {useStrings} from '../../common/useStrings'
 import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustration'
 
 export const CheckNanoXScreen = () => {

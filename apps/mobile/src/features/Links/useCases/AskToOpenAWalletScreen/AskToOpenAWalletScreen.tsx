@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/features/common/useStrings'
+import {useStrings} from '../../common/useStrings'
 
 export const AskToOpenWalletScreen = () => {
   const strings = useStrings()

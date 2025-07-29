@@ -3,17 +3,17 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 
-import {ChainDAppsWarning} from '~/features/common/ChainDAppsWarning'
-import {getGoogleSearchItem} from '~/features/common/helpers'
-import {useDAppsConnected} from '~/features/common/useDAppsConnected'
-import {useShowWelcomeDApp} from '~/features/common/useShowWelcomeDApp'
-import {useStrings} from '~/features/common/useStrings'
+import {ChainDAppsWarning} from '~/features/Discover/common/ChainDAppsWarning'
+import {getGoogleSearchItem} from '~/features/Discover/common/helpers'
+import {useDAppsConnected} from '~/features/Discover/common/useDAppsConnected'
+import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
+import {useStrings} from '~/features/Discover/common/useStrings'
+import {ShowDisclaimer} from '~/features/Legal/Disclaimer/ShowDisclaimer'
+import {useSearchOnNavBar} from '~/features/Search/SearchContext'
+import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SimpleTab} from '~/ui/SimpleTab/SimpleTab'
 import {Space} from '~/ui/Space/Space'
-import {ShowDisclaimer} from '../Legal/Disclaimer/ShowDisclaimer'
-import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
-import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
 import {CountDAppsConnected} from './CountDAppsConnected/CountDAppsConnected'
 import {DAppListItem} from './DAppListItem/DAppListItem'
@@ -111,8 +111,12 @@ export const SelectDappFromListScreen = () => {
               connected={isDappConnected(entry.origins)}
             />
           )}
-          ItemSeparatorComponent={() => <Space.Height._2xs style={styles.dAppsBox} />}
-          ListFooterComponent={() => <Space.Height._2xs style={styles.dAppsBox} />}
+          ItemSeparatorComponent={() => (
+            <Space.Height._2xs style={styles.dAppsBox} />
+          )}
+          ListFooterComponent={() => (
+            <Space.Height._2xs style={styles.dAppsBox} />
+          )}
         />
       </View>
     </>

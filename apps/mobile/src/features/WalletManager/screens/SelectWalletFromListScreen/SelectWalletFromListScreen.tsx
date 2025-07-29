@@ -12,9 +12,9 @@ import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
 // import {useLinksRequestWallet} from '../Links/common/useLinksRequestWallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useStrings} from '~/hooks/useStrings'
-import {useWalletMetas} from '~/hooks/useWalletMetas'
 import {SupportIllustration} from '~/ui/illustrations/SupportIllustration'
+import {useStrings} from '../hooks/useStrings'
+import {useWalletMetas} from '../hooks/useWalletMetas'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {

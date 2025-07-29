@@ -12,12 +12,12 @@ import {
 import {features} from '~/kernel/features'
 import {Icon} from '~/ui/Icon'
 import {Loading} from '~/ui/Loading/Loading'
-import {Space, SpaceHeight} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {isByron, isShelley} from '~/wallets/cardano/utils'
 // import {useAutomaticWalletOpener} from '../context/AutomaticWalletOpeningProvider'
-import {useSelectedNetwork} from '~/hooks/useSelectedNetwork'
-import {useSyncWalletInfo} from '~/hooks/useSyncWalletInfo'
 import {useWalletManager} from '../context/WalletManagerProvider'
+import {useSelectedNetwork} from '../hooks/useSelectedNetwork'
+import {useSyncWalletInfo} from '../hooks/useSyncWalletInfo'
 
 type Props = {
   walletMeta: Wallet.Meta

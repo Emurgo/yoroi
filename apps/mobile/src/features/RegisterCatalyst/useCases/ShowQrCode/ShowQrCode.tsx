@@ -6,7 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useStrings} from '~/features/RegisterCatalyst/common/strings'
-import {useAllowScreenshot} from '~/hooks/useAllowScreenShot'
 import {useBlockGoBack} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
@@ -14,6 +13,7 @@ import {Actions, Description} from '~/ui/common/components'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {Space} from '~/ui/Space/Space'
 import {useNavigateTo} from '../CatalystNavigator'
+import {useAllowScreenshot} from '../hooks/useAllowScreenShot'
 
 export const QrCode = () => {
   useBlockGoBack()

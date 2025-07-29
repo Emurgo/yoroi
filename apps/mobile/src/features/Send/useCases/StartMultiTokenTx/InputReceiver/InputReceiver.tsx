@@ -7,14 +7,11 @@ import {
   Text,
 } from 'react-native'
 
+import {ScannerButton} from '~/features/Send/common/ScannerButton'
+import {useStrings} from '~/features/Send/common/useStrings'
 import {Icon} from '~/ui/Icon'
-import {
-  TextInput,
-  TextInputProps,
-} from '~/ui/TextInput/TextInput'
-import {useNavigateTo} from '~/features/common/navigation'
-import {ScannerButton} from '~/features/common/ScannerButton'
-import {useStrings} from '~/features/common/strings'
+import {TextInput, TextInputProps} from '~/ui/TextInput/TextInput'
+import {useNavigateTo} from '../../common/navigation'
 import {ShowResolvedAddressSelected} from './ShowResolvedAddressSelected'
 
 export const InputReceiver = React.forwardRef(

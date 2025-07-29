@@ -5,7 +5,7 @@ import {Text} from 'react-native'
 
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 import globalMessages from '~/kernel/i18n/global-messages'
-import {limitOfSecondaryAmountsPerTx} from '~/features/common/constants'
+import {limitOfSecondaryAmountsPerTx} from '~/features/SetupWallet/common/constants'
 
 export const MaxAmountsPerTx = () => {
   const strings = useStrings()

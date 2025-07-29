@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {TextInput as RNTextInput, StyleSheet, View} from 'react-native'
 
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Swap/common/useStrings'
 import {debugWalletInfo, features} from '~/kernel/features'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'

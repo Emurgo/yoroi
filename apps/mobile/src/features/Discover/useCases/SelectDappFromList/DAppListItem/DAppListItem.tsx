@@ -12,18 +12,11 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
-import {useBrowser} from '~/features/common/BrowserProvider'
-import {
-  type DAppItem,
-  getDappFallbackLogo,
-  isGoogleSearchItem,
-} from '~/features/common/helpers'
-import {LabelCategoryDApp} from '~/features/common/LabelCategoryDApp'
-import {LabelConnected} from '~/features/common/LabelConnected'
-import {LabelSingleAddress} from '~/features/common/LabelSingleAddress'
-import {useDisconnectDapp} from '~/features/common/useDisconnectDapp'
-import {useNavigateTo} from '~/features/common/useNavigateTo'
-import {useStrings} from '~/features/common/useStrings'
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
+import {LabelCategoryDApp} from '~/features/Discover/common/LabelCategoryDApp'
+import {LabelConnected} from '~/features/Discover/common/LabelConnected'
+import {LabelSingleAddress} from '~/features/Discover/common/LabelSingleAddress'
+import {useDisconnectDapp} from '~/features/Discover/common/useDisconnectDapp'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -31,6 +24,11 @@ import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
+import {
+  type DAppItem,
+  getDappFallbackLogo,
+  isGoogleSearchItem,
+} from '../../../common/helpers'
 
 const INIT_DIALOG_DAPP_ACTIONS_HEIGHT = 286
 

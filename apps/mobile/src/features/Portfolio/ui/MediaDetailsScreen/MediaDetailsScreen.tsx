@@ -20,8 +20,7 @@ import {
   View,
 } from 'react-native'
 
-import {usePortfolioImageInvalidate} from '~/features/common/hooks/usePortfolioImage'
-import {useNavigateTo} from '~/features/common/navigation'
+import {usePortfolioImageInvalidate} from '~/features/Portfolio/common/hooks/usePortfolioImage'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {NftRoutes} from '~/kernel/navigation'
@@ -33,6 +32,7 @@ import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
 import {Space} from '~/ui/Space/Space'
 import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs/Tabs'
 import {Text} from '~/ui/Text/Text'
+import {useNavigateTo} from '../../common/navigation'
 
 export const MediaDetailsScreen = () => {
   const styles = useStyles()

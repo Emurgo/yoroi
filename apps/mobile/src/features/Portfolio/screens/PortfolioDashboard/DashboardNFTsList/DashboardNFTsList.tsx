@@ -10,9 +10,9 @@ import {
 } from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useNavigateTo} from '~/features/common/hooks/useNavigateTo'
-import {usePortfolioBalances} from '~/features/common/hooks/usePortfolioBalances'
-import {useStrings} from '~/features/common/hooks/useStrings'
+import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {Icon} from '~/ui/Icon'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
 import {Space} from '~/ui/Space/Space'

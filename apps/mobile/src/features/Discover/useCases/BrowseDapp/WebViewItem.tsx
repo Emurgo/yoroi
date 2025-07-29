@@ -20,14 +20,13 @@ import {
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes'
 
+import {TabItem, useBrowser} from '~/features/Discover/common/BrowserProvider'
+import {useConnectWalletToWebView} from '~/features/Discover/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {TabItem, useBrowser} from '~/features/common/BrowserProvider'
-import {getDomainFromUrl} from '~/features/common/helpers'
-import {useConnectWalletToWebView} from '~/features/common/hooks'
-import {useNavigateTo} from '~/features/common/useNavigateTo'
-import {isDev} from '~/kernel/env'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
+import {getDomainFromUrl} from '../../common/helpers'
+import {useNavigateTo} from '../../common/useNavigateTo'
 import {BrowserTabBar} from './BrowserTabBar'
 import {BrowserToolbar} from './BrowserToolbar'
 

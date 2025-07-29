@@ -3,7 +3,7 @@ import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
 
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Transactions/common/useStrings'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'

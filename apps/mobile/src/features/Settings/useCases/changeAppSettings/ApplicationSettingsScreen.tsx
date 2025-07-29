@@ -11,8 +11,7 @@ import {
   useAuthWithOs,
   useIsAuthOsSupported,
 } from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
-import {useNavigateTo} from '~/features/common/navigation'
-import {SettingsSwitch} from '~/features/common/SettingsSwitch'
+import {SettingsSwitch} from '~/features/Settings/common/SettingsSwitch'
 import {
   NavigatedSettingsItem,
   SettingsItem,
@@ -26,6 +25,7 @@ import {defaultLanguage} from '~/kernel/i18n/languages'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {useCrashReports} from '~/wallets/hooks'
+import {useNavigateTo} from '../../common/navigation'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {

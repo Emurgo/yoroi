@@ -5,7 +5,7 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Swap/common/useStrings'
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'

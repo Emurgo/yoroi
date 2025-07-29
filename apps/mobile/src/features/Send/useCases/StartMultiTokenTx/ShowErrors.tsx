@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Send/common/useStrings'
 import {Banner, ClickableBanner} from '~/ui/Banner/Banner'
 import {Space} from '~/ui/Space/Space'
 import {useHasPendingTx, useSync} from '~/wallets/hooks'

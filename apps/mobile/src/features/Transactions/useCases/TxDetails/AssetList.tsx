@@ -5,7 +5,7 @@ import {useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Transactions/common/useStrings'
 import {normalisePtId} from '~/kernel/helpers/normalisePtId'
 import globalMessages, {txLabels} from '~/kernel/i18n/global-messages'
 import {Boundary} from '~/ui/Boundary/Boundary'

@@ -2,8 +2,8 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {HelperText} from '~/ui/TextInput/TextInput'
-import {memoMaxLenght} from '~/features/common/constants'
-import {useStrings} from '~/features/common/strings'
+import {memoMaxLenght} from '~/features/SetupWallet/common/constants'
+import {useStrings} from '~/features/Send/common/useStrings'
 
 export const ShowMemoErrorTooLong = ({memo = ''}: {memo?: string}) => {
   const strings = useStrings()

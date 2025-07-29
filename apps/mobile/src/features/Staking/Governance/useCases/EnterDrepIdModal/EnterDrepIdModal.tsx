@@ -8,7 +8,7 @@ import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {CardanoMobile} from '~/wallets/wallets'
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Staking/common/useStrings'
 
 export type Props = {
   onSubmit?: (options: {

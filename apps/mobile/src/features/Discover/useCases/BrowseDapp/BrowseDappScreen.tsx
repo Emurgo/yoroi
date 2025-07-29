@@ -5,7 +5,7 @@ import {FlatList, StyleSheet, View} from 'react-native'
 
 import {Space} from '~/ui/Space/Space'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useBrowser} from '~/features/common/BrowserProvider'
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {BrowserTabsBar} from './BrowserTabsBar'
 import {WebViewItem} from './WebViewItem'
 

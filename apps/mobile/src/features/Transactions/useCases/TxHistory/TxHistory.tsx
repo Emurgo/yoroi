@@ -5,7 +5,7 @@ import * as React from 'react'
 import {LayoutAnimation, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useStrings} from '~/features/common/strings'
+import {useStrings} from '~/features/Transactions/common/useStrings'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'

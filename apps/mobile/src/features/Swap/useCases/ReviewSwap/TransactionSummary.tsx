@@ -4,22 +4,19 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {
-  getPriceImpactRisk,
-  usePriceImpactRiskTheme,
-} from '~/features/common/helpers'
-import {useStrings} from '~/features/common/strings'
-import {
   PRICE_IMPACT_HIGH_RISK,
   PRICE_IMPACT_MODERATE_RISK,
   undefinedToken,
 } from '~/features/Swap/common/constants'
 import {SwapContext} from '~/features/Swap/common/SwapProvider'
+import {useStrings} from '~/features/Swap/common/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Divider} from '~/ui/Divider/Divider'
 import {Icon} from '~/ui/Icon'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
+import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {Splits} from '../CreateOrder/EstimateSummary'
 import {ShowPriceImpact} from '../CreateOrder/ShowPriceImpact'
 

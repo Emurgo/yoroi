@@ -18,7 +18,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useBestBlock} from '~/features/WalletManager/hooks/useBestBlock'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {messages, useStrings} from '~/features/common/strings'
+import {messages, useStrings} from '~/features/Transactions/common/useStrings'
 import {Banner} from '~/ui/Banner/Banner'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'

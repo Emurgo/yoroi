@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useStrings} from '~/features/common/hooks/useStrings'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'

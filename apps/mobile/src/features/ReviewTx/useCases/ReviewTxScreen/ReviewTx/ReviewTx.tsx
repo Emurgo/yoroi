@@ -15,8 +15,8 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {useStrings} from '~/features/common/hooks/useStrings'
-import {FormattedMetadata, FormattedTx} from '~/features/common/types'
+import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'

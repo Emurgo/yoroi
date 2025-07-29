@@ -13,7 +13,7 @@ import WebView from 'react-native-webview'
 
 import {Icon} from '~/ui/Icon'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useBrowser} from '~/features/common/BrowserProvider'
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {WebViewState} from './WebViewItem'
 
 type Props = {

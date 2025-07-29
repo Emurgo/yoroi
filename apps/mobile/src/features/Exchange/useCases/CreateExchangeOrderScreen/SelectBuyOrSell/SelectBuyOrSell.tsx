@@ -4,7 +4,7 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {ButtonActionGroup} from '~/ui/ButtonActionGroup/ButtonActionGroup'
-import {useStrings} from '~/features/common/useStrings'
+import {useStrings} from '../../common/useStrings'
 
 export const SelectBuyOrSell = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()

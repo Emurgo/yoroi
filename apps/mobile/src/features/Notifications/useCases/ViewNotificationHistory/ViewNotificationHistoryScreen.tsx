@@ -8,20 +8,20 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
+import {triggerNotificationAction} from '~/features/Notifications/common/tools'
 import {
   getTransactionReceivedNotificationIcon,
   getTransactionReceivedNotificationTitle,
 } from '~/features/Notifications/common/TransactionReceivedNotification'
+import {useWalletNotifications} from '~/features/Notifications/common/useWalletNotifications'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {triggerNotificationAction} from '~/features/common/tools'
-import {useStrings} from '~/features/common/useStrings'
-import {useWalletNotifications} from '~/features/common/useWalletNotifications'
 import {useLanguage} from '~/kernel/i18n'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {Text} from '~/ui/Text/Text'
 import {useTransactionInfos} from '~/wallets/hooks'
+import {useStrings} from '../../common/useStrings'
 import {EmptyNotificationsIllustration} from '../illustrations/EmptyNotifications'
 
 export const ViewNotificationHistoryScreen = () => {
