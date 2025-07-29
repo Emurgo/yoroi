@@ -14,7 +14,10 @@ import {
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
+import {
+  WalletDuplicatedModal,
+  WalletDuplicatedModalActions,
+} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -133,7 +136,7 @@ export const RestoreWalletScreen = () => {
   )
 
   const handleOnNext = React.useCallback(async () => {
-    const {accountPubKeyHex} = await walletManager.generateWalletKeys(
+    const {accountPubKeyHex} = walletManager.generateWalletKeys(
       walletImplementation,
       mnemonic,
       accountVisual,
@@ -146,7 +149,7 @@ export const RestoreWalletScreen = () => {
       const {plate, seed} = walletManager.checksum(accountPubKeyHex)
 
       openModal({
-        // title: strings.restoreDuplicatedWalletModalTitle,
+        title: strings.restoreDuplicatedWalletModalTitle,
         content: (
           <WalletDuplicatedModal
             plate={plate}
@@ -154,11 +157,11 @@ export const RestoreWalletScreen = () => {
             duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
           />
         ),
-        /* footer: (
+        footer: (
           <WalletDuplicatedModalActions
             duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
           />
-        ), */
+        ),
       })
 
       return

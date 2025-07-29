@@ -14,6 +14,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Alert as AlertIllustration} from '~/ui/AlertIllustration/AlertIllustration'
 import {Button} from '~/ui/Button/Button'
@@ -30,6 +31,7 @@ export const VerifyRecoveryPhraseScreen = () => {
     useSetupWallet()
   const {track} = useMetrics()
   const {palette: p} = useTheme()
+  const {walletManager} = useWalletManager()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -122,13 +124,13 @@ export const VerifyRecoveryPhraseScreen = () => {
         <Button
           title={strings.next}
           disabled={disabled}
-          onPress={async () => {
-            /* const {accountPubKeyHex} = await walletManager.generateWalletKeys(
+          onPress={() => {
+            const {accountPubKeyHex} = walletManager.generateWalletKeys(
               walletImplementation,
               mnemonic,
               accountVisual,
             )
-            publicKeyHexChanged(accountPubKeyHex) */
+            publicKeyHexChanged(accountPubKeyHex)
 
             navigation.navigate('setup-wallet-details-form')
           }}

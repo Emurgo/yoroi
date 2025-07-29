@@ -8,6 +8,7 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
   InteractionManager,
+  Linking,
   TextInput as RNTextInput,
   ScrollView,
   Text,
@@ -18,6 +19,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
+import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
 import {useStrings} from '~/features/SetupWallet/common/useStrings'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -32,6 +34,7 @@ import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
 import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
@@ -195,7 +198,7 @@ export const WalletDetailsScreen = () => {
 
   const showModalTipsPassword = React.useCallback(() => {
     openModal({
-      // title: strings.walletDetailsModalTitle,
+      title: strings.walletDetailsModalTitle,
       content: (
         <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
           <View style={[a.gap_lg]}>
@@ -217,8 +220,8 @@ export const WalletDetailsScreen = () => {
           </View>
         </View>
       ),
-      /* footer: (
-        <View style={[styles.modalContent, a.gap_lg]}>
+      footer: (
+        <View style={[a.px_lg, a.pb_lg, a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)
@@ -235,7 +238,7 @@ export const WalletDetailsScreen = () => {
           />
         </View>
       ),
-      height: HEIGHT_MODAL_NAME_PASSWORD, */
+      height: HEIGHT_MODAL_NAME_PASSWORD,
     })
   }, [
     openModal,
@@ -245,6 +248,8 @@ export const WalletDetailsScreen = () => {
     strings.walletPasswordModalCardFirstItem,
     strings.walletPasswordModalCardSecondItem,
     strings.walletPasswordModalCardTitle,
+    closeModal,
+    showRestoreWalletInfoModalChanged,
   ])
 
   React.useEffect(() => {
@@ -254,7 +259,7 @@ export const WalletDetailsScreen = () => {
 
   const showModalTipsPlateNumber = () => {
     openModal({
-      // title: strings.walletDetailsModalTitle,
+      title: strings.walletDetailsModalTitle,
       content: (
         <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
           <CardAboutPhrase
@@ -269,8 +274,8 @@ export const WalletDetailsScreen = () => {
           />
         </View>
       ),
-      /* footer: (
-        <View style={[styles.modalContent, a.gap_lg]}>
+      footer: (
+        <View style={[a.px_lg, a.pb_lg, a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)
@@ -279,8 +284,8 @@ export const WalletDetailsScreen = () => {
 
           <Button title={strings.continueButton} onPress={closeModal} />
         </View>
-      ), */
-      // height: HEIGHT_MODAL_CHECKSUM,
+      ),
+      height: HEIGHT_MODAL_CHECKSUM,
     })
   }
 

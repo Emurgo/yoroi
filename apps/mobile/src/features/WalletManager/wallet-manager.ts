@@ -26,10 +26,7 @@ import {rootStorage} from '~/kernel/storage/storages'
 import {keyManager} from '~/wallets/cardano/key-manager/key-manager'
 import {WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
-import {
-  validatePassword,
-  validateWalletName,
-} from '~/wallets/utils/validators'
+import {validatePassword, validateWalletName} from '~/wallets/utils/validators'
 import {networkManagers} from './common/constants'
 import {
   SyncWalletInfo,
@@ -472,20 +469,15 @@ export class WalletManager {
     return nameErrors
   }
 
-  async generateWalletKeys(
+  generateWalletKeys(
     walletImplementation: Wallet.Implementation,
     mnemonic: string,
     accountVisual?: number,
   ) {
-    const {csl, release} = wrappedCsl()
-    const keys = await keyManager(walletImplementation)({
+    return keyManager(walletImplementation)({
       mnemonic,
-      csl,
       accountVisual,
     })
-    release()
-
-    return keys
   }
 
   _notify = (event: WalletManagerEvent | WalletEvent) => {

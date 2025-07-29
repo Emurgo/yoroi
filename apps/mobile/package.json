@@ -27,7 +27,7 @@
     "@emurgo/cip4-js": "^1.0.7",
     "@emurgo/cross-csl-core": "8.0.0-alpha.1",
     "@emurgo/cross-csl-mobile": "8.0.0-alpha.1",
-    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.5",
+    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6",
     "@emurgo/yoroi-lib": "3.0.0-beta.1",
     "@expo/metro-runtime": "~5.0.4",
     "@formatjs/intl-datetimeformat": "^6.18.0",
@@ -155,6 +155,6 @@
   },
   "private": true,
   "overrides": {
-    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.5"
+    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6"
   }
 }

@@ -78,7 +78,7 @@ export const RestoreWalletDetailsScreen = () => {
   const {palette: p} = useTheme()
   const {track} = useMetrics()
   const bold = useBold()
-  // const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
+  const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const {walletManager} = useWalletManager()
   const [name, setName] = React.useState(
@@ -175,7 +175,7 @@ export const RestoreWalletDetailsScreen = () => {
 
   const showModalTipsPassword = () => {
     openModal({
-      // title: strings.walletDetailsModalTitle,
+      title: strings.walletDetailsModalTitle,
       content: (
         <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
@@ -205,14 +205,14 @@ export const RestoreWalletDetailsScreen = () => {
           />
         </View>
       ),
-      // footer: <Button title={strings.continueButton} onPress={closeModal} />,
-      // height: HEIGHT_MODAL_NAME_PASSWORD,
+      footer: <Button title={strings.continueButton} onPress={closeModal} />,
+      height: HEIGHT_MODAL_NAME_PASSWORD,
     })
   }
 
   const showModalTipsPlateNumber = () => {
     openModal({
-      // title: strings.walletDetailsModalTitle,
+      title: strings.walletDetailsModalTitle,
       content: (
         <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
@@ -235,8 +235,8 @@ export const RestoreWalletDetailsScreen = () => {
           />
         </View>
       ),
-      // footer: <Button title={strings.continueButton} onPress={closeModal} />,
-      // height: HEIGHT_MODAL_CHECKSUM,
+      footer: <Button title={strings.continueButton} onPress={closeModal} />,
+      height: HEIGHT_MODAL_CHECKSUM,
     })
   }
 

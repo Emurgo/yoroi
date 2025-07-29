@@ -29,7 +29,7 @@ export const RecoveryPhraseScreen = () => {
   const {
     mnemonicChanged,
     showCreateWalletInfoModal,
-    // showCreateWalletInfoModalChanged,
+    showCreateWalletInfoModalChanged,
   } = useSetupWallet()
   const {track} = useMetrics()
   const {palette: p} = useTheme()
@@ -44,7 +44,7 @@ export const RecoveryPhraseScreen = () => {
 
   const handleOnShowModal = React.useCallback(() => {
     openModal({
-      // title: strings.recoveryPhraseModalTitle,
+      title: strings.recoveryPhraseModalTitle,
       content: (
         <View style={[a.flex_1, a.px_lg]}>
           <CardAboutPhrase
@@ -69,7 +69,7 @@ export const RecoveryPhraseScreen = () => {
           <Space.Height.xl />
         </View>
       ),
-      /* footer: (
+      footer: (
         <Button
           title={strings.continueButton}
           onPress={() => {
@@ -78,8 +78,8 @@ export const RecoveryPhraseScreen = () => {
           }}
           testID="setup-step2-continue-button"
         />
-      ), */
-      ///height: 552,
+      ),
+      height: 552,
     })
   }, [
     openModal,
@@ -89,6 +89,8 @@ export const RecoveryPhraseScreen = () => {
     strings.recoveryPhraseCardSecondItem,
     strings.recoveryPhraseCardThirdItem,
     strings.recoveryPhraseCardTitle,
+    closeModal,
+    showCreateWalletInfoModalChanged,
   ])
 
   React.useEffect(() => {
