@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Markdown from 'react-native-marked'
 
 import {Icon} from '~/ui/Icon'
@@ -15,27 +15,24 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
   if (dismissed) return null
 
   return (
-    <View style={a.p_lg}>
-      <View
-        style={[a.p_lg, {borderRadius: 8, backgroundColor: p.bg_color_min}]}
-      >
-        <View style={[a.flex_row, a.justify_end, a.align_center]}>
+    <View style={styles.dialog}>
+      <View style={[styles.dialogSquare, {backgroundColor: p.bg_color_min}]}>
+        <View style={styles.row}>
           <TouchableOpacity onPress={() => setDismissed(true)}>
             <Icon.Cross size={24} color={p.el_gray_max} />
           </TouchableOpacity>
         </View>
 
-        {/* @ts-expect-error old react */}
         <Markdown
-          style={{
-            text: [a.body_1_lg_regular, {color: p.text_gray_medium}],
-            body: [a.body_1_lg_regular, {color: p.text_gray_medium}],
+          value={
+            strings.contributors !== '_'
+              ? `${strings.warning}: **${strings.contributors}**`
+              : `${strings.warning}.`
+          }
+          styles={{
+            text: {...styles.markdownText, ...{color: p.text_gray_medium}},
           }}
-        >
-          {strings.contributors !== '_'
-            ? `${strings.warning}: **${strings.contributors}**`
-            : `${strings.warning}.`}
-        </Markdown>
+        />
       </View>
     </View>
   )

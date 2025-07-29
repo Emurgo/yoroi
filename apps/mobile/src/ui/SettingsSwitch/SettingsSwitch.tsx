@@ -11,14 +11,14 @@ export const SettingsSwitch = ({
   onValueChange: (value: boolean) => void
   disabled?: boolean
 }) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <Switch
       value={value}
       onValueChange={onValueChange}
       disabled={disabled}
-      trackColor={{false: color.gray_300, true: color.primary_500}}
-      thumbColor={color.white_static}
+      trackColor={{false: p.gray_300, true: p.primary_500}}
+      thumbColor={p.white_static}
     />
   )
 }

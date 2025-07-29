@@ -1,27 +1,28 @@
-import {atoms as a, SupportedThemes, useTheme} from '@yoroi/theme'
+import {atoms as a, ThemeName, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {TouchableOpacity, View} from 'react-native'
 
-import {themeNames} from '~/kernel/i18n/global-messages'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {Icon} from '~/ui/Icon'
-import {Text} from '~/ui/Text/Text'
-import {useThemeStorageMaker} from '~/wallets/hooks'
+import {themeNames} from '../../../../../kernel/i18n/global-messages'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
+import {Icon} from '../../../../../ui/Icon'
+import {Text} from '../../../../../ui/Text/Text'
+import {useThemeStorageMaker} from '../../../../../wallets/hooks'
 
 type Props = {
-  title: SupportedThemes
-  selectTheme: (name: SupportedThemes) => void
-  setLocalTheme: (name: SupportedThemes) => void
+  title: ThemeName
+  selectTheme: (name: ThemeName) => void
+  setLocalTheme: (name: ThemeName) => void
 }
 
 export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
+
   const strings = useStrings()
   const themeStorage = useThemeStorageMaker()
   const {track} = useMetrics()
 
-  const handleSelectTheme = (theme: SupportedThemes) => {
+  const handleSelectTheme = (theme: ThemeName) => {
     track.themeSelected({
       theme:
         theme === 'default-light'
@@ -54,37 +55,57 @@ export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
 }
 
 const Row = ({children}: {children: React.ReactNode}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
+  return (
+    <View
+      style={[a.flex_row, {borderBottomColor: p.gray_200}, a.border_b, a.py_lg]}
+    >
+      {children}
+    </View>
+  )
+}
+const Description = ({children}: {children: React.ReactNode}) => {
   return (
     <View
       style={[
-        a.flex_row,
-        {borderBottomColor: p.gray_200},
-        {borderBottomWidth: 1},
-        a.py_lg,
+        {
+          flex: 8,
+        },
+        a.flex_col,
       ]}
     >
       {children}
     </View>
   )
 }
-
-const Description = ({children}: {children: React.ReactNode}) => {
-  const {atoms: ta, palette: p} = useTheme()
-  return <View style={[{flex: 8}, {flexDirection: 'column'}]}>{children}</View>
-}
-
 const Selected = ({children}: {children: React.ReactNode}) => {
-  const {atoms: ta, palette: p} = useTheme()
   return (
-    <View style={[a.align_end, a.justify_center, {flex: 2}]}>{children}</View>
+    <View
+      style={[
+        a.align_end,
+        a.justify_center,
+        {
+          flex: 2,
+        },
+      ]}
+    >
+      {children}
+    </View>
   )
 }
-
 const Title = ({children}: {children: React.ReactNode}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   return (
-    <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>{children}</Text>
+    <Text
+      style={[
+        {
+          color: p.gray_900,
+        },
+        a.body_1_lg_medium,
+      ]}
+    >
+      {children}
+    </Text>
   )
 }
 
@@ -92,7 +113,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    translateThemeName: (theme: SupportedThemes) =>
+    translateThemeName: (theme: ThemeName) =>
       intl.formatMessage(themeNames[theme]),
   }
 }

@@ -1,5 +1,5 @@
 import {useMutation} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -7,7 +7,6 @@ import {
   Alert,
   LayoutAnimation,
   ScrollView,
-  StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
   useWindowDimensions,
@@ -16,42 +15,46 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {
   SettingsStackRoutes,
   useUnsafeParams,
   useWalletNavigation,
-} from '~/kernel/navigation'
-import {Button, ButtonType} from '~/ui/Button/Button'
-import {Copiable} from '~/ui/Copiable/Copiable'
-import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
-import {Icon} from '~/ui/Icon'
-import {Info} from '~/ui/Icon/Info'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text/Text'
-import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
-import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
-import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
-import {useBalances} from '~/wallets/hooks'
-import {RawUtxo} from '~/wallets/types/other'
-import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
-import {Amounts, asQuantity, Quantities} from '~/wallets/utils/utils'
-import {TokenAmountItem} from '../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
+} from '../../../../../kernel/navigation/navigation'
+import {Button, ButtonType} from '../../../../../ui/Button/Button'
+import {Copiable} from '../../../../../ui/Copiable/Copiable'
+import {ErrorPanel} from '../../../../../ui/ErrorPanel/ErrorPanel'
+import {Icon} from '../../../../../ui/Icon'
+import {Info} from '../../../../../ui/Icon/Info'
+import {useModal} from '../../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../../ui/Space/Space'
+import {Text} from '../../../../../ui/Text/Text'
+import {useSetCollateralId} from '../../../../../wallets/cardano/utxoManager/useSetCollateralId'
+import {
+  collateralConfig,
+  utxosMaker,
+} from '../../../../../wallets/cardano/utxoManager/utxos'
+import {useBalances} from '../../../../../wallets/hooks'
+import {RawUtxo} from '../../../../../wallets/types/other'
+import {YoroiEntry, YoroiSignedTx} from '../../../../../wallets/types/yoroi'
+import {
+  Amounts,
+  asQuantity,
+  Quantities,
+} from '../../../../../wallets/utils/utils'
+import {useReviewTx} from '../../../../ReviewTx/common/ReviewTxProvider'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
 import {useStrings} from './strings'
 
 export const ManageCollateralScreen = () => {
-  const {styles} = useStyles()
-  const {
-    wallet,
-    meta: {addressMode},
-  } = useSelectedWallet()
+  const {atoms: ta} = useTheme()
+
+  const {wallet, meta: addressMode} = useWalletManager().selected!
+  const {amount, collateralId, utxo} = wallet.getCollateralInfo()
   const screenHeight = useWindowDimensions().height
-  const {amount, collateralId, utxo} = useCollateralInfo(wallet)
+
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
   const {openModal, closeModal} = useModal()
@@ -162,10 +165,17 @@ export const ManageCollateralScreen = () => {
   return (
     <SafeAreaView
       edges={['top', 'left', 'right', 'bottom']}
-      style={styles.safeAreaView}
+      style={[ta.bg_color_max, a.flex_1, a.px_lg]}
     >
       <ScrollView>
-        <Text style={styles.heading}>{strings.lockedAsCollateral}</Text>
+        <Text
+          style={[
+            a.flex_1,
+            a.self_center,
+          ]}
+        >
+          {strings.lockedAsCollateral}
+        </Text>
 
         <Space.Height.sm />
 
@@ -176,7 +186,7 @@ export const ManageCollateralScreen = () => {
           disabled={isLoading}
         />
 
-        <Space.Height.md />
+        <Space.Height.lg />
 
         {hasCollateral && (
           <>
@@ -195,7 +205,7 @@ export const ManageCollateralScreen = () => {
               </Copiable>
             </Row>
 
-            <Space.Height.md />
+            <Space.Height.lg />
 
             <Text>{strings.removeCollateral}</Text>
           </>
@@ -265,15 +275,16 @@ const ActionableAmount = ({
   collateralId,
   disabled,
 }: ActionableAmountProps) => {
-  const {styles} = useStyles()
-
   const handleRemove = () => onRemove()
 
   return (
-    <View style={styles.amountItem} testID="amountItem">
-      <Left>
-        <TokenAmountItem amount={amount} />
-      </Left>
+    <View
+      style={[a.flex_row, a.justify_between, a.align_center]}
+      testID="amountItem"
+    >
+      {/*<Left>*/}
+      {/*  <TokenAmountItem amount={amount} />*/}
+      {/*</Left>*/}
 
       {collateralId !== '' && (
         <Right>
@@ -288,17 +299,14 @@ const Left = ({style, ...props}: ViewProps) => (
   <View style={[style, {flex: 1}]} {...props} />
 )
 const Right = ({style, ...props}: ViewProps) => (
-  <View style={[style, {paddingLeft: 16}]} {...props} />
+  <View style={[style, a.pl_lg]} {...props} />
 )
 const Row = ({style, ...props}: ViewProps) => (
-  <View
-    style={[style, {flexDirection: 'row', alignItems: 'center'}]}
-    {...props}
-  />
+  <View style={[style, a.flex_row, a.align_center]} {...props} />
 )
 
 const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
-  const {colors} = useStyles()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
@@ -307,13 +315,13 @@ const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
       disabled={disabled}
       style={{opacity: disabled ? 0.5 : 1}}
     >
-      <Icon.CrossCircle size={26} color={colors.iconColor} />
+      <Icon.CrossCircle size={26} color={p.gray_900} />
     </TouchableOpacity>
   )
 }
 
 const Operation = () => {
-  const {styles, colors} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const {openModal} = useModal()
 
@@ -326,56 +334,16 @@ const Operation = () => {
   }
 
   return (
-    <View style={styles.operation}>
-      <Text style={styles.operationText}>
+    <View style={[a.flex_row, a.align_center]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
         {strings.collateralInfoModalLabel}
       </Text>
 
       <Space.Width.xs />
 
       <TouchableOpacity onPress={handleOnPressInfo}>
-        <Info size={24} color={colors.iconColor} />
+        <Info size={24} color={p.iconColor} />
       </TouchableOpacity>
     </View>
   )
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
-    },
-    amountItem: {
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-      ...atoms.flex_row,
-      ...atoms.justify_between,
-      ...atoms.align_center,
-    },
-    heading: {
-      ...atoms.flex_1,
-      ...atoms.flex_1,
-      alignSelf: 'center',
-    },
-    operation: {
-      ...atoms.flex_row,
-      ...atoms.align_center,
-    },
-    operationText: {
-      ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
-    },
-  })
-
-  const colors = {
-    iconColor: color.gray_900,
-  }
-
-  return {styles, colors} as const
 }

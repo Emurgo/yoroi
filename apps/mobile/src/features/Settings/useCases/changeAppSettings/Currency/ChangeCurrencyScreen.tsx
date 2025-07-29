@@ -2,8 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '~/ui/Boundary/Boundary'
-import {CurrencyPickerList} from './CurrencyPickerList'
+import {Boundary} from '../../../../../ui/Boundary/Boundary'
 
 export const ChangeCurrencyScreen = () => {
   const {atoms: ta, palette: p} = useTheme()
@@ -11,11 +10,9 @@ export const ChangeCurrencyScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, ta.bg_color_max]}
     >
-      <Boundary>
-        <CurrencyPickerList />
-      </Boundary>
+      <Boundary>{/*<CurrencyPickerList />*/}</Boundary>
     </SafeAreaView>
   )
 }

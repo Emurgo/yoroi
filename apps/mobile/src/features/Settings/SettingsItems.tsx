@@ -58,26 +58,17 @@ export const SettingsItem = ({
 
   return (
     <View>
-      <View style={[{paddingVertical: 16}]}>
-        <View
-          style={[
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            },
-          ]}
-        >
+      <View style={a.py_lg}>
+        <View style={[a.flex_row, a.justify_between, a.align_center]}>
           {icon}
 
           {icon && <Space.Width.sm />}
 
           <Text
             style={[
-              {flex: 1},
+              a.flex_1,
               a.body_1_lg_medium,
-              {color: p.gray_900},
-              disabled && {color: p.gray_500},
+              {color: disabled ? p.gray_500 : p.gray_900},
             ]}
           >
             {label}
@@ -120,7 +111,7 @@ export const NavigatedSettingsItem = ({
   return (
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
-        <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
+        <View style={[a.flex_row, a.align_center]}>
           {!isEmptyString(selected) && (
             <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
               {selected}

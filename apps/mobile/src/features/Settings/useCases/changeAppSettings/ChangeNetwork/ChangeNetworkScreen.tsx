@@ -10,20 +10,20 @@ import {
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Platform, StyleSheet, Text, View} from 'react-native'
+import {Platform, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '~/ui/Boundary/Boundary'
-import {Button} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {Space} from '~/ui/Space/Space'
+import {Boundary} from '../../../../../ui/Boundary/Boundary'
+import {Button} from '../../../../../ui/Button/Button'
+import {useModal} from '../../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../../ui/Space/Space'
 import {NetworkPickerList} from './NetworkPickerList'
 import {useStrings} from './strings'
 
 export const ChangeNetworkScreen = () => {
-  const styles = useStyles()
+  const {atoms: ta} = useTheme()
   const {networkNoticeShown} = useNetworkNoticeShown()
 
   const {handleOpenModal} = useHandleOpenNetworkNoticeModal()
@@ -39,7 +39,12 @@ export const ChangeNetworkScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={styles.safeAreaView}
+      style={[
+        {
+          flex: 1,
+        },
+        ta.bg_color_max,
+      ]}
     >
       <Boundary>
         <NetworkPickerList />
@@ -49,7 +54,7 @@ export const ChangeNetworkScreen = () => {
 }
 
 export const useHandleOpenNetworkNoticeModal = () => {
-  const styles = useStyles()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {openModal, closeModal} = useModal()
   const {refetch} = useNetworkNoticeShown()
@@ -67,18 +72,22 @@ export const useHandleOpenNetworkNoticeModal = () => {
     openModal({
       title: strings.networkNoticeTitle,
       content: (
-        <View style={styles.modal}>
-          <Text style={styles.modalText}>{strings.networkNoticeMessage}</Text>
+        <View style={[a.flex_1, a.px_lg]}>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+            {strings.networkNoticeMessage}
+          </Text>
 
           <Space.Height.lg />
 
-          <Text style={styles.modalTextTitle}>
+          <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
             {strings.networkNoticeListTitle}
           </Text>
 
-          <Text style={styles.modalText}>{strings.networkNoticeList}</Text>
+          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+            {strings.networkNoticeList}
+          </Text>
 
-          <Space.Height._2xs fill />
+          <Space.Height.sm fill />
 
           {Platform.OS === 'android' && <Space.Height.lg />}
         </View>
@@ -131,28 +140,4 @@ const useNetworkNoticeShown = (
     ...query,
     networkNoticeShown: query.data,
   }
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-  const styles = StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor: color.bg_color_max,
-    },
-    modal: {
-      flex: 1,
-      ...atoms.px_lg,
-    },
-    modalText: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_900,
-    },
-    modalTextTitle: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_900,
-    },
-  })
-
-  return styles
 }

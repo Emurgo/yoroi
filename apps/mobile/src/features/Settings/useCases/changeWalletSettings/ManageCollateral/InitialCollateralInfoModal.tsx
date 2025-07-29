@@ -2,25 +2,19 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 
-import {Space} from '~/ui/Space/Space'
+import {Space, SpaceHeight} from '../../../../../ui/Space/Space'
 import {InfoModalIllustration} from './illustrations/InfoModalIllustration'
 import {useStrings} from './strings'
 
 export const InitialCollateralInfoModal = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
     <View style={[a.flex_1, a.px_lg, a.align_center]}>
       <InfoModalIllustration />
 
-      <Text
-        style={[
-          a.text_center,
-          a.body_1_lg_regular,
-          {color: p.text_gray_medium},
-        ]}
-      >
+      <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.collateralInfoModalText}
 
         <Space.Width._2xs />
@@ -28,7 +22,7 @@ export const InitialCollateralInfoModal = () => {
         <Link />
       </Text>
 
-      <Space.Height._2xs fill />
+      <Space.Height.lg fill />
     </View>
   )
 }
@@ -38,7 +32,7 @@ const learnMoreLink =
 
 const Link = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   const handleOnPress = () => {
     Linking.openURL(learnMoreLink)
@@ -46,7 +40,10 @@ const Link = () => {
 
   return (
     <Text
-      style={[a.link_1_lg_underline, {color: p.text_primary_medium}]}
+      style={[
+        a.link_1_lg_underline,
+        ta.text_primary_medium,
+      ]}
       onPress={handleOnPress}
     >
       {strings.learnMore}.

@@ -278,7 +278,7 @@ const InputSearch = ({placeholder}: Props) => {
       placeholder={placeholder}
       onChangeText={(search) => searchChanged(search)}
       autoCapitalize="none"
-      style={{flex: 1, color: p.el_gray_max}}
+      style={[a.flex_1, {color: p.el_gray_max}]}
       testID="inputSearch"
       placeholderTextColor={p.text_gray_medium}
       keyboardAppearance={isDark ? 'dark' : 'light'}

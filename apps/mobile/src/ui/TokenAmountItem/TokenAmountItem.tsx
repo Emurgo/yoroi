@@ -9,11 +9,13 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {features} from '~/kernel/features'
-import {Button, ButtonType} from '~/ui/Button/Button'
-import {Icon} from '~/ui/Icon'
-import {Text} from '~/ui/Text/Text'
+import {useStrings} from '../../features/ReviewTx/common/hooks/useStrings'
+import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
+import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
+import {features} from '../../kernel/features'
+import {Button, ButtonType} from '../Button/Button'
+import {Icon} from '../Icon'
 import {useModal} from '../Modal/ModalContext'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
 import {useStrings} from '../ReviewTx/common/hooks/useStrings'
@@ -43,7 +45,7 @@ export const TokenAmountItem = ({
   const strings = useStrings()
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const {privacyPlaceholder, isPrivacyActive} = usePrivacyMode()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(
     priceImpactRisk ?? 'none',
@@ -60,7 +62,7 @@ export const TokenAmountItem = ({
       : privacyPlaceholder
 
   const priceImpactRiskTextColor =
-    orderType === 'market' ? priceImpactRiskTheme.text : color.gray_900
+    orderType === 'market' ? priceImpactRiskTheme.text : p.gray_900
 
   const handleShowTokenDetails = () => {
     openModal({
@@ -83,7 +85,7 @@ export const TokenAmountItem = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="middle"
-          style={[styles.name, {color: color.gray_900}]}
+          style={[styles.name, {color: p.gray_900}]}
           testID="tokenInfoText"
         >
           {name}
@@ -92,7 +94,7 @@ export const TokenAmountItem = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="middle"
-          style={[styles.detail, {color: color.gray_600}]}
+          style={[styles.detail, {color: p.gray_600}]}
           testID="tokenFingerprintText"
         >
           {detail}
@@ -144,9 +146,9 @@ export const TokenAmountItem = ({
               <Button
                 type={ButtonType.SecondaryText}
                 fgColorsOverride={{
-                  disabled: color.text_gray_low,
-                  idle: color.text_gray_low,
-                  pressed: color.text_gray_low,
+                  disabled: p.text_gray_low,
+                  idle: p.text_gray_low,
+                  pressed: p.text_gray_low,
                 }}
                 style={styles.info}
                 size="S"
@@ -173,14 +175,12 @@ const Right = ({style, ...props}: ViewProps) => (
 )
 
 export const AmountItemPlaceholder = ({style}: ViewProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <View style={[style, styles.skeletonLogo]}>
-      <View style={[styles.skeletonTitle, {backgroundColor: color.gray_200}]} />
+      <View style={[styles.skeletonTitle, {backgroundColor: p.gray_200}]} />
 
-      <View
-        style={[styles.skeletonBorder, {backgroundColor: color.gray_200}]}
-      />
+      <View style={[styles.skeletonBorder, {backgroundColor: p.gray_200}]} />
     </View>
   )
 }

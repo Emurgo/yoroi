@@ -1,21 +1,20 @@
 import {networkConfigs} from '@yoroi/blockchains'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {freeze} from 'immer'
 import React from 'react'
-import {FlatList, StyleSheet} from 'react-native'
+import {FlatList} from 'react-native'
 
-import {availableNetworks} from '~/features/WalletManager/common/constants'
-import {useAutomaticWalletOpener} from '~/features/WalletManager/context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useNavigateTo} from '../../common/navigation'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
+import {availableNetworks} from '../../../../WalletManager/common/constants'
+import {useAutomaticWalletOpener} from '../../../../WalletManager/context/AutomaticWalletOpeningProvider'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '../../../../WalletManager/hooks/useSelectedNetwork'
+import {useNavigateTo} from '../../../common/navigation'
 import {NetworkPickerItem} from './NetworkPickerItem'
 
 export const NetworkPickerList = () => {
   const {walletManager} = useWalletManager()
-  const {styles} = useStyles()
   const navigateTo = useNavigateTo()
   const {network: selectedNetwork} = useSelectedNetwork()
   const {setShouldOpen: setShouldAutomaticWalletOpen} =
@@ -39,7 +38,7 @@ export const NetworkPickerList = () => {
 
   return (
     <FlatList
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={a.p_lg}
       data={networks}
       keyExtractor={(item) => item.network}
       renderItem={({item}) => (
@@ -59,15 +58,3 @@ const networks = freeze(
     availableNetworks.includes(network),
   ),
 )
-
-const useStyles = () => {
-  const {atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    contentContainer: {
-      ...atoms.p_lg,
-    },
-  })
-
-  return {styles}
-}

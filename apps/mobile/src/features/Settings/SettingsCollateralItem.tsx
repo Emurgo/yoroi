@@ -1,8 +1,7 @@
 import {amountFormatter} from '@yoroi/portfolio'
 import React from 'react'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {
   NavigatedSettingsItem,
   NavigatedSettingsItemProps,
@@ -15,13 +14,14 @@ export const SettingsCollateralItem = ({
   icon,
   disabled,
 }: NavigatedSettingsItemProps) => {
-  const {wallet} = useSelectedWallet()
-  const {amount} = useCollateralInfo(wallet)
+  const {selected} = useWalletManager()
+  const {amount} = selected.wallet!.getCollateralInfo()
+
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
   const formattedCollateral = React.useMemo(() => {
     const amountCollateral = {
-      info: wallet.portfolioPrimaryTokenInfo,
+      info: selected.wallet!.portfolioPrimaryTokenInfo,
       quantity: BigInt(amount.quantity),
     }
 
@@ -30,12 +30,7 @@ export const SettingsCollateralItem = ({
       : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(
           amountCollateral,
         )
-  }, [
-    amount.quantity,
-    isPrivacyActive,
-    privacyPlaceholder,
-    wallet.portfolioPrimaryTokenInfo,
-  ])
+  }, [amount.quantity, isPrivacyActive, privacyPlaceholder, selected.wallet])
 
   return (
     <NavigatedSettingsItem

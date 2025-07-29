@@ -3,10 +3,13 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
-import {useLanguage} from '~/kernel/i18n/LanguageProvider'
-import {Icon} from '~/ui/Icon'
-import {Text} from '~/ui/Text/Text'
+// import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
+import {useLanguage} from '../../kernel/i18n/LanguageProvider'
+import {
+  LanguageRecord,
+  supportedLanguages,
+} from '../../kernel/i18n/localization'
+import {Icon} from '../Icon'
 import {LanguagePickerWarning} from '../LanguagePickerWarning/LanguagePickerWarning'
 
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
@@ -14,18 +17,16 @@ const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 export const LanguagePicker = () => {
   const {palette: p} = useTheme()
   const language = useLanguage()
-  const {languageCode, selectLanguageCode, supportedLanguages} = language
+
+  const {languageCode, selectLanguage} = language
   const strings = useStrings()
 
-  useSearchOnNavBar({
-    title: strings.languagePickerTitle,
-    placeholder: strings.languagePickerSearch,
-  })
-
-  const {search} = useSearch()
+  const {search} = {
+    search: '',
+  }
   const filteredLanguages = supportedLanguages.filter(
     (lang) => lang.code.includes(search) || lang.label.includes(search),
-  )
+  ) as LanguageRecord[]
 
   return (
     <View style={[a.flex_1, a.align_stretch]}>
@@ -34,13 +35,11 @@ export const LanguagePicker = () => {
         contentContainerStyle={[a.p_lg, a.align_stretch]}
         renderItem={({item: {label, code}}) => (
           <TouchableOpacity
-            style={[a.py_lg, a.flex_row, a.align_center, a.justify_between]}
-            onPress={() => selectLanguageCode(code)}
+            style={[styles.item, a.py_lg]}
+            onPress={() => selectLanguage(code)}
             testID={`languageSelect_${code}`}
           >
-            <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
-              {label}
-            </Text>
+            <Text style={[styles.itemText, {color: p.gray_900}]}>{label}</Text>
 
             {languageCode === code && (
               <Icon.Check size={24} color={p.primary_600} />
@@ -61,7 +60,7 @@ export const LanguagePicker = () => {
 
 const HR = (props: ViewProps) => {
   const {palette: p} = useTheme()
-  return <View {...props} style={[{height: 1, backgroundColor: p.gray_200}]} />
+  return <View {...props} style={[styles.hr, {backgroundColor: p.gray_200}]} />
 }
 
 const useStrings = () => {

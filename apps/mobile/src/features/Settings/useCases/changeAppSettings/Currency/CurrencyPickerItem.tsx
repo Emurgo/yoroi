@@ -3,10 +3,10 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {TouchableOpacity, View} from 'react-native'
 
-import {currencyNames} from '~/kernel/i18n/global-messages'
-import {Icon} from '~/ui/Icon'
-import {Text} from '~/ui/Text/Text'
-import {CurrencySymbol} from '~/wallets/types/other'
+import {currencyNames} from '../../../../../kernel/i18n/global-messages'
+import {Icon} from '../../../../../ui/Icon'
+import {Text} from '../../../../../ui/Text/Text'
+import {CurrencySymbol} from '../../../../../wallets/types/other'
 
 type Props = {
   nativeName: string
@@ -22,8 +22,7 @@ export const CurrencyPickerItem = ({
   isSelected,
 }: Props) => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
-
+  const {palette: p} = useTheme()
   const title = strings.translatedName(symbol)
   const subtitle = `${nativeName} (${symbol})`
 
@@ -49,44 +48,79 @@ export const CurrencyPickerItem = ({
 }
 
 const Row = ({children}: {children: React.ReactNode}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <View
       style={[
         a.flex_row,
-        {borderBottomColor: p.gray_200},
-        {borderBottomWidth: 1},
-        {paddingVertical: 8},
+        {
+          borderBottomColor: p.gray_200,
+          borderBottomWidth: 1,
+          paddingVertical: 8,
+        },
       ]}
     >
       {children}
     </View>
   )
 }
-
 const Description = ({children}: {children: React.ReactNode}) => {
-  const {atoms: ta, palette: p} = useTheme()
-  return <View style={[{flex: 8}, {flexDirection: 'column'}]}>{children}</View>
+  return (
+    <View
+      style={[
+        {
+          flex: 8,
+        },
+        a.flex_col,
+      ]}
+    >
+      {children}
+    </View>
+  )
 }
-
 const Selected = ({children}: {children: React.ReactNode}) => {
-  const {atoms: ta, palette: p} = useTheme()
   return (
-    <View style={[a.align_end, a.justify_center, {flex: 2}]}>{children}</View>
+    <View
+      style={[
+        a.align_end,
+        a.justify_center,
+        {
+          flex: 2,
+        },
+      ]}
+    >
+      {children}
+    </View>
   )
 }
-
 const Title = ({children}: {children: React.ReactNode}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   return (
-    <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>{children}</Text>
+    <Text
+      style={[
+        {
+          color: p.gray_900,
+        },
+        a.body_1_lg_medium,
+      ]}
+    >
+      {children}
+    </Text>
   )
 }
-
 const Subtitle = ({children}: {children: React.ReactNode}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   return (
-    <Text style={[a.body_3_sm_regular, {color: p.gray_900}]}>{children}</Text>
+    <Text
+      style={[
+        {
+          color: p.gray_900,
+        },
+        a.body_3_sm_regular,
+      ]}
+    >
+      {children}
+    </Text>
   )
 }
 

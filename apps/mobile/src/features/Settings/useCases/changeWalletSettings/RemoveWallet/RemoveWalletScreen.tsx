@@ -4,19 +4,19 @@ import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '~/ui/Button/Button'
-import {Checkbox} from '~/ui/Checkbox/Checkbox'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text/Text'
+import {useWalletNavigation} from '../../../../../kernel/navigation/navigation'
+import {Button} from '../../../../../ui/Button/Button'
+import {Checkbox} from '../../../../../ui/Checkbox/Checkbox'
+import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Space, SpaceHeight} from '../../../../../ui/Space/Space'
+import {Text} from '../../../../../ui/Text/Text'
 import {
   Checkmark,
   TextInput,
   TextInputProps,
-} from '~/ui/TextInput/TextInput'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletNavigation} from '~/kernel/navigation'
+} from '../../../../../ui/TextInput/TextInput'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
@@ -44,38 +44,36 @@ export const RemoveWalletScreen = () => {
     (!meta.isHW && !hasMnemonicWrittenDown) || meta.name !== typedWalletName
 
   return (
-    <KeyboardAvoidingView
-      style={[{backgroundColor: p.bg_color_max}, a.flex_1, a.px_lg, a.pt_lg]}
-    >
-      <SafeAreaView edges={['left', 'right', 'bottom']} style={[a.flex_1]}>
+    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1, a.px_lg, a.pt_lg]}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={a.flex_1}>
         <ScrollView bounces={false}>
           <Description>
             {!meta.isHW && (
-              <Text style={[a.body_1_lg_regular]}>
+              <Text style={a.body_1_lg_regular}>
                 {strings.descriptionParagraph1}
               </Text>
             )}
 
-            <Space.Height.lg />
+            <Space.Height.xl />
 
-            <Text style={[a.body_1_lg_regular]}>
+            <Text style={a.body_1_lg_regular}>
               {strings.descriptionParagraph2}
             </Text>
           </Description>
 
-          <Space.Height.xl />
+          <Space.Height.lg />
 
           <WalletInfo>
-            <Text style={[a.body_1_lg_medium]}>{strings.walletName}</Text>
+            <Text style={a.body_1_lg_medium}>{strings.walletName}</Text>
 
-            <Space.Height.sm />
+            <SpaceHeight size={10} />
 
-            <Text style={[a.body_1_lg_regular]}>{meta.name}</Text>
+            <Text style={a.body_1_lg_regular}>{meta.name}</Text>
 
-            <Space.Height.lg />
+            <Space.Height.xl />
 
             <WalletNameInput
-              placeholder={strings.walletName}
+              placeholder={a.body_1_lg_regular}
               value={typedWalletName}
               onChangeText={setTypedWalletName}
               right={typedWalletName === meta.name ? <Checkmark /> : undefined}
@@ -88,7 +86,7 @@ export const RemoveWalletScreen = () => {
           </WalletInfo>
         </ScrollView>
 
-        <Space.Height._2xs fill />
+        <Space.Height.lg fill />
 
         {!meta.isHW && (
           <Checkbox
@@ -102,7 +100,9 @@ export const RemoveWalletScreen = () => {
           <Button
             onPress={handleOnRemoveWallet}
             title={strings.remove}
-            style={[{backgroundColor: p.sys_magenta_500}]}
+            style={{
+              backgroundColor: p.sys_magenta_500,
+            }}
             disabled={disabled}
           />
         </Actions>
@@ -115,8 +115,8 @@ const Description = (props: ViewProps) => {
   return <View {...props} />
 }
 const WalletInfo = (props: ViewProps) => {
-  const {atoms: ta, palette: p} = useTheme()
-  return <View {...props} style={[{backgroundColor: p.bg_color_max}]} />
+  const {atoms: ta} = useTheme()
+  return <View {...props} style={ta.bg_color_max} />
 }
 const WalletNameInput = (props: TextInputProps) => {
   return (
@@ -129,8 +129,7 @@ const WalletNameInput = (props: TextInputProps) => {
   )
 }
 const Actions = (props: ViewProps) => {
-  const {atoms: ta, palette: p} = useTheme()
-  return <View {...props} style={[a.py_lg]} />
+  return <View {...props} style={a.py_lg} />
 }
 
 const messages = defineMessages({

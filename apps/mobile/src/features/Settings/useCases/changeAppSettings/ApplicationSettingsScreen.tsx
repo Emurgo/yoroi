@@ -1,17 +1,24 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {isBoolean} from '@yoroi/common'
-import {SupportedThemes, useTheme} from '@yoroi/theme'
+import {ThemeName, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {isDev, isNightly} from '../../../../kernel/constants'
+import {themeNames} from '../../../../kernel/i18n/global-messages'
+import {useLanguage} from '../../../../kernel/i18n/LanguageProvider'
 import {
-  useAuthSetting,
-  useAuthWithOs,
-  useIsAuthOsSupported,
-} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
-import {SettingsSwitch} from '~/features/Settings/common/SettingsSwitch'
+  LanguageRecord,
+  supportedLanguages,
+} from '../../../../kernel/i18n/localization'
+import {Icon} from '../../../../ui/Icon'
+import {SettingsSwitch} from '../../../../ui/SettingsSwitch/SettingsSwitch'
+import {Space} from '../../../../ui/Space/Space'
+import {useCrashReports} from '../../../../wallets/hooks'
+import {useSelectedNetwork} from '../../../WalletManager/hooks/useSelectedNetwork'
+import {useNavigateTo} from '../../common/navigation'
 import {
   NavigatedSettingsItem,
   SettingsItem,
@@ -35,12 +42,11 @@ import {
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
-  const {name} = useTheme()
-  const {languageCode, supportedLanguages} = useLanguage()
-  const language =
-    supportedLanguages.find((lang) => lang.code === languageCode) ??
-    defaultLanguage
+  const {paletteName: name, palette: p} = useTheme()
+  const {languageCode} = useLanguage()
+  const language = supportedLanguages.find(
+    (lang) => lang.code === languageCode,
+  ) as LanguageRecord
 
   const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
   const {currency} = useCurrencyPairing()
@@ -49,7 +55,9 @@ export const ApplicationSettingsScreen = () => {
   const authSetting = useAuthSetting()
   const isAuthOsSupported = useIsAuthOsSupported()
   const navigateTo = useNavigateTo()
+
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
+
   const {network} = useSelectedNetwork()
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
@@ -64,13 +72,13 @@ export const ApplicationSettingsScreen = () => {
   }
 
   const iconProps = {
-    color: colors.icon,
+    color: p.gray_400,
     size: 23,
   }
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
-      <ScrollView bounces={false} style={styles.settings}>
+    <SafeAreaView edges={['bottom', 'right', 'left']} style={{}}>
+      <ScrollView bounces={false} style={{}}>
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
@@ -125,7 +133,7 @@ export const ApplicationSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.securityReporting}>
           <NavigatedSettingsItem
@@ -178,7 +186,7 @@ export const ApplicationSettingsScreen = () => {
           )}
         </SettingsSection>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
       </ScrollView>
     </SafeAreaView>
   )
@@ -290,7 +298,7 @@ const useStrings = () => {
     privacyPolicy: intl.formatMessage(messages.privacyPolicy),
     screenSharing: intl.formatMessage(messages.screenSharing),
     screenSharingInfo: intl.formatMessage(messages.screenSharingInfo),
-    translateThemeName: (theme: SupportedThemes) =>
+    translateThemeName: (theme: ThemeName) =>
       intl.formatMessage(themeNames[theme]),
     network: intl.formatMessage(messages.network),
   }

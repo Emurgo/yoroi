@@ -74,6 +74,7 @@ function Yoroi() {
       })
       setFontsLoaded(true)
     }
+
     loadFonts()
   }, [])
 

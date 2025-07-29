@@ -11,13 +11,13 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {availableNetworks} from '~/features/WalletManager/common/constants'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation'
-import {Button, ButtonType} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {Space} from '~/ui/Space/Space'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
+import {useWalletNavigation} from '../../../../../kernel/navigation/navigation'
+import {Button, ButtonType} from '../../../../../ui/Button/Button'
+import {useModal} from '../../../../../ui/Modal/ModalContext'
+import {Space} from '../../../../../ui/Space/Space'
+import {availableNetworks} from '../../../../WalletManager/common/constants'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from './strings'
 
 export const NetworkTag = ({
@@ -33,12 +33,13 @@ export const NetworkTag = ({
   disabled?: boolean
   textStyle?: TextStyle
 }) => {
+  const width = useWindowDimensions().width - 120
   const {
     selected: {network: selectedNetwork},
     walletManager,
   } = useWalletManager()
   const {navigateToChangeNetwork} = useWalletNavigation()
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta, atoms} = useTheme()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const {track} = useMetrics()
@@ -89,7 +90,15 @@ export const NetworkTag = ({
 
   return (
     <View
-      style={[{width}, a.flex_row, a.align_center, a.justify_center, style]}
+      style={[
+        {
+          width,
+        },
+        a.flex_row,
+        a.align_center,
+        a.justify_center,
+        style,
+      ]}
     >
       <Text
         numberOfLines={1}
@@ -97,9 +106,9 @@ export const NetworkTag = ({
         aria-level="1"
         ellipsizeMode="tail"
         style={[
+          ta.text_gray_medium,
           a.body_1_lg_medium,
           a.flex_shrink,
-          {color: p.text_gray_medium},
           textStyle,
         ]}
       >
@@ -130,7 +139,8 @@ const PreprodTag = ({
   onPress: () => void
   disabled: boolean
 }) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
+
   const {name} = networkConfigs[Chain.Network.Preprod]
 
   return (
@@ -157,16 +167,17 @@ const MainnetWarningDialog = ({
   onCancel: () => void
   onOk: () => void
 }) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
+
   const strings = useStrings()
 
   return (
     <View style={[a.px_lg, a.flex_1]}>
-      <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.networkTagModalText}
       </Text>
 
-      <Space.Height._2xs fill />
+      <Space.Height.lg fill />
 
       <View style={[a.pb_lg, a.flex_row, a.justify_between]}>
         <Button

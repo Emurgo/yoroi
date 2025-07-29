@@ -1,32 +1,31 @@
 import {useNavigation} from '@react-navigation/native'
 import {MutationOptions, useMutation} from '@tanstack/react-query'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {
   TextInput as RNTextInput,
   ScrollView,
-  StyleSheet,
   View,
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '~/ui/Button/Button'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Checkmark, TextInput} from '~/ui/TextInput/TextInput'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {errorMessages} from '../../../../../kernel/i18n/global-messages'
+import {Button} from '../../../../../ui/Button/Button'
+import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Checkmark, TextInput} from '../../../../../ui/TextInput/TextInput'
+import {YoroiWallet} from '../../../../../wallets/cardano/types'
 import {
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
-} from '~/wallets/utils/validators'
-import {errorMessages} from '~/kernel/i18n/global-messages'
+} from '../../../../../wallets/utils/validators'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {atoms: ta} = useTheme()
   const navigation = useNavigation()
 
   const currentPasswordRef = React.useRef<RNTextInput>(null)
@@ -56,15 +55,12 @@ export const ChangePasswordScreen = () => {
   })
 
   return (
-    <KeyboardAvoidingView style={styles.root}>
-      <SafeAreaView
-        edges={['left', 'right', 'bottom']}
-        style={styles.safeAreaView}
-      >
+    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={a.flex_1}>
         <ScrollView
           bounces={false}
           keyboardDismissMode="on-drag"
-          contentContainerStyle={styles.contentContainer}
+          contentContainerStyle={[a.p_lg, a.gap_lg]}
         >
           <CurrentPasswordInput
             ref={currentPasswordRef}
@@ -141,8 +137,8 @@ const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
 const Actions = (props: ViewProps) => {
-  const styles = useStyles()
-  return <View {...props} style={styles.actions} />
+  const {palette: p} = useTheme()
+  return <View {...props} style={[ta.bg_color_max, a.p_lg]} />
 }
 
 const messages = defineMessages({
@@ -195,29 +191,6 @@ const useStrings = () => {
       errorMessages.incorrectPassword.title,
     ),
   }
-}
-
-const useStyles = () => {
-  const {color, atoms} = useTheme()
-
-  const styles = StyleSheet.create({
-    root: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.flex_1,
-    },
-    safeAreaView: {
-      ...atoms.flex_1,
-    },
-    contentContainer: {
-      ...atoms.p_lg,
-      ...atoms.gap_lg,
-    },
-    actions: {
-      backgroundColor: color.bg_color_max,
-      ...atoms.p_lg,
-    },
-  })
-  return styles
 }
 
 const useChangePassword = (

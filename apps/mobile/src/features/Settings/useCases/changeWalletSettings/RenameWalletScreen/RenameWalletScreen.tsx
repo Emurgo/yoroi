@@ -5,20 +5,20 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import globalMessages from '~/kernel/i18n/global-messages'
-import {Button} from '~/ui/Button/Button'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Space} from '~/ui/Space/Space'
-import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '~/wallets/utils/string'
-import {getWalletNameError} from '~/wallets/utils/validators'
+import globalMessages from '../../../../../kernel/i18n/global-messages'
+import {Button} from '../../../../../ui/Button/Button'
+import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Space} from '../../../../../ui/Space/Space'
+import {TextInput} from '../../../../../ui/TextInput/TextInput'
+import {isEmptyString} from '../../../../../wallets/utils/string'
+import {getWalletNameError} from '../../../../../wallets/utils/validators'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const RenameWalletScreen = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation()
+  const {atoms: ta, palette: p} = useTheme()
 
   const {
     wallet,
@@ -46,12 +46,12 @@ export const RenameWalletScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={[{backgroundColor: p.bg_color_max}, a.flex_1]}>
+    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]}>
       <SafeAreaView
         style={[a.flex_1, a.pt_lg, a.pb_lg]}
         edges={['left', 'right', 'bottom']}
       >
-        <ScrollView contentContainerStyle={[a.px_lg]} bounces={false}>
+        <ScrollView contentContainerStyle={a.px_lg} bounces={false}>
           <WalletNameInput
             returnKeyType="done"
             errorDelay={0}
@@ -65,9 +65,9 @@ export const RenameWalletScreen = () => {
           />
         </ScrollView>
 
-        <Space.Height._2xs fill />
+        <Space.Height.lg fill />
 
-        <View style={[{backgroundColor: p.bg_color_max}, a.pt_lg, a.px_lg]}>
+        <View style={[ta.bg_color_max, a.pt_lg, a.px_lg]}>
           <Button
             onPress={handleOnRename}
             title={strings.changeButton}

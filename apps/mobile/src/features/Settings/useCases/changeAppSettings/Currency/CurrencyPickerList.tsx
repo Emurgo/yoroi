@@ -1,3 +1,4 @@
+import {atoms as a} from '@yoroi/theme'
 import React from 'react'
 import {FlatList} from 'react-native'
 
@@ -13,7 +14,7 @@ export const CurrencyPickerList = () => {
 
   return (
     <FlatList
-      contentContainerStyle={{padding: 16}}
+      contentContainerStyle={{...a.p_lg}}
       data={currencies}
       keyExtractor={({symbol}) => symbol}
       renderItem={({item: {symbol, data}}) => (

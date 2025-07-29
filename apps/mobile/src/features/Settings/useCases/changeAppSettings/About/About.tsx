@@ -1,4 +1,3 @@
-import messaging from '@react-native-firebase/messaging'
 import {useNavigation} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
@@ -6,10 +5,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, Text, View} from 'react-native'
 
-import {appInfo} from '~/kernel/appInfo'
-import {commit} from '~/kernel/env'
-import {SettingsRouteNavigation} from '~/kernel/navigation'
-import {Copiable} from '~/ui/Copiable/Copiable'
+import {commit} from '../../../../../kernel/constants'
+import {SettingsRouteNavigation} from '../../../../../kernel/navigation/navigation'
+import {Copiable} from '../../../../../ui/Copiable/Copiable'
 
 export const About = () => {
   const strings = useStrings()
@@ -22,39 +20,81 @@ export const About = () => {
   })
 
   return (
-    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}, a.p_lg]}>
+    <View style={[a.flex_1, ta.bg_color_max, a.p_lg]}>
       <View style={[a.flex_row, a.justify_between, a.py_lg]}>
-        <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
+        <Text
+          style={[
+            {
+              color: p.gray_900,
+            },
+            a.body_1_lg_medium,
+          ]}
+        >
           {strings.currentVersion}
         </Text>
 
         <Pressable
           onLongPress={() => navigation.navigate('settings-system-log')}
         >
-          <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
+          <Text
+            style={[
+              {
+                color: p.gray_500,
+              },
+              a.body_1_lg_regular,
+            ]}
+          >
             {appInfo.version}
           </Text>
         </Pressable>
       </View>
 
       <View style={[a.flex_row, a.justify_between, a.py_lg]}>
-        <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
+        <Text
+          style={[
+            {
+              color: p.gray_900,
+            },
+            a.body_1_lg_medium,
+          ]}
+        >
           {strings.commit}
         </Text>
 
-        <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>{commit}</Text>
+        <Text
+          style={[
+            {
+              color: p.gray_500,
+            },
+            a.body_1_lg_regular,
+          ]}
+        >
+          {commit}
+        </Text>
       </View>
 
       {FCMToken !== undefined && (
         <>
-          <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
+          <Text
+            style={[
+              {
+                color: p.gray_900,
+              },
+              a.body_1_lg_medium,
+            ]}
+          >
             {strings.fcmToken}
           </Text>
 
           <Copiable text={FCMToken}>
             <View style={{flex: 1}}>
               <Text
-                style={[a.body_1_lg_regular, {color: p.gray_500}]}
+                style={[
+                  {
+                    color: p.gray_500,
+                  },
+                  a.body_1_lg_regular,
+                ]}
                 numberOfLines={1}
                 ellipsizeMode="middle"
               >

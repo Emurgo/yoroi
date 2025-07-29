@@ -2,9 +2,9 @@ import {time} from '@yoroi/common'
 
 import * as React from 'react'
 
-import {logger} from '~/kernel/logger/logger'
-import {useWalletNavigation} from '~/kernel/navigation'
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {logger} from '../../../kernel/logger/logger'
+import {useWalletNavigation} from '../../../kernel/navigation/navigation'
+import {YoroiWallet} from '../../../wallets/cardano/types'
 import {useWalletManager} from '../context/WalletManagerProvider'
 
 /**

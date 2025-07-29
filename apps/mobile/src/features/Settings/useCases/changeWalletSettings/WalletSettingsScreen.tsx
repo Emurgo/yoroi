@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
@@ -7,8 +8,25 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAuthSetting} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
-import {SettingsSwitch} from '~/features/Settings/common/SettingsSwitch'
+import {
+  DIALOG_BUTTONS,
+  showConfirmationDialog,
+} from '../../../../kernel/dialogs'
+import {confirmationMessages} from '../../../../kernel/i18n/global-messages'
+import {
+  SettingsRouteNavigation,
+  useWalletNavigation,
+} from '../../../../kernel/navigation/navigation'
+import {Icon} from '../../../../ui/Icon'
+import {SettingsSwitch} from '../../../../ui/SettingsSwitch/SettingsSwitch'
+import {Space} from '../../../../ui/Space/Space'
+import {useResync} from '../../../../wallets/hooks'
+import {useAuth} from '../../../Auth/context/AuthProvider'
+import {useAuthSetting} from '../../../Auth/hooks'
+import {useAddressMode} from '../../../WalletManager/hooks/useAddressMode'
+import {useSelectedWallet} from '../../../WalletManager/hooks/useSelectedWallet'
+import {useNavigateTo} from '../../common/navigation'
+import {SettingsCollateralItem} from '../../SettingsCollateralItem'
 import {
   NavigatedSettingsItem,
   SettingsBuildItem,
@@ -30,7 +48,7 @@ import {SettingsCollateralItem} from '../SettingsCollateralItem'
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {atoms: ta, palette: p} = useTheme()
   const {resetToWalletSelection, navigateToNotificationSettings} =
     useWalletNavigation()
   const authSetting = useAuthSetting()
@@ -56,16 +74,16 @@ export const WalletSettingsScreen = () => {
   }
 
   const iconProps = {
-    color: colors.icon,
+    color: p.gray_400,
     size: 23,
   }
 
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[{flex: 1, backgroundColor: p.bg_color_max}]}
+      style={[a.flex_row, ta.bg_color_max]}
     >
-      <ScrollView bounces={false} style={[{flex: 1, padding: 16}]}>
+      <ScrollView bounces={false} style={[a.flex_1, a.p_lg]}>
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.WalletStack {...iconProps} />}
@@ -86,7 +104,7 @@ export const WalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.security}>
           <NavigatedSettingsItem
@@ -110,7 +128,7 @@ export const WalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.actions}>
           <NavigatedSettingsItem
@@ -136,7 +154,7 @@ export const WalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.notifications}>
           <NavigatedSettingsItem
@@ -146,7 +164,7 @@ export const WalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
 
         <SettingsSection title={strings.about}>
           <SettingsBuildItem
@@ -155,7 +173,7 @@ export const WalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
       </ScrollView>
     </SafeAreaView>
   )
@@ -171,10 +189,11 @@ const getWalletType = (
 }
 
 const ResyncButton = () => {
-  const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {colors} = useStyles()
+  const {palette: p} = useTheme()
+  const strings = useStrings()
   const intl = useIntl()
+
   const {walletIdChanged} = useSetupWallet()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {resync, isLoading} = useResync(wallet, {
@@ -195,7 +214,7 @@ const ResyncButton = () => {
   }
 
   const iconProps = {
-    color: colors.icon,
+    color: p.gray_400,
     size: 23,
   }
 
@@ -234,7 +253,7 @@ const AddressModeSwitcher = (props: {isSingle: boolean}) => {
 }
 
 const useLogout = () => {
-  const {logout} = useAuth()
+  const {loggedOut} = useAuth()
   const intl = useIntl()
 
   return async () => {
@@ -243,7 +262,7 @@ const useLogout = () => {
       intl,
     )
     if (selection === DIALOG_BUTTONS.YES) {
-      logout() // triggers navigation to login
+      loggedOut() // triggers navigation to login
     }
   }
 }

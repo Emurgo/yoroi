@@ -3,15 +3,15 @@ import {App} from '@yoroi/types'
 import React from 'react'
 import {ScrollView, TextProps, View} from 'react-native'
 
-import {logger} from '~/kernel/logger/logger'
-import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text/Text'
+import {logger} from '../../../../../kernel/logger/logger'
+import {Space} from '../../../../../ui/Space/Space'
+import {Text} from '../../../../../ui/Text/Text'
 
 export const SystemLogScreen = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
-    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}, a.px_lg]}>
+    <View style={[a.flex_1, ta.bg_color_max, a.px_lg]}>
       <ScrollView>
         {logger.trail.map((entry) => {
           return (
@@ -48,20 +48,38 @@ const LoggerLevelEmoji = {
 } as const
 
 const LabelText = ({style, children, ...props}: TextProps) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
-    <Text {...props} style={[a.body_1_lg_medium, {color: p.gray_900}, style]}>
+    <Text
+      {...props}
+      style={[
+        {
+          color: p.gray_900,
+        },
+        a.body_1_lg_medium,
+        style,
+      ]}
+    >
       {children}
     </Text>
   )
 }
 
 const ValueText = ({style, children, ...props}: TextProps) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
-    <Text {...props} style={[a.body_1_lg_regular, {color: p.gray_500}, style]}>
+    <Text
+      {...props}
+      style={[
+        {
+          color: p.gray_500,
+        },
+        a.body_1_lg_regular,
+        style,
+      ]}
+    >
       {children}
     </Text>
   )

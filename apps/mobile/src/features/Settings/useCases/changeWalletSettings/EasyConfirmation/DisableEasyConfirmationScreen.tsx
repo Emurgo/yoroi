@@ -5,14 +5,14 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '~/ui/Button/Button'
-import {Text} from '~/ui/Text/Text'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Button} from '../../../../../ui/Button/Button'
+import {Text} from '../../../../../ui/Text/Text'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const DisableEasyConfirmationScreen = () => {
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation()
   const {wallet} = useSelectedWallet()
   const {walletManager} = useWalletManager()
@@ -23,15 +23,26 @@ export const DisableEasyConfirmationScreen = () => {
   }
 
   return (
-    <SafeAreaView
-      edges={['bottom']}
-      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-    >
-      <View style={[a.flex_1, a.justify_center, {padding: 20}]}>
-        <Text style={[a.body_1_lg_regular]}>{strings.disableHeading}</Text>
+    <SafeAreaView edges={['bottom']} style={[a.flex_1, ta.bg_color_max]}>
+      <View
+        style={[
+          a.flex_1,
+          a.justify_center,
+          {
+            padding: 20,
+          },
+        ]}
+      >
+        <Text
+          style={[
+            a.body_1_lg_regular,
+          ]}
+        >
+          {strings.disableHeading}
+        </Text>
       </View>
 
-      <View style={[{paddingBottom: 16, paddingHorizontal: 16}]}>
+      <View style={[a.pb_lg, a.px_lg]}>
         <Button
           title={strings.disableButton}
           onPress={handleOnDisableConfirmation}
