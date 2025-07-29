@@ -10,7 +10,7 @@ export const CollateralInfoModal = () => {
   const strings = useStrings()
 
   return (
-    <View style={(a.flex_1, a.px_lg, a.align_center)}>
+    <View style={[a.flex_1, a.px_lg, a.align_center]}>
       <InfoModalIllustration />
 
       <Text
