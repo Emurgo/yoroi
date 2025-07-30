@@ -5,7 +5,7 @@ import {Text, View} from 'react-native'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useStrings} from '~/features/Transactions/common/useStrings'
+import {useStrings} from '~/features/Transactions/common/strings'
 
 export const WarningSingleAddress = () => {
   const {palette: p} = useTheme()
