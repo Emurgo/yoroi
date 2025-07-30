@@ -30,8 +30,8 @@
 
 ## Error Reading Process
 
-- **Read errors directly**: Errors appear in the Metro terminal where `npm start` is running
-- **No need to paste**: The assistant can read errors from the Metro logs provided
+- **Read errors directly**: The assistant can read errors directly from the Metro terminal where `npm start` is running
+- **Direct access**: No need for user to paste logs - the assistant has direct access to the Metro process
 - **Systematic approach**: Fix → Commit → Reload → Check next error
 - **Cache issues**: If errors persist, clear Metro cache with `npm start --clear`
 
