@@ -2,12 +2,12 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 
+import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
   NftRoutes,
 } from '~/kernel/navigation/navigation'
-import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useStrings} from './common/hooks/useStrings'
 import {ListMediaGalleryScreen} from './screens/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen'
 import {ZoomMediaImageScreen} from './screens/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ZoomMediaImageScreen'

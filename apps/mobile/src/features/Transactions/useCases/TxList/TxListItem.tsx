@@ -8,6 +8,8 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
+import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useStrings} from '~/features/Transactions/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
@@ -25,8 +27,6 @@ import {
   formatTokenInteger,
 } from '~/wallets/utils/format'
 import {asQuantity} from '~/wallets/utils/utils'
-import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useTxFilter} from './TxFilterProvider'
 
 type Props = {

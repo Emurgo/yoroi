@@ -33,4 +33,4 @@ export const FadeIn = ({
 
   // eslint-disable-next-line react-native/no-inline-styles
   return <Animated.View style={[{opacity}, style]}>{children}</Animated.View>
-} 
+}
