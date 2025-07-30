@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {View, TouchableOpacity, Text} from 'react-native'
 
 import {DiscoverNavigator} from '~/features/Discover'
 import {MenuNavigator} from '~/features/Menu/Menu'
@@ -74,6 +75,8 @@ export const WalletNavigator = () => {
 // Main wallet routes component that handles the different tabs
 const MainWalletRoutes = () => {
   const {track} = useMetrics()
+  const [currentView, setCurrentView] = React.useState<'history' | 'portfolio'>('history')
+  const {palette: p} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -83,7 +86,62 @@ const MainWalletRoutes = () => {
 
   return (
     <SearchProvider>
-      <TxHistoryNavigator />
+      <View style={{flex: 1}}>
+        {/* Simple navigation tabs */}
+        <View style={{
+          flexDirection: 'row',
+          backgroundColor: p.bg_color_max,
+          borderBottomWidth: 1,
+          borderBottomColor: p.gray_200,
+          paddingHorizontal: 16,
+          paddingVertical: 8,
+        }}>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              paddingVertical: 12,
+              alignItems: 'center',
+              backgroundColor: currentView === 'history' ? p.primary_600 : 'transparent',
+              borderRadius: 8,
+              marginRight: 8,
+            }}
+            onPress={() => setCurrentView('history')}
+          >
+            <Text style={{
+              color: currentView === 'history' ? p.white_static : p.gray_max,
+              fontWeight: '600',
+            }}>
+              History
+            </Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              paddingVertical: 12,
+              alignItems: 'center',
+              backgroundColor: currentView === 'portfolio' ? p.primary_600 : 'transparent',
+              borderRadius: 8,
+              marginLeft: 8,
+            }}
+            onPress={() => setCurrentView('portfolio')}
+          >
+            <Text style={{
+              color: currentView === 'portfolio' ? p.white_static : p.gray_max,
+              fontWeight: '600',
+            }}>
+              Portfolio
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Content based on selected view */}
+        {currentView === 'history' ? (
+          <TxHistoryNavigator />
+        ) : (
+          <PortfolioNavigator />
+        )}
+      </View>
     </SearchProvider>
   )
 }
