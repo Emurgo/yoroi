@@ -13,13 +13,16 @@ export const generateWalletRootKey = (mnemonic: string) => {
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const entropyBuffer = Buffer.from(bip39entropy, 'hex')
   const entropyUint8 = new Uint8Array(entropyBuffer)
-  const amptyUint8 = new Uint8Array()
-
-  const rootKey = CardanoMobile.Bip32PrivateKey.fromBip39Entropy(
-    entropyUint8,
-    amptyUint8,
-  )
-  return rootKey
+  const emptyPassword = new Uint8Array()
+  try {
+    const rootKey = CardanoMobile.Bip32PrivateKey.fromBip39Entropy(
+      entropyUint8,
+      emptyPassword,
+    )
+    return rootKey
+  } catch (error) {
+    throw new Error(`Failed to generate wallet root key: ${error}`)
+  }
 }
 
 export const getMasterKeyFromMnemonic = (mnemonic: string) => {
