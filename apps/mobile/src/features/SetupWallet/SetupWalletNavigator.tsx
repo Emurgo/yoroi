@@ -1,13 +1,13 @@
 import {createStackNavigator} from '@react-navigation/stack'
-// import {useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-/* import {
+import {
   defaultStackNavigationOptions,
   WalletInitRoutes,
-} from '~/kernel/navigation' */
-// import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+} from '../../kernel/navigation'
+import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
 import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen'
@@ -21,24 +21,22 @@ import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 
-const Stack = createStackNavigator<any /* WalletInitRoutes */>()
+const Stack = createStackNavigator<WalletInitRoutes>()
 export const SetupWalletNavigator = () => {
   const strings = useStrings()
-  // const {atoms: ta, palette: p} = useTheme()
+  const {atoms, color} = useTheme()
 
-  /* const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(ta, p),
-    [ta, p],
+  const navigationOptions = React.useMemo(
+    () => defaultStackNavigationOptions(atoms, color),
+    [atoms, color],
   )
- */
+
   return (
     <Stack.Navigator
-      screenOptions={
-        {
-          // ...navigationOptions,
-          // headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-        }
-      }
+      screenOptions={{
+        ...navigationOptions,
+        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+      }}
     >
       <Stack.Screen
         name="setup-wallet-choose-setup-type-init"
@@ -49,13 +47,17 @@ export const SetupWalletNavigator = () => {
       <Stack.Screen
         name="setup-wallet-choose-setup-type"
         component={ChooseSetupTypeScreen}
-        options={{title: strings.addNewWalletTitle}}
+        options={{...navigationOptions, title: strings.addNewWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-restore-choose-mnemonic-type"
         component={ChooseMnemonicTypeScreen}
-        options={{title: strings.restoreWalletTitle}}
+        options={{
+          ...navigationOptions,
+          title: strings.restoreWalletTitle,
+          headerBackTitle: '',
+        }}
       />
 
       <Stack.Screen
