@@ -9,7 +9,7 @@ import {
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {Tab, TabPanel, Tabs} from '~/ui/Tabs/Tabs'
+import {Tab, TabPanel, Tabs} from '~/features/Portfolio/ui/TabsGradient/Tabs'
 import {useSearchOnNavBar} from '../Search/SearchContext'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
