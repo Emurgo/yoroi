@@ -4,7 +4,7 @@ import React from 'react'
 import {TouchableOpacity} from 'react-native'
 
 import {Icon} from '~/ui/Icon'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
 
 export const HeaderRightSwap = React.memo(() => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()

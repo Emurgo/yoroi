@@ -10,7 +10,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useCopy} from '~/ui/Clipboard/ClipboardProvider'
 import {Icon} from '~/ui/Icon'
