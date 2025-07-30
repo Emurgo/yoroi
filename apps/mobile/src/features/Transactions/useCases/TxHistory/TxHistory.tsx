@@ -5,7 +5,7 @@ import * as React from 'react'
 import {LayoutAnimation, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import infoIcon from '~/assets/img/icon/info-light-green.png'
+import infoIcon from '../../../../../assets/img/icon/info-light-green.png'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
 import {useStrings} from '~/features/Transactions/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
