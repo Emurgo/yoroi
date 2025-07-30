@@ -20,7 +20,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Line} from '~/ui/Line'
 import {Space} from '~/ui/Space/Space'
-import {TabPanel} from '~/ui/Tabs/Tabs'
+import {TabPanel} from '~/ui/Tabs'
 import {useSearch} from '../Search/SearchContext'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {LendAndBorrowTab} from './LendAndBorrowTab'
