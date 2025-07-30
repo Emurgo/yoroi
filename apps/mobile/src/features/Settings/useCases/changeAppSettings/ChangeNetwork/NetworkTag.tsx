@@ -56,7 +56,7 @@ export const NetworkTag = ({
 
       if (nextNetwork === Chain.Network.Mainnet) {
         openModal({
-          // title: strings.networkTagModalTitle,
+          title: strings.networkTagModalTitle,
           content: (
             <MainnetWarningDialog
               onCancel={closeModal}
@@ -70,7 +70,7 @@ export const NetworkTag = ({
               }}
             />
           ),
-          // height: 280,
+          height: 280,
         })
 
         return

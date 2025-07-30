@@ -1,18 +1,20 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
-
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
+import {atoms as a, useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
-import {Alert, Linking, Text, TouchableOpacity, View} from 'react-native'
+import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useWalletMetas} from '~/features/WalletManager/hooks/useWalletMetas'
 import {SupportIllustration} from '~/features/WalletManager/ui/illustrations/SupportIllustration'
 import {isDev} from '~/kernel/constants'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useWalletNavigation} from '~/kernel/navigation/navigation'
 import {Button} from '~/ui/Button/Button'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
+import {useWalletManager} from '../../context/WalletManagerProvider'
 import {useStrings} from '../../hooks/useStrings'
 import {WalletListItem} from './WalletListItem'
 
@@ -23,6 +25,8 @@ export const SelectWalletFromList = () => {
   const {track} = useMetrics()
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
   const [showLine, setShowLine] = React.useState(false)
+  const {navigateToTxHistory} = useWalletNavigation()
+  const {walletManager} = useWalletManager()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -30,19 +34,24 @@ export const SelectWalletFromList = () => {
     }, [track]),
   )
 
+  const handleOnSelect = React.useCallback(
+    async (walletMeta: Wallet.Meta) => {
+      walletManager.setSelectedWalletId(walletMeta.id)
+      navigateToTxHistory()
+    },
+    [walletManager, navigateToTxHistory],
+  )
+
   const data = React.useMemo(
     () =>
       walletMetas?.map((walletMeta) => (
         <React.Fragment key={walletMeta.id}>
-          <WalletListItem
-            walletMeta={walletMeta}
-            onPress={() => Alert.alert('Tx Wallet list not implemented')}
-          />
+          <WalletListItem walletMeta={walletMeta} onPress={handleOnSelect} />
 
           <Space.Height.lg />
         </React.Fragment>
       )),
-    [walletMetas],
+    [handleOnSelect, walletMetas],
   )
 
   return (

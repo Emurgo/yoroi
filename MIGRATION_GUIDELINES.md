@@ -1,124 +1,213 @@
-# Migration Guidelines
+# Yoroi Mobile App Migration Guidelines
 
 ## Overview
+This document outlines the process for migrating and debugging the Yoroi mobile app after mass style/import changes.
 
-This document tracks components that need to be migrated from `apps/wallet-mobile/src/components` to `apps/mobile/src/ui`.
+## Starting the App
 
-## Missing Components
+### Prerequisites
+- Android emulator running (Medium_Phone_API_35 or similar)
+- Node.js and npm installed
+- Expo CLI installed
 
-### Core Components (High Priority) - STILL MISSING
+### Step-by-Step Process
 
-These components are actively used and should be migrated first:
-
-1. **Accordion** - `apps/wallet-mobile/src/components/Accordion/` ❌ **MISSING**
-2. **CameraCodeScanner** - `apps/wallet-mobile/src/components/CameraCodeScanner/` ❌ **MISSING**
-3. **ChainWarning** - `apps/wallet-mobile/src/components/ChainWarning/` ❌ **MISSING**
-4. **ConfirmTxWithHwModal** - `apps/wallet-mobile/src/components/ConfirmTxWithHwModal/` ❌ **MISSING**
-5. **ConfirmTxWithOsModal** - `apps/wallet-mobile/src/components/ConfirmTxWithOsModal/` ❌ **MISSING**
-6. **ConfirmTxWithSpendingPasswordModal** - `apps/wallet-mobile/src/components/ConfirmTxWithSpendingPasswordModal/` ❌ **MISSING**
-7. **ErrorModal** - `apps/wallet-mobile/src/components/ErrorModal/` ❌ **MISSING**
-8. **ErrorPanel** - `apps/wallet-mobile/src/components/ErrorPanel/` ❌ **MISSING**
-9. **HideableText** - `apps/wallet-mobile/src/components/HideableText/` ❌ **MISSING**
-10. **InfoBanner** - `apps/wallet-mobile/src/components/InfoBanner/` ❌ **MISSING**
-11. **MediaPreview** - `apps/wallet-mobile/src/components/MediaPreview/` ❌ **MISSING**
-12. **Modal** - `apps/wallet-mobile/src/components/Modal/` ✅ **MIGRATED** (exists in `apps/mobile/src/ui/Modal/`)
-13. **NftPreview** - `apps/wallet-mobile/src/components/NftPreview/` ❌ **MISSING**
-14. **OfflineBanner** - `apps/wallet-mobile/src/components/OfflineBanner/` ❌ **MISSING**
-15. **PressableIcon** - `apps/wallet-mobile/src/components/PressableIcon/` ❌ **MISSING**
-16. **SomethingWentWrong** - `apps/wallet-mobile/src/components/SomethingWentWrong/` ❌ **MISSING**
-17. **Spacer** - `apps/wallet-mobile/src/components/Spacer/` ✅ **MIGRATED** (replaced with Space component)
-18. **Tabs** - `apps/wallet-mobile/src/components/Tabs/` ❌ **MISSING**
-19. **TwoActionView** - `apps/wallet-mobile/src/components/TwoActionView/` ❌ **MISSING**
-20. **WarningBanner** - `apps/wallet-mobile/src/components/WarningBanner/` ❌ **MISSING**
-
-### Individual Files (Medium Priority) - STILL MISSING
-
-These individual files need to be migrated:
-
-1. **DismissableView** - `apps/wallet-mobile/src/components/DismissableView.tsx` ❌ **MISSING**
-2. **ErrorImage** - `apps/wallet-mobile/src/components/ErrorImage.tsx` ❌ **MISSING**
-3. **FadeIn** - `apps/wallet-mobile/src/components/FadeIn.tsx` ❌ **MISSING**
-4. **GradientWarning** - `apps/wallet-mobile/src/components/GradientWarning.tsx` ❌ **MISSING**
-5. **KeyboardSpacer** - `apps/wallet-mobile/src/components/KeyboardSpacer.tsx` ❌ **MISSING**
-6. **PleaseWaitModal** - `apps/wallet-mobile/src/components/PleaseWaitModal.tsx` ❌ **MISSING**
-7. **ProgressStep** - `apps/wallet-mobile/src/components/ProgressStep.tsx` ❌ **MISSING**
-8. **ValidatedTextInput** - `apps/wallet-mobile/src/components/ValidatedTextInput.tsx` ❌ **MISSING**
-
-### Story Files (Removed)
-
-Storybook story files have been removed from the project and should not be migrated.
-
-### Number Components (Unknown Priority) - STILL MISSING
-
-These appear to be step/sequence components:
-
-1. **Number1** - `apps/wallet-mobile/src/components/StepperProgress/Number1.tsx` ❌ **MISSING**
-2. **Number2** - `apps/wallet-mobile/src/components/StepperProgress/Number2.tsx` ❌ **MISSING**
-3. **Number2Empty** - `apps/wallet-mobile/src/components/StepperProgress/Number2Empty.tsx` ❌ **MISSING**
-4. **Number3** - `apps/wallet-mobile/src/components/StepperProgress/Number3.tsx` ❌ **MISSING**
-5. **Number3Empty** - `apps/wallet-mobile/src/components/StepperProgress/Number3Empty.tsx` ❌ **MISSING**
-6. **Number4** - `apps/wallet-mobile/src/components/StepperProgress/Number4.tsx` ❌ **MISSING**
-7. **Number4Empty** - `apps/wallet-mobile/src/components/StepperProgress/Number4Empty.tsx` ❌ **MISSING**
-
-### String Files (Low Priority)
-
-These are likely translation or string constant files:
-
-1. **strings** - Multiple string files in various component directories
-
-## Migration Process
-
-### For Components with Directories:
-
-1. Use `git mv` to preserve history:
-
+1. **Start the Expo Development Server**
    ```bash
-   git mv apps/wallet-mobile/src/components/ComponentName apps/mobile/src/ui/ComponentName
+   cd apps/mobile
+   npm start
+   ```
+   This starts the Metro bundler on `http://localhost:8081`
+
+2. **Build and Run on Android**
+   ```bash
+   npm run android --debug
+   ```
+   This compiles the code and serves it to the running server
+
+3. **Expected Output**
+   - Build should complete successfully
+   - App should install on emulator
+   - App should open with development client URL
+
+## Checking Previous Working Versions
+
+### Using Git Tags
+When you need to reference a previous working version:
+
+1. **Stash current changes**
+   ```bash
+   git stash
    ```
 
-2. Fix any broken relative imports in the moved component files
-3. Update any remaining relative imports in other files that reference the moved component
-4. Run linting and TypeScript checks to ensure no issues
-
-### For Individual Files:
-
-1. Use `git mv` to preserve history:
-
+2. **Checkout the working tag**
    ```bash
-   git mv apps/wallet-mobile/src/components/ComponentName.tsx apps/mobile/src/ui/ComponentName/ComponentName.tsx
+   git checkout rn71  # or other working tag
    ```
 
-2. Create the directory structure if it doesn't exist
-3. Fix any broken relative imports in the moved file
-4. Update any remaining relative imports that reference the moved component
+3. **Explore the working structure**
+   - Check navigation structure
+   - Compare component implementations
+   - Note differences in imports and styling
 
-### For Story Files:
+4. **Return to current version**
+   ```bash
+   git checkout develop
+   git stash pop
+   ```
 
-Storybook story files have been removed from the project and should not be migrated.
+## Common Issues and Fixes
 
-## Recently Completed Migrations
+### Navigation Issues
 
-- ✅ **Tooltip/utils.ts** - Moved from `apps/wallet-mobile/src/components/Tooltip/utils.ts` to `apps/mobile/src/ui/Tooltip/utils.ts`
-- ✅ **Modal** - Already migrated to `apps/mobile/src/ui/Modal/`
-- ✅ **Spacer** - Replaced with Space component system
+#### Problem: Missing WalletNavigator
+**Symptoms**: App crashes when trying to navigate to main wallet routes
+**Solution**: Create `WalletNavigator.tsx` with proper tab navigation structure
 
-## Current Status Summary
+```typescript
+// apps/mobile/src/WalletNavigator.tsx
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+// ... imports
 
-**Total Components Listed:** 35
-**Migrated:** 3 (Modal, Spacer, Tooltip/utils.ts)
-**Still Missing:** 32 components
+const WalletTabNavigator = () => {
+  // Tab navigator with history, portfolio, discover, menu
+}
 
-**Critical Missing Components (actively imported):**
+export const WalletNavigator = () => {
+  // Stack navigator with wallet-selection, main-wallet-routes, etc.
+}
+```
 
-- Accordion, ChainWarning, ConfirmTxWithHwModal, ConfirmTxWithOsModal, ConfirmTxWithSpendingPasswordModal
-- ErrorModal, ErrorPanel, FadeIn, InfoBanner, MediaPreview, SomethingWentWrong, Tabs, WarningBanner
+#### Problem: Wallet Selection Not Working
+**Symptoms**: Tapping wallet shows "not implemented" alert
+**Solution**: Implement proper `handleOnSelect` function
+
+```typescript
+const handleOnSelect = React.useCallback(
+  async (walletMeta: Wallet.Meta) => {
+    walletManager.setSelectedWalletId(walletMeta.id)
+    navigateToTxHistory()
+  },
+  [walletManager, navigateToTxHistory],
+)
+```
+
+#### Problem: PIN Navigation Broken
+**Symptoms**: PIN screen doesn't navigate to wallet selection
+**Solution**: Update navigation to use `manage-wallets` route
+
+```typescript
+navigation.navigate('manage-wallets', {screen: 'wallet-selection'})
+```
+
+### Import Issues
+
+#### Problem: Malformed Imports
+**Symptoms**: `~/~/` imports or missing modules
+**Solution**: Use proper absolute paths with `~/` prefix
+
+```typescript
+// Correct
+import {Component} from '~/features/Feature/Component'
+
+// Incorrect
+import {Component} from '~/~/features/Feature/Component'
+```
+
+#### Problem: Missing Components
+**Symptoms**: "Cannot find module" errors
+**Solution**: Check if component exists and use correct import path
+
+```bash
+# Search for component
+find apps/mobile/src -name "ComponentName.tsx"
+
+# Check if it exists in the expected location
+ls apps/mobile/src/features/Feature/ComponentName.tsx
+```
+
+## App Structure
+
+### Navigation Hierarchy
+```
+AppNavigator
+├── Login (TempPinLoginScreen)
+├── manage-wallets (WalletNavigator)
+│   ├── wallet-selection (SelectWalletFromList)
+│   ├── main-wallet-routes (WalletTabNavigator)
+│   │   ├── history (TxHistoryNavigator)
+│   │   ├── portfolio (PortfolioNavigator)
+│   │   ├── discover (DiscoverNavigator)
+│   │   └── menu (MenuNavigator)
+│   ├── setup-wallet (SetupWalletNavigator)
+│   ├── settings (SettingsScreenNavigator)
+│   └── ... (other routes)
+```
+
+### Key Components
+- **TempPinLoginScreen**: PIN entry (accepts "000000")
+- **SelectWalletFromList**: Wallet selection screen
+- **WalletNavigator**: Main wallet navigation with tabs
+- **TxHistoryNavigator**: Transaction history and send/receive
+- **PortfolioNavigator**: Portfolio and token management
+- **DiscoverNavigator**: DApp browser and discovery
+- **MenuNavigator**: Settings and additional features
+
+## Testing Flow
+
+### User Journey
+1. **PIN Entry**: Enter "000000" to unlock
+2. **Wallet Selection**: See wallet list and select a wallet
+3. **Main Interface**: Navigate to main wallet interface with tabs
+4. **Tab Navigation**: Switch between History, Portfolio, Discover, and Menu tabs
+
+### Expected Behavior
+- PIN screen should accept "000000" and navigate to wallet selection
+- Wallet selection should show wallet list and allow selection
+- Selecting a wallet should navigate to main interface with tabs
+- Tab navigation should work between different sections
+
+## Debugging Tools
+
+### Terminal Commands
+```bash
+# Check if Expo server is running
+ps aux | grep expo
+
+# Kill existing Expo processes
+pkill -f expo
+
+# Clear Expo cache
+npx expo start --clear
+
+# Check TypeScript errors
+npm run tsc
+
+# Check linting errors
+npm run lint
+```
+
+### Useful Files to Check
+- `apps/mobile/src/kernel/navigation/AppNavigator.tsx` - Main app navigation
+- `apps/mobile/src/WalletNavigator.tsx` - Wallet navigation structure
+- `apps/mobile/src/features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen.tsx` - Wallet selection
+- `apps/mobile/src/features/Temporal_To_Remove/Auth/TempPinLoginScreen.tsx` - PIN entry
+
+## Migration Checklist
+
+- [ ] App starts without errors
+- [ ] PIN screen accepts "000000"
+- [ ] Navigation to wallet selection works
+- [ ] Wallet selection shows wallet list
+- [ ] Selecting wallet navigates to main interface
+- [ ] Tab navigation works
+- [ ] All imports resolve correctly
+- [ ] No TypeScript errors
+- [ ] No linting errors
 
 ## Notes
 
-- Always use `git mv` to preserve file history
-- Test components after migration to ensure they work correctly
-- Focus on fixing broken relative imports that reference moved components
-- Most absolute path imports have already been converted, so focus on remaining relative imports
-- Consider the new mobile structure's organization when placing components
-- Some components may need to be refactored to use the new theme system (@yoroi/theme)
-- **Priority:** Focus on the 12 critical missing components that are actively being imported
+- Always work on a feature branch, not directly on develop
+- Test the complete user flow after each major change
+- Keep the conflicts file updated as issues are resolved
+- Reference the working version (rn71 tag) when implementing missing functionality

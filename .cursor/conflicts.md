@@ -2,6 +2,46 @@
 
 This document tracks all the issues that couldn't be resolved during the migration process and require manual intervention.
 
+## ✅ Recently Resolved Issues
+
+### 7. Wallet Navigation and Functionality - **✅ RESOLVED**
+
+**Issue**: Missing WalletNavigator and broken wallet selection functionality
+**Status**: ✅ **RESOLVED**
+
+**Changes Made**:
+
+- ✅ Created `apps/mobile/src/WalletNavigator.tsx` with proper tab navigation structure
+- ✅ Fixed `SelectWalletFromListScreen` to properly handle wallet selection
+- ✅ Updated `AppNavigator` to include `manage-wallets` route
+- ✅ Fixed PIN screen navigation to use `manage-wallets` route
+- ✅ Implemented proper `handleOnSelect` function for wallet selection
+- ✅ Added proper navigation structure with tabs (History, Portfolio, Discover, Menu)
+
+**Files Fixed**:
+
+- ✅ `apps/mobile/src/WalletNavigator.tsx` - **NEW FILE**
+  - Created complete wallet navigation structure
+  - Includes WalletTabNavigator with proper tab navigation
+  - Includes all necessary screen routes
+
+- ✅ `apps/mobile/src/features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen.tsx`
+  - Fixed wallet selection to use `walletManager.setSelectedWalletId()`
+  - Added proper navigation to transaction history
+  - Removed "not implemented" alert
+
+- ✅ `apps/mobile/src/kernel/navigation/AppNavigator.tsx`
+  - Added `manage-wallets` route using WalletNavigator
+  - Fixed navigation structure
+
+- ✅ `apps/mobile/src/features/Temporal_To_Remove/Auth/TempPinLoginScreen.tsx`
+  - Updated navigation to use `manage-wallets` route
+  - Fixed PIN screen to properly navigate to wallet selection
+
+**Impact**: Complete wallet navigation flow now works from PIN entry through wallet selection to main interface
+
+---
+
 ## 🚨 Critical Missing Files
 
 ### 1. TypeScript Path Mapping Issues - **⏳ PENDING**

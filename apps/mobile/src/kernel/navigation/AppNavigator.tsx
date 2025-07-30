@@ -10,6 +10,7 @@ import {InitialScreenNavigator} from '~/features/Temporal_To_Remove/InitialScree
 import {TempTestSearchScreen} from '~/features/Temporal_To_Remove/Search/TempTestSearchScreen'
 import {SelectWalletFromList} from '~/features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {Modal} from '~/ui/Modal/ModalScreen'
+import {WalletNavigator} from '~/WalletNavigator'
 
 const Stack = createStackNavigator<any>()
 
@@ -23,6 +24,11 @@ export const AppNavigator = () => {
             name="initial"
             options={{headerShown: false}}
             component={InitialScreenNavigator}
+          />
+          <Stack.Screen
+            name="manage-wallets"
+            options={{headerShown: false}}
+            component={WalletNavigator}
           />
           <Stack.Screen
             name="wallet-selection"
