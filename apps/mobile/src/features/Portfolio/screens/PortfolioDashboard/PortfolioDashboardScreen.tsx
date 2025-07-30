@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Space} from '~/ui/Space/Space'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
-import {BalanceCard} from './BalanceCard/BalanceCard'
+import {BalanceCard} from '~/ui/BalanceCard/BalanceCard'
 import {DashboardNFTsList} from './DashboardNFTsList/DashboardNFTsList'
 import {DashboardTokensList} from './DashboardTokensList/DashboardTokensList'
 
