@@ -13,7 +13,7 @@ import {CardanoTypes} from '~/wallets/cardano/types'
 import {formatTokenAmount} from '~/wallets/utils/format'
 import {isEmptyString} from '~/wallets/utils/string'
 import {asQuantity} from '~/wallets/utils/utils'
-import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>

@@ -25,8 +25,8 @@ import {
   formatTokenInteger,
 } from '~/wallets/utils/format'
 import {asQuantity} from '~/wallets/utils/utils'
-import {useCurrencyPairing} from '../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useTxFilter} from './TxFilterProvider'
 
 type Props = {
