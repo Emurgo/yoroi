@@ -1,20 +1,16 @@
-import {
-  createStackNavigator,
-  StackNavigationOptions,
-} from '@react-navigation/stack'
-import {atoms as a, ThemedPalette, useTheme} from '@yoroi/theme'
+import {createStackNavigator} from '@react-navigation/stack'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
-  BackButton,
   defaultStackNavigationOptions,
   TxHistoryRoutes,
 } from '~/kernel/navigation/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
-import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'

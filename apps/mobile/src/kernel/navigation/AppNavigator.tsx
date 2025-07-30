@@ -1,5 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
+import {WalletNavigator} from 'src/WalletNavigator'
 
 import {DevMenu} from '~/features/DevMenu'
 import {SearchProvider} from '~/features/Search/SearchContext'
@@ -10,7 +11,6 @@ import {InitialScreenNavigator} from '~/features/Temporal_To_Remove/InitialScree
 import {TempTestSearchScreen} from '~/features/Temporal_To_Remove/Search/TempTestSearchScreen'
 import {SelectWalletFromList} from '~/features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {Modal} from '~/ui/Modal/ModalScreen'
-import {WalletNavigator} from '~/WalletNavigator'
 
 const Stack = createStackNavigator<any>()
 

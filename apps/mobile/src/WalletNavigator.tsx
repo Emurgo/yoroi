@@ -71,7 +71,7 @@ export const WalletNavigator = () => {
   )
 }
 
-// Simple component to show main wallet routes
+// Main wallet routes component that handles the different tabs
 const MainWalletRoutes = () => {
   const {track} = useMetrics()
 
