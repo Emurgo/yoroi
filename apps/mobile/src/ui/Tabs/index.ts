@@ -1,0 +1,1 @@
+export {Tabs, Tab, TabPanels, TabPanel} from './Tabs' 
