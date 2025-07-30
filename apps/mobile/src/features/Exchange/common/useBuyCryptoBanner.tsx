@@ -8,7 +8,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useBalances} from '~/wallets/hooks'
 import {Amounts, Quantities} from '~/wallets/utils/utils'
-import {BannerIds, showBanner} from '../Notifications/common/banners'
+import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useStrings} from './useStrings'
 
 export const useBuyCryptoBanner = () => {

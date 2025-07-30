@@ -8,7 +8,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
-import {BannerIds, showBanner} from '../Notifications/common/banners'
+import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useUtxoList} from '../UtxoList/useUtxoList'
 
 export const useUtxoConsolidationBanner = () => {

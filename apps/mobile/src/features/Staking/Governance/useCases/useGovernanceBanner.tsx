@@ -8,7 +8,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useWalletEvent} from '~/wallets/hooks'
 import {useIsParticipatingInGovernance} from '../common/helpers'
 import {useStrings} from '../common/strings'
-import {BannerIds, showBanner} from '../Notifications/common/banners'
+import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 
 export const useGovernanceBanner = () => {
   const strings = useStrings()
