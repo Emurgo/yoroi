@@ -25,8 +25,8 @@ export const managerMock: DappConnectorManager = {
   getWalletConnectorScript(): string {
     return ''
   },
-  handleEvent(): Promise<void> {
-    return Promise.resolve()
+  handleEvent(): void {
+    return undefined
   },
 }
 

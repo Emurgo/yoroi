@@ -278,7 +278,7 @@ describe('DappConnector', () => {
     it('should handle cardano_enable event with true if the user confirms connection', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        confirmConnection: () => Promise.resolve(true),
+        confirmConnection: () => true,
       })
       const event = createEvent('cardano_enable')
       const sendMessage = jest.fn()
@@ -289,7 +289,7 @@ describe('DappConnector', () => {
     it('should handle cardano_enable event with false if the user does not confirm connection', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        confirmConnection: () => Promise.resolve(false),
+        confirmConnection: () => false,
       })
       const event = createEvent('cardano_enable')
       const sendMessage = jest.fn()
@@ -300,7 +300,7 @@ describe('DappConnector', () => {
     it('should not rely on user confirmation if the dapp is enabled', async () => {
       const wallet = {
         ...mockWallet,
-        confirmConnection: () => Promise.resolve(true),
+        confirmConnection: () => true,
       }
       const dappConnector = getDappConnector(wallet)
       const event = createEvent('cardano_enable')
@@ -308,7 +308,7 @@ describe('DappConnector', () => {
       const sendMessage2 = jest.fn()
       await dappConnector.handleEvent(event, trustedUrl, sendMessage1)
       expect(sendMessage1).toHaveBeenCalledWith('1', true)
-      wallet.confirmConnection = () => Promise.resolve(false)
+      wallet.confirmConnection = () => false
       await dappConnector.handleEvent(event, trustedUrl, sendMessage2)
       expect(sendMessage2).toHaveBeenCalledWith('1', true)
     })
@@ -316,7 +316,7 @@ describe('DappConnector', () => {
     it('should save dapp connection if cardano_enable is resolved', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        confirmConnection: () => Promise.resolve(true),
+        confirmConnection: () => true,
       })
       const event = createEvent('cardano_enable')
       const sendMessage = jest.fn()
@@ -333,7 +333,7 @@ describe('DappConnector', () => {
     it('should not save dapp connection if cardano_enable is rejected', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        confirmConnection: () => Promise.resolve(false),
+        confirmConnection: () => false,
       })
       const event = createEvent('cardano_enable')
       const sendMessage = jest.fn()
@@ -352,7 +352,7 @@ describe('DappConnector', () => {
     it('should handle cardano_is_enabled event with true for connected wallets', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        confirmConnection: () => Promise.resolve(true),
+        confirmConnection: () => true,
       })
       const event = createEvent('cardano_is_enabled')
       const sendMessage = jest.fn()
@@ -499,7 +499,7 @@ describe('DappConnector', () => {
     it('should resolve getUsedAddresses with mocked data', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        getUsedAddresses: () => Promise.resolve([{toHex: () => '00'}] as any),
+        getUsedAddresses: () => [{toHex: () => '00'}] as any,
       })
       const sendMessage = jest.fn()
       await dappConnector.addConnection({
@@ -517,7 +517,7 @@ describe('DappConnector', () => {
     it('should resolve getUsedAddresses with mocked data also when pagination is provided', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        getUsedAddresses: () => Promise.resolve([{toHex: () => '00'}] as any),
+        getUsedAddresses: () => [{toHex: () => '00'}] as any,
       })
       const sendMessage = jest.fn()
       await dappConnector.addConnection({
@@ -631,7 +631,7 @@ describe('DappConnector', () => {
     it('should resolve getCollateral with mocked data', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        getCollateral: () => Promise.resolve([{toHex: () => '00'}] as any),
+        getCollateral: () => [{toHex: () => '00'}] as any,
       })
       const sendMessage = jest.fn()
       await dappConnector.addConnection({
@@ -649,7 +649,7 @@ describe('DappConnector', () => {
     it('should resolve getCollateral with null if not enough funds', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        getCollateral: () => Promise.resolve([]),
+        getCollateral: () => [],
         getBalance: () => CSL.Value.fromHex('00'),
       })
       const sendMessage = jest.fn()
@@ -668,10 +668,9 @@ describe('DappConnector', () => {
     it('should resolve getCollateral with reorganisation tx if there are enough funds', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        getCollateral: () => Promise.resolve([]),
-        getBalance: async () =>
-          CSL.Value.new(await CSL.BigNum.fromStr('20000000')),
-        sendReorganisationTx: async () => ({toHex: () => '00'}) as any,
+        getCollateral: () => [],
+        getBalance: () => CSL.Value.new(CSL.BigNum.fromStr('20000000')),
+        sendReorganisationTx: () => ({toHex: () => '00'}) as any,
       })
       const sendMessage = jest.fn()
       await dappConnector.addConnection({
@@ -696,9 +695,8 @@ describe('DappConnector', () => {
     it('should resolve getCollateral with null if reorganisation fails', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        getCollateral: () => Promise.resolve([]),
-        getBalance: async () =>
-          CSL.Value.new(await CSL.BigNum.fromStr('20000000')),
+        getCollateral: () => [],
+        getBalance: () => CSL.Value.new(CSL.BigNum.fromStr('20000000')),
         sendReorganisationTx: async () =>
           Promise.reject(new Error('Reorganisation failed')),
       })
@@ -722,7 +720,7 @@ describe('DappConnector', () => {
     it('should resolve getUnusedAddresses with mocked data', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        getUnusedAddresses: () => Promise.resolve([{toHex: () => '00'}] as any),
+        getUnusedAddresses: () => [{toHex: () => '00'}] as any,
       })
       const sendMessage = jest.fn()
       await dappConnector.addConnection({
@@ -755,7 +753,7 @@ describe('DappConnector', () => {
     it('should resolve getUtxos with mocked data', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        getUtxos: () => Promise.resolve([{toHex: () => '00'}] as any),
+        getUtxos: () => [{toHex: () => '00'}] as any,
       })
       const sendMessage = jest.fn()
       await dappConnector.addConnection({
@@ -773,7 +771,7 @@ describe('DappConnector', () => {
     it('should resolve getUtxos with mocked data also when pagination is provided', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
-        getUtxos: () => Promise.resolve([{toHex: () => '00'}] as any),
+        getUtxos: () => [{toHex: () => '00'}] as any,
       })
       const sendMessage = jest.fn()
       await dappConnector.addConnection({
@@ -808,7 +806,7 @@ describe('DappConnector', () => {
         ...mockWallet,
         cip95: {
           ...mockWallet.cip95!,
-          getPubDRepKey: () => Promise.resolve('00'),
+          getPubDRepKey: () => '00',
         },
       })
       const sendMessage = jest.fn()
@@ -843,7 +841,7 @@ describe('DappConnector', () => {
         ...mockWallet,
         cip95: {
           ...mockWallet.cip95!,
-          getUnregisteredPubStakeKeys: () => Promise.resolve(['00']),
+          getUnregisteredPubStakeKeys: () => ['00'],
         },
       })
       const sendMessage = jest.fn()
@@ -878,7 +876,7 @@ describe('DappConnector', () => {
         ...mockWallet,
         cip95: {
           ...mockWallet.cip95!,
-          getRegisteredPubStakeKeys: () => Promise.resolve(['00']),
+          getRegisteredPubStakeKeys: () => ['00'],
         },
       })
       const sendMessage = jest.fn()
@@ -914,7 +912,7 @@ describe('DappConnector', () => {
         ...mockWallet,
         cip95: {
           ...mockWallet.cip95!,
-          signData: () => Promise.resolve(result),
+          signData: () => result,
         },
       })
       const sendMessage = jest.fn()
@@ -1008,38 +1006,43 @@ const walletId = 'b5d94758-26c5-48b0-af2b-6e68c3ef2dbf'
 
 const CSL = init('test')
 const mockWallet: ResolverWallet = {
-  signTx: () => Promise.resolve(CSL.TransactionWitnessSet.new()),
-  signData: () => Promise.resolve({key: '', signature: ''}),
+  signTx: () => CSL.TransactionWitnessSet.new(),
+  signData: () => ({signature: '', key: ''}),
   id: walletId,
   network: Chain.Network.Mainnet,
   networkId: 1,
-  confirmConnection: async () => true,
+  confirmConnection: () => true,
   getBalance: () => CSL.Value.fromHex('1a062ea8a0'),
-  getUnusedAddresses: () => Promise.resolve([]),
-  getUsedAddresses: () => Promise.resolve([]),
+  getUnusedAddresses: () => [],
+  getUsedAddresses: () => [],
   getChangeAddress: () =>
     CSL.Address.fromHex(
       '017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
     ),
-  getRewardAddresses: () =>
-    Promise.all([
-      CSL.Address.fromHex(
-        'e184d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
-      ),
-    ]),
-  getUtxos: () => Promise.resolve([]),
-  getCollateral: () => Promise.resolve([]),
-  submitTx: () => Promise.resolve('tx-id'),
+  getRewardAddresses: () => [
+    CSL.Address.fromHex(
+      'e184d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
+    ),
+  ],
+  getUtxos: () => [],
+  getCollateral: () => [],
+  submitTx: () => 'tx-id',
   sendReorganisationTx: async () => {
     throw new Error('Not implemented')
   },
   cip95: {
-    getPubDRepKey: () => Promise.reject(new Error('Not implemented')),
-    getUnregisteredPubStakeKeys: () =>
-      Promise.reject(new Error('Not implemented')),
-    getRegisteredPubStakeKeys: () =>
-      Promise.reject(new Error('Not implemented')),
-    signData: () => Promise.reject(new Error('Not implemented')),
+    getPubDRepKey: () => {
+      throw new Error('Not implemented')
+    },
+    getUnregisteredPubStakeKeys: () => {
+      throw new Error('Not implemented')
+    },
+    getRegisteredPubStakeKeys: () => {
+      throw new Error('Not implemented')
+    },
+    signData: () => {
+      throw new Error('Not implemented')
+    },
   },
 }
 const trustedUrl = 'https://yoroi-wallet.com/'

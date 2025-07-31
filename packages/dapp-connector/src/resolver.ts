@@ -60,9 +60,7 @@ export const resolver: Resolver = {
   enable: async (_params: unknown, context: Context) => {
     assertOriginsMatch(context)
     if (await hasWalletAcceptedConnection(context)) return true
-    const manualAccept = await context.wallet.confirmConnection(
-      context.trustedOrigin,
-    )
+    const manualAccept = context.wallet.confirmConnection(context.trustedOrigin)
     if (!manualAccept) return false
     await context.storage.save({
       walletId: context.wallet.id,
@@ -142,11 +140,11 @@ export const resolver: Resolver = {
         typeof params.args[0] === 'string'
           ? params.args[0]
           : defaultCollateral
-      const result = await context.wallet.getCollateral(value)
+      const result = context.wallet.getCollateral(value)
 
       if (result === null || result.length === 0) {
-        const balance = await context.wallet.getBalance('*')
-        const coin = new BigNumber(await (await balance.coin()).toStr())
+        const balance = context.wallet.getBalance('*')
+        const coin = new BigNumber(balance.coin().toStr())
         if (coin.isGreaterThan(new BigNumber(value))) {
           await context.wallet.sendReorganisationTx(value)
         }
@@ -159,7 +157,7 @@ export const resolver: Resolver = {
     getUnusedAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      const addresses = await context.wallet.getUnusedAddresses()
+      const addresses = context.wallet.getUnusedAddresses()
       return Promise.all(addresses.map((a) => a.toHex()))
     },
     getExtensions: async (_params: unknown, context: Context) => {
@@ -175,7 +173,7 @@ export const resolver: Resolver = {
       await assertWalletAcceptedConnection(context)
       if (!isGetBalanceParams(params)) throw new Error('Invalid params')
       const [tokenId = '*'] = params.args
-      const balance = await context.wallet.getBalance(tokenId)
+      const balance = context.wallet.getBalance(tokenId)
       return balance.toHex()
     },
     getChangeAddress: async (_params: unknown, context: Context) => {
@@ -409,38 +407,35 @@ export type ResolverWallet = {
   id: string
   networkId: number
   network: Chain.SupportedNetworks
-  confirmConnection: (dappOrigin: string) => Promise<boolean>
-  getBalance: (tokenId?: string) => Promise<Value>
-  getUnusedAddresses: () => Promise<Address[]>
-  getUsedAddresses: (pagination?: Pagination) => Promise<Address[]>
-  getChangeAddress: () => Promise<Address>
-  getRewardAddresses: () => Promise<Address[]>
+  confirmConnection: (dappOrigin: string) => boolean
+  getBalance: (tokenId?: string) => Value
+  getUnusedAddresses: () => Address[]
+  getUsedAddresses: (pagination?: Pagination) => Address[]
+  getChangeAddress: () => Address
+  getRewardAddresses: () => Address[]
   getUtxos: (
     value?: string,
     pagination?: Pagination,
-  ) => Promise<TransactionUnspentOutput[] | null>
-  getCollateral: (value?: string) => Promise<TransactionUnspentOutput[] | null>
-  submitTx: (cbor: string) => Promise<string>
-  signTx: (
-    txHex: string,
-    partialSign?: boolean,
-  ) => Promise<TransactionWitnessSet>
+  ) => TransactionUnspentOutput[] | null
+  getCollateral: (value?: string) => TransactionUnspentOutput[] | null
+  submitTx: (cbor: string) => string
+  signTx: (txHex: string, partialSign?: boolean) => TransactionWitnessSet
   signData: (
     address: string,
     payload: string,
-  ) => Promise<{signature: string; key: string}>
-  sendReorganisationTx: (value?: string) => Promise<void>
+  ) => {signature: string; key: string}
+  sendReorganisationTx: (value?: string) => void
   cip95?: CIP95ResolverWallet
 }
 
 type CIP95ResolverWallet = {
-  getPubDRepKey: () => Promise<string>
-  getRegisteredPubStakeKeys: () => Promise<string[]>
-  getUnregisteredPubStakeKeys: () => Promise<string[]>
+  getPubDRepKey: () => string
+  getRegisteredPubStakeKeys: () => string[]
+  getUnregisteredPubStakeKeys: () => string[]
   signData: (
     address: string,
     payload: string,
-  ) => Promise<{signature: string; key: string}>
+  ) => {signature: string; key: string}
 }
 
 type Pagination = {

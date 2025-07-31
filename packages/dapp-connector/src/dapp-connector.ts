@@ -9,14 +9,11 @@ import {freeze} from 'immer'
 export type DappConnectorManager = {
   getDAppList(): Promise<DappListResponse>
   listAllConnections(): Promise<DappConnection[]>
-  removeConnection(options: {
-    walletId?: string
-    dappOrigin: string
-  }): Promise<void>
+  removeConnection(options: {walletId?: string; dappOrigin: string}): void
   removeConnections(
     options: Array<{walletId?: string; dappOrigin: string}>,
-  ): Promise<void>
-  addConnection(options: {dappOrigin: string; walletId?: string}): Promise<void>
+  ): void
+  addConnection(options: {dappOrigin: string; walletId?: string}): void
   getWalletConnectorScript(props: {
     iconUrl: string
     apiVersion: string
@@ -27,7 +24,7 @@ export type DappConnectorManager = {
     eventData: string,
     trustedUrl: string,
     sendMessage: (id: string, result: unknown, error?: Error) => void,
-  ): Promise<void>
+  ): void
   readonly network: Chain.SupportedNetworks
   readonly walletId: string
 }
@@ -43,6 +40,7 @@ export const dappConnectorMaker = (
 export class DappConnector implements DappConnectorManager {
   network: Chain.SupportedNetworks
   walletId: string
+
   constructor(
     private storage: Storage,
     private wallet: ResolverWallet,
