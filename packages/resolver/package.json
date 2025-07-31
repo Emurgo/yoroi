@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/resolver",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Yoroi domain resolver",
   "keywords": [
     "yoroi",
@@ -129,8 +129,8 @@
     "zod": "3.25.17"
   },
   "dependencies": {
-    "@emurgo/cross-csl-core": "^7.1.1",
-    "@emurgo/cross-csl-nodejs": "^7.1.1",
+    "@emurgo/cross-csl-core": "8.0.0-alpha.1",
+    "@emurgo/cross-csl-nodejs":"8.0.0-alpha.1",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@yoroi/api": "file:../api",
     "@yoroi/common": "file:../common",
