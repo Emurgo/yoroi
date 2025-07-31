@@ -14,23 +14,20 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
-import {RawUtxo, YoroiUnsignedTx} from '@yoroi/types'
 import {logger} from '~/kernel/logger/logger'
+import {RawUtxo} from '~/wallets/types/other'
+import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {asQuantity, Utxos} from '~/wallets/utils/utils'
 import {Cardano, CardanoMobile} from '~/wallets/wallets'
 import {toAssetNameHex, toPolicyId} from '../api/utils'
+import {identifierToCardanoAsset} from '../assetUtils'
 import * as cip8 from '../cip8/cip8'
 import {
   getDerivationPathForAddress,
   getTransactionSigners,
 } from '../common/signatureUtils'
 import {Pagination, YoroiWallet} from '../types'
-import {
-  copyFromCSL,
-  copyMultipleFromCSL,
-  createRawTxSigningKey,
-  identifierToCardanoAsset,
-} from '../utils'
+import {copyFromCSL, copyMultipleFromCSL, createRawTxSigningKey} from '../utils'
 import {
   collateralConfig,
   findCollateralCandidates,
