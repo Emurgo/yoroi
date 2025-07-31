@@ -24,15 +24,15 @@
 1. **Start the server**: `cd apps/mobile && npm start`
 2. **Monitor errors**: Watch the terminal output for "Unable to resolve" errors
 3. **Fix errors**: Update import paths and dependencies
-4. **Commit changes**: `git add . && git commit -m "fix: description"`
-5. **Reload**: Send `a` to the Metro terminal to trigger Android reload
-6. **Repeat**: Check for next error in Metro logs and fix
+4. **Reload**: Use `curl -s "http://localhost:8081/reload" > /dev/null` to trigger reload
+5. **Repeat**: Check for next error in Metro logs and fix
+6. **Continue loop**: Fix → Reload → Check next error until no more errors
 
 ## Error Reading Process
 
 - **Read errors directly**: The assistant can read errors directly from the Metro terminal where `npm start` is running
 - **Direct access**: No need for user to paste logs - the assistant has direct access to the Metro process
-- **Systematic approach**: Fix → Commit → Reload → Check next error
+- **Systematic approach**: Fix → Reload (curl) → Check next error
 - **Cache issues**: If errors persist, clear Metro cache with `npm start --clear`
 
 ## Current Error Fixing Progress
@@ -57,7 +57,7 @@
 
 ## Debugging Instructions
 
-- **Server interaction**: Send `a` to the running Metro server terminal to trigger Android reload
+- **Server interaction**: Use `curl -s "http://localhost:8081/reload" > /dev/null` to trigger reload
 - **Error monitoring**: Watch Metro bundler output for "Unable to resolve" errors
 - **Build testing**: Use `npm run android --debug` to test fixes
 - **File search**: Use `file_search` to locate missing components
@@ -84,13 +84,13 @@
 1. **Identify error** from Metro bundler output
 2. **Locate file** causing the error
 3. **Fix import path** or add missing dependency
-4. **Commit changes** with descriptive message
-5. **Trigger reload** with `a` in Metro terminal
-6. **Check next error** and repeat
+4. **Trigger reload** with `curl -s "http://localhost:8081/reload" > /dev/null`
+5. **Check next error** and repeat
+6. **Continue loop** until no more errors
 
 ## Testing Process
 
 - **Build success**: Verify `npm run android --debug` completes successfully
 - **Runtime testing**: Test app functionality in emulator
 - **Error monitoring**: Watch Metro logs for runtime errors
-- **Iterative fixing**: Fix one error at a time, commit, reload, repeat
+- **Iterative fixing**: Fix one error at a time, reload (curl), repeat until no more errors
