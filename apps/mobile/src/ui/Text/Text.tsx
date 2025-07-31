@@ -27,7 +27,7 @@ const androidAdjustsFontSizeToFitFix = (
 
 export const Text = (props: Props) => {
   const [fontSize, setFontSize] = React.useState(0)
-  const {palette: color} = useTheme()
+  const {palette: p} = useTheme()
 
   const {
     small,

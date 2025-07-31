@@ -3,8 +3,8 @@ import {LinearGradient} from 'expo-linear-gradient'
 import React, {useState} from 'react'
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native'
 
-import {Accordion} from '~/features/ReviewTx/common/Accordion'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {Accordion} from '~/ui/Accordion/Accordion'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {Space} from '~/ui/Space/Space'
 import NewsPlaceHolder from '../../../../../../../assets/img/token-news-place-holder.png'
 export const TokenNews = () => {

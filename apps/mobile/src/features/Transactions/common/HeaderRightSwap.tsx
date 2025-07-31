@@ -8,14 +8,14 @@ import {Icon} from '~/ui/Icon'
 
 export const HeaderRightSwap = React.memo(() => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('swap-orders')}
       style={{paddingRight: 8}}
     >
-      <Icon.TermsOfUse color={color.gray_max} size={24} />
+      <Icon.TermsOfUse color={p.gray_max} size={24} />
     </TouchableOpacity>
   )
 })

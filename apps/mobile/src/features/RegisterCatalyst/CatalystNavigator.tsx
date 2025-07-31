@@ -21,7 +21,7 @@ import {QrCode} from './useCases/ShowQrCode/ShowQrCode'
 
 const Stack = createStackNavigator<VotingRegistrationRoutes>()
 export const CatalystNavigator = () => {
-  const {atoms, color} = useTheme()
+  const {atoms, palette: p} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
 
@@ -32,8 +32,8 @@ export const CatalystNavigator = () => {
   )
 
   const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(atoms, color),
-    [atoms, color],
+    () => defaultStackNavigationOptions(atoms, p),
+    [atoms, p],
   )
 
   return (

@@ -12,7 +12,8 @@
       "~/hooks/*": ["./src/hooks/*"],
       "~/kernel/*": ["./src/kernel/*"],
       "~/wallets/*": ["./src/wallets/*"],
-      "~/components/*": ["./src/ui/*"]
+      "~/components/*": ["./src/ui/*"],
+      "~/assets/*": ["./assets/*"]
     }
   }
 }

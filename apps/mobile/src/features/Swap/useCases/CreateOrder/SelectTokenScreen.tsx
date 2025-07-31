@@ -36,7 +36,7 @@ type Direction = SwapTokenRoutes['swap-select-token']
 
 export const SelectTokenScreen = () => {
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const {direction} = useUnsafeParams<Direction>()
 
   const loading = React.useMemo(
@@ -67,7 +67,7 @@ export const SelectTokenScreen = () => {
 
   return (
     <SafeAreaView
-      style={[a.flex_1, {backgroundColor: color.bg_color_max}]}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
       edges={['left', 'right']}
     >
       <Boundary loading={loading}>
@@ -91,7 +91,7 @@ const TokenList = ({direction}: Direction) => {
   const balances = usePortfolioBalances({wallet})
   const {swapConfig} = useSwapConfig()
   const {tokenActivity} = usePortfolioTokenActivity()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const ownedTokens = React.useMemo(
     () =>
@@ -163,11 +163,7 @@ const TokenList = ({direction}: Direction) => {
         renderItem={({item}: {item: Portfolio.Token.Info | string}) =>
           isString(item) ? (
             <Text
-              style={[
-                styles.sectionHeading,
-                {color: color.text_gray_low},
-                a.p_lg,
-              ]}
+              style={[styles.sectionHeading, {color: p.text_gray_low}, a.p_lg]}
             >
               {item}
             </Text>
@@ -295,7 +291,7 @@ const SelectableToken = ({
 
 const EmptyList = () => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   if (isSearching && assetSearchTerm.length > 0)
@@ -306,7 +302,7 @@ const EmptyList = () => {
 
 const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <View style={[styles.imageContainer, {flex: 1, textAlign: 'center'}]}>
       <Space.Height.xl />
@@ -323,7 +319,7 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
       <Text
         style={[
           styles.contentText,
-          {flex: 1, color: color.gray_max, paddingTop: 4, textAlign: 'center'},
+          {flex: 1, color: p.gray_max, paddingTop: 4, textAlign: 'center'},
         ]}
       >
         {assetSearchTerm === ''

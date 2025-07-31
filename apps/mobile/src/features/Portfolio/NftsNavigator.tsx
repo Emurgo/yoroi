@@ -16,7 +16,7 @@ import {MediaDetailsScreen} from './ui/MediaDetailsScreen/MediaDetailsScreen'
 const Stack = createStackNavigator<NftRoutes>()
 
 export const NftsNavigator = () => {
-  const {atoms, color} = useTheme()
+  const {atoms, palette: p} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
 
@@ -31,7 +31,7 @@ export const NftsNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
+        ...defaultStackNavigationOptions(atoms, p),
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >

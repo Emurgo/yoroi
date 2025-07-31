@@ -9,7 +9,7 @@ type Props = {
   onPress: () => void
 }
 export const ScannerButton = ({disabled, onPress}: Props) => {
-  const {color: themeColor} = useTheme()
+  const {palette: themeColor} = useTheme()
 
   const color = disabled ? themeColor.gray_600 : themeColor.gray_max
 

@@ -4,7 +4,7 @@ import {View} from 'react-native'
 
 import {formatPriceChange} from '~/features/Portfolio/common/helpers/priceChange'
 import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 import {Text} from '~/ui/Text/Text'

@@ -5,12 +5,12 @@ import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent} from 'react-native'
 
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {
   PortfolioDetailsTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {Tab, Tabs} from '~/features/Portfolio/ui/TabsGradient/Tabs'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {TxFilter} from '~/features/Transactions/useCases/TxList/TxFilterProvider'
 import {TxList} from '~/features/Transactions/useCases/TxList/TxList'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'

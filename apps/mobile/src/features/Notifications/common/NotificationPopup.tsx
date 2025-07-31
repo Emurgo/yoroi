@@ -31,6 +31,7 @@ export const NotificationPopup = ({
   const strings = useStrings()
 
   const {track} = useMetrics()
+  const {palette: p} = useTheme()
 
   React.useEffect(() => {
     if (event.trigger === Notifications.Trigger.Push) {
@@ -177,11 +178,11 @@ const PushNotificationIcon = () => {
 }
 
 const ColoredIcon = (props: {icon: (p: IconProps) => React.JSX.Element}) => {
-  const {color} = useTheme()
+  const {palette} = useTheme()
   const Icon = props.icon
   return (
-    <View style={[styles.icon, {backgroundColor: color.secondary_100}]}>
-      <Icon color={color.secondary_600} />
+    <View style={[styles.icon, {backgroundColor: palette.secondary_100}]}>
+      <Icon color={palette.secondary_600} />
     </View>
   )
 }

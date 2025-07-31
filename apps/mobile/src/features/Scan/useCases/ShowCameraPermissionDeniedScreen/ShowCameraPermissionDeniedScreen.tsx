@@ -15,12 +15,12 @@ export const ShowCameraPermissionDeniedScreen = () => {
   const strings = useStrings()
   useBlockGoBack()
   const {resetToTxHistory} = useWalletNavigation()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <SafeAreaView
       edges={['top', 'left', 'right', 'bottom']}
-      style={[{flex: 1}, a.px_lg, {backgroundColor: color.bg_color_max}]}
+      style={[{flex: 1}, a.px_lg, {backgroundColor: p.bg_color_max}]}
     >
       <ScrollView
         contentContainerStyle={[
@@ -35,7 +35,7 @@ export const ShowCameraPermissionDeniedScreen = () => {
           style={[
             a.heading_3_medium,
             a.px_sm,
-            {textAlign: 'center', color: color.gray_max},
+            {textAlign: 'center', color: p.gray_max},
           ]}
         >
           {strings.cameraPermissionDeniedTitle}
@@ -44,7 +44,7 @@ export const ShowCameraPermissionDeniedScreen = () => {
         <YoroiText
           style={[
             a.body_2_md_regular,
-            {textAlign: 'center', maxWidth: 330, color: color.gray_600},
+            {textAlign: 'center', maxWidth: 330, color: p.gray_600},
           ]}
         >
           {strings.cameraPermissionDeniedHelp}

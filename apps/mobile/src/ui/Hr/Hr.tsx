@@ -3,7 +3,7 @@ import React from 'react'
 import {View, ViewProps} from 'react-native'
 
 export const Hr = ({style, ...rest}: ViewProps) => {
-  const {palette: color} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <View
       {...rest}

@@ -2,12 +2,12 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {
   PortfolioDappsTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {TabsGradient} from '~/features/Portfolio/ui/TabsGradient/Tabs'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 
 export const PortfolioDAppTabs = () => {
   const strings = useStrings()

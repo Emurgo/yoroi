@@ -7,11 +7,11 @@ import {
   formatPriceChange,
   priceChange,
 } from '~/features/Portfolio/common/helpers/priceChange'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {Icon} from '~/ui/Icon'
