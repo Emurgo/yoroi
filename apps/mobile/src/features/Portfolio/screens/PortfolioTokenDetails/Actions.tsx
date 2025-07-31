@@ -11,7 +11,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useSwap} from '../Swap/common/SwapProvider'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
 
 type Props = {
   tokenInfo: Portfolio.Token.Info

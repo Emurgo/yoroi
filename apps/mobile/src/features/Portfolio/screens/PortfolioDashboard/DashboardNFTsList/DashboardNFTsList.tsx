@@ -16,8 +16,8 @@ import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {Icon} from '~/ui/Icon'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
 import {Space} from '~/ui/Space/Space'
-import placeholderDark from '../assets/img/nft-placeholder-dark.png'
-import placeholderLight from '../assets/img/nft-placeholder.png'
+import placeholderDark from '../../../../../../assets/img/nft-placeholder-dark.png'
+import placeholderLight from '../../../../../../assets/img/nft-placeholder.png'
 
 export const DashboardNFTsList = () => {
   const {atoms: ta, palette: p, isDark} = useTheme()

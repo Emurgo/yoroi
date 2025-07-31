@@ -3,7 +3,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {LayoutAnimation, Text, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'

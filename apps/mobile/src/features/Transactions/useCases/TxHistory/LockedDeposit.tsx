@@ -8,7 +8,7 @@ import {useStrings} from '~/features/Transactions/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
-import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 export const LockedDeposit = ({
   ignorePrivacy = false,

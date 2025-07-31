@@ -9,7 +9,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
-import {useUtxoList} from '../UtxoList/useUtxoList'
+import {useUtxoList} from '~/features/Transactions/useCases/UtxoList/useUtxoList'
 
 export const useUtxoConsolidationBanner = () => {
   const {wallet} = useSelectedWallet()

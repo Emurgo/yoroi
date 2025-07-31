@@ -1,7 +1,7 @@
 import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {ImageSourcePropType} from 'react-native'
 
-import {getDappFallbackLogo} from '../Discover/common/helpers'
+import {getDappFallbackLogo} from '~/features/Discover/common/helpers'
 import {IAsset, mockAmount} from './useGetLiquidityPool'
 
 export interface IOpenOrders {

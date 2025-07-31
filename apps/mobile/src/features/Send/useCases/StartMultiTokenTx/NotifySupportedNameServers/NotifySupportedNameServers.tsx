@@ -2,7 +2,7 @@ import {useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
 import {Icon} from '~/ui/Icon'
 

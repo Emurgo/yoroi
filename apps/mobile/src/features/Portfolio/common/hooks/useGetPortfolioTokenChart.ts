@@ -8,11 +8,11 @@ import {fetchPtPriceActivity} from '~/features/Pairing/hooks/usePrimaryTokenActi
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {supportedCurrencies} from '~/kernel/constants'
-import {useLanguage} from '~/kernel/i18n'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {logger} from '~/kernel/logger/logger'
 import {delay} from '~/wallets/utils/timeUtils'
 import {priceChange} from '../helpers/priceChange'
-import {useCurrencyPairing} from '../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePortfolioTokenDetailParams} from './useNavigateTo'
 
 export const TokenChartInterval = {

@@ -13,9 +13,9 @@ import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {MediaGallery} from '~/ui/MediaGallery/MediaGallery'
+import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
 import {Space} from '~/ui/Space/Space'
-import {useNavigateTo} from '../../common/navigation'
+import {useNavigateTo} from '~/features/Portfolio/common/navigation'
 import {EmptyGallery} from './EmptyGallery'
 
 export const ListMediaGalleryScreen = () => {

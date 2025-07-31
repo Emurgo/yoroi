@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
 import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'

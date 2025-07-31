@@ -9,9 +9,9 @@ import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggreg
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {BalanceCardContent} from '../BalanceCardContent/BalanceCardContent'
-import {usePairing} from '../Pairing/context/PairingProvider'
-import {BalanceCardSkeleton} from './BalanceCardSkeleton'
-import {BalanceHeaderCard} from './BalanceHeaderCard'
+import {usePairing} from '~/features/Pairing/context/PairingProvider'
+import {BalanceCardSkeleton} from '~/ui/BalanceCardSkeleton/BalanceCardSkeleton'
+import {BalanceHeaderCard} from '~/ui/BalanceHeaderCard/BalanceHeaderCard'
 
 export const BalanceCard = () => {
   const {palette: p} = useTheme()

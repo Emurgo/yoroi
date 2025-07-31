@@ -10,7 +10,7 @@ import {ResetErrorRef} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {Space} from '~/ui/Space/Space'
-import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const {wallet, meta} = useSelectedWallet()
