@@ -3,9 +3,9 @@ import * as React from 'react'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 export const TokenBalanceSkeletonItem = () => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
-    <SkeletonPlaceholder backgroundColor={color.gray_100}>
+    <SkeletonPlaceholder backgroundColor={p.gray_100}>
       <SkeletonPlaceholder.Item
         flexDirection="row"
         justifyContent="space-between"

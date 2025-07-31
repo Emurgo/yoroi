@@ -6,7 +6,7 @@ import {
   ScrollView,
   View,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
 export const TabsGradient = ({children}: React.PropsWithChildren) => {
   const [enableStartGradient, setEnableStartGradient] = React.useState(false)

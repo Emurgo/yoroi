@@ -12,17 +12,17 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {useZeroBalance} from '~/features/Portfolio/common/hooks/useZeroBalance'
-import {usePortfolioTokenActivity} from '~/features/Portfolio/common/PortfolioTokenActivityProvider'
 import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
+import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
+import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyList'
+import {useSearch} from '~/features/Search/SearchContext'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {makeList} from '~/kernel/utils'
-import {Line} from '~/ui/Line'
+import {Line} from '~/ui/Line/Line'
 import {Space} from '~/ui/Space/Space'
-import {TokenEmptyList} from '~/ui/TokenEmptyList/TokenEmptyList'
-import {useSearch} from '../Search/SearchContext'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {TokenBalanceItem} from './TokenBalanceItem'
 import {TokenBalanceSkeletonItem} from './TokenBalanceSkeletonItem'
@@ -57,13 +57,17 @@ export const PortfolioWalletTokenList = () => {
         if (isPrimaryToken(b.info)) return 1 // `b` is the PrimaryToken, so it should come first
 
         // Compare based on weighted value (price * amount)
-        return (tokenActivity[b.info.id]?.price.close ?? new BigNumber(0))
+        const comparison = (
+          tokenActivity[b.info.id]?.price.close ?? new BigNumber(0)
+        )
           .multipliedBy(amountBreakdown(b).bn)
           .comparedTo(
             (
               tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)
             ).multipliedBy(amountBreakdown(a).bn),
           )
+
+        return comparison ?? 0
       }) ?? [],
     [balances.fts, tokenActivity],
   )

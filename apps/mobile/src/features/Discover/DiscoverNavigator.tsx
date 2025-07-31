@@ -20,7 +20,7 @@ import {useDappConnectorManager} from './useDappConnectorManager'
 const Stack = createStackNavigator<DiscoverRoutes>()
 
 export const DiscoverNavigator = () => {
-  const {atoms, color} = useTheme()
+  const {atoms, palette: p} = useTheme()
   const strings = useStrings()
 
   const manager = useDappConnectorManager()
@@ -29,7 +29,7 @@ export const DiscoverNavigator = () => {
     <DappConnectorProvider manager={manager}>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions(atoms, color),
+          ...defaultStackNavigationOptions(atoms, p.palette),
           headerLeft: () => null,
           gestureEnabled: true,
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,

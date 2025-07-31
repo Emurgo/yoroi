@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Image, Text, View} from 'react-native'
 
-import {useStrings} from '~/features/Transactions/common/useStrings'
+import {useStrings} from '~/features/Transactions/common/strings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'

@@ -9,13 +9,13 @@ import {
   View,
 } from 'react-native'
 
-import {Icon} from '~/ui/Icon'
-import {Space} from '~/ui/Space/Space'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {useZeroBalance} from '~/features/Portfolio/common/hooks/useZeroBalance'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 import {DashboardTokenItem} from './DashboardTokenItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 

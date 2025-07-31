@@ -1,124 +1,274 @@
 # Migration Guidelines
 
-## Overview
+## Prerequisites
 
-This document tracks components that need to be migrated from `apps/wallet-mobile/src/components` to `apps/mobile/src/ui`.
+- Node.js and npm installed
+- Android Studio with emulator set up
+- Git access to the repository
 
-## Missing Components
+## App Startup Process
 
-### Core Components (High Priority) - STILL MISSING
+1. Navigate to `/apps/mobile`
+2. Run `npm start` to start the Metro bundler
+3. In another terminal, run `npm run android --debug` to compile and serve to Android emulator
+4. Use PIN "000000" to access wallet selection
 
-These components are actively used and should be migrated first:
+## Reference Previous Working Version
 
-1. **Accordion** - `apps/wallet-mobile/src/components/Accordion/` ❌ **MISSING**
-2. **CameraCodeScanner** - `apps/wallet-mobile/src/components/CameraCodeScanner/` ❌ **MISSING**
-3. **ChainWarning** - `apps/wallet-mobile/src/components/ChainWarning/` ❌ **MISSING**
-4. **ConfirmTxWithHwModal** - `apps/wallet-mobile/src/components/ConfirmTxWithHwModal/` ❌ **MISSING**
-5. **ConfirmTxWithOsModal** - `apps/wallet-mobile/src/components/ConfirmTxWithOsModal/` ❌ **MISSING**
-6. **ConfirmTxWithSpendingPasswordModal** - `apps/wallet-mobile/src/components/ConfirmTxWithSpendingPasswordModal/` ❌ **MISSING**
-7. **ErrorModal** - `apps/wallet-mobile/src/components/ErrorModal/` ❌ **MISSING**
-8. **ErrorPanel** - `apps/wallet-mobile/src/components/ErrorPanel/` ❌ **MISSING**
-9. **HideableText** - `apps/wallet-mobile/src/components/HideableText/` ❌ **MISSING**
-10. **InfoBanner** - `apps/wallet-mobile/src/components/InfoBanner/` ❌ **MISSING**
-11. **MediaPreview** - `apps/wallet-mobile/src/components/MediaPreview/` ❌ **MISSING**
-12. **Modal** - `apps/wallet-mobile/src/components/Modal/` ✅ **MIGRATED** (exists in `apps/mobile/src/ui/Modal/`)
-13. **NftPreview** - `apps/wallet-mobile/src/components/NftPreview/` ❌ **MISSING**
-14. **OfflineBanner** - `apps/wallet-mobile/src/components/OfflineBanner/` ❌ **MISSING**
-15. **PressableIcon** - `apps/wallet-mobile/src/components/PressableIcon/` ❌ **MISSING**
-16. **SomethingWentWrong** - `apps/wallet-mobile/src/components/SomethingWentWrong/` ❌ **MISSING**
-17. **Spacer** - `apps/wallet-mobile/src/components/Spacer/` ✅ **MIGRATED** (replaced with Space component)
-18. **Tabs** - `apps/wallet-mobile/src/components/Tabs/` ❌ **MISSING**
-19. **TwoActionView** - `apps/wallet-mobile/src/components/TwoActionView/` ❌ **MISSING**
-20. **WarningBanner** - `apps/wallet-mobile/src/components/WarningBanner/` ❌ **MISSING**
+- Use `git checkout rn71` to inspect the working `wallet-mobile` version
+- Compare navigation and wallet selection logic
+- Use as reference for missing functionality
 
-### Individual Files (Medium Priority) - STILL MISSING
+## Systematic Error Fixing Process
 
-These individual files need to be migrated:
+1. **Start the server**: `cd apps/mobile && npm start`
+2. **Monitor errors**: Watch the terminal output for "Unable to resolve" errors
+3. **Fix errors**: Update import paths and dependencies
+4. **Reload**: Use `curl -s "http://localhost:8081/reload" > /dev/null` to trigger reload
+5. **Repeat**: Check for next error in Metro logs and fix
+6. **Continue loop**: Fix → Reload → Check next error until no more errors
 
-1. **DismissableView** - `apps/wallet-mobile/src/components/DismissableView.tsx` ❌ **MISSING**
-2. **ErrorImage** - `apps/wallet-mobile/src/components/ErrorImage.tsx` ❌ **MISSING**
-3. **FadeIn** - `apps/wallet-mobile/src/components/FadeIn.tsx` ❌ **MISSING**
-4. **GradientWarning** - `apps/wallet-mobile/src/components/GradientWarning.tsx` ❌ **MISSING**
-5. **KeyboardSpacer** - `apps/wallet-mobile/src/components/KeyboardSpacer.tsx` ❌ **MISSING**
-6. **PleaseWaitModal** - `apps/wallet-mobile/src/components/PleaseWaitModal.tsx` ❌ **MISSING**
-7. **ProgressStep** - `apps/wallet-mobile/src/components/ProgressStep.tsx` ❌ **MISSING**
-8. **ValidatedTextInput** - `apps/wallet-mobile/src/components/ValidatedTextInput.tsx` ❌ **MISSING**
+## Error Reading Process
 
-### Story Files (Removed)
+- **Read errors directly**: The assistant can read errors directly from the Metro terminal where `npm start` is running
+- **Direct access**: No need for user to paste logs - the assistant has direct access to the Metro process
+- **Systematic approach**: Fix → Reload (curl) → Check next error
+- **Cache issues**: If errors persist, clear Metro cache with `npm start --clear`
 
-Storybook story files have been removed from the project and should not be migrated.
+## Current Error Fixing Progress
 
-### Number Components (Unknown Priority) - STILL MISSING
+### Completed Fixes
 
-These appear to be step/sequence components:
+- ✅ **Tabs component migration**: Migrated from wallet-mobile to mobile app with atomic design tokens
+- ✅ **Import path fixes**: Updated all Tabs imports to use `~/ui/Tabs` instead of `~/ui/Tabs/Tabs`
+- ✅ **useBuyCryptoBanner**: Converted relative import to absolute path in TxHistory.tsx
 
-1. **Number1** - `apps/wallet-mobile/src/components/StepperProgress/Number1.tsx` ❌ **MISSING**
-2. **Number2** - `apps/wallet-mobile/src/components/StepperProgress/Number2.tsx` ❌ **MISSING**
-3. **Number2Empty** - `apps/wallet-mobile/src/components/StepperProgress/Number2Empty.tsx` ❌ **MISSING**
-4. **Number3** - `apps/wallet-mobile/src/components/StepperProgress/Number3.tsx` ❌ **MISSING**
-5. **Number3Empty** - `apps/wallet-mobile/src/components/StepperProgress/Number3Empty.tsx` ❌ **MISSING**
-6. **Number4** - `apps/wallet-mobile/src/components/StepperProgress/Number4.tsx` ❌ **MISSING**
-7. **Number4Empty** - `apps/wallet-mobile/src/components/StepperProgress/Number4Empty.tsx` ❌ **MISSING**
+### Current Error Status
 
-### String Files (Low Priority)
+- 🔄 **Tabs import still failing**: The error persists despite fixes, may need cache clearing
+- 🔄 **useBuyCryptoBanner import**: Fixed but may need verification after restart
 
-These are likely translation or string constant files:
+### Next Steps After Restart
 
-1. **strings** - Multiple string files in various component directories
+1. Clear Metro cache: `npm start --clear`
+2. Monitor for remaining import errors
+3. Continue systematic fixing process
+4. Test runtime functionality in emulator
 
-## Migration Process
+## Debugging Instructions
 
-### For Components with Directories:
+- **Server interaction**: Use `curl -s "http://localhost:8081/reload" > /dev/null` to trigger reload
+- **Error monitoring**: Watch Metro bundler output for "Unable to resolve" errors
+- **Build testing**: Use `npm run android --debug` to test fixes
+- **File search**: Use `file_search` to locate missing components
+- **No tsc**: Do not run `tsc` directly - it will fail due to memory issues and many errors
+- **Terminal workflow**:
+  1. Start Metro: `npm start` (keep this terminal open)
+  2. Build Android: `npm run android --debug` (close after success)
+  3. Use Metro terminal for errors and reloads
+- **Import patterns**:
+  - Use `~/` for absolute imports from src directory
+  - Use relative paths for image assets (e.g., `../../../../../assets/img/`)
+  - Convert relative imports to absolute imports systematically
 
-1. Use `git mv` to preserve history:
+## Common Import Fixes
 
-   ```bash
-   git mv apps/wallet-mobile/src/components/ComponentName apps/mobile/src/ui/ComponentName
-   ```
+- **Image assets**: Use relative paths, not `~` alias
+- **Components**: Use absolute paths with `~/` prefix
+- **Tabs component**: Use `~/ui/Tabs` (migrated from wallet-mobile)
+- **Navigation**: Use `~/kernel/navigation/navigation` not `~/kernel/navigation`
+- **Strings**: Use `~/features/Transactions/common/strings` not `~/features/Transactions/common/useStrings`
 
-2. Fix any broken relative imports in the moved component files
-3. Update any remaining relative imports in other files that reference the moved component
-4. Run linting and TypeScript checks to ensure no issues
+## React Query v5 Migration Guidelines
 
-### For Individual Files:
+### Error Pattern
 
-1. Use `git mv` to preserve history:
+- **Error**: `Bad argument type. Starting with v5, only the "Object" form is allowed when calling query related functions`
+- **Location**: Any file using `useQuery` with old v3 syntax
 
-   ```bash
-   git mv apps/wallet-mobile/src/components/ComponentName.tsx apps/mobile/src/ui/ComponentName/ComponentName.tsx
-   ```
+### Migration Process
 
-2. Create the directory structure if it doesn't exist
-3. Fix any broken relative imports in the moved file
-4. Update any remaining relative imports that reference the moved component
+1. **Identify old v3 syntax**: `useQuery(queryKey, queryFn, options)`
+2. **Convert to v5 syntax**: `useQuery({queryKey, queryFn, ...options})`
+3. **Systematic approach**: Fix → Reload → Check next error
 
-### For Story Files:
+### Common Files to Check
 
-Storybook story files have been removed from the project and should not be migrated.
+- **Transaction hooks**: `useTxBody.tsx`, `useFormattedTx.tsx`
+- **Swap components**: `SwapProvider.tsx`, `useSwapConfig.ts`
+- **Wallet hooks**: `wallets/hooks/index.ts`
+- **Discover components**: `ChainDAppsWarning.tsx`
+- **Portfolio hooks**: `usePortfolioTokenInfos.ts`
 
-## Recently Completed Migrations
+### Migration Examples
 
-- ✅ **Tooltip/utils.ts** - Moved from `apps/wallet-mobile/src/components/Tooltip/utils.ts` to `apps/mobile/src/ui/Tooltip/utils.ts`
-- ✅ **Modal** - Already migrated to `apps/mobile/src/ui/Modal/`
-- ✅ **Spacer** - Replaced with Space component system
+**Before (v3):**
 
-## Current Status Summary
+```typescript
+const query = useQuery(
+  ["useTxBody", cbor, unsignedTx],
+  async () => {
+    /* query function */
+  },
+  { suspense: true }
+);
+```
 
-**Total Components Listed:** 35
-**Migrated:** 3 (Modal, Spacer, Tooltip/utils.ts)
-**Still Missing:** 32 components
+**After (v5):**
 
-**Critical Missing Components (actively imported):**
+```typescript
+const query = useQuery({
+  queryKey: ["useTxBody", cbor, unsignedTx],
+  queryFn: async () => {
+    /* query function */
+  },
+  suspense: true,
+});
+```
 
-- Accordion, ChainWarning, ConfirmTxWithHwModal, ConfirmTxWithOsModal, ConfirmTxWithSpendingPasswordModal
-- ErrorModal, ErrorPanel, FadeIn, InfoBanner, MediaPreview, SomethingWentWrong, Tabs, WarningBanner
+### Systematic Fixing Process
 
-## Notes
+1. **Search for old syntax**: Look for `useQuery(` with positional arguments
+2. **Convert to object syntax**: Move all parameters into a single object
+3. **Reload and test**: Use `curl -s "http://localhost:8081/reload" > /dev/null`
+4. **Check for next error**: Monitor Metro output for remaining v3 syntax
+5. **Repeat until complete**: Fix all instances systematically
 
-- Always use `git mv` to preserve file history
-- Test components after migration to ensure they work correctly
-- Focus on fixing broken relative imports that reference moved components
-- Most absolute path imports have already been converted, so focus on remaining relative imports
-- Consider the new mobile structure's organization when placing components
-- Some components may need to be refactored to use the new theme system (@yoroi/theme)
-- **Priority:** Focus on the 12 critical missing components that are actively being imported
+### Key Changes
+
+- **queryKey**: Move from first parameter to `queryKey` property
+- **queryFn**: Move from second parameter to `queryFn` property
+- **options**: Spread remaining options into the object
+- **suspense**: Move from options object to top-level property
+
+## Temporary Workarounds and Known Issues
+
+### 1. Firebase to Expo Notifications Migration
+
+**Issue**: `Native module RNFBAppModule not found` in Expo project
+**Root Cause**: Firebase native modules are not compatible with Expo managed workflow
+**Solution**: Migrate to Expo notifications
+
+**Files Modified**:
+
+- `apps/mobile/src/features/Notifications/common/hooks.ts`
+- `apps/mobile/src/features/Notifications/common/tools.ts`
+
+**Changes**:
+
+- Replace `@react-native-firebase/messaging` with `expo-notifications`
+- Replace `react-native-notifications` with `react-native-notifications` (for native registration)
+- Update permission checks and event listeners
+
+### 2. Require Cycle Resolution
+
+**Issue**: Circular dependencies causing warnings
+**Solution**: Extract shared functions to separate files
+
+**Files Created/Modified**:
+
+- `apps/mobile/src/wallets/cardano/assetUtils.ts` (new)
+- `apps/mobile/src/wallets/cardano/utils.ts`
+- `apps/mobile/src/wallets/cardano/cardanoValueFromMultiToken.ts`
+- `apps/mobile/src/features/Swap/common/useSwap.ts` (new)
+- `apps/mobile/src/features/Swap/common/SwapProvider.tsx`
+- `apps/mobile/src/features/Swap/common/useSwapConfig.ts`
+
+### 3. MediaPreview SkeletonPlaceholder Issue
+
+**Issue**: `Invariant Violation: View config not found for component 'RNCMaskedView'`
+**Root Cause**: `react-native-skeleton-placeholder` dependency on `@react-native-masked-view/masked-view` not properly linked in Expo
+**Solution**: Replace with simple loading placeholder
+
+**File Modified**: `apps/mobile/src/ui/MediaPreview/MediaPreview.tsx`
+
+**Changes**:
+
+- Remove `import SkeletonPlaceholder from 'react-native-skeleton-placeholder'`
+- Replace `SkeletonPlaceholder` component with simple `View` with background color
+- Maintain same visual loading state without native dependency
+
+### 4. Asset Alias Configuration
+
+**Issue**: Asset imports failing with `~/assets` alias
+**Root Cause**: Missing TypeScript path configuration
+**Solution**: Add alias to TypeScript config
+
+**File Modified**: `apps/mobile/tsconfig.json`
+
+**Changes**:
+
+- Add `"~/assets/*": ["./assets/*"]` to paths configuration
+- Ensure both Metro and TypeScript recognize the alias
+
+### 5. Theme API Migration
+
+**Issue**: `Cannot read property 'gray_100' of undefined`
+**Root Cause**: Using old theme API with `color` instead of `palette`
+**Solution**: Update to new theme API
+
+**Files Modified**:
+
+- `apps/mobile/src/ui/MediaPreview/MediaPreview.tsx`
+- Various components using `useStyles`
+
+**Changes**:
+
+- Replace `const {atoms, color} = useTheme()` with `const {atoms, palette: p} = useTheme()`
+- Update color references from `color.gray_100` to `p.gray_100`
+
+### 6. useStrings Import Issues
+
+**Issue**: `TypeError: strings.tokens is not a function (it is undefined)`
+**Root Cause**: Importing wrong `useStrings` hook from different feature
+**Solution**: Use correct feature-specific `useStrings` hook
+
+**Files Modified**:
+
+- `apps/mobile/src/features/Portfolio/screens/PortfolioDashboard/DashboardTokensList/DashboardTokensList.tsx`
+- `apps/mobile/src/features/Portfolio/screens/PortfolioDashboard/DashboardNFTsList/DashboardNFTsList.tsx`
+
+**Changes**:
+
+- Change from `~/features/ReviewTx/common/hooks/useStrings` to `~/features/Portfolio/common/hooks/useStrings`
+
+### 7. Context Provider Missing
+
+**Issue**: `Error: CurrencyProvider is missing`
+**Root Cause**: Missing provider in component tree
+**Solution**: Add provider to main App component
+
+**File Modified**: `apps/mobile/App.tsx`
+
+**Changes**:
+
+- Add `CurrencyProvider` to provider hierarchy
+- Wrap children with `YoroiNotificationManager` and `CurrencyProvider`
+
+### 8. Excessive Logging
+
+**Issue**: Verbose logging spam with call stacks
+**Root Cause**: Debug logging level in development
+**Solution**: Adjust logger level
+
+**File Modified**: `apps/mobile/src/kernel/constants.ts`
+
+**Changes**:
+
+- Change `loggerLevel` from `App.Logger.Level.Debug` to `App.Logger.Level.Warn` in development
+
+## Error Resolution Workflow
+
+1. **Identify error** from Metro bundler output
+2. **Locate file** causing the error
+3. **Fix import path** or add missing dependency
+4. **Trigger reload** with `curl -s "http://localhost:8081/reload" > /dev/null`
+5. **Check next error** and repeat
+6. **Continue loop** until no more errors
+
+## Testing Process
+
+- **Build success**: Verify `npm run android --debug` completes successfully
+- **Runtime testing**: Test app functionality in emulator
+- **Error monitoring**: Watch Metro logs for runtime errors
+- **Iterative fixing**: Fix one error at a time, reload (curl), repeat until no more errors

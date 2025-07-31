@@ -9,15 +9,15 @@ import {
   View,
 } from 'react-native'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Icon} from '~/ui/Icon'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
 import {Space} from '~/ui/Space/Space'
-import placeholderDark from '../assets/img/nft-placeholder-dark.png'
-import placeholderLight from '../assets/img/nft-placeholder.png'
+import placeholderDark from '../../../../../../assets/img/nft-placeholder-dark.png'
+import placeholderLight from '../../../../../../assets/img/nft-placeholder.png'
 
 export const DashboardNFTsList = () => {
   const {atoms: ta, palette: p, isDark} = useTheme()

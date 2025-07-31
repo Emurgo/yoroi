@@ -45,7 +45,7 @@ import {UserSummary} from './UserSummary'
 
 export const Dashboard = () => {
   const {track} = useMetrics()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const intl = useIntl()
   const navigateTo = useNavigateTo()
@@ -115,7 +115,7 @@ export const Dashboard = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
-      style={[styles.root, {backgroundColor: color.bg_color_max}]}
+      style={[styles.root, {backgroundColor: p.bg_color_max}]}
     >
       <View style={styles.container}>
         {isOnline && error && (

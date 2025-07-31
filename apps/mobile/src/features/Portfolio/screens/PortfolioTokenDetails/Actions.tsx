@@ -5,13 +5,13 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useSwap} from '../Swap/common/SwapProvider'
 
 type Props = {
   tokenInfo: Portfolio.Token.Info

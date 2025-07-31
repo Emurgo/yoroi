@@ -4,11 +4,11 @@ import React, {ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Space} from '~/ui/Space/Space'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useGetPortfolioTokenInfo} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenInfo'
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Space} from '~/ui/Space/Space'
 
 export const Performance = () => {
   const {atoms: ta, palette: p} = useTheme()

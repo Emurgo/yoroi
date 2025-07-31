@@ -44,9 +44,9 @@ export const ChooseSetupTypeScreen = () => {
 
   /* const handleHw = () => {
     openModal({
-      // title: strings.hwModalTitle,
+      title: strings.hwModalTitle,
       content: <SelectHwConnectionModal />,
-      // height: 305,
+      height: 305,
     })
   } */
 

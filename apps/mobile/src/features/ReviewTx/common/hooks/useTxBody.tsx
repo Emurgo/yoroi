@@ -11,9 +11,9 @@ export const useTxBody = ({
   cbor?: string | null
   unsignedTx?: YoroiUnsignedTx | null
 }): TransactionBody => {
-  const query = useQuery(
-    ['useTxBody', cbor, unsignedTx],
-    async () => {
+  const query = useQuery({
+    queryKey: ['useTxBody', cbor, unsignedTx],
+    queryFn: async () => {
       // ORDER IS IMPORTANT
       // cbor comes from navigation params and unsigned tx from provider
       // Reason is unsignedTx can change during the CATALYST registration funnel (CIP36)
@@ -26,11 +26,9 @@ export const useTxBody = ({
         throw new Error('useTxBody: missing cbor and unsignedTx')
       }
     },
-    {
-      useErrorBoundary: true,
-      suspense: true,
-    },
-  )
+    useErrorBoundary: true,
+    suspense: true,
+  })
 
   if (query.data === undefined)
     throw new Error('useTxBody: cannot extract txBody')

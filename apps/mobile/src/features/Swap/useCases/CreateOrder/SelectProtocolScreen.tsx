@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {undefinedToken} from '~/features/Swap/common/constants'

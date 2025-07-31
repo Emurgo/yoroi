@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
 import {Space} from '~/ui/Space/Space'
 

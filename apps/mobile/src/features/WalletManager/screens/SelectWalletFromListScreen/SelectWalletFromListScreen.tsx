@@ -1,12 +1,11 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
-
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
+import {atoms as a, useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useSetupWallet} from '@yoroi/setup-wallet'
-import {Wallet} from '@yoroi/types'
 import {useWalletMetas} from '~/features/WalletManager/hooks/useWalletMetas'
 import {SupportIllustration} from '~/features/WalletManager/ui/illustrations/SupportIllustration'
 import {isDev} from '~/kernel/constants'
@@ -55,7 +54,7 @@ export const SelectWalletFromList = () => {
           <Space.Height.lg />
         </React.Fragment>
       )),
-    [walletMetas],
+    [handleOnSelect, walletMetas],
   )
 
   return (

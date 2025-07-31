@@ -4,10 +4,10 @@ import * as React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Space} from '~/ui/Space/Space'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
-import {BalanceCard} from './BalanceCard/BalanceCard'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {BalanceCard} from '~/ui/BalanceCard/BalanceCard'
+import {Space} from '~/ui/Space/Space'
 import {DashboardNFTsList} from './DashboardNFTsList/DashboardNFTsList'
 import {DashboardTokensList} from './DashboardTokensList/DashboardTokensList'
 

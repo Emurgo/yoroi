@@ -2,9 +2,12 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 
+import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {defaultStackNavigationOptions, NftRoutes} from '~/kernel/navigation'
-import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {
+  defaultStackNavigationOptions,
+  NftRoutes,
+} from '~/kernel/navigation/navigation'
 import {useStrings} from './common/hooks/useStrings'
 import {ListMediaGalleryScreen} from './screens/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen'
 import {ZoomMediaImageScreen} from './screens/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ZoomMediaImageScreen'
@@ -13,7 +16,7 @@ import {MediaDetailsScreen} from './ui/MediaDetailsScreen/MediaDetailsScreen'
 const Stack = createStackNavigator<NftRoutes>()
 
 export const NftsNavigator = () => {
-  const {atoms, color} = useTheme()
+  const {atoms, palette: p} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
 
@@ -28,7 +31,7 @@ export const NftsNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
+        ...defaultStackNavigationOptions(atoms, p),
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >

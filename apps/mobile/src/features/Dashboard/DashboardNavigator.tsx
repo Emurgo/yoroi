@@ -20,7 +20,7 @@ const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {
   const {meta} = useSelectedWallet()
   const strings = useStrings()
-  const {color, atoms} = useTheme()
+  const {palette: p, atoms} = useTheme()
 
   const manager = useGovernanceManagerMaker()
 
@@ -28,7 +28,7 @@ export const DashboardNavigator = () => {
     <GovernanceProvider manager={manager}>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions(atoms, color),
+          ...defaultStackNavigationOptions(atoms, p.color),
           title: strings.title,
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }}

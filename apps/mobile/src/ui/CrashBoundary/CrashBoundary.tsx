@@ -5,7 +5,6 @@ import {BackHandler, Platform, ScrollView, Text, View} from 'react-native'
 
 import {useTranslatedError} from '~/hooks/useTranslatedError'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
-import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'
@@ -35,7 +34,7 @@ export class CrashBoundary extends React.Component<Props, State> {
     error: Error | LocalizableError,
     details: React.ErrorInfo,
   ) {
-    logger.error(error, {details})
+    // logger.error(error, {details})
 
     this.setState({
       error,

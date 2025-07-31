@@ -3,15 +3,15 @@ import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useGetDAppsPortfolioBalance} from '~/features/Portfolio/common/hooks/useGetDAppsPortfolioBalance'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
+import {useSearchOnNavBar} from '~/features/Search/SearchContext'
+import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {Tab, TabPanel, Tabs} from '~/ui/Tabs/Tabs'
-import {useSearchOnNavBar} from '../Search/SearchContext'
-import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {Tab, TabPanel, Tabs} from '~/ui/Tabs'
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
 import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'
 

@@ -9,10 +9,10 @@ type RemoveAmountButtonProps = {
 }
 
 export const RemoveAmountButton = ({onPress}: RemoveAmountButtonProps) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <TouchableOpacity onPress={onPress} testID="removeAmountButton">
-      <Icon.Delete size={26} color={color.gray_max} />
+      <Icon.Delete size={26} color={p.gray_max} />
     </TouchableOpacity>
   )
 }

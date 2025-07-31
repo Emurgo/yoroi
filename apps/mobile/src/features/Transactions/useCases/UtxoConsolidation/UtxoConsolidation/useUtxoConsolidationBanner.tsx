@@ -3,13 +3,13 @@ import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
 
-import {useStrings} from '~/features/Transactions/common/useStrings'
+import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
+import {useStrings} from '~/features/Transactions/common/strings'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
-import {BannerIds, showBanner} from '../Notifications/common/banners'
-import {useUtxoList} from '../UtxoList/useUtxoList'
+import {useUtxoList} from '~/features/Transactions/useCases/UtxoList/useUtxoList'
 
 export const useUtxoConsolidationBanner = () => {
   const {wallet} = useSelectedWallet()

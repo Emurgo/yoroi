@@ -4,6 +4,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
@@ -37,7 +38,7 @@ export const useOpenConfirmConnectionModal = () => {
         : confirmConnectionModalHeight
 
       openModal({
-        // title: strings.confirmConnectionModalTitle,
+        title: strings.confirmConnectionModalTitle,
         content: (
           <ConfirmConnectionModal
             name={props.name}
@@ -46,7 +47,7 @@ export const useOpenConfirmConnectionModal = () => {
             showSingleAddressWarning={props.showSingleAddressWarning}
           />
         ),
-        /* footer: (
+        footer: (
           <Button
             title={strings.confirmConnectionModalConnect}
             onPress={() => {
@@ -55,9 +56,8 @@ export const useOpenConfirmConnectionModal = () => {
               closeModal()
             }}
           />
-        ), */
-        // height: modalHeight,
-        // onClose: props.onClose,
+        ),
+        height: modalHeight,
       })
     },
     [openModal],

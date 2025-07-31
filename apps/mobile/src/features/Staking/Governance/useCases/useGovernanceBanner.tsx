@@ -3,12 +3,12 @@ import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
 
+import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/wallets/hooks'
 import {useIsParticipatingInGovernance} from '../common/helpers'
 import {useStrings} from '../common/strings'
-import {BannerIds, showBanner} from '../Notifications/common/banners'
 
 export const useGovernanceBanner = () => {
   const strings = useStrings()

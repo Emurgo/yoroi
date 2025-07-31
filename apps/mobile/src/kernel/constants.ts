@@ -59,7 +59,7 @@ export const sentryDsn = getEnvString('SENTRY_DSN')
 const envLoggerFilter = getEnvString('LOGGER_FILTER')
 export const loggerFilter = envLoggerFilter ? new RegExp(envLoggerFilter) : null
 export const loggerLevel: App.Logger.Level = isDev
-  ? App.Logger.Level.Debug
+  ? App.Logger.Level.Warn
   : App.Logger.Level.Warn
 
 // Themes

@@ -5,13 +5,13 @@ import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {View} from 'react-native'
 
+import {usePairing} from '~/features/Pairing/context/PairingProvider'
 import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
-import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioProvider'
+import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {BalanceCardSkeleton} from '~/ui/BalanceCardSkeleton/BalanceCardSkeleton'
+import {BalanceHeaderCard} from '~/ui/BalanceHeaderCard/BalanceHeaderCard'
 import {BalanceCardContent} from '../BalanceCardContent/BalanceCardContent'
-import {usePairing} from '../Pairing/context/PairingProvider'
-import {BalanceCardSkeleton} from './BalanceCardSkeleton'
-import {BalanceHeaderCard} from './BalanceHeaderCard'
 
 export const BalanceCard = () => {
   const {palette: p} = useTheme()

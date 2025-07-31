@@ -33,7 +33,7 @@ export const StakeRegistrationOperation = ({
 }) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <View style={styles.operation}>
@@ -48,7 +48,7 @@ export const StakeRegistrationOperation = ({
       <Text
         style={[
           styles.operationValue,
-          {color: color.text_gray_medium},
+          {color: p.text_gray_medium},
           strike && styles.strike,
         ]}
       >
@@ -113,7 +113,7 @@ export const StakeDelegationOperation = ({
   const poolInfo = usePoolInfo({poolId})
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const handleShowPoolDetails = () => {
     openModal({
@@ -139,7 +139,7 @@ export const StakeDelegationOperation = ({
         <Text
           style={[
             styles.operationLink,
-            {color: color.text_primary_medium},
+            {color: p.text_primary_medium},
             strike && styles.strike,
           ]}
         >
@@ -208,7 +208,7 @@ export const VoteDelegationOperation = ({
   strike?: boolean
 }) => {
   const strings = useStrings()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   const CIP129label = formatDrepHashToCIP129Format(hash, type)
   const CIP105label = formatDrepHashToCIP105Format(hash)
@@ -227,7 +227,7 @@ export const VoteDelegationOperation = ({
         <Text
           style={[
             styles.operationValue,
-            {color: color.text_gray_medium},
+            {color: p.text_gray_medium},
             strike && styles.strike,
           ]}
         >
@@ -249,7 +249,7 @@ export const VoteDelegationOperation = ({
         <Text
           style={[
             styles.operationValue,
-            {color: color.text_gray_medium},
+            {color: p.text_gray_medium},
             strike && styles.strike,
           ]}
         >
@@ -271,7 +271,7 @@ export const DrepRegistrationOperation = ({
 }) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <View style={styles.operation}>
@@ -286,7 +286,7 @@ export const DrepRegistrationOperation = ({
       <Text
         style={[
           styles.operationValue,
-          {color: color.text_gray_medium},
+          {color: p.text_gray_medium},
           strike && styles.strike,
         ]}
       >
@@ -327,7 +327,7 @@ export const PoolRegistrationOperation = ({
 }) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <View style={styles.operation}>
@@ -342,7 +342,7 @@ export const PoolRegistrationOperation = ({
       <Text
         style={[
           styles.operationValue,
-          {color: color.text_gray_medium},
+          {color: p.text_gray_medium},
           strike && styles.strike,
         ]}
       >
@@ -458,13 +458,13 @@ const Label = ({
   showWarning?: boolean
   strike?: boolean
 }) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <View style={styles.operationLabelContainer}>
       <Text
         style={[
           styles.operationLabel,
-          {color: color.text_gray_low},
+          {color: p.text_gray_low},
           strike && styles.strike,
         ]}
       >
@@ -473,7 +473,7 @@ const Label = ({
 
       {showWarning && (
         <View style={styles.infoIcon}>
-          <Icon.Info size={24} color={color.sys_orange_500} />
+          <Icon.Info size={24} color={p.sys_orange_500} />
         </View>
       )}
     </View>

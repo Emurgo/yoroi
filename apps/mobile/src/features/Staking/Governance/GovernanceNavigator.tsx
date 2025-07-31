@@ -2,13 +2,13 @@ import {GovernanceProvider} from '@yoroi/staking'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
 
-import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {
   BackButton,
   defaultStackNavigationOptions,
   useWalletNavigation,
 } from '~/kernel/navigation'
-import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {useStrings} from './common/strings'
@@ -24,7 +24,7 @@ const Stack = NavigationStack
 export const GovernanceNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
-  const {atoms, color} = useTheme()
+  const {atoms, palette: p} = useTheme()
   const walletNavigation = useWalletNavigation()
 
   return (
@@ -32,7 +32,7 @@ export const GovernanceNavigator = () => {
       <SafeArea>
         <Stack.Navigator
           screenOptions={{
-            ...screenOptions(atoms, color),
+            ...screenOptions(atoms, p),
             headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
           }}
           initialRouteName="staking-gov-home"

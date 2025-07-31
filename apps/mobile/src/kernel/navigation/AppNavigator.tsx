@@ -1,5 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
+import {WalletNavigator} from 'src/WalletNavigator'
 
 import {DevMenu} from '~/features/DevMenu'
 import {SearchProvider} from '~/features/Search/SearchContext'
@@ -24,6 +25,11 @@ export const AppNavigator = () => {
             name="initial"
             options={{headerShown: false}}
             component={InitialScreenNavigator}
+          />
+          <Stack.Screen
+            name="manage-wallets"
+            options={{headerShown: false}}
+            component={WalletNavigator}
           />
           <Stack.Screen
             name="wallet-selection"

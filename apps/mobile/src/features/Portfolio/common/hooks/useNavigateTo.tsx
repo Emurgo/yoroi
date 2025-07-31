@@ -2,7 +2,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 
-import {PortfolioRoutes, useParams} from '~/kernel/navigation'
+import {PortfolioRoutes, useParams} from '~/kernel/navigation/navigation'
 import {isEmptyString} from '~/wallets/utils/string'
 
 export const useNavigateTo = () => {

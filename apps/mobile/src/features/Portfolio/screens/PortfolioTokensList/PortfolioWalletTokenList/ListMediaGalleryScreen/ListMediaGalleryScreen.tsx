@@ -7,15 +7,15 @@ import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {useTrackNftGallerySearchActivated} from '~/features/Portfolio/common/hooks/useTrackNftGallerySearchActivated'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useNavigateTo} from '~/features/Portfolio/common/navigation'
+import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {MediaGallery} from '~/ui/MediaGallery/MediaGallery'
 import {Space} from '~/ui/Space/Space'
-import {useNavigateTo} from '../../common/navigation'
 import {EmptyGallery} from './EmptyGallery'
 
 export const ListMediaGalleryScreen = () => {

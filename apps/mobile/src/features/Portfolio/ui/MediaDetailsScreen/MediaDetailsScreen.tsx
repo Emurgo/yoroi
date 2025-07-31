@@ -29,7 +29,7 @@ import {FadeIn} from '~/ui/FadeIn/FadeIn'
 import {Hr} from '~/ui/Hr/Hr'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
 import {Space} from '~/ui/Space/Space'
-import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs/Tabs'
+import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs'
 import {Text} from '~/ui/Text/Text'
 import {useNavigateTo} from '../../common/navigation'
 

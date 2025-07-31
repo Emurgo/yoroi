@@ -1,11 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Text, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 
-import {Button} from '~/ui/Button/Button'
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {Button} from '~/ui/Button/Button'
 import {TradeTokensAsset} from './TradeTokensAsset'
 
 export const TradeTokensBanner = () => {

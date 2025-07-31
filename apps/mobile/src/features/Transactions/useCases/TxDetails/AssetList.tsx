@@ -4,8 +4,9 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useStrings} from '~/features/Transactions/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/features/Transactions/common/useStrings'
 import {normalisePtId} from '~/kernel/helpers/normalisePtId'
 import globalMessages, {txLabels} from '~/kernel/i18n/global-messages'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -13,7 +14,6 @@ import {CardanoTypes} from '~/wallets/cardano/types'
 import {formatTokenAmount} from '~/wallets/utils/format'
 import {isEmptyString} from '~/wallets/utils/string'
 import {asQuantity} from '~/wallets/utils/utils'
-import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>

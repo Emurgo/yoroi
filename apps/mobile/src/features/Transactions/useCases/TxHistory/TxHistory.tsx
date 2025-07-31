@@ -1,9 +1,9 @@
 import {useHeaderHeight} from '@react-navigation/elements'
 import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {LayoutAnimation, Text, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 // import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'

@@ -19,8 +19,6 @@ import {useStrings} from './strings'
 import {useGetInputs} from './useGetInputs'
 import {useSwapConfig} from './useSwapConfig'
 
-export const useSwap = () => React.useContext(SwapContext)
-
 export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const navigate = useNavigateTo()
   const strings = useStrings()
@@ -116,15 +114,15 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     action({type: 'SlippageInputChanged', value: swapManager.settings.slippage})
   }, [swapManager.settings.slippage])
 
-  const {data: limitOptions} = useQuery(
-    [
+  const {data: limitOptions} = useQuery({
+    queryKey: [
       'useSwapLimitOptions',
       network,
       swapManager.settings.routingPreference,
       state.tokenInInput.tokenId,
       state.tokenOutInput.tokenId,
     ],
-    async () => {
+    queryFn: async () => {
       if (
         state.tokenInInput.tokenId === undefined ||
         state.tokenOutInput.tokenId === undefined
@@ -139,13 +137,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       if (isRight(res)) return res.value.data
       return undefined
     },
-    {
-      enabled:
-        state.orderType === 'limit' &&
-        state.tokenInInput.tokenId !== undefined &&
-        state.tokenOutInput.tokenId !== undefined,
-    },
-  )
+    enabled:
+      state.orderType === 'limit' &&
+      state.tokenInInput.tokenId !== undefined &&
+      state.tokenOutInput.tokenId !== undefined,
+  })
 
   React.useEffect(() => {
     const value = limitOptions?.defaultProtocol

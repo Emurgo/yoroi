@@ -2,7 +2,7 @@ import {PoolTransition} from '@emurgo/yoroi-lib'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Image, Text, View, ViewProps} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'

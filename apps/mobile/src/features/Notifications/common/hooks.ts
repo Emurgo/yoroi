@@ -1,12 +1,12 @@
-import messaging from '@react-native-firebase/messaging'
 import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {
   Notifications as NotificationTypes,
   Notifications as YoroiNotifications,
 } from '@yoroi/types'
+import * as Notifications from 'expo-notifications'
 import React from 'react'
-import {Notifications} from 'react-native-notifications'
+import {Notifications as RNNotifications} from 'react-native-notifications'
 
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation, WalletNavigation} from '~/kernel/navigation'
@@ -18,30 +18,47 @@ import {triggerNotificationAction} from './tools'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
 const initPushNotifications = (walletNavigation: WalletNavigation) => {
-  const unsubscribeFromForegroundMessage = messaging().onMessage(
-    (remoteMessage) => {
-      const {notification} = remoteMessage
+  // Configure Expo notifications
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  })
 
-      if (
-        notification &&
-        isString(notification.title) &&
-        isString(notification.body)
-      ) {
+  const notificationListener = Notifications.addNotificationReceivedListener(
+    (notification) => {
+      const {title, body, data} = notification.request.content
+
+      if (isString(title) && isString(body)) {
         const pushNotification = createPushNotification({
-          id: remoteMessage.sentTime ?? 0,
-          title: notification.title,
-          description: notification.body,
-          data: remoteMessage.data,
+          id: Date.now(),
+          title,
+          description: body,
+          data: data as Record<string, unknown>,
         })
         pushNotificationsManager.events.push(pushNotification)
 
-        logger.info('FCM Message Notification in foreground: ', {notification})
+        logger.info('Expo Notification received: ', {title, body})
       }
     },
   )
 
+  const responseListener =
+    Notifications.addNotificationResponseReceivedListener((response) => {
+      const {title, body, data} = response.notification.request.content
+      const id = parseNotificationId(Date.now().toString())
+      triggerNotificationAction({
+        manager: pushNotificationsManager,
+        id,
+        walletNavigation,
+        source: 'os',
+      })
+    })
+
   const notificationOpenedSubscription =
-    Notifications.events().registerNotificationOpened(
+    RNNotifications.events().registerNotificationOpened(
       (notification, completion) => {
         const payloadId = notification.payload['google.sent_time']
         const id = parseNotificationId(payloadId)
@@ -56,8 +73,9 @@ const initPushNotifications = (walletNavigation: WalletNavigation) => {
     )
 
   return () => {
+    notificationListener?.remove()
+    responseListener?.remove()
     notificationOpenedSubscription.remove()
-    unsubscribeFromForegroundMessage()
   }
 }
 
@@ -91,29 +109,6 @@ export const useInitNotifications = ({
   usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
   useRewardsUpdatedNotifications({enabled: localEnabled})
 }
-
-messaging().setBackgroundMessageHandler((remoteMessage) => {
-  const remoteNotification = remoteMessage.notification
-  if (
-    remoteNotification &&
-    isString(remoteNotification.title) &&
-    isString(remoteNotification.body)
-  ) {
-    // Automatically shown by the OS
-    pushNotificationsManager.events.push(
-      createPushNotification({
-        id: remoteMessage.sentTime ?? 0,
-        title: remoteNotification.title,
-        description: remoteNotification.body,
-        data: remoteMessage.data,
-      }),
-    )
-    logger.info(`FCM Message Notification in background`, {
-      notification: remoteMessage.notification,
-    })
-  }
-  return Promise.resolve()
-})
 
 const createPushNotification = (options: {
   title: string

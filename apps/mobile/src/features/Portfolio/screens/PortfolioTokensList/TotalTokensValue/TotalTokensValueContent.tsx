@@ -7,17 +7,17 @@ import {
   formatPriceChange,
   priceChange,
 } from '~/features/Portfolio/common/helpers/priceChange'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
+import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {Icon} from '~/ui/Icon'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 import {Space} from '~/ui/Space/Space'
 import {Tooltip} from '~/ui/Tooltip/Tooltip'
-import {usePrivacyMode} from '../Settings/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useCurrencyPairing} from '../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {SkeletonQuantityChange} from './SkeletonQuantityChange'
 import {TokenValueBalance} from './TokenValueBalance'
 import {TokenValuePairedBalance} from './TokenValuePairedBalance'

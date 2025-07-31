@@ -2,11 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {View} from 'react-native'
 
-import {TabPanel, TabPanels} from '~/ui/Tabs/Tabs'
 import {
   PortfolioDetailsTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
+import {TabPanel, TabPanels} from '~/ui/Tabs'
 import {Overview} from './Overview/Overview'
 import {Performance} from './Performance'
 

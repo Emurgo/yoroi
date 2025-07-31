@@ -5,11 +5,11 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 export const SkeletonAdressDetail = () => {
   const {width} = useWindowDimensions()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const WIDTH = width - 32
 
   return (
-    <SkeletonPlaceholder borderRadius={10} backgroundColor={color.gray_200}>
+    <SkeletonPlaceholder borderRadius={10} backgroundColor={p.gray_200}>
       <SkeletonPlaceholder.Item alignItems="center" justifyContent="center">
         <SkeletonPlaceholder.Item width={WIDTH} height="100%" maxHeight={458} />
       </SkeletonPlaceholder.Item>
@@ -19,11 +19,11 @@ export const SkeletonAdressDetail = () => {
 
 export const SkeletonSmallCardAddress = () => {
   const {width} = useWindowDimensions()
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
   const WIDTH = width - 32
 
   return (
-    <SkeletonPlaceholder borderRadius={10} backgroundColor={color.gray_200}>
+    <SkeletonPlaceholder borderRadius={10} backgroundColor={p.gray_200}>
       <SkeletonPlaceholder.Item alignItems="center" justifyContent="center">
         <SkeletonPlaceholder.Item width={WIDTH} height={140} />
       </SkeletonPlaceholder.Item>

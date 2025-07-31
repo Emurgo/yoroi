@@ -2,10 +2,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useWalletNavigation} from '~/kernel/navigation'
+import {useStrings} from '~/features/Transactions/common/strings'
+import {useWalletNavigation} from '~/kernel/navigation/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useStrings} from '~/features/Transactions/common/useStrings'
 
 export const WarningSingleAddress = () => {
   const {palette: p} = useTheme()
