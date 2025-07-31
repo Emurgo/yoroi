@@ -4,10 +4,10 @@ import {FlatList, Text, View} from 'react-native'
 
 import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
 import {useShowOpenOrderModal} from '~/features/Portfolio/common/hooks/useShowOpenOrderModal'
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyList'
 import {makeList} from '~/kernel/utils'
 import {Space} from '~/ui/Space/Space'
-import {TokenEmptyList} from '~/ui/TokenEmptyList/TokenEmptyList'
 import {DAppTokenItem} from './DAppTokenItem/DAppTokenItem'
 import {DAppTokenItemSkeleton} from './DAppTokenItem/DAppTokenItemSkeleton'
 

@@ -2,9 +2,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {Space} from '~/ui/Space/Space'
+import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyList'
 import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
-import {TokenEmptyList} from '~/ui/TokenEmptyList/TokenEmptyList'
+import {Space} from '~/ui/Space/Space'
 
 export const LendAndBorrowTab = () => {
   const {atoms: ta} = useTheme()

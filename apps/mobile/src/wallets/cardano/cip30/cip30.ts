@@ -17,6 +17,7 @@ import _ from 'lodash'
 import {RawUtxo, YoroiUnsignedTx} from '@yoroi/types'
 import {logger} from '~/kernel/logger/logger'
 import {asQuantity, Utxos} from '~/wallets/utils/utils'
+import {Cardano, CardanoMobile} from '~/wallets/wallets'
 import {toAssetNameHex, toPolicyId} from '../api/utils'
 import * as cip8 from '../cip8/cip8'
 import {
@@ -35,7 +36,6 @@ import {
   findCollateralCandidates,
   utxosMaker,
 } from '../utxoManager/utxos'
-import {Cardano, CardanoMobile} from '../wallets'
 import {wrappedCsl} from '../wrappedCsl'
 
 export const cip30ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {

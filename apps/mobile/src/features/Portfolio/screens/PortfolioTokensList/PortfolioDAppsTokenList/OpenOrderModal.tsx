@@ -13,7 +13,7 @@ import {
 
 import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
 import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
-import {AssetLogo} from '~/ui/AssetLogo/AssetLogo'
+import {AssetLogo} from '~/features/Portfolio/ui/AssetLogo/AssetLogo'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 

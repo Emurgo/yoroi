@@ -64,6 +64,7 @@ config.resolver.extraNodeModules = {
   '~/kernel': path.resolve(projectRoot, 'src/kernel'),
   '~/wallets': path.resolve(projectRoot, 'src/wallets'),
   '~/components': path.resolve(projectRoot, 'src/ui'),
+  '~/assets': path.resolve(projectRoot, 'assets'),
 }
 
 config.transformer.minifierConfig = {

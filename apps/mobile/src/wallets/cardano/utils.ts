@@ -9,7 +9,7 @@ import {Buffer} from 'buffer'
 import {BaseAsset, DefaultAsset, RawUtxo, YoroiEntry} from '@yoroi/types'
 import {Amounts} from '../utils/utils'
 import {CardanoMobile} from '../wallets'
-import {toAssetNameHex, toPolicyId} from './api/utils'
+import {identifierToCardanoAsset} from './assetUtils'
 import {withMinAmounts} from './getMinAmounts'
 import {MultiToken} from './MultiToken'
 import {CardanoTypes, YoroiWallet} from './types'
@@ -62,20 +62,6 @@ export const deriveRewardAddressFromAddress = (
 /**
  * Multi-asset related
  */
-export const identifierToCardanoAsset = (
-  tokenId: string,
-): {
-  policyId: CardanoTypes.ScriptHash
-  name: CardanoTypes.AssetName
-} => {
-  const policyId = toPolicyId(tokenId)
-  const assetNameHex = toAssetNameHex(tokenId)
-
-  return {
-    policyId: CardanoMobile.ScriptHash.fromBytes(Buffer.from(policyId, 'hex')),
-    name: CardanoMobile.AssetName.new(Buffer.from(assetNameHex, 'hex')),
-  }
-}
 
 export const cardanoValueFromRemoteFormat = (utxo: RawUtxo) => {
   const value = CardanoMobile.Value.new(

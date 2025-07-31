@@ -6,7 +6,7 @@ import {Text, TouchableOpacity, View} from 'react-native'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
-import {AssetLogo} from '~/ui/AssetLogo/AssetLogo'
+import {AssetLogo} from '~/features/Portfolio/ui/AssetLogo/AssetLogo'
 
 type Props = {
   tokenInfo: ILiquidityPool

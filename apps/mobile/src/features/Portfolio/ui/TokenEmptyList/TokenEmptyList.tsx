@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
-import {AssetTokenImage} from '../illustrations/AssetTokenImage/AssetTokenImage'
+import {AssetTokenImage} from '~/ui/AssetTokenImage/AssetTokenImage'
 
 type Props = {
   emptyText?: string

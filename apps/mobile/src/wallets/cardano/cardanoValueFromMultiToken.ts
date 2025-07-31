@@ -1,6 +1,6 @@
 import {CardanoMobile} from '../wallets'
 import {MultiToken} from './MultiToken'
-import {identifierToCardanoAsset} from './utils'
+import {identifierToCardanoAsset} from './assetUtils'
 
 export const cardanoValueFromMultiToken = (tokens: MultiToken) => {
   const value = CardanoMobile.Value.new(

@@ -1,8 +1,9 @@
-import messaging from '@react-native-firebase/messaging'
+// import messaging from '@react-native-firebase/messaging'
 import {isNumber, isRecord, isString} from '@yoroi/common'
 import {Portfolio, Notifications as YoroiNotifications} from '@yoroi/types'
+import * as Notifications from 'expo-notifications'
 import {Linking, PermissionsAndroid, Platform} from 'react-native'
-import {Notifications} from 'react-native-notifications'
+import {Notifications as RNNotifications} from 'react-native-notifications'
 
 import {WalletNavigation} from '~/kernel/navigation'
 import {BannerIds} from './banners'
@@ -12,7 +13,7 @@ const permissionModalStorageKey = 'triggeredNotificationsPermissionModal'
 
 export const triggerNotificationsPermissionModal = async () => {
   // Triggers iOS permission request
-  Notifications.registerRemoteNotifications({})
+  RNNotifications.registerRemoteNotifications({})
 
   // Android requires manual permission request
   if (Platform.OS === 'android') {
@@ -25,22 +26,19 @@ export const triggerNotificationsPermissionModal = async () => {
 }
 
 export const getNotificationsAuthorizationStatus = async () => {
-  const status = await messaging().hasPermission()
+  const {status} = await Notifications.getPermissionsAsync()
   const modalNeverTriggered =
     (await uiStorage.getItem(permissionModalStorageKey)) !== true
 
-  if (status === messaging.AuthorizationStatus.AUTHORIZED) {
+  if (status === 'granted') {
     return 'authorized'
   }
 
-  if (status === messaging.AuthorizationStatus.DENIED) {
+  if (status === 'denied') {
     return 'denied'
   }
 
-  if (
-    status === messaging.AuthorizationStatus.NOT_DETERMINED ||
-    modalNeverTriggered
-  ) {
+  if (status === 'undetermined' || modalNeverTriggered) {
     return 'not_determined'
   }
 

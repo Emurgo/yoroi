@@ -8,6 +8,7 @@ import * as React from 'react'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
 import {CopyProvider} from './src/features/Copy/context/CopyProvider'
+import {YoroiNotificationManager} from './src/features/Notifications/common/YoroiNotificationManager'
 import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
 import {SearchProvider} from './src/features/Search/SearchContext'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
@@ -95,7 +96,9 @@ function BusinessShell({children}: React.PropsWithChildren) {
       <SearchProvider>
         <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
           <WalletManagerProvider walletManager={walletManager}>
-            <SetupWalletProvider>{children}</SetupWalletProvider>
+            <SetupWalletProvider>
+              <YoroiNotificationManager>{children}</YoroiNotificationManager>
+            </SetupWalletProvider>
           </WalletManagerProvider>
         </PairingProvider>
       </SearchProvider>

@@ -19,8 +19,6 @@ import {useStrings} from './strings'
 import {useGetInputs} from './useGetInputs'
 import {useSwapConfig} from './useSwapConfig'
 
-export const useSwap = () => React.useContext(SwapContext)
-
 export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const navigate = useNavigateTo()
   const strings = useStrings()

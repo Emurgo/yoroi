@@ -1,12 +1,12 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {LinearGradient} from 'expo-linear-gradient'
 import React, {useState} from 'react'
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 
+import {Accordion} from '~/features/ReviewTx/common/Accordion'
 import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
-import {Accordion} from '~/ui/Accordion/Accordion'
 import {Space} from '~/ui/Space/Space'
-import NewsPlaceHolder from '../assets/img/token-news-place-holder.png'
+import NewsPlaceHolder from '../../../../../../../assets/img/token-news-place-holder.png'
 export const TokenNews = () => {
   const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
