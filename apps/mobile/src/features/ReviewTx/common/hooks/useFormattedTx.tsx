@@ -320,13 +320,12 @@ const getAddressKind = async (
 export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
   const {networkManager} = useSelectedNetwork()
 
-  const query = useQuery(
-    ['useUtxos', inputs],
-    async () => getAllUtxos(inputs, wallet, networkManager.api.utxoData),
-    {
-      suspense: true,
-    },
-  )
+  const query = useQuery({
+    queryKey: ['useUtxos', inputs],
+    queryFn: async () =>
+      getAllUtxos(inputs, wallet, networkManager.api.utxoData),
+    suspense: true,
+  })
 
   if (!query.data) throw new Error('invalid formatted inputs')
   return query.data

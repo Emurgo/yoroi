@@ -11,6 +11,7 @@ import {CopyProvider} from './src/features/Copy/context/CopyProvider'
 import {YoroiNotificationManager} from './src/features/Notifications/common/YoroiNotificationManager'
 import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
 import {SearchProvider} from './src/features/Search/SearchContext'
+import {CurrencyProvider} from './src/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './src/features/WalletManager/wallet-manager'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
@@ -97,7 +98,9 @@ function BusinessShell({children}: React.PropsWithChildren) {
         <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
           <WalletManagerProvider walletManager={walletManager}>
             <SetupWalletProvider>
-              <YoroiNotificationManager>{children}</YoroiNotificationManager>
+              <YoroiNotificationManager>
+                <CurrencyProvider>{children}</CurrencyProvider>
+              </YoroiNotificationManager>
             </SetupWalletProvider>
           </WalletManagerProvider>
         </PairingProvider>

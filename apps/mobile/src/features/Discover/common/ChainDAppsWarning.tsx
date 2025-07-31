@@ -36,11 +36,11 @@ const useDAppsWarning = () => {
   const {wallet} = useSelectedWallet()
   const walletStorage = storage.join(`wallet/${wallet.id}/dAppsWarning/`)
   const queryKey = [wallet.id, 'dAppsWarning']
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () =>
+    queryFn: async () =>
       (await walletStorage.getItem<boolean | null>('accepted')) ?? false,
-  )
+  })
 }
 
 const useAcceptedDAppsWarning = () => {

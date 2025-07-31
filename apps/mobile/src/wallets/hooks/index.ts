@@ -138,7 +138,9 @@ export const useStakingKey = (wallet: YoroiWallet) => {
       .then((r) => r.hash())
       .then((h) => h.toBytes())
       .then((bytes) => Buffer.from(bytes).toString('hex'))
-  const result = useQuery([wallet.id, 'stakingKey'], getPublicKeyHex, {
+  const result = useQuery({
+    queryKey: [wallet.id, 'stakingKey'],
+    queryFn: getPublicKeyHex,
     suspense: true,
   })
   if (!result.data) throw new Error('invalid state')
@@ -146,13 +148,11 @@ export const useStakingKey = (wallet: YoroiWallet) => {
 }
 
 export const useAddressHex = (wallet: YoroiWallet) => {
-  const result = useQuery(
-    [wallet.id, 'addressHex'],
-    () => convertBech32ToHex(wallet.externalAddresses[0]),
-    {
-      suspense: true,
-    },
-  )
+  const result = useQuery({
+    queryKey: [wallet.id, 'addressHex'],
+    queryFn: () => convertBech32ToHex(wallet.externalAddresses[0]),
+    suspense: true,
+  })
   if (!result.data) throw new Error('invalid state')
   return result.data
 }
