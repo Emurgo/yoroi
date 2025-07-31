@@ -5,18 +5,17 @@ import * as React from 'react'
 import {LayoutAnimation, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useStrings} from '~/features/Transactions/common/useStrings'
+import infoIcon from '~/assets/img/icon/info-light-green.png'
+// import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
+// import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
+import {useStrings} from '~/features/Transactions/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
 import {useSync} from '~/wallets/hooks'
-import infoIcon from '../assets/img/icon/info-light-green.png'
-import {useBuyCryptoBanner} from '../Exchange/common/useBuyCryptoBanner'
-import {usePoolTransitionModal} from '../legacy/Staking/PoolTransition/usePoolTransitionModal'
-import {useGovernanceBanner} from '../Staking/Governance/useCases/useGovernanceBanner'
 import {TxList} from '../TxList/TxList'
-import {useUtxoConsolidationBanner} from '../UtxoConsolidation/useUtxoConsolidationBanner'
+// import {useUtxoConsolidationBanner} from '../UtxoConsolidation/UtxoConsolidation/useUtxoConsolidationBanner'
 import {UtxoListButton} from '../UtxoList/UtxoListButton'
 import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
@@ -26,9 +25,9 @@ import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
 
 export const TxHistory = () => {
-  useGovernanceBanner()
-  useBuyCryptoBanner()
-  useUtxoConsolidationBanner()
+  //useGovernanceBanner()
+  // useBuyCryptoBanner()
+  // useUtxoConsolidationBanner()
 
   const strings = useStrings()
   const {atoms: ta, palette: p, isDark} = useTheme()
@@ -48,9 +47,9 @@ export const TxHistory = () => {
   )
   const headerHeight = useHeaderHeight()
 
-  const {sync, isLoading: isLoadingWallet} = useSync(wallet)
-  const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
-  const isLoading = isLoadingWallet || isLoadingPoolTransition
+  const {sync, isPending: isLoadingWallet} = useSync(wallet)
+  // const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
+  const isLoading = isLoadingWallet // || isLoadingPoolTransition
 
   const [expanded, setExpanded] = React.useState(true)
   const onScroll = useOnScroll({
@@ -75,7 +74,7 @@ export const TxHistory = () => {
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={{flex: 1}}
     >
-      <Space.Height._2xs height={headerHeight} />
+      <Space.Height._2xs />
 
       <CollapsibleHeader expanded={expanded}>
         <BalanceBanner />

@@ -4,6 +4,7 @@
     "strict": true,
     "baseUrl": ".",
     "jsx": "react-native",
+    "typeRoots": ["./src/types", "./node_modules/@types"],
     "paths": {
       "react-native-mmkv": ["./node_modules/react-native-mmkv"],
       "rxjs": ["./node_modules/rxjs"],
@@ -12,7 +13,8 @@
       "~/hooks/*": ["./src/hooks/*"],
       "~/kernel/*": ["./src/kernel/*"],
       "~/wallets/*": ["./src/wallets/*"],
-      "~/components/*": ["./src/ui/*"]
+      "~/components/*": ["./src/ui/*"],
+      "~/assets/*": ["./assets/*"]
     }
   }
 }

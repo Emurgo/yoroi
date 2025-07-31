@@ -8,9 +8,11 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
+import {useStrings} from '~/features/Transactions/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/features/Transactions/common/useStrings'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation'
+// import {TxHistoryRouteNavigation} from '~/kernel/navigation'
+import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
@@ -25,8 +27,6 @@ import {
   formatTokenInteger,
 } from '~/wallets/utils/format'
 import {asQuantity} from '~/wallets/utils/utils'
-import {useCurrencyPairing} from '../Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '../Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useTxFilter} from './TxFilterProvider'
 
 type Props = {
@@ -35,7 +35,7 @@ type Props = {
 
 export const TxListItem = ({transaction}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const navigation = useNavigation<any>()
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {tokenId} = useTxFilter()

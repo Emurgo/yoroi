@@ -4,22 +4,21 @@ import {useTransfer} from '@yoroi/transfer'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
+import {useCopy} from '~/features/Copy/context/CopyProvider'
+import {useReceive} from '~/features/Receive/common/ReceiveProvider'
+import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
 
-import {useStrings} from '~/features/Transactions/common/useStrings'
+import {useReceiveAddressesStatus} from '~/features/Receive/common/useReceiveAddressesStatus'
+import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSwapConfig} from '~/features/Swap/common/useSwapConfig'
+import {useStrings} from '~/features/Transactions/common/strings'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {useCopy} from '~/ui/Clipboard/ClipboardProvider'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
-import {useReceive} from '../Receive/common/ReceiveProvider'
-import {useMultipleAddressesInfo} from '../Receive/common/useMultipleAddressesInfo'
-import {useReceiveAddressesStatus} from '../Receive/common/useReceiveAddressesStatus'
-import {useSwap} from '../Swap/common/SwapProvider'
-import {useSwapConfig} from '../Swap/common/useSwapConfig'
 
 export const ActionsBanner = (props: {disabled: boolean}) => {
   const strings = useStrings()
@@ -210,7 +209,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
 }
 
 const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const navigation = useNavigation<any>()
 
   return {
     send: () => navigation.navigate('send-start-tx'),

@@ -8,6 +8,7 @@ import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {TempPinLoginScreen} from '~/features/Temporal_To_Remove/Auth/TempPinLoginScreen'
 import {InitialScreenNavigator} from '~/features/Temporal_To_Remove/InitialScreen/InitialScreenNavigatorNavigator'
 import {TempTestSearchScreen} from '~/features/Temporal_To_Remove/Search/TempTestSearchScreen'
+import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
 import {SelectWalletFromList} from '~/features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {Modal} from '~/ui/Modal/ModalScreen'
 
@@ -28,6 +29,11 @@ export const AppNavigator = () => {
             name="wallet-selection"
             options={{headerShown: false}}
             component={SelectWalletFromList}
+          />
+          <Stack.Screen
+            name="tx-list"
+            options={{headerShown: false}}
+            component={TxHistoryNavigator}
           />
           <Stack.Screen
             name="settings"
