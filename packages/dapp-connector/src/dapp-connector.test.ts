@@ -697,8 +697,9 @@ describe('DappConnector', () => {
         ...mockWallet,
         getCollateral: () => [],
         getBalance: () => CSL.Value.new(CSL.BigNum.fromStr('20000000')),
-        sendReorganisationTx: async () =>
-          Promise.reject(new Error('Reorganisation failed')),
+        sendReorganisationTx: () => {
+          throw new Error('Reorganisation failed')
+        },
       })
       const sendMessage = jest.fn()
       await dappConnector.addConnection({

@@ -146,7 +146,7 @@ export const resolver: Resolver = {
         const balance = context.wallet.getBalance('*')
         const coin = new BigNumber(balance.coin().toStr())
         if (coin.isGreaterThan(new BigNumber(value))) {
-          await context.wallet.sendReorganisationTx(value)
+          context.wallet.sendReorganisationTx(value)
         }
 
         return null
