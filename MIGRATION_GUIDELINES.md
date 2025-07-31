@@ -57,10 +57,15 @@
 
 ## Debugging Instructions
 
-- **Server interaction**: Send `a` to the running Expo server terminal to trigger Android reload
+- **Server interaction**: Send `a` to the running Metro server terminal to trigger Android reload
 - **Error monitoring**: Watch Metro bundler output for "Unable to resolve" errors
 - **Build testing**: Use `npm run android --debug` to test fixes
 - **File search**: Use `file_search` to locate missing components
+- **No tsc**: Do not run `tsc` directly - it will fail due to memory issues and many errors
+- **Terminal workflow**:
+  1. Start Metro: `npm start` (keep this terminal open)
+  2. Build Android: `npm run android --debug` (close after success)
+  3. Use Metro terminal for errors and reloads
 - **Import patterns**:
   - Use `~/` for absolute imports from src directory
   - Use relative paths for image assets (e.g., `../../../../../assets/img/`)

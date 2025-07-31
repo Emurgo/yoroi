@@ -11,7 +11,7 @@ import {Tab, TabPanel, Tabs} from '~/features/Portfolio/ui/TabsGradient/Tabs'
 import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
 import {useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
 import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'
 
