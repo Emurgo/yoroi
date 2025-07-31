@@ -84,7 +84,7 @@
     "@react-native/metro-config": "0.79.2",
     "@react-native/typescript-config": "0.79.2",
     "@release-it/conventional-changelog": "^10.0.1",
-    "@tanstack/react-query": "^5.76.2",
+    "@tanstack/react-query": "^5.81.5",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^16.3.0",
     "@testing-library/react-native": "^13.2.0",
@@ -123,7 +123,7 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
-    "@tanstack/react-query": "5.76.2",
+    "@tanstack/react-query": "5.81.5",
     "@yoroi/common": "file:../common",
     "axios": "^1.10.0",
     "bignumber.js": "9.3.0",
