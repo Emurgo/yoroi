@@ -6,7 +6,7 @@ import {useStrings} from '~/features/Transactions/common/strings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
-import OrganizeWalletImage from '../assets/img/organize-wallet-utxos.png'
+import OrganizeWalletImage from '~/assets/img/organize-wallet-utxos.png'
 
 export const UtxoConsolidation = () => {
   const strings = useStrings()

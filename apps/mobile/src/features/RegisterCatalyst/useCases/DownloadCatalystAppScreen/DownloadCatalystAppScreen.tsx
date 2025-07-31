@@ -24,8 +24,8 @@ import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustr
 import {Actions, Row, Stepper} from '~/ui/common/components'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import appstoreBadge from '../../../assets/img/app-store-badge.png'
-import playstoreBadge from '../../../assets/img/google-play-badge.png'
+import appstoreBadge from '~/assets/img/app-store-badge.png'
+import playstoreBadge from '~/assets/img/google-play-badge.png'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
