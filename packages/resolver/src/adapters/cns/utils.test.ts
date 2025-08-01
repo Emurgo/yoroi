@@ -209,7 +209,7 @@ const item2 = {
 
 describe('objToHex', () => {
   it('successfully converts to hex', async () => {
-    const result = await objToHex(item1, init('ctx'))
+    const result = objToHex(item1, init('ctx'))
     expect(result).toBe(
       'd8799fd8799f581ca5644bcb8cd82b5e0478657e2c8feea865682a5b20db45d095807d84ffd8799fd8799fd8799f581ce40482bb4648fc54bffc06175c4a9e5f268b70da54bf6de4d6ad71dfffffffff',
     )
@@ -218,16 +218,16 @@ describe('objToHex', () => {
 
 describe('parsePlutusAddressToBech32', () => {
   it('successfully converts to Bech32: pub key credential', async () => {
-    const hex = await objToHex(item1, init('ctx'))
-    const result = await parsePlutusAddressToBech32(hex, init('ctx'), 1)
+    const hex = objToHex(item1, init('ctx'))
+    const result = parsePlutusAddressToBech32(hex, init('ctx'), 1)
     expect(result).toBe(
       'addr1qxjkgj7t3nvzkhsy0pjhuty0a65x26p2tvsdk3wsjkq8mp8yqjptk3jgl32tllqxzawy48jly69hpkj5hak7f44dw80sqfylvs',
     )
   })
 
   it('successfully converts to Bech32: script credential', async () => {
-    const hex = await objToHex(item2, init('ctx'))
-    const result = await parsePlutusAddressToBech32(hex, init('ctx'), 1)
+    const hex = objToHex(item2, init('ctx'))
+    const result = parsePlutusAddressToBech32(hex, init('ctx'), 1)
     expect(result).toBe(
       'addr1zxjkgj7t3nvzkhsy0pjhuty0a65x26p2tvsdk3wsjkq8mp8yqjptk3jgl32tllqxzawy48jly69hpkj5hak7f44dw80s0xayjy',
     )

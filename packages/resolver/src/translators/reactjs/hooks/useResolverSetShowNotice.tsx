@@ -1,21 +1,29 @@
-import {UseMutationOptions} from '@tanstack/react-query'
+import {useState} from 'react'
 
 import {useResolver} from '../provider/ResolverProvider'
-import {useMutationWithInvalidations} from '../../../utils/useMutationWithInvalidations'
 
-export const useResolverSetShowNotice = (
-  options?: UseMutationOptions<void, Error, boolean>,
-) => {
+export const useResolverSetShowNotice = () => {
   const {showNotice} = useResolver()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
 
-  const mutation = useMutationWithInvalidations({
-    ...options,
-    mutationKey: ['useResolverSetShowNotice'],
-    mutationFn: showNotice.save,
-    invalidateQueries: [['useResolverShowNotice']],
-  })
+  const setShowNotice = async (value: boolean) => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      await showNotice.save(value)
+    } catch (err) {
+      setError(err as Error)
+      throw err
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return {
-    ...mutation,
-    setShowNotice: mutation.mutate,
+    isLoading,
+    error,
+    isError: error !== null,
+    setShowNotice,
   }
 }

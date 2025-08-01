@@ -1,22 +1,35 @@
-import {UseQueryOptions, useQuery} from '@tanstack/react-query'
+import {useState, useEffect} from 'react'
 
 import {useResolver} from '../provider/ResolverProvider'
 
-export const useResolverShowNotice = (
-  options: Partial<
-    UseQueryOptions<boolean, Error, boolean, ['useResolverShowNotice']>
-  > = {},
-) => {
+export const useResolverShowNotice = () => {
   const {showNotice} = useResolver()
+  const [data, setData] = useState<boolean>(false)
+  const [error, setError] = useState<Error | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const query = useQuery({
-    ...options,
-    queryKey: ['useResolverShowNotice'],
-    queryFn: showNotice.read,
-  })
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+        const result = await showNotice.read()
+        setData(result)
+      } catch (err) {
+        setError(err as Error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [showNotice])
 
   return {
-    ...query,
-    showNotice: query.data,
+    data,
+    error,
+    isLoading,
+    isError: error !== null,
+    showNotice: data,
   }
 }

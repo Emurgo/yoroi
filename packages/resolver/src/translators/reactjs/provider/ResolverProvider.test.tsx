@@ -1,9 +1,7 @@
 import {Resolver} from '@yoroi/types'
 
-import {QueryClient} from '@tanstack/react-query'
 import {renderHook, act} from '@testing-library/react'
 
-import {queryClientFixture} from '../../../fixtures/query-client'
 import {useResolver} from './ResolverProvider'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 
@@ -20,20 +18,12 @@ const resolverManagerMock: Resolver.Manager = {
 }
 
 describe('ResolverProvider', () => {
-  let queryClient: QueryClient
-
   beforeEach(() => {
     jest.clearAllMocks()
-    queryClient = queryClientFixture()
-  })
-
-  afterEach(() => {
-    queryClient.clear()
   })
 
   it('works', () => {
     const wrapper = wrapperManagerFixture({
-      queryClient,
       resolverManager: resolverManagerMock,
     })
     const {result} = renderHook(() => useResolver(), {
