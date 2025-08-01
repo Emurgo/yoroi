@@ -72,7 +72,6 @@
     "@yoroi/staking": "file:../../packages/staking",
     "@yoroi/swap": "file:../../packages/swap",
     "@yoroi/theme": "file:../../packages/theme",
-    "@yoroi/transfer": "file:../../packages/transfer",
     "@yoroi/types": "file:../../packages/types",
     "axios": "^1.10.0",
     "bignumber.js": "^9.3.0",
