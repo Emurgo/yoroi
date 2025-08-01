@@ -74,22 +74,19 @@ export const parseAssocMapAsync = async <T>(
   return parsedAssocMap
 }
 
-export const objToHex = async <T>(
-  obj: T,
-  csl: WasmModuleProxy,
-): Promise<string> => {
-  const plutusData = await csl.PlutusData.fromJson(JSON.stringify(obj), 1)
-  const result = await plutusData.toHex()
+export const objToHex = <T>(obj: T, csl: WasmModuleProxy): string => {
+  const plutusData = csl.PlutusData.fromJson(JSON.stringify(obj), 1)
+  const result = plutusData.toHex()
   return result
 }
 
-export const parsePlutusAddressToBech32 = async (
+export const parsePlutusAddressToBech32 = (
   plutusHex: string,
   csl: WasmModuleProxy,
   networkId: number,
-): Promise<string> => {
-  const cslPlutusDataAddress = await csl.PlutusData.fromHex(plutusHex)
-  const plutusDataAddressJson = await cslPlutusDataAddress.toJson(1)
+): string => {
+  const cslPlutusDataAddress = csl.PlutusData.fromHex(plutusHex)
+  const plutusDataAddressJson = cslPlutusDataAddress.toJson(1)
   const plutusDataAddressObject = JSON.parse(plutusDataAddressJson)
   const plutusDataPaymentKeyObject = plutusDataAddressObject.fields[0]
   const plutusDataStakeKeyObject = plutusDataAddressObject.fields[1]
@@ -97,16 +94,14 @@ export const parsePlutusAddressToBech32 = async (
 
   // Take into account whether the hash is a PubKeyHash or ScriptHash
   const credentialKeyHashBytes = Buffer.from(cslPaymentKeyHash, 'hex')
-  const pubKeyCredentialKeyHash = await csl.Ed25519KeyHash.fromBytes(
+  const pubKeyCredentialKeyHash = csl.Ed25519KeyHash.fromBytes(
     credentialKeyHashBytes,
   )
-  const pubKeyCredential = await csl.Credential.fromKeyhash(
-    pubKeyCredentialKeyHash,
-  )
-  const scriptCredentialKeyHash = await csl.ScriptHash.fromBytes(
+  const pubKeyCredential = csl.Credential.fromKeyhash(pubKeyCredentialKeyHash)
+  const scriptCredentialKeyHash = csl.ScriptHash.fromBytes(
     credentialKeyHashBytes,
   )
-  const scriptCredential = await csl.Credential.fromScripthash(
+  const scriptCredential = csl.Credential.fromScripthash(
     scriptCredentialKeyHash,
   )
   const cslPaymentCredential =
@@ -116,21 +111,21 @@ export const parsePlutusAddressToBech32 = async (
   let bech32Addr = ''
 
   // Parsing address according to whether it has a stake key
-  const cslStakeKeyHash = await csl.Ed25519KeyHash.fromBytes(
+  const cslStakeKeyHash = csl.Ed25519KeyHash.fromBytes(
     Buffer.from(
       plutusDataStakeKeyObject.fields[0].fields[0].fields[0].bytes,
       'hex',
     ),
   )
-  const stakeCredential = await csl.Credential.fromKeyhash(cslStakeKeyHash)
-  const cslBaseAddress = await csl.BaseAddress.new(
+  const stakeCredential = csl.Credential.fromKeyhash(cslStakeKeyHash)
+  const cslBaseAddress = csl.BaseAddress.new(
     networkId,
     cslPaymentCredential,
     stakeCredential,
   )
-  const cslAddress = await cslBaseAddress.toAddress()
+  const cslAddress = cslBaseAddress.toAddress()
 
-  bech32Addr = await cslAddress.toBech32(undefined)
+  bech32Addr = cslAddress.toBech32(undefined)
 
   return bech32Addr
 }

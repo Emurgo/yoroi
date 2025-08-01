@@ -1,23 +1,14 @@
 import * as React from 'react'
-import {QueryClient} from '@tanstack/react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 
-import {queryClientFixture} from '../../../fixtures/query-client'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {useResolverCryptoAddresses} from './useResolverCryptoAddresses'
 import {resolverManagerMocks} from '../../manager.mocks'
 
 describe('useResolverCryptoAddresses', () => {
-  let queryClient: QueryClient
-
   beforeEach(() => {
     jest.clearAllMocks()
-    queryClient = queryClientFixture()
-  })
-
-  afterEach(() => {
-    queryClient.clear()
   })
 
   const mockResolverManager = {...resolverManagerMocks.success}
@@ -40,7 +31,6 @@ describe('useResolverCryptoAddresses', () => {
       )
 
     const wrapper = wrapperManagerFixture({
-      queryClient,
       resolverManager: mockResolverManager,
     })
 
