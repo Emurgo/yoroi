@@ -27,7 +27,7 @@ export const ReviewTxNavigator = () => {
         ...screenOptions(atoms, p),
       }}
     >
-      <Stack.Screen name="review-tx" options={{title: strings.reviewTx.title}}>
+      <Stack.Screen name="review-tx" options={{title: strings.txReview.title}}>
         {() => (
           <Boundary
             error={{

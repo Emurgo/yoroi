@@ -14,7 +14,7 @@ import {ConfirmRawTxWithHW} from '../ConfirmRawTxWithHw'
 import {useNavigateTo} from './useNavigateTo'
 import {usePromptRootKey} from './usePromptRootKey'
 import {useSignTxWithHW} from './useSignTxWithHW'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export type OnConfirm = {
   cbor?: string | null

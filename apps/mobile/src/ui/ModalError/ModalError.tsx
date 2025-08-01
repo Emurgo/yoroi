@@ -2,6 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
@@ -13,7 +14,6 @@ import {
   LedgerUserError,
   RejectedByUserError,
 } from '~/wallets/hw/hw'
-import {useStrings} from './strings'
 
 type Props = {
   error: Error

@@ -11,7 +11,7 @@ import {useTransactionInfos} from '~/wallets/hooks'
 import {TransactionInfo} from '~/wallets/types/other'
 import {Token} from '~/wallets/types/tokens'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const getTransactionReceivedNotificationTitle = (
   event: Notifications.Event,

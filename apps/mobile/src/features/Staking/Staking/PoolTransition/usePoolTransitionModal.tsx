@@ -8,7 +8,8 @@ import {
   PoolTransitionModalActions,
 } from './PoolTransitionModal'
 import {usePoolTransitionContext} from './PoolTransitionProvider'
-import {usePoolTransition, useStrings} from './usePoolTransition'
+import {usePoolTransition} from './usePoolTransition'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const usePoolTransitionModal = () => {
   const {poolTransition, isPoolRetiring, isLoading, navigateToUpdate} =

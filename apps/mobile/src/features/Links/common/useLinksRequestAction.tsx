@@ -14,7 +14,7 @@ import {useBrowser} from '../Discover/common/BrowserProvider'
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
 import {RequestedBrowserLaunchDappUrlScreen} from '../useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
 import {useNavigateTo} from './useNavigationTo'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 const heightBreakpoint = 467
 export const useLinksRequestAction = () => {

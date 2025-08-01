@@ -5,7 +5,7 @@ import {InteractionManager} from 'react-native'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {AskToOpenWalletScreen} from '../useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 const heightBreakpoint = 367
 export const useLinksRequestWallet = () => {

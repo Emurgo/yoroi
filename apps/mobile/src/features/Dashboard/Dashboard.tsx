@@ -3,7 +3,6 @@ import {StackNavigationProp} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
-import {defineMessages} from 'react-intl'
 import {
   ActivityIndicator,
   RefreshControl,
@@ -16,13 +15,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {StakeRewardsWithdrawalOperation} from '~/features/ReviewTx/common/operations'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useIsParticipatingInGovernance} from '~/features/Staking/Governance/common/helpers'
-import {useStrings} from '~/features/Staking/Governance/common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {WithdrawGovernanceWarningModal} from '~/features/Staking/Governance/useCases/WithdrawGovernanceWarningModal/WithdrawGovernanceWarningModal'
 import {PoolTransitionNotice} from '~/features/Staking/Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '~/features/Staking/Staking/PoolTransition/usePoolTransition'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {DashboardRoutes, useWalletNavigation} from '~/kernel/navigation'
 

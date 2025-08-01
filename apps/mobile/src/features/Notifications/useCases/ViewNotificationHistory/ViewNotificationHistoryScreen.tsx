@@ -21,7 +21,7 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {Text} from '~/ui/Text/Text'
 import {useTransactionInfos} from '~/wallets/hooks'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {EmptyNotificationsIllustration} from '../illustrations/EmptyNotifications'
 
 export const ViewNotificationHistoryScreen = () => {

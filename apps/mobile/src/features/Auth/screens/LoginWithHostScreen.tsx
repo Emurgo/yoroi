@@ -24,7 +24,11 @@ export const LoginWithHostScreen = () => {
       </MiddleSection>
 
       <BottomSection>
-        <Button title={strings.auth.loginWithHost.title} disabled={isPending} onPress={resolve} />
+        <Button
+          title={strings.auth.loginWithHost.title}
+          disabled={isPending}
+          onPress={resolve}
+        />
       </BottomSection>
     </View>
   )

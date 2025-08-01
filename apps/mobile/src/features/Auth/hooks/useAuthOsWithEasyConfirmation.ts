@@ -1,6 +1,6 @@
 export const useAuthOsWithEasyConfirmation = (
   {
-    walletId,
+    walletId: _walletId,
     authenticationPrompt,
   }: {walletId: string; authenticationPrompt?: AuthenticationPrompt},
   options?: UseMutationOptions<string, Error>,

@@ -6,7 +6,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useOpenUnverifiedDappModal = () => {
   const {openModal, closeModal} = useModal()

@@ -12,7 +12,6 @@ type Props = {
   selectedTypes: string[]
 }
 export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
-  const {palette: p} = useTheme()
   const scrollViewRef = React.useRef<ScrollView | null>(null)
   const sorted = React.useMemo(
     () => sortTypes(types, selectedTypes),

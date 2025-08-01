@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useDialogs = () => {
   const strings = useStrings()

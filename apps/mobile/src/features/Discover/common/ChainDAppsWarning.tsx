@@ -24,8 +24,18 @@ export const ChainDAppsWarning = () => {
 
   if (isMainnet || hasAccepted) return null
   return (
-    <View style={{padding: 16, backgroundColor: '#fff3cd', borderColor: '#ffeaa7', borderWidth: 1, borderRadius: 8}}>
-      <Text style={{fontWeight: 'bold', marginBottom: 8}}>{strings.testnetWarningTitle}</Text>
+    <View
+      style={{
+        padding: 16,
+        backgroundColor: '#fff3cd',
+        borderColor: '#ffeaa7',
+        borderWidth: 1,
+        borderRadius: 8,
+      }}
+    >
+      <Text style={{fontWeight: 'bold', marginBottom: 8}}>
+        {strings.testnetWarningTitle}
+      </Text>
       <Text style={{marginBottom: 8}}>{strings.testnetWarningDescription}</Text>
       <Button title="Close" onPress={handleOnClose} />
     </View>

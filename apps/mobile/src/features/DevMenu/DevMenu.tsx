@@ -12,9 +12,9 @@ import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePairing} from '~/features/Pairing/context/PairingProvider'
 import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {encryptData} from '~/kernel/crypto/encrypt-data'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {debugStorage} from '~/kernel/storage/debug-storage'
 import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
@@ -22,14 +22,7 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 
 export function DevMenu({visible}: {visible?: boolean}) {
-  const {
-    isDark,
-    config,
-    palette: p,
-    basePalette,
-    selectTheme,
-    atoms: ta,
-  } = useTheme()
+  const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
   const {authWithHost} = useAuth()
   const {languageCode, selectLanguage} = useLanguage()
   const strings = useStrings()

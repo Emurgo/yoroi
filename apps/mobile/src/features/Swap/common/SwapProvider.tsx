@@ -15,7 +15,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useAddressHex, useStakingKey} from '~/wallets/hooks'
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
-import {useStrings} from './strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useGetInputs} from './useGetInputs'
 import {useSwapConfig} from './useSwapConfig'
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Linking} from 'react-native'
 
-import {useStrings} from '~/features/Swap/common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 
 const SWAP_ZENDESK_LINK =

@@ -28,7 +28,7 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
     <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
       <Space.Height.lg />
 
-      <Accordion label={`${strings.reviewTx.utxosInputsLabel} (${tx.inputs.length})`}>
+      <Accordion label={`${strings.txReview.utxosInputsLabel} (${tx.inputs.length})`}>
         <Inputs inputs={tx.inputs} />
       </Accordion>
 
@@ -39,7 +39,7 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
         )}
       />
 
-      <Accordion label={`${strings.reviewTx.utxosOutputsLabel} (${tx.outputs.length})`}>
+      <Accordion label={`${strings.txReview.utxosOutputsLabel} (${tx.outputs.length})`}>
         <Outputs outputs={tx.outputs} />
       </Accordion>
 
@@ -174,7 +174,7 @@ const Fee = ({fee}: {fee: string}) => {
 
       <View style={[a.flex_row, a.justify_between]}>
         <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-          {strings.reviewTx.feeLabel}
+          {strings.txReview.feeLabel}
         </Text>
 
         <Text
@@ -200,8 +200,8 @@ const UtxoTitle = ({
   const label =
     isOwnAdddress != null
       ? isOwnAdddress
-        ? strings.reviewTx.utxosYourAddressLabel
-        : strings.reviewTx.utxosForeignAddressLabel
+        ? strings.txReview.utxosYourAddressLabel
+        : strings.txReview.utxosForeignAddressLabel
       : '-'
 
   return (

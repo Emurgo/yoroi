@@ -15,7 +15,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '../common'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Biometric} from '../illustrations/Biometric'
 
 export const ChooseBiometricLoginScreen = () => {

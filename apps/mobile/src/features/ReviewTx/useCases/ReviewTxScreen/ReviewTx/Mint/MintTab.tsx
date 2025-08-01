@@ -24,7 +24,7 @@ export const MintTab = ({mintData}: {mintData: FormattedTx['mint']}) => {
             <View style={[a.flex_1, a.flex_row, a.justify_between]}>
               <Text
                 style={[a.body_2_md_medium, {color: p.text_gray_medium}]}
-              >{`${strings.reviewTx.policyIdLabel}:`}</Text>
+              >{`${strings.txReview.policyIdLabel}:`}</Text>
 
               <Space.Width.sm />
 

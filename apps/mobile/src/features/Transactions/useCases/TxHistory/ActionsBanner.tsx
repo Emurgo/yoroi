@@ -4,12 +4,12 @@ import {Alert, View} from 'react-native'
 
 // import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
-import {useStrings} from '../../common/strings'
 
-export const ActionsBanner = (props: {disabled: boolean}) => {
+export const ActionsBanner = (_props: {disabled: boolean}) => {
   const strings = useStrings()
   // const swapForm = useSwap()
   // const {tokenOutId, isLoading} = useSwapConfig()

@@ -4,9 +4,9 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Pressable, Text, TextInput, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {isEmptyString} from '~/wallets/utils/string'
 
 type AmountCardProps = {

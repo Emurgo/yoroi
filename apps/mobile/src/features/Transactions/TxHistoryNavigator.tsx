@@ -3,11 +3,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   defaultStackNavigationOptions,
   TxHistoryRoutes,
 } from '~/kernel/navigation/navigation'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'

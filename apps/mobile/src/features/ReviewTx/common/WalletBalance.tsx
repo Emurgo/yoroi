@@ -61,7 +61,7 @@ export const WalletBalance = ({
         <TokenSquare
           count={ftList.length}
           list={ftList}
-          title={strings.reviewTx.walletBalanceTokensTitle}
+          title={strings.txReview.walletBalanceTokensTitle}
         />
 
         <Space.Width.lg />
@@ -69,7 +69,7 @@ export const WalletBalance = ({
         <TokenSquare
           count={nftsList.length}
           list={nftsList}
-          title={strings.reviewTx.walletBalanceNFTsTitle}
+          title={strings.txReview.walletBalanceNFTsTitle}
         />
       </TokenSquares>
     </View>

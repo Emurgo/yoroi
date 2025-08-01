@@ -25,7 +25,7 @@ export const TokenItem = ({
 
   const handleShowTokenDetails = () => {
     openModal({
-      title: strings.reviewTx.tokenDetailsTitle,
+      title: strings.txReview.tokenDetailsTitle,
       content: <TokenDetails tokenInfo={tokenInfo} />,
       height: windowHeight * 0.8,
     })

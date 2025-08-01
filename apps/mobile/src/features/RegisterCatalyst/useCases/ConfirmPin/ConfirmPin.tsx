@@ -5,8 +5,8 @@ import React from 'react'
 import {ActivityIndicator, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStrings} from '~/features/RegisterCatalyst/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {
@@ -215,11 +215,15 @@ export const ConfirmPin = () => {
       style={[a.flex_1, {backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
     >
       <Padding style={a.px_lg}>
-        <Stepper title={strings.step3Title} currentStep={3} totalSteps={3} />
+        <Stepper
+          title={strings.registerCatalyst.step3Title}
+          currentStep={3}
+          totalSteps={3}
+        />
       </Padding>
 
       <ScrollView bounces={false} contentContainerStyle={[]}>
-        <Description>{strings.step3Description}</Description>
+        <Description>{strings.registerCatalyst.step3Description}</Description>
 
         <Space.Height.lg />
 
@@ -274,7 +278,7 @@ export const ConfirmPin = () => {
         <Actions>
           <Button
             onPress={() => onNext()}
-            title={strings.continueButton}
+            title={strings.registerCatalyst.confirm}
             disabled={!done || isLoading}
           />
         </Actions>

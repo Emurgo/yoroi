@@ -39,7 +39,7 @@ export const SubmittedTxScreen = () => {
           {color: p.gray_max},
         ]}
       >
-        {strings.reviewTx.submittedTxTitle}
+        {strings.txReview.submittedTxTitle}
       </Text>
 
       <Text
@@ -49,7 +49,7 @@ export const SubmittedTxScreen = () => {
           {color: p.gray_600, maxWidth: 330},
         ]}
       >
-        {strings.reviewTx.submittedTxText}
+        {strings.txReview.submittedTxText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -57,7 +57,7 @@ export const SubmittedTxScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.reviewTx.submittedTxButton}
+          title={strings.txReview.submittedTxButton}
           style={[a.px_lg]}
         />
       </Actions>

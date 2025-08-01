@@ -21,6 +21,7 @@ export {setupWalletMessages} from './setup-wallet'
 export {stakingMessages} from './staking'
 export {swapMessages} from './swap'
 export {transactionsMessages} from './transactions'
+export {txReviewMessages} from './txReview'
 export {uiMessages} from './ui'
 export {walletManagerMessages} from './wallet-manager'
 

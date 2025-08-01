@@ -7,7 +7,8 @@ import {BlueCheckbox} from '~/ui/BlueCheckbox/BlueCheckbox'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SpaceHeight} from '~/ui/Space/Space'
-import {useNavigateTo, useStrings} from '../common'
+import {useNavigateTo} from '../common'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const TermsOfServiceChangedScreen = () => {
   const [accepted, setAccepted] = React.useState(false)

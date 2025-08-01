@@ -12,7 +12,7 @@ import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
 import {SwipeOutWrapper} from '~/ui/SwipeOutWrapper/SwipeOutWrapper'
 import {TransactionReceivedNotificationPopup} from '~/ui/TransactionReceivedNotificationPopup/TransactionReceivedNotificationPopup'
 import {BannerIds} from './banners'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 type Props = {
   event: Notifications.Event

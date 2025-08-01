@@ -52,8 +52,8 @@ export const ReviewTx = ({
   const strings = useStrings()
 
   const tabsData: Array<[string, Tabs]> = [
-    [strings.reviewTx.overviewTab, 'overview'],
-    [strings.reviewTx.utxosTab, 'utxos'],
+    [strings.txReview.overviewTab, 'overview'],
+    [strings.txReview.utxosTab, 'utxos'],
   ]
   const [activeTab, setActiveTab] = React.useState<Tabs>(tabsData[0][1])
 
@@ -63,10 +63,10 @@ export const ReviewTx = ({
   const showMintTab = !!formattedTx.mint
   const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
 
-  if (showMetadataTab) tabsData.push([strings.reviewTx.metadataTab, 'metadata'])
-  if (showMintTab) tabsData.push([strings.reviewTx.mintTab, 'mint'])
+  if (showMetadataTab) tabsData.push([strings.txReview.metadataTab, 'metadata'])
+  if (showMintTab) tabsData.push([strings.txReview.mintTab, 'mint'])
   if (showReferenceInoutsTab)
-    tabsData.push([strings.reviewTx.referenceInputsTab, 'reference_inputs'])
+    tabsData.push([strings.txReview.referenceInputsTab, 'reference_inputs'])
 
   // intentionally not using ref
   const {
@@ -182,7 +182,7 @@ export const ReviewTx = ({
       <Actions
         style={scrollbarActive && [a.border_t, {borderTopColor: p.gray_200}]}
       >
-        <Button title={strings.reviewTx.confirm} onPress={onConfirm} />
+        <Button title={strings.txReview.confirm} onPress={onConfirm} />
       </Actions>
     </SafeArea>
   )

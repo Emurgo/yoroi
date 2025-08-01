@@ -4,7 +4,7 @@ import {InteractionManager} from 'react-native'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {isEmptyString} from '~/wallets/utils/string'
 import {AskToRedirectScreen} from '../useCases/AskToRedirect/AskToRedirectScreen'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 const heightBreakpoint = 367
 export const useLinksRequestRedirect = (redirectTo?: string) => {

@@ -1,4 +1,3 @@
-import {useHeaderHeight} from '@react-navigation/elements'
 import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -44,7 +43,6 @@ export const TxHistory = () => {
   const [showWarning, setShowWarning] = React.useState(
     meta.implementation === 'cardano-bip44',
   )
-  const headerHeight = useHeaderHeight()
 
   const {sync, isPending: isLoadingWallet} = useSync(wallet)
   // const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()

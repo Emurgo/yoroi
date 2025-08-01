@@ -35,6 +35,7 @@ import {
   themeNames,
   transactionsMessages,
   txLabels,
+  txReviewMessages,
   uiMessages,
   walletManagerMessages,
 } from './messages'
@@ -1246,6 +1247,150 @@ export const useStrings = () => {
         },
       },
 
+      // ReviewTx strings
+      txReview: {
+        adaDescription: f(txReviewMessages.adaDescription),
+        confirm: f(txReviewMessages.confirm),
+        title: f(txReviewMessages.title),
+        tabLabel: {
+          utxos: f(txReviewMessages.tabLabelUtxos),
+          overview: f(txReviewMessages.tabLabelOverview),
+          mint: f(txReviewMessages.tabLabelMint),
+          referenceInputs: f(txReviewMessages.tabLabelReferenceInputs),
+          metadataTab: f(txReviewMessages.tabLabelMetadataTab),
+        },
+        metadata: {
+          metadataHash: f(txReviewMessages.metadataMetadataHash),
+          metadataJsonLabel: f(txReviewMessages.metadataMetadataJsonLabel),
+        },
+        overview: {
+          wallet: f(txReviewMessages.overviewWallet),
+          myWalletLabel: f(txReviewMessages.overviewMyWalletLabel),
+          sendLabel: f(txReviewMessages.overviewSendLabel),
+          receiveToLabel: f(txReviewMessages.overviewReceiveToLabel),
+          receiveToScriptLabel: f(
+            txReviewMessages.overviewReceiveToScriptLabel,
+          ),
+          multiExternalPartiesSectionLabel: f(
+            txReviewMessages.overviewMultiExternalPartiesSectionLabel,
+          ),
+          multiExternalPartiesSectionNotice: f(
+            txReviewMessages.overviewMultiExternalPartiesSectionNotice,
+          ),
+          operationsNoticeText: f(
+            txReviewMessages.overviewOperationsNoticeText,
+          ),
+          operationsNoticeButton: f(
+            txReviewMessages.overviewOperationsNoticeButton,
+          ),
+          operationsNoticeTitle: f(
+            txReviewMessages.overviewOperationsNoticeTitle,
+          ),
+        },
+        fee: f(txReviewMessages.fee),
+        utxos: {
+          utxosInputsLabel: f(txReviewMessages.utxosUtxosInputsLabel),
+          utxosOutputsLabel: f(txReviewMessages.utxosUtxosOutputsLabel),
+          utxosYourAddressLabel: f(txReviewMessages.utxosUtxosYourAddressLabel),
+          utxosForeignAddressLabel: f(
+            txReviewMessages.utxosUtxosForeignAddressLabel,
+          ),
+        },
+        tokenDetails: {
+          title: f(txReviewMessages.tokenDetailsTitle),
+          overViewTab: {
+            title: f(txReviewMessages.tokenDetailsOverViewTabTitle),
+            name: f(txReviewMessages.tokenDetailsOverViewTabNameLabel),
+            tokenSupply: f(
+              txReviewMessages.tokenDetailsOverViewTabTokenSupplyLabel,
+            ),
+            symbol: f(txReviewMessages.tokenDetailsOverViewTabSymbolLabel),
+            description: f(
+              txReviewMessages.tokenDetailsOverViewTabDescriptionLabel,
+            ),
+            details: f(txReviewMessages.tokenDetailsOverViewTabDetailsLabel),
+          },
+          jsonTab: {
+            title: f(txReviewMessages.tokenDetailsJsonTabTitle),
+            metadata: f(txReviewMessages.tokenDetailsJsonTabMetadata),
+          },
+          policyId: f(txReviewMessages.tokenDetailsPolicyIdLabel),
+          fingerprint: f(txReviewMessages.tokenDetailsFingerprintLabel),
+        },
+        poolDetails: {
+          title: f(txReviewMessages.poolDetailsTitle),
+          poolId: f(txReviewMessages.poolDetailsPoolIdLabel),
+          poolHash: f(txReviewMessages.poolDetailsPoolHashLabel),
+          poolSize: f(txReviewMessages.poolDetailsPoolSizeLabel),
+          poolRoa: f(txReviewMessages.poolDetailsPoolRoaLabel),
+          poolShare: f(txReviewMessages.poolDetailsPoolShareLabel),
+          poolSaturation: f(txReviewMessages.poolDetailsPoolSaturationLabel),
+          taxFix: f(txReviewMessages.poolDetailsTaxFixLabel),
+          taxRatio: f(txReviewMessages.poolDetailsTaxRatioLabel),
+          pledge: f(txReviewMessages.poolDetailsPledgeLabel),
+        },
+        walletBalance: {
+          title: f(txReviewMessages.walletBalanceTitle),
+          tokens: f(txReviewMessages.walletBalanceTokensTitle),
+          nfts: f(txReviewMessages.walletBalanceNFTsTitle),
+        },
+        operations: {
+          registerStakingKey: f(txReviewMessages.operationsRegisterStakingKey),
+          drepRegistration: f(txReviewMessages.operationsDrepRegistration),
+          poolRegistration: f(txReviewMessages.operationsPoolRegistration),
+          poolRetirement: f(txReviewMessages.operationsPoolRetirement),
+          drepUpdate: f(txReviewMessages.operationsDrepUpdate),
+          drepDeregistration: f(txReviewMessages.operationsDrepDeregistration),
+          deregisterStakingKey: f(
+            txReviewMessages.operationsDeregisterStakingKey,
+          ),
+          moveInstantaneousRewards: f(
+            txReviewMessages.operationsMoveInstantaneousRewards,
+          ),
+          committeeHotAuthorization: f(
+            txReviewMessages.operationsCommitteeHotAuthorization,
+          ),
+          committeeColdResign: f(
+            txReviewMessages.operationsCommitteeColdResign,
+          ),
+          rewardsWithdrawal: {
+            label: f(txReviewMessages.operationsRewardsWithdrawalLabel),
+            text: f(txReviewMessages.operationsRewardsWithdrawalText),
+          },
+          selectAbstain: f(txReviewMessages.operationsSelectAbstain),
+          selectNoConfidence: f(txReviewMessages.operationsSelectNoConfidence),
+          delegateVotingToDRep: f(
+            txReviewMessages.operationsDelegateVotingToDRep,
+          ),
+          delegateVotingToDRepSpecified: f(
+            txReviewMessages.operationsDelegateVotingToDRepSpecified,
+          ),
+          delegateStake: f(txReviewMessages.operationsDelegateStake),
+          log: f(txReviewMessages.operationsLogTitle),
+          warning: {
+            title: f(txReviewMessages.operationsWarningTitle),
+            text: f(txReviewMessages.operationsWarningText),
+          },
+        },
+        submittedTxTitle: f(txReviewMessages.submittedTxTitle),
+        submittedTxText: f(txReviewMessages.submittedTxText),
+        submittedTxButton: f(txReviewMessages.submittedTxButton),
+        failedTxTitle: f(txReviewMessages.failedTxTitle),
+        failedTxText: f(txReviewMessages.failedTxText),
+        failedTxButton: f(txReviewMessages.failedTxButton),
+        infraestructureIssueTitle: f(
+          txReviewMessages.infraestructureIssueTitle,
+        ),
+        infraestructureIssueText: f(txReviewMessages.infraestructureIssueText),
+        infraestructureIssueButton: f(
+          txReviewMessages.infraestructureIssueButton,
+        ),
+        receiveLabel: f(txReviewMessages.receiveLabel),
+        operationsLabel: f(txReviewMessages.operationsLabel),
+        policyIdLabel: f(txReviewMessages.policyIdLabel),
+        createdBy: f(txReviewMessages.createdBy),
+      },
+
       // Transactions strings
       transactions: {
         title: f(transactionsMessages.title),
@@ -1444,202 +1589,51 @@ export const useStrings = () => {
 
       // Setup Wallet strings
       setupWallet: {
-        notFound: f(setupWalletMessages.notFound),
-        clearAll: f(setupWalletMessages.clearAll),
-        passwordStrengthRequirement: f(
-          setupWalletMessages.passwordStrengthRequirement,
-        ),
-        repeatPasswordInputLabel: f(
-          setupWalletMessages.repeatPasswordInputLabel,
-        ),
-        repeatPasswordInputError: f(
-          setupWalletMessages.repeatPasswordInputError,
-        ),
-        logoTitle: f(setupWalletMessages.logoTitle),
-        logoSubtitle: f(setupWalletMessages.logoSubtitle),
-        learnMore: f(setupWalletMessages.learnMore),
-        continueButton: f(setupWalletMessages.continueButton),
-        next: f(setupWalletMessages.next),
-        createWalletButtonCard: f(setupWalletMessages.createWalletButtonCard),
-        restoreWalletButtonCard: f(setupWalletMessages.restoreWalletButtonCard),
-        connectWalletButtonCard: f(setupWalletMessages.connectWalletButtonCard),
-        cardanoMainnet: f(setupWalletMessages.cardanoMainnet),
-        cardanoTestnet: f(setupWalletMessages.cardanoTestnet),
-        cardanoMainnetDescription: f(
-          setupWalletMessages.cardanoMainnetDescription,
-        ),
-        cardanoTestnetDescription: f(
-          setupWalletMessages.cardanoTestnetDescription,
-        ),
-        aboutRecoveryPhraseTitle: f(
-          setupWalletMessages.aboutRecoveryPhraseTitle,
-        ),
-        stepAboutRecoveryPhrase: f(setupWalletMessages.stepAboutRecoveryPhrase),
-        aboutRecoveryPhraseCardFirstItem: f(
-          setupWalletMessages.aboutRecoveryPhraseCardFirstItem,
-        ),
-        aboutRecoveryPhraseCardSecondItem: f(
-          setupWalletMessages.aboutRecoveryPhraseCardSecondItem,
-        ),
-        aboutRecoveryPhraseCardThirdItem: f(
-          setupWalletMessages.aboutRecoveryPhraseCardThirdItem,
-        ),
-        aboutRecoveryPhraseCardFourthItem: f(
-          setupWalletMessages.aboutRecoveryPhraseCardFourthItem,
-        ),
-        aboutRecoveryPhraseCardFifthItem: f(
-          setupWalletMessages.aboutRecoveryPhraseCardFifthItem,
-        ),
-        recoveryPhraseTitle: f(setupWalletMessages.recoveryPhraseTitle),
-        stepRecoveryPhrase: f(setupWalletMessages.stepRecoveryPhrase),
-        hideRecoveryPhraseButton: f(
-          setupWalletMessages.hideRecoveryPhraseButton,
-        ),
-        showRecoveryPhraseButton: f(
-          setupWalletMessages.showRecoveryPhraseButton,
-        ),
-        recoveryPhraseModalTitle: f(
-          setupWalletMessages.recoveryPhraseModalTitle,
-        ),
-        recoveryPhraseCardTitle: f(setupWalletMessages.recoveryPhraseCardTitle),
-        recoveryPhraseCardFirstItem: f(
-          setupWalletMessages.recoveryPhraseCardFirstItem,
-        ),
-        recoveryPhraseCardSecondItem: f(
-          setupWalletMessages.recoveryPhraseCardSecondItem,
-        ),
-        recoveryPhraseCardThirdItem: f(
-          setupWalletMessages.recoveryPhraseCardThirdItem,
-        ),
-        recoveryPhraseCardFourthItem: f(
-          setupWalletMessages.recoveryPhraseCardFourthItem,
-        ),
-        recoveryPhraseCardFifthItem: f(
-          setupWalletMessages.recoveryPhraseCardFifthItem,
-        ),
-        verifyRecoveryPhraseTitle: f(
-          setupWalletMessages.verifyRecoveryPhraseTitle,
-        ),
-        stepVerifyRecoveryPhrase: f(
-          setupWalletMessages.stepVerifyRecoveryPhrase,
-        ),
-        verifyRecoveryPhraseErrorMessage: f(
-          setupWalletMessages.verifyRecoveryPhraseErrorMessage,
-        ),
-        verifyRecoveryPhraseSuccessMessage: f(
-          setupWalletMessages.verifyRecoveryPhraseSuccessMessage,
-        ),
-        walletDetailsModalTitle: f(setupWalletMessages.walletDetailsModalTitle),
-        walletNameModalCardTitle: f(
-          setupWalletMessages.walletNameModalCardTitle,
-        ),
-        walletNameModalCardFirstItem: f(
-          setupWalletMessages.walletNameModalCardFirstItem,
-        ),
-        walletNameModalCardSecondItem: f(
-          setupWalletMessages.walletNameModalCardSecondItem,
-        ),
-        walletPasswordModalCardTitle: f(
-          setupWalletMessages.walletPasswordModalCardTitle,
-        ),
-        walletPasswordModalCardFirstItem: f(
-          setupWalletMessages.walletPasswordModalCardFirstItem,
-        ),
-        walletPasswordModalCardSecondItem: f(
-          setupWalletMessages.walletPasswordModalCardSecondItem,
-        ),
-        walletChecksumModalCardTitle: f(
-          setupWalletMessages.walletChecksumModalCardTitle,
-        ),
-        walletChecksumModalCardFirstItem: f(
-          setupWalletMessages.walletChecksumModalCardFirstItem,
-        ),
-        walletChecksum: f(setupWalletMessages.walletChecksum),
-        walletChecksumModalCardSecondItem: f(
-          setupWalletMessages.walletChecksumModalCardSecondItem,
-        ),
-        walletChecksumModalCardThirdItem: f(
-          setupWalletMessages.walletChecksumModalCardThirdItem,
-        ),
-        stepWalletDetails: f(setupWalletMessages.stepWalletDetails),
-        walletDetailsTitle: f(setupWalletMessages.walletDetailsTitle),
-        walletDetailsPasswordHelper: f(
-          setupWalletMessages.walletDetailsPasswordHelper,
-        ),
-        walletDetailsNameInput: f(setupWalletMessages.walletDetailsNameInput),
-        walletDetailsPasswordInput: f(
-          setupWalletMessages.walletDetailsPasswordInput,
-        ),
-        walletDetailsConfirmPasswordInput: f(
-          setupWalletMessages.walletDetailsConfirmPasswordInput,
-        ),
-        invalidChecksum: f(setupWalletMessages.invalidChecksum),
-        validChecksum: f(setupWalletMessages.validChecksum),
-        stepRestoreWalletScreen: f(setupWalletMessages.stepRestoreWalletScreen),
-        choose15WordsMnemonicTitle: f(
-          setupWalletMessages.choose15WordsMnemonicTitle,
-        ),
-        choose24WordsMnemonicTitle: f(
-          setupWalletMessages.choose24WordsMnemonicTitle,
-        ),
-        restoreWalletScreenTitle: f(
-          setupWalletMessages.restoreWalletScreenTitle,
-        ),
-        restoreDuplicatedWalletModalTitle: f(
-          setupWalletMessages.restoreDuplicatedWalletModalTitle,
-        ),
-        restoreDuplicatedWalletModalText: f(
-          setupWalletMessages.restoreDuplicatedWalletModalText,
-        ),
-        restoreDuplicatedWalletModalButton: f(
-          setupWalletMessages.restoreDuplicatedWalletModalButton,
-        ),
-        preparingWallet: f(setupWalletMessages.preparingWallet),
-        wordNotFound: f(setupWalletMessages.wordNotFound),
-        hwModalTitle: f(setupWalletMessages.hwModalTitle),
-        hwModalText: f(setupWalletMessages.hwModalText),
-        hwModalUsbButton: f(setupWalletMessages.hwModalUsbButton),
-        hwModalBtButton: f(setupWalletMessages.hwModalBtButton),
-        hwModalIosWarning: f(setupWalletMessages.hwModalIosWarning),
-        hwWalletDetailsTitle: f(setupWalletMessages.hwWalletDetailsTitle),
-        hwExportKey: f(setupWalletMessages.hwExportKey),
-        bluetoothError: f(setupWalletMessages.bluetoothError),
-        hwCheckIntroline: f(setupWalletMessages.hwCheckIntroline),
-        hwCheckTitle: f(setupWalletMessages.hwCheckTitle),
-        ledgerSupportLink: f(setupWalletMessages.ledgerSupportLink),
-        addNewWalletTitle: f(setupWalletMessages.addNewWalletTitle),
-        createWalletTitle: f(setupWalletMessages.createWalletTitle),
-        restoreWalletTitle: f(setupWalletMessages.restoreWalletTitle),
-        importReadOnlyTitle: f(setupWalletMessages.importReadOnlyTitle),
-        saveReadOnlyWalletTitle: f(setupWalletMessages.saveReadOnlyWalletTitle),
-        mnemonicShowTitle: f(setupWalletMessages.mnemonicShowTitle),
-        mnemonicCheckTitle: f(setupWalletMessages.mnemonicCheckTitle),
-        walletNameInputLabel: f(setupWalletMessages.walletNameInputLabel),
-        save: f(setupWalletMessages.save),
-        walletNameErrorTooLong: f(setupWalletMessages.walletNameErrorTooLong),
-        walletNameErrorMustBeFilled: f(
-          setupWalletMessages.walletNameErrorMustBeFilled,
-        ),
-        defaultWalletName: f(setupWalletMessages.defaultWalletName),
-        checksumLabel: f(setupWalletMessages.checksumLabel),
-        walletAddressLabel: f(setupWalletMessages.walletAddressLabel),
-        key: f(setupWalletMessages.key),
-        derivationPath: f(setupWalletMessages.derivationPath),
-        importReadOnlyWalletTitle: f(
-          setupWalletMessages.importReadOnlyWalletTitle,
-        ),
-        importReadOnlyWalletDescription: f(
-          setupWalletMessages.importReadOnlyWalletDescription,
-        ),
-        importReadOnlyWalletAddress: f(
-          setupWalletMessages.importReadOnlyWalletAddress,
-        ),
-        importReadOnlyWalletAddressPlaceholder: f(
-          setupWalletMessages.importReadOnlyWalletAddressPlaceholder,
-        ),
-        importReadOnlyWalletImport: f(
-          setupWalletMessages.importReadOnlyWalletImport,
-        ),
+      // Wallet initialization strings (flat structure)
+      walletChecksum: f(setupWalletMessages.walletChecksum),
+      walletChecksumModalCardFirstItem: f(setupWalletMessages.walletChecksumModalCardFirstItem),
+      walletChecksumModalCardSecondItem: f(setupWalletMessages.walletChecksumModalCardSecondItem),
+      walletChecksumModalCardThirdItem: f(setupWalletMessages.walletChecksumModalCardThirdItem),
+      stepWalletDetails: f(setupWalletMessages.stepWalletDetails),
+      walletDetailsTitle: f(setupWalletMessages.walletDetailsTitle),
+      walletDetailsPasswordHelper: f(setupWalletMessages.walletDetailsPasswordHelper),
+      walletDetailsNameInput: f(setupWalletMessages.walletDetailsNameInput),
+      walletDetailsPasswordInput: f(setupWalletMessages.walletDetailsPasswordInput),
+      walletDetailsConfirmPasswordInput: f(setupWalletMessages.walletDetailsConfirmPasswordInput),
+      invalidChecksum: f(setupWalletMessages.invalidChecksum),
+      validChecksum: f(setupWalletMessages.validChecksum),
+      stepRestoreWalletScreen: f(setupWalletMessages.stepRestoreWalletScreen),
+      choose15WordsMnemonicTitle: f(setupWalletMessages.choose15WordsMnemonicTitle),
+      choose24WordsMnemonicTitle: f(setupWalletMessages.choose24WordsMnemonicTitle),
+      hwModalTitle: f(setupWalletMessages.hwModalTitle),
+      hwModalText: f(setupWalletMessages.hwModalText),
+      hwModalUsbButton: f(setupWalletMessages.hwModalUsbButton),
+      hwModalBtButton: f(setupWalletMessages.hwModalBtButton),
+      hwModalIosWarning: f(setupWalletMessages.hwModalIosWarning),
+      hwWalletDetailsTitle: f(setupWalletMessages.hwWalletDetailsTitle),
+      hwExportKey: f(setupWalletMessages.hwExportKey),
+      bluetoothError: f(setupWalletMessages.bluetoothError),
+      hwCheckIntroline: f(setupWalletMessages.hwCheckIntroline),
+      hwCheckTitle: f(setupWalletMessages.hwCheckTitle),
+      ledgerSupportLink: f(setupWalletMessages.ledgerSupportLink),
+      addNewWalletTitle: f(setupWalletMessages.addNewWalletTitle),
+      createWalletTitle: f(setupWalletMessages.createWalletTitle),
+      restoreWalletTitle: f(setupWalletMessages.restoreWalletTitle),
+      importReadOnlyTitle: f(setupWalletMessages.importReadOnlyTitle),
+      saveReadOnlyWalletTitle: f(setupWalletMessages.saveReadOnlyWalletTitle),
+      save: f(setupWalletMessages.save),
+      walletNameErrorTooLong: f(setupWalletMessages.walletNameErrorTooLong),
+      walletNameErrorMustBeFilled: f(setupWalletMessages.walletNameErrorMustBeFilled),
+      defaultWalletName: f(setupWalletMessages.defaultWalletName),
+      checksumLabel: f(setupWalletMessages.checksumLabel),
+      walletAddressLabel: f(setupWalletMessages.walletAddressLabel),
+      key: f(setupWalletMessages.key),
+      derivationPath: f(setupWalletMessages.derivationPath),
+      importReadOnlyWalletTitle: f(setupWalletMessages.importReadOnlyWalletTitle),
+      importReadOnlyWalletDescription: f(setupWalletMessages.importReadOnlyWalletDescription),
+      importReadOnlyWalletAddress: f(setupWalletMessages.importReadOnlyWalletAddress),
+      importReadOnlyWalletAddressPlaceholder: f(setupWalletMessages.importReadOnlyWalletAddressPlaceholder),
+      importReadOnlyWalletImport: f(setupWalletMessages.importReadOnlyWalletImport),
       },
     })
   }, [intl])

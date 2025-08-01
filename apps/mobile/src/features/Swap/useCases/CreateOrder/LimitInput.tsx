@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Text, TextInput, View} from 'react-native'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
-import {useStrings} from '~/features/Swap/common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSwap} from '~/features/Swap/common/SwapProvider'
 
 const BORDER_SIZE = 1

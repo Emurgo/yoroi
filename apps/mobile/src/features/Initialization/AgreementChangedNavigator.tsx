@@ -7,7 +7,7 @@ import {
   InititalizationRoutes,
 } from '~/kernel/navigation'
 import {AnalyticsChangedScreen} from './AnalyticsChangedScreen'
-import {useStrings} from './common'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {ReadPrivacyPolicyScreen} from './ReadPrivacyPolicyScreen'
 import {ReadTermsOfServiceScreen} from './ReadTermsOfServiceScreen'
 import {TermsOfServiceChangedScreen} from './TermsOfServiceChangedScreen'

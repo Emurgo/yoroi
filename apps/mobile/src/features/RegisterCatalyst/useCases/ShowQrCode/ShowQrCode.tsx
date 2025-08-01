@@ -5,7 +5,7 @@ import {InteractionManager, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
-import {useStrings} from '~/features/RegisterCatalyst/common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
@@ -44,22 +44,22 @@ export const QrCode = () => {
     >
       <ScrollView bounces={false} contentContainerStyle={[a.px_lg]}>
         <ShareQRCodeCard
-          title={strings.step4QrTitle}
+          title={strings.registerCatalyst.step4QrTitle}
           qrContent={votingKeyEncrypted}
           shareContent={votingKeyEncrypted}
           onLongPress={(event) =>
             copy({
               text: votingKeyEncrypted,
-              feedback: strings.step4QrCopiedText,
+              feedback: strings.registerCatalyst.step4QrCopiedText,
               event,
             })
           }
-          shareLabel={strings.step4QrShareLabel}
+          shareLabel={strings.registerCatalyst.step4QrShareLabel}
         />
 
         <Space.Height.lg />
 
-        <Description>{strings.step4Description}</Description>
+        <Description>{strings.registerCatalyst.step4Description}</Description>
 
         <Space.Height.lg />
 
@@ -67,14 +67,14 @@ export const QrCode = () => {
           onChange={setChecked}
           checked={checked}
           style={[a.align_start]}
-          text={strings.step4QrCheckbox}
+          text={strings.registerCatalyst.step4QrCheckbox}
         />
       </ScrollView>
 
       <Actions style={[a.px_lg]}>
         <Button
           onPress={onNext}
-          title={strings.completeButton}
+          title={strings.registerCatalyst.confirm}
           disabled={isCopying || !checked}
         />
       </Actions>

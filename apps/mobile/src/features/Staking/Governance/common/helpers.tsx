@@ -18,7 +18,7 @@ import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {CardanoMobile} from '~/wallets/wallets'
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
-import {useStrings} from './strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useIsParticipatingInGovernance = () => {
   const status = useGovernanceStatus({

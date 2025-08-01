@@ -21,7 +21,7 @@ export const ReferenceInputsTab = ({
       <Space.Height.lg />
 
       <Accordion
-        label={`${strings.reviewTx.utxosInputsLabel} (${referenceInputs.length})`}
+        label={`${strings.txReview.utxosInputsLabel} (${referenceInputs.length})`}
       >
         <Inputs inputs={referenceInputs} />
       </Accordion>

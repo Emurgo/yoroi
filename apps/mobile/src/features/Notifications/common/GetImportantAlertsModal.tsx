@@ -9,7 +9,7 @@ import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {uiStorage} from './storage'
 import {triggerNotificationsPermissionModal} from './tools'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 const timeToShowModalInMs = 1000
 const modalStorageKey = 'hasShownGetImportantAlertsModal'

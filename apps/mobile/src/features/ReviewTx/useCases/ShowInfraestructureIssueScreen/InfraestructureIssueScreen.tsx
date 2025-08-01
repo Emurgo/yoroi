@@ -45,11 +45,11 @@ export const InfraestructureIssueScreen = () => {
           a.text_center,
         ]}
       >
-        {strings.reviewTx.infraestructureIssueTitle}
+        {strings.txReview.infraestructureIssueTitle}
       </Text>
 
       <Text style={[{color: p.gray_600}, a.body_1_lg_regular, a.text_center]}>
-        {strings.reviewTx.infraestructureIssueText}
+        {strings.txReview.infraestructureIssueText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -57,7 +57,7 @@ export const InfraestructureIssueScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.reviewTx.infraestructureIssueButton}
+          title={strings.txReview.infraestructureIssueButton}
           style={[a.px_lg]}
         />
       </Actions>

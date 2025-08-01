@@ -1,15 +1,13 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Text, TouchableOpacity, View} from 'react-native'
 
 import {SearchProvider} from '~/features/Search/SearchContext'
 import {SettingsScreenNavigator} from '~/features/Settings/SettingsScreenNavigator'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {SelectWalletFromList} from '~/features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   defaultStackNavigationOptions,
   WalletStackRoutes,
@@ -20,7 +18,7 @@ const Stack = createStackNavigator<WalletStackRoutes>()
 
 export const WalletNavigator = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const navOptions = React.useMemo(
     () => defaultStackNavigationOptions(a, p),
@@ -69,5 +67,3 @@ export const WalletNavigator = () => {
 }
 
 // Main wallet routes now handled by WalletTabNavigator
-
-import {useStrings} from '~/kernel/i18n/useStrings'

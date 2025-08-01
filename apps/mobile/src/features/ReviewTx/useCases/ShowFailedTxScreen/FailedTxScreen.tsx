@@ -39,11 +39,11 @@ export const FailedTxScreen = () => {
           {color: p.gray_max},
         ]}
       >
-        {strings.reviewTx.failedTxTitle}
+        {strings.txReview.failedTxTitle}
       </Text>
 
       <Text style={[a.body_1_lg_regular, a.text_center, {color: p.gray_600}]}>
-        {strings.reviewTx.failedTxText}
+        {strings.txReview.failedTxText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -51,7 +51,7 @@ export const FailedTxScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.reviewTx.failedTxButton}
+          title={strings.txReview.failedTxButton}
           style={[a.px_lg]}
         />
       </Actions>

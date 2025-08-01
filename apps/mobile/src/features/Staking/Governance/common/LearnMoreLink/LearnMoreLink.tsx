@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
-import {useStrings} from '../strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 const LEARN_MORE_LINK =
   'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8582793481231-Governance'

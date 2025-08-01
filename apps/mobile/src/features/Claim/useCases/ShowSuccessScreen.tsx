@@ -16,16 +16,16 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {ClaimSuccessIllustration} from '~/ui/ClaimSuccessIllustration/ClaimSuccessIllustration'
-import {Copiable} from '~/ui/Copiable'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {isEmptyString} from '~/wallets/utils/string'
 import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'
-import {useStrings} from '../common/useStrings'
 
 export const ShowSuccessScreen = () => {
   const strings = useStrings()
@@ -43,7 +43,7 @@ export const ShowSuccessScreen = () => {
   return (
     <SafeAreaView
       edges={['top', 'left', 'right']}
-      style={[a.flex_1, {color: p.bg_color_max}]}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
     >
       <View style={[a.flex_1]}>
         <Header>
@@ -68,7 +68,7 @@ export const ShowSuccessScreen = () => {
           </>
         )}
 
-        <Button onPress={navigateTo.back} title={strings.ok} />
+        <Button onPress={navigateTo.back} title={strings.global.ok} />
 
         <Space.Height.lg />
       </Actions>
@@ -137,7 +137,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
         <Text
           style={[a.body_1_lg_regular, a.pr_sm, {color: p.text_gray_medium}]}
         >
-          {strings.transactionId}
+          {strings.transactions.transactionId}
         </Text>
 
         <Copiable text={txHash} />

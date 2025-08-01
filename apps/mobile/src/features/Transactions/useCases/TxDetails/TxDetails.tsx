@@ -16,7 +16,6 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useBestBlock} from '~/features/WalletManager/hooks/useBestBlock'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Banner} from '~/ui/Banner/Banner'
@@ -221,26 +220,6 @@ export const TxDetails = () => {
   )
 }
 
-const Confirmations = ({transaction}: {transaction: TransactionInfo}) => {
-  const strings = useStrings()
-  const bestBlock = useBestBlock({
-    options: {
-      refetchInterval: 5_000,
-      queryKey: ['useBestBlock'], // This will be overridden by the hook's internal queryKey
-    },
-  })
-
-  return (
-    <Text>
-      {strings.confirmations(
-        transaction.blockNumber === 0
-          ? 0
-          : bestBlock.height - transaction.blockNumber,
-      )}
-    </Text>
-  )
-}
-
 const Label = ({children}: {children: string}) => {
   const {palette: p} = useTheme()
 
@@ -353,9 +332,13 @@ const getShownAddresses = (
 
   const getPath = (address: string) => {
     if (isMyReceive(address)) {
-      return strings.transactions.addressPrefixReceive(externalAddressIndex[address])
+      return strings.transactions.addressPrefixReceive(
+        externalAddressIndex[address],
+      )
     } else if (isMyChange(address)) {
-      return strings.transactions.addressPrefixChange(internalAddressIndex[address])
+      return strings.transactions.addressPrefixChange(
+        internalAddressIndex[address],
+      )
     } else {
       return strings.transactions.addressPrefixNotMine
     }
