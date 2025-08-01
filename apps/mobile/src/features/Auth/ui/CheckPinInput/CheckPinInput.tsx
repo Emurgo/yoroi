@@ -6,7 +6,7 @@ import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {PinInput, PinInputRef} from '~/features/Auth/ui/PinInput/PinInput'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import globalMessages from '~/kernel/i18n/global-messages'
+
 import {logger} from '~/kernel/logger/logger'
 
 export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
@@ -29,7 +29,7 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
         }
         logger.info('invalid PIN', {origin: 'CheckPinInput', type: 'user'})
         showErrorDialog({
-          title: globalMessages.error,
+          title: strings.global.error,
           message: strings.auth.invalidPin,
         })
       }}

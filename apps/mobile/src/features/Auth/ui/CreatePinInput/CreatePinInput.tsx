@@ -1,11 +1,9 @@
 import * as React from 'react'
-import {useIntl} from 'react-intl'
 
 import {pinLength} from '~/features/Auth/common/constants'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {PinInput, PinInputRef} from '~/features/Auth/ui/PinInput/PinInput'
 import {showErrorDialog} from '~/kernel/dialogs'
-import {errorMessages} from '~/kernel/i18n/global-messages'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 
@@ -13,7 +11,6 @@ export const CreatePinInput = ({onDone}: Props) => {
   const pinInputRef = React.useRef<null | PinInputRef>(null)
   const pinConfirmationInputRef = React.useRef<null | PinInputRef>(null)
 
-  const intl = useIntl()
   const strings = useStrings()
   const {createPin} = useAuth()
 
@@ -28,7 +25,7 @@ export const CreatePinInput = ({onDone}: Props) => {
   const handlePinConfirmation = (pinConfirmation: string) => {
     if (pinConfirmation !== pin) {
       logger.debug('PIN mismatch', {origin: 'CreatePinInput', type: 'user'})
-      showErrorDialog(errorMessages.pinMismatch, intl)
+      showErrorDialog(strings.auth.pinMismatch)
       step === 'pin'
         ? pinInputRef.current?.clear()
         : pinConfirmationInputRef.current?.clear()
