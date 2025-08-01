@@ -3,7 +3,7 @@ import {Wallet} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ImageSourcePropType, View, ViewStyle} from 'react-native'
 
-import {useSetupWallet} from '~/features/SetupWallet/common/hooks/useSetupWallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
