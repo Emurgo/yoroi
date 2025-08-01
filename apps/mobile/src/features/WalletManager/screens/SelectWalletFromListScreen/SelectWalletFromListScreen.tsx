@@ -14,7 +14,7 @@ import {Button} from '~/ui/Button/Button'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
 import {useWalletManager} from '../../context/WalletManagerProvider'
-import {useStrings} from '../../hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
