@@ -10,7 +10,7 @@ import {
   SettingsStackRoutes,
   useParams,
 } from '../../../../../kernel/navigation/navigation'
-import {useStrings} from './strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useLaunchRouteAfterSyncing} from './useLaunchRouteAfterSyncing'
 
 export const PreparingNetworkScreen = () => {
@@ -34,7 +34,7 @@ export const PreparingNetworkScreen = () => {
           a.heading_2_medium,
         ]}
       >
-        {strings.preparingNetwork}
+        {strings.settings.preparingNetwork}
       </Text>
     </SafeAreaView>
   )
