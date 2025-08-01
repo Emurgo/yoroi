@@ -2,7 +2,6 @@ import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View} from 'react-native'
 
 import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
