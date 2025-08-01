@@ -102,6 +102,63 @@ export const useStrings = () => {
         supportTicketLink: f(messages.walletManager.supportTicketLink),
       },
 
+      // Links strings
+      links: {
+        trustedPaymentRequestedTitle: f(messages.links.trustedPaymentRequestedTitle),
+        trustedPaymentRequestedDescription: f(messages.links.trustedPaymentRequestedDescription),
+        untrustedPaymentRequestedTitle: f(messages.links.untrustedPaymentRequestedTitle),
+        untrustedPaymentRequestedDescription: f(messages.links.untrustedPaymentRequestedDescription),
+        trustedBrowserLaunchDappUrlTitle: f(messages.links.trustedBrowserLaunchDappUrlTitle),
+        trustedBrowserLaunchDappUrlDescription: f(messages.links.trustedBrowserLaunchDappUrlDescription),
+        untrustedBrowserLaunchDappUrlTitle: f(messages.links.untrustedBrowserLaunchDappUrlTitle),
+        untrustedBrowserLaunchDappUrlDescription: f(messages.links.untrustedBrowserLaunchDappUrlDescription),
+        askToOpenAWalletTitle: f(messages.links.askToOpenAWalletTitle),
+        askToOpenAWalletDescription: f(messages.links.askToOpenAWalletDescription),
+        askToRedirectTitle: f(messages.links.askToRedirectTitle),
+        askToRedirectDescription: f(messages.links.askToRedirectDescription),
+      },
+
+      // Notifications strings
+      notifications: {
+        tapToView: f(messages.notifications.tapToView),
+        stakingRewardsReceived: f(messages.notifications.stakingRewardsReceived),
+        assetsReceived: f(messages.notifications.assetsReceived),
+        intraWalletTransactionSent: f(messages.notifications.intraWalletTransactionSent),
+        multipleAssetsReceived: f(messages.notifications.multipleAssetsReceived),
+        received: f(messages.notifications.received),
+        multipleAssetsSent: f(messages.notifications.multipleAssetsSent),
+        sent: f(messages.notifications.sent),
+        noNotifications: f(messages.notifications.noNotifications),
+        markAllAsRead: f(messages.notifications.markAllAsRead),
+        getImportantAlerts: f(messages.notifications.getImportantAlerts),
+        turnOnAlerts: f(messages.notifications.turnOnAlerts),
+        skip: f(messages.notifications.skip),
+        turnOnNotifications: f(messages.notifications.turnOnNotifications),
+      },
+
+      // Claim strings
+      claim: {
+        askConfirmationTitle: f(messages.claim.askConfirmationTitle),
+        showSuccessTitle: f(messages.claim.showSuccessTitle),
+        acceptedTitle: f(messages.claim.acceptedTitle),
+        acceptedMessage: f(messages.claim.acceptedMessage),
+        processingTitle: f(messages.claim.processingTitle),
+        processingMessage: f(messages.claim.processingMessage),
+        doneTitle: f(messages.claim.doneTitle),
+        doneMessage: f(messages.claim.doneMessage),
+        addressSharingWarning: f(messages.claim.addressSharingWarning),
+        domain: f(messages.claim.domain),
+        code: f(messages.claim.code),
+        apiErrorTitle: f(messages.claim.apiErrorTitle),
+        apiErrorInvalidRequest: f(messages.claim.apiErrorInvalidRequest),
+        apiErrorNotFound: f(messages.claim.apiErrorNotFound),
+        apiErrorAlreadyClaimed: f(messages.claim.apiErrorAlreadyClaimed),
+        apiErrorExpired: f(messages.claim.apiErrorExpired),
+        apiErrorTooEarly: f(messages.claim.apiErrorTooEarly),
+        apiErrorRateLimited: f(messages.claim.apiErrorRateLimited),
+        continue: f(messages.claim.continue),
+      },
+
       // Portfolio strings
       portfolio: {
         portfolio: f(messages.portfolio.portfolio),
@@ -507,6 +564,197 @@ const messages = {
     supportTicketLink: {
       id: 'components.walletselection.walletselectionscreen.supportTicketLink',
       defaultMessage: '!!!Ask our support team',
+    },
+  }),
+
+  links: defineMessages({
+    trustedPaymentRequestedTitle: {
+      id: 'links.trusted.paymentRequested.title',
+      defaultMessage: '!!!Payment requested',
+    },
+    trustedPaymentRequestedDescription: {
+      id: 'links.trusted.paymentRequested.description',
+      defaultMessage: '!!!A payment has been requested.',
+    },
+    untrustedPaymentRequestedTitle: {
+      id: 'links.untrusted.paymentRequested.title',
+      defaultMessage: '!!!Payment requested',
+    },
+    untrustedPaymentRequestedDescription: {
+      id: 'links.untrusted.paymentRequested.description',
+      defaultMessage: '!!!A payment has been requested.',
+    },
+    trustedBrowserLaunchDappUrlTitle: {
+      id: 'links.trusted.browserLaunchDappUrl.title',
+      defaultMessage: '!!!Launch dApp requested',
+    },
+    trustedBrowserLaunchDappUrlDescription: {
+      id: 'links.trusted.browserLaunchDappUrl.description',
+      defaultMessage: '!!!A payment has been requested.',
+    },
+    untrustedBrowserLaunchDappUrlTitle: {
+      id: 'links.untrusted.browserLaunchDappUrl.title',
+      defaultMessage: '!!!Lauch dApp requested',
+    },
+    untrustedBrowserLaunchDappUrlDescription: {
+      id: 'links.untrusted.browserLaunchDappUrl.description',
+      defaultMessage: '!!!A payment has been requested.',
+    },
+    askToOpenAWalletTitle: {
+      id: 'links.askToOpenAWallet.title',
+      defaultMessage: '!!!Open a wallet',
+    },
+    askToOpenAWalletDescription: {
+      id: 'links.askToOpenAWallet.description',
+      defaultMessage: '!!!To continue, open a wallet.',
+    },
+    askToRedirectTitle: {
+      id: 'links.askToRedirect.title',
+      defaultMessage: '!!!Redirect available',
+    },
+    askToRedirectDescription: {
+      id: 'links.askToRedirect.description',
+      defaultMessage:
+        '!!!The caller that request this action has provided a way for Yoroi to return to their application, would you like to be redirected?',
+    },
+  }),
+
+  notifications: defineMessages({
+    tapToView: {
+      id: 'notifications.tapToView',
+      defaultMessage: '!!!Tap to view',
+    },
+    stakingRewardsReceived: {
+      id: 'notifications.stakingRewardsReceived',
+      defaultMessage: '!!!Staking rewards received',
+    },
+    assetsReceived: {
+      id: 'notifications.assetsReceived',
+      defaultMessage: '!!!Assets received',
+    },
+    intraWalletTransactionSent: {
+      id: 'notifications.intraWalletTransactionSent',
+      defaultMessage: '!!!Intrawallet transaction sent',
+    },
+    multipleAssetsReceived: {
+      id: 'notifications.multipleAssetsReceived',
+      defaultMessage: '!!!Multiple assets received',
+    },
+    received: {
+      id: 'notifications.received',
+      defaultMessage: '!!!received',
+    },
+    multipleAssetsSent: {
+      id: 'notifications.multipleAssetsSent',
+      defaultMessage: '!!!Multiple assets sent',
+    },
+    sent: {
+      id: 'notifications.sent',
+      defaultMessage: '!!!sent',
+    },
+    noNotifications: {
+      id: 'notifications.noNotifications',
+      defaultMessage: '!!!No notifications yet',
+    },
+    markAllAsRead: {
+      id: 'notifications.markAllAsRead',
+      defaultMessage: '!!!Mark all as read',
+    },
+    getImportantAlerts: {
+      id: 'notifications.getImportantAlerts',
+      defaultMessage: '!!!Get important alerts',
+    },
+    turnOnAlerts: {
+      id: 'notifications.turnOnAlerts',
+      defaultMessage:
+        '!!!Turn on notifications to get alerts and updates about your wallet.',
+    },
+    skip: {
+      id: 'notifications.skip',
+      defaultMessage: '!!!Skip',
+    },
+    turnOnNotifications: {
+      id: 'notifications.turnOnNotifications',
+      defaultMessage: '!!!Turn on notifications',
+    },
+  }),
+
+  claim: defineMessages({
+    askConfirmationTitle: {
+      id: 'claim.askConfirmation.title',
+      defaultMessage: '!!!Confirm Claim',
+    },
+    showSuccessTitle: {
+      id: 'claim.showSuccess.title',
+      defaultMessage: '!!!Success',
+    },
+    acceptedTitle: {
+      id: 'claim.accepted.title',
+      defaultMessage: '!!!Accepted',
+    },
+    acceptedMessage: {
+      id: 'claim.accepted.message',
+      defaultMessage: '!!!Accepted',
+    },
+    processingTitle: {
+      id: 'claim.processing.title',
+      defaultMessage: '!!!Processing',
+    },
+    processingMessage: {
+      id: 'claim.processing.message',
+      defaultMessage: '!!!Processing',
+    },
+    doneTitle: {
+      id: 'claim.done.title',
+      defaultMessage: '!!!Done',
+    },
+    doneMessage: {
+      id: 'claim.done.message',
+      defaultMessage: '!!!Done',
+    },
+    addressSharingWarning: {
+      id: 'claim.addressSharingWarning',
+      defaultMessage: '!!!Address sharing warning',
+    },
+    domain: {
+      id: 'claim.domain',
+      defaultMessage: '!!!Domain',
+    },
+    code: {
+      id: 'claim.code',
+      defaultMessage: '!!!Code',
+    },
+    apiErrorTitle: {
+      id: 'claim.apiError.title',
+      defaultMessage: '!!!Error title',
+    },
+    apiErrorInvalidRequest: {
+      id: 'claim.apiError.invalidRequest',
+      defaultMessage: '!!!Invalid request',
+    },
+    apiErrorNotFound: {
+      id: 'claim.apiError.notFound',
+      defaultMessage: '!!!Not found',
+    },
+    apiErrorAlreadyClaimed: {
+      id: 'claim.apiError.alreadyClaimed',
+      defaultMessage: '!!!Already claimed',
+    },
+    apiErrorExpired: {
+      id: 'claim.apiError.expired',
+      defaultMessage: '!!!Expired',
+    },
+    apiErrorTooEarly: {
+      id: 'claim.apiError.tooEarly',
+      defaultMessage: '!!!Too early',
+    },
+    apiErrorRateLimited: {
+      id: 'claim.apiError.rateLimited',
+      defaultMessage: '!!!Rate limited',
+    },
+    continue: {
+      id: 'claim.continue',
+      defaultMessage: '!!!Continue',
     },
   }),
 
