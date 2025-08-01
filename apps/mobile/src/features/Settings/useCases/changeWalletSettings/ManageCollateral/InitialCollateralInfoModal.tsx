@@ -4,7 +4,7 @@ import {Linking, Text, View} from 'react-native'
 
 import {Space, SpaceHeight} from '../../../../../ui/Space/Space'
 import {InfoModalIllustration} from './illustrations/InfoModalIllustration'
-import {useStrings} from './strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const InitialCollateralInfoModal = () => {
   const {atoms: ta} = useTheme()
