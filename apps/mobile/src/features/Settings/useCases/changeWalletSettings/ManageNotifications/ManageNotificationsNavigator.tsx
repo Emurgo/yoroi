@@ -8,7 +8,7 @@ import {
 } from '../../../../../kernel/navigation/navigation'
 import {ManageNotificationDisplayDurationScreen} from './ManageNotificationDisplayDuration/ManageNotificationDisplayDurationScreen'
 import {ManageNotificationSettings} from './ManageNotificationSettings/ManageNotificationSettings'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 const Stack = createStackNavigator<ManageNotificationsRoutes>()
 
@@ -26,13 +26,13 @@ export const ManageNotificationsNavigator = () => {
       <Stack.Screen //
         name="manage-notification-settings"
         component={ManageNotificationSettings}
-        options={{title: strings.notifications}}
+        options={{title: strings.settings.notifications}}
       />
 
       <Stack.Screen //
         name="manage-notification-display-duration"
         component={ManageNotificationDisplayDurationScreen}
-        options={{title: strings.manageDisplayDurationScreenTitle}}
+        options={{title: strings.settings.manageDisplayDurationScreenTitle}}
       />
     </Stack.Navigator>
   )
