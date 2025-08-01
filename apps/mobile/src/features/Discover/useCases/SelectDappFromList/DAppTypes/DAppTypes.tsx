@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, Text, TouchableWithoutFeedback, View} from 'react-native'
-import {useMappedStrings} from '~/features/Discover/common/useStrings'
+import {useMappedStrings} from '~/kernel/i18n/useStrings''
 
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'

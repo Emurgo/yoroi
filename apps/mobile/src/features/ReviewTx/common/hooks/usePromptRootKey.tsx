@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useModal} from '~/ui/Modal/ModalContext'
-import {useStrings} from '../Discover/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings''
 import {ConfirmRawTxWithOs} from '../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
 
@@ -30,7 +30,7 @@ export const usePromptRootKey = () => {
 
       if (meta.isEasyConfirmationEnabled) {
         openModal({
-          title: title ?? strings.confirmTx,
+          title: title ?? strings.discover.confirmTx,
           content: (
             <ConfirmRawTxWithOs onSuccess={handleOnConfirm} onError={onError} />
           ),
@@ -41,7 +41,7 @@ export const usePromptRootKey = () => {
       }
 
       openModal({
-        title: title ?? strings.confirmTx,
+        title: title ?? strings.discover.confirmTx,
         content: (
           <ConfirmRawTxWithPassword
             summary={summary}
@@ -52,7 +52,7 @@ export const usePromptRootKey = () => {
         onClose,
       })
     },
-    [closeModal, meta.isEasyConfirmationEnabled, openModal, strings.confirmTx],
+    [closeModal, meta.isEasyConfirmationEnabled, openModal, strings.discover.confirmTx],
   )
 
   return {promptRootKey} as const

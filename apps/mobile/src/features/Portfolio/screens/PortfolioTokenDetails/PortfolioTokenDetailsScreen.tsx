@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent} from 'react-native'
 
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings''
 import {
   PortfolioDetailsTab,
   usePortfolio,
@@ -73,7 +73,7 @@ export const PortfolioTokenDetailsScreen = () => {
             style={[{flex: 1}]}
             active={detailsTab === PortfolioDetailsTab.Performance}
             onPress={() => setDetailsTab(PortfolioDetailsTab.Performance)}
-            label={strings.performance}
+            label={strings.portfolio.performance}
           />
         )}
 
@@ -81,23 +81,23 @@ export const PortfolioTokenDetailsScreen = () => {
           style={[{flex: 1}]}
           active={detailsTab === PortfolioDetailsTab.Overview}
           onPress={() => setDetailsTab(PortfolioDetailsTab.Overview)}
-          label={strings.overview}
+          label={strings.portfolio.overview}
         />
 
         <Tab
           style={[{flex: 1}]}
           active={detailsTab === PortfolioDetailsTab.Transactions}
           onPress={() => setDetailsTab(PortfolioDetailsTab.Transactions)}
-          label={strings.transactions}
+          label={strings.portfolio.transactions}
         />
       </Tabs>
     )
   }, [
     detailsTab,
     setDetailsTab,
-    strings.overview,
-    strings.performance,
-    strings.transactions,
+    strings.portfolio.overview,
+    strings.portfolio.performance,
+    strings.portfolio.transactions,
   ])
 
   return (

@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {TradeTokensAsset} from './TradeTokensAsset'
 
@@ -38,10 +38,10 @@ export const TradeTokensBanner = () => {
         <Text
           style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_max}]}
         >
-          {strings.tradeTokens}
+          {strings.portfolio.tradeTokens}
         </Text>
 
-        <Button title={strings.swap} onPress={handleSwap} />
+        <Button title={strings.portfolio.swap} onPress={handleSwap} />
 
         <View
           style={[

@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings''
 import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -45,11 +45,11 @@ export const InfraestructureIssueScreen = () => {
           a.text_center,
         ]}
       >
-        {strings.infraestructureIssueTitle}
+        {strings.reviewTx.infraestructureIssueTitle}
       </Text>
 
       <Text style={[{color: p.gray_600}, a.body_1_lg_regular, a.text_center]}>
-        {strings.infraestructureIssueText}
+        {strings.reviewTx.infraestructureIssueText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -57,7 +57,7 @@ export const InfraestructureIssueScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.infraestructureIssueButton}
+          title={strings.reviewTx.infraestructureIssueButton}
           style={[a.px_lg]}
         />
       </Actions>

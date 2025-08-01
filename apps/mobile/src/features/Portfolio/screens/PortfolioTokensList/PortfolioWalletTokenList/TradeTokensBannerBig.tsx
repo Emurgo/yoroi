@@ -4,7 +4,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings''
 import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
@@ -40,18 +40,18 @@ export const TradeTokensBannerBig = () => {
         <Text
           style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_max}]}
         >
-          {strings.portfolioSwapTokensTitle}
+          {strings.portfolio.portfolioSwapTokensTitle}
         </Text>
 
         <Space.Height.sm />
 
         <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
-          {strings.portfolioSwapTokensDescription}
+          {strings.portfolio.portfolioSwapTokensDescription}
         </Text>
 
         <Space.Height.xl />
 
-        <Button title={strings.startSwapping} onPress={handleSwap} />
+        <Button title={strings.portfolio.startSwapping} onPress={handleSwap} />
 
         <View
           style={[

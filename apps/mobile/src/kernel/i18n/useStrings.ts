@@ -102,6 +102,83 @@ export const useStrings = () => {
         supportTicketLink: f(messages.walletManager.supportTicketLink),
       },
 
+      // Portfolio strings
+      portfolio: {
+        portfolio: f(messages.portfolio.portfolio),
+        totalWalletValue: f(messages.portfolio.totalWalletValue),
+        buyADATitle: f(messages.portfolio.buyADATitle),
+        buyADADescription: f(messages.portfolio.buyADADescription),
+        buyCrypto: f(messages.portfolio.buyCrypto),
+        tradeTokens: f(messages.portfolio.tradeTokens),
+        swap: f(messages.portfolio.swap),
+        tokenList: f(messages.portfolio.tokenList),
+        walletToken: f(messages.portfolio.walletToken),
+        dappsToken: f(messages.portfolio.dappsToken),
+        searchTokens: f(messages.portfolio.searchTokens),
+        noTokensFound: f(messages.portfolio.noTokensFound),
+        totalDAppValue: f(messages.portfolio.totalDAppValue),
+        liquidityPool: f(messages.portfolio.liquidityPool),
+        openOrders: f(messages.portfolio.openOrders),
+        lendAndBorrow: f(messages.portfolio.lendAndBorrow),
+        tokenDetail: f(messages.portfolio.tokenDetail),
+        availableSoon: f(messages.portfolio.availableSoon),
+        noDataFound: f(messages.portfolio.noDataFound),
+        value: f(messages.portfolio.value),
+        dex: f(messages.portfolio.dex),
+        lp: f(messages.portfolio.lp),
+        total: f(messages.portfolio.total),
+        assetPrice: f(messages.portfolio.assetPrice),
+        assetAmount: f(messages.portfolio.assetAmount),
+        txId: f(messages.portfolio.txId),
+        performance: f(messages.portfolio.performance),
+        overview: f(messages.portfolio.overview),
+        transactions: f(messages.portfolio.transactions),
+        _1_week: f(messages.portfolio._1_week),
+        _24_hours: f(messages.portfolio._24_hours),
+        _1_month: f(messages.portfolio._1_month),
+        _6_months: f(messages.portfolio._6_months),
+        _1_year: f(messages.portfolio._1_year),
+        all_time: f(messages.portfolio.all_time),
+        netInvested: f(messages.portfolio.netInvested),
+        bought: f(messages.portfolio.bought),
+        received: f(messages.portfolio.received),
+        sent: f(messages.portfolio.sent),
+        send: f(messages.portfolio.send),
+        sold: f(messages.portfolio.sold),
+        failed: f(messages.portfolio.failed),
+        stakeDelegated: f(messages.portfolio.stakeDelegated),
+        stakingReward: f(messages.portfolio.stakingReward),
+        unknown: f(messages.portfolio.unknown),
+        assets: f(messages.portfolio.assets),
+        marketData: f(messages.portfolio.marketData),
+        tokenPriceChange: f(messages.portfolio.tokenPriceChange),
+        tokenPrice: f(messages.portfolio.tokenPrice),
+        marketCap: f(messages.portfolio.marketCap),
+        _24hVolume: f(messages.portfolio._24hVolume),
+        rank: f(messages.portfolio.rank),
+        circulating: f(messages.portfolio.circulating),
+        totalSupply: f(messages.portfolio.totalSupply),
+        maxSupply: f(messages.portfolio.maxSupply),
+        allTimeHigh: f(messages.portfolio.allTimeHigh),
+        allTimeLow: f(messages.portfolio.allTimeLow),
+        info: f(messages.portfolio.info),
+        website: f(messages.portfolio.website),
+        policyID: f(messages.portfolio.policyID),
+        fingerprint: f(messages.portfolio.fingerprint),
+        news: f(messages.portfolio.news),
+        detailsOn: f(messages.portfolio.detailsOn),
+        totalPortfolioValue: f(messages.portfolio.totalPortfolioValue),
+        totalPortfolioValueTooltip: f(messages.portfolio.totalPortfolioValueTooltip),
+        totalWalletValueTooltip: f(messages.portfolio.totalWalletValueTooltip),
+        totalDAppsValueTooltip: f(messages.portfolio.totalDAppsValueTooltip),
+        portfolioSwapTokensTitle: f(messages.portfolio.portfolioSwapTokensTitle),
+        portfolioSwapTokensDescription: f(messages.portfolio.portfolioSwapTokensDescription),
+        startSwapping: f(messages.portfolio.startSwapping),
+        titleMediaDetails: f(messages.portfolio.titleMediaDetails),
+        title: f(messages.portfolio.title),
+        search: f(messages.portfolio.search),
+      },
+
       // Global strings
       global: {
         error: f(globalMessages.error),
@@ -430,6 +507,301 @@ const messages = {
     supportTicketLink: {
       id: 'components.walletselection.walletselectionscreen.supportTicketLink',
       defaultMessage: '!!!Ask our support team',
+    },
+  }),
+
+  portfolio: defineMessages({
+    portfolio: {
+      id: 'portfolio.portfolio',
+      defaultMessage: '!!!Portfolio',
+    },
+    totalWalletValue: {
+      id: 'portfolio.totalWalletValue',
+      defaultMessage: '!!!Total Wallet Value',
+    },
+    buyADATitle: {
+      id: 'portfolio.buyADATitle',
+      defaultMessage: '!!!Buy ADA',
+    },
+    buyADADescription: {
+      id: 'portfolio.buyADADescription',
+      defaultMessage: '!!!Buy ADA description',
+    },
+    buyCrypto: {
+      id: 'portfolio.buyCrypto',
+      defaultMessage: '!!!Buy Crypto',
+    },
+    tradeTokens: {
+      id: 'portfolio.tradeTokens',
+      defaultMessage: '!!!Trade Tokens',
+    },
+    swap: {
+      id: 'portfolio.swap',
+      defaultMessage: '!!!Swap',
+    },
+    tokenList: {
+      id: 'portfolio.tokenList',
+      defaultMessage: '!!!Token List',
+    },
+    walletToken: {
+      id: 'portfolio.walletToken',
+      defaultMessage: '!!!Wallet Token',
+    },
+    dappsToken: {
+      id: 'portfolio.dappsToken',
+      defaultMessage: '!!!DApps Token',
+    },
+    searchTokens: {
+      id: 'portfolio.searchTokens',
+      defaultMessage: '!!!Search Tokens',
+    },
+    noTokensFound: {
+      id: 'portfolio.noTokensFound',
+      defaultMessage: '!!!No Tokens Found',
+    },
+    totalDAppValue: {
+      id: 'portfolio.totalDAppValue',
+      defaultMessage: '!!!Total DApp Value',
+    },
+    liquidityPool: {
+      id: 'portfolio.liquidityPool',
+      defaultMessage: '!!!Liquidity Pool',
+    },
+    openOrders: {
+      id: 'portfolio.openOrders',
+      defaultMessage: '!!!Open Orders',
+    },
+    lendAndBorrow: {
+      id: 'portfolio.lendAndBorrow',
+      defaultMessage: '!!!Lend and Borrow',
+    },
+    tokenDetail: {
+      id: 'portfolio.tokenDetail',
+      defaultMessage: '!!!Token Detail',
+    },
+    availableSoon: {
+      id: 'portfolio.availableSoon',
+      defaultMessage: '!!!Available Soon',
+    },
+    noDataFound: {
+      id: 'portfolio.noDataFound',
+      defaultMessage: '!!!No Data Found',
+    },
+    value: {
+      id: 'portfolio.value',
+      defaultMessage: '!!!Value',
+    },
+    dex: {
+      id: 'portfolio.dex',
+      defaultMessage: '!!!DEX',
+    },
+    lp: {
+      id: 'portfolio.lp',
+      defaultMessage: '!!!LP',
+    },
+    total: {
+      id: 'portfolio.total',
+      defaultMessage: '!!!Total',
+    },
+    assetPrice: {
+      id: 'portfolio.assetPrice',
+      defaultMessage: '!!!Asset Price',
+    },
+    assetAmount: {
+      id: 'portfolio.assetAmount',
+      defaultMessage: '!!!Asset Amount',
+    },
+    txId: {
+      id: 'portfolio.txId',
+      defaultMessage: '!!!Transaction ID',
+    },
+    performance: {
+      id: 'portfolio.performance',
+      defaultMessage: '!!!Performance',
+    },
+    overview: {
+      id: 'portfolio.overview',
+      defaultMessage: '!!!Overview',
+    },
+    transactions: {
+      id: 'portfolio.transactions',
+      defaultMessage: '!!!Transactions',
+    },
+    _1_week: {
+      id: 'portfolio._1_week',
+      defaultMessage: '!!!1 Week',
+    },
+    _24_hours: {
+      id: 'portfolio._24_hours',
+      defaultMessage: '!!!24 Hours',
+    },
+    _1_month: {
+      id: 'portfolio._1_month',
+      defaultMessage: '!!!1 Month',
+    },
+    _6_months: {
+      id: 'portfolio._6_months',
+      defaultMessage: '!!!6 Months',
+    },
+    _1_year: {
+      id: 'portfolio._1_year',
+      defaultMessage: '!!!1 Year',
+    },
+    all_time: {
+      id: 'portfolio.all_time',
+      defaultMessage: '!!!All Time',
+    },
+    netInvested: {
+      id: 'portfolio.netInvested',
+      defaultMessage: '!!!Net Invested',
+    },
+    bought: {
+      id: 'portfolio.bought',
+      defaultMessage: '!!!Bought',
+    },
+    received: {
+      id: 'portfolio.received',
+      defaultMessage: '!!!Received',
+    },
+    sent: {
+      id: 'portfolio.sent',
+      defaultMessage: '!!!Sent',
+    },
+    send: {
+      id: 'portfolio.send',
+      defaultMessage: '!!!Send',
+    },
+    sold: {
+      id: 'portfolio.sold',
+      defaultMessage: '!!!Sold',
+    },
+    failed: {
+      id: 'portfolio.failed',
+      defaultMessage: '!!!Failed',
+    },
+    stakeDelegated: {
+      id: 'portfolio.stakeDelegated',
+      defaultMessage: '!!!Stake Delegated',
+    },
+    stakingReward: {
+      id: 'portfolio.stakingReward',
+      defaultMessage: '!!!Staking Reward',
+    },
+    unknown: {
+      id: 'portfolio.unknown',
+      defaultMessage: '!!!Unknown',
+    },
+    assets: {
+      id: 'portfolio.assets',
+      defaultMessage: '!!!Assets',
+    },
+    marketData: {
+      id: 'portfolio.marketData',
+      defaultMessage: '!!!Market Data',
+    },
+    tokenPriceChange: {
+      id: 'portfolio.tokenPriceChange',
+      defaultMessage: '!!!Token Price Change',
+    },
+    tokenPrice: {
+      id: 'portfolio.tokenPrice',
+      defaultMessage: '!!!Token Price',
+    },
+    marketCap: {
+      id: 'portfolio.marketCap',
+      defaultMessage: '!!!Market Cap',
+    },
+    _24hVolume: {
+      id: 'portfolio._24hVolume',
+      defaultMessage: '!!!24h Volume',
+    },
+    rank: {
+      id: 'portfolio.rank',
+      defaultMessage: '!!!Rank',
+    },
+    circulating: {
+      id: 'portfolio.circulating',
+      defaultMessage: '!!!Circulating',
+    },
+    totalSupply: {
+      id: 'portfolio.totalSupply',
+      defaultMessage: '!!!Total Supply',
+    },
+    maxSupply: {
+      id: 'portfolio.maxSupply',
+      defaultMessage: '!!!Max Supply',
+    },
+    allTimeHigh: {
+      id: 'portfolio.allTimeHigh',
+      defaultMessage: '!!!All Time High',
+    },
+    allTimeLow: {
+      id: 'portfolio.allTimeLow',
+      defaultMessage: '!!!All Time Low',
+    },
+    info: {
+      id: 'portfolio.info',
+      defaultMessage: '!!!Info',
+    },
+    website: {
+      id: 'portfolio.website',
+      defaultMessage: '!!!Website',
+    },
+    policyID: {
+      id: 'portfolio.policyID',
+      defaultMessage: '!!!Policy ID',
+    },
+    fingerprint: {
+      id: 'portfolio.fingerprint',
+      defaultMessage: '!!!Fingerprint',
+    },
+    news: {
+      id: 'portfolio.news',
+      defaultMessage: '!!!News',
+    },
+    detailsOn: {
+      id: 'portfolio.detailsOn',
+      defaultMessage: '!!!Details On',
+    },
+    totalPortfolioValue: {
+      id: 'portfolio.totalPortfolioValue',
+      defaultMessage: '!!!Total Portfolio Value',
+    },
+    totalPortfolioValueTooltip: {
+      id: 'portfolio.totalPortfolioValueTooltip',
+      defaultMessage: '!!!Total Portfolio Value Tooltip',
+    },
+    totalWalletValueTooltip: {
+      id: 'portfolio.totalWalletValueTooltip',
+      defaultMessage: '!!!Total Wallet Value Tooltip',
+    },
+    totalDAppsValueTooltip: {
+      id: 'portfolio.totalDAppsValueTooltip',
+      defaultMessage: '!!!Total DApps Value Tooltip',
+    },
+    portfolioSwapTokensTitle: {
+      id: 'portfolio.portfolioSwapTokensTitle',
+      defaultMessage: '!!!Portfolio Swap Tokens Title',
+    },
+    portfolioSwapTokensDescription: {
+      id: 'portfolio.portfolioSwapTokensDescription',
+      defaultMessage: '!!!Portfolio Swap Tokens Description',
+    },
+    startSwapping: {
+      id: 'portfolio.startSwapping',
+      defaultMessage: '!!!Start Swapping',
+    },
+    titleMediaDetails: {
+      id: 'portfolio.titleMediaDetails',
+      defaultMessage: '!!!Title Media Details',
+    },
+    title: {
+      id: 'portfolio.title',
+      defaultMessage: '!!!Title',
+    },
+    search: {
+      id: 'portfolio.search',
+      defaultMessage: '!!!Search',
     },
   }),
 } 

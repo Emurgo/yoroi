@@ -20,7 +20,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {CardAboutPhrase} from '~/features/SetupWallet/common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
 import {LearnMoreButton} from '~/features/SetupWallet/common/LearnMoreButton/LearnMoreButton'
-import {useStrings} from '~/features/SetupWallet/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings''
 import {Info as InfoIcon} from '~/features/SetupWallet/illustrations/Info'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -128,9 +128,9 @@ export const SaveNanoXScreen = () => {
   const nameErrors = !isLoading ? walletManager.validateWalletName(name) : null
   const walletNameErrorText = getWalletNameError(
     {
-      tooLong: strings.tooLong,
-      nameAlreadyTaken: strings.nameAlreadyTaken,
-      mustBeFilled: strings.mustBeFilled,
+      tooLong: strings.setupWallet.tooLong,
+      nameAlreadyTaken: strings.setupWallet.nameAlreadyTaken,
+      mustBeFilled: strings.setupWallet.mustBeFilled,
     },
     nameErrors,
   )
@@ -151,24 +151,24 @@ export const SaveNanoXScreen = () => {
 
   const showModalTipsPassword = () => {
     openModal({
-      title: strings.walletDetailsModalTitle,
+      title: strings.setupWallet.walletDetailsModalTitle,
       content: (
         <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
-            title={strings.walletNameModalCardTitle}
+            title={strings.setupWallet.walletNameModalCardTitle}
             linesOfText={[
-              strings.walletNameModalCardFirstItem,
-              strings.walletNameModalCardSecondItem,
+              strings.setupWallet.walletNameModalCardFirstItem,
+              strings.setupWallet.walletNameModalCardSecondItem,
             ]}
           />
 
           <Space.Height.lg />
 
           <CardAboutPhrase
-            title={strings.walletPasswordModalCardTitle}
+            title={strings.setupWallet.walletPasswordModalCardTitle}
             linesOfText={[
-              strings.walletPasswordModalCardFirstItem,
-              strings.walletPasswordModalCardSecondItem,
+              strings.setupWallet.walletPasswordModalCardFirstItem,
+              strings.setupWallet.walletPasswordModalCardSecondItem,
             ]}
           />
 
@@ -181,24 +181,24 @@ export const SaveNanoXScreen = () => {
           />
         </View>
       ),
-      footer: <Button title={strings.continueButton} onPress={closeModal} />,
+      footer: <Button title={strings.setupWallet.continueButton} onPress={closeModal} />,
       height: HEIGHT_MODAL_NAME_PASSWORD,
     })
   }
 
   const showModalTipsPlateNumber = () => {
     openModal({
-      title: strings.walletDetailsModalTitle,
+      title: strings.setupWallet.walletDetailsModalTitle,
       content: (
         <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
-            title={strings.walletChecksumModalCardTitle}
+            title={strings.setupWallet.walletChecksumModalCardTitle}
             checksumImage={seed}
             checksumLine={1}
             linesOfText={[
-              strings.walletChecksumModalCardFirstItem,
-              strings.walletChecksumModalCardSecondItem(plate),
-              strings.walletChecksumModalCardThirdItem,
+              strings.setupWallet.walletChecksumModalCardFirstItem,
+              strings.setupWallet.walletChecksumModalCardSecondItem(plate),
+              strings.setupWallet.walletChecksumModalCardThirdItem,
             ]}
           />
 
@@ -211,7 +211,7 @@ export const SaveNanoXScreen = () => {
           />
         </View>
       ),
-      footer: <Button title={strings.continueButton} onPress={closeModal} />,
+      footer: <Button title={strings.setupWallet.continueButton} onPress={closeModal} />,
       height: HEIGHT_MODAL_CHECKSUM,
     })
   }
@@ -231,7 +231,7 @@ export const SaveNanoXScreen = () => {
       >
         <StepperProgress
           currentStep={2}
-          currentStepTitle={strings.stepWalletDetails}
+          currentStepTitle={strings.setupWallet.stepWalletDetails}
           totalSteps={2}
         />
 
@@ -239,7 +239,7 @@ export const SaveNanoXScreen = () => {
 
         <View style={[a.flex_row]}>
           <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-            {strings.hwWalletDetailsTitle(bold)}
+            {strings.setupWallet.hwWalletDetailsTitle(bold)}
           </Text>
 
           <Space.Width.xs />
@@ -253,7 +253,7 @@ export const SaveNanoXScreen = () => {
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus
-            label={strings.walletDetailsNameInput}
+            label={strings.setupWallet.walletDetailsNameInput}
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
@@ -307,7 +307,7 @@ export const SaveNanoXScreen = () => {
 
         <View>
           <Button
-            title={strings.next}
+            title={strings.setupWallet.next}
             onPress={handleOnSubmit}
             testID="setup-restore-step2-next-button"
             disabled={disabled}

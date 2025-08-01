@@ -1,7 +1,7 @@
 import {ReactNode} from 'react'
 import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 
-import {messages as receiveMessages} from '~/features/Receive/common/useStrings'
+import {messages as receiveMessages} from '~/kernel/i18n/useStrings''
 import globalMessages, {
   actionMessages,
   txLabels,

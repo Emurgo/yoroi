@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings''
 import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -39,11 +39,11 @@ export const FailedTxScreen = () => {
           {color: p.gray_max},
         ]}
       >
-        {strings.failedTxTitle}
+        {strings.reviewTx.failedTxTitle}
       </Text>
 
       <Text style={[a.body_1_lg_regular, a.text_center, {color: p.gray_600}]}>
-        {strings.failedTxText}
+        {strings.reviewTx.failedTxText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -51,7 +51,7 @@ export const FailedTxScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.failedTxButton}
+          title={strings.reviewTx.failedTxButton}
           style={[a.px_lg]}
         />
       </Actions>

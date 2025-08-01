@@ -18,7 +18,7 @@ import {
   View,
 } from 'react-native'
 
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings''
 import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
 import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
 import {
@@ -82,8 +82,8 @@ export const OverviewTab = ({
       {operationsComponentsDuplicated && (
         <>
           <WarningBanner
-            title={strings.operationsLogWarningTitle}
-            content={strings.operationsLogWarningText}
+            title={strings.reviewTx.operationsLogWarningTitle}
+            content={strings.reviewTx.operationsLogWarningText}
           />
 
           <Space.Height.lg />
@@ -142,7 +142,7 @@ const WalletInfoSection = ({
 
   const handleShowWalletBalance = () => {
     openModal({
-      title: strings.walletBalanceTitle,
+      title: strings.reviewTx.walletBalanceTitle,
       content: (
         <WalletBalance image={seedImage} plate={plate} name={meta.name} />
       ),
@@ -154,7 +154,7 @@ const WalletInfoSection = ({
     <>
       <View style={[a.flex_row, a.justify_between]}>
         <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-          {strings.walletLabel}
+          {strings.reviewTx.walletLabel}
         </Text>
 
         <View style={[a.flex_row, a.align_center]}>
@@ -204,7 +204,7 @@ const FeeInfoItem = ({fee}: {fee: string}) => {
   return (
     <View style={[a.flex_row, a.justify_between]}>
       <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-        {strings.feeLabel}
+        {strings.reviewTx.feeLabel}
       </Text>
 
       <Text
@@ -232,7 +232,7 @@ const MyWalletSection = ({
     ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address ?? '-'
 
   return (
-    <Accordion label={strings.myWalletLabel}>
+    <Accordion label={strings.reviewTx.myWalletLabel}>
       <Space.Height.lg />
 
       <Copiable text={address}>
@@ -349,7 +349,7 @@ const MyWalletSectionLabel = () => {
       <Space.Width._2xs />
 
       <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-        {strings.sendLabel}
+        {strings.reviewTx.sendLabel}
       </Text>
     </View>
   )
@@ -372,7 +372,7 @@ const OneExternalPartySection = ({
 
       <View style={[a.flex_row, a.align_center, a.flex_row, a.justify_between]}>
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
-          {strings.receiveToLabel}:
+          {strings.reviewTx.receiveToLabel}:
         </Text>
 
         {receiverCustomTitle ?? (
@@ -483,10 +483,10 @@ const MultiExternalPartiesSection = ({
     <View>
       <Divider verticalSpace="lg" />
 
-      <Accordion label={strings.multiExternalPartiesSectionLabel}>
+      <Accordion label={strings.reviewTx.multiExternalPartiesSectionLabel}>
         <Space.Height.lg />
 
-        <InfoBanner content={strings.multiExternalPartiesSectionNotice} />
+        <InfoBanner content={strings.reviewTx.multiExternalPartiesSectionNotice} />
 
         {receivers}
       </Accordion>
@@ -505,7 +505,7 @@ const ExternalPartiesSectionLabel = () => {
       <Space.Width._2xs />
 
       <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-        {strings.receiveLabel}
+        {strings.reviewTx.receiveLabel}
       </Text>
     </View>
   )
@@ -535,7 +535,7 @@ const OperationsSection = ({
     <View>
       <Divider verticalSpace="lg" />
 
-      <Accordion label={strings.operationsLabel}>
+      <Accordion label={strings.reviewTx.operationsLabel}>
         <Space.Height.lg />
 
         {operationsNotice != null && (
@@ -565,7 +565,7 @@ const OperationsSection = ({
         {componentDuplicated.length > 0 && (
           <Details
             details={{
-              title: strings.operationsLogTitle,
+              title: strings.reviewTx.operationsLogTitle,
               component: <OperationsModal operations={operations} />,
             }}
           />
@@ -582,11 +582,11 @@ const OperationsModal = ({operations}: {operations: Operations}) => {
   return (
     <View>
       <WarningBanner
-        title={strings.operationsLogWarningTitle}
-        content={strings.operationsLogWarningText}
+        title={strings.reviewTx.operationsLogWarningTitle}
+        content={strings.reviewTx.operationsLogWarningText}
       />
 
-      <Accordion label={strings.operationsLabel}>
+      <Accordion label={strings.reviewTx.operationsLabel}>
         <Space.Height.lg />
 
         {components.map((operation, index) => {
@@ -653,7 +653,7 @@ export const CreatedByInfoItem = ({
   return (
     <View style={[a.flex_row, a.justify_between]}>
       <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-        {strings.createdBy}
+        {strings.reviewTx.createdBy}
       </Text>
 
       <View style={[a.flex_row, a.align_center]}>
@@ -699,14 +699,14 @@ export const OperationsNotice = () => {
           {color: p.text_gray_medium},
         ]}
       >
-        {strings.operationsNoticeText}
+        {strings.reviewTx.operationsNoticeText}
       </Text>
 
       <Space.Height._2xs fill />
 
       <View style={{alignSelf: 'stretch'}}>
         <Button
-          title={strings.operationsNoticeButton}
+          title={strings.reviewTx.operationsNoticeButton}
           onPress={handleOnpress}
         />
       </View>
@@ -739,7 +739,7 @@ const useShowOperationsNotice = (operations: Operations) => {
       timeout = setTimeout(
         () =>
           openModal({
-            title: strings.operationsNoticeTitle,
+            title: strings.reviewTx.operationsNoticeTitle,
             content: <OperationsNotice />,
             height: 570,
           }),
