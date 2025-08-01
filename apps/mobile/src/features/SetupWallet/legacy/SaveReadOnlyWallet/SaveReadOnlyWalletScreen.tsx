@@ -5,7 +5,6 @@ import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {Api, Wallet} from '@yoroi/types'
 import React from 'react'
-import {useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -15,7 +14,6 @@ import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet
 import {useCreateWalletXPub} from '~/features/WalletManager/hooks/useCreateWalletXPub'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {showErrorDialog} from '~/kernel/dialogs'
-import {errorMessages} from '~/kernel/i18n/global-messages'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -32,7 +30,6 @@ import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 const addressMode: Wallet.AddressMode = 'single'
 export const SaveReadOnlyWalletScreen = () => {
   const strings = useStrings()
-  const intl = useIntl()
   const storage = useAsyncStorage()
   const navigation = useNavigation<any>()
   const {track} = useMetrics()
@@ -71,8 +68,8 @@ export const SaveReadOnlyWalletScreen = () => {
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
-          ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {
+          ? showErrorDialog(strings.global.networkError)
+          : showErrorDialog(strings.global.generalError, {
               message: error.message,
             })
       })

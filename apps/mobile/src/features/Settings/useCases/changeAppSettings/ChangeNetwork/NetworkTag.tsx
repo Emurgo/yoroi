@@ -18,7 +18,7 @@ import {useWalletNavigation} from '~/kernel/navigation/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from './strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const NetworkTag = ({
   children,
@@ -56,7 +56,7 @@ export const NetworkTag = ({
 
       if (nextNetwork === Chain.Network.Mainnet) {
         openModal({
-          title: strings.networkTagModalTitle,
+          title: strings.settings.changeNetwork.networkTagModalTitle,
           content: (
             <MainnetWarningDialog
               onCancel={closeModal}
@@ -173,7 +173,7 @@ const MainnetWarningDialog = ({
   return (
     <View style={[a.px_lg, a.flex_1]}>
       <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
-        {strings.networkTagModalText}
+        {strings.settings.changeNetwork.networkTagModalText}
       </Text>
 
       <Space.Height.lg fill />
