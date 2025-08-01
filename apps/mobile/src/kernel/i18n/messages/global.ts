@@ -887,6 +887,34 @@ export default freeze(
       id: 'global.walletSelectionScreenHeader',
       defaultMessage: '!!!Select Wallet',
     },
+    currentVersion: {
+      id: 'global.currentVersion',
+      defaultMessage: '!!!Current Version',
+    },
+    commit: {
+      id: 'global.commit',
+      defaultMessage: '!!!Commit',
+    },
+    network: {
+      id: 'global.network',
+      defaultMessage: '!!!Network',
+    },
+    singleAddress: {
+      id: 'global.singleAddress',
+      defaultMessage: '!!!Single Address',
+    },
+    yoroiZendesk: {
+      id: 'global.yoroiZendesk',
+      defaultMessage: '!!!Yoroi Zendesk',
+    },
+    collateral: {
+      id: 'global.collateral',
+      defaultMessage: '!!!Collateral',
+    },
+    proceed: {
+      id: 'global.proceed',
+      defaultMessage: '!!!Proceed',
+    },
   }),
   true,
 )

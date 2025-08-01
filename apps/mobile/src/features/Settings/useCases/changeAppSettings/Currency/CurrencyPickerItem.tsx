@@ -22,7 +22,7 @@ export const CurrencyPickerItem = ({
 }: Props) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
-  const title = strings.settings.currency.translatedName(symbol)
+  const title = strings.settings.currencySettings.translatedName(symbol)
   const subtitle = `${nativeName} (${symbol})`
 
   const handleSelectCurrency = () => {

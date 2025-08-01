@@ -6,11 +6,12 @@ This document consolidates all development guidelines, migration processes, and 
 
 1. [App Startup & Development Process](#app-startup--development-process)
 2. [Migration Guidelines](#migration-guidelines)
-3. [Feature Restoration Status](#feature-restoration-status)
-4. [Temporary Fixes & Compatibility Issues](#temporary-fixes--compatibility-issues)
-5. [Current Conflicts & Issues](#current-conflicts--issues)
-6. [Debugging & Error Resolution](#debugging--error-resolution)
-7. [Testing & Quality Assurance](#testing--quality-assurance)
+3. [useStrings Consolidation](#usestrings-consolidation)
+4. [Feature Restoration Status](#feature-restoration-status)
+5. [Temporary Fixes & Compatibility Issues](#temporary-fixes--compatibility-issues)
+6. [Current Conflicts & Issues](#current-conflicts--issues)
+7. [Debugging & Error Resolution](#debugging--error-resolution)
+8. [Testing & Quality Assurance](#testing--quality-assurance)
 
 ---
 
@@ -167,6 +168,277 @@ const query = useQuery({
   suspense: true,
 });
 ```
+
+---
+
+## 🔤 useStrings Consolidation
+
+### Overview
+
+This section documents the migration from multiple scattered `useStrings` functions throughout the codebase to a single centralized `useStrings` hook with modular message organization.
+
+### Before Migration
+
+Previously, the codebase had multiple local `useStrings` declarations scattered across different files:
+
+```typescript
+// Example: EnableEasyConfirmationScreen.tsx
+const useStrings = () => {
+  const intl = useIntl();
+  return {
+    title: intl.formatMessage(
+      defineMessages({
+        title: {
+          id: "settings.enableEasyConfirmation.title",
+          defaultMessage: "Enable Easy Confirmation",
+        },
+      })
+    ),
+  };
+};
+```
+
+### After Migration
+
+All strings are now centralized in a single `useStrings` hook with modular message organization:
+
+```
+apps/mobile/src/kernel/i18n/
+├── useStrings.ts                    # Main consolidated hook
+└── messages/                        # Modular message files
+    ├── global.ts                    # Global messages
+    ├── auth.ts                      # Authentication messages
+    ├── settings.ts                  # Settings messages
+    ├── swap.ts                      # Swap/DEX messages
+    ├── staking.ts                   # Staking/Governance messages
+    ├── transactions.ts              # Transaction history messages
+    ├── send.ts                      # Send functionality messages
+    ├── receive.ts                   # Receive functionality messages
+    ├── portfolio.ts                 # Portfolio messages
+    ├── notifications.ts             # Notification messages
+    ├── manage-notifications.ts      # Notification management
+    ├── manage-collateral.ts         # Collateral management
+    ├── claim.ts                     # Claim functionality
+    ├── discover.ts                  # DApp discovery
+    ├── exchange.ts                  # Exchange functionality
+    ├── scan.ts                      # QR scanning
+    ├── links.ts                     # Deep linking
+    ├── menu.ts                      # Menu items
+    ├── dashboard.ts                 # Dashboard
+    ├── ui.ts                        # UI elements
+    ├── error.ts                     # Error messages
+    ├── action.ts                    # Action labels
+    ├── tx-labels.ts                 # Transaction labels
+    ├── theme-names.ts               # Theme names
+    ├── currency-names.ts            # Currency names
+    ├── initialization.ts             # App initialization
+    ├── setup-wallet.ts              # Wallet setup
+    ├── register-catalyst.ts         # Catalyst registration
+    ├── hardware-wallet.ts           # Hardware wallet
+    └── ledger.ts                    # Ledger specific
+```
+
+### Migration Pattern
+
+#### 1. Create Message File
+
+Create a new message file in `apps/mobile/src/kernel/i18n/messages/`:
+
+```typescript
+// apps/mobile/src/kernel/i18n/messages/example.ts
+import { defineMessages } from "react-intl";
+
+export const exampleMessages = defineMessages({
+  title: {
+    id: "example.title",
+    defaultMessage: "Example Title",
+  },
+  description: {
+    id: "example.description",
+    defaultMessage: "Example description",
+  },
+});
+```
+
+#### 2. Add Import to useStrings.ts
+
+Add the import to the main `useStrings.ts` file:
+
+```typescript
+// apps/mobile/src/kernel/i18n/useStrings.ts
+import {
+  // ... existing imports
+  exampleMessages,
+} from "./messages";
+```
+
+#### 3. Add Section to useStrings Hook
+
+Add a new section in the `useStrings` hook:
+
+```typescript
+// apps/mobile/src/kernel/i18n/useStrings.ts
+export const useStrings = () => {
+  const intl = useIntl();
+
+  return React.useMemo(() => {
+    const f = intl.formatMessage;
+
+    return freeze({
+      // ... existing sections
+
+      // Example strings
+      example: {
+        title: f(exampleMessages.title),
+        description: f(exampleMessages.description),
+      },
+    });
+  }, [intl]);
+};
+```
+
+#### 4. Update Component Usage
+
+Replace local `useStrings` with the centralized one:
+
+```typescript
+// Before
+const useStrings = () => {
+  const intl = useIntl();
+  return {
+    title: intl.formatMessage(
+      defineMessages({
+        title: {
+          id: "example.title",
+          defaultMessage: "Example Title",
+        },
+      })
+    ),
+  };
+};
+
+// After
+import { useStrings } from "@yoroi/wallet-mobile/src/kernel/i18n/useStrings";
+
+const Component = () => {
+  const strings = useStrings();
+  return <Text>{strings.example.title}</Text>;
+};
+```
+
+### Message Organization Principles
+
+#### 1. Flattening Nested Objects
+
+When migrating nested message objects, flatten them into single-level properties:
+
+```typescript
+// Before (nested)
+poolDetails: {
+  poolHash: f(stakingMessages.poolDetails.poolHash),
+  delegate: f(stakingMessages.poolDetails.delegate),
+}
+
+// After (flattened)
+poolDetails: {
+  poolHash: f(stakingMessages.poolDetailsPoolHash),
+  delegate: f(stakingMessages.poolDetailsDelegate),
+}
+```
+
+#### 2. Dynamic Access Patterns
+
+For dynamic message access, use mapping objects:
+
+```typescript
+// For dynamic direction messages
+direction: (direction: any) => {
+  const directionMap = {
+    SENT: transactionsMessages.directionMessagesSENT,
+    RECEIVED: transactionsMessages.directionMessagesRECEIVED,
+    SELF: transactionsMessages.directionMessagesSELF,
+    MULTI: transactionsMessages.directionMessagesMULTI,
+  };
+  return f(directionMap[direction as keyof typeof directionMap]);
+};
+```
+
+#### 3. Function Parameters
+
+For messages with parameters, use function wrappers:
+
+```typescript
+// In useStrings.ts
+pairedBalanceError: (currency: string) =>
+  f(uiMessages.pairedBalanceError, {currency}),
+
+// In component
+const error = strings.ui.pairedBalanceError('USD')
+```
+
+### Common Migration Issues
+
+#### 1. Duplicate Property Names
+
+If you encounter duplicate property names, rename one:
+
+```typescript
+// Before (conflict)
+currency: f(globalMessages.currency),
+currency: {
+  translatedName: (symbol: any) => f(currencyNames[symbol]),
+},
+
+// After (resolved)
+currency: f(globalMessages.currency),
+currencySettings: {
+  translatedName: (symbol: any) => f(currencyNames[symbol]),
+},
+```
+
+#### 2. Missing Properties
+
+When adding new message files, ensure all properties used in `useStrings.ts` are defined in the message file:
+
+```typescript
+// In message file
+export const exampleMessages = defineMessages({
+  title: {
+    id: "example.title",
+    defaultMessage: "Title",
+  },
+  // Add all properties that are referenced in useStrings.ts
+});
+```
+
+### Verification Steps
+
+1. **TypeScript Compilation**: Run `npx tsc --noEmit src/kernel/i18n/useStrings.ts` to ensure no compilation errors
+2. **Import Verification**: Check that all message imports are working
+3. **Usage Testing**: Verify that components using the new structure work correctly
+4. **Linter Clean**: Ensure no duplicate property errors
+
+### Benefits
+
+- **Centralized Management**: All strings in one place
+- **Type Safety**: Better TypeScript support
+- **Modular Organization**: Feature-specific message files
+- **Consistent API**: Single `useStrings` hook across the app
+- **Easier Maintenance**: Clear structure for adding new strings
+
+### Migration Checklist
+
+- [ ] Create message file in `messages/` directory
+- [ ] Add import to `useStrings.ts`
+- [ ] Add section to `useStrings` hook
+- [ ] Update component to use centralized `useStrings`
+- [ ] Remove local `useStrings` declaration
+- [ ] Verify TypeScript compilation
+- [ ] Test component functionality
+- [ ] Update any dynamic access patterns
+- [ ] Handle any duplicate property conflicts
+
+This pattern can be replicated for migrating components from `wallet-mobile` or `tag rn71` to the new centralized structure.
 
 ---
 
