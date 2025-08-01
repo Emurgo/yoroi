@@ -4,7 +4,7 @@ import {FlatList, Text, View} from 'react-native'
 
 import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
 import {useShowLiquidityPoolModal} from '~/features/Portfolio/common/hooks/useShowLiquidityPoolModal'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyList'
 import {makeList} from '~/kernel/utils'
 import {Space} from '~/ui/Space/Space'

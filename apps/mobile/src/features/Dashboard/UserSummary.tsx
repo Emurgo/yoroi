@@ -1,12 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import globalMessages from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonProps, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
@@ -36,7 +35,7 @@ export const UserSummary = ({
   const {isPrivacyActive} = usePrivacyMode()
 
   return (
-    <TitledCard title={strings.title} testID="userSummaryTitleCard">
+    <TitledCard title={strings.dashboard.title} testID="userSummaryTitleCard">
       <View style={[a.flex_1, a.flex_col]}>
         <View style={[a.flex_1, a.flex_row, a.align_center]}>
           <View>
@@ -47,7 +46,7 @@ export const UserSummary = ({
 
           <View style={[a.flex_col]}>
             <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
-              {strings.availableFunds}:
+              {strings.dashboard.availableFunds}:
             </Text>
 
             <Text
@@ -78,7 +77,7 @@ export const UserSummary = ({
 
           <View style={[a.flex_col]}>
             <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
-              {strings.rewardsLabel}:
+              {strings.dashboard.rewardsLabel}:
             </Text>
 
             <Text
@@ -109,7 +108,7 @@ export const UserSummary = ({
 
           <View style={[a.flex_col]}>
             <Text style={[a.body_3_sm_regular, {color: p.text_gray_low}]}>
-              {strings.delegatedLabel}:
+              {strings.dashboard.delegatedLabel}:
             </Text>
 
             <Text
@@ -136,7 +135,7 @@ export const UserSummary = ({
             <Button
               type={ButtonType.Secondary}
               size="S"
-              title={strings.withdrawButtonTitle}
+              title={strings.dashboard.withdrawButtonTitle}
               {...ctaProps}
               testID="userSummaryWithdrawButton"
             />
@@ -146,34 +145,3 @@ export const UserSummary = ({
     </TitledCard>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    title: intl.formatMessage(messages.title),
-    rewardsLabel: intl.formatMessage(messages.rewardsLabel),
-    delegatedLabel: intl.formatMessage(messages.delegatedLabel),
-    withdrawButtonTitle: intl.formatMessage(messages.withdrawButtonTitle),
-    availableFunds: intl.formatMessage(globalMessages.availableFunds),
-  }
-}
-
-const messages = defineMessages({
-  title: {
-    id: 'components.delegationsummary.userSummary.title',
-    defaultMessage: '!!!Your Summary',
-  },
-  rewardsLabel: {
-    id: 'components.delegationsummary.userSummary.totalRewards',
-    defaultMessage: '!!!Total Rewards',
-  },
-  delegatedLabel: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
-    defaultMessage: '!!!Total Delegated',
-  },
-  withdrawButtonTitle: {
-    id: 'components.delegationsummary.userSummary.withdrawButtonTitle',
-    defaultMessage: '!!!Withdraw',
-  },
-})

@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/Staking/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
@@ -39,11 +39,11 @@ export const SubmittedTxScreen = () => {
           {color: p.gray_max},
         ]}
       >
-        {strings.submittedTxTitle}
+        {strings.staking.submittedTxTitle}
       </Text>
 
       <Text style={[a.body_1_lg_regular, a.text_center, {color: p.gray_600}]}>
-        {strings.submittedTxText}
+        {strings.staking.submittedTxText}
       </Text>
 
       <Space.Height.sm fill />
@@ -51,7 +51,7 @@ export const SubmittedTxScreen = () => {
       <View style={a.align_stretch}>
         <Button
           onPress={navigateTo.navigateToTxHistory}
-          title={strings.submittedTxButton}
+          title={strings.staking.submittedTxButton}
           style={a.px_lg}
         />
       </View>

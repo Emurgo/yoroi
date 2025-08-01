@@ -1,131 +1,131 @@
 import {useNavigation} from '@react-navigation/native'
-import {MutationOptions, useMutation} from '@tanstack/react-query'
+import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {
-  TextInput as RNTextInput,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   View,
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {errorMessages} from '../../../../../kernel/i18n/global-messages'
-import {Button} from '../../../../../ui/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Checkmark, TextInput} from '../../../../../ui/TextInput/TextInput'
-import {YoroiWallet} from '../../../../../wallets/cardano/types'
-import {
-  REQUIRED_PASSWORD_LENGTH,
-  validatePassword,
-} from '../../../../../wallets/utils/validators'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
+import {TextInput} from '~/ui/TextInput/TextInput'
+import {YoroiWallet} from '~/wallets/cardano/types'
+
+const REQUIRED_PASSWORD_LENGTH = 10
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
   const navigation = useNavigation()
-
-  const currentPasswordRef = React.useRef<RNTextInput>(null)
-  const [currentPassword, setCurrentPassword] = React.useState('')
-  const currentPasswordErrors =
-    currentPassword.length === 0 ? {currentPasswordRequired: true} : {}
-
-  const newPasswordRef = React.useRef<RNTextInput>(null)
-  const [newPassword, setNewPassword] = React.useState('')
-
-  const newPasswordConfirmationRef = React.useRef<RNTextInput>(null)
-  const [newPasswordConfirmation, setNewPasswordConfirmation] =
-    React.useState('')
-  const newPasswordErrors = validatePassword(
-    newPassword,
-    newPasswordConfirmation,
-  )
-
-  const hasErrors =
-    Object.keys(currentPasswordErrors).length > 0 ||
-    Object.keys(newPasswordErrors).length > 0
-
+  const {atoms: ta, palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
-  const {changePassword, isError, reset} = useChangePassword(wallet, {
+
+  const [currentPassword, setCurrentPassword] = React.useState('')
+  const [newPassword, setNewPassword] = React.useState('')
+  const [repeatPassword, setRepeatPassword] = React.useState('')
+
+  const {changePassword, isLoading, error} = useChangePassword(wallet, {
     onSuccess: () => navigation.goBack(),
-    onError: () => currentPasswordRef.current?.focus(),
   })
 
+  const hasErrors =
+    newPassword.length < REQUIRED_PASSWORD_LENGTH ||
+    newPassword !== repeatPassword ||
+    newPassword === currentPassword
+
   return (
-    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]}>
-      <SafeAreaView edges={['left', 'right', 'bottom']} style={a.flex_1}>
+    <KeyboardAvoidingView
+      style={[ta.bg_color_max, a.flex_1]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <SafeAreaView style={[a.flex_1]} edges={['left', 'right', 'bottom']}>
         <ScrollView
+          contentContainerStyle={[a.p_lg]}
           bounces={false}
-          keyboardDismissMode="on-drag"
-          contentContainerStyle={[a.p_lg, a.gap_lg]}
+          keyboardShouldPersistTaps="handled"
         >
+          <Space.Height.lg />
+
           <CurrentPasswordInput
-            ref={currentPasswordRef}
+            returnKeyType="done"
+            errorDelay={0}
             enablesReturnKeyAutomatically
             autoFocus
-            secureTextEntry
-            label={strings.oldPasswordInputLabel}
+            label={strings.settings.changePassword.oldPasswordInputLabel}
             value={currentPassword}
-            onChange={reset}
             onChangeText={setCurrentPassword}
-            returnKeyType="next"
-            onSubmitEditing={() => newPasswordRef.current?.focus()}
-            errorText={isError ? strings.incorrectPassword : undefined}
-            autoComplete="off"
+            secureTextEntry
+            autoComplete="password"
           />
+
+          <Space.Height.lg />
 
           <PasswordInput
-            ref={newPasswordRef}
+            returnKeyType="done"
+            errorDelay={0}
             enablesReturnKeyAutomatically
-            secureTextEntry
-            label={strings.newPasswordInputLabel}
+            label={strings.settings.changePassword.newPasswordInputLabel}
             value={newPassword}
             onChangeText={setNewPassword}
+            secureTextEntry
+            autoComplete="new-password"
             errorText={
-              newPasswordErrors.passwordIsWeak
-                ? strings.passwordStrengthRequirement
+              newPassword.length > 0 &&
+              newPassword.length < REQUIRED_PASSWORD_LENGTH
+                ? strings.settings.changePassword.passwordStrengthRequirement
                 : undefined
             }
-            helper={strings.passwordStrengthRequirement}
-            returnKeyType="next"
-            onSubmitEditing={() => newPasswordConfirmationRef.current?.focus()}
-            right={
-              !newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined
-            }
-            autoComplete="off"
           />
 
+          <Space.Height.lg />
+
           <PasswordConfirmationInput
-            ref={newPasswordConfirmationRef}
+            returnKeyType="done"
+            errorDelay={0}
             enablesReturnKeyAutomatically
+            label={strings.settings.changePassword.repeatPasswordInputLabel}
+            value={repeatPassword}
+            onChangeText={setRepeatPassword}
             secureTextEntry
-            label={strings.repeatPasswordInputLabel}
-            value={newPasswordConfirmation}
-            onChangeText={setNewPasswordConfirmation}
+            autoComplete="new-password"
             errorText={
-              newPasswordErrors.matchesConfirmation
-                ? strings.repeatPasswordInputNotMatchError
+              repeatPassword.length > 0 && newPassword !== repeatPassword
+                ? strings.settings.changePassword
+                    .repeatPasswordInputNotMatchError
                 : undefined
             }
-            returnKeyType="done"
-            right={
-              !newPasswordErrors.matchesConfirmation &&
-              !newPasswordErrors.passwordConfirmationReq ? (
-                <Checkmark />
-              ) : undefined
-            }
-            autoComplete="off"
           />
+
+          {error && (
+            <>
+              <Space.Height.lg />
+              <Text
+                style={[
+                  a.body_1_lg_regular,
+                  {
+                    color: p.sys_magenta_500,
+                  },
+                ]}
+              >
+                {strings.settings.changePassword.incorrectPassword}
+              </Text>
+            </>
+          )}
         </ScrollView>
 
         <Actions>
           <Button
             onPress={() => changePassword({currentPassword, newPassword})}
             disabled={hasErrors}
-            title={strings.continueButton}
+            title={strings.settings.changePassword.continueButton}
           />
         </Actions>
       </SafeAreaView>
@@ -137,65 +137,13 @@ const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
 const Actions = (props: ViewProps) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return <View {...props} style={[ta.bg_color_max, a.p_lg]} />
-}
-
-const messages = defineMessages({
-  oldPasswordInputLabel: {
-    id: 'components.settings.changepasswordscreen.oldPasswordInputLabel',
-    defaultMessage: '!!!Current password',
-  },
-  newPasswordInputLabel: {
-    id: 'components.settings.changepasswordscreen.newPasswordInputLabel',
-    defaultMessage: '!!!New password',
-  },
-  passwordStrengthRequirement: {
-    id: 'components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement',
-    defaultMessage: '!!!Minimum {requirePasswordLength} characters',
-  },
-  repeatPasswordInputLabel: {
-    id: 'components.settings.changepasswordscreen.repeatPasswordInputLabel',
-    defaultMessage: '!!!Repeat new password',
-  },
-  repeatPasswordInputNotMatchError: {
-    id: 'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
-    defaultMessage: '!!!Passwords do not match',
-  },
-  continueButton: {
-    id: 'components.settings.changepasswordscreen.continueButton',
-    defaultMessage: '!!!Change password',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    oldPasswordInputLabel: intl.formatMessage(messages.oldPasswordInputLabel),
-    newPasswordInputLabel: intl.formatMessage(messages.newPasswordInputLabel),
-    passwordStrengthRequirement: intl.formatMessage(
-      messages.passwordStrengthRequirement,
-      {
-        requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
-      },
-    ),
-    repeatPasswordInputLabel: intl.formatMessage(
-      messages.repeatPasswordInputLabel,
-    ),
-    repeatPasswordInputNotMatchError: intl.formatMessage(
-      messages.repeatPasswordInputNotMatchError,
-    ),
-    continueButton: intl.formatMessage(messages.continueButton),
-    incorrectPassword: intl.formatMessage(
-      errorMessages.incorrectPassword.title,
-    ),
-  }
 }
 
 const useChangePassword = (
   wallet: YoroiWallet,
-  mutationOptions: MutationOptions<
+  mutationOptions: UseMutationOptions<
     void,
     Error,
     {currentPassword: string; newPassword: string}

@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/Staking/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'

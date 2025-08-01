@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'

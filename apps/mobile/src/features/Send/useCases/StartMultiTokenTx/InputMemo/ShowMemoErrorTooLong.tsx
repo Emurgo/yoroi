@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {useStrings} from '~/features/Send/common/useStrings'
 import {memoMaxLenght} from '~/features/SetupWallet/common/constants'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {HelperText} from '~/ui/TextInput/TextInput'
 
 export const ShowMemoErrorTooLong = ({memo = ''}: {memo?: string}) => {
@@ -12,7 +12,9 @@ export const ShowMemoErrorTooLong = ({memo = ''}: {memo?: string}) => {
 
   return (
     <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-      <HelperText type="error">{strings.helperMemoErrorTooLong}</HelperText>
+      <HelperText type="error">
+        {strings.send.helperMemoErrorTooLong}
+      </HelperText>
 
       <HelperText type="error">{lenghtInfo}</HelperText>
     </View>

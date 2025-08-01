@@ -1,9 +1,9 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, TouchableOpacity, View, ViewProps} from 'react-native'
+import {FlatList, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
 // import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useLanguage} from '../../kernel/i18n/LanguageProvider'
 import {
   LanguageRecord,
@@ -35,11 +35,20 @@ export const LanguagePicker = () => {
         contentContainerStyle={[a.p_lg, a.align_stretch]}
         renderItem={({item: {label, code}}) => (
           <TouchableOpacity
-            style={[styles.item, a.py_lg]}
+            style={[
+              {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              },
+              a.py_lg,
+            ]}
             onPress={() => selectLanguage(code)}
             testID={`languageSelect_${code}`}
           >
-            <Text style={[styles.itemText, {color: p.gray_900}]}>{label}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
+              {label}
+            </Text>
 
             {languageCode === code && (
               <Icon.Check size={24} color={p.primary_600} />
@@ -60,25 +69,15 @@ export const LanguagePicker = () => {
 
 const HR = (props: ViewProps) => {
   const {palette: p} = useTheme()
-  return <View {...props} style={[styles.hr, {backgroundColor: p.gray_200}]} />
+  return (
+    <View
+      {...props}
+      style={[
+        {
+          height: 1,
+        },
+        {backgroundColor: p.gray_200},
+      ]}
+    />
+  )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    languagePickerTitle: intl.formatMessage(messages.languagePickerTitle),
-    languagePickerSearch: intl.formatMessage(messages.languagePickerSearch),
-  }
-}
-
-const messages = defineMessages({
-  languagePickerTitle: {
-    id: 'global.title',
-    defaultMessage: '!!!Language',
-  },
-  languagePickerSearch: {
-    id: 'global.search',
-    defaultMessage: '!!!Search',
-  },
-})

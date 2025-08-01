@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/Send/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -41,7 +41,7 @@ export const SubmittedTxScreen = () => {
           a.text_center,
         ]}
       >
-        {strings.submittedTxTitle}
+        {strings.send.submittedTxTitle}
       </Text>
 
       <Text
@@ -52,7 +52,7 @@ export const SubmittedTxScreen = () => {
           {maxWidth: 330},
         ]}
       >
-        {strings.submittedTxText}
+        {strings.send.submittedTxText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -60,7 +60,7 @@ export const SubmittedTxScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.submittedTxButton}
+          title={strings.send.submittedTxButton}
           style={[a.px_lg]}
         />
       </Actions>

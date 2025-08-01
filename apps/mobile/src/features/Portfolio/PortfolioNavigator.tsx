@@ -5,12 +5,12 @@ import * as React from 'react'
 import {SearchProvider} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {TxDetails} from '~/features/Transactions/useCases/TxDetails/TxDetails'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   defaultStackNavigationOptions,
   PortfolioRoutes,
 } from '~/kernel/navigation/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
-import {useStrings} from './common/hooks/useStrings'
 import {PortfolioProvider} from './context/PortfolioProvider'
 import {NftsNavigator} from './NftsNavigator'
 import {PortfolioDashboardScreen} from './screens/PortfolioDashboard/PortfolioDashboardScreen'
@@ -35,21 +35,21 @@ export const PortfolioNavigator = () => {
         <Stack.Screen
           name="dashboard-portfolio"
           getComponent={() => PortfolioDashboardScreen}
-          options={{title: strings.portfolio, headerLeft: () => null}}
+          options={{title: strings.portfolio.portfolio, headerLeft: () => null}}
         />
 
         <Stack.Screen
           name="portfolio-tokens-list"
           getComponent={() => PortfolioTokenListScreen}
           options={{
-            title: strings.tokenList,
+            title: strings.portfolio.tokenList,
           }}
         />
 
         <Stack.Screen
           name="portfolio-token-details"
           options={{
-            title: strings.tokenDetail,
+            title: strings.portfolio.tokenDetail,
             headerRight: () => <ExportTokenTransactions />,
           }}
           getComponent={() => PortfolioTokenDetailsScreen}

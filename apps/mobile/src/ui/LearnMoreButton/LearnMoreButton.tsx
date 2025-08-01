@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const LearnMoreButton = ({
   activeOpacity = 0.5,

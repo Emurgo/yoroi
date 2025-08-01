@@ -5,7 +5,7 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'

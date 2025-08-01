@@ -3,7 +3,7 @@ import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useGetDAppsPortfolioBalance} from '~/features/Portfolio/common/hooks/useGetDAppsPortfolioBalance'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,

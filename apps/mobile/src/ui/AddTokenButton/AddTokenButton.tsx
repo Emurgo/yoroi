@@ -1,8 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {StyleProp, Text, TouchableOpacity, ViewStyle} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
@@ -46,23 +46,8 @@ export const AddTokenButton = ({
       <Text
         style={[a.button_2_md, {color: p.primary_600, textTransform: 'none'}]}
       >
-        {strings.addToken.toLocaleUpperCase()}
+        {strings.ui.addToken.toLocaleUpperCase()}
       </Text>
     </TouchableOpacity>
   )
-}
-
-const messages = defineMessages({
-  addToken: {
-    id: 'components.send.addToken',
-    defaultMessage: '!!!Add token',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    addToken: intl.formatMessage(messages.addToken),
-  }
 }

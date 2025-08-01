@@ -4,12 +4,12 @@ import {ScrollView, View, ViewProps} from 'react-native'
 import {openSettings} from 'react-native-permissions'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {CameraPermissionDeniedIllustration} from '~/ui/CameraPermissionDeniedIllustration/CameraPermissionDeniedIllustration'
 import {Space} from '~/ui/Space/Space'
 import {Text as YoroiText} from '~/ui/Text/Text'
-import {useStrings} from '../../common/useStrings'
 
 export const ShowCameraPermissionDeniedScreen = () => {
   const strings = useStrings()
@@ -38,7 +38,7 @@ export const ShowCameraPermissionDeniedScreen = () => {
             {textAlign: 'center', color: p.gray_max},
           ]}
         >
-          {strings.cameraPermissionDeniedTitle}
+          {strings.scan.cameraPermissionDeniedTitle}
         </YoroiText>
 
         <YoroiText
@@ -47,14 +47,14 @@ export const ShowCameraPermissionDeniedScreen = () => {
             {textAlign: 'center', maxWidth: 330, color: p.gray_600},
           ]}
         >
-          {strings.cameraPermissionDeniedHelp}
+          {strings.scan.cameraPermissionDeniedHelp}
         </YoroiText>
       </ScrollView>
 
       <Actions style={[styles.actions, a.py_lg]}>
         <Button
           onPress={resetToTxHistory}
-          title={strings.continue}
+          title={strings.scan.continue}
           size="S"
           type={ButtonType.Secondary}
         />
@@ -63,7 +63,7 @@ export const ShowCameraPermissionDeniedScreen = () => {
 
         <Button
           onPress={() => openSettings()}
-          title={strings.openAppSettings}
+          title={strings.scan.openAppSettings}
           size="S"
         />
       </Actions>

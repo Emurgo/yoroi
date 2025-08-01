@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const AskToOpenWalletScreen = () => {
   const strings = useStrings()
@@ -28,7 +28,7 @@ export const AskToOpenWalletScreen = () => {
     >
       <ScrollView bounces={false}>
         <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
-          {strings.askToOpenAWalletDescription}
+          {strings.links.askToOpenAWalletDescription}
         </Text>
 
         <Space.Height._2xs fill />
@@ -39,12 +39,12 @@ export const AskToOpenWalletScreen = () => {
           size="S"
           type={ButtonType.Secondary}
           onPress={handleOnCancel}
-          title={strings.cancel}
+          title={strings.links.cancel}
         />
 
         <Space.Width.md />
 
-        <Button size="S" onPress={closeModal} title={strings.ok} />
+        <Button size="S" onPress={closeModal} title={strings.links.ok} />
       </Actions>
     </SafeAreaView>
   )

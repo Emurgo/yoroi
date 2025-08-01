@@ -4,6 +4,7 @@ import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation'
@@ -20,7 +21,6 @@ import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
 import {useConfirmConnection} from './common/useConfirmConnection'
 import {useNavigateTo} from './common/useNavigateTo'
-import {useStrings} from './common/useStrings'
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()

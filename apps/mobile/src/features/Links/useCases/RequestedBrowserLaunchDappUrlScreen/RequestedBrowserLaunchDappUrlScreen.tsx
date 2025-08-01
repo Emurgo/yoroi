@@ -7,17 +7,8 @@ import {ScrollView, Text, View, ViewProps} from 'react-native'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
-
-// Temporary implementations
-const useStrings = () => ({
-  disclaimer: 'Disclaimer',
-  trustedBrowserLaunchDappUrlDescription: 'Trusted browser launch description',
-  untrustedBrowserLaunchDappUrlDescription:
-    'Untrusted browser launch description',
-  cancel: 'Cancel',
-  continue: 'Continue',
-})
 
 const isEmptyString = (str: string | undefined | null): boolean => {
   return str == null || str.trim() === ''
@@ -39,8 +30,8 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
 
   // TODO: revisit check with product
   const description = isTrusted
-    ? strings.trustedBrowserLaunchDappUrlDescription
-    : strings.untrustedBrowserLaunchDappUrlDescription
+    ? strings.links.requestedBrowserLaunchDappUrl.trustedBrowserLaunchDappUrlDescription
+    : strings.links.requestedBrowserLaunchDappUrl.untrustedBrowserLaunchDappUrlDescription
 
   const handleOnCancel = () => {
     actionFinished()
@@ -60,7 +51,7 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
       ]}
     >
       <ScrollView bounces={false}>
-        <ShowDisclaimer title={strings.disclaimer}>
+        <ShowDisclaimer title={strings.links.requestedBrowserLaunchDappUrl.disclaimer}>
           <Text
             style={[
               {
@@ -96,10 +87,15 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
           size="S"
           type={ButtonType.Secondary}
           onPress={handleOnCancel}
-          title={strings.cancel}
+          title={strings.links.requestedBrowserLaunchDappUrl.cancel}
         />
 
-        <Button size="S" onPress={onContinue} title={strings.continue} />
+        <Button
+          size="S"
+          type={ButtonType.Primary}
+          onPress={onContinue}
+          title={strings.links.requestedBrowserLaunchDappUrl.continue}
+        />
       </Actions>
     </View>
   )
@@ -107,25 +103,35 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
 
 const Message = ({message}: {message?: string}) => {
   const {palette: p} = useTheme()
-  return (
-    !isEmptyString(message) && (
-      <>
-        <Text
-          style={[
-            {
-              color: p.text_gray_max,
-              fontSize: 14,
-              lineHeight: 20,
-              fontWeight: '400',
-            },
-          ]}
-        >
-          {message}
-        </Text>
 
-        <Space.Height.lg />
-      </>
-    )
+  if (isEmptyString(message)) {
+    return null
+  }
+
+  return (
+    <View
+      style={[
+        {
+          backgroundColor: p.gray_100,
+          padding: 16,
+          borderRadius: 8,
+        },
+      ]}
+    >
+      <Text
+        style={[
+          {
+            color: p.text_gray_max,
+            fontSize: 14,
+            lineHeight: 20,
+            fontWeight: '400',
+          },
+        ]}
+      >
+        {message}
+      </Text>
+    </View>
   )
 }
+
 const Actions = (props: ViewProps) => <View {...props} />

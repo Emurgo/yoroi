@@ -14,7 +14,7 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'

@@ -1,15 +1,15 @@
 import {PoolTransition} from '@emurgo/yoroi-lib'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Image, Text, View, ViewProps} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {formatTimeSpan} from '~/wallets/utils/timeUtils'
-import {useStrings} from './usePoolTransition'
 
 export const PoolTransitionModal = ({
   poolTransition,
@@ -24,7 +24,7 @@ export const PoolTransitionModal = ({
   return (
     <View style={[a.flex_1, a.px_lg]}>
       <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-        {isActive ? strings.warning : strings.finalWarning}
+        {isActive ? strings.staking.warning : strings.staking.finalWarning}
       </Text>
 
       <Space.Height.lg />
@@ -40,7 +40,7 @@ export const PoolTransitionModal = ({
       >
         <Row>
           <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
-            {strings.currentPool}
+            {strings.staking.currentPool}
           </Text>
 
           <View style={[a.align_center, a.flex_row, a.gap_sm]}>
@@ -59,7 +59,7 @@ export const PoolTransitionModal = ({
 
         <Row>
           <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
-            {strings.estimatedRoa}
+            {strings.staking.estimatedRoa}
           </Text>
 
           <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
@@ -69,7 +69,7 @@ export const PoolTransitionModal = ({
 
         <Row>
           <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
-            {strings.fee}
+            {strings.staking.fee}
           </Text>
 
           <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
@@ -79,7 +79,9 @@ export const PoolTransitionModal = ({
 
         <Text style={{color: p.sys_magenta_500}}>
           <Text style={a.body_1_lg_regular}>
-            {isActive ? strings.poolWillStopRewards : strings.poolNoRewards}
+            {isActive
+              ? strings.staking.poolWillStopRewards
+              : strings.staking.poolNoRewards}
           </Text>
 
           {isActive && (
@@ -120,7 +122,7 @@ export const PoolTransitionModal = ({
 
         <Row>
           <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
-            {strings.newPool}
+            {strings.staking.newPool}
           </Text>
 
           <View style={[a.align_center, a.flex_row, {gap: 8}]}>
@@ -139,7 +141,7 @@ export const PoolTransitionModal = ({
 
         <Row>
           <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
-            {strings.estimatedRoa}
+            {strings.staking.estimatedRoa}
           </Text>
 
           <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
@@ -149,7 +151,7 @@ export const PoolTransitionModal = ({
 
         <Row>
           <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
-            {strings.fee}
+            {strings.staking.fee}
           </Text>
 
           <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
@@ -158,7 +160,7 @@ export const PoolTransitionModal = ({
         </Row>
 
         <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
-          {strings.poolGeneratesRewards}
+          {strings.staking.poolGeneratesRewards}
         </Text>
       </View>
     </View>
@@ -192,12 +194,12 @@ export const PoolTransitionModalActions = ({
     <View style={[a.px_lg, a.gap_lg]}>
       <Button
         type={ButtonType.SecondaryText}
-        title={strings.skipNoRewards}
+        title={strings.staking.skipNoRewards}
         onPress={handleOnSkip}
       />
 
       <Button
-        title={strings.updateKeepEarning}
+        title={strings.staking.updateKeepEarning}
         onPress={handleOnUpdate}
         disabled={isLoading}
       />

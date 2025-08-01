@@ -11,7 +11,7 @@ import {Space} from '~/ui/Space/Space'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {isEmptyString} from '~/wallets/utils/string'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {useStrings} from './hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {generatePoolName} from './operations'
 
 export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {

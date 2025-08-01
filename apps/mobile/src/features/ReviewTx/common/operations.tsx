@@ -18,7 +18,7 @@ import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {usePoolInfo} from '~/wallets/hooks'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {useStrings} from './hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {PoolDetails} from './PoolDetails'
 import {CertificateType, FormattedTx} from './types'
 
@@ -38,7 +38,7 @@ export const StakeRegistrationOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.registerStakingKey}
+        label={strings.reviewTx.registerStakingKey}
         showWarning={showWarning}
         strike={strike}
       />
@@ -70,7 +70,7 @@ export const StakeDeregistrationOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.deregisterStakingKey}
+        label={strings.reviewTx.deregisterStakingKey}
         showWarning={showWarning}
         strike={strike}
       />
@@ -90,12 +90,12 @@ export const StakeRewardsWithdrawalOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.rewardsWithdrawalLabel}
+        label={strings.reviewTx.rewardsWithdrawalLabel}
         showWarning={showWarning}
         strike={strike}
       />
 
-      <Text style={styles.operationValue}>{strings.rewardsWithdrawalText}</Text>
+      <Text style={styles.operationValue}>{strings.reviewTx.rewardsWithdrawalText}</Text>
     </View>
   )
 }
@@ -117,7 +117,7 @@ export const StakeDelegationOperation = ({
 
   const handleShowPoolDetails = () => {
     openModal({
-      title: strings.poolDetailsTitle,
+      title: strings.reviewTx.poolDetailsTitle,
       content: <PoolDetails poolInfo={poolInfo} />,
       height: windowHeight * 0.8,
     })
@@ -128,7 +128,7 @@ export const StakeDelegationOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.delegateStake}
+        label={strings.reviewTx.delegateStake}
         showWarning={showWarning}
         strike={strike}
       />
@@ -168,7 +168,7 @@ export const AbstainOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.selectAbstain}
+        label={strings.reviewTx.selectAbstain}
         showWarning={showWarning}
         strike={strike}
       />
@@ -188,7 +188,7 @@ export const NoConfidenceOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.selectNoConfidence}
+        label={strings.reviewTx.selectNoConfidence}
         showWarning={showWarning}
         strike={strike}
       />
@@ -217,7 +217,7 @@ export const VoteDelegationOperation = ({
     <>
       <View style={styles.operation}>
         <Label
-          label={strings.delegateVotingToDRep}
+          label={strings.reviewTx.delegateVotingToDRep}
           showWarning={showWarning}
           strike={strike}
         />
@@ -239,7 +239,7 @@ export const VoteDelegationOperation = ({
 
       <View style={styles.operation}>
         <Label
-          label={strings.delegateVotingToDRepSpecified}
+          label={strings.reviewTx.delegateVotingToDRepSpecified}
           showWarning={showWarning}
           strike={strike}
         />
@@ -276,7 +276,7 @@ export const DrepRegistrationOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.drepRegistration}
+        label={strings.reviewTx.drepRegistration}
         showWarning={showWarning}
         strike={strike}
       />
@@ -308,7 +308,7 @@ export const DrepDeregistrationOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.drepDeregistration}
+        label={strings.reviewTx.drepDeregistration}
         showWarning={showWarning}
         strike={strike}
       />
@@ -332,7 +332,7 @@ export const PoolRegistrationOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.poolRegistration}
+        label={strings.reviewTx.poolRegistration}
         showWarning={showWarning}
         strike={strike}
       />
@@ -364,7 +364,7 @@ export const PoolRetirementOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.poolRetirement}
+        label={strings.reviewTx.poolRetirement}
         showWarning={showWarning}
         strike={strike}
       />
@@ -383,7 +383,7 @@ export const DrepUpdateOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.drepUpdate}
+        label={strings.reviewTx.drepUpdate}
         showWarning={showWarning}
         strike={strike}
       />
@@ -402,7 +402,7 @@ export const MoveInstantaneousRewardsOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.moveInstantaneousRewards}
+        label={strings.reviewTx.moveInstantaneousRewards}
         showWarning={showWarning}
         strike={strike}
       />
@@ -421,7 +421,7 @@ export const CommitteeHotAuthorizationOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.committeeHotAuthorization}
+        label={strings.reviewTx.committeeHotAuthorization}
         showWarning={showWarning}
         strike={strike}
       />
@@ -441,7 +441,7 @@ export const CommitteeColdResignOperation = ({
   return (
     <View style={styles.operation}>
       <Label
-        label={strings.committeeColdResign}
+        label={strings.reviewTx.committeeColdResign}
         showWarning={showWarning}
         strike={strike}
       />

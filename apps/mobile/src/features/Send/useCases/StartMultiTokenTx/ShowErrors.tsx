@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/features/Send/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Banner, ClickableBanner} from '~/ui/Banner/Banner'
 import {Space} from '~/ui/Space/Space'
 import {useHasPendingTx, useSync} from '~/wallets/hooks'
@@ -19,7 +19,7 @@ export const ShowErrors = () => {
         <ClickableBanner
           error
           onPress={() => sync()}
-          text={strings.errorBannerNetworkError}
+          text={strings.send.errorBannerNetworkError}
         />
 
         <Space.Height.md />
@@ -28,7 +28,10 @@ export const ShowErrors = () => {
   } else if (hasPendingTx) {
     return (
       <>
-        <Banner error text={strings.errorBannerPendingOutgoingTransaction} />
+        <Banner
+          error
+          text={strings.send.errorBannerPendingOutgoingTransaction}
+        />
 
         <Space.Height.md />
       </>

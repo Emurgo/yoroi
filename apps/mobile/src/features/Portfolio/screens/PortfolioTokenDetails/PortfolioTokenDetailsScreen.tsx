@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent} from 'react-native'
 
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   PortfolioDetailsTab,
   usePortfolio,

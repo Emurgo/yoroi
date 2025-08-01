@@ -1,13 +1,13 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {SettingsSwitch} from '~/features/Settings/common/SettingsSwitch'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {Space, SpaceHeight} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
 
@@ -75,7 +75,7 @@ const Notice = ({
               metrics.disable()
               onClose?.()
             }}
-            title={strings.skip}
+            title={strings.ui.skip}
           />
         </View>
       </ScrollView>
@@ -101,13 +101,14 @@ const Notice = ({
           },
         ]}
       >
-        <Button // accept button
-          size="S"
+        <Button
+          size="L"
+          type={ButtonType.Primary}
           onPress={() => {
             metrics.enable()
             onClose?.()
           }}
-          title={strings.accept}
+          title={strings.ui.accept}
         />
       </View>
     </View>
@@ -119,41 +120,25 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   const metrics = useMetrics()
   const {atoms: ta, palette: p} = useTheme()
 
-  const scrollViewRef = React.useRef<ScrollView | null>(null)
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      scrollViewRef.current?.flashScrollIndicators()
-    }, 500)
-
-    return () => clearTimeout(timeout)
-  }, [])
-
   return (
     <View style={{flex: 1, backgroundColor: p.bg_color_max}}>
-      <ScrollView
-        bounces={false}
-        ref={scrollViewRef}
-        persistentScrollbar={true}
-        showsVerticalScrollIndicator={true}
-      >
-        <View style={{alignItems: 'center', paddingHorizontal: 16}}>
-          <CommonContent onReadMore={onReadMore} />
+      <View style={{flex: 1, paddingHorizontal: 16}}>
+        <CommonContent onReadMore={onReadMore} />
 
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={{...a.body_1_lg_medium, fontWeight: '500'}}>
-              {strings.toggle}
-            </Text>
+        <Space.Height.lg />
 
-            <SettingsSwitch
-              value={metrics.isEnabled}
-              onValueChange={() =>
-                metrics.isEnabled ? metrics.disable() : metrics.enable()
-              }
-            />
-          </View>
-        </View>
-      </ScrollView>
+        <SettingsSwitch
+          value={metrics.isEnabled()}
+          onValueChange={(value) => {
+            if (value) {
+              metrics.enable()
+            } else {
+              metrics.disable()
+            }
+          }}
+          title={strings.ui.toggle}
+        />
+      </View>
     </View>
   )
 }
@@ -198,27 +183,45 @@ const CommonContent = ({
 
   return (
     <>
-      <Space.Height.md />
-
       {showLogo && (
         <>
+          <Space.Height._2xl />
           <YoroiLogo />
-
-          <Space.Height.md />
+          <Space.Height._2xl />
         </>
       )}
 
-      <AnalyticsImage />
-
-      <Space.Height.md />
-
-      <Text style={{...a.heading_3_medium, textAlign: 'center'}}>
-        {strings.header}
+      <Text style={{...ta.heading_1_medium, color: p.text_gray_max}}>
+        {strings.ui.header}
       </Text>
 
       <Space.Height.md />
 
-      <View style={{flex: 1, flexGrow: 1, alignSelf: 'flex-start'}}>
+      <Text style={{...ta.body_1_lg_regular, color: p.text_gray_medium}}>
+        {strings.ui.description}
+      </Text>
+
+      <Space.Height.lg />
+
+      <AnalyticsImage />
+
+      <Space.Height.lg />
+
+      <View style={{alignItems: 'center'}}>
+        <Text style={{...ta.body_1_lg_medium, color: p.text_gray_max}}>
+          {strings.ui.anonymous}
+        </Text>
+
+        <Space.Height.xs />
+
+        <Text style={{...ta.body_2_md_regular, color: p.text_gray_medium}}>
+          {strings.ui.optout}
+        </Text>
+      </View>
+
+      <Space.Height.lg />
+
+      <View style={{gap: 8}}>
         {list.map(({style, icon, key}) => (
           <View
             key={key}
@@ -230,7 +233,7 @@ const CommonContent = ({
           >
             <Text style={style}>{icon}</Text>
 
-            <Text style={{...a.body_1_lg_regular}}>{strings[key]}</Text>
+            <Text style={{...a.body_1_lg_regular}}>{strings.ui[key]}</Text>
           </View>
         ))}
       </View>
@@ -241,7 +244,7 @@ const CommonContent = ({
         <Text
           style={{color: p.primary_600, textAlign: 'center', ...a.link_1_lg}}
         >
-          {strings.more}
+          {strings.ui.more}
         </Text>
       </TouchableOpacity>
 
@@ -253,68 +256,3 @@ const CommonContent = ({
 const bold = {
   b: (text: ReactNode) => <Text style={a.body_2_md_medium}>{text}</Text>,
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-  return {
-    header: intl.formatMessage(messages.header),
-    description: intl.formatMessage(messages.description),
-    anonymous: intl.formatMessage(messages.anonymous),
-    optout: intl.formatMessage(messages.optout),
-    private: intl.formatMessage(messages.private, bold),
-    noip: intl.formatMessage(messages.noip, bold),
-    nosell: intl.formatMessage(messages.nosell, bold),
-    more: intl.formatMessage(messages.more),
-    skip: intl.formatMessage(messages.skip),
-    accept: intl.formatMessage(messages.accept),
-    toggle: intl.formatMessage(messages.toggle),
-  }
-}
-
-const messages = defineMessages({
-  header: {
-    id: 'analytics.header',
-    defaultMessage: '!!!Join the journey to improve Yoroi',
-  },
-  description: {
-    id: 'analytics.description',
-    defaultMessage:
-      '!!!Share user insights to help us fine tune Yoroi to better serve your needs.',
-  },
-  anonymous: {
-    id: 'analytics.anonymous',
-    defaultMessage: '!!!Anonymous analytics data',
-  },
-  optout: {
-    id: 'analytics.optout',
-    defaultMessage: '!!!You can always opt-out via Settings',
-  },
-  private: {
-    id: 'analytics.private',
-    defaultMessage: '!!!We <b>cannot</b> access private keys',
-  },
-  noip: {
-    id: 'analytics.noip',
-    defaultMessage: '!!!We <b>are not</b> recording IP addresses',
-  },
-  nosell: {
-    id: 'analytics.nosell',
-    defaultMessage: '!!!We <b>do not</b> sell data',
-  },
-  more: {
-    id: 'analytics.more',
-    defaultMessage: '!!!Learn more about user insights',
-  },
-  skip: {
-    id: 'analytics.skip',
-    defaultMessage: '!!!Skip',
-  },
-  accept: {
-    id: 'analytics.accept',
-    defaultMessage: '!!!Accept',
-  },
-  toggle: {
-    id: 'analytics.toggle',
-    defaultMessage: '!!!Allow Yoroi analytics',
-  },
-})

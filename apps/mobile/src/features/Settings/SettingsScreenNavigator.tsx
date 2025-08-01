@@ -3,10 +3,9 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity} from 'react-native'
 
-import globalMessages from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   defaultMaterialTopTabNavigationOptions,
@@ -68,27 +67,27 @@ export const SettingsScreenNavigator = () => {
         name="app-settings"
         component={ApplicationSettingsScreen}
         options={{
-          title: strings.appSettingsTitle,
+          title: strings.settings.appSettingsTitle,
         }}
       />
 
       <Stack.Screen
         name="about"
         component={About}
-        options={{title: strings.aboutTitle}}
+        options={{title: strings.settings.aboutTitle}}
       />
 
       <Stack.Screen
         name="settings-system-log"
         component={SystemLogScreen}
-        options={{title: strings.systemLogTitle}}
+        options={{title: strings.settings.systemLogTitle}}
       />
 
       <Stack.Screen //
         name="main-settings"
         component={SettingsTabNavigator}
         options={{
-          title: strings.settingsTitle,
+          title: strings.settings.settingsTitle,
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }}
       />
@@ -96,19 +95,19 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen
         name="change-wallet-name"
         component={RenameWalletScreen}
-        options={{title: strings.changeWalletNameTitle}}
+        options={{title: strings.settings.changeWalletNameTitle}}
       />
 
       <Stack.Screen
         name="terms-of-use"
         component={TermsOfServiceScreen}
-        options={{title: strings.termsOfServiceTitle}}
+        options={{title: strings.settings.termsOfServiceTitle}}
       />
 
       <Stack.Screen
         name="privacy-policy"
         component={PrivacyPolicyScreen}
-        options={{title: strings.privacyPolicyTitle}}
+        options={{title: strings.settings.privacyPolicyTitle}}
       />
 
       <Stack.Screen //
@@ -120,20 +119,20 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen //
         name="remove-wallet"
         component={RemoveWalletScreen}
-        options={{title: strings.removeWalletTitle}}
+        options={{title: strings.settings.removeWalletTitle}}
       />
 
       <Stack.Screen //
         name="change-language"
         component={ChangeLanguageScreen}
-        options={{title: strings.languageTitle}}
+        options={{title: strings.settings.languageTitle}}
       />
 
       <Stack.Screen //
         name="change-currency"
         component={ChangeCurrencyScreen}
         options={{
-          title: strings.currency,
+          title: strings.settings.currency,
         }}
       />
 
@@ -141,7 +140,7 @@ export const SettingsScreenNavigator = () => {
         name="change-theme"
         component={ChangeThemeScreen}
         options={{
-          title: strings.themeTitle,
+          title: strings.settings.themeTitle,
         }}
       />
 
@@ -149,7 +148,7 @@ export const SettingsScreenNavigator = () => {
         name="change-network"
         component={ChangeNetworkScreen}
         options={{
-          title: strings.networkTitle,
+          title: strings.settings.networkTitle,
           headerRight: () => (
             <TouchableOpacity
               onPress={handleOpenModal}
@@ -173,25 +172,25 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen //
         name="enable-easy-confirmation"
         component={EnableEasyConfirmationScreen}
-        options={{title: strings.enableEasyConfirmationTitle}}
+        options={{title: strings.settings.enableEasyConfirmationTitle}}
       />
 
       <Stack.Screen //
         name="disable-easy-confirmation"
         component={DisableEasyConfirmationScreen}
-        options={{title: strings.disableEasyConfirmationTitle}}
+        options={{title: strings.settings.disableEasyConfirmationTitle}}
       />
 
       <Stack.Screen //
         name="change-password"
         component={ChangePasswordScreen}
-        options={{title: strings.changePasswordTitle}}
+        options={{title: strings.settings.changePasswordTitle}}
       />
 
       <Stack.Screen //
         name="change-custom-pin"
         options={{
-          title: strings.changeCustomPinTitle,
+          title: strings.settings.changeCustomPinTitle,
         }}
         component={ChangePinScreenWrapper}
       />
@@ -199,7 +198,7 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen //
         name="manage-collateral"
         options={{
-          title: strings.collateral,
+          title: strings.settings.collateral,
         }}
         component={ManageCollateralScreen}
       />
@@ -212,7 +211,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen
         name="enable-login-with-pin"
-        options={{title: strings.customPinTitle}}
+        options={{title: strings.settings.customPinTitle}}
         component={EnableLoginWithPinWrapper}
       />
 
@@ -237,8 +236,8 @@ const SettingsTabNavigator = () => {
         ...defaultMaterialTopTabNavigationOptions(a, p),
         tabBarLabel:
           route.name === 'wallet-settings'
-            ? strings.walletTabTitle
-            : strings.appTabTitle,
+            ? strings.settings.walletTabTitle
+            : strings.settings.appTabTitle,
       })}
     >
       <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />
@@ -266,124 +265,4 @@ const EnableLoginWithPinWrapper = () => {
   const navigation = useNavigation()
 
   return <EnableLoginWithPinScreen onDone={navigation.goBack} />
-}
-
-const messages = defineMessages({
-  walletTabTitle: {
-    id: 'components.settings.walletsettingscreen.tabTitle',
-    defaultMessage: '!!!Wallet',
-  },
-  appTabTitle: {
-    id: 'components.settings.applicationsettingsscreen.tabTitle',
-    defaultMessage: '!!!Application',
-  },
-  changeCustomPinTitle: {
-    id: 'components.settings.applicationsettingsscreen.changePin',
-    defaultMessage: '!!!Change PIN',
-  },
-  changePasswordTitle: {
-    id: 'components.settings.changepasswordscreen.title',
-    defaultMessage: '!!!Change spending password',
-  },
-  removeWalletTitle: {
-    id: 'components.settings.removewalletscreen.title',
-    defaultMessage: '!!!Remove wallet',
-  },
-  termsOfServiceTitle: {
-    id: 'components.settings.termsofservicescreen.title',
-    defaultMessage: '!!!Terms of Service Agreement',
-  },
-  changeWalletNameTitle: {
-    id: 'components.settings.changewalletname.title',
-    defaultMessage: '!!!Change wallet name',
-  },
-  supportTitle: {
-    id: 'components.settings.settingsscreen.title',
-    defaultMessage: '!!!Support',
-  },
-  enableEasyConfirmationTitle: {
-    id: 'components.settings.enableeasyconfirmationscreen.title',
-    defaultMessage: '!!!Easy confirmation',
-  },
-  disableEasyConfirmationTitle: {
-    id: 'components.settings.disableeasyconfirmationscreen.title',
-    defaultMessage: '!!!Easy confirmation',
-  },
-  customPinTitle: {
-    id: 'components.initialization.custompinscreen.title',
-    defaultMessage: '!!!Set PIN',
-  },
-  settingsTitle: {
-    id: 'components.settings.applicationsettingsscreen.title',
-    defaultMessage: '!!!Settings',
-  },
-  languageTitle: {
-    id: 'components.settings.changelanguagescreen.title',
-    defaultMessage: '!!!Language',
-  },
-  themeTitle: {
-    id: 'components.settings.changeThemescreen.title',
-    defaultMessage: '!!!Theming',
-  },
-  networkTitle: {
-    id: 'components.settings.changeNetworkScreen.title',
-    defaultMessage: '!!!Network',
-  },
-  appSettingsTitle: {
-    id: 'components.settings.applicationsettingsscreen.appSettingsTitle',
-    defaultMessage: '!!!App settings',
-  },
-  aboutTitle: {
-    id: 'components.settings.applicationsettingsscreen.about',
-    defaultMessage: '!!!About',
-  },
-  privacyPolicyTitle: {
-    id: 'components.settings.privacypolicyscreen.title',
-    defaultMessage: '!!!Privacy Policy',
-  },
-  collateral: {
-    id: 'global.collateral',
-    defaultMessage: '!!!Collateral',
-  },
-  systemLogTitle: {
-    id: 'global.log',
-    defaultMessage: '!!!Log',
-  },
-  notifications: {
-    id: 'components.settings.notifications.title',
-    defaultMessage: '!!!Notifications',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    aboutTitle: intl.formatMessage(messages.aboutTitle),
-    appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),
-    appTabTitle: intl.formatMessage(messages.appTabTitle),
-    changeCustomPinTitle: intl.formatMessage(messages.changeCustomPinTitle),
-    changePasswordTitle: intl.formatMessage(messages.changePasswordTitle),
-    changeWalletNameTitle: intl.formatMessage(messages.changeWalletNameTitle),
-    collateral: intl.formatMessage(messages.collateral),
-    currency: intl.formatMessage(globalMessages.currency),
-    customPinTitle: intl.formatMessage(messages.customPinTitle),
-    disableEasyConfirmationTitle: intl.formatMessage(
-      messages.disableEasyConfirmationTitle,
-    ),
-    enableEasyConfirmationTitle: intl.formatMessage(
-      messages.enableEasyConfirmationTitle,
-    ),
-    languageTitle: intl.formatMessage(messages.languageTitle),
-    systemLogTitle: intl.formatMessage(messages.systemLogTitle),
-    privacyPolicyTitle: intl.formatMessage(messages.privacyPolicyTitle),
-    removeWalletTitle: intl.formatMessage(messages.removeWalletTitle),
-    settingsTitle: intl.formatMessage(messages.settingsTitle),
-    supportTitle: intl.formatMessage(messages.supportTitle),
-    termsOfServiceTitle: intl.formatMessage(messages.termsOfServiceTitle),
-    themeTitle: intl.formatMessage(messages.themeTitle),
-    walletTabTitle: intl.formatMessage(messages.walletTabTitle),
-    networkTitle: intl.formatMessage(messages.networkTitle),
-    notifications: intl.formatMessage(messages.notifications),
-  }
 }

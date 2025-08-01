@@ -6,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/SwapProvider'
-import {useStrings} from '~/features/Swap/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'

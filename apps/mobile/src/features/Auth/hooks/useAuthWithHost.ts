@@ -4,9 +4,9 @@ import {freeze} from 'immer'
 import * as React from 'react'
 
 import {useAppState} from '~/hooks/useAppState'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {AuthWithHostConfig} from '../common/types'
-import {useStrings} from './useStrings'
 
 export const useAuthWithHost = () => {
   const [authWithHostConfig, setAuthWithHostConfig] =
@@ -42,9 +42,9 @@ export const useAuthWithHost = () => {
     async ({noFallback = false}: {noFallback?: boolean} = {}) => {
       try {
         const result = await AuthHost.authenticateAsync({
-          promptMessage: strings.authorize,
-          cancelLabel: strings.cancel,
-          fallbackLabel: noFallback ? undefined : strings.usePasscode,
+          promptMessage: strings.auth.authorize,
+          cancelLabel: strings.global.cancel,
+          fallbackLabel: noFallback ? undefined : strings.auth.usePasscode,
           disableDeviceFallback: noFallback,
         })
 
@@ -58,7 +58,7 @@ export const useAuthWithHost = () => {
         return false
       }
     },
-    [strings.authorize, strings.cancel, strings.usePasscode],
+    [strings.auth.authorize, strings.global.cancel, strings.auth.usePasscode],
   )
 
   return React.useMemo(

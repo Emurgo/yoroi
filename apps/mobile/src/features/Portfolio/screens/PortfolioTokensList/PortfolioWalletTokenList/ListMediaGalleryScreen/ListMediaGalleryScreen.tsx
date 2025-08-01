@@ -7,7 +7,7 @@ import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useTrackNftGallerySearchActivated} from '~/features/Portfolio/common/hooks/useTrackNftGallerySearchActivated'
 import {useNavigateTo} from '~/features/Portfolio/common/navigation'
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'

@@ -4,7 +4,7 @@ import React, {useState} from 'react'
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native'
 
 import NewsPlaceHolder from '~/assets/img/token-news-place-holder.png'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Space} from '~/ui/Space/Space'
 

@@ -9,8 +9,8 @@ import {
   undefinedToken,
 } from '~/features/Swap/common/constants'
 import {SwapContext} from '~/features/Swap/common/SwapProvider'
-import {useStrings} from '~/features/Swap/common/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Divider} from '~/ui/Divider/Divider'
 import {Icon} from '~/ui/Icon'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'

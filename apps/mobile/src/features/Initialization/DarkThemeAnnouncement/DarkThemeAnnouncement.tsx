@@ -7,11 +7,11 @@ import {
 } from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Platform, Pressable, Switch, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation'
 
@@ -70,7 +70,7 @@ export const DarkThemeAnnouncement = () => {
           <Space.Height._2xl />
 
           <Text style={[a.heading_3_medium, a.text_center]}>
-            {strings.header}
+            {strings.initialization.darkThemeAnnouncement.header}
           </Text>
 
           <Text
@@ -81,7 +81,7 @@ export const DarkThemeAnnouncement = () => {
               a.py_sm,
             ]}
           >
-            {strings.description}
+            {strings.initialization.darkThemeAnnouncement.description}
           </Text>
 
           <Toggle />
@@ -93,13 +93,13 @@ export const DarkThemeAnnouncement = () => {
               a.body_3_sm_regular,
             ]}
           >
-            {strings.changeTheme}
+            {strings.initialization.darkThemeAnnouncement.changeTheme}
           </Text>
         </View>
       </ScrollView>
 
       <Button
-        title={strings.continue}
+        title={strings.initialization.darkThemeAnnouncement.continue}
         disabled={isSetScreenShownLoading}
         onPress={navigate}
       />
@@ -188,33 +188,3 @@ const useSetScreenShown = () => {
     setScreenShown: mutation.mutate,
   }
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-  return {
-    header: intl.formatMessage(messages.header),
-    description: intl.formatMessage(messages.description),
-    changeTheme: intl.formatMessage(messages.changeTheme),
-    continue: intl.formatMessage(messages.continue),
-  }
-}
-
-const messages = defineMessages({
-  header: {
-    id: 'walletinit.theme.tryDarkTheme',
-    defaultMessage: '!!!Try Yoroi dark theme',
-  },
-  description: {
-    id: 'walletinit.theme.description',
-    defaultMessage:
-      '!!!Press the theme switcher and dive into the new stylish theme crafted to enhance your Cardano wallet experience',
-  },
-  changeTheme: {
-    id: 'walletinit.theme.chanageTheme',
-    defaultMessage: '!!!Anonymous analytics data',
-  },
-  continue: {
-    id: 'components.walletinit.walletform.continueButton',
-    defaultMessage: '!!!Continue',
-  },
-})

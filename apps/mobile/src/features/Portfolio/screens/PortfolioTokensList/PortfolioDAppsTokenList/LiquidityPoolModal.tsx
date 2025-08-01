@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Image, ImageSourcePropType, ImageStyle, Text, View} from 'react-native'
 
 import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {AssetLogo} from '~/features/Portfolio/ui/AssetLogo/AssetLogo'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'

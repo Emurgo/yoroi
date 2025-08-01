@@ -7,7 +7,7 @@ import {
   formatPriceChange,
   priceChange,
 } from '~/features/Portfolio/common/helpers/priceChange'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,

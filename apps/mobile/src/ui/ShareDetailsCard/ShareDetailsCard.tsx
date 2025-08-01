@@ -4,7 +4,7 @@ import {useWindowDimensions, View} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 
 import {useLastDateAddressUsed} from '~/features/Receive/common/useLastDateAddressUsed'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Text} from '~/ui/Text/Text'
 import {isEmptyString} from '~/wallets/utils/string'

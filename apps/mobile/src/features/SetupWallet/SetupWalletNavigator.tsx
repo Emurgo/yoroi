@@ -1,7 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 // import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 
 /* import {
   defaultStackNavigationOptions,
@@ -18,6 +17,7 @@ import {RecoveryPhraseScreen} from './useCases/CreateWallet/RecoveryPhraseScreen
 import {VerifyRecoveryPhraseScreen} from './useCases/CreateWallet/VerifyRecoveryPhraseScreen'
 import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
 // import {ConnectNanoXScreen} from './useCases/RestoreHwWallet/ConnectNanoXScreen'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 
@@ -43,46 +43,50 @@ export const SetupWalletNavigator = () => {
       <Stack.Screen
         name="setup-wallet-choose-setup-type-init"
         component={ChooseSetupTypeScreen}
-        options={{title: strings.addNewWalletTitle, headerLeft: () => null}}
+        options={{
+          title: strings.setupWallet.navigator.addNewWalletTitle,
+          headerLeft: () => null,
+        }}
       />
 
       <Stack.Screen
         name="setup-wallet-choose-setup-type"
         component={ChooseSetupTypeScreen}
-        options={{title: strings.addNewWalletTitle}}
+        options={{title: strings.setupWallet.navigator.addNewWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-restore-choose-mnemonic-type"
         component={ChooseMnemonicTypeScreen}
-        options={{title: strings.restoreWalletTitle}}
+        options={{title: strings.setupWallet.navigator.restoreWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-details-form"
         component={WalletDetailsScreen}
         options={{
-          /* ...navigationOptions,  */ title: strings.createWalletTitle,
+          /* ...navigationOptions,  */ title:
+            strings.setupWallet.navigator.createWalletTitle,
         }}
       />
 
       <Stack.Screen
         name="setup-wallet-restore-form"
         component={RestoreWalletScreen}
-        options={{title: strings.restoreWalletTitle}}
+        options={{title: strings.setupWallet.navigator.restoreWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-restore-details"
         component={RestoreWalletDetailsScreen}
-        options={{title: strings.restoreWalletTitle}}
+        options={{title: strings.setupWallet.navigator.restoreWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-import-read-only"
         component={ImportReadOnlyWalletScreen}
         options={{
-          title: strings.importReadOnlyTitle,
+          title: strings.setupWallet.navigator.importReadOnlyTitle,
           headerTransparent: true,
         }}
       />
@@ -90,7 +94,7 @@ export const SetupWalletNavigator = () => {
       <Stack.Screen
         name="setup-wallet-save-read-only"
         component={SaveReadOnlyWalletScreen}
-        options={{title: strings.saveReadOnlyWalletTitle}}
+        options={{title: strings.setupWallet.navigator.saveReadOnlyWalletTitle}}
       />
       {/*
       <Stack.Screen //
@@ -116,19 +120,19 @@ export const SetupWalletNavigator = () => {
       <Stack.Screen //
         name="setup-wallet-about-recovery-phase"
         component={AboutRecoveryPhraseScreen}
-        options={{title: strings.createWalletTitle}}
+        options={{title: strings.setupWallet.navigator.createWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-recovery-phrase-mnemonic"
         component={RecoveryPhraseScreen}
-        options={{title: strings.createWalletTitle}}
+        options={{title: strings.setupWallet.navigator.createWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-verify-recovery-phrase-mnemonic"
         component={VerifyRecoveryPhraseScreen}
-        options={{title: strings.createWalletTitle}}
+        options={{title: strings.setupWallet.navigator.createWalletTitle}}
       />
 
       <Stack.Screen
@@ -141,77 +145,3 @@ export const SetupWalletNavigator = () => {
 }
 
 /* const ConnectNanoXScreenWrapper = () => <ConnectNanoXScreen /> */
-
-const messages = defineMessages({
-  addNewWalletTitle: {
-    id: 'components.walletinit.walletinitscreen.title',
-    defaultMessage: '!!!Add new wallet',
-  },
-  createWalletTitle: {
-    id: 'components.walletinit.createwallet.createwalletscreen.title',
-    defaultMessage: '!!!Create wallet',
-  },
-  restoreWalletTitle: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.title',
-    defaultMessage: '!!!Restore wallet',
-  },
-  importReadOnlyTitle: {
-    id: 'components.walletinit.importreadonlywalletscreen.title',
-    defaultMessage: '!!!Read-only Wallet',
-  },
-  saveReadOnlyWalletTitle: {
-    id: 'components.walletinit.savereadonlywalletscreen.title',
-    defaultMessage: '!!!Verify read-only wallet',
-  },
-  mnemonicShowTitle: {
-    id: 'components.walletinit.createwallet.mnemonicshowscreen.title',
-    defaultMessage: '!!!Recovery phrase',
-  },
-  mnemonicCheckTitle: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.title',
-    defaultMessage: '!!!Recovery phrase',
-  },
-  verifyRestoredWalletTitle: {
-    id: 'components.walletinit.verifyrestoredwallet.title',
-    defaultMessage: '!!!Verify restored wallet',
-  },
-  walletCredentialsTitle: {
-    id: 'components.walletinit.restorewallet.walletcredentialsscreen.title',
-    defaultMessage: '!!!Wallet credentials',
-  },
-  connectNanoXTitle: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
-    defaultMessage: '!!!Connect hardware wallet',
-  },
-  checkNanoXTitle: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
-    defaultMessage: '!!!Connect hardware wallet',
-  },
-  saveNanoXTitle: {
-    id: 'components.walletinit.connectnanox.savenanoxscreen.title',
-    defaultMessage: '!!!Connect hardware wallet',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    addNewWalletTitle: intl.formatMessage(messages.addNewWalletTitle),
-    createWalletTitle: intl.formatMessage(messages.createWalletTitle),
-    restoreWalletTitle: intl.formatMessage(messages.restoreWalletTitle),
-    importReadOnlyTitle: intl.formatMessage(messages.importReadOnlyTitle),
-    saveReadOnlyWalletTitle: intl.formatMessage(
-      messages.saveReadOnlyWalletTitle,
-    ),
-    mnemonicShowTitle: intl.formatMessage(messages.mnemonicShowTitle),
-    mnemonicCheckTitle: intl.formatMessage(messages.mnemonicCheckTitle),
-    verifyRestoredWalletTitle: intl.formatMessage(
-      messages.verifyRestoredWalletTitle,
-    ),
-    walletCredentialsTitle: intl.formatMessage(messages.walletCredentialsTitle),
-    connectNanoXTitle: intl.formatMessage(messages.connectNanoXTitle),
-    checkNanoXTitle: intl.formatMessage(messages.checkNanoXTitle),
-    saveNanoXTitle: intl.formatMessage(messages.saveNanoXTitle),
-  }
-}

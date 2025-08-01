@@ -8,9 +8,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {AddressErrorWrongNetwork} from '~/features/Send/common/errors'
 import {useSendAddress} from '~/features/Send/common/useSendAddress'
 import {useSendReceiver} from '~/features/Send/common/useSendReceiver'
-import {useStrings} from '~/features/Send/common/useStrings'
 import {memoMaxLenght} from '~/features/SetupWallet/common/constants'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
@@ -135,7 +135,7 @@ export const StartMultiTokenTxScreen = () => {
           <Padding>
             <NextButton
               onPress={handleOnNext}
-              title={strings.next}
+              title={strings.send.next}
               disabled={!canGoNext}
               testID="nextButton"
             />
@@ -177,32 +177,32 @@ const useReceiverError = ({
   if (isUnsupportedDomain)
     return {
       hasReceiverError: true,
-      receiverErrorMessage: strings.helperAddressErrorInvalid,
+      receiverErrorMessage: strings.send.helperAddressErrorInvalid,
     }
   if (isWrongBlockchainError)
     return {
       hasReceiverError: true,
-      receiverErrorMessage: strings.helperAddressErrorWrongBlockchain,
+      receiverErrorMessage: strings.send.helperAddressErrorWrongBlockchain,
     }
   if (isNotResolvedDomain)
     return {
       hasReceiverError: true,
-      receiverErrorMessage: strings.helperResolverErrorDomainNotFound,
+      receiverErrorMessage: strings.send.helperResolverErrorDomainNotFound,
     }
   if (receiverError != null)
     return {
       hasReceiverError: true,
-      receiverErrorMessage: strings.helperAddressErrorInvalid,
+      receiverErrorMessage: strings.send.helperAddressErrorInvalid,
     }
   if (addressError instanceof AddressErrorWrongNetwork)
     return {
       hasReceiverError: true,
-      receiverErrorMessage: strings.helperAddressErrorWrongNetwork,
+      receiverErrorMessage: strings.send.helperAddressErrorWrongNetwork,
     }
   if (addressError != null)
     return {
       hasReceiverError: true,
-      receiverErrorMessage: strings.helperAddressErrorInvalid,
+      receiverErrorMessage: strings.send.helperAddressErrorInvalid,
     }
 
   return {

@@ -5,7 +5,7 @@ import Animated, {Layout} from 'react-native-reanimated'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useReceive} from '~/features/Receive/common/ReceiveProvider'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
 import {useKeyHashes} from '~/wallets/hooks'

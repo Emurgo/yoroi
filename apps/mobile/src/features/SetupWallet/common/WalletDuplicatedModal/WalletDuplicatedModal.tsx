@@ -7,7 +7,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '../useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const WalletDuplicatedModal = ({
   plate,

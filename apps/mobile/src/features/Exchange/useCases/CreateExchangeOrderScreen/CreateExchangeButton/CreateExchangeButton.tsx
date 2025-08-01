@@ -5,8 +5,8 @@ import * as React from 'react'
 import {Linking, View, ViewStyle} from 'react-native'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {useStrings} from '../../common/useStrings'
 
 export const CreateExchangeButton = ({
   style,

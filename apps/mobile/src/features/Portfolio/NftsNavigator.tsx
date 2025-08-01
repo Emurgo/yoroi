@@ -3,12 +3,12 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
   NftRoutes,
 } from '~/kernel/navigation/navigation'
-import {useStrings} from './common/hooks/useStrings'
 import {ListMediaGalleryScreen} from './screens/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen'
 import {ZoomMediaImageScreen} from './screens/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ZoomMediaImageScreen'
 import {MediaDetailsScreen} from './ui/MediaDetailsScreen/MediaDetailsScreen'
@@ -43,7 +43,7 @@ export const NftsNavigator = () => {
       <Stack.Screen
         name="nft-details"
         options={{
-          title: strings.titleMediaDetails,
+          title: strings.portfolio.titleMediaDetails,
           headerTitleAlign: 'center',
         }}
         listeners={trackDetails}

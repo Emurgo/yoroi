@@ -3,11 +3,11 @@ import * as React from 'react'
 import {Image, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import IllustrationDAppImage from '~/assets/img/illustration-dapp.png'
 import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
-import {useStrings} from '../../common/useStrings'
-import IllustrationDAppImage from '~/assets/img/illustration-dapp.png'
 
 export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()

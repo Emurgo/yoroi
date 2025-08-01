@@ -6,14 +6,13 @@ import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {useLayoutEffect} from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {toYoroiEntry} from '~/features/Send/common/toYoroiEntry'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import globalMessages from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {assetsToSendProperties} from '~/kernel/metrics/helpers'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation'
@@ -164,7 +163,7 @@ export const ListAmountsToSendScreen = () => {
 
         <NextButton
           onPress={onNext}
-          title={strings.next}
+          title={strings.send.next}
           disabled={selectedTokensCounter === 0}
           isLoading={isLoading}
         />
@@ -247,19 +246,3 @@ const ListAmountsNavigateBackButton = () => {
     </TouchableOpacity>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    addToken: intl.formatMessage(messages.addToken),
-    next: intl.formatMessage(globalMessages.next),
-  }
-}
-
-const messages = defineMessages({
-  addToken: {
-    id: 'components.send.addToken',
-    defaultMessage: '!!!Add token',
-  },
-})

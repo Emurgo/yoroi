@@ -4,6 +4,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   defaultStackNavigationOptions,
   DiscoverRoutes,
@@ -12,7 +13,6 @@ import {LoadingBoundary} from '~/ui/Boundary/Boundary'
 import {SomethingWentWrong} from '~/ui/SomethingWentWrong/SomethingWentWrong'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {BrowserNavigator} from './BrowserNavigator'
-import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
 import {useDappConnectorManager} from './useDappConnectorManager'
@@ -38,7 +38,7 @@ export const DiscoverNavigator = () => {
       >
         <Stack.Screen
           name="discover-select-dapp-from-list"
-          options={{title: strings.discoverTitle}}
+          options={{title: strings.discover.discoverTitle}}
         >
           {() => (
             <ErrorBoundary FallbackComponent={SomethingWentWrong}>

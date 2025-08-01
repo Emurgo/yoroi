@@ -18,7 +18,7 @@ import {
   View,
 } from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
 import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
 import {

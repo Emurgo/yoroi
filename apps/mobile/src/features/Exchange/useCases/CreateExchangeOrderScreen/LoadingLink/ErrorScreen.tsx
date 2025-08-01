@@ -3,10 +3,10 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {ErrorLogo} from '~/features/Exchange/illustrations/ErrorLogo'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '../../../common/useStrings'
 
 export const ErrorScreen = () => {
   const strings = useStrings()

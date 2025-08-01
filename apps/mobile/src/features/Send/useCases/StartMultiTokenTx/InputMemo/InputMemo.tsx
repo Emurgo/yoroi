@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {useStrings} from '~/features/Send/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {TextInput, TextInputProps} from '~/ui/TextInput/TextInput'
 import {ShowMemoErrorTooLong} from './ShowMemoErrorTooLong'
 import {ShowMemoInstructions} from './ShowMemoInstructions'
@@ -15,7 +15,7 @@ export const InputMemo = ({
   return (
     <TextInput
       value={value}
-      label={strings.memoLabel}
+      label={strings.send.memoLabel}
       autoComplete="off"
       testID="memoFieldInput"
       error={isValid ? undefined : true}

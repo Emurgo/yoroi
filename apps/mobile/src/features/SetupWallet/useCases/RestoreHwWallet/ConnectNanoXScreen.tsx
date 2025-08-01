@@ -20,7 +20,7 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {getHWDeviceInfo} from '~/wallets/cardano/hw/hw'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {LedgerConnect} from '../legacy/HW'
 
 type Props = {}

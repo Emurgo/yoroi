@@ -1,11 +1,10 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages from '../../../../../kernel/i18n/global-messages'
-import {Button, ButtonType} from '../../../../../ui/Button/Button'
-import {useEnableAuthWithOs} from '../../../../Auth/hooks/useEnableAuthWithOS'
-import {OsAuthScreen} from '../../../../Auth/screens/OsAuthScreen'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {useEnableAuthWithOs} from '~/features/Auth/hooks/useEnableAuthWithOS'
+import {OsAuthScreen} from '~/features/Auth/screens/OsAuthScreen'
 
 export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
@@ -17,61 +16,25 @@ export const EnableLoginWithOsScreen = () => {
 
   return (
     <OsAuthScreen
-      headings={[strings.heading]}
-      subHeadings={[strings.subHeading1, strings.subHeading2]}
+      headings={[strings.settings.enableLoginWithOs.heading]}
+      subHeadings={[strings.settings.enableLoginWithOs.subHeading1, strings.settings.enableLoginWithOs.subHeading2]}
       buttons={[
         <Button
           key="cancel"
           disabled={isLoading}
           size="S"
           type={ButtonType.Secondary}
-          title={strings.notNowButton}
+          title={strings.settings.enableLoginWithOs.notNowButton}
           onPress={() => navigation.goBack()}
         />,
         <Button
           size="S"
           disabled={isLoading}
           key="link"
-          title={strings.linkButton}
+          title={strings.settings.enableLoginWithOs.linkButton}
           onPress={() => enableAuthWithOs()}
         />,
       ]}
     />
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    error: intl.formatMessage(globalMessages.error),
-    heading: intl.formatMessage(messages.heading),
-    subHeading1: intl.formatMessage(messages.subHeading1),
-    subHeading2: intl.formatMessage(messages.subHeading2),
-    notNowButton: intl.formatMessage(messages.notNowButton),
-    linkButton: intl.formatMessage(messages.linkButton),
-  }
-}
-
-const messages = defineMessages({
-  notNowButton: {
-    id: 'components.settings.biometricslinkscreen.notNowButton',
-    defaultMessage: '!!!Not now',
-  },
-  linkButton: {
-    id: 'components.settings.biometricslinkscreen.linkButton',
-    defaultMessage: '!!!Link',
-  },
-  heading: {
-    id: 'components.settings.biometricslinkscreen.heading',
-    defaultMessage: '!!!Use your fingerprint',
-  },
-  subHeading1: {
-    id: 'components.settings.biometricslinkscreen.subHeading1',
-    defaultMessage: '!!!for faster, easier access',
-  },
-  subHeading2: {
-    id: 'components.settings.biometricslinkscreen.subHeading2',
-    defaultMessage: '!!!to your Yoroi wallet',
-  },
-})

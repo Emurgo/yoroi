@@ -15,7 +15,7 @@ import {
 
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Text} from '~/ui/Text/Text'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {TokenDetails} from '../ReviewTx/common/TokenDetails'
 import {TokenInfoIcon} from './TokenInfoIcon'
 

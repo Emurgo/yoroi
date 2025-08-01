@@ -12,7 +12,7 @@ import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const AboutRecoveryPhraseScreen = () => {
   const bold = useBold()
@@ -40,14 +40,14 @@ export const AboutRecoveryPhraseScreen = () => {
       <ScrollView bounces={false} contentContainerStyle={[a.px_lg]}>
         <StepperProgress
           currentStep={1}
-          currentStepTitle={strings.stepAboutRecoveryPhrase}
+          currentStepTitle={strings.setupWallet.stepAboutRecoveryPhrase}
           totalSteps={4}
         />
 
         <Space.Height.lg />
 
         <Text style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}>
-          {strings.aboutRecoveryPhraseTitle(bold)}
+          {strings.setupWallet.aboutRecoveryPhraseTitle(bold)}
         </Text>
 
         <Space.Height.lg />
@@ -56,11 +56,11 @@ export const AboutRecoveryPhraseScreen = () => {
           showBackgroundColor
           includeSpacing
           linesOfText={[
-            strings.aboutRecoveryPhraseCardFirstItem(bold),
-            strings.aboutRecoveryPhraseCardSecondItem(bold),
-            strings.aboutRecoveryPhraseCardThirdItem(bold),
-            strings.aboutRecoveryPhraseCardFourthItem(bold),
-            strings.aboutRecoveryPhraseCardFifthItem(bold),
+            strings.setupWallet.aboutRecoveryPhraseCardFirstItem(bold),
+            strings.setupWallet.aboutRecoveryPhraseCardSecondItem(bold),
+            strings.setupWallet.aboutRecoveryPhraseCardThirdItem(bold),
+            strings.setupWallet.aboutRecoveryPhraseCardFourthItem(bold),
+            strings.setupWallet.aboutRecoveryPhraseCardFifthItem(bold),
           ]}
         />
       </ScrollView>
@@ -71,7 +71,7 @@ export const AboutRecoveryPhraseScreen = () => {
         <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
 
         <Button
-          title={strings.next}
+          title={strings.setupWallet.next}
           onPress={() =>
             navigation.navigate('setup-wallet-recovery-phrase-mnemonic')
           }

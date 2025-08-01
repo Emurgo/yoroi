@@ -1,8 +1,8 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
@@ -34,11 +34,11 @@ export const FailedTxScreen = () => {
           {color: p.gray_max},
         ]}
       >
-        {strings.failedTxTitle}
+        {strings.dashboard.failedTxTitle}
       </Text>
 
       <Text style={[a.body_1_lg_regular, a.text_center, {color: p.gray_600}]}>
-        {strings.failedTxText}
+        {strings.dashboard.failedTxText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -46,7 +46,7 @@ export const FailedTxScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.failedTxButton}
+          title={strings.dashboard.failedTxButton}
           style={[a.px_lg]}
         />
       </Actions>
@@ -68,29 +68,3 @@ const Actions = ({children}: {children: React.ReactNode}) => {
     </View>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
-    failedTxText: intl.formatMessage(messages.failedTxText),
-    failedTxButton: intl.formatMessage(messages.failedTxButton),
-  }
-}
-
-const messages = defineMessages({
-  failedTxTitle: {
-    id: 'components.delegation.failedTx.title',
-    defaultMessage: '!!!Transaction error',
-  },
-  failedTxText: {
-    id: 'components.delegation.failedTx.text',
-    defaultMessage:
-      '!!!Your transaction has not been processed properly due to technical issues.',
-  },
-  failedTxButton: {
-    id: 'components.delegation.failedTx.button',
-    defaultMessage: '!!!Try again',
-  },
-})

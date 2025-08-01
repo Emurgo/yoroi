@@ -1,13 +1,12 @@
 import {amountFormatter} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {useIntl} from 'react-intl'
 import {Platform, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import globalMessages from '~/kernel/i18n/global-messages'
-import {Space} from '~/ui/Space/Space'
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Space} from '~/ui/Space/Space'
 import {useCatalystCurrentFund} from './hooks'
 
 const formatter = amountFormatter({
@@ -31,7 +30,7 @@ export const InsufficientFundsModal = () => {
   return (
     <View style={[a.px_lg, a.flex_1, a.gap_lg, a.justify_between]}>
       <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
-        {strings.insufficientBalance({
+        {strings.global.insufficientBalance({
           requiredBalance: fmtMinPrimaryBalance,
           currentBalance: fmtPrimaryBalance,
         })}
@@ -40,22 +39,4 @@ export const InsufficientFundsModal = () => {
       {Platform.OS === 'android' && <Space.Height.lg />}
     </View>
   )
-}
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    insufficientBalance: ({
-      requiredBalance,
-      currentBalance,
-    }: {
-      requiredBalance: string
-      currentBalance: string
-    }) =>
-      intl.formatMessage(globalMessages.insufficientBalance, {
-        requiredBalance,
-        currentBalance,
-      }),
-  }
 }

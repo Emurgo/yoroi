@@ -14,6 +14,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {ShowAddressLimitInfo} from '~/ui/ShowAddressLimitInfo/ShowAddressLimitInfo'
@@ -22,7 +23,6 @@ import {Space} from '~/ui/Space/Space'
 import {useReceive} from '../common/ReceiveProvider'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
-import {useStrings} from '../common/useStrings'
 
 type AddressInfo = {
   isUsed?: boolean
@@ -137,7 +137,7 @@ export const ListMultipleAddressesScreen = () => {
         layout={Layout}
       >
         <Button
-          title={strings.generateButton}
+          title={strings.receive.generateButton}
           disabled={hasReachedGapLimit}
           onPress={handleOnGenerateNewReceiveAddress}
         />

@@ -1,5 +1,4 @@
 export {useNavigateTo} from './navigation'
-export {useStrings} from './strings'
 export {
   useAgreeWithLegal,
   useLegalAgreement,

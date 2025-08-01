@@ -6,7 +6,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {useGetPortfolioTokenInfo} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenInfo'
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
 

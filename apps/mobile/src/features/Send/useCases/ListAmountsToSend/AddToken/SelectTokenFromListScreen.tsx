@@ -7,9 +7,9 @@ import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {Alert, TouchableOpacity, View} from 'react-native'
 
-import {useStrings} from '~/features/Send/common/useStrings'
 import {limitOfSecondaryAmountsPerTx} from '~/features/SetupWallet/common/constants'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
@@ -33,8 +33,8 @@ export const SelectTokenFromListScreen = () => {
   const [isPending, startTransition] = React.useTransition()
 
   useSearchOnNavBar({
-    placeholder: strings.searchTokens,
-    title: strings.selecteAssetTitle,
+    placeholder: strings.send.searchTokens,
+    title: strings.send.selecteAssetTitle,
   })
   const {visible: isSearchOpened, isSearching, search} = useSearch()
   const shouldShowNfts = fungibilityFilter === 'nfts' && !isSearchOpened
@@ -100,14 +100,14 @@ export const SelectTokenFromListScreen = () => {
             <Tab
               active={fungibilityFilter}
               onPress={handleOnPressAll}
-              label={strings.all}
+              label={strings.send.all}
               tab="all"
             />
 
             <Tab
               active={fungibilityFilter}
               onPress={handleOnPressFTs}
-              label={strings.tokens(2)}
+              label={strings.send.tokens(2)}
               tab="fts"
             />
 
@@ -115,7 +115,7 @@ export const SelectTokenFromListScreen = () => {
               <Tab
                 active={fungibilityFilter}
                 onPress={handleOnPressNFTs}
-                label={strings.nfts(2)}
+                label={strings.send.nfts(2)}
                 tab="nfts"
               />
             )}
@@ -174,7 +174,7 @@ const ListSpendableNfts = ({
       navigation.navigate('send-list-amounts-to-send')
     } else {
       // should not happen
-      Alert.alert(strings.unknownAsset, strings.unknownAsset)
+      Alert.alert(strings.send.unknownAsset, strings.send.unknownAsset)
     }
   }
 
@@ -187,7 +187,9 @@ const ListSpendableNfts = ({
       isRefreshing={false}
       withVerticalPadding={!isEmpty} // to keep consistency between tabs when the list is not empty
       ListEmptyComponent={
-        <NoSpendableAmount text={strings.noAssetsAddedYet(strings.nfts(2))} />
+        <NoSpendableAmount
+          text={strings.send.noAssetsAddedYet(strings.send.nfts(2))}
+        />
       }
     />
   )
@@ -339,7 +341,9 @@ const EmptyStatuses = ({
 
   if (isSearchOpened === false)
     return (
-      <NoSpendableAmount text={strings.noAssetsAddedYet(strings.tokens(2))} />
+      <NoSpendableAmount
+        text={strings.send.noAssetsAddedYet(strings.send.tokens(2))}
+      />
     )
 
   return null
@@ -386,7 +390,7 @@ const EmptySearchResult = () => {
           {color: p.gray_max, flex: 1, textAlign: 'center'},
         ]}
       >
-        {strings.noAssets}
+        {strings.send.noAssets}
       </Text>
     </View>
   )
@@ -410,12 +414,12 @@ const Counter = <T,>({
     return (
       <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
         <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
-          {strings.youHave}
+          {strings.send.youHave}
         </Text>
 
         <Text
           style={[{color: p.primary_600}, a.body_2_md_medium]}
-        >{` ${counter} ${strings.assets(counter)}`}</Text>
+        >{` ${counter} ${strings.send.assets(counter)}`}</Text>
       </View>
     )
   }
@@ -424,12 +428,12 @@ const Counter = <T,>({
     return (
       <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
         <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
-          {strings.youHave}
+          {strings.send.youHave}
         </Text>
 
         <Text
           style={[{color: p.primary_600}, a.body_2_md_medium]}
-        >{` ${counter} ${strings.tokens(counter)}`}</Text>
+        >{` ${counter} ${strings.send.tokens(counter)}`}</Text>
       </View>
     )
   }
@@ -438,12 +442,12 @@ const Counter = <T,>({
     return (
       <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
         <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
-          {strings.youHave}
+          {strings.send.youHave}
         </Text>
 
         <Text
           style={[{color: p.primary_600}, a.body_2_md_medium]}
-        >{` ${counter} ${strings.nfts(counter)}`}</Text>
+        >{` ${counter} ${strings.send.nfts(counter)}`}</Text>
       </View>
     )
   }
@@ -453,10 +457,10 @@ const Counter = <T,>({
       <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
         <Text
           style={[{color: p.primary_600}, a.body_2_md_medium]}
-        >{`${counter} ${strings.assets(counter)} `}</Text>
+        >{`${counter} ${strings.send.assets(counter)} `}</Text>
 
         <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
-          {strings.found}
+          {strings.send.found}
         </Text>
       </View>
     )

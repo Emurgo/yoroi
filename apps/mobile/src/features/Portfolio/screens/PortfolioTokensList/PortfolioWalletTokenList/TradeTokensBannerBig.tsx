@@ -4,7 +4,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'

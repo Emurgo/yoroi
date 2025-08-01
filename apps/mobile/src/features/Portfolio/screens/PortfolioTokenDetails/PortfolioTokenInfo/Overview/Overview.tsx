@@ -5,7 +5,7 @@ import {Linking, Text, TouchableOpacity, View} from 'react-native'
 
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {Copiable} from '~/ui/Copiable/Copiable'

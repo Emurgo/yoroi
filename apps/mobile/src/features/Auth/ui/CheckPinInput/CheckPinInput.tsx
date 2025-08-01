@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import {pinLength} from '~/features/Auth/common/constants'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {messages} from '~/features/Auth/hooks/useStrings'
+
 import {PinInput, PinInputRef} from '~/features/Auth/ui/PinInput/PinInput'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -30,7 +30,7 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
         logger.info('invalid PIN', {origin: 'CheckPinInput', type: 'user'})
         showErrorDialog({
           title: globalMessages.error,
-          message: messages.invalidPin,
+          message: strings.auth.invalidPin,
         })
       }}
       pinMaxLength={pinLength}

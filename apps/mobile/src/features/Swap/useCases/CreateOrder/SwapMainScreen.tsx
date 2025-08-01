@@ -5,7 +5,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/SwapProvider'
-import {useStrings} from '~/features/Swap/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useIsKeyboardOpen} from '~/kernel/keyboard/useIsKeyboardOpen'
 import {AmountCard} from '~/ui/AmountCard/AmountCard'
 import {Button, ButtonType} from '~/ui/Button/Button'

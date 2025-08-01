@@ -9,7 +9,7 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
 export const RequestedAdaPaymentWithLinkScreen = ({
@@ -28,8 +28,8 @@ export const RequestedAdaPaymentWithLinkScreen = ({
 
   // TODO: revisit check with product
   const description = isTrusted
-    ? strings.trustedPaymentRequestedDescription
-    : strings.untrustedPaymentRequestedDescription
+    ? strings.links.trustedPaymentRequestedDescription
+    : strings.links.untrustedPaymentRequestedDescription
 
   const handleOnCancel = () => {
     actionFinished()
@@ -42,7 +42,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
       style={[{backgroundColor: p.bg_color_max}, a.flex_1, a.px_lg]}
     >
       <ScrollView bounces={false}>
-        <ShowDisclaimer title={strings.disclaimer}>
+        <ShowDisclaimer title={strings.links.disclaimer}>
           <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
             {description}
           </Text>
@@ -65,12 +65,12 @@ export const RequestedAdaPaymentWithLinkScreen = ({
           size="S"
           type={ButtonType.Secondary}
           onPress={handleOnCancel}
-          title={strings.cancel}
+          title={strings.links.cancel}
         />
 
         <Space.Width.md />
 
-        <Button size="S" onPress={onContinue} title={strings.continue} />
+        <Button size="S" onPress={onContinue} title={strings.links.continue} />
       </Actions>
     </SafeAreaView>
   )

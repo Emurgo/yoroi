@@ -1,20 +1,16 @@
+import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
 
 import Markdown from 'react-native-marked'
-import globalMessages, {
-  actionMessages,
-  confirmationMessages,
-} from '~/kernel/i18n/global-messages'
-import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useDisclaimerState} from '~/features/Legal/Disclaimer/useDisclaimerState'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation'
-import {useModal} from '~/ui/Modal/ModalContext'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
-import {useStrings} from '~/kernel/i18n/useStrings'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {loadText} from './loadText'
 import {Disclaimer} from './types'
 

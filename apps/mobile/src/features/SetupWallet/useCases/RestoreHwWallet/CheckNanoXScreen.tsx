@@ -19,7 +19,7 @@ import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {Text} from '~/ui/Text/Text'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustration'
 
 export const CheckNanoXScreen = () => {

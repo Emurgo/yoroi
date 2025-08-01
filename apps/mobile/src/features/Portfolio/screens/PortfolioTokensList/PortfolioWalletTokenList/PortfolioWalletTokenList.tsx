@@ -12,7 +12,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
-import {useStrings} from '~/kernel/i18n/useStrings''
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useZeroBalance} from '~/features/Portfolio/common/hooks/useZeroBalance'
 import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'

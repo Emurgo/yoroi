@@ -2,10 +2,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View, ViewProps} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {formatTimeSpan} from '~/wallets/utils/timeUtils'
-import {usePoolTransition, useStrings} from './usePoolTransition'
 
 export const PoolTransitionNotice = () => {
   const {palette: p} = useTheme()
@@ -30,7 +30,9 @@ export const PoolTransitionNotice = () => {
 
       <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
         <Text>
-          {isActive ? strings.poolWillStopRewards : strings.poolNoRewards}
+          {isActive
+            ? strings.staking.poolWillStopRewards
+            : strings.staking.poolNoRewards}
         </Text>
 
         {isActive && (
@@ -46,7 +48,7 @@ export const PoolTransitionNotice = () => {
         <Button
           style={[{flexGrow: 0, backgroundColor: p.sys_magenta_500}]}
           onPress={navigateToUpdate}
-          title={strings.update}
+          title={strings.staking.update}
         />
       </View>
     </View>
