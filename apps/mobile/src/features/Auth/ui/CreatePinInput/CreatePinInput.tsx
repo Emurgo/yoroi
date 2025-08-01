@@ -3,10 +3,10 @@ import {useIntl} from 'react-intl'
 
 import {pinLength} from '~/features/Auth/common/constants'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useStrings} from '~/features/Auth/hooks/useStrings'
 import {PinInput, PinInputRef} from '~/features/Auth/ui/PinInput/PinInput'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 
 export const CreatePinInput = ({onDone}: Props) => {
@@ -47,8 +47,8 @@ export const CreatePinInput = ({onDone}: Props) => {
     <PinInput
       ref={pinInputRef}
       key="pinInput"
-      title={strings.pinInputTitle}
-      subtitles={[strings.pinInputSubtitle]}
+      title={strings.auth.pinInputTitle}
+      subtitles={[strings.auth.pinInputSubtitle]}
       pinMaxLength={pinLength}
       onDone={handlePinInput}
     />
@@ -56,8 +56,8 @@ export const CreatePinInput = ({onDone}: Props) => {
     <PinInput
       ref={pinConfirmationInputRef}
       key="pinConfirmationInput"
-      title={strings.pinInputConfirmationTitle}
-      subtitles={[strings.pinInputConfirmationSubTitle]}
+      title={strings.auth.pinInputConfirmationTitle}
+      subtitles={[strings.auth.pinInputConfirmationSubTitle]}
       pinMaxLength={pinLength}
       onDone={handlePinConfirmation}
       onGoBack={() => setStep('pin')}
