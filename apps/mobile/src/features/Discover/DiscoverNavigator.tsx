@@ -10,7 +10,7 @@ import {
   DiscoverRoutes,
 } from '~/kernel/navigation'
 import {LoadingBoundary} from '~/ui/Boundary/Boundary'
-import {SomethingWentWrong} from '~/ui/SomethingWentWrong/SomethingWentWrong'
+import {FullErrorFallback} from '~/ui/Boundary/FullErrorFallback'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {BrowserNavigator} from './BrowserNavigator'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
@@ -41,7 +41,7 @@ export const DiscoverNavigator = () => {
           options={{title: strings.discover.discoverTitle}}
         >
           {() => (
-            <ErrorBoundary FallbackComponent={SomethingWentWrong}>
+            <ErrorBoundary FallbackComponent={FullErrorFallback}>
               <LoadingBoundary fallback={<ListSkeleton />}>
                 <SelectDappFromListScreen />
               </LoadingBoundary>
