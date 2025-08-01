@@ -17,6 +17,7 @@ import {walletManager} from './src/features/WalletManager/wallet-manager'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
 import {AppNavigator} from './src/kernel/navigation/AppNavigator'
+import {QueryProvider} from './src/kernel/query/QueryProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
   authStorageKeyManager,
@@ -40,11 +41,13 @@ function AppShell({children}: React.PropsWithChildren) {
       <ConnectionProvider>
         <ThemeProvider storage={themeStorageKeyManager}>
           <LanguageProvider storage={languageStorageKeyManager}>
-            <CopyProvider>
-              <CrashBoundary>
-                <LoadingOverlayProvider>{children}</LoadingOverlayProvider>
-              </CrashBoundary>
-            </CopyProvider>
+            <QueryProvider>
+              <CopyProvider>
+                <CrashBoundary>
+                  <LoadingOverlayProvider>{children}</LoadingOverlayProvider>
+                </CrashBoundary>
+              </CopyProvider>
+            </QueryProvider>
           </LanguageProvider>
         </ThemeProvider>
       </ConnectionProvider>
