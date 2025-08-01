@@ -3,7 +3,7 @@ import {IntlShape, MessageDescriptor} from 'react-intl'
 import {Alert} from 'react-native'
 
 import {isNative, isWeb} from './constants'
-import globalMessages from './i18n/global-messages'
+
 
 type DialogOptions = {
   title: string
@@ -65,7 +65,7 @@ export const showErrorDialog = (
   if (intl != null) {
     title = intl.formatMessage(dialog.title)
     message = intl.formatMessage(dialog.message, msgOptions)
-    yesButton = intl.formatMessage(globalMessages.ok)
+    yesButton = intl.formatMessage({id: 'global.ok', defaultMessage: 'OK'})
   } else {
     title = dialog.title.defaultMessage
 
@@ -81,7 +81,7 @@ export const showErrorDialog = (
       message = 'unknown error'
     }
 
-    yesButton = globalMessages.ok.defaultMessage
+    yesButton = 'OK'
   }
 
   return showDialog({
