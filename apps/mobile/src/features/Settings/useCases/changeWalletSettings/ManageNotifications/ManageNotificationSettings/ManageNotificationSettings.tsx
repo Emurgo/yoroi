@@ -23,7 +23,7 @@ import {
   useChangeNotificationDisplaySettings,
   useNotificationDisplaySettings,
 } from '../../Notifications/NotificationsDisplaySettings'
-import {useStrings} from '../useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 const getNotificationsAuthorizationStatus = () => {
   // TODO: Alert.alert('getNotificationsAuthorizationStatus not implemented')
