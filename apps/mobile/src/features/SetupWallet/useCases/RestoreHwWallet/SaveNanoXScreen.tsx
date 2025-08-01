@@ -27,7 +27,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useCreateWalletXPub} from '~/features/WalletManager/hooks/useCreateWalletXPub'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
-import {errorMessages} from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation'
@@ -68,7 +68,7 @@ const useSizeModal = () => {
 // when hw, later will be part of the onboarding
 const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
-  const intl = useIntl()
+
   const strings = useStrings()
   const {palette: p, isDark} = useTheme()
   const storage = useAsyncStorage()
@@ -117,8 +117,8 @@ export const SaveNanoXScreen = () => {
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
-          ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {
+          ? showErrorDialog(strings.global.networkError)
+          : showErrorDialog(strings.global.generalError, {
               message: error.message,
             })
       })

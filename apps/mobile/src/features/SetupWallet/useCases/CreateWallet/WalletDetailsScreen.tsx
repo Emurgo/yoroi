@@ -26,7 +26,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
-import {errorMessages} from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -85,7 +85,7 @@ export const WalletDetailsScreen = () => {
   const walletNames = Array.from(walletManager.walletMetas.values()).map(
     ({name}) => name,
   )
-  const intl = useIntl()
+
   const storage = useAsyncStorage()
   const {
     mnemonic,
@@ -142,8 +142,8 @@ export const WalletDetailsScreen = () => {
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
-          ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {
+          ? showErrorDialog(strings.global.networkError)
+          : showErrorDialog(strings.global.generalError, {
               message: error.message,
             })
       })
