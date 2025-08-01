@@ -73,6 +73,9 @@ config.transformer.minifierConfig = {
   },
 }
 
+// Enable require.context feature
+config.transformer.unstable_allowRequireContext = true
+
 const shims = {
   'crypto': 'react-native-quick-crypto',
   'buffer': '@craftzdog/react-native-buffer',

@@ -883,6 +883,10 @@ export default freeze(
       id: 'global.cancel',
       defaultMessage: '!!!Cancel',
     },
+    walletSelectionScreenHeader: {
+      id: 'global.walletSelectionScreenHeader',
+      defaultMessage: '!!!Select Wallet',
+    },
   }),
   true,
 )

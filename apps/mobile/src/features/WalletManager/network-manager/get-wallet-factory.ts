@@ -14,20 +14,12 @@ const ShelleyWalletTestnet = makeCardanoWallet(
   networkManagers[Chain.Network.Preprod],
   'cardano-cip1852',
 )
-const ShelleyPreviewWallet = makeCardanoWallet(
-  networkManagers[Chain.Network.Preview],
-  'cardano-cip1852',
-)
 const ByronWalletMainnet = makeCardanoWallet(
   networkManagers[Chain.Network.Mainnet],
   'cardano-bip44',
 )
 const ByronWalletTestnet = makeCardanoWallet(
   networkManagers[Chain.Network.Preprod],
-  'cardano-bip44',
-)
-const ByronPreviewWallet = makeCardanoWallet(
-  networkManagers[Chain.Network.Preview],
   'cardano-bip44',
 )
 
@@ -47,10 +39,7 @@ export function getWalletFactory({
   network: Chain.SupportedNetworks
   implementation: Wallet.Implementation
 }): WalletFactory {
-  const walletMap: Record<
-    Chain.SupportedNetworks,
-    Partial<Record<Wallet.Implementation, WalletFactory>>
-  > = freeze({
+  const walletMap = freeze({
     [Chain.Network.Mainnet]: /* cardano mainnet */ {
       'cardano-cip1852': ShelleyWalletMainnet,
       'cardano-bip44': ByronWalletMainnet,
@@ -59,15 +48,17 @@ export function getWalletFactory({
       'cardano-cip1852': ShelleyWalletTestnet,
       'cardano-bip44': ByronWalletTestnet,
     },
-    [Chain.Network.Preview]: /* cardano preview */ {
-      'cardano-cip1852': ShelleyPreviewWallet,
-      'cardano-bip44': ByronPreviewWallet,
-    },
   } as const)
 
-  const networkImplementations = walletMap[network]
-  if (!networkImplementations)
+  const networkImplementations = walletMap[network as keyof typeof walletMap]
+  if (!networkImplementations) {
+    if (network === Chain.Network.Preview) {
+      throwLoggedError(
+        'getWalletFactory: Preview network is not supported in mobile app',
+      )
+    }
     throwLoggedError('getWalletFactory: Unable to find network implementations')
+  }
 
   const factory = networkImplementations?.[implementation]
   if (!factory)

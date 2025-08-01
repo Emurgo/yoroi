@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
-import {WalletNavigator} from 'src/WalletNavigator'
+import {WalletNavigator} from '../../WalletNavigator'
 
 import {DevMenu} from '~/features/DevMenu'
 import {SearchProvider} from '~/features/Search/SearchContext'

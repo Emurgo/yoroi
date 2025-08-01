@@ -1,5 +1,5 @@
 import * as React from 'react'
 
-import {SwapContext} from './SwapProvider'
+import {SwapContextInstance} from './SwapProvider'
 
-export const useSwap = () => React.useContext(SwapContext)
+export const useSwap = () => React.useContext(SwapContextInstance)
