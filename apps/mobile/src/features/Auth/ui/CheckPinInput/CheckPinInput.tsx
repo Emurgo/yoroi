@@ -2,9 +2,10 @@ import * as React from 'react'
 
 import {pinLength} from '~/features/Auth/common/constants'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {messages, useStrings} from '~/features/Auth/hooks/useStrings'
+import {messages} from '~/features/Auth/hooks/useStrings'
 import {PinInput, PinInputRef} from '~/features/Auth/ui/PinInput/PinInput'
 import {showErrorDialog} from '~/kernel/dialogs'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import globalMessages from '~/kernel/i18n/global-messages'
 import {logger} from '~/kernel/logger/logger'
 
@@ -17,8 +18,8 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
   return (
     <PinInput
       ref={pinInputRef}
-      title={strings.titleChangePin}
-      subtitles={[strings.subtitleChangePin]}
+      title={strings.auth.titleChangePin}
+      subtitles={[strings.auth.subtitleChangePin]}
       onDone={(pin) => {
         const isValid = checkPin(pin)
         if (isValid) {

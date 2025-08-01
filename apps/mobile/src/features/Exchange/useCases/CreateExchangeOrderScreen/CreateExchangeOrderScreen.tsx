@@ -23,7 +23,7 @@ import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingVi
 import {useModal} from '~/ui/Modal/ModalContext'
 import {delay} from '~/wallets/utils/timeUtils'
 import {useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {BanxaLogo} from '../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../illustrations/EncryptusLogo'
 import {ShowDisclaimer} from '../Legal/Disclaimer/ShowDisclaimer'
@@ -161,8 +161,8 @@ export const CreateExchangeOrderScreen = () => {
 
   const feeText =
     isPreprod && orderType === 'sell'
-      ? strings.playground
-      : `${fee}% ${strings.fee}`
+      ? strings.exchange.playground
+      : `${fee}% ${strings.exchange.fee}`
 
   return (
     <KeyboardAvoidingView style={[a.flex_1, ta.bg_color_max]}>
