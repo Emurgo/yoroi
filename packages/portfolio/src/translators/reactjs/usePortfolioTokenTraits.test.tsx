@@ -29,19 +29,11 @@ describe('usePortfolioTokenTraits', () => {
       .mockResolvedValue(tokenTraitsMocks.apiResponse.success)
 
     const TestComponent = () => {
-      const {data, isLoading} = usePortfolioTokenTraits({
+      const {data} = usePortfolioTokenTraits({
         id: tokenMocks.nftCryptoKitty.info.id,
         network: Chain.Network.Mainnet,
         getTokenTraits: mockedGetTokenTraits,
       })
-
-      if (isLoading) {
-        return (
-          <View>
-            <Text testID="loading">Loading...</Text>
-          </View>
-        )
-      }
 
       return (
         <View>
@@ -53,9 +45,6 @@ describe('usePortfolioTokenTraits', () => {
       queryClient,
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
-
-    // First we should see loading state
-    expect(getByTestId('loading')).toBeDefined()
 
     // Then we should see the data
     await waitFor(() => {
@@ -74,27 +63,11 @@ describe('usePortfolioTokenTraits', () => {
       .mockResolvedValue(tokenTraitsMocks.apiResponse.error)
 
     const TestComponent = () => {
-      const {data, isLoading, isError} = usePortfolioTokenTraits({
+      const {data} = usePortfolioTokenTraits({
         id: tokenMocks.nftCryptoKitty.info.id,
         network: Chain.Network.Mainnet,
         getTokenTraits: mockedGetTokenTraits,
       })
-
-      if (isLoading) {
-        return (
-          <View>
-            <Text testID="loading">Loading...</Text>
-          </View>
-        )
-      }
-
-      if (isError) {
-        return (
-          <View>
-            <Text testID="hasError">Error occurred</Text>
-          </View>
-        )
-      }
 
       return (
         <View>
@@ -107,12 +80,14 @@ describe('usePortfolioTokenTraits', () => {
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
 
-    // First we should see loading state
-    expect(getByTestId('loading')).toBeDefined()
-
-    // Then we should see the error state
+    // Then we should see the data
     await waitFor(() => {
-      expect(getByTestId('hasError')).toBeDefined()
+      expect(getByTestId('data')).toBeDefined()
     })
+
+    expect(getByTestId('data').props.children).toEqual(JSON.stringify(1))
+    expect(mockedGetTokenTraits).toHaveBeenCalledWith(
+      tokenMocks.nftCryptoKitty.info.id,
+    )
   })
 })
