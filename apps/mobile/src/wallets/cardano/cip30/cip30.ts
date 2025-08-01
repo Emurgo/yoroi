@@ -20,7 +20,7 @@ import {asQuantity, Utxos} from '~/wallets/utils/utils'
 import {Cardano, CardanoMobile} from '~/wallets/wallets'
 import {toAssetNameHex, toPolicyId} from '../api/utils'
 import {identifierToCardanoAsset} from '../assetUtils'
-import * as cip8 from '../cip8/cip8'
+// import * as cip8 from '../cip8/cip8'
 import {
   getDerivationPathForAddress,
   getTransactionSigners,
@@ -175,17 +175,18 @@ class CIP30Extension {
           )
 
     const signingKey = createRawTxSigningKey(rootKey, signingPath)
-    const coseSign1 = await cip8.sign(
-      Buffer.from(normalisedAddress.toHex(), 'hex'),
-      signingKey,
-      payloadInBytes,
-    )
-    const key = await cip8.makeCip8Key(signingKey.toPublic().asBytes())
+    throw new Error('msl can be used')
+    // const coseSign1 = await cip8.sign(
+    //   Buffer.from(normalisedAddress.toHex(), 'hex'),
+    //   signingKey,
+    //   payloadInBytes,
+    // )
+    // const key = await cip8.makeCip8Key(signingKey.toPublic().asBytes())
 
-    return {
-      signature: Buffer.from(coseSign1.toBytes()).toString('hex'),
-      key: Buffer.from(key.toBytes()).toString('hex'),
-    }
+    // return {
+    //   signature: Buffer.from(coseSign1.toBytes()).toString('hex'),
+    //   key: Buffer.from(key.toBytes()).toString('hex'),
+    // }
   }
 
   signTx(

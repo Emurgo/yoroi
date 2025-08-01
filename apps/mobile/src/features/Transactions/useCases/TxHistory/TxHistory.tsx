@@ -7,7 +7,6 @@ import {LayoutAnimation, Text, View} from 'react-native'
 
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 // import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
-import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
 // import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {useStrings} from '~/features/Transactions/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -33,7 +32,7 @@ export const TxHistory = () => {
   const {atoms: ta, palette: p, isDark} = useTheme()
 
   const {track} = useMetrics()
-  useGetImportantAlertsModal({enabled: true})
+  // useGetImportantAlertsModal({enabled: true})
 
   useFocusEffect(
     React.useCallback(() => {

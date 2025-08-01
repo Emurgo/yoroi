@@ -101,7 +101,7 @@ export const TxDetails = () => {
     >
       <FadeIn style={a.flex_1}>
         <ScrollView contentContainerStyle={a.px_lg}>
-          <Banner label={strings[transaction.direction]}>
+          <Banner label={strings.direction(transaction.direction)}>
             <Boundary>
               <AdaAmount amount={amount} />
 
@@ -201,9 +201,9 @@ export const TxDetails = () => {
             <Label>{strings.txAssuranceLevel}</Label>
           </View>
 
-          <Boundary loading={{size: 'small'}}>
+          {/* <Boundary loading={{size: 'small'}}>
             <Confirmations transaction={transaction} />
-          </Boundary>
+          </Boundary> */}
 
           <Label>{strings.transactionId}</Label>
 
@@ -228,6 +228,7 @@ const Confirmations = ({transaction}: {transaction: TransactionInfo}) => {
   const bestBlock = useBestBlock({
     options: {
       refetchInterval: 5_000,
+      queryKey: ['useBestBlock'], // This will be overridden by the hook's internal queryKey
     },
   })
 
@@ -263,8 +264,8 @@ const AdaAmount = ({amount}: {amount: BigNumber}) => {
   const {palette: p} = useTheme()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const amountStyle = amount.gte(0)
-    ? {color: p.primary_600, fontWeight: '500'}
-    : {color: p.sys_magenta_500, fontWeight: '500'}
+    ? {color: p.primary_600, fontWeight: '500' as const}
+    : {color: p.sys_magenta_500, fontWeight: '500' as const}
 
   if (isPrivacyActive) {
     return <Text style={amountStyle}>{privacyPlaceholder}</Text>
@@ -288,7 +289,7 @@ const Fee = ({amount}: {amount: BigNumber}) => {
   return <Text>{text}</Text>
 }
 
-const ExpandableAssetList: React.VFC<{
+const ExpandableAssetList: React.FC<{
   expanded: boolean
   assets: CardanoTypes.TokenEntry[]
 }> = ({expanded, assets}) => {

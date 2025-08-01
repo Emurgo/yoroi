@@ -4,8 +4,6 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
   TxHistoryRoutes,
@@ -18,10 +16,8 @@ import {TxHistory} from './useCases/TxHistory/TxHistory'
 const Stack = createStackNavigator<TxHistoryRoutes>()
 
 export const TxHistoryNavigator = () => {
-  const {track} = useMetrics()
   const strings = useStrings()
-  const {wallet, meta} = useSelectedWallet()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const navigationOptions = React.useMemo(
     () => defaultStackNavigationOptions(a, p),
