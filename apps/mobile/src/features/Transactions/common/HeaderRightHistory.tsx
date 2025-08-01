@@ -3,20 +3,20 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 
-import {useWalletNotifications} from '~/features/Notifications/common/useWalletNotifications'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
+// import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {Icon} from '~/ui/Icon'
+//import {useWalletNotifications} from '../Notifications/common/useWalletNotifications'
 
 export const HeaderRightHistory = React.memo(() => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const navigation = useNavigation<any /* TxHistoryRouteNavigation */>()
   const {palette: p} = useTheme()
-  const {data: walletNotifications} = useWalletNotifications()
+  // const {data: walletNotifications} = useWalletNotifications()
 
-  const isBellActive = React.useMemo(
+  /*  const isBellActive = React.useMemo(
     () => walletNotifications.some((n) => !n.isRead),
     [walletNotifications],
   )
-
+ */
   return (
     <View style={[a.pr_sm, a.gap_md, a.flex_row]}>
       <TouchableOpacity
@@ -25,7 +25,7 @@ export const HeaderRightHistory = React.memo(() => {
       >
         <Icon.Bell color={p.gray_max} size={24} />
 
-        {isBellActive && (
+        {/* {isBellActive && (
           <View
             style={[
               a.absolute,
@@ -39,7 +39,7 @@ export const HeaderRightHistory = React.memo(() => {
               a.rounded_full,
             ]}
           />
-        )}
+        )} */}
       </TouchableOpacity>
 
       <TouchableOpacity

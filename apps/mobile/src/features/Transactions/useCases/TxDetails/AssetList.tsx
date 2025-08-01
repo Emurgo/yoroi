@@ -5,7 +5,7 @@ import {useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useStrings} from '~/features/Transactions/common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {normalisePtId} from '~/kernel/helpers/normalisePtId'
 import globalMessages, {txLabels} from '~/kernel/i18n/global-messages'

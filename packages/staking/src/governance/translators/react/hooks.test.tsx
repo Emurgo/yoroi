@@ -1,5 +1,4 @@
 import * as React from 'react'
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {init} from '@emurgo/cross-csl-nodejs'
 import {act, renderHook, waitFor} from '@testing-library/react-native'
 
@@ -16,14 +15,8 @@ import {GovernanceManager} from '../../manager'
 
 const createMocks = (managerPatch: Partial<GovernanceManager>) => {
   const manager = {...managerMock, ...managerPatch}
-  const queryClient = new QueryClient()
-  queryClient.setDefaultOptions({queries: {staleTime: 0, retry: false}})
   const wrapper = ({children}: React.PropsWithChildren) => {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <GovernanceProvider manager={manager}>{children}</GovernanceProvider>
-      </QueryClientProvider>
-    )
+    return <GovernanceProvider manager={manager}>{children}</GovernanceProvider>
   }
   return {wrapper, manager}
 }
@@ -64,12 +57,9 @@ describe('Governance Translators React', () => {
     const {wrapper, manager} = createMocks({
       setLatestGovernanceAction: jest.fn().mockResolvedValue(true),
     })
-    const {result} = renderHook(
-      () => useUpdateLatestGovernanceAction('wallet-id'),
-      {
-        wrapper,
-      },
-    )
+    const {result} = renderHook(() => useUpdateLatestGovernanceAction(), {
+      wrapper,
+    })
     act(() => {
       result.current.mutate({
         hash: 'drepId',
@@ -93,22 +83,22 @@ describe('Governance Translators React', () => {
     })
 
     const cardano = init('global')
-    const privateKey = await cardano.Bip32PrivateKey.fromBytes(
+    const privateKey = cardano.Bip32PrivateKey.fromBytes(
       Buffer.from(privateKeyCBOR, 'hex'),
     )
-    const publicKey = await privateKey.toPublic()
-    const stakingKey = await publicKey
-      .derive(2)
-      .then((x) => x.derive(0))
-      .then((x) => x.toRawKey())
+    const publicKey = privateKey.toPublic()
+    const stakingKey = publicKey.derive(2).derive(0).toRawKey()
+
     const {result} = renderHook(() => useDelegationCertificate(), {wrapper})
-    await waitFor(() =>
-      result.current.createCertificate({
+
+    await act(async () => {
+      await result.current.createCertificate({
         hash: 'drepId',
         type: 'key',
         stakingKey,
-      }),
-    )
+      })
+    })
+
     await waitFor(() => result.current.isSuccess)
     expect(manager.createDelegationCertificate).toHaveBeenCalledWith(
       'drepId',
@@ -123,18 +113,20 @@ describe('Governance Translators React', () => {
     })
 
     const cardano = init('global')
-    const privateKey = await cardano.Bip32PrivateKey.fromBytes(
+    const privateKey = cardano.Bip32PrivateKey.fromBytes(
       Buffer.from(privateKeyCBOR, 'hex'),
     )
-    const publicKey = await privateKey.toPublic()
-    const stakingKey = await publicKey
-      .derive(2)
-      .then((x) => x.derive(0))
-      .then((x) => x.toRawKey())
+    const publicKey = privateKey.toPublic()
+    const stakingKey = publicKey.derive(2).derive(0).toRawKey()
     const {result} = renderHook(() => useVotingCertificate(), {wrapper})
-    await waitFor(() =>
-      result.current.createCertificate({vote: 'no-confidence', stakingKey}),
-    )
+
+    await act(async () => {
+      await result.current.createCertificate({
+        vote: 'no-confidence',
+        stakingKey,
+      })
+    })
+
     await waitFor(() => result.current.isSuccess)
     expect(manager.createVotingCertificate).toHaveBeenCalledWith(
       'no-confidence',

@@ -5,13 +5,13 @@ import {BigNumber} from 'bignumber.js'
 import {
   BaseAsset,
   CERTIFICATE_KIND,
-  Token,
   Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
   TransactionInfo,
-} from '@yoroi/types'
+} from '~/wallets/types/other'
+import {Token} from '~/wallets/types/tokens'
 import {
   getDefaultNetworkTokenEntry,
   MultiToken,

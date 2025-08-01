@@ -8,11 +8,11 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+// import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useStrings} from '~/features/Transactions/common/strings'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
 import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
@@ -35,7 +35,7 @@ type Props = {
 
 export const TxListItem = ({transaction}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const navigation = useNavigation<any>()
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {tokenId} = useTxFilter()

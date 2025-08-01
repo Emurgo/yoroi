@@ -1,6 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
-import {WalletNavigator} from '../../WalletNavigator'
 
 import {DevMenu} from '~/features/DevMenu'
 import {SearchProvider} from '~/features/Search/SearchContext'
@@ -9,6 +8,7 @@ import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {TempPinLoginScreen} from '~/features/Temporal_To_Remove/Auth/TempPinLoginScreen'
 import {InitialScreenNavigator} from '~/features/Temporal_To_Remove/InitialScreen/InitialScreenNavigatorNavigator'
 import {TempTestSearchScreen} from '~/features/Temporal_To_Remove/Search/TempTestSearchScreen'
+import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
 import {SelectWalletFromList} from '~/features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {Modal} from '~/ui/Modal/ModalScreen'
 
@@ -25,15 +25,20 @@ export const AppNavigator = () => {
             options={{headerShown: false}}
             component={InitialScreenNavigator}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="manage-wallets"
             options={{headerShown: false}}
             component={WalletNavigator}
-          />
+          /> */}
           <Stack.Screen
             name="wallet-selection"
             options={{headerShown: false}}
             component={SelectWalletFromList}
+          />
+          <Stack.Screen
+            name="tx-list"
+            options={{headerShown: false}}
+            component={TxHistoryNavigator}
           />
           <Stack.Screen
             name="settings"

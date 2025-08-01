@@ -5,7 +5,7 @@ import React from 'react'
 import {Text, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
-import {useStrings} from '~/features/Transactions/common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'

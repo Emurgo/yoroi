@@ -319,6 +319,11 @@ export type PortfolioRoutes = {
   'history': NavigatorScreenParams<TxHistoryRoutes>
 }
 
+export type PortfolioTokenListTabRoutes = {
+  'wallet-token': undefined
+  'dapps-token': undefined
+}
+
 export type ReviewTxRoutes = {
   'review-tx'?: {
     cbor?: string
@@ -339,11 +344,6 @@ export type ReviewTxRoutes = {
   }
   'review-tx-submitted-tx': undefined
   'review-tx-failed-tx': undefined
-}
-
-export type PortfolioTokenListTabRoutes = {
-  'wallet-token': undefined
-  'dapps-token': undefined
 }
 
 export type VotingRegistrationRoutes = {

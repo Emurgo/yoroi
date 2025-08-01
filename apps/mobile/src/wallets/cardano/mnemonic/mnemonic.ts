@@ -1,5 +1,5 @@
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+
 const {randomBytes} = require('react-native-randombytes')
 
 import {CardanoMobile} from '~/wallets/wallets'

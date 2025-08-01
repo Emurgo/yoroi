@@ -10,7 +10,6 @@ import {useWalletMetas} from '~/features/WalletManager/hooks/useWalletMetas'
 import {SupportIllustration} from '~/features/WalletManager/ui/illustrations/SupportIllustration'
 import {isDev} from '~/kernel/constants'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation/navigation'
 import {Button} from '~/ui/Button/Button'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
@@ -25,8 +24,8 @@ export const SelectWalletFromList = () => {
   const {track} = useMetrics()
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
   const [showLine, setShowLine] = React.useState(false)
-  const {navigateToTxHistory} = useWalletNavigation()
   const {walletManager} = useWalletManager()
+  const navigation = useNavigation<any>()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -37,9 +36,13 @@ export const SelectWalletFromList = () => {
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
       walletManager.setSelectedWalletId(walletMeta.id)
-      navigateToTxHistory()
+      /* if (await shouldHandleNotificationInternalNavigationAction()) {
+        await handleNotificationInternalNavigationAction(pushNotificationsManager, walletNavigation)
+        return
+      } */
+      navigation.navigate('tx-list')
     },
-    [walletManager, navigateToTxHistory],
+    [walletManager, navigation],
   )
 
   const data = React.useMemo(

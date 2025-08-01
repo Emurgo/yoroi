@@ -1,42 +1,32 @@
-import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useTransfer} from '@yoroi/transfer'
-import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {Alert, View} from 'react-native'
 
-import {useStrings} from '~/features/Transactions/common/strings'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+// import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
-import {useReceive} from '~/features/Receive/common/ReceiveProvider'
-import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
-import {useReceiveAddressesStatus} from '~/features/Receive/common/useReceiveAddressesStatus'
-import {useSwap} from '~/features/Swap/common/SwapProvider'
-import {useSwapConfig} from '~/features/Swap/common/useSwapConfig'
+import {useStrings} from '../../common/strings'
 
 export const ActionsBanner = (props: {disabled: boolean}) => {
   const strings = useStrings()
-  const swapForm = useSwap()
-  const {tokenOutId, isLoading} = useSwapConfig()
-  const disabled = props.disabled || isLoading
-  const navigateTo = useNavigateTo()
+  // const swapForm = useSwap()
+  // const {tokenOutId, isLoading} = useSwapConfig()
+  // const disabled = props.disabled || isLoading
+  // const navigateTo = useNavigateTo()
   const {palette: p} = useTheme()
 
-  const {isSingle, addressMode} = useAddressMode()
-  const {next: nextReceiveAddress, used: usedAddresses} =
-    useReceiveAddressesStatus(addressMode)
-  const {selectedAddressChanged} = useReceive()
-  const {copy} = useCopy()
-  const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} =
-    useMultipleAddressesInfo()
+  // const {isSingle, addressMode} = useAddressMode()
+  // const {next: nextReceiveAddress, used: usedAddresses} =
+  //   useReceiveAddressesStatus(addressMode)
+  // const {selectedAddressChanged} = useReceive()
+  // const {copy} = useCopy()
+  // const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} =
+  //   useMultipleAddressesInfo()
 
+  const {meta} = useSelectedWallet()
+  /*
   const {reset: resetSendState} = useTransfer()
 
   const {track} = useMetrics()
@@ -45,17 +35,14 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
     selected: {network},
   } = useWalletManager()
 
-  const {
-    meta,
-    wallet: {portfolioPrimaryTokenInfo},
-  } = useSelectedWallet()
+
 
   const handleOnSend = () => {
     navigateTo.send()
     resetSendState()
   }
-
-  const handleOnSwap = () => {
+ */
+  /* const handleOnSwap = () => {
     if (network === Chain.Network.Preprod) {
       navigateTo.swapPreprodNotice()
       return
@@ -83,13 +70,13 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
 
     navigateTo.swap()
   }
-
-  const handleOnExchange = () => {
+ */
+  /* const handleOnExchange = () => {
     track.walletPageExchangeClicked()
     navigateTo.exchange()
   }
-
-  const handleOnPressReceive = () => {
+ */
+  /* const handleOnPressReceive = () => {
     if (!isSingle) {
       navigateTo.receiveMultipleAddresses()
       return
@@ -113,7 +100,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
       copy_address_location: 'Long Press wallet Address',
     })
     copy({text: nextReceiveAddress, event, feedback: strings.copiedLabel})
-  }
+  } */
 
   return (
     <View style={[a.py_xl, a.flex_row, a.justify_center, a.gap_lg]}>
@@ -121,10 +108,10 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
         <Button
           type={ButtonType.Circle}
           icon={Icon.Received}
-          onPress={handleOnPressReceive}
+          onPress={() => Alert.alert('Receive Feature not implemented')}
           testID="receiveButton"
-          disabled={disabled}
-          onLongPress={handleOnLongPressReceive}
+          // disabled={disabled}
+          // onLongPress={handleOnLongPressReceive}
         />
 
         <Text
@@ -132,7 +119,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
             a.pt_sm,
             a.body_3_sm_medium,
             {color: p.text_gray_medium},
-            disabled && {color: p.text_gray_low},
+            // disabled && {color: p.text_gray_low},
           ]}
         >
           {strings.receiveLabel}
@@ -145,9 +132,9 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
             <Button
               type={ButtonType.Circle}
               icon={Icon.Send}
-              onPress={handleOnSend}
+              onPress={() => Alert.alert('Send Feature not implemented')}
               testID="sendButton"
-              disabled={disabled}
+              // disabled={disabled}
             />
 
             <Text
@@ -155,7 +142,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
                 a.pt_sm,
                 a.body_3_sm_medium,
                 {color: p.text_gray_medium},
-                disabled && {color: p.text_gray_low},
+                // disabled && {color: p.text_gray_low},
               ]}
             >
               {strings.sendLabel}
@@ -166,9 +153,9 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
             <Button
               type={ButtonType.Circle}
               icon={Icon.Swap}
-              onPress={handleOnSwap}
+              onPress={() => Alert.alert('Swap Feature not implemented')}
               testID="swapButton"
-              disabled={disabled}
+              // disabled={disabled}
             />
 
             <Text
@@ -176,7 +163,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
                 a.pt_sm,
                 a.body_3_sm_medium,
                 {color: p.text_gray_medium},
-                disabled && {color: p.text_gray_low},
+                // disabled && {color: p.text_gray_low},
               ]}
             >
               {strings.swapLabel}
@@ -187,9 +174,9 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
             <Button
               type={ButtonType.Circle}
               icon={Icon.Exchange}
-              onPress={handleOnExchange}
+              onPress={() => Alert.alert('Exchange Feature not implemented')}
               testID="buyButton"
-              disabled={disabled}
+              // disabled={disabled}
             />
 
             <Text
@@ -197,7 +184,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
                 a.pt_sm,
                 a.body_3_sm_medium,
                 {color: p.text_gray_medium},
-                disabled && {color: p.text_gray_low},
+                // disabled && {color: p.text_gray_low},
               ]}
             >
               {strings.exchange}
@@ -209,8 +196,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
   )
 }
 
-const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
+/* const useNavigateTo = () => {
+  const navigation = useNavigation<any>()
 
   return {
     send: () => navigation.navigate('send-start-tx'),
@@ -220,4 +207,4 @@ const useNavigateTo = () => {
     swapPreprodNotice: () => navigation.navigate('swap-preprod-notice'),
     exchange: () => navigation.navigate('exchange-create-order'),
   }
-}
+} */

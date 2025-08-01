@@ -4,12 +4,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
-import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
+// import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
 import {SearchProvider} from '~/features/Search/SearchContext'
 import {SettingsScreenNavigator} from '~/features/Settings/SettingsScreenNavigator'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
-import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
 import {SelectWalletFromList} from '~/features/WalletManager/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
@@ -144,11 +143,11 @@ const MainWalletRoutes = () => {
         </View>
 
         {/* Content based on selected view */}
-        {currentView === 'history' ? (
+        {/* {currentView === 'history' ? (
           <TxHistoryNavigator />
         ) : (
           <PortfolioNavigator />
-        )}
+        )} */}
       </View>
     </SearchProvider>
   )

@@ -4,7 +4,7 @@ import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
 
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
-import {useStrings} from '~/features/Transactions/common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'

@@ -1,32 +1,35 @@
-import {time} from '@yoroi/common'
-import {useQuery, UseQueryOptions, UseQueryResult} from '@tanstack/react-query'
+import {useState, useEffect} from 'react'
 
 import {DappListResponse} from '../../adapters/api'
 import {useDappConnector} from './DappConnectorProvider'
 
-type DappListQueryKey = readonly [string, 'dappList', string]
-
-export const useDappList = (
-  options?: UseQueryOptions<
-    DappListResponse,
-    Error,
-    DappListResponse,
-    DappListQueryKey
-  >,
-): UseQueryResult<DappListResponse, Error> => {
+export const useDappList = () => {
   const {manager} = useDappConnector()
+  const [data, setData] = useState<DappListResponse | null>(null)
+  const [error, setError] = useState<Error | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const queryKey: DappListQueryKey = [
-    manager.walletId,
-    'dappList',
-    manager.network,
-  ]
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+        const result = await manager.getDAppList()
+        setData(result)
+      } catch (err) {
+        setError(err as Error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-  return useQuery<DappListResponse, Error, DappListResponse, DappListQueryKey>({
-    queryKey,
-    queryFn: () => manager.getDAppList(),
-    refetchOnMount: false,
-    refetchInterval: time.oneDay,
-    ...(options ?? {}),
-  })
+    fetchData()
+  }, [manager])
+
+  return {
+    data,
+    error,
+    isLoading,
+    isError: error !== null,
+  }
 }

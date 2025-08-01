@@ -5,7 +5,7 @@ import * as Notifications from 'expo-notifications'
 import {Linking, PermissionsAndroid, Platform} from 'react-native'
 import {Notifications as RNNotifications} from 'react-native-notifications'
 
-import {WalletNavigation} from '~/kernel/navigation'
+// import {WalletNavigation} from '~/kernel/navigation'
 import {BannerIds} from './banners'
 import {uiStorage} from './storage'
 
@@ -48,7 +48,7 @@ export const getNotificationsAuthorizationStatus = async () => {
 export const triggerNotificationAction = async (options: {
   manager: YoroiNotifications.Manager
   id: number
-  walletNavigation: WalletNavigation
+  walletNavigation: any
   source: 'os' | 'app'
 }) => {
   const {manager, id, walletNavigation, source} = options
@@ -113,7 +113,7 @@ export const shouldHandleNotificationInternalNavigationAction = async () => {
 
 export const handleNotificationInternalNavigationAction = async (
   manager: YoroiNotifications.Manager,
-  walletNavigation: WalletNavigation,
+  walletNavigation: any,
 ) => {
   const id = await uiStorage.getItem(
     'triggerNotificationInternalNavigationAction',
@@ -130,7 +130,7 @@ export const handleNotificationInternalNavigationAction = async (
 
 const handleInternalNavigation = (
   event: YoroiNotifications.PushEvent,
-  walletNavigation: WalletNavigation,
+  walletNavigation: any,
   pushNotificationHistory: boolean,
 ) => {
   if (!isRecord(event.metadata.data)) return

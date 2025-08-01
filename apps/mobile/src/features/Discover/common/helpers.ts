@@ -10,10 +10,7 @@ import {App, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
-import {
-  cip95ExtensionMaker,
-  supportsCIP95,
-} from '~/wallets/cardano/cip95/cip95'
+import {cip95ExtensionMaker, supportsCIP95} from '~/wallets/cardano/cip95/cip95'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
 
@@ -124,8 +121,9 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     getChangeAddress: () => cip30.getChangeAddress(),
     getRewardAddresses: () => cip30.getRewardAddresses(),
     submitTx: (cbor) => cip30.submitTx(cbor),
-    getCollateral: (value) => cip30.getCollateral(value),
-    getUtxos: (value, pagination) => cip30.getUtxos(value, pagination),
+    getCollateral: async (value) => await cip30.getCollateral(value),
+    getUtxos: async (value, pagination) =>
+      await cip30.getUtxos(value, pagination),
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
     signData: async (address, payload) => {
       if (meta.isHW) {
