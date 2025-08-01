@@ -14,7 +14,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
 import {useSync} from '~/wallets/hooks'
-import infoIcon from '../../../../../assets/img/icon/info-light-green.png'
+import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {TxList} from '../TxList/TxList'
 import {useUtxoConsolidationBanner} from '~/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/useUtxoConsolidationBanner'
 import {UtxoListButton} from '../UtxoList/UtxoListButton'

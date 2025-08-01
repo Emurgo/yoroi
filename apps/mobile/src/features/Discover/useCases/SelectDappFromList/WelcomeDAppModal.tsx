@@ -7,7 +7,7 @@ import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {useStrings} from '../../common/useStrings'
-import IllustrationDAppImage from '../assets/img/illustration-dapp.png'
+import IllustrationDAppImage from '~/assets/img/illustration-dapp.png'
 
 export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()
