@@ -242,6 +242,7 @@ export const useStrings = () => {
         cancel: f(globalMessages.cancel),
         ok: f(globalMessages.ok),
         close: f(globalMessages.close),
+        walletSelectionScreenHeader: f(messages.global.walletSelectionScreenHeader),
       },
     })
   }, [intl])
@@ -564,6 +565,13 @@ const messages = {
     supportTicketLink: {
       id: 'components.walletselection.walletselectionscreen.supportTicketLink',
       defaultMessage: '!!!Ask our support team',
+    },
+  }),
+
+  global: defineMessages({
+    walletSelectionScreenHeader: {
+      id: 'global.walletSelectionScreenHeader',
+      defaultMessage: '!!!Select Wallet',
     },
   }),
 

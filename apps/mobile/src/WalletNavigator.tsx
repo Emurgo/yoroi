@@ -40,7 +40,7 @@ export const WalletNavigator = () => {
         <Stack.Screen
           name="wallet-selection"
           options={{
-            title: strings.walletSelectionScreenHeader,
+            title: strings.global.walletSelectionScreenHeader,
             headerTitle: ({children}) => (
               <NetworkTag directChangeActive>{children}</NetworkTag>
             ),
@@ -155,19 +155,4 @@ const MainWalletRoutes = () => {
   )
 }
 
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    walletSelectionScreenHeader: intl.formatMessage(
-      messages.walletSelectionScreenHeader,
-    ),
-  }
-}
-
-const messages = defineMessages({
-  walletSelectionScreenHeader: {
-    id: 'global.walletSelectionScreenHeader',
-    defaultMessage: '!!!Select Wallet',
-  },
-})
+import {useStrings} from '~/kernel/i18n/useStrings'
