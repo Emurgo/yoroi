@@ -2,35 +2,35 @@ import {defineMessages} from 'react-intl'
 
 export const stakingMessages = defineMessages({
   title: {
-    id: 'components.staking.title',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Staking',
   },
   stakingCenter: {
-    id: 'components.staking.stakingCenter',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Staking Center',
   },
   delegate: {
-    id: 'components.staking.delegate',
+    id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Delegate',
   },
   undelegate: {
-    id: 'components.staking.undelegate',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.undelegate',
     defaultMessage: '!!!Undelegate',
   },
   withdraw: {
-    id: 'components.staking.withdraw',
+    id: 'components.delegationsummary.userSummary.withdrawButtonTitle',
     defaultMessage: '!!!Withdraw',
   },
   rewards: {
-    id: 'components.staking.rewards',
+    id: 'components.catalyst.insufficientBalance',
     defaultMessage: '!!!Rewards',
   },
   delegated: {
-    id: 'components.staking.delegated',
+    id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Delegated',
   },
   stakePool: {
-    id: 'components.staking.stakePool',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.title',
     defaultMessage: '!!!Stake Pool',
   },
   stakePools: {
@@ -38,19 +38,19 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Stake Pools',
   },
   searchPools: {
-    id: 'components.staking.searchPools',
+    id: 'nft.navigation.search',
     defaultMessage: '!!!Search Pools',
   },
   noPoolsFound: {
-    id: 'components.staking.noPoolsFound',
+    id: 'components.send.assetselectorscreen.found',
     defaultMessage: '!!!No pools found',
   },
   poolId: {
-    id: 'components.staking.poolId',
+    id: 'txReview.poolDetails.poolId.label',
     defaultMessage: '!!!Pool ID',
   },
   poolName: {
-    id: 'components.staking.poolName',
+    id: 'global.staking.stakePoolName',
     defaultMessage: '!!!Pool Name',
   },
   poolTicker: {
@@ -58,7 +58,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Pool Ticker',
   },
   poolDescription: {
-    id: 'components.staking.poolDescription',
+    id: 'txReview.tokenDetails.overViewTab.description.label',
     defaultMessage: '!!!Pool Description',
   },
   poolHomepage: {
@@ -74,15 +74,15 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Pool Fixed Cost',
   },
   poolPledge: {
-    id: 'components.staking.poolPledge',
+    id: 'txReview.poolDetails.pledge.label',
     defaultMessage: '!!!Pool Pledge',
   },
   poolSaturation: {
-    id: 'components.staking.poolSaturation',
+    id: 'txReview.poolDetails.poolSaturation.label',
     defaultMessage: '!!!Pool Saturation',
   },
   poolPerformance: {
-    id: 'components.staking.poolPerformance',
+    id: 'portfolio.portfolioTokensDetailScreen.performance',
     defaultMessage: '!!!Pool Performance',
   },
   poolROA: {
@@ -94,7 +94,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Pool Blocks',
   },
   poolEpochs: {
-    id: 'components.staking.poolEpochs',
+    id: 'global.staking.epochLabel',
     defaultMessage: '!!!Pool Epochs',
   },
   poolLifetime: {
@@ -110,7 +110,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Pool Lifetime Blocks',
   },
   poolLifetimeEpochs: {
-    id: 'components.staking.poolLifetimeEpochs',
+    id: 'global.staking.epochLabel',
     defaultMessage: '!!!Pool Lifetime Epochs',
   },
   poolLifetimeStake: {
@@ -122,7 +122,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Pool Lifetime Rewards',
   },
   poolLifetimeFees: {
-    id: 'components.staking.poolLifetimeFees',
+    id: 'txReview.fee',
     defaultMessage: '!!!Pool Lifetime Fees',
   },
   poolLifetimeMargin: {
@@ -134,47 +134,47 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Pool Lifetime Fixed Cost',
   },
   poolLifetimePledge: {
-    id: 'components.staking.poolLifetimePledge',
+    id: 'txReview.poolDetails.pledge.label',
     defaultMessage: '!!!Pool Lifetime Pledge',
   },
   poolLifetimeSaturation: {
-    id: 'components.staking.poolLifetimeSaturation',
+    id: 'txReview.poolDetails.poolSaturation.label',
     defaultMessage: '!!!Pool Lifetime Saturation',
   },
   confirmDelegation: {
-    id: 'components.staking.confirmDelegation',
+    id: 'components.stakingcenter.confirmDelegation.title',
     defaultMessage: '!!!Confirm Delegation',
   },
   confirmUndelegation: {
-    id: 'components.staking.confirmUndelegation',
+    id: 'txReview.confirm',
     defaultMessage: '!!!Confirm Undelegation',
   },
   confirmWithdrawal: {
-    id: 'components.staking.confirmWithdrawal',
+    id: 'components.delegationsummary.userSummary.withdrawButtonTitle',
     defaultMessage: '!!!Confirm Withdrawal',
   },
   delegationSuccess: {
-    id: 'components.staking.delegationSuccess',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelHigh',
     defaultMessage: '!!!Delegation Success',
   },
   undelegationSuccess: {
-    id: 'components.staking.undelegationSuccess',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelHigh',
     defaultMessage: '!!!Undelegation Success',
   },
   withdrawalSuccess: {
-    id: 'components.staking.withdrawalSuccess',
+    id: 'components.delegationsummary.userSummary.withdrawButtonTitle',
     defaultMessage: '!!!Withdrawal Success',
   },
   delegationFailed: {
-    id: 'components.staking.delegationFailed',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Delegation Failed',
   },
   undelegationFailed: {
-    id: 'components.staking.undelegationFailed',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Undelegation Failed',
   },
   withdrawalFailed: {
-    id: 'components.staking.withdrawalFailed',
+    id: 'components.delegationsummary.userSummary.withdrawButtonTitle',
     defaultMessage: '!!!Withdrawal Failed',
   },
   loading: {
@@ -182,355 +182,355 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Loading...',
   },
   error: {
-    id: 'components.staking.error',
+    id: 'global.error',
     defaultMessage: '!!!Error',
   },
   retry: {
-    id: 'components.staking.retry',
+    id: 'components.send.sendscreen.errorBannerNetworkError',
     defaultMessage: '!!!Retry',
   },
   warning: {
-    id: 'components.staking.warning',
+    id: 'components.stakingcenter.poolwarningmodal.title',
     defaultMessage: '!!!Warning',
   },
   finalWarning: {
-    id: 'components.staking.finalWarning',
+    id: 'components.stakingcenter.poolwarningmodal.title',
     defaultMessage: '!!!Final Warning',
   },
   currentPool: {
-    id: 'components.staking.currentPool',
+    id: 'components.stakingcenter.pooldetailscreen.title',
     defaultMessage: '!!!Current Pool',
   },
   newPool: {
-    id: 'components.staking.newPool',
+    id: 'components.stakingcenter.pooldetailscreen.title',
     defaultMessage: '!!!New Pool',
   },
   estimatedRoa: {
-    id: 'components.staking.estimatedRoa',
+    id: 'components.stakingcenter.confirmDelegation.rewardsExplanation',
     defaultMessage: '!!!Estimated ROA',
   },
   fee: {
-    id: 'components.staking.fee',
+    id: 'components.stakingcenter.confirmDelegation.ofFees',
     defaultMessage: '!!!Fee',
   },
   poolGeneratesRewards: {
-    id: 'components.staking.poolGeneratesRewards',
+    id: 'components.stakingcenter.confirmDelegation.rewardsExplanation',
     defaultMessage: '!!!Pool Generates Rewards',
   },
   poolNoRewards: {
-    id: 'components.staking.poolNoRewards',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Pool No Rewards',
   },
   poolWillStopRewards: {
-    id: 'components.staking.poolWillStopRewards',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Pool Will Stop Rewards',
   },
   skipNoRewards: {
-    id: 'components.staking.skipNoRewards',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Skip No Rewards',
   },
   updateKeepEarning: {
-    id: 'components.staking.updateKeepEarning',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Update Keep Earning',
   },
   update: {
-    id: 'components.staking.update',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Update',
   },
   governanceCentreTitle: {
-    id: 'components.staking.governanceCentreTitle',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Governance Centre Title',
   },
   confirmTxTitle: {
-    id: 'components.staking.confirmTxTitle',
+    id: 'components.stakingcenter.confirmDelegation.title',
     defaultMessage: '!!!Confirm Tx Title',
   },
   learnMoreAboutGovernance: {
-    id: 'components.staking.learnMoreAboutGovernance',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Learn More About Governance',
   },
   actionDelegateToADRepTitle: {
-    id: 'components.staking.actionDelegateToADRepTitle',
+    id: 'components.governance.actionDelegateToADRepTitle',
     defaultMessage: '!!!Action Delegate To A DRep Title',
   },
   actionDelegateToADRepDescription: {
-    id: 'components.staking.actionDelegateToADRepDescription',
+    id: 'components.governance.actionDelegateToADRepDescription',
     defaultMessage: '!!!Action Delegate To A DRep Description',
   },
   actionAbstainTitle: {
-    id: 'components.staking.actionAbstainTitle',
+    id: 'components.governance.actionAbstainTitle',
     defaultMessage: '!!!Action Abstain Title',
   },
   actionAbstainDescription: {
-    id: 'components.staking.actionAbstainDescription',
+    id: 'components.governance.actionAbstainDescription',
     defaultMessage: '!!!Action Abstain Description',
   },
   actionNoConfidenceTitle: {
-    id: 'components.staking.actionNoConfidenceTitle',
+    id: 'components.governance.actionNoConfidenceTitle',
     defaultMessage: '!!!Action No Confidence Title',
   },
   actionNoConfidenceDescription: {
-    id: 'components.staking.actionNoConfidenceDescription',
+    id: 'components.governance.actionNoConfidenceDescription',
     defaultMessage: '!!!Action No Confidence Description',
   },
   drepKey: {
-    id: 'components.staking.drepKey',
+    id: 'components.governance.drepKey',
     defaultMessage: '!!!DRep Key',
   },
   delegatingToADRep: {
-    id: 'components.staking.delegatingToADRep',
+    id: 'components.governance.delegatingToADRep',
     defaultMessage: '!!!Delegating To A DRep',
   },
   delegateToADRep: {
-    id: 'components.staking.delegateToADRep',
+    id: 'components.governance.delegateToADRep',
     defaultMessage: '!!!Delegate To A DRep',
   },
   abstaining: {
-    id: 'components.staking.abstaining',
+    id: 'components.governance.abstaining',
     defaultMessage: '!!!Abstaining',
   },
   delegateVotingToDRep: {
-    id: 'components.staking.delegateVotingToDRep',
+    id: 'components.governance.delegateVotingToDRep',
     defaultMessage: '!!!Delegate Voting To DRep',
   },
   selectAbstain: {
-    id: 'components.staking.selectAbstain',
+    id: 'components.governance.abstaining',
     defaultMessage: '!!!Select Abstain',
   },
   selectNoConfidence: {
-    id: 'components.staking.selectNoConfidence',
+    id: 'components.governance.actionNoConfidenceTitle',
     defaultMessage: '!!!Select No Confidence',
   },
   operations: {
-    id: 'components.staking.operations',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Operations',
   },
   drepID: {
-    id: 'components.staking.drepID',
+    id: 'components.governance.drepID',
     defaultMessage: '!!!DRep ID',
   },
   thankYouForParticipating: {
-    id: 'components.staking.thankYouForParticipating',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Thank You For Participating',
   },
   thisTransactionCanTakeAWhile: {
-    id: 'components.staking.thisTransactionCanTakeAWhile',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!This Transaction Can Take A While',
   },
   participationBenefits: {
-    id: 'components.staking.participationBenefits',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Participation Benefits',
   },
   goToGovernance: {
-    id: 'components.staking.goToGovernance',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Go To Governance',
   },
   findDRepHere: {
-    id: 'components.staking.findDRepHere',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Find DRep Here',
   },
   reviewActions: {
-    id: 'components.staking.reviewActions',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Review Actions',
   },
   actionYouHaveSelectedTxPending: {
-    id: 'components.staking.actionYouHaveSelectedTxPending',
+    id: 'components.send.assetselectorscreen.youHave',
     defaultMessage: '!!!Action You Have Selected Tx Pending',
   },
   actionYouHaveSelected: {
-    id: 'components.staking.actionYouHaveSelected',
+    id: 'components.send.assetselectorscreen.youHave',
     defaultMessage: '!!!Action You Have Selected',
   },
   changeDRep: {
-    id: 'components.staking.changeDRep',
+    id: 'components.governance.changeDRep',
     defaultMessage: '!!!Change DRep',
   },
   confirm: {
-    id: 'components.staking.confirm',
+    id: 'components.governance.confirm',
     defaultMessage: '!!!Confirm',
   },
   transactionDetails: {
-    id: 'components.staking.transactionDetails',
+    id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Transaction Details',
   },
   total: {
-    id: 'components.staking.total',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Total',
   },
   transactionFailed: {
-    id: 'components.staking.transactionFailed',
+    id: 'components.delegation.failedTx.title',
     defaultMessage: '!!!Transaction Failed',
   },
   notSupportedVersionTitle: {
-    id: 'components.staking.notSupportedVersionTitle',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Not Supported Version Title',
   },
   notSupportedVersionDescription: {
-    id: 'components.staking.notSupportedVersionDescription',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Not Supported Version Description',
   },
   noFunds: {
-    id: 'components.staking.noFunds',
+    id: 'components.stakingcenter.failedDelegation.noFundsToProcess',
     defaultMessage: '!!!No Funds',
   },
   transactionFailedDescription: {
-    id: 'components.staking.transactionFailedDescription',
+    id: 'components.delegation.failedTx.text',
     defaultMessage: '!!!Transaction Failed Description',
   },
   tryAgain: {
-    id: 'components.staking.tryAgain',
+    id: 'components.delegation.failedTx.button',
     defaultMessage: '!!!Try Again',
   },
   buyAda: {
-    id: 'components.staking.buyAda',
+    id: 'components.stakingcenter.failedDelegation.buyAda',
     defaultMessage: '!!!Buy Ada',
   },
   goToFaucet: {
-    id: 'components.staking.goToFaucet',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Go To Faucet',
   },
   withdrawWarningTitle: {
-    id: 'components.staking.withdrawWarningTitle',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Withdraw Warning Title',
   },
   withdrawWarningDescription: {
-    id: 'components.staking.withdrawWarningDescription',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Withdraw Warning Description',
   },
   withdrawWarningButton: {
-    id: 'components.staking.withdrawWarningButton',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Withdraw Warning Button',
   },
   enterDRepID: {
-    id: 'components.staking.enterDRepID',
+    id: 'components.governance.drepID',
     defaultMessage: '!!!Enter DRep ID',
   },
   enterPassword: {
-    id: 'components.staking.enterPassword',
+    id: 'components.walletinit.walletDetails.walletDetailsPasswordInput',
     defaultMessage: '!!!Enter Password',
   },
   hardwareWalletSupportComingSoon: {
-    id: 'components.staking.hardwareWalletSupportComingSoon',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Hardware Wallet Support Coming Soon',
   },
   workingOnHardwareWalletSupport: {
-    id: 'components.staking.workingOnHardwareWalletSupport',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Working On Hardware Wallet Support',
   },
   goToWallet: {
-    id: 'components.staking.goToWallet',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Go To Wallet',
   },
   txFees: {
-    id: 'components.staking.txFees',
+    id: 'components.stakingcenter.confirmDelegation.ofFees',
     defaultMessage: '!!!Tx Fees',
   },
   registerStakingKey: {
-    id: 'components.staking.registerStakingKey',
+    id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Register Staking Key',
   },
   enterDrepIDInfo: {
-    id: 'components.staking.enterDrepIDInfo',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Enter Drep ID Info',
   },
   goToStaking: {
-    id: 'components.staking.goToStaking',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Go To Staking',
   },
   readyToCollectRewards: {
-    id: 'components.staking.readyToCollectRewards',
+    id: 'components.stakingcenter.confirmDelegation.rewardsExplanation',
     defaultMessage: '!!!Ready To Collect Rewards',
   },
   notSupportedVersionButton: {
-    id: 'components.staking.notSupportedVersionButton',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Not Supported Version Button',
   },
   scriptNotSupported: {
-    id: 'components.staking.scriptNotSupported',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Script Not Supported',
   },
   submittedTxButton: {
-    id: 'components.staking.submittedTxButton',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Submitted Tx Button',
   },
   submittedTxText: {
-    id: 'components.staking.submittedTxText',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Submitted Tx Text',
   },
   submittedTxTitle: {
-    id: 'components.staking.submittedTxTitle',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Submitted Tx Title',
   },
   failedTxButton: {
-    id: 'components.staking.failedTxButton',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Failed Tx Button',
   },
   failedTxText: {
-    id: 'components.staking.failedTxText',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Failed Tx Text',
   },
   failedTxTitle: {
-    id: 'components.staking.failedTxTitle',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Failed Tx Title',
   },
   invalidDRepId: {
-    id: 'components.staking.invalidDRepId',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Invalid DRep Id',
   },
   delegateToAYoroiDrep: {
-    id: 'components.staking.delegateToAYoroiDrep',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Delegate To A Yoroi Drep',
   },
   delegatingToYoroiDRep: {
-    id: 'components.staking.delegatingToYoroiDRep',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Delegating To Yoroi DRep',
   },
   delegateToAYoroiDRepDescription: {
-    id: 'components.staking.delegateToAYoroiDRepDescription',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Delegate To A Yoroi DRep Description',
   },
   delegateVotingToDRepDeprecatedFormatNotice: {
-    id: 'components.staking.delegateVotingToDRepDeprecatedFormatNotice',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Delegate Voting To DRep Deprecated Format Notice',
   },
   yoroiRecord: {
-    id: 'components.staking.yoroiRecord',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Yoroi Record',
   },
   newToGovernanceTitle: {
-    id: 'components.staking.newToGovernanceTitle',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!New To Governance Title',
   },
   newToGovernanceText: {
-    id: 'components.staking.newToGovernanceText',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!New To Governance Text',
   },
   poolDetailsPoolHash: {
-    id: 'components.staking.poolDetails.poolHash',
+    id: 'components.stakingcenter.poolDetails.disclaimerTitle',
     defaultMessage: '!!!Pool Hash',
   },
   poolDetailsDelegate: {
-    id: 'components.staking.poolDetails.delegate',
+    id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Delegate',
   },
   poolDetailsPoolID: {
-    id: 'components.staking.poolDetails.poolID',
+    id: 'components.stakingcenter.delegationbyid.stakePoolId',
     defaultMessage: '!!!Pool ID',
   },
   poolDetailsInvalidPoolID: {
-    id: 'components.staking.poolDetails.invalidPoolID',
+    id: 'components.stakingcenter.noPoolDataDialog.title',
     defaultMessage: '!!!Invalid Pool ID',
   },
   poolDetailsNext: {
-    id: 'components.staking.poolDetails.next',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Next',
   },
   poolDetailsDisclaimerTitle: {
-    id: 'components.staking.poolDetails.disclaimerTitle',
+    id: 'components.stakingcenter.poolDetails.disclaimerTitle',
     defaultMessage: '!!!Disclaimer Title',
   },
   poolDetailsDisclaimerText: {
-    id: 'components.staking.poolDetails.disclaimerText',
+    id: 'components.stakingcenter.poolDetails.disclaimerText',
     defaultMessage: '!!!Disclaimer Text',
   },
 })

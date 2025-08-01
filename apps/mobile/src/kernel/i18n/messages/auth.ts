@@ -10,7 +10,7 @@ export const authMessages = defineMessages({
     defaultMessage: '!!!Too many attempts',
   },
   invalidPin: {
-    id: 'auth.error.invalidPin',
+    id: 'global.actions.dialogs.wrongPinError.title',
     defaultMessage: '!!!Invalid PIN',
   },
   authorize: {

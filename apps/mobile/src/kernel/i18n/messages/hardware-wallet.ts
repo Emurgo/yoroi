@@ -2,39 +2,39 @@ import {defineMessages} from 'react-intl'
 
 export const hardwareWalletMessages = defineMessages({
   title: {
-    id: 'components.hw.title',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Hardware Wallet',
   },
   usbExplanation: {
-    id: 'components.hw.usbExplanation',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!USB explanation',
   },
   usbButton: {
-    id: 'components.hw.usbButton',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!USB Button',
   },
   usbButtonNotSupported: {
-    id: 'components.hw.usbButtonNotSupported',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!USB button not supported',
   },
   usbButtonDisabled: {
-    id: 'components.hw.usbButtonDisabled',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!USB button disabled',
   },
   bluetoothExplanation: {
-    id: 'components.hw.bluetoothExplanation',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!Bluetooth explanation',
   },
   bluetoothButton: {
-    id: 'components.hw.bluetoothButton',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Bluetooth Button',
   },
   bluetoothError: {
-    id: 'components.hw.bluetoothError',
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
     defaultMessage: '!!!Bluetooth error',
   },
   beforeConfirm: {
-    id: 'components.hw.beforeConfirm',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Before confirm',
   },
 })

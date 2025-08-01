@@ -4,7 +4,7 @@ import {Text, TextInput, View} from 'react-native'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSwap} from '~/features/Swap/common/useSwap'
 
 const BORDER_SIZE = 1
 

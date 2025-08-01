@@ -2,71 +2,71 @@ import {defineMessages} from 'react-intl'
 
 export const manageNotificationsMessages = defineMessages({
   displayDuration: {
-    id: 'components.manageNotifications.displayDuration',
+    id: 'components.settings.manageNotificationDisplayDuration.displayDuration',
     defaultMessage: '!!!Display Duration',
   },
   inAppNotifications: {
-    id: 'components.manageNotifications.inAppNotifications',
+    id: 'components.settings.walletsettingscreen.inAppNotifications',
     defaultMessage: '!!!In App Notifications',
   },
   pushNotifications: {
-    id: 'components.manageNotifications.pushNotifications',
+    id: 'components.settings.walletsettingscreen.pushNotifications',
     defaultMessage: '!!!Push Notifications',
   },
   goToSettings: {
-    id: 'components.manageNotifications.goToSettings',
+    id: 'components.settings.walletsettingscreen.goToSettings',
     defaultMessage: '!!!Go to Settings',
   },
   enableNotificationsThroughSettings: {
-    id: 'components.manageNotifications.enableNotificationsThroughSettings',
+    id: 'components.settings.walletsettingscreen.enableNotificationsThroughSettings',
     defaultMessage: '!!!Enable Notifications Through Settings',
   },
   notifications: {
-    id: 'components.manageNotifications.notifications',
+    id: 'components.settings.walletsettingscreen.notifications',
     defaultMessage: '!!!Notifications',
   },
   description: {
-    id: 'components.manageNotifications.description',
+    id: 'components.settings.manageNotificationDisplayDuration.description',
     defaultMessage: '!!!Description',
   },
   apply: {
-    id: 'components.manageNotifications.apply',
+    id: 'components.settings.manageNotificationDisplayDuration.apply',
     defaultMessage: '!!!Apply',
   },
   manual: {
-    id: 'components.manageNotifications.manual',
+    id: 'components.settings.manageNotificationDisplayDuration.manual',
     defaultMessage: '!!!Manual',
   },
   seconds: {
-    id: 'components.manageNotifications.seconds',
+    id: 'components.settings.manageNotificationDisplayDuration.seconds',
     defaultMessage: '!!!Seconds',
   },
   twoSeconds: {
-    id: 'components.manageNotifications.twoSeconds',
+    id: 'components.settings.manageNotificationDisplayDuration.twoSeconds',
     defaultMessage: '!!!Two Seconds',
   },
   fourSeconds: {
-    id: 'components.manageNotifications.fourSeconds',
+    id: 'components.settings.manageNotificationDisplayDuration.fourSeconds',
     defaultMessage: '!!!Four Seconds',
   },
   sixSeconds: {
-    id: 'components.manageNotifications.sixSeconds',
+    id: 'components.settings.manageNotificationDisplayDuration.sixSeconds',
     defaultMessage: '!!!Six Seconds',
   },
   eightSeconds: {
-    id: 'components.manageNotifications.eightSeconds',
+    id: 'components.settings.manageNotificationDisplayDuration.eightSeconds',
     defaultMessage: '!!!Eight Seconds',
   },
   tenSeconds: {
-    id: 'components.manageNotifications.tenSeconds',
+    id: 'components.settings.manageNotificationDisplayDuration.tenSeconds',
     defaultMessage: '!!!Ten Seconds',
   },
   twelveSeconds: {
-    id: 'components.manageNotifications.twelveSeconds',
+    id: 'components.settings.manageNotificationDisplayDuration.twelveSeconds',
     defaultMessage: '!!!Twelve Seconds',
   },
   inputError: {
-    id: 'components.manageNotifications.inputError',
+    id: 'components.settings.manageNotificationDisplayDuration.inputError',
     defaultMessage: '!!!Input Error',
   },
 })

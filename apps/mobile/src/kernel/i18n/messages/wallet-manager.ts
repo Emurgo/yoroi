@@ -2,59 +2,59 @@ import {defineMessages} from 'react-intl'
 
 export const walletManagerMessages = defineMessages({
   title: {
-    id: 'components.walletmanager.title',
+    id: 'txReview.overview.wallet',
     defaultMessage: '!!!Wallet Manager',
   },
   addWallet: {
-    id: 'components.walletmanager.addWallet',
+    id: 'components.walletselection.walletselectionscreen.addWalletButton',
     defaultMessage: '!!!Add Wallet',
   },
   removeWallet: {
-    id: 'components.walletmanager.removeWallet',
+    id: 'components.settings.walletsettingscreen.removeWallet',
     defaultMessage: '!!!Remove Wallet',
   },
   walletName: {
-    id: 'components.walletmanager.walletName',
+    id: 'components.walletinit.walletform.walletNameInputLabel',
     defaultMessage: '!!!Wallet Name',
   },
   walletType: {
-    id: 'components.walletmanager.walletType',
+    id: 'components.settings.applicationsettingsscreen.walletType',
     defaultMessage: '!!!Wallet Type',
   },
   byronWallet: {
-    id: 'components.walletmanager.byronWallet',
+    id: 'txReview.overview.wallet',
     defaultMessage: '!!!Byron Wallet',
   },
   shelleyWallet: {
-    id: 'components.walletmanager.shelleyWallet',
+    id: 'txReview.overview.wallet',
     defaultMessage: '!!!Shelley Wallet',
   },
   unknownWalletType: {
-    id: 'components.walletmanager.unknownWalletType',
+    id: 'components.settings.walletsettingscreen.unknownWalletType',
     defaultMessage: '!!!Unknown Wallet Type',
   },
   network: {
-    id: 'components.walletmanager.network',
+    id: 'global.network',
     defaultMessage: '!!!Network',
   },
   mainnet: {
-    id: 'components.walletmanager.mainnet',
+    id: 'components.delegationsummary.warningbanner.message',
     defaultMessage: '!!!Mainnet',
   },
   testnet: {
-    id: 'components.walletmanager.testnet',
+    id: 'components.delegationsummary.failedwalletupgrademodal.explanation1',
     defaultMessage: '!!!Testnet',
   },
   unknownNetwork: {
-    id: 'components.walletmanager.unknownNetwork',
+    id: 'global.network',
     defaultMessage: '!!!Unknown Network',
   },
   addWalletButton: {
-    id: 'components.walletmanager.addWalletButton',
+    id: 'components.walletselection.walletselectionscreen.addWalletButton',
     defaultMessage: '!!!Add Wallet',
   },
   supportTicketLink: {
-    id: 'components.walletmanager.supportTicketLink',
+    id: 'components.settings.settingsscreen.title',
     defaultMessage: '!!!Support Ticket',
   },
 })

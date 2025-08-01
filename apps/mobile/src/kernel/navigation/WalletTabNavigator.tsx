@@ -7,8 +7,8 @@ import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
 import {SettingsScreenNavigator} from '~/features/Settings/SettingsScreenNavigator'
 import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {WalletTabRoutes} from './navigation'
 import {Icon} from '~/ui/Icon'
+import {WalletTabRoutes} from './navigation'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 
@@ -42,9 +42,12 @@ export const WalletTabNavigator = () => {
         component={TxHistoryNavigator}
         options={{
           title: strings.transactions.history.historyTitle,
-          tabBarIcon: ({color, size}) => (
-            <Icon.Direction size={size} color={color} />
-          ),
+          tabBarIcon: ({focused, color, size}) =>
+            focused ? (
+              <Icon.TabWalletActive size={size} color={color} />
+            ) : (
+              <Icon.TabWallet size={size} color={color} />
+            ),
         }}
       />
 
@@ -53,9 +56,12 @@ export const WalletTabNavigator = () => {
         component={PortfolioNavigator}
         options={{
           title: strings.portfolio.portfolio,
-          tabBarIcon: ({color, size}) => (
-            <Icon.Portfolio size={size} color={color} />
-          ),
+          tabBarIcon: ({focused, color, size}) =>
+            focused ? (
+              <Icon.TabPortfolioActive size={size} color={color} />
+            ) : (
+              <Icon.TabPortfolio size={size} color={color} />
+            ),
         }}
       />
 
@@ -64,9 +70,12 @@ export const WalletTabNavigator = () => {
         component={DiscoverNavigator}
         options={{
           title: strings.discover.discoverTitle,
-          tabBarIcon: ({color, size}) => (
-            <Icon.DApp size={size} color={color} />
-          ),
+          tabBarIcon: ({focused, color, size}) =>
+            focused ? (
+              <Icon.TabDiscoverActive size={size} color={color} />
+            ) : (
+              <Icon.TabDiscover size={size} color={color} />
+            ),
         }}
       />
 
@@ -75,11 +84,14 @@ export const WalletTabNavigator = () => {
         component={SettingsScreenNavigator}
         options={{
           title: strings.menu.menu,
-          tabBarIcon: ({color, size}) => (
-            <Icon.Settings size={size} color={color} />
-          ),
+          tabBarIcon: ({focused, color, size}) =>
+            focused ? (
+              <Icon.TabMenuActive size={size} color={color} />
+            ) : (
+              <Icon.TabMenu size={size} color={color} />
+            ),
         }}
       />
     </Tab.Navigator>
   )
-} 
+}

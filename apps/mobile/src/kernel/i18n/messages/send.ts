@@ -18,15 +18,15 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Fee not available',
   },
   amountLabel: {
-    id: 'components.send.sendscreen.amountLabel',
+    id: 'global.txLabels.amount',
     defaultMessage: '!!!Amount',
   },
   amountInputLabel: {
-    id: 'components.send.sendscreen.amountInputLabel',
+    id: 'global.txLabels.amount',
     defaultMessage: '!!!Amount',
   },
   amountInputError: {
-    id: 'components.send.sendscreen.amountInput.error',
+    id: 'global.error',
     defaultMessage: '!!!Amount input error',
   },
   amountInputErrorInvalidAmount: {
@@ -46,47 +46,47 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Amount too low',
   },
   amountInputErrorInsufficientBalance: {
-    id: 'components.send.sendscreen.amountInput.error.INSUFFICIENT_BALANCE',
+    id: 'swap.swapScreen.balance',
     defaultMessage: '!!!Insufficient balance',
   },
   amountInputErrorMinPrimaryBalanceForTokens: {
-    id: 'components.send.sendscreen.amountInput.error.MIN_PRIMARY_BALANCE_FOR_TOKENS',
+    id: 'global.ok',
     defaultMessage: '!!!Minimum primary balance for tokens',
   },
   memoLabel: {
-    id: 'components.send.sendscreen.memoLabel',
+    id: 'components.txhistory.txdetails.memo',
     defaultMessage: '!!!Memo',
   },
   memoInputLabel: {
-    id: 'components.send.sendscreen.memoInputLabel',
+    id: 'components.txhistory.txdetails.memo',
     defaultMessage: '!!!Memo',
   },
   memoInputError: {
-    id: 'components.send.sendscreen.memoInput.error',
+    id: 'global.error',
     defaultMessage: '!!!Memo input error',
   },
   memoInputErrorTooLong: {
-    id: 'components.send.sendscreen.memoInput.error.TOO_LONG',
+    id: 'components.txhistory.txdetails.memo',
     defaultMessage: '!!!Memo too long',
   },
   memoInputErrorInvalidCharacters: {
-    id: 'components.send.sendscreen.memoInput.error.INVALID_CHARACTERS',
+    id: 'components.txhistory.txdetails.memo',
     defaultMessage: '!!!Invalid characters in memo',
   },
   next: {
-    id: 'components.send.sendscreen.next',
+    id: 'global.next',
     defaultMessage: '!!!Next',
   },
   nfts: {
-    id: 'global.nfts',
+    id: 'portfolio.portfolioDashboardScreen.nfts',
     defaultMessage: '!!! NFTs',
   },
   noAssetsAddedYet: {
-    id: 'components.send.sendscreen.noAssetsAddedYet',
+    id: 'components.send.listamountstosendscreen.title',
     defaultMessage: '!!!No assets added yet',
   },
   noBalance: {
-    id: 'components.send.sendscreen.noBalance',
+    id: 'global.actions.dialogs.logout.noButton',
     defaultMessage: '!!!No balance',
   },
   ok: {
@@ -98,11 +98,11 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!please wait ...',
   },
   pools: {
-    id: 'global.pools',
+    id: 'swap.swapScreen.dex',
     defaultMessage: '!!! Dex',
   },
   sendButton: {
-    id: 'components.send.sendscreen.sendButton',
+    id: 'txReview.overview.sendLabel',
     defaultMessage: '!!!Send',
   },
   sendTitle: {
@@ -110,15 +110,15 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Send',
   },
   tokens: {
-    id: 'global.tokens',
+    id: 'txReview.walletBalanceTokens.title',
     defaultMessage: '!!! Tokens',
   },
   totalLabel: {
-    id: 'components.send.sendscreen.totalLabel',
+    id: 'swap.listOrders.total',
     defaultMessage: '!!!Total',
   },
   manyNameServersWarning: {
-    id: 'components.send.sendscreen.manyNameServersWarning',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Many name servers warning',
   },
   max: {
@@ -126,7 +126,7 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Max',
   },
   minPrimaryBalanceForTokens: {
-    id: 'components.send.sendscreen.minPrimaryBalanceForTokens',
+    id: 'global.ok',
     defaultMessage: '!!!Minimum primary balance for tokens',
   },
   addressInputLabel: {
@@ -134,11 +134,11 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Address',
   },
   addressReaderQrText: {
-    id: 'components.send.sendscreen.addressReaderQrText',
+    id: 'claim.code',
     defaultMessage: '!!!Scan QR code',
   },
   asset: {
-    id: 'components.send.sendscreen.asset',
+    id: 'discover.filterOptions.parent.nft',
     defaultMessage: '!!!Asset',
   },
   availableFundsBannerIsFetching: {
@@ -190,35 +190,35 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Pending outgoing transaction',
   },
   found: {
-    id: 'components.send.sendscreen.found',
+    id: 'components.send.assetselectorscreen.found',
     defaultMessage: '!!!Found',
   },
   helperAddressErrorInvalid: {
-    id: 'components.send.sendscreen.helperAddressErrorInvalid',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Invalid address',
   },
   helperAddressErrorWrongBlockchain: {
-    id: 'components.send.sendscreen.helperAddressErrorWrongBlockchain',
+    id: 'send.helper.addressError.wrongBlockchain',
     defaultMessage: '!!!Wrong blockchain',
   },
   helperAddressErrorWrongNetwork: {
-    id: 'components.send.sendscreen.helperAddressErrorWrongNetwork',
+    id: 'claim.apiError.invalidRequest',
     defaultMessage: '!!!Wrong network',
   },
   helperMemoErrorTooLong: {
-    id: 'components.send.sendscreen.helperMemoErrorTooLong',
+    id: 'components.txhistory.txdetails.memo',
     defaultMessage: '!!!Memo too long',
   },
   helperMemoInstructions: {
-    id: 'components.send.sendscreen.helperMemoInstructions',
+    id: 'components.txhistory.txdetails.memo',
     defaultMessage: '!!!Memo instructions',
   },
   helperResolverErrorDomainNotFound: {
-    id: 'components.send.sendscreen.helperResolverErrorDomainNotFound',
+    id: 'claim.domain',
     defaultMessage: '!!!Domain not found',
   },
   noAssets: {
-    id: 'components.send.sendscreen.noAssets',
+    id: 'components.send.assetselectorscreen.noAssets',
     defaultMessage: '!!!No assets',
   },
   resolvedAddress: {
@@ -238,7 +238,7 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Search tokens',
   },
   selectAssetTitle: {
-    id: 'components.send.sendscreen.selectAssetTitle',
+    id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select asset',
   },
   sendAllWarningAlert1: {
@@ -274,11 +274,11 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Transaction submitted',
   },
   unknownAsset: {
-    id: 'components.send.sendscreen.unknownAsset',
+    id: 'components.send.assetselectorscreen.unknownAsset',
     defaultMessage: '!!!Unknown asset',
   },
   youHave: {
-    id: 'components.send.sendscreen.youHave',
+    id: 'components.send.assetselectorscreen.youHave',
     defaultMessage: '!!!You have',
   },
   failedTxButton: {

@@ -50,35 +50,35 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Restore wallet',
   },
   connectHardwareWalletButtonCard: {
-    id: 'components.walletinit.walletinitmenu.connecthardwarewalletbutton.title',
+    id: 'components.walletinit.connectnanox.savenanoxscreen.title',
     defaultMessage: '!!!Connect hardware wallet',
   },
   aboutRecoveryPhraseCardTitle: {
-    id: 'components.walletinit.createwallet.aboutrecoveryphrasecard.title',
+    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.title',
     defaultMessage: '!!!About recovery phrase',
   },
   aboutRecoveryPhraseCardFirstItem: {
-    id: 'components.walletinit.createwallet.aboutrecoveryphrasecard.firstItem',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Write down the recovery phrase',
   },
   aboutRecoveryPhraseCardSecondItem: {
-    id: 'components.walletinit.createwallet.aboutrecoveryphrasecard.secondItem',
+    id: 'components.walletinit.recoveryPhrase.recoveryPhraseCard.secondItem',
     defaultMessage: '!!!Keep it safe',
   },
   aboutRecoveryPhraseCardThirdItem: {
-    id: 'components.walletinit.createwallet.aboutrecoveryphrasecard.thirdItem',
+    id: 'txReview.poolDetails.poolShare.label',
     defaultMessage: '!!!Never share it',
   },
   aboutRecoveryPhraseCardFourthItem: {
-    id: 'components.walletinit.createwallet.aboutrecoveryphrasecard.fourthItem',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Store it securely',
   },
   aboutRecoveryPhraseCardFifthItem: {
-    id: 'components.walletinit.createwallet.aboutrecoveryphrasecard.fifthItem',
+    id: 'txReview.overview.wallet',
     defaultMessage: '!!!Use it to restore your wallet',
   },
   recoveryPhraseTitle: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.title',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Recovery phrase',
   },
   stepRecoveryPhrase: {
@@ -86,23 +86,23 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Step 1 of 3',
   },
   hideRecoveryPhraseButton: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.hideRecoveryPhraseButton',
+    id: 'components.walletinit.recoveryPhrase.hideRecoveryPhraseButton',
     defaultMessage: '!!!Hide recovery phrase',
   },
   showRecoveryPhraseButton: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.showRecoveryPhraseButton',
+    id: 'components.walletinit.recoveryPhrase.showRecoveryPhraseButton',
     defaultMessage: '!!!Show recovery phrase',
   },
   recoveryPhraseModalTitle: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.recoveryPhraseModalTitle',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Recovery phrase',
   },
   recoveryPhraseCardTitle: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.recoveryPhraseCardTitle',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Recovery phrase',
   },
   recoveryPhraseCardFirstItem: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.recoveryPhraseCardFirstItem',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Write down the recovery phrase',
   },
   recoveryPhraseCardSecondItem: {
@@ -110,19 +110,19 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Keep it safe',
   },
   recoveryPhraseCardThirdItem: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.recoveryPhraseCardThirdItem',
+    id: 'txReview.poolDetails.poolShare.label',
     defaultMessage: '!!!Never share it',
   },
   recoveryPhraseCardFourthItem: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.recoveryPhraseCardFourthItem',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Store it securely',
   },
   recoveryPhraseCardFifthItem: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.recoveryPhraseCardFifthItem',
+    id: 'txReview.overview.wallet',
     defaultMessage: '!!!Use it to restore your wallet',
   },
   verifyRecoveryPhraseTitle: {
-    id: 'components.walletinit.createwallet.verifyrecoveryphrasescreen.title',
+    id: 'components.walletinit.verifyRecoveryPhrase.verifyRecoveryStepper.title',
     defaultMessage: '!!!Verify recovery phrase',
   },
   stepVerifyRecoveryPhrase: {
@@ -130,31 +130,31 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Step 2 of 3',
   },
   verifyRecoveryPhraseErrorMessage: {
-    id: 'components.walletinit.createwallet.verifyrecoveryphrasescreen.errorMessage',
+    id: 'components.walletinit.verifyRecoveryPhrase.errorMessage',
     defaultMessage: '!!!Incorrect word',
   },
   verifyRecoveryPhraseSuccessMessage: {
-    id: 'components.walletinit.createwallet.verifyrecoveryphrasescreen.successMessage',
+    id: 'components.delegationsummary.warningbanner.message2',
     defaultMessage: '!!!Correct',
   },
   walletDetailsModalTitle: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletDetailsModalTitle',
+    id: 'components.walletinit.walletDetails.stepWalletDetails',
     defaultMessage: '!!!Wallet details',
   },
   walletNameModalCardTitle: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletNameModalCardTitle',
+    id: 'components.walletinit.walletform.walletNameInputLabel',
     defaultMessage: '!!!Wallet name',
   },
   walletNameModalCardFirstItem: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletNameModalCardFirstItem',
+    id: 'txReview.overview.wallet',
     defaultMessage: '!!!Choose a name for your wallet',
   },
   walletNameModalCardSecondItem: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletNameModalCardSecondItem',
+    id: 'components.receive.receivescreen.usedAddress',
     defaultMessage: '!!!This name will be used to identify your wallet',
   },
   walletPasswordModalCardTitle: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletPasswordModalCardTitle',
+    id: 'txReview.overview.wallet',
     defaultMessage: '!!!Wallet password',
   },
   walletPasswordModalCardFirstItem: {
@@ -162,71 +162,71 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Choose a strong password',
   },
   walletPasswordModalCardSecondItem: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletPasswordModalCardSecondItem',
+    id: 'txReview.overview.wallet',
     defaultMessage: '!!!This password will protect your wallet',
   },
   walletChecksumModalCardTitle: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletChecksumModalCardTitle',
+    id: 'components.walletinit.walletDetails.walletChecksumModalCardTitle.title',
     defaultMessage: '!!!Wallet checksum',
   },
   walletChecksumModalCardFirstItem: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletChecksumModalCardFirstItem',
+    id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.first',
     defaultMessage: '!!!This is your wallet checksum',
   },
   walletChecksum: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletChecksum',
+    id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.walletchecksum',
     defaultMessage: '!!!Checksum',
   },
   walletChecksumModalCardSecondItem: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletChecksumModalCardSecondItem',
+    id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.second',
     defaultMessage: '!!!Use it to verify your wallet',
   },
   walletChecksumModalCardThirdItem: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.walletChecksumModalCardThirdItem',
+    id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.third',
     defaultMessage: '!!!Keep it safe',
   },
   stepWalletDetails: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.step',
+    id: 'components.walletinit.walletDetails.stepWalletDetails',
     defaultMessage: '!!!Step 3 of 3',
   },
   walletDetailsTitle: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.title',
+    id: 'components.walletinit.walletDetails.walletDetailsTitle',
     defaultMessage: '!!!Wallet details',
   },
   walletDetailsPasswordHelper: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.passwordHelper',
+    id: 'components.walletinit.walletDetails.walletDetailsPasswordHelper',
     defaultMessage: '!!!Password must be at least 10 characters',
   },
   walletDetailsNameInput: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.nameInput',
+    id: 'components.walletinit.walletDetails.walletDetailsNameInput',
     defaultMessage: '!!!Wallet name',
   },
   walletDetailsPasswordInput: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.passwordInput',
+    id: 'components.walletinit.walletDetails.walletDetailsPasswordInput',
     defaultMessage: '!!!Password',
   },
   walletDetailsConfirmPasswordInput: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.confirmPasswordInput',
+    id: 'components.walletinit.walletDetails.walletDetailsConfirmPasswordInput',
     defaultMessage: '!!!Confirm password',
   },
   invalidChecksum: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.invalidChecksum',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
     defaultMessage: '!!!Invalid checksum',
   },
   validChecksum: {
-    id: 'components.walletinit.createwallet.walletdetailsscreen.validChecksum',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.validchecksum',
     defaultMessage: '!!!Valid checksum',
   },
   stepRestoreWalletScreen: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.step',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.stepRestoreWalletScreen',
     defaultMessage: '!!!Step 1 of 2',
   },
   choose15WordsMnemonicTitle: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.choose15WordsMnemonicTitle',
+    id: 'components.walletinit.restorewallet.choose15WordsMnemonicTitle',
     defaultMessage: '!!!15 words',
   },
   choose24WordsMnemonicTitle: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.choose24WordsMnemonicTitle',
+    id: 'components.walletinit.restorewallet.choose24WordsMnemonicTitle',
     defaultMessage: '!!!24 words',
   },
   restoreWalletScreenTitle: {
@@ -254,67 +254,67 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Word not found',
   },
   hwModalTitle: {
-    id: 'components.walletinit.hardwarewallet.hwmodal.title',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Connect hardware wallet',
   },
   hwModalText: {
-    id: 'components.walletinit.hardwarewallet.hwmodal.text',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!Connect your hardware wallet to continue',
   },
   hwModalUsbButton: {
-    id: 'components.walletinit.hardwarewallet.hwmodal.usbButton',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!USB',
   },
   hwModalBtButton: {
-    id: 'components.walletinit.hardwarewallet.hwmodal.btButton',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Bluetooth',
   },
   hwModalIosWarning: {
-    id: 'components.walletinit.hardwarewallet.hwmodal.iosWarning',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!iOS users must use USB',
   },
   hwWalletDetailsTitle: {
-    id: 'components.walletinit.hardwarewallet.hwwalletdetailsscreen.title',
+    id: 'components.walletinit.connectnanox.savenanoxscreen.title',
     defaultMessage: '!!!Hardware wallet details',
   },
   hwExportKey: {
-    id: 'components.walletinit.hardwarewallet.hwwalletdetailsscreen.exportKey',
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
     defaultMessage: '!!!Export public key',
   },
   bluetoothError: {
-    id: 'components.walletinit.hardwarewallet.hwwalletdetailsscreen.bluetoothError',
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
     defaultMessage: '!!!Bluetooth error',
   },
   hwCheckIntroline: {
-    id: 'components.walletinit.hardwarewallet.hwcheckscreen.introline',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!Check your hardware wallet',
   },
   hwCheckTitle: {
-    id: 'components.walletinit.hardwarewallet.hwcheckscreen.title',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Hardware wallet check',
   },
   ledgerSupportLink: {
-    id: 'components.walletinit.hardwarewallet.hwcheckscreen.ledgerSupportLink',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.learnMore',
     defaultMessage: '!!!Ledger support',
   },
   addNewWalletTitle: {
-    id: 'components.walletinit.walletinitmenu.addNewWalletTitle',
+    id: 'components.walletinit.walletinitscreen.title',
     defaultMessage: '!!!Add new wallet',
   },
   createWalletTitle: {
-    id: 'components.walletinit.walletinitmenu.createWalletTitle',
+    id: 'components.walletinit.walletinitmenu.createwalletbutton.title',
     defaultMessage: '!!!Create wallet',
   },
   restoreWalletTitle: {
-    id: 'components.walletinit.walletinitmenu.restoreWalletTitle',
+    id: 'components.walletinit.walletinitmenu.restorewalletbutton.title',
     defaultMessage: '!!!Restore wallet',
   },
   importReadOnlyTitle: {
-    id: 'components.walletinit.walletinitmenu.importReadOnlyTitle',
+    id: 'components.send.sendscreen.feeNotAvailable',
     defaultMessage: '!!!Import read-only wallet',
   },
   saveReadOnlyWalletTitle: {
-    id: 'components.walletinit.walletinitmenu.saveReadOnlyWalletTitle',
+    id: 'components.send.sendscreen.feeNotAvailable',
     defaultMessage: '!!!Save read-only wallet',
   },
   mnemonicShowTitle: {
@@ -330,71 +330,71 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Wallet name',
   },
   save: {
-    id: 'components.walletinit.walletform.save',
+    id: 'components.walletinit.connectnanox.savenanoxscreen.save',
     defaultMessage: '!!!Save',
   },
   walletNameErrorTooLong: {
-    id: 'components.walletinit.walletform.walletNameErrorTooLong',
+    id: 'components.walletinit.walletform.walletNameInputLabel',
     defaultMessage: '!!!Wallet name is too long',
   },
   walletNameErrorMustBeFilled: {
-    id: 'components.walletinit.walletform.walletNameErrorMustBeFilled',
+    id: 'components.walletinit.walletform.walletNameInputLabel',
     defaultMessage: '!!!Wallet name must be filled',
   },
   defaultWalletName: {
-    id: 'components.walletinit.walletform.defaultWalletName',
+    id: 'components.walletinit.connectnanox.savenanoxscreen.ledgerWalletNameSuggestion',
     defaultMessage: '!!!My Wallet',
   },
   checksumLabel: {
-    id: 'components.walletinit.walletform.checksumLabel',
+    id: 'components.walletinit.walletDetails.walletChecksumModalCardTitle.title',
     defaultMessage: '!!!Checksum',
   },
   walletAddressLabel: {
-    id: 'components.walletinit.walletform.walletAddressLabel',
+    id: 'components.receive.addresscard.title',
     defaultMessage: '!!!Wallet address',
   },
   key: {
-    id: 'components.walletinit.walletform.key',
+    id: 'analytics.private',
     defaultMessage: '!!!Key',
   },
   derivationPath: {
-    id: 'components.walletinit.walletform.derivationPath',
+    id: 'components.receive.addressmodal.BIP32path',
     defaultMessage: '!!!Derivation path',
   },
   importReadOnlyWalletTitle: {
-    id: 'components.walletinit.importreadonlywallet.importreadonlywalletscreen.title',
+    id: 'components.walletinit.importreadonlywalletscreen.title',
     defaultMessage: '!!!Import read-only wallet',
   },
   importReadOnlyWalletDescription: {
-    id: 'components.walletinit.importreadonlywallet.importreadonlywalletscreen.description',
+    id: 'components.walletinit.importreadonlywalletscreen.paragraph',
     defaultMessage: '!!!Enter your wallet address',
   },
   importReadOnlyWalletAddress: {
-    id: 'components.walletinit.importreadonlywallet.importreadonlywalletscreen.address',
+    id: 'components.receive.addresscard.title',
     defaultMessage: '!!!Wallet address',
   },
   importReadOnlyWalletAddressPlaceholder: {
-    id: 'components.walletinit.importreadonlywallet.importreadonlywalletscreen.addressPlaceholder',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Enter wallet address',
   },
   importReadOnlyWalletImport: {
-    id: 'components.walletinit.importreadonlywallet.importreadonlywalletscreen.import',
+    id: 'components.settings.collateral.collateralInfoModalText',
     defaultMessage: '!!!Import',
   },
   connectWalletButtonCard: {
-    id: 'components.walletinit.walletinitmenu.connecthardwarewalletbutton.title',
+    id: 'components.walletinit.connectnanox.savenanoxscreen.title',
     defaultMessage: '!!!Connect hardware wallet',
   },
   cardanoMainnet: {
-    id: 'components.walletinit.walletinitmenu.cardanoMainnet',
+    id: 'components.walletinit.walletinitmenu.cardanoMainnetbutton.title',
     defaultMessage: '!!!Cardano Mainnet',
   },
   cardanoTestnet: {
-    id: 'components.walletinit.walletinitmenu.cardanoTestnet',
+    id: 'global.actions.dialogs.logout.noButton',
     defaultMessage: '!!!Cardano Testnet',
   },
   cardanoMainnetDescription: {
-    id: 'components.walletinit.walletinitmenu.cardanoMainnetDescription',
+    id: 'portfolio.portfolioTokensDetailScreen.transactions',
     defaultMessage: '!!!Mainnet for real transactions',
   },
   cardanoTestnetDescription: {
@@ -402,7 +402,7 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Testnet for testing',
   },
   aboutRecoveryPhraseTitle: {
-    id: 'components.walletinit.createwallet.aboutrecoveryphrasecard.title',
+    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.title',
     defaultMessage: '!!!About recovery phrase',
   },
   stepAboutRecoveryPhrase: {

@@ -126,11 +126,11 @@ export const scanMessages = defineMessages({
     defaultMessage: '!!!An unknown error occurred',
   },
   openAppSettings: {
-    id: 'scan.openAppSettings',
+    id: 'global.openAppSettings',
     defaultMessage: '!!!Open app settings',
   },
   continue: {
-    id: 'scan.continue',
+    id: 'global.continue',
     defaultMessage: '!!!Continue',
   },
   linksErrorUnsupportedVersionTitle: {

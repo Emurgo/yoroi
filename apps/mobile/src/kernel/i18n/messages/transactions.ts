@@ -2,95 +2,95 @@ import {defineMessages} from 'react-intl'
 
 export const transactionsMessages = defineMessages({
   title: {
-    id: 'components.transactions.title',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Transactions',
   },
   history: {
-    id: 'components.transactions.history',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!History',
   },
   details: {
-    id: 'components.transactions.details',
+    id: 'nft.detail.title',
     defaultMessage: '!!!Details',
   },
   sent: {
-    id: 'components.transactions.sent',
+    id: 'portfolio.portfolioTokensDetailScreen.sent',
     defaultMessage: '!!!Sent',
   },
   received: {
-    id: 'components.transactions.received',
+    id: 'portfolio.portfolioTokensDetailScreen.received',
     defaultMessage: '!!!Received',
   },
   pending: {
-    id: 'components.transactions.pending',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
     defaultMessage: '!!!Pending',
   },
   confirmed: {
-    id: 'components.transactions.confirmed',
+    id: 'swap.submittedTxScreen.text',
     defaultMessage: '!!!Confirmed',
   },
   failed: {
-    id: 'components.transactions.failed',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Failed',
   },
   amount: {
-    id: 'components.transactions.amount',
+    id: 'global.txLabels.amount',
     defaultMessage: '!!!Amount',
   },
   fee: {
-    id: 'components.transactions.fee',
+    id: 'txReview.fee',
     defaultMessage: '!!!Fee',
   },
   total: {
-    id: 'components.transactions.total',
+    id: 'swap.listOrders.total',
     defaultMessage: '!!!Total',
   },
   date: {
-    id: 'components.transactions.date',
+    id: 'components.governance.delegateVotingToDRepDeprecatedFormatNotice',
     defaultMessage: '!!!Date',
   },
   time: {
-    id: 'components.transactions.time',
+    id: 'components.catalyst.step2.description',
     defaultMessage: '!!!Time',
   },
   status: {
-    id: 'components.transactions.status',
+    id: 'claim.accepted.message',
     defaultMessage: '!!!Status',
   },
   txId: {
-    id: 'components.transactions.txId',
+    id: 'swap.listOrders.txId',
     defaultMessage: '!!!Transaction ID',
   },
   from: {
-    id: 'components.transactions.from',
+    id: 'swap.swapScreen.from',
     defaultMessage: '!!!From',
   },
   to: {
-    id: 'components.transactions.to',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!To',
   },
   memo: {
-    id: 'components.transactions.memo',
+    id: 'components.txhistory.txdetails.memo',
     defaultMessage: '!!!Memo',
   },
   block: {
-    id: 'components.transactions.block',
+    id: 'components.catalyst.confirmTx.passwordSignDescription',
     defaultMessage: '!!!Block',
   },
   epoch: {
-    id: 'components.transactions.epoch',
+    id: 'global.staking.epochLabel',
     defaultMessage: '!!!Epoch',
   },
   slot: {
-    id: 'components.transactions.slot',
+    id: 'components.stakingcenter.poolwarningmodal.multiBlock',
     defaultMessage: '!!!Slot',
   },
   confirmations: {
-    id: 'components.transactions.confirmations',
+    id: 'txReview.confirm',
     defaultMessage: '!!!Confirmations',
   },
   copyTxId: {
-    id: 'components.transactions.copyTxId',
+    id: 'swap.listOrders.txId',
     defaultMessage: '!!!Copy Transaction ID',
   },
   viewOnExplorer: {
@@ -98,7 +98,7 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!View on Explorer',
   },
   noTransactions: {
-    id: 'components.transactions.noTransactions',
+    id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No transactions',
   },
   loading: {
@@ -106,147 +106,147 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Loading...',
   },
   error: {
-    id: 'components.transactions.error',
+    id: 'global.error',
     defaultMessage: '!!!Error',
   },
   retry: {
-    id: 'components.transactions.retry',
+    id: 'components.send.sendscreen.errorBannerNetworkError',
     defaultMessage: '!!!Retry',
   },
   warningTitle: {
-    id: 'components.transactions.warningTitle',
+    id: 'components.txhistory.txhistory.warningbanner.title',
     defaultMessage: '!!!Warning Title',
   },
   message: {
-    id: 'components.transactions.message',
+    id: 'components.txhistory.txhistory.warningbanner.message',
     defaultMessage: '!!!Message',
   },
   unknownAssetName: {
-    id: 'components.transactions.unknownAssetName',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Unknown Asset Name',
   },
   walletAddress: {
-    id: 'components.transactions.walletAddress',
+    id: 'components.txhistory.txdetails.transactionId',
     defaultMessage: '!!!Wallet Address',
   },
   BIP32path: {
-    id: 'components.transactions.BIP32path',
+    id: 'components.receive.addressmodal.BIP32path',
     defaultMessage: '!!!BIP32 Path',
   },
   copyLabel: {
-    id: 'components.transactions.copyLabel',
+    id: 'components.receive.addressmodal.copyLabel',
     defaultMessage: '!!!Copy Label',
   },
   spending: {
-    id: 'components.transactions.spending',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Spending',
   },
   staking: {
-    id: 'components.transactions.staking',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Staking',
   },
   addessModalTitle: {
-    id: 'components.transactions.addessModalTitle',
+    id: 'components.receive.addressmodal.title',
     defaultMessage: '!!!Address Modal Title',
   },
   verifyLabel: {
-    id: 'components.transactions.verifyLabel',
+    id: 'components.receive.addressview.verifyAddressLabel',
     defaultMessage: '!!!Verify Label',
   },
   txDetailsFee: {
-    id: 'components.transactions.txDetailsFee',
+    id: 'components.txhistory.txdetails.fee',
     defaultMessage: '!!!Transaction Details Fee',
   },
   fromAddresses: {
-    id: 'components.transactions.fromAddresses',
+    id: 'components.txhistory.txdetails.fromAddresses',
     defaultMessage: '!!!From Addresses',
   },
   toAddresses: {
-    id: 'components.transactions.toAddresses',
+    id: 'components.txhistory.txdetails.toAddresses',
     defaultMessage: '!!!To Addresses',
   },
   transactionId: {
-    id: 'components.transactions.transactionId',
+    id: 'components.txhistory.txdetails.transactionId',
     defaultMessage: '!!!Transaction ID',
   },
   txAssuranceLevel: {
-    id: 'components.transactions.txAssuranceLevel',
+    id: 'components.txhistory.txdetails.txAssuranceLevel',
     defaultMessage: '!!!Transaction Assurance Level',
   },
   omittedCount: {
-    id: 'components.transactions.omittedCount',
+    id: 'nft.gallery.nftCount',
     defaultMessage: '!!!Omitted Count',
   },
   openInExplorer: {
-    id: 'components.transactions.openInExplorer',
+    id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Open In Explorer',
   },
   copiedLabel: {
-    id: 'components.transactions.copiedLabel',
+    id: 'components.txhistory.txdetails.transactionId',
     defaultMessage: '!!!Copied Label',
   },
   organizeWallet: {
-    id: 'components.transactions.organizeWallet',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Organize Wallet',
   },
   organizeWalletBanner: {
-    id: 'components.transactions.organizeWalletBanner',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Organize Wallet Banner',
   },
   organizeWalletDescription: {
-    id: 'components.transactions.organizeWalletDescription',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Organize Wallet Description',
   },
   organizeWalletWarning: {
-    id: 'components.transactions.organizeWalletWarning',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Organize Wallet Warning',
   },
   organizeWalletButton: {
-    id: 'components.transactions.organizeWalletButton',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Organize Wallet Button',
   },
   historyTitle: {
-    id: 'components.transactions.historyTitle',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!History Title',
   },
   txDetailsTitle: {
-    id: 'components.transactions.txDetailsTitle',
+    id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Transaction Details Title',
   },
   submittedTxTitle: {
-    id: 'components.transactions.submittedTxTitle',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Submitted Transaction Title',
   },
   submittedTxText: {
-    id: 'components.transactions.submittedTxText',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Submitted Transaction Text',
   },
   submittedTxButton: {
-    id: 'components.transactions.submittedTxButton',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Submitted Transaction Button',
   },
   txTypeMessagesSENT: {
-    id: 'components.transactions.txTypeMessages.SENT',
+    id: 'components.txhistory.txdetails.txTypeSent',
     defaultMessage: '!!!Sent',
   },
   txTypeMessagesRECEIVED: {
-    id: 'components.transactions.txTypeMessages.RECEIVED',
+    id: 'components.txhistory.txdetails.txTypeReceived',
     defaultMessage: '!!!Received',
   },
   txTypeMessagesSELF: {
-    id: 'components.transactions.txTypeMessages.SELF',
+    id: 'components.txhistory.txdetails.txTypeSelf',
     defaultMessage: '!!!Self',
   },
   txTypeMessagesMULTI: {
-    id: 'components.transactions.txTypeMessages.MULTI',
+    id: 'components.txhistory.txdetails.txTypeMulti',
     defaultMessage: '!!!Multi',
   },
   directionMessagesSENT: {
-    id: 'components.transactions.directionMessages.SENT',
+    id: 'portfolio.portfolioTokensDetailScreen.sent',
     defaultMessage: '!!!Sent',
   },
   directionMessagesRECEIVED: {
-    id: 'components.transactions.directionMessages.RECEIVED',
+    id: 'portfolio.portfolioTokensDetailScreen.received',
     defaultMessage: '!!!Received',
   },
   directionMessagesSELF: {
@@ -254,19 +254,19 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Self',
   },
   directionMessagesMULTI: {
-    id: 'components.transactions.directionMessages.MULTI',
+    id: 'components.organizeWallet.description',
     defaultMessage: '!!!Multi',
   },
   addressPrefixReceive: {
-    id: 'components.transactions.addressPrefixReceive',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Receive Address {idx}',
   },
   addressPrefixChange: {
-    id: 'components.transactions.addressPrefixChange',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Change Address {idx}',
   },
   addressPrefixNotMine: {
-    id: 'components.transactions.addressPrefixNotMine',
+    id: 'components.txhistory.txdetails.addressPrefixNotMine',
     defaultMessage: '!!!External Address',
   },
 })

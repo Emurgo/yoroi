@@ -4,7 +4,7 @@ import {Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
-import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSwap} from '~/features/Swap/common/useSwap'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useIsKeyboardOpen} from '~/kernel/keyboard/useIsKeyboardOpen'
 import {AmountCard} from '~/ui/AmountCard/AmountCard'

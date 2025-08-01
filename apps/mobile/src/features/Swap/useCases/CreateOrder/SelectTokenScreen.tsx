@@ -13,7 +13,7 @@ import {getTokenIdParts} from '~/features/Portfolio/common/helpers/get-token-id-
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/common/PortfolioTokenActivityProvider'
 import {filterBySearch} from '~/features/Swap/common/filterBySearch'
-import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSwapConfig} from '~/features/Swap/common/useSwapConfig'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'

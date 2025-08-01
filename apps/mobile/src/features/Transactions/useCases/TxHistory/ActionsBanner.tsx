@@ -122,7 +122,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
             // disabled && {color: p.text_gray_low},
           ]}
         >
-          {strings.receiveLabel}
+          {strings.transactions.receiveLabel}
         </Text>
       </View>
 
@@ -145,7 +145,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
                 // disabled && {color: p.text_gray_low},
               ]}
             >
-              {strings.sendLabel}
+              {strings.transactions.sendLabel}
             </Text>
           </View>
 
@@ -166,7 +166,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
                 // disabled && {color: p.text_gray_low},
               ]}
             >
-              {strings.swapLabel}
+              {strings.transactions.swapLabel}
             </Text>
           </View>
 
@@ -187,7 +187,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
                 // disabled && {color: p.text_gray_low},
               ]}
             >
-              {strings.exchange}
+              {strings.transactions.exchange}
             </Text>
           </View>
         </>

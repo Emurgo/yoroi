@@ -2,315 +2,315 @@ import {defineMessages} from 'react-intl'
 
 export const portfolioMessages = defineMessages({
   portfolio: {
-    id: 'components.portfolio.portfolio',
+    id: 'global.portfolio',
     defaultMessage: '!!!Portfolio',
   },
   totalWalletValue: {
-    id: 'components.portfolio.totalWalletValue',
+    id: 'portfolio.portfolioDashboardScreen.totalWalletValue',
     defaultMessage: '!!!Total Wallet Value',
   },
   buyADATitle: {
-    id: 'components.portfolio.buyADATitle',
+    id: 'global.buy',
     defaultMessage: '!!!Buy ADA',
   },
   buyADADescription: {
-    id: 'components.portfolio.buyADADescription',
+    id: 'global.buy',
     defaultMessage: '!!!Buy ADA description',
   },
   buyCrypto: {
-    id: 'components.portfolio.buyCrypto',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Buy Crypto',
   },
   tradeTokens: {
-    id: 'components.portfolio.tradeTokens',
+    id: 'portfolio.portfolioDashboardScreen.tradeTokens',
     defaultMessage: '!!!Trade Tokens',
   },
   swap: {
-    id: 'components.portfolio.swap',
+    id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
   tokenList: {
-    id: 'components.portfolio.tokenList',
+    id: 'portfolio.portfolioTokensListScreen.tokenList',
     defaultMessage: '!!!Token List',
   },
   walletToken: {
-    id: 'components.portfolio.walletToken',
+    id: 'portfolio.portfolioTokensListScreen.walletToken',
     defaultMessage: '!!!Wallet Token',
   },
   dappsToken: {
-    id: 'components.portfolio.dappsToken',
+    id: 'portfolio.portfolioTokensListScreen.dappsToken',
     defaultMessage: '!!!dApps Token',
   },
   nfts: {
-    id: 'global.nfts',
+    id: 'portfolio.portfolioDashboardScreen.nfts',
     defaultMessage: '!!! NFTs',
   },
   tokensAvailable: {
-    id: 'components.portfolio.tokensAvailable',
+    id: 'global.ok',
     defaultMessage: '!!!{qty} tokens available',
   },
   countLiquidityPoolsAvailable: {
-    id: 'components.portfolio.countLiquidityPoolsAvailable',
+    id: 'global.available',
     defaultMessage: '!!!{qty} liquidity pools available',
   },
   countOpenOrders: {
-    id: 'components.portfolio.countOpenOrders',
+    id: 'swap.listOrders.open',
     defaultMessage: '!!!{qty} open orders',
   },
   tokenPriceChangeTooltip: {
-    id: 'components.portfolio.tokenPriceChangeTooltip',
-    defaultMessage: '!!!Price change tooltip',
+    id: 'portfolio.portfolioTokensDetailScreen.tokenPriceChangeTooltip',
+    defaultMessage: '!!!Token price change \nin {timeInterval}',
   },
   searchTokens: {
-    id: 'components.portfolio.searchTokens',
+    id: 'portfolio.portfolioTokensListScreen.searchTokens',
     defaultMessage: '!!!Search tokens',
   },
   noTokensFound: {
-    id: 'components.portfolio.noTokensFound',
+    id: 'portfolio.portfolioTokensListScreen.noTokensFound',
     defaultMessage: '!!!No tokens found',
   },
   totalDAppValue: {
-    id: 'components.portfolio.totalDAppValue',
+    id: 'swap.listOrders.total',
     defaultMessage: '!!!Total dApp Value',
   },
   liquidityPool: {
-    id: 'components.portfolio.liquidityPool',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Liquidity Pool',
   },
   openOrders: {
-    id: 'components.portfolio.openOrders',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Open Orders',
   },
   lendAndBorrow: {
-    id: 'components.portfolio.lendAndBorrow',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Lend and Borrow',
   },
   tokenDetail: {
-    id: 'components.portfolio.tokenDetail',
+    id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Token Detail',
   },
   availableSoon: {
-    id: 'components.portfolio.availableSoon',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!Available Soon',
   },
   noDataFound: {
-    id: 'components.portfolio.noDataFound',
+    id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No data found',
   },
   value: {
-    id: 'components.portfolio.value',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Value',
   },
   dex: {
-    id: 'components.portfolio.dex',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!DEX',
   },
   lp: {
-    id: 'components.portfolio.lp',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!LP',
   },
   total: {
-    id: 'components.portfolio.total',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Total',
   },
   assetPrice: {
-    id: 'components.portfolio.assetPrice',
+    id: 'components.txhistory.txdetails.fee',
     defaultMessage: '!!!Asset Price',
   },
   assetAmount: {
-    id: 'components.portfolio.assetAmount',
+    id: 'components.txhistory.txdetails.fee',
     defaultMessage: '!!!Asset Amount',
   },
   txId: {
-    id: 'components.portfolio.txId',
+    id: 'components.txhistory.txdetails.transactionId',
     defaultMessage: '!!!Transaction ID',
   },
   performance: {
-    id: 'components.portfolio.performance',
+    id: 'components.delegationsummary.userSummary.totalRewards',
     defaultMessage: '!!!Performance',
   },
   overview: {
-    id: 'components.portfolio.overview',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!Overview',
   },
   transactions: {
-    id: 'components.portfolio.transactions',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Transactions',
   },
   _1_week: {
-    id: 'components.portfolio._1_week',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!1 Week',
   },
   _24_hours: {
-    id: 'components.portfolio._24_hours',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!24 Hours',
   },
   _1_month: {
-    id: 'components.portfolio._1_month',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!1 Month',
   },
   _6_months: {
-    id: 'components.portfolio._6_months',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!6 Months',
   },
   _1_year: {
-    id: 'components.portfolio._1_year',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!1 Year',
   },
   all_time: {
-    id: 'components.portfolio.all_time',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!All Time',
   },
   netInvested: {
-    id: 'components.portfolio.netInvested',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Net Invested',
   },
   bought: {
-    id: 'components.portfolio.bought',
+    id: 'components.txhistory.txhistorylistitem.transactionTypeReceived',
     defaultMessage: '!!!Bought',
   },
   received: {
-    id: 'components.portfolio.received',
+    id: 'components.txhistory.txhistorylistitem.transactionTypeReceived',
     defaultMessage: '!!!Received',
   },
   sent: {
-    id: 'components.portfolio.sent',
+    id: 'components.txhistory.txhistorylistitem.transactionTypeSent',
     defaultMessage: '!!!Sent',
   },
   send: {
-    id: 'components.portfolio.send',
+    id: 'components.txhistory.txnavigationbuttons.sendButton',
     defaultMessage: '!!!Send',
   },
   sold: {
-    id: 'components.portfolio.sold',
+    id: 'components.txhistory.txhistorylistitem.transactionTypeSent',
     defaultMessage: '!!!Sold',
   },
   failed: {
-    id: 'components.portfolio.failed',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelFailed',
     defaultMessage: '!!!Failed',
   },
   stakeDelegated: {
-    id: 'components.portfolio.stakeDelegated',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.title',
     defaultMessage: '!!!Stake Delegated',
   },
   stakingReward: {
-    id: 'components.portfolio.stakingReward',
+    id: 'components.delegationsummary.userSummary.totalRewards',
     defaultMessage: '!!!Staking Reward',
   },
   unknown: {
-    id: 'components.portfolio.unknown',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
     defaultMessage: '!!!Unknown',
   },
   assets: {
-    id: 'components.portfolio.assets',
+    id: 'components.delegationsummary.userSummary.totalRewards',
     defaultMessage: '!!!Assets',
   },
   marketData: {
-    id: 'components.portfolio.marketData',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!Market Data',
   },
   tokenPriceChange: {
-    id: 'components.portfolio.tokenPriceChange',
+    id: 'components.delegationsummary.userSummary.totalRewards',
     defaultMessage: '!!!Token Price Change',
   },
   tokenPrice: {
-    id: 'components.portfolio.tokenPrice',
+    id: 'components.txhistory.txdetails.fee',
     defaultMessage: '!!!Token Price',
   },
   marketCap: {
-    id: 'components.portfolio.marketCap',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Market Cap',
   },
   _24hVolume: {
-    id: 'components.portfolio._24hVolume',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!24h Volume',
   },
   rank: {
-    id: 'components.portfolio.rank',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!Rank',
   },
   circulating: {
-    id: 'components.portfolio.circulating',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Circulating',
   },
   totalSupply: {
-    id: 'components.portfolio.totalSupply',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Total Supply',
   },
   maxSupply: {
-    id: 'components.portfolio.maxSupply',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Max Supply',
   },
   allTimeHigh: {
-    id: 'components.portfolio.allTimeHigh',
+    id: 'components.delegationsummary.userSummary.totalRewards',
     defaultMessage: '!!!All Time High',
   },
   allTimeLow: {
-    id: 'components.portfolio.allTimeLow',
+    id: 'components.delegationsummary.userSummary.totalRewards',
     defaultMessage: '!!!All Time Low',
   },
   info: {
-    id: 'components.portfolio.info',
+    id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Info',
   },
   website: {
-    id: 'components.portfolio.website',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
     defaultMessage: '!!!Website',
   },
   policyID: {
-    id: 'components.portfolio.policyID',
+    id: 'components.txhistory.txdetails.transactionId',
     defaultMessage: '!!!Policy ID',
   },
   fingerprint: {
-    id: 'components.portfolio.fingerprint',
+    id: 'components.txhistory.txdetails.transactionId',
     defaultMessage: '!!!Fingerprint',
   },
   news: {
-    id: 'components.portfolio.news',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!News',
   },
   detailsOn: {
-    id: 'components.portfolio.detailsOn',
+    id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Details on',
   },
   totalPortfolioValue: {
-    id: 'components.portfolio.totalPortfolioValue',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Total Portfolio Value',
   },
   totalPortfolioValueTooltip: {
-    id: 'components.portfolio.totalPortfolioValueTooltip',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!Total portfolio value tooltip',
   },
   totalWalletValueTooltip: {
-    id: 'components.portfolio.totalWalletValueTooltip',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!Total wallet value tooltip',
   },
   totalDAppsValueTooltip: {
-    id: 'components.portfolio.totalDAppsValueTooltip',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!Total dApps value tooltip',
   },
   portfolioSwapTokensTitle: {
-    id: 'components.portfolio.portfolioSwapTokensTitle',
+    id: 'components.txhistory.txnavigationbuttons.sendButton',
     defaultMessage: '!!!Portfolio Swap Tokens Title',
   },
   portfolioSwapTokensDescription: {
-    id: 'components.portfolio.portfolioSwapTokensDescription',
+    id: 'global.ok',
     defaultMessage: '!!!Portfolio swap tokens description',
   },
   startSwapping: {
-    id: 'components.portfolio.startSwapping',
+    id: 'portfolio.portfolioDashboardScreen.startSwapping',
     defaultMessage: '!!!Start Swapping',
   },
   titleMediaDetails: {
-    id: 'components.portfolio.titleMediaDetails',
+    id: 'nft.detail.title',
     defaultMessage: '!!!Title Media Details',
   },
   title: {
-    id: 'components.portfolio.title',
+    id: 'txReview.walletBalanceNFTs.title',
     defaultMessage: '!!!Title',
   },
   search: {
-    id: 'components.portfolio.search',
+    id: 'nft.navigation.search',
     defaultMessage: '!!!Search',
   },
 })

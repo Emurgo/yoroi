@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
-import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSwap} from '~/features/Swap/common/useSwap'
 import {useNavigateTo} from '~/features/Transactions/common/navigation'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'

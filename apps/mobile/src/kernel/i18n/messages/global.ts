@@ -2,6 +2,7 @@ import {freeze} from 'immer'
 import {MessageDescriptor, defineMessages} from 'react-intl'
 
 import {ThemeName} from '@yoroi/theme'
+import {supportedCurrencies} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
 export const confirmationMessages = freeze(
   {
@@ -634,7 +635,7 @@ export const actionMessages = freeze(
 )
 
 export const currencyNames: Readonly<
-  Record<keyof typeof supportedCurrencies, MessageDescriptor>
+  Record<(typeof supportedCurrencies)[number], MessageDescriptor>
 > = freeze(
   defineMessages({
     ADA: {
@@ -884,7 +885,7 @@ export default freeze(
       defaultMessage: '!!!Cancel',
     },
     walletSelectionScreenHeader: {
-      id: 'global.walletSelectionScreenHeader',
+      id: 'components.walletselection.walletselectionscreen.header',
       defaultMessage: '!!!Select Wallet',
     },
     currentVersion: {
@@ -916,11 +917,11 @@ export default freeze(
       defaultMessage: '!!!Proceed',
     },
     today: {
-      id: 'global.today',
+      id: 'utils.format.today',
       defaultMessage: '!!!Today',
     },
     yesterday: {
-      id: 'global.yesterday',
+      id: 'utils.format.yesterday',
       defaultMessage: '!!!Yesterday',
     },
   }),

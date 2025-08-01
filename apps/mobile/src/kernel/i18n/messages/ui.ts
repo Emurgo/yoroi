@@ -2,63 +2,63 @@ import {defineMessages} from 'react-intl'
 
 export const uiMessages = defineMessages({
   loading: {
-    id: 'components.ui.loading',
+    id: 'components.common.osloginscreen.button.title',
     defaultMessage: '!!!Loading...',
   },
   error: {
-    id: 'components.ui.error',
+    id: 'components.common.errormodal.showError',
     defaultMessage: '!!!Error',
   },
   success: {
-    id: 'components.ui.success',
+    id: 'components.common.errormodal.hideError',
     defaultMessage: '!!!Success',
   },
   warning: {
-    id: 'components.ui.warning',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Warning',
   },
   info: {
-    id: 'components.ui.info',
+    id: 'portfolio.portfolioTokensDetailScreen.info',
     defaultMessage: '!!!Info',
   },
   retry: {
-    id: 'components.ui.retry',
+    id: 'components.send.sendscreen.errorBannerNetworkError',
     defaultMessage: '!!!Retry',
   },
   cancel: {
-    id: 'components.ui.cancel',
+    id: 'components.common.errormodal.hideError',
     defaultMessage: '!!!Cancel',
   },
   confirm: {
-    id: 'components.ui.confirm',
+    id: 'txReview.confirm',
     defaultMessage: '!!!Confirm',
   },
   back: {
-    id: 'components.ui.back',
+    id: 'swap.swapScreen.limitPriceWarningBack',
     defaultMessage: '!!!Back',
   },
   next: {
-    id: 'components.ui.next',
+    id: 'global.next',
     defaultMessage: '!!!Next',
   },
   done: {
-    id: 'components.ui.done',
+    id: 'discover.discoverList.done',
     defaultMessage: '!!!Done',
   },
   close: {
-    id: 'components.ui.close',
+    id: 'swap.submittedTxScreen.button',
     defaultMessage: '!!!Close',
   },
   open: {
-    id: 'components.ui.open',
+    id: 'components.walletinit.importreadonlywalletscreen.line1',
     defaultMessage: '!!!Open',
   },
   save: {
-    id: 'components.ui.save',
+    id: 'components.walletinit.connectnanox.savenanoxscreen.save',
     defaultMessage: '!!!Save',
   },
   delete: {
-    id: 'components.ui.delete',
+    id: 'components.settings.removewalletscreen.descriptionParagraph1',
     defaultMessage: '!!!Delete',
   },
   edit: {
@@ -66,15 +66,15 @@ export const uiMessages = defineMessages({
     defaultMessage: '!!!Edit',
   },
   add: {
-    id: 'components.ui.add',
+    id: 'analytics.noip',
     defaultMessage: '!!!Add',
   },
   remove: {
-    id: 'components.ui.remove',
+    id: 'components.settings.collateral.removeCollateral',
     defaultMessage: '!!!Remove',
   },
   search: {
-    id: 'components.ui.search',
+    id: 'nft.navigation.search',
     defaultMessage: '!!!Search',
   },
   filter: {
@@ -86,151 +86,151 @@ export const uiMessages = defineMessages({
     defaultMessage: '!!!Sort',
   },
   refresh: {
-    id: 'components.ui.refresh',
+    id: 'components.send.confirmscreen.collateralTxPending',
     defaultMessage: '!!!Refresh',
   },
   sync: {
-    id: 'components.ui.sync',
+    id: 'global.actions.dialogs.resync.title',
     defaultMessage: '!!!Sync',
   },
   settings: {
-    id: 'components.ui.settings',
+    id: 'menu.settings',
     defaultMessage: '!!!Settings',
   },
   help: {
-    id: 'components.ui.help',
+    id: 'analytics.description',
     defaultMessage: '!!!Help',
   },
   about: {
-    id: 'components.ui.about',
+    id: 'components.settings.walletsettingscreen.about',
     defaultMessage: '!!!About',
   },
   version: {
-    id: 'components.ui.version',
+    id: 'components.settings.applicationsettingsscreen.version',
     defaultMessage: '!!!Version',
   },
   build: {
-    id: 'components.ui.build',
+    id: 'components.stakingcenter.delegationTxBuildError',
     defaultMessage: '!!!Build',
   },
   date: {
-    id: 'components.ui.date',
+    id: 'components.governance.delegateVotingToDRepDeprecatedFormatNotice',
     defaultMessage: '!!!Date',
   },
   time: {
-    id: 'components.ui.time',
+    id: 'components.catalyst.step2.description',
     defaultMessage: '!!!Time',
   },
   amount: {
-    id: 'components.ui.amount',
+    id: 'global.txLabels.amount',
     defaultMessage: '!!!Amount',
   },
   balance: {
-    id: 'components.ui.balance',
+    id: 'swap.swapScreen.balance',
     defaultMessage: '!!!Balance',
   },
   address: {
-    id: 'components.ui.address',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Address',
   },
   transaction: {
-    id: 'components.ui.transaction',
+    id: 'claim.done.message',
     defaultMessage: '!!!Transaction',
   },
   fee: {
-    id: 'components.ui.fee',
+    id: 'txReview.fee',
     defaultMessage: '!!!Fee',
   },
   total: {
-    id: 'components.ui.total',
+    id: 'swap.listOrders.total',
     defaultMessage: '!!!Total',
   },
   status: {
-    id: 'components.ui.status',
+    id: 'claim.accepted.message',
     defaultMessage: '!!!Status',
   },
   pending: {
-    id: 'components.ui.pending',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
     defaultMessage: '!!!Pending',
   },
   confirmed: {
-    id: 'components.ui.confirmed',
+    id: 'swap.submittedTxScreen.text',
     defaultMessage: '!!!Confirmed',
   },
   failed: {
-    id: 'components.ui.failed',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Failed',
   },
   sent: {
-    id: 'components.ui.sent',
+    id: 'portfolio.portfolioTokensDetailScreen.sent',
     defaultMessage: '!!!Sent',
   },
   received: {
-    id: 'components.ui.received',
+    id: 'portfolio.portfolioTokensDetailScreen.received',
     defaultMessage: '!!!Received',
   },
   yoroiLogo: {
-    id: 'components.ui.yoroiLogo',
+    id: 'components.walletinit.walletinitmenu.logo.title',
     defaultMessage: '!!!Yoroi Logo',
   },
   tryAgain: {
-    id: 'components.ui.tryAgain',
+    id: 'swap.failedTxScreen.button',
     defaultMessage: '!!!Try Again',
   },
   addToken: {
-    id: 'components.ui.addToken',
+    id: 'global.ok',
     defaultMessage: '!!!Add Token',
   },
   pairedBalanceError: {
-    id: 'components.ui.pairedBalanceError',
+    id: 'global.error',
     defaultMessage: '!!!Paired balance error for {currency}',
   },
   contributors: {
-    id: 'components.ui.contributors',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Contributors',
   },
   header: {
-    id: 'components.ui.header',
+    id: 'components.walletselection.walletselectionscreen.header',
     defaultMessage: '!!!Header',
   },
   description: {
-    id: 'components.ui.description',
+    id: 'txReview.tokenDetails.overViewTab.description.label',
     defaultMessage: '!!!Description',
   },
   anonymous: {
-    id: 'components.ui.anonymous',
+    id: 'analytics.anonymous',
     defaultMessage: '!!!Anonymous',
   },
   optout: {
-    id: 'components.ui.optout',
+    id: 'analytics.optout',
     defaultMessage: '!!!Opt out',
   },
   private: {
-    id: 'components.ui.private',
+    id: 'analytics.private',
     defaultMessage: '!!!Private',
   },
   noip: {
-    id: 'components.ui.noip',
+    id: 'global.actions.dialogs.logout.noButton',
     defaultMessage: '!!!No IP',
   },
   nosell: {
-    id: 'components.ui.nosell',
+    id: 'global.actions.dialogs.logout.noButton',
     defaultMessage: '!!!No sell',
   },
   more: {
-    id: 'components.ui.more',
+    id: 'analytics.more',
     defaultMessage: '!!!More',
   },
   skip: {
-    id: 'components.ui.skip',
+    id: 'notifications.skip',
     defaultMessage: '!!!Skip',
   },
   accept: {
-    id: 'components.ui.accept',
+    id: 'components.initialization.acepttermsofservicescreen.continueButton',
     defaultMessage: '!!!Accept',
   },
   toggle: {
-    id: 'components.ui.toggle',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Toggle',
   },
 })

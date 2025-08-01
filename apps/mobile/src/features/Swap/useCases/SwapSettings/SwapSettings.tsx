@@ -5,7 +5,7 @@ import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSwap} from '~/features/Swap/common/useSwap'
 import {useLanguage} from '~/kernel/i18n'
 import {NumberLocale} from '~/kernel/i18n/languages'
 import {useStrings} from '~/kernel/i18n/useStrings'

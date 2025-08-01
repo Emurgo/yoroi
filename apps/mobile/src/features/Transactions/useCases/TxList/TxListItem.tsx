@@ -82,7 +82,7 @@ export const TxListItem = ({transaction}: Props) => {
           ]}
           testID="transactionDirection"
         >
-          {strings.direction(transaction.direction as any)}
+          {strings.transactions.direction(transaction.direction as any)}
         </Text>
 
         <Text
@@ -110,7 +110,7 @@ export const TxListItem = ({transaction}: Props) => {
           ) : (
             <Text
               style={[{color: p.gray_600}, a.body_3_sm_regular]}
-            >{`${assetLength} ${strings.assets(assetLength)}`}</Text>
+            >{`${assetLength} ${strings.transactions.assets(assetLength)}`}</Text>
           )}
         </Row>
       </Right>

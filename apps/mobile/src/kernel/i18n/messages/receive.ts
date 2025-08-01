@@ -14,103 +14,103 @@ export const receiveMessages = defineMessages({
     defaultMessage: '!!!Address',
   },
   shareLabel: {
-    id: 'components.receive.shareLabel',
+    id: 'txReview.poolDetails.poolShare.label',
     defaultMessage: '!!!Share',
   },
   walletAddress: {
-    id: 'components.receive.walletAddress',
+    id: 'components.receive.addresscard.title',
     defaultMessage: '!!!Wallet address',
   },
   spendingKeyHash: {
-    id: 'components.receive.spendingKeyHash',
+    id: 'components.receive.addresscard.spendingKeyHash',
     defaultMessage: '!!!Spending key hash',
   },
   stakingKeyHash: {
-    id: 'components.receive.stakingKeyHash',
+    id: 'components.receive.addresscard.stakingKeyHash',
     defaultMessage: '!!!Staking key hash',
   },
   address: {
-    id: 'components.receive.address',
+    id: 'components.receive.receivescreen.title',
     defaultMessage: '!!!Address',
   },
   specificAmount: {
-    id: 'components.receive.specificAmount',
+    id: 'components.receive.receivescreen.specificAmount',
     defaultMessage: '!!!Specific amount',
   },
   requestSpecificAmountButton: {
-    id: 'components.receive.requestSpecificAmountButton',
+    id: 'components.receive.receivescreen.specificAmount',
     defaultMessage: '!!!Request specific amount',
   },
   copyAddressButton: {
-    id: 'components.receive.copyAddressButton',
+    id: 'components.receive.receivescreen.copyButton',
     defaultMessage: '!!!Copy address',
   },
   specificAmountDescription: {
-    id: 'components.receive.specificAmountDescription',
+    id: 'global.txLabels.amount',
     defaultMessage: '!!!Specific amount description',
   },
   ADALabel: {
-    id: 'components.receive.ADALabel',
+    id: 'components.delegationsummary.notDelegatedInfo.firstLine',
     defaultMessage: '!!!ADA',
   },
   generateLink: {
-    id: 'components.receive.generateLink',
+    id: 'components.receive.receivescreen.generateLink',
     defaultMessage: '!!!Generate link',
   },
   multipleAddress: {
-    id: 'components.receive.multipleAddress',
+    id: 'components.receive.receivescreen.multipleAddress',
     defaultMessage: '!!!Multiple address',
   },
   copyLinkBtn: {
-    id: 'components.receive.copyLinkBtn',
+    id: 'components.receive.receivescreen.copyLinkBtn',
     defaultMessage: '!!!Copy link',
   },
   copyLinkMsg: {
-    id: 'components.receive.copyLinkMsg',
+    id: 'components.receive.receivescreen.copyLinkMsg',
     defaultMessage: '!!!Link copied',
   },
   addressCopiedMsg: {
-    id: 'components.receive.addressCopiedMsg',
+    id: 'components.receive.receivescreen.addressCopiedMsg',
     defaultMessage: '!!!Address copied',
   },
   lastUsed: {
-    id: 'components.receive.lastUsed',
+    id: 'components.receive.receivescreen.lastUsed',
     defaultMessage: '!!!Last used',
   },
   unusedAddress: {
-    id: 'components.receive.unusedAddress',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Unused address',
   },
   usedAddress: {
-    id: 'components.receive.usedAddress',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Used address',
   },
   generateButton: {
-    id: 'components.receive.generateButton',
+    id: 'discover.modal.collateralNotFoundActionText',
     defaultMessage: '!!!Generate',
   },
   infoAddressLimit: {
-    id: 'components.receive.infoAddressLimit',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Address limit info',
   },
   singleOrMultiple: {
-    id: 'components.receive.singleOrMultiple',
+    id: 'components.receive.receivescreen.singleOrMultiple',
     defaultMessage: '!!!Single or multiple',
   },
   singleOrMultipleDetails: {
-    id: 'components.receive.singleOrMultipleDetails',
+    id: 'nft.detail.title',
     defaultMessage: '!!!Single or multiple details',
   },
   selectMultiple: {
-    id: 'components.receive.selectMultiple',
+    id: 'components.receive.receivescreen.selectMultiple',
     defaultMessage: '!!!Select multiple',
   },
   singleAddressWallet: {
-    id: 'components.receive.singleAddressWallet',
+    id: 'components.receive.receivescreen.singleAddressWallet',
     defaultMessage: '!!!Single address wallet',
   },
   singleAddressWarning: {
-    id: 'components.receive.singleAddressWarning',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Single address warning',
   },
 })

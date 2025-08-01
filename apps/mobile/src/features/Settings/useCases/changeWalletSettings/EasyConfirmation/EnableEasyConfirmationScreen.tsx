@@ -5,12 +5,12 @@ import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useStrings} from '~/kernel/i18n/useStrings'
 
+import {isEmptyString} from '~/wallets/utils/string'
 import {Button} from '../../../../../ui/Button/Button'
 import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LoadingOverlay} from '../../../../../ui/LoadingOverlay/LoadingOverlay'
 import {Text} from '../../../../../ui/Text/Text'
 import {TextInput} from '../../../../../ui/TextInput/TextInput'
-import {isEmptyString} from '../../../../../wallets/utils/string'
 import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const EnableEasyConfirmationScreen = () => {

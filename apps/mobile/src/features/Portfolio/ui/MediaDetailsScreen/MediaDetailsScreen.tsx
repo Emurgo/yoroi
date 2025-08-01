@@ -73,7 +73,7 @@ export const MediaDetailsScreen = () => {
                   track.nftGalleryDetailsTab({nft_tab: 'Overview'})
                 }
               }}
-              label={strings.portfolio.nftDetail.overview}
+              label={strings.portfolio.overview}
               active={activeTab === 'overview'}
               testID="overview"
             />
@@ -85,7 +85,7 @@ export const MediaDetailsScreen = () => {
                   track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
                 }
               }}
-              label={strings.portfolio.nftDetail.metadata}
+              label={strings.portfolio.info}
               active={activeTab === 'metadata'}
               testID="metadata"
             />
@@ -209,23 +209,23 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
 
   return (
     <View>
-      <MetadataRow title={strings.portfolio.nftDetail.nftName}>
+      <MetadataRow title={strings.portfolio.info}>
         <Text style={[a.body_2_md_regular, {color: p.gray_600}, a.flex_1]}>
           {info.name}
         </Text>
       </MetadataRow>
 
-      <MetadataRow title={strings.portfolio.nftDetail.description}>
+      <MetadataRow title={strings.portfolio.info}>
         <Text style={[a.body_2_md_regular, {color: p.gray_600}, a.flex_1]}>
           {normalizeMetadataString(info.description)}
         </Text>
       </MetadataRow>
 
-      <MetadataRow title={strings.portfolio.nftDetail.fingerprint}>
+      <MetadataRow title={strings.portfolio.fingerprint}>
         <Copiable title={info.fingerprint} text={info.fingerprint} />
       </MetadataRow>
 
-      <MetadataRow title={strings.portfolio.nftDetail.policyId}>
+      <MetadataRow title={strings.portfolio.policyID}>
         <Copiable title={policyId} text={policyId} />
       </MetadataRow>
 
@@ -233,7 +233,7 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
         <Trait key={`trait-${trait.type}`} trait={trait} />
       ))}
 
-      <MetadataRow title={strings.portfolio.nftDetail.detailsLinks}>
+      <MetadataRow title={strings.portfolio.info}>
         <View
           style={{
             display: 'flex',

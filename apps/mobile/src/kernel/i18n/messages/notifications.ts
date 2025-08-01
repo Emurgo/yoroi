@@ -2,59 +2,59 @@ import {defineMessages} from 'react-intl'
 
 export const notificationsMessages = defineMessages({
   tapToView: {
-    id: 'components.notifications.tapToView',
+    id: 'notifications.tapToView',
     defaultMessage: '!!!Tap to view',
   },
   stakingRewardsReceived: {
-    id: 'components.notifications.stakingRewardsReceived',
+    id: 'notifications.stakingRewardsReceived',
     defaultMessage: '!!!Staking rewards received',
   },
   assetsReceived: {
-    id: 'components.notifications.assetsReceived',
+    id: 'notifications.assetsReceived',
     defaultMessage: '!!!Assets received',
   },
   intraWalletTransactionSent: {
-    id: 'components.notifications.intraWalletTransactionSent',
+    id: 'components.send.sendscreen.feeNotAvailable',
     defaultMessage: '!!!Intra-wallet transaction sent',
   },
   multipleAssetsReceived: {
-    id: 'components.notifications.multipleAssetsReceived',
+    id: 'notifications.multipleAssetsReceived',
     defaultMessage: '!!!Multiple assets received',
   },
   received: {
-    id: 'components.notifications.received',
+    id: 'portfolio.portfolioTokensDetailScreen.received',
     defaultMessage: '!!!Received',
   },
   multipleAssetsSent: {
-    id: 'components.notifications.multipleAssetsSent',
+    id: 'notifications.multipleAssetsSent',
     defaultMessage: '!!!Multiple assets sent',
   },
   sent: {
-    id: 'components.notifications.sent',
+    id: 'portfolio.portfolioTokensDetailScreen.sent',
     defaultMessage: '!!!Sent',
   },
   noNotifications: {
-    id: 'components.notifications.noNotifications',
+    id: 'components.txhistory.notifications.title',
     defaultMessage: '!!!No notifications',
   },
   markAllAsRead: {
-    id: 'components.notifications.markAllAsRead',
+    id: 'notifications.markAllAsRead',
     defaultMessage: '!!!Mark all as read',
   },
   getImportantAlerts: {
-    id: 'components.notifications.getImportantAlerts',
+    id: 'notifications.getImportantAlerts',
     defaultMessage: '!!!Get important alerts',
   },
   turnOnAlerts: {
-    id: 'components.notifications.turnOnAlerts',
+    id: 'notifications.turnOnAlerts',
     defaultMessage: '!!!Turn on alerts',
   },
   skip: {
-    id: 'components.notifications.skip',
+    id: 'notifications.skip',
     defaultMessage: '!!!Skip',
   },
   turnOnNotifications: {
-    id: 'components.notifications.turnOnNotifications',
+    id: 'notifications.turnOnNotifications',
     defaultMessage: '!!!Turn on notifications',
   },
 })

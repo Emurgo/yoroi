@@ -2,99 +2,99 @@ import {defineMessages} from 'react-intl'
 
 export const registerCatalystMessages = defineMessages({
   title: {
-    id: 'components.registercatalyst.title',
+    id: 'components.catalyst.step1.title',
     defaultMessage: '!!!Register Catalyst',
   },
   subTitle: {
-    id: 'components.registercatalyst.subTitle',
+    id: 'components.catalyst.step1.subTitle',
     defaultMessage: '!!!Register for Catalyst voting',
   },
   stakingKeyNotRegistered: {
-    id: 'components.registercatalyst.stakingKeyNotRegistered',
+    id: 'components.catalyst.step1.stakingKeyNotRegistered',
     defaultMessage: '!!!Staking key not registered',
   },
   tip: {
-    id: 'components.registercatalyst.tip',
+    id: 'components.catalyst.step1.tip',
     defaultMessage: '!!!Tip',
   },
   registrationStart: {
-    id: 'components.registercatalyst.registrationStart',
+    id: 'catalyst.registration.start',
     defaultMessage: '!!!Registration Start',
   },
   snapshotStart: {
-    id: 'components.registercatalyst.snapshotStart',
+    id: 'catalyst.snapshot.start',
     defaultMessage: '!!!Snapshot Start',
   },
   votingStart: {
-    id: 'components.registercatalyst.votingStart',
+    id: 'catalyst.voting.start',
     defaultMessage: '!!!Voting Start',
   },
   votingEnd: {
-    id: 'components.registercatalyst.votingEnd',
+    id: 'catalyst.voting.end',
     defaultMessage: '!!!Voting End',
   },
   votingResults: {
-    id: 'components.registercatalyst.votingResults',
+    id: 'catalyst.voting.results',
     defaultMessage: '!!!Voting Results',
   },
   step2Title: {
-    id: 'components.registercatalyst.step2Title',
+    id: 'components.catalyst.step2.title',
     defaultMessage: '!!!Step 2 Title',
   },
   step2Description: {
-    id: 'components.registercatalyst.step2Description',
+    id: 'components.catalyst.step2.description',
     defaultMessage: '!!!Step 2 Description',
   },
   checkbox: {
-    id: 'components.registercatalyst.checkbox',
+    id: 'components.catalyst.step2.checkbox',
     defaultMessage: '!!!Checkbox',
   },
   step3Title: {
-    id: 'components.registercatalyst.step3Title',
+    id: 'components.catalyst.step3.title',
     defaultMessage: '!!!Step 3 Title',
   },
   step3Description: {
-    id: 'components.registercatalyst.step3Description',
+    id: 'components.catalyst.step3.description',
     defaultMessage: '!!!Step 3 Description',
   },
   confirmationTitle: {
-    id: 'components.registercatalyst.confirmationTitle',
+    id: 'components.catalyst.confirmTx.title',
     defaultMessage: '!!!Confirmation Title',
   },
   passwordSignDescription: {
-    id: 'components.registercatalyst.passwordSignDescription',
+    id: 'components.catalyst.confirmTx.passwordSignDescription',
     defaultMessage: '!!!Password sign description',
   },
   authOsInstructions: {
-    id: 'components.registercatalyst.authOsInstructions',
+    id: 'components.catalyst.confirmTx.bioAuthInstructions',
     defaultMessage: '!!!Auth OS instructions',
   },
   confirm: {
-    id: 'components.registercatalyst.confirm',
+    id: 'components.catalyst.confirmTx.title',
     defaultMessage: '!!!Confirm',
   },
   step4Description: {
-    id: 'components.registercatalyst.step4Description',
+    id: 'components.catalyst.step4.description',
     defaultMessage: '!!!Step 4 Description',
   },
   step4Title: {
-    id: 'components.registercatalyst.step4Title',
+    id: 'components.catalyst.step4.title',
     defaultMessage: '!!!Step 4 Title',
   },
   step4QrTitle: {
-    id: 'components.registercatalyst.step4QrTitle',
+    id: 'components.catalyst.step4.qrTitle',
     defaultMessage: '!!!Step 4 QR Title',
   },
   step4QrShareLabel: {
-    id: 'components.registercatalyst.step4QrShareLabel',
+    id: 'components.catalyst.step4.qrShareLabel',
     defaultMessage: '!!!Step 4 QR Share Label',
   },
   step4QrCopiedText: {
-    id: 'components.registercatalyst.step4QrCopiedText',
+    id: 'components.catalyst.step4.qrCopiedText',
     defaultMessage: '!!!Step 4 QR Copied Text',
   },
   step4QrCheckbox: {
-    id: 'components.registercatalyst.step4QrCheckbox',
+    id: 'components.catalyst.step4.qrCheckbox',
     defaultMessage: '!!!Step 4 QR Checkbox',
   },
 }) 

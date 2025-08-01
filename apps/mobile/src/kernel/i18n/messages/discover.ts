@@ -2,11 +2,11 @@ import {defineMessages} from 'react-intl'
 
 export const discoverMessages = defineMessages({
   title: {
-    id: 'components.discover.title',
+    id: 'components.common.navigation.dappExplorerButton',
     defaultMessage: '!!!Discover',
   },
   search: {
-    id: 'components.discover.search',
+    id: 'nft.navigation.search',
     defaultMessage: '!!!Search',
   },
   categories: {
@@ -30,15 +30,15 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Trending',
   },
   new: {
-    id: 'components.discover.new',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.warning',
     defaultMessage: '!!!New',
   },
   all: {
-    id: 'components.discover.all',
+    id: 'global.all',
     defaultMessage: '!!!All',
   },
   dapps: {
-    id: 'components.discover.dapps',
+    id: 'components.receive.receivescreen.singleAddressWarning',
     defaultMessage: '!!!dApps',
   },
   games: {
@@ -54,7 +54,7 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Social',
   },
   tools: {
-    id: 'components.discover.tools',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Tools',
   },
   education: {
@@ -62,11 +62,11 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Education',
   },
   entertainment: {
-    id: 'components.discover.entertainment',
+    id: 'discover.filterOptions.child.entertainment',
     defaultMessage: '!!!Entertainment',
   },
   noResults: {
-    id: 'components.discover.noResults',
+    id: 'catalyst.voting.results',
     defaultMessage: '!!!No results found',
   },
   loading: {
@@ -74,255 +74,255 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Loading...',
   },
   error: {
-    id: 'components.discover.error',
+    id: 'components.common.navigation.discover',
     defaultMessage: '!!!Error loading discover',
   },
   retry: {
-    id: 'components.discover.retry',
+    id: 'components.send.sendscreen.errorBannerNetworkError',
     defaultMessage: '!!!Retry',
   },
   confirmTx: {
-    id: 'components.discover.confirmTx',
+    id: 'global.txLabels.confirmTx',
     defaultMessage: '!!!Confirm Transaction',
   },
   discoverTitle: {
-    id: 'components.discover.discoverTitle',
+    id: 'components.common.navigation.discover',
     defaultMessage: '!!!Discover',
   },
   searchDApps: {
-    id: 'components.discover.searchDApps',
+    id: 'discover.discoverList.searchDApps',
     defaultMessage: '!!!Search dApps',
   },
   welcomeToYoroiDAppExplorer: {
-    id: 'components.discover.welcomeToYoroiDAppExplorer',
+    id: 'discover.discoverList.welcomeToYoroiDAppExplorer',
     defaultMessage: '!!!Welcome to Yoroi dApp Explorer',
   },
   welcomeToYoroiDAppExplorerDescription: {
-    id: 'components.discover.welcomeToYoroiDAppExplorerDescription',
+    id: 'components.walletinit.walletinitmenu.logo.title',
     defaultMessage: '!!!Welcome to Yoroi dApp Explorer Description',
   },
   next: {
-    id: 'components.discover.next',
+    id: 'global.next',
     defaultMessage: '!!!Next',
   },
   totalDAppAvailable: {
-    id: 'components.discover.totalDAppAvailable',
+    id: 'global.available',
     defaultMessage: '!!!{count} dApps available',
   },
   dAppConnected: {
-    id: 'components.discover.dAppConnected',
+    id: 'nft.gallery.nftCount',
     defaultMessage: '!!!{count} dApps connected',
   },
   connected: {
-    id: 'components.discover.connected',
+    id: 'components.walletinit.walletDetails.walletNameModalCardItem.second',
     defaultMessage: '!!!Connected',
   },
   recommended: {
-    id: 'components.discover.recommended',
+    id: 'discover.discoverList.recommended',
     defaultMessage: '!!!Recommended',
   },
   done: {
-    id: 'components.discover.done',
+    id: 'discover.discoverList.done',
     defaultMessage: '!!!Done',
   },
   openDApp: {
-    id: 'components.discover.openDApp',
+    id: 'discover.discoverList.openDApp',
     defaultMessage: '!!!Open dApp',
   },
   disconnectWalletFromDApp: {
-    id: 'components.discover.disconnectWalletFromDApp',
+    id: 'txReview.overview.wallet',
     defaultMessage: '!!!Disconnect wallet from dApp',
   },
   dAppActions: {
-    id: 'components.discover.dAppActions',
+    id: 'discover.discoverList.dAppActions',
     defaultMessage: '!!!dApp Actions',
   },
   confirmConnectionModalTitle: {
-    id: 'components.discover.confirmConnectionModalTitle',
+    id: 'discover.confirmConnectionModal.title',
     defaultMessage: '!!!Confirm Connection',
   },
   confirmConnectionModalConnectTo: {
-    id: 'components.discover.confirmConnectionModalConnectTo',
+    id: 'discover.confirmConnectionModal.connectTo',
     defaultMessage: '!!!Connect to',
   },
   confirmConnectionModalConnect: {
-    id: 'components.discover.confirmConnectionModalConnect',
+    id: 'discover.confirmConnectionModal.connect',
     defaultMessage: '!!!Connect',
   },
   confirmConnectionModalAllowThisDAppTo: {
-    id: 'components.discover.confirmConnectionModalAllowThisDAppTo',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelLow',
     defaultMessage: '!!!Allow this dApp to',
   },
   confirmConnectionModalPermission1: {
-    id: 'components.discover.confirmConnectionModalPermission1',
+    id: 'discover.confirmConnectionModal.permission1',
     defaultMessage: '!!!Permission 1',
   },
   singleAddressWarning: {
-    id: 'components.discover.singleAddressWarning',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Single address warning',
   },
   confirmConnectionModalPermission2: {
-    id: 'components.discover.confirmConnectionModalPermission2',
+    id: 'discover.confirmConnectionModal.permission2',
     defaultMessage: '!!!Permission 2',
   },
   understand: {
-    id: 'components.discover.understand',
+    id: 'rampOnOff.resultRampOnOff.and',
     defaultMessage: '!!!Understand',
   },
   disclaimerModalText: {
-    id: 'components.discover.disclaimerModalText',
+    id: 'discover.unverifiedDappModal.disclaimerModalTitle',
     defaultMessage: '!!!Disclaimer modal text',
   },
   disclaimerModalTitle: {
-    id: 'components.discover.disclaimerModalTitle',
+    id: 'discover.unverifiedDappModal.disclaimerModalTitle',
     defaultMessage: '!!!Disclaimer modal title',
   },
   disconnectDApp: {
-    id: 'components.discover.disconnectDApp',
+    id: 'discover.confirmDisconnectDApp.disconnectDApp',
     defaultMessage: '!!!Disconnect dApp',
   },
   confirmDisconnectDAppDescription: {
-    id: 'components.discover.confirmDisconnectDAppDescription',
+    id: 'txReview.confirm',
     defaultMessage: '!!!Confirm disconnect dApp description',
   },
   cancel: {
-    id: 'components.discover.cancel',
+    id: 'global.cancel',
     defaultMessage: '!!!Cancel',
   },
   confirm: {
-    id: 'components.discover.confirm',
+    id: 'txReview.confirm',
     defaultMessage: '!!!Confirm',
   },
   signDataNotSupported: {
-    id: 'components.discover.signDataNotSupported',
+    id: 'components.settings.settingsscreen.title',
     defaultMessage: '!!!Sign data not supported',
   },
   transactionReview: {
-    id: 'components.discover.transactionReview',
+    id: 'txReview.title',
     defaultMessage: '!!!Transaction Review',
   },
   inputs: {
-    id: 'components.discover.inputs',
+    id: 'txReview.utxos.utxosInputsLabel',
     defaultMessage: '!!!Inputs',
   },
   outputs: {
-    id: 'components.discover.outputs',
+    id: 'txReview.utxos.utxosOutputsLabel',
     defaultMessage: '!!!Outputs',
   },
   transactionIdCopied: {
-    id: 'components.discover.transactionIdCopied',
+    id: 'discover.reviewTransaction.transactionIdCopied',
     defaultMessage: '!!!Transaction ID copied',
   },
   addressCopied: {
-    id: 'components.discover.addressCopied',
+    id: 'discover.reviewTransaction.addressCopied',
     defaultMessage: '!!!Address copied',
   },
   yourAddress: {
-    id: 'components.discover.yourAddress',
+    id: 'txReview.utxos.utxosYourAddressLabel',
     defaultMessage: '!!!Your address',
   },
   externalAddress: {
-    id: 'components.discover.externalAddress',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!External address',
   },
   fee: {
-    id: 'components.discover.fee',
+    id: 'txReview.fee',
     defaultMessage: '!!!Fee',
   },
   signData: {
-    id: 'components.discover.signData',
+    id: 'discover.reviewTransaction.signData',
     defaultMessage: '!!!Sign Data',
   },
   signMessage: {
-    id: 'components.discover.signMessage',
+    id: 'discover.reviewTransaction.signMessage',
     defaultMessage: '!!!Sign Message',
   },
   testnetWarningTitle: {
-    id: 'components.discover.testnetWarningTitle',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Testnet warning title',
   },
   testnetWarningDescription: {
-    id: 'components.discover.testnetWarningDescription',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Testnet warning description',
   },
   filterChildOptionsNews: {
-    id: 'components.discover.filterChildOptionsNews',
+    id: 'portfolio.portfolioTokensDetailScreen.news',
     defaultMessage: '!!!News',
   },
   filterChildOptionsEntertainment: {
-    id: 'components.discover.filterChildOptionsEntertainment',
+    id: 'discover.filterOptions.child.entertainment',
     defaultMessage: '!!!Entertainment',
   },
   filterChildOptionsDeFi: {
-    id: 'components.discover.filterChildOptionsDeFi',
+    id: 'discover.filterOptions.child.defi',
     defaultMessage: '!!!DeFi',
   },
   filterChildOptionsDEX: {
-    id: 'components.discover.filterChildOptionsDEX',
+    id: 'portfolio.portfolioTokensListScreen.dex',
     defaultMessage: '!!!DEX',
   },
   filterChildOptionsNFTMarketplace: {
-    id: 'components.discover.filterChildOptionsNFTMarketplace',
+    id: 'swap.swapScreen.marketButton',
     defaultMessage: '!!!NFT Marketplace',
   },
   filterChildOptionsStablecoin: {
-    id: 'components.discover.filterChildOptionsStablecoin',
+    id: 'discover.filterOptions.child.stablecoin',
     defaultMessage: '!!!Stablecoin',
   },
   filterChildOptionsTradingTools: {
-    id: 'components.discover.filterChildOptionsTradingTools',
+    id: 'discover.filterOptions.child.tradingtools',
     defaultMessage: '!!!Trading Tools',
   },
   filterChildOptionsDAO: {
-    id: 'components.discover.filterChildOptionsDAO',
+    id: 'discover.filterOptions.child.dao',
     defaultMessage: '!!!DAO',
   },
   filterChildOptionsDecentralisedStorage: {
-    id: 'components.discover.filterChildOptionsDecentralisedStorage',
+    id: 'discover.filterOptions.child.decentralisedstorage',
     defaultMessage: '!!!Decentralised Storage',
   },
   filterParentOptionsMedia: {
-    id: 'components.discover.filterParentOptionsMedia',
+    id: 'discover.filterOptions.parent.media',
     defaultMessage: '!!!Media',
   },
   filterParentOptionsInvestment: {
-    id: 'components.discover.filterParentOptionsInvestment',
+    id: 'discover.filterOptions.parent.investment',
     defaultMessage: '!!!Investment',
   },
   filterParentOptionsNFT: {
-    id: 'components.discover.filterParentOptionsNFT',
+    id: 'portfolio.portfolioDashboardScreen.nfts',
     defaultMessage: '!!!NFT',
   },
   filterParentOptionsTrading: {
-    id: 'components.discover.filterParentOptionsTrading',
+    id: 'discover.filterOptions.parent.trading',
     defaultMessage: '!!!Trading',
   },
   filterParentOptionsCommunity: {
-    id: 'components.discover.filterParentOptionsCommunity',
+    id: 'discover.filterOptions.parent.community',
     defaultMessage: '!!!Community',
   },
   disconnectWarning: {
-    id: 'components.discover.disconnectWarning',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Disconnect warning',
   },
   collateralNotFoundText: {
-    id: 'components.discover.collateralNotFoundText',
+    id: 'components.send.assetselectorscreen.found',
     defaultMessage: '!!!Collateral not found text',
   },
   collateralNotFoundTitle: {
-    id: 'components.discover.collateralNotFoundTitle',
+    id: 'components.send.assetselectorscreen.found',
     defaultMessage: '!!!Collateral not found title',
   },
   collateralNotFoundActionText: {
-    id: 'components.discover.collateralNotFoundActionText',
+    id: 'components.send.assetselectorscreen.found',
     defaultMessage: '!!!Collateral not found action text',
   },
   collateralTxPendingTitle: {
-    id: 'components.discover.collateralTxPendingTitle',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
     defaultMessage: '!!!Collateral transaction pending title',
   },
   collateralTxPendingText: {
-    id: 'components.discover.collateralTxPendingText',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
     defaultMessage: '!!!Collateral transaction pending text',
   },
 })

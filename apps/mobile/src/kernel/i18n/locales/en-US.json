@@ -585,6 +585,8 @@
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "Received",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "Intrawallet",
   "components.txhistory.txhistorylistitem.transactionTypeSent": "Sent",
+  "components.transactions.directionMessages.SELF": "Self",
+  "components.transactions.directionMessages.MULTI": "Multi",
   "components.txhistory.txnavigationbuttons.receiveButton": "Receive",
   "components.txhistory.txnavigationbuttons.sendButton": "Send",
   "components.uikit.offlinebanner.offline": "You are offline. Please check settings on your device.",

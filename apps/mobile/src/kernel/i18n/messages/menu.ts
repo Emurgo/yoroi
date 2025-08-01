@@ -2,39 +2,39 @@ import {defineMessages} from 'react-intl'
 
 export const menuMessages = defineMessages({
   catalystVoting: {
-    id: 'components.menu.catalystVoting',
+    id: 'menu.catalystVoting',
     defaultMessage: '!!!Catalyst Voting',
   },
   settings: {
-    id: 'components.menu.settings',
+    id: 'components.common.navigation.dashboardButton',
     defaultMessage: '!!!Settings',
   },
   stakingCenter: {
-    id: 'components.menu.stakingCenter',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Staking Center',
   },
   supportTitle: {
-    id: 'components.menu.supportTitle',
+    id: 'components.settings.settingsscreen.title',
     defaultMessage: '!!!Support',
   },
   supportLink: {
-    id: 'components.menu.supportLink',
+    id: 'components.settings.settingsscreen.title',
     defaultMessage: '!!!Support Link',
   },
   knowledgeBase: {
-    id: 'components.menu.knowledgeBase',
+    id: 'menu.knowledgeBase',
     defaultMessage: '!!!Knowledge Base',
   },
   menu: {
-    id: 'components.menu.menu',
+    id: 'menu',
     defaultMessage: '!!!Menu',
   },
   releases: {
-    id: 'components.menu.releases',
+    id: 'menu.releases',
     defaultMessage: '!!!Releases',
   },
   governanceCentre: {
-    id: 'components.menu.governanceCentre',
+    id: 'menu.governanceCentre',
     defaultMessage: '!!!Governance Centre',
   },
 })

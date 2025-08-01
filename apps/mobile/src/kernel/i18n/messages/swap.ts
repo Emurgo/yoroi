@@ -2,71 +2,71 @@ import {defineMessages} from 'react-intl'
 
 export const swapMessages = defineMessages({
   title: {
-    id: 'components.swap.title',
+    id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
   swap: {
-    id: 'components.swap.swap',
+    id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
   dex: {
-    id: 'components.swap.dex',
+    id: 'portfolio.portfolioTokensListScreen.dex',
     defaultMessage: '!!!DEX',
   },
   from: {
-    id: 'components.swap.from',
+    id: 'components.txhistory.txdetails.fromAddresses',
     defaultMessage: '!!!From',
   },
   to: {
-    id: 'components.swap.to',
+    id: 'components.txhistory.txdetails.toAddresses',
     defaultMessage: '!!!To',
   },
   amount: {
-    id: 'components.swap.amount',
+    id: 'global.txLabels.amount',
     defaultMessage: '!!!Amount',
   },
   balance: {
-    id: 'components.swap.balance',
+    id: 'swap.swapScreen.balance',
     defaultMessage: '!!!Balance',
   },
   max: {
-    id: 'components.swap.max',
+    id: 'global.max',
     defaultMessage: '!!!Max',
   },
   rate: {
-    id: 'components.swap.rate',
+    id: 'components.catalyst.confirmTx.bioAuthInstructions',
     defaultMessage: '!!!Rate',
   },
   fee: {
-    id: 'components.swap.fee',
+    id: 'txReview.fee',
     defaultMessage: '!!!Fee',
   },
   slippage: {
-    id: 'components.swap.slippage',
+    id: 'components.txhistory.txdetails.fee',
     defaultMessage: '!!!Slippage',
   },
   minimumReceived: {
-    id: 'components.swap.minimumReceived',
+    id: 'txReview.receiveLabel',
     defaultMessage: '!!!Minimum Received',
   },
   priceImpact: {
-    id: 'components.swap.priceImpact',
+    id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Price Impact',
   },
   confirmSwap: {
-    id: 'components.swap.confirmSwap',
+    id: 'txReview.confirm',
     defaultMessage: '!!!Confirm Swap',
   },
   swapFailed: {
-    id: 'components.swap.swapFailed',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Swap Failed',
   },
   swapSuccess: {
-    id: 'components.swap.swapSuccess',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelHigh',
     defaultMessage: '!!!Swap Success',
   },
   insufficientBalance: {
-    id: 'components.swap.insufficientBalance',
+    id: 'swap.swapScreen.balance',
     defaultMessage: '!!!Insufficient Balance',
   },
   insufficientLiquidity: {
@@ -78,23 +78,23 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!High Slippage',
   },
   selectToken: {
-    id: 'components.swap.selectToken',
+    id: 'swap.swapScreen.selectToken',
     defaultMessage: '!!!Select Token',
   },
   searchTokens: {
-    id: 'components.swap.searchTokens',
+    id: 'portfolio.portfolioTokensListScreen.searchTokens',
     defaultMessage: '!!!Search Tokens',
   },
   popularTokens: {
-    id: 'components.swap.popularTokens',
+    id: 'global.ok',
     defaultMessage: '!!!Popular Tokens',
   },
   allTokens: {
-    id: 'components.swap.allTokens',
+    id: 'global.ok',
     defaultMessage: '!!!All Tokens',
   },
   noTokensFound: {
-    id: 'components.swap.noTokensFound',
+    id: 'portfolio.portfolioTokensListScreen.noTokensFound',
     defaultMessage: '!!!No tokens found',
   },
   loading: {
@@ -102,575 +102,575 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Loading...',
   },
   error: {
-    id: 'components.swap.error',
+    id: 'global.error',
     defaultMessage: '!!!Error',
   },
   retry: {
-    id: 'components.swap.retry',
+    id: 'components.send.sendscreen.errorBannerNetworkError',
     defaultMessage: '!!!Retry',
   },
   settings: {
-    id: 'components.swap.settings',
+    id: 'menu.settings',
     defaultMessage: '!!!Settings',
   },
   slippageTolerance: {
-    id: 'components.swap.slippageTolerance',
+    id: 'swap.swapScreen.slippageTolerance',
     defaultMessage: '!!!Slippage Tolerance',
   },
   auto: {
-    id: 'components.swap.auto',
+    id: 'global.auto',
     defaultMessage: '!!!Auto',
   },
   custom: {
-    id: 'components.swap.custom',
+    id: 'components.send.sendscreen.resolverNoticeText',
     defaultMessage: '!!!Custom',
   },
   save: {
-    id: 'components.swap.save',
+    id: 'components.walletinit.connectnanox.savenanoxscreen.save',
     defaultMessage: '!!!Save',
   },
   cancel: {
-    id: 'components.swap.cancel',
+    id: 'global.cancel',
     defaultMessage: '!!!Cancel',
   },
   via: {
-    id: 'components.swap.via',
+    id: 'swap.swapScreen.via',
     defaultMessage: '!!!Via',
   },
   placeOrder: {
-    id: 'components.swap.placeOrder',
+    id: 'swap.swapScreen.placeOrder',
     defaultMessage: '!!!Place Order',
   },
   yourAssets: {
-    id: 'components.swap.yourAssets',
+    id: 'swap.swapScreen.yourAssets',
     defaultMessage: '!!!Your Assets',
   },
   allAssets: {
-    id: 'components.swap.allAssets',
+    id: 'swap.swapScreen.allAssets',
     defaultMessage: '!!!All Assets',
   },
   swapTitle: {
-    id: 'components.swap.swapTitle',
+    id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
   swapDetailsTitle: {
-    id: 'components.swap.swapDetailsTitle',
+    id: 'swap.swapScreen.swapDetailsTitle',
     defaultMessage: '!!!Swap Details',
   },
   swapCancellationDetailsTitle: {
-    id: 'components.swap.swapCancellationDetailsTitle',
+    id: 'global.cancel',
     defaultMessage: '!!!Swap Cancellation Details',
   },
   tokenSwap: {
-    id: 'components.swap.tokenSwap',
+    id: 'global.ok',
     defaultMessage: '!!!Token Swap',
   },
   orderSwap: {
-    id: 'components.swap.orderSwap',
+    id: 'components.txhistory.txnavigationbuttons.sendButton',
     defaultMessage: '!!!Order Swap',
   },
   marketButton: {
-    id: 'components.swap.marketButton',
+    id: 'swap.swapScreen.marketButton',
     defaultMessage: '!!!Market',
   },
   limitButton: {
-    id: 'components.swap.limitButton',
+    id: 'swap.swapScreen.limitButton',
     defaultMessage: '!!!Limit',
   },
   swapFrom: {
-    id: 'components.swap.swapFrom',
+    id: 'swap.swapScreen.swapFrom',
     defaultMessage: '!!!Swap From',
   },
   swapTo: {
-    id: 'components.swap.swapTo',
+    id: 'swap.swapScreen.swapTo',
     defaultMessage: '!!!Swap To',
   },
   currentBalance: {
-    id: 'components.swap.currentBalance',
+    id: 'swap.swapScreen.currentBalance',
     defaultMessage: '!!!Current Balance',
   },
   clear: {
-    id: 'components.swap.clear',
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.clearButton',
     defaultMessage: '!!!Clear',
   },
   marketPrice: {
-    id: 'components.swap.marketPrice',
+    id: 'swap.swapScreen.marketPrice',
     defaultMessage: '!!!Market Price',
   },
   marketPriceInfo: {
-    id: 'components.swap.marketPriceInfo',
+    id: 'portfolio.portfolioTokensDetailScreen.info',
     defaultMessage: '!!!Market Price Info',
   },
   limitPriceInfo: {
-    id: 'components.swap.limitPriceInfo',
+    id: 'portfolio.portfolioTokensDetailScreen.info',
     defaultMessage: '!!!Limit Price Info',
   },
   limitPrice: {
-    id: 'components.swap.limitPrice',
+    id: 'swap.swapScreen.limitPriceWarningTitle',
     defaultMessage: '!!!Limit Price',
   },
   slippageToleranceInfo: {
-    id: 'components.swap.slippageToleranceInfo',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Slippage Tolerance Info',
   },
   swapButton: {
-    id: 'components.swap.swapButton',
+    id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
   verifiedBy: {
-    id: 'components.swap.verifiedBy',
+    id: 'swap.swapScreen.verifiedBy',
     defaultMessage: '!!!Verified by {pool}',
   },
   assetsIn: {
-    id: 'components.swap.assetsIn',
+    id: 'components.send.sendscreen.sendAllWarningAlert2',
     defaultMessage: '!!!Assets In',
   },
   slippageInfo: {
-    id: 'components.swap.slippageInfo',
+    id: 'portfolio.portfolioTokensDetailScreen.info',
     defaultMessage: '!!!Slippage Info',
   },
   autoPool: {
-    id: 'components.swap.autoPool',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Auto Pool',
   },
   changePool: {
-    id: 'components.swap.changePool',
+    id: 'swap.swapScreen.changePool',
     defaultMessage: '!!!Change Pool',
   },
   swapMinAda: {
-    id: 'components.swap.swapMinAda',
+    id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap Min ADA',
   },
   swapMinAdaTitle: {
-    id: 'components.swap.swapMinAdaTitle',
+    id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap Min ADA Title',
   },
   swapMinReceived: {
-    id: 'components.swap.swapMinReceived',
+    id: 'txReview.receiveLabel',
     defaultMessage: '!!!Swap Min Received',
   },
   swapMinReceivedTitle: {
-    id: 'components.swap.swapMinReceivedTitle',
+    id: 'txReview.receiveLabel',
     defaultMessage: '!!!Swap Min Received Title',
   },
   swapFeesTitle: {
-    id: 'components.swap.swapFeesTitle',
+    id: 'txReview.fee',
     defaultMessage: '!!!Swap Fees Title',
   },
   swapLiquidityFee: {
-    id: 'components.swap.swapLiquidityFee',
+    id: 'txReview.fee',
     defaultMessage: '!!!Swap Liquidity Fee',
   },
   swapLiqProvFee: {
-    id: 'components.swap.swapLiqProvFee',
+    id: 'txReview.fee',
     defaultMessage: '!!!Swap Liquidity Provider Fee',
   },
   swapLiquidityFeeInfo: {
-    id: 'components.swap.swapLiquidityFeeInfo',
+    id: 'txReview.fee',
     defaultMessage: '!!!Swap Liquidity Fee Info',
   },
   poolVerification: {
-    id: 'components.swap.poolVerification',
+    id: 'swap.swapScreen.poolVerification',
     defaultMessage: '!!!Pool Verification {pool}',
   },
   poolVerificationInfo: {
-    id: 'components.swap.poolVerificationInfo',
+    id: 'portfolio.portfolioTokensDetailScreen.info',
     defaultMessage: '!!!Pool Verification Info {pool}',
   },
   eachVerifiedToken: {
-    id: 'components.swap.eachVerifiedToken',
+    id: 'global.ok',
     defaultMessage: '!!!Each Verified Token',
   },
   verifiedBadge: {
-    id: 'components.swap.verifiedBadge',
+    id: 'swap.swapScreen.verifiedBadge',
     defaultMessage: '!!!Verified Badge',
   },
   enterSlippage: {
-    id: 'components.swap.enterSlippage',
+    id: 'swap.swapScreen.enterSlippage',
     defaultMessage: '!!!Enter Slippage',
   },
   slippageToleranceError: {
-    id: 'components.swap.slippageToleranceError',
+    id: 'global.error',
     defaultMessage: '!!!Slippage Tolerance Error',
   },
   openOrders: {
-    id: 'components.swap.openOrders',
+    id: 'swap.listOrders.open',
     defaultMessage: '!!!Open Orders',
   },
   noAssetsFound: {
-    id: 'components.swap.noAssetsFound',
+    id: 'components.send.assetselectorscreen.noAssets',
     defaultMessage: '!!!No Assets Found',
   },
   noAssetsFoundFor: {
-    id: 'components.swap.noAssetsFoundFor',
+    id: 'components.send.assetselectorscreen.found',
     defaultMessage: '!!!No Assets Found For {search}',
   },
   completedOrders: {
-    id: 'components.swap.completedOrders',
+    id: 'swap.listOrders.completed',
     defaultMessage: '!!!Completed Orders',
   },
   signTransaction: {
-    id: 'components.swap.signTransaction',
+    id: 'global.signTransaction',
     defaultMessage: '!!!Sign Transaction',
   },
   enterSpendingPassword: {
-    id: 'components.swap.enterSpendingPassword',
+    id: 'global.txLabels.password',
     defaultMessage: '!!!Enter Spending Password',
   },
   spendingPassword: {
-    id: 'components.swap.spendingPassword',
+    id: 'global.spendingPassword',
     defaultMessage: '!!!Spending Password',
   },
   sign: {
-    id: 'components.swap.sign',
+    id: 'global.sign',
     defaultMessage: '!!!Sign',
   },
   next: {
-    id: 'components.swap.next',
+    id: 'global.next',
     defaultMessage: '!!!Next',
   },
   chooseConnectionMethod: {
-    id: 'components.swap.chooseConnectionMethod',
+    id: 'components.ledger.ledgertransportswitchmodal.title',
     defaultMessage: '!!!Choose Connection Method',
   },
   selecteAssetTitle: {
-    id: 'components.swap.selecteAssetTitle',
+    id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select Asset Title',
   },
   found: {
-    id: 'components.swap.found',
+    id: 'components.send.assetselectorscreen.found',
     defaultMessage: '!!!Found',
   },
   youHave: {
-    id: 'components.swap.youHave',
+    id: 'components.send.assetselectorscreen.youHave',
     defaultMessage: '!!!You Have',
   },
   price: {
-    id: 'components.swap.price',
+    id: 'global.price',
     defaultMessage: '!!!Price',
   },
   priceImpact: {
-    id: 'components.swap.priceImpact',
+    id: 'components.txhistory.txdetails.txDetails',
     defaultMessage: '!!!Price Impact',
   },
   priceImpactRiskHigh: {
-    id: 'components.swap.priceImpactRiskHigh',
+    id: 'global.price',
     defaultMessage: '!!!Price Impact Risk High {riskValue}',
   },
   priceImpactModerateDescription: {
-    id: 'components.swap.priceImpactModerateDescription',
+    id: 'global.price',
     defaultMessage: '!!!Price Impact Moderate Description',
   },
   priceImpactHighDescription: {
-    id: 'components.swap.priceImpactHighDescription',
+    id: 'global.price',
     defaultMessage: '!!!Price Impact High Description',
   },
   priceImpactInfo: {
-    id: 'components.swap.priceImpactInfo',
+    id: 'portfolio.portfolioTokensDetailScreen.info',
     defaultMessage: '!!!Price Impact Info',
   },
   tvl: {
-    id: 'components.swap.tvl',
+    id: 'swap.swapScreen.tvl',
     defaultMessage: '!!!TVL',
   },
   poolFee: {
-    id: 'components.swap.poolFee',
+    id: 'txReview.fee',
     defaultMessage: '!!!Pool Fee',
   },
   batcherFee: {
-    id: 'components.swap.batcherFee',
+    id: 'swap.swapScreen.batcherFee',
     defaultMessage: '!!!Batcher Fee',
   },
   asset: {
-    id: 'components.swap.asset',
+    id: 'discover.filterOptions.parent.nft',
     defaultMessage: '!!!Asset',
   },
   volume: {
-    id: 'components.swap.volume',
+    id: 'swap.swapScreen.swapLiquidityFeeInfo',
     defaultMessage: '!!!Volume',
   },
   listCompletedOrders: {
-    id: 'components.swap.listCompletedOrders',
+    id: 'global.actions.dialogs.commonbuttons.completeButton',
     defaultMessage: '!!!List Completed Orders',
   },
   listOpenOrders: {
-    id: 'components.swap.listOpenOrders',
+    id: 'swap.listOrders.open',
     defaultMessage: '!!!List Open Orders',
   },
   listOrdersSheetTitle: {
-    id: 'components.swap.listOrdersSheetTitle',
+    id: 'swap.swapScreen.ordersSwapTab',
     defaultMessage: '!!!List Orders Sheet Title',
   },
   listOrdersSheetButtonText: {
-    id: 'components.swap.listOrdersSheetButtonText',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!List Orders Sheet Button Text',
   },
   listOrdersSheetContentTitle: {
-    id: 'components.swap.listOrdersSheetContentTitle',
+    id: 'swap.swapScreen.ordersSwapTab',
     defaultMessage: '!!!List Orders Sheet Content Title',
   },
   listOrdersSheetLink: {
-    id: 'components.swap.listOrdersSheetLink',
+    id: 'components.settings.biometricslinkscreen.linkButton',
     defaultMessage: '!!!List Orders Sheet Link',
   },
   listOrdersSheetAssetPrice: {
-    id: 'components.swap.listOrdersSheetAssetPrice',
+    id: 'discover.filterOptions.parent.nft',
     defaultMessage: '!!!List Orders Sheet Asset Price',
   },
   listOrdersSheetAssetAmount: {
-    id: 'components.swap.listOrdersSheetAssetAmount',
+    id: 'global.txLabels.amount',
     defaultMessage: '!!!List Orders Sheet Asset Amount',
   },
   listOrdersSheetTotalReturned: {
-    id: 'components.swap.listOrdersSheetTotalReturned',
+    id: 'swap.listOrders.total',
     defaultMessage: '!!!List Orders Sheet Total Returned',
   },
   listOrdersSheetCancellationFee: {
-    id: 'components.swap.listOrdersSheetCancellationFee',
+    id: 'txReview.fee',
     defaultMessage: '!!!List Orders Sheet Cancellation Fee',
   },
   listOrdersSheetConfirm: {
-    id: 'components.swap.listOrdersSheetConfirm',
+    id: 'txReview.confirm',
     defaultMessage: '!!!List Orders Sheet Confirm',
   },
   listOrdersSheetBack: {
-    id: 'components.swap.listOrdersSheetBack',
+    id: 'swap.swapScreen.limitPriceWarningBack',
     defaultMessage: '!!!List Orders Sheet Back',
   },
   listOrdersTimeCreated: {
-    id: 'components.swap.listOrdersTimeCreated',
+    id: 'nft.detail.createdAt',
     defaultMessage: '!!!List Orders Time Created',
   },
   listOrdersTimeCompleted: {
-    id: 'components.swap.listOrdersTimeCompleted',
+    id: 'global.actions.dialogs.commonbuttons.completeButton',
     defaultMessage: '!!!List Orders Time Completed',
   },
   listOrdersLiquidityPool: {
-    id: 'components.swap.listOrdersLiquidityPool',
+    id: 'swap.listOrders.liquidityPool',
     defaultMessage: '!!!List Orders Liquidity Pool',
   },
   listOrdersTotal: {
-    id: 'components.swap.listOrdersTotal',
+    id: 'swap.listOrders.total',
     defaultMessage: '!!!List Orders Total',
   },
   listOrdersTxId: {
-    id: 'components.swap.listOrdersTxId',
+    id: 'swap.swapScreen.ordersSwapTab',
     defaultMessage: '!!!List Orders Tx Id',
   },
   limitPriceWarningTitle: {
-    id: 'components.swap.limitPriceWarningTitle',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Limit Price Warning Title',
   },
   limitPriceWarningDescription: {
-    id: 'components.swap.limitPriceWarningDescription',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Limit Price Warning Description',
   },
   limitPriceWarningYourPrice: {
-    id: 'components.swap.limitPriceWarningYourPrice',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Limit Price Warning Your Price',
   },
   limitPriceWarningMarketPrice: {
-    id: 'components.swap.limitPriceWarningMarketPrice',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Limit Price Warning Market Price',
   },
   limitPriceWarningBack: {
-    id: 'components.swap.limitPriceWarningBack',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Limit Price Warning Back',
   },
   limitPriceWarningConfirm: {
-    id: 'components.swap.limitPriceWarningConfirm',
+    id: 'txReview.confirm',
     defaultMessage: '!!!Limit Price Warning Confirm',
   },
   routingPreferences: {
-    id: 'components.swap.routingPreferences',
+    id: 'swap.swapScreen.routingPreferences',
     defaultMessage: '!!!Routing Preferences',
   },
   route: {
-    id: 'components.swap.route',
+    id: 'swap.swapScreen.route',
     defaultMessage: '!!!Route',
   },
   routeDescription: {
-    id: 'components.swap.routeDescription',
+    id: 'txReview.tokenDetails.overViewTab.description.label',
     defaultMessage: '!!!Route Description',
   },
   usbExplanation: {
-    id: 'components.swap.usbExplanation',
+    id: 'components.ledger.ledgertransportswitchmodal.usbExplanation',
     defaultMessage: '!!!USB Explanation',
   },
   usbButton: {
-    id: 'components.swap.usbButton',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!USB Button',
   },
   usbConnectionIsBlocked: {
-    id: 'components.swap.usbConnectionIsBlocked',
+    id: 'components.ledger.ledgertransportswitchmodal.usbConnectionIsBlocked',
     defaultMessage: '!!!USB Connection Is Blocked',
   },
   bluetoothExplanation: {
-    id: 'components.swap.bluetoothExplanation',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Bluetooth Explanation',
   },
   bluetoothButton: {
-    id: 'components.swap.bluetoothButton',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Bluetooth Button',
   },
   bluetoothError: {
-    id: 'components.swap.bluetoothError',
+    id: 'global.error',
     defaultMessage: '!!!Bluetooth Error',
   },
   transactionSigned: {
-    id: 'components.swap.transactionSigned',
+    id: 'swap.submittedTxScreen.title',
     defaultMessage: '!!!Transaction Signed',
   },
   transactionDisplay: {
-    id: 'components.swap.transactionDisplay',
+    id: 'swap.swapScreen.transactionDisplay',
     defaultMessage: '!!!Transaction Display',
   },
   seeOnExplorer: {
-    id: 'components.swap.seeOnExplorer',
+    id: 'swap.swapScreen.seeOnExplorer',
     defaultMessage: '!!!See On Explorer',
   },
   goToTransactions: {
-    id: 'components.swap.goToTransactions',
+    id: 'rampOnOff.resultRampOnOff.goToTransactions',
     defaultMessage: '!!!Go To Transactions',
   },
   wrongPasswordMessage: {
-    id: 'components.swap.wrongPasswordMessage',
+    id: 'global.actions.dialogs.incorrectPassword.title',
     defaultMessage: '!!!Wrong Password Message',
   },
   assignCollateral: {
-    id: 'components.swap.assignCollateral',
+    id: 'global.actions.dialogs.insufficientCollateral.message',
     defaultMessage: '!!!Assign Collateral',
   },
   collateralNotFound: {
-    id: 'components.swap.collateralNotFound',
+    id: 'discover.modal.collateralNotFoundTitle',
     defaultMessage: '!!!Collateral Not Found',
   },
   noActiveCollateral: {
-    id: 'components.swap.noActiveCollateral',
+    id: 'global.actions.dialogs.logout.noButton',
     defaultMessage: '!!!No Active Collateral',
   },
   collateralTxPending: {
-    id: 'components.swap.collateralTxPending',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
     defaultMessage: '!!!Collateral Tx Pending',
   },
   collateralTxPendingTitle: {
-    id: 'components.swap.collateralTxPendingTitle',
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
     defaultMessage: '!!!Collateral Tx Pending Title',
   },
   failedTxTitle: {
-    id: 'components.swap.failedTxTitle',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Failed Tx Title',
   },
   failedTxText: {
-    id: 'components.swap.failedTxText',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Failed Tx Text',
   },
   failedTxButton: {
-    id: 'components.swap.failedTxButton',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Failed Tx Button',
   },
   notEnoughBalance: {
-    id: 'components.swap.notEnoughBalance',
+    id: 'swap.swapScreen.notEnoughBalance',
     defaultMessage: '!!!Not Enough Balance',
   },
   notEnoughSupply: {
-    id: 'components.swap.notEnoughSupply',
+    id: 'global.actions.dialogs.logout.noButton',
     defaultMessage: '!!!Not Enough Supply',
   },
   notEnoughFeeBalance: {
-    id: 'components.swap.notEnoughFeeBalance',
+    id: 'txReview.fee',
     defaultMessage: '!!!Not Enough Fee Balance',
   },
   noPool: {
-    id: 'components.swap.noPool',
+    id: 'global.actions.dialogs.logout.noButton',
     defaultMessage: '!!!No Pool',
   },
   continue: {
-    id: 'components.swap.continue',
+    id: 'global.continue',
     defaultMessage: '!!!Continue',
   },
   slippageWarningTitle: {
-    id: 'components.swap.slippageWarningTitle',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Slippage Warning Title',
   },
   slippageWarningText: {
-    id: 'components.swap.slippageWarningText',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Slippage Warning Text',
   },
   slippageWarningYourSlippage: {
-    id: 'components.swap.slippageWarningYourSlippage',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Slippage Warning Your Slippage',
   },
   slippageWarningChangeAmount: {
-    id: 'components.swap.slippageWarningChangeAmount',
+    id: 'global.txLabels.amount',
     defaultMessage: '!!!Slippage Warning Change Amount',
   },
   serviceUnavailable: {
-    id: 'components.swap.serviceUnavailable',
+    id: 'global.error.serviceUnavailable',
     defaultMessage: '!!!Service Unavailable',
   },
   serviceUnavailableInfo: {
-    id: 'components.swap.serviceUnavailableInfo',
+    id: 'global.available',
     defaultMessage: '!!!Service Unavailable Info',
   },
   emptyOpenOrders: {
-    id: 'components.swap.emptyOpenOrders',
+    id: 'swap.listOrders.open',
     defaultMessage: '!!!Empty Open Orders',
   },
   emptyOpenOrdersSub: {
-    id: 'components.swap.emptyOpenOrdersSub',
+    id: 'swap.listOrders.open',
     defaultMessage: '!!!Empty Open Orders Sub',
   },
   emptyCompletedOrders: {
-    id: 'components.swap.emptyCompletedOrders',
+    id: 'global.actions.dialogs.commonbuttons.completeButton',
     defaultMessage: '!!!Empty Completed Orders',
   },
   emptySearchCompletedOrders: {
-    id: 'components.swap.emptySearchCompletedOrders',
+    id: 'global.actions.dialogs.commonbuttons.completeButton',
     defaultMessage: '!!!Empty Search Completed Orders',
   },
   emptySearchOpenOrders: {
-    id: 'components.swap.emptySearchOpenOrders',
+    id: 'nft.navigation.search',
     defaultMessage: '!!!Empty Search Open Orders',
   },
   warning: {
-    id: 'components.swap.warning',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Warning',
   },
   backToSwapOrders: {
-    id: 'components.swap.backToSwapOrders',
+    id: 'swap.swapScreen.backToSwapOrders',
     defaultMessage: '!!!Back To Swap Orders',
   },
   preprodNoticeTitle: {
-    id: 'components.swap.preprodNoticeTitle',
+    id: 'global.actions.dialogs.logout.noButton',
     defaultMessage: '!!!Preprod Notice Title',
   },
   preprodNoticeText: {
-    id: 'components.swap.preprodNoticeText',
+    id: 'global.actions.dialogs.logout.noButton',
     defaultMessage: '!!!Preprod Notice Text',
   },
   failedTxScreenTitle: {
-    id: 'components.swap.failedTxScreenTitle',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Failed Tx Screen Title',
   },
   failedTxScreenText: {
-    id: 'components.swap.failedTxScreenText',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Failed Tx Screen Text',
   },
   failedTxScreenButton: {
-    id: 'components.swap.failedTxScreenButton',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Failed Tx Screen Button',
   },
   submittedTxScreenTitle: {
-    id: 'components.swap.submittedTxScreenTitle',
+    id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Submitted Tx Screen Title',
   },
   submittedTxScreenText: {
-    id: 'components.swap.submittedTxScreenText',
+    id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!Submitted Tx Screen Text',
   },
   submittedTxScreenButton: {
-    id: 'components.swap.submittedTxScreenButton',
+    id: 'components.txhistory.txnavigationbuttons.sendButton',
     defaultMessage: '!!!Submitted Tx Screen Button',
   },
 })

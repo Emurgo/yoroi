@@ -2,47 +2,47 @@ import {defineMessages} from 'react-intl'
 
 export const ledgerMessages = defineMessages({
   connectUsb: {
-    id: 'hw.connect.usb',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Connect via USB',
   },
   keepUsbConnected: {
-    id: 'hw.connect.keepUsbConnected',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!Keep USB connected',
   },
   enableLocation: {
-    id: 'hw.connect.enableLocation',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Enable location services',
   },
   enableTransport: {
-    id: 'hw.connect.enableTransport',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Enable transport',
   },
   enterPin: {
-    id: 'hw.connect.enterPin',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Enter PIN on device',
   },
   openApp: {
-    id: 'hw.connect.openApp',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Open Cardano app on device',
   },
   rejectedByUserError: {
-    id: 'hw.error.rejectedByUser',
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
     defaultMessage: '!!!Operation rejected by user',
   },
   continueOnLedger: {
-    id: 'hw.connect.continueOnLedger',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.learnMore',
     defaultMessage: '!!!Continue on Ledger',
   },
   bluetoothDisabledError: {
-    id: 'hw.error.bluetoothDisabled',
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
     defaultMessage: '!!!Bluetooth is disabled',
   },
   connectionError: {
-    id: 'hw.error.connection',
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
     defaultMessage: '!!!Connection error',
   },
   appOpened: {
-    id: 'hw.connect.appOpened',
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!App opened on device',
   },
 }) 

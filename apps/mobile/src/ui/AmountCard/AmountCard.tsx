@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Platform, Pressable, Text, TextInput, View} from 'react-native'
 
-import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSwap} from '~/features/Swap/common/useSwap'
 import {Icon} from '~/ui/Icon'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
 import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'

@@ -2,67 +2,67 @@ import {defineMessages} from 'react-intl'
 
 export const dashboardMessages = defineMessages({
   title: {
-    id: 'components.dashboard.title',
+    id: 'components.common.navigation.dashboardButton',
     defaultMessage: '!!!Dashboard',
   },
   balanceLabel: {
-    id: 'components.dashboard.balanceLabel',
+    id: 'swap.swapScreen.balance',
     defaultMessage: '!!!Balance',
   },
   rewardsLabel: {
-    id: 'components.dashboard.rewardsLabel',
+    id: 'components.catalyst.insufficientBalance',
     defaultMessage: '!!!Rewards',
   },
   delegatedLabel: {
-    id: 'components.dashboard.delegatedLabel',
+    id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Delegated',
   },
   withdrawButtonTitle: {
-    id: 'components.dashboard.withdrawButtonTitle',
+    id: 'components.delegationsummary.userSummary.withdrawButtonTitle',
     defaultMessage: '!!!Withdraw',
   },
   stakingCenterTitle: {
-    id: 'components.dashboard.stakingCenterTitle',
+    id: 'components.stakingcenter.title',
     defaultMessage: '!!!Staking Center',
   },
   firstLine: {
-    id: 'components.dashboard.firstLine',
+    id: 'components.delegationsummary.notDelegatedInfo.firstLine',
     defaultMessage: '!!!First line',
   },
   secondLine: {
-    id: 'components.dashboard.secondLine',
+    id: 'components.delegationsummary.notDelegatedInfo.secondLine',
     defaultMessage: '!!!Second line',
   },
   failedTxTitle: {
-    id: 'components.dashboard.failedTxTitle',
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
     defaultMessage: '!!!Failed transaction',
   },
   failedTxText: {
-    id: 'components.dashboard.failedTxText',
+    id: 'txReview.failedTxTitle',
     defaultMessage: '!!!Transaction failed',
   },
   failedTxButton: {
-    id: 'components.dashboard.failedTxButton',
+    id: 'global.ok',
     defaultMessage: '!!!OK',
   },
   warning: {
-    id: 'components.dashboard.warning',
+    id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!!Warning',
   },
   goToWebsiteButtonLabel: {
-    id: 'components.dashboard.goToWebsiteButtonLabel',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
     defaultMessage: '!!!Go to website',
   },
   copied: {
-    id: 'components.dashboard.copied',
+    id: 'components.catalyst.step4.qrCopiedText',
     defaultMessage: '!!!Copied',
   },
   unknownPool: {
-    id: 'components.dashboard.unknownPool',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.unknownPool',
     defaultMessage: '!!!Unknown pool',
   },
   undelegate: {
-    id: 'components.dashboard.undelegate',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.undelegate',
     defaultMessage: '!!!Undelegate',
   },
   stakingCenterButton: {

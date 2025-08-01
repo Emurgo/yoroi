@@ -2,51 +2,51 @@ import {defineMessages} from 'react-intl'
 
 export const linksMessages = defineMessages({
   trustedPaymentRequestedTitle: {
-    id: 'components.links.trustedPaymentRequestedTitle',
+    id: 'links.untrusted.paymentRequested.title',
     defaultMessage: '!!!Trusted Payment Requested',
   },
   trustedPaymentRequestedDescription: {
-    id: 'components.links.trustedPaymentRequestedDescription',
+    id: 'links.trusted.paymentRequested.description',
     defaultMessage: '!!!A trusted dApp is requesting a payment',
   },
   untrustedPaymentRequestedTitle: {
-    id: 'components.links.untrustedPaymentRequestedTitle',
+    id: 'links.untrusted.paymentRequested.title',
     defaultMessage: '!!!Untrusted Payment Requested',
   },
   untrustedPaymentRequestedDescription: {
-    id: 'components.links.untrustedPaymentRequestedDescription',
+    id: 'links.untrusted.paymentRequested.description',
     defaultMessage: '!!!An untrusted dApp is requesting a payment',
   },
   trustedBrowserLaunchDappUrlTitle: {
-    id: 'components.links.trustedBrowserLaunchDappUrlTitle',
+    id: 'links.trusted.browserLaunchDappUrl.title',
     defaultMessage: '!!!Trusted Browser Launch',
   },
   trustedBrowserLaunchDappUrlDescription: {
-    id: 'components.links.trustedBrowserLaunchDappUrlDescription',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!A trusted dApp wants to open a URL',
   },
   untrustedBrowserLaunchDappUrlTitle: {
-    id: 'components.links.untrustedBrowserLaunchDappUrlTitle',
+    id: 'links.untrusted.browserLaunchDappUrl.title',
     defaultMessage: '!!!Untrusted Browser Launch',
   },
   untrustedBrowserLaunchDappUrlDescription: {
-    id: 'components.links.untrustedBrowserLaunchDappUrlDescription',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!An untrusted dApp wants to open a URL',
   },
   askToOpenAWalletTitle: {
-    id: 'components.links.askToOpenAWalletTitle',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalButton',
     defaultMessage: '!!!Open Wallet',
   },
   askToOpenAWalletDescription: {
-    id: 'components.links.askToOpenAWalletDescription',
+    id: 'txReview.overview.wallet',
     defaultMessage: '!!!A dApp wants to open a wallet',
   },
   askToRedirectTitle: {
-    id: 'components.links.askToRedirectTitle',
+    id: 'global.buyInfo',
     defaultMessage: '!!!Redirect',
   },
   askToRedirectDescription: {
-    id: 'components.links.askToRedirectDescription',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!A dApp wants to redirect',
   },
 })

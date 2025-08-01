@@ -2,79 +2,79 @@ import {defineMessages} from 'react-intl'
 
 export const claimMessages = defineMessages({
   askConfirmationTitle: {
-    id: 'components.claim.askConfirmationTitle',
+    id: 'claim.askConfirmation.title',
     defaultMessage: '!!!Confirm Claim',
   },
   showSuccessTitle: {
-    id: 'components.claim.showSuccessTitle',
+    id: 'claim.showSuccess.title',
     defaultMessage: '!!!Claim Successful',
   },
   acceptedTitle: {
-    id: 'components.claim.acceptedTitle',
+    id: 'components.initialization.acepttermsofservicescreen.continueButton',
     defaultMessage: '!!!Claim Accepted',
   },
   acceptedMessage: {
-    id: 'components.claim.acceptedMessage',
+    id: 'components.initialization.acepttermsofservicescreen.continueButton',
     defaultMessage: '!!!Your claim has been accepted',
   },
   processingTitle: {
-    id: 'components.claim.processingTitle',
+    id: 'claim.processing.title',
     defaultMessage: '!!!Processing Claim',
   },
   processingMessage: {
-    id: 'components.claim.processingMessage',
+    id: 'claim.processing.message',
     defaultMessage: '!!!Your claim is being processed',
   },
   doneTitle: {
-    id: 'components.claim.doneTitle',
+    id: 'claim.done.title',
     defaultMessage: '!!!Claim Complete',
   },
   doneMessage: {
-    id: 'components.claim.doneMessage',
+    id: 'global.actions.dialogs.commonbuttons.completeButton',
     defaultMessage: '!!!Your claim has been completed',
   },
   addressSharingWarning: {
-    id: 'components.claim.addressSharingWarning',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Address sharing warning',
   },
   domain: {
-    id: 'components.claim.domain',
+    id: 'claim.domain',
     defaultMessage: '!!!Domain',
   },
   code: {
-    id: 'components.claim.code',
+    id: 'claim.code',
     defaultMessage: '!!!Code',
   },
   apiErrorTitle: {
-    id: 'components.claim.apiErrorTitle',
+    id: 'global.actions.dialogs.apiError.title',
     defaultMessage: '!!!API Error',
   },
   apiErrorInvalidRequest: {
-    id: 'components.claim.apiErrorInvalidRequest',
+    id: 'claim.apiError.invalidRequest',
     defaultMessage: '!!!Invalid request',
   },
   apiErrorNotFound: {
-    id: 'components.claim.apiErrorNotFound',
+    id: 'components.walletinit.createwallet.createwalletscreen.notFound',
     defaultMessage: '!!!Not found',
   },
   apiErrorAlreadyClaimed: {
-    id: 'components.claim.apiErrorAlreadyClaimed',
+    id: 'claim.apiError.alreadyClaimed',
     defaultMessage: '!!!Already claimed',
   },
   apiErrorExpired: {
-    id: 'components.claim.apiErrorExpired',
+    id: 'claim.apiError.expired',
     defaultMessage: '!!!Expired',
   },
   apiErrorTooEarly: {
-    id: 'components.claim.apiErrorTooEarly',
+    id: 'txReview.overview.receiveToLabel',
     defaultMessage: '!!!Too early',
   },
   apiErrorRateLimited: {
-    id: 'components.claim.apiErrorRateLimited',
+    id: 'swap.swapScreen.limitButton',
     defaultMessage: '!!!Rate limited',
   },
   continue: {
-    id: 'components.claim.continue',
+    id: 'global.continue',
     defaultMessage: '!!!Continue',
   },
 })

@@ -1,4 +1,5 @@
 import {ThemeName} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 import type {ReactNode} from 'react'
 import * as React from 'react'
@@ -307,6 +308,8 @@ export const useStrings = () => {
         assets: f(portfolioMessages.assets),
         marketData: f(portfolioMessages.marketData),
         tokenPriceChange: f(portfolioMessages.tokenPriceChange),
+        tokenPriceChangeTooltip: (timeInterval: string) =>
+          f(portfolioMessages.tokenPriceChangeTooltip, {timeInterval}),
         tokenPrice: f(portfolioMessages.tokenPrice),
         marketCap: f(portfolioMessages.marketCap),
         _24hVolume: f(portfolioMessages._24hVolume),
@@ -336,6 +339,9 @@ export const useStrings = () => {
         titleMediaDetails: f(portfolioMessages.titleMediaDetails),
         title: f(portfolioMessages.title),
         search: f(portfolioMessages.search),
+        tokens: (qty: number) => f(globalMessages.tokens, {qty}),
+        nfts: (qty: number) => f(globalMessages.nfts, {qty}),
+        tokensAvailable: (qty: number) => f(globalMessages.tokens, {qty}),
       },
 
       // UI strings
@@ -533,7 +539,8 @@ export const useStrings = () => {
           translateThemeName: (theme: ThemeName) => f(themeNames[theme]),
         },
         currencySettings: {
-          translatedName: (symbol: any) => f(currencyNames[symbol]),
+          translatedName: (symbol: Portfolio.Currency.Symbol) =>
+            f(currencyNames[symbol]),
         },
         removeWallet: {
           descriptionParagraph1: f(
@@ -1589,51 +1596,79 @@ export const useStrings = () => {
 
       // Setup Wallet strings
       setupWallet: {
-      // Wallet initialization strings (flat structure)
-      walletChecksum: f(setupWalletMessages.walletChecksum),
-      walletChecksumModalCardFirstItem: f(setupWalletMessages.walletChecksumModalCardFirstItem),
-      walletChecksumModalCardSecondItem: f(setupWalletMessages.walletChecksumModalCardSecondItem),
-      walletChecksumModalCardThirdItem: f(setupWalletMessages.walletChecksumModalCardThirdItem),
-      stepWalletDetails: f(setupWalletMessages.stepWalletDetails),
-      walletDetailsTitle: f(setupWalletMessages.walletDetailsTitle),
-      walletDetailsPasswordHelper: f(setupWalletMessages.walletDetailsPasswordHelper),
-      walletDetailsNameInput: f(setupWalletMessages.walletDetailsNameInput),
-      walletDetailsPasswordInput: f(setupWalletMessages.walletDetailsPasswordInput),
-      walletDetailsConfirmPasswordInput: f(setupWalletMessages.walletDetailsConfirmPasswordInput),
-      invalidChecksum: f(setupWalletMessages.invalidChecksum),
-      validChecksum: f(setupWalletMessages.validChecksum),
-      stepRestoreWalletScreen: f(setupWalletMessages.stepRestoreWalletScreen),
-      choose15WordsMnemonicTitle: f(setupWalletMessages.choose15WordsMnemonicTitle),
-      choose24WordsMnemonicTitle: f(setupWalletMessages.choose24WordsMnemonicTitle),
-      hwModalTitle: f(setupWalletMessages.hwModalTitle),
-      hwModalText: f(setupWalletMessages.hwModalText),
-      hwModalUsbButton: f(setupWalletMessages.hwModalUsbButton),
-      hwModalBtButton: f(setupWalletMessages.hwModalBtButton),
-      hwModalIosWarning: f(setupWalletMessages.hwModalIosWarning),
-      hwWalletDetailsTitle: f(setupWalletMessages.hwWalletDetailsTitle),
-      hwExportKey: f(setupWalletMessages.hwExportKey),
-      bluetoothError: f(setupWalletMessages.bluetoothError),
-      hwCheckIntroline: f(setupWalletMessages.hwCheckIntroline),
-      hwCheckTitle: f(setupWalletMessages.hwCheckTitle),
-      ledgerSupportLink: f(setupWalletMessages.ledgerSupportLink),
-      addNewWalletTitle: f(setupWalletMessages.addNewWalletTitle),
-      createWalletTitle: f(setupWalletMessages.createWalletTitle),
-      restoreWalletTitle: f(setupWalletMessages.restoreWalletTitle),
-      importReadOnlyTitle: f(setupWalletMessages.importReadOnlyTitle),
-      saveReadOnlyWalletTitle: f(setupWalletMessages.saveReadOnlyWalletTitle),
-      save: f(setupWalletMessages.save),
-      walletNameErrorTooLong: f(setupWalletMessages.walletNameErrorTooLong),
-      walletNameErrorMustBeFilled: f(setupWalletMessages.walletNameErrorMustBeFilled),
-      defaultWalletName: f(setupWalletMessages.defaultWalletName),
-      checksumLabel: f(setupWalletMessages.checksumLabel),
-      walletAddressLabel: f(setupWalletMessages.walletAddressLabel),
-      key: f(setupWalletMessages.key),
-      derivationPath: f(setupWalletMessages.derivationPath),
-      importReadOnlyWalletTitle: f(setupWalletMessages.importReadOnlyWalletTitle),
-      importReadOnlyWalletDescription: f(setupWalletMessages.importReadOnlyWalletDescription),
-      importReadOnlyWalletAddress: f(setupWalletMessages.importReadOnlyWalletAddress),
-      importReadOnlyWalletAddressPlaceholder: f(setupWalletMessages.importReadOnlyWalletAddressPlaceholder),
-      importReadOnlyWalletImport: f(setupWalletMessages.importReadOnlyWalletImport),
+        // Wallet initialization strings (flat structure)
+        walletChecksum: f(setupWalletMessages.walletChecksum),
+        walletChecksumModalCardFirstItem: f(
+          setupWalletMessages.walletChecksumModalCardFirstItem,
+        ),
+        walletChecksumModalCardSecondItem: f(
+          setupWalletMessages.walletChecksumModalCardSecondItem,
+        ),
+        walletChecksumModalCardThirdItem: f(
+          setupWalletMessages.walletChecksumModalCardThirdItem,
+        ),
+        stepWalletDetails: f(setupWalletMessages.stepWalletDetails),
+        walletDetailsTitle: f(setupWalletMessages.walletDetailsTitle),
+        walletDetailsPasswordHelper: f(
+          setupWalletMessages.walletDetailsPasswordHelper,
+        ),
+        walletDetailsNameInput: f(setupWalletMessages.walletDetailsNameInput),
+        walletDetailsPasswordInput: f(
+          setupWalletMessages.walletDetailsPasswordInput,
+        ),
+        walletDetailsConfirmPasswordInput: f(
+          setupWalletMessages.walletDetailsConfirmPasswordInput,
+        ),
+        invalidChecksum: f(setupWalletMessages.invalidChecksum),
+        validChecksum: f(setupWalletMessages.validChecksum),
+        stepRestoreWalletScreen: f(setupWalletMessages.stepRestoreWalletScreen),
+        choose15WordsMnemonicTitle: f(
+          setupWalletMessages.choose15WordsMnemonicTitle,
+        ),
+        choose24WordsMnemonicTitle: f(
+          setupWalletMessages.choose24WordsMnemonicTitle,
+        ),
+        hwModalTitle: f(setupWalletMessages.hwModalTitle),
+        hwModalText: f(setupWalletMessages.hwModalText),
+        hwModalUsbButton: f(setupWalletMessages.hwModalUsbButton),
+        hwModalBtButton: f(setupWalletMessages.hwModalBtButton),
+        hwModalIosWarning: f(setupWalletMessages.hwModalIosWarning),
+        hwWalletDetailsTitle: f(setupWalletMessages.hwWalletDetailsTitle),
+        hwExportKey: f(setupWalletMessages.hwExportKey),
+        bluetoothError: f(setupWalletMessages.bluetoothError),
+        hwCheckIntroline: f(setupWalletMessages.hwCheckIntroline),
+        hwCheckTitle: f(setupWalletMessages.hwCheckTitle),
+        ledgerSupportLink: f(setupWalletMessages.ledgerSupportLink),
+        addNewWalletTitle: f(setupWalletMessages.addNewWalletTitle),
+        createWalletTitle: f(setupWalletMessages.createWalletTitle),
+        restoreWalletTitle: f(setupWalletMessages.restoreWalletTitle),
+        importReadOnlyTitle: f(setupWalletMessages.importReadOnlyTitle),
+        saveReadOnlyWalletTitle: f(setupWalletMessages.saveReadOnlyWalletTitle),
+        save: f(setupWalletMessages.save),
+        walletNameErrorTooLong: f(setupWalletMessages.walletNameErrorTooLong),
+        walletNameErrorMustBeFilled: f(
+          setupWalletMessages.walletNameErrorMustBeFilled,
+        ),
+        defaultWalletName: f(setupWalletMessages.defaultWalletName),
+        checksumLabel: f(setupWalletMessages.checksumLabel),
+        walletAddressLabel: f(setupWalletMessages.walletAddressLabel),
+        key: f(setupWalletMessages.key),
+        derivationPath: f(setupWalletMessages.derivationPath),
+        importReadOnlyWalletTitle: f(
+          setupWalletMessages.importReadOnlyWalletTitle,
+        ),
+        importReadOnlyWalletDescription: f(
+          setupWalletMessages.importReadOnlyWalletDescription,
+        ),
+        importReadOnlyWalletAddress: f(
+          setupWalletMessages.importReadOnlyWalletAddress,
+        ),
+        importReadOnlyWalletAddressPlaceholder: f(
+          setupWalletMessages.importReadOnlyWalletAddressPlaceholder,
+        ),
+        importReadOnlyWalletImport: f(
+          setupWalletMessages.importReadOnlyWalletImport,
+        ),
       },
     })
   }, [intl])

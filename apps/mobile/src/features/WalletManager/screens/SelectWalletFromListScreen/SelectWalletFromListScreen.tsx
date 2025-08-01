@@ -9,12 +9,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useWalletMetas} from '~/features/WalletManager/hooks/useWalletMetas'
 import {SupportIllustration} from '~/features/WalletManager/ui/illustrations/SupportIllustration'
 import {isDev} from '~/kernel/constants'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
 import {useWalletManager} from '../../context/WalletManagerProvider'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
@@ -40,7 +40,10 @@ export const SelectWalletFromList = () => {
         await handleNotificationInternalNavigationAction(pushNotificationsManager, walletNavigation)
         return
       } */
-      navigation.navigate('tx-list')
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'history-list'}},
+      })
     },
     [walletManager, navigation],
   )
@@ -124,7 +127,7 @@ const SupportTicketLink = () => {
       <Space.Width.sm />
 
       <Text style={[ta.text_primary_medium, a.button_2_md]}>
-        {strings.supportTicketLink.toLocaleUpperCase()}
+        {strings.walletManager.supportTicketLink.toLocaleUpperCase()}
       </Text>
     </TouchableOpacity>
   )
@@ -144,7 +147,7 @@ const AddWalletButton = () => {
         resetSetupWalletState()
         goToSetupWallet()
       }}
-      title={strings.addWalletButton}
+      title={strings.walletManager.addWalletButton}
     />
   )
 }
