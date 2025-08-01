@@ -46,7 +46,7 @@ import {useWalletManager} from '../../../../WalletManager/context/WalletManagerP
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
-import {useStrings} from './strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const ManageCollateralScreen = () => {
   const {atoms: ta} = useTheme()
