@@ -65,4 +65,16 @@ export const dashboardMessages = defineMessages({
     id: 'components.dashboard.undelegate',
     defaultMessage: '!!!Undelegate',
   },
+  stakingCenterButton: {
+    id: 'components.delegation.delegationnavigationbuttons.stakingCenterButton',
+    defaultMessage: '!!!Go to Staking Center',
+  },
+  epochProgressTitle: {
+    id: 'components.delegationsummary.epochProgress.title',
+    defaultMessage: '!!!Epoch progress',
+  },
+  endsInLabel: {
+    id: 'components.delegationsummary.epochProgress.endsIn',
+    defaultMessage: '!!!Ends in',
+  },
 })

@@ -1,8 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {ProgressCircle} from '~/ui/ProgressCircle/ProgressCircle'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
@@ -20,12 +20,12 @@ type Props = {
 }
 
 export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
-  const intl = useIntl()
+  const strings = useStrings()
   const {palette: p} = useTheme()
 
   return (
     <TitledCard
-      title={intl.formatMessage(messages.epochProgressTitle)}
+      title={strings.dashboard.epochProgressTitle}
       testID="epochProgressTitleCard"
     >
       <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
@@ -47,7 +47,7 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
             <Text
               style={[a.pr_sm, a.body_2_md_regular, {color: p.text_gray_low}]}
             >
-              {intl.formatMessage(messages.epochProgressTitle)}:
+              {strings.dashboard.epochProgressTitle}:
             </Text>
 
             <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
@@ -70,7 +70,7 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
             <Text
               style={[a.pr_sm, a.body_2_md_regular, {color: p.text_gray_low}]}
             >
-              {intl.formatMessage(messages.endsInLabel)}:
+              {strings.dashboard.endsInLabel}:
             </Text>
 
             <View
@@ -151,13 +151,4 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
   )
 }
 
-const messages = defineMessages({
-  epochProgressTitle: {
-    id: 'components.delegationsummary.epochProgress.title',
-    defaultMessage: '!!!Epoch progress',
-  },
-  endsInLabel: {
-    id: 'components.delegationsummary.epochProgress.endsIn',
-    defaultMessage: '!!!Ends in',
-  },
-})
+// Messages moved to centralized useStrings

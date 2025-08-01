@@ -3,7 +3,7 @@ import {StackNavigationProp} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
+import {defineMessages} from 'react-intl'
 import {
   ActivityIndicator,
   RefreshControl,
@@ -22,7 +22,7 @@ import {PoolTransitionNotice} from '~/features/Staking/Staking/PoolTransition/Po
 import {usePoolTransition} from '~/features/Staking/Staking/PoolTransition/usePoolTransition'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import globalMessages from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {DashboardRoutes, useWalletNavigation} from '~/kernel/navigation'
 
@@ -47,7 +47,7 @@ export const Dashboard = () => {
   const {track} = useMetrics()
   const {palette: p} = useTheme()
 
-  const intl = useIntl()
+  const strings = useStrings()
   const navigateTo = useNavigateTo()
   const governanceStrings = useStrings()
   const {isPoolRetiring} = usePoolTransition()
@@ -206,7 +206,7 @@ export const Dashboard = () => {
         <Actions>
           <Button
             onPress={navigateTo.stakingCenter}
-            title={intl.formatMessage(messages.stakingCenterButton)}
+            title={strings.dashboard.stakingCenterButton}
             disabled={meta.isReadOnly}
             testID="stakingCenterButton"
           />
@@ -228,15 +228,15 @@ export const useNavigateTo = () => {
 }
 
 const SyncErrorBanner = ({showRefresh}: {showRefresh: boolean}) => {
-  const intl = useIntl()
+  const strings = useStrings()
 
   return (
     <Banner
       error
       text={
         showRefresh
-          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
+          ? strings.global.syncErrorBannerTextWithRefresh
+          : strings.global.syncErrorBannerTextWithoutRefresh
       }
     />
   )
@@ -281,12 +281,7 @@ const EpochInfo = () => {
   )
 }
 
-const messages = defineMessages({
-  stakingCenterButton: {
-    id: 'components.delegation.delegationnavigationbuttons.stakingCenterButton',
-    defaultMessage: '!!!Go to Staking Center',
-  },
-})
+// Messages moved to centralized useStrings
 
 const Actions = (props: ViewProps) => {
   const {palette: p} = useTheme()

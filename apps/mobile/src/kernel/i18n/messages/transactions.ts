@@ -257,4 +257,16 @@ export const transactionsMessages = defineMessages({
     id: 'components.transactions.directionMessages.MULTI',
     defaultMessage: '!!!Multi',
   },
+  addressPrefixReceive: {
+    id: 'components.transactions.addressPrefixReceive',
+    defaultMessage: '!!!Receive Address {idx}',
+  },
+  addressPrefixChange: {
+    id: 'components.transactions.addressPrefixChange',
+    defaultMessage: '!!!Change Address {idx}',
+  },
+  addressPrefixNotMine: {
+    id: 'components.transactions.addressPrefixNotMine',
+    defaultMessage: '!!!External Address',
+  },
 })

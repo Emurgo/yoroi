@@ -8,8 +8,8 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 // import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
@@ -49,7 +49,7 @@ export const TxListItem = ({transaction}: Props) => {
   const showDetails = () =>
     navigation.navigate('tx-details', {id: transaction.id})
   const submittedAt = isNonNullable(transaction.submittedAt)
-    ? `${formatDateRelative(transaction.submittedAt, intl) + ', ' + formatTime(transaction.submittedAt, intl)}`
+    ? `${formatDateRelative(transaction.submittedAt, intl, {today: strings.global.today, yesterday: strings.global.yesterday}) + ', ' + formatTime(transaction.submittedAt, intl)}`
     : ''
 
   const amountAsMT = MultiToken.fromArray(transaction.amount)

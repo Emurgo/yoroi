@@ -915,6 +915,14 @@ export default freeze(
       id: 'global.proceed',
       defaultMessage: '!!!Proceed',
     },
+    today: {
+      id: 'global.today',
+      defaultMessage: '!!!Today',
+    },
+    yesterday: {
+      id: 'global.yesterday',
+      defaultMessage: '!!!Yesterday',
+    },
   }),
   true,
 )

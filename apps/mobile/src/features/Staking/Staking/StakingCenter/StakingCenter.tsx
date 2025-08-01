@@ -10,7 +10,7 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {showErrorDialog} from '~/kernel/dialogs'
-import globalMessages from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -20,7 +20,7 @@ import {PoolDetailScreen} from '../PoolDetails'
 import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
 
 export const StakingCenter = () => {
-  const intl = useIntl()
+  const strings = useStrings()
   const {isDark, atoms: ta} = useTheme()
   const queryClient = useQueryClient()
 
@@ -132,7 +132,7 @@ export const StakingCenter = () => {
 
       <PleaseWaitModal
         title=""
-        spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
+        spinnerText={strings.global.pleaseWait}
         visible={isLoading}
       />
     </SafeAreaView>

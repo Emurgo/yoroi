@@ -444,6 +444,9 @@ export const useStrings = () => {
         rewardsLabel: f(dashboardMessages.rewardsLabel),
         delegatedLabel: f(dashboardMessages.delegatedLabel),
         withdrawButtonTitle: f(dashboardMessages.withdrawButtonTitle),
+        stakingCenterButton: f(dashboardMessages.stakingCenterButton),
+        epochProgressTitle: f(dashboardMessages.epochProgressTitle),
+        endsInLabel: f(dashboardMessages.endsInLabel),
       },
 
       // Settings strings
@@ -796,6 +799,8 @@ export const useStrings = () => {
         ),
         disclaimer: f(globalMessages.disclaimer),
         proceed: f(globalMessages.proceed),
+        today: f(globalMessages.today),
+        yesterday: f(globalMessages.yesterday),
         insufficientBalance: (params: {
           requiredBalance: string
           currentBalance: string
@@ -1279,6 +1284,11 @@ export const useStrings = () => {
         walletAddress: f(transactionsMessages.walletAddress),
         BIP32path: f(transactionsMessages.BIP32path),
         copyLabel: f(transactionsMessages.copyLabel),
+        addressPrefixReceive: (idx: number) =>
+          f(transactionsMessages.addressPrefixReceive, {idx}),
+        addressPrefixChange: (idx: number) =>
+          f(transactionsMessages.addressPrefixChange, {idx}),
+        addressPrefixNotMine: f(transactionsMessages.addressPrefixNotMine),
         spending: f(transactionsMessages.spending),
         staking: f(transactionsMessages.staking),
         addessModalTitle: f(transactionsMessages.addessModalTitle),
