@@ -1,11 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack'
-// import {useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
-/* import {
+import {
   defaultStackNavigationOptions,
   WalletInitRoutes,
-} from '~/kernel/navigation' */
+} from '~/kernel/navigation'
 // import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
@@ -21,21 +21,21 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 
-const Stack = createStackNavigator<any /* WalletInitRoutes */>()
+const Stack = createStackNavigator<WalletInitRoutes>()
 export const SetupWalletNavigator = () => {
   const strings = useStrings()
-  // const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
-  /* const navigationOptions = React.useMemo(
+  const navigationOptions = React.useMemo(
     () => defaultStackNavigationOptions(ta, p),
     [ta, p],
   )
- */
+
   return (
     <Stack.Navigator
       screenOptions={
         {
-          // ...navigationOptions,
+          ...navigationOptions,
           // headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }
       }

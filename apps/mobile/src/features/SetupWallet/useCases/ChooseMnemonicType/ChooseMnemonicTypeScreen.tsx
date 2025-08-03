@@ -6,6 +6,7 @@ import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
 import {Space} from '~/ui/Space/Space'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
@@ -19,7 +20,7 @@ export const ChooseMnemonicTypeScreen = () => {
   const {track} = useMetrics()
   const {palette: p} = useTheme()
 
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const handle15Words = () => {
     mnemonicTypeChanged(15)
