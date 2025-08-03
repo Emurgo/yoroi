@@ -1669,6 +1669,14 @@ export const useStrings = () => {
         importReadOnlyWalletImport: f(
           setupWalletMessages.importReadOnlyWalletImport,
         ),
+        aboutRecoveryPhraseTitle: f(setupWalletMessages.aboutRecoveryPhraseTitle),
+        aboutRecoveryPhraseCardFirstItem: f(setupWalletMessages.aboutRecoveryPhraseCardFirstItem),
+        aboutRecoveryPhraseCardSecondItem: f(setupWalletMessages.aboutRecoveryPhraseCardSecondItem),
+        aboutRecoveryPhraseCardThirdItem: f(setupWalletMessages.aboutRecoveryPhraseCardThirdItem),
+        aboutRecoveryPhraseCardFourthItem: f(setupWalletMessages.aboutRecoveryPhraseCardFourthItem),
+        aboutRecoveryPhraseCardFifthItem: f(setupWalletMessages.aboutRecoveryPhraseCardFifthItem),
+        stepAboutRecoveryPhrase: f(setupWalletMessages.stepAboutRecoveryPhrase),
+        next: f(setupWalletMessages.next),
       },
     })
   }, [intl])

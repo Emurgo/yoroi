@@ -406,7 +406,7 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!About recovery phrase',
   },
   stepAboutRecoveryPhrase: {
-    id: 'components.walletinit.createwallet.aboutrecoveryphrasecard.step',
+    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.step',
     defaultMessage: '!!!Step 1 of 3',
   },
 }) 

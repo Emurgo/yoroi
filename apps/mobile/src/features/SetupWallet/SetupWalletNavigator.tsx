@@ -44,7 +44,7 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-choose-setup-type-init"
         component={ChooseSetupTypeScreen}
         options={{
-          title: strings.setupWallet.navigator.addNewWalletTitle,
+          title: strings.setupWallet.addNewWalletTitle,
           headerLeft: () => null,
         }}
       />
@@ -52,13 +52,13 @@ export const SetupWalletNavigator = () => {
       <Stack.Screen
         name="setup-wallet-choose-setup-type"
         component={ChooseSetupTypeScreen}
-        options={{title: strings.setupWallet.navigator.addNewWalletTitle}}
+        options={{title: strings.setupWallet.addNewWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-restore-choose-mnemonic-type"
         component={ChooseMnemonicTypeScreen}
-        options={{title: strings.setupWallet.navigator.restoreWalletTitle}}
+        options={{title: strings.setupWallet.restoreWalletTitle}}
       />
 
       <Stack.Screen
@@ -66,27 +66,27 @@ export const SetupWalletNavigator = () => {
         component={WalletDetailsScreen}
         options={{
           /* ...navigationOptions,  */ title:
-            strings.setupWallet.navigator.createWalletTitle,
+            strings.setupWallet.createWalletTitle,
         }}
       />
 
       <Stack.Screen
         name="setup-wallet-restore-form"
         component={RestoreWalletScreen}
-        options={{title: strings.setupWallet.navigator.restoreWalletTitle}}
+        options={{title: strings.setupWallet.restoreWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-restore-details"
         component={RestoreWalletDetailsScreen}
-        options={{title: strings.setupWallet.navigator.restoreWalletTitle}}
+        options={{title: strings.setupWallet.restoreWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-import-read-only"
         component={ImportReadOnlyWalletScreen}
         options={{
-          title: strings.setupWallet.navigator.importReadOnlyTitle,
+          title: strings.setupWallet.importReadOnlyTitle,
           headerTransparent: true,
         }}
       />
@@ -94,7 +94,7 @@ export const SetupWalletNavigator = () => {
       <Stack.Screen
         name="setup-wallet-save-read-only"
         component={SaveReadOnlyWalletScreen}
-        options={{title: strings.setupWallet.navigator.saveReadOnlyWalletTitle}}
+        options={{title: strings.setupWallet.saveReadOnlyWalletTitle}}
       />
       {/*
       <Stack.Screen //
@@ -120,19 +120,19 @@ export const SetupWalletNavigator = () => {
       <Stack.Screen //
         name="setup-wallet-about-recovery-phase"
         component={AboutRecoveryPhraseScreen}
-        options={{title: strings.setupWallet.navigator.createWalletTitle}}
+        options={{title: strings.setupWallet.createWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-recovery-phrase-mnemonic"
         component={RecoveryPhraseScreen}
-        options={{title: strings.setupWallet.navigator.createWalletTitle}}
+        options={{title: strings.setupWallet.createWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-verify-recovery-phrase-mnemonic"
         component={VerifyRecoveryPhraseScreen}
-        options={{title: strings.setupWallet.navigator.createWalletTitle}}
+        options={{title: strings.setupWallet.createWalletTitle}}
       />
 
       <Stack.Screen

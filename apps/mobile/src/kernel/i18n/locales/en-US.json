@@ -608,6 +608,7 @@
   "components.walletinit.walletinitmenu.cardanoTestnetbutton.description": "Works with test ADA (tADA)",
   "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhrase.title": "<b>Read this information carefully</b> before saving your recovery phrase:",
   "components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.title": "About recovery phrase",
+  "components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.step": "Step 1 of 3",
   "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.firstItem": "<b>Recovery phrase</b> is a unique combination of words",
   "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.secondItem": "<b>Recovery phrase</b> is the only way to access your wallet",
   "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.thirdItem": "If you lose your <b>Recovery phrase</b>, it will not be possible to recover your wallet",
