@@ -1601,9 +1601,7 @@ export const useStrings = () => {
         walletChecksumModalCardFirstItem: f(
           setupWalletMessages.walletChecksumModalCardFirstItem,
         ),
-        walletChecksumModalCardSecondItem: f(
-          setupWalletMessages.walletChecksumModalCardSecondItem,
-        ),
+        walletChecksumModalCardSecondItem: (values: any) => f(setupWalletMessages.walletChecksumModalCardSecondItem, values),
         walletChecksumModalCardThirdItem: f(
           setupWalletMessages.walletChecksumModalCardThirdItem,
         ),
