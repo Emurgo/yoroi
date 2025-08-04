@@ -1,30 +1,31 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+import {UseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
 import {
   parseBoolean,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+
+import * as React from 'react'
 import {Platform, Pressable, Switch, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation'
-
+import {useWalletNavigation} from '~/kernel/navigation/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
+
 import {DarkThemeIlustration} from '../illustrations/DarkThemeIlustration'
 import {LightThemeIlustration} from '../illustrations/LightThemeIlustration'
 
-export const DarkThemeAnnouncement = () => {
+export const DarkThemeAnnouncementScreen = () => {
   const strings = useStrings()
   const {isDark, atoms: ta, palette: p} = useTheme()
   const {track} = useMetrics()
-  const {setScreenShown, isLoading: isSetScreenShownLoading} =
+  const {setScreenShown, isPending: isSetScreenShownLoading} =
     useSetScreenShown()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
@@ -148,18 +149,18 @@ const Toggle = () => {
 
 const darkThemeAnnouncementShownKey = 'dark-theme-announcement-shown-key'
 export const useShowDarkThemeAnnouncementScreen = (
-  options: UseQueryOptions<
-    boolean,
-    Error,
-    boolean,
-    ['useShowDarkThemeAnnouncementScreen']
+  options: Partial<
+    UseQueryOptions<
+      boolean,
+      Error,
+      boolean,
+      ['useShowDarkThemeAnnouncementScreen']
+    >
   > = {},
 ) => {
   const storage = useAsyncStorage()
 
-  const query = useQuery({
-    useErrorBoundary: true,
-    suspense: true,
+  const query = useSuspenseQuery({
     ...options,
     queryKey: ['useShowDarkThemeAnnouncementScreen'],
     queryFn: () =>

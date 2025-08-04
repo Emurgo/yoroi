@@ -1,4 +1,4 @@
-import {useQuery} from '@tanstack/react-query'
+import {useSuspenseQuery} from '@tanstack/react-query'
 import {
   isBoolean,
   parseSafe,
@@ -6,7 +6,7 @@ import {
   useMutationWithInvalidations,
 } from '@yoroi/common'
 
-import {Disclaimer} from './types'
+import {Disclaimer} from '../../common/types'
 
 export const useDisclaimerState = (name: Disclaimer, key = 'accepted') => {
   const storage = useAsyncStorage()
@@ -18,8 +18,7 @@ export const useDisclaimerState = (name: Disclaimer, key = 'accepted') => {
     invalidateQueries: [queryKey],
   })
 
-  const query = useQuery({
-    suspense: true,
+  const query = useSuspenseQuery({
     queryKey,
     queryFn: async () => {
       const storedStorage = await walletStorage.getItem(key)

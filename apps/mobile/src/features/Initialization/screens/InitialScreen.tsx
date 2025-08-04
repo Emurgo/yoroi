@@ -1,16 +1,18 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {BlueCheckbox} from '~/ui/BlueCheckbox/BlueCheckbox'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {SpaceHeight} from '~/ui/Space/Space'
-import {useNavigateTo} from '../common'
-import {useStrings} from '~/kernel/i18n/useStrings'
+import {Space} from '~/ui/Space/Space'
+
+import {useNavigateTo} from '../hooks/useNavigateTo'
 
 export const InitialScreen = () => {
   const strings = useStrings()
@@ -51,7 +53,7 @@ export const InitialScreen = () => {
         <Space.Height.xl />
 
         <Text style={[a.heading_3_medium, a.text_center, {color: p.gray_900}]}>
-          {strings.languagePickerTitle}
+          {strings.initialization.languagePickerTitle}
         </Text>
 
         <Space.Height.lg />
@@ -69,7 +71,7 @@ export const InitialScreen = () => {
           <View style={[a.flex, a.flex_row, a.flex_wrap]}>
             <Text
               style={[a.body_1_lg_regular, {color: p.gray_max}]}
-            >{`${strings.tosIAgreeWith} `}</Text>
+            >{`${strings.initialization.tosIAgreeWith} `}</Text>
 
             <TouchableOpacity onPress={onTosLinkPress} testID="linkToS">
               <Text
@@ -78,7 +80,7 @@ export const InitialScreen = () => {
                   {color: p.primary_800, textDecorationLine: 'underline'},
                 ]}
               >
-                {strings.tosAgreement}
+                {strings.initialization.tosAgreement}
               </Text>
             </TouchableOpacity>
 
@@ -87,7 +89,7 @@ export const InitialScreen = () => {
             >{` `}</Text>
 
             <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
-              {strings.tosAnd}
+              {strings.initialization.tosAnd}
             </Text>
 
             <Text
@@ -104,14 +106,14 @@ export const InitialScreen = () => {
                   {color: p.primary_800, textDecorationLine: 'underline'},
                 ]}
               >
-                {strings.privacyPolicy}
+                {strings.initialization.privacyPolicy}
               </Text>
             </TouchableOpacity>
           </View>
         </BlueCheckbox>
 
         <Button
-          title={strings.continue}
+          title={strings.initialization.continue}
           disabled={!tosAccepted}
           onPress={onPressContinue}
           testID="buttonContinue"

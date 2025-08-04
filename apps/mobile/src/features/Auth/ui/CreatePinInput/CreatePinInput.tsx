@@ -4,6 +4,7 @@ import {pinLength} from '~/features/Auth/common/constants'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {PinInput, PinInputRef} from '~/features/Auth/ui/PinInput/PinInput'
 import {showErrorDialog} from '~/kernel/dialogs'
+import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 
@@ -25,7 +26,7 @@ export const CreatePinInput = ({onDone}: Props) => {
   const handlePinConfirmation = (pinConfirmation: string) => {
     if (pinConfirmation !== pin) {
       logger.debug('PIN mismatch', {origin: 'CreatePinInput', type: 'user'})
-      showErrorDialog(strings.auth.pinMismatch)
+      showErrorDialog(errorMessages.pinMismatch)
       step === 'pin'
         ? pinInputRef.current?.clear()
         : pinConfirmationInputRef.current?.clear()

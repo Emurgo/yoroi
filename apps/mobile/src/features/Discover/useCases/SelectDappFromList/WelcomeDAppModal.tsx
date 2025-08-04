@@ -21,7 +21,7 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
     if (disabled || seen || showing) return
 
     openModal({
-      title: strings.welcomeToYoroiDAppExplorer,
+      title: strings.discover.welcomeToYoroiDAppExplorer,
       content: (
         <View style={[a.px_lg]}>
           <Image
@@ -32,7 +32,7 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
           <Text
             style={[a.body_1_lg_regular, {color: p.gray_900, marginTop: 16}]}
           >
-            {strings.welcomeToYoroiDAppExplorerDescription}
+            {strings.discover.welcomeToYoroiDAppExplorerDescription}
           </Text>
         </View>
       ),
@@ -42,7 +42,7 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
             setSeen(true)
             closeModal()
           }}
-          title={strings.next}
+          title={strings.discover.next}
         />
       ),
       height: 530 + insets.bottom,
@@ -57,9 +57,9 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
     seen,
     setSeen,
     showing,
-    strings.next,
-    strings.welcomeToYoroiDAppExplorer,
-    strings.welcomeToYoroiDAppExplorerDescription,
+    strings.discover.next,
+    strings.discover.welcomeToYoroiDAppExplorer,
+    strings.discover.welcomeToYoroiDAppExplorerDescription,
   ])
 
   return <></>

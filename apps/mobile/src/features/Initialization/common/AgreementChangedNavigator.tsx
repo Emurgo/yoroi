@@ -1,27 +1,29 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {createStackNavigator} from '@react-navigation/stack'
-import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
-import {
-  defaultStackNavigationOptions,
-  InititalizationRoutes,
-} from '~/kernel/navigation'
-import {AnalyticsChangedScreen} from './AnalyticsChangedScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {ReadPrivacyPolicyScreen} from './ReadPrivacyPolicyScreen'
-import {ReadTermsOfServiceScreen} from './ReadTermsOfServiceScreen'
-import {TermsOfServiceChangedScreen} from './TermsOfServiceChangedScreen'
+
+import {
+  InititalizationRoutes,
+  defaultStackNavigationOptions,
+} from '~/kernel/navigation/navigation'
+import {AnalyticsChangedScreen} from '../screens/AnalyticsChangedScreen'
+import {ReadPrivacyPolicyScreen} from '../screens/ReadPrivacyPolicyScreen'
+import {ReadTermsOfServiceScreen} from '../screens/ReadTermsOfServiceScreen'
+import {TermsOfServiceChangedScreen} from '../screens/TermsOfServiceChangedScreen'
 
 const Stack = createStackNavigator<InititalizationRoutes>()
 
 export const AgreementChangedNavigator = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   return (
     <Stack.Navigator
       initialRouteName="terms-of-service-changed"
       screenOptions={{
-        ...defaultStackNavigationOptions(ta, p),
+        ...defaultStackNavigationOptions(a, p),
       }}
     >
       <Stack.Screen
@@ -39,13 +41,19 @@ export const AgreementChangedNavigator = () => {
       <Stack.Screen
         name="read-terms-of-service"
         component={ReadTermsOfServiceScreen}
-        options={{headerShown: true, title: strings.acceptTermsTitle}}
+        options={{
+          headerShown: true,
+          title: strings.initialization.acceptTermsTitle,
+        }}
       />
 
       <Stack.Screen
         name="read-privacy-policy"
         component={ReadPrivacyPolicyScreen}
-        options={{headerShown: true, title: strings.acceptPrivacyPolicyTitle}}
+        options={{
+          headerShown: true,
+          title: strings.initialization.acceptPrivacyPolicyTitle,
+        }}
       />
     </Stack.Navigator>
   )

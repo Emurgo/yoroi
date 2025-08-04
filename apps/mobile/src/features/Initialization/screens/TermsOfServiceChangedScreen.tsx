@@ -1,14 +1,16 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {BlueCheckbox} from '~/ui/BlueCheckbox/BlueCheckbox'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {SpaceHeight} from '~/ui/Space/Space'
-import {useNavigateTo} from '../common'
-import {useStrings} from '~/kernel/i18n/useStrings'
+import {Space} from '~/ui/Space/Space'
+
+import {useNavigateTo} from '../hooks/useNavigateTo'
 
 export const TermsOfServiceChangedScreen = () => {
   const [accepted, setAccepted] = React.useState(false)
@@ -40,13 +42,13 @@ export const TermsOfServiceChangedScreen = () => {
         <Space.Height.xl />
 
         <Text style={[a.heading_3_medium, {color: p.gray_900}, a.text_center]}>
-          {strings.title}
+          {strings.initialization.title}
         </Text>
 
         <Space.Height.lg />
 
         <Text style={[a.body_1_lg_regular, {color: p.gray_800}, a.text_center]}>
-          {strings.description}
+          {strings.initialization.description}
         </Text>
 
         <Space.Height.lg />
@@ -60,7 +62,7 @@ export const TermsOfServiceChangedScreen = () => {
           <View style={[a.flex, a.flex_row, a.flex_wrap]}>
             <Text
               style={[a.body_1_lg_regular, {color: p.gray_max}]}
-            >{`${strings.tosIAgreeWith} `}</Text>
+            >{`${strings.initialization.tosIAgreeWith} `}</Text>
 
             <TouchableOpacity onPress={onTosLinkPress}>
               <Text
@@ -69,7 +71,7 @@ export const TermsOfServiceChangedScreen = () => {
                   {color: p.gray_800, textDecorationLine: 'underline'},
                 ]}
               >
-                {strings.tosAgreement}
+                {strings.initialization.tosAgreement}
               </Text>
             </TouchableOpacity>
 
@@ -78,7 +80,7 @@ export const TermsOfServiceChangedScreen = () => {
             >{` `}</Text>
 
             <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
-              {strings.tosAnd}
+              {strings.initialization.tosAnd}
             </Text>
 
             <Text
@@ -92,14 +94,14 @@ export const TermsOfServiceChangedScreen = () => {
                   {color: p.gray_800, textDecorationLine: 'underline'},
                 ]}
               >
-                {strings.privacyPolicy}
+                {strings.initialization.privacyPolicy}
               </Text>
             </TouchableOpacity>
           </View>
         </BlueCheckbox>
 
         <Button
-          title={strings.continue}
+          title={strings.initialization.continue}
           disabled={!accepted}
           onPress={onPressContinue}
         />

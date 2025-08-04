@@ -5,7 +5,7 @@ import {
   MetricsProvider,
   makeMetricsManager,
 } from './src/kernel/metrics/metricsManager'
-import {RouterContainer} from './src/kernel/navigation/Router'
+import {RouterContainer} from './src/kernel/navigation/RouterContainer'
 
 const metricsManager = makeMetricsManager()
 

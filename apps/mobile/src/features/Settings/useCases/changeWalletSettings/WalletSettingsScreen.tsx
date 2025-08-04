@@ -7,7 +7,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Hr} from '~/ui/Hr/Hr'
 import {Icon} from '~/ui/Icon'
@@ -22,34 +22,34 @@ export const WalletSettingsScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
 
-  const onToggleEasyConfirmation = () => {
-    // TODO: implement
-    track.walletSettingsEasyConfirmationToggled()
-  }
+  // const onToggleEasyConfirmation = () => {
+  //   // TODO: implement
+  //   track.walletSettingsEasyConfirmationToggled()
+  // }
 
-  const onSwitchWallet = () => {
-    resetToWalletSelection()
-  }
+  // const onSwitchWallet = () => {
+  //   resetToWalletSelection()
+  // }
 
-  const onLogout = () => {
-    Alert.alert(
-      strings.settings.walletSettings.logout,
-      strings.settings.walletSettings.logout,
-      [
-        {
-          text: strings.settings.walletSettings.logout,
-          onPress: () => {
-            walletManager.logout(wallet.id)
-            resetToWalletSelection()
-          },
-        },
-        {
-          text: strings.settings.walletSettings.cancel,
-          style: 'cancel',
-        },
-      ],
-    )
-  }
+  // const onLogout = () => {
+  //   Alert.alert(
+  //     strings.settings.walletSettings.logout,
+  //     strings.settings.walletSettings.logout,
+  //     [
+  //       {
+  //         text: strings.settings.walletSettings.logout,
+  //         onPress: () => {
+  //           walletManager.logout(wallet.id)
+  //           resetToWalletSelection()
+  //         },
+  //       },
+  //       {
+  //         text: strings.settings.walletSettings.cancel,
+  //         style: 'cancel',
+  //       },
+  //     ],
+  //   )
+  // }
 
   return (
     <ScrollView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
@@ -64,13 +64,13 @@ export const WalletSettingsScreen = () => {
 
           <View style={[a.gap_sm]}>
             <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.network}</Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>{meta.networkId}</Text>
+            {/* <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>{meta.networkId}</Text> */}
           </View>
 
           <View style={[a.gap_sm]}>
             <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.walletType}</Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {getWalletType(meta.implementation)}
+              {/* {getWalletType(meta.implementation)} */}
             </Text>
           </View>
         </View>
@@ -171,86 +171,86 @@ export const WalletSettingsScreen = () => {
 
         <Space.Height.lg />
 
-        <Button title={strings.settings.walletSettings.logout} onPress={onLogout} />
+        {/* <Button title={strings.settings.walletSettings.logout} onPress={onLogout} /> */}
       </View>
     </ScrollView>
   )
 }
 
-const getWalletType = (
-  implementation: Wallet.Implementation,
-): string => {
-  switch (implementation) {
-    case 'byron':
-      return strings.settings.walletSettings.byronWallet
-    case 'shelley':
-      return strings.settings.walletSettings.shelleyWallet
-    default:
-      return strings.settings.walletSettings.unknownWalletType
-  }
-}
+// const getWalletType = (
+//   implementation: Wallet.Implementation,
+// ): string => {
+//   switch (implementation) {
+//     case 'byron':
+//       return strings.settings.walletSettings.byronWallet
+//     case 'shelley':
+//       return strings.settings.walletSettings.shelleyWallet
+//     default:
+//       return strings.settings.walletSettings.unknownWalletType
+//   }
+// }
 
-const ResyncButton = () => {
-  const strings = useStrings()
-  const {track} = useMetrics()
+// const ResyncButton = () => {
+//   const strings = useStrings()
+//   const {track} = useMetrics()
 
-  const onResync = async () => {
-    // TODO: implement resync
-    track.walletSettingsResyncClicked()
-  }
+//   const onResync = async () => {
+//     // TODO: implement resync
+//     track.walletSettingsResyncClicked()
+//   }
 
-  return (
-    <Button
-      title={strings.settings.walletSettings.resync}
-      onPress={onResync}
-    />
-  )
-}
+//   return (
+//     <Button
+//       title={strings.settings.walletSettings.resync}
+//       onPress={onResync}
+//     />
+//   )
+// }
 
-const AddressModeSwitcher = (props: {isSingle: boolean}) => {
-  const strings = useStrings()
+// const AddressModeSwitcher = (props: {isSingle: boolean}) => {
+//   const strings = useStrings()
 
-  const handleOnSwitchAddressMode = () => {
-    // TODO: implement address mode switching
-  }
+//   const handleOnSwitchAddressMode = () => {
+//     // TODO: implement address mode switching
+//   }
 
-  return (
-    <View style={[a.flex_row, a.gap_sm]}>
-      <Text style={[a.body_1_lg_regular]}>
-        {props.isSingle ? strings.settings.walletSettings.singleAddress : strings.settings.walletSettings.multipleAddresses}
-      </Text>
-      <Button
-        title={strings.settings.walletSettings.switchWallet}
-        onPress={handleOnSwitchAddressMode}
-      />
-    </View>
-  )
-}
+//   return (
+//     <View style={[a.flex_row, a.gap_sm]}>
+//       <Text style={[a.body_1_lg_regular]}>
+//         {props.isSingle ? strings.settings.walletSettings.singleAddress : strings.settings.walletSettings.multipleAddresses}
+//       </Text>
+//       <Button
+//         title={strings.settings.walletSettings.switchWallet}
+//         onPress={handleOnSwitchAddressMode}
+//       />
+//     </View>
+//   )
+// }
 
-const useLogout = () => {
-  const strings = useStrings()
-  const {walletManager} = useWalletManager()
-  const {resetToWalletSelection} = useWalletNavigation()
+// const useLogout = () => {
+//   const strings = useStrings()
+//   const {walletManager} = useWalletManager()
+//   const {resetToWalletSelection} = useWalletNavigation()
 
-  const logout = () => {
-    Alert.alert(
-      strings.settings.walletSettings.logout,
-      strings.settings.walletSettings.logout,
-      [
-        {
-          text: strings.settings.walletSettings.logout,
-          onPress: () => {
-            // TODO: implement logout
-            resetToWalletSelection()
-          },
-        },
-        {
-          text: strings.settings.walletSettings.cancel,
-          style: 'cancel',
-        },
-      ],
-    )
-  }
+//   const logout = () => {
+//     Alert.alert(
+//       strings.settings.walletSettings.logout,
+//       strings.settings.walletSettings.logout,
+//       [
+//         {
+//           text: strings.settings.walletSettings.logout,
+//           onPress: () => {
+//             // TODO: implement logout
+//             resetToWalletSelection()
+//           },
+//         },
+//         {
+//           text: strings.settings.walletSettings.cancel,
+//           style: 'cancel',
+//         },
+//       ],
+//     )
+//   }
 
-  return {logout}
-}
+//   return {logout}
+// }

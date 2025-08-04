@@ -1,16 +1,18 @@
-import {createStackNavigator} from '@react-navigation/stack'
 import {DappConnectorProvider} from '@yoroi/dapp-connector'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
-  defaultStackNavigationOptions,
   DiscoverRoutes,
-} from '~/kernel/navigation'
+  defaultStackNavigationOptions,
+} from '~/kernel/navigation/navigation'
 import {LoadingBoundary} from '~/ui/Boundary/Boundary'
 import {FullErrorFallback} from '~/ui/Boundary/FullErrorFallback'
+
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {BrowserNavigator} from './BrowserNavigator'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
@@ -20,7 +22,7 @@ import {useDappConnectorManager} from './useDappConnectorManager'
 const Stack = createStackNavigator<DiscoverRoutes>()
 
 export const DiscoverNavigator = () => {
-  const {atoms, palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
 
   const manager = useDappConnectorManager()
@@ -29,7 +31,7 @@ export const DiscoverNavigator = () => {
     <DappConnectorProvider manager={manager}>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions(atoms, p.palette),
+          ...defaultStackNavigationOptions(a, p),
           headerLeft: () => null,
           gestureEnabled: true,
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,

@@ -3,11 +3,11 @@ import * as React from 'react'
 import {Linking} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
 import {Analytics} from '~/ui/Analytics/Analytics'
-import {useAgreeWithLegal} from '../common'
 
 export const AnalyticsChangedScreen = () => {
-  const {agree} = useAgreeWithLegal()
+  const {agree} = useLegalAgreement()
   const {atoms: ta} = useTheme()
 
   const onReadMore = () => {

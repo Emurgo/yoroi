@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 import {useDisableAllEasyConfirmation} from '../hooks/useDisableAllEasyConfirmation'
 import {CreatePinScreen} from './CreatePinScreen'

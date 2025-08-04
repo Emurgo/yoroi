@@ -1,17 +1,19 @@
-import {Transaction} from '@emurgo/cross-csl-core'
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
+
+import {Transaction} from '@emurgo/cross-csl-core'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/navigation'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {BaseLedgerError} from '~/wallets/hw/hw'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {getCollateralAmountInLovelace} from '../Settings/useCases/changeWalletSettings/ManageCollateral/helpers'
@@ -21,6 +23,7 @@ import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
 import {useConfirmConnection} from './common/useConfirmConnection'
 import {useNavigateTo} from './common/useNavigateTo'
+import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFoundAlert'
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
@@ -258,8 +261,8 @@ const useSignData = () => {
     (_address: string, payload: string) => {
       return new Promise<string>((resolve, reject) => {
         let shouldResolveOnClose = true
-        const title = strings.signData
-        const summary = `${strings.signMessage}: ${Buffer.from(payload, 'hex').toString('utf-8')}`
+        const title = strings.discover.signData
+        const summary = `${strings.discover.signMessage}: ${Buffer.from(payload, 'hex').toString('utf-8')}`
         try {
           promptRootKey({
             title,
@@ -278,7 +281,7 @@ const useSignData = () => {
         }
       })
     },
-    [promptRootKey, strings.signData, strings.signMessage],
+    [promptRootKey, strings.discover.signData, strings.discover.signMessage],
   )
 }
 
@@ -338,11 +341,11 @@ export const useDappCollateralRequestUtils = (wallet: YoroiWallet) => {
   const strings = useStrings()
   const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert({
     wallet,
-    collateralTxPendingTitle: strings.collateralTxPendingTitle,
-    collateralNotFoundTitle: strings.collateralNotFoundTitle,
-    collateralTxPendingText: strings.collateralTxPendingText,
-    collateralNotFoundText: strings.collateralNotFoundText,
-    collateralNotFoundActionText: strings.collateralNotFoundActionText,
+    collateralTxPendingTitle: strings.discover.collateralTxPendingTitle,
+    collateralNotFoundTitle: strings.discover.collateralNotFoundTitle,
+    collateralTxPendingText: strings.discover.collateralTxPendingText,
+    collateralNotFoundText: strings.discover.collateralNotFoundText,
+    collateralNotFoundActionText: strings.discover.collateralNotFoundActionText,
     onCollateralNotFoundPress: () => {
       navigateToCollateralSettings()
       setIsWarningActive(false)

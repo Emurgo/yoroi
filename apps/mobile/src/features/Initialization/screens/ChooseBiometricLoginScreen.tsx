@@ -1,21 +1,23 @@
-import {useFocusEffect} from '@react-navigation/native'
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {
   parseBoolean,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
-import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useFocusEffect} from '@react-navigation/native'
+import {UseSuspenseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {Alert, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useEnableAuthWithOs} from '~/features/Auth/hooks/useEnableAuthWithOS'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {useStrings} from '~/kernel/i18n/useStrings'
+
 import {Biometric} from '../illustrations/Biometric'
 
 export const ChooseBiometricLoginScreen = () => {
@@ -30,7 +32,7 @@ export const ChooseBiometricLoginScreen = () => {
     }, []),
   )
 
-  const {setScreenShown, isLoading: isScreenShownLoading} = useSetScreenShown()
+  const {setScreenShown, isPending: isScreenShownLoading} = useSetScreenShown()
 
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({
     onSuccess: () => setScreenShown(),
@@ -93,18 +95,16 @@ export const ChooseBiometricLoginScreen = () => {
 
 const chooseBiometricLoginScreenShownKey = 'choose-biometric-login-screen-shown'
 export const useShowBiometricsScreen = (
-  options: UseQueryOptions<
+  options: Partial<UseSuspenseQueryOptions<
     boolean,
     Error,
     boolean,
     ['useShowBiometricsScreen']
-  > = {},
+  >> = {},
 ) => {
   const storage = useAsyncStorage()
 
-  const query = useQuery({
-    useErrorBoundary: true,
-    suspense: true,
+  const query = useSuspenseQuery({
     ...options,
     queryKey: ['useShowBiometricsScreen'],
     queryFn: () =>

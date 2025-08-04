@@ -8,6 +8,7 @@ import {useBackgroundTimer} from '~/hooks/useBackgroundTimer'
 import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {encryptData} from '~/kernel/crypto/encrypt-data'
 import {logger} from '~/kernel/logger/logger'
+
 import {AuthSetting, AuthWithHostConfig} from '../common/types'
 import {useAuthWithHost} from '../hooks/useAuthWithHost'
 

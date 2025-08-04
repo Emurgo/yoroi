@@ -19,6 +19,7 @@ import {of} from 'rxjs'
 import * as uuid from 'uuid'
 
 import {AuthSetting} from '~/features/Auth/common/types'
+import {LegalAgreement} from '~/features/Legal/common/types'
 import {defaultCurrency} from '~/kernel/constants'
 import {
   LanguageCode,
@@ -153,11 +154,29 @@ export const currencyStorageKey = 'currencySymbol'
 export const currencyStorageKeyManager =
   settingsStorageKeyMaker<Portfolio.Currency.Symbol>({
     key: currencyStorageKey,
-    // parser: (data) => parseCurrencySymbol(data),
     parser: (data) => {
       const parsed = parseCurrencySymbol(data)
       return parsed ?? defaultCurrency
     },
+  })
+
+// Settings - Legal Agreement
+export const isLegalAgreement = (data: unknown): data is LegalAgreement => {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'latestAcceptedAgreementsDate' in data
+  )
+}
+export const parseLegalAgreement = (data: unknown) => {
+  const parsed = parseSafe(data)
+  return isLegalAgreement(parsed) ? parsed : {latestAcceptedAgreementsDate: 0}
+}
+export const legalAgreementStorageKey = 'legalAgreement'
+export const legalAgreementStorageKeyManager =
+  settingsStorageKeyMaker<LegalAgreement>({
+    key: legalAgreementStorageKey,
+    parser: parseLegalAgreement,
   })
 
 // Debug storage

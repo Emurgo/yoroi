@@ -2,6 +2,7 @@ import {atoms as a} from '@yoroi/theme'
 
 import * as React from 'react'
 import {View} from 'react-native'
+
 import {CreatePinInput} from '../ui/CreatePinInput/CreatePinInput'
 
 export const CreatePinScreen: React.FC<Props> = ({onDone}) => {

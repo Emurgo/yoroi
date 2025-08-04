@@ -58,6 +58,7 @@
     "@yoroi/blockchains": "file:../../packages/blockchains",
     "@yoroi/claim": "file:../../packages/claim",
     "@yoroi/common": "file:../../packages/common",
+    "@yoroi/dapp-connector": "file:../../packages/dapp-connector",
     "@yoroi/exchange": "file:../../packages/exchange",
     "@yoroi/explorers": "file:../../packages/explorers",
     "@yoroi/identicon": "file:../../packages/identicon",

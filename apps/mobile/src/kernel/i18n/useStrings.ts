@@ -798,6 +798,7 @@ export const useStrings = () => {
 
       // Global strings
       global: {
+        accept: f(globalMessages.accept),
         error: f(globalMessages.error),
         cancel: f(globalMessages.cancel),
         ok: f(globalMessages.ok),
