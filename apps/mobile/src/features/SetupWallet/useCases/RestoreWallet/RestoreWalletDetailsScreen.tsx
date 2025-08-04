@@ -24,6 +24,8 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
+import { useStrings } from '~/kernel/i18n/useStrings'
+import {errorMessages} from '~/kernel/i18n/messages/global'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -128,9 +130,13 @@ export const RestoreWalletDetailsScreen = () => {
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
-          ? showErrorDialog(strings.global.networkError)
-          : showErrorDialog(strings.global.generalError, {
-              message: error.message,
+          ? showErrorDialog({
+              title: errorMessages.networkError.title,
+              message: errorMessages.networkError.message,
+            })
+          : showErrorDialog({
+              title: errorMessages.generalError.title,
+              message: errorMessages.generalError.message,
             })
       })
     },
@@ -138,9 +144,7 @@ export const RestoreWalletDetailsScreen = () => {
 
   const passwordErrorText =
     passwordErrors.passwordIsWeak && !isPending
-      ? strings.setupWallet.passwordStrengthRequirement({
-          requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
-        })
+      ? strings.setupWallet.passwordStrengthRequirement
       : undefined
   const passwordConfirmationErrorText =
     passwordErrors.matchesConfirmation && !isPending
@@ -218,7 +222,7 @@ export const RestoreWalletDetailsScreen = () => {
             checksumLine={1}
             linesOfText={[
               strings.setupWallet.walletChecksumModalCardFirstItem,
-              strings.setupWallet.walletChecksumModalCardSecondItem(plate.TextPart),
+              strings.setupWallet.walletChecksumModalCardSecondItem,
               strings.setupWallet.walletChecksumModalCardThirdItem,
             ]}
           />
@@ -257,15 +261,8 @@ export const RestoreWalletDetailsScreen = () => {
         />
 
         <View style={a.flex_row}>
-          <Text
-            style={[
-              {
-                color: p.text_gray_medium,
-              },
-              a.body_1_lg_regular,
-            ]}
-          >
-            {strings.setupWallet.walletDetailsTitle(bold)}
+          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+            {strings.setupWallet.walletDetailsTitle}
           </Text>
 
           <Info onPress={showModalTipsPassword} />
