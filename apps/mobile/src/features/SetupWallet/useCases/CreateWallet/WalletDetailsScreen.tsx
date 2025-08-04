@@ -155,7 +155,9 @@ export const WalletDetailsScreen = () => {
 
   const passwordErrorText =
     passwordErrors.passwordIsWeak && !isPending
-      ? strings.setupWallet.passwordStrengthRequirement
+      ? strings.setupWallet.passwordStrengthRequirement({
+          requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
+        })
       : undefined
   const passwordConfirmationErrorText =
     passwordErrors.matchesConfirmation && !isPending
