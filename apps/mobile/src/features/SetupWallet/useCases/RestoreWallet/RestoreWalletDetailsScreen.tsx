@@ -224,7 +224,7 @@ export const RestoreWalletDetailsScreen = () => {
             checksumLine={1}
             linesOfText={[
               strings.setupWallet.walletChecksumModalCardFirstItem,
-              strings.setupWallet.walletChecksumModalCardSecondItem,
+              strings.setupWallet.walletChecksumModalCardSecondItem({checksum: plate.TextPart}),
               strings.setupWallet.walletChecksumModalCardThirdItem,
             ]}
           />
@@ -262,8 +262,14 @@ export const RestoreWalletDetailsScreen = () => {
           totalSteps={2}
         />
 
-        <View style={a.flex_row}>
-          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+        <View style={[{height: 24}, a.px_lg, a.flex_row]}>
+          <Text
+            style={[
+              {color: p.text_gray_medium},
+              a.self_center,
+              a.body_1_lg_regular,
+            ]}
+          >
             {strings.setupWallet.walletDetailsTitle(bold)}
           </Text>
 

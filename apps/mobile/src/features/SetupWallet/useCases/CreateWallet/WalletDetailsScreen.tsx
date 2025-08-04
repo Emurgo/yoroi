@@ -264,30 +264,28 @@ export const WalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
+        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
-            title={strings.setupWallet.walletChecksumModalCardThirdItem}
+            title={strings.setupWallet.walletChecksumModalCardTitle}
             checksumImage={seed}
             checksumLine={1}
             linesOfText={[
               strings.setupWallet.walletChecksumModalCardFirstItem,
-              strings.setupWallet.walletChecksumModalCardSecondItem,
+              strings.setupWallet.walletChecksumModalCardSecondItem({checksum: plate}),
               strings.setupWallet.walletChecksumModalCardThirdItem,
             ]}
           />
-        </View>
-      ),
-      footer: (
-        <View style={[a.px_lg, a.pb_lg, a.gap_lg]}>
+
+          <Space.Height.lg />
+
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)
             }}
           />
-
-          <Button title={strings.setupWallet.continueButton} onPress={closeModal} />
         </View>
       ),
+      footer: <Button title={strings.setupWallet.continueButton} onPress={closeModal} />,
       height: HEIGHT_MODAL_CHECKSUM,
     })
   }
@@ -306,7 +304,13 @@ export const WalletDetailsScreen = () => {
         />
 
         <View style={[{height: 24}, a.px_lg, a.flex_row]}>
-          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+          <Text
+            style={[
+              {color: p.text_gray_medium},
+              a.self_center,
+              a.body_1_lg_regular,
+            ]}
+          >
             {strings.setupWallet.walletDetailsTitle(bold)}
           </Text>
 
@@ -384,10 +388,8 @@ export const WalletDetailsScreen = () => {
             <Text
               style={[
                 {color: p.text_gray_medium},
+                a.self_center,
                 a.body_1_lg_regular,
-                a.text_center,
-                a.justify_center,
-                a.align_center,
               ]}
             >
               {plate}
