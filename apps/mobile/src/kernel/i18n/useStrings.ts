@@ -1699,6 +1699,7 @@ export const useStrings = () => {
         nameAlreadyTaken: f(globalMessages.walletNameErrorNameAlreadyTaken),
         mustBeFilled: f(globalMessages.walletNameErrorMustBeFilled),
         walletDetailsModalTitle: f(setupWalletMessages.walletDetailsModalTitle),
+        walletDetailsModalTipsTitle: f(setupWalletMessages.walletDetailsModalTipsTitle),
         walletNameModalCardTitle: f(setupWalletMessages.walletNameModalCardTitle),
         walletNameModalCardFirstItem: f(setupWalletMessages.walletNameModalCardFirstItem),
         walletNameModalCardSecondItem: f(setupWalletMessages.walletNameModalCardSecondItem),

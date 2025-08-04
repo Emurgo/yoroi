@@ -201,7 +201,7 @@ export const WalletDetailsScreen = () => {
 
   const showModalTipsPassword = React.useCallback(() => {
     openModal({
-      title: strings.setupWallet.walletDetailsModalTitle,
+      title: strings.setupWallet.walletDetailsModalTipsTitle,
       content: (
         <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
           <View style={[a.gap_lg]}>
@@ -262,7 +262,7 @@ export const WalletDetailsScreen = () => {
 
   const showModalTipsPlateNumber = () => {
     openModal({
-      title: strings.setupWallet.walletDetailsModalTitle,
+      title: strings.setupWallet.walletDetailsModalTipsTitle,
       content: (
         <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase

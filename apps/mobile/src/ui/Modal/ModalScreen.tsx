@@ -5,10 +5,11 @@ import {
 } from '@gorhom/bottom-sheet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
+import {Text, View} from 'react-native'
 import {useModal} from './ModalContext'
 
 export const Modal = () => {
-  const {bottomSheetModalRef, content, height, canDiscard} = useModal()
+  const {bottomSheetModalRef, content, height, canDiscard, title} = useModal()
   const {palette: p, isDark} = useTheme()
 
   const snapPoints = React.useMemo(() => [height], [height])
@@ -45,7 +46,16 @@ export const Modal = () => {
       }}
     >
       <BottomSheetView style={[a.flex_1, a.self_stretch]}>
-        {content}
+        {title && title.trim() !== '' && (
+          <View style={[a.pt_sm, a.pb_md]}>
+            <Text style={[a.heading_3_medium, {color: p.gray_900}, a.self_center]}>
+              {title}
+            </Text>
+          </View>
+        )}
+        <View style={[title && title.trim() !== '' ? a.px_lg : a.px_lg, a.pt_lg]}>
+          {content}
+        </View>
       </BottomSheetView>
     </BottomSheetModal>
   )

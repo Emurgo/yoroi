@@ -178,7 +178,7 @@ export const RestoreWalletDetailsScreen = () => {
 
   const showModalTipsPassword = () => {
     openModal({
-      title: strings.setupWallet.walletDetailsModalTitle,
+      title: strings.setupWallet.walletDetailsModalTipsTitle,
       content: (
         <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
@@ -214,8 +214,9 @@ export const RestoreWalletDetailsScreen = () => {
   }
 
   const showModalTipsPlateNumber = () => {
+    console.log('Modal Tips title:', strings.setupWallet.walletDetailsModalTipsTitle) // Temporary debug
     openModal({
-      title: strings.setupWallet.walletDetailsModalTitle,
+      title: strings.setupWallet.walletDetailsModalTipsTitle,
       content: (
         <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase

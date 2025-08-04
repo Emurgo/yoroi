@@ -141,6 +141,10 @@ export const setupWalletMessages = defineMessages({
     id: 'components.walletinit.walletDetails.stepWalletDetails',
     defaultMessage: '!!!Wallet details',
   },
+  walletDetailsModalTipsTitle: {
+    id: 'components.walletinit.walletDetails.walletDetailsModalTitle.title',
+    defaultMessage: '!!!Tips',
+  },
   walletNameModalCardTitle: {
     id: 'components.walletinit.walletform.walletNameInputLabel',
     defaultMessage: '!!!Wallet name',
