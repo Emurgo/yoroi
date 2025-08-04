@@ -9,20 +9,30 @@ export const useResolverShowNotice = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    let isCancelled = false
     const fetchData = async () => {
       try {
         setIsLoading(true)
         setError(null)
         const result = await showNotice.read()
-        setData(result)
+        if (!isCancelled) {
+          setData(result)
+        }
       } catch (err) {
-        setError(err as Error)
+        if (!isCancelled) {
+          setError(err as Error)
+        }
       } finally {
-        setIsLoading(false)
+        if (!isCancelled) {
+          setIsLoading(false)
+        }
       }
     }
 
     fetchData()
+    return () => {
+      isCancelled = true
+    }
   }, [showNotice])
 
   return {
