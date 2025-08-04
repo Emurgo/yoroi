@@ -4,7 +4,7 @@ import React from 'react'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useEnableAuthWithOs} from '~/features/Auth/hooks/useEnableAuthWithOS'
-import {OsAuthScreen} from '~/features/Auth/screens/OsAuthScreen'
+import {OsAuthScreen} from '~/features/Auth/ui/screens/OsAuthScreen'
 
 export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()

@@ -8,7 +8,7 @@ import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Analytics} from '~/ui/Analytics/Analytics'
 
-import {useNavigateTo} from '../hooks/useNavigateTo'
+import {useNavigateTo} from '../../hooks/useNavigateTo'
 
 export const AnalyticsNoticeScreen = () => {
   const navigateTo = useNavigateTo()

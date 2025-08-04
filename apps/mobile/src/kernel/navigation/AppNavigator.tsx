@@ -8,20 +8,20 @@ import {AuthSetting, AuthWithHostConfig} from '~/features/Auth/common/types'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
 import {useIsAuthOsSupported} from '~/features/Auth/hooks/useIsAuthOsSupported'
-import {EnableLoginWithPinScreen} from '~/features/Auth/screens/EnableLoginWithPinScreen'
-import {LoginWithHostScreen} from '~/features/Auth/screens/LoginWithHostScreen'
-import {LoginWithPinScreen} from '~/features/Auth/screens/LoginWithPinScreen'
+import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
+import {LoginWithHostScreen} from '~/features/Auth/ui/screens/LoginWithHostScreen'
+import {LoginWithPinScreen} from '~/features/Auth/ui/screens/LoginWithPinScreen'
 import {DevMenu} from '~/features/DevMenu'
-import {AgreementChangedNavigator} from '~/features/Initialization/common/AgreementChangedNavigator'
-import {InitializationNavigator} from '~/features/Initialization/common/InitializationNavigator'
+import {AgreementChangedNavigator} from '~/features/Initialization/ui/navigation/AgreementChangedNavigator'
+import {InitializationNavigator} from '~/features/Initialization/ui/navigation/InitializationNavigator'
 import {
   ChooseBiometricLoginScreen,
   useShowBiometricsScreen,
-} from '~/features/Initialization/screens/ChooseBiometricLoginScreen'
+} from '~/features/Initialization/ui/screens/ChooseBiometricLoginScreen'
 import {
   DarkThemeAnnouncementScreen,
   useShowDarkThemeAnnouncementScreen,
-} from '~/features/Initialization/screens/DarkThemeAnnouncementScreen'
+} from '~/features/Initialization/ui/screens/DarkThemeAnnouncementScreen'
 import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
 import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
@@ -85,7 +85,7 @@ export const AppNavigator = () => {
           {firstAction === 'request-new-pin' && (
             <Stack.Screen //
               name="enable-login-with-pin"
-              component={CreatePinScreenWrapper}
+              component={InitiatePinScreen}
               options={{title: strings.auth.pinInputTitle}}
             />
           )}
@@ -164,12 +164,6 @@ export const AppNavigator = () => {
       )}
     </Stack.Navigator>
   )
-}
-
-const CreatePinScreenWrapper = () => {
-  const {loggedIn} = useAuth()
-
-  return <EnableLoginWithPinScreen onDone={loggedIn} />
 }
 
 const getFirstAction = (

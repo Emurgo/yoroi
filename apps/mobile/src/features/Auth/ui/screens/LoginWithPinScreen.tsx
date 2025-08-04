@@ -5,9 +5,9 @@ import {View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 
-import {pinLength} from '../common/constants'
-import {useAuth} from '../context/AuthProvider'
-import {PinInput, PinInputRef} from '../ui/PinInput/PinInput'
+import {pinLength} from '../../common/constants'
+import {useAuth} from '../../context/AuthProvider'
+import {PinInput, PinInputRef} from '../shared/PinInput/PinInput'
 
 export const LoginWithPinScreen = () => {
   const strings = useStrings()

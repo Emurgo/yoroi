@@ -8,8 +8,8 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 
-import {useAuth} from '../context/AuthProvider'
-import {Logo} from '../ui/illustrations/Logo'
+import {useAuth} from '../../context/AuthProvider'
+import {Logo} from '../shared/illustrations/Logo'
 
 export const LoginWithHostScreen = () => {
   const strings = useStrings()

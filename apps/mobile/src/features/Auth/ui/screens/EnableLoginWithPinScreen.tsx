@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {useDisableAllEasyConfirmation} from '../hooks/useDisableAllEasyConfirmation'
+import {useDisableAllEasyConfirmation} from '../../hooks/useDisableAllEasyConfirmation'
 import {CreatePinScreen} from './CreatePinScreen'
 
 export const EnableLoginWithPinScreen = ({onDone}: {onDone: () => void}) => {

@@ -8,9 +8,8 @@ import {
   InititalizationRoutes,
   defaultStackNavigationOptions,
 } from '~/kernel/navigation/navigation'
+import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
 
-import {useAuth} from '../../Auth/context/AuthProvider'
-import {EnableLoginWithPinScreen} from '../../Auth/screens/EnableLoginWithPinScreen'
 import {AnalyticsNoticeScreen} from '../screens/AnalyticsNoticeScreen'
 import {InitialScreen} from '../screens/InitialScreen'
 import {LanguagePickerScreen} from '../screens/LanguagePickerScreen'
@@ -55,7 +54,7 @@ export const InitializationNavigator = () => {
       <Stack.Screen //
         name="enable-login-with-pin"
         options={{headerShown: false}}
-        component={CreatePinScreenWrapper}
+        component={InitiatePinScreen}
       />
 
       <Stack.Screen //
@@ -65,10 +64,4 @@ export const InitializationNavigator = () => {
       />
     </Stack.Navigator>
   )
-}
-
-const CreatePinScreenWrapper = () => {
-  const {loggedIn} = useAuth()
-
-  return <EnableLoginWithPinScreen onDone={loggedIn} />
 }

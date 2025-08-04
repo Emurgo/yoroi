@@ -12,7 +12,7 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
-import {useNavigateTo} from '../hooks/useNavigateTo'
+import {useNavigateTo} from '../../hooks/useNavigateTo'
 
 export const InitialScreen = () => {
   const strings = useStrings()
