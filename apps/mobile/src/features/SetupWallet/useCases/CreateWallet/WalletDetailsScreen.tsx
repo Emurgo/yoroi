@@ -305,7 +305,7 @@ export const WalletDetailsScreen = () => {
 
         <View style={[{height: 24}, a.px_lg, a.flex_row]}>
           <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.setupWallet.walletDetailsTitle}
+            {strings.setupWallet.walletDetailsTitle(bold)}
           </Text>
 
           <Info onPress={showModalTipsPassword} />

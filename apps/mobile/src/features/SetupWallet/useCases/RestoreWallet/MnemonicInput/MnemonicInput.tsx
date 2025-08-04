@@ -58,7 +58,7 @@ export const MnemonicInput = ({
 
   const isMnemonicCompleted = !isEmptyString(mnemonic)
   const error =
-    !isValidPhrase && isMnemonicCompleted ? strings.invalidChecksum : ''
+    !isValidPhrase && isMnemonicCompleted ? strings.setupWallet.invalidChecksum : ''
 
   return (
     <View>
@@ -93,7 +93,7 @@ export const MnemonicInput = ({
           <Check2 color={p.secondary_600} />
 
           <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
-            {strings.validChecksum}
+            {strings.setupWallet.validChecksum}
           </Text>
         </View>
       )}
@@ -134,7 +134,7 @@ const ClearAllButton = ({
             {color: p.text_primary_medium, textTransform: 'uppercase'},
           ]}
         >
-          {strings.clearAll}
+          {strings.setupWallet.clearAll}
         </Text>
       </TouchableOpacity>
     </View>

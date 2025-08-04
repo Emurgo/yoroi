@@ -230,8 +230,8 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!24 words',
   },
   restoreWalletScreenTitle: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.title',
-    defaultMessage: '!!!Restore wallet',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.restoreWalletScreenTitle',
+    defaultMessage: '!!!Add the <b>recovery phrase</b> you received upon your wallet creation process.',
   },
   restoreDuplicatedWalletModalTitle: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalTitle',

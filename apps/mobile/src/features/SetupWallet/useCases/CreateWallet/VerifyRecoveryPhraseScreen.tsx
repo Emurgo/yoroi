@@ -90,13 +90,13 @@ export const VerifyRecoveryPhraseScreen = () => {
     >
       <StepperProgress
         currentStep={3}
-        currentStepTitle={strings.stepVerifyRecoveryPhrase}
+        currentStepTitle={strings.setupWallet.stepVerifyRecoveryPhrase}
         totalSteps={4}
         style={a.px_lg}
       />
 
       <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}, a.px_lg]}>
-        {strings.verifyRecoveryPhraseTitle(bold)}
+        {strings.setupWallet.verifyRecoveryPhraseTitle(bold)}
       </Text>
 
       <MnemonicInput
@@ -122,7 +122,7 @@ export const VerifyRecoveryPhraseScreen = () => {
 
       <View style={[a.pb_lg, a.px_lg]}>
         <Button
-          title={strings.next}
+          title={strings.setupWallet.next}
           disabled={disabled}
           onPress={() => {
             const {accountPubKeyHex} = walletManager.generateWalletKeys(
@@ -151,7 +151,7 @@ const ErrorMessage = () => {
       <Space.Height.sm />
 
       <Text style={[{color: p.sys_magenta_500}, a.body_2_md_regular]}>
-        {strings.verifyRecoveryPhraseErrorMessage}
+        {strings.setupWallet.verifyRecoveryPhraseErrorMessage}
       </Text>
     </View>
   )
@@ -167,7 +167,7 @@ const SuccessMessage = () => {
       <Space.Height.sm />
 
       <Text style={[{color: p.text_gray_max}, a.body_1_lg_medium]}>
-        {strings.verifyRecoveryPhraseSuccessMessage}
+        {strings.setupWallet.verifyRecoveryPhraseSuccessMessage}
       </Text>
     </View>
   )

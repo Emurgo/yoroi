@@ -38,15 +38,15 @@ export const CheckNanoXScreen = () => {
     }, []),
   )
 
-  const commonRequirements = [strings.appInstalled, strings.appOpened]
+  const commonRequirements = [strings.setupWallet.appInstalled, strings.setupWallet.appOpened]
   const usbRequirements = [
-    strings.haveOTGAdapter,
-    strings.usbAlwaysConnected,
+    strings.setupWallet.haveOTGAdapter,
+    strings.setupWallet.usbAlwaysConnected,
     ...commonRequirements,
   ]
   const bleRequirements = [
-    strings.bluetoothEnabled,
-    ...(Platform.OS === 'android' ? [strings.locationEnabled] : []),
+    strings.setupWallet.bluetoothEnabled,
+    ...(Platform.OS === 'android' ? [strings.setupWallet.locationEnabled] : []),
     ...commonRequirements,
   ]
 
@@ -75,7 +75,7 @@ export const CheckNanoXScreen = () => {
             },
           ]}
         >
-          {strings.hwCheckIntroline}
+          {strings.setupWallet.hwCheckIntroline}
         </Text>
 
         <Space.Height.lg />
@@ -105,7 +105,7 @@ export const CheckNanoXScreen = () => {
       <Actions>
         <Button
           onPress={onContinue}
-          title={strings.continueButton}
+          title={strings.setupWallet.continueButton}
           testID="continueButton"
         />
       </Actions>
@@ -135,7 +135,7 @@ const LedgerSupportLink = () => {
       ]}
       onPress={onPress}
     >
-      <Text style={[{color: p.primary_500}]}>{strings.ledgerSupportLink}</Text>
+      <Text style={[{color: p.primary_500}]}>{strings.setupWallet.ledgerSupportLink}</Text>
     </TouchableOpacity>
   )
 }

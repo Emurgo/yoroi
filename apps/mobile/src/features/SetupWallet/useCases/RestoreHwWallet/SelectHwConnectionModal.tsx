@@ -43,7 +43,7 @@ export const SelectHwConnectionModal = () => {
           },
         ]}
       >
-        {strings.hwModalText}
+        {strings.setupWallet.hwModalText}
       </Text>
 
       <SelectBluetoothSection />
@@ -70,7 +70,7 @@ const SelectBluetoothSection = () => {
   }
 
   const {request} = useLedgerPermissions({
-    onError: () => Alert.alert(strings.error, strings.bluetoothError),
+    onError: () => Alert.alert(strings.setupWallet.error, strings.setupWallet.bluetoothError),
     onSuccess: () => {
       USBChanged(false)
       navigateHw()
@@ -83,7 +83,7 @@ const SelectBluetoothSection = () => {
 
       <Button
         type={ButtonType.Secondary}
-        title={strings.hwModalBtButton}
+        title={strings.setupWallet.hwModalBtButton}
         icon={Icon.Bluetooth}
         onPress={() => request()}
       />
@@ -124,7 +124,7 @@ const SelectUsbSection = () => {
             },
           ]}
         >
-          {strings.hwModalIosWarning}
+          {strings.setupWallet.hwModalIosWarning}
         </Text>
       </>
     )
@@ -138,7 +138,7 @@ const SelectUsbSection = () => {
 
       <Button
         type={ButtonType.Secondary}
-        title={strings.hwModalUsbButton}
+        title={strings.setupWallet.hwModalUsbButton}
         icon={Icon.Usb}
         onPress={() => {
           USBChanged(true)

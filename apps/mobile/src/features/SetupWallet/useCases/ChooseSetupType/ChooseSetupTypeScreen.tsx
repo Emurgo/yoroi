@@ -2,7 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, View, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useMetrics} from '~/kernel/metrics/metricsManager'

@@ -149,7 +149,7 @@ export const RestoreWalletScreen = () => {
       const {plate, seed} = walletManager.checksum(accountPubKeyHex)
 
       openModal({
-        title: strings.restoreDuplicatedWalletModalTitle,
+        title: strings.setupWallet.restoreDuplicatedWalletModalTitle,
         content: (
           <WalletDuplicatedModal
             plate={plate}
@@ -190,7 +190,7 @@ export const RestoreWalletScreen = () => {
         <View style={a.px_lg}>
           <StepperProgress
             currentStep={1}
-            currentStepTitle={strings.stepRestoreWalletScreen}
+            currentStepTitle={strings.setupWallet.stepRestoreWalletScreen}
             totalSteps={2}
           />
         </View>
@@ -201,7 +201,7 @@ export const RestoreWalletScreen = () => {
           keyboardShouldPersistTaps="always"
         >
           <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.restoreWalletScreenTitle(bold)}
+            {strings.setupWallet.restoreWalletScreenTitle(bold)}
           </Text>
 
           <Space.Height.lg />
@@ -257,7 +257,7 @@ export const RestoreWalletScreen = () => {
                 a.text_center,
               ]}
             >
-              {strings.wordNotFound}
+              {strings.setupWallet.wordNotFound}
             </Text>
           </View>
         )}
@@ -273,7 +273,7 @@ const NextButton = ({onPress}: {onPress: () => void}) => {
   return (
     <View style={a.p_lg}>
       <Button
-        title={strings.next}
+        title={strings.setupWallet.next}
         style={{backgroundColor: p.primary_500}}
         onPress={onPress}
         testID="setup-restore-step1-next-button"

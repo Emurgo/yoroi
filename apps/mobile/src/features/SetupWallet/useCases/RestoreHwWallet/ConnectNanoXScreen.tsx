@@ -58,7 +58,7 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
       )
 
       openModal({
-        title: strings.restoreDuplicatedWalletModalTitle,
+        title: strings.setupWallet.restoreDuplicatedWalletModalTitle,
         content: (
           <WalletDuplicatedModal
             plate={plate}
@@ -119,7 +119,7 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
           onConnectBLE={onConnectBLE}
           onConnectUSB={onConnectUSB}
           useUSB={useUSB}
-          onWaitingMessage={strings.hwExportKey}
+          onWaitingMessage={strings.setupWallet.hwExportKey}
           defaultDevices={defaultDevices}
         />
       </View>

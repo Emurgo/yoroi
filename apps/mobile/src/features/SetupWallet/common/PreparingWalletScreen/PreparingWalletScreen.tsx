@@ -40,7 +40,7 @@ export const PreparingWalletScreen = () => {
       ]}
     >
       <Text style={[{color: p.primary_500}, a.text_center, a.heading_2_medium]}>
-        {strings.preparingWallet}
+        {strings.setupWallet.preparingWallet}
       </Text>
     </SafeAreaView>
   )

@@ -24,7 +24,7 @@ export const WalletDuplicatedModal = ({
   return (
     <View style={[a.flex_1, a.px_lg]}>
       <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
-        {strings.restoreDuplicatedWalletModalText}
+        {strings.setupWallet.restoreDuplicatedWalletModalText}
       </Text>
 
       <Space.Height.lg />
@@ -84,7 +84,7 @@ export const WalletDuplicatedModalActions = ({
 
   return (
     <Button
-      title={strings.restoreDuplicatedWalletModalButton}
+      title={strings.setupWallet.restoreDuplicatedWalletModalButton}
       onPress={handleOpenWalletWithDuplicatedName}
       style={{backgroundColor: p.primary_500}}
     />
