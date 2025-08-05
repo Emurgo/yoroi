@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {isDev} from '~/kernel/env'
-import {ReviewTxRoutes, useUnsafeParams} from '~/kernel/navigation'
+import {ReviewTxRoutes, useUnsafeParams} from '~/kernel/navigation/navigation'
 import {useFormattedMetadata} from '~/features/ReviewTx/common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useLegacyOnConfirm} from '~/features/ReviewTx/common/hooks/useLegacyOnConfirm'
