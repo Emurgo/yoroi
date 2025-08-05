@@ -1,5 +1,4 @@
 import {createTypeGuardFromSchema} from '@yoroi/common'
-import {BarCodeScannerResult} from 'expo-barcode-scanner'
 import * as React from 'react'
 import {Alert, AlertButton} from 'react-native'
 import {z} from 'zod'
@@ -22,7 +21,7 @@ export const ScanCodeScreen = () => {
   const scannerRef = React.useRef<CameraCodeScannerMethods>(null)
   const [buttons] = React.useState<AlertButton[]>([
     {
-      text: strings.scan.ok,
+      text: strings.scan.continue,
       onPress: () => scannerRef.current?.continueScanning(),
     },
   ])
@@ -31,7 +30,7 @@ export const ScanCodeScreen = () => {
   const trigger = useTriggerScanAction({insideFeature})
 
   const handleOnRead = React.useCallback(
-    (event: BarCodeScannerResult) => {
+    (event: {data: string; type: string}) => {
       scannerRef.current?.stopScanning()
       const {data: codeContent} = event
 

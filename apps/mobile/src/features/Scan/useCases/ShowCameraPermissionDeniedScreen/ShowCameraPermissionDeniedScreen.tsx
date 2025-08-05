@@ -1,7 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ScrollView, View, ViewProps} from 'react-native'
-import {openSettings} from 'react-native-permissions'
+import {Linking, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -62,7 +61,7 @@ export const ShowCameraPermissionDeniedScreen = () => {
         <Space.Height.md />
 
         <Button
-          onPress={() => openSettings()}
+          onPress={() => Linking.openSettings()}
           title={strings.scan.openAppSettings}
           size="S"
         />
