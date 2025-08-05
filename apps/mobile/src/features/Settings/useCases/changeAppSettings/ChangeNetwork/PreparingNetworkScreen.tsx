@@ -6,10 +6,8 @@ import {Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {z} from 'zod'
 
-import {
-  SettingsStackRoutes,
-  useParams,
-} from '../../../../../kernel/navigation/navigation'
+import {SettingsStackRoutes} from '../../../../../kernel/navigation/types'
+import {useParams} from '../../../../../kernel/navigation/hooks'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useLaunchRouteAfterSyncing} from './useLaunchRouteAfterSyncing'
 

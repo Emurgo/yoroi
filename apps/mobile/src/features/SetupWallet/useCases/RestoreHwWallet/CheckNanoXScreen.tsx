@@ -13,7 +13,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '~/kernel/navigation'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {BulletPointItem} from '~/ui/BulletPointItem'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'

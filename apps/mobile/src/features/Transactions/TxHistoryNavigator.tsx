@@ -24,10 +24,8 @@ import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeN
 import {UtxoConsolidation} from '~/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
 import {UtxoList} from '~/features/Transactions/useCases/UtxoList/UtxoList'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {
-  defaultStackNavigationOptions,
-  TxHistoryRoutes,
-} from '~/kernel/navigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {TxHistoryRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
@@ -100,7 +98,6 @@ export const TxHistoryNavigator = () => {
           )}
         </Stack.Screen>
 
-        {/* UTXO Screens */}
         <Stack.Screen
           name="utxo-list"
           options={{
@@ -183,7 +180,7 @@ export const TxHistoryNavigator = () => {
         <Stack.Screen
           name="send-submitted-tx"
           options={{
-            title: strings.send.submittedTxTitle,
+            title: strings.send.sendTitle,
           }}
         >
           {() => (
@@ -196,12 +193,52 @@ export const TxHistoryNavigator = () => {
         <Stack.Screen
           name="send-failed-tx"
           options={{
-            title: strings.send.failedTxTitle,
+            title: strings.send.sendTitle,
           }}
         >
           {() => (
             <Boundary loading={{size: 'full'}}>
               <SendFailedTxScreen />
+            </Boundary>
+          )}
+        </Stack.Screen>
+
+        {/* Receive Screens */}
+        <Stack.Screen
+          name="receive-single"
+          options={{
+            title: strings.receive.receiveTitle,
+          }}
+        >
+          {() => (
+            <Boundary loading={{size: 'full'}}>
+              <DescribeSelectedAddressScreen />
+            </Boundary>
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen
+          name="receive-specific-amount"
+          options={{
+            title: strings.receive.receiveTitle,
+          }}
+        >
+          {() => (
+            <Boundary loading={{size: 'full'}}>
+              <RequestSpecificAmountScreen />
+            </Boundary>
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen
+          name="receive-multiple"
+          options={{
+            title: strings.receive.receiveTitle,
+          }}
+        >
+          {() => (
+            <Boundary loading={{size: 'full'}}>
+              <ListMultipleAddressesScreen />
             </Boundary>
           )}
         </Stack.Screen>
@@ -229,46 +266,6 @@ export const TxHistoryNavigator = () => {
           {() => (
             <Boundary loading={{size: 'full'}}>
               <ShowCameraPermissionDeniedScreen />
-            </Boundary>
-          )}
-        </Stack.Screen>
-
-        {/* Receive Screens */}
-        <Stack.Screen
-          name="receive-single"
-          options={{
-            title: strings.receive.receiveTitle,
-          }}
-        >
-          {() => (
-            <Boundary loading={{size: 'full'}}>
-              <DescribeSelectedAddressScreen />
-            </Boundary>
-          )}
-        </Stack.Screen>
-
-        <Stack.Screen
-          name="receive-specific-amount"
-          options={{
-            title: strings.receive.amountToReceive,
-          }}
-        >
-          {() => (
-            <Boundary loading={{size: 'full'}}>
-              <RequestSpecificAmountScreen />
-            </Boundary>
-          )}
-        </Stack.Screen>
-
-        <Stack.Screen
-          name="receive-multiple"
-          options={{
-            title: strings.receive.multipleAddress,
-          }}
-        >
-          {() => (
-            <Boundary loading={{size: 'full'}}>
-              <ListMultipleAddressesScreen />
             </Boundary>
           )}
         </Stack.Screen>

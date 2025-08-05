@@ -9,12 +9,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useWalletMetas} from '~/features/WalletManager/hooks/useWalletMetas'
 import {SupportIllustration} from '~/features/WalletManager/ui/illustrations/SupportIllustration'
 import {isDev} from '~/kernel/constants'
+import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
 import {useWalletManager} from '../../context/WalletManagerProvider'
+import {AggregatedBalance} from './AggregatedBalance'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
@@ -65,7 +67,7 @@ export const SelectWalletFromList = () => {
       style={[a.flex_1, a.py_lg]}
       edges={['left', 'right', 'bottom']}
     >
-      {/* {features.walletListAggregatedBalance && <AggregatedBalance />} */}
+      {features.walletListAggregatedBalance && <AggregatedBalance />}
 
       <ScrollView
         ref={scrollViewRef}
@@ -155,7 +157,7 @@ const AddWalletButton = () => {
 const OnlyDevButton = () => {
   const navigation = useNavigation<any>()
   const openDevMenu = React.useCallback(() => {
-    navigation.navigate('dev')
+    navigation.navigate('developer')
   }, [navigation])
 
   return (

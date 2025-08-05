@@ -15,11 +15,8 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {
-  SettingsStackRoutes,
-  useUnsafeParams,
-  useWalletNavigation,
-} from '../../../../../kernel/navigation/navigation'
+import {SettingsStackRoutes} from '../../../../../kernel/navigation/types'
+import {useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation/hooks'
 import {Button, ButtonType} from '../../../../../ui/Button/Button'
 import {Copiable} from '../../../../../ui/Copiable/Copiable'
 import {ErrorPanel} from '../../../../../ui/ErrorPanel/ErrorPanel'

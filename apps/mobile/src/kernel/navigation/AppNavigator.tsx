@@ -1,4 +1,5 @@
 import {isString} from '@yoroi/common'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {TransitionPresets, createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
@@ -11,7 +12,7 @@ import {useIsAuthOsSupported} from '~/features/Auth/hooks/useIsAuthOsSupported'
 import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
 import {LoginWithHostScreen} from '~/features/Auth/ui/screens/LoginWithHostScreen'
 import {LoginWithPinScreen} from '~/features/Auth/ui/screens/LoginWithPinScreen'
-import {DevMenu} from '~/features/DevMenu'
+import {DevMenu} from '~/features/DevMenu/DevMenu'
 import {AgreementChangedNavigator} from '~/features/Initialization/ui/navigation/AgreementChangedNavigator'
 import {InitializationNavigator} from '~/features/Initialization/ui/navigation/InitializationNavigator'
 import {
@@ -30,22 +31,30 @@ import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 import {Modal} from '~/ui/Modal/ModalScreen'
 
 import {WalletNavigator} from '../../WalletNavigator'
-import {agreementDate} from '../constants'
+import {agreementDate, isDev} from '../constants'
 import {useStrings} from '../i18n/useStrings'
+import {defaultStackNavigationOptions} from './common/helpers'
 import {FirstAction} from './types'
 
 const Stack = createStackNavigator<any>()
 
 export const AppNavigator = () => {
+  // TODO: REVISIT missing deeplink watcher 
+  const {palette: p} = useTheme()
   const firstAction = useFirstAction()
   const {isLoggedOut, isLoggedIn} = useAuth()
   const afterLoginAction = useAfterLoginAction()
   const strings = useStrings()
 
+  const navOptions = React.useMemo(
+    () => defaultStackNavigationOptions(a, p),
+    [p],
+  )
+
   return (
     <Stack.Navigator
       screenOptions={{
-        // ...navOptions,
+        ...navOptions,
         headerShown: false /* used only for transition */,
       }}
     >
@@ -95,64 +104,64 @@ export const AppNavigator = () => {
       {/* Authenticated */}
 
       {isLoggedIn && (
-        <>
-          <Stack.Group>
-            {afterLoginAction === 'choose-biometric-login' && (
-              <Stack.Screen //
-                name="choose-biometric-login"
-                options={{headerShown: false}}
-                getComponent={() => ChooseBiometricLoginScreen}
-              />
-            )}
-
-            {afterLoginAction === 'dark-theme-announcement' && (
-              <Stack.Screen //
-                name="dark-theme-announcement"
-                options={{headerShown: false}}
-                getComponent={() => DarkThemeAnnouncementScreen}
-              />
-            )}
-
-            {afterLoginAction === 'setup-wallet' && (
-              <Stack.Screen //
-                name="setup-wallet"
-                options={{headerShown: false}}
-                component={SetupWalletNavigator}
-              />
-            )}
-
-            {afterLoginAction === 'manage-wallets' && (
-              <Stack.Screen
-                name="manage-wallets"
-                getComponent={() => WalletNavigator}
-              />
-            )}
-          </Stack.Group>
-
-          <Stack.Group
-            screenOptions={{
-              gestureEnabled: false,
-              presentation: 'transparentModal',
-              ...(Platform.OS === 'android' && {
-                ...TransitionPresets.DefaultTransition,
-              }), // overriding general navigation settings
-              cardStyle: {backgroundColor: 'transparent'}, // this is needed for the modal to be transparent
-            }}
-          >
-            <Stack.Screen
-              name="modal"
-              getComponent={() => Modal}
-              options={{
-                gestureEnabled: false,
-              }}
+        <Stack.Group>
+          {afterLoginAction === 'choose-biometric-login' && (
+            <Stack.Screen //
+              name="choose-biometric-login"
+              options={{headerShown: false}}
+              getComponent={() => ChooseBiometricLoginScreen}
             />
-          </Stack.Group>
-        </>
+          )}
+
+          {afterLoginAction === 'dark-theme-announcement' && (
+            <Stack.Screen //
+              name="dark-theme-announcement"
+              options={{headerShown: false}}
+              getComponent={() => DarkThemeAnnouncementScreen}
+            />
+          )}
+
+          {afterLoginAction === 'setup-wallet' && (
+            <Stack.Screen //
+              name="setup-wallet"
+              options={{headerShown: false}}
+              component={SetupWalletNavigator}
+            />
+          )}
+
+          {afterLoginAction === 'manage-wallets' && (
+            <Stack.Screen
+              name="manage-wallets"
+              getComponent={() => WalletNavigator}
+            />
+          )}
+        </Stack.Group>
       )}
+
+      {/* Modal */}
+
+      <Stack.Group
+        screenOptions={{
+          gestureEnabled: false,
+          presentation: 'transparentModal',
+          ...(Platform.OS === 'android' && {
+            ...TransitionPresets.DefaultTransition,
+          }), // overriding general navigation settings
+          cardStyle: {backgroundColor: 'transparent'}, // this is needed for the modal to be transparent
+        }}
+      >
+        <Stack.Screen
+          name="modal"
+          getComponent={() => Modal}
+          options={{
+            gestureEnabled: false,
+          }}
+        />
+      </Stack.Group>
 
       {/* Development */}
 
-      {__DEV__ && (
+      {isDev && (
         <Stack.Group>
           <Stack.Screen name="developer" getComponent={() => DevMenu} />
 

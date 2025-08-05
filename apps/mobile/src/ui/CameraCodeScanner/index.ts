@@ -1,2 +1,2 @@
 export {CameraCodeScanner} from './CameraCodeScanner'
-export type {CameraCodeScannerMethods} from './CameraCodeScanner'
+export type {CameraCodeScannerProps} from './CameraCodeScanner'

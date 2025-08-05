@@ -11,14 +11,14 @@ import * as React from 'react'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/kernel/i18n/useStrings'
-import {useWalletNavigation} from '~/kernel/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {useStakingKey, useWalletEvent} from '~/wallets/hooks'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {CardanoMobile} from '~/wallets/wallets'
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useIsParticipatingInGovernance = () => {
   const status = useGovernanceStatus({

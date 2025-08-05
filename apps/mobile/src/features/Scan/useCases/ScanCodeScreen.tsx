@@ -8,8 +8,9 @@ import {z} from 'zod'
 
 import {useTriggerScanAction} from '~/features/Scan/common/useTriggerScanAction'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {ScanRoutes, useParams} from '~/kernel/navigation'
-import {useWalletNavigation} from '~/kernel/navigation/navigation'
+import {useParams} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {ScanRoutes} from '~/kernel/navigation/types'
 
 const scanParamsSchema = z.object({
   insideFeature: z.string().optional(),

@@ -16,7 +16,7 @@ import {showErrorDialog} from '~/kernel/dialogs'
 
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation} from '~/kernel/navigation'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {getHWDeviceInfo} from '~/wallets/cardano/hw/hw'

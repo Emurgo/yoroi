@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useWalletNavigation} from '~/kernel/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 
@@ -23,13 +23,13 @@ export const WarningSingleAddress = () => {
     >
       <Icon.Warning size={20} color={p.sys_magenta_500} />
 
-      <Text style={[{color: p.gray_900}, a.body_2_md_regular]}>
-        {strings.transactions.organizeWalletDescription}
+      <Text style={[{color: p.gray_max}, a.body_2_md_regular]}>
+        <Text>{strings.organizeWalletDescription}</Text>
       </Text>
 
       <Button
         type={ButtonType.Critical}
-        title={strings.transactions.organizeWalletButton}
+        title={strings.organizeWallet}
         size="S"
         onPress={navigateToUtxoConsolidation}
       />

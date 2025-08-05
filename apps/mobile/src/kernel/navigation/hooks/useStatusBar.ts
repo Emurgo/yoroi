@@ -1,4 +1,5 @@
 import {ThemedPalette, useTheme} from '@yoroi/theme'
+
 import {setBackgroundColorAsync} from 'expo-system-ui'
 import * as React from 'react'
 import {Platform, StatusBar, StatusBarStyle} from 'react-native'
@@ -8,27 +9,35 @@ type StatusBarColor = {
   statusBarStyle: StatusBarStyle | undefined
 }
 export const useStatusBar = (currentRouteName: string | undefined) => {
-  const {color, isDark} = useTheme()
+  const {palette: p, isDark} = useTheme()
   const statusBarStyleByRoute = React.useRef<StatusBarColor>(
-    getStatusBarStyleByRoute({currentRouteName, isDark, color}),
+    getStatusBarStyleByRoute({currentRouteName, isDark, color: p}),
   )
 
   React.useEffect(() => {
     if (currentRouteName === 'modal') {
       if (Platform.OS === 'android')
-        StatusBar.setBackgroundColor(simulateOpacity(statusBarStyleByRoute.current.bgColorAndroid), true)
+        StatusBar.setBackgroundColor(
+          simulateOpacity(statusBarStyleByRoute.current.bgColorAndroid),
+          true,
+        )
     } else {
-      const style = getStatusBarStyleByRoute({currentRouteName, isDark, color})
+      const style = getStatusBarStyleByRoute({
+        currentRouteName,
+        isDark,
+        color: p,
+      })
       statusBarStyleByRoute.current = style
       if (Platform.OS === 'android') {
         StatusBar.setBackgroundColor(style.bgColorAndroid)
         StatusBar.setTranslucent(true)
       }
-      style.statusBarStyle !== undefined && StatusBar.setBarStyle(style.statusBarStyle, true)
+      style.statusBarStyle !== undefined &&
+        StatusBar.setBarStyle(style.statusBarStyle, true)
     }
 
-    setBackgroundColorAsync(color.bg_color_max)
-  }, [currentRouteName, isDark, color])
+    setBackgroundColorAsync(p.bg_color_max)
+  }, [currentRouteName, isDark, p])
 }
 
 const getStatusBarStyleByRoute = ({
@@ -117,6 +126,9 @@ const expandColor = (color: Color) => {
   return color
 }
 
-const isHex = (color: Color) => /^#([0-9A-Fa-f]{3}([0-9A-Fa-f]{1})?|[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?)$/.test(color)
+const isHex = (color: Color) =>
+  /^#([0-9A-Fa-f]{3}([0-9A-Fa-f]{1})?|[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?)$/.test(
+    color,
+  )
 
 type Color = `#${string}` | `rgba(${number},${number},${number},${number})`

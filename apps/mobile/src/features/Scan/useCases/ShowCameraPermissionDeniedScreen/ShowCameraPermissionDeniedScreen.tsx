@@ -4,7 +4,7 @@ import {Linking, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button} from '~/ui/Button/Button'
 import {CameraPermissionDeniedIllustration} from '~/ui/CameraPermissionDeniedIllustration/CameraPermissionDeniedIllustration'
 import {Space} from '~/ui/Space/Space'
