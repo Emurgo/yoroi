@@ -19,12 +19,7 @@ export const useSendAddress = () => {
     isLoading: isValidatingAddress,
     error: addressError,
     refetch,
-  } = useValidateAddress(
-    {address, chainId},
-    {
-      enabled: false,
-    },
-  )
+  } = useValidateAddress({address, chainId})
 
   React.useEffect(() => {
     if (address.length === 0) return
@@ -51,9 +46,14 @@ const useValidateAddress = (
   const query = useQuery({
     ...options,
     staleTime: 0,
-    cacheTime: 0,
+    gcTime: 0,
     queryKey: ['useValidateAddress', address, chainId],
     queryFn: () => validateAddress(address, chainId),
+    retry: false, // Don't retry validation failures
+    // Prevent dehydration of validation queries to avoid hydration errors
+    meta: {
+      shouldDehydrate: false,
+    },
   })
 
   return {
@@ -64,11 +64,19 @@ const useValidateAddress = (
 
 // NOTE: should be a wallet function from address manager
 const validateAddress = (address: string, chainId: number) => {
-  const chainAddress = normalizeToAddress(CardanoMobile, address)
-  if (!chainAddress) throw new AddressErrorInvalid()
+  try {
+    const chainAddress = normalizeToAddress(CardanoMobile, address)
+    if (!chainAddress) throw new AddressErrorInvalid()
 
-  const chainAddressChainId = chainAddress.networkId()
-  if (chainAddressChainId !== chainId) throw new AddressErrorWrongNetwork()
+    const chainAddressChainId = chainAddress.networkId()
+    if (chainAddressChainId !== chainId) throw new AddressErrorWrongNetwork()
 
-  return true
+    return true
+  } catch (error) {
+    // Ensure we throw a proper Error object for React Query
+    if (error instanceof Error) {
+      throw error
+    }
+    throw new Error('Address validation failed')
+  }
 }
