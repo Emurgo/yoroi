@@ -46,6 +46,7 @@ This document consolidates all development guidelines, migration processes, and 
 4. **Error Monitoring**:
    - Watch Metro terminal for "Unable to resolve" errors
    - Use `curl -s "http://localhost:8081/reload"` to trigger reloads
+   - For Android-specific bundle testing: `curl -s "http://localhost:8081/index.ts.bundle?platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable"`
    - Fix errors systematically: Fix → Reload → Check next error
 
 ### Reference Previous Working Version
