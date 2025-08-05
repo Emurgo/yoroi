@@ -1,29 +1,18 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  Alert,
-  Linking,
-  ScrollView,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {ScrollView, TouchableOpacity, useWindowDimensions} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {usePrefetchStakingInfo} from '~/features/Dashboard/StakePoolInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {MenuRoutes} from '~/kernel/navigation/types'
-import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
+import {useCanVote} from '../RegisterCatalyst/common/hooks'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
@@ -73,13 +62,17 @@ export const Menu = () => {
       <ScrollView contentContainerStyle={[a.flex_1, a.p_lg]} bounces={false}>
         <AppSettings //
           label={strings.menu.settings}
-          onPress={navigateTo.settings}
+          onPress={() => {}}
           left={<Icon.Gear size={24} color={p.gray_600} />}
         />
 
         <Staking
           label={strings.menu.stakingCenter}
-          onPress={navigateTo.stakingCenter}
+          onPress={
+            () => {}
+
+            // navigateTo.stakingCenter
+          }
           left={<Icon.TabStaking size={24} color={p.gray_600} />}
           right={
             isPoolRetiring ? (
@@ -90,40 +83,21 @@ export const Menu = () => {
 
         <Governance
           label={strings.menu.governanceCentre}
-          onPress={navigateTo.governanceCentre}
+          onPress={
+            () => {}
+            // navigateTo.governanceCentre
+          }
           left={<Icon.Governance size={24} color={p.gray_600} />}
         />
 
-        <React.Suspense
-          fallback={
-            <Item
-              disabled
-              onPress={() => null}
-              label={strings.menu.catalystVoting}
-              left={<Icon.Catalyst size={24} color={p.gray_600} />}
-              right={<ActivityIndicator />}
-            />
+        <Catalyst
+          label={strings.menu.catalystVoting}
+          onPress={
+            () => {}
+            // navigateTo.catalystVoting
           }
-        >
-          <Catalyst
-            label={strings.menu.catalystVoting}
-            onPress={
-              () => {
-                Alert.alert('useCatalystCurrentFund cause crashes')
-              }
-              // navigateTo.catalystVoting
-            }
-            left={<Icon.Catalyst size={24} color={p.gray_600} />}
-          />
-        </React.Suspense>
-
-        <KnowledgeBase //
-          label={strings.menu.knowledgeBase}
-          onPress={navigateTo.knowledgeBase}
-          left={<Icon.Info size={24} color={p.gray_600} />}
+          left={<Icon.Catalyst size={24} color={p.gray_600} />}
         />
-
-        <Space.Height.sm fill />
 
         <SupportLink />
 
@@ -230,23 +204,22 @@ const Catalyst = ({
 }) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  // Hook causes crashes at the moment
-  // const {sufficientFunds} = useCanVote(wallet)
+  const {sufficientFunds} = useCanVote(wallet)
   const {openModal, closeModal} = useModal()
   const screenHeight = useWindowDimensions().height
   const modalHeight = Math.min(screenHeight * 0.8, 280)
 
   const handlePress = () => {
-    // if (sufficientFunds) {
-    //   onPress()
-    // } else {
-    openModal({
-      title: strings.menu.attention,
-      content: <InsufficientFundsModal />,
-      footer: <Button title={strings.menu.back} onPress={closeModal} />,
-      height: modalHeight,
-    })
-    // }
+    if (sufficientFunds) {
+      onPress()
+    } else {
+      openModal({
+        title: strings.menu.attention,
+        content: <InsufficientFundsModal />,
+        footer: <Button title={strings.menu.back} onPress={closeModal} />,
+        height: modalHeight,
+      })
+    }
   }
   return <Item label={label} onPress={handlePress} left={left} />
 }
