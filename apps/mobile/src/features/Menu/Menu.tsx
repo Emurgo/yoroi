@@ -1,30 +1,17 @@
-import {defineMessage} from '@formatjs/intl'
-import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  Linking,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {ScrollView, TouchableOpacity, useWindowDimensions} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {MenuRoutes} from '~/kernel/navigation/types'
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
+import {Text} from '~/ui/Text/Text'
 import {useCanVote} from '../RegisterCatalyst/common/hooks'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
@@ -34,13 +21,13 @@ const MenuStack = createStackNavigator<MenuRoutes>()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <MenuStack.Navigator
       initialRouteName="_menu"
       screenOptions={{
-        ...defaultStackNavigationOptions(p),
+        ...defaultStackNavigationOptions(a, p),
         headerLeft: () => null,
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
@@ -75,13 +62,17 @@ export const Menu = () => {
       <ScrollView contentContainerStyle={[a.flex_1, a.p_lg]} bounces={false}>
         <AppSettings //
           label={strings.menu.settings}
-          onPress={navigateTo.settings}
+          onPress={() => {}}
           left={<Icon.Gear size={24} color={p.gray_600} />}
         />
 
         <Staking
           label={strings.menu.stakingCenter}
-          onPress={navigateTo.stakingCenter}
+          onPress={
+            () => {}
+
+            // navigateTo.stakingCenter
+          }
           left={<Icon.TabStaking size={24} color={p.gray_600} />}
           right={
             isPoolRetiring ? (
@@ -92,14 +83,20 @@ export const Menu = () => {
 
         <Governance
           label={strings.menu.governanceCentre}
-          onPress={navigateTo.governanceCentre}
-          left={<Icon.TabGovernance size={24} color={p.gray_600} />}
+          onPress={
+            () => {}
+            // navigateTo.governanceCentre
+          }
+          left={<Icon.Governance size={24} color={p.gray_600} />}
         />
 
         <Catalyst
           label={strings.menu.catalystVoting}
-          onPress={navigateTo.catalystVoting}
-          left={<Icon.TabCatalyst size={24} color={p.gray_600} />}
+          onPress={
+            () => {}
+            // navigateTo.catalystVoting
+          }
+          left={<Icon.Catalyst size={24} color={p.gray_600} />}
         />
 
         <SupportLink />
@@ -124,7 +121,7 @@ const SupportLink = () => {
   return (
     <View style={a.align_center}>
       <View style={a.justify_center}>
-        <Text style={{color: p.gray_600}}>{strings.supportTitle}</Text>
+        <Text style={{color: p.gray_600}}>{strings.menu.supportTitle}</Text>
       </View>
 
       <Space.Height.lg />
@@ -138,7 +135,7 @@ const SupportLink = () => {
         <Space.Width.lg />
 
         <Text style={[ta.el_primary_medium, a.body_2_md_medium]}>
-          {strings.supportLink.toLocaleUpperCase()}
+          {strings.menu.supportLink.toLocaleUpperCase()}
         </Text>
       </TouchableOpacity>
     </View>
@@ -168,8 +165,8 @@ const Item = ({
         a.flex_row,
         a.align_center,
         a.justify_center,
+        a.border_b,
         {
-          borderBottomWidth: StyleSheet.hairlineWidth,
           borderBottomColor: p.gray_200,
         },
       ]}
@@ -217,9 +214,9 @@ const Catalyst = ({
       onPress()
     } else {
       openModal({
-        title: strings.attention,
+        title: strings.menu.attention,
         content: <InsufficientFundsModal />,
-        footer: <Button title={strings.back} onPress={closeModal} />,
+        footer: <Button title={strings.menu.back} onPress={closeModal} />,
         height: modalHeight,
       })
     }
@@ -261,46 +258,3 @@ const useNavigateTo = () => {
     governanceCentre: () => navigateToGovernanceCentre(),
   }
 }
-
-const messages = defineMessage({
-  staking: {
-    id: 'menu.staking',
-    defaultMessage: '!!!Staking center',
-  },
-  catalystVoting: {
-    id: 'menu.catalystVoting',
-    defaultMessage: '!!!Catalyst voting',
-  },
-  stakingCenter: {
-    id: 'menu.stakingCenter',
-    defaultMessage: '!!!Staking',
-  },
-  settings: {
-    id: 'menu.settings',
-    defaultMessage: '!!!Settings',
-  },
-  supportTitle: {
-    id: 'menu.supportTitle',
-    defaultMessage: '!!!Any questions',
-  },
-  supportLink: {
-    id: 'menu.supportLink',
-    defaultMessage: '!!!Ask our support team',
-  },
-  knowledgeBase: {
-    id: 'menu.knowledgeBase',
-    defaultMessage: '!!!Knowledge base',
-  },
-  menu: {
-    id: 'menu',
-    defaultMessage: '!!!Menu',
-  },
-  releases: {
-    id: 'menu.releases',
-    defaultMessage: '!!!Releases',
-  },
-  governanceCentre: {
-    id: 'menu.governanceCentre',
-    defaultMessage: '!!!Governance centre',
-  },
-})
