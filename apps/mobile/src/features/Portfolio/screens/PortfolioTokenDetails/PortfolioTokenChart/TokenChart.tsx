@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import {Dimensions, PanResponder} from 'react-native'
 import {Circle, G, Line, Rect, Text as SvgText} from 'react-native-svg'
-// import {LineChart as SvgLineChart} from 'react-native-svg-charts'
+import {LineChart as SvgLineChart} from 'react-native-svg-charts'
 
 interface Props {
   dataSources?: {
