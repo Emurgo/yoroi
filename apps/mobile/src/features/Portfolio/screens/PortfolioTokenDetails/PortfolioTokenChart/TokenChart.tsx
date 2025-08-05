@@ -165,9 +165,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
     onValueSelected(dataSize - 1)
   }, [dataSize, onValueSelected])
 
-  return null
-
-  /* return (
+  return (
     <View style={[{height: 144}]}>
       <View style={[a.flex_1]} {...panResponder.panHandlers}>
         <SvgLineChart
@@ -183,7 +181,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
         </SvgLineChart>
       </View>
     </View>
-  ) */
+  )
 }
 
 export const TokenChart = memo(TokenChartComponent)
