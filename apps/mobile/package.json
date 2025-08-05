@@ -129,6 +129,7 @@
     "react-native-svg": "15.11.2",
     "react-native-svg-charts": "^5.4.0",
     "react-native-url-polyfill": "^2.0.0",
+    "react-native-view-shot": "^4.0.3",
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
     "rxjs": "^7.8.2",
@@ -165,6 +166,7 @@
   },
   "private": true,
   "overrides": {
-    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6"
+    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6",
+    "react-native-svg": "15.11.2"
   }
 }

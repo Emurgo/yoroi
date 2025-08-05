@@ -1,9 +1,8 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
-import * as shape from 'd3-shape'
+import {useTheme} from '@yoroi/theme'
 import React, {memo, useEffect, useMemo, useState} from 'react'
-import {Dimensions, PanResponder, View} from 'react-native'
+import {Dimensions, PanResponder} from 'react-native'
 import {Circle, G, Line, Rect, Text as SvgText} from 'react-native-svg'
-import {LineChart as SvgLineChart} from 'react-native-svg-charts'
+// import {LineChart as SvgLineChart} from 'react-native-svg-charts'
 
 interface Props {
   dataSources?: {
@@ -166,7 +165,9 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
     onValueSelected(dataSize - 1)
   }, [dataSize, onValueSelected])
 
-  return (
+  return null
+
+  /* return (
     <View style={[{height: 144}]}>
       <View style={[a.flex_1]} {...panResponder.panHandlers}>
         <SvgLineChart
@@ -182,7 +183,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
         </SvgLineChart>
       </View>
     </View>
-  )
+  ) */
 }
 
 export const TokenChart = memo(TokenChartComponent)

@@ -1,7 +1,7 @@
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {fromPairs} from 'lodash'
-import React from 'react'
+import * as React from 'react'
 import {Text, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
@@ -56,7 +56,7 @@ export const AddressModal = ({address, path}: Props) => {
 
       <View>
         <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-          {strings.walletAddress}
+          {strings.transactions.walletAddress}
         </Text>
 
         <Copiable title={address} text={address} />
@@ -66,7 +66,7 @@ export const AddressModal = ({address, path}: Props) => {
         {derivationPath !== null && (
           <>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.BIP32path}
+              {strings.transactions.BIP32path}
             </Text>
 
             <View style={a.flex_row}>
@@ -82,7 +82,7 @@ export const AddressModal = ({address, path}: Props) => {
         {keyHashes?.staking != null && keyHashes.staking !== '' && (
           <>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.staking}
+              {strings.transactions.staking}
             </Text>
 
             <Copiable title={keyHashes.staking} text={keyHashes.staking} />
@@ -94,7 +94,7 @@ export const AddressModal = ({address, path}: Props) => {
         {keyHashes?.spending != null && keyHashes.spending !== '' && (
           <>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.spending}
+              {strings.transactions.spending}
             </Text>
 
             <Copiable title={keyHashes.spending} text={keyHashes.spending} />

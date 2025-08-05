@@ -1,10 +1,17 @@
+import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Alert, View} from 'react-native'
+import {Alert, GestureResponderEvent, View} from 'react-native'
 
 // import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useCopy} from '~/features/Copy/context/CopyProvider'
+import {useReceive} from '~/features/Receive/common/ReceiveProvider'
+import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
+import {useReceiveAddressesStatus} from '~/features/Receive/common/useReceiveAddressesStatus'
+import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
@@ -14,16 +21,16 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
   // const swapForm = useSwap()
   // const {tokenOutId, isLoading} = useSwapConfig()
   // const disabled = props.disabled || isLoading
-  // const navigateTo = useNavigateTo()
+  const navigateTo = useNavigateTo()
   const {palette: p} = useTheme()
 
-  // const {isSingle, addressMode} = useAddressMode()
-  // const {next: nextReceiveAddress, used: usedAddresses} =
-  //   useReceiveAddressesStatus(addressMode)
-  // const {selectedAddressChanged} = useReceive()
-  // const {copy} = useCopy()
-  // const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} =
-  //   useMultipleAddressesInfo()
+  const {isSingle, addressMode} = useAddressMode()
+  const {next: nextReceiveAddress, used: usedAddresses} =
+    useReceiveAddressesStatus(addressMode)
+  const {selectedAddressChanged} = useReceive()
+  const {copy} = useCopy()
+  const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} =
+    useMultipleAddressesInfo()
 
   const {meta} = useSelectedWallet()
   /*
@@ -76,7 +83,9 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
     navigateTo.exchange()
   }
  */
-  /* const handleOnPressReceive = () => {
+  const {track} = useMetrics()
+
+  const handleOnPressReceive = () => {
     if (!isSingle) {
       navigateTo.receiveMultipleAddresses()
       return
@@ -99,8 +108,12 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
     track.receiveCopyAddressClicked({
       copy_address_location: 'Long Press wallet Address',
     })
-    copy({text: nextReceiveAddress, event, feedback: strings.copiedLabel})
-  } */
+    copy({
+      text: nextReceiveAddress,
+      event,
+      feedback: strings.transactions.copiedLabel,
+    })
+  }
 
   return (
     <View style={[a.py_xl, a.flex_row, a.justify_center, a.gap_lg]}>
@@ -108,10 +121,10 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
         <Button
           type={ButtonType.Circle}
           icon={Icon.Received}
-          onPress={() => Alert.alert('Receive Feature not implemented')}
+          onPress={handleOnPressReceive}
           testID="receiveButton"
           // disabled={disabled}
-          // onLongPress={handleOnLongPressReceive}
+          onLongPress={handleOnLongPressReceive}
         />
 
         <Text
@@ -196,7 +209,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
   )
 }
 
-/* const useNavigateTo = () => {
+const useNavigateTo = () => {
   const navigation = useNavigation<any>()
 
   return {
@@ -207,4 +220,4 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
     swapPreprodNotice: () => navigation.navigate('swap-preprod-notice'),
     exchange: () => navigation.navigate('exchange-create-order'),
   }
-} */
+}

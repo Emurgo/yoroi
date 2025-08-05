@@ -8,7 +8,7 @@ import {
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
-import _ from 'lodash'
+import {uniqWith} from 'lodash'
 
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {CardanoMobile} from '~/wallets/wallets'
@@ -114,7 +114,7 @@ const getRequiredSigners = (
 }
 
 const getUniquePaths = (paths: number[][]) => {
-  return _.uniqWith(paths, arePathsEqual)
+  return uniqWith(paths, arePathsEqual)
 }
 
 const arePathsEqual = (path1: number[], path2: number[]) => {
