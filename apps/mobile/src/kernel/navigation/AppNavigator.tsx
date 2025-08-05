@@ -1,8 +1,11 @@
 import {isString} from '@yoroi/common'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {TransitionPresets, createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 import {Platform} from 'react-native'
+
+
 
 import {AuthSetting, AuthWithHostConfig} from '~/features/Auth/common/types'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
@@ -11,7 +14,7 @@ import {useIsAuthOsSupported} from '~/features/Auth/hooks/useIsAuthOsSupported'
 import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
 import {LoginWithHostScreen} from '~/features/Auth/ui/screens/LoginWithHostScreen'
 import {LoginWithPinScreen} from '~/features/Auth/ui/screens/LoginWithPinScreen'
-import {DevMenu} from '~/features/DevMenu'
+import {DevMenu} from '~/features/DevMenu/DevMenu'
 import {AgreementChangedNavigator} from '~/features/Initialization/ui/navigation/AgreementChangedNavigator'
 import {InitializationNavigator} from '~/features/Initialization/ui/navigation/InitializationNavigator'
 import {
@@ -32,20 +35,28 @@ import {Modal} from '~/ui/Modal/ModalScreen'
 import {WalletNavigator} from '../../WalletNavigator'
 import {agreementDate, isDev} from '../constants'
 import {useStrings} from '../i18n/useStrings'
+import {defaultStackNavigationOptions} from './common/helpers'
 import {FirstAction} from './types'
 
 const Stack = createStackNavigator<any>()
 
 export const AppNavigator = () => {
+  // TODO: REVISIT missing deeplink watcher 
+  const {palette: p} = useTheme()
   const firstAction = useFirstAction()
   const {isLoggedOut, isLoggedIn} = useAuth()
   const afterLoginAction = useAfterLoginAction()
   const strings = useStrings()
 
+  const navOptions = React.useMemo(
+    () => defaultStackNavigationOptions(a, p),
+    [p],
+  )
+
   return (
     <Stack.Navigator
       screenOptions={{
-        // ...navOptions,
+        ...navOptions,
         headerShown: false /* used only for transition */,
       }}
     >

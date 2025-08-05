@@ -252,6 +252,13 @@ export type InititalizationRoutes = {
 
 export type InititalizationNavigation = StackNavigationProp<InititalizationRoutes>
 
+export type FirstAction =
+  | 'first-run'
+  | 'show-agreement-changed-notice'
+  | 'auth-with-pin'
+  | 'auth-with-os'
+  | 'request-new-pin'
+
 type FirstRunRoutes = {
   'language-pick': undefined
   'accept-terms-of-service': undefined

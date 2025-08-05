@@ -131,6 +131,10 @@ const getFocusedRouteName = (
   return [name]
 }
 
+export const getCurrentRouteName = (state: NavigationState): string | undefined => {
+  return state.routes[state.index]?.name
+}
+
 export const isWalletSelectionRoute = (
   state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
 ) => {
