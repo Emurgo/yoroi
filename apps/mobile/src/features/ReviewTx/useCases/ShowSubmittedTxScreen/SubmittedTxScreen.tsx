@@ -1,13 +1,14 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import {useTheme} from '@yoroi/theme'
+import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
-import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
+import {
+  useBlockGoBack,
+  useWalletNavigation,
+} from '~/kernel/navigation/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 
 export const SubmittedTxScreen = () => {
   useBlockGoBack()

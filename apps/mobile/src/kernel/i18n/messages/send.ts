@@ -181,6 +181,10 @@ export const sendMessages = defineMessages({
     id: 'components.send.sendscreen.domainUnsupportedError',
     defaultMessage: '!!!Domain unsupported',
   },
+  editAmountTitle: {
+    id: 'components.send.editamountscreen.title',
+    defaultMessage: '!!!Edit Amount',
+  },
   errorBannerNetworkError: {
     id: 'components.send.sendscreen.errorBannerNetworkError',
     defaultMessage: '!!!Network error',
@@ -198,24 +202,28 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Invalid address',
   },
   helperAddressErrorWrongBlockchain: {
-    id: 'send.helper.addressError.wrongBlockchain',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Wrong blockchain',
   },
   helperAddressErrorWrongNetwork: {
-    id: 'claim.apiError.invalidRequest',
+    id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Wrong network',
   },
   helperMemoErrorTooLong: {
-    id: 'components.txhistory.txdetails.memo',
+    id: 'components.send.sendscreen.memoInputError',
     defaultMessage: '!!!Memo too long',
   },
   helperMemoInstructions: {
-    id: 'components.txhistory.txdetails.memo',
+    id: 'components.send.sendscreen.memoInputInstructions',
     defaultMessage: '!!!Memo instructions',
   },
   helperResolverErrorDomainNotFound: {
-    id: 'claim.domain',
+    id: 'components.send.sendscreen.resolverErrorDomainNotFound',
     defaultMessage: '!!!Domain not found',
+  },
+  listAmountsToSendTitle: {
+    id: 'components.send.listamountstosendscreen.title',
+    defaultMessage: '!!!List amounts to send',
   },
   noAssets: {
     id: 'components.send.assetselectorscreen.noAssets',
@@ -227,7 +235,7 @@ export const sendMessages = defineMessages({
   },
   resolverNoticeTitle: {
     id: 'components.send.sendscreen.resolverNoticeTitle',
-    defaultMessage: '!!!Resolver notice',
+    defaultMessage: '!!!Resolver notice title',
   },
   resolverNoticeText: {
     id: 'components.send.sendscreen.resolverNoticeText',
@@ -238,12 +246,16 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Search tokens',
   },
   selectAssetTitle: {
-    id: 'components.send.selectasset.title',
+    id: 'components.send.assetselectorscreen.title',
     defaultMessage: '!!!Select asset',
+  },
+  selectTokenTitle: {
+    id: 'components.send.selecttokenfromlistscreen.title',
+    defaultMessage: '!!!Select token',
   },
   sendAllWarningAlert1: {
     id: 'components.send.sendscreen.sendAllWarningAlert1',
-    defaultMessage: '!!!Send all warning alert 1 {assetNameOrId}',
+    defaultMessage: '!!!Send all warning alert 1',
   },
   sendAllWarningAlert2: {
     id: 'components.send.sendscreen.sendAllWarningAlert2',
@@ -263,15 +275,15 @@ export const sendMessages = defineMessages({
   },
   submittedTxButton: {
     id: 'components.send.sendscreen.submittedTxButton',
-    defaultMessage: '!!!Submitted',
+    defaultMessage: '!!!Submitted transaction button',
   },
   submittedTxText: {
     id: 'components.send.sendscreen.submittedTxText',
-    defaultMessage: '!!!Transaction submitted',
+    defaultMessage: '!!!Submitted transaction text',
   },
   submittedTxTitle: {
     id: 'components.send.sendscreen.submittedTxTitle',
-    defaultMessage: '!!!Transaction submitted',
+    defaultMessage: '!!!Submitted transaction',
   },
   unknownAsset: {
     id: 'components.send.assetselectorscreen.unknownAsset',
@@ -283,14 +295,14 @@ export const sendMessages = defineMessages({
   },
   failedTxButton: {
     id: 'components.send.sendscreen.failedTxButton',
-    defaultMessage: '!!!Failed',
+    defaultMessage: '!!!Failed transaction button',
   },
   failedTxText: {
     id: 'components.send.sendscreen.failedTxText',
-    defaultMessage: '!!!Transaction failed',
+    defaultMessage: '!!!Failed transaction text',
   },
   failedTxTitle: {
     id: 'components.send.sendscreen.failedTxTitle',
-    defaultMessage: '!!!Transaction failed',
+    defaultMessage: '!!!Failed transaction',
   },
 })

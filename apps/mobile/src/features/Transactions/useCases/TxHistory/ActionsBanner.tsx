@@ -5,6 +5,7 @@ import {Alert, View} from 'react-native'
 // import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
@@ -14,7 +15,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
   // const swapForm = useSwap()
   // const {tokenOutId, isLoading} = useSwapConfig()
   // const disabled = props.disabled || isLoading
-  // const navigateTo = useNavigateTo()
+  const navigateTo = useWalletNavigation()
   const {palette: p} = useTheme()
 
   // const {isSingle, addressMode} = useAddressMode()
@@ -108,7 +109,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
         <Button
           type={ButtonType.Circle}
           icon={Icon.Received}
-          onPress={() => Alert.alert('Receive Feature not implemented')}
+          onPress={() => navigateTo.navigateToReceiveSingle()}
           testID="receiveButton"
           // disabled={disabled}
           // onLongPress={handleOnLongPressReceive}
@@ -132,7 +133,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
             <Button
               type={ButtonType.Circle}
               icon={Icon.Send}
-              onPress={() => Alert.alert('Send Feature not implemented')}
+              onPress={() => navigateTo.navigateToSendStartTx()}
               testID="sendButton"
               // disabled={disabled}
             />
@@ -195,16 +196,3 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
     </View>
   )
 }
-
-/* const useNavigateTo = () => {
-  const navigation = useNavigation<any>()
-
-  return {
-    send: () => navigation.navigate('send-start-tx'),
-    receiveSingleAddress: () => navigation.navigate('receive-single'),
-    receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
-    swap: () => navigation.navigate('swap-main'),
-    swapPreprodNotice: () => navigation.navigate('swap-preprod-notice'),
-    exchange: () => navigation.navigate('exchange-create-order'),
-  }
-} */

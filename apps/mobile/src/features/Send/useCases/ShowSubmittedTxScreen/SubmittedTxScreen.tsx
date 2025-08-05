@@ -3,11 +3,14 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
+import {
+  useBlockGoBack,
+  useWalletNavigation,
+} from '~/kernel/navigation/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {SuccessfulTxIcon} from '../ReviewTx/illustrations/SuccessfulTxIcon'
+import {SubmittedTxIcon} from '../ReviewTx/illustrations/SubmittedTxIcon'
 
 export const SubmittedTxScreen = () => {
   useBlockGoBack()
@@ -27,7 +30,7 @@ export const SubmittedTxScreen = () => {
     >
       <Space.Height._2xl />
 
-      <SuccessfulTxIcon />
+      <SubmittedTxIcon />
 
       <Space.Height._2xl />
 

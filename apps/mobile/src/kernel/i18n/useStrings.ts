@@ -735,6 +735,7 @@ export const useStrings = () => {
         domainNotRegisteredError: f(sendMessages.domainNotRegisteredError),
         domainRecordNotFoundError: f(sendMessages.domainRecordNotFoundError),
         domainUnsupportedError: f(sendMessages.domainUnsupportedError),
+        editAmountTitle: f(sendMessages.editAmountTitle),
         errorBannerNetworkError: f(sendMessages.errorBannerNetworkError),
         errorBannerPendingOutgoingTransaction: f(
           sendMessages.errorBannerPendingOutgoingTransaction,
@@ -757,6 +758,7 @@ export const useStrings = () => {
         helperResolverErrorDomainNotFound: f(
           sendMessages.helperResolverErrorDomainNotFound,
         ),
+        listAmountsToSendTitle: f(sendMessages.listAmountsToSendTitle),
         manyNameServersWarning: (options: {
           b: (content: ReactNode[]) => ReactNode
         }) => f(sendMessages.manyNameServersWarning, options),
@@ -777,7 +779,8 @@ export const useStrings = () => {
         resolverNoticeTitle: f(sendMessages.resolverNoticeTitle),
         resolverNoticeText: f(sendMessages.resolverNoticeText),
         searchTokens: f(sendMessages.searchTokens),
-        selecteAssetTitle: f(sendMessages.selectAssetTitle),
+        selectAssetTitle: f(sendMessages.selectAssetTitle),
+        selectTokenTitle: f(sendMessages.selectTokenTitle),
         sendAllContinueButton: f(
           confirmationMessages.commonButtons.continueButton,
         ),
@@ -787,6 +790,7 @@ export const useStrings = () => {
         sendAllWarningAlert3: f(sendMessages.sendAllWarningAlert3),
         sendAllWarningText: f(sendMessages.sendAllWarningText),
         sendAllWarningTitle: f(sendMessages.sendAllWarningTitle),
+        sendTitle: f(sendMessages.sendTitle),
         submittedTxButton: f(sendMessages.submittedTxButton),
         submittedTxText: f(sendMessages.submittedTxText),
         submittedTxTitle: f(sendMessages.submittedTxTitle),
@@ -1475,6 +1479,12 @@ export const useStrings = () => {
           historyTitle: f(transactionsMessages.historyTitle),
           txDetailsTitle: f(transactionsMessages.txDetailsTitle),
         },
+        utxo: {
+          utxoListTitle: f(transactionsMessages.utxoListTitle),
+          utxoConsolidationTitle: f(
+            transactionsMessages.utxoConsolidationTitle,
+          ),
+        },
         submitted: {
           submittedTxTitle: f(transactionsMessages.submittedTxTitle),
           submittedTxText: f(transactionsMessages.submittedTxText),
@@ -1608,9 +1618,12 @@ export const useStrings = () => {
         walletChecksumModalCardThirdItem: f(
           setupWalletMessages.walletChecksumModalCardThirdItem,
         ),
-        walletChecksumModalCardTitle: f(setupWalletMessages.walletChecksumModalCardTitle),
+        walletChecksumModalCardTitle: f(
+          setupWalletMessages.walletChecksumModalCardTitle,
+        ),
         stepWalletDetails: f(setupWalletMessages.stepWalletDetails),
-        walletDetailsTitle: (bold: any) => f(setupWalletMessages.walletDetailsTitle, {b: bold.b}),
+        walletDetailsTitle: (bold: any) =>
+          f(setupWalletMessages.walletDetailsTitle, {b: bold.b}),
         walletDetailsPasswordHelper: f(
           setupWalletMessages.walletDetailsPasswordHelper,
         ),
@@ -1635,7 +1648,8 @@ export const useStrings = () => {
         hwModalUsbButton: f(setupWalletMessages.hwModalUsbButton),
         hwModalBtButton: f(setupWalletMessages.hwModalBtButton),
         hwModalIosWarning: f(setupWalletMessages.hwModalIosWarning),
-        hwWalletDetailsTitle: (bold: any) => f(setupWalletMessages.hwWalletDetailsTitle, {b: bold.b}),
+        hwWalletDetailsTitle: (bold: any) =>
+          f(setupWalletMessages.hwWalletDetailsTitle, {b: bold.b}),
         hwExportKey: f(setupWalletMessages.hwExportKey),
         bluetoothError: f(setupWalletMessages.bluetoothError),
         hwCheckIntroline: f(setupWalletMessages.hwCheckIntroline),
@@ -1659,55 +1673,107 @@ export const useStrings = () => {
         importReadOnlyWalletDescription: f(
           setupWalletMessages.importReadOnlyWalletDescription,
         ),
-        aboutRecoveryPhraseTitle: (bold: any) => f(setupWalletMessages.aboutRecoveryPhraseTitle, {b: bold.b}),
-        aboutRecoveryPhraseCardFirstItem: (bold: any) => f(setupWalletMessages.aboutRecoveryPhraseCardFirstItem, {b: bold.b}),
-        aboutRecoveryPhraseCardSecondItem: (bold: any) => f(setupWalletMessages.aboutRecoveryPhraseCardSecondItem, {b: bold.b}),
-        aboutRecoveryPhraseCardThirdItem: (bold: any) => f(setupWalletMessages.aboutRecoveryPhraseCardThirdItem, {b: bold.b}),
-        aboutRecoveryPhraseCardFourthItem: (bold: any) => f(setupWalletMessages.aboutRecoveryPhraseCardFourthItem, {b: bold.b}),
-        aboutRecoveryPhraseCardFifthItem: (bold: any) => f(setupWalletMessages.aboutRecoveryPhraseCardFifthItem, {b: bold.b}),
+        aboutRecoveryPhraseTitle: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseTitle, {b: bold.b}),
+        aboutRecoveryPhraseCardFirstItem: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseCardFirstItem, {b: bold.b}),
+        aboutRecoveryPhraseCardSecondItem: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseCardSecondItem, {b: bold.b}),
+        aboutRecoveryPhraseCardThirdItem: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseCardThirdItem, {b: bold.b}),
+        aboutRecoveryPhraseCardFourthItem: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseCardFourthItem, {b: bold.b}),
+        aboutRecoveryPhraseCardFifthItem: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseCardFifthItem, {b: bold.b}),
         stepAboutRecoveryPhrase: f(setupWalletMessages.stepAboutRecoveryPhrase),
         next: f(setupWalletMessages.next),
-        restoreDuplicatedWalletModalTitle: f(setupWalletMessages.restoreDuplicatedWalletModalTitle),
-        restoreWalletScreenTitle: (bold: any) => f(setupWalletMessages.restoreWalletScreenTitle, {b: bold.b}),
+        restoreDuplicatedWalletModalTitle: f(
+          setupWalletMessages.restoreDuplicatedWalletModalTitle,
+        ),
+        restoreWalletScreenTitle: (bold: any) =>
+          f(setupWalletMessages.restoreWalletScreenTitle, {b: bold.b}),
         wordNotFound: f(setupWalletMessages.wordNotFound),
         learnMore: f(setupWalletMessages.learnMore),
         logoTitle: f(setupWalletMessages.logoTitle),
         logoSubtitle: f(setupWalletMessages.logoSubtitle),
         continueButton: f(setupWalletMessages.continueButton),
-        recoveryPhraseModalTitle: f(setupWalletMessages.recoveryPhraseModalTitle),
+        recoveryPhraseModalTitle: f(
+          setupWalletMessages.recoveryPhraseModalTitle,
+        ),
         recoveryPhraseCardTitle: f(setupWalletMessages.recoveryPhraseCardTitle),
-        recoveryPhraseCardFirstItem: f(setupWalletMessages.recoveryPhraseCardFirstItem),
-        recoveryPhraseCardSecondItem: f(setupWalletMessages.recoveryPhraseCardSecondItem),
-        recoveryPhraseCardThirdItem: f(setupWalletMessages.recoveryPhraseCardThirdItem),
-        recoveryPhraseCardFourthItem: f(setupWalletMessages.recoveryPhraseCardFourthItem),
-        recoveryPhraseCardFifthItem: f(setupWalletMessages.recoveryPhraseCardFifthItem),
+        recoveryPhraseCardFirstItem: f(
+          setupWalletMessages.recoveryPhraseCardFirstItem,
+        ),
+        recoveryPhraseCardSecondItem: f(
+          setupWalletMessages.recoveryPhraseCardSecondItem,
+        ),
+        recoveryPhraseCardThirdItem: f(
+          setupWalletMessages.recoveryPhraseCardThirdItem,
+        ),
+        recoveryPhraseCardFourthItem: f(
+          setupWalletMessages.recoveryPhraseCardFourthItem,
+        ),
+        recoveryPhraseCardFifthItem: f(
+          setupWalletMessages.recoveryPhraseCardFifthItem,
+        ),
         stepRecoveryPhrase: f(setupWalletMessages.stepRecoveryPhrase),
-        recoveryPhraseTitle: (bold: any) => f(setupWalletMessages.recoveryPhraseTitle, {b: bold.b}),
-        hideRecoveryPhraseButton: f(setupWalletMessages.hideRecoveryPhraseButton),
-        showRecoveryPhraseButton: f(setupWalletMessages.showRecoveryPhraseButton),
-        verifyRecoveryPhraseTitle: (bold: any) => f(setupWalletMessages.verifyRecoveryPhraseTitle, {b: bold.b}),
-        stepVerifyRecoveryPhrase: f(setupWalletMessages.stepVerifyRecoveryPhrase),
-        verifyRecoveryPhraseErrorMessage: f(setupWalletMessages.verifyRecoveryPhraseErrorMessage),
-        verifyRecoveryPhraseSuccessMessage: f(setupWalletMessages.verifyRecoveryPhraseSuccessMessage),
+        recoveryPhraseTitle: (bold: any) =>
+          f(setupWalletMessages.recoveryPhraseTitle, {b: bold.b}),
+        hideRecoveryPhraseButton: f(
+          setupWalletMessages.hideRecoveryPhraseButton,
+        ),
+        showRecoveryPhraseButton: f(
+          setupWalletMessages.showRecoveryPhraseButton,
+        ),
+        verifyRecoveryPhraseTitle: (bold: any) =>
+          f(setupWalletMessages.verifyRecoveryPhraseTitle, {b: bold.b}),
+        stepVerifyRecoveryPhrase: f(
+          setupWalletMessages.stepVerifyRecoveryPhrase,
+        ),
+        verifyRecoveryPhraseErrorMessage: f(
+          setupWalletMessages.verifyRecoveryPhraseErrorMessage,
+        ),
+        verifyRecoveryPhraseSuccessMessage: f(
+          setupWalletMessages.verifyRecoveryPhraseSuccessMessage,
+        ),
         clearAll: f(setupWalletMessages.clearAll),
         preparingWallet: f(setupWalletMessages.preparingWallet),
-        restoreDuplicatedWalletModalText: f(setupWalletMessages.restoreDuplicatedWalletModalText),
-        restoreDuplicatedWalletModalButton: f(setupWalletMessages.restoreDuplicatedWalletModalButton),
+        restoreDuplicatedWalletModalText: f(
+          setupWalletMessages.restoreDuplicatedWalletModalText,
+        ),
+        restoreDuplicatedWalletModalButton: f(
+          setupWalletMessages.restoreDuplicatedWalletModalButton,
+        ),
         connectWalletButtonCard: f(setupWalletMessages.connectWalletButtonCard),
         createWalletButtonCard: f(setupWalletMessages.createWalletButtonCard),
         restoreWalletButtonCard: f(setupWalletMessages.restoreWalletButtonCard),
-        passwordStrengthRequirement: (values: any) => f(setupWalletMessages.passwordStrengthRequirement, values),
-        repeatPasswordInputError: f(setupWalletMessages.repeatPasswordInputError),
+        passwordStrengthRequirement: (values: any) =>
+          f(setupWalletMessages.passwordStrengthRequirement, values),
+        repeatPasswordInputError: f(
+          setupWalletMessages.repeatPasswordInputError,
+        ),
         tooLong: f(globalMessages.walletNameErrorTooLong),
         nameAlreadyTaken: f(globalMessages.walletNameErrorNameAlreadyTaken),
         mustBeFilled: f(globalMessages.walletNameErrorMustBeFilled),
         walletDetailsModalTitle: f(setupWalletMessages.walletDetailsModalTitle),
-        walletNameModalCardTitle: f(setupWalletMessages.walletNameModalCardTitle),
-        walletNameModalCardFirstItem: f(setupWalletMessages.walletNameModalCardFirstItem),
-        walletNameModalCardSecondItem: f(setupWalletMessages.walletNameModalCardSecondItem),
-        walletPasswordModalCardTitle: f(setupWalletMessages.walletPasswordModalCardTitle),
-        walletPasswordModalCardFirstItem: f(setupWalletMessages.walletPasswordModalCardFirstItem),
-        walletPasswordModalCardSecondItem: f(setupWalletMessages.walletPasswordModalCardSecondItem),
+        walletNameModalCardTitle: f(
+          setupWalletMessages.walletNameModalCardTitle,
+        ),
+        walletNameModalCardFirstItem: f(
+          setupWalletMessages.walletNameModalCardFirstItem,
+        ),
+        walletNameModalCardSecondItem: f(
+          setupWalletMessages.walletNameModalCardSecondItem,
+        ),
+        walletPasswordModalCardTitle: f(
+          setupWalletMessages.walletPasswordModalCardTitle,
+        ),
+        walletPasswordModalCardFirstItem: f(
+          setupWalletMessages.walletPasswordModalCardFirstItem,
+        ),
+        walletPasswordModalCardSecondItem: f(
+          setupWalletMessages.walletPasswordModalCardSecondItem,
+        ),
         // The following keys do not exist on setupWalletMessages and have been removed to fix the error:
         // usbAlwaysConnected: f(setupWalletMessages.usbAlwaysConnected),
         // bluetoothEnabled: f(setupWalletMessages.bluetoothEnabled),

@@ -97,6 +97,14 @@ export const transactionsMessages = defineMessages({
     id: 'components.transactions.viewOnExplorer',
     defaultMessage: '!!!View on Explorer',
   },
+  utxoListTitle: {
+    id: 'components.transactions.utxo.utxoListTitle',
+    defaultMessage: '!!!UTXO List',
+  },
+  utxoConsolidationTitle: {
+    id: 'components.transactions.utxo.utxoConsolidationTitle',
+    defaultMessage: '!!!UTXO Consolidation',
+  },
   noTransactions: {
     id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No transactions',
