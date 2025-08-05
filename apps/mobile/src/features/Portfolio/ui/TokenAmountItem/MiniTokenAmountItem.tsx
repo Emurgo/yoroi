@@ -13,11 +13,11 @@ import {
   ViewProps,
 } from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Text} from '~/ui/Text/Text'
-import {useStrings} from '~/kernel/i18n/useStrings'
-import {TokenDetails} from '../ReviewTx/common/TokenDetails'
-import {TokenInfoIcon} from './TokenInfoIcon'
+import {TokenDetails} from '~/ui/TokenDetails/TokenDetails'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 
 type MiniTokenAmountItemProps = {
   amount: Portfolio.Token.Amount

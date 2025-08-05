@@ -1,5 +1,4 @@
 import {ThemeName} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 import type {ReactNode} from 'react'
 import * as React from 'react'
@@ -10,7 +9,7 @@ import {
   authMessages,
   claimMessages,
   confirmationMessages,
-  currencyNames,
+  // currencyNames,
   dashboardMessages,
   discoverMessages,
   errorMessages,
@@ -357,9 +356,12 @@ export const useStrings = () => {
         description: f(uiMessages.description),
         anonymous: f(uiMessages.anonymous),
         optout: f(uiMessages.optout),
-        private: f(uiMessages.private),
-        noip: f(uiMessages.noip),
-        nosell: f(uiMessages.nosell),
+        private: (options: {b: (content: ReactNode[]) => ReactNode}) =>
+          f(uiMessages.private, options),
+        noip: (options: {b: (content: ReactNode[]) => ReactNode}) =>
+          f(uiMessages.noip, options),
+        nosell: (options: {b: (content: ReactNode[]) => ReactNode}) =>
+          f(uiMessages.nosell, options),
         more: f(uiMessages.more),
         skip: f(uiMessages.skip),
         accept: f(uiMessages.accept),
@@ -538,10 +540,10 @@ export const useStrings = () => {
         theme: {
           translateThemeName: (theme: ThemeName) => f(themeNames[theme]),
         },
-        currencySettings: {
-          translatedName: (symbol: Portfolio.Currency.Symbol) =>
-            f(currencyNames[symbol]),
-        },
+        // currencySettings: {
+        //   translatedName: (symbol: Portfolio.Currency.Symbol) =>
+        //     f(currencyNames[symbol]),
+        // },
         removeWallet: {
           descriptionParagraph1: f(
             settingsMessages.removeWalletDescriptionParagraph1,
@@ -736,6 +738,7 @@ export const useStrings = () => {
         domainRecordNotFoundError: f(sendMessages.domainRecordNotFoundError),
         domainUnsupportedError: f(sendMessages.domainUnsupportedError),
         editAmountTitle: f(sendMessages.editAmountTitle),
+        errorBannerMaxTokenLimit: f(sendMessages.errorBannerMaxTokenLimit),
         errorBannerNetworkError: f(sendMessages.errorBannerNetworkError),
         errorBannerPendingOutgoingTransaction: f(
           sendMessages.errorBannerPendingOutgoingTransaction,
@@ -1484,6 +1487,10 @@ export const useStrings = () => {
           utxoConsolidationTitle: f(
             transactionsMessages.utxoConsolidationTitle,
           ),
+          utxoConsolidationWarning: f(
+            transactionsMessages.utxoConsolidationWarning,
+          ),
+          organizeWalletButton: f(transactionsMessages.organizeWalletButton),
         },
         submitted: {
           submittedTxTitle: f(transactionsMessages.submittedTxTitle),

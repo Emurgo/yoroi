@@ -13,7 +13,7 @@ export const UtxoList = () => {
   const {utxoList} = useUtxoList()
   const {isSingle} = useAddressMode()
 
-  if (utxoList === undefined) return null
+  if (utxoList === undefined || !Array.isArray(utxoList)) return null
 
   return (
     <View style={[a.flex, a.flex_1, a.p_lg]}>

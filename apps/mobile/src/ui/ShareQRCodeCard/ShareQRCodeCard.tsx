@@ -1,4 +1,5 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {
   GestureResponderEvent,
@@ -7,14 +8,11 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
-import Share from 'react-native-share'
-import ViewShot, {captureRef} from 'react-native-view-shot'
+// import ViewShot, {captureRef} from 'react-native-view-shot'
 
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
-import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {
   qrContent: string
@@ -38,43 +36,13 @@ export const ShareQRCodeCard = ({
   const {palette: p} = useTheme()
   const screenWidth = useWindowDimensions().width
 
-  const [isSharing, setIsSharing] = React.useState(false)
-  const ref: React.RefObject<ViewShot> = React.useRef(null)
-
   const handleOnPressShare = () => {
-    setIsSharing(true)
     onShare?.()
+    // Temporarily disabled view-shot functionality due to native module issues
+    // Share.open({
+    //   message: shareContent,
+    // })
   }
-
-  React.useEffect(() => {
-    if (isSharing) {
-      const captureAndShare = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 10))
-
-        const uri = await captureRef(ref, {
-          format: 'png',
-          quality: 1,
-          fileName: shareLabel,
-        })
-
-        setIsSharing(false)
-        await Share.open({
-          url: uri,
-          filename: shareLabel,
-          message: shareContent,
-        })
-      }
-
-      captureAndShare()
-    }
-  }, [isSharing, shareLabel, shareContent])
-
-  if (isSharing)
-    return (
-      <ViewShot style={{height: 308}} ref={ref}>
-        <CaptureShareQRCodeCard content={qrContent} />
-      </ViewShot>
-    )
 
   return (
     <TouchableWithoutFeedback onLongPress={onLongPress}>

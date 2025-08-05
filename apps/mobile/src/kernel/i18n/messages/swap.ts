@@ -349,10 +349,6 @@ export const swapMessages = defineMessages({
     id: 'global.price',
     defaultMessage: '!!!Price',
   },
-  priceImpact: {
-    id: 'components.txhistory.txdetails.txDetails',
-    defaultMessage: '!!!Price Impact',
-  },
   priceImpactRiskHigh: {
     id: 'global.price',
     defaultMessage: '!!!Price Impact Risk High {riskValue}',

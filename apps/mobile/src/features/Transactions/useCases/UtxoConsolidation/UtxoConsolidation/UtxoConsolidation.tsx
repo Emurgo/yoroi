@@ -30,7 +30,7 @@ export const UtxoConsolidation = () => {
           />
 
           <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.organizeWalletDescription}
+            {strings.transactions.utxo.utxoConsolidationTitle}
           </Text>
 
           {shouldShowNotice && (
@@ -45,7 +45,7 @@ export const UtxoConsolidation = () => {
               <Icon.Info size={20} color={p.el_gray_max} />
 
               <Text style={[a.body_1_lg_medium, {color: p.el_gray_medium}]}>
-                {strings.organizeWalletWarning}
+                {strings.transactions.utxo.utxoConsolidationWarning}
               </Text>
             </View>
           )}
@@ -58,7 +58,10 @@ export const UtxoConsolidation = () => {
           isScrollBarShown && [a.border_t, {borderTopColor: p.gray_200}],
         ]}
       >
-        <Button onPress={handleOnPress} title={strings.organizeWalletButton} />
+        <Button
+          onPress={handleOnPress}
+          title={strings.transactions.utxo.organizeWalletButton}
+        />
       </View>
     </View>
   )

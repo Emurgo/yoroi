@@ -5,7 +5,7 @@ import * as React from 'react'
 import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
-import {MiniTokenAmountItem} from '~/features/Portfolio/common/TokenAmountItem/MiniTokenAmountItem'
+import {MiniTokenAmountItem} from '~/features/Portfolio/ui/TokenAmountItem/MiniTokenAmountItem'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletNavigation} from '~/kernel/navigation'
 import {Space} from '~/ui/Space/Space'
@@ -15,16 +15,16 @@ export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {navigateToTxDetails} = useWalletNavigation()
-  const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} =
-    usePortfolioTokenInfos({
-      wallet,
-      tokenIds: Object.keys(item.balance) as Portfolio.Token.Id[],
-      sourceId: 'UtxoList',
-    })
+  const tokenIds = Object.keys(item.balance) as Portfolio.Token.Id[]
+  const {tokenInfos, isLoading} = usePortfolioTokenInfos({
+    wallet,
+    tokenIds,
+    sourceId: 'UtxoList',
+  })
 
   const utxoId = `${item.txHash}#${item.txIndex}`
 
-  if (tokenInfos === undefined)
+  if (isLoading || !tokenInfos || tokenIds.length === 0)
     return <ActivityIndicator size={22} color={p.el_gray_medium} />
 
   return (
@@ -40,7 +40,7 @@ export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
         contentContainerStyle={a.p_md}
         renderItem={({item: [id, qty]}) => {
           const quantity = BigInt(qty)
-          const info = tokenInfos.get(id as Portfolio.Token.Id)
+          const info = tokenInfos?.get?.(id as Portfolio.Token.Id)
           if (!info) return null
           return <MiniTokenAmountItem amount={{quantity, info}} />
         }}

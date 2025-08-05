@@ -591,6 +591,8 @@
   "components.txhistory.txnavigationbuttons.sendButton": "Send",
   "components.uikit.offlinebanner.offline": "You are offline. Please check settings on your device.",
   "components.utxoList": "UTxO List",
+  "components.utxoConsolidation": "UTxO Consolidation",
+  "components.utxoConsolidationWarning": "Consolidate your UTxOs to improve wallet performance",
   "components.walletinit.txnavigationbuttons.continueButton": "Continue",
   "components.walletinit.txnavigationbuttons.nextButton": "Next",
   "components.walletinit.biometricScreen.biometricDescription.description": "Use your device biometrics for a more convenient access to your Yoroi wallet",

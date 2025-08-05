@@ -62,12 +62,12 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Memo',
   },
   memoInputError: {
-    id: 'global.error',
-    defaultMessage: '!!!Memo input error',
+    id: 'components.send.memofield.error',
+    defaultMessage: '!!!Memo is too long',
   },
   memoInputErrorTooLong: {
-    id: 'components.txhistory.txdetails.memo',
-    defaultMessage: '!!!Memo too long',
+    id: 'components.send.memofield.error',
+    defaultMessage: '!!!Memo is too long',
   },
   memoInputErrorInvalidCharacters: {
     id: 'components.txhistory.txdetails.memo',
@@ -84,6 +84,10 @@ export const sendMessages = defineMessages({
   noAssetsAddedYet: {
     id: 'components.send.listamountstosendscreen.title',
     defaultMessage: '!!!No assets added yet',
+  },
+  errorBannerMaxTokenLimit: {
+    id: 'components.send.sendscreen.errorBannerMaxTokenLimit',
+    defaultMessage: '!!!is the maximum number allowed to send in one transaction',
   },
   noBalance: {
     id: 'global.actions.dialogs.logout.noButton',
@@ -210,16 +214,16 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Wrong network',
   },
   helperMemoErrorTooLong: {
-    id: 'components.send.sendscreen.memoInputError',
-    defaultMessage: '!!!Memo too long',
+    id: 'components.send.memofield.error',
+    defaultMessage: '!!!Memo is too long',
   },
   helperMemoInstructions: {
-    id: 'components.send.sendscreen.memoInputInstructions',
-    defaultMessage: '!!!Memo instructions',
+    id: 'components.send.memofield.message',
+    defaultMessage: '!!!(Optional) Memo is stored locally',
   },
   helperResolverErrorDomainNotFound: {
-    id: 'components.send.sendscreen.resolverErrorDomainNotFound',
-    defaultMessage: '!!!Domain not found',
+    id: 'components.send.sendscreen.domainRecordNotFoundError',
+    defaultMessage: '!!!No Cardano record found for this domain',
   },
   listAmountsToSendTitle: {
     id: 'components.send.listamountstosendscreen.title',
@@ -246,12 +250,12 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Search tokens',
   },
   selectAssetTitle: {
-    id: 'components.send.assetselectorscreen.title',
-    defaultMessage: '!!!Select asset',
+    id: 'components.send.selectasset.title',
+    defaultMessage: '!!!Select Asset',
   },
   selectTokenTitle: {
-    id: 'components.send.selecttokenfromlistscreen.title',
-    defaultMessage: '!!!Select token',
+    id: 'components.send.selectasset.title',
+    defaultMessage: '!!!Select Asset',
   },
   sendAllWarningAlert1: {
     id: 'components.send.sendscreen.sendAllWarningAlert1',

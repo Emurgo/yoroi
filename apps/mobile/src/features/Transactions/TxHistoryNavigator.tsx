@@ -1,5 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
+import {Resolver} from '@yoroi/types'
 import React from 'react'
 
 import {DescribeSelectedAddressScreen} from '~/features/Receive/useCases/DescribeSelectedAddressScreen'
@@ -35,8 +37,30 @@ export const TxHistoryNavigator = () => {
     [p],
   )
 
+  // Setup resolver manager
+  const resolverStorage = React.useMemo(() => {
+    return resolverStorageMaker()
+  }, [])
+
+  const resolverApi = React.useMemo(() => {
+    return resolverApiMaker({
+      apiConfig: {
+        [Resolver.NameServer.Unstoppable]: {
+          apiKey: '', // Empty for now, can be configured later
+        },
+      },
+      cslFactory: () => require('@emurgo/cross-csl-core'),
+      isMainnet: true, // Default to mainnet
+    })
+  }, [])
+
+  const resolverManager = React.useMemo(() => {
+    return resolverManagerMaker(resolverStorage, resolverApi)
+  }, [resolverStorage, resolverApi])
+
   return (
-    <Stack.Navigator
+    <ResolverProvider resolverManager={resolverManager}>
+      <Stack.Navigator
       screenOptions={{
         ...navigationOptions,
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
@@ -215,5 +239,6 @@ export const TxHistoryNavigator = () => {
         )}
       </Stack.Screen>
     </Stack.Navigator>
+    </ResolverProvider>
   )
 }

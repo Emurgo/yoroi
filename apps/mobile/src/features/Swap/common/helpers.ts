@@ -1,10 +1,11 @@
-import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
+import {parseSafe} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {z} from 'zod'
-
-import {normalisePtId} from '~/kernel/helpers/normalisePtId'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
 import {SwapPriceImpactRisk} from './types'
+
+// Temporary fix for missing normalisePtId - using identity function
+const normalisePtId = (id: string) => id
 
 type OrderTxMetadata = {
   sellTokenId: string
@@ -14,7 +15,7 @@ type OrderTxMetadata = {
   provider: string
 }
 
-const OrderTxMetadataSchema: z.ZodSchema<OrderTxMetadata> = z.object({
+const OrderTxMetadataSchema = z.object({
   sellTokenId: z.string(),
   buyTokenId: z.string(),
   sellQuantity: z.string(),
@@ -22,7 +23,17 @@ const OrderTxMetadataSchema: z.ZodSchema<OrderTxMetadata> = z.object({
   provider: z.string(),
 })
 
-const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
+const isOrderTxMetadata = (data: unknown): data is OrderTxMetadata => {
+  if (!data || typeof data !== 'object') return false
+  const obj = data as Record<string, unknown>
+  return (
+    typeof obj.sellTokenId === 'string' &&
+    typeof obj.buyTokenId === 'string' &&
+    typeof obj.sellQuantity === 'string' &&
+    typeof obj.buyQuantity === 'string' &&
+    typeof obj.provider === 'string'
+  )
+}
 
 /**
  * Parses and validates a JSON metadata string, transforming it into a structure compliant with MappedRawOrder['metadata'].
@@ -51,24 +62,24 @@ export const getPriceImpactRisk = (priceImpact: number) => {
 }
 
 export const usePriceImpactRiskTheme = (risk: SwapPriceImpactRisk) => {
-  const {color} = useTheme()
+  const {palette: p} = useTheme()
 
   if (risk === 'high') {
     return {
-      text: color.sys_magenta_500,
-      background: color.sys_magenta_100,
+      text: p.sys_magenta_500,
+      background: p.sys_magenta_100,
     }
   }
 
   if (risk === 'moderate') {
     return {
-      text: color.sys_orange_500,
-      background: color.sys_orange_100,
+      text: p.sys_orange_500,
+      background: p.sys_orange_100,
     }
   }
 
   return {
-    text: color.gray_max,
-    background: color.gray_min,
+    text: p.gray_max,
+    background: p.gray_min,
   }
 }

@@ -235,7 +235,11 @@ const CommonContent = ({
           >
             <Text style={style}>{icon}</Text>
 
-            <Text style={{...a.body_1_lg_regular}}>{strings.ui[key]}</Text>
+            <Text style={{...a.body_1_lg_regular}}>
+              {key === 'private' || key === 'noip' || key === 'nosell'
+                ? strings.ui[key](bold)
+                : strings.ui[key]}
+            </Text>
           </View>
         ))}
       </View>

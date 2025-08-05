@@ -1,5 +1,3 @@
-export * from './type'
-
 import {Ada} from './Ada'
 import {Analytics} from './Analytics'
 import {AngleDown} from './AngleDown'
