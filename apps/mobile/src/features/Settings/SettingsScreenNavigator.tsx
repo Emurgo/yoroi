@@ -12,7 +12,7 @@ import {
   defaultStackNavigationOptions,
   SettingsStackRoutes,
   SettingsTabRoutes,
-} from '~/kernel/navigation/navigation'
+} from '~/kernel/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {ChangePinScreen} from '../Auth/ui/screens/ChangePinScreen'

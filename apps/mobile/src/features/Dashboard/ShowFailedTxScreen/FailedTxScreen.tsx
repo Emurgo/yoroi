@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation/navigation'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'

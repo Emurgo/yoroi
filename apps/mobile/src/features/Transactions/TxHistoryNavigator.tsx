@@ -18,7 +18,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   defaultStackNavigationOptions,
   TxHistoryRoutes,
-} from '~/kernel/navigation/navigation'
+} from '~/kernel/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'

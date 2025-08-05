@@ -9,7 +9,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   DiscoverRoutes,
   defaultStackNavigationOptions,
-} from '~/kernel/navigation/navigation'
+} from '~/kernel/navigation'
 import {LoadingBoundary} from '~/ui/Boundary/Boundary'
 import {FullErrorFallback} from '~/ui/Boundary/FullErrorFallback'
 

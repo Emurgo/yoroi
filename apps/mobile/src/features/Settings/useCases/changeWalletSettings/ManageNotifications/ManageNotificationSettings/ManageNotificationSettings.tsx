@@ -12,8 +12,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {SettingsItem, SettingsSection} from '~/features/Settings/SettingsItems'
 import {SettingsNotificationDurationItem} from '~/features/Settings/SettingsNotificationDurationItem'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation/navigation'
+import {useWalletNavigation} from '~/kernel/navigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
@@ -23,7 +24,6 @@ import {
   useChangeNotificationDisplaySettings,
   useNotificationDisplaySettings,
 } from '../../Notifications/NotificationsDisplaySettings'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 const getNotificationsAuthorizationStatus = () => {
   // TODO: Alert.alert('getNotificationsAuthorizationStatus not implemented')

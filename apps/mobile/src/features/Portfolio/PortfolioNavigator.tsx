@@ -9,7 +9,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   defaultStackNavigationOptions,
   PortfolioRoutes,
-} from '~/kernel/navigation/navigation'
+} from '~/kernel/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {PortfolioProvider} from './context/PortfolioProvider'
 import {NftsNavigator} from './NftsNavigator'

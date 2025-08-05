@@ -3,12 +3,12 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
+import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   InititalizationRoutes,
   defaultStackNavigationOptions,
-} from '~/kernel/navigation/navigation'
-import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
+} from '~/kernel/navigation'
 
 import {AnalyticsNoticeScreen} from '../screens/AnalyticsNoticeScreen'
 import {InitialScreen} from '../screens/InitialScreen'

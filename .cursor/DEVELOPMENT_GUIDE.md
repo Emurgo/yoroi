@@ -638,7 +638,7 @@ This pattern can be replicated for migrating components from `wallet-mobile` or 
 - **Image assets**: Use relative paths, not `~` alias
 - **Components**: Use absolute paths with `~/` prefix
 - **Tabs component**: Use `~/ui/Tabs` (migrated from wallet-mobile)
-- **Navigation**: Use `~/kernel/navigation/navigation` not `~/kernel/navigation`
+- **Navigation**: Use `~/kernel/navigation` not `~/kernel/navigation`
 - **Strings**: Use `~/features/Transactions/common/strings` not `~/features/Transactions/common/useStrings`
 
 ### Debugging Instructions

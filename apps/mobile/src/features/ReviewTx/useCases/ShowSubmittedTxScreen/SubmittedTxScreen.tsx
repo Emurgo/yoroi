@@ -2,10 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {
-  useBlockGoBack,
-  useWalletNavigation,
-} from '~/kernel/navigation/navigation'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'

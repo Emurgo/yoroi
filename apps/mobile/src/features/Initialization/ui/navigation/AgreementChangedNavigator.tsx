@@ -8,7 +8,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   InititalizationRoutes,
   defaultStackNavigationOptions,
-} from '~/kernel/navigation/navigation'
+} from '~/kernel/navigation'
 import {AnalyticsChangedScreen} from '../screens/AnalyticsChangedScreen'
 import {ReadPrivacyPolicyScreen} from '../screens/ReadPrivacyPolicyScreen'
 import {ReadTermsOfServiceScreen} from '../screens/ReadTermsOfServiceScreen'

@@ -11,7 +11,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   defaultStackNavigationOptions,
   WalletStackRoutes,
-} from '~/kernel/navigation/navigation'
+} from '~/kernel/navigation'
 import {WalletTabNavigator} from '~/kernel/navigation/WalletTabNavigator'
 
 const Stack = createStackNavigator<WalletStackRoutes>()
