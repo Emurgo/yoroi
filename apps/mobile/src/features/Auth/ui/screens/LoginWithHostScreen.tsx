@@ -16,6 +16,10 @@ export const LoginWithHostScreen = () => {
   const {loginWithHost} = useAuth()
   const {resolve, isPending} = usePromise(loginWithHost)
 
+  React.useEffect(() => {
+    resolve()
+  }, [])
+
   return (
     <View style={[a.flex_1, a.flex_col, a.justify_between]}>
       <Space.Height.lg fill />
@@ -26,7 +30,7 @@ export const LoginWithHostScreen = () => {
 
       <BottomSection>
         <Button
-          title={strings.auth.loginWithHost.title}
+          title={strings.auth.authorize}
           disabled={isPending}
           onPress={resolve}
         />

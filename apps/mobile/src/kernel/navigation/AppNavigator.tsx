@@ -5,8 +5,6 @@ import {TransitionPresets, createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 import {Platform} from 'react-native'
 
-
-
 import {AuthSetting, AuthWithHostConfig} from '~/features/Auth/common/types'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'

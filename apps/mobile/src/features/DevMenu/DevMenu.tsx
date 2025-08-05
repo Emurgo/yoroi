@@ -22,9 +22,9 @@ import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 
-export function DevMenu({visible}: {visible?: boolean}) {
+export function DevMenu() {
   const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
-  const {authWithHost} = useAuth()
+  const {authWithHost, changeAuthSetting} = useAuth()
   const {languageCode, selectLanguage} = useLanguage()
   const strings = useStrings()
   const [isLoading, setIsLoading] = React.useState(false)
@@ -39,10 +39,6 @@ export function DevMenu({visible}: {visible?: boolean}) {
   const metrics = useMetrics()
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
-
-  if (!visible) {
-    return null
-  }
 
   return (
     <SafeAreaView
@@ -96,6 +92,13 @@ export function DevMenu({visible}: {visible?: boolean}) {
         onPress={() => authWithHost().then(console.log).catch(console.error)}
         type={ButtonType.Secondary}
         title="Auth with Host"
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
+
+      <Button
+        onPress={() => changeAuthSetting('os')}
+        type={ButtonType.Secondary}
+        title="Set Auth with Host"
         style={[a.pt_md, a.p_md, a.rounded_md]}
       />
 
