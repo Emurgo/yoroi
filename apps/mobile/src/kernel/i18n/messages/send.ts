@@ -82,12 +82,13 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!! NFTs',
   },
   noAssetsAddedYet: {
-    id: 'components.send.listamountstosendscreen.title',
-    defaultMessage: '!!!No assets added yet',
+    id: 'components.send.assetselectorscreen.noAssetsAddedYet',
+    defaultMessage: '!!!No {fungible} added yet',
   },
   errorBannerMaxTokenLimit: {
     id: 'components.send.sendscreen.errorBannerMaxTokenLimit',
-    defaultMessage: '!!!is the maximum number allowed to send in one transaction',
+    defaultMessage:
+      '!!!is the maximum number allowed to send in one transaction',
   },
   noBalance: {
     id: 'global.actions.dialogs.logout.noButton',

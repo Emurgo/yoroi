@@ -97,6 +97,7 @@
     "expo-notifications": "~0.31.3",
     "expo-screen-capture": "~7.1.5",
     "expo-status-bar": "~2.2.3",
+    "expo-system-ui": "~5.0.10",
     "fast-text-encoding": "^1.0.6",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
@@ -135,8 +136,7 @@
     "react-native-webview": "13.13.5",
     "rxjs": "^7.8.2",
     "uuid": "^11.1.0",
-    "zod": "^3.25.17",
-    "expo-system-ui": "~5.0.10"
+    "zod": "^3.25.17"
   },
   "devDependencies": {
     "@amplitude/ampli": "^1.36.2",

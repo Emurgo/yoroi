@@ -51,6 +51,15 @@ export const EditAmountScreen = () => {
   } = useTransfer()
 
   const amount = targets[selectedTargetIndex].entry.amounts[selectedTokenId]
+
+  if (!amount) {
+    // If amount is not found, navigate back to the token selection screen
+    React.useEffect(() => {
+      navigateTo.selectedTokens()
+    }, [navigateTo])
+    return null
+  }
+
   const initialQuantity = amount.quantity
   const available =
     (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
