@@ -17,7 +17,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {banxaTestWallet} from '~/kernel/constants'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Icon} from '~/ui/Icon'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '~/ui/Modal/ModalContext'

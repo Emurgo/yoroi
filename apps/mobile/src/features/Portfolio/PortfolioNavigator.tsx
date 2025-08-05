@@ -1,16 +1,16 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {createStackNavigator} from '@react-navigation/stack'
-import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {SearchProvider} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {TxDetails} from '~/features/Transactions/useCases/TxDetails/TxDetails'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {
-  defaultStackNavigationOptions,
-  PortfolioRoutes,
-} from '~/kernel/navigation/navigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {PortfolioRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
+
 import {PortfolioProvider} from './context/PortfolioProvider'
 import {NftsNavigator} from './NftsNavigator'
 import {PortfolioDashboardScreen} from './screens/PortfolioDashboard/PortfolioDashboardScreen'
@@ -21,14 +21,14 @@ import {PortfolioTokenListScreen} from './screens/PortfolioTokensList/PortfolioT
 const Stack = createStackNavigator<PortfolioRoutes>()
 
 export const PortfolioNavigator = () => {
-  const {atoms, palette} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
     <PortfolioProvider>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions(atoms, palette),
+          ...defaultStackNavigationOptions(a, p),
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }}
       >

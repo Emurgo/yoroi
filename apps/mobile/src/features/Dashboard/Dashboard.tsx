@@ -22,7 +22,8 @@ import {usePoolTransition} from '~/features/Staking/Staking/PoolTransition/usePo
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {DashboardRoutes, useWalletNavigation} from '~/kernel/navigation'
+import {DashboardRoutes} from '~/kernel/navigation/types'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 
 import {Banner} from '~/ui/Banner/Banner'
 import {Button} from '~/ui/Button/Button'

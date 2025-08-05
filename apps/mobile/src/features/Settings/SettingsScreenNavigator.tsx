@@ -7,16 +7,12 @@ import {TouchableOpacity} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {
-  defaultMaterialTopTabNavigationOptions,
-  defaultStackNavigationOptions,
-  SettingsStackRoutes,
-  SettingsTabRoutes,
-} from '~/kernel/navigation/navigation'
+import {defaultMaterialTopTabNavigationOptions, defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {SettingsStackRoutes, SettingsTabRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
-import {ChangePinScreen} from '../Auth/screens/ChangePinScreen'
-import {EnableLoginWithPinScreen} from '../Auth/screens/EnableLoginWithPinScreen'
+import {ChangePinScreen} from '../Auth/ui/screens/ChangePinScreen'
+import {EnableLoginWithPinScreen} from '../Auth/ui/screens/EnableLoginWithPinScreen'
 import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
 import {About} from './useCases/changeAppSettings/About'
 import {ApplicationSettingsScreen} from './useCases/changeAppSettings/ApplicationSettingsScreen'

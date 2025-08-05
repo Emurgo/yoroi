@@ -1,10 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
 import {Chain} from '@yoroi/types'
 
-import {
-  SettingsRouteNavigation,
-  useWalletNavigation,
-} from '../../../kernel/navigation/navigation'
+import {SettingsRouteNavigation} from '../../../kernel/navigation/types'
+import {useWalletNavigation} from '../../../kernel/navigation/hooks'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<SettingsRouteNavigation>()

@@ -58,6 +58,7 @@
     "@yoroi/blockchains": "file:../../packages/blockchains",
     "@yoroi/claim": "file:../../packages/claim",
     "@yoroi/common": "file:../../packages/common",
+    "@yoroi/dapp-connector": "file:../../packages/dapp-connector",
     "@yoroi/exchange": "file:../../packages/exchange",
     "@yoroi/explorers": "file:../../packages/explorers",
     "@yoroi/identicon": "file:../../packages/identicon",
@@ -132,7 +133,8 @@
     "react-native-webview": "13.13.5",
     "rxjs": "^7.8.2",
     "uuid": "^11.1.0",
-    "zod": "^3.25.17"
+    "zod": "^3.25.17",
+    "expo-system-ui": "~5.0.10"
   },
   "devDependencies": {
     "@amplitude/ampli": "^1.36.2",

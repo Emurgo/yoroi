@@ -6,7 +6,8 @@ import {z} from 'zod'
 
 import * as feedback from '~/kernel/haptics/feedback'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {ScanRoutes, useParams} from '~/kernel/navigation'
+import {ScanRoutes} from '~/kernel/navigation/types'
+import {useParams} from '~/kernel/navigation/hooks'
 import {
   CameraCodeScanner,
   CameraCodeScannerMethods,

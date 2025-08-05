@@ -15,7 +15,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {assetsToSendProperties} from '~/kernel/metrics/helpers'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {AddTokenButton} from '~/ui/AddTokenButton/AddTokenButton'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'

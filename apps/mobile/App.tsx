@@ -5,6 +5,8 @@ import {ThemeProvider} from '@yoroi/theme'
 import * as Font from 'expo-font'
 import * as React from 'react'
 
+import {AppNavigator} from '~/kernel/navigation/AppNavigator'
+import {Modal} from '~/ui/Modal/ModalScreen'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
 import {CopyProvider} from './src/features/Copy/context/CopyProvider'
@@ -16,7 +18,6 @@ import {WalletManagerProvider} from './src/features/WalletManager/context/Wallet
 import {walletManager} from './src/features/WalletManager/wallet-manager'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
-import {AppNavigator} from './src/kernel/navigation/AppNavigator'
 import {QueryProvider} from './src/kernel/query/QueryProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
@@ -55,7 +56,29 @@ function AppShell({children}: React.PropsWithChildren) {
   )
 }
 
-function Yoroi() {
+function BusinessShell({children}: React.PropsWithChildren) {
+  return (
+    <AuthProvider
+      authStorageKeyManager={authStorageKeyManager}
+      pinStorageKeyManager={pinStorageKeyManager}
+      installationIdKeyManager={installationIdStorageKeyManager}
+    >
+      <SearchProvider>
+        <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
+          <WalletManagerProvider walletManager={walletManager}>
+            <SetupWalletProvider>
+              <YoroiNotificationManager>
+                <CurrencyProvider>{children}</CurrencyProvider>
+              </YoroiNotificationManager>
+            </SetupWalletProvider>
+          </WalletManagerProvider>
+        </PairingProvider>
+      </SearchProvider>
+    </AuthProvider>
+  )
+}
+
+export default function App() {
   const [fontsLoaded, setFontsLoaded] = React.useState(false)
 
   React.useEffect(() => {
@@ -87,39 +110,14 @@ function Yoroi() {
     return null
   }
 
-  return <AppNavigator />
-}
-
-function BusinessShell({children}: React.PropsWithChildren) {
-  return (
-    <AuthProvider
-      authStorageKeyManager={authStorageKeyManager}
-      pinStorageKeyManager={pinStorageKeyManager}
-      installationIdKeyManager={installationIdStorageKeyManager}
-    >
-      <SearchProvider>
-        <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
-          <WalletManagerProvider walletManager={walletManager}>
-            <SetupWalletProvider>
-              <YoroiNotificationManager>
-                <CurrencyProvider>{children}</CurrencyProvider>
-              </YoroiNotificationManager>
-            </SetupWalletProvider>
-          </WalletManagerProvider>
-        </PairingProvider>
-      </SearchProvider>
-    </AuthProvider>
-  )
-}
-
-export default function App() {
   return (
     <AppShell>
-      <PlatformShell>
-        <BusinessShell>
-          <Yoroi />
-        </BusinessShell>
-      </PlatformShell>
+      <BusinessShell>
+        <PlatformShell>
+          <Modal />
+          <AppNavigator />
+        </PlatformShell>
+      </BusinessShell>
     </AppShell>
   )
 }

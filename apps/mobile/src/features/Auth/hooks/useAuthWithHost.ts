@@ -1,4 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
 import * as AuthHost from 'expo-local-authentication'
 import {freeze} from 'immer'
 import * as React from 'react'
@@ -6,6 +5,7 @@ import * as React from 'react'
 import {useAppState} from '~/hooks/useAppState'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+
 import {AuthWithHostConfig} from '../common/types'
 
 export const useAuthWithHost = () => {
@@ -17,15 +17,16 @@ export const useAuthWithHost = () => {
     getAuthHostConfig().then(setAuthWithHostConfig)
   }, [])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      logger.debug('focus - update auth with host config', {
-        origin: 'useAuthWithHost',
-        type: 'ui',
-      })
-      getAuthHostConfig().then(setAuthWithHostConfig)
-    }, []),
-  )
+  // TODO: REVISIT needs to happen after the navigation is ready
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     logger.debug('focus - update auth with host config', {
+  //       origin: 'useAuthWithHost',
+  //       type: 'ui',
+  //     })
+  //     getAuthHostConfig().then(setAuthWithHostConfig)
+  //   }, []),
+  // )
 
   useAppState({
     on: 'active',

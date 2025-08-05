@@ -76,36 +76,38 @@ export const AppNavigator = () => {
     },
   })
 
-  const firstAction = useFirstAction()
-  const onReady = React.useCallback(() => {
-    if (isLoggedIn) return
+  // NOTE: _____ DONE 
+  // const firstAction = useFirstAction()
+  // const onReady = React.useCallback(() => {
+  //   if (isLoggedIn) return
 
-    // try first OS auth before navigating to os login screen
-    if (firstAction === 'auth-with-os') {
-      if (Platform.OS === 'android') {
-        supportsAndroidFingerprintOverlay().then((isOverlaySupported) => {
-          if (!isOverlaySupported) {
-            RNBootSplash.hide({fade: true})
-          }
-          InteractionManager.runAfterInteractions(() => {
-            authWithOs()
-          })
-        })
-        return
-      }
+  //   // try first OS auth before navigating to os login screen
+  //   if (firstAction === 'auth-with-os') {
+  //     if (Platform.OS === 'android') {
+  //       supportsAndroidFingerprintOverlay().then((isOverlaySupported) => {
+  //         if (!isOverlaySupported) {
+  //           RNBootSplash.hide({fade: true})
+  //         }
+  //         InteractionManager.runAfterInteractions(() => {
+  //           authWithOs()
+  //         })
+  //       })
+  //       return
+  //     }
 
-      authWithOs()
-    } else {
-      RNBootSplash.hide({fade: true})
-    }
-  }, [authWithOs, firstAction, isLoggedIn])
+  //     authWithOs()
+  //   } else {
+  //     RNBootSplash.hide({fade: true})
+  //   }
+  // }, [authWithOs, firstAction, isLoggedIn])
 
-  const handleStateChange = React.useCallback(() => {
-    const currentRouteName = navRef.current?.getCurrentRoute()?.name
-    setRouteName(currentRouteName)
-  }, [])
-
-  const afterLoginAction = useAfterLoginAction()
+  // const handleStateChange = React.useCallback(() => {
+  //   const currentRouteName = navRef.current?.getCurrentRoute()?.name
+  //   setRouteName(currentRouteName)
+  // }, [])
+  //
+  // const afterLoginAction = useAfterLoginAction()
+  // NOTE: _____ DONE 
 
   const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 

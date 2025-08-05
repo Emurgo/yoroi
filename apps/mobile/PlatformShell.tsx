@@ -9,13 +9,15 @@ import {
   MetricsProvider,
   makeMetricsManager,
 } from './src/kernel/metrics/metricsManager'
-import {RouterContainer} from './src/kernel/navigation/Router'
+import {RouterContainer} from './src/kernel/navigation/RouterContainer'
 import {ModalProvider} from './src/ui/Modal/ModalContext'
 
 const metricsManager = makeMetricsManager()
 
 export function PlatformShell({children}: React.PropsWithChildren) {
   useScreenCapture()
+  // TODO: Uncomment this when we have a way to test notifications
+  // useInitNotifications({localEnabled: true, pushEnabled: true})
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>

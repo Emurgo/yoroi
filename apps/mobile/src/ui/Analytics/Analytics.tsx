@@ -1,13 +1,15 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React, {ReactNode} from 'react'
+
+import * as React from 'react'
 import {Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {SettingsSwitch} from '~/features/Settings/common/SettingsSwitch'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
+
+import {SettingsSwitch} from '../SettingsSwitch/SettingsSwitch'
 import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
 
@@ -102,7 +104,6 @@ const Notice = ({
         ]}
       >
         <Button
-          size="L"
           type={ButtonType.Primary}
           onPress={() => {
             metrics.enable()
@@ -128,7 +129,7 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
         <Space.Height.lg />
 
         <SettingsSwitch
-          value={metrics.isEnabled()}
+          value={metrics.isEnabled}
           onValueChange={(value) => {
             if (value) {
               metrics.enable()
@@ -136,7 +137,8 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
               metrics.disable()
             }
           }}
-          title={strings.ui.toggle}
+          // TODO: REVISIT it looks the API has changed for this component
+          // title={strings.ui.toggle}
         />
       </View>
     </View>
@@ -191,13 +193,13 @@ const CommonContent = ({
         </>
       )}
 
-      <Text style={{...ta.heading_1_medium, color: p.text_gray_max}}>
+      <Text style={[a.heading_1_medium, ta.text_gray_max]}>
         {strings.ui.header}
       </Text>
 
       <Space.Height.md />
 
-      <Text style={{...ta.body_1_lg_regular, color: p.text_gray_medium}}>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.ui.description}
       </Text>
 
@@ -208,13 +210,13 @@ const CommonContent = ({
       <Space.Height.lg />
 
       <View style={{alignItems: 'center'}}>
-        <Text style={{...ta.body_1_lg_medium, color: p.text_gray_max}}>
+        <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
           {strings.ui.anonymous}
         </Text>
 
         <Space.Height.xs />
 
-        <Text style={{...ta.body_2_md_regular, color: p.text_gray_medium}}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
           {strings.ui.optout}
         </Text>
       </View>
@@ -254,5 +256,5 @@ const CommonContent = ({
 }
 
 const bold = {
-  b: (text: ReactNode) => <Text style={a.body_2_md_medium}>{text}</Text>,
+  b: (text: React.ReactNode) => <Text style={a.body_2_md_medium}>{text}</Text>,
 }

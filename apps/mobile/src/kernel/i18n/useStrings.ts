@@ -798,6 +798,7 @@ export const useStrings = () => {
 
       // Global strings
       global: {
+        accept: f(globalMessages.accept),
         error: f(globalMessages.error),
         cancel: f(globalMessages.cancel),
         ok: f(globalMessages.ok),
@@ -814,6 +815,7 @@ export const useStrings = () => {
           currentBalance: string
         }) => f(globalMessages.insufficientBalance, params),
         votingTitle: f(globalMessages.votingTitle),
+        available: f(globalMessages.available),
       },
 
       // Discover strings

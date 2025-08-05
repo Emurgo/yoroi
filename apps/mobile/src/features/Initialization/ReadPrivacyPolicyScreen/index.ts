@@ -1,1 +1,0 @@
-export {ReadPrivacyPolicyScreen} from './ReadPrivacyPolicyScreen'

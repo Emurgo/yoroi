@@ -699,6 +699,10 @@ export const themeNames: Readonly<Record<ThemeName, MessageDescriptor>> =
 
 export default freeze(
   defineMessages({
+    accept: {
+      id: 'global.accept',
+      defaultMessage: '!!!Accept',
+    },
     continue: {
       id: 'global.continue',
       defaultMessage: '!!!Continue',
