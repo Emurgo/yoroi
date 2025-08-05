@@ -5,10 +5,8 @@ import React from 'react'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {
-  defaultStackNavigationOptions,
-  NftRoutes,
-} from '~/kernel/navigation/navigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {NftRoutes} from '~/kernel/navigation/types'
 import {ListMediaGalleryScreen} from './screens/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen'
 import {ZoomMediaImageScreen} from './screens/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ZoomMediaImageScreen'
 import {MediaDetailsScreen} from './ui/MediaDetailsScreen/MediaDetailsScreen'

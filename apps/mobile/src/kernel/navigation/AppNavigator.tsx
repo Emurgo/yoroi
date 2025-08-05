@@ -30,7 +30,7 @@ import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 import {Modal} from '~/ui/Modal/ModalScreen'
 
 import {WalletNavigator} from '../../WalletNavigator'
-import {agreementDate} from '../constants'
+import {agreementDate, isDev} from '../constants'
 import {useStrings} from '../i18n/useStrings'
 import {FirstAction} from './types'
 
@@ -95,64 +95,64 @@ export const AppNavigator = () => {
       {/* Authenticated */}
 
       {isLoggedIn && (
-        <>
-          <Stack.Group>
-            {afterLoginAction === 'choose-biometric-login' && (
-              <Stack.Screen //
-                name="choose-biometric-login"
-                options={{headerShown: false}}
-                getComponent={() => ChooseBiometricLoginScreen}
-              />
-            )}
-
-            {afterLoginAction === 'dark-theme-announcement' && (
-              <Stack.Screen //
-                name="dark-theme-announcement"
-                options={{headerShown: false}}
-                getComponent={() => DarkThemeAnnouncementScreen}
-              />
-            )}
-
-            {afterLoginAction === 'setup-wallet' && (
-              <Stack.Screen //
-                name="setup-wallet"
-                options={{headerShown: false}}
-                component={SetupWalletNavigator}
-              />
-            )}
-
-            {afterLoginAction === 'manage-wallets' && (
-              <Stack.Screen
-                name="manage-wallets"
-                getComponent={() => WalletNavigator}
-              />
-            )}
-          </Stack.Group>
-
-          <Stack.Group
-            screenOptions={{
-              gestureEnabled: false,
-              presentation: 'transparentModal',
-              ...(Platform.OS === 'android' && {
-                ...TransitionPresets.DefaultTransition,
-              }), // overriding general navigation settings
-              cardStyle: {backgroundColor: 'transparent'}, // this is needed for the modal to be transparent
-            }}
-          >
-            <Stack.Screen
-              name="modal"
-              getComponent={() => Modal}
-              options={{
-                gestureEnabled: false,
-              }}
+        <Stack.Group>
+          {afterLoginAction === 'choose-biometric-login' && (
+            <Stack.Screen //
+              name="choose-biometric-login"
+              options={{headerShown: false}}
+              getComponent={() => ChooseBiometricLoginScreen}
             />
-          </Stack.Group>
-        </>
+          )}
+
+          {afterLoginAction === 'dark-theme-announcement' && (
+            <Stack.Screen //
+              name="dark-theme-announcement"
+              options={{headerShown: false}}
+              getComponent={() => DarkThemeAnnouncementScreen}
+            />
+          )}
+
+          {afterLoginAction === 'setup-wallet' && (
+            <Stack.Screen //
+              name="setup-wallet"
+              options={{headerShown: false}}
+              component={SetupWalletNavigator}
+            />
+          )}
+
+          {afterLoginAction === 'manage-wallets' && (
+            <Stack.Screen
+              name="manage-wallets"
+              getComponent={() => WalletNavigator}
+            />
+          )}
+        </Stack.Group>
       )}
+
+      {/* Modal */}
+
+      <Stack.Group
+        screenOptions={{
+          gestureEnabled: false,
+          presentation: 'transparentModal',
+          ...(Platform.OS === 'android' && {
+            ...TransitionPresets.DefaultTransition,
+          }), // overriding general navigation settings
+          cardStyle: {backgroundColor: 'transparent'}, // this is needed for the modal to be transparent
+        }}
+      >
+        <Stack.Screen
+          name="modal"
+          getComponent={() => Modal}
+          options={{
+            gestureEnabled: false,
+          }}
+        />
+      </Stack.Group>
 
       {/* Development */}
 
-      {__DEV__ && (
+      {isDev && (
         <Stack.Group>
           <Stack.Screen name="developer" getComponent={() => DevMenu} />
 

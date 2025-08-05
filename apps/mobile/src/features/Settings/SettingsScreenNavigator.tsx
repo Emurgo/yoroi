@@ -7,12 +7,8 @@ import {TouchableOpacity} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {
-  defaultMaterialTopTabNavigationOptions,
-  defaultStackNavigationOptions,
-  SettingsStackRoutes,
-  SettingsTabRoutes,
-} from '~/kernel/navigation/navigation'
+import {defaultMaterialTopTabNavigationOptions, defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {SettingsStackRoutes, SettingsTabRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {ChangePinScreen} from '../Auth/ui/screens/ChangePinScreen'

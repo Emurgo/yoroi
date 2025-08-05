@@ -5,10 +5,8 @@ import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 
-import {
-  InititalizationRoutes,
-  defaultStackNavigationOptions,
-} from '~/kernel/navigation/navigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {InititalizationRoutes} from '~/kernel/navigation/types'
 import {AnalyticsChangedScreen} from '../screens/AnalyticsChangedScreen'
 import {ReadPrivacyPolicyScreen} from '../screens/ReadPrivacyPolicyScreen'
 import {ReadTermsOfServiceScreen} from '../screens/ReadTermsOfServiceScreen'

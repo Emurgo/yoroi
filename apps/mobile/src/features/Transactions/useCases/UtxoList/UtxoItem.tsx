@@ -7,7 +7,7 @@ import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native'
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {MiniTokenAmountItem} from '~/features/Portfolio/common/TokenAmountItem/MiniTokenAmountItem'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletNavigation} from '~/kernel/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Space} from '~/ui/Space/Space'
 import {UtxoList} from './useUtxoList'
 

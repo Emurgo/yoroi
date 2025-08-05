@@ -8,11 +8,12 @@ import {Text, View} from 'react-native'
 import {usePairing} from '~/features/Pairing/context/PairingProvider'
 import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
-import {BalanceCardContent} from '~/features/Portfolio/screens/PortfolioDashboard/BalanceCard/BalanceCardContent'
-import {BalanceCardSkeleton} from '~/features/Portfolio/screens/PortfolioDashboard/BalanceCard/BalanceCardSkeleton'
-import {BalanceHeaderCard} from '~/features/Portfolio/screens/PortfolioDashboard/BalanceCard/BalanceHeaderCard'
+import {BalanceCardContent} from '~/ui/BalanceCardContent/BalanceCardContent'
+import {BalanceCardSkeleton} from '~/ui/BalanceCardSkeleton/BalanceCardSkeleton'
+import {BalanceHeaderCard} from '~/ui/BalanceHeaderCard/BalanceHeaderCard'
 import {Space} from '~/ui/Space/Space'
-import {useSelectedNetwork} from '../hooks/useSelectedNetwork'
+
+import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
 
 export const AggregatedBalance = () => {
   const {palette: p, atoms: ta} = useTheme()

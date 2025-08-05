@@ -10,7 +10,7 @@ import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
-import {useWalletNavigation} from '~/kernel/navigation/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
 

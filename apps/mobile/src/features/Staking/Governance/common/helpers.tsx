@@ -11,7 +11,7 @@ import * as React from 'react'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletNavigation} from '~/kernel/navigation/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {useStakingKey, useWalletEvent} from '~/wallets/hooks'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'

@@ -1,6 +1,7 @@
-import {useNavigation} from '@react-navigation/native'
 import {hex} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {Text} from 'react-native'

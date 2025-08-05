@@ -11,7 +11,7 @@ import {limitOfSecondaryAmountsPerTx} from '~/features/SetupWallet/common/consta
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'

@@ -5,7 +5,7 @@ import {View} from 'react-native'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Icon} from '~/ui/Icon'
 import {IconProps} from '~/ui/Icon/type'
 import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'

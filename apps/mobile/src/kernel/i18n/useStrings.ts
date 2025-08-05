@@ -815,6 +815,7 @@ export const useStrings = () => {
           currentBalance: string
         }) => f(globalMessages.insufficientBalance, params),
         votingTitle: f(globalMessages.votingTitle),
+        available: f(globalMessages.available),
       },
 
       // Discover strings

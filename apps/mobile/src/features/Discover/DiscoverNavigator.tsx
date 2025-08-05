@@ -6,10 +6,8 @@ import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {
-  DiscoverRoutes,
-  defaultStackNavigationOptions,
-} from '~/kernel/navigation/navigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {DiscoverRoutes} from '~/kernel/navigation/types'
 import {LoadingBoundary} from '~/ui/Boundary/Boundary'
 import {FullErrorFallback} from '~/ui/Boundary/FullErrorFallback'
 

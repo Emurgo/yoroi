@@ -2,7 +2,7 @@ import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {useWalletNavigation} from '~/kernel/navigation/navigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 

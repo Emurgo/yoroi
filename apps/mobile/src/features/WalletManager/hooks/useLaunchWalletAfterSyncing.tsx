@@ -3,7 +3,7 @@ import {time} from '@yoroi/common'
 import * as React from 'react'
 
 import {logger} from '../../../kernel/logger/logger'
-import {useWalletNavigation} from '../../../kernel/navigation/navigation'
+import {useWalletNavigation} from '../../../kernel/navigation/hooks'
 import {YoroiWallet} from '../../../wallets/cardano/types'
 import {useWalletManager} from '../context/WalletManagerProvider'
 
