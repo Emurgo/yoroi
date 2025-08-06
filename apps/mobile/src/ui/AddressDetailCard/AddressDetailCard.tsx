@@ -138,7 +138,7 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
                   height: 12,
                   borderRadius: 100,
                   backgroundColor:
-                    index === scrollPosition ? p.el_primary_medium : p.gray_300,
+                    index === scrollPosition ? ta.el_primary_medium : p.gray_300,
                 },
               ]}
             />
