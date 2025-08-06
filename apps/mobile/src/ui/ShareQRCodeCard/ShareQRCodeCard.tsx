@@ -89,7 +89,7 @@ export const ShareQRCodeCard = ({
             borderRadius: 16,
             a.align_center,
             width: screenWidth - 32,
-            overflow: 'hidden',
+            a.overflow_hidden,
           },
         ]}
       >
