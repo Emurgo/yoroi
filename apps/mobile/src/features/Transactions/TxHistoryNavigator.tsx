@@ -31,6 +31,7 @@ import {Boundary} from '~/ui/Boundary/Boundary'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
+import {unstoppableApiKey} from '~/kernel/constants'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
 
@@ -52,7 +53,7 @@ export const TxHistoryNavigator = () => {
     return resolverApiMaker({
       apiConfig: {
         [Resolver.NameServer.Unstoppable]: {
-          apiKey: '', // Empty for now, can be configured later
+          apiKey: unstoppableApiKey,
         },
       },
       cslFactory: () => require('@emurgo/cross-csl-core'),
