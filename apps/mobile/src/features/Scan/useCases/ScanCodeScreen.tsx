@@ -2,7 +2,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {CameraView, useCameraPermissions} from 'expo-camera'
 import * as Haptics from 'expo-haptics'
-import React, {useCallback, useRef, useState} from 'react'
+import * as React from 'react'
 import {Alert, Text, TouchableOpacity, View} from 'react-native'
 import {z} from 'zod'
 
@@ -17,7 +17,7 @@ const scanParamsSchema = z.object({
 })
 
 export const ScanCodeScreen = () => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
   const {navigateToTxHistory} = useWalletNavigation()
   const params = useParams<ScanRoutes['scan-start']>((params) => {
@@ -25,13 +25,13 @@ export const ScanCodeScreen = () => {
   })
   const {insideFeature} = scanParamsSchema.parse(params)
   const triggerScanAction = useTriggerScanAction({
-    insideFeature: insideFeature as any,
+    insideFeature: insideFeature as 'scan' | 'send',
   })
   const [permission, requestPermission] = useCameraPermissions()
-  const [scanned, setScanned] = useState(false)
-  const cameraRef = useRef<CameraView>(null)
+  const [scanned, setScanned] = React.useState(false)
+  const cameraRef = React.useRef<CameraView>(null)
 
-  const handleBarCodeScanned = useCallback(
+  const handleBarCodeScanned = React.useCallback(
     (event: {data: string; type: string}) => {
       if (scanned) return
       setScanned(true)
@@ -57,12 +57,12 @@ export const ScanCodeScreen = () => {
     [scanned, triggerScanAction, navigateToTxHistory, strings.scan],
   )
 
-  const handleScanAgain = useCallback(() => {
+  const handleScanAgain = React.useCallback(() => {
     setScanned(false)
   }, [])
 
   useFocusEffect(
-    useCallback(() => {
+    React.useCallback(() => {
       setScanned(false)
     }, []),
   )
@@ -70,12 +70,7 @@ export const ScanCodeScreen = () => {
   if (!permission) {
     return (
       <View
-        style={[
-          a.flex_1,
-          a.justify_center,
-          a.align_center,
-          {backgroundColor: p.bg_color_max},
-        ]}
+        style={[a.flex_1, a.justify_center, a.align_center, ta.bg_color_max]}
       >
         <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
           Requesting camera permission...
@@ -87,12 +82,7 @@ export const ScanCodeScreen = () => {
   if (!permission.granted) {
     return (
       <View
-        style={[
-          a.flex_1,
-          a.justify_center,
-          a.align_center,
-          {backgroundColor: p.bg_color_max},
-        ]}
+        style={[a.flex_1, a.justify_center, a.align_center, ta.bg_color_max]}
       >
         <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
           We need your permission to show the camera
@@ -115,7 +105,7 @@ export const ScanCodeScreen = () => {
   }
 
   return (
-    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+    <View style={[a.flex_1, ta.bg_color_max]}>
       <CameraView
         ref={cameraRef}
         style={[a.flex_1]}
@@ -135,14 +125,7 @@ export const ScanCodeScreen = () => {
             {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
           ]}
         >
-          <View
-            style={[
-              a.p_lg,
-              {backgroundColor: p.bg_color_min},
-              a.rounded_md,
-              a.px_md,
-            ]}
-          >
+          <View style={[a.p_lg, ta.bg_color_min, a.rounded_md, a.px_md]}>
             <Text
               style={[
                 a.body_1_lg_regular,
