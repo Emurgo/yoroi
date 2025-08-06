@@ -74,13 +74,11 @@ export const DescribeSelectedAddressScreen = () => {
   }, 300);
   return () => clearTimeout(timeout)
   }, [
-    isShowingMultipleAddressInfo,
-    isSingle,
-    isMultipleAddressesUsed,
-    openModal,
-    strings.receive.singleOrMultiple,
-    handleOnModalConfirm,
-    closeModal,
+  isShowingMultipleAddressInfo,
+  openModal,
+  strings.receive.singleOrMultiple,
+  handleOnModalConfirm,
+  closeModal,
   ])
 
   useFocusEffect(
