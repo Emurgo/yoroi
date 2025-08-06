@@ -87,7 +87,7 @@ export const ShareQRCodeCard = ({
           {
             minHeight: 432,
             borderRadius: 16,
-            alignItems: 'center',
+            a.align_center,
             width: screenWidth - 32,
             overflow: 'hidden',
           },
