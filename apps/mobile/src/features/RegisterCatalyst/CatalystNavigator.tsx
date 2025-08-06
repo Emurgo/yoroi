@@ -5,12 +5,9 @@ import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {
-  defaultStackNavigationOptions,
-  useWalletNavigation,
-  VotingRegistrationRouteNavigation,
-  VotingRegistrationRoutes,
-} from '~/kernel/navigation/navigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {VotingRegistrationRouteNavigation, VotingRegistrationRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {ConfirmPin} from './useCases/ConfirmPin/ConfirmPin'

@@ -3,10 +3,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {
-  defaultStackNavigationOptions,
-  ToggleAnalyticsSettingsRoutes,
-} from '~/kernel/navigation/navigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {ToggleAnalyticsSettingsRoutes} from '~/kernel/navigation/types'
 import {ToggleAnalyticsSettingsScreen} from './ToggleAnalyticsSettingsScreen'
 
 const Stack = createStackNavigator<ToggleAnalyticsSettingsRoutes>()

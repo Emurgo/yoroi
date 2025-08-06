@@ -4,11 +4,8 @@ import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {
-  BackButton,
-  defaultStackNavigationOptions,
-  useWalletNavigation,
-} from '~/kernel/navigation/navigation'
+import {BackButton, defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'

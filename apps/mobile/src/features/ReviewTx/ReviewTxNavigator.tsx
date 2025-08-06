@@ -3,10 +3,8 @@ import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {
-  defaultStackNavigationOptions,
-  ReviewTxRoutes,
-} from '~/kernel/navigation/navigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
