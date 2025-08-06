@@ -84,13 +84,12 @@ export const ShareQRCodeCard = ({
           a.align_center,
           a.flex_1,
           a.px_lg,
+          a.rounded_lg,
           {
             minHeight: 432,
-            borderRadius: 16,
-            a.align_center,
             width: screenWidth - 32,
-            a.overflow_hidden,
           },
+          a.overflow_hidden,
         ]}
       >
         <LinearGradient
@@ -101,10 +100,10 @@ export const ShareQRCodeCard = ({
               right: 0,
               bottom: 0,
               opacity: 1,
-              borderRadius: 16,
             },
             a.absolute,
-            a.inset_0,            
+            a.inset_0,
+            a.rounded_lg,
           ]}
           start={{x: 0, y: 0}}
           end={{x: 0, y: 1}}
@@ -122,12 +121,7 @@ export const ShareQRCodeCard = ({
 
         <View style={a.align_center}>
           <View
-            style={[
-            // TODO; REVISIT leverage something that exists.
-              padding: 10,
-              borderRadius: 8,
-              {backgroundColor: p.white_static,
-            }}
+            style={[a.p_md, a.rounded_lg, {backgroundColor: p.white_static}]}
           >
             <QRCode
               value={qrContent}
@@ -157,14 +151,12 @@ export const ShareQRCodeCard = ({
         >
           <Text
             style={[
+              a.button_2_md,
               {
                 height: 32,
                 textAlignVertical: 'center',
-                textTransform: 'uppercase',
-                letterSpacing: 0.5,
+                color: p.gray_900,
               },
-              a.button_2_md,
-              {color: p.gray_900},
             ]}
           >
             {shareLabel}

@@ -29,9 +29,10 @@ export const DescribeSelectedAddressScreen = () => {
   const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
-  const {isSingle, addressMode} = useAddressMode()
+  const {/* isSingle,  */ addressMode} = useAddressMode()
   const addresses = useReceiveAddressesStatus(addressMode)
-  const isMultipleAddressesUsed = addresses.used.length > 1
+  // TODO: REVISIT, RESTORE THIS FEATURE
+  // const isMultipleAddressesUsed = addresses.used.length > 1
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
   const {openModal, closeModal} = useModal()
 
@@ -58,27 +59,27 @@ export const DescribeSelectedAddressScreen = () => {
     [navigateTo],
   )
   React.useEffect(() => {
-  if (!isShowingMultipleAddressInfo) return;
+    if (isShowingMultipleAddressInfo) return
 
-  const timeout = setTimeout(() => {
-    openModal({
-      title: strings.receive.singleOrMultiple,
-      content: (
-        <SingleOrMultipleAddressesModal
-          onConfirm={handleOnModalConfirm}
-          onClose={closeModal}
-        />
-      ),
-      height: singleOrMultipleAddressesModalHeight,
-    });
-  }, 300);
-  return () => clearTimeout(timeout)
+    const timeout = setTimeout(() => {
+      openModal({
+        title: strings.receive.singleOrMultiple,
+        content: (
+          <SingleOrMultipleAddressesModal
+            onConfirm={handleOnModalConfirm}
+            onClose={closeModal}
+          />
+        ),
+        height: singleOrMultipleAddressesModalHeight,
+      })
+    }, 300)
+    return () => clearTimeout(timeout)
   }, [
-  isShowingMultipleAddressInfo,
-  openModal,
-  strings.receive.singleOrMultiple,
-  handleOnModalConfirm,
-  closeModal,
+    isShowingMultipleAddressInfo,
+    openModal,
+    strings.receive.singleOrMultiple,
+    handleOnModalConfirm,
+    closeModal,
   ])
 
   useFocusEffect(
