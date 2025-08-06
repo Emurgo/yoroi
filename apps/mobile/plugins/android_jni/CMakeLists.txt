@@ -77,9 +77,34 @@ print(closest_path)
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+# Get CSL Bridge path - choose the one closest relative to this CMakeLists.txt location
+execute_process(
+    COMMAND bash -c "npm ls @emurgo/msl-mobile-bridge-jsi --parseable | python3 -c \"
+import sys, os
+current_dir = '${CMAKE_CURRENT_LIST_DIR}'
+min_depth = float('inf')
+closest_path = ''
+for line in sys.stdin:
+    path = line.strip()
+    if path:
+        try:
+            rel_path = os.path.relpath(path, current_dir)
+            depth = rel_path.count('../')
+            if depth < min_depth:
+                min_depth = depth
+                closest_path = path
+        except ValueError:
+            pass
+print(closest_path)
+\""
+    OUTPUT_VARIABLE MSL_BRIDGE_PATH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
 message(STATUS "NODE_MODULES_DIR: ${NODE_MODULES_DIR}")
 message(STATUS "RN_PATH: ${RN_PATH}")
 message(STATUS "CSL_BRIDGE_PATH: ${CSL_BRIDGE_PATH}")
+message(STATUS "MSL_BRIDGE_PATH: ${MSL_BRIDGE_PATH}")
 
 if (NOT EXISTS ${RN_PATH})
     message(FATAL_ERROR "Can't find React Native. Please run npm install in the root of your project directory")
@@ -87,6 +112,9 @@ endif()
 
 if (NOT EXISTS ${CSL_BRIDGE_PATH})
     message(FATAL_ERROR "Can't find @emurgo/csl-mobile-bridge-jsi. Please run npm install in the root of your project directory")
+endif()
+if (NOT EXISTS ${MSL_BRIDGE_PATH})
+    message(FATAL_ERROR "Can't find @emurgo/msl-mobile-bridge-jsi. Please run npm install in the root of your project directory")
 endif()
 
 set(CPP_DIR ${CMAKE_CURRENT_LIST_DIR}/../../../../../cpp)
@@ -108,10 +136,12 @@ include_directories(
 
 include(${RN_PATH}/ReactAndroid/cmake-utils/ReactNative-application.cmake)
 include(${CSL_BRIDGE_PATH}/emurgo-csl-mobile-bridge.cmake)
+include(${MSL_BRIDGE_PATH}/emurgo-msl-mobile-bridge.cmake)
 
 target_link_libraries(cxx_modules_loader
         jsi
-        cls_mobile_bridge_jsi)
+        cls_mobile_bridge_jsi
+        msl_mobile_bridge_jsi)
 
 
 target_link_libraries(${CMAKE_PROJECT_NAME} cxx_modules_loader)
