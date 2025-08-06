@@ -1,4 +1,4 @@
-import {getAllowedDexes, resolveDexes} from './helpers'
+import {getAllowedDexes} from './helpers'
 import {Dex} from './types'
 
 const allDexes: Array<Dex> = [
@@ -35,29 +35,6 @@ describe('getAllowedDexes', () => {
 
   it('should return an empty array if all DEXes are blocked', () => {
     const result = getAllowedDexes({blocked: allDexes})
-    expect(result).toEqual([])
-  })
-})
-
-describe('resolveDexes', () => {
-  it('should return the protocol if provided', () => {
-    const result = resolveDexes({protocol: Dex.Minswap_v1})
-    expect(result).toEqual([Dex.Minswap_v1])
-  })
-
-  it('should return allowed DEXes if protocol is not provided', () => {
-    const result = resolveDexes({blockedProtocols: [Dex.Minswap_stable]})
-    const expected = allDexes.filter((dex) => dex !== Dex.Minswap_stable)
-    expect(result).toEqual(expected)
-  })
-
-  it('should return all DEXes if no protocol and no blocked protocols are provided', () => {
-    const result = resolveDexes({})
-    expect(result).toEqual(allDexes)
-  })
-
-  it('should return an empty array if all DEXes are blocked and no protocol is provided', () => {
-    const result = resolveDexes({blockedProtocols: allDexes})
     expect(result).toEqual([])
   })
 })

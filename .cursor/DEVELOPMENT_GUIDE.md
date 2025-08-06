@@ -116,6 +116,7 @@ import { RawUtxo, YoroiUnsignedTx } from "@yoroi/types";
 #### 4. Adopt Atomic Design System
 
 **Static Atoms (`a`):**
+Static atoms come directly from `@yoroi/theme` and are theme-independent:
 
 ```typescript
 import {atoms as a} from '@yoroi/theme'
@@ -123,10 +124,112 @@ style={[a.p_lg, a.rounded_sm, a.flex_col]}
 ```
 
 **Theme-Aware Atoms (`ta`) and Palette (`p`):**
+Dynamic atoms come from `useTheme` and are aliased to `ta`. These should be preferred over direct palette usage for theme-dependent styles:
 
 ```typescript
 const {atoms: ta, palette: p} = useTheme()
-style={[...ta.bg_color_max, a.p_lg, {color: p.text_gray_low}]}
+
+// ✅ CORRECT: Use themed atoms for theme-dependent styles
+style={[a.p_lg, ta.bg_color_max]} // Instead of {backgroundColor: p.bg_color_max}
+
+// ✅ CORRECT: Use themed atoms for text colors
+style={[a.text_center, ta.text_primary_max]} // Instead of {color: p.text_primary_max}
+
+// ✅ CORRECT: Use themed atoms for element colors
+style={[a.flex_1, ta.el_primary_max]} // Instead of {color: p.el_primary_max}
+```
+
+**Available Themed Atoms (`ta`):**
+The following atoms should use `ta` instead of direct palette access:
+
+```typescript
+// Background colors
+ta.bg_color_max; // {backgroundColor: themes[paletteName].theme.bg_color_max}
+ta.bg_color_min; // {backgroundColor: themes[paletteName].theme.bg_color_min}
+
+// Element colors
+ta.el_primary_max; // {color: themes[paletteName].theme.el_primary_max}
+ta.el_primary_medium; // {color: themes[paletteName].theme.el_primary_medium}
+ta.el_primary_min; // {color: themes[paletteName].theme.el_primary_min}
+ta.el_gray_max; // {color: themes[paletteName].theme.el_gray_max}
+ta.el_gray_medium; // {color: themes[paletteName].theme.el_gray_medium}
+ta.el_gray_min; // {color: themes[paletteName].theme.el_gray_min}
+ta.el_secondary; // {color: themes[paletteName].theme.el_secondary}
+
+// Input colors
+ta.input_selected; // {color: themes[paletteName].theme.input_selected}
+
+// Text colors
+ta.text_primary_max; // {color: themes[paletteName].theme.text_primary_max}
+ta.text_primary_medium; // {color: themes[paletteName].theme.text_primary_medium}
+ta.text_primary_min; // {color: themes[paletteName].theme.text_primary_min}
+ta.text_gray_max; // {color: themes[paletteName].theme.text_gray_max}
+ta.text_gray_medium; // {color: themes[paletteName].theme.text_gray_medium}
+ta.text_gray_low; // {color: themes[paletteName].theme.text_gray_low}
+ta.text_gray_min; // {color: themes[paletteName].theme.text_gray_min}
+ta.text_error; // {color: themes[paletteName].theme.text_error}
+ta.text_warning; // {color: themes[paletteName].theme.text_warning}
+ta.text_success; // {color: themes[paletteName].theme.text_success}
+ta.text_info; // {color: themes[paletteName].theme.text_info}
+
+// Web-specific backgrounds
+ta.web_bg_sidebar_active; // {backgroundColor: themes[paletteName].theme.web_bg_sidebar_active}
+ta.web_bg_sidebar_inactive; // {backgroundColor: themes[paletteName].theme.web_bg_sidebar_inactive}
+
+// Mobile-specific backgrounds
+ta.mobile_bg_blur; // {backgroundColor: themes[paletteName].theme.mobile_bg_blur}
+```
+
+**Style Organization Best Practices:**
+
+```typescript
+// ✅ CORRECT: Organize styles in this order
+style={[
+  // 1. Static atoms first (performance)
+  a.flex_1,
+  a.p_lg,
+  a.rounded_sm,
+
+  // 2. Themed atoms second (theme-dependent)
+  ta.bg_color_max,
+  ta.text_primary_max,
+
+  // 3. Direct palette only when no themed atom exists
+  {borderColor: p.gray_300} // Only if no ta.el_gray_min equivalent
+]}
+```
+
+**Migration Examples:**
+
+```typescript
+// ❌ BEFORE: Direct palette usage
+const {palette: p} = useTheme()
+<View style={[a.p_lg, {backgroundColor: p.bg_color_max}]} />
+
+// ✅ AFTER: Use themed atoms
+const {atoms: ta} = useTheme()
+<View style={[a.p_lg, ta.bg_color_max]} />
+
+// ❌ BEFORE: Direct palette for text colors
+<Text style={[a.text_center, {color: p.text_primary_max}]}>Hello</Text>
+
+// ✅ AFTER: Use themed atoms for text colors
+<Text style={[a.text_center, ta.text_primary_max]}>Hello</Text>
+
+// ❌ BEFORE: Direct palette for element colors
+<Icon style={[a.w_6, a.h_6, {color: p.el_primary_max}]} />
+
+// ✅ AFTER: Use themed atoms for element colors
+<Icon style={[a.w_6, a.h_6, ta.el_primary_max]} />
+```
+
+**When to Use Direct Palette (`p`):**
+Only use direct palette access when there's no equivalent themed atom available:
+
+```typescript
+// ✅ CORRECT: Use palette for colors without themed atoms
+style={{borderColor: p.gray_300}} // No ta.border_gray_300 exists
+style={{shadowColor: p.black_static}} // No ta.shadow_color exists
 ```
 
 #### 5. Update Component Imports
@@ -764,12 +867,14 @@ git checkout fix/wallet-navigation-and-functionality
 
 1. **Always use absolute paths** with `~/` prefix for internal imports
 2. **Prefer static atoms** (`a`) when possible for better performance
-3. **Use theme atoms** (`ta`) only for theme-dependent styles
-4. **Keep style arrays** organized: static atoms first, then theme atoms, then palette
+3. **Use themed atoms** (`ta`) for theme-dependent styles instead of direct palette access
+4. **Keep style arrays** organized: static atoms first, then themed atoms, then palette
 5. **Test both light and dark themes** after migration
 6. **Update all relative imports** to use the new absolute path system
 7. **Check conflicts.md** before starting new migrations
 8. **Document new issues** in conflicts.md when found
+9. **Use themed atoms for common theme-dependent styles** like `ta.bg_color_max`, `ta.text_primary_max`, `ta.el_primary_max` instead of `{backgroundColor: p.bg_color_max}`, `{color: p.text_primary_max}`, etc.
+10. **Only use direct palette access** when no equivalent themed atom exists
 
 ## 🔄 Migration Checklist
 
@@ -777,6 +882,7 @@ git checkout fix/wallet-navigation-and-functionality
 - [ ] Replace relative imports with absolute paths (`~/`)
 - [ ] Update component imports from `components/` to `ui/`
 - [ ] Convert styles to atomic design system
+- [ ] Use themed atoms (`ta`) instead of direct palette access for theme-dependent styles
 - [ ] Test in both light and dark themes
 - [ ] Verify all imports resolve correctly
 - [ ] Clear Metro cache and restart development server
