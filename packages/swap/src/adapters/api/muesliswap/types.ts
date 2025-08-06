@@ -107,8 +107,7 @@ export type OrdersHistoryResponse = {
 }
 
 export type CancelRequest = {
-  tx_hash: string
-  output_idx: number
+  order_ids: string[]
 }
 
 export type CancelResponse = {
@@ -121,7 +120,8 @@ export type LimitOrderRequest = {
   buy_amount: string
   sell_amount: string
   user_address: string
-  dex: Dex
+  // Changed from dex to order_contract
+  order_contract?: Dex
   partner?: string
   numbers_have_decimals?: boolean
   utxos?: string[]
@@ -134,7 +134,8 @@ export type CreateOrderRequest = {
   sell_amount?: string
   user_address: string
   slippage?: number
-  dex?: ReadonlyArray<Dex> | Dex
+  // Changed from dex to excluded_sources
+  excluded_sources?: ReadonlyArray<Dex> | Dex
   partner?: string
   numbers_have_decimals?: boolean
   utxos?: string[]
@@ -146,8 +147,8 @@ export type QuoteRequest = {
   buy_amount?: string
   sell_amount?: string
   slippage?: number
-  // TODO: @jorbuedo it looks to accept string/array of strings
-  dex?: ReadonlyArray<Dex> | Dex
+  // Changed from dex to excluded_sources
+  excluded_sources?: ReadonlyArray<Dex> | Dex
   partner?: string
   numbers_have_decimals?: boolean
 }
@@ -157,7 +158,8 @@ export type LimitQuoteRequest = {
   sell_token: string
   buy_amount: string
   sell_amount: string
-  dex?: Dex
+  // Changed from dex to order_contract
+  order_contract?: Dex
   partner?: string
   numbers_have_decimals?: boolean
 }
@@ -188,7 +190,8 @@ export type QuoteResponse = {
   sell_token_decimals: number
   net_price: number
   net_price_impact: number
-  frontend_fee: number | string
+  // Changed from frontend_fee to service_fee
+  service_fee: number | string
   total_output_without_slippage?: number | string
   splits: Array<Split>
   numbers_have_decimals: boolean

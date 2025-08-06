@@ -7,7 +7,7 @@ import {
   transformersMaker,
 } from './transformers'
 import {api, primaryTokenInfo} from './api.mocks'
-import {CreateOrderRequest, Dex} from './types'
+import {Dex, LimitOrderRequest} from './types'
 
 const address =
   'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl'
@@ -76,7 +76,19 @@ describe('transformers', () => {
         buy_amount: '10',
         buy_token:
           'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
-        dex: ['minswap-v1'],
+        excluded_sources: [
+          'muesliswap-v2',
+          'muesliswap-clp',
+          'minswap-v2',
+          'minswap-stable',
+          'spectrum-v1',
+          'teddy-v1',
+          'wingriders-v1',
+          'wingriders-v2',
+          'vyfi-v1',
+          'sundaeswap-v1',
+          'sundaeswap-v3',
+        ],
         numbers_have_decimals: true,
         partner: 'somePartnerId',
         sell_token: '.',
@@ -86,19 +98,7 @@ describe('transformers', () => {
       const input = {...api.inputs.quote, protocol: undefined}
       const request = {
         ...api.requests.quote,
-        dex: [
-          'muesliswap-v2',
-          'muesliswap-clp',
-          'minswap-v1',
-          'minswap-v2',
-          'minswap-stable',
-          'spectrum-v1',
-          'teddy-v1',
-          'wingriders-v2',
-          'vyfi-v1',
-          'sundaeswap-v1',
-          'sundaeswap-v3',
-        ],
+        excluded_sources: ['wingriders-v1'],
       }
       expect(transformers.quote.request(input)).toEqual(request)
     })
@@ -123,7 +123,7 @@ describe('transformers', () => {
       )
 
       const input = {...api.inputs.quoteLimit, protocol: undefined}
-      const request = {...api.requests.quoteLimit, dex: undefined}
+      const request = {...api.requests.quoteLimit, order_contract: undefined}
       expect(transformers.limitQuote.request(input)).toEqual(request)
     })
   })
@@ -152,10 +152,10 @@ describe('transformers', () => {
       ).toEqual(api.requests.createLimit(address))
       expect(
         transformers.createLimit.request(api.inputs.createLimit[1]!),
-      ).toEqual<CreateOrderRequest>({
+      ).toEqual<LimitOrderRequest>({
         ...api.requests.createLimit(address),
         buy_amount: '0',
-        dex: Dex.Unsupported,
+        order_contract: Dex.Unsupported,
       })
     })
 
