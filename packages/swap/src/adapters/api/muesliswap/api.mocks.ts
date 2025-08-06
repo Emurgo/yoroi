@@ -5,6 +5,8 @@ import {
   CancelResponse,
   CreateOrderRequest,
   CreateOrderResponse,
+  LimitOrderRequest,
+  LimitQuoteRequest,
   OrdersHistoryResponse,
   QuoteRequest,
   QuoteResponse,
@@ -257,8 +259,9 @@ const cancelInput: Array<Swap.CancelRequest> = [
 ]
 
 const cancelRequest: CancelRequest = {
-  output_idx: 0,
-  tx_hash: '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf',
+  order_ids: [
+    '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf#0',
+  ],
 }
 
 const cancelResponse: CancelResponse = {
@@ -277,10 +280,10 @@ const quoteLimitInput: Swap.EstimateRequest = {
   protocol: 'minswap-v1',
 }
 
-const quoteLimitRequest: QuoteRequest = {
+const quoteLimitRequest: LimitQuoteRequest = {
   buy_amount: '0',
   buy_token: quoteLimitInput.tokenOut,
-  dex: 'minswap-v1',
+  order_contract: 'minswap-v1',
   numbers_have_decimals: true,
   sell_amount: '0',
   sell_token: quoteLimitInput.tokenIn,
@@ -302,7 +305,19 @@ const quoteRequest: QuoteRequest = {
   sell_amount: String(quoteInput.amountIn),
   slippage: quoteInput.slippage / 100,
   numbers_have_decimals: true,
-  dex: ['minswap-v1'],
+  excluded_sources: [
+    'muesliswap-v2',
+    'muesliswap-clp',
+    'minswap-v2',
+    'minswap-stable',
+    'spectrum-v1',
+    'teddy-v1',
+    'wingriders-v1',
+    'wingriders-v2',
+    'vyfi-v1',
+    'sundaeswap-v1',
+    'sundaeswap-v3',
+  ],
   partner: 'somePartnerId',
 }
 
@@ -316,7 +331,7 @@ const quoteResponse: QuoteResponse = {
   sell_token_decimals: 6,
   net_price: 0.00113,
   net_price_impact: 1.258404559451805,
-  frontend_fee: '0.000000',
+  service_fee: '0.000000',
   numbers_have_decimals: true,
   total_output_without_slippage: '1130',
   splits: [
@@ -349,7 +364,7 @@ const quoteNoOutResponse: QuoteResponse = {
   sell_token_decimals: 6,
   net_price: 0.00113,
   net_price_impact: 1.258404559451805,
-  frontend_fee: '0.000000',
+  service_fee: '0.000000',
   numbers_have_decimals: true,
   splits: [
     {
@@ -449,14 +464,14 @@ const createLimitInput: Array<Swap.CreateRequest> = [
   },
 ]
 
-const createLimitRequest = (address: string): CreateOrderRequest => ({
+const createLimitRequest = (address: string): LimitOrderRequest => ({
   sell_token: '.',
   sell_amount: '1',
   user_address: address,
   buy_token:
     'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
   buy_amount: '1',
-  dex: 'minswap-v1',
+  order_contract: 'minswap-v1',
   numbers_have_decimals: true,
 })
 
@@ -488,7 +503,7 @@ const createLimitResponse: CreateOrderResponse = {
     sell_token_decimals: 6,
     net_price: 0.00113,
     net_price_impact: 1.258404559451805,
-    frontend_fee: '0.000000',
+    service_fee: '0.000000',
     numbers_have_decimals: true,
     total_output_without_slippage: '1130',
     splits: [
@@ -554,20 +569,7 @@ const createRequest = (address: string): Array<CreateOrderRequest> => [
     user_address: address,
     buy_token:
       'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-    dex: [
-      'muesliswap-v2',
-      'muesliswap-clp',
-      'minswap-v1',
-      'minswap-v2',
-      'minswap-stable',
-      'spectrum-v1',
-      'teddy-v1',
-      'wingriders-v1',
-      'wingriders-v2',
-      'vyfi-v1',
-      'sundaeswap-v1',
-      'sundaeswap-v3',
-    ],
+    excluded_sources: [],
     numbers_have_decimals: true,
     slippage: 0,
     partner: 'somePartnerId',
@@ -578,7 +580,19 @@ const createRequest = (address: string): Array<CreateOrderRequest> => [
     user_address: address,
     buy_token:
       'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-    dex: ['minswap-v1'],
+    excluded_sources: [
+      'muesliswap-v2',
+      'muesliswap-clp',
+      'minswap-v2',
+      'minswap-stable',
+      'spectrum-v1',
+      'teddy-v1',
+      'wingriders-v1',
+      'wingriders-v2',
+      'vyfi-v1',
+      'sundaeswap-v1',
+      'sundaeswap-v3',
+    ],
     numbers_have_decimals: true,
     slippage: 0.02,
     partner: 'somePartnerId',
@@ -596,7 +610,7 @@ const createResponse: CreateOrderResponse = {
     sell_token_decimals: 6,
     net_price: 0.00113,
     net_price_impact: 1.258404559451805,
-    frontend_fee: '0.000000',
+    service_fee: '0.000000',
     numbers_have_decimals: true,
     total_output_without_slippage: '1130',
     splits: [

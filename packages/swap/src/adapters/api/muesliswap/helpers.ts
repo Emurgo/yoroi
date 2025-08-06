@@ -12,13 +12,3 @@ export function getAllowedDexes({
   )
   return difference(dexesWithoutUnsupported, blocked)
 }
-
-export function resolveDexes({
-  protocol,
-  blockedProtocols,
-}: {
-  protocol?: Dex
-  blockedProtocols?: ReadonlyArray<Dex>
-}) {
-  return protocol ? [protocol] : getAllowedDexes({blocked: blockedProtocols})
-}
