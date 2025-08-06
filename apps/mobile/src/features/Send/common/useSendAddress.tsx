@@ -1,5 +1,4 @@
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
 
@@ -14,51 +13,23 @@ export const useSendAddress = () => {
   const {targets, selectedTargetIndex} = useTransfer()
   const {address} = targets[selectedTargetIndex].entry
 
-  const {
-    addressValidated,
-    isLoading: isValidatingAddress,
-    error: addressError,
-    refetch,
-  } = useValidateAddress({address, chainId})
+  const {addressValidated, addressError} = React.useMemo(() => {
+    if (address.length === 0) {
+      return {addressValidated: undefined, addressError: undefined}
+    }
 
-  React.useEffect(() => {
-    if (address.length === 0) return
-
-    refetch()
-  }, [address, refetch])
+    try {
+      validateAddress(address, chainId)
+      return {addressValidated: true, addressError: undefined}
+    } catch (error) {
+      return {addressValidated: false, addressError: error as Error}
+    }
+  }, [address, chainId])
 
   return {
     addressValidated,
     addressError,
-    isValidatingAddress,
-  }
-}
-
-const useValidateAddress = (
-  {address, chainId}: {address: string; chainId: number},
-  options?: UseQueryOptions<
-    boolean,
-    Error,
-    boolean,
-    ['useValidateAddress', string, number]
-  >,
-) => {
-  const query = useQuery({
-    ...options,
-    staleTime: 0,
-    gcTime: 0,
-    queryKey: ['useValidateAddress', address, chainId],
-    queryFn: () => validateAddress(address, chainId),
-    retry: false, // Don't retry validation failures
-    // Prevent dehydration of validation queries to avoid hydration errors
-    meta: {
-      shouldDehydrate: false,
-    },
-  })
-
-  return {
-    ...query,
-    addressValidated: query.data,
+    isValidatingAddress: false,
   }
 }
 

@@ -1,4 +1,5 @@
 import {ThemeName} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 import type {ReactNode} from 'react'
 import * as React from 'react'
@@ -9,7 +10,7 @@ import {
   authMessages,
   claimMessages,
   confirmationMessages,
-  // currencyNames,
+  currencyNames,
   dashboardMessages,
   discoverMessages,
   errorMessages,
@@ -545,10 +546,10 @@ export const useStrings = () => {
         theme: {
           translateThemeName: (theme: ThemeName) => f(themeNames[theme]),
         },
-        // currencySettings: {
-        //   translatedName: (symbol: Portfolio.Currency.Symbol) =>
-        //     f(currencyNames[symbol]),
-        // },
+        currencySettings: {
+          translatedName: (symbol: Portfolio.Currency.Symbol) =>
+            f(currencyNames[symbol]),
+        },
         removeWallet: {
           descriptionParagraph1: f(
             settingsMessages.removeWalletDescriptionParagraph1,

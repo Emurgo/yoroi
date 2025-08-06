@@ -2,7 +2,7 @@ import {freeze} from 'immer'
 import {MessageDescriptor, defineMessages} from 'react-intl'
 
 import {ThemeName} from '@yoroi/theme'
-// import {supportedCurrencies} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {supportedCurrencies} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
 export const confirmationMessages = freeze(
   {
@@ -634,49 +634,49 @@ export const actionMessages = freeze(
   true,
 )
 
-// export const currencyNames: Readonly<
-//   Record<(typeof supportedCurrencies)[number], MessageDescriptor>
-// > = freeze(
-//   defineMessages({
-//     ADA: {
-//       id: 'global.currency.ADA',
-//       defaultMessage: `!!!ADA`,
-//     },
-//     BRL: {
-//       id: 'global.currency.BRL',
-//       defaultMessage: `!!!BRL`,
-//     },
-//     BTC: {
-//       id: 'global.currency.BTC',
-//       defaultMessage: `!!!BTC`,
-//     },
-//     CNY: {
-//       id: 'global.currency.CNY',
-//       defaultMessage: `!!!CNY`,
-//     },
-//     ETH: {
-//       id: 'global.currency.ETH',
-//       defaultMessage: `!!!ETH`,
-//     },
-//     EUR: {
-//       id: 'global.currency.EUR',
-//       defaultMessage: `!!!EUR`,
-//     },
-//     JPY: {
-//       id: 'global.currency.JPY',
-//       defaultMessage: `!!!JPY`,
-//     },
-//     KRW: {
-//       id: 'global.currency.KRW',
-//       defaultMessage: `!!!KRW`,
-//     },
-//     USD: {
-//       id: 'global.currency.USD',
-//       defaultMessage: `!!!USD`,
-//     },
-//   }),
-//   true,
-// )
+export const currencyNames: Readonly<
+  Record<(typeof supportedCurrencies)[number], MessageDescriptor>
+> = freeze(
+  defineMessages({
+    ADA: {
+      id: 'global.currency.ADA',
+      defaultMessage: `!!!ADA`,
+    },
+    BRL: {
+      id: 'global.currency.BRL',
+      defaultMessage: `!!!BRL`,
+    },
+    BTC: {
+      id: 'global.currency.BTC',
+      defaultMessage: `!!!BTC`,
+    },
+    CNY: {
+      id: 'global.currency.CNY',
+      defaultMessage: `!!!CNY`,
+    },
+    ETH: {
+      id: 'global.currency.ETH',
+      defaultMessage: `!!!ETH`,
+    },
+    EUR: {
+      id: 'global.currency.EUR',
+      defaultMessage: `!!!EUR`,
+    },
+    JPY: {
+      id: 'global.currency.JPY',
+      defaultMessage: `!!!JPY`,
+    },
+    KRW: {
+      id: 'global.currency.KRW',
+      defaultMessage: `!!!KRW`,
+    },
+    USD: {
+      id: 'global.currency.USD',
+      defaultMessage: `!!!USD`,
+    },
+  }),
+  true,
+)
 
 export const themeNames: Readonly<Record<ThemeName, MessageDescriptor>> =
   freeze(

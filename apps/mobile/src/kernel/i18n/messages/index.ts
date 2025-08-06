@@ -29,7 +29,7 @@ export {walletManagerMessages} from './wallet-manager'
 export {
   actionMessages,
   confirmationMessages,
-  // currencyNames,
+  currencyNames,
   errorMessages,
   default as globalMessages,
   themeNames,

@@ -203,15 +203,15 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Found',
   },
   helperAddressErrorInvalid: {
-    id: 'components.send.sendscreen.addressInputLabel',
+    id: 'send.helper.addressError.invalid',
     defaultMessage: '!!!Invalid address',
   },
   helperAddressErrorWrongBlockchain: {
-    id: 'components.send.sendscreen.addressInputLabel',
+    id: 'send.helper.addressError.wrongBlockchain',
     defaultMessage: '!!!Wrong blockchain',
   },
   helperAddressErrorWrongNetwork: {
-    id: 'components.send.sendscreen.addressInputLabel',
+    id: 'send.helper.addressError.wrongNetwork',
     defaultMessage: '!!!Wrong network',
   },
   helperMemoErrorTooLong: {

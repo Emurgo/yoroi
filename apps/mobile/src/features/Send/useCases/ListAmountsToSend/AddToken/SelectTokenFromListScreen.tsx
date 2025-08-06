@@ -361,7 +361,7 @@ const NoSpendableAmount = ({text}: {text: string}) => {
 
       <Space.Height.lg />
 
-      <Text style={[a.heading_3_medium, {color: p.gray_max, flex: 1}]}>
+      <Text style={[a.heading_3_medium, {color: p.text_gray_max}, a.flex_1]}>
         {text}
       </Text>
     </View>
@@ -381,7 +381,7 @@ const EmptySearchResult = () => {
 
       <Space.Height.lg />
 
-      <Text style={[a.heading_3_medium, {color: p.gray_max, flex: 1}]}>
+      <Text style={[a.heading_3_medium, {color: p.text_gray_max}, a.flex_1]}>
         {strings.send.noAssets}
       </Text>
     </View>

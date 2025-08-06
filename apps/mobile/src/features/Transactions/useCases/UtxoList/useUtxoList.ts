@@ -23,7 +23,9 @@ export const useUtxoList = () => {
   const queryClient = useQueryClient()
 
   const queryKey = ['utxoList', walletId]
-  useWalletEvent(wallet, 'utxos', () => queryClient.invalidateQueries(queryKey))
+  useWalletEvent(wallet, 'utxos', () =>
+    queryClient.invalidateQueries({queryKey}),
+  )
 
   const query = useQuery({
     queryKey,
