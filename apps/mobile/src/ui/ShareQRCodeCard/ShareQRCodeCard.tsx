@@ -122,10 +122,11 @@ export const ShareQRCodeCard = ({
 
         <View style={a.align_center}>
           <View
-            style={{
+            style={[
+            // TODO; REVISIT leverage something that exists.
               padding: 10,
               borderRadius: 8,
-              backgroundColor: p.white_static,
+              {backgroundColor: p.white_static,
             }}
           >
             <QRCode
