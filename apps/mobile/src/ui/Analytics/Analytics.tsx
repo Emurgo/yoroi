@@ -232,7 +232,7 @@ const CommonContent = ({
           >
             <Text style={style}>{icon}</Text>
 
-            <Text style={{...a.body_1_lg_regular}}>
+            <Text style={[a.body_1_lg_regular]}>
               {key === 'private' || key === 'noip' || key === 'nosell'
                 ? strings.ui[key](bold)
                 : strings.ui[key]}
@@ -244,9 +244,7 @@ const CommonContent = ({
       <Space.Height.md />
 
       <TouchableOpacity onPress={onReadMore}>
-        <Text
-          style={{color: p.primary_600, textAlign: 'center', ...a.link_1_lg}}
-        >
+        <Text style={[ta.text_primary_medium, a.text_center, a.link_1_lg]}>
           {strings.ui.more}
         </Text>
       </TouchableOpacity>

@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {CameraView, useCameraPermissions} from 'expo-camera'
-import React, {useCallback, useState} from 'react'
+import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -19,9 +19,9 @@ export const CameraCodeScanner = ({
   const {atoms: ta} = useTheme()
   const strings = useStrings()
   const [permission, requestPermission] = useCameraPermissions()
-  const [scanned, setScanned] = useState(false)
+  const [scanned, setScanned] = React.useState(false)
 
-  const handleBarCodeScanned = useCallback(
+  const handleBarCodeScanned = React.useCallback(
     (event: {data: string; type: string}) => {
       if (!scanned) {
         setScanned(true)
