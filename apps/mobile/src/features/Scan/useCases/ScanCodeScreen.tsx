@@ -13,11 +13,11 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {ScanRoutes} from '~/kernel/navigation/types'
 
 const scanParamsSchema = z.object({
-  insideFeature: z.string().optional(),
+  insideFeature: z.enum(['scan', 'send']).optional(),
 })
 
 export const ScanCodeScreen = () => {
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
   const {navigateToTxHistory} = useWalletNavigation()
   const params = useParams<ScanRoutes['scan-start']>((params) => {
@@ -72,8 +72,8 @@ export const ScanCodeScreen = () => {
       <View
         style={[a.flex_1, a.justify_center, a.align_center, ta.bg_color_max]}
       >
-        <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
-          Requesting camera permission...
+        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+          {strings.scan.requestingCameraPermission}
         </Text>
       </View>
     )
@@ -84,20 +84,15 @@ export const ScanCodeScreen = () => {
       <View
         style={[a.flex_1, a.justify_center, a.align_center, ta.bg_color_max]}
       >
-        <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
-          We need your permission to show the camera
+        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+          {strings.scan.needCameraPermission}
         </Text>
         <TouchableOpacity
           onPress={requestPermission}
-          style={[
-            a.pt_lg,
-            a.p_md,
-            {backgroundColor: p.el_primary_medium},
-            a.rounded_md,
-          ]}
+          style={[a.pt_lg, a.p_md, ta.bg_color_min, a.rounded_md]}
         >
-          <Text style={[a.body_1_lg_regular, {color: p.text_primary_max}]}>
-            Grant Permission
+          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+            {strings.scan.grantPermission}
           </Text>
         </TouchableOpacity>
       </View>
@@ -131,25 +126,23 @@ export const ScanCodeScreen = () => {
                 a.body_1_lg_regular,
                 a.text_center,
                 a.pb_md,
-                {color: p.gray_max},
+                ta.text_gray_max,
               ]}
             >
-              QR Code Scanned Successfully
+              {strings.scan.qrCodeScannedSuccessfully}
             </Text>
             <View style={[a.flex_row, a.gap_md]}>
               <TouchableOpacity
                 style={[
                   a.flex_1,
                   a.p_md,
-                  {backgroundColor: p.el_primary_medium},
+                  ta.bg_color_min,
                   a.rounded_md,
                   a.align_center,
                 ]}
                 onPress={() => navigateToTxHistory()}
               >
-                <Text
-                  style={[a.body_1_lg_regular, {color: p.text_primary_max}]}
-                >
+                <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
                   {strings.scan.continue}
                 </Text>
               </TouchableOpacity>
@@ -157,16 +150,14 @@ export const ScanCodeScreen = () => {
                 style={[
                   a.flex_1,
                   a.p_md,
-                  {backgroundColor: p.el_gray_medium},
+                  ta.bg_color_max,
                   a.rounded_md,
                   a.align_center,
                 ]}
                 onPress={handleScanAgain}
               >
-                <Text
-                  style={[a.body_1_lg_regular, {color: p.text_primary_max}]}
-                >
-                  Scan Again
+                <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+                  {strings.scan.scanAgain}
                 </Text>
               </TouchableOpacity>
             </View>

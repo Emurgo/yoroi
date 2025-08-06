@@ -5,7 +5,7 @@ import * as Notifications from 'expo-notifications'
 import {Linking, PermissionsAndroid, Platform} from 'react-native'
 import {Notifications as RNNotifications} from 'react-native-notifications'
 
-// import {WalletNavigation} from '~/kernel/navigation'
+// import {WalletNavigation} from '~/kernel/navigation/navigation'
 import {BannerIds} from './banners'
 import {uiStorage} from './storage'
 

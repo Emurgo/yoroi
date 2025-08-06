@@ -876,6 +876,7 @@ git checkout fix/wallet-navigation-and-functionality
 8. **Document new issues** in conflicts.md when found
 9. **Use themed atoms for common theme-dependent styles** like `ta.bg_color_max`, `ta.text_primary_max`, `ta.el_primary_max` instead of `{backgroundColor: p.bg_color_max}`, `{color: p.text_primary_max}`, etc.
 10. **Only use direct palette access** when no equivalent themed atom exists
+11. **Do not create index.ts files** - import directly from the source files instead of creating barrel exports
 
 ## 🔄 Migration Checklist
 
@@ -889,3 +890,4 @@ git checkout fix/wallet-navigation-and-functionality
 - [ ] Clear Metro cache and restart development server
 - [ ] Check conflicts.md for known issues
 - [ ] Document any new conflicts found
+- [ ] Remove any new index.ts files and update imports to use direct file paths

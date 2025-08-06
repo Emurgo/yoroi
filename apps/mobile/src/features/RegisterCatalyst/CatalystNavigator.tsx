@@ -10,7 +10,7 @@ import {
   useWalletNavigation,
   VotingRegistrationRouteNavigation,
   VotingRegistrationRoutes,
-} from '~/kernel/navigation'
+} from '~/kernel/navigation/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {ConfirmPin} from './useCases/ConfirmPin/ConfirmPin'

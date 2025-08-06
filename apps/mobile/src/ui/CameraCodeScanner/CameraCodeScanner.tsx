@@ -3,6 +3,8 @@ import {CameraView, useCameraPermissions} from 'expo-camera'
 import React, {useCallback, useState} from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
+
 export type CameraCodeScannerProps = {
   onRead: (event: {data: string; type: string}) => void
   withMask?: boolean
@@ -14,7 +16,8 @@ export const CameraCodeScanner = ({
   withMask,
   maskText,
 }: CameraCodeScannerProps) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
+  const strings = useStrings()
   const [permission, requestPermission] = useCameraPermissions()
   const [scanned, setScanned] = useState(false)
 
@@ -28,32 +31,21 @@ export const CameraCodeScanner = ({
     [scanned, onRead],
   )
 
-  if (!permission)
-    return <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]} />
+  if (!permission) return <View style={[a.flex_1, ta.bg_color_max]} />
   if (!permission.granted) {
     return (
       <View
-        style={[
-          a.flex_1,
-          a.justify_center,
-          a.align_center,
-          {backgroundColor: p.bg_color_max},
-        ]}
+        style={[a.flex_1, a.justify_center, a.align_center, ta.bg_color_max]}
       >
-        <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
-          We need your permission to show the camera
+        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+          {strings.scan.needCameraPermission}
         </Text>
         <TouchableOpacity
           onPress={requestPermission}
-          style={[
-            a.pt_lg,
-            a.p_md,
-            {backgroundColor: p.el_primary_medium},
-            a.rounded_md,
-          ]}
+          style={[a.pt_lg, a.p_md, ta.bg_color_min, a.rounded_md]}
         >
-          <Text style={[a.body_1_lg_regular, {color: p.text_primary_max}]}>
-            Grant Permission
+          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+            {strings.scan.grantPermission}
           </Text>
         </TouchableOpacity>
       </View>
@@ -61,7 +53,7 @@ export const CameraCodeScanner = ({
   }
 
   return (
-    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+    <View style={[a.flex_1, ta.bg_color_max]}>
       <CameraView
         style={[a.absolute, a.inset_0]}
         facing="back"
@@ -84,7 +76,7 @@ export const CameraCodeScanner = ({
                 width: 240,
                 height: 240,
                 borderWidth: 2,
-                borderColor: p.el_primary_medium,
+                borderColor: ta.el_primary_medium.color,
                 borderRadius: 16,
               },
             ]}
@@ -94,7 +86,8 @@ export const CameraCodeScanner = ({
               style={[
                 a.pt_lg,
                 a.body_1_lg_regular,
-                {color: p.text_primary_max, textAlign: 'center'},
+                ta.text_primary_max,
+                a.text_center,
               ]}
             >
               {maskText}

@@ -13,6 +13,26 @@ export const scanMessages = defineMessages({
     id: 'scan.cameraPermissionDenied.help',
     defaultMessage: '!!!Please enable camera access in settings',
   },
+  requestingCameraPermission: {
+    id: 'scan.requestingCameraPermission',
+    defaultMessage: '!!!Requesting camera permission...',
+  },
+  needCameraPermission: {
+    id: 'scan.needCameraPermission',
+    defaultMessage: '!!!We need your permission to show the camera',
+  },
+  grantPermission: {
+    id: 'scan.grantPermission',
+    defaultMessage: '!!!Grant Permission',
+  },
+  qrCodeScannedSuccessfully: {
+    id: 'scan.qrCodeScannedSuccessfully',
+    defaultMessage: '!!!QR Code Scanned Successfully',
+  },
+  scanAgain: {
+    id: 'scan.scanAgain',
+    defaultMessage: '!!!Scan Again',
+  },
   errorUnknownTitle: {
     id: 'scan.errorUnknown.title',
     defaultMessage: '!!!Unknown error',

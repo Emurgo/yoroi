@@ -22,10 +22,11 @@ import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
+import {useBold} from '~/hooks/useBold'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
-import { useStrings } from '~/kernel/i18n/useStrings'
 import {errorMessages} from '~/kernel/i18n/messages/global'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -76,7 +77,7 @@ export const RestoreWalletDetailsScreen = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
   const {track} = useMetrics()
-  const bold = useBold()
+  const bold = useBold({style: a.body_1_lg_medium})
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const {walletManager} = useWalletManager()
@@ -103,7 +104,6 @@ export const RestoreWalletDetailsScreen = () => {
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
   const passwordErrors = validatePassword(password, passwordConfirmation)
-
 
   const {
     createWallet,
@@ -208,7 +208,12 @@ export const RestoreWalletDetailsScreen = () => {
           />
         </View>
       ),
-      footer: <Button title={strings.setupWallet.continueButton} onPress={closeModal} />,
+      footer: (
+        <Button
+          title={strings.setupWallet.continueButton}
+          onPress={closeModal}
+        />
+      ),
       height: HEIGHT_MODAL_NAME_PASSWORD,
     })
   }
@@ -238,7 +243,12 @@ export const RestoreWalletDetailsScreen = () => {
           />
         </View>
       ),
-      footer: <Button title={strings.setupWallet.continueButton} onPress={closeModal} />,
+      footer: (
+        <Button
+          title={strings.setupWallet.continueButton}
+          onPress={closeModal}
+        />
+      ),
       height: HEIGHT_MODAL_CHECKSUM,
     })
   }
@@ -391,12 +401,4 @@ const Info = ({onPress}: {onPress: () => void}) => {
       <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
     </TouchableOpacity>
   )
-}
-
-const useBold = () => {
-  return {
-    b: (text: React.ReactNode) => (
-      <Text style={a.body_1_lg_medium}>{text}</Text>
-    ),
-  }
 }

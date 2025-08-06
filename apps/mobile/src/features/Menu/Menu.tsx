@@ -21,7 +21,7 @@ import {
   defaultStackNavigationOptions,
   MenuRoutes,
   useWalletNavigation,
-} from '~/kernel/navigation'
+} from '~/kernel/navigation/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'

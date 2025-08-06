@@ -4,6 +4,7 @@ import * as React from 'react'
 import {Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -154,15 +155,11 @@ const CommonContent = ({
 }) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
+  const bold = useBold({style: a.body_1_lg_medium})
 
   const list = [
     {
-      style: {color: p.primary_700, paddingRight: 8, fontSize: 16},
-      icon: '✓',
-      key: 'anonymous',
-    },
-    {
-      style: {color: p.primary_700, paddingRight: 8, fontSize: 16},
+      style: {color: p.sys_magenta_500, paddingRight: 8, fontSize: 16},
       icon: '✓',
       key: 'optout',
     },
@@ -257,8 +254,4 @@ const CommonContent = ({
       <Space.Height.md />
     </>
   )
-}
-
-const bold = {
-  b: (text: React.ReactNode) => <Text style={a.body_2_md_medium}>{text}</Text>,
 }
