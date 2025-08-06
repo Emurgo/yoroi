@@ -8,7 +8,7 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 
 export const WarningSingleAddress = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const {navigateToUtxoConsolidation} = useWalletNavigation()
 
@@ -23,7 +23,7 @@ export const WarningSingleAddress = () => {
     >
       <Icon.Warning size={20} color={p.sys_magenta_500} />
 
-      <Text style={[{color: p.gray_max}, a.body_2_md_regular]}>
+      <Text style={[ta.text_gray_max, a.body_2_md_regular]}>
         <Text>{strings.transactions.organizeWalletDescription}</Text>
       </Text>
 

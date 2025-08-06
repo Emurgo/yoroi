@@ -12,7 +12,7 @@ import {Space} from '~/ui/Space/Space'
 import {UtxoList} from './useUtxoList'
 
 export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {wallet} = useSelectedWallet()
   const {navigateToTxDetails} = useWalletNavigation()
   const tokenIds = Object.keys(item.balance) as Portfolio.Token.Id[]
@@ -24,13 +24,13 @@ export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
 
   const utxoId = `${item.txHash}#${item.txIndex}`
 
-  if (isLoading || !tokenInfos || tokenIds.length === 0)
-    return <ActivityIndicator size={22} color={p.el_gray_medium} />
+  if (isLoading || !tokenInfos)
+    return <ActivityIndicator size={22} color={ta.el_gray_medium.color} />
 
   return (
     <View style={[a.flex, a.flex_1, a.p_sm]}>
       <TouchableOpacity onPress={() => navigateToTxDetails(item.txHash)}>
-        <Text style={[{color: p.el_gray_max}, a.body_2_md_regular]}>
+        <Text style={[ta.text_gray_max, a.body_2_md_regular]}>
           {utxoId}
         </Text>
       </TouchableOpacity>

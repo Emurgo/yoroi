@@ -8,7 +8,7 @@ import {Space} from '~/ui/Space/Space'
 import {UtxoList} from './useUtxoList'
 import {UtxoItem} from './UtxoItem'
 export const UtxoAddressGroup = ({item}: {item: UtxoList[number]}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
     <View style={[a.flex, a.flex_1]}>
@@ -18,7 +18,7 @@ export const UtxoAddressGroup = ({item}: {item: UtxoList[number]}) => {
             Linking.openURL('https://cips.cardano.org/cip/CIP-1852')
           }
         >
-          <Text style={[a.body_3_sm_medium, {color: p.el_gray_max}]}>
+          <Text style={[a.body_3_sm_medium, ta.text_gray_max]}>
             {item.path}
           </Text>
         </TouchableOpacity>
@@ -26,11 +26,11 @@ export const UtxoAddressGroup = ({item}: {item: UtxoList[number]}) => {
         <Copiable text={item.address}>
           <View style={{flex: 1}}>
             <Text numberOfLines={1} ellipsizeMode="middle">
-              <Text style={[a.body_2_md_regular, {color: p.el_gray_medium}]}>
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
                 {item.address.slice(0, -6)}
               </Text>
 
-              <Text style={[a.body_2_md_medium, {color: p.primary_500}]}>
+              <Text style={[a.body_2_md_medium, ta.text_primary_medium]}>
                 {' '}
                 {item.address.slice(-6)}
               </Text>
