@@ -41,16 +41,16 @@ export const ManageNotificationSettings = () => {
       style={[a.flex_1, ta.bg_color_max]}
     >
       <ScrollView bounces={false} style={[a.flex_1, a.py_lg, a.px_lg]}>
-        <SettingsSection title={strings.pushNotifications}>
+        <SettingsSection title={strings.manageNotifications.pushNotifications}>
           <PushNotificationSettingsItem />
         </SettingsSection>
 
         <Space.Height.xl />
 
-        <SettingsSection title={strings.inAppNotifications}>
+        <SettingsSection title={strings.manageNotifications.inAppNotifications}>
           <SettingsItem
             icon={<Icon.Bell color={p.gray_500} size={23} />}
-            label={strings.inAppNotifications}
+            label={strings.settings.walletSettings.inAppNotifications}
           >
             <InAppNotificationDisplaySwitcher />
           </SettingsItem>
@@ -58,7 +58,7 @@ export const ManageNotificationSettings = () => {
           <SettingsNotificationDurationItem
             icon={<Icon.Time color={p.gray_500} size={23} />}
             onNavigate={() => navigateToNotificationDisplayDuration()}
-            label={strings.displayDuration}
+            label={strings.settings.walletSettings.displayDuration}
           />
         </SettingsSection>
       </ScrollView>
@@ -122,7 +122,7 @@ const PushNotificationSettingsItem = () => {
     return (
       <SettingsItem
         icon={<Icon.Bell color={p.gray_500} size={23} />}
-        label={strings.pushNotifications}
+        label={strings.settings.walletSettings.allowNotifications}
       >
         <SettingsSwitch
           value={permission === 'authorized'}
@@ -135,12 +135,12 @@ const PushNotificationSettingsItem = () => {
   return (
     <View>
       <Text style={[a.body_1_lg_medium, a.py_sm]}>
-        {strings.enableNotificationsThroughSettings}
+        {strings.manageNotifications.enableNotificationsThroughSettings}
       </Text>
 
       <Button
         style={[a.justify_start, a.p_0]}
-        title={strings.goToSettings}
+        title={strings.manageNotifications.goToSettings}
         onPress={navigateToAppSettings}
         type={ButtonType.Text}
       />

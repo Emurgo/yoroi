@@ -75,8 +75,8 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Wallet',
   },
   appTabTitle: {
-    id: 'api.error.unknown',
-    defaultMessage: '!!!App',
+    id: 'components.settings.applicationsettingsscreen.tabTitle',
+    defaultMessage: '!!!Application',
   },
   notifications: {
     id: 'components.txhistory.notifications.title',
@@ -253,11 +253,11 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Change Password',
   },
   walletSettingsEasyConfirmation: {
-    id: 'txReview.confirm',
+    id: 'components.settings.walletsettingscreen.easyConfirmation',
     defaultMessage: '!!!Easy Confirmation',
   },
   walletSettingsEasyConfirmationInfo: {
-    id: 'txReview.confirm',
+    id: 'components.settings.walletsettingscreen.easyConfirmationInfo',
     defaultMessage: '!!!Easy Confirmation Info',
   },
   walletSettingsRemoveWallet: {
