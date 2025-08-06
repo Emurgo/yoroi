@@ -6,7 +6,7 @@ export const menuMessages = defineMessages({
     defaultMessage: '!!!Catalyst Voting',
   },
   settings: {
-    id: 'components.common.navigation.dashboardButton',
+    id: 'menu.settings',
     defaultMessage: '!!!Settings',
   },
   stakingCenter: {
