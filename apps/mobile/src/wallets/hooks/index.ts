@@ -148,7 +148,7 @@ export const useStakingKey = (wallet: YoroiWallet) => {
 }
 
 export const useAddressHex = (wallet: YoroiWallet) => {
-  const result = useQuery({
+  const result = useSuspenseQuery({
     queryKey: [wallet.id, 'addressHex'],
     queryFn: () => convertBech32ToHex(wallet.externalAddresses[0]),
   })
