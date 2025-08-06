@@ -1,7 +1,6 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
-import * as shape from 'd3-shape'
+import {useTheme} from '@yoroi/theme'
 import React, {memo, useEffect, useMemo, useState} from 'react'
-import {Dimensions, PanResponder, View} from 'react-native'
+import {Dimensions, PanResponder} from 'react-native'
 import {Circle, G, Line, Rect, Text as SvgText} from 'react-native-svg'
 import {LineChart as SvgLineChart} from 'react-native-svg-charts'
 

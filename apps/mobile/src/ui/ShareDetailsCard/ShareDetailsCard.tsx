@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {LinearGradient} from 'expo-linear-gradient'
-import React from 'react'
+import * as React from 'react'
 import {useWindowDimensions, View} from 'react-native'
 
 import {useLastDateAddressUsed} from '~/features/Receive/common/ShareDetailsCard/useLastDateAddressUsed'
