@@ -75,7 +75,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             style={[
               a.py_0,
               a.heading_3_medium,
-              {textAlign: 'right'},
+              a.text_right,
               {color: p.gray_900},
               Platform.OS === 'ios' ? {lineHeight: 22} : {},
             ]}

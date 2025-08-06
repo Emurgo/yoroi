@@ -128,7 +128,7 @@ export const TokenAmountItem = ({
 
         {variant !== 'swap' && (
           <PairedBalance
-            textStyle={{textAlign: 'right'}}
+            textStyle={a.text_right}
             amount={amount}
             ignorePrivacy={ignorePrivacy}
           />
@@ -138,12 +138,12 @@ export const TokenAmountItem = ({
           <View style={[a.flex, a.flex_row, a.align_center, a.gap_sm]}>
             {amount.quantity > 0n && (
               <View>
-                <Text style={[a.body_1_lg_regular, {textAlign: 'right'}]}>
+                <Text style={[a.body_1_lg_regular, a.text_right]}>
                   {formattedQuantity}
                 </Text>
 
                 <PairedBalance
-                  textStyle={{textAlign: 'right'}}
+                  textStyle={a.text_right}
                   amount={amount}
                   ignorePrivacy={ignorePrivacy}
                 />
