@@ -1,14 +1,16 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
-import React from 'react'
-import {Text, TextInput, View} from 'react-native'
+import {atoms as a} from '@yoroi/theme'
+import * as React from 'react'
+import {TextInput, View} from 'react-native'
 
 import {useQuery} from '@tanstack/react-query'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {GradientWarning} from '~/ui/GradientWarning/GradientWarning'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/kernel/i18n/useStrings'
-import {isValidPoolIdOrHash, normalizeToPoolHash} from '~/yoroi-wallets/cardano/utils'
+import {
+  isValidPoolIdOrHash,
+  normalizeToPoolHash,
+} from '~/yoroi-wallets/cardano/utils'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void

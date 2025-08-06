@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {ActivityIndicator, TextInput as RNTextInput, Text} from 'react-native'
 
 import {useNavigateTo} from '~/features/Send/common/navigation'

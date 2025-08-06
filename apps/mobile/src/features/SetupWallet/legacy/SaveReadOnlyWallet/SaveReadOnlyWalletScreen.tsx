@@ -4,7 +4,7 @@ import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {Api, Wallet} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {FlatList, InteractionManager, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 

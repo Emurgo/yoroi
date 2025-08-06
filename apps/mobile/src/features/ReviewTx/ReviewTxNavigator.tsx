@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {

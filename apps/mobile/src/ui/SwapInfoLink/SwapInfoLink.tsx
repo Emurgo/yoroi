@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import {Linking} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'

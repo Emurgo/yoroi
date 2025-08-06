@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text} from 'react-native'
 
@@ -8,14 +8,14 @@ import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 
 export const MaxAmountsPerTx = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <ErrorPanel>
-      <Text style={[{color: p.gray_max, fontSize: 14, lineHeight: 20}]}>
-        <Text
-          style={{fontSize: 14, lineHeight: 20, fontWeight: '500'}}
-        >{`${limitOfSecondaryAmountsPerTx} `}</Text>
+      <Text style={[ta.text_gray_max, a.body_3_sm_regular]}>
+        <Text style={[a.body_3_sm_medium]}>
+          {`${limitOfSecondaryAmountsPerTx} `}
+        </Text>
 
         {strings.send.errorBannerMaxTokenLimit}
       </Text>

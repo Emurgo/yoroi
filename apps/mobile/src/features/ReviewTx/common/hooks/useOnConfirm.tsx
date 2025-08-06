@@ -1,9 +1,10 @@
 import {Transaction} from '@emurgo/cross-csl-core'
 import {Wallet} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {ModalError} from '~/ui/ModalError/ModalError'
 import {getTransactionSigners} from '~/wallets/cardano/common/signatureUtils'
@@ -14,7 +15,6 @@ import {ConfirmRawTxWithHW} from '../ConfirmRawTxWithHw'
 import {useNavigateTo} from './useNavigateTo'
 import {usePromptRootKey} from './usePromptRootKey'
 import {useSignTxWithHW} from './useSignTxWithHW'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export type OnConfirm = {
   cbor?: string | null

@@ -2,7 +2,7 @@ import {useQuery, useQueryClient, UseQueryOptions} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {Balance, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-import React from 'react'
+import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'

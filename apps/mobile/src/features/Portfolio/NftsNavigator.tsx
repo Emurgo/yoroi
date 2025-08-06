@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'

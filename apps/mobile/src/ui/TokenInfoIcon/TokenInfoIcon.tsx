@@ -2,7 +2,7 @@ import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
-import React from 'react'
+import * as React from 'react'
 import {ImageStyle, View} from 'react-native'
 
 import {usePortfolioImage} from '~/features/Portfolio/common/hooks/usePortfolioImage'

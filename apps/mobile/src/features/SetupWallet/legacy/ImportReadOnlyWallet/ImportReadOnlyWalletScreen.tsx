@@ -1,5 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {ScrollView, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -29,7 +29,9 @@ export const ImportReadOnlyWalletScreen = () => {
 
           <TextInput
             label={strings.setupWallet.importReadOnlyWallet.walletAddress}
-            placeholder={strings.setupWallet.importReadOnlyWallet.walletAddressPlaceholder}
+            placeholder={
+              strings.setupWallet.importReadOnlyWallet.walletAddressPlaceholder
+            }
             autoFocus
             autoComplete="off"
           />

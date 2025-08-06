@@ -24,6 +24,7 @@ import {StartMultiTokenTxScreen} from '~/features/Send/useCases/StartMultiTokenT
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {UtxoConsolidation} from '~/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
 import {UtxoList} from '~/features/Transactions/useCases/UtxoList/UtxoList'
+import {unstoppableApiKey} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
@@ -31,7 +32,6 @@ import {Boundary} from '~/ui/Boundary/Boundary'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
-import {unstoppableApiKey} from '~/kernel/constants'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
 

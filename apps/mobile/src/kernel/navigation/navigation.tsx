@@ -13,7 +13,7 @@ import {
 import {isKeyOf} from '@yoroi/common'
 import {atoms as a, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Chain, Portfolio, Scan} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {
   Dimensions,
   Linking,

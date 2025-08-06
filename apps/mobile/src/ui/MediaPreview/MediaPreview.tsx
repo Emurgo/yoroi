@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
-import React from 'react'
+import * as React from 'react'
 import {ImageStyle, View} from 'react-native'
 
 import ftPlaceholderDark from '~/assets/img/ft-placeholder-dark.png'

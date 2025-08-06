@@ -4,7 +4,7 @@ import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {
   InteractionManager,
   Linking,

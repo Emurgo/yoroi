@@ -1,5 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Linking, Text, TouchableWithoutFeedback} from 'react-native'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 

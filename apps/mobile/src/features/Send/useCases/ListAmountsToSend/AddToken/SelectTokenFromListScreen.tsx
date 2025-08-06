@@ -4,7 +4,7 @@ import {infoFilterByName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {Alert, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
@@ -217,7 +217,7 @@ const ListSpendables = ({
         />
       )}
       bounces={false}
-      contentContainerStyle={{paddingHorizontal: 16}}
+      contentContainerStyle={a.px_lg}
       keyExtractor={(_, index) => index.toString()}
       testID="assetList"
       ItemSeparatorComponent={() => <Space.Height.md />}

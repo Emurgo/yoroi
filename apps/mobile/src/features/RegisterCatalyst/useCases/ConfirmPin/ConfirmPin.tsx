@@ -1,7 +1,7 @@
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {ActivityIndicator, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 

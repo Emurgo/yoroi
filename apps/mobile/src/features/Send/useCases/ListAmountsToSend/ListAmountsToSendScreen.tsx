@@ -136,7 +136,7 @@ export const ListAmountsToSendScreen = () => {
       ]}
     >
       <AmountsList
-        data={Object.values(amounts) as Portfolio.Token.Amount[]}
+        data={Object.values(amounts)}
         renderItem={({item: amount}) => (
           <Boundary>
             <ActionableAmount

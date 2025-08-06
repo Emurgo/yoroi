@@ -1,6 +1,6 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Linking, TouchableOpacity, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'

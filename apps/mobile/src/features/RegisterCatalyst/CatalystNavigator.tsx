@@ -1,7 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'

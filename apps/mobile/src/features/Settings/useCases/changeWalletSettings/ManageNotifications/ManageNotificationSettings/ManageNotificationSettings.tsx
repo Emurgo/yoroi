@@ -1,5 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {
   Alert,
   AppState,
@@ -12,6 +12,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {SettingsItem, SettingsSection} from '~/features/Settings/SettingsItems'
 import {SettingsNotificationDurationItem} from '~/features/Settings/SettingsNotificationDurationItem'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -23,7 +24,6 @@ import {
   useChangeNotificationDisplaySettings,
   useNotificationDisplaySettings,
 } from '../../Notifications/NotificationsDisplaySettings'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 const getNotificationsAuthorizationStatus = () => {
   // TODO: Alert.alert('getNotificationsAuthorizationStatus not implemented')

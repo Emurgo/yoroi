@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 const PoolTransitionContext = React.createContext<
   [string[], React.Dispatch<React.SetStateAction<string[]>>] | undefined

@@ -1,7 +1,7 @@
 import {amountFormatter} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'

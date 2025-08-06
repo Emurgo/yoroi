@@ -1,18 +1,14 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Wallet} from '@yoroi/types'
-import React from 'react'
-import {Alert, ScrollView, Text, View} from 'react-native'
+import * as React from 'react'
+import {ScrollView, Text, View} from 'react-native'
 
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks'
-import {Button} from '~/ui/Button/Button'
 import {Hr} from '~/ui/Hr/Hr'
-import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
-import {TextInput} from '~/ui/TextInput/TextInput'
 
 export const WalletSettingsScreen = () => {
   const strings = useStrings()
@@ -55,20 +51,30 @@ export const WalletSettingsScreen = () => {
     <ScrollView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <View style={[a.p_lg, a.gap_lg]}>
         <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>{strings.settings.walletSettings.general}</Text>
+          <Text style={[a.heading_3_medium]}>
+            {strings.settings.walletSettings.general}
+          </Text>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.walletName}</Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>{meta.name}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.walletName}
+            </Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {meta.name}
+            </Text>
           </View>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.network}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.network}
+            </Text>
             {/* <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>{meta.networkId}</Text> */}
           </View>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.walletType}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.walletType}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {/* {getWalletType(meta.implementation)} */}
             </Text>
@@ -78,17 +84,23 @@ export const WalletSettingsScreen = () => {
         <Hr />
 
         <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>{strings.settings.walletSettings.security}</Text>
+          <Text style={[a.heading_3_medium]}>
+            {strings.settings.walletSettings.security}
+          </Text>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.changePassword}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.changePassword}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {strings.settings.walletSettings.changePassword}
             </Text>
           </View>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.easyConfirmation}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.easyConfirmation}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {strings.settings.walletSettings.easyConfirmationInfo}
             </Text>
@@ -98,31 +110,41 @@ export const WalletSettingsScreen = () => {
         <Hr />
 
         <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>{strings.settings.walletSettings.actions}</Text>
+          <Text style={[a.heading_3_medium]}>
+            {strings.settings.walletSettings.actions}
+          </Text>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.switchWallet}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.switchWallet}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {strings.settings.walletSettings.switchWallet}
             </Text>
           </View>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.removeWallet}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.removeWallet}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {strings.settings.walletSettings.removeWallet}
             </Text>
           </View>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.about}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.about}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {strings.settings.walletSettings.about}
             </Text>
           </View>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.resync}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.resync}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {strings.settings.walletSettings.resync}
             </Text>
@@ -132,17 +154,23 @@ export const WalletSettingsScreen = () => {
         <Hr />
 
         <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>{strings.settings.walletSettings.notifications}</Text>
+          <Text style={[a.heading_3_medium]}>
+            {strings.settings.walletSettings.notifications}
+          </Text>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.inAppNotifications}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.inAppNotifications}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {strings.settings.walletSettings.allowNotifications}
             </Text>
           </View>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.displayDuration}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.displayDuration}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {strings.settings.walletSettings.displayDuration}
             </Text>
@@ -152,17 +180,23 @@ export const WalletSettingsScreen = () => {
         <Hr />
 
         <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>{strings.settings.walletSettings.collateral}</Text>
+          <Text style={[a.heading_3_medium]}>
+            {strings.settings.walletSettings.collateral}
+          </Text>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.multipleAddresses}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.multipleAddresses}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {strings.settings.walletSettings.multipleAddressesInfo}
             </Text>
           </View>
 
           <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>{strings.settings.walletSettings.singleAddress}</Text>
+            <Text style={[a.body_1_lg_regular]}>
+              {strings.settings.walletSettings.singleAddress}
+            </Text>
             <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               {strings.settings.walletSettings.singleAddress}
             </Text>

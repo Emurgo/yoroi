@@ -4,7 +4,7 @@ import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
-import React from 'react'
+import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
