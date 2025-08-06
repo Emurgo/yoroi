@@ -103,6 +103,8 @@ export const ShareQRCodeCard = ({
               opacity: 1,
               borderRadius: 16,
             },
+            a.absolute,
+            a.inset_0,            
           ]}
           start={{x: 0, y: 0}}
           end={{x: 0, y: 1}}
