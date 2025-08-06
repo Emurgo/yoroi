@@ -79,11 +79,7 @@ export const Menu = () => {
 
         <Staking
           label={strings.menu.stakingCenter}
-          onPress={
-            () => {}
-
-            // navigateTo.stakingCenter
-          }
+          onPress={navigateTo.stakingCenter}
           left={<Icon.TabStaking size={24} color={p.gray_600} />}
           right={
             isPoolRetiring ? (
@@ -94,10 +90,7 @@ export const Menu = () => {
 
         <Governance
           label={strings.menu.governanceCentre}
-          onPress={
-            () => {}
-            // navigateTo.governanceCentre
-          }
+          onPress={navigateTo.governanceCentre}
           left={<Icon.Governance size={24} color={p.gray_600} />}
         />
 
