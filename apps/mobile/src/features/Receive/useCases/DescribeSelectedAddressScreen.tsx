@@ -33,7 +33,7 @@ export const DescribeSelectedAddressScreen = () => {
   const addresses = useReceiveAddressesStatus(addressMode)
   const isMultipleAddressesUsed = addresses.used.length > 1
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
 
   const {track} = useMetrics()
 
@@ -58,14 +58,24 @@ export const DescribeSelectedAddressScreen = () => {
     [navigateTo],
   )
   React.useEffect(() => {
-    isShowingMultipleAddressInfo &&
-      openModal({
-        title: strings.receive.singleOrMultiple,
-        content: (
-          <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />
-        ),
-        height: singleOrMultipleAddressesModalHeight,
-      })
+    let timeout: number | undefined
+    if (isShowingMultipleAddressInfo) {
+      timeout = setTimeout(() => {
+        openModal({
+          title: strings.receive.singleOrMultiple,
+          content: (
+            <SingleOrMultipleAddressesModal
+              onConfirm={handleOnModalConfirm}
+              onClose={closeModal}
+            />
+          ),
+          height: singleOrMultipleAddressesModalHeight,
+        })
+      }, 300)
+    }
+    return () => {
+      if (timeout) clearTimeout(timeout)
+    }
   }, [
     isShowingMultipleAddressInfo,
     isSingle,
@@ -73,6 +83,7 @@ export const DescribeSelectedAddressScreen = () => {
     openModal,
     strings.receive.singleOrMultiple,
     handleOnModalConfirm,
+    closeModal,
   ])
 
   useFocusEffect(
